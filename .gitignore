@@ -43,3 +43,6 @@ logs/
 remappedSrc
 /config/
 
+# lsp-java
+.factorypath
+
