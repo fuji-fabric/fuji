@@ -161,6 +161,7 @@
   "warp.set.success": "<gold>Warp %s set.",
   "warp.unset.success": "<gold>Warp %s entfernt.",
   "warp.gui.title": "<blue>Warps",
+  "warp.tp.success": "<blue>Teleported to warp %s.",
   "works.list.add": "<#FFA1F5>Arbeit hinzufügen",
   "works.list.all_works": "<#FFA1F5>Alle funktioniert",
   "works.list.help.lore": "<green> - Linksklick -> Besuche\n<green> - Rechtsklick -> Allgemeine Einstellungen öffnen\n<green> - Shift + Rechtsklick -> Spezialeinstellungen öffnen",

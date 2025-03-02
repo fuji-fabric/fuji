@@ -161,6 +161,7 @@
   "warp.set.success": "<gold>Warp %s set.",
   "warp.unset.success": "<gold>Warp %s poistettu.",
   "warp.gui.title": "<blue>Warps",
+  "warp.tp.success": "<blue>Teleported to warp %s.",
   "works.list.add": "<#FFA1F5>Lisää työ",
   "works.list.all_works": "<#FFA1F5>Kaikki työt",
   "works.list.help.lore": "<green> - Vasen painike -> Vieraile\n<green> - Oikea klikkaus -> Avaa yleiset asetukset\n<green> - Vaihto + Oikea klikkaus -> Avaa erikoistuneet asetukset",

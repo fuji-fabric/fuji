@@ -161,6 +161,7 @@
   "warp.set.success": "<gold>Warp %s set.",
   "warp.unset.success": "<gold>Warp %s usunięto.",
   "warp.gui.title": "<blue>Warps",
+  "warp.tp.success": "<blue>Teleported to warp %s.",
   "works.list.add": "<#FFA1F5>Dodaj pracę",
   "works.list.all_works": "<#FFA1F5>Wszystkie prace",
   "works.list.help.lore": "<green> - Kliknij lewym przyciskiem myszy -> Odwiedź\n<green> - Kliknij prawym przyciskiem myszy -> Otwórz ustawienia ogólne\n<green> - Shift + Prawy przycisk myszy -> Otwórz ustawienia specjalistyczne",

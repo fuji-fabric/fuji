@@ -161,6 +161,7 @@
   "warp.set.success": "<gold>Warp %s set.",
   "warp.unset.success": "<gold>Warp %s αφαιρέθηκε.",
   "warp.gui.title": "<blue>Warps",
+  "warp.tp.success": "<blue>Teleported to warp %s.",
   "works.list.add": "<#FFA1F5>Προσθήκη εργασίας",
   "works.list.all_works": "<#FFA1F5>Όλα τα έργα",
   "works.list.help.lore": "<green> - Left click -> Visit\n<green> - Right click -> Open general settings\n<green> - Shift + Right click -> Open specialized settings",

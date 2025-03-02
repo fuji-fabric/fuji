@@ -161,6 +161,7 @@
   "warp.set.success": "<gold>Warp %s set.",
   "warp.unset.success": "<gold>Warp %s borttagen.",
   "warp.gui.title": "<blue>Warps",
+  "warp.tp.success": "<blue>Teleported to warp %s.",
   "works.list.add": "<#FFA1F5>Lägg till arbete",
   "works.list.all_works": "<#FFA1F5>Alla verk",
   "works.list.help.lore": "<green> - Vänsterklicka -> Besök\n<green> - Högerklicka -> Öppna allmänna inställningar\n<green> - Skift + Högerklicka -> Öppna specialiserade inställningar",

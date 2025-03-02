@@ -161,6 +161,7 @@
   "warp.set.success": "<gold>传送点 %s 已设置.",
   "warp.unset.success": "<gold>传送点 %s 已移除.",
   "warp.gui.title": "<blue>Warps",
+  "warp.tp.success": "<blue>Teleported to warp %s.",
   "works.list.add": "<#FFA1F5>添加作品",
   "works.list.all_works": "<#FFA1F5>所有作品",
   "works.list.help.lore": "<green> - 左键 -> 参观\n<green> - 右键 -> 打开通用设置\n<green> - SHIFT + 右键 -> 打开特殊设置",

@@ -161,6 +161,7 @@
   "warp.set.success": "<gold>Warp %s set.",
   "warp.unset.success": "<gold>Urzeală %s eliminată.",
   "warp.gui.title": "<blue>Warps",
+  "warp.tp.success": "<blue>Teleported to warp %s.",
   "works.list.add": "<#FFA1F5>Adaugă lucru",
   "works.list.all_works": "<#FFA1F5>Toate funcționează",
   "works.list.help.lore": "<green> - Click stânga -> Vizitează\n<green> - Click dreapta -> Deschidere setări generale\n<green> - Shift + Click dreapta -> Deschide setări specializate",
