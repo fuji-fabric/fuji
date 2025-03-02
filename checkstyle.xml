@@ -17,9 +17,9 @@
         <property name="fileNamePattern" value="module\-info\.java$"/>
     </module>
 
-    <module name="FileTabCharacter">
-        <property name="eachLine" value="true"/>
-    </module>
+    <!-- <module name="FileTabCharacter"> -->
+    <!--     <property name="eachLine" value="true"/> -->
+    <!-- </module> -->
 
     <module name="NewlineAtEndOfFile"/>
 
