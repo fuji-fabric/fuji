@@ -161,6 +161,7 @@
   "warp.set.success": "<gold>Warp %s set.",
   "warp.unset.success": "<gold>Warp %s byl odstraněn.",
   "warp.gui.title": "<blue>Warps",
+  "warp.tp.success": "<blue>Teleported to warp %s.",
   "works.list.add": "<#FFA1F5>Přidat práci",
   "works.list.all_works": "<#FFA1F5>Všechny práce",
   "works.list.help.lore": "<green> - Klepněte levým tlačítkem -> Navštivte\n<green> - Klepněte pravým tlačítkem -> Otevřít obecné nastavení\n<green> - Shift + Klepněte pravým tlačítkem -> Otevřít specializované nastavení",

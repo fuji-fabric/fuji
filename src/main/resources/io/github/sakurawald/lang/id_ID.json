@@ -161,6 +161,7 @@
   "warp.set.success": "<gold>Warp %s diatur.",
   "warp.unset.success": "<gold>Warp %s dihapus.",
   "warp.gui.title": "<blue>Warp",
+  "warp.tp.success": "<blue>Teleportasi ke warp %s.",
   "works.list.add": "<#FFA1F5>Tambah pekerjaan",
   "works.list.all_works": "<#FFA1F5>Semua pekerjaan",
   "works.list.help.lore": "<green> - Klik kiri -> Kunjungi\n<green> - Klik kanan -> Buka pengaturan umum\n<green> - Shift + Klik kanan -> Buka pengaturan khusus",

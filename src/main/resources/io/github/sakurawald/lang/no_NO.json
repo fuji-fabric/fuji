@@ -161,6 +161,7 @@
   "warp.set.success": "<gold>Warp %s set.",
   "warp.unset.success": "<gold>Warp %s fjernet.",
   "warp.gui.title": "<blue>Warps",
+  "warp.tp.success": "<blue>Teleported to warp %s.",
   "works.list.add": "<#FFA1F5>Legg til arbeid",
   "works.list.all_works": "<#FFA1F5>Alle fungerer",
   "works.list.help.lore": "<green> - Venstreklikk -> Besøk\n<green> - Høyreklikk -> Åpne generelle innstillinger\n<green> - Shift + Høyreklikk -> Åpne spesialiserte innstillinger",

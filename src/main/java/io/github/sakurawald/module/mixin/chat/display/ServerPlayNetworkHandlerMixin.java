@@ -3,7 +3,6 @@ package io.github.sakurawald.module.mixin.chat.display;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.module.initializer.chat.display.ChatDisplayInitializer;
 import io.github.sakurawald.module.initializer.chat.display.helper.DisplayHelper;
-import net.minecraft.network.message.MessageType;
 import net.minecraft.network.message.SignedMessage;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -13,45 +12,41 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
-@Mixin(value = ServerPlayNetworkHandler.class)
+@Mixin(value = ServerPlayNetworkHandler.class, priority = 1000+500)
 public abstract class ServerPlayNetworkHandlerMixin {
 
     @Shadow
     public ServerPlayerEntity player;
 
     @Unique
-    private Text replaceDisplayText(Text original) {
+    private Text replaceDisplayText(Text original, ServerPlayerEntity sharedByPlayer) {
         MutableText newValue
             = TextHelper.replaceTextWithRegex(original
             , ChatDisplayInitializer.config.model().replace_pattern.item_display
-            , () -> DisplayHelper.createItemDisplayText(player));
+            , () -> DisplayHelper.createItemDisplayText(sharedByPlayer));
 
         newValue
             = TextHelper.replaceTextWithRegex(newValue
             , ChatDisplayInitializer.config.model().replace_pattern.inv_display
-            , () -> DisplayHelper.createInvDisplayText(player));
+            , () -> DisplayHelper.createInvDisplayText(sharedByPlayer));
 
         newValue
             = TextHelper.replaceTextWithRegex(newValue
             , ChatDisplayInitializer.config.model().replace_pattern.ender_display
-            , () -> DisplayHelper.createEnderDisplayText(player));
+            , () -> DisplayHelper.createEnderDisplayText(sharedByPlayer));
         return newValue;
     }
 
-    @ModifyVariable(method = "sendChatMessage", at = @At(value = "HEAD"), argsOnly = true)
-    public SignedMessage modifyChatMessageSentByPlayers(SignedMessage original) {
-        Text newText = replaceDisplayText(original.getContent());
-        return original.withUnsignedContent(newText);
-    }
+    @ModifyArgs(method = "handleDecoratedMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;broadcast(Lnet/minecraft/network/message/SignedMessage;Lnet/minecraft/server/network/ServerPlayerEntity;Lnet/minecraft/network/message/MessageType$Parameters;)V"))
+    public void modifyChatMessageSentByPlayers(Args args) {
+        /* get args */
+        SignedMessage signedMessage = args.get(0);
 
-    /* some chat-related mods will encode the content into the sender, or vice versa.
-    * For this reason, we have to parse the display text twice.
-    */
-    @ModifyVariable(method = "sendChatMessage", at = @At(value = "HEAD"), argsOnly = true)
-    public MessageType.Parameters modifyChatMessageSentByPlayers(MessageType.Parameters original) {
-        Text newText = replaceDisplayText(original.comp_920());
-        return new MessageType.Parameters(original.type(), newText, original.comp_921());
+        /* make content text */
+        Text contentText = replaceDisplayText(signedMessage.getContent(), player);
+        args.set(0, signedMessage.withUnsignedContent(contentText));
     }
 }
