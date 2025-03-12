@@ -25,6 +25,7 @@ import net.minecraft.network.packet.s2c.play.AdvancementUpdateS2CPacket;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.AssetInfo;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,13 +38,14 @@ import java.util.Set;
 
 public class SendToastInitializer extends ModuleInitializer {
     private static final String IMPOSSIBLE = "impossible";
+    public static final String DUMMY_RESOURCE_IMAGE_IDENTIFIER = "minecraft:textures/gui/advancements/backgrounds/end.png";
 
     private static void sendToast(ServerPlayerEntity player, AdvancementFrame advancementFrame, Item icon, Text title) {
         AdvancementDisplay advancementDisplay = new AdvancementDisplay(
             icon.getDefaultStack()
             , title
             , Text.empty()
-            , Optional.of(Identifier.of("minecraft:textures/gui/advancements/backgrounds/end.png"))
+            , Optional.of(new AssetInfo(Identifier.of(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
             , advancementFrame
             , true
             , false
@@ -81,14 +83,14 @@ public class SendToastInitializer extends ModuleInitializer {
         Collection<AdvancementEntry> toEarn = List.of(advancementEntry);
         Set<Identifier> toRemove = Set.of();
         Map<Identifier, AdvancementProgress> toSetProgress = Map.of(identifier, advancementProgress);
-        return new AdvancementUpdateS2CPacket(false, toEarn, toRemove, toSetProgress);
+        return new AdvancementUpdateS2CPacket(false, toEarn, toRemove, toSetProgress, true);
     }
 
     private static @NotNull AdvancementUpdateS2CPacket makeRevokePacket(Identifier identifier) {
         Collection<AdvancementEntry> toEarn = List.of();
         Set<Identifier> toRemove = Set.of(identifier);
         Map<Identifier, AdvancementProgress> toSetProgress = Map.of();
-        return new AdvancementUpdateS2CPacket(false, toEarn, toRemove, toSetProgress);
+        return new AdvancementUpdateS2CPacket(false, toEarn, toRemove, toSetProgress, true);
     }
 
     @CommandNode("send-toast")
