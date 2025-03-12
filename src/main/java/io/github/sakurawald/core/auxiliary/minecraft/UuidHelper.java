@@ -24,7 +24,7 @@ public class UuidHelper {
 
         NbtCompound root = nbtComponent.copyNbt();
         if (!root.contains(FUJI_UUID)) return null;
-        return root.getString(FUJI_UUID);
+        return root.getString(FUJI_UUID).orElse(null);
     }
 
     public static String getAttachedUuid(SpatialBlock spatialBlock) {

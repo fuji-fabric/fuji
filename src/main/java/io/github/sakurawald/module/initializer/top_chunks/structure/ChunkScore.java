@@ -111,7 +111,7 @@ public class ChunkScore implements Comparable<ChunkScore> {
         return Text.empty()
             .append(Text.literal(this.toString()))
             .fillStyle(Style.EMPTY
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverText))
+                .withHoverEvent(new HoverEvent.ShowText(hoverText))
                 .withFormatting(this.players.isEmpty() ? Formatting.GRAY : Formatting.DARK_GREEN)
                 .withClickEvent(Managers.getCallbackManager().makeCallbackEvent((player) -> {
                     if (!hasPermissionToClickToTeleport(player)) return;

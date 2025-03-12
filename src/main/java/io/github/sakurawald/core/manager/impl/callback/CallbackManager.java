@@ -63,7 +63,7 @@ public class CallbackManager extends BaseManager {
     }
 
     private ClickEvent makeCallbackEvent(String uuid, Consumer<ServerPlayerEntity> callback, long ttl, TimeUnit timeUnit) {
-        return new ClickEvent(ClickEvent.Action.RUN_COMMAND, makeCallbackCommand(uuid, callback, ttl, timeUnit));
+        return new ClickEvent.RunCommand(makeCallbackCommand(uuid, callback, ttl, timeUnit));
     }
 
     public String makeCallbackCommand(Consumer<ServerPlayerEntity> callback, long ttl, TimeUnit timeUnit) {

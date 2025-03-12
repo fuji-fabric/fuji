@@ -102,7 +102,7 @@ public class SkinRestorer {
 
                         observer.networkHandler.sendPacket(new DifficultyS2CPacket(observer.getServerWorld().getDifficulty(), player.getServerWorld().getLevelProperties().isDifficultyLocked()));
 
-                        observer.networkHandler.sendPacket(new UpdateSelectedSlotS2CPacket(observer.getInventory().selectedSlot));
+                        observer.networkHandler.sendPacket(new UpdateSelectedSlotS2CPacket(observer.getInventory().getSelectedSlot()));
                         observer.sendAbilitiesUpdate();
                         observer.playerScreenHandler.updateToClient();
                         for (StatusEffectInstance instance : observer.getStatusEffects()) {

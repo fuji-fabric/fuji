@@ -26,7 +26,7 @@ public class EntityHelper {
 
         /* apply saved dimension */
         if (playerDataNbt.contains(DIMENSION_NBT_KEY)) {
-            String dimensionId = playerDataNbt.getString(DIMENSION_NBT_KEY);
+            String dimensionId = playerDataNbt.getString(DIMENSION_NBT_KEY).orElse(null);
 
             ServerWorld world = RegistryHelper.ofServerWorld(dimensionId);
             if (world != null) {

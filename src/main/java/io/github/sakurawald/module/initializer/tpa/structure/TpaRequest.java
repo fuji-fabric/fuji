@@ -81,8 +81,8 @@ public class TpaRequest {
             Text.literal(CROSS)
                 .fillStyle(Style.EMPTY
                     .withFormatting(Formatting.RED)
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextHelper.getTextByKey(getSender(), "cancel")))
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpacancel %s".formatted(getReceiver().getGameProfile().getName())))
+                    .withHoverEvent(new HoverEvent.ShowText(TextHelper.getTextByKey(getSender(), "cancel")))
+                    .withClickEvent(new ClickEvent.RunCommand("/tpacancel %s".formatted(getReceiver().getGameProfile().getName())))
                 );
 
         return asSenderText$Description()
@@ -100,15 +100,15 @@ public class TpaRequest {
         Text acceptText = Text.literal(TICK)
             .fillStyle(Style.EMPTY
                 .withFormatting(Formatting.GREEN)
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextHelper.getTextByKey(getReceiver(), "accept")))
-                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaaccept %s".formatted(sender.getGameProfile().getName()))));
+                .withHoverEvent(new HoverEvent.ShowText(TextHelper.getTextByKey(getReceiver(), "accept")))
+                .withClickEvent(new ClickEvent.RunCommand("/tpaaccept %s".formatted(sender.getGameProfile().getName()))));
 
         Text denyText =
             Text.literal(CROSS)
                 .fillStyle(Style.EMPTY
                     .withFormatting(Formatting.RED)
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextHelper.getTextByKey(getReceiver(), "deny")))
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpadeny %s".formatted(sender.getGameProfile().getName())))
+                    .withHoverEvent(new HoverEvent.ShowText(TextHelper.getTextByKey(getReceiver(), "deny")))
+                    .withClickEvent(new ClickEvent.RunCommand("/tpadeny %s".formatted(sender.getGameProfile().getName())))
                 );
 
         return asReceiverText$Description()

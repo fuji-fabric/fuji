@@ -238,8 +238,8 @@ public class CommandDescriptor {
             .copy()
             .setStyle(Style.EMPTY
                 .withColor(CommandHelper.EXCEPTION_COLOR)
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.of("Click to copy the stacktrace.")))
-                .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, stacktrace)));
+                .withHoverEvent(new HoverEvent.ShowText( Text.of("Click to copy the stacktrace.")))
+                .withClickEvent(new ClickEvent.CopyToClipboard(stacktrace)));
 
         source.sendMessage(report);
     }

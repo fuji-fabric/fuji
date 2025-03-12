@@ -23,6 +23,7 @@ import net.minecraft.entity.decoration.BlockAttachedEntity;
 import net.minecraft.entity.vehicle.VehicleEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -113,7 +114,7 @@ public class CleanerInitializer extends ModuleInitializer {
                 .append(TextHelper.getTextByKey(player, "cleaner.broadcast", counter.values().stream().mapToInt(Integer::intValue).sum()))
                 .fillStyle(
                     Style.EMPTY
-                        .withHoverEvent(new net.minecraft.text.HoverEvent(net.minecraft.text.HoverEvent.Action.SHOW_TEXT, hoverText)));
+                        .withHoverEvent(new HoverEvent.ShowText(hoverText)));
             player.sendMessage(text);
         }
     }

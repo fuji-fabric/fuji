@@ -16,14 +16,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 
-
 public class BedInitializer extends ModuleInitializer {
 
     @CommandNode("bed")
     @Document("Teleport to the bed location.")
     private static int $bed(@CommandSource @CommandTarget ServerPlayerEntity player) {
-        BlockPos respawnPosition = player.getSpawnPointPosition();
-        RegistryKey<World> respawnDimension = player.getSpawnPointDimension();
+        ServerPlayerEntity.Respawn respawn = player.getRespawn();
+        BlockPos respawnPosition = respawn.comp_3684();
+        RegistryKey<World> respawnDimension = respawn.comp_3683();
 
         ServerWorld world = ServerHelper.getServer().getWorld(respawnDimension);
         if (respawnPosition == null || world == null) {

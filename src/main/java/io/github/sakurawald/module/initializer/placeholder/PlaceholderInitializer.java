@@ -144,11 +144,10 @@ public class PlaceholderInitializer extends ModuleInitializer {
             return TextHelper.getTextByKey(player, "placeholder.pos", x, y, z, dim_display_name)
                 .copy()
                 .fillStyle(Style.EMPTY
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                        Text.literal(hoverString + "\n")
+                    .withHoverEvent(new HoverEvent.ShowText(Text.literal(hoverString + "\n")
                             .append(TextHelper.getTextByKey(player, "chat.xaero_waypoint_add"))
                     ))
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, clickCommand))
+                    .withClickEvent(new ClickEvent.RunCommand(clickCommand))
                 );
         });
     }
