@@ -1,6 +1,6 @@
 package io.github.sakurawald.module.initializer.head.structure;
 
-import io.github.sakurawald.core.auxiliary.minecraft.InventoryUtil;
+import io.github.sakurawald.core.auxiliary.minecraft.InventoryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.module.initializer.head.HeadInitializer;
 import net.minecraft.item.Item;
@@ -18,7 +18,7 @@ public enum EconomyType {
 
     @SuppressWarnings("WhileLoopReplaceableByForEach")
     private static boolean extract(ServerPlayerEntity player, @NotNull Item item, int amount) {
-        Iterator<DefaultedList<ItemStack>> iterator = InventoryUtil.getCombinedInventory(player).iterator();
+        Iterator<DefaultedList<ItemStack>> iterator = InventoryHelper.getCombinedInventory(player).iterator();
         while (iterator.hasNext()) {
             DefaultedList<ItemStack> list = iterator.next();
 

@@ -4,7 +4,7 @@ import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.core.auxiliary.minecraft.InventoryUtil;
+import io.github.sakurawald.core.auxiliary.minecraft.InventoryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.NbtHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
@@ -94,11 +94,11 @@ public class DeathLogInitializer extends ModuleInitializer {
 
             // restore armor (4 slot)
             List<ItemStack> armor = NbtHelper.readSlotsNode((NbtList) inventoryNode.get(ARMOR));
-            InventoryUtil.setArmorStacks(to, armor);
+            InventoryHelper.setArmorStacks(to, armor);
 
             // restore offhand (1 slot)
             List<ItemStack> offhand = NbtHelper.readSlotsNode((NbtList) inventoryNode.get(OFFHAND));
-            InventoryUtil.setOffhandStacks(to,offhand);
+            InventoryHelper.setOffhandStacks(to,offhand);
 
             // restore score
             to.setScore(inventoryNode.getInt(SCORE).get());
@@ -208,13 +208,13 @@ public class DeathLogInitializer extends ModuleInitializer {
         PlayerInventory inventory = player.getInventory();
 
         LogUtil.debug("Write armor slots for {}", player);
-        inventoryTag.put(ARMOR, NbtHelper.writeSlotsNode(new NbtList(), InventoryUtil.getArmorStacks(player)));
+        inventoryTag.put(ARMOR, NbtHelper.writeSlotsNode(new NbtList(), InventoryHelper.getArmorStacks(player)));
 
         LogUtil.debug("Write off-hand slots for {}", player);
-        inventoryTag.put(OFFHAND, NbtHelper.writeSlotsNode(new NbtList(), InventoryUtil.getOffhandStack(player)));
+        inventoryTag.put(OFFHAND, NbtHelper.writeSlotsNode(new NbtList(), InventoryHelper.getOffhandStack(player)));
 
         LogUtil.debug("Write main stacks slots for {}", player);
-        inventoryTag.put(ITEM, NbtHelper.writeSlotsNode(new NbtList(), InventoryUtil.getMainStacks(player)));
+        inventoryTag.put(ITEM, NbtHelper.writeSlotsNode(new NbtList(), InventoryHelper.getMainStacks(player)));
 
         inventoryTag.putInt(SCORE, player.getScore());
         inventoryTag.putInt(XP_LEVEL, player.experienceLevel);

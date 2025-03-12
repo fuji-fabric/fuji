@@ -10,7 +10,7 @@ import net.minecraft.util.collection.DefaultedList;
 import java.util.List;
 
 @UtilityClass
-public class InventoryUtil {
+public class InventoryHelper {
 
     public static final List<EquipmentSlot> PLAYER_ARMOR_SLOTS = List.of(
             EquipmentSlot.HEAD
@@ -56,8 +56,8 @@ public class InventoryUtil {
     }
 
     public static List<DefaultedList<ItemStack>> getCombinedInventory(PlayerEntity player) {
-        return ImmutableList.of(InventoryUtil.getMainStacks(player)
-                , InventoryUtil.getArmorStacks(player)
-                , InventoryUtil.getOffhandStack(player));
+        return ImmutableList.of(InventoryHelper.getMainStacks(player)
+                , InventoryHelper.getArmorStacks(player)
+                , InventoryHelper.getOffhandStack(player));
     }
 }

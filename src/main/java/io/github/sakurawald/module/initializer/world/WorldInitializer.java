@@ -8,7 +8,7 @@ import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
-import io.github.sakurawald.core.auxiliary.minecraft.WorldUtil;
+import io.github.sakurawald.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.core.command.annotation.CommandSource;
@@ -65,7 +65,7 @@ public class WorldInitializer extends ModuleInitializer {
     @Document("Teleport to the spawnpoint of the world.")
     private static int $tp(@CommandSource ServerPlayerEntity player, Dimension dimension) {
         ServerWorld world = dimension.getValue();
-        WorldUtil.getWorldDefaultSpawn(world, player).teleport(player);
+        WorldHelper.teleportToSafePositionNearOrigin(world, player);
         return CommandHelper.Return.SUCCESS;
     }
 

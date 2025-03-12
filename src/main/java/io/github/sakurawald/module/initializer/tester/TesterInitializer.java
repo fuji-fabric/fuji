@@ -2,7 +2,7 @@ package io.github.sakurawald.module.initializer.tester;
 
 import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.core.auxiliary.LogUtil;
-import io.github.sakurawald.core.auxiliary.minecraft.InventoryUtil;
+import io.github.sakurawald.core.auxiliary.minecraft.InventoryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandRequirement;
@@ -28,8 +28,8 @@ public class TesterInitializer extends ModuleInitializer {
     @CommandNode("run")
     private static int $run(@CommandSource ServerPlayerEntity player) {
 
-        LogUtil.debug("main stacks = {}", InventoryUtil.getMainStacks(player));
-        LogUtil.debug("armor = {}", InventoryUtil.getArmorStacks(player));
+        LogUtil.debug("main stacks = {}", InventoryHelper.getMainStacks(player));
+        LogUtil.debug("armor = {}", InventoryHelper.getArmorStacks(player));
 
         return 1;
     }
