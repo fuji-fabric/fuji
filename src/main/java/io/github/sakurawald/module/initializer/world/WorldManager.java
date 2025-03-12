@@ -33,6 +33,7 @@ import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionTypes;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -151,16 +152,15 @@ public class WorldManager {
         }
     }
 
+    private static @Nullable DimensionOptions getDimensionOptionsAsTemplate(@NotNull Registry<DimensionOptions> registry, Identifier dimensionTypeIdentifier) {
+        return registry.get(dimensionTypeIdentifier);
+    }
+
     /**
      * To avoid share the same reference of the vanilla minecraft default `DimensionOptions` instance,
      * we must create new instance.
      */
-    private static @NotNull DimensionOptions makeDimensionOptions(@NotNull Registry<DimensionOptions> registry, Identifier dimensionTypeIdentifier) {
-        DimensionOptions template = registry.get(dimensionTypeIdentifier);
-        if (template == null) {
-            throw new IllegalArgumentException("The dimension type %s can't be used as template.".formatted(dimensionTypeIdentifier));
-        }
-
+    private static @NotNull DimensionOptions makeDimensionOptions(DimensionOptions template) {
         return new DimensionOptions(template.dimensionTypeEntry(), template.chunkGenerator());
     }
 
@@ -174,7 +174,13 @@ public class WorldManager {
         LogUtil.debug("make instance of world with registry key of type `World`: {}", worldRegistryKey);
 
         Registry<DimensionOptions> registry = RegistryHelper.ofRegistry(RegistryKeys.DIMENSION);
-        DimensionOptions dimensionOptions = makeDimensionOptions(registry, dimenstionTypeIdentifier);
+        @Nullable DimensionOptions template = getDimensionOptionsAsTemplate(registry, dimenstionTypeIdentifier);
+        if (template == null) {
+            LogUtil.error("Can't use {} dimension-type as the template to create extra fuji worlds.", dimenstionTypeIdentifier);
+            return;
+        }
+
+        DimensionOptions dimensionOptions = makeDimensionOptions(template);
         ((IDimensionOptions) (Object) dimensionOptions).fuji$setSaveProperties(false);
 
         ServerWorld world;

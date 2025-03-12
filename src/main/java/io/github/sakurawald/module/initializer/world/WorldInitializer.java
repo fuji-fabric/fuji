@@ -8,6 +8,7 @@ import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.WorldUtil;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.core.command.annotation.CommandSource;
@@ -17,21 +18,19 @@ import io.github.sakurawald.core.command.exception.AbortCommandExecutionExceptio
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.core.event.impl.ServerLifecycleEvents;
-import io.github.sakurawald.core.structure.SpatialPose;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.world.config.model.WorldConfigModel;
 import io.github.sakurawald.module.initializer.world.config.model.WorldDataModel;
 import io.github.sakurawald.module.initializer.world.gui.WorldGui;
 import io.github.sakurawald.module.initializer.world.structure.DimensionNode;
-
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.RandomSeed;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -66,10 +65,7 @@ public class WorldInitializer extends ModuleInitializer {
     @Document("Teleport to the spawnpoint of the world.")
     private static int $tp(@CommandSource ServerPlayerEntity player, Dimension dimension) {
         ServerWorld world = dimension.getValue();
-        BlockPos spawnPos = world.getSpawnPos();
-
-        new SpatialPose(world, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), player.getYaw(), player.getPitch())
-            .teleport(player);
+        WorldUtil.getWorldDefaultSpawn(world, player).teleport(player);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -114,7 +110,6 @@ public class WorldInitializer extends ModuleInitializer {
 
         /* request creation */
         WorldManager.requestToCreateWorld(dimensionNode);
-
         TextHelper.sendBroadcastByKey("world.dimension.created", dimensionIdentifier);
         return CommandHelper.Return.SUCCESS;
     }
