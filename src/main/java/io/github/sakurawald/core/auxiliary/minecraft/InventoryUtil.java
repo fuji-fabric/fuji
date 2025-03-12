@@ -1,5 +1,6 @@
 package io.github.sakurawald.core.auxiliary.minecraft;
 
+import com.google.common.collect.ImmutableList;
 import lombok.experimental.UtilityClass;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
@@ -52,5 +53,11 @@ public class InventoryUtil {
         if (stacks.isEmpty()) return;
 
         player.equipment.put(EquipmentSlot.OFFHAND, stacks.getFirst());
+    }
+
+    public static List<DefaultedList<ItemStack>> getCombinedInventory(PlayerEntity player) {
+        return ImmutableList.of(InventoryUtil.getMainStacks(player)
+                , InventoryUtil.getArmorStacks(player)
+                , InventoryUtil.getOffhandStack(player));
     }
 }
