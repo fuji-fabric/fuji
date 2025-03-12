@@ -58,7 +58,7 @@ public class InteractModifierMixin {
         if (!config.allow_right_click_sit) return;
         if (!config.allow_sneaking_to_sit && player.isSneaking()) return;
         if (!SitInitializer.canSit(player)) return;
-        if (config.require_empty_hand_to_sit && !player.getInventory().getMainHandStack().isEmpty()) return;
+        if (config.require_empty_hand_to_sit && !player.getMainHandStack().isEmpty()) return;
 
         BlockPos hitBlockPos = hitResult.getBlockPos();
         BlockState hitBlockState = world.getBlockState(hitBlockPos);
