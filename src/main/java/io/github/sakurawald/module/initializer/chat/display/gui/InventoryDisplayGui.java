@@ -22,7 +22,7 @@ public class InventoryDisplayGui extends BaseDisplayGui {
     public InventoryDisplayGui(Text title, @NotNull ServerPlayerEntity player) {
         this.title = title;
         PlayerInventory inventory = player.getInventory();
-        InventoryUtil.getArmorStack(player).forEach(itemStack -> armor.add(itemStack.copy()));
+        InventoryUtil.getArmorStacks(player).forEach(itemStack -> armor.add(itemStack.copy()));
         InventoryUtil.getOffhandStack(player).forEach(itemStack -> offhand.add(itemStack.copy()));
         InventoryUtil.getMainStacks(player).forEach(itemStack -> items.add(itemStack.copy()));
     }

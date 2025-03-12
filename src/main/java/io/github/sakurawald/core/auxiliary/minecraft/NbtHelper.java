@@ -9,6 +9,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.RegistryWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,7 +34,8 @@ public class NbtHelper {
                 root.put(node, new NbtCompound());
             }
 
-            root = root.getCompound(node);
+            // root is ensured not-null, just get it.
+            root = root.getCompound(node).get();
         }
 
         /* set the value */
@@ -60,7 +62,7 @@ public class NbtHelper {
                 LogUtil.error("nbt {} don't has path {}", root, path);
             }
 
-            root = root.getCompound(node);
+            root = root.getCompound(node).get();
         }
 
         // get the value
@@ -69,18 +71,33 @@ public class NbtHelper {
     }
 
     public static NbtList writeSlotsNode(@NotNull NbtList node, @NotNull List<ItemStack> itemStackList) {
-        for (ItemStack item : itemStackList) {
-            node.add(item.toNbtAllowEmpty(RegistryHelper.getDefaultWrapperLookup()));
+        for (ItemStack stack : itemStackList) {
+            node.add(toNbtAllowEmpty(stack, RegistryHelper.getDefaultWrapperLookup()));
         }
         return node;
     }
+
+    public NbtElement toNbtAllowEmpty(ItemStack stack, RegistryWrapper.WrapperLookup wrapperLookup) {
+        if (stack.isEmpty()) {
+            return new NbtCompound();
+        }
+        return stack.toNbt(wrapperLookup, new NbtCompound());
+    }
+
+    public static ItemStack fromNbtOrEmpty(RegistryWrapper.WrapperLookup wrapperLookup, NbtCompound nbtCompound) {
+        if (nbtCompound.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+        return ItemStack.fromNbt(wrapperLookup, nbtCompound).orElse(ItemStack.EMPTY);
+    }
+
 
     public static @NotNull List<ItemStack> readSlotsNode(@Nullable NbtList node) {
         if (node == null) return new ArrayList<>();
 
         List<ItemStack> ret = new ArrayList<>();
         for (int i = 0; i < node.size(); i++) {
-            ret.add(ItemStack.fromNbtOrEmpty(RegistryHelper.getDefaultWrapperLookup(), node.getCompound(i)));
+            ret.add(fromNbtOrEmpty(RegistryHelper.getDefaultWrapperLookup(), node.getCompound(i).get()));
         }
         return ret;
     }

@@ -1,8 +1,10 @@
 package io.github.sakurawald.module.initializer.deathlog;
 
 import io.github.sakurawald.core.annotation.Document;
+import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.InventoryUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.NbtHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
@@ -82,22 +84,28 @@ public class DeathLogInitializer extends ModuleInitializer {
             }
 
             /* restore inventory */
-            NbtCompound inventoryNode = deathsNode.getCompound(index).getCompound(INVENTORY);
+            NbtCompound inventoryNode = deathsNode.getCompound(index).get().getCompound(INVENTORY).get();
+
+            // restore main stacks (1*9 slots + 3*9 slots)
             List<ItemStack> item = NbtHelper.readSlotsNode((NbtList) inventoryNode.get(ITEM));
             for (int i = 0; i < item.size(); i++) {
-                to.getInventory().main.set(i, item.get(i));
+                to.getInventory().getMainStacks().set(i, item.get(i));
             }
+
+            // restore armor (4 slot)
             List<ItemStack> armor = NbtHelper.readSlotsNode((NbtList) inventoryNode.get(ARMOR));
-            for (int i = 0; i < armor.size(); i++) {
-                to.getInventory().armor.set(i, armor.get(i));
-            }
+            InventoryUtil.setArmorStacks(to, armor);
+
+            // restore offhand (1 slot)
             List<ItemStack> offhand = NbtHelper.readSlotsNode((NbtList) inventoryNode.get(OFFHAND));
-            for (int i = 0; i < offhand.size(); i++) {
-                to.getInventory().offHand.set(i, offhand.get(i));
-            }
-            to.setScore(inventoryNode.getInt(SCORE));
-            to.experienceLevel = inventoryNode.getInt(XP_LEVEL);
-            to.experienceProgress = inventoryNode.getFloat(XP_PROGRESS);
+            InventoryUtil.setOffhandStacks(to,offhand);
+
+            // restore score
+            to.setScore(inventoryNode.getInt(SCORE).get());
+
+            // restore exp
+            to.experienceLevel = inventoryNode.getInt(XP_LEVEL).get();
+            to.experienceProgress = inventoryNode.getFloat(XP_PROGRESS).get();
 
             TextHelper.sendMessageByKey(source, "deathlog.restore.success", from, index, to.getGameProfile().getName());
         });
@@ -130,7 +138,7 @@ public class DeathLogInitializer extends ModuleInitializer {
             MutableText deathlogViewText = Text.empty();
             String to = player.getGameProfile().getName();
             for (int i = 0; i < deaths.size(); i++) {
-                deathlogViewText.append(asViewText(player, deaths.getCompound(i), $from, i, to));
+                deathlogViewText.append(asViewText(player, deaths.getCompound(i).get(), $from, i, to));
             }
 
             player.sendMessage(deathlogViewText);
@@ -140,23 +148,23 @@ public class DeathLogInitializer extends ModuleInitializer {
     }
 
     private static @NotNull Text asViewText(Object audience, @NotNull NbtCompound node, String from, int index, String to) {
-        NbtCompound remarkTag = node.getCompound(REMARK);
+        NbtCompound remarkTag = node.getCompound(REMARK).get();
 
         MutableText hoverText = Text.empty()
-            .append(TextHelper.getTextByKey(audience, "deathlog.view.time", remarkTag.getString(TIME)))
+            .append(TextHelper.getTextByKey(audience, "deathlog.view.time", remarkTag.getString(TIME).get()))
             .append(TextHelper.TEXT_NEWLINE)
-            .append(TextHelper.getTextByKey(audience, "deathlog.view.reason", remarkTag.getString(REASON)))
+            .append(TextHelper.getTextByKey(audience, "deathlog.view.reason", remarkTag.getString(REASON).get()))
             .append(TextHelper.TEXT_NEWLINE)
-            .append(TextHelper.getTextByKey(audience, "deathlog.view.dimension", remarkTag.getString(DIMENSION)))
+            .append(TextHelper.getTextByKey(audience, "deathlog.view.dimension", remarkTag.getString(DIMENSION).get()))
             .append(TextHelper.TEXT_NEWLINE)
-            .append(TextHelper.getTextByKey(audience, "deathlog.view.coordinate", remarkTag.getDouble(X), remarkTag.getDouble(Y), remarkTag.getDouble(Z)));
+            .append(TextHelper.getTextByKey(audience, "deathlog.view.coordinate", remarkTag.getDouble(X).get(), remarkTag.getDouble(Y).get(), remarkTag.getDouble(Z).get()));
 
         return Text
             .literal(String.valueOf(index))
             .fillStyle(Style.EMPTY
                 .withFormatting(Formatting.RED)
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverText))
-                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/deathlog restore %s %d %s".formatted(from, index, to)))
+                .withHoverEvent(new HoverEvent.ShowText(hoverText))
+                .withClickEvent(new ClickEvent.RunCommand("/deathlog restore %s %d %s".formatted(from, index, to)))
             )
             .append(TextHelper.TEXT_SPACE);
     }
@@ -198,9 +206,16 @@ public class DeathLogInitializer extends ModuleInitializer {
     private static void writeInventoryNode(@NotNull NbtCompound node, @NotNull ServerPlayerEntity player) {
         NbtCompound inventoryTag = new NbtCompound();
         PlayerInventory inventory = player.getInventory();
-        inventoryTag.put(ARMOR, NbtHelper.writeSlotsNode(new NbtList(), inventory.armor));
-        inventoryTag.put(OFFHAND, NbtHelper.writeSlotsNode(new NbtList(), inventory.offHand));
-        inventoryTag.put(ITEM, NbtHelper.writeSlotsNode(new NbtList(), inventory.main));
+
+        LogUtil.debug("Write armor slots for {}", player);
+        inventoryTag.put(ARMOR, NbtHelper.writeSlotsNode(new NbtList(), InventoryUtil.getArmorStacks(player)));
+
+        LogUtil.debug("Write off-hand slots for {}", player);
+        inventoryTag.put(OFFHAND, NbtHelper.writeSlotsNode(new NbtList(), InventoryUtil.getOffhandStack(player)));
+
+        LogUtil.debug("Write main stacks slots for {}", player);
+        inventoryTag.put(ITEM, NbtHelper.writeSlotsNode(new NbtList(), InventoryUtil.getMainStacks(player)));
+
         inventoryTag.putInt(SCORE, player.getScore());
         inventoryTag.putInt(XP_LEVEL, player.experienceLevel);
         inventoryTag.putFloat(XP_PROGRESS, player.experienceProgress);
