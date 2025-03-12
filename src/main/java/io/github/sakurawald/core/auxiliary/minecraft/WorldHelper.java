@@ -17,7 +17,7 @@ public class WorldHelper {
                 , 0
                 , false
                 , 0
-                , 512
+                , 256
                 ,0
                 , 128
                 ,32
