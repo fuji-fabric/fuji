@@ -2,6 +2,7 @@ package io.github.sakurawald.module.initializer.chat.display.gui;
 
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.InventoryUtil;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerType;
@@ -21,9 +22,9 @@ public class InventoryDisplayGui extends BaseDisplayGui {
     public InventoryDisplayGui(Text title, @NotNull ServerPlayerEntity player) {
         this.title = title;
         PlayerInventory inventory = player.getInventory();
-        inventory.armor.forEach(itemStack -> armor.add(itemStack.copy()));
-        inventory.offHand.forEach(itemStack -> offhand.add(itemStack.copy()));
-        inventory.main.forEach(itemStack -> items.add(itemStack.copy()));
+        InventoryUtil.getArmorStack(player).forEach(itemStack -> armor.add(itemStack.copy()));
+        InventoryUtil.getOffhandStack(player).forEach(itemStack -> offhand.add(itemStack.copy()));
+        InventoryUtil.getMainStacks(player).forEach(itemStack -> items.add(itemStack.copy()));
     }
 
     @Override
