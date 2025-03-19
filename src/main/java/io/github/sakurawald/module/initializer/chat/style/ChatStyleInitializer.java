@@ -34,7 +34,6 @@ public class ChatStyleInitializer extends ModuleInitializer {
     public static final MessageType MESSAGE_TYPE_VALUE = new MessageType(
         Decoration.ofChat("%s%s"),
         Decoration.ofChat("%s%s"));
-    public static final String STYLE_TYPE_CHAT = "chat";
 
     private static final BaseConfigurationHandler<ChatFormatModel> chat = new ObjectConfigurationHandler<>("chat.json", ChatFormatModel.class);
 
