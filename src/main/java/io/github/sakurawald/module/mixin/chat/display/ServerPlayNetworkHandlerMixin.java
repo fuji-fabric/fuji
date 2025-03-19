@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
-@Mixin(value = ServerPlayNetworkHandler.class, priority = 1000+500)
+@Mixin(value = ServerPlayNetworkHandler.class, priority = 1000 + 500)
 public abstract class ServerPlayNetworkHandlerMixin {
 
     @Shadow

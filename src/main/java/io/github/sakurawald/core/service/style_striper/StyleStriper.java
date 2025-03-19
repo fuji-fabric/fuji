@@ -16,8 +16,6 @@ public class StyleStriper {
     @SuppressWarnings("RegExpUnnecessaryNonCapturingGroup")
     private static final Pattern TAG_RESOLVER = Pattern.compile("<([^>]+)>");
 
-    public static final String STYLE_TYPE_CHAT = "chat";
-
     public static String stripe(PlayerEntity player, String type, String input) {
         for (String tag : resolveTags(input)) {
             String tagType = extractTagType(tag);

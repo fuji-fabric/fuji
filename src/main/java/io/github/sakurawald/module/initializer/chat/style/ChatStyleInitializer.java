@@ -10,7 +10,6 @@ import io.github.sakurawald.core.command.annotation.CommandTarget;
 import io.github.sakurawald.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
-import io.github.sakurawald.core.service.style_striper.StyleStriper;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.chat.style.model.ChatFormatModel;
 import io.github.sakurawald.module.initializer.chat.style.model.ChatStyleConfigModel;
@@ -35,6 +34,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
     public static final MessageType MESSAGE_TYPE_VALUE = new MessageType(
         Decoration.ofChat("%s%s"),
         Decoration.ofChat("%s%s"));
+    public static final String STYLE_TYPE_CHAT = "chat";
 
     private static final BaseConfigurationHandler<ChatFormatModel> chat = new ObjectConfigurationHandler<>("chat.json", ChatFormatModel.class);
 
@@ -48,7 +48,6 @@ public class ChatStyleInitializer extends ModuleInitializer {
         /* save the format*/
         String name = player.getGameProfile().getName();
         String $format = format.getValue();
-        $format = StyleStriper.stripe(player, StyleStriper.STYLE_TYPE_CHAT, $format);
         chat.model().format.player2format.put(name, $format);
         chat.writeStorage();
 

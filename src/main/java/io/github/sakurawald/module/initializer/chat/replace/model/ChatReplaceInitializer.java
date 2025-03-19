@@ -13,7 +13,7 @@ public class ChatReplaceInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<ChatReplaceConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatReplaceConfigModel.class);
 
-    public static Text rewriteChatText(PlayerEntity player, Text text) {
+    public static Text replaceChatText(PlayerEntity player, Text text) {
         MutableText ret = text.copy();
 
         for (RegexRewriteNode rule : config.model().replace.regex) {

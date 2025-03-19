@@ -14,7 +14,6 @@ import java.nio.file.Path;
     , "https://github.com/Zrips/CMI-API"
     , "https://github.com/ForgeEssentials/ForgeEssentials"
 })
-
 public class Fuji implements ModInitializer {
 
     public static final String MOD_ID = "fuji";
