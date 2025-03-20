@@ -25,3 +25,4 @@
             - json operations
             - text operation
     - application: /air, /alert, /respawn, /vote
+- feature: command_advice module
