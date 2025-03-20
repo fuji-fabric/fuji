@@ -49,7 +49,7 @@ public class MentionPlayersJob extends FixedIntervalJob {
 
             ServerHelper.getServer().executeSync(() -> {
                 SoundEvent soundEvent = SoundEvent.of(Identifier.of(setup.sound));
-                SoundCategory soundCategory = SoundCategory.MUSIC;
+                SoundCategory soundCategory = SoundCategory.BLOCKS;
                 player.playSoundToPlayer(soundEvent, soundCategory, setup.volume, setup.pitch);
             });
         }
