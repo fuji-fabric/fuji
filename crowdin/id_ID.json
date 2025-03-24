@@ -12,7 +12,7 @@
   "cancel": "<red>Batal",
   "chat.current_pos": "Posisi Saat Ini",
   "chat.format.reset": "<gold>Format obrolan telah diatur ulang</gold>",
-  "chat.format.set": "<gold>Format obrolan telah diubah, gaya saat ini:</gold><newline>%s<reset><newline><red><hover:show_text:'<red>Klik untuk mereset'><click:run_command:/chat style reset> [Reset]</click></hover></red>",
+  "chat.format.set": "<gold>Format obrolan telah diubah, gaya saat ini:</gold><newline>%s<reset><newline><red><hover:show_text:'<red>Klik untuk mengatur ulang'><click:run_command:/chat style reset> [Reset]</click></hover></red>",
   "chat.format.show": "Pesan-Anda",
   "chat.xaero_waypoint_add": "Klik untuk menambahkan titik jalan minimap Xaero",
   "chat.xaero_waypoint_add.command": "/xaero_waypoint_add:Waypoint:·:%d:%s:%d:0:false:0:Internal_%s_waypoints",
