@@ -1,3 +1,3 @@
 > The version number of fuji follows `semver` now: https://semver.org/
 
-- chore: support `mc 1.21.5`.
+- (command_toolbox.hat) feature: allow to place any items into HEAD equipment slot directly without the `/hat` command..
