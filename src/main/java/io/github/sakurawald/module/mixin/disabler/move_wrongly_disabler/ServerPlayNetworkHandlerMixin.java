@@ -19,7 +19,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
         method = "onPlayerMove",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/server/network/ServerPlayerInteractionManager;isCreative()Z"
+            target = "Lnet/minecraft/server/network/ServerPlayerEntity;isCreative()Z"
         )
     )
     public boolean disablePlayerMovedWrongly(boolean original) {

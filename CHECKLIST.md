@@ -29,7 +29,7 @@ It's good to have a checklist, to avoid forgetting something.
 - See an inventory display contains a shulker box.
     - Test the deep-level gui.
     - Test the shulker entity reader.
-- Try to move an afk player.
+- Try to move a player in afk state.
 - Buy a new head in `/head`.
 - Get a kit from `/kit`.
     - Test the screen gui.
@@ -61,7 +61,9 @@ It's good to have a checklist, to avoid forgetting something.
     - in spectator gamemode
     - in the end portal
 - Test `/stop` and see if the server closed (in production server).
-- Test the translatable text in `[item]` in chat message.
+- Test the translatable text in `[item]` or `%fuji:item%` in chat message.
+- Place a `sign` to see if colorful `Text` can be parsed and reversed.
+- Sit in a `boat` and move it.
 
 ## Publish a new version
 

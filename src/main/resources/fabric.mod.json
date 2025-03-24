@@ -70,7 +70,7 @@
   ],
   "depends": {
     "fabricloader": ">=0.16.10",
-    "minecraft": "1.21.5-beta.1",
+    "minecraft": "1.21.5-rc.1",
     "java": ">=21"
   },
   "suggests": {
@@ -81,7 +81,7 @@
   "custom": {
     "mc-publish": {
       "dependencies": [
-        "placeholder-api@2.5.1+1.21.3(embedded)"
+        "placeholder-api@2.6.1+1.21.5(embedded)"
       ]
     }
   }
