@@ -40,6 +40,7 @@
     "command_rewrite.ServerPlayNetworkHandlerMixin",
     "command_spy.CommandDispatcherMixin",
     "command_spy.CommandManagerMixin",
+    "command_toolbox.hat.LivingEntityMixin",
     "command_toolbox.nickname.ServerPlayerEntityMixin",
     "command_toolbox.reply.MsgCommandMixin",
     "command_toolbox.seen.PlayerListMixin",
