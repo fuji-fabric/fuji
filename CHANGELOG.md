@@ -1,3 +1,4 @@
 > The version number of fuji follows `semver` now: https://semver.org/
 
-- (command_toolbox.hat) feature: allow to place any items into HEAD equipment slot directly without the `/hat` command..
+- chore: support for `Minecraft 1.25.1` version.
+- i18n: new `id_ID` language translation. (Thanks to @yichifauzi)

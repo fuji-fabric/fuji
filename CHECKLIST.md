@@ -64,6 +64,7 @@ It's good to have a checklist, to avoid forgetting something.
 - Test the translatable text in `[item]` or `%fuji:item%` in chat message.
 - Place a `sign` to see if colorful `Text` can be parsed and reversed.
 - Sit in a `boat` and move it.
+- Test `/view {inv/ender}` command.
 
 ## Publish a new version
 
