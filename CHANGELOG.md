@@ -1,4 +1,3 @@
 > The version number of fuji follows `semver` now: https://semver.org/
 
-- chore: support for `Minecraft 1.25.1` version.
-- i18n: new `id_ID` language translation. (Thanks to @yichifauzi)
+- (world module) fix: should not stuck the server if some `datapack` use `scheduled functions`. ([#263](https://github.com/sakurawald/fuji/issues/263]) Thanks to @wolgamir)

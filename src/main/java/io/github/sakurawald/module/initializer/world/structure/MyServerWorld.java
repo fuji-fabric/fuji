@@ -31,4 +31,10 @@ public class MyServerWorld extends ServerWorld {
     public long getSeed() {
         return ((MyWorldProperties) this.properties).getSeed();
     }
+
+    @Override
+    protected void tickTime() {
+        // Tick the time, but should not set the ServerWorld.worldProperties, or it may break some datapacks in scheduled functions.
+         this.setTimeOfDay(this.properties.getTimeOfDay() + 1L);
+    }
 }
