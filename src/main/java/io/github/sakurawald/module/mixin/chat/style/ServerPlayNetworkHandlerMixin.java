@@ -23,7 +23,6 @@ public abstract class ServerPlayNetworkHandlerMixin {
     public void modifyChatMessageSentByPlayers(Args args) {
         /* get args */
         SignedMessage signedMessage = args.get(0);
-        MessageType.Parameters parameters = args.get(2);
 
         /* make content text */
         String contentString = signedMessage.getContent().getString();

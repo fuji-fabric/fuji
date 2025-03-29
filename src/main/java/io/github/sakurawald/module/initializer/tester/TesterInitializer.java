@@ -15,14 +15,9 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @CommandNode("tester")
 @CommandRequirement(level = 4)
 public class TesterInitializer extends ModuleInitializer {
-
-    private static final Map<String, String> map = new HashMap<>();
 
     @SneakyThrows(Exception.class)
     @CommandNode("run")
@@ -36,9 +31,13 @@ public class TesterInitializer extends ModuleInitializer {
 
     @CommandNode("visible")
     private static int testInvisible(@CommandSource ServerPlayerEntity player) {
-
         player.sendMessage(Text.of(String.valueOf(player.isInvisible())));
+        return 1;
+    }
 
+    @CommandNode("text-replace")
+    private static int testTextReplace(@CommandSource ServerPlayerEntity player) {
+        testTextReplacement(player);
         return 1;
     }
 

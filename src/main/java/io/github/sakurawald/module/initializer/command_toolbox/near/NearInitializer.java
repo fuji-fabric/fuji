@@ -8,7 +8,6 @@ import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.core.command.annotation.CommandSource;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.List;
@@ -25,8 +24,6 @@ public class NearInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     @Document("List nearby players.")
     private static int near(@CommandSource ServerPlayerEntity player, Optional<Integer> distance) {
-        MinecraftServer server = ServerHelper.getServer();
-
         int $distance = distance.orElse(128);
 
         int sd = $distance * $distance;
