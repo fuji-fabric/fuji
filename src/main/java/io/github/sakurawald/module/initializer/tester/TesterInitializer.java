@@ -1,14 +1,18 @@
 package io.github.sakurawald.module.initializer.tester;
 
+
 import com.mojang.brigadier.context.CommandContext;
+
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.InventoryHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.core.command.annotation.CommandSource;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import lombok.SneakyThrows;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
@@ -22,9 +26,17 @@ public class TesterInitializer extends ModuleInitializer {
     @SneakyThrows(Exception.class)
     @CommandNode("run")
     private static int $run(@CommandSource ServerPlayerEntity player) {
-
         LogUtil.debug("main stacks = {}", InventoryHelper.getMainStacks(player));
         LogUtil.debug("armor = {}", InventoryHelper.getArmorStacks(player));
+
+        // return 1;
+        return 0;
+    }
+
+    @CommandNode("world")
+    private static int testWorld(@CommandSource ServerPlayerEntity playerEntity) {
+        MinecraftServer server = ServerHelper.getServer();
+        server.getPlayerManager();
 
         return 1;
     }
