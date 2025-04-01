@@ -18,19 +18,38 @@ public class CommandSpyInitializer extends ModuleInitializer {
         if (!CommandSpyInitializer.config.model().spy_on_console
             && source.getPlayer() == null) return;
 
-        // ignore
+        // ignore commands
         String name = source.getName();
         String string = parseResults.getReader().getString();
 
-        if (config.model().ignore.stream().anyMatch(it -> {
-            boolean flag = string.matches(it);
-            if (flag) {
-                LogUtil.info("{} issued the ignored command: /{}", name, it);
-            }
-            return flag;
-        })) {
+        if (config.model()
+            .ignore_commands
+            .stream()
+            .anyMatch(it -> {
+                boolean flag = string.matches(it);
+                if (flag) {
+                    LogUtil.info("{} issued the ignored command: /{}", name, it);
+                }
+                return flag;
+            })) {
             return;
         }
+
+        // only spy these commands
+        if (config.model()
+            .only_spy_these_commands
+            .enable) {
+
+            boolean matchesAnyCommandThatOnlySpies = config.model()
+                .only_spy_these_commands.commands
+                .stream()
+                .anyMatch(string::matches);
+
+            if (!matchesAnyCommandThatOnlySpies) {
+                return;
+            }
+        }
+
 
         // log
         LogUtil.info("{} issued the server command: /{}", name, string);
