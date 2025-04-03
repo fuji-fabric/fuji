@@ -7,14 +7,14 @@ import java.util.List;
 
 public class CommandSpyConfigModel {
 
-    @SerializedName("ignore")
+    @SerializedName(value = "ignore_commands", alternate = "ignore")
     public List<String> ignore_commands = new ArrayList<>() {
         {
             this.add("login.*");
         }
     };
 
-    public OnlySpyTheseCommands only_spy_these_commands;
+    public OnlySpyTheseCommands only_spy_these_commands = new OnlySpyTheseCommands();
     public static class OnlySpyTheseCommands {
         public boolean enable = false;
         public List<String> commands = new ArrayList<>() {
