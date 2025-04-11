@@ -50,6 +50,14 @@ public class ServerHelper {
             .orElse(null);
     }
 
+    public static @Nullable ServerPlayerEntity getPlayerByNameIgnoreCase(String name) {
+        return getPlayers()
+            .stream()
+            .filter(it -> it.getGameProfile().getName().equalsIgnoreCase(name))
+            .findFirst()
+            .orElse(null);
+    }
+
     public static Optional<ServerPlayerEntity> getPlayerByUuid(UUID uuid) {
         return getPlayers()
             .stream()

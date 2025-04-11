@@ -53,13 +53,13 @@ public class FakePlayerManagerInitializer extends ModuleInitializer {
                 List<String> newValue = e.getValue()
                     .stream()
                     .filter(fakePlayerName -> {
-                        ServerPlayerEntity fakePlayer = ServerHelper.getPlayerByName(fakePlayerName);
+                        ServerPlayerEntity fakePlayer = ServerHelper.getPlayerByNameIgnoreCase(fakePlayerName);
                         if (fakePlayer == null) return false;
 
                         /* check: expiration */
                         if (currentTimeMs >= expiration) {
                             /* auto-renew the fake players if the owner player is online */
-                            ServerPlayerEntity owner = ServerHelper.getPlayerByName(ownerPlayerName);
+                            ServerPlayerEntity owner = ServerHelper.getPlayerByNameIgnoreCase(ownerPlayerName);
                             if (owner != null) {
                                 renewMyFakePlayers(owner);
                                 return true;
@@ -124,7 +124,7 @@ public class FakePlayerManagerInitializer extends ModuleInitializer {
     public static void invalidFakePlayers() {
         player2fakePlayers.values()
             .forEach(value -> value.removeIf(fakePlayerName -> {
-                ServerPlayerEntity fakePlayer = ServerHelper.getPlayerByName(fakePlayerName);
+                ServerPlayerEntity fakePlayer = ServerHelper.getPlayerByNameIgnoreCase(fakePlayerName);
                 return fakePlayer == null || fakePlayer.isRemoved();
             }));
     }
@@ -141,6 +141,18 @@ public class FakePlayerManagerInitializer extends ModuleInitializer {
             .add(fakePlayer);
     }
 
+    public static boolean isMyFakePlayer(@NotNull ServerPlayerEntity player, @NotNull String fakePlayer) {
+        List<String> myFakePlayers = player2fakePlayers.computeIfAbsent(player.getGameProfile().getName(), k -> new ArrayList<>());
+        return myFakePlayers
+            .stream()
+            // The `carpet` mod ignores the case of fake-player name.
+            .anyMatch(it -> it.equalsIgnoreCase(fakePlayer));
+    }
+
+    public static boolean isMyFakePlayer(@NotNull ServerPlayerEntity player, @NotNull ServerPlayerEntity fakePlayer) {
+        return isMyFakePlayer(player, fakePlayer.getGameProfile().getName());
+    }
+
     public static boolean canManipulateFakePlayer(@NotNull CommandContext<ServerCommandSource> ctx, String fakePlayer) {
         // IMPORTANT: disable /player ... shadow command for online-player
         if (ctx.getNodes().get(2).getNode().getName().equals("shadow")) return false;
@@ -153,13 +165,7 @@ public class FakePlayerManagerInitializer extends ModuleInitializer {
         if (ctx.getSource().hasPermissionLevel(4)) return true;
 
         // check
-        List<String> myFakePlayers = player2fakePlayers.computeIfAbsent(player.getGameProfile().getName(), k -> new ArrayList<>());
-        return myFakePlayers.contains(fakePlayer);
-    }
-
-    public static boolean isMyFakePlayer(@NotNull ServerPlayerEntity player, @NotNull ServerPlayerEntity fakePlayer) {
-        return player2fakePlayers.computeIfAbsent(player.getGameProfile().getName(), k -> new ArrayList<>())
-            .contains(fakePlayer.getGameProfile().getName());
+        return isMyFakePlayer(player, fakePlayer);
     }
 
     @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
