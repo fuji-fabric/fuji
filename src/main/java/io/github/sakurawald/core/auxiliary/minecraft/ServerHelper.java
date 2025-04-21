@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -83,4 +84,10 @@ public class ServerHelper {
         getPlayerManager().getPlayerList().stream().filter(it -> it != player).forEach(p -> p.networkHandler.sendPacket(packet));
     }
 
+    public static void updateDisplayName() {
+        MinecraftServer server = getServer();
+        for (ServerPlayerEntity player : getPlayers()) {
+            server.getPlayerManager().sendToAll(new PlayerListS2CPacket(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME, player));
+        }
+    }
 }

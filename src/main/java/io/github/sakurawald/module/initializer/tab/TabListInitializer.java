@@ -10,8 +10,6 @@ import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.tab.config.model.TabListConfigModel;
 import io.github.sakurawald.module.initializer.tab.job.RenderHeaderAndFooterJob;
 import net.minecraft.network.packet.s2c.play.PlayerListHeaderS2CPacket;
-import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -39,14 +37,7 @@ public class TabListInitializer extends ModuleInitializer {
 
     @Override
     protected void onReload() {
-        updateDisplayName();
-    }
-
-    private void updateDisplayName() {
-        MinecraftServer server = ServerHelper.getServer();
-        for (ServerPlayerEntity player : ServerHelper.getPlayers()) {
-            server.getPlayerManager().sendToAll(new PlayerListS2CPacket(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME, player));
-        }
+        ServerHelper.updateDisplayName();
     }
 
 }

@@ -2,6 +2,7 @@ package io.github.sakurawald.module.initializer.command_toolbox.nickname;
 
 import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandSource;
@@ -38,6 +39,7 @@ public class NicknameInitializer extends ModuleInitializer {
 
         data.model().format.player2format.put(name, value);
         data.writeStorage();
+        ServerHelper.updateDisplayName();
 
         TextHelper.sendMessageByKey(player, "nickname.set");
         return CommandHelper.Return.SUCCESS;
@@ -49,6 +51,7 @@ public class NicknameInitializer extends ModuleInitializer {
         String name = player.getGameProfile().getName();
         data.model().format.player2format.remove(name);
         data.writeStorage();
+        ServerHelper.updateDisplayName();
 
         TextHelper.sendMessageByKey(player, "nickname.unset");
         return CommandHelper.Return.SUCCESS;
