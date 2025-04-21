@@ -24,12 +24,14 @@ public class DelayInitializer extends ModuleInitializer {
     @CommandNode("delay")
     @CommandRequirement(level = 4)
     @Document("Execute a command in seconds.")
-    private static int delay(@CommandSource ServerCommandSource source, int time, GreedyString rest) {
+    private static int delay(@CommandSource ServerCommandSource source, double time, GreedyString rest) {
         String $rest = rest.getValue();
 
+        long scheduleTimeMs = (long) (1000 * time);
         executor
-            .schedule(() -> ServerHelper.getServer()
-                .executeSync(() -> CommandExecutor.execute(ExtendedCommandSource.asConsole(source), $rest)), time, TimeUnit.SECONDS);
+            .schedule(() -> ServerHelper.getServer().executeSync(() -> CommandExecutor.execute(ExtendedCommandSource.asConsole(source), $rest))
+                , scheduleTimeMs
+                , TimeUnit.MILLISECONDS);
 
         return CommandHelper.Return.SUCCESS;
     }
