@@ -134,7 +134,10 @@ public class CommandDescriptor {
             });
 
         /* remove leaf node */
-        return targetNode.getChildren().isEmpty();
+        return
+            // That's interesting, the children of a command node may be null.
+            targetNode.getChildren() == null
+                || targetNode.getChildren().isEmpty();
     }
 
     private static CommandNode<ServerCommandSource> computeRedirectTargetOfOptionalArgument(List<Argument> arguments) {
