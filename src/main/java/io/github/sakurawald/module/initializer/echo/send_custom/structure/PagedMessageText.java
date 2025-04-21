@@ -24,6 +24,11 @@ public class PagedMessageText extends PagedText {
             pageCallbacks.add(i, this.makeClickCallbackCommand(i));
         }
 
+        /* single page message doesn't need the paginator */
+        if (pageCallbacks.size() == 1) {
+            return;
+        }
+
         /* generate paginator */
         int totalPages = getPages().size();
         for (int i = 0; i < getPages().size(); i++) {
