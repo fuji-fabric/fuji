@@ -13,9 +13,11 @@ import io.github.sakurawald.module.initializer.tpa.config.model.TpaConfigModel;
 import io.github.sakurawald.module.initializer.tpa.structure.TpaRequest;
 import lombok.Getter;
 import net.minecraft.server.network.ServerPlayerEntity;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 public class TpaInitializer extends ModuleInitializer {
@@ -40,14 +42,58 @@ public class TpaInitializer extends ModuleInitializer {
         return doResponse(player, target, ResponseStatus.ACCEPT);
     }
 
+    private static void doResponseToAll(ServerPlayerEntity me, ResponseStatus responseStatus) {
+        // Filter the target players.
+        ArrayList<TpaRequest> targetPlayers = requests
+            .stream()
+            .filter(request -> {
+                if (responseStatus == ResponseStatus.CANCEL) {
+                    return request.getSender().equals(me);
+                }
+
+                return request.getReceiver().equals(me);
+            })
+            .collect(Collectors.toCollection(ArrayList::new));
+
+        // Iterate it.
+        targetPlayers.forEach(request -> {
+            ServerPlayerEntity responseTarget;
+            if (responseStatus == ResponseStatus.CANCEL) {
+                responseTarget = request.getReceiver();
+            } else {
+                responseTarget = request.getSender();
+            }
+
+            doResponse(me, responseTarget, responseStatus);
+        });
+    }
+
+    @CommandNode("tpaaccept all")
+    private static int $tpaaccept(@CommandSource ServerPlayerEntity player) {
+        doResponseToAll(player, ResponseStatus.ACCEPT);
+        return CommandHelper.Return.SUCCESS;
+    }
+
     @CommandNode("tpadeny")
     private static int $tpadeny(@CommandSource ServerPlayerEntity player, ServerPlayerEntity target) {
         return doResponse(player, target, ResponseStatus.DENY);
     }
 
+    @CommandNode("tpadeny all")
+    private static int $tpadeny(@CommandSource ServerPlayerEntity player) {
+        doResponseToAll(player, ResponseStatus.DENY);
+        return CommandHelper.Return.SUCCESS;
+    }
+
     @CommandNode("tpacancel")
     private static int $tpacancel(@CommandSource ServerPlayerEntity player, ServerPlayerEntity target) {
         return doResponse(player, target, ResponseStatus.CANCEL);
+    }
+
+    @CommandNode("tpacancel all")
+    private static int $tpacancel(@CommandSource ServerPlayerEntity player) {
+        doResponseToAll(player, ResponseStatus.CANCEL);
+        return CommandHelper.Return.SUCCESS;
     }
 
     private static int doResponse(ServerPlayerEntity player, ServerPlayerEntity target, ResponseStatus status) {
