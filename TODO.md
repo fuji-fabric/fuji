@@ -25,7 +25,6 @@
             - json operations
             - text operation
     - application: /air, /alert, /respawn, /vote
-- feature: command_advice module.
-- feature: command_debug module.
 - feature: command_gui module.
+- feature: send-console <str>
 - docs: find useful things https://vanillatweaks.net/picker/datapacks/
