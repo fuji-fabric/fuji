@@ -8,6 +8,7 @@ This module allows you to create advice for existing commands, to decorate exist
     \begin{jsoncode}
     {
       "match_command_string_regex": "back",
+      "only_valid_when_command_is_executed_by_player": true,
       "advice_type": "BEFORE_EXECUTING",
       "commands": [
         "run as fake-op %player:name% say before executing /back for %player:name%"
@@ -15,6 +16,7 @@ This module allows you to create advice for existing commands, to decorate exist
     },
     {
       "match_command_string_regex": "back",
+      "only_valid_when_command_is_executed_by_player": true,
       "advice_type": "AFTER_EXECUTING",
       "commands": [
         "run as fake-op %player:name% say after executing /back for %player:name%"
@@ -27,6 +29,7 @@ This module allows you to create advice for existing commands, to decorate exist
     \begin{jsoncode}
     {
       "match_command_string_regex": "heal",
+      "only_valid_when_command_is_executed_by_player": true,
       "advice_type": "AFTER_EXECUTING",
       "commands": [
         "say spawn a fireworks for player %player:name%",
@@ -42,6 +45,7 @@ This module allows you to create advice for existing commands, to decorate exist
     \begin{jsoncode}
     {
       "match_command_string_regex": "say (.+)",
+      "only_valid_when_command_is_executed_by_player": true,
       "advice_type": "CANCEL_WITH_SUCCESS",
       "commands": [
         "send-message %player:name% <rb>You just said:</rb> $1"
