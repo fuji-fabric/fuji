@@ -1,0 +1,24 @@
+package io.github.sakurawald.module.initializer.command_advice.model;
+
+import io.github.sakurawald.module.initializer.command_advice.structure.CommandAdviceEntry;
+import io.github.sakurawald.module.initializer.command_advice.structure.CommandAdviceType;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class CommandAdviceConfigModel {
+
+    public final List<CommandAdviceEntry> entries = new ArrayList<>() {
+        {
+            this.add(new CommandAdviceEntry("back", true, CommandAdviceType.BEFORE_EXECUTING, List.of("run as fake-op %player:name% say before executing /back for %player:name%")));
+            this.add(new CommandAdviceEntry("back",true, CommandAdviceType.AFTER_EXECUTING, List.of("run as fake-op %player:name% say after executing /back for %player:name%")));
+
+            this.add(new CommandAdviceEntry("heal",true, CommandAdviceType.AFTER_EXECUTING, List.of(
+                "say spawn a fireworks for player %player:name%",
+                "run as fake-op %player:name% summon firework_rocket ~ ~1 ~ {FireworksItem:{id:firework_rocket,components:{fireworks:{explosions:[{shape:small_ball,colors:[I;15961002]}]}}}}")));
+
+            this.add(new CommandAdviceEntry("say (.+)",true, CommandAdviceType.CANCEL_WITH_SUCCESS, List.of(
+                "send-message %player:name% <rb>You just said:</rb> $1")));
+        }
+    };
+}

@@ -26,6 +26,8 @@
     "chat.style.ServerPlayNetworkHandlerMixin",
     "chat.style.message_type.RegistryLoaderMixin",
     "color.sign.ServerPlayerEntityMixin",
+    "command_advice.CommandDispatcherMixin",
+    "command_advice.CommandManagerMixin",
     "command_attachment.EntityMixin",
     "command_attachment.ServerPlayerInteractionManagerMixin",
     "command_attachment.ServerPlayNetworkHandlerMixin",

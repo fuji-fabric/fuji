@@ -12,6 +12,7 @@ io.github.sakurawald.module.initializer.chat.style.ChatStyleInitializer
 io.github.sakurawald.module.initializer.cleaner.CleanerInitializer
 io.github.sakurawald.module.initializer.color.anvil.ColorAnvilInitializer
 io.github.sakurawald.module.initializer.color.sign.ColorSignInitializer
+io.github.sakurawald.module.initializer.command_advice.CommandAdviceInitializer
 io.github.sakurawald.module.initializer.command_alias.CommandAliasInitializer
 io.github.sakurawald.module.initializer.command_attachment.CommandAttachmentInitializer
 io.github.sakurawald.module.initializer.command_bundle.CommandBundleInitializer

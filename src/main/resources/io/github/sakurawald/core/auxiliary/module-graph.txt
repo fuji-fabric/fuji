@@ -15,6 +15,7 @@ cleaner
 color
 color.anvil
 color.sign
+command_advice
 command_alias
 command_attachment
 command_bundle
