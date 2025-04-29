@@ -64,6 +64,7 @@ io.github.sakurawald.module.initializer.echo.send_actionbar.SendActionbar
 io.github.sakurawald.module.initializer.echo.send_bossbar.SendBossbarInitializer
 io.github.sakurawald.module.initializer.echo.send_broadcast.SendBroadcastInitializer
 io.github.sakurawald.module.initializer.echo.send_chat.SendChatInitializer
+io.github.sakurawald.module.initializer.echo.send_console.SendConsoleInitializer
 io.github.sakurawald.module.initializer.echo.send_custom.SendCustomInitializer
 io.github.sakurawald.module.initializer.echo.send_message.SendMessageInitializer
 io.github.sakurawald.module.initializer.echo.send_title.SendTitleInitializer

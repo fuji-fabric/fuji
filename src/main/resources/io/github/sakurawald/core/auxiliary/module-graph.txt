@@ -76,6 +76,7 @@ echo.send_actionbar
 echo.send_bossbar
 echo.send_broadcast
 echo.send_chat
+echo.send_console
 echo.send_custom
 echo.send_message
 echo.send_title

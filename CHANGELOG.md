@@ -1,3 +1,3 @@
 > The version number of fuji follows `semver` now: https://semver.org/
 
-- (command_advice module) feature: add `command_advice` module, to allow decorate existing commands.
+- (echo.send_console module) feature: add `/send-console` command, to send a string into the console.
