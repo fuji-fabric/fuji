@@ -22,18 +22,17 @@ public abstract class ServerPlayerEntityMixin {
     @NotNull
     final ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
 
-
     @Inject(method = "onDeath", at = @At("HEAD"))
     public void saveCurPos(DamageSource damageSource, CallbackInfo ci) {
         if (BackInitializer.config.model().enable_back_on_death) {
-            BackInitializer.saveCurrentPosition(player);
+            BackInitializer.trySaveCurrentLocation(player);
         }
     }
 
     @Inject(method = "teleport", at = @At("HEAD"))
     public void saveCurPos(ServerWorld serverWorld, double d, double e, double f, Set<PositionFlag> set, float g, float h, boolean bl, CallbackInfoReturnable<Boolean> cir) {
         if (BackInitializer.config.model().enable_back_on_teleport) {
-            BackInitializer.saveCurrentPosition(player);
+            BackInitializer.trySaveCurrentLocation(player);
         }
     }
 

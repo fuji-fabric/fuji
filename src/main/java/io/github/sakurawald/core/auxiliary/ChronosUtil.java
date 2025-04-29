@@ -22,4 +22,8 @@ public class ChronosUtil {
         return STANDARD_DATE_FORMAT.format(timeMillis);
     }
 
+    public static @NotNull Long getCurrentMillis() {
+        return System.currentTimeMillis();
+    }
+
 }
