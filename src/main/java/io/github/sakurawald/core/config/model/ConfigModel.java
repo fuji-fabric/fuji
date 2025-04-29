@@ -84,6 +84,7 @@ public class ConfigModel {
         public CommandToolbox command_toolbox = new CommandToolbox();
         public CommandSpy command_spy = new CommandSpy();
         public CommandEvent command_event = new CommandEvent();
+        public CommandDebug command_debug = new CommandDebug();
         public World world = new World();
         public TeleportWarmup teleport_warmup = new TeleportWarmup();
         public TopChunks top_chunks = new TopChunks();
@@ -659,6 +660,10 @@ public class ConfigModel {
             public static class Compass {
                 public boolean enable = false;
             }
+        }
+
+        public static class CommandDebug {
+            public boolean enable = false;
         }
 
         public static class Tab {
