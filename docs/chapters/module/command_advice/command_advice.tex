@@ -1,0 +1,54 @@
+\LevelOne{command\_advice}\label{ch:command_advice}
+
+\LevelTwo{Purpose}
+This module allows you to create advice for existing commands, to decorate existing commands.
+
+\LevelTwo{Example}
+\begin{example}{Execute commands before/after executing a target command}
+    \begin{jsoncode}
+    {
+      "match_command_string_regex": "back",
+      "advice_type": "BEFORE_EXECUTING",
+      "commands": [
+        "run as fake-op %player:name% say before executing /back for %player:name%"
+      ]
+    },
+    {
+      "match_command_string_regex": "back",
+      "advice_type": "AFTER_EXECUTING",
+      "commands": [
+        "run as fake-op %player:name% say after executing /back for %player:name%"
+      ]
+    },
+    \end{jsoncode}
+\end{example}
+
+\begin{example}{Decorate an existing command}
+    \begin{jsoncode}
+    {
+      "match_command_string_regex": "heal",
+      "advice_type": "AFTER_EXECUTING",
+      "commands": [
+        "say spawn a fireworks for player %player:name%",
+        "run as fake-op %player:name% summon firework_rocket ~ ~1 ~
+{FireworksItem:{id:firework_rocket,components:
+{fireworks:{explosions:[{shape:small_ball,colors:[I;15961002]}]}}}}"
+      ]
+    }
+    \end{jsoncode}
+\end{example}
+
+\begin{example}{Cancel the executing of a target command with success}
+    \begin{jsoncode}
+    {
+      "match_command_string_regex": "say (.+)",
+      "advice_type": "CANCEL_WITH_SUCCESS",
+      "commands": [
+        "send-message %player:name% <rb>You just said:</rb> $1"
+      ]
+    }
+    \end{jsoncode}
+\end{example}
+
+\LevelTwo{Reference}
+The function of this module is similar to~\nameref{ch:command_bundle}
