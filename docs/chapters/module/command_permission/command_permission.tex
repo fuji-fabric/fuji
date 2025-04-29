@@ -4,7 +4,8 @@
 This module provides the customization of \tbf{the requirement of all commands}.
 
 \LevelTwo{Command}
-\fcmd{/command-permission}
+\fcmd{/command-permission gui}
+\fcmd{/command-permission verbose}
 
 \LevelTwo{How it works?}
 The vanilla minecraft use a command system named brigadier.\\
@@ -30,8 +31,13 @@ Also, each \tbf{command node} has its \tbf{requirement}, which is a \tbf{predica
 
 \begin{tips}{Query the command path of a command.}
     \cmd{/lp group default permission set fuji.permission\ldots}\\
-    or \cmd{/command-permission}\\
+    or \cmd{/command-permission gui}\\
     or \cmd{/fuji inspect server-commands}
+\end{tips}
+
+\begin{tips}{Use verbose mode to see what is happening}
+    Issue \cmd{/command-permission verbose} to enable verbose mode, and then issue the \textbf{target command} in game, then see the logs in console.
+    Now, you can issue \cmd{/lp group default permission set fuji.permission.<command path of target command>} to let command\_permission module intercept and handle the requirement predicate of the target command.
 \end{tips}
 
 \begin{warn}{Understand the parent permission node and its children node}
