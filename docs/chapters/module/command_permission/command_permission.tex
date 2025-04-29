@@ -44,6 +44,16 @@ Also, each \tbf{command node} has its \tbf{requirement}, which is a \tbf{predica
     It's recommend to modify the \ttt{apply-sponge-implicit-wildcard} option to \ttt{false} in \ttt{luckperms.conf}, to control the \ttt{permission node} more fine-grained.
 \end{warn}
 
+\begin{warn}{Be careful with wildcard-permission and regex-permission}
+    The \ttt{apply-regex} and \ttt{apply-wildcards} options in \ttt{luckperms.conf} file controls how luckperms calculates the permission state for a player.
+    You have to understand what you are doing before you assign a \ttt{wildcard-permission} and \ttt{regex-permission} for a player.
+\end{warn}
+
+In short, what the command\_permission module does is simple, it only intercepts all command nodes, and checks whether the target player has the permission \ttt{fuji.permission.<command path of target command>}.
+Then it decides whether to allow or dis-allow the usage of this command based on the permission calculation result from luckperms, or just simply do nothing if no related positive/negative permission is assigned.
+
+The complex permission calculation is done by luckperms, including \ttt{permission inheritance}, \ttt{permission wildcards} and \ttt{permission regex}.
+
 \LevelTwo{Example}
 \begin{example}{Allow everyone to use \cmd{/gamemode} command}
     \cmd{/lp group default permission set fuji.permission.gamemode true}
