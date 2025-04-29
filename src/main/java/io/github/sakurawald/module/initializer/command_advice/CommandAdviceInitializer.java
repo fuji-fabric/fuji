@@ -25,8 +25,6 @@ public class CommandAdviceInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<CommandAdviceConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandAdviceConfigModel.class);
 
-    public static final int KEEP_CLOSER_TO_PRIMARY_METHOD = 1000 - 750;
-
     @SuppressWarnings({"ResultOfMethodCallIgnored", "unchecked"})
     public static void processCommandAdvice(Object handler, ServerCommandSource source, String commandString, CommandAdviceType adviceType, CallbackInfo ci) {
 
