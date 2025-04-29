@@ -26,7 +26,6 @@
             - text operation
     - application: /air, /alert, /respawn, /vote
 - feature: command_advice module.
-- feature: /command_permission verbose
 - feature: command_debug module.
 - feature: command_gui module.
 - docs: find useful things https://vanillatweaks.net/picker/datapacks/
