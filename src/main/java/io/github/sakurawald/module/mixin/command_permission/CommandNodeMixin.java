@@ -32,15 +32,16 @@ public class CommandNodeMixin {
 
     @SuppressWarnings("unchecked")
     @ModifyReturnValue(method = "getRequirement", at = @At("TAIL"))
-    private Predicate<?> injected(Predicate<?> original) {
+    private Predicate<?> wrapRequirementPredicateForThisCommandNode(Predicate<?> original) {
 
-        // wrap the predicate until the dispatcher is initialized.
+        /* Only try to wrap the requirement predicate of command node until the command dispatcher is initialized. */
         @Nullable CommandDispatcher<ServerCommandSource> dispatcher = ServerHelper.getCommandDispatcher();
         if (dispatcher == null) {
             LogUtil.debug("The CommandNode#getRequirement is triggered too early, fuji will just ignore this call.");
             return original;
         }
 
+        /* Wrap the requirement predicate for command node. */
         if (!(original instanceof WrappedPredicate<?>)) {
             String path = CommandHelper.computeCommandNodePath(node);
             requirement = CommandPermissionInitializer.makeWrappedPredicate(path, (Predicate<ServerCommandSource>) original);
