@@ -26,5 +26,4 @@
             - text operation
     - application: /air, /alert, /respawn, /vote
 - feature: command_gui module.
-- feature: send-console <str>
 - docs: find useful things https://vanillatweaks.net/picker/datapacks/
