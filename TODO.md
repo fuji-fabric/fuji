@@ -24,6 +24,7 @@
             - list operations
             - json operations
             - text operation
-    - application: /air, /alert, /respawn, /vote
+    - application: /air, /alert, /respawn and /spawn, /vote
 - feature: command_gui module.
+- feature: compare command_cooldown and command_condition.
 - docs: find useful things https://vanillatweaks.net/picker/datapacks/
