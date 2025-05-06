@@ -158,7 +158,7 @@ public class BackInitializer extends ModuleInitializer {
             SpatialPose latestLocation = latestEntry.getLocation();
             double ignoreDistance = config.model().ignore_distance;
             if (latestLocation.sameLevel(player.getWorld())
-                && player.getPos().squaredDistanceTo(latestLocation.getX(), latestLocation.getY(), latestLocation.getZ()) > ignoreDistance * ignoreDistance
+                && player.getPos().squaredDistanceTo(latestLocation.getX(), latestLocation.getY(), latestLocation.getZ()) <= ignoreDistance * ignoreDistance
             ) {
                 return false;
             }
