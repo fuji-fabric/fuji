@@ -16,8 +16,8 @@ public class TeleportWarmupConfigModel {
 
     public static class Dimension {
 
-        @SerializedName(value = "blacklist", alternate = "list")
-        public Set<String> blacklist = new HashSet<>() {
+        @SerializedName(value = "effective_dimensions", alternate = {"list", "blacklist"})
+        public Set<String> effective_dimensions = new HashSet<>() {
             {
                 this.add("minecraft:overworld");
                 this.add("minecraft:the_nether");

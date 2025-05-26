@@ -22,25 +22,33 @@ import java.util.Set;
 @Mixin(value = ServerPlayerEntity.class, priority = 1000 - 500)
 public abstract class ServerPlayerMixin {
 
+    @SuppressWarnings("CancellableInjectionUsage")
     @Inject(method = "teleport", at = @At("HEAD"), cancellable = true)
     public void interceptTeleportAndAddTicket(ServerWorld serverWorld, double x, double y, double z, Set<PositionFlag> set, float yaw, float pitch, boolean bl, CallbackInfoReturnable<Boolean> cir) {
-        // check blacklist
-        if (!TeleportWarmupInitializer.config.model().dimension.blacklist.contains(RegistryHelper.ofString(serverWorld))) {
+        /* Skip the teleport warmup if target dimension is not inside effective dimensions */
+        if (!TeleportWarmupInitializer.config.model().dimension.effective_dimensions.contains(RegistryHelper.ofString(serverWorld))) {
             return;
         }
 
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
 
+        /* Skip the teleport warmup if the player is a fake-player. */
         // If we try to spawn a fake-player in the end or nether, the fake-player will initially spawn in overworld
         // and teleport to the target world. This will cause the teleport warmup to be triggered.
         if (!EntityHelper.isRealPlayer(player)) return;
+
+        /* Skip the teleport warmup if the player has the bypass permission. */
+        if (PermissionHelper.hasPermission(player.getUuid(), "fuji.teleport_warmup.bypass")) {
+            return;
+        }
+
+        /* Add a new teleport ticker if no exists. */
         TeleportTicket ticket = TeleportWarmupInitializer.getTeleportTicket(player);
-
-        Optional<Integer> permission_warmup_time = PermissionHelper.getMeta(player.getUuid(), "fuji.teleport_warmup.warmup", Integer::valueOf);
-        //set warmup seconds to LP permission seconds or default config seconds
-        int warmup_seconds = permission_warmup_time.orElse(TeleportWarmupInitializer.config.model().warmup_second);
-
         if (ticket == null) {
+            Optional<Integer> permission_warmup_time = PermissionHelper.getMeta(player.getUuid(), "fuji.teleport_warmup.warmup", Integer::valueOf);
+            //set warmup seconds to LP permission seconds or default config seconds
+            int warmup_seconds = permission_warmup_time.orElse(TeleportWarmupInitializer.config.model().warmup_second);
+
             ticket = TeleportTicket.make(
                 player
                 , SpatialPose.of(player)
