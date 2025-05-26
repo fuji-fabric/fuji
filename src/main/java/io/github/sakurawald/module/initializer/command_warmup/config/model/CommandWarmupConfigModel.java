@@ -12,8 +12,8 @@ public class CommandWarmupConfigModel {
 
     public List<CommandWarmupNode> entries = new ArrayList<>() {
         {
-            this.add(new CommandWarmupNode(new CommandWarmupNode.Command("back", 3 * 1000), new Interruptible(true, 3, true, true)));
-            this.add(new CommandWarmupNode(new CommandWarmupNode.Command("heal", 1000), new Interruptible(true, 3, true, true)));
+            this.add(CommandWarmupNode.makeInstance(new CommandWarmupNode.Command("back", 3 * 1000), new Interruptible(true, 3, true, true)));
+            this.add(CommandWarmupNode.makeInstance(new CommandWarmupNode.Command("heal", 1000), new Interruptible(true, 3, true, true)));
         }
     };
 }

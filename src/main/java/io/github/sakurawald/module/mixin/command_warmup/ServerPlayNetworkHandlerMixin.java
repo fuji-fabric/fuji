@@ -2,6 +2,7 @@ package io.github.sakurawald.module.mixin.command_warmup;
 
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.manager.Managers;
+import io.github.sakurawald.core.structure.Tag;
 import io.github.sakurawald.module.initializer.command_warmup.CommandWarmupInitializer;
 import io.github.sakurawald.module.initializer.command_warmup.structure.CommandWarmupNode;
 import io.github.sakurawald.module.initializer.command_warmup.structure.CommandWarmupTicket;
@@ -24,11 +25,17 @@ public abstract class ServerPlayNetworkHandlerMixin {
     @Inject(method = "onCommandExecution", at = @At("HEAD"), cancellable = true)
     public void interceptCommandUsagePackets(@NotNull CommandExecutionC2SPacket commandExecutionC2SPacket, @NotNull CallbackInfo ci) {
         String command = commandExecutionC2SPacket.comp_808();
-
         var config = CommandWarmupInitializer.config.model();
 
+        /* Iterate the node entries. */
         for (CommandWarmupNode entry : config.entries) {
-            // cancel the usage of command, if a warmup entry matches.
+
+            /* Test if we should bypass this warmup entry */
+            if (Tag.hasAnyTagPermission(player,"command_warmup.bypass", entry.getTag().getTags())) {
+                continue;
+            }
+
+            /* If a warmup entry matches the command string, then we cancel the usage of the command. */
             if (command.matches(entry.getCommand().getRegex())) {
                 Managers.getBossBarManager().addTicket(CommandWarmupTicket.make(player, command, entry));
 
