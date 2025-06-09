@@ -27,6 +27,8 @@ public class TesterInitializer extends ModuleInitializer {
 
         #if MC_VER == MC_1_21_5
             player.sendMessage(Text.of("Version is 1.21.5"));
+        #elif MC_VER == MC_1_21_4
+            player.sendMessage(Text.of("Version is 1.21.4"));
         #else
             player.sendMessage(Text.of("Version unknown."));
         #endif
