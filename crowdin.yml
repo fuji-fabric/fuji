@@ -1,9 +1,14 @@
+# Define the crowdin tokens.
 project_id_env: CROWDIN_PROJECT_ID
 api_token_env: CROWDIN_TOKEN
+
+# Path to your project directory, relative to the `crowdin.yml` file.
 base_path: .
 
+# Saving the same file system structure on crowdin server.
 preserve_hierarchy: true
 
+# Define the location to push-to-crowdin and pull-from-crowdin.
 files:
-  - source: src/main/resources/io/github/sakurawald/lang/en_US.json
-    translation: crowdin/%locale_with_underscore%.json
+  - source: crowdin/push-to-crowdin/en_US.json
+    translation: crowdin/pull-from-crowdin/%locale_with_underscore%.json
