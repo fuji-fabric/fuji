@@ -8,10 +8,10 @@ base_path: .
 # Saving the same file system structure on crowdin server.
 preserve_hierarchy: true
 
-# Define the location to push-to-crowdin and pull-from-crowdin.
+# Define the location to push-to-crowdin and pull-from-crowdin. (Relative to the base_path variable)
 files: [
   {
-    "source": "crowdin/push-to-crowdin/en_US.json",
-    "translation": "crowdin/pull-from-crowdin/%locale_with_underscore%.json"
+    "source": "push-to-crowdin/en_US.json",
+    "translation": "pull-from-crowdin/%locale_with_underscore%.json"
   }
 ]
