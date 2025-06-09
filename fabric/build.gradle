@@ -1,5 +1,3 @@
-import org.apache.tools.ant.filters.ReplaceTokens
-
 /* Define the gradle plugins. */
 plugins {
     id "java"
@@ -8,8 +6,8 @@ plugins {
     // Manifold preprocessor
     id "systems.manifold.manifold-gradle-plugin" version "0.0.2-alpha"
 
+    // Fabric Loom
     id "fabric-loom" version "1.7.+"
-    id "maven-publish"
 }
 
 /* Define the jar repositories. */
@@ -85,7 +83,7 @@ dependencies {
     testImplementation "net.fabricmc:fabric-loader-junit:${project.fabric_loader_version}"
 }
 
-/* compile */
+/* Configure Java compiler. */
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
     it.options.release.set(21)
@@ -102,7 +100,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_21
 }
 
-/* build */
+/* Replace the version in fabric.mod.json file */
 processResources {
     outputs.upToDateWhen { false }
 
@@ -111,113 +109,26 @@ processResources {
     }
 }
 
-jar {
-    from("LICENSE") {
-        rename { "${it}" }
-    }
-}
-
-/* publish */
-publishing {
-
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {}
-}
-
-/* test framework */
+/* Configure test framework. */
 test {
     useJUnitPlatform()
     filter {}
 }
 
-/* validate the access widener file */
+/* Validate the access widener file */
 tasks.compileJava.dependsOn(validateAccessWidener)
 
-/* compile latex */
-def processTexDir = file("${layout.buildDirectory.get()}/processTeX")
-
-def outputTexDir = file("${layout.buildDirectory.get()}/outTeX")
-def outputTexFile = "fuji.pdf"
-
-def docsDir = file("$projectDir/docs")
-
-def recreateDir(File dir) {
-    if (dir.exists()) {
-        println "Delete existing directory: $dir"
-        dir.deleteDir()
-    }
-    println "Mkdir the directory: $dir"
-    dir.mkdirs()
-}
-
-tasks.register('processLatex', Copy) {
-    outputs.upToDateWhen { false }
-
-    // clean
-    doFirst {
-        recreateDir(processTexDir)
-    }
-
-    // copy
-    from(docsDir)
-    into("${processTexDir}")
-    include "**/*.tex"
-
-    filter(ReplaceTokens, tokens: [
-            'TOKEN_MOD_VERSION' : project.version.toString(),
-            'TOKEN_PROJECT_ROOT': project.rootDir.absolutePath,
-            'TOKEN_TEX_OUT_DIR' : outputTexDir.toString()
-    ])
-}
-
-tasks.register('compileLatex') {
-    doFirst {
-        recreateDir(outputTexDir)
-    }
-
-    doLast {
-        2.times {
-            exec {
-                workingDir = processTexDir
-                commandLine "pdflatex",
-                        "-file-line-error",
-                        "-interaction=nonstopmode",
-                        "-synctex=1",
-                        "-output-format=pdf",
-                        "-output-directory=${outputTexDir}",
-                        "-shell-escape",
-                        "fuji.tex"
-                println("Compile TeX once.")
-            }
-        }
-        println 'Finish the loop of compiling TeX.'
-
-        copy {
-            from("${outputTexDir}/${outputTexFile}")
-            into("${docsDir}/release")
-        }
-    }
-}
-tasks.compileLatex.dependsOn(processLatex)
-
-/* ensure the file is not locked */
-
+/* Ensure the file is not locked */
 tasks.register('deleteWorldLockFile') {
     outputs.upToDateWhen { false }
     delete(file("$projectDir/run/world/session.lock"))
 }
 tasks.runServer.dependsOn(deleteWorldLockFile)
 
-/* generate graph */
+/* Generate graph */
 tasks.runServer.dependsOn(check)
 
-/* copy translation files into resource directory */
+/* Copy translation files into resource directory */
 // FIXME The logic here should be modified to meet the new structure.
 tasks.register('copyTranslationFiles', Copy) {
     outputs.upToDateWhen { false }

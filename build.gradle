@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 /* Define the gradle plugins. */
 plugins {
     id "java"
@@ -61,3 +63,91 @@ group = project.maven_group
 def details = versionDetails()
 // must starts with sem-ver to make the fabric loader happy
 version = "${project.mod_version}-${details.gitHash}-mc${project.minecraft_version}"
+
+/* Rename the LICENSE file in jar. */
+jar {
+    from("LICENSE") {
+        rename { "${it}" }
+    }
+}
+
+/* Configure Publishing. */
+publishing {
+
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {}
+}
+
+/* Configure Latex Compiler */
+def processTexDir = file("${layout.buildDirectory.get()}/processTeX")
+
+def outputTexDir = file("${layout.buildDirectory.get()}/outTeX")
+def outputTexFile = "fuji.pdf"
+
+def docsDir = file("$projectDir/docs")
+
+def recreateDir(File dir) {
+    if (dir.exists()) {
+        println "Delete existing directory: $dir"
+        dir.deleteDir()
+    }
+    println "Mkdir the directory: $dir"
+    dir.mkdirs()
+}
+
+tasks.register('processLatex', Copy) {
+    outputs.upToDateWhen { false }
+
+    // clean
+    doFirst {
+        recreateDir(processTexDir)
+    }
+
+    // copy
+    from(docsDir)
+    into("${processTexDir}")
+    include "**/*.tex"
+
+    filter(ReplaceTokens, tokens: [
+            'TOKEN_MOD_VERSION' : project.version.toString(),
+            'TOKEN_PROJECT_ROOT': project.rootDir.absolutePath,
+            'TOKEN_TEX_OUT_DIR' : outputTexDir.toString()
+    ])
+}
+
+tasks.register('compileLatex') {
+    doFirst {
+        recreateDir(outputTexDir)
+    }
+
+    doLast {
+        2.times {
+            exec {
+                workingDir = processTexDir
+                commandLine "pdflatex",
+                        "-file-line-error",
+                        "-interaction=nonstopmode",
+                        "-synctex=1",
+                        "-output-format=pdf",
+                        "-output-directory=${outputTexDir}",
+                        "-shell-escape",
+                        "fuji.tex"
+                println("Compile TeX once.")
+            }
+        }
+        println 'Finish the loop of compiling TeX.'
+
+        copy {
+            from("${outputTexDir}/${outputTexFile}")
+            into("${docsDir}/release")
+        }
+    }
+}
+tasks.compileLatex.dependsOn(processLatex)
+

@@ -10,7 +10,7 @@ pluginManagement {
 	}
 }
 
-/** Loads the VersionProperties file for the currently selected Minecraft version. */
+/* Loads the VersionProperties file for the currently selected Minecraft version. */
 def loadProperties() {
 	def defaultMcVersion = "1.21.5"
 
@@ -48,7 +48,6 @@ def loadProperties() {
 	gradle.ext.mcIndex = mcIndex
 }
 loadProperties()
-
 
 /* Include child projects. */
 include("fabric")
