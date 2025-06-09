@@ -8,7 +8,7 @@ plugins {
     id "com.palantir.git-version" version "3.1.0"
     id 'checkstyle'
 
-    id "maven-publish"
+    id "systems.manifold.manifold-gradle-plugin" version "0.0.2-alpha"
 }
 
 /* Configure the checkstyle gradle plugin. */
@@ -63,6 +63,44 @@ group = project.maven_group
 def details = versionDetails()
 // must starts with sem-ver to make the fabric loader happy
 version = "${project.mod_version}-${details.gitHash}-mc${project.minecraft_version}"
+
+/* Configure shared parts for each sub project. */
+subprojects { p ->
+
+    /* Configure manifold gradle plugin. */
+    apply plugin: "systems.manifold.manifold-gradle-plugin"
+    manifold {
+        manifoldVersion = rootProject.manifold_version
+    }
+
+    /* Configure dependencies. */
+    dependencies {
+        annotationProcessor("systems.manifold:manifold-preprocessor:${rootProject.manifold_version}")
+        testAnnotationProcessor("systems.manifold:manifold-preprocessor:${rootProject.manifold_version}")
+    }
+
+}
+
+/* Configure for all projects. */
+allprojects { p ->
+    apply plugin: "java"
+    apply plugin: "maven-publish"
+
+    repositories {
+        // The central repo.
+        mavenCentral()
+
+        maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
+
+        // For manifold preprocessor.
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+
+        maven { url "https://jitpack.io" }
+        maven { url "https://projectlombok.org/edge-releases" }
+
+    }
+}
+
 
 /* Rename the LICENSE file in jar. */
 jar {

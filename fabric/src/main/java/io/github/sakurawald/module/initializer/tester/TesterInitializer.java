@@ -2,9 +2,7 @@ package io.github.sakurawald.module.initializer.tester;
 
 
 import com.mojang.brigadier.context.CommandContext;
-
 import io.github.sakurawald.core.auxiliary.LogUtil;
-import io.github.sakurawald.core.auxiliary.minecraft.InventoryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
@@ -26,10 +24,13 @@ public class TesterInitializer extends ModuleInitializer {
     @SneakyThrows(Exception.class)
     @CommandNode("run")
     private static int $run(@CommandSource ServerPlayerEntity player) {
-        LogUtil.debug("main stacks = {}", InventoryHelper.getMainStacks(player));
-        LogUtil.debug("armor = {}", InventoryHelper.getArmorStacks(player));
 
-        // return 1;
+        #if MC_VER == MC_1_21_5
+            player.sendMessage(Text.of("Version is 1.21.5"));
+        #else
+            player.sendMessage(Text.of("Version unknown."));
+        #endif
+
         return 0;
     }
 
@@ -37,7 +38,6 @@ public class TesterInitializer extends ModuleInitializer {
     private static int testWorld(@CommandSource ServerPlayerEntity playerEntity) {
         MinecraftServer server = ServerHelper.getServer();
         server.getPlayerManager();
-
         return 1;
     }
 

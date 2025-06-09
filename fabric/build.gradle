@@ -3,9 +3,6 @@ plugins {
     id "java"
     id "idea"
 
-    // Manifold preprocessor
-    id "systems.manifold.manifold-gradle-plugin" version "0.0.2-alpha"
-
     // Fabric Loom
     id "fabric-loom" version "1.7.+"
 }
@@ -13,12 +10,10 @@ plugins {
 /* Define the jar repositories. */
 repositories {
     mavenCentral()
-    maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-    maven { url "https://jitpack.io" }
+    // For fabric-carpet mod.
     maven { url "https://masa.dy.fi/maven" }
+    // For text-placeholder and sgui mod.
     maven { url "https://maven.nucleoid.xyz" }
-    maven { url "https://projectlombok.org/edge-releases" }
 }
 
 /* Configure fabric-loom plugin. */
