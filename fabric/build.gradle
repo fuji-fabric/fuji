@@ -231,6 +231,7 @@ tasks.runServer.dependsOn(deleteWorldLockFile)
 tasks.runServer.dependsOn(check)
 
 /* copy translation files into resource directory */
+// FIXME The logic here should be modified to meet the new structure.
 tasks.register('copyTranslationFiles', Copy) {
     outputs.upToDateWhen { false }
 

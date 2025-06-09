@@ -62,9 +62,10 @@ jobs:
             fabric
             quilt
 
+          # FIXME Choose a better location to put the build file.
           files: |
-            build/libs/!(*-@(dev|sources|javadoc)).jar
-            build/libs/*-@(dev|sources|javadocs).jar
+            fabric/build/libs/!(*-@(dev|sources|javadoc)).jar
+            fabric/build/libs/*-@(dev|sources|javadocs).jar
 
           game-version-filter: any
 
