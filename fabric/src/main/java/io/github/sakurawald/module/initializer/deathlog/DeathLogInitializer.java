@@ -68,9 +68,9 @@ public class DeathLogInitializer extends ModuleInitializer {
         NbtHelper.withNbtFile(computePath(from), root -> {
             ensureDeathlogNotEmpty(source, root);
 
-            NbtList deathsNode = NbtHelper.withNbtElement(root, DEATHS, new NbtList());
+            NbtList deathListNode = NbtHelper.withNbtElement(root, DEATHS, new NbtList());
 
-            if (index >= deathsNode.size()) {
+            if (index >= deathListNode.size()) {
                 TextHelper.sendMessageByKey(source, "deathlog.index.not_found", index);
                 throw new AbortCommandExecutionException();
             }
@@ -82,7 +82,8 @@ public class DeathLogInitializer extends ModuleInitializer {
             }
 
             /* restore inventory */
-            NbtCompound inventoryNode = NbtHelper.getCompound(deathsNode, index);
+            NbtCompound deathNode = NbtHelper.getCompound(deathListNode, index);
+            NbtCompound inventoryNode = NbtHelper.getCompound(deathNode, INVENTORY);
 
             // restore main stacks (1*9 slots + 3*9 slots)
             List<ItemStack> item = NbtHelper.readSlotsNode((NbtList) inventoryNode.get(ITEM));
