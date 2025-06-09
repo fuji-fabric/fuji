@@ -78,6 +78,73 @@ subprojects { p ->
         testAnnotationProcessor("systems.manifold:manifold-preprocessor:${rootProject.manifold_version}")
     }
 
+    /* Replace properties for each mc version. */
+    processResources {
+        def resourceTargets = [ // Location of where to inject the properties
+                                // Holds info like git commit
+                                // TODO: For some reason this script doesnt work with the core project
+                                "build_info.json",
+
+                                // Properties for each of the loaders
+                                "fabric.mod.json",
+                                "quilt.mod.json",
+                                "META-INF/mods.toml",
+                                "META-INF/neoforge.mods.toml",
+
+                                // The mixins for each of the loaders
+                                "fuji." + p.name + ".fabricLike.mixins.json"
+        ]
+        def intoTargets = ["$buildDir/resources/main/"] // Location of the built resources folder
+
+//        println p.tasks.findByName('shadowJar')
+
+//        // These "hasProperty"'s are so that they can be passed through the cli (ie in the CI)
+//        try {
+//            if (infoGitCommit == "null")
+//                infoGitCommit = 'git rev-parse --verify HEAD'.execute().text.trim()
+//            if (infoGitBranch == "null")
+//                infoGitBranch = 'git symbolic-ref --short HEAD'.execute().text.trim()
+//        } catch (Exception e) {
+//            infoGitCommit = infoGitBranch = "Git not found"
+//            println "Git or Git project not found"
+//        }
+
+        // The left side is what gets replaced in the mod info and the right side is where to get it from in the gradle.properties
+        def replaceProperties = [
+                version                      : mod_version,
+                mod_id                       : mod_id,
+                group                        : maven_group,
+                minecraft_version            : minecraft_version,
+                compatible_minecraft_versions: compatible_minecraft_versions,
+                java_version                 : java_version,
+
+//                info_git_commit              : infoGitBranch,
+//                info_git_branch              : infoGitCommit,
+//                info_build_source            : infoBuildSource,
+
+                mc_publish_dependencies_list : mc_publish_dependencies_list
+        ]
+
+        // replace any properties in the sub-projects with the values defined here
+        inputs.properties replaceProperties
+        replaceProperties.put "project", project
+        filesMatching(resourceTargets) {
+            expand replaceProperties
+        }
+
+        intoTargets.each { target ->
+            if (file(target).exists()) {
+                copy {
+                    from(sourceSets.main.resources) {
+                        include resourceTargets
+                        expand replaceProperties
+                    }
+                    into target
+                }
+            }
+        }
+
+    }
 }
 
 /* Configure for all projects. */
