@@ -21,8 +21,6 @@ import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -241,8 +239,8 @@ public class CommandDescriptor {
             .copy()
             .setStyle(Style.EMPTY
                 .withColor(CommandHelper.EXCEPTION_COLOR)
-                .withHoverEvent(new HoverEvent.ShowText( Text.of("Click to copy the stacktrace.")))
-                .withClickEvent(new ClickEvent.CopyToClipboard(stacktrace)));
+                .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(Text.of("Click to copy the stacktrace.")))
+                .withClickEvent(TextHelper.ClickEvent.makeCopyToClipboardAction(stacktrace)));
 
         source.sendMessage(report);
     }

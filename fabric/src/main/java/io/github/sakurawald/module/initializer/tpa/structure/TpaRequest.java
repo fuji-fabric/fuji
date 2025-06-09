@@ -5,8 +5,6 @@ import io.github.sakurawald.module.initializer.tpa.TpaInitializer;
 import lombok.Getter;
 import lombok.ToString;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -81,8 +79,8 @@ public class TpaRequest {
             Text.literal(CROSS)
                 .fillStyle(Style.EMPTY
                     .withFormatting(Formatting.RED)
-                    .withHoverEvent(new HoverEvent.ShowText(TextHelper.getTextByKey(getSender(), "cancel")))
-                    .withClickEvent(new ClickEvent.RunCommand("/tpacancel %s".formatted(getReceiver().getGameProfile().getName())))
+                    .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(getSender(), "cancel")))
+                    .withClickEvent(TextHelper.ClickEvent.makeRunCommandAction("/tpacancel %s".formatted(getReceiver().getGameProfile().getName())))
                 );
 
         return asSenderText$Description()
@@ -100,15 +98,15 @@ public class TpaRequest {
         Text acceptText = Text.literal(TICK)
             .fillStyle(Style.EMPTY
                 .withFormatting(Formatting.GREEN)
-                .withHoverEvent(new HoverEvent.ShowText(TextHelper.getTextByKey(getReceiver(), "accept")))
-                .withClickEvent(new ClickEvent.RunCommand("/tpaaccept %s".formatted(sender.getGameProfile().getName()))));
+                .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(getReceiver(), "accept")))
+                .withClickEvent(TextHelper.ClickEvent.makeRunCommandAction("/tpaaccept %s".formatted(sender.getGameProfile().getName()))));
 
         Text denyText =
             Text.literal(CROSS)
                 .fillStyle(Style.EMPTY
                     .withFormatting(Formatting.RED)
-                    .withHoverEvent(new HoverEvent.ShowText(TextHelper.getTextByKey(getReceiver(), "deny")))
-                    .withClickEvent(new ClickEvent.RunCommand("/tpadeny %s".formatted(sender.getGameProfile().getName())))
+                    .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(getReceiver(), "deny")))
+                    .withClickEvent(TextHelper.ClickEvent.makeRunCommandAction("/tpadeny %s".formatted(sender.getGameProfile().getName())))
                 );
 
         return asReceiverText$Description()

@@ -432,4 +432,34 @@ public class TextHelper {
             return val;
         };
     }
+
+    public static class ClickEvent {
+
+        public static net.minecraft.text.ClickEvent makeRunCommandAction(String command) {
+            #if MC_VER == MC_1_21_4
+                return new net.minecraft.text.ClickEvent(net.minecraft.text.ClickEvent.Action.RUN_COMMAND, command);
+            #elif MC_VER == MC_1_21_5
+                return new net.minecraft.text.ClickEvent.RunCommand(command);
+            #endif
+        }
+
+        public static net.minecraft.text.ClickEvent makeCopyToClipboardAction(String string) {
+            #if MC_VER == MC_1_21_4
+                return new net.minecraft.text.ClickEvent(net.minecraft.text.ClickEvent.Action.COPY_TO_CLIPBOARD, string);
+            #elif MC_VER == MC_1_21_5
+                return new net.minecraft.text.ClickEvent.CopyToClipboard(string);
+            #endif
+        }
+    }
+
+    public static class HoverEvent {
+
+        public static net.minecraft.text.HoverEvent makeShowTextAction(Text hoverText) {
+            #if MC_VER == MC_1_21_4
+            return new net.minecraft.text.HoverEvent(net.minecraft.text.HoverEvent.Action.SHOW_TEXT, hoverText);
+            #elif MC_VER == MC_1_21_5
+                return new net.minecraft.text.HoverEvent.ShowText(hoverText);
+            #endif
+        }
+    }
 }

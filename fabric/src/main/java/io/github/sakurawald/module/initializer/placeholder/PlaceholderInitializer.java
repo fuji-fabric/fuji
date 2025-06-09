@@ -22,8 +22,6 @@ import io.github.sakurawald.module.initializer.placeholder.job.UpdateSumUpPlaceh
 import io.github.sakurawald.module.initializer.placeholder.structure.SumUpPlaceholder;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -144,10 +142,10 @@ public class PlaceholderInitializer extends ModuleInitializer {
             return TextHelper.getTextByKey(player, "placeholder.pos", x, y, z, dim_display_name)
                 .copy()
                 .fillStyle(Style.EMPTY
-                    .withHoverEvent(new HoverEvent.ShowText(Text.literal(hoverString + "\n")
+                    .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(Text.literal(hoverString + "\n")
                             .append(TextHelper.getTextByKey(player, "chat.xaero_waypoint_add"))
                     ))
-                    .withClickEvent(new ClickEvent.RunCommand(clickCommand))
+                    .withClickEvent(TextHelper.ClickEvent.makeRunCommandAction(clickCommand))
                 );
         });
     }

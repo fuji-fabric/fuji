@@ -12,7 +12,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -111,7 +110,7 @@ public class ChunkScore implements Comparable<ChunkScore> {
         return Text.empty()
             .append(Text.literal(this.toString()))
             .fillStyle(Style.EMPTY
-                .withHoverEvent(new HoverEvent.ShowText(hoverText))
+                .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(hoverText))
                 .withFormatting(this.players.isEmpty() ? Formatting.GRAY : Formatting.DARK_GREEN)
                 .withClickEvent(Managers.getCallbackManager().makeCallbackEvent((player) -> {
                     if (!hasPermissionToClickToTeleport(player)) return;

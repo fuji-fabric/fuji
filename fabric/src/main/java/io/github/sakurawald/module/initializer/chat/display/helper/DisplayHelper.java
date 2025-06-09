@@ -12,7 +12,6 @@ import io.github.sakurawald.module.initializer.chat.display.structure.SoftRefere
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.ClickEvent;
-import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -73,7 +72,7 @@ public class DisplayHelper {
             .copy()
             .fillStyle(
                 Style.EMPTY
-                    .withHoverEvent(new HoverEvent.ShowText(TextHelper.getTextByKey(player, "display.click.prompt")))
+                    .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(player, "display.click.prompt")))
                     .withClickEvent(makeDisplayClickEvent(displayUUID))
             );
     }
@@ -83,7 +82,7 @@ public class DisplayHelper {
         return TextHelper.getTextByKey(player, "display.inventory.text")
             .copy()
             .fillStyle(Style.EMPTY
-                .withHoverEvent(new HoverEvent.ShowText(TextHelper.getTextByKey(player, "display.click.prompt")))
+                .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(player, "display.click.prompt")))
                 .withClickEvent(makeDisplayClickEvent(displayUUID))
             );
     }
@@ -94,7 +93,7 @@ public class DisplayHelper {
 
         MutableText translatable = Text.translatable(player.getMainHandStack().getItem().getTranslationKey());
         translatable.fillStyle(Style.EMPTY
-            .withHoverEvent(new HoverEvent.ShowText(TextHelper.getTextByKey(player, "display.click.prompt")))
+            .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(player, "display.click.prompt")))
             .withClickEvent(makeDisplayClickEvent(displayUUID))
         );
 

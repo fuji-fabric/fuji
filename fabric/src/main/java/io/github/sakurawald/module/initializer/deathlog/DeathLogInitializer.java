@@ -166,8 +166,8 @@ public class DeathLogInitializer extends ModuleInitializer {
             .literal(String.valueOf(index))
             .fillStyle(Style.EMPTY
                 .withFormatting(Formatting.RED)
-                .withHoverEvent(new HoverEvent.ShowText(hoverText))
-                .withClickEvent(new ClickEvent.RunCommand("/deathlog restore %s %d %s".formatted(from, index, to)))
+                .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(hoverText))
+                .withClickEvent(TextHelper.ClickEvent.makeRunCommandAction("/deathlog restore %s %d %s".formatted(from, index, to)))
             )
             .append(TextHelper.TEXT_SPACE);
     }
