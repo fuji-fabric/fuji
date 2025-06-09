@@ -24,14 +24,25 @@ jobs:
         uses: crowdin/github-action@v2
         if: github.ref == 'refs/heads/dev'
         with:
-            upload_sources: true
-            download_sources: false
-            push_sources: true
+            # Define the location of crowdin.yml file.
+            config: "crowdin/crowdin.yml"
 
-            upload_translations: false
+            # Always push the source file to crowdin.
+            upload_sources: true
+            # Never pull the source file from crowdin.
+            download_sources: false
+
+            # Always pull the translation files from crowdin.
             download_translations: true
+            # Never push the translation files to crowdin.
+            upload_translations: false
+
+            # Push downloaded sources to the localization branch ???
+            push_sources: true
+            # Push downloaded translations to the localization branch ???
             push_translations: true
 
+            # Create a pull-request for the translations.
             create_pull_request: true
             pull_request_base_branch_name: 'dev'
             localization_branch_name: crowdin-bot

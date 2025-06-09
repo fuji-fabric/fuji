@@ -9,6 +9,9 @@ base_path: .
 preserve_hierarchy: true
 
 # Define the location to push-to-crowdin and pull-from-crowdin.
-files:
-  - source: crowdin/push-to-crowdin/en_US.json
-    translation: crowdin/pull-from-crowdin/%locale_with_underscore%.json
+files: [
+  {
+    "source": "crowdin/push-to-crowdin/en_US.json",
+    "translation": "crowdin/pull-from-crowdin/%locale_with_underscore%.json"
+  }
+]
