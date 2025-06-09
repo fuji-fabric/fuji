@@ -2,18 +2,14 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 /* Define the gradle plugins. */
 plugins {
-    id "fabric-loom" version "1.7.+"
-    id "maven-publish"
     id "java"
     id "idea"
-    id "com.palantir.git-version" version "3.1.0"
-    id 'checkstyle'
-}
 
-/* Configure the checkstyle gradle plugin. */
-checkstyle {
-    configFile = project.rootProject.file("checkstyle.xml")
-    toolVersion = '10.18.0'
+    // Manifold preprocessor
+    id "systems.manifold.manifold-gradle-plugin" version "0.0.2-alpha"
+
+    id "fabric-loom" version "1.7.+"
+    id "maven-publish"
 }
 
 /* Define the jar repositories. */
@@ -26,14 +22,6 @@ repositories {
     maven { url "https://maven.nucleoid.xyz" }
     maven { url "https://projectlombok.org/edge-releases" }
 }
-
-/* Define top-level props */
-group = project.maven_group
-
-/* Define jar file name */
-def details = versionDetails()
-// must starts with sem-ver to make the fabric loader happy
-version = "${project.mod_version}-${details.gitHash}-mc${project.minecraft_version}"
 
 /* Configure fabric-loom plugin. */
 loom {
@@ -96,7 +84,6 @@ dependencies {
 
     testImplementation "net.fabricmc:fabric-loader-junit:${project.fabric_loader_version}"
 }
-
 
 /* compile */
 tasks.withType(JavaCompile).configureEach {

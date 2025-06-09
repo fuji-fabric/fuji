@@ -1,0 +1,63 @@
+/* Define the gradle plugins. */
+plugins {
+    id "java"
+    id "idea"
+
+    id "com.palantir.git-version" version "3.1.0"
+    id 'checkstyle'
+
+    id "maven-publish"
+}
+
+/* Configure the checkstyle gradle plugin. */
+checkstyle {
+    configFile = project.rootProject.file("checkstyle.xml")
+    toolVersion = '10.18.0'
+}
+
+/* Configure Pre-Processor. */
+def writeBuildGradlePredefine(List<String> mcVers, int mcIndex)
+{
+    // Build the list of preprocessors to use
+    StringBuilder sb = new StringBuilder();
+
+    sb.append("# DON'T TOUCH THIS FILE, This is handled by the build script\n");
+
+
+    for (int i = 0; i < mcVers.size(); i++)
+    {
+        String verStr = mcVers[i].replace(".", "_");
+        sb.append("MC_" + verStr + "=" + i.toString() + "\n");
+
+        if (mcIndex == i)
+            sb.append("MC_VER=" + i.toString() + "\n");
+    }
+
+
+    // Check if this is a development build
+    if (mod_version.toLowerCase().contains("dev"))
+    {
+        // WARNING: only use this for logging, we don't want to have confusion
+        // when a method doesn't work correctly in the release build.
+        sb.append("DEV_BUILD=\n");
+    }
+
+    new File(projectDir, "build.properties").text = sb.toString()
+}
+
+// Transfers the values set in settings.gradle to the rest of the project
+project.gradle.ext.getProperties().each { prop ->
+    rootProject.ext.set(prop.key, prop.value)
+//    println "Added prop [key:" + prop.key + ", value:" + prop.value + "]"
+}
+
+// Sets up manifold stuff
+writeBuildGradlePredefine(rootProject.mcVers, rootProject.mcIndex)
+
+/* Define top-level props */
+group = project.maven_group
+
+/* Define jar file name */
+def details = versionDetails()
+// must starts with sem-ver to make the fabric loader happy
+version = "${project.mod_version}-${details.gitHash}-mc${project.minecraft_version}"

@@ -10,10 +10,48 @@ pluginManagement {
 	}
 }
 
+/** Loads the VersionProperties file for the currently selected Minecraft version. */
+def loadProperties() {
+	def defaultMcVersion = "1.21.5"
+
+	def mcVersion = ""
+	def mcVers = fileTree("versionProperties").files.name // Get all the files in "versionProperties"
+	for (int i = 0; i < mcVers.size(); i++) {
+		mcVers[i] = mcVers[i].replaceAll("\\.properties", "") // As we are getting the file names, we should remove the ".properties" at the end to get the versions
+	}
+
+	mcVers.sort() // Sort so it always goes from oldest to newest
+
+	int mcIndex = -1
+	println "Avalible MC versions: ${mcVers}"
+	if (hasProperty("mcVer")) {
+		mcVersion = mcVer
+		mcIndex = mcVers.indexOf(mcVer)
+	}
+	if (mcIndex == -1) {
+		println "No mcVer set or the set mcVer is invalid! Defaulting to ${defaultMcVersion}."
+		println "Tip: Use -PmcVer=\"${defaultMcVersion}\" in cmd arg to set mcVer."
+		mcVersion = defaultMcVersion
+		mcIndex = mcVers.indexOf(defaultMcVersion)
+		assert mcIndex != -1
+	}
+
+	println "Loading properties file at " + mcVersion + ".properties"
+	def props = new Properties()
+	props.load(new FileInputStream("$rootDir/versionProperties/"+"$mcVersion"+".properties"))
+
+	props.each { prop ->
+		gradle.ext.set(prop.key, prop.value)
+		// println "Added prop [key:" + prop.key + ", value:" + prop.value + "]"
+	}
+	gradle.ext.mcVers = mcVers
+	gradle.ext.mcIndex = mcIndex
+}
+loadProperties()
+
+
 /* Include child projects. */
 include("fabric")
 
-
 /* Define the name of root project. */
 rootProject.name = 'fuji'
-
