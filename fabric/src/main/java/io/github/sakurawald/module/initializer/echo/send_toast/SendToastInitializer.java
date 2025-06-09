@@ -1,5 +1,9 @@
 package io.github.sakurawald.module.initializer.echo.send_toast;
 
+#if MC_VER == MC_1_21_5
+import net.minecraft.util.AssetInfo;
+#endif
+
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
@@ -25,7 +29,6 @@ import net.minecraft.network.packet.s2c.play.AdvancementUpdateS2CPacket;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.AssetInfo;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,7 +48,13 @@ public class SendToastInitializer extends ModuleInitializer {
             icon.getDefaultStack()
             , title
             , Text.empty()
-            , Optional.of(new AssetInfo(Identifier.of(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
+            , Optional.of(
+                #if MC_VER == MC_1_21_4
+                    Identifier.of(DUMMY_RESOURCE_IMAGE_IDENTIFIER)
+                #elif MC_VER == MC_1_21_5
+                    new AssetInfo(Identifier.of(DUMMY_RESOURCE_IMAGE_IDENTIFIER))
+                #endif
+            )
             , advancementFrame
             , true
             , false
@@ -83,14 +92,22 @@ public class SendToastInitializer extends ModuleInitializer {
         Collection<AdvancementEntry> toEarn = List.of(advancementEntry);
         Set<Identifier> toRemove = Set.of();
         Map<Identifier, AdvancementProgress> toSetProgress = Map.of(identifier, advancementProgress);
-        return new AdvancementUpdateS2CPacket(false, toEarn, toRemove, toSetProgress, true);
+        return makeAdvancementUpdatePacket(toEarn,toRemove,toSetProgress);
+    }
+
+    private static AdvancementUpdateS2CPacket makeAdvancementUpdatePacket(Collection<AdvancementEntry> toEarn, Set<Identifier> toRemove, Map<Identifier, AdvancementProgress> toSetProgress) {
+        #if MC_VER == MC_1_21_4
+            return new AdvancementUpdateS2CPacket(false, toEarn, toRemove, toSetProgress);
+        #elif MC_VER == MC_1_21_5
+            return new AdvancementUpdateS2CPacket(false, toEarn, toRemove, toSetProgress, true);
+        #endif
     }
 
     private static @NotNull AdvancementUpdateS2CPacket makeRevokePacket(Identifier identifier) {
         Collection<AdvancementEntry> toEarn = List.of();
         Set<Identifier> toRemove = Set.of(identifier);
         Map<Identifier, AdvancementProgress> toSetProgress = Map.of();
-        return new AdvancementUpdateS2CPacket(false, toEarn, toRemove, toSetProgress, true);
+        return makeAdvancementUpdatePacket(toEarn, toRemove, toSetProgress);
     }
 
     @CommandNode("send-toast")

@@ -20,7 +20,12 @@ public class InventoryHelper {
 
     // Main Stacks (1*9 slots + 3*9 slots)
     public static DefaultedList<ItemStack> getMainStacks(PlayerEntity player) {
+        #if MC_VER == MC_1_21_4
+        return player.getInventory().main;
+        #elif MC_VER == MC_1_21_5
         return player.getInventory().getMainStacks();
+        #endif
+
     }
 
     // Offhand (1 slot) = EquipmentSlot.OFFHAND
@@ -44,7 +49,11 @@ public class InventoryHelper {
     public static void setArmorStacks(PlayerEntity player, List<ItemStack> stacks) {
 
         for (int i = 0; i < stacks.size(); i++) {
+            #if MC_VER == MC_1_21_4
+            player.getInventory().armor.set(i, stacks.get(i));
+            #elif MC_VER == MC_1_21_5
             player.equipment.put(PLAYER_ARMOR_SLOTS.get(i), stacks.get(i));
+            #endif
         }
     }
 
@@ -52,7 +61,12 @@ public class InventoryHelper {
         // It looks like the size of stacks is 0 or 1.
         if (stacks.isEmpty()) return;
 
-        player.equipment.put(EquipmentSlot.OFFHAND, stacks.getFirst());
+        #if MC_VER == MC_1_21_4
+            player.getInventory().offHand.set(0, stacks.get(0));
+        #elif MC_VER == MC_1_21_5
+            player.equipment.put(EquipmentSlot.OFFHAND, stacks.getFirst());
+        #endif
+
     }
 
     public static List<DefaultedList<ItemStack>> getCombinedInventory(PlayerEntity player) {

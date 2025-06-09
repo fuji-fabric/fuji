@@ -102,7 +102,13 @@ public class SkinRestorer {
 
                         observer.networkHandler.sendPacket(new DifficultyS2CPacket(observer.getServerWorld().getDifficulty(), player.getServerWorld().getLevelProperties().isDifficultyLocked()));
 
+                        #if MC_VER == MC_1_21_4
+                        observer.networkHandler.sendPacket(new UpdateSelectedSlotS2CPacket(observer.getInventory().selectedSlot));
+                        #elif MC_VER == MC_1_21_5
                         observer.networkHandler.sendPacket(new UpdateSelectedSlotS2CPacket(observer.getInventory().getSelectedSlot()));
+                        #endif
+
+
                         observer.sendAbilitiesUpdate();
                         observer.playerScreenHandler.updateToClient();
                         for (StatusEffectInstance instance : observer.getStatusEffects()) {

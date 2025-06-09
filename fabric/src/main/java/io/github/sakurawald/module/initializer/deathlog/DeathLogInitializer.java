@@ -20,8 +20,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -89,7 +87,7 @@ public class DeathLogInitializer extends ModuleInitializer {
             // restore main stacks (1*9 slots + 3*9 slots)
             List<ItemStack> item = NbtHelper.readSlotsNode((NbtList) inventoryNode.get(ITEM));
             for (int i = 0; i < item.size(); i++) {
-                to.getInventory().getMainStacks().set(i, item.get(i));
+                InventoryHelper.getMainStacks(to).set(i, item.get(i));
             }
 
             // restore armor (4 slot)
