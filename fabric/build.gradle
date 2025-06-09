@@ -1,5 +1,6 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
+/* Define the gradle plugins. */
 plugins {
     id "fabric-loom" version "1.7.+"
     id "maven-publish"
@@ -9,11 +10,13 @@ plugins {
     id 'checkstyle'
 }
 
+/* Configure the checkstyle gradle plugin. */
 checkstyle {
     configFile = project.rootProject.file("checkstyle.xml")
     toolVersion = '10.18.0'
 }
 
+/* Define the jar repositories. */
 repositories {
     mavenCentral()
     maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
@@ -24,15 +27,15 @@ repositories {
     maven { url "https://projectlombok.org/edge-releases" }
 }
 
-/* top-level props */
+/* Define top-level props */
 group = project.maven_group
 
-/* jar file name */
+/* Define jar file name */
 def details = versionDetails()
 // must starts with sem-ver to make the fabric loader happy
 version = "${project.mod_version}-${details.gitHash}-mc${project.minecraft_version}"
 
-/* fabric env */
+/* Configure fabric-loom plugin. */
 loom {
     accessWidenerPath = file("src/main/resources/fuji.accesswidener")
 
@@ -46,6 +49,13 @@ loom {
     runs {
         configureEach {
             vmArgs("-Xms8G -Xmx8G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=40 -XX:G1MaxNewSizePercent=50 -XX:G1HeapRegionSize=16M -XX:G1ReservePercent=15 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -XX:+UseLargePages -XX:+UseTransparentHugePages -Duser.timezone=GMT+08 -Dmixin.debug.export=false".split(" "))
+        }
+
+        server {
+            server()
+            setConfigName("Fabric Server")
+            ideConfigGenerated(true)
+            runDir("../run/server")
         }
     }
 }

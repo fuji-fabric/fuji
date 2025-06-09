@@ -28,3 +28,4 @@
 - feature: command_gui module.
 - feature: compare command_cooldown and command_condition.
 - docs: find useful things https://vanillatweaks.net/picker/datapacks/
+- Ignore the `lang/` dir in `src/` dir, we only need to copy the files from `crowdin/` for building.

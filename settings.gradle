@@ -1,3 +1,4 @@
+/* Define the repositories for the project. */
 pluginManagement {
 	repositories {
 		maven {
@@ -9,5 +10,10 @@ pluginManagement {
 	}
 }
 
+/* Include child projects. */
+include("fabric")
+
+
+/* Define the name of root project. */
 rootProject.name = 'fuji'
 
