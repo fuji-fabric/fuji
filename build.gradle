@@ -5,9 +5,13 @@ plugins {
     id "java"
     id "idea"
 
+    // Used to get info from git.
     id "com.palantir.git-version" version "3.1.0"
+
+    // Used to check coding style.
     id 'checkstyle'
 
+    // Used for pre-processor.
     id "systems.manifold.manifold-gradle-plugin" version "0.0.2-alpha"
 }
 
@@ -59,11 +63,6 @@ writeBuildGradlePredefine(rootProject.mcVers, rootProject.mcIndex)
 /* Define top-level props */
 group = project.maven_group
 
-/* Define jar file name */
-def details = versionDetails()
-// must starts with sem-ver to make the fabric loader happy
-version = "${project.mod_version}-${details.gitHash}-mc${project.minecraft_version}"
-
 /* Configure shared parts for each sub project. */
 subprojects { p ->
 
@@ -101,6 +100,11 @@ allprojects { p ->
         // VanillaGradle and Mixins in common module.
         maven { url "https://repo.spongepowered.org/maven/" }
     }
+
+    /* Define the version string. */
+    def gitVersionDetails = versionDetails()
+    // must starts with sem-ver to make the fabric loader happy
+    version = "${project.mod_version}-${gitVersionDetails.gitHash}-mc${project.minecraft_version}"
 
     /* Copy accesswidener file. */
     task copyCommonLoaderResources(type: Copy) {
