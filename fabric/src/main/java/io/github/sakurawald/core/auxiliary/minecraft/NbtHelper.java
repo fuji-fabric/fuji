@@ -35,7 +35,7 @@ public class NbtHelper {
             }
 
             // root is ensured not-null, just get it.
-            root = root.getCompound(node).get();
+            root = getCompound(root, node);
         }
 
         /* set the value */
@@ -62,7 +62,7 @@ public class NbtHelper {
                 LogUtil.error("nbt {} don't has path {}", root, path);
             }
 
-            root = root.getCompound(node).get();
+            root = getCompound(root, node);
         }
 
         // get the value
@@ -97,11 +97,10 @@ public class NbtHelper {
 
         List<ItemStack> ret = new ArrayList<>();
         for (int i = 0; i < node.size(); i++) {
-            ret.add(fromNbtOrEmpty(RegistryHelper.getDefaultWrapperLookup(), node.getCompound(i).get()));
+            ret.add(fromNbtOrEmpty(RegistryHelper.getDefaultWrapperLookup(), getCompound(node, i)));
         }
         return ret;
     }
-
 
     public static void withNbtFile(@NotNull Path path, @NotNull Consumer<NbtCompound> function) {
         // discard the return value
@@ -133,5 +132,53 @@ public class NbtHelper {
 
         /* return the useful value to outer space */
         return value;
+    }
+
+    public static @Nullable String getString(NbtCompound root, String key) {
+        #if MC_VER == MC_1_21_4
+            return root.getString(key);
+        #elif MC_VER == MC_1_21_5
+            return root.getString(key).orElse(null);
+        #endif
+    }
+
+    public static @Nullable NbtCompound getCompound(NbtCompound root, String key) {
+        #if MC_VER == MC_1_21_4
+            return root.getCompound(key);
+        #elif MC_VER == MC_1_21_5
+            return root.getCompound(key).get();
+        #endif
+    }
+
+    public static @Nullable NbtCompound getCompound(NbtList list, int index) {
+        #if MC_VER == MC_1_21_4
+            return list.getCompound(index);
+        #elif MC_VER == MC_1_21_5
+            return list.getCompound(index).get();
+        #endif
+    }
+
+    public static int getInt(NbtCompound root, String key) {
+        #if MC_VER == MC_1_21_4
+            return root.getInt(key);
+        #elif MC_VER == MC_1_21_5
+            return root.getInt(key).get();
+        #endif
+    }
+
+    public static float getFloat(NbtCompound root, String key) {
+        #if MC_VER == MC_1_21_4
+            return root.getFloat(key);
+        #elif MC_VER == MC_1_21_5
+            return root.getFloat(key).get();
+        #endif
+    }
+
+    public static double getDouble(NbtCompound root, String key) {
+        #if MC_VER == MC_1_21_4
+        return root.getDouble(key);
+        #elif MC_VER == MC_1_21_5
+            return root.getDouble(key).get();
+        #endif
     }
 }

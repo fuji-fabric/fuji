@@ -84,7 +84,7 @@ public class DeathLogInitializer extends ModuleInitializer {
             }
 
             /* restore inventory */
-            NbtCompound inventoryNode = deathsNode.getCompound(index).get().getCompound(INVENTORY).get();
+            NbtCompound inventoryNode = NbtHelper.getCompound(deathsNode, index);
 
             // restore main stacks (1*9 slots + 3*9 slots)
             List<ItemStack> item = NbtHelper.readSlotsNode((NbtList) inventoryNode.get(ITEM));
@@ -98,14 +98,14 @@ public class DeathLogInitializer extends ModuleInitializer {
 
             // restore offhand (1 slot)
             List<ItemStack> offhand = NbtHelper.readSlotsNode((NbtList) inventoryNode.get(OFFHAND));
-            InventoryHelper.setOffhandStacks(to,offhand);
+            InventoryHelper.setOffhandStacks(to, offhand);
 
             // restore score
-            to.setScore(inventoryNode.getInt(SCORE).get());
+            to.setScore(NbtHelper.getInt(inventoryNode, SCORE));
 
             // restore exp
-            to.experienceLevel = inventoryNode.getInt(XP_LEVEL).get();
-            to.experienceProgress = inventoryNode.getFloat(XP_PROGRESS).get();
+            to.experienceLevel = NbtHelper.getInt(inventoryNode, XP_LEVEL);
+            to.experienceProgress = NbtHelper.getFloat(inventoryNode, XP_PROGRESS);
 
             TextHelper.sendMessageByKey(source, "deathlog.restore.success", from, index, to.getGameProfile().getName());
         });
@@ -138,7 +138,7 @@ public class DeathLogInitializer extends ModuleInitializer {
             MutableText deathlogViewText = Text.empty();
             String to = player.getGameProfile().getName();
             for (int i = 0; i < deaths.size(); i++) {
-                deathlogViewText.append(asViewText(player, deaths.getCompound(i).get(), $from, i, to));
+                deathlogViewText.append(asViewText(player, NbtHelper.getCompound(deaths, i), $from, i, to));
             }
 
             player.sendMessage(deathlogViewText);
@@ -148,16 +148,19 @@ public class DeathLogInitializer extends ModuleInitializer {
     }
 
     private static @NotNull Text asViewText(Object audience, @NotNull NbtCompound node, String from, int index, String to) {
-        NbtCompound remarkTag = node.getCompound(REMARK).get();
+        NbtCompound remarkTag = NbtHelper.getCompound(node, REMARK);
 
         MutableText hoverText = Text.empty()
-            .append(TextHelper.getTextByKey(audience, "deathlog.view.time", remarkTag.getString(TIME).get()))
+            .append(TextHelper.getTextByKey(audience, "deathlog.view.time", NbtHelper.getString(remarkTag, TIME)))
             .append(TextHelper.TEXT_NEWLINE)
-            .append(TextHelper.getTextByKey(audience, "deathlog.view.reason", remarkTag.getString(REASON).get()))
+            .append(TextHelper.getTextByKey(audience, "deathlog.view.reason", NbtHelper.getString(remarkTag, REASON)))
             .append(TextHelper.TEXT_NEWLINE)
-            .append(TextHelper.getTextByKey(audience, "deathlog.view.dimension", remarkTag.getString(DIMENSION).get()))
+            .append(TextHelper.getTextByKey(audience, "deathlog.view.dimension", NbtHelper.getString(remarkTag, DIMENSION)))
             .append(TextHelper.TEXT_NEWLINE)
-            .append(TextHelper.getTextByKey(audience, "deathlog.view.coordinate", remarkTag.getDouble(X).get(), remarkTag.getDouble(Y).get(), remarkTag.getDouble(Z).get()));
+            .append(TextHelper.getTextByKey(audience, "deathlog.view.coordinate"
+                , NbtHelper.getDouble(remarkTag, X)
+                , NbtHelper.getDouble(remarkTag, Y)
+                , NbtHelper.getDouble(remarkTag,Z)));
 
         return Text
             .literal(String.valueOf(index))
