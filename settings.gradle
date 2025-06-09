@@ -5,8 +5,15 @@ pluginManagement {
 			name = 'Fabric'
 			url = 'https://maven.fabricmc.net/'
 		}
+		maven { // Used for Vanilla Minecraft's libraries
+			name "Sponge"
+			url "https://repo.spongepowered.org/repository/maven-public/"
+		}
+
+		/* The fallback repos. */
 		mavenCentral()
 		gradlePluginPortal()
+
 	}
 }
 
@@ -50,6 +57,7 @@ def loadProperties() {
 loadProperties()
 
 /* Include child projects. */
+include("common")
 include("fabric")
 
 /* Define the name of root project. */

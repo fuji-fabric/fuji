@@ -98,6 +98,16 @@ allprojects { p ->
         maven { url "https://jitpack.io" }
         maven { url "https://projectlombok.org/edge-releases" }
 
+        // VanillaGradle and Mixins in common module.
+        maven { url "https://repo.spongepowered.org/maven/" }
+    }
+
+    /* Copy accesswidener file. */
+    task copyCommonLoaderResources(type: Copy) {
+        from project(":common").file("src/main/resources/${access_widener_version}.fuji.accesswidener")
+        into(file(p.file("build/resources/main")))
+        rename "${access_widener_version}.fuji.accesswidener", "fuji.accesswidener"
+
     }
 }
 
