@@ -3,6 +3,7 @@ package io.github.sakurawald.module.initializer.command_toolbox.sit;
 import io.github.sakurawald.core.annotation.Cite;
 import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandSource;
@@ -19,7 +20,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -130,11 +130,11 @@ public class SitInitializer extends ModuleInitializer {
             @Override
             public void tick() {
                 if (hasPassenger && getPassengerList().isEmpty()) {
-                    kill((ServerWorld) this.getWorld());
+                    EntityHelper.killEntity(this);
                 }
 
                 if (isChairBlockBroken()) {
-                    kill((ServerWorld) this.getWorld());
+                    EntityHelper.killEntity(this);
                 }
 
                 // sync the leg position
@@ -167,8 +167,10 @@ public class SitInitializer extends ModuleInitializer {
     @Override
     protected void onInitialize() {
         // kill all sit entities on server stopping
-        ServerLifecycleEvents.SERVER_STOPPING.register((server) -> CHAIR_ENTITY_LIST.forEach(e -> {
-            if (e.isAlive()) e.kill((ServerWorld) e.getWorld());
+        ServerLifecycleEvents.SERVER_STOPPING.register((server) -> CHAIR_ENTITY_LIST.forEach(entity -> {
+            if (entity.isAlive()) {
+                EntityHelper.killEntity(entity);
+            }
         }));
     }
 }

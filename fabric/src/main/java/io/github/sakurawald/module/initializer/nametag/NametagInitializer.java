@@ -9,7 +9,6 @@ import io.github.sakurawald.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.nametag.config.model.NametagConfigModel;
 import io.github.sakurawald.module.initializer.nametag.job.UpdateNametagJob;
-import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
@@ -65,11 +64,17 @@ public class NametagInitializer extends ModuleInitializer {
             }
         };
 
-        /* let the nametag riding in internal server-side, so that the server will handle the position update for nametags. */
+        /* Make the nametag entity invulnerable. */
         nametag.setInvulnerable(true);
-        nametag.setPose(EntityPose.STANDING);
-        nametag.vehicle = player;
-        nametag.vehicle.addPassenger(nametag);
+
+        /* let the nametag riding in internal server-side, so that the server will handle the position update for nametags. */
+        #if MC_VER == MC_1_21
+            nametag.startRiding(player);
+        #elif MC_VER > MC_1_21
+            nametag.setPose(EntityPose.STANDING);
+            nametag.vehicle = player;
+            nametag.vehicle.addPassenger(nametag);
+        #endif
 
         /* send packet to client */
         sendExistingNametagsToTheNewJoinedPlayer(player);

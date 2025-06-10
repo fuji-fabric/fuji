@@ -4,6 +4,7 @@ import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.core.command.annotation.CommandSource;
@@ -64,7 +65,7 @@ public class TpposInitializer extends ModuleInitializer {
         int $minRange = minRange.orElse(0);
         int $maxRange = maxRange.orElse((int) world.getWorldBorder().getSize() / 2);
         int $minY = minY.orElse(world.getBottomY());
-        int $maxY = maxY.orElse(world.getTopYInclusive());
+        int $maxY = maxY.orElse(WorldHelper.getTopY(world));
         int $maxTryTimes = maxTryTimes.orElse(8);
 
         TeleportSetup teleportSetup = new TeleportSetup(RegistryHelper.ofString(world), $centerX, $centerZ, $circle, $minRange, $maxRange, $minY

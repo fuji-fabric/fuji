@@ -64,7 +64,11 @@ public class SpatialPose {
         }
 
         /* make position flags */
-        player.teleport(serverLevel, this.x, this.y, this.z, flags, this.yaw, this.pitch, true);
+        #if MC_VER == MC_1_21
+            player.teleport(serverLevel, this.x, this.y, this.z, flags, this.yaw, this.pitch);
+        #elif MC_VER > MC_1_21
+            player.teleport(serverLevel, this.x, this.y, this.z, flags, this.yaw, this.pitch, true);
+        #endif
     }
 
     public void teleport(@NotNull ServerPlayerEntity player) {

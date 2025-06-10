@@ -2,6 +2,7 @@ package io.github.sakurawald.core.auxiliary.minecraft;
 
 import com.mojang.authlib.GameProfile;
 import lombok.experimental.UtilityClass;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.c2s.common.SyncedClientOptions;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -58,4 +59,13 @@ public class EntityHelper {
 
         return userCache.findByName(playerName);
     }
+
+    public static void killEntity(Entity entity) {
+        #if MC_VER == MC_1_21
+            entity.kill();
+        #elif MC_VER > MC_1_21
+            entity.kill(entity.getServerWorld());
+        #endif
+    }
+
 }

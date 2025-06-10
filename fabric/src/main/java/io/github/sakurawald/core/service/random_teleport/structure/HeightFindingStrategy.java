@@ -1,5 +1,6 @@
 package io.github.sakurawald.core.service.random_teleport.structure;
 
+import io.github.sakurawald.core.auxiliary.minecraft.WorldHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.world.ServerWorld;
@@ -26,7 +27,7 @@ public enum HeightFindingStrategy implements HeightFinder {
     }
 
     private static int computeMaxY(@NotNull Chunk chunk) {
-        final int maxY = chunk.getTopYInclusive();
+        final int maxY = WorldHelper.getTopY(chunk);
         ChunkSection[] sections = chunk.getSectionArray();
         int maxSectionIndex = Math.min(sections.length - 1, maxY >> 4);
 
@@ -105,7 +106,7 @@ public enum HeightFindingStrategy implements HeightFinder {
 
     public static int getChunkHighestNonEmptySectionYOffsetOrTopY(@NotNull Chunk chunk) {
         int i = chunk.getHighestNonEmptySection();
-        return i == chunk.getTopYInclusive() ? chunk.getBottomY() : ChunkSectionPos.getBlockCoord(chunk.sectionIndexToCoord(i));
+        return i == WorldHelper.getTopY(chunk) ? chunk.getBottomY() : ChunkSectionPos.getBlockCoord(chunk.sectionIndexToCoord(i));
     }
 
     @Override

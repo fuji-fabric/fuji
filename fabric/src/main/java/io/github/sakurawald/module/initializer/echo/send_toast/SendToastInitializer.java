@@ -49,7 +49,7 @@ public class SendToastInitializer extends ModuleInitializer {
             , title
             , Text.empty()
             , Optional.of(
-                #if MC_VER == MC_1_21_3 || MC_VER == MC_1_21_4
+                #if MC_VER >= MC_1_21 && MC_VER <= MC_1_21_4
                     Identifier.of(DUMMY_RESOURCE_IMAGE_IDENTIFIER)
                 #elif MC_VER == MC_1_21_5
                     new AssetInfo(Identifier.of(DUMMY_RESOURCE_IMAGE_IDENTIFIER))
@@ -96,7 +96,7 @@ public class SendToastInitializer extends ModuleInitializer {
     }
 
     private static AdvancementUpdateS2CPacket makeAdvancementUpdatePacket(Collection<AdvancementEntry> toEarn, Set<Identifier> toRemove, Map<Identifier, AdvancementProgress> toSetProgress) {
-        #if MC_VER == MC_1_21_3 || MC_VER == MC_1_21_4
+        #if MC_VER >= MC_1_21 && MC_VER <= MC_1_21_4
             return new AdvancementUpdateS2CPacket(false, toEarn, toRemove, toSetProgress);
         #elif MC_VER == MC_1_21_5
             return new AdvancementUpdateS2CPacket(false, toEarn, toRemove, toSetProgress, true);

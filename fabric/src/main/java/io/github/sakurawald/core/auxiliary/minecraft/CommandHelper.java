@@ -6,6 +6,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import lombok.experimental.UtilityClass;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -123,6 +124,14 @@ public class CommandHelper {
                 return consumer.apply(player, mainHandStack);
             });
         }
+    }
+
+    public static ServerCommandSource getCommandSource(Entity entity) {
+        #if MC_VER == MC_1_21
+            return entity.getCommandSource();
+        #elif MC_VER > MC_1_21
+            return entity.getCommandSource(entity.getWorld());
+        #endif
     }
 
 }

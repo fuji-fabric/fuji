@@ -36,7 +36,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
@@ -117,7 +116,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
             /* execute as */
             ExecuteAsType executeAsType = e.getExecuteAsType();
-            ServerCommandSource source = player.getCommandSource((ServerWorld) player.getWorld());
+            ServerCommandSource source = CommandHelper.getCommandSource(player);
             switch (executeAsType) {
                 case CONSOLE -> CommandExecutor.execute(ExtendedCommandSource.asConsole(source), e.getCommand());
                 case PLAYER ->

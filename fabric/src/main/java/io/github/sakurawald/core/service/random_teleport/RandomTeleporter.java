@@ -6,6 +6,7 @@ import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.core.service.random_teleport.structure.HeightFinder;
 import io.github.sakurawald.core.service.random_teleport.structure.HeightFindingStrategy;
 import io.github.sakurawald.core.structure.SpatialPose;
@@ -139,7 +140,7 @@ public class RandomTeleporter {
             && blockState.getBlock() != Blocks.POWDER_SNOW
             && blockState.getBlock() != Blocks.FIRE
             && pos.getY() >= chunk.getBottomY()
-            && pos.getY() <= chunk.getTopYInclusive();
+            && pos.getY() <= WorldHelper.getTopY(chunk);
     }
 
     private static @NotNull Iterable<BlockPos.Mutable> getChunkCandidateBlocks(@NotNull ChunkPos chunkPos) {

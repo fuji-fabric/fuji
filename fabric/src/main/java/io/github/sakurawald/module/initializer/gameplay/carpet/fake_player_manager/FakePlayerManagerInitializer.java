@@ -4,6 +4,7 @@ import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
@@ -66,7 +67,7 @@ public class FakePlayerManagerInitializer extends ModuleInitializer {
                             }
 
                             /* kill all fake players due to expiration */
-                            fakePlayer.kill(fakePlayer.getServerWorld());
+                            EntityHelper.killEntity(fakePlayer);
                             TextHelper.sendBroadcastByKey("fake_player_manager.kick_for_expiration", fakePlayer.getGameProfile().getName(), ownerPlayerName);
                             return false;
                         }
@@ -76,7 +77,7 @@ public class FakePlayerManagerInitializer extends ModuleInitializer {
                             allowFakePlayers[0]++;
                             return true;
                         } else {
-                            fakePlayer.kill(fakePlayer.getServerWorld());
+                            EntityHelper.killEntity(fakePlayer);
                             TextHelper.sendBroadcastByKey("fake_player_manager.kick_for_amount", fakePlayer.getGameProfile().getName(), ownerPlayerName);
                             return false;
                         }

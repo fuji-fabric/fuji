@@ -20,12 +20,11 @@ public class InventoryHelper {
 
     // Main Stacks (1*9 slots + 3*9 slots)
     public static DefaultedList<ItemStack> getMainStacks(PlayerEntity player) {
-        #if MC_VER == MC_1_21_3 || MC_VER == MC_1_21_4
+        #if MC_VER >= MC_1_21 && MC_VER <= MC_1_21_4
         return player.getInventory().main;
         #elif MC_VER == MC_1_21_5
         return player.getInventory().getMainStacks();
         #endif
-
     }
 
     // Offhand (1 slot) = EquipmentSlot.OFFHAND

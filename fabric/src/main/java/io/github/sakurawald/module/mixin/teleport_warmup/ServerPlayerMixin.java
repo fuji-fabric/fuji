@@ -23,8 +23,15 @@ import java.util.Set;
 public abstract class ServerPlayerMixin {
 
     @SuppressWarnings("CancellableInjectionUsage")
+
+        #if MC_VER == MC_1_21
+    @Inject(method = "teleport(Lnet/minecraft/server/world/ServerWorld;DDDLjava/util/Set;FF)Z", at = @At("HEAD"), cancellable = true)
+    public void interceptTeleportAndAddTicket(ServerWorld serverWorld, double x, double y, double z, Set<PositionFlag> set, float yaw, float pitch, CallbackInfoReturnable<Boolean> cir)
+        #elif MC_VER > MC_1_21
     @Inject(method = "teleport", at = @At("HEAD"), cancellable = true)
-    public void interceptTeleportAndAddTicket(ServerWorld serverWorld, double x, double y, double z, Set<PositionFlag> set, float yaw, float pitch, boolean bl, CallbackInfoReturnable<Boolean> cir) {
+    public void interceptTeleportAndAddTicket(ServerWorld serverWorld, double x, double y, double z, Set<PositionFlag> set, float yaw, float pitch, boolean bl, CallbackInfoReturnable<Boolean> cir)
+        #endif
+    {
         /* Skip the teleport warmup if target dimension is not inside effective dimensions */
         if (!TeleportWarmupInitializer.config.model().dimension.effective_dimensions.contains(RegistryHelper.ofString(serverWorld))) {
             return;

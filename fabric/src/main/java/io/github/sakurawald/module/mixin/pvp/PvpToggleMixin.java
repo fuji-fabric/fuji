@@ -1,11 +1,11 @@
 package io.github.sakurawald.module.mixin.pvp;
 
 import com.mojang.authlib.GameProfile;
+import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.module.initializer.pvp.PvpInitializer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +25,8 @@ public abstract class PvpToggleMixin extends PlayerEntity {
     public void $shouldDamagePlayer(@NotNull PlayerEntity sourcePlayer, @NotNull CallbackInfoReturnable<Boolean> cir) {
         if (this == sourcePlayer) return;
 
-        ServerPlayerEntity player = sourcePlayer.getCommandSource((ServerWorld) sourcePlayer.getWorld()).getPlayer();
+        ServerPlayerEntity player = CommandHelper.getCommandSource(sourcePlayer).getPlayer();
+
         if (player == null) return;
 
         if (!PvpInitializer.contains(sourcePlayer.getGameProfile().getName())) {
