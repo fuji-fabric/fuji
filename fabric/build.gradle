@@ -91,7 +91,7 @@ java {
 
 /* Replace the version in fabric.mod.json file */
 processResources {
-    outputs.upToDateWhen { false }
+//    outputs.upToDateWhen { false }
     dependsOn(copyCommonResources)
 }
 
@@ -105,5 +105,5 @@ tasks.register('deleteWorldLockFile') {
 }
 tasks.runServer.dependsOn(deleteWorldLockFile)
 
-/* Generate graph (Actually, the graph files should be generated before process the resources) */
+/* Re-generate graph (Actually, the graph files should be generated before process the resources) */
 tasks.runServer.dependsOn(check)
