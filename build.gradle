@@ -20,6 +20,7 @@ checkstyle {
 }
 
 /* Configure Pre-Processor. */
+
 def writeBuildGradlePredefine(List<String> targetMcVersions, int activeMcVersionIndex) {
     // Build the list of preprocessors to use
     StringBuilder sb = new StringBuilder();
@@ -34,8 +35,7 @@ def writeBuildGradlePredefine(List<String> targetMcVersions, int activeMcVersion
     }
 
     // Check if this is a development build
-    if (mod_version.toLowerCase().contains("dev"))
-    {
+    if (mod_version.toLowerCase().contains("dev")) {
         // WARNING: only use this for logging, we don't want to have confusion
         // when a method doesn't work correctly in the release build.
         sb.append("DEV_BUILD=\n");
@@ -173,12 +173,33 @@ allprojects { p ->
 
     /* Copy common resource files. */
     task copyCommonResources(type: Copy) {
-            println("Copy accesswidener file for specified MC version.")
-            from project(":common").file("src/main/resources/${access_widener_version}.fuji.accesswidener")
-            into(file(p.file("build/resources/main")))
-            rename "${access_widener_version}.fuji.accesswidener", "fuji.accesswidener"
-
+        println("Copy accesswidener file for specified MC version.")
+        from project(":common").file("src/main/resources/${access_widener_version}.fuji.accesswidener")
+        into(file(p.file("build/resources/main")))
+        rename "${access_widener_version}.fuji.accesswidener", "fuji.accesswidener"
     }
+
+    task copyLanguageResources(type: Copy) {
+        println("Copy language files from source to destination.")
+
+        def sourceDir = project(":crowdin").file("pull-from-crowdin/")
+        println("The source dir: " + sourceDir)
+
+        def destinationDir = file("${layout.buildDirectory.get()}/resources/main/lang/")
+        println("The destination dir: " + destinationDir)
+
+        from(sourceDir)
+        into(destinationDir)
+        include "**/*.json"
+    }
+
+    task copyOtherResources(type: Copy) {
+            println("Copy all resource files in :common project.")
+            from project(":common").file("src/main/resources/")
+            into(file(p.file("build/resources/main/")))
+            exclude '**/*.accesswidener'
+    }
+
 //    task copyCommonResources(type: Copy) {
 //        // Copy all resource files in :common project.
 //        copy {

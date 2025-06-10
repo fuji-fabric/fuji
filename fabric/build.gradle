@@ -92,6 +92,8 @@ java {
 /* Replace the version in fabric.mod.json file */
 processResources {
     dependsOn(copyCommonResources)
+    dependsOn(copyLanguageResources)
+    dependsOn(copyOtherResources)
 }
 
 /* Validate the access widener file. */
