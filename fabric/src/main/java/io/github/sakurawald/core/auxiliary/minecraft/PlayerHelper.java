@@ -7,8 +7,10 @@ import net.minecraft.network.packet.c2s.common.SyncedClientOptions;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+#if MC_VER >= MC_1_21_6
 import net.minecraft.storage.ReadView;
 import net.minecraft.util.ErrorReporter;
+#endif
 import net.minecraft.util.UserCache;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,7 +63,7 @@ public class PlayerHelper {
              */
         #if MC_VER < MC_1_21_6
         Optional<NbtCompound> playerDataOpt = ServerHelper.getPlayerManager().loadPlayerData(player);
-        applyPlayerDataNbt(player, playerDataOpt.orElse(null));
+        applyPlayerData(player, playerDataOpt.orElse(null));
         #elif MC_VER >= MC_1_21_6
         Optional<ReadView> playerDataOpt = ServerHelper.getPlayerManager().loadPlayerData(player, ErrorReporter.Impl.EMPTY);
         applyPlayerData(player,playerDataOpt.get());
