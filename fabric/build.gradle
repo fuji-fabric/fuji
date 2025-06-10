@@ -43,9 +43,7 @@ loom {
 
 /**
  * Each time adds a new library, you should build the software, and go to the production-env to check whether the library works.
- *
  * It's possible the necessary libraries are not packed into the release package, even you `include` the library ...
- *
  */
 dependencies {
     /* For mod loader: fabric-loader */
@@ -102,19 +100,6 @@ processResources {
     }
 }
 
-/* Validate the access widener file */
-tasks.compileJava.dependsOn(validateAccessWidener)
-
-/* Ensure the file is not locked */
-tasks.register('deleteWorldLockFile') {
-    outputs.upToDateWhen { false }
-    delete(file("$projectDir/run/world/session.lock"))
-}
-tasks.runServer.dependsOn(deleteWorldLockFile)
-
-/* Generate graph */
-tasks.runServer.dependsOn(check)
-
 /* Copy translation files into resource directory */
 // FIXME The logic here should be modified to meet the new structure.
 tasks.register('copyTranslationFiles', Copy) {
@@ -141,3 +126,15 @@ tasks.register('copyTranslationFiles', Copy) {
 }
 tasks.processResources.dependsOn(copyTranslationFiles)
 
+/* Validate the access widener file. */
+tasks.compileJava.dependsOn(validateAccessWidener)
+
+/* Ensure the file is not locked */
+tasks.register('deleteWorldLockFile') {
+    outputs.upToDateWhen { false }
+    delete(file("$projectDir/run/world/session.lock"))
+}
+tasks.runServer.dependsOn(deleteWorldLockFile)
+
+/* Generate graph (Actually, the graph files should be generated before process the resources) */
+tasks.runServer.dependsOn(check)

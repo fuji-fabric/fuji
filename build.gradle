@@ -45,8 +45,7 @@ project.gradle.ext.getProperties().each { prop ->
 // Sets up manifold stuff
 writeBuildGradlePredefine(rootProject.mcVers, rootProject.mcIndex)
 
-/* Define top-level props */
-// FIXME here
+/* Configure the project maven group. */
 group = project.maven_group
 
 /* Configure shared parts for each sub project. */
