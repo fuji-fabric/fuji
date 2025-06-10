@@ -20,8 +20,7 @@ checkstyle {
 }
 
 /* Configure Pre-Processor. */
-def writeBuildGradlePredefine(List<String> targetMcVersions, int activeMcVersionIndex)
-{
+def writeBuildGradlePredefine(List<String> targetMcVersions, int activeMcVersionIndex) {
     // Build the list of preprocessors to use
     StringBuilder sb = new StringBuilder();
     sb.append("# DON'T TOUCH THIS FILE, This is handled by the build script\n");
@@ -84,14 +83,14 @@ subprojects { p ->
     processResources {
         // Define the locations to inject the properties.
         def resourceTargets = [
-                                // Properties for each of the loaders
-                                "fabric.mod.json",
-                                "quilt.mod.json",
-                                "META-INF/mods.toml",
-                                "META-INF/neoforge.mods.toml",
+                // Properties for each of the loaders
+                "fabric.mod.json",
+                "quilt.mod.json",
+                "META-INF/mods.toml",
+                "META-INF/neoforge.mods.toml",
 
-                                // The mixins for each of the loaders
-                                "fuji." + p.name + ".fabricLike.mixins.json"
+                // The mixins for each of the loaders
+                "fuji." + p.name + ".fabricLike.mixins.json"
         ]
         def intoTargets = ["$buildDir/resources/main/"] // Location of the built resources folder
 
@@ -169,6 +168,12 @@ allprojects { p ->
         from project(":common").file("src/main/resources/${access_widener_version}.fuji.accesswidener")
         into(file(p.file("build/resources/main")))
         rename "${access_widener_version}.fuji.accesswidener", "fuji.accesswidener"
+    }
+
+    /* Configure test framework. */
+    test {
+        useJUnitPlatform()
+        filter {}
     }
 
 }

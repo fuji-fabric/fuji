@@ -102,13 +102,6 @@ processResources {
     }
 }
 
-/* Configure test framework. */
-// FIXME The :fabric test task failed to run.
-//test {
-//    useJUnitPlatform()
-//    filter {}
-//}
-
 /* Validate the access widener file */
 tasks.compileJava.dependsOn(validateAccessWidener)
 
