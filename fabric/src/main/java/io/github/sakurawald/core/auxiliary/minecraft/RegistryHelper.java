@@ -79,7 +79,7 @@ public class RegistryHelper {
         #if MC_VER <= MC_1_20_6
             return new Identifier(identifier);
         #elif MC_VER > MC_1_20_6
-            return RegistryHelper.makeIdentifier(setup.sound);
+            return Identifier.of(identifier);
         #endif
     }
 }

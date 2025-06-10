@@ -4,10 +4,11 @@ import lombok.experimental.UtilityClass;
 import net.minecraft.entity.Entity;
 #if MC_VER <= MC_1_20_6
 import net.minecraft.entity.decoration.LeashKnotEntity;
+import net.minecraft.entity.mob.MobEntity;
 #elif MC_VER > MC_1_20_6
+import net.minecraft.entity.Leashable;
 import net.minecraft.entity.decoration.BlockAttachedEntity;
 #endif
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 
