@@ -91,9 +91,10 @@ java {
 
 /* Replace the version in fabric.mod.json file */
 processResources {
+    // NOTE The fabric.mod.json file will always be copied to fabric/build/resources/main dir.
     dependsOn(copyCommonResources)
     dependsOn(copyLanguageResources)
-    dependsOn(copyOtherResources)
+    dependsOn(copyAccessWidenerResources)
 }
 
 /* Validate the access widener file. */
