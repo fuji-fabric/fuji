@@ -57,6 +57,8 @@ jobs:
       - name: make gradle wrapper executable
         if: ${{ runner.os != 'Windows' }}
         run: chmod +x ./gradlew
+      - name: make buildAll executable
+        if: ${{ runner.os != 'Windows' }}
         run: chmod +x ./buildAll
       - name: build
         run: ./buildAll
