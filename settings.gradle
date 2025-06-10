@@ -59,6 +59,7 @@ loadProperties()
 /* Include child projects. */
 include("common")
 include("fabric")
+include("docs")
 
 /* Define the name of root project. */
 rootProject.name = 'fuji'
