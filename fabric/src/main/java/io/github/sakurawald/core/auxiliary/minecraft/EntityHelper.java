@@ -64,7 +64,7 @@ public class EntityHelper {
         #if MC_VER == MC_1_21
             entity.kill();
         #elif MC_VER > MC_1_21
-            entity.kill(entity.getServerWorld());
+            entity.kill((ServerWorld) entity.getWorld());
         #endif
     }
 

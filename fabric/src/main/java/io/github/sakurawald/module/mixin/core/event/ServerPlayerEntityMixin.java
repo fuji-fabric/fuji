@@ -3,6 +3,9 @@ package io.github.sakurawald.module.mixin.core.event;
 import io.github.sakurawald.core.event.impl.PlayerEvents;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+#if MC_VER > MC_1_21
+import net.minecraft.server.world.ServerWorld;
+#endif
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

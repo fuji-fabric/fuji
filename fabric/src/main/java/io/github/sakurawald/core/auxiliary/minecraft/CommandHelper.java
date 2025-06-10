@@ -13,6 +13,9 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+#if MC_VER > MC_1_21
+import net.minecraft.server.world.ServerWorld;
+#endif
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
@@ -130,7 +133,7 @@ public class CommandHelper {
         #if MC_VER == MC_1_21
             return entity.getCommandSource();
         #elif MC_VER > MC_1_21
-            return entity.getCommandSource(entity.getWorld());
+            return entity.getCommandSource((ServerWorld) entity.getWorld());
         #endif
     }
 

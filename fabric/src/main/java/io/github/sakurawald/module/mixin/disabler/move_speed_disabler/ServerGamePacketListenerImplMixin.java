@@ -1,6 +1,9 @@
 package io.github.sakurawald.module.mixin.disabler.move_speed_disabler;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+#if MC_VER > MC_1_21
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+#endif
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;

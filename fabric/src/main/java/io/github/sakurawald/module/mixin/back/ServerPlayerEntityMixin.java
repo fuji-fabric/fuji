@@ -2,6 +2,12 @@ package io.github.sakurawald.module.mixin.back;
 
 import io.github.sakurawald.module.initializer.back.BackInitializer;
 import net.minecraft.entity.damage.DamageSource;
+#if MC_VER > MC_1_21
+import net.minecraft.network.packet.s2c.play.PositionFlag;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Set;
+#endif
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import org.jetbrains.annotations.NotNull;

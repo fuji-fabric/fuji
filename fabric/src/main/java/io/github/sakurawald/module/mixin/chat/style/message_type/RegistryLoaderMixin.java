@@ -1,6 +1,5 @@
 package io.github.sakurawald.module.mixin.chat.style.message_type;
 
-import com.llamalad7.mixinextras.sugar.Local;
 import io.github.sakurawald.core.annotation.Cite;
 import io.github.sakurawald.module.initializer.chat.style.ChatStyleInitializer;
 import net.minecraft.network.message.MessageType;
@@ -10,7 +9,6 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryLoader;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Coerce;
@@ -18,6 +16,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
+
+#if MC_VER > MC_1_21
+import net.minecraft.registry.RegistryOps;
+import net.minecraft.registry.RegistryWrapper;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import java.util.Map;
+#endif
 
 @SuppressWarnings({"unchecked"})
 @Cite("https://github.com/Patbox/StyledChat")
