@@ -29,6 +29,7 @@ import net.minecraft.network.packet.s2c.play.AdvancementUpdateS2CPacket;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.AssetInfo;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,7 +52,7 @@ public class SendToastInitializer extends ModuleInitializer {
             , Optional.of(
                 #if MC_VER >= MC_1_21 && MC_VER <= MC_1_21_4
                     Identifier.of(DUMMY_RESOURCE_IMAGE_IDENTIFIER)
-                #elif MC_VER == MC_1_21_5
+                #elif MC_VER >= MC_1_21_5
                     new AssetInfo(Identifier.of(DUMMY_RESOURCE_IMAGE_IDENTIFIER))
                 #endif
             )

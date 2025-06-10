@@ -21,7 +21,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
             value = "INVOKE",
             #if MC_VER >= MC_1_21 && MC_VER <= MC_1_21_4
             target = "Lnet/minecraft/server/network/ServerPlayerInteractionManager;isCreative()Z"
-            #elif MC_VER == MC_1_21_5
+            #elif MC_VER >= MC_1_21_5
             target = "Lnet/minecraft/server/network/ServerPlayerEntity;isCreative()Z"
             #endif
         )

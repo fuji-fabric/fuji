@@ -24,7 +24,7 @@ public class BedInitializer extends ModuleInitializer {
         #if MC_VER >= MC_1_21 && MC_VER <= MC_1_21_4
         BlockPos respawnPosition = player.getSpawnPointPosition();
         RegistryKey<World> respawnDimension = player.getSpawnPointDimension();
-        #elif MC_VER == MC_1_21_5
+        #elif MC_VER >= MC_1_21_5
         ServerPlayerEntity.Respawn respawn = player.getRespawn();
         BlockPos respawnPosition = respawn.comp_3684();
         RegistryKey<World> respawnDimension = respawn.comp_3683();
