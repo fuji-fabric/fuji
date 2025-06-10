@@ -101,30 +101,21 @@ processResources {
 }
 
 /* Copy translation files into resource directory */
-// FIXME The logic here should be modified to meet the new structure.
-tasks.register('copyTranslationFiles', Copy) {
+tasks.register('copyLanguageFiles', Copy) {
     outputs.upToDateWhen { false }
+    println("Copy language files from source to destination.")
 
-    def langDir = file("$projectDir/src/main/resources/io/github/sakurawald/lang")
-    def translationDir = file("$projectDir/crowdin")
-    def sourceLanguageFile = "en_US.json"
+    def sourceDir = project(":crowdin").file("pull-from-crowdin/")
+    println("The source dir: " + sourceDir)
 
-    // clean
-    doFirst {
-        delete("${translationDir}/${sourceLanguageFile}")
-        copy {
-            from("${langDir}/${sourceLanguageFile}")
-            into("${translationDir}")
-        }
-        recreateDir(langDir)
-    }
+    def destinationDir = file("${layout.buildDirectory.get()}/resources/main/lang/")
+    println("The destination dir: " + destinationDir)
 
-    // copy
-    from(translationDir)
-    into("${langDir}")
+    from(sourceDir)
+    into(destinationDir)
     include "**/*.json"
 }
-tasks.processResources.dependsOn(copyTranslationFiles)
+tasks.processResources.dependsOn(copyLanguageFiles)
 
 /* Validate the access widener file. */
 tasks.compileJava.dependsOn(validateAccessWidener)

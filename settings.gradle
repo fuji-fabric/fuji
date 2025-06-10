@@ -58,6 +58,7 @@ loadProperties()
 
 /* Include child projects. */
 include("common")
+include("crowdin")
 include("fabric")
 include("docs")
 
