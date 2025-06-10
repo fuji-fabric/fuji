@@ -5,9 +5,9 @@ mkdir -p buildAllJars
 rm -rf buildAllJars/*
 
 # Loop trough everything in the version properties folder
-for d in versionProperties/*; do
+for d in version_properties/*; do
   # Get the name of the version that is going to be compiled
-  version=$(echo "$d" | sed "s/versionProperties\///" | sed "s/.properties//")
+  version=$(echo "$d" | sed "s/version_properties\///" | sed "s/.properties//")
 
   # Clean out the folders, build it, and merge it
   # (We could use "./" to run gradlew, but as it is a shell script im going to be running it with the "sh" command)
