@@ -26,12 +26,9 @@ def writeBuildGradlePredefine(List<String> targetMcVersions, int activeMcVersion
 {
     // Build the list of preprocessors to use
     StringBuilder sb = new StringBuilder();
-
     sb.append("# DON'T TOUCH THIS FILE, This is handled by the build script\n");
 
-
-    for (int i = 0; i < targetMcVersions.size(); i++)
-    {
+    for (int i = 0; i < targetMcVersions.size(); i++) {
         String verStr = targetMcVersions[i].replace(".", "_");
         sb.append("MC_" + verStr + "=" + i.toString() + "\n");
 
@@ -39,28 +36,20 @@ def writeBuildGradlePredefine(List<String> targetMcVersions, int activeMcVersion
             sb.append("MC_VER=" + i.toString() + "\n");
     }
 
-
-    // Check if this is a development build
-    if (mod_version.toLowerCase().contains("dev"))
-    {
-        // WARNING: only use this for logging, we don't want to have confusion
-        // when a method doesn't work correctly in the release build.
-        sb.append("DEV_BUILD=\n");
-    }
-
     new File(projectDir, "build.properties").text = sb.toString()
 }
 
-// Transfers the values set in settings.gradle to the rest of the project
+// Transfers the values set in settings.gradle file to the rest of the project
 project.gradle.ext.getProperties().each { prop ->
     rootProject.ext.set(prop.key, prop.value)
-//    println "Added prop [key:" + prop.key + ", value:" + prop.value + "]"
+    println "Add prop in rootProject.ext [key:" + prop.key + ", value:" + prop.value + "]"
 }
 
 // Sets up manifold stuff
 writeBuildGradlePredefine(rootProject.mcVers, rootProject.mcIndex)
 
 /* Define top-level props */
+// FIXME here
 group = project.maven_group
 
 /* Configure shared parts for each sub project. */
@@ -80,11 +69,8 @@ subprojects { p ->
 
     /* Replace properties for each mc version. */
     processResources {
-        def resourceTargets = [ // Location of where to inject the properties
-                                // Holds info like git commit
-                                // TODO: For some reason this script doesnt work with the core project
-                                "build_info.json",
-
+        // Define the locations to inject the properties.
+        def resourceTargets = [
                                 // Properties for each of the loaders
                                 "fabric.mod.json",
                                 "quilt.mod.json",
@@ -96,19 +82,6 @@ subprojects { p ->
         ]
         def intoTargets = ["$buildDir/resources/main/"] // Location of the built resources folder
 
-//        println p.tasks.findByName('shadowJar')
-
-//        // These "hasProperty"'s are so that they can be passed through the cli (ie in the CI)
-//        try {
-//            if (infoGitCommit == "null")
-//                infoGitCommit = 'git rev-parse --verify HEAD'.execute().text.trim()
-//            if (infoGitBranch == "null")
-//                infoGitBranch = 'git symbolic-ref --short HEAD'.execute().text.trim()
-//        } catch (Exception e) {
-//            infoGitCommit = infoGitBranch = "Git not found"
-//            println "Git or Git project not found"
-//        }
-
         // The left side is what gets replaced in the mod info and the right side is where to get it from in the gradle.properties
         def replaceProperties = [
                 version                      : mod_version,
@@ -117,10 +90,6 @@ subprojects { p ->
                 minecraft_version            : minecraft_version,
                 compatible_minecraft_versions: compatible_minecraft_versions,
                 java_version                 : java_version,
-
-//                info_git_commit              : infoGitBranch,
-//                info_git_branch              : infoGitCommit,
-//                info_build_source            : infoBuildSource,
 
                 mc_publish_dependencies_list : mc_publish_dependencies_list
         ]
@@ -168,9 +137,10 @@ allprojects { p ->
         maven { url "https://repo.spongepowered.org/maven/" }
     }
 
-    /* Define the version string. */
+    /* Define the archive name. */
+    archivesBaseName = "fuji-" + project.name
+    // The `version` must starts with sem-ver to make the fabric loader happy
     def gitVersionDetails = versionDetails()
-    // must starts with sem-ver to make the fabric loader happy
     version = "${project.mod_version}-${gitVersionDetails.gitHash}-mc${project.minecraft_version}"
 
     /* Copy accesswidener file. */
@@ -178,7 +148,6 @@ allprojects { p ->
         from project(":common").file("src/main/resources/${access_widener_version}.fuji.accesswidener")
         into(file(p.file("build/resources/main")))
         rename "${access_widener_version}.fuji.accesswidener", "fuji.accesswidener"
-
     }
 }
 
