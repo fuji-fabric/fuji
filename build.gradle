@@ -128,12 +128,13 @@ subprojects { p ->
     }
 
     /* Copy LICENSE file into jar file. */
-    // FIXME not working
-//    jar {
-//        from(file("${rootProject}/LICENSE")) {
-//            rename { "${it}" }
-//        }
-//    }
+    jar {
+        outputs.upToDateWhen { false }
+        def licenseFilePath = rootProject.file("LICENSE")
+        from(licenseFilePath) {
+            rename { "${it}" }
+        }
+    }
 }
 
 /* Configure for all projects. */
