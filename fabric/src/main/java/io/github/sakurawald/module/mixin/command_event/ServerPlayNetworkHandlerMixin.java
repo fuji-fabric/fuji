@@ -4,7 +4,10 @@ package io.github.sakurawald.module.mixin.command_event;
 import io.github.sakurawald.core.command.executor.CommandExecutor;
 import io.github.sakurawald.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.module.initializer.command_event.CommandEventInitializer;
+#if MC_VER <= MC_1_20_6
+#elif MC_VER > MC_1_20_6
 import net.minecraft.network.DisconnectionInfo;
+#endif
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +23,12 @@ public class ServerPlayNetworkHandlerMixin {
     public ServerPlayerEntity player;
 
     @Inject(at = @At("HEAD"), method = "onDisconnected")
-    private void onPlayerLeft(DisconnectionInfo disconnectionInfo, CallbackInfo ci) {
+    private void onPlayerLeft(
+        #if MC_VER <= MC_1_20_6
+        #elif MC_VER > MC_1_20_6
+            DisconnectionInfo disconnectionInfo,
+        #endif
+        CallbackInfo ci) {
         CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), CommandEventInitializer.config.model().event.on_player_left.command_list);
     }
 }

@@ -28,7 +28,7 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
     @Shadow
     private String newItemName;
 
-    #if MC_VER == MC_1_21
+    #if MC_VER <= MC_1_21
     public AnvilScreenHandlerMixin(@Nullable ScreenHandlerType<?> screenHandlerType, int i, PlayerInventory playerInventory, ScreenHandlerContext screenHandlerContext) {
         super(screenHandlerType, i, playerInventory, screenHandlerContext);
     }

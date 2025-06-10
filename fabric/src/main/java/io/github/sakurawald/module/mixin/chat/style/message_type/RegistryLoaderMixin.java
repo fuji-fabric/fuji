@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.mixin.chat.style.message_type;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import io.github.sakurawald.core.annotation.Cite;
 import io.github.sakurawald.module.initializer.chat.style.ChatStyleInitializer;
 import net.minecraft.network.message.MessageType;
@@ -9,6 +10,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryLoader;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Coerce;
@@ -34,7 +36,7 @@ import java.util.Map;
 @Mixin(value = RegistryLoader.class)
 public class RegistryLoaderMixin {
 
-    #if MC_VER == MC_1_21
+    #if MC_VER <= MC_1_21
     @Inject(method = "load(Lnet/minecraft/registry/RegistryLoader$RegistryLoadable;Lnet/minecraft/registry/DynamicRegistryManager;Ljava/util/List;)Lnet/minecraft/registry/DynamicRegistryManager$Immutable;"
         , at = @At(value = "INVOKE", target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V", ordinal = 0, shift = At.Shift.AFTER))
     private static void registerNewMessageType(@Coerce Object registryLoadable

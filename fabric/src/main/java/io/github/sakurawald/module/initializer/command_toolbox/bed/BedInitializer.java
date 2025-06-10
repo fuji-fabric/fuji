@@ -21,7 +21,7 @@ public class BedInitializer extends ModuleInitializer {
     @CommandNode("bed")
     @Document("Teleport to the bed location.")
     private static int $bed(@CommandSource @CommandTarget ServerPlayerEntity player) {
-        #if MC_VER >= MC_1_21 && MC_VER <= MC_1_21_4
+        #if MC_VER < MC_1_21_5
         BlockPos respawnPosition = player.getSpawnPointPosition();
         RegistryKey<World> respawnDimension = player.getSpawnPointDimension();
         #elif MC_VER >= MC_1_21_5

@@ -2,6 +2,12 @@ package io.github.sakurawald.core.auxiliary.minecraft;
 
 import lombok.experimental.UtilityClass;
 import net.minecraft.entity.Entity;
+#if MC_VER <= MC_1_20_6
+import net.minecraft.entity.decoration.LeashKnotEntity;
+#elif MC_VER > MC_1_20_6
+import net.minecraft.entity.decoration.BlockAttachedEntity;
+#endif
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 
@@ -22,6 +28,22 @@ public class EntityHelper {
 
     public static MinecraftServer getMinecraftServer(Entity entity) {
         return entity.getServer();
+    }
+
+    public static boolean isBlockAttachedEntity(Entity entity) {
+        #if MC_VER <= MC_1_20_6
+            return entity instanceof LeashKnotEntity;
+        #elif MC_VER > MC_1_20_6
+            return entity instanceof BlockAttachedEntity;
+        #endif
+    }
+
+    public static boolean isLeashed(Entity entity) {
+        #if MC_VER <= MC_1_20_6
+            return (entity instanceof MobEntity mobEntity) && mobEntity.isLeashed();
+        #elif MC_VER > MC_1_20_6
+            return (entity instanceof Leashable leashable) && leashable.isLeashed();
+        #endif
     }
 
 }

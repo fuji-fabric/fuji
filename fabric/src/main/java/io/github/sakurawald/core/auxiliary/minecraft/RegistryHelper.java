@@ -48,7 +48,7 @@ public class RegistryHelper {
         return ServerHelper.getServer()
             .getCombinedDynamicRegistries()
             .getCombinedRegistryManager()
-            #if MC_VER == MC_1_21
+            #if MC_VER <= MC_1_21
                 .get(registryKey);
             #elif MC_VER > MC_1_21
                 .getOrThrow(registryKey);

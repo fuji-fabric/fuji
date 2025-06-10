@@ -24,7 +24,7 @@ public abstract class ServerPlayerMixin {
 
     @SuppressWarnings("CancellableInjectionUsage")
 
-        #if MC_VER == MC_1_21
+        #if MC_VER <= MC_1_21
     @Inject(method = "teleport(Lnet/minecraft/server/world/ServerWorld;DDDLjava/util/Set;FF)Z", at = @At("HEAD"), cancellable = true)
     public void interceptTeleportAndAddTicket(ServerWorld serverWorld, double x, double y, double z, Set<PositionFlag> set, float yaw, float pitch, CallbackInfoReturnable<Boolean> cir)
         #elif MC_VER > MC_1_21

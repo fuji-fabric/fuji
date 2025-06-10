@@ -3,6 +3,7 @@ package io.github.sakurawald.module.initializer.cleaner;
 import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
@@ -18,8 +19,6 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.Leashable;
-import net.minecraft.entity.decoration.BlockAttachedEntity;
 import net.minecraft.entity.vehicle.VehicleEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -41,7 +40,7 @@ public class CleanerInitializer extends ModuleInitializer {
     @SuppressWarnings("RedundantIfStatement")
     private static boolean ignoreEntity(Entity entity) {
         if (entity.getType().equals(EntityType.PLAYER)) return true;
-        if (entity instanceof BlockAttachedEntity) return true;
+        if (EntityHelper.isBlockAttachedEntity(entity)) return true;
         if (entity instanceof VehicleEntity) return true;
 
         var config = CleanerInitializer.config.model().ignore;
@@ -56,7 +55,7 @@ public class CleanerInitializer extends ModuleInitializer {
         if (config.ignore_entity_with_vehicle && entity.hasVehicle()) return true;
         if (config.ignore_entity_with_passengers && entity.hasPassengers()) return true;
         if (config.ignore_glowing_entity && entity.isGlowing()) return true;
-        if (config.ignore_leashed_entity && entity instanceof Leashable leashable && leashable.isLeashed()) return true;
+        if (config.ignore_leashed_entity && EntityHelper.isLeashed(entity)) return true;
 
         return false;
     }

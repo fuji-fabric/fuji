@@ -130,7 +130,7 @@ public class CommandHelper {
     }
 
     public static ServerCommandSource getCommandSource(Entity entity) {
-        #if MC_VER == MC_1_21
+        #if MC_VER <= MC_1_21
             return entity.getCommandSource();
         #elif MC_VER > MC_1_21
             return entity.getCommandSource((ServerWorld) entity.getWorld());
