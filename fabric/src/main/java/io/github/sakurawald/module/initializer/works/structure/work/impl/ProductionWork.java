@@ -190,7 +190,12 @@ public class ProductionWork extends Work {
         int minecartHopperCount = 0;
         ServerWorld world = EntityHelper.getServerWorld(player);
 
-        Iterable<ChunkHolder> chunkHolders = world.getChunkManager().chunkLoadingManager.entryIterator();
+        #if MC_VER <= MC_1_20_6
+            Iterable<ChunkHolder> chunkHolders = world.getChunkManager().threadedAnvilChunkStorage.entryIterator();
+        #elif MC_VER > MC_1_20_6
+            Iterable<ChunkHolder> chunkHolders = world.getChunkManager().chunkLoadingManager.entryIterator();
+        #endif
+
         for (ChunkHolder chunkHolder : chunkHolders) {
             WorldChunk worldChunk = chunkHolder.getWorldChunk();
             if (worldChunk == null) continue;

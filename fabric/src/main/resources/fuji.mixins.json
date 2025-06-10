@@ -68,6 +68,7 @@
     "gameplay.carpet.fake_player_manager.PlayerCommandMixin",
     "gameplay.carpet.fake_player_manager.PlayerEntityMixin",
     "gameplay.multi_obsidian_platform.EndPortalBlockMixin",
+    "gameplay.multi_obsidian_platform.EntityMixin",
     "language.ServerPlayerMixin",
     "motd.ServerQueryNetworkHandlerMixin",
     "multiplier.ServerPlayerMixin",

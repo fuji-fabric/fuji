@@ -1,5 +1,15 @@
 package io.github.sakurawald.module.mixin.gameplay.multi_obsidian_platform;
 
+#if MC_VER <= MC_1_20_6
+import net.minecraft.block.EndPortalBlock;
+import org.spongepowered.asm.mixin.Mixin;
+
+@Mixin(EndPortalBlock.class)
+public class EndPortalBlockMixin {
+
+}
+
+#elif MC_VER > MC_1_20_6
 import com.llamalad7.mixinextras.sugar.Local;
 import io.github.sakurawald.module.initializer.gameplay.multi_obsidian_platform.MultiObsidianPlatformInitializer;
 import net.minecraft.block.EndPortalBlock;
@@ -37,5 +47,6 @@ public class EndPortalBlockMixin {
         }
         return getTransformedEndSpawnPoint(entity);
     }
-
 }
+#endif
+

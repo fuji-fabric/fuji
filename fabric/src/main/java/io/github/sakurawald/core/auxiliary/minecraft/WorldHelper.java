@@ -5,6 +5,8 @@ import io.github.sakurawald.core.structure.TeleportSetup;
 import lombok.experimental.UtilityClass;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
@@ -40,6 +42,10 @@ public class WorldHelper {
         #elif MC_VER > MC_1_21
             return world.getTopYInclusive();
         #endif
+    }
+
+    public static Vec3d toBottomCenterPos(BlockPos pos) {
+        return Vec3d.add(pos, 0.5, 0.0, 0.5);
     }
 
 }

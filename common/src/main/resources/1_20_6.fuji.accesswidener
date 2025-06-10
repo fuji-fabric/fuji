@@ -23,10 +23,10 @@ accessible method net/minecraft/server/ServerConfigList removeInvalidEntries ()V
 accessible method net/minecraft/server/network/ServerPlayNetworkHandler handleDecoratedMessage (Lnet/minecraft/network/message/SignedMessage;)V
 
 # view module
-#accessible field net/minecraft/server/MinecraftServer saveHandler Lnet/minecraft/world/PlayerSaveHandler;
+accessible field net/minecraft/server/MinecraftServer saveHandler Lnet/minecraft/world/WorldSaveHandler;
 
 # works module + top chunks module
-#accessible method net/minecraft/server/world/ServerChunkLoadingManager entryIterator ()Ljava/lang/Iterable;
+accessible method net/minecraft/server/world/ThreadedAnvilChunkStorage entryIterator ()Ljava/lang/Iterable;
 
 # nametag
 accessible field net/minecraft/entity/decoration/DisplayEntity$TextDisplayEntity TEXT Lnet/minecraft/entity/data/TrackedData;

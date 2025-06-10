@@ -38,7 +38,11 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
     }
     #endif
 
+    #if MC_VER <= MC_1_20_6
+    @ModifyArg(method = "updateResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;set(Lnet/minecraft/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))
+    #elif MC_VER > MC_1_20_6
     @ModifyArg(method = "updateResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;set(Lnet/minecraft/component/ComponentType;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))
+    #endif
     public @NotNull Object updateResult(Object text) {
         if (ColorAnvilInitializer.config.model().requires_corresponding_permission_to_use_style_tag) {
             newItemName = StyleStriper.stripe(super.player, STYLE_TYPE_ANVIL, newItemName);
@@ -46,7 +50,11 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
         return TextHelper.getTextByValue(null, newItemName);
     }
 
+    #if MC_VER <= MC_1_20_6
+    @ModifyArg(method = "setNewItemName", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;set(Lnet/minecraft/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))
+    #elif MC_VER > MC_1_20_6
     @ModifyArg(method = "setNewItemName", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;set(Lnet/minecraft/component/ComponentType;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))
+    #endif
     public @NotNull Object newItemName(Object text) {
         if (ColorAnvilInitializer.config.model().requires_corresponding_permission_to_use_style_tag) {
             newItemName = StyleStriper.stripe(super.player, STYLE_TYPE_ANVIL, newItemName);

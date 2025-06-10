@@ -29,7 +29,12 @@ public class PlayerListManagerMixin {
     }
 
     @Inject(method = "respawnPlayer", at = @At("TAIL"))
-    private void afterRespawn(ServerPlayerEntity oldPlayer, boolean alive, Entity.RemovalReason removalReason, CallbackInfoReturnable<ServerPlayerEntity> cir) {
+    #if MC_VER <= MC_1_20_6
+    private void afterRespawn(ServerPlayerEntity oldPlayer, boolean alive, CallbackInfoReturnable<ServerPlayerEntity> cir)
+    #elif MC_VER > MC_1_20_6
+    private void afterRespawn(ServerPlayerEntity oldPlayer, boolean alive, Entity.RemovalReason removalReason, CallbackInfoReturnable<ServerPlayerEntity> cir)
+    #endif
+    {
         ServerPlayerEntity newPlayer = cir.getReturnValue();
         CommandExecutor.execute(ExtendedCommandSource.asConsole(newPlayer.getCommandSource()), CommandEventInitializer.config.model().event.after_player_respawn.command_list);
     }

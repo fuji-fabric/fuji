@@ -31,7 +31,7 @@ public abstract class ServerPlayerEntityMixin {
         }
     }
 
-    #if MC_VER == MC_1_21
+    #if MC_VER <= MC_1_21
     @Inject(method = "teleport(Lnet/minecraft/server/world/ServerWorld;DDDFF)V", at = @At("HEAD"))
     public void saveCurPos(ServerWorld serverWorld, double d, double e, double f, float g, float h, CallbackInfo ci)
     #elif MC_VER > MC_1_21

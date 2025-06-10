@@ -54,7 +54,12 @@ public class TopChunksInitializer extends ModuleInitializer {
                 }
 
                 /* block-entity in this world */
-                Iterable<ChunkHolder> chunkHolders = world.getChunkManager().chunkLoadingManager.entryIterator();
+                #if MC_VER <= MC_1_20_6
+                    Iterable<ChunkHolder> chunkHolders = world.getChunkManager().threadedAnvilChunkStorage.entryIterator();
+                #elif MC_VER > MC_1_20_6
+                    Iterable<ChunkHolder> chunkHolders = world.getChunkManager().chunkLoadingManager.entryIterator();
+                #endif
+
                 for (ChunkHolder chunkHolder : chunkHolders) {
                     WorldChunk worldChunk = chunkHolder.getWorldChunk();
                     if (worldChunk == null) continue;

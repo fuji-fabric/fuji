@@ -5,6 +5,7 @@ import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandSource;
 import io.github.sakurawald.core.command.annotation.CommandTarget;
@@ -72,7 +73,10 @@ public class SitInitializer extends ModuleInitializer {
 
     public static @NotNull Entity makeChairEntity(@NotNull World world, @NotNull BlockPos targetBlockPos, @Nullable Vec3d target) {
 
-        Vec3d chairEntityPosition = targetBlockPos.toBottomCenterPos().add(0, 0.5, 0).add(SitInitializer.CHAIR_ENTITY_OFFSET);
+        Vec3d chairEntityPosition =
+            WorldHelper.toBottomCenterPos(targetBlockPos)
+            .add(0, 0.5, 0)
+            .add(SitInitializer.CHAIR_ENTITY_OFFSET);
         BlockState targetBlockStage = world.getBlockState(targetBlockPos);
 
         // if there is a slab/stair block under the player, then we should not sit on the ground.
