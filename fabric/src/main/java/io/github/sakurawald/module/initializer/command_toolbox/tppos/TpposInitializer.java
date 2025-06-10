@@ -1,6 +1,7 @@
 package io.github.sakurawald.module.initializer.command_toolbox.tppos;
 
 import io.github.sakurawald.core.annotation.Document;
+import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
@@ -44,6 +45,7 @@ public class TpposInitializer extends ModuleInitializer {
     ) {
         /* specify the dimension */
         ServerWorld world = dimension.isPresent() ? dimension.get().getValue() : EntityHelper.getServerWorld(player);
+        LogUtil.debug("tppos: x = {}, y = {}, z = {}", x, y, z);
 
         /* mode: fixed teleport */
         if (x.isPresent() || y.isPresent() || z.isPresent()) {

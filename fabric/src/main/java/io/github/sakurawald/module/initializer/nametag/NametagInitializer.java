@@ -72,7 +72,7 @@ public class NametagInitializer extends ModuleInitializer {
         nametag.setInvulnerable(true);
 
         /* let the nametag riding in internal server-side, so that the server will handle the position update for nametags. */
-        #if MC_VER == MC_1_21
+        #if MC_VER <= MC_1_21
             nametag.startRiding(player);
         #elif MC_VER > MC_1_21
             nametag.setPose(EntityPose.STANDING);
