@@ -16,6 +16,7 @@ import io.github.sakurawald.module.initializer.kit.structure.Kit;
 import lombok.SneakyThrows;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -121,7 +122,8 @@ public class KitInitializer extends ModuleInitializer {
 
         for (int i = 0; i < kit.getStackList().size(); i++) {
             ItemStack template = kit.getStackList().get(i);
-            if (template.isEmpty()) {
+
+            if (template.isEmpty() || template.getItem().equals(Items.BARRIER)) {
                 continue;
             }
 
