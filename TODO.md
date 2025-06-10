@@ -28,4 +28,5 @@
 - feature: command_gui module.
 - feature: compare command_cooldown and command_condition.
 - docs: find useful things https://vanillatweaks.net/picker/datapacks/
-- Ignore the `lang/` dir in `src/` dir, we only need to copy the files from `crowdin/` for building.
+- extract the chat.display module into a standalone module.
+- fix: the test gradle task will create spam files in fabric/config, fabric/mods and fabric/run
