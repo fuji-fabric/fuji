@@ -92,12 +92,7 @@ java {
 /* Replace the version in fabric.mod.json file */
 processResources {
     outputs.upToDateWhen { false }
-
     dependsOn(copyCommonResources)
-
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version
-    }
 }
 
 /* Validate the access widener file. */

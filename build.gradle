@@ -195,6 +195,7 @@ allprojects { p ->
 
     /* Configure test framework. */
     test {
+        outputs.upToDateWhen { false }
         useJUnitPlatform()
         filter {}
     }
