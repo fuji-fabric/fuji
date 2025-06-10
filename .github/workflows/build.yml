@@ -7,7 +7,7 @@ jobs:
       matrix:
         java: [21]
         os: [ubuntu-latest]
-        target-mc-version: [1.21.6, 1.21.5]
+        target-mc-version: [1.21.6, 1.21.5, 1.21.4, 1.21.3, 1.21]
     runs-on: ${{ matrix.os }}
     steps:
       - name: checkout repository
@@ -85,7 +85,7 @@ jobs:
           modrinth-id: 1TowMm2v
           modrinth-token: "${{secrets.MODRINTH_TOKEN}}"
 
-#          github-token: ${{ secrets.GITHUB_TOKEN }}
-#
-#          curseforge-id: 1096649
-#          curseforge-token: "${{secrets.CURSEFORGE_TOKEN}}"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+          curseforge-id: 1096649
+          curseforge-token: "${{secrets.CURSEFORGE_TOKEN}}"
