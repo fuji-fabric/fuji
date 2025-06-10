@@ -5,10 +5,11 @@ jobs:
   build:
     strategy:
       matrix:
-        java: [
-          21,
-        ]
-        os: [ ubuntu-latest ]
+        java: [21,]
+        os: [ubuntu-latest]
+        include:
+            - target-mc-version: 1.21.6
+            - target-mc-version: 1.21.5
     runs-on: ${{ matrix.os }}
     steps:
       - name: checkout repository
@@ -57,17 +58,14 @@ jobs:
       - name: make gradle wrapper executable
         if: ${{ runner.os != 'Windows' }}
         run: chmod +x ./gradlew
-      - name: make buildAll executable
-        if: ${{ runner.os != 'Windows' }}
-        run: chmod +x ./buildAll
       - name: build
-        run: ./buildAll
+        run: ./gradlew build -PmcVer=#{{matrix.target-mc-version}}
       - name: capture build artifacts
         if: ${{ runner.os == 'Linux' && matrix.java == '21' }}
         uses: actions/upload-artifact@v4
         with:
           name: Artifacts
-          path: buildAllJars/
+          path: fabric/build/libs/
       - name: mc-publish
         uses: Kir-Antipov/mc-publish@v3.3.0
         if: github.ref == 'refs/heads/release' || contains(github.event.head_commit.message, '[publish]')
@@ -78,8 +76,8 @@ jobs:
 
           # FIXME Choose a better location to put the build file.
           files: |
-            buildAllJars/!(*-@(dev|sources|javadoc)).jar
-            buildAllJars/*-@(dev|sources|javadocs).jar
+            fabric/build/libs/!(*-@(dev|sources|javadoc)).jar
+            fabric/build/libs/*-@(dev|sources|javadocs).jar
 
           game-version-filter: any
 
