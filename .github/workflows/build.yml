@@ -78,8 +78,8 @@ jobs:
 
           # FIXME Choose a better location to put the build file.
           files: |
-            fabric/build/libs/!(*-@(dev|sources|javadoc)).jar
-            fabric/build/libs/*-@(dev|sources|javadocs).jar
+            buildAllJars/!(*-@(dev|sources|javadoc)).jar
+            buildAllJars/*-@(dev|sources|javadocs).jar
 
           game-version-filter: any
 
@@ -90,7 +90,7 @@ jobs:
           modrinth-id: 1TowMm2v
           modrinth-token: "${{secrets.MODRINTH_TOKEN}}"
 
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-          curseforge-id: 1096649
-          curseforge-token: "${{secrets.CURSEFORGE_TOKEN}}"
+#          github-token: ${{ secrets.GITHUB_TOKEN }}
+#
+#          curseforge-id: 1096649
+#          curseforge-token: "${{secrets.CURSEFORGE_TOKEN}}"
