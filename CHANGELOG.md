@@ -3,4 +3,5 @@
 - i18n: new `zh_CN` translation file. (Thanks to @BBleae)
 - feature: new supported version for Minecraft 1.21.6
 - refactor: merge multiple codebase into a single one using pre-processor method. (This greatly reduce the complexity of maintaining)
+- fix: the language resource file location is in-correct. 
 
