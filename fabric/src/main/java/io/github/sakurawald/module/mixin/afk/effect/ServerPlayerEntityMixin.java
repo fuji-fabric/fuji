@@ -12,6 +12,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 #endif
 
+#if MC_VER < MC_1_21_6
+import net.minecraft.util.math.BlockPos;
+#endif
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;

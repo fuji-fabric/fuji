@@ -6,6 +6,9 @@ import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.module.initializer.pvp.PvpInitializer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
+#if MC_VER < MC_1_21_6
+import net.minecraft.util.math.BlockPos;
+#endif
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
