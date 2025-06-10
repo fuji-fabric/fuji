@@ -30,7 +30,11 @@ public abstract class ServerPlayNetworkHandlerMixin {
         return true;
     }
 
+    #if MC_VER < MC_1_21_6
     @ModifyConstant(method = "onVehicleMove", constant = @Constant(doubleValue = 0.0625, ordinal = 1))
+    #elif MC_VER >= MC_1_21_6
+    @ModifyConstant(method = "onVehicleMove", constant = @Constant(doubleValue = 0.0625, ordinal = 0))
+    #endif
     public double disableVehicleMovedWrongly(double original) {
         return Double.MAX_VALUE;
      }

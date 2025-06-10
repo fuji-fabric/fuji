@@ -6,11 +6,9 @@ import io.github.sakurawald.module.initializer.color.sign.structure.SignCache;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,9 +20,6 @@ public abstract class ServerPlayerEntityMixin {
     @Unique
     @NotNull
     final ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-
-    @Shadow
-    public abstract ServerWorld getServerWorld();
 
     @Inject(method = "openEditSignScreen", at = @At("HEAD"))
     private void sendBlockStateUpdatePacketOfSerializedTextBeforeTheClientOpenTheEditScreen(@NotNull SignBlockEntity signBlockEntity, boolean bl, @NotNull CallbackInfo ci) {

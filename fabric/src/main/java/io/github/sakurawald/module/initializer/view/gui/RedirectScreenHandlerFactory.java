@@ -1,7 +1,7 @@
 package io.github.sakurawald.module.initializer.view.gui;
 
-import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -39,7 +39,7 @@ public abstract class RedirectScreenHandlerFactory {
             onlineEditMode = true;
             targetPlayer = player;
         } else {
-            targetPlayer = EntityHelper.loadOfflinePlayer(targetPlayerName);
+            targetPlayer = PlayerHelper.loadOfflinePlayer(targetPlayerName);
         }
     }
 

@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.AnvilInputGui;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.service.gameprofile_fetcher.MojangProfileFetcher;
@@ -60,7 +61,7 @@ public class PlayerHeadGui extends AnvilInputGui {
                 GameProfile gameProfile = MojangProfileFetcher.makeOnlineGameProfile(this.getInput());
                 GuiElementBuilder builder = new GuiElementBuilder()
                     .setItem(Items.PLAYER_HEAD)
-                    .setSkullOwner(gameProfile, player.server);
+                    .setSkullOwner(gameProfile, EntityHelper.getMinecraftServer(player));
 
                 /* make head item */
                 if (HeadInitializer.head.model().economy_type != EconomyType.FREE) {

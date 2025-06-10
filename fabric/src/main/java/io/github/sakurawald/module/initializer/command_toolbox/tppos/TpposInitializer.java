@@ -3,6 +3,7 @@ package io.github.sakurawald.module.initializer.command_toolbox.tppos;
 import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
@@ -79,7 +80,7 @@ public class TpposInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     @Document("Teleport to the offline position of a player.")
     private static int tppos(@CommandSource ServerPlayerEntity source, OfflinePlayerName player) {
-        ServerPlayerEntity dummy = EntityHelper.loadOfflinePlayer(player.getValue());
+        ServerPlayerEntity dummy = PlayerHelper.loadOfflinePlayer(player.getValue());
         new SpatialPose(EntityHelper.getServerWorld(dummy), dummy.getX(), dummy.getY(), dummy.getZ(), dummy.getYaw(), dummy.getPitch()).teleport(source);
         return CommandHelper.Return.SUCCESS;
     }

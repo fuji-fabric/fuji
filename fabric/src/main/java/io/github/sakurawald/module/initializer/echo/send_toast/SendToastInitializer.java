@@ -99,7 +99,7 @@ public class SendToastInitializer extends ModuleInitializer {
     private static AdvancementUpdateS2CPacket makeAdvancementUpdatePacket(Collection<AdvancementEntry> toEarn, Set<Identifier> toRemove, Map<Identifier, AdvancementProgress> toSetProgress) {
         #if MC_VER >= MC_1_21 && MC_VER <= MC_1_21_4
             return new AdvancementUpdateS2CPacket(false, toEarn, toRemove, toSetProgress);
-        #elif MC_VER == MC_1_21_5
+        #elif MC_VER >= MC_1_21_5
             return new AdvancementUpdateS2CPacket(false, toEarn, toRemove, toSetProgress, true);
         #endif
     }

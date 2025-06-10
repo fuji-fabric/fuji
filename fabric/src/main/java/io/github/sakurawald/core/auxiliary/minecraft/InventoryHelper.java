@@ -22,7 +22,7 @@ public class InventoryHelper {
     public static DefaultedList<ItemStack> getMainStacks(PlayerEntity player) {
         #if MC_VER >= MC_1_21 && MC_VER <= MC_1_21_4
         return player.getInventory().main;
-        #elif MC_VER == MC_1_21_5
+        #elif MC_VER >= MC_1_21_5
         return player.getInventory().getMainStacks();
         #endif
     }

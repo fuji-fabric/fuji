@@ -1,6 +1,6 @@
 package io.github.sakurawald.core.manager.impl.bossbar;
 
-import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.core.event.impl.PlayerEvents;
 import io.github.sakurawald.core.event.impl.ServerTickEvents;
 import io.github.sakurawald.core.manager.abst.BaseManager;
@@ -28,7 +28,7 @@ public class BossBarManager extends BaseManager {
                 && interruptibleTicket.getInterruptible().isEnable()
                 && interruptibleTicket.getInterruptible().isInterruptOnDamaged()
                 // the spawn mechanism of fake-player is different, they are spawned in overworld, and then teleport to target position.
-                && EntityHelper.isRealPlayer(player)
+                && PlayerHelper.isRealPlayer(player)
                 && it.getPlayers().stream().anyMatch(p -> p.equals(player)))
             .forEach(it -> it.setAborted(true)));
     }

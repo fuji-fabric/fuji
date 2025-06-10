@@ -84,7 +84,7 @@ public class NbtHelper {
         #if MC_VER == MC_1_21
             return stack.encodeAllowEmpty(wrapperLookup);
         #elif MC_VER > MC_1_21
-            return stack.toNbt(wrapperLookup, new NbtCompound());
+            return StackHelper.toNbt(stack, wrapperLookup, new NbtCompound());
         #endif
     }
 
@@ -92,7 +92,7 @@ public class NbtHelper {
         if (nbtCompound.isEmpty()) {
             return ItemStack.EMPTY;
         }
-        return ItemStack.fromNbt(wrapperLookup, nbtCompound).orElse(ItemStack.EMPTY);
+        return StackHelper.fromNbt(wrapperLookup, nbtCompound).orElse(ItemStack.EMPTY);
     }
 
 
@@ -141,7 +141,7 @@ public class NbtHelper {
     public static @Nullable String getString(NbtCompound root, String key) {
         #if MC_VER >= MC_1_21 && MC_VER <= MC_1_21_4
             return root.getString(key);
-        #elif MC_VER == MC_1_21_5
+        #elif MC_VER >= MC_1_21_5
             return root.getString(key).orElse(null);
         #endif
     }
@@ -149,7 +149,7 @@ public class NbtHelper {
     public static @Nullable NbtCompound getCompound(NbtCompound root, String key) {
         #if MC_VER >= MC_1_21 && MC_VER <= MC_1_21_4
             return root.getCompound(key);
-        #elif MC_VER == MC_1_21_5
+        #elif MC_VER >= MC_1_21_5
             return root.getCompound(key).get();
         #endif
     }
@@ -157,7 +157,7 @@ public class NbtHelper {
     public static @Nullable NbtCompound getCompound(NbtList list, int index) {
         #if MC_VER >= MC_1_21 && MC_VER <= MC_1_21_4
             return list.getCompound(index);
-        #elif MC_VER == MC_1_21_5
+        #elif MC_VER >= MC_1_21_5
             return list.getCompound(index).get();
         #endif
     }
@@ -165,7 +165,7 @@ public class NbtHelper {
     public static int getInt(NbtCompound root, String key) {
         #if MC_VER >= MC_1_21 && MC_VER <= MC_1_21_4
             return root.getInt(key);
-        #elif MC_VER == MC_1_21_5
+        #elif MC_VER >= MC_1_21_5
             return root.getInt(key).get();
         #endif
     }
@@ -173,7 +173,7 @@ public class NbtHelper {
     public static float getFloat(NbtCompound root, String key) {
         #if MC_VER >= MC_1_21 && MC_VER <= MC_1_21_4
             return root.getFloat(key);
-        #elif MC_VER == MC_1_21_5
+        #elif MC_VER >= MC_1_21_5
             return root.getFloat(key).get();
         #endif
     }
@@ -181,7 +181,7 @@ public class NbtHelper {
     public static double getDouble(NbtCompound root, String key) {
         #if MC_VER >= MC_1_21 && MC_VER <= MC_1_21_4
         return root.getDouble(key);
-        #elif MC_VER == MC_1_21_5
+        #elif MC_VER >= MC_1_21_5
             return root.getDouble(key).get();
         #endif
     }

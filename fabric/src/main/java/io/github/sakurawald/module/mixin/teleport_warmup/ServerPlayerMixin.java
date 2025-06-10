@@ -1,7 +1,7 @@
 package io.github.sakurawald.module.mixin.teleport_warmup;
 
-import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.PermissionHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.manager.Managers;
@@ -42,7 +42,7 @@ public abstract class ServerPlayerMixin {
         /* Skip the teleport warmup if the player is a fake-player. */
         // If we try to spawn a fake-player in the end or nether, the fake-player will initially spawn in overworld
         // and teleport to the target world. This will cause the teleport warmup to be triggered.
-        if (!EntityHelper.isRealPlayer(player)) return;
+        if (!PlayerHelper.isRealPlayer(player)) return;
 
         /* Skip the teleport warmup if the player has the bypass permission. */
         if (PermissionHelper.hasPermission(player.getUuid(), "fuji.teleport_warmup.bypass")) {
