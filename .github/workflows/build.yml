@@ -65,8 +65,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Artifacts
-          # FIXME Choose a better location to put the build file.
-          path: fabric/build/libs/
+          path: buildAllJars/
       - name: mc-publish
         uses: Kir-Antipov/mc-publish@v3.3.0
         if: github.ref == 'refs/heads/release' || contains(github.event.head_commit.message, '[publish]')
