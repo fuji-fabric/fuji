@@ -114,6 +114,14 @@ subprojects { p ->
         }
 
     }
+
+    /* Copy LICENSE file into jar file. */
+    // FIXME not working
+//    jar {
+//        from(file("${rootProject}/LICENSE")) {
+//            rename { "${it}" }
+//        }
+//    }
 }
 
 /* Configure for all projects. */
@@ -149,15 +157,9 @@ allprojects { p ->
         into(file(p.file("build/resources/main")))
         rename "${access_widener_version}.fuji.accesswidener", "fuji.accesswidener"
     }
+
 }
 
-
-/* Rename the LICENSE file in jar. */
-jar {
-    from("LICENSE") {
-        rename { "${it}" }
-    }
-}
 
 /* Configure Publishing. */
 publishing {
