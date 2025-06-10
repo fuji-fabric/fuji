@@ -175,12 +175,14 @@ allprojects { p ->
     task copyCommonResources(type: Copy) {
         // Copy all resource files in :common project.
         copy {
+            println("Copy all resource files in :common project.")
             from project(":common").file("src/main/resources/")
             into(file(p.file("build/resources/main/")))
             exclude '**/*.accesswidener'
         }
         // Copy the specified MC version accesswidener file in :common project.
         copy {
+            println("Copy accesswidener file for specified MC version.")
             from project(":common").file("src/main/resources/${access_widener_version}.fuji.accesswidener")
             into(file(p.file("build/resources/main")))
             rename "${access_widener_version}.fuji.accesswidener", "fuji.accesswidener"
