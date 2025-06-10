@@ -91,7 +91,6 @@ java {
 
 /* Replace the version in fabric.mod.json file */
 processResources {
-//    outputs.upToDateWhen { false }
     dependsOn(copyCommonResources)
 }
 
