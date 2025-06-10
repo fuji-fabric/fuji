@@ -4,6 +4,7 @@ import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.NbtHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
@@ -16,7 +17,6 @@ import io.github.sakurawald.module.initializer.kit.structure.Kit;
 import lombok.SneakyThrows;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -123,7 +123,7 @@ public class KitInitializer extends ModuleInitializer {
         for (int i = 0; i < kit.getStackList().size(); i++) {
             ItemStack template = kit.getStackList().get(i);
 
-            if (template.isEmpty() || template.getItem().equals(Items.BARRIER)) {
+            if (template.isEmpty() || GuiHelper.isInvalidSlotPlaceholder(template)) {
                 continue;
             }
 

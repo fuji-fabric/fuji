@@ -4,6 +4,7 @@ import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import lombok.experimental.UtilityClass;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.GenericContainerScreenHandler;
@@ -14,6 +15,8 @@ import org.jetbrains.annotations.NotNull;
 @UtilityClass
 public class GuiHelper {
 
+    private static Item INVALID_SLOT_PLACEHOLDER_ITEM = Items.BARRIER;
+
     public static void fill(@NotNull SimpleGui gui, ItemStack itemStack) {
         for (int i = 0; i < gui.getSize(); i++) {
             gui.setSlot(i, itemStack);
@@ -22,6 +25,10 @@ public class GuiHelper {
 
     public boolean isInvalidSlotInsidePlayerInventory(int index) {
         return index == 41 || index == 42 || index == 43 || index == 44;
+    }
+
+    public boolean isInvalidSlotPlaceholder(ItemStack stack) {
+        return stack.getItem().equals(INVALID_SLOT_PLACEHOLDER_ITEM);
     }
 
     public static int getRows(ScreenHandlerType<GenericContainerScreenHandler> screenHandlerType) {
