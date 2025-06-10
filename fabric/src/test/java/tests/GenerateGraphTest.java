@@ -51,7 +51,7 @@ public class GenerateGraphTest {
                 scanResult.getSubclasses(BaseArgumentTypeAdapter.class).getNames().stream().sorted().forEach(writer::println);
             }
 
-            try (PrintWriter writer = new PrintWriter(Path.of("CITE").toFile())) {
+            try (PrintWriter writer = new PrintWriter(Path.of("../CITE").toFile())) {
                 List<String> cites = new ArrayList<>();
                 scanResult.getClassesWithAnnotation(Cite.class).forEach(clazz -> {
                     AnnotationInfo annotationInfo = clazz.getAnnotationInfo(Cite.class);
