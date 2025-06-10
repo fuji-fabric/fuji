@@ -17,6 +17,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
+#if MC_VER == MC_1_21
+import com.llamalad7.mixinextras.sugar.Local;
+import org.jetbrains.annotations.NotNull;
+#endif
+
 #if MC_VER > MC_1_21
 import net.minecraft.registry.RegistryOps;
 import net.minecraft.registry.RegistryWrapper;
