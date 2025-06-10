@@ -22,7 +22,7 @@ checkstyle {
 }
 
 /* Configure Pre-Processor. */
-def writeBuildGradlePredefine(List<String> mcVers, int mcIndex)
+def writeBuildGradlePredefine(List<String> targetMcVersions, int activeMcVersionIndex)
 {
     // Build the list of preprocessors to use
     StringBuilder sb = new StringBuilder();
@@ -30,12 +30,12 @@ def writeBuildGradlePredefine(List<String> mcVers, int mcIndex)
     sb.append("# DON'T TOUCH THIS FILE, This is handled by the build script\n");
 
 
-    for (int i = 0; i < mcVers.size(); i++)
+    for (int i = 0; i < targetMcVersions.size(); i++)
     {
-        String verStr = mcVers[i].replace(".", "_");
+        String verStr = targetMcVersions[i].replace(".", "_");
         sb.append("MC_" + verStr + "=" + i.toString() + "\n");
 
-        if (mcIndex == i)
+        if (activeMcVersionIndex == i)
             sb.append("MC_VER=" + i.toString() + "\n");
     }
 
