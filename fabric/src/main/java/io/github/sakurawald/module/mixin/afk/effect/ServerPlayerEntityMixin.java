@@ -11,7 +11,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 #if MC_VER > MC_1_21
 import net.minecraft.server.world.ServerWorld;
 #endif
-import net.minecraft.util.math.BlockPos;
+
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,9 +26,15 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
     @Unique
     final ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
 
+    #if MC_VER < MC_1_21_6
     public ServerPlayerEntityMixin(World world, BlockPos blockPos, float f, GameProfile gameProfile) {
         super(world, blockPos, f, gameProfile);
     }
+    #elif MC_VER >= MC_1_21_6
+    public ServerPlayerEntityMixin(World world, GameProfile gameProfile) {
+        super(world, gameProfile);
+    }
+    #endif
 
     @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
     public void invulnerableEffect(

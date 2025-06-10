@@ -6,7 +6,6 @@ import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.module.initializer.pvp.PvpInitializer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,9 +16,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ServerPlayerEntity.class)
 public abstract class PvpToggleMixin extends PlayerEntity {
 
-    public PvpToggleMixin(@NotNull World world, @NotNull BlockPos pos, float yaw, @NotNull GameProfile gameProfile) {
-        super(world, pos, yaw, gameProfile);
+    #if MC_VER < MC_1_21_6
+    public PvpToggleMixin(World world, BlockPos blockPos, float f, GameProfile gameProfile) {
+        super(world, blockPos, f, gameProfile);
     }
+    #elif MC_VER >= MC_1_21_6
+    public PvpToggleMixin(World world, GameProfile gameProfile) {
+        super(world, gameProfile);
+    }
+    #endif
 
     @Inject(method = "shouldDamagePlayer", at = @At("HEAD"), cancellable = true)
     public void $shouldDamagePlayer(@NotNull PlayerEntity sourcePlayer, @NotNull CallbackInfoReturnable<Boolean> cir) {

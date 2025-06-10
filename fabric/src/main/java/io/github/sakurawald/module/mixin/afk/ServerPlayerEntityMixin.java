@@ -14,7 +14,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,7 +26,7 @@ import java.util.List;
 
 // to override tab list name in `tab list module`
 @Mixin(value = ServerPlayerEntity.class, priority = 1000 - 250)
-public abstract class ServerPlayerMixin extends PlayerEntity implements AfkStateAccessor {
+public abstract class ServerPlayerEntityMixin extends PlayerEntity implements AfkStateAccessor {
 
     @Unique
     private final ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
@@ -39,9 +38,15 @@ public abstract class ServerPlayerMixin extends PlayerEntity implements AfkState
     @Unique
     private long inputCounter = 0;
 
-    public ServerPlayerMixin(World world, BlockPos blockPos, float f, GameProfile gameProfile) {
+    #if MC_VER < MC_1_21_6
+    public ServerPlayerEntityMixin(World world, BlockPos blockPos, float f, GameProfile gameProfile) {
         super(world, blockPos, f, gameProfile);
     }
+    #elif MC_VER >= MC_1_21_6
+    public ServerPlayerEntityMixin(World world, GameProfile gameProfile) {
+        super(world, gameProfile);
+    }
+    #endif
 
     @ModifyReturnValue(method = "getPlayerListName", at = @At("RETURN"))
     public Text $getPlayerListName(Text original) {
