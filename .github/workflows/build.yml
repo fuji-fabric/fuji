@@ -8,8 +8,8 @@ jobs:
         java: [21,]
         os: [ubuntu-latest]
         include:
-            - target-mc-version: 1.21.6
-            - target-mc-version: 1.21.5
+          - target-mc-version: 1.21.6
+          - target-mc-version: 1.21.5
     runs-on: ${{ matrix.os }}
     steps:
       - name: checkout repository
@@ -59,7 +59,7 @@ jobs:
         if: ${{ runner.os != 'Windows' }}
         run: chmod +x ./gradlew
       - name: build
-        run: ./gradlew build -PmcVer=#{{matrix.target-mc-version}}
+        run: ./gradlew build -PmcVer=${{matrix.target-mc-version}}
       - name: capture build artifacts
         if: ${{ runner.os == 'Linux' && matrix.java == '21' }}
         uses: actions/upload-artifact@v4
