@@ -172,14 +172,14 @@ allprojects { p ->
     version = "${project.mod_version}-${gitVersionDetails.gitHash}-mc${project.minecraft_version}"
 
     /* Copy resource files. */
-    task copyCommonResources(type: Copy) {
+    tasks.register('copyCommonResources', Copy) {
         println("Copy all resource files in :common project.")
         from project(":common").file("src/main/resources/")
         into(file(p.file("build/resources/main/")))
         exclude '**/*.accesswidener'
     }
 
-    task copyLanguageResources(type: Copy) {
+    tasks.register('copyLanguageResources', Copy) {
         println("Copy language files from source to destination.")
 
         def sourceDir = project(":crowdin").file("pull-from-crowdin/")
@@ -193,7 +193,7 @@ allprojects { p ->
         include "**/*.json"
     }
 
-    task copyAccessWidenerResources(type: Copy) {
+    tasks.register('copyAccessWidenerResources', Copy) {
         println("Copy accesswidener file for specified MC version.")
         from project(":common").file("src/main/resources/${access_widener_version}.fuji.accesswidener")
         into(file(p.file("build/resources/main")))
