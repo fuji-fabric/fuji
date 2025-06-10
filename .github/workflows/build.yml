@@ -5,10 +5,9 @@ jobs:
   build:
     strategy:
       matrix:
-        java: [21,]
+        java: [21]
         os: [ubuntu-latest]
-        include:
-          - target-mc-version: [1.21.6, 1.21.5]
+        target-mc-version: [1.21.6, 1.21.5]
     runs-on: ${{ matrix.os }}
     steps:
       - name: checkout repository
