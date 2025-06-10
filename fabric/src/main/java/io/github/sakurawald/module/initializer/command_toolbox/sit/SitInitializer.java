@@ -107,7 +107,8 @@ public class SitInitializer extends ModuleInitializer {
             }
 
             public boolean isChairBlockBroken() {
-                return getEntityWorld().getBlockState(getChairBlockPos()).isAir();
+                return EntityHelper.getServerWorld(this)
+                        .getBlockState(getChairBlockPos()).isAir();
             }
 
             // note: if the chair block is broken, the method `updatePassengerForDismount` will not be called.

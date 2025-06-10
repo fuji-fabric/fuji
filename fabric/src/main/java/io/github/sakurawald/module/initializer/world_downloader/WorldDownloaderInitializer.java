@@ -7,6 +7,7 @@ import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.IOUtil;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandSource;
@@ -102,7 +103,7 @@ public class WorldDownloaderInitializer extends ModuleInitializer {
         int regionZ = chunkPos.getRegionZ();
 
         /* get world folder */
-        ServerWorld world = player.getServerWorld();
+        ServerWorld world = EntityHelper.getServerWorld(player);
         MinecraftServer server = world.getServer();
         RegistryKey<World> dimensionKey = world.getRegistryKey();
         LevelStorage.Session session = server.session;

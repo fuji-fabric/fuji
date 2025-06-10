@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.mixin.command_attachment;
 
+import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.UuidHelper;
 import io.github.sakurawald.module.initializer.command_attachment.CommandAttachmentInitializer;
 import io.github.sakurawald.module.initializer.command_attachment.command.argument.wrapper.InteractType;
@@ -41,7 +42,7 @@ public class ServerPlayerInteractionManagerMixin {
     @Inject(method = "onBlockBreakingAction", at = @At("HEAD"))
     void onPlayerLeftClickBlock(BlockPos blockPos, boolean bl, int i, String string, CallbackInfo ci) {
         if (string.equals("actual start of destroying")) {
-            String uuid = UuidHelper.getAttachedUuid(player.getServerWorld(), blockPos);
+            String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
             if (!CommandAttachmentInitializer.existsAttachmentModel(uuid)) return;
             CommandAttachmentInitializer.triggerAttachmentModel(uuid, player, List.of(InteractType.LEFT, InteractType.BOTH));
         }

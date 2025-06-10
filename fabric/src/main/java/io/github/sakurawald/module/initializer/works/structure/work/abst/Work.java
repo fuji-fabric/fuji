@@ -7,6 +7,7 @@ import com.google.gson.JsonParseException;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.ChronosUtil;
+import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
@@ -135,7 +136,7 @@ public abstract class Work {
             .setItem(Items.END_PORTAL_FRAME)
             .setName(TextHelper.getTextByKey(player, "works.work.set.target.position"))
             .setCallback(() -> {
-                work.level = player.getServerWorld().getRegistryKey().getValue().toString();
+                work.level = EntityHelper.getServerWorld(player).getRegistryKey().getValue().toString();
                 work.x = player.getPos().x;
                 work.y = player.getPos().y;
                 work.z = player.getPos().z;

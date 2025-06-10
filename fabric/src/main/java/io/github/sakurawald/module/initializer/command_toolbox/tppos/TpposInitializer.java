@@ -42,7 +42,7 @@ public class TpposInitializer extends ModuleInitializer {
         , @Document("max try times for rtp") Optional<Integer> maxTryTimes
     ) {
         /* specify the dimension */
-        ServerWorld world = dimension.isPresent() ? dimension.get().getValue() : player.getServerWorld();
+        ServerWorld world = dimension.isPresent() ? dimension.get().getValue() : EntityHelper.getServerWorld(player);
 
         /* mode: fixed teleport */
         if (x.isPresent() || y.isPresent() || z.isPresent()) {
@@ -80,7 +80,7 @@ public class TpposInitializer extends ModuleInitializer {
     @Document("Teleport to the offline position of a player.")
     private static int tppos(@CommandSource ServerPlayerEntity source, OfflinePlayerName player) {
         ServerPlayerEntity dummy = EntityHelper.loadOfflinePlayer(player.getValue());
-        new SpatialPose(dummy.getServerWorld(), dummy.getX(), dummy.getY(), dummy.getZ(), dummy.getYaw(), dummy.getPitch()).teleport(source);
+        new SpatialPose(EntityHelper.getServerWorld(dummy), dummy.getX(), dummy.getY(), dummy.getZ(), dummy.getYaw(), dummy.getPitch()).teleport(source);
         return CommandHelper.Return.SUCCESS;
     }
 

@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.UuidHelper;
@@ -59,7 +60,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     private static void testSteppingBlockForPlayer(ServerPlayerEntity player) {
         String playerName = player.getGameProfile().getName();
         String originalUuid = player2uuid.get(playerName);
-        String uuid = UuidHelper.getAttachedUuid(player.getServerWorld(), player.getSteppingPos());
+        String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), player.getSteppingPos());
 
         if (uuid.equals(originalUuid)) return;
         // update value
@@ -203,7 +204,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         , @Document("The command") GreedyString command
     ) {
         // get entity id
-        String uuid = UuidHelper.getAttachedUuid(player.getServerWorld(), blockPos);
+        String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
         CommandAttachmentModel model = getAttachmentModel(uuid);
 
         // new entry
@@ -250,7 +251,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @CommandNode("detach-block-all")
     @Document("Detach all attached commands in the block.")
     private static int detachBlockAll(@CommandSource ServerPlayerEntity player, BlockPos blockPos) {
-        String uuid = UuidHelper.getAttachedUuid(player.getServerWorld(), blockPos);
+        String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
 
         doDetachAttachment(player, uuid);
         return CommandHelper.Return.SUCCESS;
@@ -283,7 +284,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @CommandNode("query-block")
     @Document("Query all attached commands in the block.")
     private static int queryBlock(@CommandSource ServerPlayerEntity player, BlockPos blockPos) {
-        String uuid = UuidHelper.getAttachedUuid(player.getServerWorld(), blockPos);
+        String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
         doQueryAttachment(player, uuid);
         return CommandHelper.Return.SUCCESS;
     }

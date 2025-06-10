@@ -1,6 +1,7 @@
 package io.github.sakurawald.module.initializer.nametag;
 
 import io.github.sakurawald.core.auxiliary.LogUtil;
+import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
@@ -38,7 +39,7 @@ public class NametagInitializer extends ModuleInitializer {
     private static DisplayEntity.TextDisplayEntity makeNametag(ServerPlayerEntity player) {
         LogUtil.debug("make nametag for player: {}", player.getGameProfile().getName());
 
-        DisplayEntity.TextDisplayEntity nametag = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY, player.getServerWorld()) {
+        DisplayEntity.TextDisplayEntity nametag = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY, EntityHelper.getServerWorld(player)) {
 
             private void discardNametag() {
                 ServerHelper.sendPacketToAll(new EntitiesDestroyS2CPacket(this.getId()));

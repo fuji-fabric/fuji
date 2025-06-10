@@ -2,6 +2,7 @@ package io.github.sakurawald.module.initializer.predicate;
 
 import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.PermissionHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
@@ -68,7 +69,8 @@ public class PredicateInitializer extends ModuleInitializer {
 
     @CommandNode("is-in-world?")
     private static int isInWorld(@CommandSource ServerCommandSource source, ServerPlayerEntity player, Dimension dimension) {
-        boolean value = player.getServerWorld().equals(dimension.getValue());
+        player.getWorld();
+        boolean value = EntityHelper.getServerWorld(player).equals(dimension.getValue());
         return CommandHelper.Return.outputBoolean(source, value);
     }
 

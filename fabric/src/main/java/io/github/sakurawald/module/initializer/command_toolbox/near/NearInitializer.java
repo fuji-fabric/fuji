@@ -2,6 +2,7 @@ package io.github.sakurawald.module.initializer.command_toolbox.near;
 
 import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
@@ -16,7 +17,7 @@ import java.util.Optional;
 public class NearInitializer extends ModuleInitializer {
 
     private static int distance(ServerPlayerEntity a, ServerPlayerEntity b) {
-        if (a.getServerWorld() != b.getServerWorld()) return Integer.MAX_VALUE;
+        if (EntityHelper.getServerWorld(a) != EntityHelper.getServerWorld(b)) return Integer.MAX_VALUE;
         return (int) a.getBlockPos().getSquaredDistance(b.getBlockPos().toCenterPos());
     }
 

@@ -3,6 +3,7 @@ package io.github.sakurawald.module.initializer.works.structure.work.impl;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.ChronosUtil;
+import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.gui.ConfirmGui;
@@ -187,7 +188,7 @@ public class ProductionWork extends Work {
         // add cache entry
         int hopperBlockCount = 0;
         int minecartHopperCount = 0;
-        ServerWorld world = player.getServerWorld();
+        ServerWorld world = EntityHelper.getServerWorld(player);
 
         Iterable<ChunkHolder> chunkHolders = world.getChunkManager().chunkLoadingManager.entryIterator();
         for (ChunkHolder chunkHolder : chunkHolders) {
@@ -227,7 +228,7 @@ public class ProductionWork extends Work {
     private void startSample(@NotNull ServerPlayerEntity player) {
         this.sample.sampleStartTimeMS = System.currentTimeMillis();
         this.sample.sampleEndTimeMS = this.sample.sampleStartTimeMS + WorksInitializer.config.model().sample_time_ms;
-        this.sample.sampleDimension = player.getServerWorld().getRegistryKey().getValue().toString();
+        this.sample.sampleDimension = EntityHelper.getServerWorld(player).getRegistryKey().getValue().toString();
         this.sample.sampleX = player.getX();
         this.sample.sampleY = player.getY();
         this.sample.sampleZ = player.getZ();

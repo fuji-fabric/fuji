@@ -2,6 +2,7 @@ package io.github.sakurawald.module.initializer.rtp;
 
 import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
@@ -42,7 +43,7 @@ public class RtpInitializer extends ModuleInitializer {
     @CommandNode("rtp")
     @Document("Random rtp in specified dimension.")
     private static int $rtp(@CommandSource @CommandTarget ServerPlayerEntity player, Optional<Dimension> dimension) {
-        ServerWorld serverWorld = dimension.isPresent() ? dimension.get().getValue() : player.getServerWorld();
+        ServerWorld serverWorld = dimension.isPresent() ? dimension.get().getValue() : EntityHelper.getServerWorld(player);
         TeleportSetup setup = withTeleportSetup(player, serverWorld);
 
         TextHelper.sendActionBarByKey(player, "rtp.tip");

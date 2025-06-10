@@ -5,6 +5,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.github.sakurawald.core.annotation.Cite;
 import io.github.sakurawald.core.auxiliary.LogUtil;
+import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import it.unimi.dsi.fastutil.Pair;
 import lombok.Getter;
@@ -86,7 +87,7 @@ public class SkinRestorer {
                 applySkin(player.getGameProfile(), skin);
 
                 /* broadcast the change */
-                for (ServerPlayerEntity observer : player.getServerWorld().getPlayers()) {
+                for (ServerPlayerEntity observer : EntityHelper.getServerWorld(player).getPlayers()) {
 
                     /* update the tablist */
                     observer.networkHandler.sendPacket(new PlayerRemoveS2CPacket(Collections.singletonList(player.getUuid())));
@@ -107,10 +108,10 @@ public class SkinRestorer {
                         observer.networkHandler.sendPacket(new EntityPassengersSetS2CPacket(player));
 
                     } else if (player == observer) {
-                        observer.networkHandler.sendPacket(new PlayerRespawnS2CPacket(player.createCommonPlayerSpawnInfo(player.getServerWorld()), (byte) 2));
+                        observer.networkHandler.sendPacket(new PlayerRespawnS2CPacket(player.createCommonPlayerSpawnInfo(EntityHelper.getServerWorld(player)), (byte) 2));
                         observer.networkHandler.requestTeleport(observer.getX(), observer.getY(), observer.getZ(), observer.getYaw(), observer.getPitch());
 
-                        observer.networkHandler.sendPacket(new DifficultyS2CPacket(observer.getServerWorld().getDifficulty(), player.getServerWorld().getLevelProperties().isDifficultyLocked()));
+                        observer.networkHandler.sendPacket(new DifficultyS2CPacket(EntityHelper.getServerWorld(observer).getDifficulty(), EntityHelper.getServerWorld(player).getLevelProperties().isDifficultyLocked()));
 
                         #if MC_VER == MC_1_21_4
                         observer.networkHandler.sendPacket(new UpdateSelectedSlotS2CPacket(observer.getInventory().selectedSlot));

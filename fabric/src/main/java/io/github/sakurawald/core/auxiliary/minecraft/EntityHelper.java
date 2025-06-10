@@ -68,4 +68,8 @@ public class EntityHelper {
         #endif
     }
 
+    public static ServerWorld getServerWorld(Entity entity) {
+        return (ServerWorld) entity.getWorld();
+    }
+
 }
