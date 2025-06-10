@@ -1,9 +1,5 @@
 package io.github.sakurawald.module.initializer.echo.send_toast;
 
-#if MC_VER == MC_1_21_5
-import net.minecraft.util.AssetInfo;
-#endif
-
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
@@ -29,7 +25,9 @@ import net.minecraft.network.packet.s2c.play.AdvancementUpdateS2CPacket;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+#if MC_VER >= MC_1_21_5
 import net.minecraft.util.AssetInfo;
+#endif
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
