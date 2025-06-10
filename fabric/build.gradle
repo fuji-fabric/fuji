@@ -93,7 +93,7 @@ java {
 processResources {
     outputs.upToDateWhen { false }
 
-    dependsOn(copyCommonLoaderResources)
+    dependsOn(copyCommonResources)
 
     filesMatching("fabric.mod.json") {
         expand "version": project.version

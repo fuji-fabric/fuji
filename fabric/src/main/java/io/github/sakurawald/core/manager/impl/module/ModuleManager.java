@@ -35,6 +35,9 @@ public class ModuleManager extends BaseManager {
      * @return the module path for given class name, if the class is not inside a module, then a special module path List.of("core") will be returned.
      */
     public static @NotNull List<String> computeModulePath(@NotNull String className) {
+        if (MODULE_PATHS.isEmpty()) {
+            LogUtil.warn("This is the first time we generating the module graph file, we just ");
+        }
 
         /* remove leading directories */
         int left = -1;
@@ -72,7 +75,7 @@ public class ModuleManager extends BaseManager {
         while (!MODULE_PATHS.contains(modulePathString)) {
             // remove last!
             if (modulePath.isEmpty()) {
-                throw new RuntimeException("can't find the module enable-supplier in `config.json` for class name %s. Did you forget to add the enable-supplier key in ConfigModel ?".formatted(className));
+                throw new RuntimeException("Can't find the module enable-supplier in `config.json` for class name %s. Did you forget to add the enable-supplier key in ConfigModel ?".formatted(className));
             }
             modulePath.removeLast();
 

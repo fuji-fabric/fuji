@@ -37,7 +37,11 @@ public class ReflectionUtil {
     public static List<String> getGraph(String graphName) {
         InputStream inputStream = ReflectionUtil.class.getResourceAsStream(graphName);
 
-        assert inputStream != null;
+        if (inputStream == null) {
+            LogUtil.info("The inputStream of {} is null, we just simply return an empty graph for that.", graphName);
+            return new ArrayList<>();
+        }
+
         @Cleanup BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         List<String> lines = new ArrayList<>();
         String line;
