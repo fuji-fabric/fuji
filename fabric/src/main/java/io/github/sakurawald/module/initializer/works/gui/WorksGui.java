@@ -4,6 +4,7 @@ import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.gui.PagedGui;
@@ -70,7 +71,7 @@ public class WorksGui extends PagedGui<Work> {
             .setCallback((index, clickType, actionType) -> {
                 /* left click -> visit */
                 if (clickType.isLeft) {
-                    RegistryKey<World> worldKey = RegistryKey.of(RegistryKeys.WORLD, Identifier.of(entity.level));
+                    RegistryKey<World> worldKey = RegistryKey.of(RegistryKeys.WORLD, RegistryHelper.makeIdentifier(entity.level));
                     ServerWorld level = ServerHelper.getServer().getWorld(worldKey);
                     if (level != null) {
                         new SpatialPose(level, entity.x, entity.y, entity.z, entity.yaw, entity.pitch)

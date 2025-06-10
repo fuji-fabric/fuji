@@ -2,6 +2,7 @@ package io.github.sakurawald.module.initializer.echo.send_toast;
 
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandRequirement;
@@ -49,9 +50,9 @@ public class SendToastInitializer extends ModuleInitializer {
             , Text.empty()
             , Optional.of(
                 #if MC_VER <= MC_1_21_4
-                    Identifier.of(DUMMY_RESOURCE_IMAGE_IDENTIFIER)
+                    RegistryHelper.makeIdentifier(DUMMY_RESOURCE_IMAGE_IDENTIFIER)
                 #elif MC_VER >= MC_1_21_5
-                    new AssetInfo(Identifier.of(DUMMY_RESOURCE_IMAGE_IDENTIFIER))
+                    new AssetInfo(RegistryHelper.makeIdentifier(DUMMY_RESOURCE_IMAGE_IDENTIFIER))
                 #endif
             )
             , advancementFrame

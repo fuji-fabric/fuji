@@ -1,5 +1,6 @@
 package io.github.sakurawald.core.structure;
 
+import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import lombok.Data;
@@ -56,7 +57,7 @@ public class SpatialPose {
     }
 
     public void teleport(@NotNull ServerPlayerEntity player, Set<PositionFlag> flags) {
-        RegistryKey<World> worldKey = RegistryKey.of(RegistryKeys.WORLD, Identifier.of(this.level));
+        RegistryKey<World> worldKey = RegistryKey.of(RegistryKeys.WORLD, RegistryHelper.makeIdentifier(this.level));
         ServerWorld serverLevel = ServerHelper.getServer().getWorld(worldKey);
         if (serverLevel == null) {
             TextHelper.sendMessageByKey(player, "world.dimension.not_found", this.level);

@@ -27,7 +27,7 @@ public class WorldHelper {
     }
 
     public static int getTopY(Chunk chunk) {
-        #if MC_VER == MC_1_21
+        #if MC_VER <= MC_1_21
             return chunk.getTopY();
         #elif MC_VER > MC_1_21
             return chunk.getTopYInclusive();
@@ -35,7 +35,7 @@ public class WorldHelper {
     }
 
     public static int getTopY(World world) {
-        #if MC_VER == MC_1_21
+        #if MC_VER <= MC_1_21
             return world.getTopY();
         #elif MC_VER > MC_1_21
             return world.getTopYInclusive();

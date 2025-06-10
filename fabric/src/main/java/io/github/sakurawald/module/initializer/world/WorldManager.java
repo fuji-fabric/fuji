@@ -82,8 +82,8 @@ public class WorldManager {
 
         // register the dimension
         MinecraftServer server = ServerHelper.getServer();
-        Identifier dimension = Identifier.of(dimensionNode.getDimension());
-        Identifier dimensionType = Identifier.of(dimensionNode.getDimension_type());
+        Identifier dimension = RegistryHelper.makeIdentifier(dimensionNode.getDimension());
+        Identifier dimensionType = RegistryHelper.makeIdentifier(dimensionNode.getDimension_type());
         long seed = dimensionNode.getSeed();
         registerWorld(server, dimension, dimensionType, seed);
         return true;

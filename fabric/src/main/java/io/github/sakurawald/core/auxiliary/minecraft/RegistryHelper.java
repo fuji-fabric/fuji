@@ -61,7 +61,7 @@ public class RegistryHelper {
     }
 
     public static @Nullable ServerWorld ofServerWorld(String identifier) {
-        RegistryKey<World> key = ofRegistryKey(RegistryKeys.WORLD, Identifier.of(identifier));
+        RegistryKey<World> key = ofRegistryKey(RegistryKeys.WORLD, RegistryHelper.makeIdentifier(identifier));
         // get the world instance from the server.
         return ServerHelper.getServer().getWorld(key);
     }
@@ -73,5 +73,13 @@ public class RegistryHelper {
     public static RegistryWrapper.WrapperLookup getDefaultWrapperLookup() {
         return ServerHelper.getServer()
             .getRegistryManager();
+    }
+
+    public static Identifier makeIdentifier(String identifier) {
+        #if MC_VER <= MC_1_20_6
+            return new Identifier(identifier);
+        #elif MC_VER > MC_1_20_6
+            return RegistryHelper.makeIdentifier(setup.sound);
+        #endif
     }
 }

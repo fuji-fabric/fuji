@@ -1,5 +1,6 @@
 package io.github.sakurawald.core.job.impl;
 
+import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.job.abst.FixedIntervalJob;
 import lombok.NoArgsConstructor;
@@ -48,7 +49,7 @@ public class MentionPlayersJob extends FixedIntervalJob {
             if (player == null) continue;
 
             ServerHelper.getServer().executeSync(() -> {
-                SoundEvent soundEvent = SoundEvent.of(Identifier.of(setup.sound));
+                SoundEvent soundEvent = SoundEvent.of(RegistryHelper.makeIdentifier(setup.sound));
                 SoundCategory soundCategory = SoundCategory.BLOCKS;
                 player.playSoundToPlayer(soundEvent, soundCategory, setup.volume, setup.pitch);
             });

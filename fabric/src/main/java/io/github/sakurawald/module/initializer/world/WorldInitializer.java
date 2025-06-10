@@ -103,7 +103,7 @@ public class WorldInitializer extends ModuleInitializer {
 
         /* make dimension entry */
         long $seed = seed.orElse(RandomSeed.getSeed());
-        Identifier dimensionTypeIdentifier = Identifier.of(dimensionType.getValue());
+        Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(dimensionType.getValue());
         DimensionNode dimensionNode = new DimensionNode(true, dimensionIdentifier.toString(), dimensionTypeIdentifier.toString(), $seed);
         storage.model().dimension_list.add(dimensionNode);
         storage.writeStorage();
