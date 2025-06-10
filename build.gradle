@@ -33,6 +33,14 @@ def writeBuildGradlePredefine(List<String> targetMcVersions, int activeMcVersion
             sb.append("MC_VER=" + i.toString() + "\n");
     }
 
+    // Check if this is a development build
+    if (mod_version.toLowerCase().contains("dev"))
+    {
+        // WARNING: only use this for logging, we don't want to have confusion
+        // when a method doesn't work correctly in the release build.
+        sb.append("DEV_BUILD=\n");
+    }
+
     new File(projectDir, "build.properties").text = sb.toString()
 }
 
