@@ -48,33 +48,29 @@ loom {
  *
  */
 dependencies {
+    /* For mod loader: fabric-loader */
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings_version}"
     modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
 
-    compileOnly "org.projectlombok:lombok:${project.lombok_version}"
-    annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
-    testCompileOnly "org.projectlombok:lombok:${project.lombok_version}"
-    testAnnotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
+    /* For fabric-carpet mod */
+    modImplementation("carpet:fabric-carpet:${project.carpet_core_version}")
 
+    /* For json parser: gson */
     implementation "com.google.code.gson:gson:${project.gson_version}"
     include(implementation("com.jayway.jsonpath:json-path:${project.json_path_version}"))
 
-    modImplementation("carpet:fabric-carpet:${project.carpet_core_version}")
-
+    /* For permission system: luckperms */
     include(implementation "net.luckperms:api:${project.luckperms_api_version}")
 
+    /* For server side gui: sgui*/
     include(modImplementation("eu.pb4:sgui:${project.sgui_version}"))
     include(modImplementation("eu.pb4:placeholder-api:${project.placeholder_api_version}"))
 
+    /* For scheduler: quartz */
     include(implementation "org.quartz-scheduler:quartz:${project.quartz_version}")
 
-    testImplementation(platform("org.junit:junit-bom:${project.junit_version}"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
-    testImplementation "io.github.classgraph:classgraph:${project.classgraph_version}"
-
+    /* For testing: fabric-loader-junit */
     testImplementation "net.fabricmc:fabric-loader-junit:${project.fabric_loader_version}"
 }
 
