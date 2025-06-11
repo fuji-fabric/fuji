@@ -8,6 +8,7 @@ import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import lombok.experimental.UtilityClass;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -138,7 +139,7 @@ public class CommandHelper {
         #endif
     }
 
-    public static void executeCommand(ServerPlayerEntity player, String command) {
+    public static void executeCommand(PlayerEntity player, String command) {
         ServerCommandSource commandSource = player.getCommandSource();
         ParseResults<ServerCommandSource> parseResults = ServerHelper.getCommandDispatcher().parse(command, commandSource);
         ServerHelper.getServer().getCommandManager().execute(parseResults, command);
