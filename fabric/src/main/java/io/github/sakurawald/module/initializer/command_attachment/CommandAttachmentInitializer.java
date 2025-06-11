@@ -32,7 +32,6 @@ import io.github.sakurawald.module.initializer.command_attachment.structure.Comm
 import io.github.sakurawald.module.initializer.command_attachment.structure.EntityCommandAttachmentNode;
 import io.github.sakurawald.module.initializer.command_attachment.structure.ItemStackCommandAttachmentNode;
 import lombok.SneakyThrows;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
