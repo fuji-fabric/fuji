@@ -3,10 +3,11 @@ package io.github.sakurawald.core.command.argument.adapter.impl;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
-import io.github.sakurawald.core.command.argument.exception.ArgumentTypeNotSupportedException;
 import io.github.sakurawald.core.command.argument.structure.Argument;
 import io.github.sakurawald.core.command.argument.wrapper.impl.NotSupportedType;
 #if MC_VER <= MC_1_20_4
+import com.mojang.brigadier.arguments.StringArgumentType;
+import io.github.sakurawald.core.command.argument.wrapper.impl.GreedyString;
 #elif MC_VER > MC_1_20_4
 import net.minecraft.command.argument.SlotRangeArgumentType;
 import net.minecraft.inventory.SlotRange;
@@ -19,7 +20,7 @@ public class SlotRangeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected ArgumentType<?> makeArgumentType() {
         #if MC_VER <= MC_1_20_4
-            throw new ArgumentTypeNotSupportedException();
+            return StringArgumentType.greedyString();
         #elif MC_VER > MC_1_20_4
             return SlotRangeArgumentType.slotRange();
         #endif
@@ -28,9 +29,9 @@ public class SlotRangeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
         #if MC_VER <= MC_1_20_4
-            throw new ArgumentTypeNotSupportedException();
+        return new GreedyString(StringArgumentType.getString(context, argument.getArgumentName()));
         #elif MC_VER > MC_1_20_4
-            return SlotRangeArgumentType.getSlotRange(context, argument.getArgumentName());
+        return SlotRangeArgumentType.getSlotRange(context, argument.getArgumentName());
         #endif
     }
 
