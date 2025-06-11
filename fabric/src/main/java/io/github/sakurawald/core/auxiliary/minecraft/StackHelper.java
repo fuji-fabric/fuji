@@ -40,4 +40,12 @@ public class StackHelper {
             stack.set(DataComponentTypes.CUSTOM_NAME, customName);
         #endif
     }
+
+    public static boolean hasCustomName(ItemStack stack) {
+        #if MC_VER <= MC_1_20_4
+            return stack.hasCustomName();
+        #elif MC_VER > MC_1_20_4
+            return stack.get(DataComponentTypes.CUSTOM_NAME) != null;
+        #endif
+    }
 }

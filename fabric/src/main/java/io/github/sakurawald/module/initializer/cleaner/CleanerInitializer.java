@@ -5,6 +5,7 @@ import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.StackHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandRequirement;
@@ -15,11 +16,11 @@ import io.github.sakurawald.core.structure.TypeFormatter;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.cleaner.config.model.CleanerConfigModel;
 import io.github.sakurawald.module.initializer.cleaner.job.CleanerJob;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.vehicle.VehicleEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.MutableText;
@@ -49,8 +50,12 @@ public class CleanerInitializer extends ModuleInitializer {
         if (config.ignore_living_entity && entity.isLiving()) return true;
         if (config.ignore_named_entity) {
             if (entity.hasCustomName()) return true;
-            if (entity instanceof ItemEntity ie && ie.getStack().get(DataComponentTypes.CUSTOM_NAME) != null)
-                return true;
+            if (entity instanceof ItemEntity ie) {
+                ItemStack stack = ie.getStack();
+                if (StackHelper.hasCustomName(stack)) {
+                    return true;
+                }
+            }
         }
         if (config.ignore_entity_with_vehicle && entity.hasVehicle()) return true;
         if (config.ignore_entity_with_passengers && entity.hasPassengers()) return true;
