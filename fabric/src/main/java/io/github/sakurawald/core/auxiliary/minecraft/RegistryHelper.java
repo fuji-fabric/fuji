@@ -18,6 +18,8 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 @UtilityClass
 public class RegistryHelper {
 
@@ -86,5 +88,27 @@ public class RegistryHelper {
 
     public static <T> String getIdAsString(RegistryEntry<T> entry) {
         return entry.getKey().map((registryKey) -> registryKey.getValue().toString()).orElse("[unregistered]");
+    }
+
+    public static <T> @Nullable String findRegistryKeyByRegistryValueInASpecifiedRegistry(RegistryKey<? extends Registry<? extends T>> registrySpecifier, Object theRegistryValue) {
+        var ref = new Object() {
+            String result;
+        };
+
+        RegistryHelper
+            .ofRegistry(registrySpecifier)
+            .streamEntries()
+            .forEach(candidate -> {
+                Optional<RegistryKey<T>> candidateKey = candidate.getKey();
+                // If the candidate didn't have a key, then we have nothing to return.
+                if (candidateKey.isPresent()) {
+                    if (theRegistryValue.equals(candidate.value)) {
+                        ref.result = candidateKey.get().getValue().toString();
+                    }
+                }
+            });
+
+        // Return the identifier.
+        return ref.result;
     }
 }

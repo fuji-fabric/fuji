@@ -1,11 +1,13 @@
 package io.github.sakurawald.module.mixin.chat.spy;
 
 import io.github.sakurawald.core.auxiliary.LogUtil;
+import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.module.initializer.chat.spy.ChatSpyInitializer;
 import net.minecraft.network.message.MessageType;
 import net.minecraft.network.message.SignedMessage;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
@@ -16,6 +18,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
 
 @Mixin(value = ServerPlayNetworkHandler.class)
 public abstract class ServerPlayNetworkHandlerMixin {
@@ -31,10 +34,13 @@ public abstract class ServerPlayNetworkHandlerMixin {
         /* filter -> whitelist message types */
         #if MC_VER <= MC_1_20_4
         // FIXME This seems wrong.
-        String messageType = parameters.type().toString();
+        MessageType messageTypeObj = parameters.type();
+        String messageType = RegistryHelper.findRegistryKeyByRegistryValueInASpecifiedRegistry(RegistryKeys.MESSAGE_TYPE, messageTypeObj);
         #elif MC_VER > MC_1_20_4
         String messageType = parameters.type().getIdAsString();
         #endif
+
+        LogUtil.debug("Receive a message with message type {}", messageType);
 
         if (ChatSpyInitializer.config.model().message_type.whitelist.stream().noneMatch(it -> it.matches(messageType))) {
             return;
