@@ -11,7 +11,7 @@ import net.minecraft.screen.ScreenHandlerType;
 #if MC_VER > MC_1_21
 import net.minecraft.screen.slot.ForgingSlotsManager;
 #endif
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -38,24 +38,34 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
     }
     #endif
 
-    #if MC_VER <= MC_1_20_6
+    #if MC_VER <= MC_1_20_4
+    @ModifyArg(method = "updateResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;setCustomName(Lnet/minecraft/text/Text;)Lnet/minecraft/item/ItemStack;", ordinal = 0))
+    public Text updateResult(Text text)
+    #elif MC_VER > MC_1_20_4 && MC_VER <= MC_1_20_6
     @ModifyArg(method = "updateResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;set(Lnet/minecraft/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))
+    public @NotNull Object updateResult(Object text)
     #elif MC_VER > MC_1_20_6
     @ModifyArg(method = "updateResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;set(Lnet/minecraft/component/ComponentType;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))
+    public @NotNull Object updateResult(Object text)
     #endif
-    public @NotNull Object updateResult(Object text) {
+     {
         if (ColorAnvilInitializer.config.model().requires_corresponding_permission_to_use_style_tag) {
             newItemName = StyleStriper.stripe(super.player, STYLE_TYPE_ANVIL, newItemName);
         }
         return TextHelper.getTextByValue(null, newItemName);
     }
 
-    #if MC_VER <= MC_1_20_6
+    #if MC_VER <= MC_1_20_4
+    @ModifyArg(method = "setNewItemName", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;setCustomName(Lnet/minecraft/text/Text;)Lnet/minecraft/item/ItemStack;", ordinal = 0))
+    public Text newItemName(Text text)
+    #elif MC_VER > MC_1_20_4 && MC_VER <= MC_1_20_6
     @ModifyArg(method = "setNewItemName", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;set(Lnet/minecraft/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))
+    public @NotNull Object newItemName(Object text)
     #elif MC_VER > MC_1_20_6
     @ModifyArg(method = "setNewItemName", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;set(Lnet/minecraft/component/ComponentType;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))
+    public @NotNull Object newItemName(Object text)
     #endif
-    public @NotNull Object newItemName(Object text) {
+     {
         if (ColorAnvilInitializer.config.model().requires_corresponding_permission_to_use_style_tag) {
             newItemName = StyleStriper.stripe(super.player, STYLE_TYPE_ANVIL, newItemName);
         }
