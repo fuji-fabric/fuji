@@ -1,7 +1,6 @@
 {
   "required": true,
   "package": "io.github.sakurawald.module.mixin",
-  "compatibilityLevel": "JAVA_21",
   "plugin": "io.github.sakurawald.module.mixin.GlobalMixinConfigPlugin",
   "server": [
     "anti_build.EntityMixin",
