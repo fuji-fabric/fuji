@@ -1,5 +1,10 @@
 package io.github.sakurawald.module.mixin.world;
 
+import net.minecraft.world.level.WorldGenSettings;
+import org.spongepowered.asm.mixin.Mixin;
+
+#if MC_VER <= MC_1_20_4
+#elif MC_VER > MC_1_20_4
 import com.google.common.collect.Maps;
 import io.github.sakurawald.module.initializer.world.accessor.IDimensionOptions;
 import io.github.sakurawald.module.initializer.world.structure.FilteredRegistry;
@@ -7,17 +12,18 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionOptionsRegistryHolder;
-import net.minecraft.world.level.WorldGenSettings;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.Mixin;
+import java.util.Map;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+#endif
 
-import java.util.Map;
 
 @Mixin(WorldGenSettings.class)
 public class WorldGenSettingsMixin {
 
+    #if MC_VER <= MC_1_20_4
+    #elif MC_VER > MC_1_20_4
     @ModifyArg(method = "encode(Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/world/gen/GeneratorOptions;Lnet/minecraft/world/dimension/DimensionOptionsRegistryHolder;)Lcom/mojang/serialization/DataResult;"
         , at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/WorldGenSettings;<init>(Lnet/minecraft/world/gen/GeneratorOptions;Lnet/minecraft/world/dimension/DimensionOptionsRegistryHolder;)V"), index = 1)
     private static @NotNull DimensionOptionsRegistryHolder $wrapWorldGenSettings(DimensionOptionsRegistryHolder original) {
@@ -32,4 +38,5 @@ public class WorldGenSettingsMixin {
     private static Registry<DimensionOptions> $wrapWorldGenSettings(Registry<DimensionOptions> registry) {
         return new FilteredRegistry<>(registry, IDimensionOptions.SAVE_PROPERTIES_PREDICATE);
     }
+    #endif
 }

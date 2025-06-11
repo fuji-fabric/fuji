@@ -29,7 +29,13 @@ public abstract class ServerPlayNetworkHandlerMixin {
     @Inject(method = "sendChatMessage", at = @At(value = "HEAD"))
     public void spy(SignedMessage signedMessage, MessageType.Parameters parameters, CallbackInfo ci) {
         /* filter -> whitelist message types */
+        #if MC_VER <= MC_1_20_4
+        // FIXME This seems wrong.
+        String messageType = parameters.type().toString();
+        #elif MC_VER > MC_1_20_4
         String messageType = parameters.type().getIdAsString();
+        #endif
+
         if (ChatSpyInitializer.config.model().message_type.whitelist.stream().noneMatch(it -> it.matches(messageType))) {
             return;
         }

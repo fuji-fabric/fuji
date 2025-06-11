@@ -39,8 +39,13 @@ public class ServerPlayerInteractionManagerMixin {
         CommandAttachmentInitializer.triggerAttachmentModel(uuid, player, List.of(InteractType.RIGHT, InteractType.BOTH));
     }
 
+    #if MC_VER <= MC_1_20_4
+    @Inject(method = "method_41250", at = @At("HEAD"))
+    #elif MC_VER > MC_1_20_4
     @Inject(method = "onBlockBreakingAction", at = @At("HEAD"))
-    void onPlayerLeftClickBlock(BlockPos blockPos, boolean bl, int i, String string, CallbackInfo ci) {
+    #endif
+    void onPlayerLeftClickBlock(BlockPos blockPos, boolean bl, int i, String string, CallbackInfo ci)
+     {
         if (string.equals("actual start of destroying")) {
             String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
             if (!CommandAttachmentInitializer.existsAttachmentModel(uuid)) return;
