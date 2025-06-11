@@ -46,6 +46,7 @@ It's good to have a checklist, to avoid forgetting something.
 - Test command requirements:
     - Test the requirement of `/warp`
     - Test the requirement of `/world`
+- Open a `shulker box display` from a `inventory display`. 
 - Test the command tree for a default user.
 - Test platform environments:
     - The fabric server-side environment.
@@ -74,4 +75,5 @@ It's good to have a checklist, to avoid forgetting something.
 - test the jar file in a real environment.
 - publish the pdf file in "dev" branch.
 - modify the `build.yml` file to include the new supported MC version.
+- place a sign and write `/say hi` and `back` command on it.
 - push a git commit with the prefix `[publish]`

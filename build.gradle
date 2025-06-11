@@ -201,6 +201,7 @@ allprojects { p ->
     }
 
     /* Configure test framework. */
+    // NOTE If :fabric:test task failed for no reason, you can comment out this block, disable the test, and run again, see what's happening.
     test {
         outputs.upToDateWhen { false }
         useJUnitPlatform()
