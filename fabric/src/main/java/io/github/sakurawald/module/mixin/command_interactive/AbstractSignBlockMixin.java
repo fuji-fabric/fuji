@@ -1,6 +1,5 @@
 package io.github.sakurawald.module.mixin.command_interactive;
 
-import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import net.minecraft.block.AbstractSignBlock;
 import net.minecraft.block.BlockState;
@@ -10,7 +9,9 @@ import net.minecraft.block.entity.SignText;
 import net.minecraft.entity.player.PlayerEntity;
 #if MC_VER <= MC_1_20_4
 import net.minecraft.util.Hand;
+import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 #elif MC_VER > MC_1_20_4
+import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
 #endif
 
 import net.minecraft.server.network.ServerPlayerEntity;
