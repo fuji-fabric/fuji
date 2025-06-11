@@ -126,12 +126,19 @@ public class TextHelper {
     private @NotNull String getClientSideLanguageCode(@Nullable Object audience) {
         if (audience == null) return getDefaultLanguageCode();
 
-        PlayerEntity player = switch (audience) {
-            case ServerPlayerEntity serverPlayerEntity -> serverPlayerEntity;
-            case PlayerEntity playerEntity -> playerEntity;
-            case ServerCommandSource source when source.getPlayer() != null -> source.getPlayer();
-            default -> null;
-        };
+        PlayerEntity player = null;
+        if (audience instanceof ServerPlayerEntity) {
+            player = ((ServerPlayerEntity) audience);
+        }
+        else if (audience instanceof PlayerEntity) {
+            player = (PlayerEntity) audience;
+        }
+        else if (audience instanceof ServerCommandSource) {
+            ServerCommandSource commandSource = (ServerCommandSource) audience;
+            if (commandSource.getPlayer() != null) {
+                player = commandSource.getPlayer();
+            }
+        }
 
         // always use default_language for non-player object.
         if (player == null) return getDefaultLanguageCode();
