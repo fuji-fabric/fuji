@@ -42,17 +42,25 @@ public class GuiHelper {
         throw new IllegalArgumentException("Unknown screen handler type: " + screenHandlerType);
     }
 
+    public static GuiElementBuilder hideTooltip(GuiElementBuilder builder) {
+        #if MC_VER <= MC_1_20_4
+            builder.hideFlags();
+        #elif MC_VER > MC_1_20_4
+            builder.hideTooltip();
+        #endif
+
+        return builder;
+    }
+
     public static GuiElementInterface makeBarrier() {
-        return new GuiElementBuilder()
-            .setItem(Items.BARRIER)
-            .hideTooltip()
+        return hideTooltip(new GuiElementBuilder()
+            .setItem(Items.BARRIER))
             .build();
     }
 
     public static GuiElementInterface makeSlotPlaceholder() {
-        return new GuiElementBuilder()
-            .setItem(Items.GRAY_STAINED_GLASS_PANE)
-            .hideTooltip()
+        return hideTooltip(new GuiElementBuilder()
+            .setItem(Items.GRAY_STAINED_GLASS_PANE))
             .build();
     }
 
