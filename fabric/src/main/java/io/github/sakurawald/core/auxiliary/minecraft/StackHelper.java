@@ -104,10 +104,14 @@ public class StackHelper {
     public static NbtCompound getSkullOwner(ItemStack stack) {
         #if MC_VER <= MC_1_20_4
         return stack.getSubNbt("SkullOwner");
-        #elif MC_VER > MC_1_20_4
+        #elif MC_VER > MC_1_20_4 && MC_VER < MC_1_21_5
         NbtCompound nbt = NbtHelper.getNbt(stack);
         if (nbt == null) return null;
         return nbt.getCompound("SkullOwner");
+        #elif MC_VER >= MC_1_21_5
+        NbtCompound nbt = NbtHelper.getNbt(stack);
+        if (nbt == null) return null;
+        return nbt.getCompound("SkullOwner").get();
         #endif
     }
 
