@@ -78,7 +78,7 @@ public class WorldInitializer extends ModuleInitializer {
 
         } else {
             ServerHelper.getWorlds().forEach(world -> {
-                String dimensionType = world.getDimensionEntry().getIdAsString();
+                String dimensionType = RegistryHelper.getIdAsString(world.getDimensionEntry());
                 String dimension = String.valueOf(world.getRegistryKey().getValue());
                 TextHelper.sendMessageByKey(source, "world.dimension.list.entry", dimension, dimensionType);
             });

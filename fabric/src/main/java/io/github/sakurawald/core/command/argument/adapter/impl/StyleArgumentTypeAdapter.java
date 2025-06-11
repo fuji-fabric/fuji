@@ -14,7 +14,11 @@ import java.util.List;
 public class StyleArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected ArgumentType<?> makeArgumentType() {
+        #if MC_VER <= MC_1_20_4
+        return StyleArgumentType.style();
+        #elif MC_VER > MC_1_20_4
         return StyleArgumentType.style(CommandAnnotationProcessor.getRegistryAccess());
+        #endif
     }
 
     @Override

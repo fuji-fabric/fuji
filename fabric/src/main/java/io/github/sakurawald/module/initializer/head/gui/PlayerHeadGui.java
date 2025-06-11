@@ -6,6 +6,7 @@ import eu.pb4.sgui.api.gui.AnvilInputGui;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.StackHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.service.gameprofile_fetcher.MojangProfileFetcher;
 import io.github.sakurawald.module.initializer.head.HeadInitializer;
@@ -77,7 +78,7 @@ public class PlayerHeadGui extends AnvilInputGui {
                         var cursorStack = getPlayer().currentScreenHandler.getCursorStack();
                         if (player.currentScreenHandler.getCursorStack().isEmpty()) {
                             player.currentScreenHandler.setCursorStack(headStack.copy());
-                        } else if (ItemStack.areItemsAndComponentsEqual(headStack, cursorStack) && cursorStack.getCount() < cursorStack.getMaxCount()) {
+                        } else if (StackHelper.canCombine(headStack, cursorStack) && cursorStack.getCount() < cursorStack.getMaxCount()) {
                             cursorStack.increment(1);
                         } else {
                             player.dropItem(headStack.copy(), false);

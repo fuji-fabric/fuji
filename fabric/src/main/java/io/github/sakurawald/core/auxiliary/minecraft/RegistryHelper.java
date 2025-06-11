@@ -11,6 +11,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
@@ -81,5 +82,9 @@ public class RegistryHelper {
         #elif MC_VER > MC_1_20_6
             return Identifier.of(identifier);
         #endif
+    }
+
+    public static <T> String getIdAsString(RegistryEntry<T> entry) {
+        return entry.getKey().map((registryKey) -> registryKey.getValue().toString()).orElse("[unregistered]");
     }
 }

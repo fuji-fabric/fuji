@@ -11,6 +11,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.storage.ReadView;
 import net.minecraft.util.ErrorReporter;
 #endif
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.UserCache;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,7 +63,10 @@ public class PlayerHelper {
              the default dimension for ServerPlayerEntity instance is minecraft:overworld.
              in order to keep original dimension, here we should set dimension for the loaded player entity.
              */
-        #if MC_VER < MC_1_21_6
+        #if MC_VER <= MC_1_20_4
+        NbtCompound playerDataOpt = ServerHelper.getPlayerManager().loadPlayerData(player);
+        applyPlayerData(player, playerDataOpt);
+        #elif MC_VER > MC_1_20_4 && MC_VER < MC_1_21_6
         Optional<NbtCompound> playerDataOpt = ServerHelper.getPlayerManager().loadPlayerData(player);
         applyPlayerData(player, playerDataOpt.orElse(null));
         #elif MC_VER >= MC_1_21_6
@@ -84,6 +89,14 @@ public class PlayerHelper {
         if (world != null) {
             player.setServerWorld(world);
         }
+    }
+
+    public static void playSound(ServerPlayerEntity player, SoundEvent soundEvent, SoundCategory soundCategory, float volume, float pitch) {
+        #if MC_VER <= MC_1_20_4
+            player.playSound(soundEvent, soundCategory, volume, pitch);
+        #elif MC_VER > MC_1_20_4
+            player.playSoundToPlayer(soundEvent, soundCategory, volume, pitch);
+        #endif
     }
 
 }

@@ -2,6 +2,7 @@ package io.github.sakurawald.module.mixin.multiplier;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import io.github.sakurawald.core.auxiliary.minecraft.PermissionHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
@@ -27,8 +28,10 @@ public abstract class ServerPlayerMixin {
 
     @ModifyVariable(method = "damage", at = @At(value = "HEAD"), argsOnly = true)
     public float transformDamage(float damage, @Local(argsOnly = true) @NotNull DamageSource damageSource) {
+//        damageSource.getTypeRegistryEntry().
+
         damage = transform(player, "damage", "all", damage);
-        damage = transform(player, "damage", damageSource.getTypeRegistryEntry().getIdAsString(), damage);
+        damage = transform(player, "damage", RegistryHelper.getIdAsString(damageSource.getTypeRegistryEntry()), damage);
         return damage;
     }
 

@@ -14,7 +14,11 @@ import java.util.List;
 public class TextArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected ArgumentType<?> makeArgumentType() {
+        #if MC_VER <= MC_1_20_4
+        return TextArgumentType.text();
+        #elif MC_VER > MC_1_20_4
         return TextArgumentType.text(CommandAnnotationProcessor.getRegistryAccess());
+        #endif
     }
 
     @Override

@@ -123,7 +123,12 @@ public class SkinRestorer {
                         observer.sendAbilitiesUpdate();
                         observer.playerScreenHandler.updateToClient();
                         for (StatusEffectInstance instance : observer.getStatusEffects()) {
+                            #if MC_VER <= MC_1_20_4
+                            observer.networkHandler.sendPacket(new EntityStatusEffectS2CPacket(observer.getId(), instance));
+                            #elif MC_VER > MC_1_20_4
                             observer.networkHandler.sendPacket(new EntityStatusEffectS2CPacket(observer.getId(), instance, false));
+                            #endif
+
                         }
                         observer.networkHandler.sendPacket(new EntityTrackerUpdateS2CPacket(player.getId(), player.getDataTracker().getChangedEntries()));
                         observer.networkHandler.sendPacket(new ExperienceBarUpdateS2CPacket(player.experienceProgress, player.totalExperience, player.experienceLevel));
