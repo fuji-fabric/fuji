@@ -47,14 +47,18 @@ public class CompassInitializer extends ModuleInitializer {
         #if MC_VER <= MC_1_20_4
         NbtHelper.withNbt(itemStack, tag -> {
             if (world == null) {
+                tag.remove("LodestoneTracked");
                 tag.remove("LodestoneDimension");
             } else {
+                tag.putBoolean("LodestoneTracked", false);
                 tag.putString("LodestoneDimension", RegistryHelper.ofString(world));
             }
 
             if (blockPos == null) {
+                tag.remove("LodestoneTracked");
                 tag.remove("LodestonePos");
             } else {
+                tag.putBoolean("LodestoneTracked", false);
                 NbtCompound posTag = new NbtCompound();
                 posTag.putInt("X", blockPos.getX());
                 posTag.putInt("Y", blockPos.getY());
