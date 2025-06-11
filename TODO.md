@@ -29,4 +29,4 @@
 - feature: compare command_cooldown and command_condition.
 - docs: find useful things https://vanillatweaks.net/picker/datapacks/
 - extract the chat.display module into a standalone module.
-- fix: the test gradle task will create spam files in fabric/config, fabric/mods and fabric/run
+- fix: /kit editor in 1.20.6
