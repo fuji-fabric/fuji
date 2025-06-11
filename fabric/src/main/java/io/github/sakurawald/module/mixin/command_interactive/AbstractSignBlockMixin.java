@@ -10,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 #if MC_VER <= MC_1_20_4
 import net.minecraft.network.PacketByteBuf;
 import io.netty.buffer.Unpooled;
+import net.minecraft.util.Hand;
 #elif MC_VER > MC_1_20_4
 #endif
 
@@ -35,8 +36,14 @@ import java.util.stream.Collectors;
 @Mixin(AbstractSignBlock.class)
 public class AbstractSignBlockMixin {
 
+    #if MC_VER <= MC_1_20_4
     @Inject(method = "onUse", at = @At("HEAD"), cancellable = true)
-    private void listenSignBlockUse(BlockState blockState, @NotNull World world, BlockPos blockPos, @NotNull PlayerEntity player, BlockHitResult blockHitResult, @NotNull CallbackInfoReturnable<ActionResult> cir) {
+    private void listenSignBlockUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult, CallbackInfoReturnable<ActionResult> cir)
+    #elif MC_VER > MC_1_20_4
+    @Inject(method = "onUse", at = @At("HEAD"), cancellable = true)
+    private void listenSignBlockUse(BlockState blockState, @NotNull World world, BlockPos blockPos, @NotNull PlayerEntity player, BlockHitResult blockHitResult, @NotNull CallbackInfoReturnable<ActionResult> cir)
+    #endif
+    {
         // bypass if player is sneaking
         if (player.isSneaking()) return;
 
