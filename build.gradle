@@ -165,6 +165,19 @@ allprojects { p ->
         maven { url "https://repo.spongepowered.org/maven/" }
     }
 
+    /* Configure Java compiler. */
+    tasks.withType(JavaCompile) {
+        options.release = rootProject.java_version as Integer
+        options.encoding = "UTF-8"
+
+        configure(options) {
+            // include the 'parameter name' in compiled .class file, for command annotation processor reflection
+            options.compilerArgs << '-parameters'
+            // yeah, the code of fuji is more dynamic.
+            options.compilerArgs << '-Xlint:-unchecked'
+        }
+    }
+
     /* Define the archive name. */
     archivesBaseName = "fuji-" + project.name
     // The `version` must starts with sem-ver to make the fabric loader happy

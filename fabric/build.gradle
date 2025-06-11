@@ -72,18 +72,6 @@ dependencies {
     testImplementation "net.fabricmc:fabric-loader-junit:${project.fabric_loader_version}"
 }
 
-/* Configure Java compiler. */
-tasks.withType(JavaCompile).configureEach {
-    it.options.encoding = "UTF-8"
-    it.options.release.set(21)
-    configure(options) {
-        // include the 'parameter name' in compiled .class file, for command annotation processor reflection
-        options.compilerArgs << '-parameters'
-        // yeah, the code of fuji is more dynamic.
-        options.compilerArgs << '-Xlint:-unchecked'
-    }
-}
-
 java {
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
