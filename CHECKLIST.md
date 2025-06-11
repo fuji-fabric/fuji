@@ -73,5 +73,5 @@ It's good to have a checklist, to avoid forgetting something.
 - update change log in "CHANGELOG.md"
 - test the jar file in a real environment.
 - publish the pdf file in "dev" branch.
-- merge changes from "dev" branch into "release" branch.
-
+- modify the `build.yml` file to include the new supported MC version.
+- push a git commit with the prefix `[publish]`
