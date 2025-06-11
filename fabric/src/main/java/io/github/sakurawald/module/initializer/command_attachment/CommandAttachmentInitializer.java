@@ -7,6 +7,7 @@ import com.google.gson.JsonParseException;
 import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.NbtHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.UuidHelper;
@@ -267,7 +268,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     private static int queryItem(@CommandSource ServerPlayerEntity player) {
         ItemStack mainHandStack = player.getMainHandStack();
         checkItemStackInHand(player, mainHandStack);
-        String uuid = UuidHelper.getAttachedUuid(mainHandStack.get(DataComponentTypes.CUSTOM_DATA));
+        String uuid = UuidHelper.getAttachedUuid(NbtHelper.getNbt(mainHandStack));
 
         doQueryAttachment(player, uuid);
         return CommandHelper.Return.SUCCESS;

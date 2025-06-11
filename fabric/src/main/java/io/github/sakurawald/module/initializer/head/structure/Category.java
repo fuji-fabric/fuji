@@ -1,7 +1,7 @@
 package io.github.sakurawald.module.initializer.head.structure;
 
+import io.github.sakurawald.core.auxiliary.minecraft.StackHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -77,7 +77,7 @@ public enum Category {
     }
 
     public @NotNull ItemStack toItemStack(ServerPlayerEntity player) {
-        icon.set(DataComponentTypes.CUSTOM_NAME, this.getText(player));
+        StackHelper.setCustomName(icon, this.getText(player));
         return icon;
     }
 
