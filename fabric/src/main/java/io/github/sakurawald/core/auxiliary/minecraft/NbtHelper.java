@@ -4,6 +4,11 @@ import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.command.exception.AbortCommandExecutionException;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
+#if MC_VER <= MC_1_20_4
+#elif MC_VER > MC_1_20_4
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
+#endif
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -183,6 +188,22 @@ public class NbtHelper {
         return root.getDouble(key);
         #elif MC_VER >= MC_1_21_5
             return root.getDouble(key).get();
+        #endif
+    }
+
+    public static NbtCompound getNbt(ItemStack stack) {
+        #if MC_VER <= MC_1_20_4
+            return stack.getNbt();
+        #elif MC_VER > MC_1_20_4
+            return stack.get(DataComponentTypes.CUSTOM_DATA).copyNbt();
+        #endif
+    }
+
+    public static Object setNbt(ItemStack stack, NbtCompound newNbt) {
+        #if MC_VER <= MC_1_20_4
+            return stack.getNbt();
+        #elif MC_VER > MC_1_20_4
+            return stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(newNbt));
         #endif
     }
 }
