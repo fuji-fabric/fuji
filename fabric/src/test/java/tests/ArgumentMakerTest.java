@@ -19,7 +19,7 @@ public class ArgumentMakerTest {
         System.out.println(descriptor);
         List<Argument> args = descriptor.arguments;
 
-        Argument firstArg = args.getFirst();
+        Argument firstArg = args.get(0);
         assertTrue(firstArg.isLiteralArgument());
         assertEquals("my-command", firstArg.getArgumentName());
         assertFalse(firstArg.isOptional());
@@ -43,7 +43,7 @@ public class ArgumentMakerTest {
 
         List<Argument> args = descriptor.arguments;
 
-        Argument firstArg = args.getFirst();
+        Argument firstArg = args.get(0);
         assertTrue(firstArg.isLiteralArgument());
         assertEquals("my-command", firstArg.getArgumentName());
         assertFalse(firstArg.isOptional());
@@ -76,7 +76,7 @@ public class ArgumentMakerTest {
 
         List<Argument> args = descriptor.arguments;
 
-        Argument firstArg = args.getFirst();
+        Argument firstArg = args.get(0);
         assertTrue(firstArg.isLiteralArgument());
         assertEquals("my-command", firstArg.getArgumentName());
         assertFalse(firstArg.isOptional());

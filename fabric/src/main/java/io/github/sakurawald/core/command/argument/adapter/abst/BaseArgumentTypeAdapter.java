@@ -52,7 +52,7 @@ public abstract class BaseArgumentTypeAdapter {
                     adapters.add(adapter);
 
                     /* register type mapping */
-                    Class<?> typeClass = adapter.getTypeClasses().getFirst();
+                    Class<?> typeClass = adapter.getTypeClasses().get(0);
                     adapter.getTypeStrings().forEach(typeString -> {
                         if (string2class.containsKey(typeString) && !predefined.containsKey(typeString)) {
                             throw new IllegalStateException("Type `%s` is already registered".formatted(typeString));

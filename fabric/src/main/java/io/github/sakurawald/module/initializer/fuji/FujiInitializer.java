@@ -135,7 +135,7 @@ public class FujiInitializer extends ModuleInitializer {
             new ArgumentTypeGui(ctx.getSource().getPlayer(), adapters, 0).open();
         } else {
             adapters.forEach(adapter -> adapter.getTypeStrings().forEach(typeString -> {
-                String typeClass = adapter.getTypeClasses().getFirst().getSimpleName();
+                String typeClass = adapter.getTypeClasses().get(0).getSimpleName();
                 String string2types = "%s -> %s".formatted(typeString, typeClass);
                 ctx.getSource().sendMessage(Text.literal(string2types));
             }));

@@ -99,7 +99,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
             List<Object> objs = makeObjectsByArguments(ctx);
 
             /* apply the command execution for each target. */
-            PlayerCollection targets = (PlayerCollection) objs.getFirst();
+            PlayerCollection targets = (PlayerCollection) objs.get(0);
             LogUtil.debug("get the targets argument (the first argument in args): {}", targets.getValue().stream().map(it -> it.getGameProfile().getName()).toList());
 
             int finalValue = CommandHelper.Return.SUCCESS;

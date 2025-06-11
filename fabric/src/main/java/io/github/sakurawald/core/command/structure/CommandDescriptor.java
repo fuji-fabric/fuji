@@ -91,7 +91,8 @@ public class CommandDescriptor {
     private static LiteralArgumentBuilder<ServerCommandSource> makeRootArgumentBuilder(List<ArgumentBuilder<ServerCommandSource, ?>> builders, Command<ServerCommandSource> command) {
         ArgumentBuilder<ServerCommandSource, ?> root = null;
 
-        for (ArgumentBuilder<ServerCommandSource, ?> node : builders.reversed()) {
+        for (int i = builders.size() - 1; i >= 0; i--) {
+            ArgumentBuilder<ServerCommandSource, ?> node = builders.get(i);
             if (root == null) {
                 root = node;
                 root = root.executes(command);
@@ -214,7 +215,7 @@ public class CommandDescriptor {
         if (expectedCommandSources.size() > 1)
             throw new IllegalArgumentException("Expected only one command source: " + descriptor);
 
-        return BaseArgumentTypeAdapter.getAdapter(expectedCommandSources.getFirst().getType()).verifyCommandSource(ctx);
+        return BaseArgumentTypeAdapter.getAdapter(expectedCommandSources.get(0).getType()).verifyCommandSource(ctx);
     }
 
     protected static void reportException(ServerCommandSource source, Method method, Throwable throwable) {

@@ -189,7 +189,7 @@ public class CommandAnnotationProcessor {
                 if (parameter.getAnnotation(CommandSource.class) == null) continue;
                 Class<?> type = unbox(parameter);
                 // for a command source argument, we don't care the index
-                argumentList.addFirst(Argument
+                argumentList.add(0, Argument
                     .makeRequiredArgument(type, parameter.getName(), false, CommandRequirementDescriptor.of(methodRequirement))
                     .markWithParameter(parameter)
                     .withDocument(parameter.getAnnotation(Document.class))

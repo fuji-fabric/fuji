@@ -38,7 +38,7 @@ public class AddWorkGui extends InputSignGui {
         BaseConfigurationHandler<WorksDataModel> worksHandler = WorksInitializer.works;
         selectWorkTypeGui.setSlot(11, new GuiElementBuilder().setItem(Items.GUNPOWDER).setName(TextHelper.getTextByKey(player, "works.non_production_work.name")).setCallback(() -> {
             // add
-            worksHandler.model().works.addFirst(new NonProductionWork(player, name));
+            worksHandler.model().works.add(0, new NonProductionWork(player, name));
             TextHelper.sendActionBarByKey(player, "works.work.add.done");
             TextHelper.sendBroadcastByKey("works.work.add.broadcast", player.getGameProfile().getName(), name);
             selectWorkTypeGui.close();
@@ -47,7 +47,7 @@ public class AddWorkGui extends InputSignGui {
         selectWorkTypeGui.setSlot(15, new GuiElementBuilder().setItem(Items.REDSTONE).setName(TextHelper.getTextByKey(player, "works.production_work.name")).setCallback(() -> {
             // add
             ProductionWork work = new ProductionWork(player, name);
-            worksHandler.model().works.addFirst(work);
+            worksHandler.model().works.add(0, work);
             TextHelper.sendActionBarByKey(player, "works.work.add.done");
             TextHelper.sendBroadcastByKey("works.work.add.broadcast", player.getGameProfile().getName(), name);
             selectWorkTypeGui.close();

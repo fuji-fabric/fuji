@@ -24,7 +24,7 @@ public class LocationHistory {
     }
 
     public @Nullable LocationEntry getLatestEntry() {
-        return this.history.isEmpty() ? null : this.history.getLast();
+        return this.history.isEmpty() ? null : this.history.get(this.history.size() - 1);
     }
 
     public @Nullable LocationEntry findEntry(int lastNLocation, @Nullable Dimension targetDimension) {

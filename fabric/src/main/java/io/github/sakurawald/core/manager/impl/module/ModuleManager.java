@@ -66,7 +66,7 @@ public class ModuleManager extends BaseManager {
 
         List<String> modulePath = new ArrayList<>(List.of(str.split("\\.")));
 
-        if (modulePath.getFirst().equals(CORE_MODULE_ROOT)) {
+        if (modulePath.get(0).equals(CORE_MODULE_ROOT)) {
             return List.of(CORE_MODULE_ROOT);
         }
 
@@ -77,7 +77,7 @@ public class ModuleManager extends BaseManager {
             if (modulePath.isEmpty()) {
                 throw new RuntimeException("Can't find the module enable-supplier in `config.json` for class name %s. Did you forget to add the enable-supplier key in ConfigModel ?".formatted(className));
             }
-            modulePath.removeLast();
+            modulePath.remove(modulePath.size() - 1);
 
             // compute it
             modulePathString = String.join(".", modulePath);
@@ -174,7 +174,7 @@ public class ModuleManager extends BaseManager {
 
     private boolean shouldWeEnableThis(@NotNull List<String> modulePath) {
         if (Configs.configHandler.model().core.debug.disable_all_modules) return false;
-        if (modulePath.getFirst().equals(CORE_MODULE_ROOT)) return true;
+        if (modulePath.get(0).equals(CORE_MODULE_ROOT)) return true;
 
         // cache
         if (module2enable.containsKey(modulePath)) {
