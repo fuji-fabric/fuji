@@ -140,7 +140,7 @@ public class CommandHelper {
     }
 
     public static void executeCommand(PlayerEntity player, String command) {
-        ServerCommandSource commandSource = player.getCommandSource();
+        ServerCommandSource commandSource = CommandHelper.getCommandSource(player);
         ParseResults<ServerCommandSource> parseResults = ServerHelper.getCommandDispatcher().parse(command, commandSource);
         ServerHelper.getServer().getCommandManager().execute(parseResults, command);
     }
