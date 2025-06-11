@@ -11,7 +11,10 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.entry.RegistryEntry.Reference;
+#if MC_VER <= MC_1_20_4
+#elif MC_VER > MC_1_20_4
 import net.minecraft.registry.entry.RegistryEntryInfo;
+#endif
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
@@ -38,9 +41,13 @@ public abstract class SimpleRegistryExtensionMixin<T> implements SimpleRegistryE
     @Final
     private Map<RegistryKey<T>, RegistryEntry.Reference<T>> keyToEntry;
 
+    #if MC_VER <= MC_1_20_4
+    #elif MC_VER > MC_1_20_4
     @Shadow
     @Final
     private Map<RegistryKey<T>, RegistryEntryInfo> keyToEntryInfo;
+    #endif
+
 
     @Shadow
     @Final
@@ -71,7 +78,10 @@ public abstract class SimpleRegistryExtensionMixin<T> implements SimpleRegistryE
             this.idToEntry.remove(registryEntry.registryKey().getValue());
             this.valueToEntry.remove(entry);
             this.rawIdToEntry.set(rawId, null);
+            #if MC_VER <= MC_1_20_4
+            #elif MC_VER > MC_1_20_4
             this.keyToEntryInfo.remove(this.key);
+            #endif
             return true;
         } catch (Throwable e) {
             LogUtil.error("failed to remove entry: {}", entry.toString());

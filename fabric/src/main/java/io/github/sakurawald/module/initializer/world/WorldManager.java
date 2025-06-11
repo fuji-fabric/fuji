@@ -21,7 +21,11 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.SimpleRegistry;
+#if MC_VER <= MC_1_20_4
+import com.mojang.serialization.Lifecycle;
+#elif MC_VER > MC_1_20_4
 import net.minecraft.registry.entry.RegistryEntryInfo;
+#endif
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -216,7 +220,11 @@ public class WorldManager {
 
         if (!dimensionOptionsRegistry.contains(dimensionOptionsRegistryKey)) {
             LogUtil.debug("add entry for dimension options registry: key = {}, value = {}", dimensionOptionsRegistryKey, dimensionOptions);
+            #if MC_VER <= MC_1_20_4
+            dimensionOptionsRegistry.add(dimensionOptionsRegistryKey, dimensionOptions, Lifecycle.stable());
+            #elif MC_VER > MC_1_20_4
             dimensionOptionsRegistry.add(dimensionOptionsRegistryKey, dimensionOptions, RegistryEntryInfo.DEFAULT);
+            #endif
         }
         ((SimpleRegistryExtension<?>) dimensionOptionsRegistry).fuji$setFrozen(original);
 
