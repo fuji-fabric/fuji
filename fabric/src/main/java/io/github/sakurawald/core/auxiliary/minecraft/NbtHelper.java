@@ -87,7 +87,7 @@ public class NbtHelper {
             return new NbtCompound();
         }
         #if MC_VER <= MC_1_21
-            return stack.encodeAllowEmpty(wrapperLookup);
+            return StackHelper.encodeAllowEmpty(stack, wrapperLookup);
         #elif MC_VER > MC_1_21
             return StackHelper.toNbt(stack, wrapperLookup, new NbtCompound());
         #endif
@@ -199,11 +199,22 @@ public class NbtHelper {
         #endif
     }
 
-    public static Object setNbt(ItemStack stack, NbtCompound newNbt) {
+    public void withNbt(ItemStack stack, Consumer<NbtCompound> nbtConsumer) {
+        NbtCompound targetNbt = NbtHelper.getNbt(stack);
+        if (targetNbt == null) {
+            targetNbt = new NbtCompound();
+        }
+
+        nbtConsumer.accept(targetNbt);
+
+        NbtHelper.setNbt(stack, targetNbt);
+    }
+
+    public static void setNbt(ItemStack stack, NbtCompound newNbt) {
         #if MC_VER <= MC_1_20_4
-            return stack.getNbt();
+            stack.setNbt(newNbt);
         #elif MC_VER > MC_1_20_4
-            return stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(newNbt));
+            stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(newNbt));
         #endif
     }
 }
