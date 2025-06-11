@@ -9,19 +9,18 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.registry.RegistryWrapper;
-#if MC_VER <= MC_1_20_4
-#elif MC_VER > MC_1_20_4
-import net.minecraft.component.DataComponentTypes;
-#endif
-
 import net.minecraft.text.Text;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @UtilityClass
 public class StackHelper {
+
+    public static final String LORE_NBT_KEY = "Lore";
+    public static final String DISPLAY_NBT_KEY = "display";
 
     public NbtElement toNbt(ItemStack stack, RegistryWrapper.WrapperLookup wrapperLookup, NbtElement nbtElement) {
         if (stack.isEmpty()) {
@@ -40,7 +39,7 @@ public class StackHelper {
 
     public static void setCustomName(ItemStack stack, Text customName) {
         #if MC_VER <= MC_1_20_4
-            stack.setCustomName(customName);
+        stack.setCustomName(customName);
         #elif MC_VER > MC_1_20_4
             stack.set(DataComponentTypes.CUSTOM_NAME, customName);
         #endif
@@ -48,10 +47,18 @@ public class StackHelper {
 
     public static boolean hasCustomName(ItemStack stack) {
         #if MC_VER <= MC_1_20_4
-            return stack.hasCustomName();
+        return stack.hasCustomName();
         #elif MC_VER > MC_1_20_4
             return stack.get(DataComponentTypes.CUSTOM_NAME) != null;
         #endif
+    }
+
+    public static List<Text> getLore(ItemStack stack) {
+        return stack
+            .getOrCreateSubNbt("display")
+            .getList("Lore", NbtElement.STRING_TYPE)
+            .stream()
+            .map(tag -> Text.Serialization.fromJson(tag.asString())).collect(Collectors.toList());
     }
 
     public static void setLore(ItemStack stack, List<Text> texts) {

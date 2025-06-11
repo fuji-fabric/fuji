@@ -191,7 +191,7 @@ public class NbtHelper {
         #endif
     }
 
-    public static NbtCompound getNbt(ItemStack stack) {
+    public static @Nullable NbtCompound getNbt(ItemStack stack) {
         #if MC_VER <= MC_1_20_4
             return stack.getNbt();
         #elif MC_VER > MC_1_20_4

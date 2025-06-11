@@ -7,6 +7,7 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.Fuji;
 import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.StackHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.gui.PagedGui;
 import io.github.sakurawald.core.service.gameprofile_fetcher.MojangProfileFetcher;
@@ -14,8 +15,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ContactInformation;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.fabricmc.loader.api.metadata.Person;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -74,9 +73,9 @@ public class AboutGui extends PagedGui<Person> {
                     .setCallback(slot.getGuiCallback())
                     .setSkullOwner(gameProfile, ServerHelper.getServer());
 
-                LoreComponent loreComponent = itemStack.get(DataComponentTypes.LORE);
-                if (loreComponent != null) {
-                    builder.setLore(loreComponent.comp_2400());
+                List<Text> lore = StackHelper.getLore(itemStack);
+                if (!lore.isEmpty()) {
+                    builder.setLore(lore);
                 }
 
                 setSlot(finalI, builder);
