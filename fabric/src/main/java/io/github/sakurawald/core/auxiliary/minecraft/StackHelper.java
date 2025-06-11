@@ -17,6 +17,7 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.text.Text;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @UtilityClass
@@ -66,4 +67,19 @@ public class StackHelper {
             stack.set(DataComponentTypes.LORE, loreComponent);
         #endif
     }
+
+    public static NbtCompound getSkullOwner(ItemStack stack) {
+        return stack.getSubNbt("SkullOwner");
+    }
+
+    public static boolean canCombine(ItemStack itemStack, ItemStack itemStack2) {
+        if (!itemStack.isOf(itemStack2.getItem())) {
+            return false;
+        }
+        if (itemStack.isEmpty() && itemStack2.isEmpty()) {
+            return true;
+        }
+        return Objects.equals(NbtHelper.getNbt(itemStack), NbtHelper.getNbt(itemStack2));
+    }
+
 }

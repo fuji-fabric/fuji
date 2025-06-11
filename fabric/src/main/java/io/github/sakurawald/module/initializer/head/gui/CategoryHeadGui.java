@@ -5,6 +5,7 @@ import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.LogUtil;
+import io.github.sakurawald.core.auxiliary.minecraft.StackHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.gui.PagedGui;
 import io.github.sakurawald.module.initializer.head.HeadInitializer;
@@ -60,7 +61,7 @@ public class CategoryHeadGui extends PagedGui<Head> {
 
         /* happy debug */
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-            LogUtil.debug("head = {}", headStack.get(DataComponentTypes.PROFILE));
+            LogUtil.debug("head = {}", StackHelper.getSkullOwner(headStack));
         }
 
         if (cursorStack.isEmpty()) {
@@ -77,7 +78,7 @@ public class CategoryHeadGui extends PagedGui<Head> {
         } else if (cursorStack.getMaxCount() <= cursorStack.getCount()) {
             //noinspection UnnecessaryReturnStatement
             return;
-        } else if (ItemStack.areItemsAndComponentsEqual(headStack, cursorStack)) {
+        } else if (StackHelper.canCombine(headStack, cursorStack)) {
             /* switch click type */
             if (type.isLeft) {
                 EconomyType.tryPurchase(player, 1, () -> cursorStack.increment(1));
