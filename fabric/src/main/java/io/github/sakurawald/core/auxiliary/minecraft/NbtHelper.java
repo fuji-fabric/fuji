@@ -192,10 +192,12 @@ public class NbtHelper {
     }
 
     public static @Nullable NbtCompound getNbt(ItemStack stack) {
+
         #if MC_VER <= MC_1_20_4
             return stack.getNbt();
         #elif MC_VER > MC_1_20_4
-            return stack.get(DataComponentTypes.CUSTOM_DATA).copyNbt();
+            NbtComponent nbtComponent = stack.get(DataComponentTypes.CUSTOM_DATA);
+            return nbtComponent == null ? null : nbtComponent.copyNbt();
         #endif
     }
 
