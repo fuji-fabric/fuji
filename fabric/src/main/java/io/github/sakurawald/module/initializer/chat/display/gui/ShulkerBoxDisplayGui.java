@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 
 public class ShulkerBoxDisplayGui extends BaseDisplayGui {
 
+    private static final int SHULKER_BOX_MAX_CAPACITY = 3 * 9;
     private final Text title;
     private final ItemStack itemStack;
     private final SimpleGui parentGui;
@@ -40,7 +41,7 @@ public class ShulkerBoxDisplayGui extends BaseDisplayGui {
             NbtList items = (NbtList) blockEntityData.get("Items");
             if (items == null) return Stream.empty();
 
-            DefaultedList<ItemStack> temp = DefaultedList.ofSize(items.size(), ItemStack.EMPTY);
+            DefaultedList<ItemStack> temp = DefaultedList.ofSize(SHULKER_BOX_MAX_CAPACITY, ItemStack.EMPTY);
 
             items.forEach(item -> {
                 NbtCompound itemNbtCompound = (NbtCompound) item;
