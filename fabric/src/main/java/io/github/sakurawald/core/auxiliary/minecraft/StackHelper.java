@@ -5,16 +5,22 @@ import lombok.experimental.UtilityClass;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.NbtString;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+#if MC_VER <= MC_1_20_4
+import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
 import java.util.stream.Collectors;
+#elif MC_VER > MC_1_20_4
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.LoreComponent;
+#endif
+
 
 @UtilityClass
 public class StackHelper {
@@ -26,20 +32,35 @@ public class StackHelper {
         if (stack.isEmpty()) {
             throw new IllegalStateException("Cannot encode empty ItemStack");
         }
+        #if MC_VER <= MC_1_20_4
+        return ItemStack.CODEC
+            .encode(stack, NbtOps.INSTANCE, nbtElement)
+            .getOrThrow(true, string -> LogUtil.error("Failed to encode item: {}", string));
+        #elif MC_VER > MC_1_20_4
         return ItemStack.CODEC
             .encode(stack, wrapperLookup.getOps(NbtOps.INSTANCE), nbtElement)
             .getOrThrow();
+        #endif
+
+    }
+
+    public NbtElement encodeAllowEmpty(ItemStack stack, RegistryWrapper.WrapperLookup wrapperLookup) {
+        return stack.isEmpty() ? new NbtCompound() : StackHelper.toNbt(stack, wrapperLookup, new NbtCompound());
     }
 
     public static Optional<ItemStack> fromNbt(RegistryWrapper.WrapperLookup wrapperLookup, NbtElement nbtElement) {
         return ItemStack.CODEC
+            #if MC_VER <= MC_1_20_4
+            .parse(NbtOps.INSTANCE, nbtElement)
+            #elif MC_VER > MC_1_20_4
             .parse(wrapperLookup.getOps(NbtOps.INSTANCE), nbtElement)
+            #endif
             .resultOrPartial(string -> LogUtil.error("Tried to load invalid item: '{}'", string));
     }
 
     public static void setCustomName(ItemStack stack, Text customName) {
         #if MC_VER <= MC_1_20_4
-        stack.setCustomName(customName);
+            stack.setCustomName(customName);
         #elif MC_VER > MC_1_20_4
             stack.set(DataComponentTypes.CUSTOM_NAME, customName);
         #endif
@@ -54,11 +75,16 @@ public class StackHelper {
     }
 
     public static List<Text> getLore(ItemStack stack) {
-        return stack
+        #if MC_VER <= MC_1_20_4
+            return stack
             .getOrCreateSubNbt("display")
             .getList("Lore", NbtElement.STRING_TYPE)
             .stream()
             .map(tag -> Text.Serialization.fromJson(tag.asString())).collect(Collectors.toList());
+        #elif MC_VER > MC_1_20_4
+            return stack.get(DataComponentTypes.LORE)
+                .comp_2400();
+        #endif
     }
 
     public static void setLore(ItemStack stack, List<Text> texts) {
@@ -76,7 +102,13 @@ public class StackHelper {
     }
 
     public static NbtCompound getSkullOwner(ItemStack stack) {
+        #if MC_VER <= MC_1_20_4
         return stack.getSubNbt("SkullOwner");
+        #elif MC_VER > MC_1_20_4
+        NbtCompound nbt = NbtHelper.getNbt(stack);
+        if (nbt == null) return null;
+        return nbt.getCompound("SkullOwner");
+        #endif
     }
 
     public static boolean canCombine(ItemStack itemStack, ItemStack itemStack2) {
