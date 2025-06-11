@@ -3,8 +3,11 @@ package io.github.sakurawald.core.auxiliary.minecraft;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import lombok.experimental.UtilityClass;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.registry.RegistryWrapper;
 #if MC_VER <= MC_1_20_4
 #elif MC_VER > MC_1_20_4
@@ -13,6 +16,7 @@ import net.minecraft.component.DataComponentTypes;
 
 import net.minecraft.text.Text;
 
+import java.util.List;
 import java.util.Optional;
 
 @UtilityClass
@@ -46,6 +50,20 @@ public class StackHelper {
             return stack.hasCustomName();
         #elif MC_VER > MC_1_20_4
             return stack.get(DataComponentTypes.CUSTOM_NAME) != null;
+        #endif
+    }
+
+    public static void setLore(ItemStack stack, List<Text> texts) {
+        #if MC_VER <= MC_1_20_4
+        NbtCompound display = stack.getOrCreateSubNbt("display");
+        NbtList loreItems = new NbtList();
+        for (Text text : texts) {
+            loreItems.add(NbtString.of(Text.Serialization.toJsonString(text)));
+        }
+        display.put("Lore", loreItems);
+        #elif MC_VER > MC_1_20_4
+            LoreComponent loreComponent = new LoreComponent(texts);
+            stack.set(DataComponentTypes.LORE, loreComponent);
         #endif
     }
 }
