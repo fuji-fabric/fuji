@@ -1,6 +1,7 @@
 package io.github.sakurawald.core.auxiliary.minecraft;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.CommandNode;
@@ -135,6 +136,12 @@ public class CommandHelper {
         #elif MC_VER > MC_1_21
             return entity.getCommandSource((ServerWorld) entity.getWorld());
         #endif
+    }
+
+    public static void executeCommand(ServerPlayerEntity player, String command) {
+        ServerCommandSource commandSource = player.getCommandSource();
+        ParseResults<ServerCommandSource> parseResults = ServerHelper.getCommandDispatcher().parse(command, commandSource);
+        ServerHelper.getServer().getCommandManager().execute(parseResults, command);
     }
 
 }

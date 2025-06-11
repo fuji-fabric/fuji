@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.command_warmup.structure;
 
+import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.manager.impl.bossbar.structure.InterruptibleTicket;
 import io.github.sakurawald.core.structure.SpatialPose;
@@ -29,7 +30,7 @@ public class CommandWarmupTicket extends InterruptibleTicket {
 
     @Override
     protected void onComplete() {
-        player.networkHandler.executeCommand(input);
+        CommandHelper.executeCommand(player, input);
     }
 
 }
