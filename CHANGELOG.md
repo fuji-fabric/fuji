@@ -6,3 +6,4 @@
 - feature: new supported version for Minecraft 1.20.3!
 - feature: new supported version for Minecraft 1.20.2! (Alpha-Version)
 - fix: replace the MC_VER equality with in-equality.
+ 
