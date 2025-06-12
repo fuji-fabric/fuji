@@ -1,6 +1,11 @@
 package io.github.sakurawald.module.initializer.chat.style;
 
 import eu.pb4.placeholders.api.parsers.NodeParser;
+#if MC_VER <= MC_1_20_2
+import eu.pb4.placeholders.api.parsers.TextParserV1;
+#elif MC_VER > MC_1_20_2
+#endif
+
 import io.github.sakurawald.Fuji;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
@@ -37,10 +42,18 @@ public class ChatStyleInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<ChatFormatModel> chat = new ObjectConfigurationHandler<>("chat.json", ChatFormatModel.class);
 
-    private static final NodeParser CHAT_STYLE_PARSER = NodeParser.builder()
-        .quickText()
-        .simplifiedTextFormat()
-        .build();
+    private static final NodeParser CHAT_STYLE_PARSER = makeTextParser();
+
+    private static TextParserV1 makeTextParser() {
+        #if MC_VER <= MC_1_20_2
+            return TextParserV1.createDefault();
+        #elif MC_VER > MC_1_20_2
+            return NodeParser.builder()
+            .quickText()
+            .simplifiedTextFormat()
+            .build();
+        #endif
+    }
 
     @CommandNode("set")
     private static int setPlayerFormat(@CommandSource @CommandTarget ServerPlayerEntity player, GreedyString format) {
