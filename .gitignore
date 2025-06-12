@@ -28,7 +28,8 @@ bin/
 *.DS_Store
 
 # fabric
-run/
+# NOTE Should not ignore the RunInitializer
+/run/
 mods/
 
 # jvm
