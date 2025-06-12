@@ -16,7 +16,7 @@ public abstract class ServerPlayerEntityMixin {
 
     @Inject(method = "damage", at = @At("RETURN"))
     public void abortTicketIfGetDamaged(
-        #if MC_VER == MC_1_21
+        #if MC_VER <= MC_1_21
         #elif MC_VER > MC_1_21
             ServerWorld serverWorld,
         #endif

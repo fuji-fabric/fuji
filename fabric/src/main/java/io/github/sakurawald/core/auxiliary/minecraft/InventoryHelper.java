@@ -49,9 +49,9 @@ public class InventoryHelper {
     public static void setArmorStacks(PlayerEntity player, List<ItemStack> stacks) {
 
         for (int i = 0; i < stacks.size(); i++) {
-            #if MC_VER == MC_1_21_4
+            #if MC_VER < MC_1_21_5
             player.getInventory().armor.set(i, stacks.get(i));
-            #elif MC_VER == MC_1_21_5
+            #elif MC_VER >= MC_1_21_5
             player.equipment.put(PLAYER_ARMOR_SLOTS.get(i), stacks.get(i));
             #endif
         }
@@ -61,9 +61,9 @@ public class InventoryHelper {
         // It looks like the size of stacks is 0 or 1.
         if (stacks.isEmpty()) return;
 
-        #if MC_VER == MC_1_21_4
+        #if MC_VER < MC_1_21_5
             player.getInventory().offHand.set(0, stacks.get(0));
-        #elif MC_VER == MC_1_21_5
+        #elif MC_VER >= MC_1_21_5
             player.equipment.put(EquipmentSlot.OFFHAND, stacks.getFirst());
         #endif
 

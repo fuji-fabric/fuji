@@ -24,9 +24,7 @@ import net.minecraft.network.packet.s2c.play.ExperienceBarUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerRemoveS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerRespawnS2CPacket;
-#if MC_VER >= MC_1_21_4
 import net.minecraft.network.packet.s2c.play.UpdateSelectedSlotS2CPacket;
-#endif
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
@@ -98,7 +96,7 @@ public class SkinRestorer {
                         observer.networkHandler.sendPacket(new EntitiesDestroyS2CPacket(player.getId()));
                         observer.networkHandler.sendPacket(new EntitySpawnS2CPacket(player, 0, player.getBlockPos()));
 
-                        #if MC_VER == MC_1_21
+                        #if MC_VER <= MC_1_21
                             observer.networkHandler.sendPacket(new EntityPositionS2CPacket(player));
                         #elif MC_VER > MC_1_21
                             observer.networkHandler.sendPacket(EntityPositionS2CPacket.create(player.getId(), PlayerPosition.fromEntity(player), Set.of(), player.isOnGround()));
@@ -113,9 +111,9 @@ public class SkinRestorer {
 
                         observer.networkHandler.sendPacket(new DifficultyS2CPacket(EntityHelper.getServerWorld(observer).getDifficulty(), EntityHelper.getServerWorld(player).getLevelProperties().isDifficultyLocked()));
 
-                        #if MC_VER == MC_1_21_4
+                        #if MC_VER < MC_1_21_5
                         observer.networkHandler.sendPacket(new UpdateSelectedSlotS2CPacket(observer.getInventory().selectedSlot));
-                        #elif MC_VER == MC_1_21_5
+                        #elif MC_VER >= MC_1_21_5
                         observer.networkHandler.sendPacket(new UpdateSelectedSlotS2CPacket(observer.getInventory().getSelectedSlot()));
                         #endif
 

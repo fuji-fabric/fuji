@@ -41,7 +41,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
 
     @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
     public void invulnerableEffect(
-        #if MC_VER == MC_1_21
+        #if MC_VER <= MC_1_21
         #elif MC_VER > MC_1_21
             ServerWorld serverWorld,
         #endif

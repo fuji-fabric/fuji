@@ -16,7 +16,7 @@ public abstract class ServerGamePacketListenerImplMixin {
     @Shadow
     public ServerPlayerEntity player;
 
-    #if MC_VER == MC_1_21
+    #if MC_VER <= MC_1_21
     @ModifyExpressionValue(method = "onPlayerMove", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;isHost()Z"))
     public boolean disablePlayerMoveTooQuickly(boolean original) {
         return true;
