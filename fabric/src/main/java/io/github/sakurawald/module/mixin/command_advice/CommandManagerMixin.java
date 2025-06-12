@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 #endif
 
 
-@Mixin(value = CommandManager.class, priority = 1000 + 1000, remap = false)
+@Mixin(value = CommandManager.class, priority = 1000 + 1000)
 public class CommandManagerMixin {
 
     #if MC_VER <= MC_1_20_2
