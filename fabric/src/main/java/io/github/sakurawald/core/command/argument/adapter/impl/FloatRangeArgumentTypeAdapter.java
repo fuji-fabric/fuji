@@ -23,7 +23,11 @@ public class FloatRangeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     public List<Class<?>> getTypeClasses() {
+        #if MC_VER <= MC_1_20_1
+        return List.of(NumberRange.FloatRange.class);
+        #elif MC_VER > MC_1_20_1
         return List.of(NumberRange.DoubleRange.class);
+        #endif
     }
 
     @Override

@@ -25,7 +25,11 @@ public abstract class ServerLoginNetworkHandlerMixin {
     @Unique
     private CompletableFuture<Property> pendingSkins;
 
+    #if MC_VER <= MC_1_20_1
+    @Inject(method = "acceptPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;checkCanJoin(Ljava/net/SocketAddress;Lcom/mojang/authlib/GameProfile;)Lnet/minecraft/text/Text;"), cancellable = true)
+    #elif MC_VER > MC_1_20_1
     @Inject(method = "tickVerify", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;checkCanJoin(Ljava/net/SocketAddress;Lcom/mojang/authlib/GameProfile;)Lnet/minecraft/text/Text;"), cancellable = true)
+    #endif
     public void waitForSkin(@NotNull CallbackInfo ci) {
         if (pendingSkins == null) {
             pendingSkins = CompletableFuture.supplyAsync(() -> {
@@ -48,6 +52,15 @@ public abstract class ServerLoginNetworkHandlerMixin {
         }
     }
 
+    #if MC_VER <= MC_1_20_1
+    @Inject(method = "acceptPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/ClientConnection;send(Lnet/minecraft/network/packet/Packet;)V", ordinal = 0))
+    public void applyTheFetchedSkin(CallbackInfo ci) {
+        /* apply the skin if fetched skin is not empty */
+        if (pendingSkins != null) {
+            SkinRestorer.applySkin(profile, pendingSkins.getNow(SkinRestorer.getSkinStorage().getDefaultSkin()));
+        }
+    }
+    #elif MC_VER > MC_1_20_1
     @Inject(method = "sendSuccessPacket", at = @At("HEAD"))
     public void applyTheFetchedSkin(@NotNull GameProfile gameProfile, CallbackInfo ci) {
         /* apply the skin if fetched skin is not empty */
@@ -55,4 +68,6 @@ public abstract class ServerLoginNetworkHandlerMixin {
             SkinRestorer.applySkin(gameProfile, pendingSkins.getNow(SkinRestorer.getSkinStorage().getDefaultSkin()));
         }
     }
+    #endif
+
 }

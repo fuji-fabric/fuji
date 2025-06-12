@@ -2,6 +2,7 @@ package io.github.sakurawald.module.initializer.command_toolbox.ping;
 
 import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandRequirement;
@@ -19,7 +20,7 @@ public class PingInitializer extends ModuleInitializer {
     private static int $ping(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
         String name = target.getGameProfile().getName();
 
-        int latency = target.networkHandler.getLatency();
+        int latency = PlayerHelper.getPing(target);
         TextHelper.sendMessageByKey(source, "ping.player", name, latency);
 
         return CommandHelper.Return.SUCCESS;

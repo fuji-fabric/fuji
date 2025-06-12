@@ -5,6 +5,7 @@ import com.mojang.authlib.properties.Property;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.RandomUtil;
 import io.github.sakurawald.core.auxiliary.ReflectionUtil;
+import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.module.initializer.skin.SkinInitializer;
 import org.apache.commons.io.FileUtils;
@@ -38,7 +39,7 @@ public class SkinStorage {
         Property textures = gameProfile.getProperties().get("textures").stream().findFirst().orElse(null);
         if (textures == null) return false;
 
-        return SkinInitializer.config.model().default_skins.stream().anyMatch(it -> it.value().equals(textures.value()));
+        return SkinInitializer.config.model().default_skins.stream().anyMatch(it -> PlayerHelper.getPropertyValue(it).equals(PlayerHelper.getPropertyValue(textures)));
     }
 
     public Property getSkin(UUID uuid) {

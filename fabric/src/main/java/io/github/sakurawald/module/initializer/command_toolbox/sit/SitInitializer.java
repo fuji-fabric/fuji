@@ -71,6 +71,7 @@ public class SitInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @SuppressWarnings("Convert2MethodRef")
     public static @NotNull Entity makeChairEntity(@NotNull World world, @NotNull BlockPos targetBlockPos, @Nullable Vec3d target) {
 
         Vec3d chairEntityPosition =
@@ -82,7 +83,13 @@ public class SitInitializer extends ModuleInitializer {
         // if there is a slab/stair block under the player, then we should not sit on the ground.
         VoxelShape outlineShape = targetBlockStage.getOutlineShape(world, targetBlockPos);
         if (!Block.isFaceFullSquare(outlineShape, Direction.UP)) {
-            double averageLengthY = outlineShape.getBoundingBoxes().stream().mapToDouble(Box::getLengthY).average().orElse(0);
+            double averageLengthY = outlineShape.getBoundingBoxes().stream().mapToDouble(it -> {
+                #if MC_VER <= MC_1_20_1
+                    return it.getYLength();
+                #elif MC_VER > MC_1_20_1
+                    return it.getLengthY();
+                #endif
+            }).average().orElse(0);
             chairEntityPosition = chairEntityPosition.add(0, -(1 - averageLengthY), 0);
         }
 

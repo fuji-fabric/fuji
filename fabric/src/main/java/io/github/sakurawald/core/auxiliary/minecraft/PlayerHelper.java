@@ -1,10 +1,19 @@
 package io.github.sakurawald.core.auxiliary.minecraft;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import lombok.experimental.UtilityClass;
 import net.minecraft.nbt.NbtCompound;
+#if MC_VER <= MC_1_20_1
+#elif MC_VER > MC_1_20_1
 import net.minecraft.network.packet.c2s.common.SyncedClientOptions;
+#endif
 import net.minecraft.server.MinecraftServer;
+#if MC_VER <= MC_1_20_1
+#elif MC_VER > MC_1_20_1
+import net.minecraft.server.network.ServerPlayNetworkHandler;
+#endif
+
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 #if MC_VER >= MC_1_21_6
@@ -26,8 +35,12 @@ public class PlayerHelper {
 
     public static ServerPlayerEntity makePlayer(GameProfile gameProfile) {
         MinecraftServer server = ServerHelper.getServer();
+        #if MC_VER <= MC_1_20_1
+        return new ServerPlayerEntity(server, server.getOverworld(), gameProfile);
+        #elif MC_VER > MC_1_20_1
         SyncedClientOptions syncedClientOptions = SyncedClientOptions.createDefault();
         return new ServerPlayerEntity(server, server.getOverworld(), gameProfile, syncedClientOptions);
+        #endif
     }
 
     private static void applyPlayerData(ServerPlayerEntity player, @Nullable NbtCompound playerData) {
@@ -99,4 +112,19 @@ public class PlayerHelper {
         #endif
     }
 
+    public static int getPing(ServerPlayerEntity player) {
+        #if MC_VER <= MC_1_20_1
+            return player.pingMilliseconds;
+        #elif MC_VER > MC_1_20_1
+            return player.networkHandler.getLatency();
+        #endif
+    }
+
+    public static String getPropertyValue(Property property) {
+        #if MC_VER <= MC_1_20_1
+        return property.getValue();
+        #elif MC_VER > MC_1_20_1
+        return property.value();
+        #endif
+    }
 }

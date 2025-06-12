@@ -6,6 +6,7 @@ import com.mojang.authlib.properties.Property;
 import io.github.sakurawald.core.annotation.Cite;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import it.unimi.dsi.fastutil.Pair;
 import lombok.Getter;
@@ -27,6 +28,7 @@ import net.minecraft.network.packet.s2c.play.PlayerRespawnS2CPacket;
 import net.minecraft.network.packet.s2c.play.UpdateSelectedSlotS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.biome.source.BiomeAccess;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
@@ -71,7 +73,7 @@ public class SkinRestorer {
             Collection<GameProfile> acceptedProfiles = pair.right();
             Set<ServerPlayerEntity> acceptedPlayers = new HashSet<>();
 
-            JsonObject newSkinJson = BaseConfigurationHandler.getGson().fromJson(new String(Base64.getDecoder().decode(skin.value()), StandardCharsets.UTF_8), JsonObject.class);
+            JsonObject newSkinJson = BaseConfigurationHandler.getGson().fromJson(new String(Base64.getDecoder().decode(PlayerHelper.getPropertyValue(skin)), StandardCharsets.UTF_8), JsonObject.class);
             newSkinJson.remove("timestamp");
 
             for (GameProfile profile : acceptedProfiles) {
@@ -106,7 +108,12 @@ public class SkinRestorer {
                         observer.networkHandler.sendPacket(new EntityPassengersSetS2CPacket(player));
 
                     } else if (player == observer) {
+                        #if MC_VER <= MC_1_20_1
+                        observer.networkHandler.sendPacket(new PlayerRespawnS2CPacket(player.getWorld().getDimensionKey(), player.getWorld().getRegistryKey(), BiomeAccess.hashSeed(player.getServerWorld().getSeed()), player.interactionManager.getGameMode(), player.interactionManager.getPreviousGameMode(), player.getWorld().isDebugWorld(), player.getServerWorld().isFlat(), (byte) 2, player.getLastDeathPos(), player.getPortalCooldown()));
+                        #elif MC_VER > MC_1_20_1
                         observer.networkHandler.sendPacket(new PlayerRespawnS2CPacket(player.createCommonPlayerSpawnInfo(EntityHelper.getServerWorld(player)), (byte) 2));
+                        #endif
+
                         observer.networkHandler.requestTeleport(observer.getX(), observer.getY(), observer.getZ(), observer.getYaw(), observer.getPitch());
 
                         observer.networkHandler.sendPacket(new DifficultyS2CPacket(EntityHelper.getServerWorld(observer).getDifficulty(), EntityHelper.getServerWorld(player).getLevelProperties().isDifficultyLocked()));
@@ -151,7 +158,7 @@ public class SkinRestorer {
             return false;
 
         try {
-            JsonObject jy = BaseConfigurationHandler.getGson().fromJson(new String(Base64.getDecoder().decode(py.value()), StandardCharsets.UTF_8), JsonObject.class);
+            JsonObject jy = BaseConfigurationHandler.getGson().fromJson(new String(Base64.getDecoder().decode(PlayerHelper.getPropertyValue(py)), StandardCharsets.UTF_8), JsonObject.class);
             jy.remove("timestamp");
             return x.equals(jy);
         } catch (Exception ex) {
