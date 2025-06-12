@@ -7,8 +7,13 @@ import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.node.LiteralNode;
 import eu.pb4.placeholders.api.node.TextNode;
 import eu.pb4.placeholders.api.parsers.NodeParser;
+#if MC_VER <= MC_1_20_2
+import eu.pb4.placeholders.api.parsers.TextParserV1;
+#elif MC_VER > MC_1_20_2
 import eu.pb4.placeholders.api.parsers.tag.TagRegistry;
 import eu.pb4.placeholders.api.parsers.tag.TextTag;
+#endif
+
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.core.config.Configs;
@@ -35,6 +40,12 @@ import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+#if MC_VER <= MC_1_20_2
+import static eu.pb4.placeholders.impl.textparser.TextParserImpl.recursiveParsing;
+#elif MC_VER > MC_1_20_2
+#endif
+
+
 @UtilityClass
 public class TextHelper {
 
@@ -43,15 +54,9 @@ public class TextHelper {
     public static final Text TEXT_SPACE = Text.of(" ");
 
     /* class states */
-    private static final NodeParser POWERFUL_PARSER = NodeParser.builder()
-        .quickText()
-        .simplifiedTextFormat()
-        .globalPlaceholders()
-        .markdown()
-        .build();
+    private static final NodeParser POWERFUL_PARSER = makeDefaultNodeParser();
 
-    private static final NodeParser PLACEHOLDER_PARSER = NodeParser.builder()
-        .globalPlaceholders().build();
+    private static final NodeParser PLACEHOLDER_PARSER = makePlaceholderOnlyParser();
 
     private static final Map<String, String> player2code = new HashMap<>();
     private static final Map<String, JsonObject> code2json = new HashMap<>();
@@ -62,7 +67,55 @@ public class TextHelper {
 
     static {
         writeDefaultLanguageFilesIfAbsent();
+        registerTags();
+    }
 
+    private static NodeParser makeDefaultNodeParser() {
+        #if MC_VER <= MC_1_20_2
+        List<NodeParser> parsers = new ArrayList<>();
+        parsers.add(TextParserV1.createDefault());
+
+
+        NodeParser mergedParser = NodeParser.merge(parsers);
+        return mergedParser;
+        #elif MC_VER > MC_1_20_2
+        return NodeParser.builder()
+        .quickText()
+        .simplifiedTextFormat()
+        .globalPlaceholders()
+        .markdown()
+        .build();
+        #endif
+    }
+
+    private static NodeParser makePlaceholderOnlyParser() {
+        #if MC_VER <= MC_1_20_2
+        List<NodeParser> parsers = new ArrayList<>();
+        parsers.add(TextParserV1.createSafe());
+        NodeParser mergedParser = NodeParser.merge(parsers);
+        return mergedParser;
+        #elif MC_VER > MC_1_20_2
+        return NodeParser.builder()
+        .globalPlaceholders().build();
+        #endif
+    }
+
+    private static void registerTags() {
+        #if MC_VER <= MC_1_20_2
+        TextParserV1.registerDefault(
+            TextParserV1.TextTag.of(
+                "newline",
+                List.of("newline"),
+                "formatting",
+                true,
+                (tag, data, input, handlers, endAt) -> {
+                    var out = recursiveParsing(input, handlers, endAt);
+                    return out.value(new LiteralNode("\n"));
+                }
+            )
+        );
+
+        #elif MC_VER > MC_1_20_2
         TagRegistry.registerDefault(
             TextTag.self(
                 "newline",
@@ -71,6 +124,7 @@ public class TextHelper {
                 (nodes, data, parser) -> new LiteralNode("\n")
             )
         );
+        #endif
 
     }
 
@@ -468,5 +522,21 @@ public class TextHelper {
                 return new net.minecraft.text.HoverEvent.ShowText(hoverText);
             #endif
         }
+    }
+
+    public static Text fromJson(String tagString) {
+        #if MC_VER <= MC_1_20_2
+            return Text.Serializer.fromJson(tagString);
+        #elif MC_VER > MC_1_20_2
+            return Text.Serialization.fromJson(tagString, RegistryHelper.getDefaultWrapperLookup());
+        #endif
+    }
+
+    public static String toJson(Text text) {
+        #if MC_VER <= MC_1_20_2
+            return Text.Serializer.toJson(text);
+        #elif MC_VER > MC_1_20_2
+            return Text.Serialization.toJsonString(text, RegistryHelper.getDefaultWrapperLookup());
+        #endif
     }
 }
