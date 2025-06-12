@@ -18,7 +18,6 @@ import net.minecraft.registry.RegistryWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -119,15 +118,32 @@ public class NbtHelper {
         });
     }
 
-    @SneakyThrows(IOException.class)
+    @SneakyThrows
+    private static void writeNbtFile(NbtCompound nbt, Path path) {
+        #if MC_VER <= MC_1_20_2
+            NbtIo.write(nbt, path.toFile());
+        #elif MC_VER > MC_1_20_2
+            NbtIo.write(new NbtCompound(), path);
+        #endif
+    }
+
+    @SneakyThrows
+    private static NbtCompound readNbtFile(Path path) {
+        #if MC_VER <= MC_1_20_2
+            return NbtIo.read(path.toFile());
+        #elif MC_VER > MC_1_20_2
+            return NbtIo.read(path);
+        #endif
+    }
+
     public static <T> T withNbtFileAndGettingReturnValue(@NotNull Path path, @NotNull Function<NbtCompound, T> function) {
         /* make file if not exists */
         if (Files.notExists(path)) {
-            NbtIo.write(new NbtCompound(), path);
+            writeNbtFile(new NbtCompound(), path);
         }
 
         /* read the file */
-        NbtCompound read = NbtIo.read(path);
+        NbtCompound read = readNbtFile(path);
         if (read == null) {
             LogUtil.error("failed to read the nbt file in {}", path);
             throw new AbortCommandExecutionException();
@@ -137,7 +153,7 @@ public class NbtHelper {
         T value = function.apply(read);
 
         /* always write the data back, whether it's a destructive operation or not */
-        NbtIo.write(read, path);
+        writeNbtFile(read, path);
 
         /* return the useful value to outer space */
         return value;
