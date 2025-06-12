@@ -44,7 +44,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
 
     private static final NodeParser CHAT_STYLE_PARSER = makeTextParser();
 
-    private static TextParserV1 makeTextParser() {
+    private static NodeParser makeTextParser() {
         #if MC_VER <= MC_1_20_2
             return TextParserV1.createDefault();
         #elif MC_VER > MC_1_20_2

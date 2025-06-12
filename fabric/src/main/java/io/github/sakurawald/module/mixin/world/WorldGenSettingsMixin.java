@@ -23,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public class WorldGenSettingsMixin {
 
     #if MC_VER <= MC_1_20_4
+    // FIXME add functions to filter the fuji dimensions
     #elif MC_VER > MC_1_20_4
     @ModifyArg(method = "encode(Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/world/gen/GeneratorOptions;Lnet/minecraft/world/dimension/DimensionOptionsRegistryHolder;)Lcom/mojang/serialization/DataResult;"
         , at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/WorldGenSettings;<init>(Lnet/minecraft/world/gen/GeneratorOptions;Lnet/minecraft/world/dimension/DimensionOptionsRegistryHolder;)V"), index = 1)

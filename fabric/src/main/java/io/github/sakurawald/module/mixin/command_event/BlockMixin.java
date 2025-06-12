@@ -14,9 +14,11 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+
 #if MC_VER <= MC_1_20_2
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 #elif MC_VER > MC_1_20_2
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 #endif
 
