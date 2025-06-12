@@ -12,6 +12,13 @@ import net.minecraft.entity.decoration.BlockAttachedEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 
+#if MC_VER <= MC_1_20_2
+import net.minecraft.entity.vehicle.AbstractMinecartEntity;
+import net.minecraft.entity.vehicle.BoatEntity;
+#elif MC_VER > MC_1_20_2
+import net.minecraft.entity.vehicle.VehicleEntity;
+#endif
+
 @UtilityClass
 public class EntityHelper {
 
@@ -44,6 +51,15 @@ public class EntityHelper {
             return (entity instanceof MobEntity mobEntity) && mobEntity.isLeashed();
         #elif MC_VER > MC_1_20_6
             return (entity instanceof Leashable leashable) && leashable.isLeashed();
+        #endif
+    }
+
+    public static boolean isVehicleEntity(Entity entity) {
+        #if MC_VER <= MC_1_20_2
+            return (entity instanceof BoatEntity)
+                || (entity instanceof AbstractMinecartEntity);
+        #elif MC_VER > MC_1_20_2
+            return entity instanceof VehicleEntity;
         #endif
     }
 

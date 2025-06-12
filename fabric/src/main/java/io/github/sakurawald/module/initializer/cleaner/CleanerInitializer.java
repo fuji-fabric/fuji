@@ -19,7 +19,6 @@ import io.github.sakurawald.module.initializer.cleaner.job.CleanerJob;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.vehicle.VehicleEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -42,7 +41,7 @@ public class CleanerInitializer extends ModuleInitializer {
     private static boolean ignoreEntity(Entity entity) {
         if (entity.getType().equals(EntityType.PLAYER)) return true;
         if (EntityHelper.isBlockAttachedEntity(entity)) return true;
-        if (entity instanceof VehicleEntity) return true;
+        if (EntityHelper.isVehicleEntity(entity)) return true;
 
         var config = CleanerInitializer.config.model().ignore;
 
