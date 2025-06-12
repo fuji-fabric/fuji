@@ -9,7 +9,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.level.ServerWorldProperties;
 import net.minecraft.world.level.storage.LevelStorage;
+#if MC_VER <= MC_1_20_2
+#elif MC_VER > MC_1_20_2
 import net.minecraft.world.spawner.SpecialSpawner;
+#endif
+import net.minecraft.world.spawner.Spawner;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -17,9 +21,15 @@ import java.util.concurrent.Executor;
 
 public class MyServerWorld extends ServerWorld {
 
+    #if MC_VER <= MC_1_20_2
+    public MyServerWorld(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, WorldGenerationProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List<Spawner> spawners, boolean shouldTickTime, @Nullable RandomSequencesState randomSequencesState) {
+        super(server, workerExecutor, session, properties, worldKey, dimensionOptions, worldGenerationProgressListener, debugWorld, seed, spawners, shouldTickTime, randomSequencesState);
+    }
+    #elif MC_VER > MC_1_20_2
     public MyServerWorld(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, WorldGenerationProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List<SpecialSpawner> spawners, boolean shouldTickTime, @Nullable RandomSequencesState randomSequencesState) {
         super(server, workerExecutor, session, properties, worldKey, dimensionOptions, worldGenerationProgressListener, debugWorld, seed, spawners, shouldTickTime, randomSequencesState);
     }
+    #endif
 
     /*
         The main issue is that the runtime world must return the custom seed through World#getSeed, including within the ServerWorld constructor.

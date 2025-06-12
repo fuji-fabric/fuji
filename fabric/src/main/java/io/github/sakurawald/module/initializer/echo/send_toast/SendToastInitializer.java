@@ -48,13 +48,15 @@ public class SendToastInitializer extends ModuleInitializer {
             icon.getDefaultStack()
             , title
             , Text.empty()
-            , Optional.of(
-                #if MC_VER <= MC_1_21_4
+            ,
+                #if MC_VER <= MC_1_20_2
                     RegistryHelper.makeIdentifier(DUMMY_RESOURCE_IMAGE_IDENTIFIER)
+                #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_21_4
+                    Optional.of(RegistryHelper.makeIdentifier(DUMMY_RESOURCE_IMAGE_IDENTIFIER))
                 #elif MC_VER >= MC_1_21_5
-                    new AssetInfo(RegistryHelper.makeIdentifier(DUMMY_RESOURCE_IMAGE_IDENTIFIER))
+                    Optional.of(new AssetInfo(RegistryHelper.makeIdentifier(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
                 #endif
-            )
+
             , advancementFrame
             , true
             , false
@@ -78,7 +80,13 @@ public class SendToastInitializer extends ModuleInitializer {
 
     private static @NotNull AdvancementUpdateS2CPacket makeGrantPacket(AdvancementEntry advancementEntry, Identifier identifier) {
         AdvancementProgress advancementProgress = new AdvancementProgress();
-        AdvancementRequirements advancementRequirements = new AdvancementRequirements(List.of(List.of(IMPOSSIBLE)));
+        #if MC_VER <= MC_1_20_2
+            String[][] impossible = {{IMPOSSIBLE}};
+            AdvancementRequirements advancementRequirements = new AdvancementRequirements(impossible);
+        #elif MC_VER > MC_1_20_2
+            AdvancementRequirements advancementRequirements = new AdvancementRequirements(List.of(List.of(IMPOSSIBLE)));
+        #endif
+
         advancementProgress.init(advancementRequirements);
 
         CriterionProgress criterionProgress = advancementProgress.getCriterionProgress(IMPOSSIBLE);
