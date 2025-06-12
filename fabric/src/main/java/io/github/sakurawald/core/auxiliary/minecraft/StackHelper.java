@@ -80,7 +80,8 @@ public class StackHelper {
             .getOrCreateSubNbt("display")
             .getList("Lore", NbtElement.STRING_TYPE)
             .stream()
-            .map(tag -> Text.Serialization.fromJson(tag.asString())).collect(Collectors.toList());
+            .map(tag -> TextHelper.fromJson(tag.asString()))
+            .collect(Collectors.toList());
         #elif MC_VER > MC_1_20_4
             return stack.get(DataComponentTypes.LORE)
                 .comp_2400();
@@ -92,7 +93,7 @@ public class StackHelper {
         NbtCompound display = stack.getOrCreateSubNbt("display");
         NbtList loreItems = new NbtList();
         for (Text text : texts) {
-            loreItems.add(NbtString.of(Text.Serialization.toJsonString(text)));
+            loreItems.add(NbtString.of(TextHelper.toJson(text)));
         }
         display.put("Lore", loreItems);
         #elif MC_VER > MC_1_20_4
