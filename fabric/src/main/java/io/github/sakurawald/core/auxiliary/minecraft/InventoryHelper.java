@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import lombok.experimental.UtilityClass;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 
@@ -72,5 +73,13 @@ public class InventoryHelper {
         return ImmutableList.of(InventoryHelper.getMainStacks(player)
                 , InventoryHelper.getArmorStacks(player)
                 , InventoryHelper.getOffhandStack(player));
+    }
+
+    public static DefaultedList<ItemStack> getHeldStacks(SimpleInventory inventory) {
+        #if MC_VER <= MC_1_20_2
+            return inventory.stacks;
+        #elif MC_VER > MC_1_20_2
+            return inventory.getHeldStacks();
+        #endif
     }
 }

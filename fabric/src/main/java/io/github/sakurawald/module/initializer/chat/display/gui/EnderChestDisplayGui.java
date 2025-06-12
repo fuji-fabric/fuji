@@ -2,6 +2,7 @@ package io.github.sakurawald.module.initializer.chat.display.gui;
 
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandlerType;
@@ -18,7 +19,8 @@ public class EnderChestDisplayGui extends BaseDisplayGui {
 
     public EnderChestDisplayGui(Text title, @NotNull ServerPlayerEntity serverPlayer) {
         this.title = title;
-        serverPlayer.getEnderChestInventory().getHeldStacks().forEach(itemStack -> this.items.add(itemStack.copy()));
+        DefaultedList<ItemStack> heldStacks = InventoryHelper.getHeldStacks(serverPlayer.getEnderChestInventory());
+        heldStacks.forEach(itemStack -> this.items.add(itemStack.copy()));
     }
 
     @Override
