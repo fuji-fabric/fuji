@@ -9,6 +9,8 @@ import eu.pb4.placeholders.api.node.TextNode;
 import eu.pb4.placeholders.api.parsers.NodeParser;
 #if MC_VER <= MC_1_20_2
 import eu.pb4.placeholders.api.parsers.TextParserV1;
+import eu.pb4.placeholders.api.parsers.MarkdownLiteParserV1;
+import eu.pb4.placeholders.api.Placeholders;
 #elif MC_VER > MC_1_20_2
 import eu.pb4.placeholders.api.parsers.tag.TagRegistry;
 import eu.pb4.placeholders.api.parsers.tag.TextTag;
@@ -40,12 +42,6 @@ import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-#if MC_VER <= MC_1_20_2
-import static eu.pb4.placeholders.impl.textparser.TextParserImpl.recursiveParsing;
-#elif MC_VER > MC_1_20_2
-#endif
-
-
 @UtilityClass
 public class TextHelper {
 
@@ -54,9 +50,10 @@ public class TextHelper {
     public static final Text TEXT_SPACE = Text.of(" ");
 
     /* class states */
-    private static final NodeParser POWERFUL_PARSER = makeDefaultNodeParser();
-
-    private static final NodeParser PLACEHOLDER_PARSER = makePlaceholderOnlyParser();
+    private static final int ENSURE_THE_TAGS_ARE_REGISTERED_BEFORE_CREATING_THE_DEFAULT_PARSER = registerExtendedTags();
+    public static final NodeParser DEFAULT_PARSER = makeDefaultParser();
+    public static final NodeParser POWERFUL_PARSER = makePowerfulParser();
+    public static final NodeParser PLACEHOLDER_PARSER = makePlaceholderOnlyParser();
 
     private static final Map<String, String> player2code = new HashMap<>();
     private static final Map<String, JsonObject> code2json = new HashMap<>();
@@ -67,17 +64,26 @@ public class TextHelper {
 
     static {
         writeDefaultLanguageFilesIfAbsent();
-        registerTags();
     }
 
-    private static NodeParser makeDefaultNodeParser() {
+    private static NodeParser makeDefaultParser() {
+        #if MC_VER <= MC_1_20_2
+        return TextParserV1.createDefault();
+        #elif MC_VER > MC_1_20_2
+            return NodeParser.builder()
+            .quickText()
+            .simplifiedTextFormat()
+            .build();
+        #endif
+    }
+
+    private static NodeParser makePowerfulParser() {
         #if MC_VER <= MC_1_20_2
         List<NodeParser> parsers = new ArrayList<>();
         parsers.add(TextParserV1.createDefault());
-
-
-        NodeParser mergedParser = NodeParser.merge(parsers);
-        return mergedParser;
+        parsers.add(Placeholders.DEFAULT_PLACEHOLDER_PARSER);
+        parsers.add(MarkdownLiteParserV1.ALL);
+        return NodeParser.merge(parsers);
         #elif MC_VER > MC_1_20_2
         return NodeParser.builder()
         .quickText()
@@ -100,7 +106,7 @@ public class TextHelper {
         #endif
     }
 
-    private static void registerTags() {
+    private static int registerExtendedTags() {
         #if MC_VER <= MC_1_20_2
         TextParserV1.registerDefault(
             TextParserV1.TextTag.of(
@@ -108,10 +114,7 @@ public class TextHelper {
                 List.of("newline"),
                 "formatting",
                 true,
-                (tag, data, input, handlers, endAt) -> {
-                    var out = recursiveParsing(input, handlers, endAt);
-                    return out.value(new LiteralNode("\n"));
-                }
+                (tag, data, input, handlers, endAt) -> new TextParserV1.TagNodeValue(new LiteralNode("\n"), 0)
             )
         );
 
@@ -126,6 +129,7 @@ public class TextHelper {
         );
         #endif
 
+        return 0;
     }
 
     private static void writeDefaultLanguageFilesIfAbsent() {
