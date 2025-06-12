@@ -13,14 +13,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = CommandDispatcher.class, remap = false, priority = 1000 + 1000)
 public class CommandDispatcherMixin {
 
+    #if MC_VER <= MC_1_20_2
+    @Inject(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/Command;run(Lcom/mojang/brigadier/context/CommandContext;)I"), cancellable = true)
+    #elif MC_VER > MC_1_20_2
     @Inject(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/context/ContextChain;executeAll(Ljava/lang/Object;Lcom/mojang/brigadier/ResultConsumer;)I"), cancellable = true)
+    #endif
     public void beforeExecuteInCommandDispatcher(ParseResults<ServerCommandSource> parseResults, CallbackInfoReturnable<Integer> cir) {
         if (parseResults.getContext().getSource() instanceof ServerCommandSource) {
             CommandAdviceInitializer.processCommandAdvice(this, parseResults.getContext().getSource(), parseResults.getReader().getString(), CommandAdviceType.BEFORE_EXECUTING, cir);
         }
     }
 
+    #if MC_VER <= MC_1_20_2
+    @Inject(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/Command;run(Lcom/mojang/brigadier/context/CommandContext;)I", shift = At.Shift.AFTER), cancellable = true)
+    #elif MC_VER > MC_1_20_2
     @Inject(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/context/ContextChain;executeAll(Ljava/lang/Object;Lcom/mojang/brigadier/ResultConsumer;)I", shift = At.Shift.AFTER), cancellable = true)
+    #endif
     public void afterExecuteInCommandDispatcher(ParseResults<ServerCommandSource> parseResults, CallbackInfoReturnable<Integer> cir) {
         if (parseResults.getContext().getSource() instanceof ServerCommandSource) {
             CommandAdviceInitializer.processCommandAdvice(this, parseResults.getContext().getSource(), parseResults.getReader().getString(), CommandAdviceType.AFTER_EXECUTING, cir);

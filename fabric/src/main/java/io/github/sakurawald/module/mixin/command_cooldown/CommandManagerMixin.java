@@ -11,12 +11,19 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = CommandManager.class, priority = 1000 - 750)
 public class CommandManagerMixin {
 
+    #if MC_VER <= MC_1_20_2
     @Inject(method = "execute", at = @At("HEAD"), cancellable = true)
-    public void watchCommandExecution(@NotNull ParseResults<ServerCommandSource> parseResults, String string, @NotNull CallbackInfo ci) {
+    public void watchCommandExecution(ParseResults<ServerCommandSource> parseResults, String string, CallbackInfoReturnable<Integer> ci)
+    #elif MC_VER > MC_1_20_2
+    @Inject(method = "execute", at = @At("HEAD"), cancellable = true)
+    public void watchCommandExecution(@NotNull ParseResults<ServerCommandSource> parseResults, String string, @NotNull CallbackInfo ci)
+    #endif
+    {
         ServerPlayerEntity player = parseResults.getContext().getSource().getPlayer();
         if (player == null) return;
 

@@ -10,8 +10,14 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_20_4
 import net.minecraft.command.argument.StyleArgumentType;
 #elif MC_VER > MC_1_20_4
+import net.minecraft.command.argument.StyleArgumentType;
+#endif
+
+#if MC_VER <= MC_1_20_2
+#elif MC_VER > MC_1_20_2
 import io.github.sakurawald.core.command.processor.CommandAnnotationProcessor;
 #endif
+
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Style;
 

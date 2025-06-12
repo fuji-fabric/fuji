@@ -4,7 +4,12 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.extension.SimpleRegistryExtension;
 import it.unimi.dsi.fastutil.objects.ObjectList;
+#if MC_VER <= MC_1_20_2
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+#elif MC_VER > MC_1_20_2
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+#endif
+
 import net.minecraft.registry.MutableRegistry;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -53,9 +58,15 @@ public abstract class SimpleRegistryExtensionMixin<T> implements SimpleRegistryE
     @Final
     private ObjectList<RegistryEntry.Reference<T>> rawIdToEntry;
 
+    #if MC_VER <= MC_1_20_2
+    @Shadow
+    @Final
+    private Object2IntMap<T> entryToRawId;
+    #elif MC_VER > MC_1_20_2
     @Shadow
     @Final
     private Reference2IntMap<T> entryToRawId;
+    #endif
 
     @Shadow
     @Final

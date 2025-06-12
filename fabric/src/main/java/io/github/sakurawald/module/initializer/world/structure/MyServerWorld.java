@@ -10,10 +10,10 @@ import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.level.ServerWorldProperties;
 import net.minecraft.world.level.storage.LevelStorage;
 #if MC_VER <= MC_1_20_2
+import net.minecraft.world.spawner.Spawner;
 #elif MC_VER > MC_1_20_2
 import net.minecraft.world.spawner.SpecialSpawner;
 #endif
-import net.minecraft.world.spawner.Spawner;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

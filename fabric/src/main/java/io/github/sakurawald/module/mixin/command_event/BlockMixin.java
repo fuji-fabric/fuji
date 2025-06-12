@@ -14,8 +14,12 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+#if MC_VER <= MC_1_20_2
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+#elif MC_VER > MC_1_20_2
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+#endif
+
 
 @Mixin(Block.class)
 public class BlockMixin {
@@ -28,7 +32,12 @@ public class BlockMixin {
     }
 
     @Inject(method = "onBreak", at = @At("TAIL"))
-    void onBlockBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity playerEntity, CallbackInfoReturnable<BlockState> cir) {
+    #if MC_VER <= MC_1_20_2
+    void onBlockBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity playerEntity, CallbackInfo ci)
+    #elif MC_VER > MC_1_20_2
+    void onBlockBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity playerEntity, CallbackInfoReturnable<BlockState> cir)
+    #endif
+    {
         if (playerEntity instanceof ServerPlayerEntity player) {
             CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), CommandEventInitializer.config.model().event.after_player_break_block.command_list);
         }
