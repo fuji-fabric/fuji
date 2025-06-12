@@ -4,8 +4,14 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.core.command.argument.structure.Argument;
-import io.github.sakurawald.core.command.processor.CommandAnnotationProcessor;
+#if MC_VER <= MC_1_20_2
+import io.github.sakurawald.core.command.argument.wrapper.impl.GreedyString;
+import com.mojang.brigadier.arguments.StringArgumentType;
+#elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_20_4
 import net.minecraft.command.argument.StyleArgumentType;
+#elif MC_VER > MC_1_20_4
+import io.github.sakurawald.core.command.processor.CommandAnnotationProcessor;
+#endif
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Style;
 
@@ -14,7 +20,9 @@ import java.util.List;
 public class StyleArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        #if MC_VER <= MC_1_20_4
+        #if MC_VER <= MC_1_20_2
+        return StringArgumentType.greedyString();
+        #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_20_4
         return StyleArgumentType.style();
         #elif MC_VER > MC_1_20_4
         return StyleArgumentType.style(CommandAnnotationProcessor.getRegistryAccess());
@@ -23,7 +31,11 @@ public class StyleArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+        #if MC_VER <= MC_1_20_2
+        return new GreedyString(StringArgumentType.getString(context, argument.getArgumentName()));
+        #elif MC_VER > MC_1_20_2
         return StyleArgumentType.getStyle(context, argument.getArgumentName());
+        #endif
     }
 
     @Override
