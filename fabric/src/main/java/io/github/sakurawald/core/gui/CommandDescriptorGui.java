@@ -5,6 +5,7 @@ import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.structure.CommandDescriptor;
+import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -47,10 +48,12 @@ public class CommandDescriptorGui extends PagedGui<CommandDescriptor> {
     protected GuiElementInterface toGuiElement(CommandDescriptor entity) {
         List<Text> lore = new ArrayList<>();
         lore.addAll(List.of(
-            TextHelper.getTextByKey(getPlayer(), "command.source.can_be_executed_by_console", entity.canBeExecutedByConsole())
+            TextHelper.getTextByKey(getPlayer(),"command.registered_by_module", ModuleManager.computeModulePathAsString(entity.method.getDeclaringClass().getName()))
+            , TextHelper.getTextByKey(getPlayer(), "command.source.can_be_executed_by_console", entity.canBeExecutedByConsole())
             , TextHelper.getTextByKey(getPlayer(), "command.descriptor.type", entity.getClass().getSimpleName())
             , TextHelper.getTextByKey(getPlayer(), "command.requirement.level_permission", entity.getDefaultLevelPermission())
             , TextHelper.getTextByKey(getPlayer(), "command.requirement.string_permission", entity.getDefaultStringPermission())
+            , Text.empty()
         ));
         lore.addAll(computeLore(entity));
 
@@ -64,6 +67,8 @@ public class CommandDescriptorGui extends PagedGui<CommandDescriptor> {
     @Override
     protected List<CommandDescriptor> filter(String keyword) {
         return getEntities().stream()
-            .filter(it -> it.toString().contains(keyword)).toList();
+            .filter(it -> it.toString().contains(keyword)
+            || it.method.getDeclaringClass().getName().contains(keyword))
+            .toList();
     }
 }
