@@ -6,6 +6,7 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.core.gui.PagedGui;
+import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -31,7 +32,8 @@ public class ArgumentTypeGui extends PagedGui<BaseArgumentTypeAdapter> {
             .setName(Text.literal(entity.getClass().getSimpleName()))
             .setItem(Items.HOPPER)
             .setLore(List.of(
-                TextHelper.getTextByKey(getPlayer(), "command.argument.type.class", entity.getTypeClasses().stream().map(Class::getSimpleName).toList())
+                TextHelper.getTextByKey(getPlayer(),"command.argument.type.registered_by_module", ModuleManager.computeModulePathAsString(entity.getClass().getName()))
+                , TextHelper.getTextByKey(getPlayer(), "command.argument.type.class", entity.getTypeClasses().stream().map(Class::getSimpleName).toList())
                 , TextHelper.getTextByKey(getPlayer(), "command.argument.type.string", entity.getTypeStrings())
             ))
             .build();
@@ -42,6 +44,7 @@ public class ArgumentTypeGui extends PagedGui<BaseArgumentTypeAdapter> {
         return getEntities().stream()
             .filter(it -> it.getTypeClasses().stream().anyMatch(c -> c.getSimpleName().contains(keyword))
                 || it.getTypeStrings().stream().anyMatch(s -> s.contains(keyword))
+                || it.getClass().getName().contains(keyword)
             )
             .toList();
     }
