@@ -302,6 +302,6 @@
   "job.props.enabled": "<blue>Diaktifkan: %s",
   "job.props.left_times": "<blue>Sisa Waktu: %s",
   "symbol.arrow.right": "<bold><orange>-></bold>",
-  "chat.spy.indicator": "<bold><orange>-SPY-></bold>",
+  "chat.spy.indicator": "<bold><orange>-SPY-></orange></bold>",
   "registry.list.gui.title": "<blue>Registri"
 }

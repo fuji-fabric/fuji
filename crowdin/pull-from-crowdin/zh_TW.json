@@ -302,6 +302,6 @@
   "job.props.enabled": "<blue>已啟用：%s",
   "job.props.left_times": "<blue>剩餘次數：%s",
   "symbol.arrow.right": "<bold><orange>-></bold>",
-  "chat.spy.indicator": "<bold><orange>-監聽-></bold>",
+  "chat.spy.indicator": "<bold><orange>-SPY-></orange></bold>",
   "registry.list.gui.title": "<blue>登錄清單"
 }
