@@ -26,6 +26,6 @@ public class CommandManagerMixin {
     public void onExecuteInCommandManager(@NotNull ParseResults<ServerCommandSource> parseResults, String string, CallbackInfo ci)
     #endif
     {
-        CommandSpyInitializer.process(parseResults);
+        CommandSpyInitializer.processCommandSpy(parseResults);
     }
 }

@@ -3,6 +3,7 @@ package io.github.sakurawald.core.auxiliary.minecraft;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
@@ -143,6 +144,11 @@ public class CommandHelper {
         ServerCommandSource commandSource = CommandHelper.getCommandSource(player);
         ParseResults<ServerCommandSource> parseResults = ServerHelper.getCommandDispatcher().parse(command, commandSource);
         ServerHelper.getServer().getCommandManager().execute(parseResults, command);
+    }
+
+    public static <S> boolean isExecutedOnServerSide(CommandContextBuilder<S> context) {
+        // NOTE: in client-side, the S is not guarantee to be ServerCommandSource.
+        return context.getSource() instanceof ServerCommandSource;
     }
 
 }
