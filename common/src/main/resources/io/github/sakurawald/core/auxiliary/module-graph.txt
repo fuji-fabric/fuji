@@ -29,6 +29,7 @@ command_meta.chain
 command_meta.delay
 command_meta.for_each
 command_meta.json
+command_meta.one_of
 command_meta.run
 command_meta.shell
 command_permission

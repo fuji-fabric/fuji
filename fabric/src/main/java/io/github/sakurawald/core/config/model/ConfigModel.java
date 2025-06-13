@@ -486,6 +486,7 @@ public class ConfigModel {
 
             public Run run = new Run();
             public ForEach for_each = new ForEach();
+            public OneOf one_of = new OneOf();
             public Chain chain = new Chain();
             public Delay delay = new Delay();
             public Json json = new Json();
@@ -498,6 +499,10 @@ public class ConfigModel {
 
             public static class ForEach {
                 public boolean enable = false;
+            }
+
+            public static class OneOf {
+                public boolean enable = true;
             }
 
             public static class Chain {
@@ -519,7 +524,6 @@ public class ConfigModel {
             public static class Shell {
                 public boolean enable = false;
             }
-
         }
 
         public static class CommandToolbox {
