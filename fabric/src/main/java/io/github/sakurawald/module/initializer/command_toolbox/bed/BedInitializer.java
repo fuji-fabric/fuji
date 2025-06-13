@@ -36,7 +36,8 @@ public class BedInitializer extends ModuleInitializer {
             return CommandHelper.Return.FAIL;
         }
 
-        new SpatialPose(world, respawnPosition.getX(), respawnPosition.getY(), respawnPosition.getZ(), player.getYaw(), player.getPitch()).teleport(player);
+        new SpatialPose(world, respawnPosition.getX(), respawnPosition.getY(), respawnPosition.getZ(), player.getYaw(), player.getPitch())
+            .teleport(player);
         TextHelper.sendMessageByKey(player, "bed.success");
         return CommandHelper.Return.SUCCESS;
     }

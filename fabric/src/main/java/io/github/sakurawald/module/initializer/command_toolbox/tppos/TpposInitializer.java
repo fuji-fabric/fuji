@@ -45,7 +45,6 @@ public class TpposInitializer extends ModuleInitializer {
     ) {
         /* specify the dimension */
         ServerWorld world = dimension.isPresent() ? dimension.get().getValue() : EntityHelper.getServerWorld(player);
-        LogUtil.debug("tppos: x = {}, y = {}, z = {}", x, y, z);
 
         /* mode: fixed teleport */
         if (x.isPresent() || y.isPresent() || z.isPresent()) {
@@ -83,7 +82,8 @@ public class TpposInitializer extends ModuleInitializer {
     @Document("Teleport to the offline position of a player.")
     private static int tppos(@CommandSource ServerPlayerEntity source, OfflinePlayerName player) {
         ServerPlayerEntity dummy = PlayerHelper.loadOfflinePlayer(player.getValue());
-        new SpatialPose(EntityHelper.getServerWorld(dummy), dummy.getX(), dummy.getY(), dummy.getZ(), dummy.getYaw(), dummy.getPitch()).teleport(source);
+        new SpatialPose(EntityHelper.getServerWorld(dummy), dummy.getX(), dummy.getY(), dummy.getZ(), dummy.getYaw(), dummy.getPitch())
+            .teleport(source);
         return CommandHelper.Return.SUCCESS;
     }
 

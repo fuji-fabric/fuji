@@ -24,7 +24,7 @@ public class NicknameInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<NicknameConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, NicknameConfigModel.class);
 
-    private static String transformNickname(String string) {
+    private static String formatNickname(String string) {
         return config.model().transform_nickname.formatted(string);
     }
 
@@ -33,9 +33,7 @@ public class NicknameInitializer extends ModuleInitializer {
     private static int $set(@CommandSource @CommandTarget ServerPlayerEntity player, GreedyString format) {
         String name = player.getGameProfile().getName();
         String value = format.getValue();
-
-        // transform nickname
-        value = transformNickname(value);
+        value = formatNickname(value);
 
         data.model().format.player2format.put(name, value);
         data.writeStorage();
@@ -49,6 +47,7 @@ public class NicknameInitializer extends ModuleInitializer {
     @Document("Clear the display name.")
     private static int $reset(@CommandSource @CommandTarget ServerPlayerEntity player) {
         String name = player.getGameProfile().getName();
+
         data.model().format.player2format.remove(name);
         data.writeStorage();
         ServerHelper.updateDisplayName();

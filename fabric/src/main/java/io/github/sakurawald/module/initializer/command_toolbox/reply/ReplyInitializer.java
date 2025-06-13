@@ -17,16 +17,16 @@ import java.util.Objects;
 
 public class ReplyInitializer extends ModuleInitializer {
 
-    private static final HashMap<String, String> player2target = new HashMap<>();
+    private static final HashMap<String, String> player2replyTargetPlayer = new HashMap<>();
 
     public static void setReplyTarget(String player, String target) {
-        player2target.put(player, target);
+        player2replyTargetPlayer.put(player, target);
     }
 
     @CommandNode("reply")
     @Document("Reply the player who recently /msg or /tell you.")
     private static int $reply(@CommandSource ServerPlayerEntity player, GreedyString message) {
-        String target = player2target.get(player.getGameProfile().getName());
+        String target = player2replyTargetPlayer.get(player.getGameProfile().getName());
 
         try {
             Objects.requireNonNull(ServerHelper.getCommandDispatcher())

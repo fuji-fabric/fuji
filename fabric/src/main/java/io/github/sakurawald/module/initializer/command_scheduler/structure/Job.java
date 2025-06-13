@@ -23,18 +23,17 @@ public class Job {
     List<List<String>> commands_list;
 
     // for implement simplification, the job will always be scheduled, and the trigger() will always be called.
-    public void trigger() {
-
-        /* process enable */
+    public void tryTrigger() {
+        /* Filter for enable option. */
         if (!this.enable) return;
 
-        /* process left trigger times */
+        /* Filter for leftTimes option. */
         if (leftTimes <= 0) {
             return;
         }
         leftTimes--;
 
-        /* execute commands */
+        /* Execute specified commands. */
         List<String> commands = this.commands_list.get(new Random().nextInt(this.commands_list.size()));
         LogUtil.info("Execute commands in job `{}`: {}", this.getName(), commands);
 

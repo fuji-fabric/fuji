@@ -25,12 +25,12 @@ public class RealnameInitializer extends ModuleInitializer {
             Text displayName = player.getDisplayName();
             if (displayName == null) continue;
 
-            Text from = displayName;
-            Text to = player.getName();
+            Text nickname = displayName;
+            Text realname = player.getName();
 
-            builder.append(from)
+            builder.append(nickname)
                 .append(Text.literal(" -> "))
-                .append(to)
+                .append(realname)
                 .append(Text.literal("\n"));
         }
 

@@ -30,12 +30,12 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
 
     @Override
     protected void onInitialize() {
-        updateJobs();
+        reloadJobs();
     }
 
     @Override
     protected void onReload() {
-        updateJobs();
+        reloadJobs();
     }
 
     @CommandNode("list")
@@ -52,12 +52,12 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
         scheduler.model().jobs.stream()
             .filter(it -> it.getName().equals(jobName.getValue()))
             .findFirst()
-            .ifPresent(Job::trigger);
+            .ifPresent(Job::tryTrigger);
 
         return CommandHelper.Return.SUCCESS;
     }
 
-    private void updateJobs() {
+    private void reloadJobs() {
         LogUtil.info("Un-schedule jobs");
         Managers.getScheduleManager().deleteJobs(CommandScheduleJob.class);
 

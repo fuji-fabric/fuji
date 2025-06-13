@@ -22,6 +22,6 @@ public class CommandScheduleJob extends CronJob {
     @Override
     public void execute(@NotNull JobExecutionContext context) {
         Job job = (Job) context.getJobDetail().getJobDataMap().get("job");
-        job.trigger();
+        job.tryTrigger();
     }
 }
