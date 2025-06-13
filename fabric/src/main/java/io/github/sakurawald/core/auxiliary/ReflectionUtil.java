@@ -53,7 +53,7 @@ public class ReflectionUtil {
     }
 
     public static Path computeModuleConfigPath(Class<?> clazz) {
-        String modulePath = ModuleManager.computeJoinedModulePath(clazz.getName());
+        String modulePath = ModuleManager.computeModulePathAsString(clazz.getName());
         return computeModuleConfigPath(modulePath);
     }
 

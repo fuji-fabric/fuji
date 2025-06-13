@@ -230,7 +230,7 @@ public class CommandDescriptor {
 
             """.formatted(
             source.getName()
-            , ModuleManager.computeModulePath(method.getDeclaringClass().getName())
+            , ModuleManager.computeModulePathAsList(method.getDeclaringClass().getName())
             , method.getName()
             , throwable);
         LogUtil.error(string, throwable);

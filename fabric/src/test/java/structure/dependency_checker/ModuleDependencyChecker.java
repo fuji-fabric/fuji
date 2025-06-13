@@ -16,11 +16,11 @@ public class ModuleDependencyChecker extends FileDependencyChecker {
     public static final JsonElement rcConfig = BaseConfigurationHandler.getGson().toJsonTree(new ConfigModel());
 
     private @Nullable Dependency groupSymbol(Dependency dep) {
-        String definition = String.join(".", ModuleManager.computeModulePath(dep.getDefinition()));
+        String definition = ModuleManager.computeModulePathAsString(dep.getDefinition());
         List<String> referenceList = new ArrayList<>();
 
         for (String ref : dep.getReference()) {
-            String reference = String.join(".", ModuleManager.computeModulePath(ref));
+            String reference = ModuleManager.computeModulePathAsString(ref);
             // skip -> common reference
             if (reference.equals(ModuleManager.CORE_MODULE_ROOT)) continue;
             // skip -> self reference

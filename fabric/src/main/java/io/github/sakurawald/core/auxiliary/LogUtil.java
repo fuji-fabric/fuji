@@ -82,7 +82,7 @@ public class LogUtil {
     private static List<String> getCurrentStackTraceAsModuleName() {
         return getCurrentStackTraceAsClassNames()
             .stream()
-            .map(ModuleManager::computeJoinedModulePath)
+            .map(ModuleManager::computeModulePathAsString)
             .toList();
     }
 

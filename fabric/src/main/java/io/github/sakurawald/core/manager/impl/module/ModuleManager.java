@@ -31,14 +31,24 @@ public class ModuleManager extends BaseManager {
     private final Map<Class<? extends ModuleInitializer>, ModuleInitializer> moduleRegistry = new HashMap<>();
     private final Map<List<String>, Boolean> module2enable = new HashMap<>();
 
-    public static String computeJoinedModulePath(@NotNull String className) {
-        return joinModulePath(ModuleManager.computeModulePath(className));
+    private static final Map<String, String> className2modulePathString = new HashMap<>();
+
+    public static String computeModulePathAsString(@NotNull String className) {
+        /* This function wrap the computeModulePathAsList function, and providing a cache layer. */
+        String modulePathString = className2modulePathString.get(className);
+        if (modulePathString != null) {
+            return modulePathString;
+        }
+
+        String result = joinModulePath(ModuleManager.computeModulePathAsList(className));
+        className2modulePathString.put(className, result);
+        return result;
     }
 
     /**
      * @return the module path for given class name, if the class is not inside a module, then a special module path List.of("core") will be returned.
      */
-    public static @NotNull List<String> computeModulePath(@NotNull String className) {
+    public static @NotNull List<String> computeModulePathAsList(@NotNull String className) {
         if (MODULE_PATHS.isEmpty()) {
             LogUtil.warn("This is the first time we generating the module graph file, we just ");
         }
@@ -177,7 +187,7 @@ public class ModuleManager extends BaseManager {
     }
 
     public boolean shouldWeEnableThis(String className) {
-        return shouldWeEnableThis(computeModulePath(className));
+        return shouldWeEnableThis(computeModulePathAsList(className));
     }
 
     private boolean shouldWeEnableThis(@NotNull List<String> modulePath) {
