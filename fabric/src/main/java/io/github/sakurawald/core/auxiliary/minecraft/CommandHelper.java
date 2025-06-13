@@ -7,6 +7,7 @@ import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
+import io.github.sakurawald.core.command.exception.AbortCommandExecutionException;
 import lombok.experimental.UtilityClass;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -60,6 +61,13 @@ public class CommandHelper {
         // ignore the root command node
         if (!parent.getName().isEmpty()) {
             collector.add(parent);
+        }
+    }
+
+    public static void ensureItemInHandNotEmpty(ServerPlayerEntity player, ItemStack stack) {
+        if (stack.isEmpty()) {
+            TextHelper.sendMessageByKey(player, "item.empty.not_allow");
+            throw new AbortCommandExecutionException();
         }
     }
 

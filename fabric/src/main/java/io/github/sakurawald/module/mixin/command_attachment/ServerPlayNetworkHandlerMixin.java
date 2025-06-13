@@ -26,10 +26,9 @@ public abstract class ServerPlayNetworkHandlerMixin {
         if (hand.equals(Hand.MAIN_HAND)) {
             ItemStack mainHandStack = player.getMainHandStack();
             String uuid = UuidHelper.getAttachedUuid(NbtHelper.getNbt(mainHandStack));
-            if (uuid == null) return;
-
             ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-            CommandAttachmentInitializer.triggerAttachmentModel(uuid, player, List.of(InteractType.LEFT, InteractType.BOTH));
+
+            CommandAttachmentInitializer.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.LEFT, InteractType.BOTH));
         }
 
     }

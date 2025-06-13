@@ -3,6 +3,7 @@ package io.github.sakurawald.core.manager.impl.attachment;
 import io.github.sakurawald.Fuji;
 import io.github.sakurawald.core.manager.abst.BaseManager;
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +30,7 @@ public class AttachmentManager extends BaseManager {
         return path.toFile();
     }
 
-    public boolean existsAttachment(String subject, String uuid) {
+    public boolean existsAttachment(String subject, @Nullable String uuid) {
         if (uuid == null) return false;
         return Files.exists(ATTACHMENT_STORAGE_PATH.resolve(subject).resolve(uuid));
     }

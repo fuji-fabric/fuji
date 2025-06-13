@@ -5,6 +5,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import io.github.sakurawald.core.annotation.Document;
+import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.NbtHelper;
@@ -55,21 +56,21 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     private static final String COMMAND_ATTACHMENT_SUBJECT_NAME = "command-attachment";
 
-    private static final Map<String, String> player2uuid = new HashMap<>();
+    private static final Map<String, String> player2lastSteppingBlockUUID = new HashMap<>();
 
     private static void testSteppingBlockForPlayer(ServerPlayerEntity player) {
         String playerName = player.getGameProfile().getName();
-        String originalUuid = player2uuid.get(playerName);
+        String originalUuid = player2lastSteppingBlockUUID.get(playerName);
         String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), player.getSteppingPos());
 
+        /* Ignore the trigger if last stepping block is the same. */
         if (uuid.equals(originalUuid)) return;
-        // update value
-        player2uuid.put(playerName, uuid);
 
-        // test stepping block
-        if (!existsAttachmentModel(uuid)) return;
-        ServerHelper.getServer().executeSync(() -> triggerAttachmentModel(uuid, player, List.of(InteractType.STEP_ON)));
+        /* Update last stepping block, and execute attached commands. */
+        player2lastSteppingBlockUUID.put(playerName, uuid);
 
+        /* Trigger it. */
+        ServerHelper.getServer().executeSync(() -> tryTriggerAttachmentModel(uuid, player, List.of(InteractType.STEP_ON)));
     }
 
     public static void testSteppingBlockForPlayers() {
@@ -77,13 +78,12 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public static boolean existsAttachmentModel(String uuid) {
+    private static boolean existsAttachmentModel(@Nullable String uuid) {
         return Managers.getAttachmentManager().existsAttachment(COMMAND_ATTACHMENT_SUBJECT_NAME, uuid);
     }
 
     @SneakyThrows(IOException.class)
     private static CommandAttachmentModel getAttachmentModel(String uuid) {
-
         CommandAttachmentModel model;
         try {
             String attachment = Managers.getAttachmentManager().getAttachment(COMMAND_ATTACHMENT_SUBJECT_NAME, uuid);
@@ -103,19 +103,28 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         Managers.getAttachmentManager().setAttachment(COMMAND_ATTACHMENT_SUBJECT_NAME, uuid, json);
     }
 
-    public static void triggerAttachmentModel(String uuid, PlayerEntity player, List<InteractType> receivedInteractTypes) {
-        // get
+    public static void tryTriggerAttachmentModel(@Nullable String uuid, PlayerEntity player, List<InteractType> receivedInteractTypes) {
+        tryTriggerAttachmentModel(uuid,player,receivedInteractTypes, ()->{});
+    }
+
+    public static void tryTriggerAttachmentModel(@Nullable String uuid, PlayerEntity player, List<InteractType> receivedInteractTypes, Runnable postTriggered) {
+        if (!CommandAttachmentInitializer.existsAttachmentModel(uuid)) return;
+        triggerAttachmentModel(uuid, player, receivedInteractTypes, postTriggered);
+    }
+
+    private static void triggerAttachmentModel(String uuid, PlayerEntity player, List<InteractType> receivedInteractTypes, Runnable postTriggered) {
+        /* Get attachment model. */
         CommandAttachmentModel model = getAttachmentModel(uuid);
 
-        // process
+        /* Process attachment nodes. */
         for (CommandAttachmentNode e : model.getEntries()) {
-            /* interaction type*/
+            /* Filter for interaction type. */
             if (!receivedInteractTypes.contains(e.getInteractType())) continue;
 
-            /* usage limit */
+            /* Filter for usage times limit. */
             if (e.getUseTimes() >= e.getMaxUseTimes()) continue;
 
-            /* execute as */
+            /* Switch for execute-as-type. */
             ExecuteAsType executeAsType = e.getExecuteAsType();
             ServerCommandSource source = CommandHelper.getCommandSource(player);
             switch (executeAsType) {
@@ -126,7 +135,10 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
                     CommandExecutor.execute(ExtendedCommandSource.asFakeOp(source, (ServerPlayerEntity) player), e.getCommand());
             }
 
-            /* item destroy */
+            /* Eval post-triggered function. */
+            postTriggered.run();
+
+            /* Handler for destroy-item. */
             e.setUseTimes(e.getUseTimes() + 1);
             if (e instanceof ItemStackCommandAttachmentNode ie) {
                 if (ie.isDestroyItem() && e.getUseTimes() >= e.getMaxUseTimes()) {
@@ -135,7 +147,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
             }
         }
 
-        // save
+        /* Save the attachment model immediately. */
         setAttachmentModel(uuid, model);
     }
 
@@ -150,7 +162,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     ) {
         // get model
         ItemStack mainHandStack = player.getMainHandStack();
-        checkItemStackInHand(player, mainHandStack);
+        CommandHelper.ensureItemInHandNotEmpty(player, mainHandStack);
 
         String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
         CommandAttachmentModel model = getAttachmentModel(uuid);
@@ -221,18 +233,11 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    private static void checkItemStackInHand(ServerPlayerEntity player, ItemStack mainHandStack) {
-        if (mainHandStack.isEmpty()) {
-            TextHelper.sendMessageByKey(player, "item.empty.not_allow");
-            throw new AbortCommandExecutionException();
-        }
-    }
-
     @CommandNode("detach-item-all")
     @Document("Detach all attached commands in the item.")
     private static int detachItemAll(@CommandSource ServerPlayerEntity player) {
         ItemStack mainHandStack = player.getMainHandStack();
-        checkItemStackInHand(player, mainHandStack);
+        CommandHelper.ensureItemInHandNotEmpty(player, mainHandStack);
         String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
 
         doDetachAttachment(player, uuid);
@@ -266,7 +271,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @Document("Query all attached commands in the item.")
     private static int queryItem(@CommandSource ServerPlayerEntity player) {
         ItemStack mainHandStack = player.getMainHandStack();
-        checkItemStackInHand(player, mainHandStack);
+        CommandHelper.ensureItemInHandNotEmpty(player, mainHandStack);
         String uuid = UuidHelper.getAttachedUuid(NbtHelper.getNbt(mainHandStack));
 
         doQueryAttachment(player, uuid);
@@ -291,13 +296,16 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @SneakyThrows(IOException.class)
     private static void doQueryAttachment(ServerPlayerEntity player, String uuid) {
+        /* Check if attachment exists. */
         if (!Managers.getAttachmentManager().existsAttachment(COMMAND_ATTACHMENT_SUBJECT_NAME, uuid)) {
             TextHelper.sendMessageByKey(player, "command_attachment.query.no_attachment");
             throw new AbortCommandExecutionException();
         }
 
+        /* Display it. */
         String attachment = Managers.getAttachmentManager().getAttachment(COMMAND_ATTACHMENT_SUBJECT_NAME, uuid);
         player.sendMessage(Text.literal(attachment));
+        LogUtil.debug("Query the attachment: {}", attachment);
     }
 
     @Override
@@ -319,7 +327,6 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
                 json.getAsJsonObject().addProperty("type", CommandAttackmentType.ITEMSTACK.name());
             }
 
-
             String type = json.getAsJsonObject().get("type").getAsString();
             if (type.equals(CommandAttackmentType.ITEMSTACK.name()))
                 return context.deserialize(json, ItemStackCommandAttachmentNode.class);
@@ -328,7 +335,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
             if (type.equals(CommandAttackmentType.BLOCK.name()))
                 return context.deserialize(json, BlockCommandAttachmentNode.class);
 
-            throw new IllegalArgumentException("The type of command attachment entry is not supported");
+            throw new IllegalArgumentException("The type of command attachment entry is not supported!");
         }
 
     }
