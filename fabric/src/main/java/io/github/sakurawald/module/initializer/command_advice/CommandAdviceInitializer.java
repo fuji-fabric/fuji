@@ -27,6 +27,8 @@ public class CommandAdviceInitializer extends ModuleInitializer {
 
     @SuppressWarnings({"ResultOfMethodCallIgnored", "unchecked"})
     public static void processCommandAdvice(Object handler, ServerCommandSource source, String commandString, CommandAdviceType adviceType, CallbackInfo ci) {
+        // NOTE: If the command is executed by a player, then the CommandManager will call CommandDispatcher.
+        // NOTE: If the command is executed by the console, then it will directly call the function in CommandDispatcher.
 
         // Log it.
         LogUtil.debug("Process Command Advice: advice type = {}, command string = {}, command source = {}, handler = {}, ", adviceType, commandString, source.getName(), handler);

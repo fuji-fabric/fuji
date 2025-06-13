@@ -67,6 +67,8 @@ It's good to have a checklist, to avoid forgetting something.
 - Sit in a `boat` and move it.
 - Issue `/view {inv/ender}` command, and see if it can change the inv of another player on the fly.
 - Issue `/home` to see if it's rewrited to `/home tp default`.
+- Issue `/back` to see if the `command advice` is processed exactly once. 
+- Issue `/say hi` to see if the `command advice` can cancel with another command. 
 
 ## Publish a new version
 
