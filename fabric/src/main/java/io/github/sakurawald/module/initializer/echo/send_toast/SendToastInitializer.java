@@ -91,10 +91,10 @@ public class SendToastInitializer extends ModuleInitializer {
 
     private static @NotNull AdvancementUpdateS2CPacket makeGrantPacket(AdvancementEntry advancementEntry, Identifier identifier) {
         AdvancementProgress advancementProgress = new AdvancementProgress();
-        AdvancementRequirements advancementRequirements = new AdvancementRequirements(List.of(List.of(IMPOSSIBLE)));
+
         #if MC_VER <= MC_1_20_2
-        String[][] impossible = {{IMPOSSIBLE}};
-        AdvancementRequirements advancementRequirements = new AdvancementRequirements(impossible);
+            String[][] impossible = {{IMPOSSIBLE}};
+            AdvancementRequirements advancementRequirements = new AdvancementRequirements(impossible);
         #elif MC_VER > MC_1_20_2
             AdvancementRequirements advancementRequirements = new AdvancementRequirements(List.of(List.of(IMPOSSIBLE)));
         #endif
