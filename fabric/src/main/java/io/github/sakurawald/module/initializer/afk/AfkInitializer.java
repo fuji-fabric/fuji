@@ -19,6 +19,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.MovementType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.HashMap;
@@ -52,7 +53,7 @@ public class AfkInitializer extends ModuleInitializer {
     @CommandNode("test-afk")
     @CommandRequirement(level = 4)
     private static int testAfk(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {
-        boolean value = ((AfkStateAccessor) player).fuji$isAfk();
+        boolean value = isAfk(player);
         return CommandHelper.Return.outputBoolean(source, value);
     }
 
@@ -64,7 +65,18 @@ public class AfkInitializer extends ModuleInitializer {
         return false;
     }
 
-    public static boolean isPlayerActuallyMovedItself(MovementType movementType, Vec3d vec3d) {
+    public static void countAction(ServerPlayerEntity player) {
+        if (player instanceof ServerPlayerEntity) {
+            AfkStateAccessor ex = (AfkStateAccessor) player;
+            ex.fuji$incrInputCounter();
+        }
+    }
+
+    public static Text getAfkText(ServerPlayerEntity player) {
+        return TextHelper.getTextByValue(player, AfkInitializer.config.model().format);
+    }
+
+    public static boolean isPlayerVelocityNotZero(MovementType movementType, Vec3d vec3d) {
         // if a player itself moved.
         if (movementType == MovementType.PLAYER) {
             // filter zero movement: Vec3d.ZERO

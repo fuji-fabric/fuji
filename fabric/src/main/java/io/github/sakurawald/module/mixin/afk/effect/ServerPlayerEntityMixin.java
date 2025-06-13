@@ -29,6 +29,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
     @Unique
     final ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
 
+    /* Constructor for player entity. */
     #if MC_VER < MC_1_21_6
     public ServerPlayerEntityMixin(World world, BlockPos blockPos, float f, GameProfile gameProfile) {
         super(world, blockPos, f, gameProfile);
@@ -40,56 +41,57 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
     #endif
 
     @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
-    public void invulnerableEffect(
+    public void handleInvulnerableEffect(
         #if MC_VER <= MC_1_21
         #elif MC_VER > MC_1_21
             ServerWorld serverWorld,
         #endif
             DamageSource damageSource, float f, CallbackInfoReturnable<Boolean> cir) {
-        if (AfkEffectInitializer.config.model().invulnerable && AfkInitializer.isAfk(player)) {
+        if (AfkEffectInitializer.config.model().invulnerable
+            && AfkInitializer.isAfk(player)) {
             cir.setReturnValue(false);
         }
     }
 
-    // note: function move() in 'afk.effect module' will override that one in 'afk module', since the latter Mixin will override the original one.
+    // NOTE: function move() in 'afk.effect module' will override that one in 'afk module', since the latter Mixin will override the original one.
     @Override
     public void move(MovementType movementType, Vec3d vec3d) {
         AfkStateAccessor afkEx = (AfkStateAccessor) player;
 
-        /* count input on move */
-        if (AfkInitializer.isPlayerActuallyMovedItself(movementType, vec3d)) {
-            afkEx.fuji$incrInputCounter();
+        /* Count input on move. */
+        if (AfkInitializer.isPlayerVelocityNotZero(movementType, vec3d)) {
+            AfkInitializer.countAction(player);
         }
 
-        /* process moveable option */
-        if (!AfkEffectInitializer.config.model().moveable && afkEx.fuji$isAfk()) {
+        /* Handle moveable option. */
+        if (!AfkEffectInitializer.config.model().moveable && AfkInitializer.isAfk(player)) {
 
-            /* store the originalX before the call to move() */
+            /* Store the originalX before the call to move() */
             double originalX = player.getX();
             double originalY = player.getY();
             double originalZ = player.getZ();
 
-            /* if a player moved itself */
+            /* If a player moved itself... */
             if (movementType == MovementType.PLAYER) {
 
-                if (AfkInitializer.isPlayerActuallyMovedItself(movementType, vec3d)) {
-                    // flag the afk state to false, if this movement comes from the player itself.
-                    afkEx.fuji$incrInputCounter();
+                if (AfkInitializer.isPlayerVelocityNotZero(movementType, vec3d)) {
+                    // Flag the afk state to false, if this movement comes from the player itself.
+                    AfkInitializer.countAction(player);
 
-                    // call super to sync the position of player between client and server.
+                    // Call super to sync the position of player between client and server.
                     super.move(movementType, vec3d);
                 }
 
-                // ignore the move() for Vec3d.ZERO
+                // Ignore the move() for Vec3d.ZERO (In Minecraft's protocol, even if the player is still, the client will always send Vec3d.ZERO as current velocity)
                 return;
             }
 
-            // send packet to force set the position of the player in client-side.
+            // Send packet to force set the position of the player in client-side. (If we didn't request a teleport for client, the position of player will de-sync between client and server)
             player.requestTeleport(originalX, originalY, originalZ);
             return;
         }
 
-        /* not interested event, call super */
+        /* Not interested event, call super to process the default logic. */
         super.move(movementType, vec3d);
     }
 

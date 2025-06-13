@@ -91,6 +91,7 @@ public class LogUtil {
     }
 
     private static String findSourceModule(List<String> joinedModulePath) {
+        /* The most recent module in the stack trace is considered as the source module. */
         String result = "unknown";
         for (String moduleName : joinedModulePath) {
             result = moduleName;

@@ -3,7 +3,6 @@ package io.github.sakurawald.module.mixin.afk;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.authlib.GameProfile;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
-import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.executor.CommandExecutor;
 import io.github.sakurawald.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.module.initializer.afk.AfkInitializer;
@@ -27,20 +26,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-// to override tab list name in `tab list module`
+// To override tab list name in `tab list module`
 @Mixin(value = ServerPlayerEntity.class, priority = 1000 - 250)
 public abstract class ServerPlayerEntityMixin extends PlayerEntity implements AfkStateAccessor {
 
     @Unique
     private final ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
 
-    /* props for afk state */
+    /* Variables for afk state */
     @Unique
     private boolean afk;
 
     @Unique
     private long inputCounter = 0;
 
+    /* Constructor for player. */
     #if MC_VER < MC_1_21_6
     public ServerPlayerEntityMixin(World world, BlockPos blockPos, float f, GameProfile gameProfile) {
         super(world, blockPos, f, gameProfile);
@@ -52,9 +52,9 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Af
     #endif
 
     @ModifyReturnValue(method = "getPlayerListName", at = @At("RETURN"))
-    public Text $getPlayerListName(Text original) {
-        if (fuji$isAfk()) {
-            return TextHelper.getTextByValue(player, AfkInitializer.config.model().format);
+    public Text handlePlayerListName(Text original) {
+        if (AfkInitializer.isAfk(player)) {
+            return AfkInitializer.getAfkText(player);
         }
 
         return original;
@@ -62,18 +62,18 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Af
 
     @Inject(method = "updateLastActionTime", at = @At("TAIL"))
     public void $updateLastActionTime(CallbackInfo ci) {
-        this.fuji$incrInputCounter();
+        AfkInitializer.countAction(player);
     }
 
     @Override
     public void fuji$changeAfk(boolean flag) {
-        // change
+        // Change afk flag.
         this.afk = flag;
 
-        // update tab list name
+        // Update tab list name.
         ServerHelper.sendPacketToAll(new PlayerListS2CPacket(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME, (ServerPlayerEntity) (Object) this));
 
-        // trigger event
+        // Trigger afk events.
         AfkConfigModel.AfkEvent afkEvent = AfkInitializer.config.model().afk_event;
         List<String> commandList = this.afk ? afkEvent.on_enter_afk : afkEvent.on_leave_afk;
         CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), commandList);
@@ -88,6 +88,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Af
     public void fuji$incrInputCounter() {
         this.inputCounter++;
 
+        /* Set afk flag to false, once receive any input action. */
         if (fuji$isAfk()) {
             fuji$changeAfk(false);
         }
@@ -98,14 +99,15 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Af
         return this.inputCounter;
     }
 
+    // NOTE: Here we override the original move() function, we use @Override since we can't inject into a super method.
     @Override
     public void move(MovementType movementType, Vec3d vec3d) {
-        /* count input on move */
-        if (AfkInitializer.isPlayerActuallyMovedItself(movementType, vec3d)) {
-            fuji$incrInputCounter();
+        /* Count input on move. */
+        if (AfkInitializer.isPlayerVelocityNotZero(movementType, vec3d)) {
+            AfkInitializer.countAction(player);
         }
 
-        /* not interested event, call super */
+        /* Not interested event, call super to handle the default logic. */
         super.move(movementType, vec3d);
     }
 }
