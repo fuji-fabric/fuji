@@ -548,4 +548,10 @@ public class TextHelper {
             throw new UnsupportedOperationException();
         #endif
     }
+
+    public static String escapeTags(String string) {
+        return string
+            .replace("<", "\\<")
+            .replace(">", "\\>");
+    }
 }

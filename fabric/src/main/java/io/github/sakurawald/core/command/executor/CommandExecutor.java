@@ -36,10 +36,13 @@ public class CommandExecutor {
                 .requireNonNull(ServerHelper.getCommandDispatcher())
                 .execute(command, context.getExecutingSource());
         } catch (CommandSyntaxException e) {
-            // echo to the executing source
+            /* Escape tags. (e.g. "/run as console aa <yellow> bb")*/
+            command = TextHelper.escapeTags(command);
+
+            /* Echo to the executing source. */
             TextHelper.sendMessageByKey(context.getExecutingSource(), "command.execute.echo.executing_source", command, e.getMessage());
 
-            // echo to the initiating source
+            /* Echo to the initiating source. */
             if (!context.sameSource()) {
                 TextHelper.sendMessageByKey(context.getInitiatingSource(), "command.execute.echo.initiating_source", command, context.getExecutingSource().getName(), e.getMessage());
             }
