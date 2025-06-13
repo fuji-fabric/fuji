@@ -58,15 +58,14 @@ public class SendToastInitializer extends ModuleInitializer {
             icon.getDefaultStack()
             , title
             , Text.empty()
-            , Optional.of(
+            ,
                 #if MC_VER <= MC_1_20_2
-            RegistryHelper.makeIdentifier(DUMMY_RESOURCE_IMAGE_IDENTIFIER)
+                    RegistryHelper.makeIdentifier(DUMMY_RESOURCE_IMAGE_IDENTIFIER)
                 #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_21_4
                     Optional.of(RegistryHelper.makeIdentifier(DUMMY_RESOURCE_IMAGE_IDENTIFIER))
                 #elif MC_VER >= MC_1_21_5
-                    new AssetInfo(RegistryHelper.makeIdentifier(DUMMY_RESOURCE_IMAGE_IDENTIFIER))
+                    Optional.of(new AssetInfo(RegistryHelper.makeIdentifier(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
                 #endif
-        )
 
             , advancementFrame
             , true
