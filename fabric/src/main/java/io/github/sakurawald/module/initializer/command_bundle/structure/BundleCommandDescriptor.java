@@ -5,6 +5,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.ParsedArgument;
 import com.mojang.brigadier.context.StringRange;
 import io.github.sakurawald.core.auxiliary.LogUtil;
+import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.core.command.argument.structure.Argument;
@@ -45,7 +46,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
     private static final int LITERAL_ARGUMENT_NAME_GROUP_INDEX = 8;
     private static final String ARGUMENT_NAME_PLACEHOLDER = "$";
 
-    /* global environment */
+    /* Global environment */
     final BundleCommandNode entry;
     @Getter
     final Map<String, String> optionalArgumentName2DefaultValue;
@@ -72,16 +73,12 @@ public class BundleCommandDescriptor extends CommandDescriptor {
         , @NotNull BundleCommandDescriptor descriptor
         , @NotNull List<Object> args) {
 
-        /* log */
         LogUtil.debug("The closure for `bundle command` associated with {} is invoked with args: ", descriptor.entry);
-        args.forEach(arg -> LogUtil.debug("arg: {}", arg));
+        args.forEach(arg -> LogUtil.debug("Arg: {}", arg));
 
-        /* execute with context */
-        List<String> commands = new ArrayList<>(descriptor.entry.getBundle());
-
+        /* Define the variables. */
         Map<String, String> variables = new HashMap<>();
 
-        /* fill the variables */
         int argumentIndex = 0;
         for (Argument argument : descriptor.arguments) {
             if (argument.isLiteralArgument()) continue;
@@ -91,9 +88,10 @@ public class BundleCommandDescriptor extends CommandDescriptor {
             variables.put(argumentName, argumentValue);
             argumentIndex++;
         }
-        LogUtil.debug("Fill the variables with: {}", variables);
+        LogUtil.debug("Define the variables: {}", variables);
 
-        /* substitute the variables */
+        /* Resolve the variables. */
+        List<String> commands = new ArrayList<>(descriptor.entry.getBundle());
         commands = commands.stream().map(command -> {
             String newCommand = command;
             for (Map.Entry<String, String> variable : variables.entrySet()) {
@@ -104,15 +102,14 @@ public class BundleCommandDescriptor extends CommandDescriptor {
             return newCommand;
         }).toList();
 
-        /* substitute the placeholders */
+        /* Resolve the placeholders. */
         ServerCommandSource source = ctx.getSource();
         commands = commands.stream().map(command -> TextHelper.parsePlaceholder(source, command)).toList();
 
-        /* execute the commands */
+        /* Execute the commands. */
         LogUtil.debug("Execute bundle command: {}", commands);
         CommandExecutor.execute(ExtendedCommandSource.asConsole(source), commands);
-
-        return 1;
+        return CommandHelper.Return.SUCCESS;
     }
 
     public static BundleCommandDescriptor make(BundleCommandNode entry) {
@@ -172,14 +169,14 @@ public class BundleCommandDescriptor extends CommandDescriptor {
         for (Argument argument : this.collectArgumentsToMakeObjects()) {
             String argumentName = argument.getArgumentName();
 
-            /* collect the matched lexeme. */
+            /* Collect the matched lexeme. */
             String arg;
             ParsedArgument<?, ?> parsedArgument = ctxAccessor.fuji$getArguments().get(argumentName);
             if (parsedArgument != null) {
                 StringRange range = parsedArgument.getRange();
                 arg = ctx.getInput().substring(range.getStart(), range.getEnd());
             } else {
-                // if the optional argument is not specified, it will be null.
+                // If the optional argument is not specified, it will be null.
                 arg = optionalArgumentName2DefaultValue.get(argumentName);
             }
 
@@ -195,7 +192,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
     protected Command<ServerCommandSource> makeCommandFunctionClosure() {
         return (ctx) -> {
 
-            /* invoke the command function */
+            /* Invoke the command lambda. */
             BundleCommandDescriptor descriptor = this;
             List<Object> args = makeObjectsByArguments(ctx);
 
@@ -203,7 +200,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
             try {
                 value = (int) this.method.invoke(null, ctx, descriptor, args);
             } catch (Exception e) {
-                return handleException(ctx, this.method, e);
+                return handleCommandException(ctx, this.method, e);
             }
 
             return value;

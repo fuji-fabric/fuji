@@ -185,7 +185,7 @@ public class CommandDescriptor {
     }
 
     @SuppressWarnings("SameReturnValue")
-    protected static int handleException(CommandContext<ServerCommandSource> ctx, Method method, Exception wrappedOrUnwrappedException) {
+    protected static int handleCommandException(CommandContext<ServerCommandSource> ctx, Method method, Exception wrappedOrUnwrappedException) {
         /* get the real exception during reflection. */
         Throwable theRealException = wrappedOrUnwrappedException;
         if (wrappedOrUnwrappedException instanceof InvocationTargetException) {
@@ -331,7 +331,7 @@ public class CommandDescriptor {
             try {
                 value = (int) this.method.invoke(null, args.toArray());
             } catch (Exception wrappedOrUnwrappedException) {
-                return handleException(ctx, this.method, wrappedOrUnwrappedException);
+                return handleCommandException(ctx, this.method, wrappedOrUnwrappedException);
             }
 
             return value;

@@ -36,7 +36,10 @@ public class CommandBundleInitializer extends ModuleInitializer {
 
         config.model().getEntries().stream()
             .map(BundleCommandDescriptor::make)
-            .forEach(CommandDescriptor::register);
+            .forEach(it -> {
+                LogUtil.info("Register bundle command: {}", it.getCommandSyntax());
+                it.register();
+            });
         CommandHelper.updateCommandTree();
         return CommandHelper.Return.SUCCESS;
     }
@@ -49,7 +52,10 @@ public class CommandBundleInitializer extends ModuleInitializer {
         CommandAnnotationProcessor.descriptors
             .stream()
             .filter(it -> it instanceof BundleCommandDescriptor)
-            .forEach(CommandDescriptor::unregister);
+            .forEach(it -> {
+                LogUtil.info("Un-register bundle command: {}", it.getCommandSyntax());
+                it.unregister();
+            });
         CommandHelper.updateCommandTree();
         return CommandHelper.Return.SUCCESS;
     }
