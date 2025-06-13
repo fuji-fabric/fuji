@@ -5,6 +5,7 @@ import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.PermissionHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.core.command.annotation.CommandSource;
@@ -28,7 +29,7 @@ import java.util.function.Predicate;
 @CommandRequirement(level = 4)
 public class CommandPermissionInitializer extends ModuleInitializer {
 
-    public static boolean verboseMode = false;
+    private static boolean verboseMode = false;
 
     @CommandNode("gui")
     @Document("Open the command permission gui.")
@@ -45,7 +46,8 @@ public class CommandPermissionInitializer extends ModuleInitializer {
     @Document("Toggle the command permission verbose mode.")
     public static int verbose(@CommandSource ServerCommandSource source) {
         verboseMode = !verboseMode;
-        CommandHelper.Return.outputBoolean(source, verboseMode);
+
+        TextHelper.sendMessageByKey(source, verboseMode ? "command_permission.verbose.on" : "command_permission.verbose.off");
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -53,7 +55,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         return "fuji.permission.%s".formatted(commandPath);
     }
 
-    private static void tryVerboseMode(ServerCommandSource source, String commandPath, String requiredPermissionToExecuteThisCommand, Tristate state) {
+    private static void processVerboseMode(ServerCommandSource source, String commandPath, String requiredPermissionToExecuteThisCommand, Tristate state) {
         if (!verboseMode) return;
 
         // Make description.
@@ -61,23 +63,24 @@ public class CommandPermissionInitializer extends ModuleInitializer {
 
         // Info in console.
         LogUtil.info("""
-            Command Source = {}
-            Command Path of the Target Command = {}
-            The permission used by Luckperms to calculate whether the command source can use the target command = {}
-            LuckPerms Permission Calculation Result = {}
-            Description = {}
+
+            ◉ Command Source: {}
+            ◉ Command Path of the Target Command: {}
+            ◉ The permission used by Luckperms to calculate whether the command source can use the target command: {}
+            ◉ LuckPerms Permission Calculation Result: {}
+            ◉ Description: {}
             """, source.getName(), commandPath, requiredPermissionToExecuteThisCommand, state, description);
 
     }
 
     private static @NotNull String makeDescription(Tristate state) {
-        String description = null;
+        String description;
         if (state == Tristate.UNDEFINED) {
-            description = "The result is UNDEFINED, it means command_permission module WILL NOT HANDLE this command. We simply fallback the requirement predicate of this command to its original predicate.";
+            description = "The luckperms permission test result is UNDEFINED, it means command_permission module WILL NOT HANDLE this command. We simply fallback the requirement predicate of this command to its original predicate.";
         } else if (state == Tristate.TRUE) {
-            description = "The result is TRUE, it means command_permission module WILL ALLOW the command source to use this command.";
+            description = "The luckperms permission test result is TRUE, it means command_permission module WILL ALLOW the command source to use this command.";
         } else if (state == Tristate.FALSE) {
-            description = "The result is FALSE, it means command_permission module WILL DIS-ALLOW the command source to use this command.";
+            description = "The luckperms permission test result is FALSE, it means command_permission module WILL DIS-ALLOW the command source to use this command.";
         } else {
             description = "I don't know why, but the value of Tristate is un-expected.";
         }
@@ -86,10 +89,10 @@ public class CommandPermissionInitializer extends ModuleInitializer {
 
     public static @NotNull WrappedPredicate<ServerCommandSource> makeWrappedPredicate(String commandPath, @NotNull Predicate<ServerCommandSource> original) {
         return source -> {
-            /* ignore the non-player command source */
+            /* Ignore the non-player command source. */
             if (source.getPlayer() == null) return original.test(source);
 
-            /* try to use the wrapped predicate */
+            /* Try to use the wrapped predicate. */
             try {
                 /* By default, command /seed has no permission. So we can create a wrapped-permission "fuji.seed"
                    and then grant this permission to anyone so that he can use /seed command.
@@ -100,12 +103,12 @@ public class CommandPermissionInitializer extends ModuleInitializer {
                  */
                 String permission = computeCommandPermission(commandPath);
                 Tristate triState = PermissionHelper.getPermission(source.getPlayer().getUuid(), permission);
-                tryVerboseMode(source, commandPath, permission, triState);
+                processVerboseMode(source, commandPath, permission, triState);
 
+                /* If the related permission is UNDEFINED, we just fall back to original predicate. */
                 if (triState != Tristate.UNDEFINED) {
                     return triState.asBoolean();
                 }
-
                 return original.test(source);
             } catch (Throwable use_original_predicate_if_failed) {
                 return original.test(source);
@@ -115,15 +118,15 @@ public class CommandPermissionInitializer extends ModuleInitializer {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private static void ensureCommandNodeRequirementIsWrapped() {
-        // ensure the getRequirement() is triggered.
-        CommandHelper.getCommandNodes().forEach(com.mojang.brigadier.tree.CommandNode::getRequirement);
+        // Enumerate all registered commands, to ensure the getRequirement() is triggered. (For luckperms permission cache)
+        CommandHelper
+            .getCommandNodes()
+            .forEach(com.mojang.brigadier.tree.CommandNode::getRequirement);
     }
 
     @Override
     protected void onInitialize() {
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            ensureCommandNodeRequirementIsWrapped();
-        });
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> ensureCommandNodeRequirementIsWrapped());
     }
 
 }
