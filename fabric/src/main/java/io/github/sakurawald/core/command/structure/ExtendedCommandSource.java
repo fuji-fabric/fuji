@@ -81,4 +81,12 @@ public class ExtendedCommandSource {
         return string;
     }
 
+    @Override
+    public String toString() {
+        return "ExtendedCommandSource{" +
+            "initiatingSource=" + initiatingSource.getName() +
+            ", executingSource=" + executingSource.getName() +
+            ", parsePlaceholder=" + parsePlaceholder +
+            '}';
+    }
 }
