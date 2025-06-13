@@ -8,6 +8,7 @@ import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.core.command.annotation.CommandSource;
+import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import lombok.SneakyThrows;
 import net.minecraft.server.MinecraftServer;
@@ -17,6 +18,8 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
+import java.util.List;
+
 @CommandNode("tester")
 @CommandRequirement(level = 4)
 public class TesterInitializer extends ModuleInitializer {
@@ -24,15 +27,7 @@ public class TesterInitializer extends ModuleInitializer {
     @SneakyThrows(Exception.class)
     @CommandNode("run")
     private static int $run(@CommandSource ServerPlayerEntity player) {
-
-        #if MC_VER == MC_1_21_5
-            player.sendMessage(Text.of("Version is 1.21.5"));
-        #elif MC_VER == MC_1_21_4
-            player.sendMessage(Text.of("Version is 1.21.4"));
-        #else
-            player.sendMessage(Text.of("Version unknown."));
-        #endif
-
+//        LogUtil.info(LogUtil.findSourceModuleInCurrentStack());
         return 0;
     }
 
