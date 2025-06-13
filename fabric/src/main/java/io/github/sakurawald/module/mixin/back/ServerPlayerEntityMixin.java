@@ -35,8 +35,8 @@ public abstract class ServerPlayerEntityMixin {
     @Inject(method = "teleport(Lnet/minecraft/server/world/ServerWorld;DDDFF)V", at = @At("HEAD"))
     public void saveCurPos(ServerWorld serverWorld, double d, double e, double f, float g, float h, CallbackInfo ci)
     #elif MC_VER > MC_1_21
-        @Inject(method = "teleport", at = @At("HEAD"))
-        public void saveCurPos(ServerWorld serverWorld, double d, double e, double f, Set<PositionFlag> set, float g, float h, boolean bl, CallbackInfoReturnable<Boolean> cir)
+    @Inject(method = "teleport", at = @At("HEAD"))
+    public void saveCurPos(ServerWorld serverWorld, double d, double e, double f, Set<PositionFlag> set, float g, float h, boolean bl, CallbackInfoReturnable<Boolean> cir)
     #endif {
         if (BackInitializer.config.model().enable_back_on_teleport) {
             BackInitializer.trySaveCurrentLocation(player);
