@@ -1,0 +1,3 @@
+files:
+  - source: crowdin/push-to-crowdin/en_US.json
+    translation: crowdin/pull-from-crowdin/%locale_with_underscore%.json
