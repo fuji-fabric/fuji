@@ -51,7 +51,7 @@ public abstract class RedirectScreenHandlerFactory {
         return !ServerHelper.isPlayerOnline(targetPlayerName);
     }
 
-    protected abstract Inventory getTargetInventory();
+    protected abstract Inventory makeTargetInventoryRedirectScreen();
 
     protected abstract ScreenHandlerType<GenericContainerScreenHandler> getTargetInventorySize();
 
@@ -64,7 +64,7 @@ public abstract class RedirectScreenHandlerFactory {
     private GenericContainerScreenHandler makeGenericContainerScreenHandler(int syncId, PlayerInventory sourceInventory, PlayerEntity source) {
         int rows = GuiHelper.getRows(getTargetInventorySize());
 
-        return new GenericContainerScreenHandler(getTargetInventorySize(), syncId, sourceInventory, getTargetInventory(), rows) {
+        return new GenericContainerScreenHandler(getTargetInventorySize(), syncId, sourceInventory, makeTargetInventoryRedirectScreen(), rows) {
 
             @Override
             public void onSlotClick(int i, int j, SlotActionType slotActionType, PlayerEntity playerEntity) {

@@ -6,14 +6,14 @@ import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-public class EnderChestRedirectScreen extends RedirectScreenHandlerFactory {
+public class EnderChestRedirectScreenFactory extends RedirectScreenHandlerFactory {
 
-    public EnderChestRedirectScreen(ServerPlayerEntity sourcePlayer, String targetPlayerName) {
+    public EnderChestRedirectScreenFactory(ServerPlayerEntity sourcePlayer, String targetPlayerName) {
         super(targetPlayerName, TextHelper.getTextByKey(sourcePlayer, "view.ender.title", targetPlayerName));
     }
 
     @Override
-    protected Inventory getTargetInventory() {
+    protected Inventory makeTargetInventoryRedirectScreen() {
         return getTargetPlayer().getEnderChestInventory();
     }
 

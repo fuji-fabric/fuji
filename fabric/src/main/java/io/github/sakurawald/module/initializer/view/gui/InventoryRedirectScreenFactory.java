@@ -11,14 +11,14 @@ import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-public class InventoryRedirectScreen extends RedirectScreenHandlerFactory {
+public class InventoryRedirectScreenFactory extends RedirectScreenHandlerFactory {
 
-    public InventoryRedirectScreen(ServerPlayerEntity sourcePlayer, String targetPlayerName) {
+    public InventoryRedirectScreenFactory(ServerPlayerEntity sourcePlayer, String targetPlayerName) {
         super(targetPlayerName, TextHelper.getTextByKey(sourcePlayer, "view.inv.title", targetPlayerName));
     }
 
     @Override
-    public Inventory getTargetInventory() {
+    public Inventory makeTargetInventoryRedirectScreen() {
         PlayerInventory firstInventory = getTargetPlayer().getInventory();
         SimpleInventory secondInventory = new SimpleInventory(Items.BARRIER.getDefaultStack(), Items.BARRIER.getDefaultStack(), Items.BARRIER.getDefaultStack(), Items.BARRIER.getDefaultStack());
         return new DoubleInventory(firstInventory, secondInventory);

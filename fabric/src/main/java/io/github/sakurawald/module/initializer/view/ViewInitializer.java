@@ -9,8 +9,8 @@ import io.github.sakurawald.core.command.annotation.CommandSource;
 import io.github.sakurawald.core.command.argument.wrapper.impl.OfflinePlayerName;
 import io.github.sakurawald.core.command.exception.AbortCommandExecutionException;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
-import io.github.sakurawald.module.initializer.view.gui.EnderChestRedirectScreen;
-import io.github.sakurawald.module.initializer.view.gui.InventoryRedirectScreen;
+import io.github.sakurawald.module.initializer.view.gui.EnderChestRedirectScreenFactory;
+import io.github.sakurawald.module.initializer.view.gui.InventoryRedirectScreenFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 @CommandNode("view")
@@ -29,7 +29,7 @@ public class ViewInitializer extends ModuleInitializer {
     private static int inv(@CommandSource ServerPlayerEntity source, OfflinePlayerName target) {
         checkSelfView(source, target);
 
-        source.openHandledScreen(new InventoryRedirectScreen(source, target.getValue()).makeFactory());
+        source.openHandledScreen(new InventoryRedirectScreenFactory(source, target.getValue()).makeFactory());
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -38,7 +38,7 @@ public class ViewInitializer extends ModuleInitializer {
     private static int ender(@CommandSource ServerPlayerEntity source, OfflinePlayerName target) {
         checkSelfView(source, target);
 
-        source.openHandledScreen(new EnderChestRedirectScreen(source, target.getValue()).makeFactory());
+        source.openHandledScreen(new EnderChestRedirectScreenFactory(source, target.getValue()).makeFactory());
         return CommandHelper.Return.SUCCESS;
     }
 }
