@@ -23,19 +23,28 @@
  */
 package io.github.sakurawald.module.mixin.motd;
 
+import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.module.initializer.motd.MotdInitializer;
+import io.github.sakurawald.module.initializer.motd.structure.MotdEntry;
 import net.minecraft.server.ServerMetadata;
 import net.minecraft.server.network.ServerQueryNetworkHandler;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+
+import java.util.Optional;
 
 @Mixin(ServerQueryNetworkHandler.class)
 public abstract class ServerQueryNetworkHandlerMixin {
 
     @ModifyArg(method = "onRequest", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/s2c/query/QueryResponseS2CPacket;<init>(Lnet/minecraft/server/ServerMetadata;)V"))
     public @NotNull ServerMetadata handleQueryRequest(ServerMetadata original) {
-        return new ServerMetadata(MotdInitializer.getRandomMotdText(), original.comp_1274(), original.comp_1275(), MotdInitializer.getRandomIcon(), original.secureChatEnforced());
+        MotdEntry motdEntry = MotdInitializer.getMotdEntry();
+        Text text = TextHelper.getTextByValue(null, (motdEntry.getText()));
+        Optional<ServerMetadata.Favicon> icon = MotdInitializer.getMotdIcon(motdEntry.getIcon());
+
+        return new ServerMetadata(text, original.comp_1274(), original.comp_1275(), icon, original.secureChatEnforced());
     }
 }

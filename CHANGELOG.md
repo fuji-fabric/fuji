@@ -1,5 +1,6 @@
 > The version number of fuji follows `semver` now: https://semver.org/
 
 - feature: a new module `command_meta.one_of`, to pick a random command and execute it.
+- [motd] feature: ability to specify the `text` and `icon` combination. (Thanks to @wolgamir)
 - (MC 1.20.1 ~ MC 1.20.2) [command_advice] fix: should not process the command advice twice.
 - (MC 1.20.1 ~ MC 1.20.2) [command_spy] fix: should not process the command spy twice.

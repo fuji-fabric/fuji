@@ -4,15 +4,15 @@ import com.google.common.base.Preconditions;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.RandomUtil;
 import io.github.sakurawald.core.auxiliary.ReflectionUtil;
-import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.motd.config.model.MotdConfigModel;
+import io.github.sakurawald.module.initializer.motd.structure.MotdEntry;
 import lombok.Cleanup;
 import net.minecraft.server.ServerMetadata;
-import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -22,7 +22,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.stream.Stream;
 
 public class MotdInitializer extends ModuleInitializer {
@@ -31,42 +30,46 @@ public class MotdInitializer extends ModuleInitializer {
 
     private static final Path ICON_FOLDER = ReflectionUtil.computeModuleConfigPath(MotdInitializer.class).resolve("icon");
 
-    public static @NotNull Optional<ServerMetadata.Favicon> getRandomIcon() {
+    public static @NotNull Optional<ServerMetadata.Favicon> getMotdIcon(@Nullable String preferIcon) {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
-            /* get icon files */
+            /* Mkdir the icon dir. */
             Files.createDirectories(ICON_FOLDER);
-            @Cleanup Stream<Path> list = Files.list(ICON_FOLDER);
-            List<File> icons = list
+            @Cleanup Stream<Path> temp = Files.list(ICON_FOLDER);
+            List<File> availableIcons = temp
                 .map(Path::toFile)
                 .toList();
 
-            /* draw a random icon */
-            if (icons.isEmpty()) {
-                return Optional.empty();
+            /* Choose one icon. */
+            File chooseItem;
+            if (preferIcon == null) {
+                if (availableIcons.isEmpty()) {
+                    return Optional.empty();
+                } else {
+                    chooseItem = RandomUtil.drawList(availableIcons);
+                }
+            } else {
+                chooseItem = ICON_FOLDER.resolve(preferIcon).toFile();
             }
 
-            File randomIcon = RandomUtil.drawList(icons);
-            BufferedImage bufferedImage = ImageIO.read(randomIcon);
+            /* Read the icon file. */
+            BufferedImage bufferedImage = ImageIO.read(chooseItem);
+            Preconditions.checkState(bufferedImage.getWidth() == 64, "Must be 64 pixels wide: %s".formatted(chooseItem));
+            Preconditions.checkState(bufferedImage.getHeight() == 64, "Must be 64 pixels high: %s".formatted(chooseItem));
 
-            Preconditions.checkState(bufferedImage.getWidth() == 64, "Must be 64 pixels wide: %s".formatted(randomIcon));
-            Preconditions.checkState(bufferedImage.getHeight() == 64, "Must be 64 pixels high: %s".formatted(randomIcon));
-
+            /* Create the image buffer. */
             byteArrayOutputStream = new ByteArrayOutputStream();
             ImageIO.write(bufferedImage, "PNG", byteArrayOutputStream);
         } catch (Exception e) {
-            LogUtil.error("Failed to encode motd icon.", e);
+            LogUtil.error("Failed to read icon %s.".formatted(preferIcon), e);
             return Optional.empty();
         }
 
         return Optional.of(new ServerMetadata.Favicon(byteArrayOutputStream.toByteArray()));
     }
 
-    public static @NotNull Text getRandomMotdText() {
-        var motdList = config.model().list;
-        String string = motdList.get(new Random().nextInt(motdList.size()));
-
-        return TextHelper.getTextByValue(null, string);
+    public static @NotNull MotdEntry getMotdEntry() {
+        return RandomUtil.drawList(config.model().entries);
     }
 
 }
