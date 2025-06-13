@@ -26,7 +26,6 @@ public abstract class ServerPlayNetworkHandlerMixin {
         /* make content text */
         Text oldValue = signedMessage.getContent();
         Text newValue = ChatReplaceInitializer.replaceChatText(player, oldValue);
-        LogUtil.debug("Replace chat text: old = {}, new = {}", oldValue, newValue);
         args.set(0, signedMessage.withUnsignedContent(newValue));
     }
 }

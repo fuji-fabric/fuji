@@ -35,7 +35,7 @@ public class SendBossbarInitializer extends ModuleInitializer {
         , Optional<StepType> stepType
         , GreedyString title) {
 
-        /* extract props */
+        /* Resolve variables. */
         Integer $totalMs = totalMs.orElse(3000);
         BossBar.Color $color = color.orElse(BossBar.Color.PURPLE);
         BossBar.Style $style = style.orElse(BossBar.Style.PROGRESS);
@@ -43,16 +43,17 @@ public class SendBossbarInitializer extends ModuleInitializer {
         Boolean $notifyMeOnComplete = notifyMeOnComplete.orElse(false);
         StepType $stepType = stepType.orElse(StepType.FORWARD);
 
-        /* construct the ticket*/
+        /* Make the bossbar ticket. */
         BossBarTicket bossBarTicket = new SendBossbarTicket(title.getValue(), $color, $style, $totalMs, $stepType, player, () -> {
             ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(player.getCommandSource());
             CommandExecutor.execute(extendedCommandSource, $commandList.getValue());
 
-            // notify
             if ($notifyMeOnComplete) {
                 TextHelper.sendMessageByKey(source, "echo.send_bossbar.notify", player.getGameProfile().getName(), $commandList.getValue());
             }
         });
+
+        /* Submit the ticket. */
         Managers.getBossBarManager().addTicket(bossBarTicket);
 
         return CommandHelper.Return.SUCCESS;

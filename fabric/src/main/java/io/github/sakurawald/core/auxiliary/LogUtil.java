@@ -92,6 +92,7 @@ public class LogUtil {
 
     private static String findSourceModule(List<String> joinedModulePath) {
         /* The most recent module in the stack trace is considered as the source module. */
+        // NOTE: If the logger call is only used in mixin, and no function call in module initializer, then we have no clue to figure out which module it comes.
         String result = "unknown";
         for (String moduleName : joinedModulePath) {
             result = moduleName;

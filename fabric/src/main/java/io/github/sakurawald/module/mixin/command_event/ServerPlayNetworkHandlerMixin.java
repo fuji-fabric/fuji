@@ -31,7 +31,7 @@ public class ServerPlayNetworkHandlerMixin {
         CallbackInfo ci) {
         var config = CommandEventInitializer.config.model().event.on_player_left;
         if (config.enable) {
-            CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), config.command_list);
+            CommandEventInitializer.executeCommandOnEvent(player, config.command_list);
         }
     }
 }

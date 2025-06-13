@@ -20,7 +20,7 @@ public class ServerPlayerEntityMixin {
         var config = CommandEventInitializer.config.model().event.on_player_death;
         if (config.enable) {
             ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-            CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), config.command_list);
+            CommandEventInitializer.executeCommandOnEvent(player, config.command_list);
         }
     }
 
@@ -29,7 +29,7 @@ public class ServerPlayerEntityMixin {
         var config = CommandEventInitializer.config.model().event.after_player_change_world;
         if (config.enable) {
             ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-            CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), config.command_list);
+            CommandEventInitializer.executeCommandOnEvent(player, config.command_list);
         }
     }
 }

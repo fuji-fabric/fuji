@@ -69,7 +69,6 @@ public class PredicateInitializer extends ModuleInitializer {
 
     @CommandNode("is-in-world?")
     private static int isInWorld(@CommandSource ServerCommandSource source, ServerPlayerEntity player, Dimension dimension) {
-        player.getWorld();
         boolean value = EntityHelper.getServerWorld(player).equals(dimension.getValue());
         return CommandHelper.Return.outputBoolean(source, value);
     }

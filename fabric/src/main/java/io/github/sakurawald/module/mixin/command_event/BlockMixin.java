@@ -1,7 +1,5 @@
 package io.github.sakurawald.module.mixin.command_event;
 
-import io.github.sakurawald.core.command.executor.CommandExecutor;
-import io.github.sakurawald.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.module.initializer.command_event.CommandEventInitializer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -31,7 +29,7 @@ public class BlockMixin {
         var config = CommandEventInitializer.config.model().event.after_player_place_block;
         if (config.enable) {
             if (livingEntity instanceof ServerPlayerEntity player) {
-                CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), config.command_list);
+                CommandEventInitializer.executeCommandOnEvent(player, config.command_list);
             }
         }
     }
@@ -46,7 +44,7 @@ public class BlockMixin {
         var config = CommandEventInitializer.config.model().event.after_player_break_block;
         if (config.enable) {
             if (playerEntity instanceof ServerPlayerEntity player) {
-                CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), config.command_list);
+                CommandEventInitializer.executeCommandOnEvent(player, config.command_list);
             }
         }
     }

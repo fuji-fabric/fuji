@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.chat.rewrite;
 
+import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.core.structure.RegexRewriteNode;
@@ -11,9 +12,13 @@ public class ChatRewriteInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<ChatRewriteConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatRewriteConfigModel.class);
 
     public static String rewriteChatString(String string) {
+        String originalString = string;
+
         for (RegexRewriteNode rule : config.model().rewrite.regex) {
             string = string.replaceAll(rule.getRegex(), rule.getReplacement());
         }
+
+        LogUtil.debug("Rewrite chat message: old = {}, new = {}", originalString, string);
         return string;
     }
 

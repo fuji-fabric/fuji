@@ -24,18 +24,7 @@ public class ServerPlayNetworkHandlerMixin {
     #endif
     public String interceptPacketsOfIssuedCommand(@NotNull String string)
      {
-        for (RegexRewriteNode entry : CommandRewriteInitializer.config.model().rewrite) {
-            if (entry.getRegex() == null || entry.getReplacement() == null) {
-                LogUtil.warn("There is an invalid `null` entry in `command_rewrite.regex`, you should remove it: {}", entry);
-                continue;
-            }
+         return CommandRewriteInitializer.rewriteCommand(string);
+     }
 
-            if (string.matches(entry.getRegex())) {
-                LogUtil.debug("Rewrite the command: /{}", string);
-                return string.replaceAll(entry.getRegex(), entry.getReplacement());
-            }
-        }
-
-        return string;
-    }
 }

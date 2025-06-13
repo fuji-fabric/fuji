@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.chat.replace.model;
 
+import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
@@ -20,6 +21,7 @@ public class ChatReplaceInitializer extends ModuleInitializer {
             ret = TextHelper.replaceTextWithRegex(ret, rule.getRegex(), () -> TextHelper.getTextByValue(player, rule.getReplacement()));
         }
 
+        LogUtil.debug("Replace chat text: old = {}, new = {}", text, ret);
         return ret;
     }
 

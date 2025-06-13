@@ -15,7 +15,6 @@ public abstract class ServerPlayNetworkHandlerMixin {
     public ChatMessageC2SPacket modifyChatMessageSentByPlayers(ChatMessageC2SPacket original) {
         String oldChatMessage = original.chatMessage();
         String newChatMessage = ChatRewriteInitializer.rewriteChatString(oldChatMessage);
-        LogUtil.debug("Rewrite chat message: old = {}, new = {}", oldChatMessage, newChatMessage);
 
         return new ChatMessageC2SPacket(newChatMessage, original.timestamp(), original.comp_947(), original.comp_948(), original.acknowledgment());
     }
