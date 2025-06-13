@@ -19,7 +19,12 @@ public class NametagConfigModel {
 
         public static class Offset {
             public float x = 0f;
-            public float y = 0.2f;
+            public float y =
+            #if MC_VER <= MC_1_20_1
+                0.7f;
+            #elif MC_VER > MC_1_20_1
+                0.2f;
+            #endif
             public float z = 0f;
         }
 

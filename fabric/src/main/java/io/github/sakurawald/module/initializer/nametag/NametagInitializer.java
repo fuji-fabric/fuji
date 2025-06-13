@@ -10,6 +10,7 @@ import io.github.sakurawald.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.nametag.config.model.NametagConfigModel;
 import io.github.sakurawald.module.initializer.nametag.job.UpdateNametagJob;
+import net.minecraft.entity.Entity;
 #if MC_VER > MC_1_21
 import net.minecraft.entity.EntityPose;
 #endif
@@ -18,6 +19,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.decoration.Brightness;
 import net.minecraft.entity.decoration.DisplayEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.EntitiesDestroyS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityPassengersSetS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
@@ -48,17 +50,17 @@ public class NametagInitializer extends ModuleInitializer {
 
             @Override
             public void tick() {
-                /* call super */
+                /* Call super to tick the default logic of nametag entity. */
                 super.tick();
 
-                /* discard nametag if the vehicle is empty */
+                /* Discard nametag if the vehicle is empty */
                 if (this.getVehicle() == null) {
                     LogUtil.debug("Discard nametag entity {}: its vehicle is null", this);
                     this.discardNametag();
                     return;
                 }
 
-                /* discard nametag if the vehicle is sneaking */
+                /* Discard nametag if the vehicle is sneaking */
                 String discardNametagReason = getNametagDiscardReason((LivingEntity) this.getVehicle());
                 if (discardNametagReason != null) {
                     LogUtil.debug("Discard nametag entity {}: {}", this, discardNametagReason);
@@ -72,6 +74,15 @@ public class NametagInitializer extends ModuleInitializer {
         nametag.setInvulnerable(true);
 
         /* let the nametag riding in internal server-side, so that the server will handle the position update for nametags. */
+        letTheNametagRideThePlayer(nametag, player);
+
+        /* send packet to client */
+        sendExistingNametagsToTheNewJoinedPlayer(player);
+        broadcastTheNewNametagToAllPlayers(player, nametag);
+        return nametag;
+    }
+
+    private static void letTheNametagRideThePlayer(Entity nametag, PlayerEntity player) {
         #if MC_VER <= MC_1_21
             nametag.startRiding(player);
         #elif MC_VER > MC_1_21
@@ -79,11 +90,6 @@ public class NametagInitializer extends ModuleInitializer {
             nametag.vehicle = player;
             nametag.vehicle.addPassenger(nametag);
         #endif
-
-        /* send packet to client */
-        sendExistingNametagsToTheNewJoinedPlayer(player);
-        broadcastTheNewNametagToAllPlayers(player, nametag);
-        return nametag;
     }
 
     private static BlockPos computeNametagSpawnBlockPos(ServerPlayerEntity bindingPlayer) {
@@ -105,12 +111,12 @@ public class NametagInitializer extends ModuleInitializer {
     }
 
     private static void broadcastTheNewNametagToAllPlayers(ServerPlayerEntity player, DisplayEntity.TextDisplayEntity textDisplayEntity) {
-        // spawn entity packet
+        /* Spawn entity packet */
         BlockPos blockPos = computeNametagSpawnBlockPos(player);
         EntitySpawnS2CPacket entitySpawnS2CPacket = new EntitySpawnS2CPacket(textDisplayEntity, 0, blockPos);
         ServerHelper.sendPacketToAll(entitySpawnS2CPacket);
 
-        // ride entity packet
+        /* Ride entity packet */
         EntityPassengersSetS2CPacket entityPassengersSetS2CPacket = new EntityPassengersSetS2CPacket(player);
         ServerHelper.sendPacketToAll(entityPassengersSetS2CPacket);
     }
@@ -125,7 +131,7 @@ public class NametagInitializer extends ModuleInitializer {
     }
 
     private static void renderNametag(DisplayEntity.TextDisplayEntity nametag, ServerPlayerEntity player) {
-        /* update props of nametag entity */
+        /* Update props of nametag entity */
         var config = NametagInitializer.config.model();
 
         nametag.setBillboardMode(DisplayEntity.BillboardMode.CENTER);
@@ -154,7 +160,7 @@ public class NametagInitializer extends ModuleInitializer {
             nametag.setBrightness(new Brightness(config.style.brightness.block, config.style.brightness.sky));
         }
 
-        /* send update props packet */
+        /* Send update props packet */
         if (nametag.getDataTracker().isDirty()) {
             var dirty = nametag.getDataTracker().getDirtyEntries();
             if (dirty != null) {
@@ -168,7 +174,7 @@ public class NametagInitializer extends ModuleInitializer {
         if (entity.isDead()) return "The entity is dead.";
         if (entity.isSneaking()) return "The entity is sneaking.";
 
-        // when the player jumps into the ender portal in the end, its world is minecraft:overworld, its removal reason is `CHANGED_DIMENSION`
+        // NOTE: when the player jumps into the ender portal in the end, its world is minecraft:overworld, its removal reason is `CHANGED_DIMENSION`
         if (entity.getRemovalReason() != null) return "The entity is removed.";
         if (entity.isInvisible()) return "The entity is invisible.";
 
@@ -176,22 +182,23 @@ public class NametagInitializer extends ModuleInitializer {
     }
 
     public static void processNametagsForOnlinePlayers() {
-        // since the virtual entity is not added into the server, so we should call tick() ourselves.
+        // Since the virtual entity is not added into the server, so we should call tick() ourselves.
         player2nametag.values().forEach(DisplayEntity::tick);
 
-        // invalidate keys
+        // Invalidate keys
         player2nametag.entrySet().removeIf(entry -> entry.getKey().isRemoved() || entry.getValue().isRemoved());
 
-        // update
+        // Update
         ServerHelper.getPlayers().forEach(player -> {
-            // should we create the nametag for this player?
+            // Should we create the nametag for this player?
             if (getNametagDiscardReason(player) != null) return;
 
-            // make if not exists
+            // Make the nametag if not exists.
             if (!player2nametag.containsKey(player)) {
                 player2nametag.put(player, makeNametag(player));
             }
 
+            // Render the nametag.
             DisplayEntity.TextDisplayEntity nametag = player2nametag.get(player);
             renderNametag(nametag, player);
         });
@@ -205,7 +212,8 @@ public class NametagInitializer extends ModuleInitializer {
 
     @Override
     protected void onReload() {
-        // discard all existed nametags, since the `text format` may be changed after reload.
+        /* discard all existed nametags, since the `text format` may be changed after reload. */
+        LogUtil.debug("Discard all the nametags. (The module is reloaded)" );
         player2nametag.forEach((key, value) -> value.stopRiding());
     }
 
