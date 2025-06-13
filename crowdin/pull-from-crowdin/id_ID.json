@@ -289,6 +289,7 @@
   "echo.send_custom.custom_text.paginator.first_page": "<dark_green>-----<< <grey><hover:show_text:'Ini adalah halaman pertama'>Sebelumnya</grey> <green>%d<grey>/<green>%d <orange>click:run_command:'%s'<hover:show_text:'Halaman Berikutnya'>Berikutnya</hover></click></orange><dark_green> >>----",
   "echo.send_custom.custom_text.paginator.middle_page": "<dark_green>-----<< <orange>click:run_command:'%s'<hover:show_text:'Halaman Sebelumnya'>Sebelumnya</click></orange> <green>%d<grey>/<green>%d <orange>click:run_command:'%s'<hover:show_text:'Halaman Berikutnya'>Berikutnya</hover></click></orange><dark_green> >>----",
   "echo.send_custom.custom_text.paginator.last_page": "<dark_green>-----<< <orange>click:run_command:'%s'<hover:show_text:'Halaman Sebelumnya'>Sebelumnya</click></orange> <green>%d<grey>/<green>%d <grey><hover:show_text:'Ini adalah halaman terakhir'>Berikutnya</hover></grey><dark_green> >>----",
+  "command.argument.type.registered_by_module": "<yellow>From Module: %s",
   "command.argument.type.gui.title": "<blue>Jenis Argumen",
   "command.argument.type.class": "<blue>Kelas Tipe: %s",
   "command.argument.type.string": "<blue>String Tipe: %s",

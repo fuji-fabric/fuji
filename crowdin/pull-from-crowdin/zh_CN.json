@@ -289,6 +289,7 @@
   "echo.send_custom.custom_text.paginator.first_page": "<dark_green>-----<< <grey><hover:show_text:'这是第一页'>上一页</grey> <green>%d<grey>/<green>%d <orange><click:run_command:'%s'><hover:show_text:'下一頁'>下一页</hover></click></orange><dark_green> >>----",
   "echo.send_custom.custom_text.paginator.middle_page": "<dark_green>-----<< <orange><click:run_command:'%s'><hover:show_text:'上一页'>上一页</click></orange> <green>%d<grey>/<green>%d <orange><click:run_command:'%s'><hover:show_text:'下一页'>下一页</hover></click></orange><dark_green> >>----",
   "echo.send_custom.custom_text.paginator.last_page": "<dark_green>-----<< <orange><click:run_command:'%s'><hover:show_text:'上一页'>上一页</click></orange> <green>%d<grey>/<green>%d <grey><hover:show_text:'这是最后一页'>下一页</hover></grey><dark_green> >>----",
+  "command.argument.type.registered_by_module": "<yellow>From Module: %s",
   "command.argument.type.gui.title": "<blue>参数类型",
   "command.argument.type.class": "<blue>类型类别：%s",
   "command.argument.type.string": "<blue>类型字符串：%s",
