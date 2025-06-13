@@ -21,6 +21,8 @@ public class CommandBundleConfigModel {
             this.add(new BundleCommandNode(new CommandRequirementDescriptor(4, null), "shoot <entity-type entity-type-arg-name>", List.of("execute as %player:name% run summon $entity-type-arg-name ~ ~1 ~ {ExplosionPower:4,Motion:[3.0,0.0,0.0]}")));
             this.add(new BundleCommandNode(new CommandRequirementDescriptor(4, null), "strike", List.of("execute as %player:name% at @s run summon lightning_bolt ^ ^ ^10")));
             this.add(new BundleCommandNode(new CommandRequirementDescriptor(4, null), "gm <gamemode gamemode-arg>", List.of("run as player %player:name% gamemode $gamemode-arg")));
+            this.add(new BundleCommandNode(new CommandRequirementDescriptor(4, null), "gmc", List.of("run as player %player:name% gamemode creative")));
+            this.add(new BundleCommandNode(new CommandRequirementDescriptor(4, null), "gms", List.of("run as player %player:name% gamemode survival")));
             this.add(new BundleCommandNode(new CommandRequirementDescriptor(4, null), "unbreakable", List.of("run as player %player:name% enchant %player:name% minecraft:unbreaking")));
 
             this.add(new BundleCommandNode(new CommandRequirementDescriptor(4, null), "move-speed set <double double-arg>", List.of("run as player %player:name% attribute %player:name% minecraft:generic.movement_speed base set $double-arg")));
