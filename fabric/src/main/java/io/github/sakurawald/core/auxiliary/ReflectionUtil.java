@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @UtilityClass
 public class ReflectionUtil {
@@ -51,12 +52,8 @@ public class ReflectionUtil {
         return lines;
     }
 
-    public static String joinModulePath(List<String> modulePath) {
-        return String.join(".", modulePath);
-    }
-
     public static Path computeModuleConfigPath(Class<?> clazz) {
-        String modulePath = joinModulePath(ModuleManager.computeModulePath(clazz.getName()));
+        String modulePath = ModuleManager.computeJoinedModulePath(clazz.getName());
         return computeModuleConfigPath(modulePath);
     }
 
@@ -77,5 +74,11 @@ public class ReflectionUtil {
             || type == Boolean.class
             || type == Short.class
             || type == Void.class;
+    }
+
+    public static List<String> getStackTraceAsList(Throwable throwable) {
+        return Arrays.stream(throwable.getStackTrace())
+            .map(StackTraceElement::toString)
+            .collect(Collectors.toList());
     }
 }

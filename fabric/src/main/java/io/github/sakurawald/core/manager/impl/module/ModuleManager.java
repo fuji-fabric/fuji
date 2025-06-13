@@ -31,6 +31,10 @@ public class ModuleManager extends BaseManager {
     private final Map<Class<? extends ModuleInitializer>, ModuleInitializer> moduleRegistry = new HashMap<>();
     private final Map<List<String>, Boolean> module2enable = new HashMap<>();
 
+    public static String computeJoinedModulePath(@NotNull String className) {
+        return joinModulePath(ModuleManager.computeModulePath(className));
+    }
+
     /**
      * @return the module path for given class name, if the class is not inside a module, then a special module path List.of("core") will be returned.
      */
@@ -86,6 +90,10 @@ public class ModuleManager extends BaseManager {
         return modulePath;
     }
 
+    public static String joinModulePath(List<String> modulePath) {
+        return String.join(".", modulePath);
+    }
+
     @Override
     public void onInitialize() {
         invokeModuleInitializers();
@@ -139,7 +147,7 @@ public class ModuleManager extends BaseManager {
         /* report enabled/disabled modules */
         List<String> enabledModuleList = new ArrayList<>();
         module2enable.forEach((module, enable) -> {
-            if (enable) enabledModuleList.add(ReflectionUtil.joinModulePath(module));
+            if (enable) enabledModuleList.add(joinModulePath(module));
         });
 
         enabledModuleList.sort(String::compareTo);

@@ -3,7 +3,6 @@ package io.github.sakurawald.module.initializer.fuji;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.Fuji;
 import io.github.sakurawald.core.annotation.Document;
-import io.github.sakurawald.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
@@ -18,6 +17,7 @@ import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.core.gui.CommandDescriptorGui;
 import io.github.sakurawald.core.job.abst.BaseJob;
 import io.github.sakurawald.core.manager.Managers;
+import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.core.structure.CommandNodeWrapper;
 import io.github.sakurawald.core.structure.Pair;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
@@ -104,7 +104,7 @@ public class FujiInitializer extends ModuleInitializer {
         List<Pair<String, Boolean>> list = Managers.getModuleManager().getModule2enable()
             .entrySet()
             .stream()
-            .map(it -> new Pair<>(ReflectionUtil.joinModulePath(it.getKey()), it.getValue()))
+            .map(it -> new Pair<>(ModuleManager.joinModulePath(it.getKey()), it.getValue()))
             .sorted(Comparator.comparing(Pair::getKey))
             .toList();
 

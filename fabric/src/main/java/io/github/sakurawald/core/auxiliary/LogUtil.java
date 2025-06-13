@@ -2,6 +2,7 @@ package io.github.sakurawald.core.auxiliary;
 
 import io.github.sakurawald.Fuji;
 import io.github.sakurawald.core.config.Configs;
+import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import lombok.experimental.UtilityClass;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
@@ -14,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @UtilityClass
 public class LogUtil {
@@ -39,7 +39,14 @@ public class LogUtil {
         return FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER;
     }
 
+    private static String attachSourceModuleInfo(String message) {
+        String prefix = "[%s] ".formatted(findSourceModuleInCurrentStack());
+        return prefix + message;
+    }
+
     public static void debug(String message, Object... args) {
+        message = attachSourceModuleInfo(message);
+
         if (Configs.configHandler.model().core.debug.log_debug_messages
             || FabricLoader.getInstance().isDevelopmentEnvironment()) {
             String prefix = isConsoleSupportAnsiColor ? "\u001B[37m" : ""; // escape for the ansi color code
@@ -51,20 +58,45 @@ public class LogUtil {
     }
 
     public static void info(String message, Object... args) {
+        message = attachSourceModuleInfo(message);
         MOD_LOGGER.info(message, args);
     }
 
     public static void warn(String message, Object... args) {
+        message = attachSourceModuleInfo(message);
         MOD_LOGGER.warn(message, args);
     }
 
     public static void error(String message, Object... args) {
+        message = attachSourceModuleInfo(message);
         MOD_LOGGER.error(message, args);
     }
 
-    public static List<String> getStackTraceAsList(Throwable throwable) {
-        return Arrays.stream(throwable.getStackTrace())
-            .map(StackTraceElement::toString)
-            .collect(Collectors.toList());
+    private static List<String> getCurrentStackTraceAsClassNames() {
+        return Arrays.stream(Thread.currentThread()
+            .getStackTrace())
+            .map(StackTraceElement::getClassName)
+            .toList();
+    }
+
+    private static List<String> getCurrentStackTraceAsModuleName() {
+        return getCurrentStackTraceAsClassNames()
+            .stream()
+            .map(ModuleManager::computeJoinedModulePath)
+            .toList();
+    }
+
+    private static String findSourceModuleInCurrentStack() {
+        return findSourceModule(getCurrentStackTraceAsModuleName());
+    }
+
+    private static String findSourceModule(List<String> joinedModulePath) {
+        String result = "unknown";
+        for (String moduleName : joinedModulePath) {
+            result = moduleName;
+            if (!result.equals(ModuleManager.CORE_MODULE_ROOT)) return result;
+        }
+
+        return result;
     }
 }

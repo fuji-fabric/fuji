@@ -10,6 +10,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
+import io.github.sakurawald.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.PermissionHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
@@ -235,7 +236,7 @@ public class CommandDescriptor {
         LogUtil.error(string, throwable);
 
         /* report to command source */
-        String stacktrace = String.join("\n", LogUtil.getStackTraceAsList(throwable));
+        String stacktrace = String.join("\n", ReflectionUtil.getStackTraceAsList(throwable));
         MutableText report = TextHelper.getTextByValue(source, string)
             .copy()
             .setStyle(Style.EMPTY
