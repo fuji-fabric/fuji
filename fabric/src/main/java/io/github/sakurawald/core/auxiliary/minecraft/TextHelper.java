@@ -95,11 +95,12 @@ public class TextHelper {
     }
 
     private static NodeParser makePlaceholderOnlyParser() {
+        // NOTE: The placeholder-only parser should only parse placeholders, for command executing. it should not parse the <red> tags or other tags.
+
         #if MC_VER <= MC_1_20_2
         List<NodeParser> parsers = new ArrayList<>();
-        parsers.add(TextParserV1.createSafe());
-        NodeParser mergedParser = NodeParser.merge(parsers);
-        return mergedParser;
+        parsers.add(Placeholders.DEFAULT_PLACEHOLDER_PARSER);
+        return NodeParser.merge(parsers);
         #elif MC_VER > MC_1_20_2
         return NodeParser.builder()
         .globalPlaceholders().build();

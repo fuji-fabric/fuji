@@ -1,6 +1,7 @@
 package io.github.sakurawald.core.command.executor;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
@@ -28,6 +29,7 @@ public class CommandExecutor {
     public static int execute(@NotNull ExtendedCommandSource context, @NotNull String command) {
         /* expand the command */
         command = context.expandCommand(command);
+        LogUtil.debug("Executing command: command = `{}`, context = {}", command, context);
 
         try {
             return Objects
