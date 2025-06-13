@@ -31,7 +31,7 @@ public class ServerPlayerInteractionManagerMixin {
     protected ServerPlayerEntity player;
 
     @Inject(method = "tryBreakBlock", at = @At("HEAD"), cancellable = true)
-    void $tryBreak(BlockPos blockPos, @NotNull CallbackInfoReturnable<Boolean> cir) {
+    void handleBreakBlock(BlockPos blockPos, @NotNull CallbackInfoReturnable<Boolean> cir) {
         BlockState blockState = this.world.getBlockState(blockPos);
         String id = RegistryHelper.ofString(blockState);
 
@@ -39,14 +39,14 @@ public class ServerPlayerInteractionManagerMixin {
     }
 
     @Inject(method = "interactItem", at = @At("HEAD"), cancellable = true)
-    void $interactItem(ServerPlayerEntity serverPlayerEntity, World world, @NotNull ItemStack itemStack, Hand hand, @NotNull CallbackInfoReturnable<ActionResult> cir) {
+    void handleInteractItem(ServerPlayerEntity serverPlayerEntity, World world, @NotNull ItemStack itemStack, Hand hand, @NotNull CallbackInfoReturnable<ActionResult> cir) {
         String id = RegistryHelper.ofString(itemStack);
 
         AntiBuildInitializer.checkAntiBuild(player, "interact_item", AntiBuildInitializer.config.model().anti.interact_item.id, id, cir, ActionResult.FAIL, () -> true);
     }
 
     @Inject(method = "interactBlock", at = @At("HEAD"), cancellable = true)
-    void $interactBlock(ServerPlayerEntity serverPlayerEntity, @NotNull World world, ItemStack itemStack, Hand hand, @NotNull BlockHitResult blockHitResult, @NotNull CallbackInfoReturnable<ActionResult> cir) {
+    void handleInteractBlock(ServerPlayerEntity serverPlayerEntity, @NotNull World world, ItemStack itemStack, Hand hand, @NotNull BlockHitResult blockHitResult, @NotNull CallbackInfoReturnable<ActionResult> cir) {
         BlockPos blockPos = blockHitResult.getBlockPos();
         BlockState blockState = world.getBlockState(blockPos);
         String id = RegistryHelper.ofString(blockState);

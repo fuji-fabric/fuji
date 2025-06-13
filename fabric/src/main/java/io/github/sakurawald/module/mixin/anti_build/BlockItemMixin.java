@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class BlockItemMixin {
 
     @Inject(method = "canPlace", at = @At("RETURN"), cancellable = true)
-    public void $canPlace(@NotNull ItemPlacementContext itemPlacementContext, BlockState blockState, @NotNull CallbackInfoReturnable<Boolean> cir) {
+    void handlePlaceBlock(@NotNull ItemPlacementContext itemPlacementContext, BlockState blockState, @NotNull CallbackInfoReturnable<Boolean> cir) {
         PlayerEntity player = itemPlacementContext.getPlayer();
         String id = RegistryHelper.ofString(itemPlacementContext.getStack());
 

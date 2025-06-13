@@ -17,11 +17,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class EntityMixin {
 
     @Inject(method = "interact", at = @At("HEAD"), cancellable = true)
-    void $interact(@NotNull PlayerEntity player, Hand hand, @NotNull CallbackInfoReturnable<ActionResult> cir) {
+    void handleInteractEntity(@NotNull PlayerEntity player, Hand hand, @NotNull CallbackInfoReturnable<ActionResult> cir) {
         Entity entity = (Entity) (Object) this;
         String id = RegistryHelper.ofString(entity);
 
-        AntiBuildInitializer.checkAntiBuild(player, "interact_entity", AntiBuildInitializer.config.model().anti.interact_entity.id, id, cir, ActionResult.FAIL,() -> hand == Hand.MAIN_HAND);
+        AntiBuildInitializer.checkAntiBuild(player, "interact_entity", AntiBuildInitializer.config.model().anti.interact_entity.id, id, cir, ActionResult.FAIL, () -> hand == Hand.MAIN_HAND);
     }
 
 }

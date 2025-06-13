@@ -17,18 +17,31 @@ public class AntiBuildInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<AntiBuildConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, AntiBuildConfigModel.class);
 
     public static <T> void checkAntiBuild(PlayerEntity player, String antiType, Set<String> ids, String id, CallbackInfoReturnable<T> cir, T cancelWithValue, Supplier<Boolean> shouldSendFeedback) {
-        if ((ids.contains(id) || ids.contains("*")) && !isAllowedByPlayerPermission(player, antiType, id)) {
+        if (shouldWeCancelTheAction(player, antiType, ids, id)) {
+            /* Send the cation cancelled message to the player. */
             if (shouldSendFeedback.get()) {
                 TextHelper.sendMessageByKey(player, "anti_build.disallow");
             }
 
+            /* Cancel the call with specified value. */
             cir.setReturnValue(cancelWithValue);
         }
     }
 
-    private static boolean isAllowedByPlayerPermission(PlayerEntity player, String antiType, String id) {
+    private static boolean shouldWeCancelTheAction(PlayerEntity player, String antiType, Set<String> ids, String id) {
+        if (isAllowedByPermission(player, antiType, id)) return false;
+
+        return isDisallowedByConfigurationFile(ids, id);
+    }
+
+    private static boolean isDisallowedByConfigurationFile(Set<String> ids, String id) {
+        return ids.contains(id)
+            || ids.contains("*");
+    }
+
+    private static boolean isAllowedByPermission(PlayerEntity player, String antiType, String id) {
         return Optional.ofNullable(player)
             .map(p -> PermissionHelper.hasPermission(player.getUuid(), "fuji.anti_build.%s.bypass.%s".formatted(antiType, id)))
-            .orElse(true);
+            .orElse(false);
     }
 }
