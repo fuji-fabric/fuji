@@ -21,12 +21,12 @@ public abstract class Downloader {
     public void start() {
         CompletableFuture.runAsync(() -> {
             try {
-                LogUtil.info("start download file from {} to {}.", url, destination);
+                LogUtil.info("Start download file from {} to {}.", url, destination);
                 FileUtils.copyURLToFile(url, destination.toFile());
                 onComplete();
-                LogUtil.info("end download file from {} to {}.", url, destination);
+                LogUtil.info("End download file from {} to {}.", url, destination);
             } catch (IOException e) {
-                LogUtil.error("failed to download file from {} to {}", url, destination);
+                LogUtil.error("Failed to download file from {} to {}", url, destination);
             }
         });
     }

@@ -130,7 +130,7 @@ public class JavaObjectGui extends PagedGui<Field> {
                     String newPath = StringUtils.strip(this.path + "." + entity.getName(), ".");
                     new JavaObjectGui(getGui(), newInstance, getPlayer(), new ArrayList<>(), 0, topLevel, newPath).open();
                 } catch (IllegalAccessException e) {
-                    LogUtil.error("failed to access the value of field {}", entity, e);
+                    LogUtil.error("Failed to access the value of field {}", entity, e);
                 }
 
             })

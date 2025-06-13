@@ -146,7 +146,7 @@ public abstract class BaseConfigurationHandler<T> {
             }
 
         } catch (IOException e) {
-            LogUtil.error("failed to read configuration file {} from disk.", this.path, e);
+            LogUtil.error("Failed to read configuration file {} from disk.", this.path, e);
         }
 
         /* track this */
@@ -163,7 +163,7 @@ public abstract class BaseConfigurationHandler<T> {
             if (this.model == null) {
                 // getDefaultModel() is allowed to throw exception.
                 this.model = this.getDefaultModel();
-                LogUtil.info("write default configuration: {}", this.path.toFile().getAbsolutePath());
+                LogUtil.info("Write default configuration: {}", this.path.toFile().getAbsolutePath());
             }
 
             // before write storage
@@ -173,7 +173,7 @@ public abstract class BaseConfigurationHandler<T> {
             Files.createDirectories(this.path.getParent());
             Files.writeString(this.path, gson.toJson(this.model));
         } catch (IOException e) {
-            LogUtil.error("failed to write configuration file {} to disk.", this.path, e);
+            LogUtil.error("Failed to write configuration file {} to disk.", this.path, e);
         }
     }
 
@@ -196,7 +196,7 @@ public abstract class BaseConfigurationHandler<T> {
 
         // write storage on server stopping.
         ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
-            LogUtil.debug("write storage on server stopping: {}", this.path);
+            LogUtil.debug("Write storage on server stopping: {}", this.path);
             this.writeStorage();
         });
     }

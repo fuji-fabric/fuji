@@ -90,7 +90,7 @@ public class IOUtil {
     }
 
     private static String requestPost(@NotNull URI uri, @NotNull String param) throws IOException {
-        LogUtil.debug("post() -> uri = {}, param = {}", uri, param);
+        LogUtil.debug("Send a post request: uri = {}, param = {}", uri, param);
 
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
         connection.setRequestMethod("POST");
@@ -105,7 +105,7 @@ public class IOUtil {
     }
 
     private static String requestGet(@NotNull URI uri) throws IOException {
-        LogUtil.debug("get() -> uri = {}", uri);
+        LogUtil.debug("Send a get request: uri = {}", uri);
 
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
         connection.setRequestMethod("GET");

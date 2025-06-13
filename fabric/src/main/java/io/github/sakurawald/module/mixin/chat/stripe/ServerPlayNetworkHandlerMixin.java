@@ -25,7 +25,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
     public ChatMessageC2SPacket modifyChatMessageSentByPlayers(ChatMessageC2SPacket original) {
         String oldChatMessage = original.chatMessage();
         String newChatMessage = StyleStriper.stripe(player, STYLE_TYPE_CHAT, oldChatMessage);
-        LogUtil.debug("stripe chat message: old = {}, new = {}", oldChatMessage, newChatMessage);
+        LogUtil.debug("Stripe chat message: old = {}, new = {}", oldChatMessage, newChatMessage);
 
         return new ChatMessageC2SPacket(newChatMessage, original.timestamp(), original.comp_947(), original.comp_948(), original.acknowledgment());
     }

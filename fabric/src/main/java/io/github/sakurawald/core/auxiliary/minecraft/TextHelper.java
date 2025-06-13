@@ -162,10 +162,10 @@ public class TextHelper {
             resourceConfigurationHandler.readStorage();
 
             code2json.put(languageCode, resourceConfigurationHandler.model().getAsJsonObject());
-            LogUtil.info("language {} loaded.", languageCode);
+            LogUtil.info("Language {} loaded.", languageCode);
         } catch (Exception e) {
             code2json.put(languageCode, UNSUPPORTED_LANGUAGE_MARKER);
-            LogUtil.warn("failed to load language `{}`", languageCode);
+            LogUtil.warn("Failed to load language `{}`", languageCode);
         }
     }
 

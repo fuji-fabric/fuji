@@ -36,7 +36,7 @@ public abstract class ServerLoginNetworkHandlerMixin {
                 // the first time the player join, his skin is DEFAULT_SKIN (see #applyRestoredSkinHook)
                 // then we try to get skin from mojang-server. if this failed, then set his skin to DEFAULT_SKIN
                 // note: a fake-player will not trigger waitForSkin()
-                LogUtil.info("fetch skin for {}", profile.getName());
+                LogUtil.info("Fetch skin for {}", profile.getName());
 
                 if (SkinRestorer.getSkinStorage().isDefaultSkin(profile)) {
                     SkinRestorer.getSkinStorage().setSkin(profile.getId(), MojangProfileFetcher.fetchOnlineSkin(profile.getName()));

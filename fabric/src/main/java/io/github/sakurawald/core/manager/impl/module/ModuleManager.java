@@ -126,7 +126,7 @@ public class ModuleManager extends BaseManager {
                     moduleInitializer.doInitialize();
                     moduleRegistry.put(clazz, moduleInitializer);
                 } catch (Exception e) {
-                    LogUtil.error("failed to invoke doInitialize() of module initializer of module {}", clazz.getSimpleName(), e);
+                    LogUtil.error("Failed to invoke doInitialize() of module initializer of module {}", clazz.getSimpleName(), e);
                 }
             }
         }
@@ -137,7 +137,7 @@ public class ModuleManager extends BaseManager {
                 try {
                     initializer.doReload();
                 } catch (Exception e) {
-                    LogUtil.error("failed to reload module.", e);
+                    LogUtil.error("Failed to reload module.", e);
                 }
             }
         );
@@ -151,7 +151,7 @@ public class ModuleManager extends BaseManager {
         });
 
         enabledModuleList.sort(String::compareTo);
-        LogUtil.info("enabled {}/{} modules -> {}", enabledModuleList.size(), module2enable.size(), enabledModuleList);
+        LogUtil.info("Enabled {}/{} modules -> {}", enabledModuleList.size(), module2enable.size(), enabledModuleList);
 
         /* print first-time helper */
         if (enabledModuleList.size() == 1) {
@@ -208,7 +208,7 @@ public class ModuleManager extends BaseManager {
 
         // soft fail if required mod is not installed.
         if (!isRequiredModsInstalled(modulePath)) {
-            LogUtil.debug("refuse to enable module {} (reason: the required dependency mod for this module isn't installed, please read the official wiki!)", modulePath);
+            LogUtil.debug("Refuse to enable module {} (reason: the required dependency mod for this module isn't installed, please read the official wiki!)", modulePath);
             enable = false;
         }
 

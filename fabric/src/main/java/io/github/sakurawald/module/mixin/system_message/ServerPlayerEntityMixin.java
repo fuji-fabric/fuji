@@ -28,7 +28,7 @@ public abstract class ServerPlayerEntityMixin {
                 && key2value.get(translatableKey) == null) {
 
                 ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) (Object) this;
-                LogUtil.debug("cancel sending {} to player {}", translatableKey, serverPlayerEntity.getGameProfile().getName());
+                LogUtil.debug("Cancel sending {} to player {}", translatableKey, serverPlayerEntity.getGameProfile().getName());
                 ci.cancel();
             }
         }

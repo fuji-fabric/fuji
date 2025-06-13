@@ -66,7 +66,7 @@ public class SkinStorage {
                 File file = computeFilePath(uuid).toFile();
                 FileUtils.writeStringToFile(file, BaseConfigurationHandler.getGson().toJson(skin), StandardCharsets.UTF_8);
             } catch (IOException e) {
-                LogUtil.error("save skin failed: " + e.getMessage());
+                LogUtil.error("Save skin failed: " + e.getMessage());
             }
         }
     }
@@ -79,7 +79,7 @@ public class SkinStorage {
             String string = Files.readString(playerData);
             return BaseConfigurationHandler.getGson().fromJson(string, Property.class);
         } catch (IOException e) {
-            LogUtil.error("load skin failed: " + e.getMessage());
+            LogUtil.error("Load skin failed: " + e.getMessage());
         }
         return null;
     }

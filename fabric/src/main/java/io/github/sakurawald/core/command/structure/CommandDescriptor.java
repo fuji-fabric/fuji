@@ -253,7 +253,7 @@ public class CommandDescriptor {
     }
 
     public void unregister() {
-        LogUtil.debug("un-register command: {}", this);
+        LogUtil.debug("Un-register command: {}", this);
 
         RootCommandNode<ServerCommandSource> root = CommandAnnotationProcessor.getDispatcher().getRoot();
 
@@ -339,7 +339,7 @@ public class CommandDescriptor {
     }
 
     public LiteralArgumentBuilder<ServerCommandSource> register() {
-        LogUtil.debug("register command: {}", this);
+        LogUtil.debug("Register command: {}", this);
 
         /* first pass */
         var root = registerNonOptionalArguments();

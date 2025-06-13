@@ -46,7 +46,7 @@ public class KitInitializer extends ModuleInitializer {
                 .map(it -> it.toFile().getName())
                 .toList();
         } catch (IOException e) {
-            LogUtil.error("failed to list kits in storage.");
+            LogUtil.error("Failed to list kits in storage.");
             return Collections.emptyList();
         }
     }

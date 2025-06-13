@@ -38,7 +38,7 @@ public interface TextMixin {
         if (key2value.containsKey(key)) {
             /* prevent hijack too early */
             if (ServerHelper.getServer() == null) {
-                LogUtil.warn("server is null currently -> cannot hijack the text with the key: {}", key);
+                LogUtil.warn("Server is null currently -> cannot hijack the text with the key: {}", key);
                 return null;
             }
 

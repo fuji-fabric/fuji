@@ -26,12 +26,12 @@ public class ServerPlayNetworkHandlerMixin {
      {
         for (RegexRewriteNode entry : CommandRewriteInitializer.config.model().rewrite) {
             if (entry.getRegex() == null || entry.getReplacement() == null) {
-                LogUtil.warn("there is an invalid `null` entry in `command_rewrite.regex`, you should remove it: {}", entry);
+                LogUtil.warn("There is an invalid `null` entry in `command_rewrite.regex`, you should remove it: {}", entry);
                 continue;
             }
 
             if (string.matches(entry.getRegex())) {
-                LogUtil.debug("rewrite the command: /{}", string);
+                LogUtil.debug("Rewrite the command: /{}", string);
                 return string.replaceAll(entry.getRegex(), entry.getReplacement());
             }
         }

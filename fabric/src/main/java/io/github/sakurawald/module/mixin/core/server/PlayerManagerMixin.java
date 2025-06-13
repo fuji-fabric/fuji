@@ -26,7 +26,7 @@ public class PlayerManagerMixin {
     private void patchCopyOnWriteArrayListForServerPlayerList(CallbackInfo ci) {
         players = new CopyOnWriteArrayList<>() {
             {
-                LogUtil.debug("patch CopyOnWriteArrayList for `players` field in PlayerManager");
+                LogUtil.debug("Patch CopyOnWriteArrayList for `players` field in PlayerManager");
             }
         };
     }

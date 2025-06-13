@@ -73,7 +73,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
         , @NotNull List<Object> args) {
 
         /* log */
-        LogUtil.debug("the closure for `bundle command` associated with {} is invoked with args: ", descriptor.entry);
+        LogUtil.debug("The closure for `bundle command` associated with {} is invoked with args: ", descriptor.entry);
         args.forEach(arg -> LogUtil.debug("arg: {}", arg));
 
         /* execute with context */
@@ -91,7 +91,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
             variables.put(argumentName, argumentValue);
             argumentIndex++;
         }
-        LogUtil.debug("fill the variables with: {}", variables);
+        LogUtil.debug("Fill the variables with: {}", variables);
 
         /* substitute the variables */
         commands = commands.stream().map(command -> {
@@ -109,7 +109,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
         commands = commands.stream().map(command -> TextHelper.parsePlaceholder(source, command)).toList();
 
         /* execute the commands */
-        LogUtil.debug("execute bundle command: {}", commands);
+        LogUtil.debug("Execute bundle command: {}", commands);
         CommandExecutor.execute(ExtendedCommandSource.asConsole(source), commands);
 
         return 1;
@@ -186,7 +186,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
             args.add(arg);
         }
 
-        LogUtil.debug("make args for bundle command: {}", args);
+        LogUtil.debug("Make args for bundle command: {}", args);
         return args;
     }
 

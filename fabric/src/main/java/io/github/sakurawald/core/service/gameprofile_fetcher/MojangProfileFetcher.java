@@ -31,7 +31,7 @@ public class MojangProfileFetcher {
         try {
             rawUUID = JsonParser.parseString(IOUtil.requestGet(API_SERVER + playerName)).getAsJsonObject().get("id").getAsString();
         } catch (IOException e) {
-            LogUtil.debug("failed to fetch online uuid from mojang server for {}", playerName);
+            LogUtil.debug("Failed to fetch online uuid from mojang server for {}", playerName);
             return null;
         }
         return UUID.fromString(UUID_CONVERTER_PATTERN.matcher(rawUUID).replaceFirst("$1-$2-$3-$4-$5"));
@@ -49,7 +49,7 @@ public class MojangProfileFetcher {
 
             return new Property("textures", texture.get("value").getAsString(), texture.get("signature").getAsString());
         } catch (Exception e) {
-            LogUtil.debug("failed to fetch online skin from mojang server for {}", playerName);
+            LogUtil.debug("Failed to fetch online skin from mojang server for {}", playerName);
         }
         return null;
     }

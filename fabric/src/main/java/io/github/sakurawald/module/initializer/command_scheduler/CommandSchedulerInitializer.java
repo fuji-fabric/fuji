@@ -58,7 +58,7 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
     }
 
     private void updateJobs() {
-        LogUtil.info("un-schedule jobs");
+        LogUtil.info("Un-schedule jobs");
         Managers.getScheduleManager().deleteJobs(CommandScheduleJob.class);
 
         scheduler.model().jobs.forEach(scheduleJob -> {
@@ -68,7 +68,7 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
                 }
             }, () -> cron).schedule());
 
-            LogUtil.info("schedule job -> {}", scheduleJob.getName());
+            LogUtil.info("Schedule job -> {}", scheduleJob.getName());
         });
     }
 

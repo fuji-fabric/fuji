@@ -32,7 +32,7 @@ public class CommandBundleInitializer extends ModuleInitializer {
     @CommandNode("register")
     @Document("Register all commands defined in bundle-command configuration file.")
     private static int registerAllBundleCommands() {
-        LogUtil.info("register bundle commands.");
+        LogUtil.info("Register bundle commands.");
 
         config.model().getEntries().stream()
             .map(BundleCommandDescriptor::make)
@@ -44,7 +44,7 @@ public class CommandBundleInitializer extends ModuleInitializer {
     @CommandNode("un-register")
     @Document("Un-register all bundle-commands registered in server.")
     private static int unregisterAllBundleCommands() {
-        LogUtil.info("un-register bundle commands.");
+        LogUtil.info("Un-register bundle commands.");
 
         CommandAnnotationProcessor.descriptors
             .stream()

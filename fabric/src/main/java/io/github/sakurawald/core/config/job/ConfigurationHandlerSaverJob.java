@@ -21,7 +21,7 @@ public class ConfigurationHandlerSaverJob extends CronJob {
     public void execute(@NotNull JobExecutionContext context) {
         // the debug() function is not guaranteed to be printed while shutdown the jvm.
         BaseConfigurationHandler<?> configHandler = (BaseConfigurationHandler<?>) context.getJobDetail().getJobDataMap().get(BaseConfigurationHandler.class.getName());
-        LogUtil.debug("save configuration file: {}", configHandler.getPath());
+        LogUtil.debug("Save configuration file: {}", configHandler.getPath());
 
         configHandler.writeStorage();
     }

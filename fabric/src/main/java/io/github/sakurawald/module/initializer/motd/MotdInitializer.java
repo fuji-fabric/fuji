@@ -55,7 +55,7 @@ public class MotdInitializer extends ModuleInitializer {
             byteArrayOutputStream = new ByteArrayOutputStream();
             ImageIO.write(bufferedImage, "PNG", byteArrayOutputStream);
         } catch (Exception e) {
-            LogUtil.error("failed to encode motd icon.", e);
+            LogUtil.error("Failed to encode motd icon.", e);
             return Optional.empty();
         }
 

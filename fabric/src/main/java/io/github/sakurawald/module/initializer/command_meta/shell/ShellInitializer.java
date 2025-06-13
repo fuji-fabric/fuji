@@ -58,7 +58,7 @@ public class ShellInitializer extends ModuleInitializer {
         String $rest = rest.getValue();
         CompletableFuture.runAsync(() -> {
             try {
-                LogUtil.info("shell exec: {}", $rest);
+                LogUtil.info("Shell exec: {}", $rest);
 
                 Process process = Runtime.getRuntime().exec($rest, null, null);
                 InputStream inputStream = process.getInputStream();
@@ -74,7 +74,7 @@ public class ShellInitializer extends ModuleInitializer {
                 LogUtil.info(output.toString());
                 ctx.getSource().sendMessage(Text.literal(output.toString()));
             } catch (IOException | InterruptedException e) {
-                LogUtil.error("failed to execute a shell command.", e);
+                LogUtil.error("Failed to execute a shell command.", e);
             }
         });
 

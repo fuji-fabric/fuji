@@ -44,7 +44,7 @@ public class CustomTextNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
                             .map(Path::getFileName)
                             .toList();
                     } catch (IOException e) {
-                        LogUtil.error("failed to list suggestions for custom text names", e);
+                        LogUtil.error("Failed to list suggestions for custom text names", e);
                     }
 
                     return Collections.emptyList();

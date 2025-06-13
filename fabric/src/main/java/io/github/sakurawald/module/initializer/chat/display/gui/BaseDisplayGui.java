@@ -37,7 +37,7 @@ public abstract class BaseDisplayGui {
         public void click(int i, ClickType clickType, net.minecraft.screen.slot.SlotActionType clickType1, @NotNull SlotGuiInterface slotGuiInterface) {
             GuiElementInterface slot = slotGuiInterface.getSlot(i);
             if (slot == null) {
-                LogUtil.error("a slot in display gui is null.");
+                LogUtil.error("A slot in display gui is null.");
                 return;
             }
 

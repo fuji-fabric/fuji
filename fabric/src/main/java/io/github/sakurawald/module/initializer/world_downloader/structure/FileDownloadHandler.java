@@ -26,7 +26,7 @@ public class FileDownloadHandler implements HttpHandler {
     @Override
     @SneakyThrows(IOException.class)
     public void handle(@NotNull HttpExchange exchange) {
-        LogUtil.info("download file: {}", file.getAbsolutePath());
+        LogUtil.info("Download file: {}", file.getAbsolutePath());
 
         /* consume this context */
         WorldDownloaderInitializer.safelyRemoveContext(exchange.getHttpContext());
@@ -55,7 +55,7 @@ public class FileDownloadHandler implements HttpHandler {
                                 / bytesPerSecond;
                             Thread.sleep(TimeUnit.NANOSECONDS.toMillis(sleepTime));
                         } catch (InterruptedException e) {
-                            LogUtil.warn("interrupted while sleeping for throttling", e);
+                            LogUtil.warn("Interrupted while sleeping for throttling", e);
                             return;
                         }
                     }
@@ -70,6 +70,6 @@ public class FileDownloadHandler implements HttpHandler {
                 os.write(response.getBytes());
             }
         }
-        LogUtil.info("delete file: {} -> {}", file.getAbsolutePath(), file.delete());
+        LogUtil.info("Delete file: {} -> {}", file.getAbsolutePath(), file.delete());
     }
 }

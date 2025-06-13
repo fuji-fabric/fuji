@@ -47,7 +47,7 @@ public class ModuleInitializer {
             declaredField.setAccessible(true);
             if (declaredField.getType().isAssignableFrom(ObjectConfigurationHandler.class)) {
                 ObjectConfigurationHandler configHandler = (ObjectConfigurationHandler) declaredField.get(this);
-                LogUtil.debug("invoke readStorage() for field `{}` in class `{}`", declaredField.getName(), this.getClass().getName());
+                LogUtil.debug("Invoke readStorage() for field `{}` in class `{}`", declaredField.getName(), this.getClass().getName());
                 configHandler.readStorage();
             }
         }

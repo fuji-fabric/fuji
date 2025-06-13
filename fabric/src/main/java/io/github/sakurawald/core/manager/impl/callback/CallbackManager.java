@@ -57,7 +57,7 @@ public class CallbackManager extends BaseManager {
     }
 
     private String makeCallbackCommand(String uuid, Consumer<ServerPlayerEntity> callback, long ttl, TimeUnit timeUnit) {
-        LogUtil.debug("make command callback: uuid = {}", uuid);
+        LogUtil.debug("Make command callback: uuid = {}", uuid);
         this.uuid2consumer.put(uuid, callback, ttl, timeUnit);
         return "/" + COMMAND_CALLBACK + " " + uuid;
     }

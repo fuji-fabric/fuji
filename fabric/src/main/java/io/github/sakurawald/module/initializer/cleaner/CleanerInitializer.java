@@ -104,7 +104,7 @@ public class CleanerInitializer extends ModuleInitializer {
         // avoid spam
         if (counter.isEmpty()) return;
 
-        LogUtil.info("[cleaner] remove entities: {}", counter);
+        LogUtil.info("Remove entities: {}", counter);
 
         Text hoverText =
             Text.empty()

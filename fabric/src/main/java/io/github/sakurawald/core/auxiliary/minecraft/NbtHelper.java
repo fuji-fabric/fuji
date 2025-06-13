@@ -63,7 +63,7 @@ public class NbtHelper {
             String node = nodes[i];
 
             if (!root.contains(node)) {
-                LogUtil.error("nbt {} don't has path {}", root, path);
+                LogUtil.error("Failed to read specified path {} in nbt {}. (Path not exists)", path, root);
             }
 
             root = getCompound(root, node);
@@ -145,7 +145,7 @@ public class NbtHelper {
         /* read the file */
         NbtCompound read = readNbtFile(path);
         if (read == null) {
-            LogUtil.error("failed to read the nbt file in {}", path);
+            LogUtil.error("Failed to read the nbt file in {}", path);
             throw new AbortCommandExecutionException();
         }
 

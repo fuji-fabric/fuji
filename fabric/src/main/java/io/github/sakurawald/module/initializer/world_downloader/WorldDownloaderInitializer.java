@@ -49,7 +49,7 @@ public class WorldDownloaderInitializer extends ModuleInitializer {
             server = HttpServer.create(new InetSocketAddress(config.model().port), 0);
             server.start();
         } catch (IOException e) {
-            LogUtil.error("failed to start http server: {}", e.getMessage());
+            LogUtil.error("Failed to start http server: {}", e.getMessage());
         }
     }
 
@@ -75,7 +75,7 @@ public class WorldDownloaderInitializer extends ModuleInitializer {
 
         /* remove redundant contexts */
         if (contextQueue.remainingCapacity() == 0) {
-            LogUtil.debug("contexts is full, remove the oldest context. {}", contextQueue.peek());
+            LogUtil.debug("Contexts is full, remove the oldest context. {}", contextQueue.peek());
             safelyRemoveContext(contextQueue.poll());
         }
 
@@ -125,7 +125,7 @@ public class WorldDownloaderInitializer extends ModuleInitializer {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        LogUtil.info("generate region file: {}", output.getAbsolutePath());
+        LogUtil.info("Generate region file: {}", output.getAbsolutePath());
         return output;
     }
 

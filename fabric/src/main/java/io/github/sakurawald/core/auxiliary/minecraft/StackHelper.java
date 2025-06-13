@@ -55,7 +55,7 @@ public class StackHelper {
             #elif MC_VER > MC_1_20_4
             .parse(wrapperLookup.getOps(NbtOps.INSTANCE), nbtElement)
             #endif
-            .resultOrPartial(string -> LogUtil.error("Tried to load invalid item: '{}'", string));
+            .resultOrPartial(string -> LogUtil.error("Failed to decode item: '{}'", string));
     }
 
     public static void setCustomName(ItemStack stack, Text customName) {

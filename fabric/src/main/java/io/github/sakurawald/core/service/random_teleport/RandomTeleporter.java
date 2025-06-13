@@ -34,7 +34,7 @@ public class RandomTeleporter {
 
     public static void request(@NotNull ServerPlayerEntity player, @NotNull TeleportSetup setup, @Nullable Consumer<SpatialPose> postConsumer) {
         CompletableFuture.runAsync(() -> {
-            LogUtil.info("request rtp: {}", player.getGameProfile().getName());
+            LogUtil.info("Request rtp: {}", player.getGameProfile().getName());
             Stopwatch timer = Stopwatch.createStarted();
 
             ServerWorld world = RegistryHelper.ofServerWorld(setup.getDimension());
@@ -72,7 +72,7 @@ public class RandomTeleporter {
 
             // cost
             var cost = timer.stop();
-            LogUtil.info("response rtp: {} has been teleported to ({} {} {} {}) (cost = {})", player.getGameProfile().getName(), world.getRegistryKey().getValue(), result.get().getX(), result.get().getY(), result.get().getZ(), cost);
+            LogUtil.info("Response rtp: {} has been teleported to ({} {} {} {}) (cost = {})", player.getGameProfile().getName(), world.getRegistryKey().getValue(), result.get().getX(), result.get().getY(), result.get().getZ(), cost);
         });
     }
 

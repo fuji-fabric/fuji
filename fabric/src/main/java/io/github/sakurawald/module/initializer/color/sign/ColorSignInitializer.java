@@ -30,7 +30,7 @@ public class ColorSignInitializer extends ModuleInitializer {
             String data = Managers.getAttachmentManager().getAttachment(ATTACHMENT_SUBJECT, uuid);
             return BaseConfigurationHandler.getGson().fromJson(data, SignCache.class);
         } catch (IOException e) {
-            LogUtil.error("failed to read sign cache: spatialBlock = {}", spatialBlock, e);
+            LogUtil.error("Failed to read sign cache: spatialBlock = {}", spatialBlock, e);
             return null;
         }
     }
@@ -41,7 +41,7 @@ public class ColorSignInitializer extends ModuleInitializer {
         try {
             Managers.getAttachmentManager().setAttachment(ATTACHMENT_SUBJECT, uuid, data);
         } catch (IOException e) {
-            LogUtil.error("failed to write sign cache: spatialBlock = {}, signCache = {}", spatialBlock, signCache, e);
+            LogUtil.error("Failed to write sign cache: spatialBlock = {}, signCache = {}", spatialBlock, signCache, e);
         }
     }
 

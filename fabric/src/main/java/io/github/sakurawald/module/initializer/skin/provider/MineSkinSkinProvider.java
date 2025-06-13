@@ -28,7 +28,7 @@ public class MineSkinSkinProvider {
 
             return new Property("textures", texture.get("value").getAsString(), texture.get("signature").getAsString());
         } catch (IOException e) {
-            LogUtil.debug("failed to fetch skin from mine-skin server: url = {}", url);
+            LogUtil.debug("Failed to fetch skin from mine-skin server: url = {}", url);
         }
 
         return null;

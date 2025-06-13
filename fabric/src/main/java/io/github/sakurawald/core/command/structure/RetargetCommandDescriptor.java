@@ -93,14 +93,14 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
                 return CommandHelper.Return.FAIL;
             }
 
-            LogUtil.debug("execute retarget command: initialing command source = {}", ctx.getSource().getName());
+            LogUtil.debug("Execute retarget command: initialing command source = {}", ctx.getSource().getName());
 
             /* invoke the command function */
             List<Object> objs = makeObjectsByArguments(ctx);
 
             /* apply the command execution for each target. */
             PlayerCollection targets = (PlayerCollection) objs.get(0);
-            LogUtil.debug("get the targets argument (the first argument in args): {}", targets.getValue().stream().map(it -> it.getGameProfile().getName()).toList());
+            LogUtil.debug("Get the targets argument (the first argument in args): {}", targets.getValue().stream().map(it -> it.getGameProfile().getName()).toList());
 
             int finalValue = CommandHelper.Return.SUCCESS;
             for (ServerPlayerEntity target : targets.getValue()) {
@@ -118,7 +118,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
                     args.add(this.parameterIndexOfCommandTarget, target);
                 }
 
-                LogUtil.debug("invoke command method {} in class {}: target = {}, args = {}"
+                LogUtil.debug("Invoke command method {} in class {}: target = {}, args = {}"
                     , this.method.getName()
                     , this.method.getDeclaringClass().getSimpleName()
                     , target.getGameProfile().getName()
@@ -127,7 +127,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
                 try {
                     // if one of the execution if failed, then it's considered the whole return value is failed.
                     int singleValue = (int) this.method.invoke(null, args.toArray());
-                    LogUtil.debug("the return value of command method is {}: target = {}, args = {}"
+                    LogUtil.debug("The return value of command method is {}: target = {}, args = {}"
                         , singleValue
                         , target.getGameProfile().getName()
                         , args);

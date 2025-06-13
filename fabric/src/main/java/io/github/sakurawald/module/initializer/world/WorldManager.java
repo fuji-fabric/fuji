@@ -175,7 +175,7 @@ public class WorldManager {
         MyWorldProperties worldProperties = new MyWorldProperties(server.getSaveProperties(), seed);
 
         RegistryKey<World> worldRegistryKey = RegistryKey.of(RegistryKeys.WORLD, dimensionIdentifier);
-        LogUtil.debug("make instance of world with registry key of type `World`: {}", worldRegistryKey);
+        LogUtil.debug("Make instance of world with registry key of type `World`: {}", worldRegistryKey);
 
         Registry<DimensionOptions> registry = RegistryHelper.ofRegistry(RegistryKeys.DIMENSION);
         @Nullable DimensionOptions template = getDimensionOptionsAsTemplate(registry, dimenstionTypeIdentifier);
@@ -202,7 +202,7 @@ public class WorldManager {
                 true,
                 null);
         } catch (Exception e) {
-            LogUtil.error("failed to make ServerWorld instance: dimensionId = {}, dimensionTypeId = {}", dimensionIdentifier, dimenstionTypeIdentifier, e);
+            LogUtil.error("Failed to make ServerWorld instance: dimensionId = {}, dimensionTypeId = {}", dimensionIdentifier, dimenstionTypeIdentifier, e);
             return;
         }
 
@@ -219,7 +219,7 @@ public class WorldManager {
         RegistryKey<DimensionOptions> dimensionOptionsRegistryKey = RegistryKeys.toDimensionKey(worldRegistryKey);
 
         if (!dimensionOptionsRegistry.contains(dimensionOptionsRegistryKey)) {
-            LogUtil.debug("add entry for dimension options registry: key = {}, value = {}", dimensionOptionsRegistryKey, dimensionOptions);
+            LogUtil.debug("Add entry for dimension options registry: key = {}, value = {}", dimensionOptionsRegistryKey, dimensionOptions);
             #if MC_VER <= MC_1_20_4
             dimensionOptionsRegistry.add(dimensionOptionsRegistryKey, dimensionOptions, Lifecycle.stable());
             #elif MC_VER > MC_1_20_4

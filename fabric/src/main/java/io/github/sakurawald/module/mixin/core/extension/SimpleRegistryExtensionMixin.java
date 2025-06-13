@@ -95,7 +95,7 @@ public abstract class SimpleRegistryExtensionMixin<T> implements SimpleRegistryE
             #endif
             return true;
         } catch (Throwable e) {
-            LogUtil.error("failed to remove entry: {}", entry.toString());
+            LogUtil.error("Failed to remove entry: {}", entry.toString());
             return false;
         }
     }

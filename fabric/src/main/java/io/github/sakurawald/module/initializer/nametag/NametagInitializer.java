@@ -37,7 +37,7 @@ public class NametagInitializer extends ModuleInitializer {
     private static Map<ServerPlayerEntity, DisplayEntity.TextDisplayEntity> player2nametag;
 
     private static DisplayEntity.TextDisplayEntity makeNametag(ServerPlayerEntity player) {
-        LogUtil.debug("make nametag for player: {}", player.getGameProfile().getName());
+        LogUtil.debug("Make nametag for player: {}", player.getGameProfile().getName());
 
         DisplayEntity.TextDisplayEntity nametag = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY, EntityHelper.getServerWorld(player)) {
 
@@ -53,7 +53,7 @@ public class NametagInitializer extends ModuleInitializer {
 
                 /* discard nametag if the vehicle is empty */
                 if (this.getVehicle() == null) {
-                    LogUtil.debug("discard nametag entity {}: its vehicle is null", this);
+                    LogUtil.debug("Discard nametag entity {}: its vehicle is null", this);
                     this.discardNametag();
                     return;
                 }
@@ -61,7 +61,7 @@ public class NametagInitializer extends ModuleInitializer {
                 /* discard nametag if the vehicle is sneaking */
                 String discardNametagReason = getNametagDiscardReason((LivingEntity) this.getVehicle());
                 if (discardNametagReason != null) {
-                    LogUtil.debug("discard nametag entity {}: {}", this, discardNametagReason);
+                    LogUtil.debug("Discard nametag entity {}: {}", this, discardNametagReason);
                     this.discardNametag();
                 }
 

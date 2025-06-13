@@ -46,7 +46,7 @@ public class ResourceConfigurationHandler extends BaseConfigurationHandler<JsonE
         schemaTree.keySet().stream()
             .filter(key -> !dataTree.has(key))
             .forEach(key -> {
-                LogUtil.debug("add missing language key `{}` for file `{}`", key, this.path);
+                LogUtil.debug("Add missing language key `{}` for file `{}`", key, this.path);
                 dataTree.add(key, schemaTree.get(key));
             });
     }
