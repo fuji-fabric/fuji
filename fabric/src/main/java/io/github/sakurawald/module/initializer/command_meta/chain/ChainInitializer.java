@@ -21,7 +21,6 @@ public class ChainInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     @Document("Chain commands and executes them in sequence, the chain will break if the previous one command fails.")
     private static int chain(@CommandSource ServerCommandSource source, GreedyString rest) {
-
         String $rest = rest.getValue();
 
         Matcher matcher = CHAIN_COMMAND_PARSER.matcher($rest);
@@ -29,7 +28,7 @@ public class ChainInitializer extends ModuleInitializer {
             String first = matcher.group(1);
             String second = matcher.group(2);
             int value = CommandExecutor.execute(ExtendedCommandSource.fromSource(source), first);
-            // break chain, if command `fail`.
+            // Break chain, if command `fail`.
             if (value >= 0) {
                 CommandExecutor.execute(ExtendedCommandSource.fromSource(source), second);
             }

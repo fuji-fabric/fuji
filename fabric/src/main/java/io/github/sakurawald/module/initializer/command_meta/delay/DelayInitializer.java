@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 public class DelayInitializer extends ModuleInitializer {
 
-    private static final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private static final ScheduledExecutorService DELAY_COMMAND_EXECUTOR = Executors.newSingleThreadScheduledExecutor();
 
     @CommandNode("delay")
     @CommandRequirement(level = 4)
@@ -28,7 +28,7 @@ public class DelayInitializer extends ModuleInitializer {
         String $rest = rest.getValue();
 
         long scheduleTimeMs = (long) (1000 * time);
-        executor
+        DELAY_COMMAND_EXECUTOR
             .schedule(() -> ServerHelper.getServer().executeSync(() -> CommandExecutor.execute(ExtendedCommandSource.asConsole(source), $rest))
                 , scheduleTimeMs
                 , TimeUnit.MILLISECONDS);
@@ -38,6 +38,6 @@ public class DelayInitializer extends ModuleInitializer {
 
     @Override
     protected void onInitialize() {
-        ServerLifecycleEvents.SERVER_STOPPING.register((server) -> executor.shutdown());
+        ServerLifecycleEvents.SERVER_STOPPING.register((server) -> DELAY_COMMAND_EXECUTOR.shutdown());
     }
 }
