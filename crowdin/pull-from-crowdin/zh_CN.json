@@ -257,6 +257,8 @@
   "command_permission.list.gui.title": "<pink>指令权限",
   "command_permission.list.gui.entry.lore": "<orange>是否已包裝：%s",
   "command_permission.list.gui.help.lore": "<green>按下左键 -> 允许所有玩家使用此指令\n<green>按下右键 -> 禁止所有玩家使用此指令\n<green>按下中键 -> 取消指令需求覆盖。",
+  "command_permission.verbose.on": "<green> You have turn on the verbose-mode. Now you can issue commands, and see how command_permission module works in the console.",
+  "command_permission.verbose.off": "<green> The verbose-mode is off now.",
   "command_permission.command.set_true": "<orange>执行指令以<red>允许<orange>所有玩家使用指令 `%s`: %s <hover:show_text:'<green>复制到剪切板'><click:copy_to_clipboard:'%s'><green>[复制]</click></hover>",
   "command_permission.command.set_false": "<orange>执行指令以<green>禁止<orange>所有玩家使用指令 `%s`: %s <hover:show_text:'<green>复制到剪切板'><click:copy_to_clipboard:'%s'><green>[复制]</click></hover>",
   "command_permission.command.unset": "<orange>执行指令以<green>取消<orange>指令 `%s` 的需求：%s <hover:show_text:'<green>复制到剪切板'><click:copy_to_clipboard:'%s'><green>[复制]</click></hover>",
