@@ -29,6 +29,9 @@ public class ServerPlayNetworkHandlerMixin {
             DisconnectionInfo disconnectionInfo,
         #endif
         CallbackInfo ci) {
-        CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), CommandEventInitializer.config.model().event.on_player_left.command_list);
+        var config = CommandEventInitializer.config.model().event.on_player_left;
+        if (config.enable) {
+            CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), config.command_list);
+        }
     }
 }

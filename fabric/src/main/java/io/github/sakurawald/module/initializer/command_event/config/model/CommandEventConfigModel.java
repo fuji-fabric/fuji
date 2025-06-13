@@ -19,6 +19,7 @@ public class CommandEventConfigModel {
         public OnPlayerLeft on_player_left = new OnPlayerLeft();
 
         public static class OnPlayerDeath {
+            public boolean enable = true;
             public List<String> command_list = new ArrayList<>() {
                 {
                     this.add("send-message %player:name% you just die.");
@@ -27,6 +28,7 @@ public class CommandEventConfigModel {
         }
 
         public static class AfterPlayerBreakBlock {
+            public boolean enable = true;
             public List<String> command_list = new ArrayList<>() {
                 {
                     this.add("send-message %player:name% you just break a block.");
@@ -36,6 +38,7 @@ public class CommandEventConfigModel {
         }
 
         public static class AfterPlayerPlaceBlock {
+            public boolean enable = true;
             public List<String> command_list = new ArrayList<>() {
                 {
                     this.add("send-message %player:name% you just place a block.");
@@ -44,6 +47,7 @@ public class CommandEventConfigModel {
         }
 
         public static class AfterPlayerRespawn {
+            public boolean enable = true;
             public List<String> command_list = new ArrayList<>() {
                 {
                     this.add("give %player:name% minecraft:apple 8");
@@ -52,6 +56,7 @@ public class CommandEventConfigModel {
         }
 
         public static class AfterPlayerChangeWorld {
+            public boolean enable = true;
             public List<String> command_list = new ArrayList<>() {
                 {
                     this.add("send-message %player:name% You are in %world:id% now!");
@@ -60,6 +65,7 @@ public class CommandEventConfigModel {
         }
 
         public static class OnPlayerFirstJoined {
+            public boolean enable = true;
             public List<String> command_list = new ArrayList<>() {
                 {
                     this.add("send-broadcast <rainbow>welcome new player %player:name% to join us!");
@@ -68,6 +74,7 @@ public class CommandEventConfigModel {
         }
 
         public static class OnPlayerJoined {
+            public boolean enable = true;
             public List<String> command_list = new ArrayList<>() {
                 {
                     this.add("send-message %player:name% welcome to the server.");
@@ -76,6 +83,7 @@ public class CommandEventConfigModel {
         }
 
         public static class OnPlayerLeft {
+            public boolean enable = true;
             public List<String> command_list = new ArrayList<>() {
                 {
                     this.add("send-broadcast %player:name% left the server.");

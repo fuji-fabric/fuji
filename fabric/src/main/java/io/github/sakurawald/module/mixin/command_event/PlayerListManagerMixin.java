@@ -31,10 +31,16 @@ public class PlayerListManagerMixin {
     void onPlayerJoined(ClientConnection clientConnection, @NotNull ServerPlayerEntity player, ConnectedClientData connectedClientData, CallbackInfo ci)
     #endif
     {
-        CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), CommandEventInitializer.config.model().event.on_player_joined.command_list);
+        var onPlayerJoinedConfig = CommandEventInitializer.config.model().event.on_player_joined;
+        if (onPlayerJoinedConfig.enable) {
+            CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), onPlayerJoinedConfig.command_list);
+        }
 
-        if (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.LEAVE_GAME)) < 1) {
-            CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), CommandEventInitializer.config.model().event.on_player_first_joined.command_list);
+        var onPlayerFirstJoinedConfig = CommandEventInitializer.config.model().event.on_player_first_joined;
+        if (onPlayerFirstJoinedConfig.enable) {
+            if (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.LEAVE_GAME)) < 1) {
+                CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), onPlayerFirstJoinedConfig.command_list);
+            }
         }
     }
 
@@ -45,8 +51,11 @@ public class PlayerListManagerMixin {
     private void afterRespawn(ServerPlayerEntity oldPlayer, boolean alive, Entity.RemovalReason removalReason, CallbackInfoReturnable<ServerPlayerEntity> cir)
     #endif
     {
-        ServerPlayerEntity newPlayer = cir.getReturnValue();
-        CommandExecutor.execute(ExtendedCommandSource.asConsole(newPlayer.getCommandSource()), CommandEventInitializer.config.model().event.after_player_respawn.command_list);
+        var config = CommandEventInitializer.config.model().event.after_player_respawn;
+        if (config.enable) {
+            ServerPlayerEntity newPlayer = cir.getReturnValue();
+            CommandExecutor.execute(ExtendedCommandSource.asConsole(newPlayer.getCommandSource()), config.command_list);
+        }
     }
 
 }
