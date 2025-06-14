@@ -43,6 +43,22 @@ However, if you want to use \ttt{string permission} for a \ttt{command}, you can
     To undo the operation in \ttt{the first example}, just issue \cmd{/lp group default permission unset fuji.permission.seed}
 \end{example}
 
+\LevelOne{Getting Started}
+Ensure you have enabled the ~\nameref{ch:command_permission} module in \mainconfig file, and re-start your server to apply the change.
+
+\begin{tips}{Query the required permission for a command string}
+    Let's say you want to grant the \tbf{proper permision} for \cmd{/back} command, so that your players can use it.
+    Here comes the problem, what is the proper permission for this command?
+    Okay, don't worry, just issue the \cmd{/command-permission describe back} command, and fuji will describe it.
+\end{tips}
+
+\begin{tips}{Setup multiple permissions at one shot}
+    A permission node may have children permissions.
+    You may want to grant one permission and all of its children permission.
+    Of course, the luckperms allows you to grant multiple permissions at one shot.
+    See more in~\nameref{ch:command_permission}.
+\end{tips}
+
 \LevelOne{Advanced Usage}
 \LevelTwo{The string permission is calculated with a context}
 The luckperms mod provides the \ttt{context} to calculate a string permission.
@@ -58,3 +74,4 @@ Luckperms pre-define some useful context like:
 \begin{enumerate}
     \item \url{https://minecraft.fandom.com/wiki/Permission\_level}
 \end{enumerate}
+
