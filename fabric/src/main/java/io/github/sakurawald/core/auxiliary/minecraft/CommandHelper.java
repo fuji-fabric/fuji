@@ -4,8 +4,11 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.CommandContextBuilder;
+import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import io.github.sakurawald.core.command.exception.AbortCommandExecutionException;
 import lombok.experimental.UtilityClass;
@@ -29,6 +32,7 @@ import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @UtilityClass
 public class CommandHelper {
@@ -41,6 +45,18 @@ public class CommandHelper {
         assert dispatcher != null;
         String[] array = dispatcher.getPath(node).toArray(new String[]{});
         return String.join(".", array);
+    }
+
+    public static String trimPath(String path) {
+        if (path.endsWith(".")) path = path.substring(0, path.length() - 1);
+        if (path.startsWith(".")) path = path.substring(1);
+        return path;
+    }
+
+    public static @NotNull String computeCommandNodePath(List<ParsedCommandNode<ServerCommandSource>> nodes) {
+        return nodes.stream()
+            .map(it -> it.getNode().getName())
+            .collect(Collectors.joining("."));
     }
 
     public static void updateCommandTree() {
@@ -69,6 +85,17 @@ public class CommandHelper {
             TextHelper.sendMessageByKey(player, "item.empty.not_allow");
             throw new AbortCommandExecutionException();
         }
+    }
+
+    public static @NotNull List<String> getCommandPathPrefixes(List<ParsedCommandNode<ServerCommandSource>> nodes) {
+        List<String> commandPaths = new ArrayList<>();
+        String rootPath = "";
+        for (ParsedCommandNode<ServerCommandSource> node : nodes) {
+            rootPath = rootPath + "." + node.getNode().getName();
+            rootPath = trimPath(rootPath);
+            commandPaths.add(rootPath);
+        }
+        return commandPaths;
     }
 
     @SuppressWarnings("unused")
@@ -157,6 +184,14 @@ public class CommandHelper {
     public static <S> boolean isExecutedOnServerSide(CommandContextBuilder<S> context) {
         // NOTE: in client-side, the S is not guarantee to be ServerCommandSource.
         return context.getSource() instanceof ServerCommandSource;
+    }
+
+    public static String getCommandNodeType(CommandNode<ServerCommandSource> node) {
+        if (node instanceof LiteralCommandNode<ServerCommandSource>) return "LiteralCommandNode";
+        if (node instanceof ArgumentCommandNode<?,?>) return "ArgumentCommandNode";
+        if (node instanceof RootCommandNode<ServerCommandSource>) return "RootCommandNode";
+
+        return "Unknown";
     }
 
 }

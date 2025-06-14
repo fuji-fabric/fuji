@@ -32,10 +32,12 @@ public class CommandPermissionGui extends PagedGui<CommandNodePermission> {
 
     @Override
     protected GuiElementInterface toGuiElement(CommandNodePermission entity) {
-        List<Text> lore = List.of(TextHelper.getTextByKey(getPlayer(), "command_permission.list.gui.entry.lore", entity.isWrapped()));
+        boolean commandNodeWrapped = CommandPermissionInitializer.isCommandNodeWrapped(entity.getNode());
+
+        List<Text> lore = List.of(TextHelper.getTextByKey(getPlayer(), "command_permission.list.gui.entry.lore", commandNodeWrapped));
 
         return new GuiElementBuilder()
-            .setItem(entity.isWrapped() ? Items.GREEN_STAINED_GLASS : Items.RED_STAINED_GLASS)
+            .setItem(commandNodeWrapped ? Items.GREEN_STAINED_GLASS : Items.RED_STAINED_GLASS)
             .setName(Text.literal(entity.getPath()))
             .setCallback((index, clickType, actionType) -> {
                 String commandPath = entity.getPath();
