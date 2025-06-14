@@ -1,7 +1,6 @@
 package io.github.sakurawald.module.initializer.world_downloader;
 
 import com.google.common.collect.EvictingQueue;
-import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
 import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.IOUtil;
@@ -33,83 +32,81 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@SuppressWarnings("UnstableApiUsage")
 public class WorldDownloaderInitializer extends ModuleInitializer {
 
+    private static final double BYTE_TO_MEGABYTE = 1.0 * 1024 * 1024;
     private static final BaseConfigurationHandler<WorldDownloaderConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, WorldDownloaderConfigModel.class);
 
-    private static EvictingQueue<String> contextQueue;
-    private static HttpServer server;
+    private static EvictingQueue<String> downloadContextQueue;
+    private static HttpServer httpServer;
 
-    private static void initServer() {
-        if (server != null) {
-            server.stop(0);
+    private static void restartHttpServer() {
+        /* If the server already started, stop it first. */
+        if (httpServer != null) {
+            httpServer.stop(0);
         }
 
+        /* Create a new http server instance. */
         try {
-            server = HttpServer.create(new InetSocketAddress(config.model().port), 0);
-            server.start();
+            httpServer = HttpServer.create(new InetSocketAddress(config.model().port), 0);
+            httpServer.start();
         } catch (IOException e) {
             LogUtil.error("Failed to start http server: {}", e.getMessage());
         }
     }
 
-    private static void safelyRemoveContext(String path) {
+    public static void safelyRemoveContext(String path) {
         try {
-            server.removeContext(path);
-        } catch (IllegalArgumentException e) {
-            // do nothing
-        }
-    }
-
-    public static void safelyRemoveContext(@NotNull HttpContext httpContext) {
-        safelyRemoveContext(httpContext.getPath());
+            httpServer.removeContext(path);
+        } catch (IllegalArgumentException ignored) {}
     }
 
     @CommandNode("download")
     @Document("Download the region file around you.")
     private static int $download(@CommandSource ServerPlayerEntity player) {
-        /* init server */
-        if (server == null) {
-            initServer();
+        /* Ensure the download server is set up. */
+        if (httpServer == null) {
+            restartHttpServer();
         }
 
-        /* remove redundant contexts */
-        if (contextQueue.remainingCapacity() == 0) {
-            LogUtil.debug("Contexts is full, remove the oldest context. {}", contextQueue.peek());
-            safelyRemoveContext(contextQueue.poll());
+        /* Ensure the max simultaneous download count. */
+        if (downloadContextQueue.remainingCapacity() == 0) {
+            LogUtil.debug("Contexts is full, remove the oldest context. {}", downloadContextQueue.peek());
+            safelyRemoveContext(downloadContextQueue.poll());
         }
 
-        /* create context */
+        /* Make url and path. */
         String url = config.model().url_format;
-
         int port = config.model().port;
         url = url.replace("%port%", String.valueOf(port));
         String path = "/world-download/" + UUID.randomUUID();
         url = url.replace("%path%", path);
+        downloadContextQueue.add(path);
 
-        contextQueue.add(path);
+        /* Make a new download context. */
         File file = compressRegionFile(player);
-        double BYTE_TO_MEGABYTE = 1.0 * 1024 * 1024;
         TextHelper.sendBroadcastByKey("world_downloader.request", player.getGameProfile().getName(), file.length() / BYTE_TO_MEGABYTE);
-        server.createContext(path, new FileDownloadHandler(file, config.model().bytes_per_second_limit));
+
+        httpServer.createContext(path, new FileDownloadHandler(file, config.model().bytes_per_second_limit));
         TextHelper.sendMessageByKey(player, "world_downloader.response", url);
         return CommandHelper.Return.SUCCESS;
     }
 
     public static @NotNull File compressRegionFile(@NotNull ServerPlayerEntity player) {
-        /* get region location */
+        /* Get region location. */
         ChunkPos chunkPos = player.getChunkPos();
         int regionX = chunkPos.getRegionX();
         int regionZ = chunkPos.getRegionZ();
 
-        /* get world folder */
+        /* Get world folder. */
         ServerWorld world = EntityHelper.getServerWorld(player);
         MinecraftServer server = world.getServer();
         RegistryKey<World> dimensionKey = world.getRegistryKey();
         LevelStorage.Session session = server.session;
         File worldDirectory = session.getWorldDirectory(dimensionKey).toFile();
 
-        /* compress file */
+        /* Compress files. */
         String regionName = "r." + regionX + "." + regionZ + ".mca";
         List<File> input = new ArrayList<>() {
             {
@@ -131,12 +128,12 @@ public class WorldDownloaderInitializer extends ModuleInitializer {
 
     @Override
     protected void onInitialize() {
-        contextQueue = EvictingQueue.create(config.model().context_cache_size);
+        downloadContextQueue = EvictingQueue.create(config.model().max_simultaneous_download_count);
     }
 
     @Override
     protected void onReload() {
-        initServer();
+        restartHttpServer();
     }
 
 }

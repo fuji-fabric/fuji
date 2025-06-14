@@ -28,10 +28,10 @@ public class FileDownloadHandler implements HttpHandler {
     public void handle(@NotNull HttpExchange exchange) {
         LogUtil.info("Download file: {}", file.getAbsolutePath());
 
-        /* consume this context */
-        WorldDownloaderInitializer.safelyRemoveContext(exchange.getHttpContext());
+        /* Consume the context. A context can only be consumed once. */
+        WorldDownloaderInitializer.safelyRemoveContext(exchange.getHttpContext().getPath());
 
-        /* transfer */
+        /* Transfer bits to the downloading user. */
         if ("GET".equals(exchange.getRequestMethod())) {
             if (file.exists() && file.isFile()) {
                 exchange.getResponseHeaders().set("Content-Disposition", "attachment; filename=" + file.getName());
@@ -70,6 +70,6 @@ public class FileDownloadHandler implements HttpHandler {
                 os.write(response.getBytes());
             }
         }
-        LogUtil.info("Delete file: {} -> {}", file.getAbsolutePath(), file.delete());
+        LogUtil.info("Delete file: {} (success: {})", file.getAbsolutePath(), file.delete());
     }
 }
