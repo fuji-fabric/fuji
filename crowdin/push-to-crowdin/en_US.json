@@ -260,6 +260,8 @@
   "command_permission.verbose.on": "<green>You have turn on the verbose-mode. Now you can issue commands, and see how command_permission module works in the console.",
   "command_permission.verbose.off": "<green>The verbose-mode is off now.",
   "command_permission.describe.command_string": "<yellow>The command string is: `%s`",
+  "command_permission.describe.parser_exception.info": "<red>There are exceptions while parsing the command string: ",
+  "command_permission.describe.parser_exception.exception": "<red>%s -> %s",
   "command_permission.describe.command_path": "<yellow>The command path is: `%s`",
   "command_permission.describe.command_permissions": "<yellow>The command permissions are: ",
   "command_permission.describe.command_permission": "<yellow>- `%s`",
