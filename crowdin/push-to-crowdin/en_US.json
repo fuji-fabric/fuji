@@ -262,7 +262,7 @@
   "command_permission.describe.command_string": "<yellow>◉ The command string is: `%s`",
   "command_permission.describe.command_string.parser.exceptions": "<red>◉ There are exceptions while parsing the command string: ",
   "command_permission.describe.command_string.parser.exception": "<red>%s -> %s",
-  "command_permission.describe.command_node.nodes": "<yellow>We parse the command string into command nodes: `%s`",
+  "command_permission.describe.command_node.nodes": "<yellow>◉ We parse the command string into command nodes: `%s`",
   "command_permission.describe.command_node.node": "<yellow>For node `%s`, its type is `%s`. (Is the requirement of this node wrapped by command_permission module: `%s`)",
   "command_permission.describe.command_path": "<yellow>◉ The command path is: `%s`",
   "command_permission.describe.command_path.error": "<red>◉ The command path is empty. Did you input the wrong command string?",
