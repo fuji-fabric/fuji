@@ -14,7 +14,6 @@
     "anti_build.BlockItemMixin",
     "anti_build.ServerPlayerInteractionManagerMixin",
     "back.ServerPlayerEntityMixin",
-    "chat.display.ServerPlayNetworkHandlerMixin",
     "chat.history.SendChatHistoryMixin",
     "chat.history.StoreChatHistoryMixin",
     "chat.mention.ServerPlayNetworkHandlerMixin",

@@ -13,9 +13,9 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
@@ -23,26 +23,24 @@ import java.util.stream.Stream;
 public class ShulkerBoxDisplayGui extends BaseDisplayGui {
 
     private static final int SHULKER_BOX_MAX_CAPACITY = 3 * 9;
-    private final Text title;
-    private final ItemStack itemStack;
-    private final SimpleGui parentGui;
+    private final @NotNull ItemStack shulkerBoxStack;
+    private final @Nullable SimpleGui parentGui;
 
-    public ShulkerBoxDisplayGui(Text title, ItemStack itemStack, SimpleGui parentGui) {
-        this.title = title;
-        this.itemStack = itemStack;
+    public ShulkerBoxDisplayGui(ServerPlayerEntity sourcePlayer, @NotNull ItemStack shulkerBoxStack, @Nullable SimpleGui parentGui) {
+        super(sourcePlayer);
+        this.shulkerBoxStack = shulkerBoxStack;
         this.parentGui = parentGui;
     }
 
-    private static @NotNull Stream<ItemStack> extractItemListFromShulkerBox(ItemStack stack) {
+    private static @NotNull Stream<ItemStack> extractItemsFromShulkerBox(ItemStack shulkerBoxStack) {
 
         #if MC_VER <= MC_1_20_4
-        NbtCompound blockEntityData = BlockItem.getBlockEntityNbt(stack);
+        NbtCompound blockEntityData = BlockItem.getBlockEntityNbt(shulkerBoxStack);
         if (blockEntityData != null) {
             NbtList items = (NbtList) blockEntityData.get("Items");
             if (items == null) return Stream.empty();
 
             DefaultedList<ItemStack> temp = DefaultedList.ofSize(SHULKER_BOX_MAX_CAPACITY, ItemStack.EMPTY);
-
             items.forEach(item -> {
                 NbtCompound itemNbtCompound = (NbtCompound) item;
                 int slotIndex = itemNbtCompound.getInt("Slot");
@@ -65,23 +63,22 @@ public class ShulkerBoxDisplayGui extends BaseDisplayGui {
     }
 
     @Override
-    public @NotNull SimpleGui build(ServerPlayerEntity player) {
-        SimpleGui gui = new SimpleGui(ScreenHandlerType.GENERIC_9X4, player, false);
+    public @NotNull SimpleGui build(ServerPlayerEntity viewerPlayer) {
+        SimpleGui gui = new SimpleGui(ScreenHandlerType.GENERIC_9X4, viewerPlayer, false);
         gui.setLockPlayerInventory(true);
         gui.setTitle(this.title);
 
-        /* construct base  */
+        /* Place UI items.  */
         for (int i = 0; i < 9; i++) {
             gui.setSlot(i, GuiHelper.makeSlotPlaceholder().getItemStack());
         }
-        gui.setSlot(4, itemStack);
+        gui.setSlot(4, shulkerBoxStack);
         if (this.parentGui != null) {
-            gui.setSlot(LINE_SIZE - 1, GuiHelper.makeBackButton(player).setCallback(parentGui::open));
+            gui.setSlot(LINE_SIZE - 1, GuiHelper.makeBackButton(viewerPlayer).setCallback(parentGui::open));
         }
 
-        /* construct items */
-        Stream<ItemStack> containerStream = extractItemListFromShulkerBox(itemStack);
-
+        /* Place container items. */
+        Stream<ItemStack> containerStream = extractItemsFromShulkerBox(shulkerBoxStack);
         var counter = new Object() {
             int offset = 0;
         };

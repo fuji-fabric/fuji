@@ -65,6 +65,7 @@ It's good to have a checklist, to avoid forgetting something.
 - Test the translatable text in `[item]` or `%fuji:item%` in chat message.
 - Place a `sign` to see if colorful `Text` can be parsed and reversed.
 - Sit in a `boat` and move it.
+- Issue `/sit` and sit in a bed, to see if the raycast height is correct.
 - Issue `/view {inv/ender}` command, and see if it can change the inv of another player on the fly.
 - Issue `/home` to see if it's rewrited to `/home tp default`.
 - Issue `/back` to see if the `command advice` is processed exactly once. 

@@ -5,30 +5,30 @@ import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 public class ItemDisplayGui extends BaseDisplayGui {
 
-    private final Text title;
     private final ItemStack itemStack;
 
-    public ItemDisplayGui(Text title, ItemStack itemStack) {
-        this.title = title;
+    public ItemDisplayGui(ServerPlayerEntity sourcePlayer, ItemStack itemStack) {
+        super(sourcePlayer);
         this.itemStack = itemStack;
     }
 
     @Override
-    public @NotNull SimpleGui build(ServerPlayerEntity player) {
-        SimpleGui gui = new SimpleGui(ScreenHandlerType.GENERIC_3X3, player, false);
+    public @NotNull SimpleGui build(ServerPlayerEntity viewerPlayer) {
+        /* Make the GUI. */
+        SimpleGui gui = new SimpleGui(ScreenHandlerType.GENERIC_3X3, viewerPlayer, false);
         gui.setLockPlayerInventory(true);
         gui.setTitle(this.title);
 
-        /* construct base */
+        /* Place UI items. */
         for (int i = 0; i < 9; i++) {
             gui.setSlot(i, GuiHelper.makeSlotPlaceholder().getItemStack());
         }
-        /* construct item */
+
+        /* Place the displaying item. */
         gui.setSlot(4, itemStack);
         return gui;
     }
