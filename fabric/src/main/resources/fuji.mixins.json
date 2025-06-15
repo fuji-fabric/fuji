@@ -45,7 +45,7 @@
     "command_toolbox.nickname.ServerPlayerEntityMixin",
     "command_toolbox.reply.MsgCommandMixin",
     "command_toolbox.seen.PlayerListMixin",
-    "command_toolbox.sit.InteractModifierMixin",
+    "sit.InteractModifierMixin",
     "command_warmup.ServerPlayNetworkHandlerMixin",
     "core.command.CommandContextBuilderMixin",
     "core.command.CommandDispatcherMixin",

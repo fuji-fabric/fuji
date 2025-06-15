@@ -103,6 +103,7 @@ public class ConfigModel {
         public TempBan temp_ban = new TempBan();
         public CommandMeta command_meta = new CommandMeta();
         public Gameplay gameplay = new Gameplay();
+        public Sit sit = new Sit();
 
         public static class World {
             public boolean enable = false;
@@ -480,7 +481,6 @@ public class ConfigModel {
             }
         }
 
-
         public static class CommandMeta {
             public boolean enable = false;
 
@@ -526,6 +526,10 @@ public class ConfigModel {
             }
         }
 
+        public static class Sit {
+            public boolean enable = false;
+        }
+
         public static class CommandToolbox {
             public boolean enable = false;
             public Bed bed = new Bed();
@@ -534,7 +538,6 @@ public class ConfigModel {
             public Fly fly = new Fly();
             public God god = new God();
             public Hat hat = new Hat();
-            public Sit sit = new Sit();
             public Heal heal = new Heal();
             public Lore lore = new Lore();
             public More more = new More();
@@ -594,10 +597,6 @@ public class ConfigModel {
             }
 
             public static class Lore {
-                public boolean enable = false;
-            }
-
-            public static class Sit {
                 public boolean enable = false;
             }
 

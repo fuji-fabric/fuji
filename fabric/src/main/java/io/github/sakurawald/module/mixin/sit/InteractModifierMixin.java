@@ -1,6 +1,6 @@
-package io.github.sakurawald.module.mixin.command_toolbox.sit;
+package io.github.sakurawald.module.mixin.sit;
 
-import io.github.sakurawald.module.initializer.command_toolbox.sit.SitInitializer;
+import io.github.sakurawald.module.initializer.sit.SitInitializer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SideShapeType;
@@ -60,16 +60,16 @@ public class InteractModifierMixin {
     public void rightClickToSit(@NotNull ServerPlayerEntity player, @NotNull World world, ItemStack stack, Hand hand, @NotNull BlockHitResult hitResult, @NotNull CallbackInfoReturnable<ActionResult> callbackInfoReturnable) {
         /* Verify. */
         var config = SitInitializer.config.model();
-        if (!config.allow_right_click_a_stair_block_or_slab_block_to_sit) return;
-        if (!config.allow_sneaking_to_sit && player.isSneaking()) return;
+        if (!config.right_click_to_sit.enable) return;
+        if (!config.right_click_to_sit.allow_sneaking_to_sit && player.isSneaking()) return;
         if (!SitInitializer.canSitNow(player)) return;
-        if (config.require_empty_hand_to_sit && !player.getMainHandStack().isEmpty()) return;
+        if (config.right_click_to_sit.require_empty_hand_to_sit && !player.getMainHandStack().isEmpty()) return;
 
         // Verify surrounding blocks.
         BlockPos hitBlockPos = hitResult.getBlockPos();
         BlockState hitBlockState = world.getBlockState(hitBlockPos);
         Block hitBlock = hitBlockState.getBlock();
-        if (config.require_no_opaque_block_above_to_sit && world.getBlockState(hitBlockPos.add(0, 1, 0)).isOpaque()) return;
+        if (config.right_click_to_sit.require_no_opaque_block_above_to_sit && world.getBlockState(hitBlockPos.add(0, 1, 0)).isOpaque()) return;
 
         // Only allow to right-click to sit on stair block or slab block.
         if (!(hitBlock instanceof StairsBlock) && !(hitBlock instanceof SlabBlock)) return;
@@ -78,7 +78,7 @@ public class InteractModifierMixin {
         if (hitBlockState.isSideSolid(world, hitBlockPos, Direction.UP, SideShapeType.RIGID)) return;
 
         // Verify max distance to sit.
-        final double maxDistanceToSit = config.max_distance_to_sit;
+        final double maxDistanceToSit = config.right_click_to_sit.max_distance_to_sit;
         double givenDist = hitBlockPos.getSquaredDistance(player.getBlockPos());
         if (maxDistanceToSit > 0 && givenDist > maxDistanceToSit * maxDistanceToSit) return;
 

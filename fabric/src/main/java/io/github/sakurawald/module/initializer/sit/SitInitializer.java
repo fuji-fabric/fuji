@@ -1,4 +1,4 @@
-package io.github.sakurawald.module.initializer.command_toolbox.sit;
+package io.github.sakurawald.module.initializer.sit;
 
 import io.github.sakurawald.core.annotation.Cite;
 import io.github.sakurawald.core.annotation.Document;
@@ -13,7 +13,7 @@ import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
-import io.github.sakurawald.module.initializer.command_toolbox.sit.config.model.SitConfigModel;
+import io.github.sakurawald.module.initializer.sit.config.model.SitConfigModel;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.command.argument.EntityAnchorArgumentType;

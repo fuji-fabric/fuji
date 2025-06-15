@@ -59,7 +59,6 @@ command_toolbox.realname
 command_toolbox.repair
 command_toolbox.reply
 command_toolbox.seen
-command_toolbox.sit
 command_toolbox.suicide
 command_toolbox.top
 command_toolbox.tppos
@@ -110,6 +109,7 @@ predicate
 profiler
 pvp
 rtp
+sit
 skin
 system_message
 tab

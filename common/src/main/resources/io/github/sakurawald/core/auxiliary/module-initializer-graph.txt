@@ -53,7 +53,6 @@ io.github.sakurawald.module.initializer.command_toolbox.realname.RealnameInitial
 io.github.sakurawald.module.initializer.command_toolbox.repair.RepairInitializer
 io.github.sakurawald.module.initializer.command_toolbox.reply.ReplyInitializer
 io.github.sakurawald.module.initializer.command_toolbox.seen.SeenInitializer
-io.github.sakurawald.module.initializer.command_toolbox.sit.SitInitializer
 io.github.sakurawald.module.initializer.command_toolbox.suicide.SuicideInitializer
 io.github.sakurawald.module.initializer.command_toolbox.top.TopInitializer
 io.github.sakurawald.module.initializer.command_toolbox.tppos.TpposInitializer
@@ -94,6 +93,7 @@ io.github.sakurawald.module.initializer.predicate.PredicateInitializer
 io.github.sakurawald.module.initializer.profiler.ProfilerInitializer
 io.github.sakurawald.module.initializer.pvp.PvpInitializer
 io.github.sakurawald.module.initializer.rtp.RtpInitializer
+io.github.sakurawald.module.initializer.sit.SitInitializer
 io.github.sakurawald.module.initializer.skin.SkinInitializer
 io.github.sakurawald.module.initializer.system_message.SystemMessageInitializer
 io.github.sakurawald.module.initializer.tab.TabListInitializer
