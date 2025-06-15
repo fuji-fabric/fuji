@@ -18,7 +18,7 @@
     "chat.history.StoreChatHistoryMixin",
     "chat.mention.ServerPlayNetworkHandlerMixin",
     "chat.replace.ServerPlayNetworkHandlerMixin",
-    "chat.rewrite.ServerPlayNetworkHandlerMixin",
+    "chat.trigger.ServerPlayNetworkHandlerMixin",
     "chat.spy.ServerPlayNetworkHandlerMixin",
     "chat.style.ServerPlayNetworkHandlerMixin",
     "chat.style.message_type.RegistryLoaderMixin",

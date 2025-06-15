@@ -5,10 +5,10 @@ io.github.sakurawald.module.initializer.back.BackInitializer
 io.github.sakurawald.module.initializer.chat.display.ChatDisplayInitializer
 io.github.sakurawald.module.initializer.chat.history.ChatHistoryInitializer
 io.github.sakurawald.module.initializer.chat.mention.ChatMentionInitializer
-io.github.sakurawald.module.initializer.chat.replace.model.ChatReplaceInitializer
-io.github.sakurawald.module.initializer.chat.rewrite.ChatRewriteInitializer
+io.github.sakurawald.module.initializer.chat.replace.ChatReplaceInitializer
 io.github.sakurawald.module.initializer.chat.spy.ChatSpyInitializer
 io.github.sakurawald.module.initializer.chat.style.ChatStyleInitializer
+io.github.sakurawald.module.initializer.chat.trigger.ChatTriggerInitializer
 io.github.sakurawald.module.initializer.cleaner.CleanerInitializer
 io.github.sakurawald.module.initializer.color.anvil.ColorAnvilInitializer
 io.github.sakurawald.module.initializer.color.sign.ColorSignInitializer

@@ -143,7 +143,7 @@ public class ConfigModel {
             public Style style = new Style();
             public Display display = new Display();
             public History history = new History();
-            public Rewrite rewrite = new Rewrite();
+            public Trigger trigger = new Trigger();
             public Replace replace = new Replace();
             public Mention mention = new Mention();
             public Spy spy = new Spy();
@@ -160,7 +160,7 @@ public class ConfigModel {
                 public boolean enable = true;
             }
 
-            public static class Rewrite {
+            public static class Trigger {
                 public boolean enable = true;
             }
 

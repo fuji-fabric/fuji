@@ -7,9 +7,9 @@ chat.display
 chat.history
 chat.mention
 chat.replace
-chat.rewrite
 chat.spy
 chat.style
+chat.trigger
 cleaner
 color
 color.anvil

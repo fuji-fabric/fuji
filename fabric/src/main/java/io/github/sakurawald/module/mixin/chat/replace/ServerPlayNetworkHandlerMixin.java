@@ -1,6 +1,6 @@
 package io.github.sakurawald.module.mixin.chat.replace;
 
-import io.github.sakurawald.module.initializer.chat.replace.model.ChatReplaceInitializer;
+import io.github.sakurawald.module.initializer.chat.replace.ChatReplaceInitializer;
 import net.minecraft.network.message.SignedMessage;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
