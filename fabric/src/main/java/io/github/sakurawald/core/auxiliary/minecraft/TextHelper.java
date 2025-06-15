@@ -499,6 +499,12 @@ public class TextHelper {
         };
     }
 
+    public static void sendBroadcastByValue(Text text) {
+        for (ServerPlayerEntity player : ServerHelper.getPlayers()) {
+            player.sendMessage(text);
+        }
+    }
+
     public static class ClickEvent {
 
         public static net.minecraft.text.ClickEvent makeRunCommandAction(String command) {
