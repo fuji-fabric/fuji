@@ -1,15 +1,17 @@
 \LevelThree{replace}\label{ch:chat_replace}
 \LevelFour{Purpose}
-Allow you to define \ttt{regex} to replace \ttt{chat text} with a given text before it's sent to the player.
+Allow you to define \ttt{regex} to replace \ttt{chat string} with a given \ttt{chat text}.
 
-\begin{note}{The difference with chat rewrite module}
-    The \ttt{chat rewrite} module operates on \ttt{string level}, while \ttt{chat replace} module operates on \ttt{text level}.
-    The chat rewrite module rewrites the chat string received from the client, and pass this string to the chat string processor, the chat string processor will yield the final chat text, which is ready to sent to the receiver player.
-    This module will replace the final chat text using the defined rules.
-\end{note}
+\begin{warn}{Didn't work with Styled Chat mod}
+    The \ttt{chat.replace} module does work with \ttt{chat.style} module.
+    But if you are using \ttt{Styled Chat} mod to handle the chat style, then this module will not work.
+    It's because the \ttt{Styled Chat} mod hacks the Minecraft internal chat processing flow, and making the \ttt{chat.replace} module failed to work.
+    However, since \ttt{Styled Chat} mod does support you to define custom \ttt{emotions}, which provides the same purpose as \ttt{chat.replace} module.
+    \tbf{So, if you are using \ttt{Styled Chat} mod, you didn't need the \ttt{chat.replace} module, you can disable it!}
+\end{warn}
 
 \LevelFour{Example}
-\begin{example}{Define a shortcut to evaluate a placeholder}
+\begin{example}{Define a chat shortcut to evaluate a placeholder}
     \begin{jsoncode}
     {
         "regex": "(?<=^|\\s)uuid(?=\\s|$)",
