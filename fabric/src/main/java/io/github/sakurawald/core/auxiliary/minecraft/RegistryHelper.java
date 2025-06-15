@@ -6,6 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.message.MessageType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -111,4 +112,18 @@ public class RegistryHelper {
         // Return the identifier.
         return ref.result;
     }
+
+    public static String getMessageTypeAsString(MessageType.Parameters parameters) {
+        String messageTypeString;
+
+        #if MC_VER <= MC_1_20_4
+            MessageType messageTypeObj = parameters.type();
+            messageTypeString = RegistryHelper.findRegistryKeyByRegistryValueInASpecifiedRegistry(RegistryKeys.MESSAGE_TYPE, messageTypeObj);
+        #elif MC_VER > MC_1_20_4
+            messageTypeString = parameters.type().getIdAsString();
+        #endif
+
+        return messageTypeString;
+    }
+
 }

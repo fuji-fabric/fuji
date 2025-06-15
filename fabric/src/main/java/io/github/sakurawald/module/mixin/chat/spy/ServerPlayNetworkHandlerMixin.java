@@ -4,7 +4,6 @@ import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.module.initializer.chat.spy.ChatSpyInitializer;
 import net.minecraft.network.message.MessageType;
 import net.minecraft.network.message.SignedMessage;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,12 +22,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
     @Inject(method = "sendChatMessage", at = @At(value = "HEAD"))
     public void spy(SignedMessage signedMessage, MessageType.Parameters parameters, CallbackInfo ci) {
         /* Extract the message type string. */
-        #if MC_VER <= MC_1_20_4
-        MessageType messageTypeObj = parameters.type();
-        String messageTypeString = RegistryHelper.findRegistryKeyByRegistryValueInASpecifiedRegistry(RegistryKeys.MESSAGE_TYPE, messageTypeObj);
-        #elif MC_VER > MC_1_20_4
-        String messageTypeString = parameters.type().getIdAsString();
-        #endif
+        String messageTypeString = RegistryHelper.getMessageTypeAsString(parameters);
 
         /* Process it. */
         ChatSpyInitializer.processChatSpy(messageTypeString, getPlayer(), signedMessage, parameters);
