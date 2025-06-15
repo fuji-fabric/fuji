@@ -24,7 +24,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
         super(world, blockPos, f, gameProfile);
     }
     #elif MC_VER >= MC_1_21_6
-    public PvpToggleMixin(World world, GameProfile gameProfile) {
+    public ServerPlayerEntityMixin(World world, GameProfile gameProfile) {
         super(world, gameProfile);
     }
     #endif
