@@ -27,7 +27,7 @@ public class CommandDescriptorGui extends PagedGui<CommandDescriptor> {
         return new CommandDescriptorGui(player, entities, pageIndex);
     }
 
-    private List<Text> computeLore(CommandDescriptor entity) {
+    private List<Text> computeDocumentsLore(CommandDescriptor entity) {
         List<Text> lore = new ArrayList<>();
 
         /* method document */
@@ -47,16 +47,24 @@ public class CommandDescriptorGui extends PagedGui<CommandDescriptor> {
     @Override
     protected GuiElementInterface toGuiElement(CommandDescriptor entity) {
         List<Text> lore = new ArrayList<>();
+
+        /* Add basic properties of command descriptor. */
         lore.addAll(List.of(
             TextHelper.getTextByKey(getPlayer(),"command.registered_by_module", ModuleManager.computeModulePathAsString(entity.method.getDeclaringClass().getName()))
             , TextHelper.getTextByKey(getPlayer(), "command.source.can_be_executed_by_console", entity.canBeExecutedByConsole())
             , TextHelper.getTextByKey(getPlayer(), "command.descriptor.type", entity.getClass().getSimpleName())
             , TextHelper.getTextByKey(getPlayer(), "command.requirement.level_permission", entity.getDefaultLevelPermission())
             , TextHelper.getTextByKey(getPlayer(), "command.requirement.string_permission", entity.getDefaultStringPermission())
-            , Text.empty()
         ));
-        lore.addAll(computeLore(entity));
 
+        /* Add documents lore of this command. */
+        List<Text> documents = computeDocumentsLore(entity);
+        if (!documents.isEmpty()) {
+            documents.add(0, Text.empty());
+            lore.addAll(documents);
+        }
+
+        /* Make the GUI. */
         return new GuiElementBuilder()
             .setName(Text.literal(entity.getCommandSyntax()))
             .setItem(Items.REPEATING_COMMAND_BLOCK)
