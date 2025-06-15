@@ -23,7 +23,7 @@ public class MentionPlayersJob extends FixedIntervalJob {
         super(null, null, jobDataMap, intervalMs, repeatCount);
     }
 
-    public static void requestJob(MentionPlayer setup, List<ServerPlayerEntity> players) {
+    public static void submitJob(MentionPlayer setup, List<ServerPlayerEntity> players) {
         int intervalMs = setup.interval_ms;
         int repeatCount = setup.repeat_count;
 
@@ -35,8 +35,8 @@ public class MentionPlayersJob extends FixedIntervalJob {
         }, intervalMs, repeatCount).schedule();
     }
 
-    public static void requestJob(MentionPlayer setup, ServerPlayerEntity serverPlayer) {
-        requestJob(setup, new ArrayList<>(Collections.singletonList(serverPlayer)));
+    public static void submitJob(MentionPlayer setup, ServerPlayerEntity serverPlayer) {
+        submitJob(setup, new ArrayList<>(Collections.singletonList(serverPlayer)));
     }
 
     @SuppressWarnings("unchecked")

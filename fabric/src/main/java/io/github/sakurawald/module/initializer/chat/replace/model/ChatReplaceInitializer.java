@@ -12,13 +12,15 @@ import net.minecraft.text.Text;
 
 public class ChatReplaceInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<ChatReplaceConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatReplaceConfigModel.class);
+    private static final BaseConfigurationHandler<ChatReplaceConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatReplaceConfigModel.class);
 
     public static Text replaceChatText(PlayerEntity player, Text text) {
         MutableText ret = text.copy();
 
         for (RegexRewriteNode rule : config.model().replace.regex) {
-            ret = TextHelper.replaceTextWithRegex(ret, rule.getRegex(), () -> TextHelper.getTextByValue(player, rule.getReplacement()));
+            String regex = rule.getRegex();
+            Text replacement = TextHelper.getTextByValue(player, rule.getReplacement());
+            ret = TextHelper.replaceTextWithRegex(ret, regex, () -> replacement);
         }
 
         LogUtil.debug("Replace chat text: old = {}, new = {}", text, ret);

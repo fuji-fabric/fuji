@@ -115,7 +115,7 @@ public class TpaInitializer extends ModuleInitializer {
 
             ServerPlayerEntity who = request.getTeleportWho();
             ServerPlayerEntity to = request.getTeleportTo();
-            MentionPlayersJob.requestJob(config.model().mention_player, request.isTpahere() ? to : who);
+            MentionPlayersJob.submitJob(config.model().mention_player, request.isTpahere() ? to : who);
 
             new SpatialPose(to.getWorld(), to.getX(), to.getY(), to.getZ(), to.getYaw(), to.getPitch())
                 .teleport(who);
@@ -153,7 +153,7 @@ public class TpaInitializer extends ModuleInitializer {
 
         /* feedback */
         request.getReceiver().sendMessage(request.asReceiverText$Sent());
-        MentionPlayersJob.requestJob(config.model().mention_player, request.getReceiver());
+        MentionPlayersJob.submitJob(config.model().mention_player, request.getReceiver());
         request.getSender().sendMessage(request.asSenderText$Sent());
         return CommandHelper.Return.SUCCESS;
     }

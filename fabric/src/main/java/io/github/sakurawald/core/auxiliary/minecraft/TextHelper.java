@@ -278,8 +278,12 @@ public class TextHelper {
         return string;
     }
 
+    public static String visitString(Text text) {
+        return text.getString();
+    }
+
     public static @NotNull String parsePlaceholder(@Nullable Object audience, String value) {
-        return TextHelper.getText(PLACEHOLDER_PARSER, audience, false, value).getString();
+        return visitString(TextHelper.getText(PLACEHOLDER_PARSER, audience, false, value));
     }
 
     /* This is the core method to map `String` into `Text`.
@@ -403,7 +407,7 @@ public class TextHelper {
     public static void sendBroadcastByKey(@NotNull String key, Object... args) {
         // fix: log broadcast for console
         Text text = getTextByKey(null, key, args);
-        LogUtil.info(text.getString());
+        LogUtil.info(visitString(text));
 
         for (ServerPlayerEntity player : ServerHelper.getServer().getPlayerManager().getPlayerList()) {
             TextHelper.sendMessageByKey(player, key, args);
@@ -500,6 +504,8 @@ public class TextHelper {
     }
 
     public static void sendBroadcastByValue(Text text) {
+        LogUtil.info(visitString(text));
+
         for (ServerPlayerEntity player : ServerHelper.getPlayers()) {
             player.sendMessage(text);
         }
