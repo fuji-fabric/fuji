@@ -1,6 +1,11 @@
 \LevelThree{display}
 \LevelFour{Purpose}
-Allow players to share their item in hand, items in inventory and items in ender chest.
+This module allows player to share their main hand item, their inventory and their enderchest.
+
+\LevelFour{Purpose}
+\fcmd{/chat display item}
+\fcmd{/chat display inv}
+\fcmd{/chat display ender}
 
 \LevelFour{Placeholder}
 \begin{description}
@@ -16,14 +21,4 @@ Allow players to share their item in hand, items in inventory and items in ender
         Note that if a player shares its inventory items, then fuji will save a copy of his inventory data in the memory.
     }
 
-    \item[replace\_pattern] {
-        Define the \ttt{patterns} to be replaced in chat message.
-        By default, you can insert \str{[item]}, \str{[inv]} and \str{[ender]} to create displays.
-    }
-
 \end{Configuration}
-
-\LevelFour{Example}
-\begin{example}{Use chat rewrite module to create a shortcut}
-    See~\nameref{ch:chat_rewrite}
-\end{example}
