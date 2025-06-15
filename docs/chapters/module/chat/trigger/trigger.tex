@@ -1,0 +1,43 @@
+\LevelThree{trigger}\label{ch:chat_trigger}
+\LevelFour{Purpose}
+Allow you to define magic spells in chat string, to execute commands.
+
+\begin{tips}{Works with Styled Chat mod}
+    The \ttt{chat.trigger} module works with \ttt{Styled Chat} mod.
+\end{tips}
+
+\LevelFour{Example}
+
+\begin{example}{Define a simple magic spell in chat string.}
+    \begin{jsoncode}
+    {
+      "regex": "magic",
+      "commands": [
+        "say magic!"
+      ]
+    },
+    \end{jsoncode}
+\end{example}
+
+\begin{example}{Define a complex magic spell with arguments in chat string.}
+    \begin{jsoncode}
+    {
+      "regex": "i am (.+)",
+      "commands": [
+        "say You just said: $0",
+        "say Hello $1"
+      ]
+    },
+    \end{jsoncode}
+\end{example}
+
+\begin{example}{Define a shortcut for chat display module with Styled Chat mod}
+    \begin{jsoncode}
+    {
+      "regex": "(?<=^|\\s)item(?=\\s|$)",
+      "commands": [
+        "run as fake-op %player:name% chat display item"
+      ]
+    },
+    \end{jsoncode}
+\end{example}
