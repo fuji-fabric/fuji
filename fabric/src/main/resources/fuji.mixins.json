@@ -73,7 +73,7 @@
     "multiplier.ServerPlayerMixin",
     "placeholder.ServerPlayerEntityMixin",
     "placeholder.ServerPlayNetworkHandlerMixin",
-    "pvp.PvpToggleMixin",
+    "pvp.ServerPlayerEntityMixin",
     "skin.PlayerListMixin",
     "skin.ServerLoginNetworkHandlerMixin",
     "system_message.ServerPlayerEntityMixin",

@@ -1,6 +1,7 @@
 package io.github.sakurawald.module.initializer.pvp;
 
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandSource;
@@ -17,15 +18,16 @@ import java.util.Set;
 
 public class PvpInitializer extends ModuleInitializer {
 
-    private static final BaseConfigurationHandler<PvPDataModel> pvpHandler = new ObjectConfigurationHandler<>("pvp.json", PvPDataModel.class);
+    private static final BaseConfigurationHandler<PvPDataModel> data = new ObjectConfigurationHandler<>("pvp.json", PvPDataModel.class);
 
     @CommandNode("pvp on")
     private static int $on(@CommandSource @CommandTarget ServerPlayerEntity player) {
-        Set<String> whitelist = pvpHandler.model().whitelist;
-        String name = player.getGameProfile().getName();
+        Set<String> whitelist = data.model().whitelist;
+        String name = PlayerHelper.getName(player);
+
         if (!whitelist.contains(name)) {
             whitelist.add(name);
-            pvpHandler.writeStorage();
+            data.writeStorage();
 
             TextHelper.sendMessageByKey(player, "pvp.on");
             return CommandHelper.Return.SUCCESS;
@@ -37,11 +39,12 @@ public class PvpInitializer extends ModuleInitializer {
 
     @CommandNode("pvp off")
     private static int $off(@CommandSource @CommandTarget ServerPlayerEntity player) {
-        Set<String> whitelist = pvpHandler.model().whitelist;
-        String name = player.getGameProfile().getName();
+        Set<String> whitelist = data.model().whitelist;
+        String name = PlayerHelper.getName(player);
+
         if (whitelist.contains(name)) {
             whitelist.remove(name);
-            pvpHandler.writeStorage();
+            data.writeStorage();
 
             TextHelper.sendMessageByKey(player, "pvp.off");
             return CommandHelper.Return.SUCCESS;
@@ -53,9 +56,10 @@ public class PvpInitializer extends ModuleInitializer {
 
     @CommandNode("pvp status")
     private static int $status(@CommandSource @CommandTarget ServerPlayerEntity player) {
-        Set<String> whitelist = pvpHandler.model().whitelist;
+        Set<String> whitelist = data.model().whitelist;
+        String name = PlayerHelper.getName(player);
 
-        boolean flag = whitelist.contains(player.getGameProfile().getName());
+        boolean flag = whitelist.contains(name);
         player.sendMessage(
             TextHelper.getTextByKey(player, "pvp.status")
                 .copy()
@@ -65,13 +69,14 @@ public class PvpInitializer extends ModuleInitializer {
 
     @CommandNode("pvp list")
     private static int $list(@CommandSource ServerCommandSource source) {
-        Set<String> whitelist = pvpHandler.model().whitelist;
+        Set<String> whitelist = data.model().whitelist;
         TextHelper.sendMessageByKey(source, "pvp.list", whitelist);
         return CommandHelper.Return.SUCCESS;
     }
 
-    public static boolean contains(String name) {
-        return pvpHandler.model().whitelist.contains(name);
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public static boolean isPvpEnabled(String name) {
+        return data.model().whitelist.contains(name);
     }
 
 }

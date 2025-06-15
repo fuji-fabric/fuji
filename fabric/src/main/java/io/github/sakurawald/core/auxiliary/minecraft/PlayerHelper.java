@@ -3,6 +3,7 @@ package io.github.sakurawald.core.auxiliary.minecraft;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import lombok.experimental.UtilityClass;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 #if MC_VER <= MC_1_20_1
 #elif MC_VER > MC_1_20_1
@@ -126,5 +127,9 @@ public class PlayerHelper {
         #elif MC_VER > MC_1_20_1
         return property.value();
         #endif
+    }
+
+    public static String getName(PlayerEntity player) {
+        return player.getGameProfile().getName();
     }
 }

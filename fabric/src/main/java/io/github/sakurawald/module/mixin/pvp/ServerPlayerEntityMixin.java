@@ -1,7 +1,7 @@
 package io.github.sakurawald.module.mixin.pvp;
 
 import com.mojang.authlib.GameProfile;
-import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.module.initializer.pvp.PvpInitializer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,10 +17,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ServerPlayerEntity.class)
-public abstract class PvpToggleMixin extends PlayerEntity {
+public abstract class ServerPlayerEntityMixin extends PlayerEntity {
 
     #if MC_VER < MC_1_21_6
-    public PvpToggleMixin(World world, BlockPos blockPos, float f, GameProfile gameProfile) {
+    public ServerPlayerEntityMixin(World world, BlockPos blockPos, float f, GameProfile gameProfile) {
         super(world, blockPos, f, gameProfile);
     }
     #elif MC_VER >= MC_1_21_6
@@ -30,21 +30,22 @@ public abstract class PvpToggleMixin extends PlayerEntity {
     #endif
 
     @Inject(method = "shouldDamagePlayer", at = @At("HEAD"), cancellable = true)
-    public void $shouldDamagePlayer(@NotNull PlayerEntity sourcePlayer, @NotNull CallbackInfoReturnable<Boolean> cir) {
-        if (this == sourcePlayer) return;
+    public void shouldBeDamagedByAnotherPlayer(@NotNull PlayerEntity playerEntity, @NotNull CallbackInfoReturnable<Boolean> cir) {
+        /* Don't flint a TNT to kill yourself. */
+        if (this == playerEntity) return;
 
-        ServerPlayerEntity player = CommandHelper.getCommandSource(sourcePlayer).getPlayer();
-
-        if (player == null) return;
-
-        if (!PvpInitializer.contains(sourcePlayer.getGameProfile().getName())) {
-            TextHelper.sendMessageByKey(player, "pvp.check.off.me");
+        /* Okay, the damage source player should enable pvp first. */
+        ServerPlayerEntity damageSourcePlayer = (ServerPlayerEntity) playerEntity;
+        if (!PvpInitializer.isPvpEnabled(PlayerHelper.getName(damageSourcePlayer))) {
+            TextHelper.sendMessageByKey(damageSourcePlayer, "pvp.check.off.me");
             cir.setReturnValue(false);
             return;
         }
 
-        if (!PvpInitializer.contains(this.getGameProfile().getName())) {
-            TextHelper.sendMessageByKey(player, "pvp.check.off.others", this.getGameProfile().getName());
+        /* Then, the damage target player should enable pvp. */
+        String myName = PlayerHelper.getName(this);
+        if (!PvpInitializer.isPvpEnabled(myName)) {
+            TextHelper.sendMessageByKey(damageSourcePlayer, "pvp.check.off.others", myName);
             cir.setReturnValue(false);
         }
     }
