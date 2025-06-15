@@ -22,11 +22,14 @@ public class SearchHeadsInputGui extends InputSignGui {
     @Override
     public void onClose() {
         String keywords = reduceInputOrEmpty();
+
+        /* If no user input, re-open the parent gui. */
         if (keywords.isEmpty()) {
             parentGui.open();
             return;
         }
 
+        /* Filter the entities by keywords. */
         List<Head> entities = HeadProvider.getLoadedHeads().values().stream()
             .filter(head -> head.name.toLowerCase().contains(keywords.toLowerCase())
                 || head.getTagsOrEmpty().toLowerCase().contains(keywords.toLowerCase()))

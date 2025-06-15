@@ -12,8 +12,11 @@ import java.util.UUID;
 public class Head {
 
     public final @NotNull String name;
+
     public final UUID uuid;
+
     public final String value;
+
     @Nullable
     public final String tags;
 

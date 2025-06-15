@@ -4,14 +4,12 @@ import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.StackHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.gui.PagedGui;
 import io.github.sakurawald.module.initializer.head.HeadInitializer;
 import io.github.sakurawald.module.initializer.head.structure.EconomyType;
 import io.github.sakurawald.module.initializer.head.structure.Head;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -34,12 +32,14 @@ public class CategoryHeadGui extends PagedGui<Head> {
 
     @Override
     protected GuiElementInterface toGuiElement(Head entity) {
+        /* Add the price text to the head stack. */
         var builder = GuiElementBuilder.from(entity.toItemStack());
         if (HeadInitializer.head.model().economy_type != EconomyType.FREE) {
             builder.addLoreLine(Text.empty());
             builder.addLoreLine(TextHelper.getTextByKey(getPlayer(), "head.price").copy().append(EconomyType.getCostText()));
         }
 
+        /* Set click callback. */
         builder.setCallback((index, type, action) -> handleEntityClick(entity, type));
         return builder.build();
     }
@@ -52,18 +52,14 @@ public class CategoryHeadGui extends PagedGui<Head> {
             .collect(Collectors.toList());
     }
 
+    @SuppressWarnings("UnnecessaryReturnStatement")
     private void handleEntityClick(@NotNull Head head, @NotNull ClickType type) {
         ServerPlayerEntity player = getPlayer();
-
         ItemStack cursorStack = player.currentScreenHandler.getCursorStack();
         ItemStack headStack = head.toItemStack();
 
-        /* happy debug */
-        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-            LogUtil.debug("head = {}", StackHelper.getSkullOwner(headStack));
-        }
-
         if (cursorStack.isEmpty()) {
+            /* Switch click type.*/
             if (type.shift) {
                 EconomyType.tryPurchase(player, 1, () -> player.getInventory().insertStack(headStack));
             } else if (type.isMiddle) {
@@ -75,10 +71,9 @@ public class CategoryHeadGui extends PagedGui<Head> {
                 EconomyType.tryPurchase(player, 1, () -> player.currentScreenHandler.setCursorStack(headStack));
             }
         } else if (cursorStack.getMaxCount() <= cursorStack.getCount()) {
-            //noinspection UnnecessaryReturnStatement
             return;
         } else if (StackHelper.canCombine(headStack, cursorStack)) {
-            /* switch click type */
+            /* Switch click type. */
             if (type.isLeft) {
                 EconomyType.tryPurchase(player, 1, () -> cursorStack.increment(1));
             } else if (type.isRight) {

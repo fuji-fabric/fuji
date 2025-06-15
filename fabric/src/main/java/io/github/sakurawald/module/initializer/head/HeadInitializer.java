@@ -31,11 +31,13 @@ public class HeadInitializer extends ModuleInitializer {
     }
 
     @CommandNode
+    @Document("See /head gui")
     private static int $head(@CommandSource ServerPlayerEntity player) {
         return $gui(player);
     }
 
     @CommandNode("gui")
+    @Document("Open the head shop GUI.")
     private static int $gui(@CommandSource ServerPlayerEntity player) {
         new HeadGui(player).open();
         return CommandHelper.Return.SUCCESS;

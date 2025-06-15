@@ -23,12 +23,14 @@ public class HeadGui extends SimpleGui {
         super(ScreenHandlerType.GENERIC_9X2, player, false);
         this.player = player;
 
+        /* Set categories buttons. */
         int index = 0;
         for (Category category : Category.values()) {
             setCategoryButton(index, category);
             index++;
         }
 
+        /* Set other buttons. */
         this.setTitle(TextHelper.getTextByKey(player, "head.title"));
         this.setSlot(this.getSize() - 1, new GuiElementBuilder()
             .setItem(Items.COMPASS)

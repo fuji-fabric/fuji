@@ -58,13 +58,13 @@ public class PlayerHeadGui extends AnvilInputGui {
             apiDebounce = 0;
 
             CompletableFuture.runAsync(() -> {
-                /* make gui element */
+                /* Make gui element. */
                 GameProfile gameProfile = MojangProfileFetcher.makeOnlineGameProfile(this.getInput());
                 GuiElementBuilder builder = new GuiElementBuilder()
                     .setItem(Items.PLAYER_HEAD)
                     .setSkullOwner(gameProfile, EntityHelper.getMinecraftServer(player));
 
-                /* make head item */
+                /* Make head item */
                 if (HeadInitializer.head.model().economy_type != EconomyType.FREE) {
                     builder.addLoreLine(Text.empty());
                     builder.addLoreLine(TextHelper.getTextByKey(player, "head.price").copy().append(EconomyType.getCostText()));
@@ -72,7 +72,7 @@ public class PlayerHeadGui extends AnvilInputGui {
 
                 ItemStack headStack = builder.asStack();
 
-                /* purchase */
+                /* Purchase */
                 this.setSlot(2, headStack, (index, type, action, gui) ->
                     EconomyType.tryPurchase(player, 1, () -> {
                         var cursorStack = getPlayer().currentScreenHandler.getCursorStack();

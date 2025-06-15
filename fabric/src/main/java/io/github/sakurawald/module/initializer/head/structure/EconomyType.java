@@ -17,7 +17,7 @@ public enum EconomyType {
     FREE;
 
     @SuppressWarnings("WhileLoopReplaceableByForEach")
-    private static boolean extract(ServerPlayerEntity player, @NotNull Item item, int amount) {
+    private static boolean tryExtractItems(ServerPlayerEntity player, @NotNull Item item, int amount) {
         Iterator<DefaultedList<ItemStack>> iterator = InventoryHelper.getCombinedInventory(player).iterator();
         while (iterator.hasNext()) {
             DefaultedList<ItemStack> list = iterator.next();
@@ -41,7 +41,7 @@ public enum EconomyType {
         switch (HeadInitializer.head.model().economy_type) {
             case FREE -> onPurchase.run();
             case ITEM -> {
-                if (extract(player, getCostItem(), trueAmount)) {
+                if (tryExtractItems(player, getCostItem(), trueAmount)) {
                     onPurchase.run();
                 }
             }
@@ -51,7 +51,8 @@ public enum EconomyType {
     public static Text getCostText() {
         return switch (HeadInitializer.head.model().economy_type) {
             case ITEM -> Text.empty()
-                .append(getCostItem().getName()).append(Text.of(" × " + HeadInitializer.head.model().cost_amount));
+                .append(getCostItem().getName())
+                .append(Text.of(" × " + HeadInitializer.head.model().cost_amount));
             case FREE -> Text.empty();
         };
     }
