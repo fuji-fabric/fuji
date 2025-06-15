@@ -1,6 +1,7 @@
 package io.github.sakurawald.module.mixin.chat.style;
 
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.module.initializer.chat.style.ChatStyleInitializer;
 import net.minecraft.network.message.MessageType;
 import net.minecraft.network.message.SignedMessage;
@@ -21,16 +22,16 @@ public abstract class ServerPlayNetworkHandlerMixin {
 
     @ModifyArgs(method = "handleDecoratedMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;broadcast(Lnet/minecraft/network/message/SignedMessage;Lnet/minecraft/server/network/ServerPlayerEntity;Lnet/minecraft/network/message/MessageType$Parameters;)V"))
     public void modifyChatMessageSentByPlayers(Args args) {
-        /* get args */
+        /* Get signed message. */
         SignedMessage signedMessage = args.get(0);
 
-        /* make content text */
-        String contentString = signedMessage.getContent().getString();
-        Text contentText = ChatStyleInitializer.parseContentText(player, contentString);
-        args.set(0, signedMessage.withUnsignedContent(contentText));
-
-        /* make sender text*/
+        /* Make sender text. */
         Text senderText = ChatStyleInitializer.parseSenderText(player);
         args.set(2, MessageType.params(ChatStyleInitializer.MESSAGE_TYPE_KEY, ServerHelper.getServer().getRegistryManager(), senderText));
+
+        /* Make content text. */
+        String contentString = TextHelper.visitString(signedMessage.getContent());
+        Text contentText = ChatStyleInitializer.parseContentText(player, contentString);
+        args.set(0, signedMessage.withUnsignedContent(contentText));
     }
 }

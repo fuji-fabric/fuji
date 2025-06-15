@@ -20,7 +20,6 @@
     "chat.replace.ServerPlayNetworkHandlerMixin",
     "chat.rewrite.ServerPlayNetworkHandlerMixin",
     "chat.spy.ServerPlayNetworkHandlerMixin",
-    "chat.stripe.ServerPlayNetworkHandlerMixin",
     "chat.style.ServerPlayNetworkHandlerMixin",
     "chat.style.message_type.RegistryLoaderMixin",
     "color.sign.ServerPlayerEntityMixin",

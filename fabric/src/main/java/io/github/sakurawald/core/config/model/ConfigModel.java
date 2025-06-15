@@ -145,7 +145,6 @@ public class ConfigModel {
             public History history = new History();
             public Rewrite rewrite = new Rewrite();
             public Replace replace = new Replace();
-            public Stripe stripe = new Stripe();
             public Mention mention = new Mention();
             public Spy spy = new Spy();
 
@@ -163,10 +162,6 @@ public class ConfigModel {
 
             public static class Rewrite {
                 public boolean enable = true;
-            }
-
-            public static class Stripe {
-                public boolean enable = false;
             }
 
             public static class Mention {

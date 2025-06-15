@@ -9,7 +9,6 @@ chat.mention
 chat.replace
 chat.rewrite
 chat.spy
-chat.stripe
 chat.style
 cleaner
 color

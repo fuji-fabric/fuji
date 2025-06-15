@@ -4,6 +4,7 @@ import eu.pb4.placeholders.api.parsers.NodeParser;
 
 import io.github.sakurawald.Fuji;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandSource;
@@ -11,6 +12,7 @@ import io.github.sakurawald.core.command.annotation.CommandTarget;
 import io.github.sakurawald.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.core.service.style_striper.StyleStriper;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.chat.style.model.ChatFormatModel;
 import io.github.sakurawald.module.initializer.chat.style.model.ChatStyleConfigModel;
@@ -27,44 +29,56 @@ import org.jetbrains.annotations.NotNull;
 @CommandNode("chat style")
 public class ChatStyleInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<ChatStyleConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatStyleConfigModel.class);
+    private static final BaseConfigurationHandler<ChatStyleConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatStyleConfigModel.class);
 
-    // to avoid the message type already registered in the client-side, and the client-side message type will influence the client-side decorator.
+    // To avoid the message type already registered in the client-side, and the client-side message type will influence the client-side decorator.
     public static final RegistryKey<MessageType> MESSAGE_TYPE_KEY = RegistryKey.of(RegistryKeys.MESSAGE_TYPE, Identifier.of(Fuji.MOD_ID, "chat_" + FabricLoader.getInstance().getEnvironmentType().toString().toLowerCase()));
 
     public static final MessageType MESSAGE_TYPE_VALUE = new MessageType(
         Decoration.ofChat("%s%s"),
         Decoration.ofChat("%s%s"));
 
-    private static final BaseConfigurationHandler<ChatFormatModel> chat = new ObjectConfigurationHandler<>("chat.json", ChatFormatModel.class);
+    private static final BaseConfigurationHandler<ChatFormatModel> chatFormatData = new ObjectConfigurationHandler<>("chat.json", ChatFormatModel.class);
 
     private static final NodeParser CHAT_STYLE_PARSER = TextHelper.DEFAULT_PARSER;
+    private static final String DEFAULT_CONTENT_FORMAT = "%message%";
+
+    private static final String CHAT_STYLE_TYPE = "chat";
+
+    private static String stripeStyleTags(ServerPlayerEntity player, String string) {
+        return StyleStriper.stripe(player, CHAT_STYLE_TYPE, string);
+    }
 
     @CommandNode("set")
-    private static int setPlayerFormat(@CommandSource @CommandTarget ServerPlayerEntity player, GreedyString format) {
-        /* save the format*/
-        String name = player.getGameProfile().getName();
-        String $format = format.getValue();
-        chat.model().format.player2format.put(name, $format);
-        chat.writeStorage();
+    private static int setPerPlayerFormat(@CommandSource @CommandTarget ServerPlayerEntity player, GreedyString format) {
+        /* Save the new format. */
+        String playerName = PlayerHelper.getName(player);
+        String newFormat = format.getValue();
+        newFormat = stripeStyleTags(player, newFormat);
+        String stripedFormat = newFormat;
+        chatFormatData.model().format.player2format.put(playerName, newFormat);
+        chatFormatData.writeStorage();
 
-        /* feedback */
-        $format = TextHelper.getValueByKey(player, "chat.format.set").replace("%s", $format);
-        $format = $format.replace("%message%", TextHelper.getValueByKey(player, "chat.format.show"));
-        Text text = CHAT_STYLE_PARSER.parseNode($format).toText();
+        /* Feedback. */
+        newFormat = TextHelper.getValueByKey(player, "chat.format.set");
+        newFormat = newFormat.replace("%s", stripedFormat);
+        newFormat = newFormat.replace("%message%", TextHelper.getValueByKey(player, "chat.format.show"));
+        Text text = TextHelper.getTextByValue(player, newFormat);
         player.sendMessage(text);
         return CommandHelper.Return.SUCCESS;
     }
 
     @CommandNode("reset")
-    private static int resetPlayerFormat(@CommandSource @CommandTarget ServerPlayerEntity player) {
-        String name = player.getGameProfile().getName();
-        chat.model().format.player2format.remove(name);
-        chat.writeStorage();
+    private static int resetPerPlayerFormat(@CommandSource @CommandTarget ServerPlayerEntity player) {
+        /* Remove the per-player format. */
+        String playerName = PlayerHelper.getName(player);
+        chatFormatData.model().format.player2format.remove(playerName);
+        chatFormatData.writeStorage();
+
+        /* Feedback. */
         TextHelper.sendMessageByKey(player, "chat.format.reset");
         return CommandHelper.Return.SUCCESS;
     }
-
 
     public static @NotNull Text parseSenderText(@NotNull ServerPlayerEntity player) {
         String senderString = config.model().style.sender;
@@ -73,8 +87,10 @@ public class ChatStyleInitializer extends ModuleInitializer {
 
     public static @NotNull Text parseContentText(@NotNull ServerPlayerEntity player, String message) {
         String contentString = config.model().style.content.formatted(message);
-
-        contentString = chat.model().format.player2format.getOrDefault(player.getGameProfile().getName(), "%message%").replace("%message%", contentString);
+        String playerName = PlayerHelper.getName(player);
+        contentString = chatFormatData.model().format.player2format.getOrDefault(playerName, DEFAULT_CONTENT_FORMAT)
+            .replace("%message%", contentString);
+        contentString = stripeStyleTags(player, contentString);
 
         return CHAT_STYLE_PARSER.parseNode(contentString).toText();
     }

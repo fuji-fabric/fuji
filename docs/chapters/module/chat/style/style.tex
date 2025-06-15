@@ -7,6 +7,7 @@ Customize global chat style, and also allow players to use \cmd{/chat style} to 
     \item You can use \ttt{mini-message language} to define complex format.
     \item Besides the \ttt{server chat format}, each player can also set their \ttt{per-player chat format}.
     \item This module doesn't \tbf{break} the vanilla chat events, so it can work with other chat related mods.
+    \item You can control the usage of color and event tags using permissions.
 \end{enumerate}
 
 \begin{tips}{Write complex style using mini-language}
@@ -47,7 +48,15 @@ Customize global chat style, and also allow players to use \cmd{/chat style} to 
     \cmd{/chat style reset}
 \end{example}
 
-\begin{example}{Use chat stripe module to control the style tags usage}
-    By default, the \ttt{chat style} module allows any player to use any \ttt{style tags} in chat message, including \str{<click>} tag.\\
-    See~\nameref{ch:chat_stripe}
+\begin{example}{Allow players to use \str{<blue>} tag}
+    \cmd{/lp group default permission set fuji.style.chat.blue}
+\end{example}
+
+\begin{example}{Allow players to use \str{<b>} tag}
+    \cmd{/lp group default permission set fuji.style.chat.b}
+\end{example}
+
+\begin{example}{Allow players to use all tags}
+    All tags also including dangerous tags like \str{<click>} tag which can run commands on clicked!\\
+    \cmd{/lp group default permission set fuji.style.chat.*}
 \end{example}
