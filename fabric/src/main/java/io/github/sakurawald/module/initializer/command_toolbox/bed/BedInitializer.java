@@ -25,9 +25,13 @@ public class BedInitializer extends ModuleInitializer {
         BlockPos respawnPosition = player.getSpawnPointPosition();
         RegistryKey<World> respawnDimension = player.getSpawnPointDimension();
         #elif MC_VER >= MC_1_21_5
+        BlockPos respawnPosition = null;
+        RegistryKey<World> respawnDimension = null;
         ServerPlayerEntity.Respawn respawn = player.getRespawn();
-        BlockPos respawnPosition = respawn.comp_3684();
-        RegistryKey<World> respawnDimension = respawn.comp_3683();
+        if (respawn != null) {
+            respawnPosition = respawn.comp_3684();
+            respawnDimension = respawn.comp_3683();
+        }
         #endif
 
         ServerWorld world = ServerHelper.getServer().getWorld(respawnDimension);
