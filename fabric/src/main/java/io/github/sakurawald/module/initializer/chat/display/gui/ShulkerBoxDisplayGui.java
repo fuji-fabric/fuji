@@ -32,10 +32,10 @@ public class ShulkerBoxDisplayGui extends BaseDisplayGui {
         this.parentGui = parentGui;
     }
 
-    private static @NotNull Stream<ItemStack> extractItemsFromShulkerBox(ItemStack shulkerBoxStack) {
+    private static @NotNull Stream<ItemStack> extractItemsFromShulkerBox(ItemStack stack) {
 
         #if MC_VER <= MC_1_20_4
-        NbtCompound blockEntityData = BlockItem.getBlockEntityNbt(shulkerBoxStack);
+        NbtCompound blockEntityData = BlockItem.getBlockEntityNbt(stack);
         if (blockEntityData != null) {
             NbtList items = (NbtList) blockEntityData.get("Items");
             if (items == null) return Stream.empty();
