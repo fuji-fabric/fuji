@@ -14,7 +14,8 @@ import net.minecraft.screen.PlayerScreenHandler;
 @Mixin(targets = "net/minecraft/screen/PlayerScreenHandler$1")
 public class PlayerScreenHandlerMixin {
 
-    @ModifyExpressionValue(method = "canInsert", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/MobEntity;getPreferredEquipmentSlot(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/entity/EquipmentSlot;"))
+    @ModifyExpressionValue(method = "canInsert", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/MobEntity;getPreferredEquipmentSlot(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/entity/EquipmentSlot;"), require = 0)
+    // NOTE: require = 0, due to the mixin fails in forge platform.
     EquipmentSlot allowPlaceAnyItemInHeadEquipmentSlotInSurvivalGameMode(EquipmentSlot original) {
         /* If an item is not Equipment item, it will prefer EquipmentSlot.MAINHAND by default. */
         if (original == EquipmentSlot.MAINHAND) {

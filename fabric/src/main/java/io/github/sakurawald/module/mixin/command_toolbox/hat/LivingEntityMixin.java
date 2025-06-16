@@ -15,7 +15,7 @@ import net.minecraft.entity.EquipmentSlot;
 public abstract class LivingEntityMixin {
 
     #if MC_VER >= MC_1_21_5
-    @Inject(method = "canEquip", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "canEquip", at = @At("HEAD"), cancellable = true, require = 0)
     void allowPlaceAnyItemInHeadEquipmentSlotInSurvivalGameMode(ItemStack itemStack, EquipmentSlot equipmentSlot, CallbackInfoReturnable<Boolean> cir){
         LivingEntity livingEntity = (LivingEntity) (Object) this;
         if (equipmentSlot == EquipmentSlot.HEAD && livingEntity.isPlayer()){
