@@ -7,6 +7,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.entity.EquipmentSlot;
 import org.spongepowered.asm.mixin.injection.At;
 #elif MC_VER > MC_1_20_1
+import net.minecraft.screen.PlayerScreenHandler;
 #endif
 
 #if MC_VER <= MC_1_20_1
@@ -25,7 +26,7 @@ public class PlayerScreenHandlerMixin {
     }
 }
 #elif MC_VER > MC_1_20_1
-@Mixin(targets = "net/minecraft/screen/PlayerScreenHandler")
+@Mixin(PlayerScreenHandler.class)
 public class PlayerScreenHandlerMixin {}
 #endif
 
