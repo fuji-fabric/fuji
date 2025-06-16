@@ -69,6 +69,7 @@
     "language.ServerPlayerMixin",
     "motd.ServerQueryNetworkHandlerMixin",
     "multiplier.ServerPlayerMixin",
+    "nametag.EntityMixin",
     "placeholder.ServerPlayerEntityMixin",
     "placeholder.ServerPlayNetworkHandlerMixin",
     "pvp.ServerPlayerEntityMixin",

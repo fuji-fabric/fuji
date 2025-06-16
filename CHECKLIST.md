@@ -70,6 +70,7 @@ It's good to have a checklist, to avoid forgetting something.
 - Issue `/home` to see if it's rewrited to `/home tp default`.
 - Issue `/back` to see if the `command advice` is processed exactly once. 
 - Issue `/say hi` to see if the `command advice` can cancel with another command. 
+- Check if the `nametag` entity blocks the `nether` and `the end` portal.
 
 ## Publish a new version
 
