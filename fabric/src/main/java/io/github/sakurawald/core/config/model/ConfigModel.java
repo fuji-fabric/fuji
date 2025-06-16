@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-/* sometimes i really hate the typing system of java... */
+/* Sometimes I really hate the typing system of java... */
 public class ConfigModel {
 
     public Core core = new Core();
@@ -17,9 +17,9 @@ public class ConfigModel {
         public Backup backup = new Backup();
         public Language language = new Language();
         public Permission permission = new Permission();
-        public Quartz quartz = new Quartz();
+        public Scheduler scheduler = new Scheduler();
 
-        public static class Quartz {
+        public static class Scheduler {
             public String logger_level = "WARN";
         }
 
