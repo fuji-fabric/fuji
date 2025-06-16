@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 @UtilityClass
 public class GuiHelper {
 
-    private static Item INVALID_SLOT_PLACEHOLDER_ITEM = Items.BARRIER;
+    private static final Item INVALID_SLOT_PLACEHOLDER_ITEM = Items.BARRIER;
 
     public static void fill(@NotNull SimpleGui gui, ItemStack itemStack) {
         for (int i = 0; i < gui.getSize(); i++) {

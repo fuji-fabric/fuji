@@ -3,11 +3,12 @@ package io.github.sakurawald.module.initializer.kit.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.gui.InputSignGui;
 import io.github.sakurawald.core.gui.PagedGui;
-import io.github.sakurawald.module.initializer.kit.KitInitializer;
+import io.github.sakurawald.module.initializer.kit.service.KitService;
 import io.github.sakurawald.module.initializer.kit.structure.Kit;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SimpleInventory;
@@ -30,58 +31,50 @@ public class KitEditorGui extends PagedGui<Kit> {
     public KitEditorGui(ServerPlayerEntity player, @NotNull List<Kit> entities, int pageIndex) {
         super(null, player, TextHelper.getTextByKey(player, "kit.gui.editor.title"), entities, pageIndex);
 
-        /* make footer */
+        /* Make footer. */
         getFooter().setSlot(1, GuiHelper.makeHelpButton(player)
             .setLore(TextHelper.getTextListByKey(player, "kit.gui.editor.help.lore")));
         getFooter().setSlot(4, GuiHelper.makeAddButton(player).setCallback(() -> new InputSignGui(player, TextHelper.getTextByKey(player, "prompt.input.name")) {
 
             @Override
             public void onClose() {
-                /* input kit name */
+                /* Get input kit name. */
                 String name = getLine(0).getString().trim();
                 if (name.isEmpty()) {
                     TextHelper.sendActionBarByKey(player, "operation.cancelled");
                     return;
                 }
 
-                /* open edit kit gui */
-                openKitEditingGui(getPlayer(), KitInitializer.readKit(name));
+                /* Open kit editing gui. */
+                openKitEditingGui(getPlayer(), KitService.readKit(name));
             }
         }.open()));
     }
 
     private void openKitEditingGui(@NotNull ServerPlayerEntity player, @NotNull Kit kit) {
+        /* Place kit stacks. */
         int rows = 5;
         SimpleInventory simpleInventory = new SimpleInventory(rows * 9);
         for (int i = 0; i < kit.getStackList().size(); i++) {
             simpleInventory.setStack(i, kit.getStackList().get(i));
         }
 
-        /* set default items if the kit is empty */
+        /* Set default items if the kit is empty. */
         if (simpleInventory.isEmpty()) {
-            simpleInventory.setStack(0, Items.IRON_SWORD.getDefaultStack());
-
-            ItemStack food = Items.BREAD.getDefaultStack();
-            food.setCount(16);
-            simpleInventory.setStack(1, food);
-
-            simpleInventory.setStack(36, Items.IRON_BOOTS.getDefaultStack());
-            simpleInventory.setStack(37, Items.IRON_LEGGINGS.getDefaultStack());
-            simpleInventory.setStack(38, Items.IRON_CHESTPLATE.getDefaultStack());
-            simpleInventory.setStack(39, Items.IRON_HELMET.getDefaultStack());
-            simpleInventory.setStack(40, Items.SHIELD.getDefaultStack());
+            placeDefaultKitItems(simpleInventory);
         }
 
-        /* put the forbidden zone */
+        /* Place the forbidden zone placeholder items. */
         for (int i = 41; i <= 44; i++) {
             simpleInventory.setStack(i, GuiHelper.makeBarrier().getItemStack());
         }
 
+        /* Make a generic container GUI for kit editing. */
         SimpleNamedScreenHandlerFactory simpleNamedScreenHandlerFactory = new SimpleNamedScreenHandlerFactory((i, playerInventory, p) ->
             new GenericContainerScreenHandler(ScreenHandlerType.GENERIC_9X5, i, playerInventory, simpleInventory, rows) {
                 @Override
                 public void onSlotClick(int i, int j, SlotActionType slotActionType, PlayerEntity playerEntity) {
-                    // note: skip BARRIER item stack click.
+                    // NOTE: skip BARRIER item stack click.
                     if (GuiHelper.isInvalidSlotInsidePlayerInventory(i)) return;
                     super.onSlotClick(i, j, slotActionType, playerEntity);
                 }
@@ -89,15 +82,36 @@ public class KitEditorGui extends PagedGui<Kit> {
                 @Override
                 public void onClosed(PlayerEntity playerEntity) {
                     super.onClosed(playerEntity);
-                    List<ItemStack> itemStacks = new ArrayList<>();
+
+                    /* Re-create the kit with modified stacks. */
+                    List<ItemStack> newStacks = new ArrayList<>();
                     for (int j = 0; j < simpleInventory.size(); j++) {
-                        itemStacks.add(simpleInventory.getStack(j));
+                        newStacks.add(simpleInventory.getStack(j));
                     }
-                    KitInitializer.writeKit(kit.withStackList(itemStacks));
+                    KitService.createKit(kit.withStackList(newStacks));
                 }
 
             }, TextHelper.getTextByKey(player, "kit.gui.editor.kit.title", kit.getName()));
         player.openHandledScreen(simpleNamedScreenHandlerFactory);
+    }
+
+    private static void placeDefaultKitItems(SimpleInventory simpleInventory) {
+        // Mainhand.
+        simpleInventory.setStack(0, Items.IRON_SWORD.getDefaultStack());
+
+        // Food.
+        ItemStack food = Items.BREAD.getDefaultStack();
+        food.setCount(16);
+        simpleInventory.setStack(1, food);
+
+        // Armors.
+        simpleInventory.setStack(36, Items.IRON_BOOTS.getDefaultStack());
+        simpleInventory.setStack(37, Items.IRON_LEGGINGS.getDefaultStack());
+        simpleInventory.setStack(38, Items.IRON_CHESTPLATE.getDefaultStack());
+        simpleInventory.setStack(39, Items.IRON_HELMET.getDefaultStack());
+
+        // Offhand.
+        simpleInventory.setStack(40, Items.SHIELD.getDefaultStack());
     }
 
     @Override
@@ -107,27 +121,30 @@ public class KitEditorGui extends PagedGui<Kit> {
 
     @Override
     protected GuiElementInterface toGuiElement(@NotNull Kit entity) {
-        return new GuiElementBuilder().setItem(Items.CHEST)
+        return new GuiElementBuilder()
+            .setItem(Items.CHEST)
             .setName(Text.literal(entity.getName()))
             .setCallback((event) -> {
-
+                // Left Click -> Open Editing GUI for the kit.
                 if (event.isLeft) {
                     openKitEditingGui(getPlayer(), entity);
                 }
 
+                // Shift + Right Click  -> Delete the kit.
                 if (event.shift && event.isRight) {
-                    KitInitializer.deleteKit(entity.getName());
+                    KitService.deleteKit(entity.getName());
                     deleteEntity(entity);
                     TextHelper.sendActionBarByKey(getPlayer(), "deleted");
                 }
 
-            })
-            .build();
+            }).build();
     }
 
     @Override
     @NotNull
     protected List<Kit> filter(@NotNull String keyword) {
-        return getEntities().stream().filter(e -> e.getName().contains(keyword)).toList();
+        return getEntities().stream()
+            .filter(e -> e.getName().contains(keyword))
+            .toList();
     }
 }

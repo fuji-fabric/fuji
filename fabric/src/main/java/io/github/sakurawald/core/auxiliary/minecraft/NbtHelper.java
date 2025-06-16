@@ -74,8 +74,8 @@ public class NbtHelper {
         return root.get(key);
     }
 
-    public static NbtList writeSlotsNode(@NotNull NbtList node, @NotNull List<ItemStack> itemStackList) {
-        for (ItemStack stack : itemStackList) {
+    public static NbtList writeSlotsNode(@NotNull NbtList node, @NotNull List<ItemStack> stackList) {
+        for (ItemStack stack : stackList) {
             node.add(toNbtAllowEmpty(stack, RegistryHelper.getDefaultWrapperLookup()));
         }
         return node;
@@ -85,6 +85,7 @@ public class NbtHelper {
         if (stack.isEmpty()) {
             return new NbtCompound();
         }
+
         #if MC_VER <= MC_1_21
             return StackHelper.encodeAllowEmpty(stack, wrapperLookup);
         #elif MC_VER > MC_1_21
@@ -123,7 +124,7 @@ public class NbtHelper {
         #if MC_VER <= MC_1_20_2
             NbtIo.write(nbt, path.toFile());
         #elif MC_VER > MC_1_20_2
-            NbtIo.write(new NbtCompound(), path);
+            NbtIo.write(nbt, path);
         #endif
     }
 
@@ -137,25 +138,25 @@ public class NbtHelper {
     }
 
     public static <T> T withNbtFileAndGettingReturnValue(@NotNull Path path, @NotNull Function<NbtCompound, T> function) {
-        /* make file if not exists */
+        /* Make file if not exists. */
         if (Files.notExists(path)) {
             writeNbtFile(new NbtCompound(), path);
         }
 
-        /* read the file */
+        /* Read the file. */
         NbtCompound read = readNbtFile(path);
         if (read == null) {
             LogUtil.error("Failed to read the nbt file in {}", path);
             throw new AbortCommandExecutionException();
         }
 
-        /* call the consumer */
+        /* Call the consumer. */
         T value = function.apply(read);
 
-        /* always write the data back, whether it's a destructive operation or not */
+        /* Always write the data back, whether it's a destructive operation or not. */
         writeNbtFile(read, path);
 
-        /* return the useful value to outer space */
+        /* Return the useful value to surrounding env. */
         return value;
     }
 
