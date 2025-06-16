@@ -1,7 +1,6 @@
 name: build
-on:
-  schedule:
-    - cron: "0 0 * * *"
+on: [ pull_request, push ]
+
 
 jobs:
   build:
