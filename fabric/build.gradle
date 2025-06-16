@@ -88,12 +88,25 @@ processResources {
 /* Validate the access widener file. */
 tasks.compileJava.dependsOn(validateAccessWidener)
 
-/* Ensure the file is not locked */
+/* Ensure the file is not locked. */
 tasks.register('deleteWorldLockFile') {
     outputs.upToDateWhen { false }
-    delete(file("$projectDir/run/world/session.lock"))
+
+    def file = project.rootProject.file("run/server/world/session.lock")
+    println("Delete runtime world session.lock file: " + file)
+    delete(file)
 }
 tasks.runServer.dependsOn(deleteWorldLockFile)
+
+/* Ensure the language files are up to date. */
+tasks.register('deleteLanguageFiles') {
+    outputs.upToDateWhen { false }
+
+    def file = project.rootProject.file("run/server/config/fuji/lang/")
+    println("Delete runtime language files: " + file)
+    delete(file)
+}
+tasks.runServer.dependsOn(deleteLanguageFiles)
 
 /* Re-generate graph (Actually, the graph files should be generated before process the resources) */
 tasks.runServer.dependsOn(check)
