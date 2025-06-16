@@ -9,6 +9,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.Leashable;
 import net.minecraft.entity.decoration.BlockAttachedEntity;
 #endif
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 
@@ -61,6 +62,10 @@ public class EntityHelper {
         #elif MC_VER > MC_1_20_2
             return entity instanceof VehicleEntity;
         #endif
+    }
+
+    public static boolean isPlayer(Entity entity) {
+        return entity instanceof PlayerEntity;
     }
 
 }
