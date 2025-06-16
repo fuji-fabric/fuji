@@ -19,7 +19,7 @@ pluginManagement {
 
 /* Loads the version_properties file for the currently selected Minecraft version. */
 def loadProperties() {
-	def defaultMcVersion = "1.21.5"
+	def defaultMcVersion = "1.20.1"
 
 	def mcVersion = ""
 	def mcVers = fileTree("version_properties").files.name // Get all the files in "version_properties"
