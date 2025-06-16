@@ -23,10 +23,10 @@ public class PvpInitializer extends ModuleInitializer {
     @CommandNode("pvp on")
     private static int $on(@CommandSource @CommandTarget ServerPlayerEntity player) {
         Set<String> whitelist = data.model().whitelist;
-        String name = PlayerHelper.getName(player);
+        String playerName = PlayerHelper.getName(player);
 
-        if (!whitelist.contains(name)) {
-            whitelist.add(name);
+        if (!whitelist.contains(playerName)) {
+            whitelist.add(playerName);
             data.writeStorage();
 
             TextHelper.sendMessageByKey(player, "pvp.on");
@@ -40,10 +40,10 @@ public class PvpInitializer extends ModuleInitializer {
     @CommandNode("pvp off")
     private static int $off(@CommandSource @CommandTarget ServerPlayerEntity player) {
         Set<String> whitelist = data.model().whitelist;
-        String name = PlayerHelper.getName(player);
+        String playerName = PlayerHelper.getName(player);
 
-        if (whitelist.contains(name)) {
-            whitelist.remove(name);
+        if (whitelist.contains(playerName)) {
+            whitelist.remove(playerName);
             data.writeStorage();
 
             TextHelper.sendMessageByKey(player, "pvp.off");
@@ -57,13 +57,10 @@ public class PvpInitializer extends ModuleInitializer {
     @CommandNode("pvp status")
     private static int $status(@CommandSource @CommandTarget ServerPlayerEntity player) {
         Set<String> whitelist = data.model().whitelist;
-        String name = PlayerHelper.getName(player);
+        String playerName = PlayerHelper.getName(player);
 
-        boolean flag = whitelist.contains(name);
-        player.sendMessage(
-            TextHelper.getTextByKey(player, "pvp.status")
-                .copy()
-                .append(TextHelper.getTextByKey(player, flag ? "on" : "off")));
+        boolean flag = whitelist.contains(playerName);
+        player.sendMessage(TextHelper.getTextByKey(player, flag ? "pvp.status.on" : "pvp.status.off"));
         return CommandHelper.Return.SUCCESS;
     }
 
