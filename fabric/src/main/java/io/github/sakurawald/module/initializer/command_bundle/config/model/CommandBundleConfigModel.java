@@ -46,7 +46,6 @@ public class CommandBundleConfigModel {
 
             /* level 0 commands */
             this.add(new BundleCommandNode(new CommandRequirementDescriptor(0, null), "introduce-me", List.of("run as fake-op %player:name% me i am %player:name%")));
-            this.add(new BundleCommandNode(new CommandRequirementDescriptor(0, null), "rules", List.of("send-message %player:name% <rb>This is the rules of the server: <newline>blah blah...")));
             this.add(new BundleCommandNode(new CommandRequirementDescriptor(0, null), "block-info <blockpos blockpos-arg-name>", List.of("run as fake-op %player:name% data get block $blockpos-arg-name")));
             this.add(new BundleCommandNode(new CommandRequirementDescriptor(0, null), "entity-info <entity entity-arg-name>", List.of("run as fake-op %player:name% data get entity $entity-arg-name")));
             this.add(new BundleCommandNode(new CommandRequirementDescriptor(0, null), "dice", List.of("say %player:name% just roll out %fuji:random 1 6% points.")));

@@ -52,6 +52,7 @@ io.github.sakurawald.module.initializer.command_toolbox.ping.PingInitializer
 io.github.sakurawald.module.initializer.command_toolbox.realname.RealnameInitializer
 io.github.sakurawald.module.initializer.command_toolbox.repair.RepairInitializer
 io.github.sakurawald.module.initializer.command_toolbox.reply.ReplyInitializer
+io.github.sakurawald.module.initializer.command_toolbox.rules.RulesInitializer
 io.github.sakurawald.module.initializer.command_toolbox.seen.SeenInitializer
 io.github.sakurawald.module.initializer.command_toolbox.suicide.SuicideInitializer
 io.github.sakurawald.module.initializer.command_toolbox.top.TopInitializer

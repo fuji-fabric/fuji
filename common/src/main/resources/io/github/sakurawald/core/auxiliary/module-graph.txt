@@ -57,6 +57,7 @@ command_toolbox.ping
 command_toolbox.realname
 command_toolbox.repair
 command_toolbox.reply
+command_toolbox.rules
 command_toolbox.seen
 command_toolbox.suicide
 command_toolbox.top

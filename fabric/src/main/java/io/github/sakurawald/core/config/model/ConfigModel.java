@@ -554,6 +554,7 @@ public class ConfigModel {
             public Compass compass = new Compass();
             public Glow glow = new Glow();
             public Freeze freeze = new Freeze();
+            public Rules rules = new Rules();
 
             public static class Glow {
                 public boolean enable = false;
@@ -662,6 +663,10 @@ public class ConfigModel {
             }
 
             public static class Compass {
+                public boolean enable = false;
+            }
+
+            public static class Rules {
                 public boolean enable = false;
             }
         }

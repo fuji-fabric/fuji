@@ -1,4 +1,4 @@
-package io.github.sakurawald.module.initializer.echo.send_custom.structure;
+package io.github.sakurawald.core.service.paged_text;
 
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.manager.Managers;
