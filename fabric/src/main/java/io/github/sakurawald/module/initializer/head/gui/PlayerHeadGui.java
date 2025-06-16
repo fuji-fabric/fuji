@@ -21,7 +21,7 @@ import java.util.concurrent.CompletableFuture;
 public class PlayerHeadGui extends AnvilInputGui {
 
     private final @NotNull SimpleGui parentGui;
-    private long apiDebounce = 0;
+    private long apiDebounceTimeMs = 0;
 
     public PlayerHeadGui(@NotNull HeadGui parentGui) {
         super(parentGui.player, false);
@@ -40,7 +40,7 @@ public class PlayerHeadGui extends AnvilInputGui {
     @Override
     public void onInput(String input) {
         super.onInput(input);
-        apiDebounce = System.currentTimeMillis() + 500;
+        apiDebounceTimeMs = System.currentTimeMillis() + 500;
     }
 
     @Override
@@ -54,8 +54,9 @@ public class PlayerHeadGui extends AnvilInputGui {
 
     @Override
     public void onTick() {
-        if (apiDebounce != 0 && apiDebounce <= System.currentTimeMillis()) {
-            apiDebounce = 0;
+        /* Control api debounce. */
+        if (apiDebounceTimeMs != 0 && apiDebounceTimeMs <= System.currentTimeMillis()) {
+            apiDebounceTimeMs = 0;
 
             CompletableFuture.runAsync(() -> {
                 /* Make gui element. */
@@ -64,17 +65,16 @@ public class PlayerHeadGui extends AnvilInputGui {
                     .setItem(Items.PLAYER_HEAD)
                     .setSkullOwner(gameProfile, EntityHelper.getMinecraftServer(player));
 
-                /* Make head item */
+                /* Make head stack. */
                 if (HeadInitializer.head.model().economy_type != EconomyType.FREE) {
                     builder.addLoreLine(Text.empty());
                     builder.addLoreLine(TextHelper.getTextByKey(player, "head.price").copy().append(EconomyType.getCostText()));
                 }
 
+                /* Set click callback to purchase. */
                 ItemStack headStack = builder.asStack();
-
-                /* Purchase */
                 this.setSlot(2, headStack, (index, type, action, gui) ->
-                    EconomyType.tryPurchase(player, 1, () -> {
+                    EconomyType.tryPurchaseHeads(player, 1, () -> {
                         var cursorStack = getPlayer().currentScreenHandler.getCursorStack();
                         if (player.currentScreenHandler.getCursorStack().isEmpty()) {
                             player.currentScreenHandler.setCursorStack(headStack.copy());

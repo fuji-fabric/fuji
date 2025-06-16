@@ -19,15 +19,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CategoryHeadGui extends PagedGui<Head> {
+public class CategoryHeadsGui extends PagedGui<Head> {
 
-    public CategoryHeadGui(SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<Head> entities, int pageIndex) {
+    public CategoryHeadsGui(SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<Head> entities, int pageIndex) {
         super(parent, player, title, entities, pageIndex);
     }
 
     @Override
     protected PagedGui<Head> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<Head> entities, int pageIndex) {
-        return new CategoryHeadGui(parent, player, title, entities, pageIndex);
+        return new CategoryHeadsGui(parent, player, title, entities, pageIndex);
     }
 
     @Override
@@ -46,48 +46,44 @@ public class CategoryHeadGui extends PagedGui<Head> {
 
     @Override
     protected List<Head> filter(String keywords) {
-        return getEntities().stream()
+        return getEntities()
+            .stream()
             .filter(head -> head.name.toLowerCase().contains(keywords.toLowerCase())
                 || head.getTagsOrEmpty().toLowerCase().contains(keywords.toLowerCase()))
             .collect(Collectors.toList());
     }
 
-    @SuppressWarnings("UnnecessaryReturnStatement")
     private void handleEntityClick(@NotNull Head head, @NotNull ClickType type) {
         ServerPlayerEntity player = getPlayer();
         ItemStack cursorStack = player.currentScreenHandler.getCursorStack();
         ItemStack headStack = head.toItemStack();
 
+        /* If cursor stack is empty, then we are safe to set the cursor stack. */
         if (cursorStack.isEmpty()) {
-            /* Switch click type.*/
-            if (type.shift) {
-                EconomyType.tryPurchase(player, 1, () -> player.getInventory().insertStack(headStack));
-            } else if (type.isMiddle) {
-                EconomyType.tryPurchase(player, headStack.getMaxCount(), () -> {
+            if (type.shift) { // Shift click -> buy into inventory.
+                EconomyType.tryPurchaseHeads(player, 1, () -> player.getInventory().insertStack(headStack));
+            } else if (type.isMiddle) { // Double click -> buy to max count.
+                EconomyType.tryPurchaseHeads(player, headStack.getMaxCount(), () -> {
                     headStack.setCount(headStack.getMaxCount());
                     player.currentScreenHandler.setCursorStack(headStack);
                 });
-            } else {
-                EconomyType.tryPurchase(player, 1, () -> player.currentScreenHandler.setCursorStack(headStack));
+            } else { // Single click -> buy one.
+                EconomyType.tryPurchaseHeads(player, 1, () -> player.currentScreenHandler.setCursorStack(headStack));
             }
-        } else if (cursorStack.getMaxCount() <= cursorStack.getCount()) {
-            return;
         } else if (StackHelper.canCombine(headStack, cursorStack)) {
-            /* Switch click type. */
-            if (type.isLeft) {
-                EconomyType.tryPurchase(player, 1, () -> cursorStack.increment(1));
-            } else if (type.isRight) {
-                if (HeadInitializer.head.model().economy_type == EconomyType.FREE)
+            if (type.isLeft) { // Single click -> buy one.
+                EconomyType.tryPurchaseHeads(player, 1, () -> cursorStack.increment(1));
+            } else if (type.isRight) { // Right click -> only allow to return of goods when it's free.
+                if (HeadInitializer.head.model().economy_type == EconomyType.FREE) {
                     cursorStack.decrement(1);
-            } else if (type.isMiddle) {
+                }
+            } else if (type.isMiddle) { // Double click -> buy to max count.
                 var amount = headStack.getMaxCount() - cursorStack.getCount();
-                EconomyType.tryPurchase(player, amount, () -> {
+                EconomyType.tryPurchaseHeads(player, amount, () -> {
                     headStack.setCount(headStack.getMaxCount());
                     player.currentScreenHandler.setCursorStack(headStack);
                 });
             }
-        } else if (HeadInitializer.head.model().economy_type == EconomyType.FREE) {
-            player.currentScreenHandler.setCursorStack(ItemStack.EMPTY);
         }
     }
 }

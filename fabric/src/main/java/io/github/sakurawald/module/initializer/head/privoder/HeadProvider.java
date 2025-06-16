@@ -30,29 +30,29 @@ public class HeadProvider {
     private static final String HEAD_DATABASE_API = "https://minecraft-heads.com/scripts/api.php?cat=%s&tags=true";
 
     @Getter(lazy = true)
-    private static final Multimap<Category, Head> loadedHeads = fetchData();
+    private static final Multimap<Category, Head> loadedHeads = syncCategories();
 
     private static Path computePath(Category category) {
         return HEAD_DATA_DIR_PATH.resolve(category.name + ".json");
     }
 
-    public static Multimap<Category, Head> fetchData() {
+    public static Multimap<Category, Head> syncCategories() {
         HashMultimap<Category, Head> result = HashMultimap.create();
 
         for (Category category : Category.values()) {
-            String URL = null;
+            String urlString = null;
             try {
                 Path destination = computePath(category);
 
-                // skip the downloading if file exists.
+                // Skip download the category if it already exists.
                 if (Files.exists(destination)) {
                     loadCategory(result, category);
                     continue;
                 }
 
-                URL = HEAD_DATABASE_API.formatted(category.name);
-                URI uri = URI.create(URL);
-                Downloader downloader = new Downloader(uri.toURL(), destination) {
+                // Download the specific category file.
+                urlString = HEAD_DATABASE_API.formatted(category.name);
+                Downloader downloader = new Downloader(URI.create(urlString).toURL(), destination) {
                     @Override
                     public void onComplete() {
                         loadCategory(result, category);
@@ -60,7 +60,7 @@ public class HeadProvider {
                 };
                 downloader.start();
             } catch (IOException e) {
-                LogUtil.warn("Failed to download heads from URL {}", URL);
+                LogUtil.warn("Failed to download heads file from URL {}", urlString);
             }
         }
         return result;
@@ -72,14 +72,13 @@ public class HeadProvider {
 
             Path path = computePath(category);
             @Cleanup InputStreamReader reader = new InputStreamReader(Files.newInputStream(path));
-
-            JsonArray headsJson = JsonParser.parseReader(reader).getAsJsonArray();
-            for (JsonElement headJson : headsJson) {
+            JsonArray headJsonArray = JsonParser.parseReader(reader).getAsJsonArray();
+            for (JsonElement headJsonElement : headJsonArray) {
                 try {
-                    Head head = BaseConfigurationHandler.getGson().fromJson(headJson, Head.class);
+                    Head head = BaseConfigurationHandler.getGson().fromJson(headJsonElement, Head.class);
                     result.put(category, head);
                 } catch (Exception e) {
-                    LogUtil.warn("Invalid head: " + headJson);
+                    LogUtil.warn("Invalid head: " + headJsonElement);
                 }
             }
         } catch (IOException e) {

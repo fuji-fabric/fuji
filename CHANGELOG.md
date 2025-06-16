@@ -1,4 +1,5 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
-- (< MC 1.21.5) [command_toolbox.hat] feature: allow to place any item on EquipmentSlot.HEAD using mouse click in survival game mode. (Thanks to @wolgamir)
+- [head] fix: should not eat the cursor stack when the price if `FREE`.
+- [head] fix: should decrease the amount of heads on right click when the price is `FREE`.
  

@@ -22,31 +22,35 @@ public class HeadGui extends SimpleGui {
     public HeadGui(ServerPlayerEntity player) {
         super(ScreenHandlerType.GENERIC_9X2, player, false);
         this.player = player;
+        this.setTitle(TextHelper.getTextByKey(player, "head.title"));
 
-        /* Set categories buttons. */
+        /* Place categories buttons. */
         int index = 0;
         for (Category category : Category.values()) {
-            setCategoryButton(index, category);
+            placeCategoryButton(index, category);
             index++;
         }
 
-        /* Set other buttons. */
-        this.setTitle(TextHelper.getTextByKey(player, "head.title"));
-        this.setSlot(this.getSize() - 1, new GuiElementBuilder()
-            .setItem(Items.COMPASS)
-            .setName(TextHelper.getTextByKey(player, "search"))
-            .setCallback(() -> new SearchHeadsInputGui(this).open()));
+        /* Place player head button. */
         this.setSlot(this.getSize() - 2, new GuiElementBuilder()
             .setItem(Items.PLAYER_HEAD)
             .setName(TextHelper.getTextByKey(player, "head.category.player"))
             .setCallback(() -> new PlayerHeadGui(this).open()));
+
+        /* Place search button. */
+        this.setSlot(this.getSize() - 1, new GuiElementBuilder()
+            .setItem(Items.COMPASS)
+            .setName(TextHelper.getTextByKey(player, "search"))
+            .setCallback(() -> new SearchHeadsInputGui(this).open()));
+
     }
 
-    private void setCategoryButton(int slotIndex, @NotNull Category category) {
+    private void placeCategoryButton(int slotIndex, @NotNull Category category) {
         this.setSlot(slotIndex, category.toItemStack(player), (a, b, c, d) -> {
             List<Head> entities = new ArrayList<>(HeadProvider.getLoadedHeads().get(category));
             Text title = category.getText(player);
-            new CategoryHeadGui(this, player, title, entities, 0).open();
+            new CategoryHeadsGui(this, player, title, entities, 0)
+                .open();
         });
     }
 

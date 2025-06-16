@@ -26,7 +26,7 @@ public class HeadInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     @Document("Download the head database from the internet. (You need to delete the existing head database file.)")
     private static int $sync(@CommandSource CommandContext<ServerCommandSource> ctx) {
-        HeadProvider.fetchData();
+        HeadProvider.syncCategories();
         return CommandHelper.Return.SUCCESS;
     }
 
