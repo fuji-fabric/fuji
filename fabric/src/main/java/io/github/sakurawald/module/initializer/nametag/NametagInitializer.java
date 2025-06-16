@@ -11,9 +11,7 @@ import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.nametag.config.model.NametagConfigModel;
 import io.github.sakurawald.module.initializer.nametag.job.UpdateNametagJob;
 import net.minecraft.entity.Entity;
-#if MC_VER > MC_1_21
 import net.minecraft.entity.EntityPose;
-#endif
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
@@ -83,13 +81,10 @@ public class NametagInitializer extends ModuleInitializer {
     }
 
     private static void letTheNametagRideThePlayer(Entity nametag, PlayerEntity player) {
-        #if MC_VER <= MC_1_21
-            nametag.startRiding(player);
-        #elif MC_VER > MC_1_21
-            nametag.setPose(EntityPose.STANDING);
-            nametag.vehicle = player;
-            nametag.vehicle.addPassenger(nametag);
-        #endif
+        // NOTE: the startRiding() method will block the player using nether portal and the end portal.
+        nametag.setPose(EntityPose.STANDING);
+        nametag.vehicle = player;
+        nametag.vehicle.addPassenger(nametag);
     }
 
     private static BlockPos computeNametagSpawnBlockPos(ServerPlayerEntity bindingPlayer) {

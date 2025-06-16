@@ -29,6 +29,9 @@ accessible field net/minecraft/server/MinecraftServer saveHandler Lnet/minecraft
 accessible method net/minecraft/server/world/ServerChunkLoadingManager entryIterator ()Ljava/lang/Iterable;
 
 # nametag
+accessible field net/minecraft/entity/Entity vehicle Lnet/minecraft/entity/Entity;
+accessible method net/minecraft/entity/Entity addPassenger (Lnet/minecraft/entity/Entity;)V
+
 accessible field net/minecraft/entity/decoration/DisplayEntity$TextDisplayEntity TEXT Lnet/minecraft/entity/data/TrackedData;
 accessible method net/minecraft/entity/decoration/DisplayEntity$TextDisplayEntity setText (Lnet/minecraft/text/Text;)V
 
