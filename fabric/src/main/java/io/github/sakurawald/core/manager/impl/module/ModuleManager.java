@@ -164,28 +164,28 @@ public class ModuleManager extends BaseManager {
         LogUtil.info("Enabled {}/{} modules -> {}", enabledModuleList.size(), module2enable.size(), enabledModuleList);
 
         /* print first-time helper */
-        if (enabledModuleList.size() == 1) {
+        if (enabledModuleList.size() == 1 || FabricLoader.getInstance().isDevelopmentEnvironment()) {
             printUserGuide();
         }
     }
 
     public static void printUserGuide() {
+        // NOTE: The generator is https://rebane2001.com/discord-colored-text-generator/
         String userGuide = """
-            \033[38;5;219m
-
-            [Fuji User Guide]
+            [2;35m[1;35m
+            [Fuji User Guide][0m[2;35m
             It seems that this is the first time you use fuji mod.
 
             Here are some important points:
-            - Fuji is designed to be fully-modular, that is to say, all modules are disabled by default.
-            - To enable a module: modify the `config/fuji/config.json` file, and re-start the server to apply the modification.
+            - Fuji is designed to be fully-modular, that is to say, [2;34mall modules are disabled by default.[0m[2;35m
+            - To enable a module: modify the `[2;34mconfig/fuji/config.json[0m[2;35m` file, and re-start the server to apply the modification.
                 - To use `/tpa` command, enable the `tpa` module.
                 - To use placeholders provided by fuji, enable the `placeholder` module.
                 - To use echo commands like `/send-message`, `/send-broadcast` etc, enable the `echo` module.
-            - To see the list of modules, and what functionality they provides, read the `fuji manual` pdf file in https://github.com/sakurawald/fuji/raw/dev/docs/release/fuji.pdf
+            - To see the list of modules, and what functionality they provides, read the `fuji manual` pdf file in [2;34mhttps://github.com/sakurawald/fuji/raw/dev/docs/release/fuji.pdf[0m[2;35m
             - To discover new things, use `/fuji inspect` command.
-            - Anything unclear, open an issue in https://github.com/sakurawald/fuji/issues
-            """;
+            - Anything unclear, open an issue in [2;34mhttps://github.com/sakurawald/fuji/issues[0m[2;35m[0m
+           """;
         LogUtil.info(userGuide);
     }
 
