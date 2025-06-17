@@ -246,6 +246,7 @@
   "shell.failed.rtfm": "<red>拒絕執行 Shell 指令：請閱讀官方 wiki。",
   "shell.failed.not_in_allowed_list": "<red>你不在允許的玩家名稱清單中。",
   "fuji.about.gui.title": "<#6528F7>關於",
+  "fuji.user_guide": "<#6528F7>Read the user guide in console!",
   "about": "<#6528F7>關於",
   "version": "<#6528F7>版本",
   "version.format": "<#FFA1F5>版本 %s",
