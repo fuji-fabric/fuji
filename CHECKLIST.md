@@ -71,6 +71,9 @@ It's good to have a checklist, to avoid forgetting something.
 - Issue `/back` to see if the `command advice` is processed exactly once. 
 - Issue `/say hi` to see if the `command advice` can cancel with another command. 
 - Check if the `nametag` entity blocks the `nether` and `the end` portal.
+- For `chat` and its submodules.
+  - Test in online-mode and offline-mode.
+  - Test with `chat.style` and `Styled Chat`.
 
 ## Publish a new version
 
