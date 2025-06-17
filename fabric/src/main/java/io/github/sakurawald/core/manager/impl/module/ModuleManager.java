@@ -178,7 +178,7 @@ public class ModuleManager extends BaseManager {
 
             Here are some important points:
             - Fuji is designed to be fully-modular, that is to say, [2;34mall modules are disabled by default.[0m[2;35m
-            - To enable a module: modify the `[2;34mconfig/fuji/config.json[0m[2;35m` file, and re-start the server to apply the modification.
+            - To enable a module: modify the `[2;34mconfig/fuji/config.json[0m[2;35m` file, and [2;34mre-start[0m[2;35m the server to apply the modification.
                 - To use `/tpa` command, enable the `tpa` module.
                 - To use placeholders provided by fuji, enable the `placeholder` module.
                 - To use echo commands like `/send-message`, `/send-broadcast` etc, enable the `echo` module.
