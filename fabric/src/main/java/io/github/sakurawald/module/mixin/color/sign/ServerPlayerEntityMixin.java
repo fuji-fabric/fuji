@@ -14,6 +14,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.List;
+
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin {
 
@@ -22,29 +24,29 @@ public abstract class ServerPlayerEntityMixin {
     final ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
 
     @Inject(method = "openEditSignScreen", at = @At("HEAD"))
-    private void sendBlockStateUpdatePacketOfSerializedTextBeforeTheClientOpenTheEditScreen(@NotNull SignBlockEntity signBlockEntity, boolean bl, @NotNull CallbackInfo ci) {
-        /* verify */
-        if (ci.isCancelled()) return;
-
-        /* update the sign text in server-side with the sign cahce value before the client-side open the sign editor screen. */
+    private void sendBlockStateUpdatePacketOfSerializedTextBeforeTheClientOpenTheEditScreen(@NotNull SignBlockEntity signBlockEntity, boolean isFront, @NotNull CallbackInfo ci) {
+        /* Update the sign text in server-side with the SignCache value before the client-side open the sign editor screen. */
         SignCache signCache = ColorSignInitializer.readSignCache(new SpatialBlock(signBlockEntity.getWorld(), signBlockEntity.getPos()));
         if (signCache == null) return;
 
+        /* Modify the text of the sign. */
         Text[] newTextList = new Text[4];
-        for (int i = 0; i < signCache.getLines().size(); i++) {
-            String line = signCache.getLines().get(i);
-            // escape from mojang sign editor
+        List<String> trueLines = isFront ? signCache.getFrontLines() : signCache.getBackLines();
+        for (int i = 0; i < trueLines.size(); i++) {
+            String line = trueLines.get(i);
+            // Escape from mojang sign editor.
             line = line.replace("<", "\\<")
                 .replace(">", "\\>");
 
-            // restore the raw string.
+            // Restore the raw string.
             newTextList[i] = Text.literal(line);
         }
 
-        boolean facing = signBlockEntity.isPlayerFacingFront(player);
-        SignText originalSignText = signBlockEntity.getText(facing);
+        /* Send update packet. */
+        boolean facingFront = signBlockEntity.isPlayerFacingFront(player);
+        SignText originalSignText = signBlockEntity.getText(facingFront);
         SignText newSignText = new SignText(newTextList, newTextList, originalSignText.getColor(), originalSignText.isGlowing());
-        signBlockEntity.setText(newSignText, facing);
+        signBlockEntity.setText(newSignText, facingFront);
         player.networkHandler.sendPacket(signBlockEntity.toUpdatePacket());
     }
 

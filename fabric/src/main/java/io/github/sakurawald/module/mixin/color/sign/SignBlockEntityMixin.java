@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.mixin.color.sign;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.service.style_striper.StyleStriper;
@@ -19,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
@@ -30,9 +30,6 @@ import java.util.UUID;
 
 @Mixin(SignBlockEntity.class)
 public abstract class SignBlockEntityMixin extends BlockEntity {
-
-    @Unique
-    private static final String STYLE_TYPE_SIGN = "sign";
 
     @Shadow
     public abstract @Nullable UUID getEditor();
@@ -46,30 +43,41 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
 
     @ModifyVariable(method = "setText", at = @At("HEAD"), argsOnly = true)
     @NotNull
-    SignText method(@NotNull SignText signText) {
+    SignText parseTextWhenSetText(@NotNull SignText signText, @Local(ordinal = 0, argsOnly = true) boolean isFront) {
+        /* Parse input strings. */
         Text[] messages = signText.getMessages(false);
         Text[] newMessages = new Text[messages.length];
         for (int i = 0; i < messages.length; i++) {
             String string = messages[i].getString();
 
-            /* stripe style tags */
+            /* Stripe style tags. */
             if (ColorSignInitializer.config.model().requires_corresponding_permission_to_use_style_tag) {
                 Optional<ServerPlayerEntity> playerOpt = ServerHelper.getPlayerByUuid(getEditor());
                 if (playerOpt.isPresent()) {
-                    string = StyleStriper.stripe(playerOpt.get(), STYLE_TYPE_SIGN, string);
+                    string = StyleStriper.stripe(playerOpt.get(), ColorSignInitializer.STYLE_TYPE_SIGN, string);
                 }
             }
 
             newMessages[i] = TextHelper.getTextByValue(null, string);
         }
 
-        /* write cache */
+        /* Write sign cache. */
         List<String> lines = Arrays.stream(messages)
             .map(Text::getString)
             .toList();
-        ColorSignInitializer.writeSignCache(new SpatialBlock(getWorld(), getPos()), new SignCache(lines));
 
-        /* return the modified text */
+        SpatialBlock spatialBlock = new SpatialBlock(getWorld(), getPos());
+        @Nullable SignCache signCache = ColorSignInitializer.readSignCache(spatialBlock);
+        if (signCache == null) signCache = new SignCache(List.of(), List.of());
+        if (isFront) {
+            signCache = signCache.withFrontLines(lines);
+        } else {
+            signCache = signCache.withBackLines(lines);
+        }
+
+        ColorSignInitializer.writeSignCache(spatialBlock, signCache);
+
+        /* Return the modified text. */
         return new SignText(newMessages, newMessages, signText.getColor(), signText.isGlowing());
     }
 }

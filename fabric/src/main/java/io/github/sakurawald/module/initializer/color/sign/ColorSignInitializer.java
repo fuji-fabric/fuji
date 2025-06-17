@@ -9,19 +9,23 @@ import io.github.sakurawald.core.structure.SpatialBlock;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.color.sign.config.model.ColorSignConfigModel;
 import io.github.sakurawald.module.initializer.color.sign.structure.SignCache;
+import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
 public class ColorSignInitializer extends ModuleInitializer {
 
-    private static final String ATTACHMENT_SUBJECT = "color-sign-cache";
-
     public static final BaseConfigurationHandler<ColorSignConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ColorSignConfigModel.class);
 
-    public static @Nullable SignCache readSignCache(SpatialBlock spatialBlock) {
-        String uuid = UuidHelper.getAttachedUuid(spatialBlock);
+    public static final String STYLE_TYPE_SIGN = "sign";
 
+    private static final String ATTACHMENT_SUBJECT = "color-sign-cache";
+
+
+    public static @Nullable SignCache readSignCache(@NonNull SpatialBlock spatialBlock) {
+        String uuid = UuidHelper.getAttachedUuid(spatialBlock);
         if (!Managers.getAttachmentManager().existsAttachment(ATTACHMENT_SUBJECT, uuid)) {
             return null;
         }
@@ -35,7 +39,7 @@ public class ColorSignInitializer extends ModuleInitializer {
         }
     }
 
-    public static void writeSignCache(SpatialBlock spatialBlock, SignCache signCache) {
+    public static void writeSignCache(@NotNull SpatialBlock spatialBlock, @NonNull SignCache signCache) {
         String uuid = UuidHelper.getAttachedUuid(spatialBlock);
         String data = BaseConfigurationHandler.getGson().toJson(signCache);
         try {
