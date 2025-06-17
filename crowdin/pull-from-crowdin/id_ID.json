@@ -246,6 +246,7 @@
   "shell.failed.rtfm": "<red>Menolak untuk menjalankan perintah shell: silakan baca wiki resmi.",
   "shell.failed.not_in_allowed_list": "<red>Anda tidak ada dalam daftar nama pemain yang diizinkan.",
   "fuji.about.gui.title": "<#6528F7>Tentang",
+  "fuji.user_guide": "<#6528F7>Read the user guide in console!",
   "about": "<#6528F7>Tentang",
   "version": "<#6528F7>Versi",
   "version.format": "<#FFA1F5>Versi %s",
