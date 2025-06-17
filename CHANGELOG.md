@@ -1,4 +1,5 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
+- feature: new supported `MC 1.20` version!
 - [chat.history] fix: make it working in `offline-mode` server.
-- feature: now support `MC 1.20` version.
+- [command_permission] feature: now we can detect `in-complete command` or `in-correct argument` when using `/command-permission describe <cmd>` command.

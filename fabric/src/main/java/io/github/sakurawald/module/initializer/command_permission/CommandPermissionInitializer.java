@@ -3,6 +3,7 @@ package io.github.sakurawald.module.initializer.command_permission;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.context.ParsedCommandNode;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.sakurawald.core.annotation.Cite;
 import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
@@ -20,10 +21,12 @@ import io.github.sakurawald.module.initializer.command_permission.gui.CommandPer
 import io.github.sakurawald.module.initializer.command_permission.structure.CommandNodePermission;
 import io.github.sakurawald.module.initializer.command_permission.structure.WrappedPredicate;
 import net.luckperms.api.util.Tristate;
+import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.List;
@@ -70,6 +73,14 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         /* Describe the command string. */
         String commandString = TextHelper.escapeTags(parseResults.getReader().getString());
         TextHelper.sendMessageByKey(source,"command_permission.describe.command_string", commandString);
+
+        /* Check if there is early exceptions. */
+        @Nullable CommandSyntaxException earlyException = CommandManager.getException(parseResults);
+        if (earlyException != null) {
+            TextHelper.sendMessageByKey(source,"command_permission.describe.command_string.parser.exceptions");
+            TextHelper.sendMessageByKey(source,"command_permission.describe.command_string.parser.early_exception", earlyException);
+            return CommandHelper.Return.SUCCESS;
+        }
 
         /* Report the parser exceptions. */
         var exceptions = parseResults.getExceptions();
