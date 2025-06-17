@@ -246,7 +246,7 @@
   "shell.failed.rtfm": "<red>Refuse to execute shell command: please read the official wiki.",
   "shell.failed.not_in_allowed_list": "<red>You are not in the allowed player name list.",
   "fuji.about.gui.title": "<#6528F7>About",
-  "fuji.user_guide": "<#6528F7>Read the user guide in console!",
+  "fuji.user_guide": "<#FFA1F5>Read the user guide in console!",
   "about": "<#6528F7>About",
   "version": "<#6528F7>Version",
   "version.format": "<#FFA1F5>Version %s",
