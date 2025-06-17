@@ -24,7 +24,9 @@ public abstract class StoreChatHistoryMixin {
 
     @Unique
     private long getUniqueKey(SignedMessage signedMessage) {
-       return signedMessage.getSalt();
+       // NOTE: The SignedMessage#getSalt method only works in online-mode server. In offline-mode server, it always returns 0.
+       // NOTE: The hashCode() is used as the disguise key, because the SentMessage#send is called inside a loop, and will not be modified.
+       return signedMessage.hashCode();
     }
 
     @Inject(method = "sendChatMessage", at = @At(value = "TAIL"))
@@ -51,7 +53,7 @@ public abstract class StoreChatHistoryMixin {
 
             /* Add the message into chat history. */
             Text decoratedTextAsTheClientSideDo = parameters.applyChatDecoration(signedMessage.getContent());
-            ChatHistoryInitializer.getChatHistory().add(decoratedTextAsTheClientSideDo);
+            ChatHistoryInitializer.enrichChatHistory(decoratedTextAsTheClientSideDo);
         }
 
     }
