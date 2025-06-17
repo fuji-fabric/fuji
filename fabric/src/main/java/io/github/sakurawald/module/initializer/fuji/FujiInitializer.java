@@ -47,18 +47,25 @@ import java.util.List;
 @CommandRequirement(level = 4)
 public class FujiInitializer extends ModuleInitializer {
 
-    @io.github.sakurawald.core.command.annotation.CommandNode("reload")
+    @CommandNode("reload")
     private static int $reload(@CommandSource CommandContext<ServerCommandSource> ctx) {
-        // reload main-control file
+        // Reload main-control file.
         Configs.configHandler.readStorage();
 
-        // reload modules
+        // Reload modules.
         Managers.getModuleManager().reloadModuleInitializers();
 
-        // reload jobs
+        // Reload jobs.
         BaseJob.rescheduleAll();
 
         TextHelper.sendMessageByKey(ctx.getSource(), "reload");
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @CommandNode("user-guide")
+    private static int $userGuide(@CommandSource CommandContext<ServerCommandSource> ctx) {
+        ModuleManager.printUserGuide();
+        TextHelper.sendMessageByKey(ctx.getSource(), "fuji.user_guide");
         return CommandHelper.Return.SUCCESS;
     }
 
