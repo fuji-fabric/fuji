@@ -3,6 +3,7 @@ package io.github.sakurawald.module.initializer.command_cooldown;
 import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.PlaceholderHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandRequirement;
@@ -33,31 +34,30 @@ import java.util.Optional;
 @CommandNode("command-cooldown")
 @CommandRequirement(level = 4)
 public class CommandCooldownInitializer extends ModuleInitializer {
+
     public static final BaseConfigurationHandler<CommandCooldownConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandCooldownConfigModel.class) {
         @Override
         public void beforeWriteStorage() {
             this.model().namedCooldown.list.values()
                 .stream()
                 .filter(it -> !it.isPersistent())
-                // clear the timestamp for non-persistent cooldown before writing storage.
+                // Reset the timestamp for non-persistent cooldown before writing storage.
                 .forEach(it -> it.getTimestamp().clear());
         }
     }.autoSaveEveryMinute();
 
-    public static final MutableText NOT_COOLDOWN_FOUND = Text.literal("NOT_COOLDOWN_FOUND");
+    private static final MutableText NOT_COOLDOWN_FOUND_TEXT = Text.literal("NOT_COOLDOWN_FOUND");
 
     private static final Map<String, Cooldown<String>> player2cooldown = new HashMap<>();
 
     public static long computeCooldown(ServerPlayerEntity player, @NotNull String commandLine) {
-        String name = player.getGameProfile().getName();
-
-        Cooldown<String> cooldown = player2cooldown.computeIfAbsent(name, k -> new Cooldown<>());
+        String playerName = PlayerHelper.getName(player);
+        Cooldown<String> cooldown = player2cooldown.computeIfAbsent(playerName, k -> new Cooldown<>());
 
         Optional<Map.Entry<String, Long>> first = config.model().unnamed_cooldown.entrySet()
             .stream()
             .filter(it -> commandLine.matches(it.getKey()))
             .findFirst();
-
         return first.map(entry -> cooldown.tryUse(entry.getKey(), entry.getValue()))
             .orElse(-1L);
     }
@@ -164,7 +164,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
     protected void registerPlaceholder() {
         PlaceholderHelper.withPlayer("command_cooldown_left_time", (player, args) -> {
             CommandCooldown cooldown = config.model().namedCooldown.list.get(args);
-            if (cooldown == null) return NOT_COOLDOWN_FOUND;
+            if (cooldown == null) return NOT_COOLDOWN_FOUND_TEXT;
 
             String key = player.getGameProfile().getName();
             long leftTime = cooldown.getCooldown(key, cooldown.getCooldownMs());
@@ -174,7 +174,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
 
         PlaceholderHelper.withPlayer("command_cooldown_left_usage", (player, args) -> {
             CommandCooldown cooldown = config.model().namedCooldown.list.get(args);
-            if (cooldown == null) return NOT_COOLDOWN_FOUND;
+            if (cooldown == null) return NOT_COOLDOWN_FOUND_TEXT;
 
             String key = player.getGameProfile().getName();
             int usage = cooldown.getUsage().getOrDefault(key, 0);

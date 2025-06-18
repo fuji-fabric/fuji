@@ -15,6 +15,7 @@ import java.util.Map;
 public class CommandCooldown extends Cooldown<String> {
 
     private static final String GLOBAL_NAME = "GLOBAL";
+
     final @Nullable String name;
     final long cooldownMs;
     final int maxUsage;
