@@ -87,10 +87,10 @@ public class FujiInitializer extends ModuleInitializer {
     @CommandNode("debug")
     @Document("Switch the `log_debug_message` option.")
     private static int debug(@CommandSource ServerCommandSource source) {
-        var debug = Configs.configHandler.model().core.debug;
-        debug.log_debug_messages = !debug.log_debug_messages;
+        var config = Configs.configHandler.model().core.debug;
+        config.log_debug_messages = !config.log_debug_messages;
 
-        TextHelper.sendMessageByFlag(source,debug.log_debug_messages);
+        TextHelper.sendMessageByKey(source, config.log_debug_messages ? "fuji.debug.on" : "fuji.debug.off");
         return CommandHelper.Return.SUCCESS;
     }
 

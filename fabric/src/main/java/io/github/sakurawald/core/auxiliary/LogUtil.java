@@ -47,8 +47,9 @@ public class LogUtil {
     public static void debug(String message, Object... args) {
         message = attachSourceModuleInfo(message);
 
-        if (Configs.configHandler.model().core.debug.log_debug_messages
-            || FabricLoader.getInstance().isDevelopmentEnvironment()) {
+        /* Process the debug config. */
+        var debugConfig = Configs.configHandler.model().core.debug;
+        if (debugConfig.log_debug_messages) {
             String prefix = isConsoleSupportAnsiColor ? "\u001B[37m" : ""; // escape for the ansi color code
             String format = prefix + message;
             MOD_LOGGER.info(format, args);

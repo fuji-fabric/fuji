@@ -163,7 +163,7 @@ public abstract class BaseConfigurationHandler<T> {
             if (this.model == null) {
                 // getDefaultModel() is allowed to throw exception.
                 this.model = this.getDefaultModel();
-                LogUtil.info("Write default configuration: {}", this.path.toFile().getAbsolutePath());
+                LogUtil.debug("Write default configuration: {}", this.path.toFile().getAbsolutePath());
             }
 
             // before write storage
