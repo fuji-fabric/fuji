@@ -17,9 +17,8 @@ public class CommandWarmupNode {
         final int ms;
     }
 
-    public static CommandWarmupNode makeInstance(Command command, Interruptible interruptible) {
+    public static CommandWarmupNode make(Command command, Interruptible interruptible) {
         return new CommandWarmupNode(new Tag(), command, interruptible);
     }
-
 
 }

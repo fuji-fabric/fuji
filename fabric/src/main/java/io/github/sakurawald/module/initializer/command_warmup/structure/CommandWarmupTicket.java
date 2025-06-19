@@ -12,25 +12,25 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 public class CommandWarmupTicket extends InterruptibleTicket {
 
-    private final String input;
+    private final String commandString;
 
-    public CommandWarmupTicket(@NotNull ServerPlayerEntity player, @NotNull String input, CommandWarmupNode entry) {
-        super(new ServerBossBar(TextHelper.getTextByKey(player, "command_warmup.bossbar.name", input), net.minecraft.entity.boss.BossBar.Color.GREEN, net.minecraft.entity.boss.BossBar.Style.PROGRESS)
+    private CommandWarmupTicket(@NotNull ServerPlayerEntity player, @NotNull String commandString, CommandWarmupNode entry) {
+        super(new ServerBossBar(TextHelper.getTextByKey(player, "command_warmup.bossbar.name", commandString), net.minecraft.entity.boss.BossBar.Color.GREEN, net.minecraft.entity.boss.BossBar.Style.PROGRESS)
             , entry.getCommand().getMs()
             , player
             , SpatialPose.of(player)
             , entry.getInterruptible());
 
-        this.input = input;
+        this.commandString = commandString;
     }
 
-    public static CommandWarmupTicket make(ServerPlayerEntity player, String input, CommandWarmupNode entry) {
-        return new CommandWarmupTicket(player, input, entry);
+    public static CommandWarmupTicket make(ServerPlayerEntity player, String commandString, CommandWarmupNode setup) {
+        return new CommandWarmupTicket(player, commandString, setup);
     }
 
     @Override
     protected void onComplete() {
-        CommandHelper.executeCommand(player, input);
+        CommandHelper.executeCommand(player, commandString);
     }
 
 }
