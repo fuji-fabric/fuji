@@ -132,4 +132,8 @@ public class PlayerHelper {
     public static String getName(PlayerEntity player) {
         return player.getGameProfile().getName();
     }
+
+    public static boolean isServerPlayer(PlayerEntity player) {
+        return player instanceof ServerPlayerEntity;
+    }
 }

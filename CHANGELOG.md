@@ -2,3 +2,4 @@
 
 - [core] fix: remove the `command manager: ...` console spam.
 - [color.sign] fix: should only parse `color style tags`, and ignore `placeholders`. (Ignore the placeholders, making it performs bette with `command_interactive` module.)
+- (<= MC 1.20.4) [command_interactive] fix: should respect the `command_warmup` module.

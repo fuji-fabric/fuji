@@ -1,6 +1,8 @@
 package io.github.sakurawald.module.mixin.command_interactive;
 
+import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.module.initializer.command_interactive.CommandInteractiveInitializer;
 import net.minecraft.block.AbstractSignBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -9,7 +11,6 @@ import net.minecraft.block.entity.SignText;
 import net.minecraft.entity.player.PlayerEntity;
 #if MC_VER <= MC_1_20_4
 import net.minecraft.util.Hand;
-import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 #elif MC_VER > MC_1_20_4
 import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
 #endif
@@ -43,40 +44,43 @@ public class AbstractSignBlockMixin {
     private void listenSignBlockUse(BlockState blockState, @NotNull World world, BlockPos blockPos, @NotNull PlayerEntity player, BlockHitResult blockHitResult, @NotNull CallbackInfoReturnable<ActionResult> cir)
     #endif
     {
-        // bypass if player is sneaking
-        if (player.isSneaking()) return;
+        /* Check if the player can use interactive command now. */
+        if (canUseInteractiveCommand(player)) return;
 
-        // interact with sign
-        if (player instanceof ServerPlayerEntity) {
-            BlockEntity blockEntity = world.getBlockEntity(blockPos);
-            if (blockEntity instanceof SignBlockEntity signBlockEntity) {
-                SignText signText = signBlockEntity.getText(signBlockEntity.isPlayerFacingFront(player));
+        /* Check if the player is server side. */
+        if (!PlayerHelper.isServerPlayer(player)) return;
 
-                String text = reduce(signText);
-                if (text.contains("/")) {
-                    cir.setReturnValue(ActionResult.CONSUME);
+        /* Extract the sign lines from the sign block. */
+        BlockEntity interactingBlockEntity = world.getBlockEntity(blockPos);
+        if (interactingBlockEntity instanceof SignBlockEntity signBlockEntity) {
+            SignText facingSignText = signBlockEntity.getText(signBlockEntity.isPlayerFacingFront(player));
+            String facingSignLines = extractSignLines(facingSignText);
+            if (facingSignLines.contains("/")) {
+                /* Consume this interaction. */
+                cir.setReturnValue(ActionResult.CONSUME);
 
-                    List<String> commands = splitCommands(text)
-                        .stream()
-                        .map(str -> TextHelper.parsePlaceholder(player, str))
-                        .toList();
+                /* Send command execution packets. */
+                List<String> commands = splitCommands(facingSignLines)
+                    .stream()
+                    .map(str -> TextHelper.parsePlaceholder(player, str))
+                    .toList();
 
-                    #if MC_VER <= MC_1_20_4
-                    commands.forEach(command -> {
-                        CommandHelper.executeCommand(player, command);
-                    });
-                    #elif MC_VER > MC_1_20_4
-                    commands.forEach(command -> ((ServerPlayerEntity) player).networkHandler.onCommandExecution(new CommandExecutionC2SPacket(command)));
-                    #endif
-
-                }
+                commands.forEach(commandString -> CommandInteractiveInitializer.mimicCommandExecutionPacket((ServerPlayerEntity) player, commandString));
             }
         }
+
     }
 
     @Unique
-    public @NotNull String reduce(@NotNull SignText signText) {
-        return Arrays.stream(signText.getMessages(false)).map(Text::getString).reduce("", String::concat);
+    private static boolean canUseInteractiveCommand(PlayerEntity player) {
+        return player.isSneaking();
+    }
+
+    @Unique
+    public @NotNull String extractSignLines(@NotNull SignText signText) {
+        return Arrays.stream(signText.getMessages(false))
+                     .map(Text::getString)
+                     .reduce("", String::concat);
     }
 
     @Unique
