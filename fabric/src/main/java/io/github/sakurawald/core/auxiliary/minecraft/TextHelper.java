@@ -23,6 +23,9 @@ import io.github.sakurawald.core.config.handler.impl.ResourceConfigurationHandle
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.packet.s2c.play.SubtitleS2CPacket;
+import net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket;
+import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
@@ -49,6 +52,7 @@ public class TextHelper {
     public static final Text TEXT_NEWLINE = Text.of("\n");
     public static final Text TEXT_SPACE = Text.of(" ");
     public static final Text TEXT_EMPTY = Text.literal("");
+    public static final String LANGUAGE_VALUE_PLACEHOLDER = "%message%";
 
     /* class states */
     private static final int ENSURE_THE_TAGS_ARE_REGISTERED_BEFORE_CREATING_THE_DEFAULT_PARSER = registerExtendedTags();
@@ -510,6 +514,16 @@ public class TextHelper {
         for (ServerPlayerEntity player : ServerHelper.getPlayers()) {
             player.sendMessage(text);
         }
+    }
+
+    public static void sendTitle(@NotNull ServerPlayerEntity player, @NotNull Text mainTitle, @NotNull Text subTitle) {
+        sendTitle(player,10,70,20, mainTitle, subTitle);
+    }
+
+    public static void sendTitle(ServerPlayerEntity player, int fadeInTicks, int stayTicks, int fadeOutTicks, Text mainTitle, Text subTitle) {
+        player.networkHandler.sendPacket(new TitleFadeS2CPacket(fadeInTicks, stayTicks, fadeOutTicks));
+        player.networkHandler.sendPacket(new TitleS2CPacket(mainTitle));
+        player.networkHandler.sendPacket(new SubtitleS2CPacket(subTitle));
     }
 
     public static class ClickEvent {

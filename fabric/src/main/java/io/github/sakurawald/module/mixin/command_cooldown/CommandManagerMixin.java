@@ -6,12 +6,12 @@ import io.github.sakurawald.module.initializer.command_cooldown.CommandCooldownI
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = CommandManager.class, priority = 1000 - 750)
 public class CommandManagerMixin {
@@ -30,7 +30,10 @@ public class CommandManagerMixin {
         long cooldownMs = CommandCooldownInitializer.computeCooldown(player, string);
 
         if (cooldownMs > 0) {
-            TextHelper.sendActionBarByKey(player, "command_cooldown.cooldown", cooldownMs / 1000);
+            long leftTimeSecond = cooldownMs / 1000;
+            Text text = TextHelper.getTextByKey(player, "command_cooldown.cooldown", leftTimeSecond);
+            TextHelper.sendTitle(player, text, Text.empty());
+
             ci.cancel();
         }
     }
