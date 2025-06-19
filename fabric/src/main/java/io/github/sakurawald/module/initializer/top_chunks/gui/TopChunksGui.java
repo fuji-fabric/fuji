@@ -37,8 +37,6 @@ public class TopChunksGui extends PagedGui<ChunkScore> {
         lore.add(TextHelper.getTextByKey(getPlayer(), "top_chunks.prop.dimension", RegistryHelper.ofString(entity.getDimension())));
         String chunkLocationString = entity.computeChunkLocationString(commandSource);
         lore.add(TextHelper.getTextByKey(getPlayer(), "top_chunks.prop.chunk", chunkLocationString));
-        Text scoreText = TextHelper.getTextByKey(getPlayer(), "top_chunks.prop.score", entity.getScore());
-        lore.add(scoreText);
         lore.add(TextHelper.getTextByKey(getPlayer(), "top_chunks.prop.players", entity.getPlayers()));
         lore.add(TypeFormatter.formatTypes(commandSource, entity.getType2amount()));
 
@@ -48,6 +46,7 @@ public class TopChunksGui extends PagedGui<ChunkScore> {
             lore.add(TextHelper.getTextByKey(player,"prompt.click.teleport"));
         }
 
+        Text scoreText = TextHelper.getTextByKey(getPlayer(), "top_chunks.prop.score", entity.getScore());
         return new GuiElementBuilder()
             .setItem(entity.getPlayers().isEmpty() ? Items.WHITE_STAINED_GLASS : Items.LIME_STAINED_GLASS)
             .setName(scoreText)
