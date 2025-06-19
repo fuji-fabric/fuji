@@ -30,8 +30,8 @@ public abstract class ServerPlayerEntityMixin {
         if (signCache == null) return;
 
         /* Modify the text of the sign. */
-        Text[] newTextList = new Text[4];
         List<String> trueLines = isFront ? signCache.getFrontLines() : signCache.getBackLines();
+        Text[] newTextList = {Text.empty(), Text.empty(), Text.empty(), Text.empty()};
         for (int i = 0; i < trueLines.size(); i++) {
             String line = trueLines.get(i);
             // Escape from mojang sign editor.
