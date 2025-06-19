@@ -48,6 +48,7 @@ public class TextHelper {
     /* constants */
     public static final Text TEXT_NEWLINE = Text.of("\n");
     public static final Text TEXT_SPACE = Text.of(" ");
+    public static final Text TEXT_EMPTY = Text.literal("");
 
     /* class states */
     private static final int ENSURE_THE_TAGS_ARE_REGISTERED_BEFORE_CREATING_THE_DEFAULT_PARSER = registerExtendedTags();

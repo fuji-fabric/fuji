@@ -2,8 +2,8 @@ package io.github.sakurawald.module.initializer.top_chunks.structure;
 
 import io.github.sakurawald.core.auxiliary.minecraft.PermissionHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
-import io.github.sakurawald.core.manager.Managers;
 import io.github.sakurawald.core.structure.GlobalPos;
 import io.github.sakurawald.core.structure.TypeFormatter;
 import io.github.sakurawald.module.initializer.top_chunks.TopChunksInitializer;
@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 @Data
 public class ChunkScore implements Comparable<ChunkScore> {
@@ -47,9 +46,7 @@ public class ChunkScore implements Comparable<ChunkScore> {
         this.chunkPos = chunkPos;
     }
 
-    private static boolean canClickToTeleportToThisChunk(ServerCommandSource commandSource) {
-        if (commandSource.getPlayer() == null) return false;
-        ServerPlayerEntity player = commandSource.getPlayer();
+    public static boolean canClickToTeleportToThisChunk(ServerPlayerEntity player) {
         return player.hasPermissionLevel(4) || PermissionHelper.hasPermission(player.getUuid(), "top_chunks.teleport");
     }
 
@@ -90,7 +87,29 @@ public class ChunkScore implements Comparable<ChunkScore> {
     }
 
     public @NotNull Text asText(@NotNull ServerCommandSource source) {
-        /* Make chunk location string. */
+        /* Make hover text. */
+        MutableText hoverText = Text.empty()
+            .formatted(Formatting.GOLD)
+            .append(TextHelper.getTextByKey(source, "top_chunks.prop.dimension", RegistryHelper.ofString(this.dimension)))
+            .append(TextHelper.TEXT_NEWLINE)
+            .append(TextHelper.getTextByKey(source, "top_chunks.prop.chunk", computeChunkLocationString(source)))
+            .append(TextHelper.TEXT_NEWLINE)
+            .append(TextHelper.getTextByKey(source, "top_chunks.prop.score", this.score))
+            .append(TextHelper.TEXT_NEWLINE)
+            .append(TextHelper.getTextByKey(source, "top_chunks.prop.players", this.players))
+            .append(TextHelper.TEXT_NEWLINE)
+            .append(TypeFormatter.formatTypes(source, this.type2amount));
+
+        /* Make chunk score text. */
+        return Text.empty()
+            .append(Text.literal(this.toString()))
+            .fillStyle(Style.EMPTY
+                .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(hoverText))
+                .withFormatting(this.players.isEmpty() ? Formatting.GRAY : Formatting.DARK_GREEN)
+            );
+    }
+
+    public String computeChunkLocationString(@NotNull ServerCommandSource source) {
         String chunkLocation;
         if (TopChunksInitializer.config.model().hide_location) {
             chunkLocation = TextHelper.getValueByKey(source, "top_chunks.prop.hidden");
@@ -101,39 +120,10 @@ public class ChunkScore implements Comparable<ChunkScore> {
             chunkLocation = this.chunkPos.toString();
         }
 
-        /* Make hover text. */
-        MutableText hoverText = Text.empty()
-            .formatted(Formatting.GOLD)
-            .append(TextHelper.getTextByKey(source, "top_chunks.prop.dimension", this.dimension.getRegistryKey().getValue()))
-            .append(TextHelper.TEXT_NEWLINE)
-            .append(TextHelper.getTextByKey(source, "top_chunks.prop.chunk", chunkLocation))
-            .append(TextHelper.TEXT_NEWLINE)
-            .append(TextHelper.getTextByKey(source, "top_chunks.prop.score", this.score))
-            .append(TextHelper.TEXT_NEWLINE)
-            .append(TextHelper.getTextByKey(source, "top_chunks.prop.players", this.players))
-            .append(TextHelper.TEXT_NEWLINE)
-            .append(TypeFormatter.formatTypes(source, this.type2amount));
-
-        if (canClickToTeleportToThisChunk(source)) {
-            hoverText.append(TextHelper.TEXT_NEWLINE);
-            hoverText.append(TextHelper.getTextByKey(source,"prompt.click.teleport"));
-        }
-
-        /* Make chunk score text. */
-        return Text.empty()
-            .append(Text.literal(this.toString()))
-            .fillStyle(Style.EMPTY
-                .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(hoverText))
-                .withFormatting(this.players.isEmpty() ? Formatting.GRAY : Formatting.DARK_GREEN)
-                .withClickEvent(Managers.getCallbackManager().makeCallbackEvent((player) -> {
-                    /* Click to teleport the player to the chunk. */
-                    if (!canClickToTeleportToThisChunk(source)) return;
-                    teleportToThisChunk(player);
-                }, 5, TimeUnit.MINUTES))
-            );
+        return chunkLocation;
     }
 
-    private void teleportToThisChunk(ServerPlayerEntity player) {
+    public void teleportToThisChunk(ServerPlayerEntity player) {
         BlockPos chunkCenterPos = new BlockPos(chunkPos.getCenterX(), 128, chunkPos.getCenterZ());
         int y = dimension.getTopPosition(Heightmap.Type.MOTION_BLOCKING, chunkCenterPos).getY();
         // NOTE: If the chunk is unloaded, the map height will be -64

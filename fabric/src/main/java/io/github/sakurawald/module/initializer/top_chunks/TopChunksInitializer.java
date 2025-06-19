@@ -10,6 +10,7 @@ import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.top_chunks.config.model.TopChunksConfigModel;
+import io.github.sakurawald.module.initializer.top_chunks.gui.TopChunksGui;
 import io.github.sakurawald.module.initializer.top_chunks.structure.ChunkScore;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
@@ -82,7 +83,19 @@ public class TopChunksInitializer extends ModuleInitializer {
     }
 
     private static void sendTopChunksReport(ServerCommandSource source, PriorityQueue<ChunkScore> PQ) {
-        /* Send top chunks report. */
+        if (source.isExecutedByPlayer()) {
+            sendTopChunksReportAsGui(source, PQ);
+        } else {
+            sendTopChunksReportAsMessage(source, PQ);
+        }
+    }
+
+    private static void sendTopChunksReportAsGui(ServerCommandSource source, PriorityQueue<ChunkScore> PQ) {
+        new TopChunksGui(source.getPlayer(), PQ.stream().toList(), 0)
+            .open();
+    }
+
+    private static void sendTopChunksReportAsMessage(ServerCommandSource source, PriorityQueue<ChunkScore> PQ) {
         var config = TopChunksInitializer.config.model();
         computeNearestPlayer(source, PQ, config.top.rows * config.top.columns);
 
