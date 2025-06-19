@@ -1,7 +1,8 @@
 package io.github.sakurawald.module.initializer.command_warmup.structure;
 
-import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.core.command.executor.CommandExecutor;
+import io.github.sakurawald.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.core.manager.impl.bossbar.structure.InterruptibleTicket;
 import io.github.sakurawald.core.structure.GlobalPos;
 import lombok.Getter;
@@ -30,7 +31,7 @@ public class CommandWarmupTicket extends InterruptibleTicket {
 
     @Override
     protected void onComplete() {
-        CommandHelper.executeCommand(player, commandString);
+        CommandExecutor.execute(ExtendedCommandSource.asPlayer(player.getCommandSource(), player), commandString);
     }
 
 }

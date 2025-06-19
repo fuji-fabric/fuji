@@ -33,6 +33,7 @@ public class CommandExecutor {
 
         try {
             return Objects
+                // NOTE: Use CommandDispatcher to run commands. Since Mojang will do chat message validation for online-mode server, if you are using CommandManager.
                 .requireNonNull(ServerHelper.getCommandDispatcher())
                 .execute(command, context.getExecutingSource());
         } catch (CommandSyntaxException e) {
