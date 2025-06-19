@@ -566,4 +566,8 @@ public class TextHelper {
             .replace("<", "\\<")
             .replace(">", "\\>");
     }
+
+    public static Text parseString(NodeParser parser, String input) {
+        return parser.parseNode(input).toText();
+    }
 }

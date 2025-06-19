@@ -92,7 +92,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
             .replace("%message%", contentString);
         contentString = stripeStyleTags(player, contentString);
 
-        return CHAT_STYLE_PARSER.parseNode(contentString).toText();
+        return TextHelper.parseString(CHAT_STYLE_PARSER, contentString);
     }
 
 }
