@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.service.style_striper.StyleStriper;
-import io.github.sakurawald.core.structure.SpatialBlock;
+import io.github.sakurawald.core.structure.GlobalBlockPos;
 import io.github.sakurawald.module.initializer.color.sign.ColorSignInitializer;
 import io.github.sakurawald.module.initializer.color.sign.structure.SignCache;
 import net.minecraft.block.BlockState;
@@ -66,8 +66,8 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
             .map(Text::getString)
             .toList();
 
-        SpatialBlock spatialBlock = new SpatialBlock(getWorld(), getPos());
-        @Nullable SignCache signCache = ColorSignInitializer.readSignCache(spatialBlock);
+        GlobalBlockPos globalBlockPos = new GlobalBlockPos(getWorld(), getPos());
+        @Nullable SignCache signCache = ColorSignInitializer.readSignCache(globalBlockPos);
         if (signCache == null) signCache = new SignCache(List.of(), List.of());
         if (isFront) {
             signCache = signCache.withFrontLines(lines);
@@ -75,7 +75,7 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
             signCache = signCache.withBackLines(lines);
         }
 
-        ColorSignInitializer.writeSignCache(spatialBlock, signCache);
+        ColorSignInitializer.writeSignCache(globalBlockPos, signCache);
 
         /* Return the modified text. */
         return new SignText(newMessages, newMessages, signText.getColor(), signText.isGlowing());

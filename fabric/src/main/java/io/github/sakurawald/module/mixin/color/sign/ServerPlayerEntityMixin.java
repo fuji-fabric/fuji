@@ -1,6 +1,6 @@
 package io.github.sakurawald.module.mixin.color.sign;
 
-import io.github.sakurawald.core.structure.SpatialBlock;
+import io.github.sakurawald.core.structure.GlobalBlockPos;
 import io.github.sakurawald.module.initializer.color.sign.ColorSignInitializer;
 import io.github.sakurawald.module.initializer.color.sign.structure.SignCache;
 import net.minecraft.block.entity.SignBlockEntity;
@@ -26,7 +26,7 @@ public abstract class ServerPlayerEntityMixin {
     @Inject(method = "openEditSignScreen", at = @At("HEAD"))
     private void sendBlockStateUpdatePacketOfSerializedTextBeforeTheClientOpenTheEditScreen(@NotNull SignBlockEntity signBlockEntity, boolean isFront, @NotNull CallbackInfo ci) {
         /* Update the sign text in server-side with the SignCache value before the client-side open the sign editor screen. */
-        SignCache signCache = ColorSignInitializer.readSignCache(new SpatialBlock(signBlockEntity.getWorld(), signBlockEntity.getPos()));
+        SignCache signCache = ColorSignInitializer.readSignCache(new GlobalBlockPos(signBlockEntity.getWorld(), signBlockEntity.getPos()));
         if (signCache == null) return;
 
         /* Modify the text of the sign. */

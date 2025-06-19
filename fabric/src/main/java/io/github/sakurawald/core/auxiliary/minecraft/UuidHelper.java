@@ -1,7 +1,7 @@
 package io.github.sakurawald.core.auxiliary.minecraft;
 
 import io.github.sakurawald.Fuji;
-import io.github.sakurawald.core.structure.SpatialBlock;
+import io.github.sakurawald.core.structure.GlobalBlockPos;
 import lombok.experimental.UtilityClass;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -24,8 +24,8 @@ public class UuidHelper {
         return NbtHelper.getString(root, FUJI_UUID);
     }
 
-    public static String getAttachedUuid(SpatialBlock spatialBlock) {
-        return getAttachedUuid(spatialBlock.ofDimension(), spatialBlock.ofBlockPos());
+    public static String getAttachedUuid(GlobalBlockPos globalBlockPos) {
+        return getAttachedUuid(globalBlockPos.ofDimension(), globalBlockPos.ofBlockPos());
     }
 
     public static String getAttachedUuid(World world, BlockPos blockPos) {

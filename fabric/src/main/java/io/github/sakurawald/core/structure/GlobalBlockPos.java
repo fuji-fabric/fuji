@@ -10,13 +10,13 @@ import org.jetbrains.annotations.NotNull;
 
 @Data
 @AllArgsConstructor
-public class SpatialBlock {
+public class GlobalBlockPos {
     String dimension;
     int x;
     int y;
     int z;
 
-    public SpatialBlock(World world, BlockPos blockPos) {
+    public GlobalBlockPos(World world, BlockPos blockPos) {
         this.dimension = RegistryHelper.ofString(world);
         this.x = blockPos.getX();
         this.y = blockPos.getY();
