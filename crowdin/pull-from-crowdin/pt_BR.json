@@ -158,6 +158,7 @@
   "top_chunks.prop.players.nearest": "%s (mais próximo)",
   "top_chunks.prop.score": "Pontuação: %d",
   "top_chunks.prop.types": "Tipos: ",
+  "top_chunks.list.gui.title": "<blue>Top Chunks",
   "prompt.click.teleport": "<blue>Click to teleport",
   "tpa.no_relative_ticket": "<red>No relative request",
   "tpa.others_to_you": "<yellow>%s --> Você",
