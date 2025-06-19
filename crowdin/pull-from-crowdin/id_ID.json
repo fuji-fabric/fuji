@@ -284,6 +284,8 @@
   "fuji.inspect.server_commands.gui.copy_command_path": "<orange>Salin jalur perintah: %s <hover:show_text:'<green>Salin ke papan klip'>click:copy_to_clipboard:'%s'<green>[SALIN]</click></hover>",
   "fuji.inspect.modules.gui.title": "<blue>Modul",
   "fuji.inspect.fuji_commands.gui.title": "<blue>Perintah Fuji",
+  "fuji.debug.on": "<orange>The fuji debug mode is now on. You can see debug messages in the console!",
+  "fuji.debug.off": "<orange>The fuji debug mode is now off",
   "command.registered_by_module": "<yellow>From Module: %s",
   "command.source.can_be_executed_by_console": "<blue>Dapat dijalankan oleh konsol: %s",
   "command.descriptor.type": "<blue>Deskriptor: %s",

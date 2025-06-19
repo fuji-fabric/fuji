@@ -284,6 +284,8 @@
   "fuji.inspect.server_commands.gui.copy_command_path": "<orange>Copy the command path: `%s` <hover:show_text:'<green>Copy to clipboard'><click:copy_to_clipboard:'%s'><green>[COPY]</click></hover>",
   "fuji.inspect.modules.gui.title": "<blue>Modules",
   "fuji.inspect.fuji_commands.gui.title": "<blue>Fuji Commands",
+  "fuji.debug.on": "<orange>The fuji debug mode is now on. You can see debug messages in the console!",
+  "fuji.debug.off": "<orange>The fuji debug mode is now off",
   "command.registered_by_module": "<yellow>From Module: %s",
   "command.source.can_be_executed_by_console": "<blue>Can be executed by console: %s",
   "command.descriptor.type": "<blue>Descriptor: %s",
