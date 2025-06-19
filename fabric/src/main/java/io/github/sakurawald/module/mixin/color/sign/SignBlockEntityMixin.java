@@ -48,6 +48,9 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
         Text[] messages = signText.getMessages(false);
         Text[] newMessages = new Text[messages.length];
         for (int i = 0; i < messages.length; i++) {
+            /* Get the line string from the sign text. */
+            // NOTE: The messages[i] may be null if you write nothing.
+            if (messages[i] == null) messages[i] = Text.literal("");
             String string = messages[i].getString();
 
             /* Stripe style tags. */
