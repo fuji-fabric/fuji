@@ -8,7 +8,7 @@ import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.gui.PagedGui;
-import io.github.sakurawald.core.structure.SpatialPose;
+import io.github.sakurawald.core.structure.GlobalPos;
 import io.github.sakurawald.module.initializer.works.WorksInitializer;
 import io.github.sakurawald.module.initializer.works.structure.work.abst.Work;
 import io.github.sakurawald.module.initializer.works.structure.work.impl.ProductionWork;
@@ -17,7 +17,6 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -74,7 +73,7 @@ public class WorksGui extends PagedGui<Work> {
                     RegistryKey<World> worldKey = RegistryKey.of(RegistryKeys.WORLD, RegistryHelper.makeIdentifier(entity.level));
                     ServerWorld level = ServerHelper.getServer().getWorld(worldKey);
                     if (level != null) {
-                        new SpatialPose(level, entity.x, entity.y, entity.z, entity.yaw, entity.pitch)
+                        new GlobalPos(level, entity.x, entity.y, entity.z, entity.yaw, entity.pitch)
                             .teleport(player);
                     } else {
                         TextHelper.sendMessageByKey(player, "world.dimension.not_found", entity.level);

@@ -5,7 +5,7 @@ import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.manager.Managers;
-import io.github.sakurawald.core.structure.SpatialPose;
+import io.github.sakurawald.core.structure.GlobalPos;
 import io.github.sakurawald.core.structure.TeleportTicket;
 import io.github.sakurawald.module.initializer.teleport_warmup.TeleportWarmupInitializer;
 import net.minecraft.network.packet.s2c.play.PositionFlag;
@@ -58,8 +58,8 @@ public abstract class ServerPlayerMixin {
 
             ticket = TeleportTicket.make(
                 player
-                , SpatialPose.of(player)
-                , new SpatialPose(serverWorld, x, y, z, yaw, pitch)
+                , GlobalPos.of(player)
+                , new GlobalPos(serverWorld, x, y, z, yaw, pitch)
                 , warmup_seconds * 1000
                 , TeleportWarmupInitializer.config.model().interruptible
                 , set

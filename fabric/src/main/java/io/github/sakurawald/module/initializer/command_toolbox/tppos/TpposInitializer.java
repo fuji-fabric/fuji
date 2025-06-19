@@ -1,7 +1,6 @@
 package io.github.sakurawald.module.initializer.command_toolbox.tppos;
 
 import io.github.sakurawald.core.annotation.Document;
-import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
@@ -14,7 +13,7 @@ import io.github.sakurawald.core.command.annotation.CommandTarget;
 import io.github.sakurawald.core.command.argument.wrapper.impl.Dimension;
 import io.github.sakurawald.core.command.argument.wrapper.impl.OfflinePlayerName;
 import io.github.sakurawald.core.service.random_teleport.RandomTeleporter;
-import io.github.sakurawald.core.structure.SpatialPose;
+import io.github.sakurawald.core.structure.GlobalPos;
 import io.github.sakurawald.core.structure.TeleportSetup;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -55,8 +54,8 @@ public class TpposInitializer extends ModuleInitializer {
             float $pitch = pitch.orElse(player.getPitch());
 
 
-            SpatialPose spatialPose = new SpatialPose(world, $x, $y, $z, $yaw, $pitch);
-            spatialPose.teleport(player);
+            GlobalPos globalPos = new GlobalPos(world, $x, $y, $z, $yaw, $pitch);
+            globalPos.teleport(player);
             return CommandHelper.Return.SUCCESS;
         }
 
@@ -82,7 +81,7 @@ public class TpposInitializer extends ModuleInitializer {
     @Document("Teleport to the offline position of a player.")
     private static int tppos(@CommandSource ServerPlayerEntity source, OfflinePlayerName player) {
         ServerPlayerEntity dummy = PlayerHelper.loadOfflinePlayer(player.getValue());
-        new SpatialPose(EntityHelper.getServerWorld(dummy), dummy.getX(), dummy.getY(), dummy.getZ(), dummy.getYaw(), dummy.getPitch())
+        new GlobalPos(EntityHelper.getServerWorld(dummy), dummy.getX(), dummy.getY(), dummy.getZ(), dummy.getYaw(), dummy.getPitch())
             .teleport(source);
         return CommandHelper.Return.SUCCESS;
     }

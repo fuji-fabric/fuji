@@ -9,7 +9,7 @@ import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.core.service.random_teleport.structure.HeightFinder;
 import io.github.sakurawald.core.service.random_teleport.structure.HeightFindingStrategy;
-import io.github.sakurawald.core.structure.SpatialPose;
+import io.github.sakurawald.core.structure.GlobalPos;
 import io.github.sakurawald.core.structure.TeleportSetup;
 import lombok.experimental.UtilityClass;
 import net.minecraft.block.BlockState;
@@ -32,7 +32,7 @@ import java.util.OptionalInt;
 @UtilityClass
 public class RandomTeleporter {
 
-    public static void request(@NotNull ServerPlayerEntity player, @NotNull TeleportSetup setup, @Nullable Consumer<SpatialPose> postConsumer) {
+    public static void request(@NotNull ServerPlayerEntity player, @NotNull TeleportSetup setup, @Nullable Consumer<GlobalPos> postConsumer) {
         CompletableFuture.runAsync(() -> {
             LogUtil.info("Request rtp: {}", player.getGameProfile().getName());
             Stopwatch timer = Stopwatch.createStarted();
@@ -59,15 +59,15 @@ public class RandomTeleporter {
             }
 
             // teleport the player
-            SpatialPose spatialPose = new SpatialPose(world, result.get().getX() + 0.5, result.get().getY(), result.get().getZ() + 0.5, 0, 0);
+            GlobalPos globalPos = new GlobalPos(world, result.get().getX() + 0.5, result.get().getY(), result.get().getZ() + 0.5, 0, 0);
             ServerHelper.getServer().executeSync(() -> {
                 // run the teleport action in main-thread
-                spatialPose.teleport(player);
+                globalPos.teleport(player);
             });
 
             // post consumer
             if (postConsumer != null) {
-                postConsumer.accept(spatialPose);
+                postConsumer.accept(globalPos);
             }
 
             // cost

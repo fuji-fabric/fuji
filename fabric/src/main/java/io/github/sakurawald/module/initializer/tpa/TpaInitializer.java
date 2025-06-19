@@ -7,7 +7,7 @@ import io.github.sakurawald.core.command.annotation.CommandSource;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.core.job.impl.MentionPlayersJob;
-import io.github.sakurawald.core.structure.SpatialPose;
+import io.github.sakurawald.core.structure.GlobalPos;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.tpa.config.model.TpaConfigModel;
 import io.github.sakurawald.module.initializer.tpa.structure.TpaRequest;
@@ -117,7 +117,7 @@ public class TpaInitializer extends ModuleInitializer {
             ServerPlayerEntity to = request.getTeleportTo();
             MentionPlayersJob.submitJob(config.model().mention_player, request.isTpahere() ? to : who);
 
-            new SpatialPose(to.getWorld(), to.getX(), to.getY(), to.getZ(), to.getYaw(), to.getPitch())
+            new GlobalPos(to.getWorld(), to.getX(), to.getY(), to.getZ(), to.getYaw(), to.getPitch())
                 .teleport(who);
         } else if (status == ResponseStatus.DENY) {
             request.getSender().sendMessage(request.asSenderText$Denied(), true);

@@ -14,7 +14,7 @@ import io.github.sakurawald.core.command.argument.wrapper.impl.Dimension;
 import io.github.sakurawald.core.command.exception.AbortCommandExecutionException;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
-import io.github.sakurawald.core.structure.SpatialPose;
+import io.github.sakurawald.core.structure.GlobalPos;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.back.config.model.BackConfigModel;
 import io.github.sakurawald.module.initializer.back.config.model.BackLocationHistoryModel;
@@ -87,7 +87,7 @@ public class BackInitializer extends ModuleInitializer {
             locationHistory
                 .listEntries()
                 .forEachRemaining(it -> {
-                    SpatialPose location = it.getLocation();
+                    GlobalPos location = it.getLocation();
                     TextHelper.sendMessageByKey(source, "back.list.entry"
                         , location.getLevel()
                         , location.getX()
@@ -155,7 +155,7 @@ public class BackInitializer extends ModuleInitializer {
             }
 
             // Should not save location inside ignore distance.
-            SpatialPose latestLocation = latestEntry.getLocation();
+            GlobalPos latestLocation = latestEntry.getLocation();
             double ignoreDistance = config.model().ignore_distance;
             if (latestLocation.sameLevel(player.getWorld())
                 && player.getPos().squaredDistanceTo(latestLocation.getX(), latestLocation.getY(), latestLocation.getZ()) <= ignoreDistance * ignoreDistance

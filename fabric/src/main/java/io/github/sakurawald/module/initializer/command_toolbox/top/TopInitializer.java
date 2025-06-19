@@ -6,7 +6,7 @@ import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandSource;
 import io.github.sakurawald.core.command.annotation.CommandTarget;
-import io.github.sakurawald.core.structure.SpatialPose;
+import io.github.sakurawald.core.structure.GlobalPos;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
@@ -22,8 +22,8 @@ public class TopInitializer extends ModuleInitializer {
         World world = player.getWorld();
         BlockPos topPosition = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, player.getBlockPos());
 
-        SpatialPose spatialPose = SpatialPose.of(player).withY(topPosition.getY());
-        spatialPose.teleport(player);
+        GlobalPos globalPos = GlobalPos.of(player).withY(topPosition.getY());
+        globalPos.teleport(player);
 
         TextHelper.sendMessageByKey(player, "top");
         return CommandHelper.Return.SUCCESS;

@@ -1,7 +1,7 @@
 package io.github.sakurawald.module.initializer.back.structure;
 
 import io.github.sakurawald.core.auxiliary.ChronosUtil;
-import io.github.sakurawald.core.structure.SpatialPose;
+import io.github.sakurawald.core.structure.GlobalPos;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -12,11 +12,11 @@ import java.util.Comparator;
 @Data
 @AllArgsConstructor
 public class LocationEntry implements Comparable<LocationEntry> {
-    SpatialPose location;
+    GlobalPos location;
     Long savedTimestamp;
 
     public static LocationEntry makeLocationEntry(@NotNull ServerPlayerEntity player) {
-        SpatialPose location = SpatialPose.of(player);
+        GlobalPos location = GlobalPos.of(player);
         Long saved_timestamp = ChronosUtil.getCurrentMillis();
         return new LocationEntry(location, saved_timestamp);
     }

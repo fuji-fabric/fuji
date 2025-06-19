@@ -15,7 +15,7 @@ import io.github.sakurawald.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.core.service.string_splitter.StringSplitter;
-import io.github.sakurawald.core.structure.SpatialPose;
+import io.github.sakurawald.core.structure.GlobalPos;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.command_toolbox.warp.command.argument.wrapper.WarpName;
 import io.github.sakurawald.module.initializer.command_toolbox.warp.config.model.WarpDataModel;
@@ -91,7 +91,7 @@ public class WarpInitializer extends ModuleInitializer {
             }
         }
 
-        WarpNode value = new WarpNode(SpatialPose.of(player))
+        WarpNode value = new WarpNode(GlobalPos.of(player))
             .withName(name);
         data.model().name2warp.put(name, value);
         TextHelper.sendMessageByKey(player, "warp.set.success", name);

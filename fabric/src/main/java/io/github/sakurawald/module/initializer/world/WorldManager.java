@@ -8,7 +8,7 @@ import io.github.sakurawald.core.event.impl.ServerTickEvents;
 import io.github.sakurawald.core.event.impl.ServerWorldEvents;
 import io.github.sakurawald.core.extension.SimpleRegistryExtension;
 import io.github.sakurawald.core.manager.Managers;
-import io.github.sakurawald.core.structure.SpatialPose;
+import io.github.sakurawald.core.structure.GlobalPos;
 import io.github.sakurawald.core.structure.TeleportTicket;
 import io.github.sakurawald.module.initializer.world.accessor.IDimensionOptions;
 import io.github.sakurawald.module.initializer.world.structure.DimensionNode;
@@ -114,8 +114,8 @@ public class WorldManager {
         List<ServerPlayerEntity> players = new ArrayList<>(world.getPlayers());
         for (ServerPlayerEntity player : players) {
             // fix: if the player is inside resource-world while resetting the worlds, then resource worlds will delay its deletion until the player left the resource-world.
-            SpatialPose from = SpatialPose.of(player);
-            SpatialPose to = new SpatialPose(overworld, spawnPos.getX() + 0.5, spawnPos.getY() + 0.5, spawnPos.getZ() + 0.5, 0, 0);
+            GlobalPos from = GlobalPos.of(player);
+            GlobalPos to = new GlobalPos(overworld, spawnPos.getX() + 0.5, spawnPos.getY() + 0.5, spawnPos.getZ() + 0.5, 0, 0);
 
             // totalMs = 1000, the value is unused
             TeleportTicket teleportTicket = TeleportTicket.makeVipTicket(player, from, to);

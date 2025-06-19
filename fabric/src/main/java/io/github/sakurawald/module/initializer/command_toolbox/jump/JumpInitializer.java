@@ -7,7 +7,7 @@ import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.core.command.annotation.CommandSource;
 import io.github.sakurawald.core.command.annotation.CommandTarget;
-import io.github.sakurawald.core.structure.SpatialPose;
+import io.github.sakurawald.core.structure.GlobalPos;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.hit.HitResult;
@@ -26,7 +26,7 @@ public class JumpInitializer extends ModuleInitializer {
         HitResult raycast = player.raycast($distance, 0, false);
         Vec3d hitPos = raycast.getPos();
 
-        new SpatialPose(EntityHelper.getServerWorld(player), hitPos.x, hitPos.y, hitPos.z, player.getYaw(), player.getPitch())
+        new GlobalPos(EntityHelper.getServerWorld(player), hitPos.x, hitPos.y, hitPos.z, player.getYaw(), player.getPitch())
             .teleport(player);
         return CommandHelper.Return.SUCCESS;
     }

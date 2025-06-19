@@ -7,7 +7,7 @@ import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandSource;
 import io.github.sakurawald.core.command.annotation.CommandTarget;
-import io.github.sakurawald.core.structure.SpatialPose;
+import io.github.sakurawald.core.structure.GlobalPos;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -40,7 +40,7 @@ public class BedInitializer extends ModuleInitializer {
             return CommandHelper.Return.FAIL;
         }
 
-        new SpatialPose(world, respawnPosition.getX(), respawnPosition.getY(), respawnPosition.getZ(), player.getYaw(), player.getPitch())
+        new GlobalPos(world, respawnPosition.getX(), respawnPosition.getY(), respawnPosition.getZ(), player.getYaw(), player.getPitch())
             .teleport(player);
         TextHelper.sendMessageByKey(player, "bed.success");
         return CommandHelper.Return.SUCCESS;

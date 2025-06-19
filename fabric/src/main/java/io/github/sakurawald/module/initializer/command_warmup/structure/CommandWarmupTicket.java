@@ -3,7 +3,7 @@ package io.github.sakurawald.module.initializer.command_warmup.structure;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.manager.impl.bossbar.structure.InterruptibleTicket;
-import io.github.sakurawald.core.structure.SpatialPose;
+import io.github.sakurawald.core.structure.GlobalPos;
 import lombok.Getter;
 import net.minecraft.entity.boss.ServerBossBar;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -18,7 +18,7 @@ public class CommandWarmupTicket extends InterruptibleTicket {
         super(new ServerBossBar(TextHelper.getTextByKey(player, "command_warmup.bossbar.name", commandString), net.minecraft.entity.boss.BossBar.Color.GREEN, net.minecraft.entity.boss.BossBar.Style.PROGRESS)
             , entry.getCommand().getMs()
             , player
-            , SpatialPose.of(player)
+            , GlobalPos.of(player)
             , entry.getInterruptible());
 
         this.commandString = commandString;

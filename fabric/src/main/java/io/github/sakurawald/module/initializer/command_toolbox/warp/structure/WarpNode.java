@@ -1,6 +1,6 @@
 package io.github.sakurawald.module.initializer.command_toolbox.warp.structure;
 
-import io.github.sakurawald.core.structure.SpatialPose;
+import io.github.sakurawald.core.structure.GlobalPos;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.List;
 @With
 public class WarpNode {
 
-    public SpatialPose position;
+    public GlobalPos position;
 
     public String name = "<blue>Display Name";
     public String item = "minecraft:painting";
@@ -29,7 +29,7 @@ public class WarpNode {
         }
     }
 
-    public WarpNode(SpatialPose position) {
+    public WarpNode(GlobalPos position) {
         this.position = position;
     }
 }

@@ -8,7 +8,7 @@ import io.github.sakurawald.core.command.annotation.CommandSource;
 import io.github.sakurawald.core.command.exception.AbortCommandExecutionException;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
-import io.github.sakurawald.core.structure.SpatialPose;
+import io.github.sakurawald.core.structure.GlobalPos;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.home.command.argument.wrapper.HomeName;
 import io.github.sakurawald.module.initializer.home.config.model.HomeDataModel;
@@ -25,25 +25,25 @@ public class HomeInitializer extends ModuleInitializer {
     private static final BaseConfigurationHandler<HomeDataModel> storage = new ObjectConfigurationHandler<>("home.json", HomeDataModel.class)
         .autoSaveEveryMinute();
 
-    public static Map<String, SpatialPose> withHomes(@NotNull ServerPlayerEntity player) {
+    public static Map<String, GlobalPos> withHomes(@NotNull ServerPlayerEntity player) {
         String playerName = player.getGameProfile().getName();
-        Map<String, Map<String, SpatialPose>> homes = storage.model().name2home;
+        Map<String, Map<String, GlobalPos>> homes = storage.model().name2home;
         homes.computeIfAbsent(playerName, k -> new HashMap<>());
         return homes.get(playerName);
     }
 
     @CommandNode("home tp")
     private static int $tp(@CommandSource ServerPlayerEntity player, HomeName home) {
-        Map<String, SpatialPose> homes = withHomes(player);
+        Map<String, GlobalPos> homes = withHomes(player);
         String homeName = home.getValue();
         ensureHomeExists(player, homes, homeName);
 
-        SpatialPose spatialPose = homes.get(homeName);
-        spatialPose.teleport(player);
+        GlobalPos globalPos = homes.get(homeName);
+        globalPos.teleport(player);
         return CommandHelper.Return.SUCCESS;
     }
 
-    private static void ensureHomeExists(ServerPlayerEntity player, Map<String, SpatialPose> homes, String homeName) {
+    private static void ensureHomeExists(ServerPlayerEntity player, Map<String, GlobalPos> homes, String homeName) {
         if (!homes.containsKey(homeName)) {
             TextHelper.sendMessageByKey(player, "home.not_found", homeName);
             throw new AbortCommandExecutionException();
@@ -52,7 +52,7 @@ public class HomeInitializer extends ModuleInitializer {
 
     @CommandNode("home unset")
     private static int $unset(@CommandSource ServerPlayerEntity player, HomeName home) {
-        Map<String, SpatialPose> homes = withHomes(player);
+        Map<String, GlobalPos> homes = withHomes(player);
         String homeName = home.getValue();
         ensureHomeExists(player, homes, homeName);
 
@@ -63,7 +63,7 @@ public class HomeInitializer extends ModuleInitializer {
 
     @CommandNode("home set")
     private static int $set(@CommandSource ServerPlayerEntity player, HomeName home, Optional<Boolean> override) {
-        Map<String, SpatialPose> name2position = withHomes(player);
+        Map<String, GlobalPos> name2position = withHomes(player);
         String homeName = home.getValue();
 
         if (name2position.containsKey(homeName)) {
@@ -79,7 +79,7 @@ public class HomeInitializer extends ModuleInitializer {
             return CommandHelper.Return.FAIL;
         }
 
-        name2position.put(homeName, SpatialPose.of(player));
+        name2position.put(homeName, GlobalPos.of(player));
         TextHelper.sendMessageByKey(player, "home.set.success", homeName);
         return CommandHelper.Return.SUCCESS;
     }

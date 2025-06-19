@@ -10,7 +10,6 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import java.util.Set;
@@ -18,7 +17,7 @@ import java.util.EnumSet;
 
 @Data
 @With
-public class SpatialPose {
+public class GlobalPos {
     final String level;
     final double x;
     final double y;
@@ -26,7 +25,7 @@ public class SpatialPose {
     final float yaw;
     final float pitch;
 
-    private SpatialPose(String level, double x, double y, double z, float yaw, float pitch) {
+    private GlobalPos(String level, double x, double y, double z, float yaw, float pitch) {
         this.level = level;
         this.x = x;
         this.y = y;
@@ -35,12 +34,12 @@ public class SpatialPose {
         this.pitch = pitch;
     }
 
-    public SpatialPose(@NotNull World level, double x, double y, double z, float yaw, float pitch) {
+    public GlobalPos(@NotNull World level, double x, double y, double z, float yaw, float pitch) {
         this(level.getRegistryKey().getValue().toString(), x, y, z, yaw, pitch);
     }
 
-    public static @NotNull SpatialPose of(@NotNull ServerPlayerEntity player) {
-        return new SpatialPose(player.getWorld().getRegistryKey().getValue().toString(), player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
+    public static @NotNull GlobalPos of(@NotNull ServerPlayerEntity player) {
+        return new GlobalPos(player.getWorld().getRegistryKey().getValue().toString(), player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
     }
 
     public boolean sameLevel(@NotNull World level) {
@@ -48,11 +47,11 @@ public class SpatialPose {
     }
 
     @SuppressWarnings("unused")
-    public double distanceToSqr(@NotNull SpatialPose spatialPose) {
-        if (!this.level.equals(spatialPose.level)) return Double.MAX_VALUE;
-        double x = this.x - spatialPose.x;
-        double y = this.y - spatialPose.y;
-        double z = this.z - spatialPose.z;
+    public double distanceToSqr(@NotNull GlobalPos globalPos) {
+        if (!this.level.equals(globalPos.level)) return Double.MAX_VALUE;
+        double x = this.x - globalPos.x;
+        double y = this.y - globalPos.y;
+        double z = this.z - globalPos.z;
         return x * x + y * y + z * z;
     }
 

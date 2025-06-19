@@ -3,7 +3,7 @@ package io.github.sakurawald.module.initializer.top_chunks.structure;
 import io.github.sakurawald.core.auxiliary.minecraft.PermissionHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.manager.Managers;
-import io.github.sakurawald.core.structure.SpatialPose;
+import io.github.sakurawald.core.structure.GlobalPos;
 import io.github.sakurawald.core.structure.TypeFormatter;
 import io.github.sakurawald.module.initializer.top_chunks.TopChunksInitializer;
 import lombok.Getter;
@@ -123,7 +123,7 @@ public class ChunkScore implements Comparable<ChunkScore> {
                     }
 
 
-                    new SpatialPose(dimension, blockPos.getX(), y, blockPos.getZ(), player.getYaw(), player.getPitch())
+                    new GlobalPos(dimension, blockPos.getX(), y, blockPos.getZ(), player.getYaw(), player.getPitch())
                         .teleport(player);
                 }, 5, TimeUnit.MINUTES))
             );
