@@ -58,7 +58,7 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
                 }
             }
 
-            newMessages[i] = TextHelper.getTextByValue(null, string);
+            newMessages[i] = TextHelper.parseString(TextHelper.DEFAULT_PARSER, string);
         }
 
         /* Write sign cache. */
