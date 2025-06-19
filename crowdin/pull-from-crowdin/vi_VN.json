@@ -158,6 +158,7 @@
   "top_chunks.prop.players.nearest": "%s (gần nhất)",
   "top_chunks.prop.score": "Điểm: %d",
   "top_chunks.prop.types": "Loại: ",
+  "top_chunks.list.gui.title": "<blue>Top Chunks",
   "prompt.click.teleport": "<blue>Nhấp vô để dịch chuyển",
   "tpa.no_relative_ticket": "<red>No relative request",
   "tpa.others_to_you": "<yellow>%s --> bạn",

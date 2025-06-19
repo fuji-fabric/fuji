@@ -158,6 +158,7 @@
   "top_chunks.prop.players.nearest": "%s (最近)",
   "top_chunks.prop.score": "分数: %d",
   "top_chunks.prop.types": "类型: ",
+  "top_chunks.list.gui.title": "<blue>Top Chunks",
   "prompt.click.teleport": "<blue>点此传送",
   "tpa.no_relative_ticket": "<red>没有相关的传送请求",
   "tpa.others_to_you": "<yellow>%s --> 您",

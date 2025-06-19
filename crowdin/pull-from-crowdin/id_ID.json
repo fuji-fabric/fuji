@@ -158,6 +158,7 @@
   "top_chunks.prop.players.nearest": "%s (terdekat)",
   "top_chunks.prop.score": "Skor: %d",
   "top_chunks.prop.types": "Jenis: ",
+  "top_chunks.list.gui.title": "<blue>Top Chunks",
   "prompt.click.teleport": "<blue>Klik untuk berteleportasi",
   "tpa.no_relative_ticket": "<red>Tidak ada permintaan relatif",
   "tpa.others_to_you": "<yellow>%s --> Anda",
