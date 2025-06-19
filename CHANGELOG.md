@@ -6,3 +6,5 @@
 - [color.sign] fix: should only parse `color style tags`, and ignore `placeholders`. (Ignore the placeholders, making it performs bette with `command_interactive` module.)
 - [color.sign] fix: should not throw NPE when editing signs if the sign lines is empty.
 - (<= MC 1.20.4) [command_interactive] fix: should respect the `command_warmup` module.
+- [command_interactive] fix: make it working on `online-mode` server.
+- [command_warmup] fix: make it working in `online-mode` server.

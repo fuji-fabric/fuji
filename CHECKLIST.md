@@ -74,6 +74,10 @@ It's good to have a checklist, to avoid forgetting something.
 - For `chat` and its submodules.
   - Test in online-mode and offline-mode.
   - Test with `chat.style` and `Styled Chat`.
+- Test the `command_interactive` module and `command_warmup` module:
+  - In `online-mode` server.
+  - Test `/back` command.
+  - Test `/say hello world` command.
 
 ## Publish a new version
 

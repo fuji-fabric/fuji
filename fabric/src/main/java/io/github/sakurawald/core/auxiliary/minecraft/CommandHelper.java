@@ -1,7 +1,6 @@
 package io.github.sakurawald.core.auxiliary.minecraft;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.context.ParsedCommandNode;
@@ -13,16 +12,17 @@ import com.mojang.brigadier.tree.RootCommandNode;
 import io.github.sakurawald.core.command.exception.AbortCommandExecutionException;
 import lombok.experimental.UtilityClass;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+
 #if MC_VER > MC_1_21
 import net.minecraft.server.world.ServerWorld;
 #endif
+
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
@@ -173,12 +173,6 @@ public class CommandHelper {
         #elif MC_VER > MC_1_21
             return entity.getCommandSource((ServerWorld) entity.getWorld());
         #endif
-    }
-
-    public static void executeCommand(PlayerEntity player, String command) {
-        ServerCommandSource commandSource = CommandHelper.getCommandSource(player);
-        ParseResults<ServerCommandSource> parseResults = ServerHelper.getCommandDispatcher().parse(command, commandSource);
-        ServerHelper.getServer().getCommandManager().execute(parseResults, command);
     }
 
     public static <S> boolean isExecutedOnServerSide(CommandContextBuilder<S> context) {

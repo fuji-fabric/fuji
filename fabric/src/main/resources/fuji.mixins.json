@@ -35,6 +35,7 @@
     "command_event.ServerPlayerEntityMixin",
     "command_event.ServerPlayNetworkHandlerMixin",
     "command_interactive.AbstractSignBlockMixin",
+    "command_interactive.ServerPlayNetworkHandlerMixin",
     "command_permission.CommandNodeMixin",
     "command_rewrite.ServerPlayNetworkHandlerMixin",
     "command_spy.CommandDispatcherMixin",

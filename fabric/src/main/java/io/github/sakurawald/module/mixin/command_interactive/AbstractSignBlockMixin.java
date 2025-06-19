@@ -12,7 +12,6 @@ import net.minecraft.entity.player.PlayerEntity;
 #if MC_VER <= MC_1_20_4
 import net.minecraft.util.Hand;
 #elif MC_VER > MC_1_20_4
-import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
 #endif
 
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -36,10 +35,13 @@ import java.util.stream.Collectors;
 @Mixin(AbstractSignBlock.class)
 public class AbstractSignBlockMixin {
 
+    @Unique
+    private static final String COMMAND_STRING_SPLIT_CHARACTER = "/";
+
     #if MC_VER <= MC_1_20_4
-    @Inject(method = "onUse", at = @At("HEAD"), cancellable = true)
-    private void listenSignBlockUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult, CallbackInfoReturnable<ActionResult> cir)
-    #elif MC_VER > MC_1_20_4
+             @Inject(method = "onUse", at = @At("HEAD"), cancellable = true)
+             private void listenSignBlockUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult, CallbackInfoReturnable<ActionResult> cir)
+             #elif MC_VER > MC_1_20_4
     @Inject(method = "onUse", at = @At("HEAD"), cancellable = true)
     private void listenSignBlockUse(BlockState blockState, @NotNull World world, BlockPos blockPos, @NotNull PlayerEntity player, BlockHitResult blockHitResult, @NotNull CallbackInfoReturnable<ActionResult> cir)
     #endif
@@ -55,7 +57,7 @@ public class AbstractSignBlockMixin {
         if (interactingBlockEntity instanceof SignBlockEntity signBlockEntity) {
             SignText facingSignText = signBlockEntity.getText(signBlockEntity.isPlayerFacingFront(player));
             String facingSignLines = extractSignLines(facingSignText);
-            if (facingSignLines.contains("/")) {
+            if (facingSignLines.contains(COMMAND_STRING_SPLIT_CHARACTER)) {
                 /* Consume this interaction. */
                 cir.setReturnValue(ActionResult.CONSUME);
 
@@ -86,13 +88,13 @@ public class AbstractSignBlockMixin {
     @Unique
     /* text must contains "//" */
     public @NotNull List<String> splitCommands(@NotNull String text) {
-        int left = text.indexOf("/");
+        int left = text.indexOf(COMMAND_STRING_SPLIT_CHARACTER);
 
         // strip comments
         text = text.substring(left + 1);
 
         // split commands
-        String[] split = text.split("/");
+        String[] split = text.split(COMMAND_STRING_SPLIT_CHARACTER);
         return Arrays.stream(split).map(String::trim).collect(Collectors.toCollection(ArrayList::new));
     }
 }
