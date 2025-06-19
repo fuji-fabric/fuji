@@ -2,6 +2,7 @@ package io.github.sakurawald.module.initializer.top_chunks;
 
 import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandSource;
@@ -13,7 +14,6 @@ import io.github.sakurawald.module.initializer.top_chunks.structure.ChunkScore;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ChunkHolder;
 import net.minecraft.server.world.ServerWorld;
@@ -26,6 +26,7 @@ import net.minecraft.world.chunk.WorldChunk;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.concurrent.CompletableFuture;
 
@@ -38,75 +39,71 @@ public class TopChunksInitializer extends ModuleInitializer {
     @Document("List all chunks ordered by lag score.")
     private static int $chunks(@CommandSource ServerCommandSource source) {
         CompletableFuture.runAsync(() -> {
-
             PriorityQueue<ChunkScore> PQ = new PriorityQueue<>();
 
-            /* iter worlds */
-            MinecraftServer server = source.getServer();
-            for (ServerWorld world : server.getWorlds()) {
-                HashMap<ChunkPos, ChunkScore> chunkPos2ChunkScore = new HashMap<>();
+            /* Enumerate worlds. */
+            for (ServerWorld world : ServerHelper.getWorlds()) {
+                Map<ChunkPos, ChunkScore> topChunkReport = new HashMap<>();
 
-                /* entity in this world */
+                /* Enumerate entities in this world. */
                 for (Entity entity : world.iterateEntities()) {
                     ChunkPos pos = entity.getChunkPos();
-                    chunkPos2ChunkScore.putIfAbsent(pos, new ChunkScore(world, pos));
-                    chunkPos2ChunkScore.get(pos).plusEntity(entity);
+                    topChunkReport.putIfAbsent(pos, new ChunkScore(world, pos));
+                    topChunkReport.get(pos).plusEntity(entity);
                 }
 
-                /* block-entity in this world */
-                #if MC_VER <= MC_1_20_6
-                    Iterable<ChunkHolder> chunkHolders = world.getChunkManager().threadedAnvilChunkStorage.entryIterator();
-                #elif MC_VER > MC_1_20_6
-                    Iterable<ChunkHolder> chunkHolders = world.getChunkManager().chunkLoadingManager.entryIterator();
-                #endif
-
-                for (ChunkHolder chunkHolder : chunkHolders) {
+                /* Enumerate block entities in this world */
+                for (ChunkHolder chunkHolder : ServerHelper.getChunks(world)) {
                     WorldChunk worldChunk = chunkHolder.getWorldChunk();
+
+                    /* Check if the chunk is LOADED. */
                     if (worldChunk == null) continue;
 
-                    /* count for block entities */
+                    /* Enumerate block entities in the chunk. */
                     for (BlockEntity blockEntity : worldChunk.getBlockEntities().values()) {
                         ChunkPos pos = worldChunk.getPos();
-                        chunkPos2ChunkScore.putIfAbsent(pos, new ChunkScore(world, pos));
-                        chunkPos2ChunkScore.get(pos).plusBlockEntity(blockEntity);
+                        topChunkReport.putIfAbsent(pos, new ChunkScore(world, pos));
+                        topChunkReport.get(pos).plusBlockEntity(blockEntity);
                     }
                 }
 
-                /* add all ChunkScore in this world */
-                chunkPos2ChunkScore.values().forEach(chunkScore -> {
+                /* Sort chunk scores in PQ. */
+                topChunkReport.values().forEach(chunkScore -> {
                     chunkScore.sum();
                     PQ.add(chunkScore);
                 });
             }
 
-            /* send output */
-            var config = TopChunksInitializer.config.model();
-            computeNearestPlayer(source, PQ, config.top.rows * config.top.columns);
-
-            MutableText textComponentBuilder = Text.empty();
-            outer:
-            for (int j = 0; j < config.top.rows; j++) {
-                for (int i = 0; i < config.top.columns; i++) {
-                    if (PQ.isEmpty()) break outer;
-                    textComponentBuilder.append(PQ.poll().asText(source)).append(TextHelper.TEXT_SPACE);
-                }
-                textComponentBuilder.append(TextHelper.TEXT_NEWLINE);
-            }
-            source.sendMessage(textComponentBuilder);
-
-            /* send click prompt */
-            if (source.getPlayer() != null && ChunkScore.hasPermissionToClickToTeleport(source.getPlayer())) {
-                TextHelper.sendMessageByKey(source, "prompt.click.teleport");
-            }
+            /* Send top chunks report. */
+            sendTopChunksReport(source, PQ);
         });
 
         return CommandHelper.Return.SUCCESS;
     }
 
-    private static void computeNearestPlayer(ServerCommandSource source, @NotNull PriorityQueue<ChunkScore> PQ, int limit) {
+    private static void sendTopChunksReport(ServerCommandSource source, PriorityQueue<ChunkScore> PQ) {
+        /* Send top chunks report. */
+        var config = TopChunksInitializer.config.model();
+        computeNearestPlayer(source, PQ, config.top.rows * config.top.columns);
+
+        MutableText reportText = Text.empty();
+        outer:
+        for (int j = 0; j < config.top.rows; j++) {
+            for (int i = 0; i < config.top.columns; i++) {
+                if (PQ.isEmpty()) break outer;
+                reportText
+                    .append(PQ.poll().asText(source))
+                    .append(TextHelper.TEXT_SPACE);
+            }
+            reportText.append(TextHelper.TEXT_NEWLINE);
+        }
+        source.sendMessage(reportText);
+    }
+
+    private static void computeNearestPlayer(ServerCommandSource source, @NotNull PriorityQueue<ChunkScore> PQ, int topN) {
         int count = 0;
         for (ChunkScore chunkScore : PQ) {
-            if (count++ >= limit) break;
+            if (count++ >= topN) break;
 
             World world = chunkScore.getDimension();
             ChunkPos chunkPos = chunkScore.getChunkPos();

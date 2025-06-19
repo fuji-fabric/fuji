@@ -5,6 +5,7 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.gui.ConfirmGui;
 import io.github.sakurawald.core.gui.InputSignGui;
@@ -190,13 +191,7 @@ public class ProductionWork extends Work {
         int minecartHopperCount = 0;
         ServerWorld world = EntityHelper.getServerWorld(player);
 
-        #if MC_VER <= MC_1_20_6
-            Iterable<ChunkHolder> chunkHolders = world.getChunkManager().threadedAnvilChunkStorage.entryIterator();
-        #elif MC_VER > MC_1_20_6
-            Iterable<ChunkHolder> chunkHolders = world.getChunkManager().chunkLoadingManager.entryIterator();
-        #endif
-
-        for (ChunkHolder chunkHolder : chunkHolders) {
+        for (ChunkHolder chunkHolder : ServerHelper.getChunks(world)) {
             WorldChunk worldChunk = chunkHolder.getWorldChunk();
             if (worldChunk == null) continue;
             /* count for block entities */

@@ -7,6 +7,7 @@ public class TopChunksConfigModel {
     public Top top = new Top();
     public int nearest_distance = 128;
     public boolean hide_location = true;
+
     public HashMap<String, Integer> type2score = new HashMap<>() {
         {
             this.put("default", 1);

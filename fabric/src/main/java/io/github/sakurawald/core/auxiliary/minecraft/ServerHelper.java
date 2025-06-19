@@ -9,6 +9,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ChunkHolder;
 import net.minecraft.server.world.ServerWorld;
 import org.jetbrains.annotations.Nullable;
 
@@ -89,5 +90,15 @@ public class ServerHelper {
         for (ServerPlayerEntity player : getPlayers()) {
             server.getPlayerManager().sendToAll(new PlayerListS2CPacket(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME, player));
         }
+    }
+
+    public static Iterable<ChunkHolder> getChunks(ServerWorld world) {
+        #if MC_VER <= MC_1_20_6
+            Iterable<ChunkHolder> chunkHolders = world.getChunkManager().threadedAnvilChunkStorage.entryIterator();
+        #elif MC_VER > MC_1_20_6
+            Iterable<ChunkHolder> chunkHolders = world.getChunkManager().chunkLoadingManager.entryIterator();
+        #endif
+
+        return chunkHolders;
     }
 }

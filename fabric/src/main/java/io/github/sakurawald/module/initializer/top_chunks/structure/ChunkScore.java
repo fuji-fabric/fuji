@@ -1,12 +1,13 @@
 package io.github.sakurawald.module.initializer.top_chunks.structure;
 
 import io.github.sakurawald.core.auxiliary.minecraft.PermissionHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.manager.Managers;
 import io.github.sakurawald.core.structure.GlobalPos;
 import io.github.sakurawald.core.structure.TypeFormatter;
 import io.github.sakurawald.module.initializer.top_chunks.TopChunksInitializer;
-import lombok.Getter;
+import lombok.Data;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
@@ -21,30 +22,34 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.Heightmap;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-
+@Data
 public class ChunkScore implements Comparable<ChunkScore> {
-    private final HashMap<String, Integer> type2amount = new HashMap<>();
 
-    @Getter
+    /* Chunk global position. */
     private final ServerWorld dimension;
-    @Getter
     private final ChunkPos chunkPos;
-    @Getter
-    private final List<String> players = new ArrayList<>();
-    @Getter
+
+    /* Chunk score. */
+    private final Map<String, Integer> type2amount = new HashMap<>();
     private int score;
+
+    /* Players in the chunk. */
+    private final Set<String> players = new HashSet<>();
 
     public ChunkScore(ServerWorld dimension, ChunkPos chunkPos) {
         this.dimension = dimension;
         this.chunkPos = chunkPos;
     }
 
-    public static boolean hasPermissionToClickToTeleport(@NotNull ServerPlayerEntity player) {
+    private static boolean canClickToTeleportToThisChunk(ServerCommandSource commandSource) {
+        if (commandSource.getPlayer() == null) return false;
+        ServerPlayerEntity player = commandSource.getPlayer();
         return player.hasPermissionLevel(4) || PermissionHelper.hasPermission(player.getUuid(), "top_chunks.teleport");
     }
 
@@ -55,7 +60,7 @@ public class ChunkScore implements Comparable<ChunkScore> {
         type2amount.put(type, type2amount.get(type) + 1);
 
         if (entity instanceof ServerPlayerEntity player) {
-            this.players.add(player.getGameProfile().getName());
+            this.players.add(PlayerHelper.getName(player));
         }
     }
 
@@ -85,16 +90,18 @@ public class ChunkScore implements Comparable<ChunkScore> {
     }
 
     public @NotNull Text asText(@NotNull ServerCommandSource source) {
+        /* Make chunk location string. */
         String chunkLocation;
         if (TopChunksInitializer.config.model().hide_location) {
             chunkLocation = TextHelper.getValueByKey(source, "top_chunks.prop.hidden");
             if (source.hasPermissionLevel(4)) {
-                chunkLocation = TextHelper.getValueByKey(source, "top_chunks.prop.hidden.bypass", this.getChunkPos().toString());
+                chunkLocation = TextHelper.getValueByKey(source, "top_chunks.prop.hidden.bypass", this.chunkPos.toString());
             }
         } else {
-            chunkLocation = this.getChunkPos().toString();
+            chunkLocation = this.chunkPos.toString();
         }
 
+        /* Make hover text. */
         MutableText hoverText = Text.empty()
             .formatted(Formatting.GOLD)
             .append(TextHelper.getTextByKey(source, "top_chunks.prop.dimension", this.dimension.getRegistryKey().getValue()))
@@ -107,25 +114,33 @@ public class ChunkScore implements Comparable<ChunkScore> {
             .append(TextHelper.TEXT_NEWLINE)
             .append(TypeFormatter.formatTypes(source, this.type2amount));
 
+        if (canClickToTeleportToThisChunk(source)) {
+            hoverText.append(TextHelper.TEXT_NEWLINE);
+            hoverText.append(TextHelper.getTextByKey(source,"prompt.click.teleport"));
+        }
+
+        /* Make chunk score text. */
         return Text.empty()
             .append(Text.literal(this.toString()))
             .fillStyle(Style.EMPTY
                 .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(hoverText))
                 .withFormatting(this.players.isEmpty() ? Formatting.GRAY : Formatting.DARK_GREEN)
                 .withClickEvent(Managers.getCallbackManager().makeCallbackEvent((player) -> {
-                    if (!hasPermissionToClickToTeleport(player)) return;
-
-                    BlockPos blockPos = new BlockPos(chunkPos.getCenterX(), 128, chunkPos.getCenterZ());
-                    int y = dimension.getTopPosition(Heightmap.Type.MOTION_BLOCKING, blockPos).getY();
-                    // if the chunk is unloaded, the map height will be -64
-                    if (y == -64) {
-                        y = 128;
-                    }
-
-
-                    new GlobalPos(dimension, blockPos.getX(), y, blockPos.getZ(), player.getYaw(), player.getPitch())
-                        .teleport(player);
+                    /* Click to teleport the player to the chunk. */
+                    if (!canClickToTeleportToThisChunk(source)) return;
+                    teleportToThisChunk(player);
                 }, 5, TimeUnit.MINUTES))
             );
+    }
+
+    private void teleportToThisChunk(ServerPlayerEntity player) {
+        BlockPos chunkCenterPos = new BlockPos(chunkPos.getCenterX(), 128, chunkPos.getCenterZ());
+        int y = dimension.getTopPosition(Heightmap.Type.MOTION_BLOCKING, chunkCenterPos).getY();
+        // NOTE: If the chunk is unloaded, the map height will be -64
+        if (y == -64) {
+            y = 128;
+        }
+        new GlobalPos(dimension, chunkCenterPos.getX(), y, chunkCenterPos.getZ(), player.getYaw(), player.getPitch())
+            .teleport(player);
     }
 }
