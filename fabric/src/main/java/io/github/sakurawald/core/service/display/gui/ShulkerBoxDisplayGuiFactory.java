@@ -6,7 +6,6 @@ import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
 import net.minecraft.item.BlockItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 #elif MC_VER > MC_1_20_4
 import net.minecraft.component.DataComponentTypes;
@@ -15,6 +14,7 @@ import net.minecraft.component.type.ContainerComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
