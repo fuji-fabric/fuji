@@ -1,4 +1,4 @@
-package io.github.sakurawald.module.initializer.chat.display.gui;
+package io.github.sakurawald.core.service.display.gui;
 
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;

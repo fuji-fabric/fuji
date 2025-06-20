@@ -1,4 +1,4 @@
-package io.github.sakurawald.module.initializer.chat.display.gui;
+package io.github.sakurawald.core.service.display.gui;
 
 import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
@@ -43,7 +43,7 @@ public abstract class BaseDisplayGui {
             && bi.getBlock() instanceof ShulkerBoxBlock;
     }
 
-    protected record SlotClickForDeeperDisplayCallback(SimpleGui parentGui,
+    public record SlotClickForDeeperDisplayCallback(SimpleGui parentGui,
                                                        ServerPlayerEntity viewerPlayer) implements GuiElementInterface.ClickCallback {
         @Override
         public void click(int i, ClickType clickType, net.minecraft.screen.slot.SlotActionType clickType1, @NotNull SlotGuiInterface slotGuiInterface) {
