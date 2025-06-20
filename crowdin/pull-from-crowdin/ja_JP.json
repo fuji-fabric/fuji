@@ -237,7 +237,7 @@
   "world_downloader.response": "<#8DDFCB>生成されたダウンロードリンク: <hover:show_text:'<green>このリンクを開く><click:open_url:'%s'><green>[OPEN]</click></hover>",
   "deathlog.death_data.empty": "<red>No death data found for player %s.",
   "deathlog.death_data.list.gui.title": "<red>Death Data List",
-  "deathlog.death_node.list.gui.title": "<red>Player %s 's Death Node List",
+  "deathlog.death_node.list.gui.title": "<red>Player %s 's Death Nodes",
   "deathlog.death_node.view.gui.title": "<red>Death Node",
   "deathlog.restore.target_player.inventory_not_empty": "<red>ターゲットプレイヤーのインベントリ「%s」は空ではありません。死亡ログをそのインベントリに復元することはできません。",
   "deathlog.restore.success": "<orange>Restore success.",
