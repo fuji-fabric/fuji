@@ -237,7 +237,7 @@
   "world_downloader.response": "<#8DDFCB>Link generiert: <hover:show_text:'<green>Link öffnen'><click:open_url:'%s'><green>[OPEN]</click></hover>",
   "deathlog.death_data.empty": "<red>No death data found for player %s.",
   "deathlog.death_data.list.gui.title": "<red>Death Data List",
-  "deathlog.death_node.list.gui.title": "<red>Player %s 's Death Node List",
+  "deathlog.death_node.list.gui.title": "<red>Player %s 's Death Nodes",
   "deathlog.death_node.view.gui.title": "<red>Death Node",
   "deathlog.restore.target_player.inventory_not_empty": "<red>Das Inventar des Zielspielers `%s` ist nicht leer, wir können den Todeslog nicht in sein Inventar wiederherstellen.",
   "deathlog.restore.success": "<orange>Restore success.",
