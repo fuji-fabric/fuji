@@ -239,6 +239,7 @@
   "deathlog.death_data.list.gui.title": "<red>Death Data List",
   "deathlog.death_node.list.gui.title": "<red>Player %s 's Death Nodes",
   "deathlog.death_node.view.gui.title": "<red>Death Node",
+  "deathlog.death_node.not_supported_nbt_format": "<red>Not supported NBT format in this MC version.",
   "deathlog.restore.target_player.inventory_not_empty": "<red>Інвентар цільового гравця `%s` не порожній, ми не можемо відновити журнал смерті в його інвентарі.",
   "deathlog.restore.success": "<orange>Restore success.",
   "deathlog.restore.item.name": "<green>Restore",
