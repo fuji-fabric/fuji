@@ -9,6 +9,7 @@ import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.service.display.gui.InventoryDisplayGuiFactory;
 import io.github.sakurawald.module.initializer.deathlog.structure.DeathNode;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +42,28 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
             .build();
         displayGui.setSlot(LINE_SIZE + 8, restoreButton);
 
+        /* Check if the NBT format is supported. */
+        checkIfCurrentNbtFormatSupported(displayGui);
+
         return displayGui;
+    }
+
+    private void checkIfCurrentNbtFormatSupported(SimpleGui displayGui) {
+        boolean notSupported = this.main.stream().allMatch(ItemStack::isEmpty)
+            && this.armor.stream().allMatch(ItemStack::isEmpty)
+            && this.offhand.stream().allMatch(ItemStack::isEmpty);
+
+        if (notSupported) {
+            GuiElement errorNotification = new GuiElementBuilder(Items.BARRIER)
+                .setName(TextHelper.getTextByKey(displayGui.getPlayer(), "deathlog.death_node.not_supported_nbt_format"))
+                .build();
+
+            for (int i = 0; i < LINE_SIZE * 6; i++) {
+                if (displayGui.getSlot(i).getItemStack().isEmpty()) {
+                    displayGui.setSlot(i, errorNotification);
+                }
+            }
+        }
     }
 
     private void handleRestoreButton(SimpleGui displayGui, ServerPlayerEntity viewerPlayer) {
