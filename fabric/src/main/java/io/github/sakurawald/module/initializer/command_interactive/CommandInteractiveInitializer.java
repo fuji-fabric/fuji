@@ -3,6 +3,7 @@ package io.github.sakurawald.module.initializer.command_interactive;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import net.minecraft.network.message.ArgumentSignatureDataMap;
 import net.minecraft.network.message.LastSeenMessageList;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -13,17 +14,17 @@ import java.util.Set;
 
 public class CommandInteractiveInitializer extends ModuleInitializer {
 
-    private static final Set<CommandExecutionC2SPacket> TRUSTED_PACKETS = new HashSet<>();
+    private static final Set<Packet<?>> TRUSTED_PACKETS = new HashSet<>();
 
-    public static void addTrustedPacket(CommandExecutionC2SPacket packet) {
+    public static void addTrustedPacket(Packet<?> packet) {
         TRUSTED_PACKETS.add(packet);
     }
 
-    public static void removeTrustedPacket(CommandExecutionC2SPacket packet) {
+    public static void removeTrustedPacket(Packet<?> packet) {
         TRUSTED_PACKETS.remove(packet);
     }
 
-    public static boolean isTrustedPacket(CommandExecutionC2SPacket packet) {
+    public static boolean isTrustedPacket(Packet<?> packet) {
         return TRUSTED_PACKETS.contains(packet);
     }
 

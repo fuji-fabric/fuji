@@ -1,17 +1,20 @@
 package io.github.sakurawald.module.mixin.command_warmup;
 
-import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
-import io.github.sakurawald.core.manager.Managers;
-import io.github.sakurawald.core.structure.Tag;
+import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.module.initializer.command_warmup.CommandWarmupInitializer;
-import io.github.sakurawald.module.initializer.command_warmup.structure.CommandWarmupNode;
-import io.github.sakurawald.module.initializer.command_warmup.structure.CommandWarmupTicket;
+import net.minecraft.network.message.LastSeenMessageList;
+
+#if MC_VER <= MC_1_20_4
 import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
+#elif MC_VER > MC_1_20_4
+import net.minecraft.network.packet.c2s.play.ChatCommandSignedC2SPacket;
+#endif
+
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -22,35 +25,54 @@ public abstract class ServerPlayNetworkHandlerMixin {
     @Shadow
     public ServerPlayerEntity player;
 
-    @Inject(method = "onCommandExecution", at = @At("HEAD"), cancellable = true)
-    public void interceptCommandUsagePackets(CommandExecutionC2SPacket commandExecutionC2SPacket, CallbackInfo ci) {
-        String commandString = commandExecutionC2SPacket.comp_808();
+    /* MC_VER <= 1.20.4 */
+    #if MC_VER < MC_1_20_4
+    @Inject(method = "handleCommandExecution", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/command/CommandManager;execute(Lcom/mojang/brigadier/ParseResults;Ljava/lang/String;)I"), cancellable = true)
+    public void acceptTheCommandExecutionPacketButDoNotSubmitItToCommandManager(CommandExecutionC2SPacket packet, LastSeenMessageList lastSeenMessageList, CallbackInfo ci)
+    #elif MC_VER == MC_1_20_4
+    @Inject(method = "handleCommandExecution", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/command/CommandManager;execute(Lcom/mojang/brigadier/ParseResults;Ljava/lang/String;)V"), cancellable = true)
+    public void acceptTheCommandExecutionPacketButDoNotSubmitItToCommandManager(CommandExecutionC2SPacket packet, LastSeenMessageList lastSeenMessageList, CallbackInfo ci)
+    #endif
+    #if MC_VER <= MC_1_20_4
+    {
+        LogUtil.warn("hello, string = {}", packet.comp_808());
+        String commandString = ServerPlayNetworkHandlerMixin.extractCommandStringFromPacket(packet);
+        CommandWarmupInitializer.processCommandWarmup(player, commandString, ci);
+    }
+    #endif
 
-        /* Iterate the node entries. */
-        var config = CommandWarmupInitializer.config.model();
-        for (CommandWarmupNode entry : config.entries) {
+    /* MC_VER > 1.20.4 */
+    // NOTE: There is only 1 call to CommandManager#execute, if MC_VER <= MC 1.20.4
+    // NOTE: There are 2 calls to CommandManager#execute, if MC_VER > MC 1.20.4
+    #if MC_VER > MC_1_20_4
+    @Inject(method = "handleCommandExecution", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/command/CommandManager;execute(Lcom/mojang/brigadier/ParseResults;Ljava/lang/String;)V"), cancellable = true)
+    public void acceptTheCommandExecutionPacketButDoNotSubmitItToCommandManager(ChatCommandSignedC2SPacket packet, LastSeenMessageList lastSeenMessageList, CallbackInfo ci) {
+        String commandString = ServerPlayNetworkHandlerMixin.extractCommandStringFromPacket(packet);
+        CommandWarmupInitializer.processCommandWarmup(player, commandString, ci);
+    }
 
-            /* Test if we should bypass this warmup entry. */
-            if (Tag.hasAnyTagPermission(player,"command_warmup.bypass", entry.getTag().getTags())) {
-                continue;
-            }
+    @Inject(method = "executeCommand", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/command/CommandManager;execute(Lcom/mojang/brigadier/ParseResults;Ljava/lang/String;)V"), cancellable = true)
+    public void acceptTheCommandExecutionPacketButDoNotSubmitItToCommandManager(String string, CallbackInfo ci) {
+        CommandWarmupInitializer.processCommandWarmup(player, string, ci);
+    }
+    #endif
 
-            /* If a warmup entry matches the command string, then we cancel the usage of the command. */
-            if (commandString.matches(entry.getCommand().getRegex())) {
-                // Submit the command warmup ticket.
-                Managers.getBossBarManager().addTicket(CommandWarmupTicket.make(player, commandString, entry));
+    @Unique
+    private static String extractCommandStringFromPacket(
+        #if MC_VER <= MC_1_20_4
+        CommandExecutionC2SPacket packet
+        #elif MC_VER > MC_1_20_4
+        ChatCommandSignedC2SPacket packet
+        #endif
+    ) {
+        String commandString;
 
-                // Send warning for movement.
-                if (config.warn_for_move) {
-                    Text text = TextHelper.getTextByKey(player, "command_warmup.warn_for_move", entry.getInterruptible().getInterruptDistance());
-                    TextHelper.sendTitle(player, text, Text.empty());
-                }
+        #if MC_VER <= MC_1_20_4
+        commandString = packet.comp_808();
+        #elif MC_VER > MC_1_20_4
+        commandString = packet.comp_2532();
+        #endif
 
-                // Cancel the issue of command string.
-                ci.cancel();
-                break;
-            }
-        }
-
+        return commandString;
     }
 }
