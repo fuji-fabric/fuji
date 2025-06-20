@@ -7,26 +7,22 @@ import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ContainerComponent;
 #endif
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.collection.DefaultedList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
 
-public class ShulkerBoxDisplayGui extends BaseDisplayGui {
+public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
 
     private static final int SHULKER_BOX_MAX_CAPACITY = 3 * 9;
     private final @NotNull ItemStack shulkerBoxStack;
     private final @Nullable SimpleGui parentGui;
 
-    public ShulkerBoxDisplayGui(ServerPlayerEntity sourcePlayer, @NotNull ItemStack shulkerBoxStack, @Nullable SimpleGui parentGui) {
+    public ShulkerBoxDisplayGuiFactory(ServerPlayerEntity sourcePlayer, @NotNull ItemStack shulkerBoxStack, @Nullable SimpleGui parentGui) {
         super(sourcePlayer);
         this.shulkerBoxStack = shulkerBoxStack;
         this.parentGui = parentGui;

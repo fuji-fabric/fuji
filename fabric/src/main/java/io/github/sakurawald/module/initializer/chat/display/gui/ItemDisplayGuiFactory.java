@@ -2,17 +2,17 @@ package io.github.sakurawald.module.initializer.chat.display.gui;
 
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
-import io.github.sakurawald.core.service.display.gui.BaseDisplayGui;
+import io.github.sakurawald.core.service.display.gui.BaseDisplayGuiFactory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
-public class ItemDisplayGui extends BaseDisplayGui {
+public class ItemDisplayGuiFactory extends BaseDisplayGuiFactory {
 
     private final ItemStack itemStack;
 
-    public ItemDisplayGui(ServerPlayerEntity sourcePlayer, ItemStack itemStack) {
+    public ItemDisplayGuiFactory(ServerPlayerEntity sourcePlayer, ItemStack itemStack) {
         super(sourcePlayer);
         this.itemStack = itemStack;
     }

@@ -15,12 +15,12 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class BaseDisplayGui {
+public abstract class BaseDisplayGuiFactory {
 
     protected final Text title;
     protected static final int LINE_SIZE = 9;
 
-    protected BaseDisplayGui(ServerPlayerEntity sourcePlayer) {
+    protected BaseDisplayGuiFactory(ServerPlayerEntity sourcePlayer) {
         this.title = TextHelper.getTextByKey(sourcePlayer, "display.gui.title", PlayerHelper.getName(sourcePlayer));
     }
 
@@ -56,7 +56,7 @@ public abstract class BaseDisplayGui {
             /* In any display gui, if the clicked slot is a shulker box, then we can go into the shulker box. */
             ItemStack itemStack = slot.getItemStack();
             if (isShulkerBox(itemStack)) {
-                ShulkerBoxDisplayGui shulkerBoxDisplayGui = new ShulkerBoxDisplayGui(viewerPlayer, itemStack, parentGui);
+                ShulkerBoxDisplayGuiFactory shulkerBoxDisplayGui = new ShulkerBoxDisplayGuiFactory(viewerPlayer, itemStack, parentGui);
                 shulkerBoxDisplayGui.build(viewerPlayer).open();
             }
         }
