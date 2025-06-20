@@ -3,6 +3,7 @@ package io.github.sakurawald.module.initializer.deathlog.gui;
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.InventoryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
@@ -74,11 +75,13 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
             }
 
             /* Restore the inventory. */
+            LogUtil.debug("Restore the death node {} for target player {}", deathNode, PlayerHelper.getName(viewerPlayer));
             for (int i = 0; i < this.main.size(); i++) {
                 InventoryHelper.getMainStacks(viewerPlayer).set(i, this.deathNode.main.get(i));
             }
             InventoryHelper.setArmorStacks(viewerPlayer, this.deathNode.armor);
             InventoryHelper.setOffhandStacks(viewerPlayer, this.deathNode.offhand);
+            // NOTE: Yeah, the score and xp should give to the dead player.
             viewerPlayer.setScore(this.deathNode.score);
             viewerPlayer.experienceLevel = this.deathNode.expLevel;
             viewerPlayer.experienceProgress = this.deathNode.expProgress;

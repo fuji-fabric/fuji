@@ -35,7 +35,7 @@ public class StackHelper {
         #if MC_VER <= MC_1_20_4
         return ItemStack.CODEC
             .encode(stack, NbtOps.INSTANCE, nbtElement)
-            .getOrThrow(true, string -> LogUtil.error("Failed to encode item: {}", string));
+            .getOrThrow(true, string -> LogUtil.debug("Failed to encode item: {}", string));
         #elif MC_VER > MC_1_20_4
         return ItemStack.CODEC
             .encode(stack, wrapperLookup.getOps(NbtOps.INSTANCE), nbtElement)
@@ -55,7 +55,7 @@ public class StackHelper {
             #elif MC_VER > MC_1_20_4
             .parse(wrapperLookup.getOps(NbtOps.INSTANCE), nbtElement)
             #endif
-            .resultOrPartial(string -> LogUtil.error("Failed to decode item: '{}'", string));
+            .resultOrPartial(string -> LogUtil.debug("Failed to decode item: '{}'", string));
     }
 
     public static void setCustomName(ItemStack stack, Text customName) {

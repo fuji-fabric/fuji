@@ -17,7 +17,7 @@ import java.util.List;
 
 public class DeathNodeListGui extends PagedGui<DeathNode> {
 
-    private String deadPlayerName;
+    private final String deadPlayerName;
 
     public DeathNodeListGui(@Nullable SimpleGui parent, ServerPlayerEntity player, String deadPlayerName, @NotNull List<DeathNode> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "deathlog.death_node.list.gui.title", deadPlayerName), entities, pageIndex);

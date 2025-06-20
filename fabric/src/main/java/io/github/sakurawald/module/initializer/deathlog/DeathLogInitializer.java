@@ -18,8 +18,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-@CommandNode("deathlog")
-@CommandRequirement(level = 4)
 public class DeathLogInitializer extends ModuleInitializer {
 
     private static final Path DEATH_DATA_DIR_PATH = ReflectionUtil.computeModuleConfigPath(DeathLogInitializer.class).resolve("death-data");
@@ -29,7 +27,8 @@ public class DeathLogInitializer extends ModuleInitializer {
         return DEATH_DATA_DIR_PATH.resolve(fileName);
     }
 
-    @CommandNode("gui")
+    @CommandNode("deathlog")
+    @CommandRequirement(level = 4)
     private static int $gui(@CommandSource ServerPlayerEntity player) {
         List<String> offlinePlayerNames = ServerHelper.getOfflinePlayerNames();
         new DeathDataListGui(player, offlinePlayerNames, 0)
