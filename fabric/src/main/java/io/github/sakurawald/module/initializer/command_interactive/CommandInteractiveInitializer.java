@@ -14,6 +14,7 @@ import java.util.Set;
 
 public class CommandInteractiveInitializer extends ModuleInitializer {
 
+    // NOTE: It's annoy, see https://gist.github.com/kennytv/ed783dd244ca0321bbd882c347892874
     private static final Set<Packet<?>> TRUSTED_PACKETS = new HashSet<>();
 
     public static void addTrustedPacket(Packet<?> packet) {
