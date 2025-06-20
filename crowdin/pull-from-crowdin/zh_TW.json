@@ -241,6 +241,7 @@
   "deathlog.death_node.view.gui.title": "<red>Death Node",
   "deathlog.restore.target_player.inventory_not_empty": "<red>目標玩家 %s 的物品欄不是空的，我們無法將死亡記錄檔復原到其物品欄中。",
   "deathlog.restore.success": "<orange>Restore success.",
+  "deathlog.restore.item.name": "<green>Restore",
   "deathlog.view.time": "<dark_green>時間： %s",
   "deathlog.view.reason": "<dark_green>原因： %s",
   "deathlog.view.dimension": "<dark_green>維度： %s",

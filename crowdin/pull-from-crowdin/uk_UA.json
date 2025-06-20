@@ -241,6 +241,7 @@
   "deathlog.death_node.view.gui.title": "<red>Death Node",
   "deathlog.restore.target_player.inventory_not_empty": "<red>Інвентар цільового гравця `%s` не порожній, ми не можемо відновити журнал смерті в його інвентарі.",
   "deathlog.restore.success": "<orange>Restore success.",
+  "deathlog.restore.item.name": "<green>Restore",
   "deathlog.view.time": "<dark_green>Час: %s",
   "deathlog.view.reason": "<dark_green>Reason: %s",
   "deathlog.view.dimension": "<dark_green>Розмір: %s",
