@@ -1,3 +1,4 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
-- [deathlog] feature: new user-friendly GUI interface, to view death data for all players, and restore death node easily. (Issue `/deathlog` to open the GUI.)
+- (< MC 1.21.5) [deathlog] fix: should not restore the armor slots in reversed order.
+- [deathlog] feature: add death node information as lore of `restore` button.
