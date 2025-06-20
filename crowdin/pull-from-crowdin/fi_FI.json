@@ -241,6 +241,7 @@
   "deathlog.death_node.view.gui.title": "<red>Death Node",
   "deathlog.restore.target_player.inventory_not_empty": "<red>Kohdepelaajan `%s` ei ole tyhjä, emme voi palauttaa kuolemanlokia sen varastoon.",
   "deathlog.restore.success": "<orange>Restore success.",
+  "deathlog.restore.item.name": "<green>Restore",
   "deathlog.view.time": "<dark_green>Aika: %s",
   "deathlog.view.reason": "<dark_green>Syy: %s",
   "deathlog.view.dimension": "<dark_green>Mitat: %s",

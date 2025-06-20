@@ -241,6 +241,7 @@
   "deathlog.death_node.view.gui.title": "<red>Death Node",
   "deathlog.restore.target_player.inventory_not_empty": "<red>De inventaris van doel speler `%s` is niet leeg, we kunnen de dood log niet herstellen in zijn inventaris.",
   "deathlog.restore.success": "<orange>Restore success.",
+  "deathlog.restore.item.name": "<green>Restore",
   "deathlog.view.time": "<dark_green>Tijd: %s",
   "deathlog.view.reason": "<dark_green>Reden: %s",
   "deathlog.view.dimension": "<dark_green>Dimensie: %s",
