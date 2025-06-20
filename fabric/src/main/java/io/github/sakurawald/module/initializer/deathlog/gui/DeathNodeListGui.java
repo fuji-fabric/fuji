@@ -31,20 +31,14 @@ public class DeathNodeListGui extends PagedGui<DeathNode> {
 
     @Override
     protected GuiElementInterface toGuiElement(DeathNode entity) {
-        List<Text> lore = new ArrayList<>();
-        ServerPlayerEntity player = getPlayer();
-        lore.add(TextHelper.getTextByKey(player, "deathlog.view.time", entity.time));
-        lore.add(TextHelper.getTextByKey(player, "deathlog.view.dimension", entity.dimension));
-        lore.add(TextHelper.getTextByKey(player, "deathlog.view.coordinate", entity.x, entity.y, entity.z));
-        lore.add(TextHelper.getTextByKey(player, "deathlog.view.reason", entity.reason));
-
         return new GuiElementBuilder()
             .setItem(Items.CHEST)
             .setName(Text.of(entity.time))
-            .setLore(lore)
+            .setLore(entity.getLore(getPlayer()))
             .setCallback(() -> openDeathNodeDisplayGui(entity))
             .build();
     }
+
 
     private void openDeathNodeDisplayGui(DeathNode entity) {
         new DeathNodeDisplayGuiFactory(getGui(), entity)

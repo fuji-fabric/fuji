@@ -39,6 +39,7 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
         GuiElement restoreButton = new GuiElementBuilder()
             .setItem(Items.SLIME_BALL)
             .setName(TextHelper.getTextByKey(viewerPlayer, "deathlog.restore.item.name"))
+            .setLore(deathNode.getLore(viewerPlayer))
             .setCallback(() -> handleRestoreButton(displayGui, viewerPlayer))
             .build();
         displayGui.setSlot(LINE_SIZE + 8, restoreButton);

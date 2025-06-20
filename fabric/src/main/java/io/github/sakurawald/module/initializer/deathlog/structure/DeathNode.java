@@ -4,6 +4,7 @@ import io.github.sakurawald.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.InventoryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.NbtHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.module.initializer.deathlog.DeathLogInitializer;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,9 +13,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -129,5 +132,14 @@ public class DeathNode {
         writeInventoryNode(node, player);
         writeRemarkNode(node, player);
         return node;
+    }
+
+    public @NotNull List<Text> getLore(ServerPlayerEntity player) {
+        List<Text> lore = new ArrayList<>();
+        lore.add(TextHelper.getTextByKey(player, "deathlog.view.time", this.time));
+        lore.add(TextHelper.getTextByKey(player, "deathlog.view.dimension", this.dimension));
+        lore.add(TextHelper.getTextByKey(player, "deathlog.view.coordinate", this.x, this.y, this.z));
+        lore.add(TextHelper.getTextByKey(player, "deathlog.view.reason", this.reason));
+        return lore;
     }
 }

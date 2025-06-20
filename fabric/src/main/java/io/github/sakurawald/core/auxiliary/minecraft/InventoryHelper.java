@@ -47,10 +47,10 @@ public class InventoryHelper {
     }
 
     public static void setArmorStacks(PlayerEntity player, List<ItemStack> stacks) {
-
         for (int i = 0; i < stacks.size(); i++) {
             #if MC_VER < MC_1_21_5
-            player.getInventory().armor.set(i, stacks.get(i));
+            // NOTE: The armor slot index is reversed. (4 slots)
+            player.getInventory().armor.set(3 - i, stacks.get(i));
             #elif MC_VER >= MC_1_21_5
             player.equipment.put(PLAYER_ARMOR_SLOTS.get(i), stacks.get(i));
             #endif
