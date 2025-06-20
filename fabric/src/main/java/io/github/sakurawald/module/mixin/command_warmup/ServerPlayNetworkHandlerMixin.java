@@ -1,6 +1,5 @@
 package io.github.sakurawald.module.mixin.command_warmup;
 
-import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.module.initializer.command_warmup.CommandWarmupInitializer;
 import net.minecraft.network.message.LastSeenMessageList;
 
@@ -35,7 +34,6 @@ public abstract class ServerPlayNetworkHandlerMixin {
     #endif
     #if MC_VER <= MC_1_20_4
     {
-        LogUtil.warn("hello, string = {}", packet.comp_808());
         String commandString = ServerPlayNetworkHandlerMixin.extractCommandStringFromPacket(packet);
         CommandWarmupInitializer.processCommandWarmup(player, commandString, ci);
     }

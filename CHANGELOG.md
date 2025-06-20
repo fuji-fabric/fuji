@@ -1,6 +1,5 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
-- [top_chunks] feature: new GUI interface to display top chunks. (Include a searching function)
-- [command_cooldown] feature: use `title` interface to display the message.
-- [command_warmup] feature: use `title` interface to display the message.
+- [command_warmup] fix: should not break the chat message validation chain if sending a new chat message while there is a command warmup ticket. (For online-mode server only.) 
+- [command_interactive] fix: should not break the chat message validation chains in online-mode server.
 
