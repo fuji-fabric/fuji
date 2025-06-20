@@ -9,22 +9,10 @@ import io.github.sakurawald.core.command.argument.adapter.abst.BaseArgumentTypeA
 import io.github.sakurawald.core.command.argument.structure.Argument;
 import io.github.sakurawald.core.command.argument.wrapper.impl.OfflinePlayerName;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.util.UserCache;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class OfflinePlayerArgumentTypeAdapter extends BaseArgumentTypeAdapter {
-
-    private static @NotNull List<String> getPlayerNameListFromUserCache() {
-        UserCache userCache = ServerHelper.getServer().getUserCache();
-        if (userCache == null) return List.of();
-
-        List<String> playerNames = new ArrayList<>();
-        userCache.byName.values().forEach(o -> playerNames.add(o.getProfile().getName()));
-        return playerNames;
-    }
 
     @Override
     public ArgumentType<?> makeArgumentType() {
@@ -34,7 +22,7 @@ public class OfflinePlayerArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName).suggests((context, builder) -> {
-            getPlayerNameListFromUserCache().forEach(builder::suggest);
+            ServerHelper.getOfflinePlayerNames().forEach(builder::suggest);
             return builder.buildFuture();
         });
     }

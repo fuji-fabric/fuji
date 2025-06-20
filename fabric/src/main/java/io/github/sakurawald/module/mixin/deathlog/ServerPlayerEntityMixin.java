@@ -1,6 +1,6 @@
 package io.github.sakurawald.module.mixin.deathlog;
 
-import io.github.sakurawald.module.initializer.deathlog.DeathLogInitializer;
+import io.github.sakurawald.module.initializer.deathlog.structure.DeathNode;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -9,12 +9,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayerEntity.class)
-public abstract class ServerPlayerMixin {
+public abstract class ServerPlayerEntityMixin {
 
     @Inject(method = "onDeath", at = @At("HEAD"))
     public void storeInventoryOnPlayerDeath(DamageSource damageSource, CallbackInfo ci) {
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-        DeathLogInitializer.store(player);
+        DeathNode.createDeathNode(player);
     }
 
 }

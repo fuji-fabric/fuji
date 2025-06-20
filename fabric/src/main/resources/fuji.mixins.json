@@ -56,7 +56,7 @@
     "core.server.MinecraftServerMixin",
     "core.server.PlayerManagerMixin",
     "core.server.ServerWorldMixin",
-    "deathlog.ServerPlayerMixin",
+    "deathlog.ServerPlayerEntityMixin",
     "disabler.chat_speed_disabler.ServerGamePacketListenerImplMixin",
     "disabler.max_player_disabler.DedicatedPlayerManagerMixin",
     "disabler.move_speed_disabler.ServerGamePacketListenerImplMixin",

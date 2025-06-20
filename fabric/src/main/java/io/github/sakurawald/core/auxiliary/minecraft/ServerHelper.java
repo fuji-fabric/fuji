@@ -11,8 +11,11 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ChunkHolder;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.UserCache;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -92,6 +95,7 @@ public class ServerHelper {
         }
     }
 
+    @SuppressWarnings("UnnecessaryLocalVariable")
     public static Iterable<ChunkHolder> getChunks(ServerWorld world) {
         #if MC_VER <= MC_1_20_6
             Iterable<ChunkHolder> chunkHolders = world.getChunkManager().threadedAnvilChunkStorage.entryIterator();
@@ -100,5 +104,15 @@ public class ServerHelper {
         #endif
 
         return chunkHolders;
+    }
+
+
+    public static @NotNull List<String> getOfflinePlayerNames() {
+        UserCache userCache = getServer().getUserCache();
+        if (userCache == null) return List.of();
+
+        List<String> playerNames = new ArrayList<>();
+        userCache.byName.values().forEach(o -> playerNames.add(o.getProfile().getName()));
+        return playerNames;
     }
 }

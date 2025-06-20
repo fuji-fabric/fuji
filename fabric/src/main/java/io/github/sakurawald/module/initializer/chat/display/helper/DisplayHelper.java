@@ -3,11 +3,11 @@ package io.github.sakurawald.module.initializer.chat.display.helper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.manager.Managers;
 import io.github.sakurawald.module.initializer.chat.display.ChatDisplayInitializer;
-import io.github.sakurawald.core.service.display.gui.BaseDisplayGui;
-import io.github.sakurawald.module.initializer.chat.display.gui.EnderChestDisplayGui;
-import io.github.sakurawald.core.service.display.gui.InventoryDisplayGui;
-import io.github.sakurawald.module.initializer.chat.display.gui.ItemDisplayGui;
-import io.github.sakurawald.core.service.display.gui.ShulkerBoxDisplayGui;
+import io.github.sakurawald.core.service.display.gui.BaseDisplayGuiFactory;
+import io.github.sakurawald.module.initializer.chat.display.gui.EnderChestDisplayGuiFactory;
+import io.github.sakurawald.core.service.display.gui.InventoryDisplayGuiFactory;
+import io.github.sakurawald.module.initializer.chat.display.gui.ItemDisplayGuiFactory;
+import io.github.sakurawald.core.service.display.gui.ShulkerBoxDisplayGuiFactory;
 import io.github.sakurawald.module.initializer.chat.display.structure.SoftReferenceMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -22,16 +22,16 @@ import java.util.concurrent.TimeUnit;
 
 public class DisplayHelper {
 
-    private static final SoftReferenceMap<String, BaseDisplayGui> uuid2gui = new SoftReferenceMap<>();
+    private static final SoftReferenceMap<String, BaseDisplayGuiFactory> uuid2gui = new SoftReferenceMap<>();
 
-    private static String bindUUID(BaseDisplayGui displayGui) {
+    private static String bindUUID(BaseDisplayGuiFactory displayGuiFactory) {
         String uuid = UUID.randomUUID().toString();
-        uuid2gui.put(uuid, displayGui);
+        uuid2gui.put(uuid, displayGuiFactory);
         return uuid;
     }
 
     private static void viewDisplayGui(@NotNull ServerPlayerEntity viewerPlayer, String displayUUID) {
-        BaseDisplayGui baseDisplayGui = uuid2gui.get(displayUUID);
+        BaseDisplayGuiFactory baseDisplayGui = uuid2gui.get(displayUUID);
         if (baseDisplayGui == null) {
             TextHelper.sendMessageByKey(viewerPlayer, "display.invalid");
             return;
@@ -40,7 +40,7 @@ public class DisplayHelper {
     }
 
     public static MutableText createEnderDisplayText(ServerPlayerEntity player) {
-        String displayUUID = bindUUID(new EnderChestDisplayGui(player));
+        String displayUUID = bindUUID(new EnderChestDisplayGuiFactory(player));
         return TextHelper.getTextByKey(player, "display.ender_chest.text")
             .copy()
             .fillStyle(
@@ -51,7 +51,7 @@ public class DisplayHelper {
     }
 
     public static MutableText createInvDisplayText(ServerPlayerEntity player) {
-        String displayUUID = bindUUID(new InventoryDisplayGui(player));
+        String displayUUID = bindUUID(new InventoryDisplayGuiFactory(player));
         return TextHelper.getTextByKey(player, "display.inventory.text")
             .copy()
             .fillStyle(Style.EMPTY
@@ -62,12 +62,12 @@ public class DisplayHelper {
 
     public static @NotNull MutableText createItemDisplayText(ServerPlayerEntity player) {
         /* Make the display gui. */
-        BaseDisplayGui displayGui;
+        BaseDisplayGuiFactory displayGui;
         ItemStack itemStack = player.getMainHandStack().copy();
-        if (BaseDisplayGui.isShulkerBox(itemStack)) {
-            displayGui = new ShulkerBoxDisplayGui(player, itemStack, null);
+        if (BaseDisplayGuiFactory.isShulkerBox(itemStack)) {
+            displayGui = new ShulkerBoxDisplayGuiFactory(player, itemStack, null);
         } else {
-            displayGui = new ItemDisplayGui(player, itemStack);
+            displayGui = new ItemDisplayGuiFactory(player, itemStack);
         }
 
         /* Bind UUID for GUI. */

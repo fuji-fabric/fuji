@@ -6,6 +6,7 @@ import io.github.sakurawald.core.auxiliary.minecraft.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,14 +16,14 @@ import java.util.List;
 
 public class InventoryDisplayGuiFactory extends BaseDisplayGuiFactory {
 
-    private final SimpleGui parent;
-    private final List<ItemStack> armor = new ArrayList<>();
-    private final List<ItemStack> offhand = new ArrayList<>();
-    private final List<ItemStack> main = new ArrayList<>();
+    private final SimpleGui parentGui;
+    protected final List<ItemStack> armor = new ArrayList<>();
+    protected final List<ItemStack> offhand = new ArrayList<>();
+    protected final List<ItemStack> main = new ArrayList<>();
 
-    public InventoryDisplayGuiFactory(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity sourcePlayer, List<ItemStack> main, List<ItemStack> armor, List<ItemStack> offhand) {
-        super(sourcePlayer);
-        this.parent = parent;
+    public InventoryDisplayGuiFactory(@Nullable SimpleGui parentGui, Text title, List<ItemStack> main, List<ItemStack> armor, List<ItemStack> offhand) {
+        super(title);
+        this.parentGui = parentGui;
         this.main.addAll(main);
         this.armor.addAll(armor);
         this.offhand.addAll(offhand);
@@ -30,20 +31,21 @@ public class InventoryDisplayGuiFactory extends BaseDisplayGuiFactory {
 
     public InventoryDisplayGuiFactory(@NotNull ServerPlayerEntity sourcePlayer) {
         super(sourcePlayer);
-        this.parent = null;
+        this.parentGui = null;
         InventoryHelper.getMainStacks(sourcePlayer).forEach(itemStack -> main.add(itemStack.copy()));
         InventoryHelper.getArmorStacks(sourcePlayer).forEach(itemStack -> armor.add(itemStack.copy()));
         InventoryHelper.getOffhandStack(sourcePlayer).forEach(itemStack -> offhand.add(itemStack.copy()));
     }
 
+    @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
     @Override
     public @NotNull SimpleGui build(ServerPlayerEntity viewerPlayer) {
         /* Place the placeholder items. */
         SimpleGui gui = new SimpleGui(ScreenHandlerType.GENERIC_9X6, viewerPlayer, false) {
             @Override
             public void onClose() {
-                if (parent != null) {
-                    parent.open();
+                if (parentGui != null) {
+                    parentGui.open();
                 }
             }
         };
@@ -72,7 +74,6 @@ public class InventoryDisplayGuiFactory extends BaseDisplayGuiFactory {
             ItemStack itemStack = main.get(i - LINE_SIZE);
             placeDisplayItemStack(gui, i, itemStack, slotClickForDeeperDisplayCallback);
         }
-
 
         return gui;
     }

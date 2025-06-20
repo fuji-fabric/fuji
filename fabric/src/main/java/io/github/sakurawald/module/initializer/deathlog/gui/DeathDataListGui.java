@@ -1,0 +1,78 @@
+package io.github.sakurawald.module.initializer.deathlog.gui;
+
+import eu.pb4.sgui.api.elements.GuiElementBuilder;
+import eu.pb4.sgui.api.elements.GuiElementInterface;
+import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.core.auxiliary.minecraft.NbtHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.core.gui.PagedGui;
+import io.github.sakurawald.module.initializer.deathlog.DeathLogInitializer;
+import io.github.sakurawald.module.initializer.deathlog.structure.DeathNode;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class DeathDataListGui extends PagedGui<String> {
+
+    public DeathDataListGui(ServerPlayerEntity player, @NotNull List<String> entities, int pageIndex) {
+        super(null, player, Text.literal("death logs !"), entities, pageIndex);
+    }
+
+    public static boolean hasDeathNodes(ServerPlayerEntity player, NbtCompound root) {
+        if (root == null || root.isEmpty()) {
+            TextHelper.sendMessageByKey(player, "deathlog.empty");
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    protected PagedGui<String> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<String> entities, int pageIndex) {
+        return new DeathDataListGui(player, entities, 0);
+    }
+
+    @Override
+    protected GuiElementInterface toGuiElement(String entity) {
+        return new GuiElementBuilder()
+            .setItem(Items.SKELETON_SKULL)
+            .setName(Text.literal(entity))
+            .setCallback(() -> {
+                NbtHelper.withNbtFile(DeathLogInitializer.getDeathDataPath(entity), root -> {
+                    /* Check if it has death nodes. */
+                    if (!hasDeathNodes(getPlayer(), root)) {
+                        close();
+                        return;
+                    }
+
+                    /* Read death node list. */
+                    NbtList deathNodeList = NbtHelper.withNbtElement(root, DeathNode.DEATHS_KEY, new NbtList());
+                    List<DeathNode> entries = deathNodeList.stream()
+                        .map(it -> DeathNode.fromNbt((NbtCompound) it))
+                        .collect(Collectors.toList());
+                    Collections.reverse(entries);
+                    new DeathNodeListGui(getGui(), getPlayer(), entries, 0)
+                        .open();
+                });
+
+
+            })
+            .build();
+    }
+
+    @Override
+    protected List<String> filter(String keyword) {
+        return getEntities()
+            .stream()
+            .filter(it -> it.contains(keyword))
+            .toList();
+    }
+}

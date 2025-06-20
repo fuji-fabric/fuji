@@ -20,8 +20,12 @@ public abstract class BaseDisplayGuiFactory {
     protected final Text title;
     protected static final int LINE_SIZE = 9;
 
+    protected BaseDisplayGuiFactory(Text title) {
+        this.title = title;
+    }
+
     protected BaseDisplayGuiFactory(ServerPlayerEntity sourcePlayer) {
-        this.title = TextHelper.getTextByKey(sourcePlayer, "display.gui.title", PlayerHelper.getName(sourcePlayer));
+        this(TextHelper.getTextByKey(sourcePlayer, "display.gui.title", PlayerHelper.getName(sourcePlayer)));
     }
 
     protected static void placeDisplayItemStack(@NotNull SimpleGui gui, int i, @NotNull ItemStack itemStack, SlotClickForDeeperDisplayCallback slotClickForDeeperDisplayCallback) {

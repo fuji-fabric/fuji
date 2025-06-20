@@ -1,0 +1,133 @@
+package io.github.sakurawald.module.initializer.deathlog.structure;
+
+import io.github.sakurawald.core.auxiliary.ChronosUtil;
+import io.github.sakurawald.core.auxiliary.minecraft.InventoryHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.NbtHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.module.initializer.deathlog.DeathLogInitializer;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+
+@Data
+@NoArgsConstructor
+public class DeathNode {
+
+    /* Schema keys. */
+    public static final String DEATHS_KEY = "Deaths";
+
+    private static final String REMARK_KEY = "remark";
+    private static final String TIME_KEY = "time";
+    private static final String REASON_KEY = "reason";
+    private static final String DIMENSION_KEY = "dimension";
+    private static final String X_KEY = "x";
+    private static final String Y_KEY = "y";
+    private static final String Z_KEY = "z";
+
+    private static final String ARMOR_KEY = "armor";
+    private static final String OFFHAND_KEY = "offhand";
+    private static final String ITEM_KEY = "item";
+    private static final String SCORE_KEY = "score";
+    private static final String XP_LEVEL_KEY = "xp_level";
+    private static final String XP_PROGRESS_KEY = "xp_progress";
+    private static final String INVENTORY_KEY = "inventory";
+
+    /* Death node props. */
+    public String time;
+    public String dimension;
+    public double x;
+    public double y;
+    public double z;
+    public String reason;
+
+    public List<ItemStack> main;
+    public List<ItemStack> armor;
+    public List<ItemStack> offhand;
+    public int score;
+    public int expLevel;
+    public float expProgress;
+
+    public static DeathNode fromNbt(NbtCompound nbt) {
+        DeathNode deathNode = new DeathNode();
+
+        /* Read remark tag. */
+        NbtCompound remarkTag = NbtHelper.getCompound(nbt, REMARK_KEY);
+
+        deathNode.time = NbtHelper.getString(remarkTag, TIME_KEY);
+        deathNode.dimension = NbtHelper.getString(remarkTag, DIMENSION_KEY);
+        deathNode.x = NbtHelper.getDouble(remarkTag, X_KEY);
+        deathNode.y = NbtHelper.getDouble(remarkTag, Y_KEY);
+        deathNode.z = NbtHelper.getDouble(remarkTag, Z_KEY);
+        deathNode.reason = NbtHelper.getString(remarkTag, REASON_KEY);
+
+        /* Read inventory tag. */
+        NbtCompound inventoryNode = NbtHelper.getCompound(nbt, INVENTORY_KEY);
+
+        // restore main stacks (1*9 slots + 3*9 slots)
+        deathNode.main = NbtHelper.readSlotsNode((NbtList) inventoryNode.get(ITEM_KEY));
+
+        deathNode.armor = NbtHelper.readSlotsNode((NbtList) inventoryNode.get(ARMOR_KEY));
+
+        deathNode.offhand = NbtHelper.readSlotsNode((NbtList) inventoryNode.get(OFFHAND_KEY));
+
+        deathNode.score = NbtHelper.getInt(inventoryNode, SCORE_KEY);
+        deathNode.expLevel = NbtHelper.getInt(inventoryNode, XP_LEVEL_KEY);
+        deathNode.expProgress = NbtHelper.getFloat(inventoryNode, XP_PROGRESS_KEY);
+
+        return deathNode;
+    }
+
+    public static void createDeathNode(@NotNull ServerPlayerEntity player) {
+        if (player.getInventory().isEmpty()) return;
+
+        NbtHelper.withNbtFile(DeathLogInitializer.getDeathDataPath(PlayerHelper.getName(player)), root -> {
+            NbtList deathNodeList = NbtHelper.withNbtElement(root, DEATHS_KEY, new NbtList());
+            deathNodeList.add(makeDeathNodeNbt(player));
+        });
+    }
+
+    private static void writeRemarkNode(@NotNull NbtCompound parent, @NotNull ServerPlayerEntity player) {
+        String time = ChronosUtil.getCurrentDate();
+        String reason = player.getDamageTracker().getDeathMessage().getString();
+        String dimension = player.getWorld().getRegistryKey().getValue().toString();
+        Vec3d position = player.getPos();
+
+        NbtCompound remarkTag = new NbtCompound();
+        remarkTag.putString(TIME_KEY, time);
+        remarkTag.putString(REASON_KEY, reason);
+        remarkTag.putString(DIMENSION_KEY, dimension);
+        remarkTag.putDouble(X_KEY, position.x);
+        remarkTag.putDouble(Y_KEY, position.y);
+        remarkTag.putDouble(Z_KEY, position.z);
+        parent.put(REMARK_KEY, remarkTag);
+    }
+
+    private static void writeInventoryNode(@NotNull NbtCompound parent, @NotNull ServerPlayerEntity player) {
+        NbtCompound inventoryTag = new NbtCompound();
+        PlayerInventory inventory = player.getInventory();
+
+        inventoryTag.put(ARMOR_KEY, NbtHelper.writeSlotsNode(new NbtList(), InventoryHelper.getArmorStacks(player)));
+        inventoryTag.put(OFFHAND_KEY, NbtHelper.writeSlotsNode(new NbtList(), InventoryHelper.getOffhandStack(player)));
+        inventoryTag.put(ITEM_KEY, NbtHelper.writeSlotsNode(new NbtList(), InventoryHelper.getMainStacks(player)));
+
+        inventoryTag.putInt(SCORE_KEY, player.getScore());
+        inventoryTag.putInt(XP_LEVEL_KEY, player.experienceLevel);
+        inventoryTag.putFloat(XP_PROGRESS_KEY, player.experienceProgress);
+        parent.put(INVENTORY_KEY, inventoryTag);
+    }
+
+    private static @NotNull NbtCompound makeDeathNodeNbt(@NotNull ServerPlayerEntity player) {
+        NbtCompound node = new NbtCompound();
+        writeInventoryNode(node, player);
+        writeRemarkNode(node, player);
+        return node;
+    }
+}
