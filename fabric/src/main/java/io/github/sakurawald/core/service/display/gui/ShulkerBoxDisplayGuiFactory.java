@@ -3,6 +3,11 @@ package io.github.sakurawald.core.service.display.gui;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
 #if MC_VER <= MC_1_20_4
+import net.minecraft.item.BlockItem;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.text.Text;
+import net.minecraft.util.collection.DefaultedList;
 #elif MC_VER > MC_1_20_4
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ContainerComponent;
@@ -21,6 +26,12 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
     private static final int SHULKER_BOX_MAX_CAPACITY = 3 * 9;
     private final @NotNull ItemStack shulkerBoxStack;
     private final @Nullable SimpleGui parentGui;
+
+    public ShulkerBoxDisplayGuiFactory(Text title, @NotNull ItemStack shulkerBoxStack, @Nullable SimpleGui parentGui) {
+        super(title);
+        this.shulkerBoxStack = shulkerBoxStack;
+        this.parentGui = parentGui;
+    }
 
     public ShulkerBoxDisplayGuiFactory(ServerPlayerEntity sourcePlayer, @NotNull ItemStack shulkerBoxStack, @Nullable SimpleGui parentGui) {
         super(sourcePlayer);

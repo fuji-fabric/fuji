@@ -23,12 +23,12 @@ import java.util.stream.Collectors;
 public class DeathDataListGui extends PagedGui<String> {
 
     public DeathDataListGui(ServerPlayerEntity player, @NotNull List<String> entities, int pageIndex) {
-        super(null, player, Text.literal("death logs !"), entities, pageIndex);
+        super(null, player, TextHelper.getTextByKey(player, "deathlog.death_data.list.gui.title"), entities, pageIndex);
     }
 
-    public static boolean hasDeathNodes(ServerPlayerEntity player, NbtCompound root) {
+    public static boolean hasDeathData(ServerPlayerEntity player, NbtCompound root, String deadPlayerName) {
         if (root == null || root.isEmpty()) {
-            TextHelper.sendMessageByKey(player, "deathlog.empty");
+            TextHelper.sendMessageByKey(player, "deathlog.death_data.empty", deadPlayerName);
             return false;
         }
 
@@ -48,7 +48,7 @@ public class DeathDataListGui extends PagedGui<String> {
             .setCallback(() -> {
                 NbtHelper.withNbtFile(DeathLogInitializer.getDeathDataPath(entity), root -> {
                     /* Check if it has death nodes. */
-                    if (!hasDeathNodes(getPlayer(), root)) {
+                    if (!hasDeathData(getPlayer(), root, entity)) {
                         close();
                         return;
                     }
@@ -59,11 +59,9 @@ public class DeathDataListGui extends PagedGui<String> {
                         .map(it -> DeathNode.fromNbt((NbtCompound) it))
                         .collect(Collectors.toList());
                     Collections.reverse(entries);
-                    new DeathNodeListGui(getGui(), getPlayer(), entries, 0)
+                    new DeathNodeListGui(getGui(), getPlayer(), entity, entries, 0)
                         .open();
                 });
-
-
             })
             .build();
     }
@@ -72,7 +70,7 @@ public class DeathDataListGui extends PagedGui<String> {
     protected List<String> filter(String keyword) {
         return getEntities()
             .stream()
-            .filter(it -> it.contains(keyword))
+            .filter(it -> it.toLowerCase().contains(keyword.toLowerCase()))
             .toList();
     }
 }

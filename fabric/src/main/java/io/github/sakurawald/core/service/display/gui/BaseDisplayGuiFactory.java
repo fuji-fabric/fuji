@@ -60,7 +60,8 @@ public abstract class BaseDisplayGuiFactory {
             /* In any display gui, if the clicked slot is a shulker box, then we can go into the shulker box. */
             ItemStack itemStack = slot.getItemStack();
             if (isShulkerBox(itemStack)) {
-                ShulkerBoxDisplayGuiFactory shulkerBoxDisplayGui = new ShulkerBoxDisplayGuiFactory(viewerPlayer, itemStack, parentGui);
+                // NOTE: Here we just copy the parent GUI's title, to ensure the title is correct.
+                ShulkerBoxDisplayGuiFactory shulkerBoxDisplayGui = new ShulkerBoxDisplayGuiFactory(parentGui.getTitle(), itemStack, parentGui);
                 shulkerBoxDisplayGui.build(viewerPlayer).open();
             }
         }

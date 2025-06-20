@@ -17,19 +17,21 @@ import java.util.List;
 
 public class DeathNodeListGui extends PagedGui<DeathNode> {
 
-    public DeathNodeListGui(@Nullable SimpleGui parent, ServerPlayerEntity player, @NotNull List<DeathNode> entities, int pageIndex) {
-        super(parent, player, Text.literal("player 's death logs !"), entities, pageIndex);
+    private String deadPlayerName;
+
+    public DeathNodeListGui(@Nullable SimpleGui parent, ServerPlayerEntity player, String deadPlayerName, @NotNull List<DeathNode> entities, int pageIndex) {
+        super(parent, player, TextHelper.getTextByKey(player, "deathlog.death_node.list.gui.title", deadPlayerName), entities, pageIndex);
+        this.deadPlayerName = deadPlayerName;
     }
 
     @Override
     protected PagedGui<DeathNode> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<DeathNode> entities, int pageIndex) {
-        return new DeathNodeListGui(parent, player, entities, pageIndex);
+        return new DeathNodeListGui(parent, player, this.deadPlayerName, entities, pageIndex);
     }
 
     @Override
     protected GuiElementInterface toGuiElement(DeathNode entity) {
         List<Text> lore = new ArrayList<>();
-
         ServerPlayerEntity player = getPlayer();
         lore.add(TextHelper.getTextByKey(player, "deathlog.view.time", entity.time));
         lore.add(TextHelper.getTextByKey(player, "deathlog.view.dimension", entity.dimension));
@@ -48,7 +50,6 @@ public class DeathNodeListGui extends PagedGui<DeathNode> {
         new DeathNodeDisplayGuiFactory(getGui(), entity)
             .build(getPlayer())
             .open();
-
     }
 
     @Override
@@ -57,10 +58,10 @@ public class DeathNodeListGui extends PagedGui<DeathNode> {
             .stream()
             .filter(it -> it.dimension.contains(keyword)
             || it.time.contains(keyword)
-            || it.reason.contains(keyword)
-            || it.main.toString().contains(keyword)
-            || it.armor.toString().contains(keyword)
-            || it.offhand.toString().contains(keyword))
+            || it.reason.toLowerCase().contains(keyword.toLowerCase())
+            || it.main.toString().toLowerCase().contains(keyword.toLowerCase())
+            || it.armor.toString().toLowerCase().contains(keyword.toLowerCase())
+            || it.offhand.toString().toLowerCase().contains(keyword.toLowerCase()))
             .toList();
     }
 }
