@@ -42,7 +42,7 @@ public class TpaInitializer extends ModuleInitializer {
         return doResponse(player, target, ResponseStatus.ACCEPT);
     }
 
-    private static void doResponseToAll(ServerPlayerEntity me, ResponseStatus responseStatus) {
+    private static int doResponseToAll(ServerPlayerEntity me, ResponseStatus responseStatus) {
         // Filter the target players.
         ArrayList<TpaRequest> targetPlayers = requests
             .stream()
@@ -66,12 +66,13 @@ public class TpaInitializer extends ModuleInitializer {
 
             doResponse(me, responseTarget, responseStatus);
         });
+
+        return CommandHelper.Return.SUCCESS;
     }
 
     @CommandNode("tpaaccept all")
     private static int $tpaaccept(@CommandSource ServerPlayerEntity player) {
-        doResponseToAll(player, ResponseStatus.ACCEPT);
-        return CommandHelper.Return.SUCCESS;
+        return doResponseToAll(player, ResponseStatus.ACCEPT);
     }
 
     @CommandNode("tpadeny")
@@ -81,8 +82,7 @@ public class TpaInitializer extends ModuleInitializer {
 
     @CommandNode("tpadeny all")
     private static int $tpadeny(@CommandSource ServerPlayerEntity player) {
-        doResponseToAll(player, ResponseStatus.DENY);
-        return CommandHelper.Return.SUCCESS;
+        return doResponseToAll(player, ResponseStatus.DENY);
     }
 
     @CommandNode("tpacancel")
@@ -92,71 +92,75 @@ public class TpaInitializer extends ModuleInitializer {
 
     @CommandNode("tpacancel all")
     private static int $tpacancel(@CommandSource ServerPlayerEntity player) {
-        doResponseToAll(player, ResponseStatus.CANCEL);
-        return CommandHelper.Return.SUCCESS;
+        return doResponseToAll(player, ResponseStatus.CANCEL);
     }
 
     private static int doResponse(ServerPlayerEntity player, ServerPlayerEntity target, ResponseStatus status) {
-        /* resolve relative request */
-        Optional<TpaRequest> requestOptional = requests.stream()
+        /* Find relative request. */
+        Optional<TpaRequest> requestOpt = requests
+            .stream()
             .filter(request ->
                 status == ResponseStatus.CANCEL ?
                     (request.getSender().equals(player) && request.getReceiver().equals(target))
                     : (request.getSender().equals(target) && request.getReceiver().equals(player)))
             .findFirst();
-        if (requestOptional.isEmpty()) {
+        if (requestOpt.isEmpty()) {
             TextHelper.sendActionBarByKey(player, "tpa.no_relative_ticket");
             return CommandHelper.Return.FAIL;
         }
 
-        TpaRequest request = requestOptional.get();
+        /* Send feedback messages. */
+        TpaRequest request = requestOpt.get();
         if (status == ResponseStatus.ACCEPT) {
-            request.getSender().sendMessage(request.asSenderText$Accepted(), true);
-
             ServerPlayerEntity who = request.getTeleportWho();
             ServerPlayerEntity to = request.getTeleportTo();
             MentionPlayersJob.submitJob(config.model().mention_player, request.isTpahere() ? to : who);
-
             new GlobalPos(to.getWorld(), to.getX(), to.getY(), to.getZ(), to.getYaw(), to.getPitch())
                 .teleport(who);
+
+            request.getSender().sendMessage(request.toSenderText$Accepted(), true);
+            request.getReceiver().sendMessage(request.toReceiverText$Accepted());
         } else if (status == ResponseStatus.DENY) {
-            request.getSender().sendMessage(request.asSenderText$Denied(), true);
-            request.getReceiver().sendMessage(request.asReceiverText$Denied());
+            request.getSender().sendMessage(request.toSenderText$Denied(), true);
+            request.getReceiver().sendMessage(request.toReceiverText$Denied());
         } else if (status == ResponseStatus.CANCEL) {
-            request.getSender().sendMessage(request.asSenderText$Cancelled());
-            request.getReceiver().sendMessage(request.asReceiverText$Cancelled());
+            request.getSender().sendMessage(request.toSenderText$Cancelled());
+            request.getReceiver().sendMessage(request.toReceiverText$Cancelled());
         }
 
+        /* Invalidate the request. */
         request.cancelTimeout();
         requests.remove(request);
         return CommandHelper.Return.SUCCESS;
     }
 
     private static int doRequest(ServerPlayerEntity source, ServerPlayerEntity target, boolean tpahere) {
-        /* add request */
+        /* Make a new request. */
         TpaRequest request = new TpaRequest(source, target, tpahere);
 
-        /* has similar request ? */
+        // Should not send a request to self.
         if (request.getSender().equals(request.getReceiver())) {
             TextHelper.sendActionBarByKey(request.getSender(), "tpa.request_to_self");
-
             return CommandHelper.Return.FAIL;
         }
 
-        if (requests.stream().anyMatch(request::similarTo)) {
+        // Should not have existed similar request.
+        if (requests.stream().anyMatch(request::isSimilarTo)) {
             TextHelper.sendActionBarByKey(request.getSender(), "tpa.similar_request_exists");
             return CommandHelper.Return.FAIL;
         }
 
+        /* Submit the request. */
         requests.add(request);
         request.startTimeout();
-
-        /* feedback */
-        request.getReceiver().sendMessage(request.asReceiverText$Sent());
         MentionPlayersJob.submitJob(config.model().mention_player, request.getReceiver());
-        request.getSender().sendMessage(request.asSenderText$Sent());
+
+        /* Send feedback messages. */
+        request.getReceiver().sendMessage(request.toReceiverText$Sent());
+        request.getSender().sendMessage(request.toSenderText$Sent());
         return CommandHelper.Return.SUCCESS;
     }
 
+    // NOTE: Maybe the `CANCEL` should not be a response status.
     private enum ResponseStatus {ACCEPT, DENY, CANCEL}
 }

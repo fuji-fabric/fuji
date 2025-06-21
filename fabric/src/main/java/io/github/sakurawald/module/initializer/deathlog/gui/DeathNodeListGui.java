@@ -12,7 +12,6 @@ import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DeathNodeListGui extends PagedGui<DeathNode> {
@@ -38,7 +37,6 @@ public class DeathNodeListGui extends PagedGui<DeathNode> {
             .setCallback(() -> openDeathNodeDisplayGui(entity))
             .build();
     }
-
 
     private void openDeathNodeDisplayGui(DeathNode entity) {
         new DeathNodeDisplayGuiFactory(getGui(), entity)

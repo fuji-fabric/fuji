@@ -1,9 +1,9 @@
 package io.github.sakurawald.module.initializer.tpa.structure;
 
+import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.module.initializer.tpa.TpaInitializer;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.Data;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
@@ -14,20 +14,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Timer;
 import java.util.TimerTask;
 
-@ToString
+@Data
 public class TpaRequest {
 
-    private static final String CIRCLE = "●";
-    private static final String TICK = "[✔]";
-    private static final String CROSS = "[❌]";
-
-    @Getter
-    private final ServerPlayerEntity sender;
-    @Getter
-    private final ServerPlayerEntity receiver;
-    @Getter
-    private final boolean tpahere;
-    private Timer timer;
+    public final ServerPlayerEntity sender;
+    public final ServerPlayerEntity receiver;
+    public final boolean tpahere;
+    public Timer timeoutTimer;
 
     public TpaRequest(ServerPlayerEntity sender, ServerPlayerEntity receiver, boolean tpahere) {
         this.sender = sender;
@@ -35,9 +28,9 @@ public class TpaRequest {
         this.tpahere = tpahere;
     }
 
-    public boolean similarTo(@NotNull TpaRequest other) {
-        return this.sender.equals(other.sender) && this.receiver.equals(other.receiver)
-            || this.sender.equals(other.receiver) && this.receiver.equals(other.sender);
+    public boolean isSimilarTo(@NotNull TpaRequest that) {
+        return this.sender.equals(that.sender) && this.receiver.equals(that.receiver)
+            || this.sender.equals(that.receiver) && this.receiver.equals(that.sender);
     }
 
     public ServerPlayerEntity getTeleportWho() {
@@ -50,66 +43,65 @@ public class TpaRequest {
 
     public void startTimeout() {
         var that = this;
-        timer = new Timer();
-        timer.schedule(
+        timeoutTimer = new Timer();
+        timeoutTimer.schedule(
             new TimerTask() {
                 @Override
                 public void run() {
-                    getSender().sendMessage(asSenderText$Cancelled());
-                    getReceiver().sendMessage(asReceiverText$Cancelled());
-                    // don't forget to remove this request
                     TpaInitializer.getRequests().remove(that);
+                    getSender().sendMessage(toSenderText$Cancelled());
+                    getReceiver().sendMessage(toReceiverText$Cancelled());
                 }
             },
-            TpaInitializer.config.model().timeout * 1000L
+            TpaInitializer.config.model().request_timeout * 1000L
         );
     }
 
     public void cancelTimeout() {
-        timer.cancel();
+        timeoutTimer.cancel();
     }
 
-    public @NotNull Text asSenderText$Description() {
-        return tpahere ? TextHelper.getTextByKey(getSender(), "tpa.others_to_you", receiver.getGameProfile().getName())
-            : TextHelper.getTextByKey(getSender(), "tpa.you_to_others", receiver.getGameProfile().getName());
+    private @NotNull Text toSenderText$Description() {
+        return tpahere ? TextHelper.getTextByKey(getSender(), "tpa.others_to_you", PlayerHelper.getName(receiver))
+            : TextHelper.getTextByKey(getSender(), "tpa.you_to_others", PlayerHelper.getName(receiver));
     }
 
-    public MutableText asSenderText$Sent() {
+    public MutableText toSenderText$Sent() {
         Text cancelText =
-            Text.literal(CROSS)
+            TextHelper.getTextByKey(sender, "reject.button")
+                .copy()
                 .fillStyle(Style.EMPTY
-                    .withFormatting(Formatting.RED)
                     .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(getSender(), "cancel")))
-                    .withClickEvent(TextHelper.ClickEvent.makeRunCommandAction("/tpacancel %s".formatted(getReceiver().getGameProfile().getName())))
+                    .withClickEvent(TextHelper.ClickEvent.makeRunCommandAction("/tpacancel %s".formatted(PlayerHelper.getName(getReceiver()))))
                 );
 
-        return asSenderText$Description()
+        return toSenderText$Description()
             .copy()
             .append(TextHelper.TEXT_SPACE)
             .append(cancelText);
     }
 
-    public @NotNull Text asReceiverText$Description() {
-        return tpahere ? TextHelper.getTextByKey(getReceiver(), "tpa.you_to_others", sender.getGameProfile().getName())
-            : TextHelper.getTextByKey(getReceiver(), "tpa.others_to_you", sender.getGameProfile().getName());
+    private @NotNull Text toReceiverText$Description() {
+        return tpahere ? TextHelper.getTextByKey(getReceiver(), "tpa.you_to_others", PlayerHelper.getName(sender))
+            : TextHelper.getTextByKey(getReceiver(), "tpa.others_to_you", PlayerHelper.getName(sender));
     }
 
-    public @NotNull MutableText asReceiverText$Sent() {
-        Text acceptText = Text.literal(TICK)
+    @NotNull
+    public MutableText toReceiverText$Sent() {
+        Text acceptText = TextHelper.getTextByKey(receiver, "accept.button")
+            .copy()
             .fillStyle(Style.EMPTY
-                .withFormatting(Formatting.GREEN)
                 .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(getReceiver(), "accept")))
-                .withClickEvent(TextHelper.ClickEvent.makeRunCommandAction("/tpaaccept %s".formatted(sender.getGameProfile().getName()))));
+                .withClickEvent(TextHelper.ClickEvent.makeRunCommandAction("/tpaaccept %s".formatted(PlayerHelper.getName(sender)))));
 
-        Text denyText =
-            Text.literal(CROSS)
+        Text denyText = TextHelper.getTextByKey(receiver, "reject.button")
+                .copy()
                 .fillStyle(Style.EMPTY
-                    .withFormatting(Formatting.RED)
                     .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(getReceiver(), "deny")))
-                    .withClickEvent(TextHelper.ClickEvent.makeRunCommandAction("/tpadeny %s".formatted(sender.getGameProfile().getName())))
+                    .withClickEvent(TextHelper.ClickEvent.makeRunCommandAction("/tpadeny %s".formatted(PlayerHelper.getName(sender))))
                 );
 
-        return asReceiverText$Description()
+        return toReceiverText$Description()
             .copy()
             .append(TextHelper.TEXT_SPACE)
             .append(acceptText)
@@ -117,43 +109,44 @@ public class TpaRequest {
             .append(denyText);
     }
 
-    public MutableText asSenderText$Accepted() {
-        return asSenderText$Description()
+    public MutableText toSenderText$Accepted() {
+        return toSenderText$Description()
             .copy()
             .append(TextHelper.TEXT_SPACE)
-            .append(Text.literal(CIRCLE).formatted(Formatting.GREEN));
+            .append(TextHelper.getTextByKey(sender, "accept.circle"));
     }
 
-    public MutableText asReceiverText$Accepted() {
-        return asReceiverText$Description()
+    public MutableText toReceiverText$Accepted() {
+        return toReceiverText$Description()
             .copy()
             .append(TextHelper.TEXT_SPACE)
-            .append(Text.literal(CIRCLE).formatted(Formatting.GREEN));
+            .append(TextHelper.getTextByKey(receiver, "accept.circle"));
     }
 
-    public MutableText asSenderText$Denied() {
-        return asSenderText$Description()
+    public MutableText toSenderText$Denied() {
+        return toSenderText$Description()
             .copy()
             .append(TextHelper.TEXT_SPACE)
-            .append(Text.literal(CIRCLE).formatted(Formatting.RED));
+            .append(TextHelper.getTextByKey(sender, "reject.circle"));
     }
 
-    public MutableText asReceiverText$Denied() {
-        return asReceiverText$Description()
+    public MutableText toReceiverText$Denied() {
+        return toReceiverText$Description()
             .copy()
             .append(TextHelper.TEXT_SPACE)
-            .append(Text.literal(CIRCLE).formatted(Formatting.RED));
+            .append(TextHelper.getTextByKey(receiver, "reject.circle"));
     }
 
-    public MutableText asSenderText$Cancelled() {
-        return asSenderText$Description()
+    public MutableText toSenderText$Cancelled() {
+        return toSenderText$Description()
             .copy()
             .formatted(Formatting.STRIKETHROUGH);
     }
 
-    public MutableText asReceiverText$Cancelled() {
-        return asReceiverText$Description()
+    public MutableText toReceiverText$Cancelled() {
+        return toReceiverText$Description()
             .copy()
             .formatted(Formatting.STRIKETHROUGH);
     }
+
 }
