@@ -109,10 +109,6 @@ public class CommandHelper {
         }
 
         public static int outputBoolean(ServerCommandSource source, boolean value) {
-            // only send the message feedback to player, to avoid the console spam
-            if (source.isExecutedByPlayer()) {
-                source.sendMessage(Text.literal(String.valueOf(value)));
-            }
             return fromBoolean(value);
         }
     }
