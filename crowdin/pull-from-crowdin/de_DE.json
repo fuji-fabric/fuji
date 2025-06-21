@@ -135,7 +135,7 @@
   "profiler.memory": "<blue>Memory",
   "profiler.memory.name": "<blue>Name: %s",
   "profiler.memory.type": "<blue>Type: %s",
-  "profiler.memory.usage": "<blue>Usage: %s",
+  "profiler.memory.used": "<blue>Used: %s",
   "profiler.memory.init": "<blue>Init: %s",
   "profiler.memory.committed": "<blue>Commited: %s",
   "profiler.memory.max": "<blue>Max: %s",
