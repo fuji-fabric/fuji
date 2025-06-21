@@ -23,6 +23,7 @@ public abstract class ServerPlayerEntityMixin {
     @NotNull
     final ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
 
+    // NOTE: In lower MC versions like MC 1.20.1, if there are `<rb>` tag in the sign, then the `openEditSignScreen` method will not be called.
     @Inject(method = "openEditSignScreen", at = @At("HEAD"))
     private void sendBlockStateUpdatePacketOfSerializedTextBeforeTheClientOpenTheEditScreen(@NotNull SignBlockEntity signBlockEntity, boolean isFront, @NotNull CallbackInfo ci) {
         /* Update the sign text in server-side with the SignCache value before the client-side open the sign editor screen. */
@@ -32,6 +33,7 @@ public abstract class ServerPlayerEntityMixin {
         /* Modify the text of the sign. */
         List<String> trueLines = isFront ? signCache.getFrontLines() : signCache.getBackLines();
         Text[] newTextList = {Text.empty(), Text.empty(), Text.empty(), Text.empty()};
+
         for (int i = 0; i < trueLines.size(); i++) {
             String line = trueLines.get(i);
             // Escape from mojang sign editor.

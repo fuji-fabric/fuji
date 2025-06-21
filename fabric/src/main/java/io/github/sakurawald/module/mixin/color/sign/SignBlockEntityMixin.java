@@ -61,6 +61,7 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
                 }
             }
 
+            /* Set the sign texts using parsed texts. */
             newMessages[i] = TextHelper.parseString(TextHelper.DEFAULT_PARSER, string);
         }
 
@@ -77,7 +78,6 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
         } else {
             signCache = signCache.withBackLines(lines);
         }
-
         ColorSignInitializer.writeSignCache(globalBlockPos, signCache);
 
         /* Return the modified text. */
