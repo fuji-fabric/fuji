@@ -288,7 +288,7 @@ public class ProfilerGui extends SimpleGui {
                 )));
 
             if (memoryType == MemoryType.HEAP) {
-                guiElementBuilder.enchant(Enchantments.INFINITY, 1);
+                guiElementBuilder.unbreakable();
             }
 
             elements.add(guiElementBuilder.build());
