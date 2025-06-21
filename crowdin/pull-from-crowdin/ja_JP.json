@@ -1,5 +1,9 @@
 {
   "accept": "<green>受け入れる",
+  "accept.button": "<green>[✔]</green>",
+  "reject.button": "<red>[❌]</red>",
+  "accept.circle": "<green>●</green>",
+  "reject.circle": "<red>●</red>",
   "add": "<#FFA1F5>追加",
   "afk.kick": "<red>あなたは攻撃されてキックされました。",
   "afk.on": "<gold>Afkモード: オン",

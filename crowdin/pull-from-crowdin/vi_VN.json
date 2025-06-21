@@ -1,5 +1,9 @@
 {
   "accept": "<green>Chấp nhận",
+  "accept.button": "<green>[✔]</green>",
+  "reject.button": "<red>[❌]</red>",
+  "accept.circle": "<green>●</green>",
+  "reject.circle": "<red>●</red>",
   "add": "<#FFA1F5>Thêm",
   "afk.kick": "<red>Bạn đã bị mời ra vì afk.",
   "afk.on": "<gold>Chế độ afk: đã bật",

@@ -1,5 +1,9 @@
 {
   "accept": "<green>Přijmout",
+  "accept.button": "<green>[✔]</green>",
+  "reject.button": "<red>[❌]</red>",
+  "accept.circle": "<green>●</green>",
+  "reject.circle": "<red>●</red>",
   "add": "<#FFA1F5>Přidat",
   "afk.kick": "<red>Byli jste vyhozeni, že jste v aféře.",
   "afk.on": "<gold>Režim Afk: zapnutý",

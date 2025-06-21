@@ -1,5 +1,9 @@
 {
   "accept": "<green>Hyväksy",
+  "accept.button": "<green>[✔]</green>",
+  "reject.button": "<red>[❌]</red>",
+  "accept.circle": "<green>●</green>",
+  "reject.circle": "<red>●</red>",
   "add": "<#FFA1F5>Lisää",
   "afk.kick": "<red>Sinut on potkittu sen takia, että olet.",
   "afk.on": "<gold>Afk tila: päällä",
