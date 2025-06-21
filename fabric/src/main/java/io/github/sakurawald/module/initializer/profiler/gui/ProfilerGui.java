@@ -5,13 +5,11 @@ import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.StringUtil;
-import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.module.initializer.profiler.ProfilerInitializer;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -275,7 +273,7 @@ public class ProfilerGui extends SimpleGui {
             String committed = StringUtil.formatBytes(memoryUsage.getCommitted());
             String max = StringUtil.formatBytes(memoryUsage.getMax());
 
-            GuiElementBuilder guiElementBuilder = GuiHelper.hideTooltip(new GuiElementBuilder()
+            GuiElementBuilder guiElementBuilder = new GuiElementBuilder()
                 .setItem(Items.BOOK)
                 .setName(TextHelper.getTextByKey(getPlayer(), "profiler.memory"))
                 .setLore(List.of(
@@ -285,7 +283,7 @@ public class ProfilerGui extends SimpleGui {
                     , TextHelper.getTextByKey(getPlayer(), "profiler.memory.used", used)
                     , TextHelper.getTextByKey(getPlayer(), "profiler.memory.committed", committed)
                     , TextHelper.getTextByKey(getPlayer(), "profiler.memory.max", max)
-                )));
+                ));
 
             if (memoryType == MemoryType.HEAP) {
                 guiElementBuilder.unbreakable();
@@ -309,7 +307,7 @@ public class ProfilerGui extends SimpleGui {
             double avgFrequency = (double) uptime / totalGcCount / 1000;
             double avgTime = (double) totalGcTime / totalGcCount;
 
-            GuiElement element = GuiHelper.hideTooltip(new GuiElementBuilder()
+            GuiElement element = new GuiElementBuilder()
                     .setItem(Items.PAPER)
                     .setName(TextHelper.getTextByKey(getPlayer(), "profiler.gc"))
                     .setLore(List.of(
@@ -318,7 +316,7 @@ public class ProfilerGui extends SimpleGui {
                         , TextHelper.getTextByKey(getPlayer(), "profiler.gc.total_gc_time", totalGcTime)
                         , TextHelper.getTextByKey(getPlayer(), "profiler.gc.average_frequency", avgFrequency)
                         , TextHelper.getTextByKey(getPlayer(), "profiler.gc.total_gc_count", totalGcCount)
-                    )))
+                    ))
                 .build();
             elements.add(element);
         }

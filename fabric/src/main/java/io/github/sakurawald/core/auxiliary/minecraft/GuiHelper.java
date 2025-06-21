@@ -43,6 +43,8 @@ public class GuiHelper {
     }
 
     public static GuiElementBuilder hideTooltip(GuiElementBuilder builder) {
+        // NODE: In higher MC version, hides the tooltip will also hides the lore.
+
         #if MC_VER <= MC_1_20_4
             builder.hideFlags();
         #elif MC_VER > MC_1_20_4
