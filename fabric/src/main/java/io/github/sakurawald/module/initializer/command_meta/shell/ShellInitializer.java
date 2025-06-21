@@ -26,7 +26,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class ShellInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<ShellConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ShellConfigModel.class);
+    private static final BaseConfigurationHandler<ShellConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ShellConfigModel.class);
 
     private static void checkSecurity(CommandContext<ServerCommandSource> ctx) {
         var config = ShellInitializer.config.model();
@@ -48,7 +48,6 @@ public class ShellInitializer extends ModuleInitializer {
 
     }
 
-    @SuppressWarnings("deprecation")
     @CommandNode("shell")
     @CommandRequirement(level = 4)
     @Document("Execute a shell command in host os.")
@@ -60,6 +59,7 @@ public class ShellInitializer extends ModuleInitializer {
             try {
                 LogUtil.info("Shell exec: {}", $rest);
 
+                /* Call the shell. */
                 Process process = Runtime.getRuntime().exec($rest, null, null);
                 InputStream inputStream = process.getInputStream();
                 @Cleanup BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -70,7 +70,7 @@ public class ShellInitializer extends ModuleInitializer {
                 }
                 process.waitFor();
 
-                // output
+                // Send feedback.
                 LogUtil.info(output.toString());
                 ctx.getSource().sendMessage(Text.literal(output.toString()));
             } catch (IOException | InterruptedException e) {
@@ -78,6 +78,7 @@ public class ShellInitializer extends ModuleInitializer {
             }
         });
 
+        // The return value of shell command is always treated as SUCCESS.
         return CommandHelper.Return.SUCCESS;
     }
 }
