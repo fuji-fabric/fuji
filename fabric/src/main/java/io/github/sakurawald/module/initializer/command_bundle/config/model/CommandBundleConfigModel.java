@@ -49,6 +49,12 @@ public class CommandBundleConfigModel {
             this.add(new BundleCommandNode(new CommandRequirementDescriptor(0, null), "block-info <blockpos blockpos-arg-name>", List.of("run as fake-op %player:name% data get block $blockpos-arg-name")));
             this.add(new BundleCommandNode(new CommandRequirementDescriptor(0, null), "entity-info <entity entity-arg-name>", List.of("run as fake-op %player:name% data get entity $entity-arg-name")));
             this.add(new BundleCommandNode(new CommandRequirementDescriptor(0, null), "dice", List.of("say %player:name% just roll out %fuji:random 1 6% points.")));
+
+            this.add(new BundleCommandNode(new CommandRequirementDescriptor(0, null), "plugins", List.of("send-message %player:name% Server Plugins (0): ")));
+            this.add(new BundleCommandNode(new CommandRequirementDescriptor(0, null), "icanhasbukkit",
+                List.of("send-message %player:name% <i>Checking version, please wait..."
+                , "delay 2 send-message %player:name% This server is running Bukkit version (MC: %server:version%)"
+                , "delay 3 send-message %player:name% <green>You are running the latest version")));
         }
     };
 
