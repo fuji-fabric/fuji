@@ -1,5 +1,9 @@
 {
   "accept": "<green>Прийняти",
+  "accept.button": "<green>[✔]</green>",
+  "reject.button": "<red>[❌]</red>",
+  "accept.circle": "<green>●</green>",
+  "reject.circle": "<red>●</red>",
   "add": "<#FFA1F5>Додати",
   "afk.kick": "<red>Вас кікнули через перебування в AFK.",
   "afk.on": "<gold>режим AFK: увімкнено",

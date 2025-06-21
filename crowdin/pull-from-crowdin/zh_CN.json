@@ -1,5 +1,9 @@
 {
   "accept": "<green>接受",
+  "accept.button": "<green>[✔]</green>",
+  "reject.button": "<red>[❌]</red>",
+  "accept.circle": "<green>●</green>",
+  "reject.circle": "<red>●</red>",
   "add": "<#FFA1F5>添加",
   "afk.kick": "<red>您已因长时间离开而被踢出",
   "afk.on": "<gold>闲置模式: 启用",

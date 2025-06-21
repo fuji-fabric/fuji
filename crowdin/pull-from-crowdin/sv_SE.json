@@ -1,5 +1,9 @@
 {
   "accept": "<green>Acceptera",
+  "accept.button": "<green>[✔]</green>",
+  "reject.button": "<red>[❌]</red>",
+  "accept.circle": "<green>●</green>",
+  "reject.circle": "<red>●</red>",
   "add": "<#FFA1F5>Lägg till",
   "afk.kick": "<red>Du har blivit utsparkad för att vara afk.",
   "afk.on": "<gold>Afkläge: på",

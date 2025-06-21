@@ -1,5 +1,9 @@
 {
   "accept": "<green>Accetta",
+  "accept.button": "<green>[✔]</green>",
+  "reject.button": "<red>[❌]</red>",
+  "accept.circle": "<green>●</green>",
+  "reject.circle": "<red>●</red>",
   "add": "<#FFA1F5>Aggiungi",
   "afk.kick": "<red>Sei stato cacciato per essere afk.",
   "afk.on": "Modalità <gold>Afk: on",

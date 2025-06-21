@@ -1,5 +1,9 @@
 {
   "accept": "<green>Acceptă",
+  "accept.button": "<green>[✔]</green>",
+  "reject.button": "<red>[❌]</red>",
+  "accept.circle": "<green>●</green>",
+  "reject.circle": "<red>●</red>",
   "add": "<#FFA1F5>Adaugă",
   "afk.kick": "<red>Ai fost dat afara pentru ca esti afk.",
   "afk.on": "<gold>Mod Afk: pe",
