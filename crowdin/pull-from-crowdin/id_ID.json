@@ -372,5 +372,6 @@
   "job.props.left_times": "<blue>Sisa Waktu: %s",
   "symbol.arrow.right": "<bold><orange>-></bold>",
   "chat.spy.indicator": "<bold><orange>-SPY-></orange></bold>",
-  "registry.list.gui.title": "<blue>Registri"
+  "registry.list.gui.title": "<blue>Registri",
+  "command_menu.menu.not_found": "<red>Menu %s not found"
 }

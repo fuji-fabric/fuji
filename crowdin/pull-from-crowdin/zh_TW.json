@@ -372,5 +372,6 @@
   "job.props.left_times": "<blue>剩餘次數：%s",
   "symbol.arrow.right": "<bold><orange>-></bold>",
   "chat.spy.indicator": "<bold><orange>-SPY-></orange></bold>",
-  "registry.list.gui.title": "<blue>登錄清單"
+  "registry.list.gui.title": "<blue>登錄清單",
+  "command_menu.menu.not_found": "<red>Menu %s not found"
 }
