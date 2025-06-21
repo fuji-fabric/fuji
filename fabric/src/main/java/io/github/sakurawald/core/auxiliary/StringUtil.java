@@ -1,6 +1,7 @@
 package io.github.sakurawald.core.auxiliary;
 
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
 
@@ -13,5 +14,18 @@ public class StringUtil {
         }
 
         return string;
+    }
+
+    public static @NotNull String formatBytes(long bytes) {
+        if (bytes == -1) return "N/A";
+        if (bytes < 1024) {
+            return bytes + "B";
+        } else if (bytes < 1024 * 1024) {
+            return String.format("%.2fK", (double) bytes / 1024);
+        } else if (bytes < 1024 * 1024 * 1024) {
+            return String.format("%.2fM", (double) bytes / (1024 * 1024));
+        } else {
+            return String.format("%.2fG", (double) bytes / (1024 * 1024 * 1024));
+        }
     }
 }

@@ -4,13 +4,11 @@ import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.core.gui.PagedGui;
 import io.github.sakurawald.module.initializer.world.structure.DimensionNode;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.world.dimension.DimensionTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,27 +25,11 @@ public class WorldGui extends PagedGui<DimensionNode> {
         return new WorldGui(player, entities, pageIndex);
     }
 
-    private Item computeItem(DimensionNode entity) {
-        if (entity.getDimension_type().equals(DimensionTypes.OVERWORLD_ID.toString())) {
-            return Items.GRASS_BLOCK;
-        }
-
-        if (entity.getDimension_type().equals(DimensionTypes.THE_END_ID.toString())) {
-            return Items.END_STONE;
-        }
-
-        if (entity.getDimension_type().equals(DimensionTypes.THE_NETHER_ID.toString())) {
-            return Items.NETHERRACK;
-        }
-
-        return Items.PAPER;
-    }
-
     @Override
     protected GuiElementInterface toGuiElement(DimensionNode entity) {
         return new GuiElementBuilder()
             .setName(Text.of(entity.getDimension()))
-            .setItem(this.computeItem(entity))
+            .setItem(WorldHelper.getSensibleWorldItem(entity.getDimension_type()))
             .setLore(List.of(
                 TextHelper.getTextByKey(getPlayer(), "world.dimension.loaded", entity.isDimensionLoaded())
                 , TextHelper.getTextByKey(getPlayer(), "world.dimension.dimension_type", entity.getDimension_type())

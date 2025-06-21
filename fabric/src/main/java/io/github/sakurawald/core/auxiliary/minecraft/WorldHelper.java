@@ -3,12 +3,15 @@ package io.github.sakurawald.core.auxiliary.minecraft;
 import io.github.sakurawald.core.service.random_teleport.RandomTeleporter;
 import io.github.sakurawald.core.structure.TeleportSetup;
 import lombok.experimental.UtilityClass;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.dimension.DimensionTypes;
 
 @UtilityClass
 public class WorldHelper {
@@ -48,4 +51,20 @@ public class WorldHelper {
         return Vec3d.add(pos, 0.5, 0.0, 0.5);
     }
 
+
+    public static Item getSensibleWorldItem(String dimension) {
+        if (dimension.equals(DimensionTypes.OVERWORLD_ID.toString())) {
+            return Items.GRASS_BLOCK;
+        }
+
+        if (dimension.equals(DimensionTypes.THE_END_ID.toString())) {
+            return Items.END_STONE;
+        }
+
+        if (dimension.equals(DimensionTypes.THE_NETHER_ID.toString())) {
+            return Items.NETHERRACK;
+        }
+
+        return Items.ENDER_PEARL;
+    }
 }
