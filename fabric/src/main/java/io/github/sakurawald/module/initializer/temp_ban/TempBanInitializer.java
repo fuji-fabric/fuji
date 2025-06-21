@@ -28,6 +28,8 @@ import java.util.List;
 @CommandRequirement(level = 4)
 public class TempBanInitializer extends ModuleInitializer {
 
+    // NOTE: The recreation of BanCommand and BanIpCommand, but with a specified expiry date.
+
     @CommandNode("ip")
     private static int ip(@CommandSource ServerCommandSource source, String ip, String expiry, GreedyString reason) throws CommandSyntaxException {
 
@@ -35,13 +37,13 @@ public class TempBanInitializer extends ModuleInitializer {
             throw new SimpleCommandExceptionType(Text.translatable("commands.banip.invalid")).create();
         }
 
-        // add
+        // Add.
         Date expire = DateParser.parseDate(expiry);
         BannedIpEntry bannedIpEntry = new BannedIpEntry(ip, null, source.getName(), expire, reason.getValue());
         source.getServer().getPlayerManager().getIpBanList().add(bannedIpEntry);
         source.sendFeedback(() -> Text.translatable("commands.banip.success", ip, bannedIpEntry.getReason()), true);
 
-        // feedback
+        // Kick.
         List<ServerPlayerEntity> list = source.getServer().getPlayerManager().getPlayersByIp(ip);
         if (!list.isEmpty()) {
             source.sendFeedback(() -> Text.translatable("commands.banip.info", list.size(), EntitySelector.getNames(list)), true);
@@ -60,12 +62,12 @@ public class TempBanInitializer extends ModuleInitializer {
         Date expire = DateParser.parseDate(expiry);
 
         for (GameProfile gameProfile : collection.getValue()) {
-            // add
+            // Add.
             BannedPlayerEntry bannedPlayerEntry = new BannedPlayerEntry(gameProfile, null, source.getName(), expire, reason.getValue());
             playerManager.getUserBanList().add(bannedPlayerEntry);
             source.sendFeedback(() -> Text.translatable("commands.ban.success", Text.literal(gameProfile.getName()), bannedPlayerEntry.getReason()), true);
 
-            // kick
+            // Kick.
             ServerPlayerEntity serverPlayerEntity = playerManager.getPlayer(gameProfile.getId());
             if (serverPlayerEntity != null) {
                 serverPlayerEntity.networkHandler.disconnect(Text.translatable("multiplayer.disconnect.banned"));

@@ -22,7 +22,7 @@ public abstract class PlayerManagerMixin {
     @Accessor
     abstract BannedIpList getBannedIps();
 
-    // the code is used to fix a bug that mojang doesn't notice.
+    // NOTE: The code is used to fix a bug that mojang didn't notice.
     @Inject(method = "checkCanJoin", at = @At(value = "HEAD"))
     void check(SocketAddress socketAddress, GameProfile gameProfile, CallbackInfoReturnable<Text> cir) {
         getBannedProfiles().removeInvalidEntries();
