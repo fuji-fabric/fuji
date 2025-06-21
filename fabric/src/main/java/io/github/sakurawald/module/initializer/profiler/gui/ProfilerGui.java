@@ -286,7 +286,7 @@ public class ProfilerGui extends SimpleGui {
                 ));
 
             if (memoryType == MemoryType.HEAP) {
-                guiElementBuilder.unbreakable();
+                guiElementBuilder.glow();
             }
 
             elements.add(guiElementBuilder.build());

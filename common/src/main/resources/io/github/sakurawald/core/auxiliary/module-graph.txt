@@ -22,6 +22,7 @@ command_cooldown
 command_debug
 command_event
 command_interactive
+command_menu
 command_meta
 command_meta.attachment
 command_meta.chain
