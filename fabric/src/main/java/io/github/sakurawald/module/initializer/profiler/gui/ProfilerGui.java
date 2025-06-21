@@ -308,7 +308,7 @@ public class ProfilerGui extends SimpleGui {
             double avgTime = (double) totalGcTime / totalGcCount;
 
             GuiElement element = new GuiElementBuilder()
-                    .setItem(Items.PAPER)
+                    .setItem(Items.CAMPFIRE)
                     .setName(TextHelper.getTextByKey(getPlayer(), "profiler.gc"))
                     .setLore(List.of(
                         TextHelper.getTextByKey(getPlayer(), "profiler.gc.name", name)
