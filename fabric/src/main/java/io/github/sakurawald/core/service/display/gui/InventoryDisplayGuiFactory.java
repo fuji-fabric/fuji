@@ -39,9 +39,9 @@ public class InventoryDisplayGuiFactory extends BaseDisplayGuiFactory {
 
     @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
     @Override
-    public @NotNull SimpleGui build(ServerPlayerEntity viewerPlayer) {
+    public @NotNull SimpleGui build(ServerPlayerEntity viewingPlayer) {
         /* Place the placeholder items. */
-        SimpleGui gui = new SimpleGui(ScreenHandlerType.GENERIC_9X6, viewerPlayer, false) {
+        SimpleGui gui = new SimpleGui(ScreenHandlerType.GENERIC_9X6, viewingPlayer, false) {
             @Override
             public void onClose() {
                 if (parentGui != null) {
@@ -62,7 +62,7 @@ public class InventoryDisplayGuiFactory extends BaseDisplayGuiFactory {
         }
 
         /* Place offhand item. */
-        SlotClickForDeeperDisplayCallback slotClickForDeeperDisplayCallback = new SlotClickForDeeperDisplayCallback(gui, viewerPlayer);
+        SlotClickForDeeperDisplayCallback slotClickForDeeperDisplayCallback = new SlotClickForDeeperDisplayCallback(gui, viewingPlayer);
         gui.setSlot(7, offhand.get(0), slotClickForDeeperDisplayCallback);
 
         /* Place main items. */

@@ -25,11 +25,11 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
     }
 
     @Override
-    public @NotNull SimpleGui build(ServerPlayerEntity viewerPlayer) {
-        SimpleGui displayGui = super.build(viewerPlayer);
+    public @NotNull SimpleGui build(ServerPlayerEntity viewingPlayer) {
+        SimpleGui displayGui = super.build(viewingPlayer);
 
         /* Place the back button. */
-        GuiElement backButton = GuiHelper.makeBackButton(viewerPlayer)
+        GuiElement backButton = GuiHelper.makeBackButton(viewingPlayer)
             .setCallback(() -> {
                 displayGui.close();
             }).build();
@@ -38,9 +38,9 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
         /* Place the restore button. */
         GuiElement restoreButton = new GuiElementBuilder()
             .setItem(Items.SLIME_BALL)
-            .setName(TextHelper.getTextByKey(viewerPlayer, "deathlog.restore.item.name"))
-            .setLore(deathNode.getLore(viewerPlayer))
-            .setCallback(() -> handleRestoreButton(displayGui, viewerPlayer))
+            .setName(TextHelper.getTextByKey(viewingPlayer, "deathlog.restore.item.name"))
+            .setLore(deathNode.getLore(viewingPlayer))
+            .setCallback(() -> handleRestoreButton(displayGui, viewingPlayer))
             .build();
         displayGui.setSlot(LINE_SIZE + 8, restoreButton);
 
@@ -68,25 +68,25 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
         }
     }
 
-    private void handleRestoreButton(SimpleGui displayGui, ServerPlayerEntity viewerPlayer) {
+    private void handleRestoreButton(SimpleGui displayGui, ServerPlayerEntity viewingPlayer) {
             /* Ensure the restore target player's inventory is empty. */
-            if (!viewerPlayer.getInventory().isEmpty()) {
-                TextHelper.sendMessageByKey(viewerPlayer, "deathlog.restore.target_player.inventory_not_empty", PlayerHelper.getName(viewerPlayer));
+            if (!viewingPlayer.getInventory().isEmpty()) {
+                TextHelper.sendMessageByKey(viewingPlayer, "deathlog.restore.target_player.inventory_not_empty", PlayerHelper.getName(viewingPlayer));
                 return;
             }
 
             /* Restore the inventory. */
-            LogUtil.debug("Restore the death node {} for target player {}", deathNode, PlayerHelper.getName(viewerPlayer));
+            LogUtil.debug("Restore the death node {} for target player {}", deathNode, PlayerHelper.getName(viewingPlayer));
             for (int i = 0; i < this.main.size(); i++) {
-                InventoryHelper.getMainStacks(viewerPlayer).set(i, this.deathNode.main.get(i));
+                InventoryHelper.getMainStacks(viewingPlayer).set(i, this.deathNode.main.get(i));
             }
-            InventoryHelper.setArmorStacks(viewerPlayer, this.deathNode.armor);
-            InventoryHelper.setOffhandStacks(viewerPlayer, this.deathNode.offhand);
+            InventoryHelper.setArmorStacks(viewingPlayer, this.deathNode.armor);
+            InventoryHelper.setOffhandStacks(viewingPlayer, this.deathNode.offhand);
             // NOTE: Yeah, the score and xp should give to the dead player.
-            viewerPlayer.setScore(this.deathNode.score);
-            viewerPlayer.experienceLevel = this.deathNode.expLevel;
-            viewerPlayer.experienceProgress = this.deathNode.expProgress;
+            viewingPlayer.setScore(this.deathNode.score);
+            viewingPlayer.experienceLevel = this.deathNode.expLevel;
+            viewingPlayer.experienceProgress = this.deathNode.expProgress;
 
-            TextHelper.sendMessageByKey(viewerPlayer, "deathlog.restore.success");
+            TextHelper.sendMessageByKey(viewingPlayer, "deathlog.restore.success");
     }
 }

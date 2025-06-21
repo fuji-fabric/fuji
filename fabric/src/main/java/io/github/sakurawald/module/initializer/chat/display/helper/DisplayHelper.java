@@ -30,13 +30,13 @@ public class DisplayHelper {
         return uuid;
     }
 
-    private static void viewDisplayGui(@NotNull ServerPlayerEntity viewerPlayer, String displayUUID) {
+    private static void viewDisplayGui(@NotNull ServerPlayerEntity viewingPlayer, String displayUUID) {
         BaseDisplayGuiFactory baseDisplayGui = uuid2gui.get(displayUUID);
         if (baseDisplayGui == null) {
-            TextHelper.sendMessageByKey(viewerPlayer, "display.invalid");
+            TextHelper.sendMessageByKey(viewingPlayer, "display.invalid");
             return;
         }
-        baseDisplayGui.build(viewerPlayer).open();
+        baseDisplayGui.build(viewingPlayer).open();
     }
 
     public static MutableText createEnderDisplayText(ServerPlayerEntity sharingPlayer) {

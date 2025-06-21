@@ -70,8 +70,8 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
     }
 
     @Override
-    public @NotNull SimpleGui build(ServerPlayerEntity viewerPlayer) {
-        SimpleGui gui = new SimpleGui(ScreenHandlerType.GENERIC_9X4, viewerPlayer, false);
+    public @NotNull SimpleGui build(ServerPlayerEntity viewingPlayer) {
+        SimpleGui gui = new SimpleGui(ScreenHandlerType.GENERIC_9X4, viewingPlayer, false);
         gui.setLockPlayerInventory(true);
         gui.setTitle(this.title);
 
@@ -81,7 +81,7 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
         }
         gui.setSlot(4, shulkerBoxStack);
         if (this.parentGui != null) {
-            gui.setSlot(LINE_SIZE - 1, GuiHelper.makeBackButton(viewerPlayer).setCallback(parentGui::open));
+            gui.setSlot(LINE_SIZE - 1, GuiHelper.makeBackButton(viewingPlayer).setCallback(parentGui::open));
         }
 
         /* Place container items. */

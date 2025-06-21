@@ -40,7 +40,7 @@ public abstract class BaseDisplayGuiFactory {
         gui.setSlot(i, guiElementBuilder.build());
     }
 
-    public abstract SimpleGui build(ServerPlayerEntity viewerPlayer);
+    public abstract SimpleGui build(ServerPlayerEntity viewingPlayer);
 
     public static boolean isShulkerBox(@NotNull ItemStack itemStack) {
         return itemStack.getItem() instanceof BlockItem bi
@@ -48,7 +48,7 @@ public abstract class BaseDisplayGuiFactory {
     }
 
     public record SlotClickForDeeperDisplayCallback(SimpleGui parentGui,
-                                                       ServerPlayerEntity viewerPlayer) implements GuiElementInterface.ClickCallback {
+                                                       ServerPlayerEntity viewingPlayer) implements GuiElementInterface.ClickCallback {
         @Override
         public void click(int i, ClickType clickType, net.minecraft.screen.slot.SlotActionType clickType1, @NotNull SlotGuiInterface slotGuiInterface) {
             GuiElementInterface slot = slotGuiInterface.getSlot(i);
@@ -62,7 +62,7 @@ public abstract class BaseDisplayGuiFactory {
             if (isShulkerBox(itemStack)) {
                 // NOTE: Here we just copy the parent GUI's title, to ensure the title is correct.
                 ShulkerBoxDisplayGuiFactory shulkerBoxDisplayGui = new ShulkerBoxDisplayGuiFactory(parentGui.getTitle(), itemStack, parentGui);
-                shulkerBoxDisplayGui.build(viewerPlayer).open();
+                shulkerBoxDisplayGui.build(viewingPlayer).open();
             }
         }
     }
