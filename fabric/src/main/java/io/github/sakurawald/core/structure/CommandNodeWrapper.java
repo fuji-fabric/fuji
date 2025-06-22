@@ -8,8 +8,8 @@ import net.minecraft.server.command.ServerCommandSource;
 @Data
 public class CommandNodeWrapper {
 
-    final CommandNode<ServerCommandSource> node;
-    final String path;
+    public final CommandNode<ServerCommandSource> node;
+    public final String path;
 
     public CommandNodeWrapper(CommandNode<ServerCommandSource> node) {
         this.node = node;
