@@ -45,10 +45,16 @@ public class LogUtil {
     }
 
     public static void debug(String message, Object... args) {
+        /* Early return for performance. */
+        var debugConfig = Configs.mainControlConfig.model().core.debug;
+        if (!debugConfig.log_debug_messages) {
+            return;
+        }
+
+        /* Attach the module info. */
         message = attachSourceModuleInfo(message);
 
         /* Process the debug config. */
-        var debugConfig = Configs.mainControlConfig.model().core.debug;
         if (debugConfig.log_debug_messages) {
             String prefix = isConsoleSupportAnsiColor ? "\u001B[37m" : ""; // escape for the ansi color code
             String format = prefix + message;
