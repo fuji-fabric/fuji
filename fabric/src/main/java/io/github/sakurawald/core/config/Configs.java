@@ -7,6 +7,6 @@ import io.github.sakurawald.core.config.model.ConfigModel;
 
 public class Configs {
 
-    public static final BaseConfigurationHandler<ConfigModel> configHandler = new ObjectConfigurationHandler<>(Fuji.CONFIG_PATH.resolve(BaseConfigurationHandler.CONFIG_JSON), ConfigModel.class);
+    public static final BaseConfigurationHandler<ConfigModel> mainControlConfig = new ObjectConfigurationHandler<>(Fuji.CONFIG_PATH.resolve(BaseConfigurationHandler.CONFIG_JSON), ConfigModel.class);
 
 }

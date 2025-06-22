@@ -50,7 +50,7 @@ public class FujiInitializer extends ModuleInitializer {
     @CommandNode("reload")
     private static int $reload(@CommandSource CommandContext<ServerCommandSource> ctx) {
         // Reload main-control file.
-        Configs.configHandler.readStorage();
+        Configs.mainControlConfig.readStorage();
 
         // Reload modules.
         Managers.getModuleManager().reloadModuleInitializers();
@@ -87,7 +87,7 @@ public class FujiInitializer extends ModuleInitializer {
     @CommandNode("debug")
     @Document("Switch the `log_debug_message` option.")
     private static int debug(@CommandSource ServerCommandSource source) {
-        var config = Configs.configHandler.model().core.debug;
+        var config = Configs.mainControlConfig.model().core.debug;
         config.log_debug_messages = !config.log_debug_messages;
 
         TextHelper.sendMessageByKey(source, config.log_debug_messages ? "fuji.debug.on" : "fuji.debug.off");
