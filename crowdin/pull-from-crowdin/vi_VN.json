@@ -336,6 +336,7 @@
   "fuji.debug.on": "<orange>The fuji debug mode is now on. You can see debug messages in the console!",
   "fuji.debug.off": "<orange>The fuji debug mode is now off",
   "from_module": "<yellow>From Module: %s",
+  "from_package": "<yellow>From Package: %s",
   "command.source.can_be_executed_by_console": "<blue>Có thể được thực thi bởi console: %s",
   "command.descriptor.type": "<blue>Mô tả: %s",
   "command.requirement.level_permission": "<blue>Cấp độ quyền yêu cầu: %d",

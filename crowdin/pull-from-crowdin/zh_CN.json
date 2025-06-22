@@ -336,6 +336,7 @@
   "fuji.debug.on": "<orange>The fuji debug mode is now on. You can see debug messages in the console!",
   "fuji.debug.off": "<orange>The fuji debug mode is now off",
   "from_module": "<yellow>From Module: %s",
+  "from_package": "<yellow>From Package: %s",
   "command.source.can_be_executed_by_console": "<blue>可通过控制台执行： %s",
   "command.descriptor.type": "<blue>描述： %s",
   "command.requirement.level_permission": "<blue>需要的权限等级： %d",
