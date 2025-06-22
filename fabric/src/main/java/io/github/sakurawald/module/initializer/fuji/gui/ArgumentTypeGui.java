@@ -32,7 +32,7 @@ public class ArgumentTypeGui extends PagedGui<BaseArgumentTypeAdapter> {
             .setName(Text.literal(entity.getClass().getSimpleName()))
             .setItem(Items.HOPPER)
             .setLore(List.of(
-                TextHelper.getTextByKey(getPlayer(),"command.argument.type.registered_by_module", ModuleManager.computeModulePathAsString(entity.getClass().getName()))
+                TextHelper.getTextByKey(getPlayer(),"from_module", ModuleManager.computeModulePathAsString(entity.getClass().getName()))
                 , TextHelper.getTextByKey(getPlayer(), "command.argument.type.class", entity.getTypeClasses().stream().map(Class::getSimpleName).toList())
                 , TextHelper.getTextByKey(getPlayer(), "command.argument.type.string", entity.getTypeStrings())
             ))

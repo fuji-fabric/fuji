@@ -52,7 +52,7 @@ public class ModulesGui extends PagedGui<Pair<String, Boolean>> {
         }
 
         Item itemMaterial = moduleEnable ? Items.GREEN_STAINED_GLASS : Items.RED_STAINED_GLASS;
-        Text itemName = Text.literal(modulePathString).formatted(moduleEnable ? Formatting.GREEN : Formatting.RED);
+        Text itemName = Text.literal(modulePathString).formatted(Formatting.YELLOW);
         return new GuiElementBuilder()
             .setItem(itemMaterial)
             .setName(itemName)

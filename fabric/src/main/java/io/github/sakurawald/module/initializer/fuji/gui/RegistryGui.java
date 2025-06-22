@@ -34,11 +34,12 @@ public class RegistryGui extends PagedGui<Identifier> {
         return new RegistryGui(parent, player, this.isMetaRegistry, entities, pageIndex);
     }
 
+    @SuppressWarnings("UnnecessaryReturnStatement")
     @Override
     protected GuiElementInterface toGuiElement(Identifier entity) {
         return new GuiElementBuilder()
             .setName(Text.of(entity.toString()))
-            .setItem(this.isMetaRegistry ? Items.BOOKSHELF : Items.PAPER)
+            .setItem(this.isMetaRegistry ? Items.BOOK : Items.PAPER)
             .setCallback(() -> {
                 if (!this.isMetaRegistry) return;
 
