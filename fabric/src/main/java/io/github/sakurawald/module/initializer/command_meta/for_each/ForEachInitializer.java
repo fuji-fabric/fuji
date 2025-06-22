@@ -11,6 +11,10 @@ import io.github.sakurawald.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
+@Document("""
+    Provides `/foreach` command.
+    If a command is only targets on single player, you can use `/foreach` to apply it for each online player.
+    """)
 public class ForEachInitializer extends ModuleInitializer {
 
     @CommandNode("foreach")

@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.gameplay.multi_obsidian_platform;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
@@ -14,7 +15,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-
+@Document("""
+    This module makes every `ender portal frame` generates its own `obsidian platform`.
+    """)
 public class MultiObsidianPlatformInitializer extends ModuleInitializer {
 
     private static final Map<BlockPos, BlockPos> TRANSFORM_CACHE = new HashMap<>();

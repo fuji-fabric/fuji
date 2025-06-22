@@ -18,6 +18,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.quartz.JobDataMap;
 
+@Document("""
+    Provides a bill-board, for players to post and share their works.
+    """)
 public class WorksInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<WorksDataModel> works = new ObjectConfigurationHandler<>("works.json", WorksDataModel.class)

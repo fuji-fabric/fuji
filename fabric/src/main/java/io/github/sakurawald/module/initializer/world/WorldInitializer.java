@@ -46,6 +46,9 @@ import java.util.Optional;
  */
 
 @Cite("https://github.com/NucleoidMC/fantasy")
+@Document("""
+    Provides a unified world management.
+    """)
 @CommandNode("world")
 @CommandRequirement(level = 4)
 public class WorldInitializer extends ModuleInitializer {

@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.home;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.PermissionHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
@@ -19,6 +20,9 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Optional;
 
+@Document("""
+    Allows players to define its home.
+    """)
 public class HomeInitializer extends ModuleInitializer {
 
     @Getter

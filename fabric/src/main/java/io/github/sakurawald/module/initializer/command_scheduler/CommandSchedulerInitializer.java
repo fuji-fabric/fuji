@@ -21,6 +21,10 @@ import org.quartz.JobDataMap;
 import java.util.List;
 
 
+@Document("""
+    This module allows you to define `jobs` using `cron` language.
+    To execute commands at schedule.
+    """)
 @CommandNode("command-scheduler")
 @CommandRequirement(level = 4)
 public class CommandSchedulerInitializer extends ModuleInitializer {

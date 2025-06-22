@@ -23,6 +23,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
+@Document("""
+    Provides random teleportation.
+    """)
 public class RtpInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<RtpConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, RtpConfigModel.class);

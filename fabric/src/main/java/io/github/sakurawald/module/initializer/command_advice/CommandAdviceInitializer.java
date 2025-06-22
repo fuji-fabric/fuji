@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.command_advice;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.StringUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
@@ -21,6 +22,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+@Document("""
+    This module allows you to decorate existing commands:
+    1. Run other commands `before` executing the target command.
+    2. Run other commands `after` executing the target command.
+    3. Cancel the execution of the target command, and run other commands.
+    """)
 public class CommandAdviceInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<CommandAdviceConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandAdviceConfigModel.class);

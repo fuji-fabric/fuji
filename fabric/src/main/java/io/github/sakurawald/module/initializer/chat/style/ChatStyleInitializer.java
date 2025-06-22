@@ -3,6 +3,7 @@ package io.github.sakurawald.module.initializer.chat.style;
 import eu.pb4.placeholders.api.parsers.NodeParser;
 
 import io.github.sakurawald.Fuji;
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
@@ -26,6 +27,10 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
+@Document("""
+    This module allows you to customize global chat style.
+    Besides, players can use `/chat style` to set per-player chat style.
+    """)
 @CommandNode("chat style")
 public class ChatStyleInitializer extends ModuleInitializer {
 

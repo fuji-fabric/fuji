@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.command_menu;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
@@ -17,6 +18,9 @@ import io.github.sakurawald.module.initializer.command_menu.structure.MenuDescri
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
+@Document("""
+    This module allows you to define `menu` GUI, to execute commands.
+    """)
 @CommandNode("command-menu")
 @CommandRequirement(level = 4)
 public class CommandMenuInitializer extends ModuleInitializer {

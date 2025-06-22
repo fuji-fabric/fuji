@@ -50,6 +50,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Document("""
+    This module allows you to attach commands into things:
+    1. Attach commands into an item stack.
+    2. Attach commands into a block.
+    3. Attach commands into an entity.
+    """)
 @CommandNode("command-attachment")
 @CommandRequirement(level = 4)
 public class CommandAttachmentInitializer extends ModuleInitializer {

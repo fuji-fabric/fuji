@@ -31,6 +31,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Document("""
+    This module allows you to define a `cooldown` for specified commands.
+    """)
 @CommandNode("command-cooldown")
 @CommandRequirement(level = 4)
 public class CommandCooldownInitializer extends ModuleInitializer {

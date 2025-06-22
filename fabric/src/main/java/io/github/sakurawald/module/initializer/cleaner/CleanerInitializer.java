@@ -31,6 +31,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+@Document("""
+    This module provides the `entity` cleaner.
+    To remove specified entities automatically.
+    """)
 @CommandNode("cleaner")
 @CommandRequirement(level = 4)
 public class CleanerInitializer extends ModuleInitializer {

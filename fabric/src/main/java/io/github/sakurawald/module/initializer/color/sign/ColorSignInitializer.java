@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.color.sign;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.UuidHelper;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
@@ -15,6 +16,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
+@Document("""
+    This module allows you to use color tags in `sign` blocks.
+    """)
 public class ColorSignInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<ColorSignConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ColorSignConfigModel.class);

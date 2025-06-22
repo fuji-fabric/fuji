@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.chat.mention;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
@@ -17,6 +18,11 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+@Document("""
+    This module allows you to mention another online player in chat:
+    1. The target player name will be highlighted.
+    2. The target player will be sound notified.
+    """)
 public class ChatMentionInitializer extends ModuleInitializer {
     private static final BaseConfigurationHandler<ChatMentionConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatMentionConfigModel.class);
 

@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.chat.replace;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
@@ -11,6 +12,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
+@Document("""
+    This module allows you to replace `chat string` with a given `chat text`. (Including placeholder parsing)
+    """)
 public class ChatReplaceInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<ChatReplaceConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatReplaceConfigModel.class);

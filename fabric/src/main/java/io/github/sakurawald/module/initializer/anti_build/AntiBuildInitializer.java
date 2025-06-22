@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.anti_build;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.PermissionHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
@@ -13,6 +14,15 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
+@Document("""
+    This module allows you to ban types of actions for players.
+    Currently supported types are:
+    1. Break a specified block.
+    2. Place a specified block.
+    3. Interact with a specified item.
+    4. Interact with a specified block.
+    5. Interact with a specified entity.
+    """)
 public class AntiBuildInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<AntiBuildConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, AntiBuildConfigModel.class);
 

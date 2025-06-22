@@ -1,6 +1,7 @@
 package io.github.sakurawald.module.initializer.command_debug;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
@@ -13,6 +14,9 @@ import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.Objects;
 
+@Document("""
+    This module provides debug tools for executing commands.
+    """)
 public class CommandDebugInitializer extends ModuleInitializer {
 
     @CommandNode("command-debug")

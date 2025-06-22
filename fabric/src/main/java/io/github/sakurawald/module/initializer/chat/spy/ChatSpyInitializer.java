@@ -18,6 +18,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
+@Document("""
+    This module allows you to spy on specified chat message type. (Mainly used for private message types)
+    """)
 @CommandNode("chat spy")
 @CommandRequirement(level = 4)
 public class ChatSpyInitializer extends ModuleInitializer {

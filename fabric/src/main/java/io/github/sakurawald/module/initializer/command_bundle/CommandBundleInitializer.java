@@ -22,7 +22,11 @@ import net.minecraft.text.Text;
 
 import java.util.stream.Stream;
 
-
+@Document("""
+    This module allows you to create new command:
+    1. The new command can accept arguments.
+    2. The body of the new command, can be a list of commands.
+    """)
 @CommandNode("command-bundle")
 @CommandRequirement(level = 4)
 public class CommandBundleInitializer extends ModuleInitializer {

@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.pvp;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
@@ -15,7 +16,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.Set;
 
-
+@Document("""
+    Provides PvP management for players.
+    """)
 public class PvpInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<PvPDataModel> data = new ObjectConfigurationHandler<>("pvp.json", PvPDataModel.class);

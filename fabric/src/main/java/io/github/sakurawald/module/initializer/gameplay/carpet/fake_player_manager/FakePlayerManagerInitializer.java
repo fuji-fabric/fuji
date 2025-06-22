@@ -29,6 +29,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Document("""
+    This module provides `fake player management` for `carpet` mod.
+    """)
 public class FakePlayerManagerInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<FakePlayerManagerConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, FakePlayerManagerConfigModel.class);

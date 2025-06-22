@@ -2,6 +2,7 @@ package io.github.sakurawald.module.initializer.command_meta.json;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.mojang.brigadier.context.CommandContext;
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandRequirement;
@@ -19,6 +20,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.BiFunction;
 
+@Document("""
+    Provides `/json` command.
+    A powerful tool to edit json file.
+    """)
 @CommandNode("json")
 @CommandRequirement(level = 4)
 public class JsonInitializer extends ModuleInitializer {

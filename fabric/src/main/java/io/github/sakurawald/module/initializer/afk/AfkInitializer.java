@@ -26,6 +26,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+@Document("""
+    This module provides:
+    1. Afk detection: If a player idle too long, we will mark it as afk state.
+    2. Afk event: Execute commands when a player enters or leaves afk state.
+    3. Afk name customization: For a afk player, we can customize its display name in tab list.
+    """)
 public class AfkInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<AfkConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, AfkConfigModel.class);

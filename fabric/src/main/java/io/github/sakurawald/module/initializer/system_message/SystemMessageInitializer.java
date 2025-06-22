@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.system_message;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
@@ -13,6 +14,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
+@Document("""
+    Customize the `translatable text`, like most of `system messages`.
+    """)
 public class SystemMessageInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<SystemMessageConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, SystemMessageConfigModel.class);

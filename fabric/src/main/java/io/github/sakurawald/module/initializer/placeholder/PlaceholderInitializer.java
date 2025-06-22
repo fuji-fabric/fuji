@@ -36,6 +36,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
+@Document("""
+    Provides extra placeholders for `Text Placeholder API` mod.
+    """)
 @CommandNode("placeholder")
 @CommandRequirement(level = 4)
 public class PlaceholderInitializer extends ModuleInitializer {

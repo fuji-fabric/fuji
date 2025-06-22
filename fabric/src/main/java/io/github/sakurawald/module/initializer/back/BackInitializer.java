@@ -28,6 +28,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.function.Function;
 
+@Document("""
+    THis module allows the player to teleport back to:
+    1. His last teleport point.
+    2. His death point.
+    """)
 public class BackInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<BackConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, BackConfigModel.class);

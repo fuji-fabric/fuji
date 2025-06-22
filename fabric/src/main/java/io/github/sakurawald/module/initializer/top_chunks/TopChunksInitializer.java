@@ -32,6 +32,9 @@ import java.util.PriorityQueue;
 import java.util.concurrent.CompletableFuture;
 
 
+@Document("""
+    Analyze all chunks of the server, and find the most lagged chunks.
+    """)
 public class TopChunksInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<TopChunksConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, TopChunksConfigModel.class);

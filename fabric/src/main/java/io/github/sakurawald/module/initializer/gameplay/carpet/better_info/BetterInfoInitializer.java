@@ -1,11 +1,16 @@
 package io.github.sakurawald.module.initializer.gameplay.carpet.better_info;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.event.impl.CommandEvents;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import net.minecraft.server.command.CommandManager;
 
 import java.util.List;
 
+@Document("""
+    1. Provides the `/info entity` command.
+    2. Adds `block entity` query for `/info block` command.
+    """)
 public class BetterInfoInitializer extends ModuleInitializer {
 
     @Override

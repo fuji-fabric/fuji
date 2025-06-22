@@ -29,6 +29,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+@Document("""
+    Provides `/warp` command.
+    As a public teleport point.
+    """)
 @CommandNode("warp")
 public class WarpInitializer extends ModuleInitializer {
 

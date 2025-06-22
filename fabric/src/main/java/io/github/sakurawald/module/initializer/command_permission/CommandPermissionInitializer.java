@@ -34,6 +34,9 @@ import java.util.function.Predicate;
 
 
 @Cite("https://github.com/DrexHD/VanillaPermissions")
+@Document("""
+    This module provides the `luckperms permissions` for `all commands`.
+    """)
 @CommandNode("command-permission")
 @CommandRequirement(level = 4)
 public class CommandPermissionInitializer extends ModuleInitializer {

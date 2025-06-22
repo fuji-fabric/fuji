@@ -18,6 +18,9 @@ import net.minecraft.world.GameMode;
 
 import java.util.Optional;
 
+@Document("""
+    Provides `predicate` commands, suffix with `?`.
+    """)
 @CommandRequirement(level = 4)
 public class PredicateInitializer extends ModuleInitializer {
 

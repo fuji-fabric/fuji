@@ -1,6 +1,7 @@
 package io.github.sakurawald.module.initializer.chat.history;
 
 import com.google.common.collect.EvictingQueue;
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
@@ -11,6 +12,10 @@ import net.minecraft.text.Text;
 
 import java.util.Queue;
 
+@Document("""
+    This module will store chat message as history.
+    And send them to the player joined the server.
+    """)
 @SuppressWarnings("UnstableApiUsage")
 public class ChatHistoryInitializer extends ModuleInitializer {
 

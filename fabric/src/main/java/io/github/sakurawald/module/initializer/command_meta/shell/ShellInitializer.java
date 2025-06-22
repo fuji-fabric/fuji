@@ -24,6 +24,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.concurrent.CompletableFuture;
 
+@Document("""
+    Provides `/shell` command.
+    To execute the `command line` in `host shell`.
+    """)
 public class ShellInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<ShellConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ShellConfigModel.class);

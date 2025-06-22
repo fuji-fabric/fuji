@@ -33,6 +33,10 @@ import java.util.List;
 import java.util.UUID;
 
 @SuppressWarnings("UnstableApiUsage")
+@Document("""
+    Allows a player to download nearest `region` file.
+    Useful for `redstone` debug.
+    """)
 public class WorldDownloaderInitializer extends ModuleInitializer {
 
     private static final double BYTE_TO_MEGABYTE = 1.0 * 1024 * 1024;

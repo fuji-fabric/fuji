@@ -16,6 +16,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.List;
 
+@Document("""
+    Make a set of items as kit, and give the kit to players.
+    """)
 @CommandNode("kit")
 @CommandRequirement(level = 4)
 public class KitInitializer extends ModuleInitializer {

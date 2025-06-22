@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.deathlog;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
@@ -18,6 +19,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+
+@Document("""
+    This module stores the `inventory` as death log on player death.
+    """)
 public class DeathLogInitializer extends ModuleInitializer {
 
     private static final Path DEATH_DATA_DIR_PATH = ReflectionUtil.computeModuleConfigPath(DeathLogInitializer.class).resolve("death-data");

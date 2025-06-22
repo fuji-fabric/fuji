@@ -34,6 +34,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Cite("https://github.com/BradBot1/FabricSit")
+@Document("""
+    Provides a facility to sit on blocks.
+    """)
 public class SitInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<SitConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, SitConfigModel.class);

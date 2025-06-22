@@ -1,6 +1,7 @@
 package io.github.sakurawald.module.initializer.command_meta.attachment;
 
 import com.mojang.brigadier.context.CommandContext;
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
@@ -17,6 +18,9 @@ import net.minecraft.text.Text;
 
 import java.io.IOException;
 
+@Document("""
+    Provides a unified attachment facility, to attach any data to any object.
+    """)
 @CommandNode("attachment")
 @CommandRequirement(level = 4)
 public class AttachmentInitializer extends ModuleInitializer {

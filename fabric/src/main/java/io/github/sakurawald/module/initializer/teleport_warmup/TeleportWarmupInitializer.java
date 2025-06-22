@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.teleport_warmup;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.core.manager.Managers;
@@ -13,6 +14,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
+@Document("""
+    Adds a warmup cooldown before player teleportation.
+    """)
 public class TeleportWarmupInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<TeleportWarmupConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, TeleportWarmupConfigModel.class);

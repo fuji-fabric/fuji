@@ -12,6 +12,9 @@ import io.github.sakurawald.module.initializer.ModuleInitializer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
+@Document("""
+    Provides `/run` command, to run a command with context.
+    """)
 @CommandNode("run")
 @CommandRequirement(level = 4)
 public class RunInitializer extends ModuleInitializer {

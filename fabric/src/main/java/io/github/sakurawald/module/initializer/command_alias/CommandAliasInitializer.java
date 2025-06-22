@@ -3,6 +3,7 @@ package io.github.sakurawald.module.initializer.command_alias;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.CommandNode;
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
@@ -17,6 +18,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+@Document("""
+    This module allows you to define alias for existing commands.
+    The defined alies command will redirect to the existing command node.
+    """)
 public class CommandAliasInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<CommandAliasConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandAliasConfigModel.class);

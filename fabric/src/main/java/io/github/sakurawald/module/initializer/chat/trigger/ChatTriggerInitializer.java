@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.chat.trigger;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.StringUtil;
 import io.github.sakurawald.core.command.executor.CommandExecutor;
@@ -18,6 +19,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+@Document("""
+    This module allows you to define magic spells in chat, to execute commands.
+    """)
 public class ChatTriggerInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<ChatTriggerConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatTriggerConfigModel.class);

@@ -42,6 +42,12 @@ import java.util.Comparator;
 import java.util.List;
 
 
+@Document("""
+    Provides `/fuji` command.
+    To reload the configs of fuji.
+    To inspect states of fuji.
+    To discover things of fuji.
+    """)
 @CommandNode("fuji")
 @CommandRequirement(level = 4)
 public class FujiInitializer extends ModuleInitializer {

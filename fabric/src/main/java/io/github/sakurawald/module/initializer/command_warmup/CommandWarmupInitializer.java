@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.command_warmup;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
@@ -11,12 +12,13 @@ import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.command_warmup.config.model.CommandWarmupConfigModel;
 import io.github.sakurawald.module.initializer.command_warmup.structure.CommandWarmupNode;
 import io.github.sakurawald.module.initializer.command_warmup.structure.CommandWarmupTicket;
-import io.github.sakurawald.module.mixin.command_warmup.ServerPlayNetworkHandlerMixin;
-import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@Document("""
+    This module allows you to define a `cooldown` before command execution.
+    """)
 public class CommandWarmupInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<CommandWarmupConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandWarmupConfigModel.class);
 

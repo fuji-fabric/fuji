@@ -11,6 +11,10 @@ import io.github.sakurawald.module.initializer.profiler.config.ProfilerConfigMod
 import io.github.sakurawald.module.initializer.profiler.gui.ProfilerGui;
 import net.minecraft.server.network.ServerPlayerEntity;
 
+@Document("""
+    To query the server health status.
+    Including: os, vm, cpu, disk, ram, tps, mspt and gc.
+    """)
 public class ProfilerInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<ProfilerConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ProfilerConfigModel.class);

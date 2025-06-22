@@ -16,6 +16,9 @@ import net.minecraft.server.command.ServerCommandSource;
 import java.util.Arrays;
 import java.util.List;
 
+@Document("""
+    Provides `/one-of` command, to pick a random command from commands, and execute it.
+    """)
 public class OneOfInitializer extends ModuleInitializer {
 
     @CommandNode("one-of")

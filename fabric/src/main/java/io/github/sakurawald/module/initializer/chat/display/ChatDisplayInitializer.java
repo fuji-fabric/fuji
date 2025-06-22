@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.chat.display;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.PlaceholderHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
@@ -14,6 +15,12 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
+@Document("""
+    This module allows players to show things to others:
+    1. Show their item in main hand.
+    2. Show their inventory.
+    3. Show their ender chest.
+    """)
 public class ChatDisplayInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<ChatDisplayConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatDisplayConfigModel.class);

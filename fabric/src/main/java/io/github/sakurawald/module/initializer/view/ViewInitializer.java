@@ -13,6 +13,9 @@ import io.github.sakurawald.module.initializer.view.gui.EnderChestRedirectScreen
 import io.github.sakurawald.module.initializer.view.gui.InventoryRedirectScreenFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
 
+@Document("""
+    Allow you to edit player's inventory and enderchest.
+    """)
 @CommandNode("view")
 @CommandRequirement(level = 4)
 public class ViewInitializer extends ModuleInitializer {

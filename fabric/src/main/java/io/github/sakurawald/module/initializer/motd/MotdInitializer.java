@@ -1,6 +1,7 @@
 package io.github.sakurawald.module.initializer.motd;
 
 import com.google.common.base.Preconditions;
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.RandomUtil;
 import io.github.sakurawald.core.auxiliary.ReflectionUtil;
@@ -24,6 +25,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+@Document("""
+    Customize the MOTD of the server.
+    """)
 public class MotdInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<MotdConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, MotdConfigModel.class);

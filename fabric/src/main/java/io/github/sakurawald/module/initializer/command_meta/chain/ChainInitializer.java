@@ -14,6 +14,12 @@ import net.minecraft.server.command.ServerCommandSource;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Document("""
+    Provides `/chain` command.
+    It allows you to run another 2 commands.
+    The first command is any command.
+    The second command is the chain command.
+    """)
 public class ChainInitializer extends ModuleInitializer {
     private static final Pattern CHAIN_COMMAND_PARSER = Pattern.compile("(.+?)\\s+(chain .+)");
 

@@ -17,6 +17,9 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 @Cite("https://github.com/PotatoPresident/HeadIndex")
+@Document("""
+    This module allows player to buy decorative heads from a head shop.
+    """)
 @CommandNode("head")
 public class HeadInitializer extends ModuleInitializer {
 

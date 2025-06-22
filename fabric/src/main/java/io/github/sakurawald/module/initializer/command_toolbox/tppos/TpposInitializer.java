@@ -21,6 +21,10 @@ import net.minecraft.server.world.ServerWorld;
 import java.util.Optional;
 
 
+@Document("""
+    Provides `/tppos` command.
+    A unified teleport command.
+    """)
 public class TpposInitializer extends ModuleInitializer {
 
     @CommandNode("tppos")

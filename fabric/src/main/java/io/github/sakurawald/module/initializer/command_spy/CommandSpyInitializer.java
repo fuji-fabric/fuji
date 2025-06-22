@@ -1,6 +1,7 @@
 package io.github.sakurawald.module.initializer.command_spy;
 
 import com.mojang.brigadier.ParseResults;
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
@@ -8,6 +9,9 @@ import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.command_spy.config.model.CommandSpyConfigModel;
 import net.minecraft.server.command.ServerCommandSource;
 
+@Document("""
+    This module logs the `command issue` into the console.
+    """)
 public class CommandSpyInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<CommandSpyConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandSpyConfigModel.class);
 

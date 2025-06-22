@@ -28,6 +28,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Supplier;
 
+@Document("""
+    Customize the skins of players.
+    """)
 @CommandNode("skin")
 public class SkinInitializer extends ModuleInitializer {
 

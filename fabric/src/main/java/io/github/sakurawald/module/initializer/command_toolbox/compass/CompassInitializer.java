@@ -29,6 +29,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
+@Document("""
+    Allow you to set the target point of a compass item.
+    """)
 @CommandNode("compass")
 public class CompassInitializer extends ModuleInitializer {
 

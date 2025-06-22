@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.nametag;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
@@ -30,7 +31,9 @@ import org.joml.Vector3f;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-
+@Document("""
+    Customize the nametag above the players.
+    """)
 public class NametagInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<NametagConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, NametagConfigModel.class);
