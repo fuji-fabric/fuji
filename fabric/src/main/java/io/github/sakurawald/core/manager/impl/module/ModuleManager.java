@@ -31,7 +31,7 @@ public class ModuleManager extends BaseManager {
     public static final Map<List<String>, Boolean> MODULE_ENABLE_STATUS = new HashMap<>();
     private static final Map<String, String> CLASS_NAME_2_MODULE_PATH_STRING = new HashMap<>();
     public static final Map<Class<? extends ModuleInitializer>, ModuleInitializer> MODULE_INITIALIZER_BY_CLASS = new HashMap<>();
-    public static final Map<String, ModuleInitializer> MODULE_INITIALIZER_BY_MODULE_PATH_STRING = new HashMap<>();
+    public static final Map<String, Class<? extends ModuleInitializer>> MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING = new HashMap<>();
 
 
     public static String computeModulePathAsString(@NotNull String className) {
@@ -114,11 +114,16 @@ public class ModuleManager extends BaseManager {
     @SuppressWarnings("unchecked")
     private void invokeModuleInitializers() {
         ReflectionUtil.getGraph(ReflectionUtil.MODULE_INITIALIZER_GRAPH_FILE_NAME)
-            .stream()
-            .filter(className -> Managers.getModuleManager().shouldWeEnableThis(className))
             .forEach(className -> {
                 try {
+                    /* Track the module initializer class. */
                     Class<? extends ModuleInitializer> clazz = (Class<? extends ModuleInitializer>) Class.forName(className);
+                    String modulePathString = computeModulePathAsString(className);
+                    ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING.put(modulePathString, clazz);
+
+                    /* Initialize the module initializer. */
+                    boolean enable = Managers.getModuleManager().shouldWeEnableThis(className);
+                    if (!enable) return;
                     this.initializeModuleInitializer(clazz);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -137,7 +142,6 @@ public class ModuleManager extends BaseManager {
                     ModuleInitializer moduleInitializer = clazz.getDeclaredConstructor().newInstance();
                     moduleInitializer.doInitialize();
                     MODULE_INITIALIZER_BY_CLASS.put(clazz, moduleInitializer);
-                    MODULE_INITIALIZER_BY_MODULE_PATH_STRING.put(computeModulePathAsString(className), moduleInitializer);
                 } catch (Exception e) {
                     LogUtil.error("Failed to invoke doInitialize() of module initializer of module {}", clazz.getSimpleName(), e);
                 }

@@ -42,9 +42,9 @@ public class ModulesGui extends PagedGui<Pair<String, Boolean>> {
 
         /* Extract the @Document from class annotation above module initializer. */
         String modulePathString = entity.getKey();
-        ModuleInitializer moduleInitializer = ModuleManager.MODULE_INITIALIZER_BY_MODULE_PATH_STRING.getOrDefault(modulePathString, null);
-        if (moduleInitializer != null) {
-            @Nullable String classDocument = ReflectionUtil.getClassDocument(moduleInitializer.getClass());
+        Class<? extends ModuleInitializer> moduleInitializerClass = ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING.getOrDefault(modulePathString, null);
+        if (moduleInitializerClass != null) {
+            @Nullable String classDocument = ReflectionUtil.getClassDocument(moduleInitializerClass);
             if (classDocument != null) {
                 lore.add(TextHelper.TEXT_EMPTY);
                 lore.addAll(TextHelper.getTextListByValue(getPlayer(), classDocument));
