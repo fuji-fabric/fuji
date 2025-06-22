@@ -51,8 +51,8 @@ public class CommandMenuInitializer extends ModuleInitializer {
         player.closeHandledScreen();
     }
 
-    public static void executeOnShiftAndSwapHandsCommands(ServerPlayerEntity player) {
-        CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), config.model().onShiftAndSwapHandsEvent.commands);
+    public static void executeOnSneakingAndSwapHandsCommands(ServerPlayerEntity player) {
+        CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), config.model().onSneakingAndSwapHandsEvent.commands);
     }
 
 }

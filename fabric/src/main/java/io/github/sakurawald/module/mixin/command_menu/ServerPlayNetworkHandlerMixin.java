@@ -18,11 +18,11 @@ public abstract class ServerPlayNetworkHandlerMixin {
 
     @Inject(method = "onPlayerAction", at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/network/NetworkThreadUtils;forceMainThread(Lnet/minecraft/network/packet/Packet;Lnet/minecraft/network/listener/PacketListener;Lnet/minecraft/server/world/ServerWorld;)V"), cancellable = true)
     void onShiftAndSwapHandsEvent(PlayerActionC2SPacket playerActionC2SPacket, CallbackInfo ci) {
-        if (!CommandMenuInitializer.config.model().onShiftAndSwapHandsEvent.enable) return;
+        if (!CommandMenuInitializer.config.model().onSneakingAndSwapHandsEvent.enable) return;
 
         if (playerActionC2SPacket.getAction() == PlayerActionC2SPacket.Action.SWAP_ITEM_WITH_OFFHAND
             && player.isSneaking()) {
-            CommandMenuInitializer.executeOnShiftAndSwapHandsCommands(player);
+            CommandMenuInitializer.executeOnSneakingAndSwapHandsCommands(player);
             ci.cancel();
         }
     }
