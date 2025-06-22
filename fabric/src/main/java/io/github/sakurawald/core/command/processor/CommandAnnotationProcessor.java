@@ -13,7 +13,7 @@ import io.github.sakurawald.core.command.structure.CommandDescriptor;
 import io.github.sakurawald.core.command.structure.CommandRequirementDescriptor;
 import io.github.sakurawald.core.command.structure.RetargetCommandDescriptor;
 import io.github.sakurawald.core.event.impl.CommandEvents;
-import io.github.sakurawald.core.manager.Managers;
+import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import lombok.Getter;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.ServerCommandSource;
@@ -70,7 +70,7 @@ public class CommandAnnotationProcessor {
     }
 
     private static void processClasses() {
-        Managers.getModuleManager().getModuleRegistry().values()
+        ModuleManager.MODULE_INITIALIZER_BY_CLASS.values()
             .stream()
             .filter(Objects::nonNull)
             .forEach(initializer -> processClass(initializer.getClass()));

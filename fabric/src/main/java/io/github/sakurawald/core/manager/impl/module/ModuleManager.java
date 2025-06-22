@@ -28,20 +28,21 @@ public class ModuleManager extends BaseManager {
 
     private static final Set<String> MODULE_PATHS = new HashSet<>(ReflectionUtil.getGraph(ReflectionUtil.MODULE_GRAPH_FILE_NAME));
 
-    private final Map<Class<? extends ModuleInitializer>, ModuleInitializer> moduleRegistry = new HashMap<>();
-    private final Map<List<String>, Boolean> module2enable = new HashMap<>();
+    public static final Map<List<String>, Boolean> MODULE_ENABLE_STATUS = new HashMap<>();
+    private static final Map<String, String> CLASS_NAME_2_MODULE_PATH_STRING = new HashMap<>();
+    public static final Map<Class<? extends ModuleInitializer>, ModuleInitializer> MODULE_INITIALIZER_BY_CLASS = new HashMap<>();
+    public static final Map<String, ModuleInitializer> MODULE_INITIALIZER_BY_MODULE_PATH_STRING = new HashMap<>();
 
-    private static final Map<String, String> className2modulePathString = new HashMap<>();
 
     public static String computeModulePathAsString(@NotNull String className) {
         /* This function wrap the computeModulePathAsList function, and providing a cache layer. */
-        String modulePathString = className2modulePathString.get(className);
+        String modulePathString = CLASS_NAME_2_MODULE_PATH_STRING.get(className);
         if (modulePathString != null) {
             return modulePathString;
         }
 
         String result = joinModulePath(ModuleManager.computeModulePathAsList(className));
-        className2modulePathString.put(className, result);
+        CLASS_NAME_2_MODULE_PATH_STRING.put(className, result);
         return result;
     }
 
@@ -129,12 +130,14 @@ public class ModuleManager extends BaseManager {
      * If a module is enabled, but the module doesn't extend AbstractModule, then this method will also return null, but the module doesn't extend AbstractModule, then this method will also return null.
      */
     public <T extends ModuleInitializer> void initializeModuleInitializer(@NotNull Class<T> clazz) {
-        if (!moduleRegistry.containsKey(clazz)) {
-            if (shouldWeEnableThis(clazz.getName())) {
+        if (!MODULE_INITIALIZER_BY_CLASS.containsKey(clazz)) {
+            String className = clazz.getName();
+            if (shouldWeEnableThis(className)) {
                 try {
                     ModuleInitializer moduleInitializer = clazz.getDeclaredConstructor().newInstance();
                     moduleInitializer.doInitialize();
-                    moduleRegistry.put(clazz, moduleInitializer);
+                    MODULE_INITIALIZER_BY_CLASS.put(clazz, moduleInitializer);
+                    MODULE_INITIALIZER_BY_MODULE_PATH_STRING.put(computeModulePathAsString(className), moduleInitializer);
                 } catch (Exception e) {
                     LogUtil.error("Failed to invoke doInitialize() of module initializer of module {}", clazz.getSimpleName(), e);
                 }
@@ -143,7 +146,7 @@ public class ModuleManager extends BaseManager {
     }
 
     public void reloadModuleInitializers() {
-        moduleRegistry.values().forEach(initializer -> {
+        MODULE_INITIALIZER_BY_CLASS.values().forEach(initializer -> {
                 try {
                     initializer.doReload();
                 } catch (Exception e) {
@@ -156,12 +159,12 @@ public class ModuleManager extends BaseManager {
     private void serverStartupReport() {
         /* report enabled/disabled modules */
         List<String> enabledModuleList = new ArrayList<>();
-        module2enable.forEach((module, enable) -> {
+        MODULE_ENABLE_STATUS.forEach((module, enable) -> {
             if (enable) enabledModuleList.add(joinModulePath(module));
         });
 
         enabledModuleList.sort(String::compareTo);
-        LogUtil.info("Enabled {}/{} modules -> {}", enabledModuleList.size(), module2enable.size(), enabledModuleList);
+        LogUtil.info("Enabled {}/{} modules -> {}", enabledModuleList.size(), MODULE_ENABLE_STATUS.size(), enabledModuleList);
 
         /* print first-time helper */
         if (enabledModuleList.size() == 1 || FabricLoader.getInstance().isDevelopmentEnvironment()) {
@@ -198,8 +201,8 @@ public class ModuleManager extends BaseManager {
         if (modulePath.get(0).equals(CORE_MODULE_ROOT)) return true;
 
         // cache
-        if (module2enable.containsKey(modulePath)) {
-            return module2enable.get(modulePath);
+        if (MODULE_ENABLE_STATUS.containsKey(modulePath)) {
+            return MODULE_ENABLE_STATUS.get(modulePath);
         }
 
         // check enable-supplier
@@ -226,7 +229,7 @@ public class ModuleManager extends BaseManager {
         }
 
         // cache
-        module2enable.put(modulePath, enable);
+        MODULE_ENABLE_STATUS.put(modulePath, enable);
         return enable;
     }
 

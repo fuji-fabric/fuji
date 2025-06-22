@@ -1,6 +1,5 @@
 package io.github.sakurawald.module.initializer.fuji;
 
-import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.Fuji;
 import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
@@ -48,7 +47,7 @@ import java.util.List;
 public class FujiInitializer extends ModuleInitializer {
 
     @CommandNode("reload")
-    private static int $reload(@CommandSource CommandContext<ServerCommandSource> ctx) {
+    private static int $reload(@CommandSource ServerCommandSource source) {
         // Reload main-control file.
         Configs.mainControlConfig.readStorage();
 
@@ -58,14 +57,14 @@ public class FujiInitializer extends ModuleInitializer {
         // Reload jobs.
         BaseJob.rescheduleAll();
 
-        TextHelper.sendMessageByKey(ctx.getSource(), "reload");
+        TextHelper.sendMessageByKey(source, "reload");
         return CommandHelper.Return.SUCCESS;
     }
 
     @CommandNode("user-guide")
-    private static int $userGuide(@CommandSource CommandContext<ServerCommandSource> ctx) {
+    private static int $userGuide(@CommandSource ServerCommandSource source) {
         ModuleManager.printUserGuide();
-        TextHelper.sendMessageByKey(ctx.getSource(), "fuji.user_guide");
+        TextHelper.sendMessageByKey(source, "fuji.user_guide");
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -108,7 +107,7 @@ public class FujiInitializer extends ModuleInitializer {
     @CommandNode("inspect modules")
     @Document("Inspect all enabled/disabled modules of fuji.")
     private static int $listModules(@CommandSource ServerPlayerEntity player) {
-        List<Pair<String, Boolean>> list = Managers.getModuleManager().getModule2enable()
+        List<Pair<String, Boolean>> list = ModuleManager.MODULE_ENABLE_STATUS
             .entrySet()
             .stream()
             .map(it -> new Pair<>(ModuleManager.joinModulePath(it.getKey()), it.getValue()))
@@ -135,16 +134,16 @@ public class FujiInitializer extends ModuleInitializer {
 
     @CommandNode("inspect argument-types")
     @Document("Inspect all argument types registered by fuji.")
-    private static int listCommandArgumentType(@CommandSource CommandContext<ServerCommandSource> ctx) {
+    private static int listCommandArgumentType(@CommandSource ServerCommandSource source) {
         List<BaseArgumentTypeAdapter> adapters = BaseArgumentTypeAdapter.getAdapters();
 
-        if (ctx.getSource().isExecutedByPlayer()) {
-            new ArgumentTypeGui(ctx.getSource().getPlayer(), adapters, 0).open();
+        if (source.isExecutedByPlayer()) {
+            new ArgumentTypeGui(source.getPlayer(), adapters, 0).open();
         } else {
             adapters.forEach(adapter -> adapter.getTypeStrings().forEach(typeString -> {
                 String typeClass = adapter.getTypeClasses().get(0).getSimpleName();
                 String string2types = "%s -> %s".formatted(typeString, typeClass);
-                ctx.getSource().sendMessage(Text.literal(string2types));
+                source.sendMessage(Text.literal(string2types));
             }));
         }
 

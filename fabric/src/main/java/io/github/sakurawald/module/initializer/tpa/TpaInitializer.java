@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.tpa;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
@@ -20,6 +21,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
+@Document("This module provides `/tpa` and `/tpahere` commands.")
 public class TpaInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<TpaConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, TpaConfigModel.class);
