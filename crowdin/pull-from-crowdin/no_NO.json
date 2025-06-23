@@ -4,6 +4,7 @@
   "reject.button": "<red>[❌]</red>",
   "accept.circle": "<green>●</green>",
   "reject.circle": "<red>●</red>",
+  "data.fetching": "<red>The data is now fetching, please wait...",
   "add": "<#FFA1F5>Legg til",
   "afk.kick": "<red>Du har blitt sparket for å være afk.",
   "afk.on": "<gold>Afk modus: på",
