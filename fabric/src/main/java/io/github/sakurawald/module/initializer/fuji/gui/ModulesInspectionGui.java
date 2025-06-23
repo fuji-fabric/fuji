@@ -44,10 +44,10 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
         String modulePathString = entity.getKey();
         Class<? extends ModuleInitializer> moduleInitializerClass = ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING.getOrDefault(modulePathString, null);
         if (moduleInitializerClass != null) {
-            @Nullable String classDocument = ReflectionUtil.getClassDocument(moduleInitializerClass);
+            String classDocument = getDocumentString(moduleInitializerClass);
             if (classDocument != null) {
                 lore.add(TextHelper.TEXT_EMPTY);
-                lore.addAll(TextHelper.getTextListByValue(getPlayer(), classDocument));
+                lore.addAll(TextHelper.getDocumentTextList(getPlayer(), classDocument ));
             }
         }
 
@@ -58,6 +58,11 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
             .setName(itemName)
             .setLore(lore)
             .build();
+    }
+
+    private static @Nullable String getDocumentString(Class<? extends ModuleInitializer> moduleInitializerClass) {
+        @Nullable String classDocument = ReflectionUtil.getClassDocument(moduleInitializerClass);
+        return classDocument;
     }
 
     @Override

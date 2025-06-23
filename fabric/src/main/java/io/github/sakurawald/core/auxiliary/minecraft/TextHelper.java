@@ -35,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @UtilityClass
 public class TextHelper {
@@ -590,5 +592,22 @@ public class TextHelper {
 
     public static Text parseString(NodeParser parser, String input) {
         return parser.parseNode(input).toText();
+    }
+
+    private static String decorateDocumentString(String documentString) {
+        return Arrays.stream(documentString
+                .split("\n"))
+            .map(line -> "<#FFA1F5>" + line)
+            .collect(Collectors.joining("\n"));
+    }
+
+    public static Text getDocumentText(Object audience, String value) {
+        value = decorateDocumentString(value);
+        return getTextByValue(audience, value);
+    }
+
+    public static List<Text> getDocumentTextList(Object audience, String value) {
+        value = decorateDocumentString(value);
+        return getTextListByValue(audience, value);
     }
 }

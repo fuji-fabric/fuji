@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.fuji.structure;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import lombok.Data;
@@ -79,6 +80,15 @@ public class InspectingObject {
         /* Call the implementation of toString() of the object. */
         // NOTE: value.toString() may throw NPE.
         return String.valueOf(value);
+    }
+
+    public @Nullable String getDocumentString() {
+        if (this.object instanceof Field field) {
+            Document documentAnnotation = field.getAnnotation(Document.class);
+            return documentAnnotation != null ? documentAnnotation.value() : null;
+        }
+
+        return null;
     }
 
     public Object getObjectValue() {
@@ -205,6 +215,13 @@ public class InspectingObject {
         /* Add click prompt. */
         if (this.canGoInside()) {
             lore.add(TextHelper.getTextByKey(player, "prompt.click.see_inside"));
+        }
+
+        /* Add @Document text. */
+        String documentString = this.getDocumentString();
+        if (documentString != null) {
+            lore.add(TextHelper.TEXT_EMPTY);
+            lore.add(TextHelper.getDocumentText(player, documentString));
         }
 
         return lore;
