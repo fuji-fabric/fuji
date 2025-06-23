@@ -91,7 +91,7 @@ public class FujiInitializer extends ModuleInitializer {
 
     @CommandNode("debug")
     @Document("Switch the `log_debug_message` option.")
-    private static int debug(@CommandSource ServerCommandSource source) {
+    private static int $debug(@CommandSource ServerCommandSource source) {
         var config = Configs.mainControlConfig.model().core.debug;
         config.log_debug_messages = !config.log_debug_messages;
 
@@ -101,7 +101,7 @@ public class FujiInitializer extends ModuleInitializer {
 
     @CommandNode("inspect server-commands")
     @Document("Inspect all commands registered in server.")
-    private static int $listServerCommands(@CommandSource ServerPlayerEntity player) {
+    private static int $inspectServerCommands(@CommandSource ServerPlayerEntity player) {
         List<ServerCommandNodeWrapper> entities = CommandHelper.getCommandNodes()
             .stream()
             .map(ServerCommandNodeWrapper::new)
@@ -113,7 +113,7 @@ public class FujiInitializer extends ModuleInitializer {
 
     @CommandNode("inspect modules")
     @Document("Inspect all enabled/disabled modules of fuji.")
-    private static int $listModules(@CommandSource ServerPlayerEntity player) {
+    private static int $inspectModules(@CommandSource ServerPlayerEntity player) {
         List<Pair<String, Boolean>> list = ModuleManager.MODULE_ENABLE_STATUS
             .entrySet()
             .stream()
@@ -127,7 +127,7 @@ public class FujiInitializer extends ModuleInitializer {
 
     @CommandNode("inspect fuji-commands")
     @Document("Inspect all commands registered by fuji.")
-    private static int $listFujiCommands(@CommandSource ServerPlayerEntity player) {
+    private static int $inspectFujiCommands(@CommandSource ServerPlayerEntity player) {
         List<CommandDescriptor> descriptors = CommandAnnotationProcessor
             .descriptors
             .stream()
@@ -141,7 +141,7 @@ public class FujiInitializer extends ModuleInitializer {
 
     @CommandNode("inspect argument-types")
     @Document("Inspect all argument types registered by fuji.")
-    private static int listCommandArgumentType(@CommandSource ServerCommandSource source) {
+    private static int $inspectCommandArgumentTypes(@CommandSource ServerCommandSource source) {
         List<BaseArgumentTypeAdapter> adapters = BaseArgumentTypeAdapter.getAdapters();
 
         if (source.isExecutedByPlayer()) {
@@ -159,7 +159,7 @@ public class FujiInitializer extends ModuleInitializer {
 
     @CommandNode("inspect configurations")
     @Document("Inspect all loaded configurations files.")
-    private static int listConfiguration(@CommandSource ServerPlayerEntity player) {
+    private static int $inspectConfigurations(@CommandSource ServerPlayerEntity player) {
         List<BaseConfigurationHandler<?>> list = BaseConfigurationHandler.handlers.stream()
             .filter(it -> it instanceof ObjectConfigurationHandler<?>)
             .sorted(Comparator.comparing(BaseConfigurationHandler::getPath))
@@ -171,7 +171,7 @@ public class FujiInitializer extends ModuleInitializer {
 
     @CommandNode("inspect registry")
     @Document("Inspect all registries in server.")
-    private static int listRegistry(@CommandSource ServerPlayerEntity player) {
+    private static int $inspectRegistry(@CommandSource ServerPlayerEntity player) {
         List<Identifier> staticRegistries = Registries.REGISTRIES.getKeys().stream()
             .map(RegistryKey::getValue)
             .toList();

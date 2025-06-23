@@ -17,6 +17,9 @@ public class ServerCommandNodeWrapper extends CommandNodeWrapper {
     }
 
     private String guessWhichPackageTheCommandIsFrom(CommandNode<?> commandNode) {
+        // NOTE: In this solution, we only go deeper to find the possible package.
+        // For some commands that redirect to its parent node, this solution fails.
+
         /* Try to find the package from CommandNode. */
         Command<?> commandFunction = commandNode.getCommand();
         if (commandFunction != null) {
@@ -32,8 +35,8 @@ public class ServerCommandNodeWrapper extends CommandNodeWrapper {
             }
         }
 
-        /* We need to go deeper. (Maybe go upper in some case, to find a solution?) */
-        // NOTE: Some commands like `/execute run` are hard to handle.
+        /* We need to go deeper. */
+        // NOTE: We failed to guess the package for some commands, like `/execute run` command.
         for (CommandNode<?> child : commandNode.getChildren()) {
             String result = guessWhichPackageTheCommandIsFrom(child);
             if (!result.equals(UNKNOWN_PACKAGE)) {

@@ -20,7 +20,6 @@ import java.util.List;
 
 public class ServerCommandsGui extends PagedGui<ServerCommandNodeWrapper> {
 
-
     public ServerCommandsGui(ServerPlayerEntity player, @NotNull List<ServerCommandNodeWrapper> entities, int pageIndex) {
         super(null, player, TextHelper.getTextByKey(player, "fuji.inspect.server_commands.gui.title"), entities, pageIndex);
 

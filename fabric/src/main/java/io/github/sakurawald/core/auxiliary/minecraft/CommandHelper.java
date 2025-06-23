@@ -72,9 +72,10 @@ public class CommandHelper {
     }
 
     private static void getCommandNodes(List<CommandNode<ServerCommandSource>> collector, CommandNode<ServerCommandSource> parent) {
-        parent.getChildren().forEach(it -> getCommandNodes(collector, it));
+        parent.getChildren()
+            .forEach(it -> getCommandNodes(collector, it));
 
-        // ignore the root command node
+        // Exclude the `root command node` from the result.
         if (!parent.getName().isEmpty()) {
             collector.add(parent);
         }
