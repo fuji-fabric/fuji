@@ -20,12 +20,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class JavaObjectGui extends PagedGui<InspectingObject> {
+public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
 
     private final String fileRelativePath;
     private final String walkingPath;
 
-    public JavaObjectGui(@Nullable SimpleGui parent, @Nullable Object objectToInspect, ServerPlayerEntity player, @NotNull List<InspectingObject> entities, int pageIndex, String fileRelativePath, @NotNull String walkingPath) {
+    public JavaObjectInspectionGui(@Nullable SimpleGui parent, @Nullable Object objectToInspect, ServerPlayerEntity player, @NotNull List<InspectingObject> entities, int pageIndex, String fileRelativePath, @NotNull String walkingPath) {
         super(parent, player, TextHelper.getTextByKey(player, "object.gui.title", walkingPath), entities, pageIndex);
 
         /* Pass the variables along the inspection path. */
@@ -46,7 +46,7 @@ public class JavaObjectGui extends PagedGui<InspectingObject> {
 
     @Override
     protected PagedGui<InspectingObject> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<InspectingObject> entities, int pageIndex) {
-        return new JavaObjectGui(getParent(), null, player, entities, pageIndex, this.fileRelativePath, this.walkingPath);
+        return new JavaObjectInspectionGui(getParent(), null, player, entities, pageIndex, this.fileRelativePath, this.walkingPath);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class JavaObjectGui extends PagedGui<InspectingObject> {
                 newWalkingPath = StringUtils.strip(newWalkingPath, ".");
 
                 /* Make the deeper GUI and open it. */
-                new JavaObjectGui(getGui(), objectToInspect, getPlayer(), newEntities, 0, this.fileRelativePath, newWalkingPath)
+                new JavaObjectInspectionGui(getGui(), objectToInspect, getPlayer(), newEntities, 0, this.fileRelativePath, newWalkingPath)
                     .open();
             });
 

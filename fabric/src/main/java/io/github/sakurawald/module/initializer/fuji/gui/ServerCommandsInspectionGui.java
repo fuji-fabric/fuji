@@ -18,9 +18,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServerCommandsGui extends PagedGui<ServerCommandNodeWrapper> {
+public class ServerCommandsInspectionGui extends PagedGui<ServerCommandNodeWrapper> {
 
-    public ServerCommandsGui(ServerPlayerEntity player, @NotNull List<ServerCommandNodeWrapper> entities, int pageIndex) {
+    public ServerCommandsInspectionGui(ServerPlayerEntity player, @NotNull List<ServerCommandNodeWrapper> entities, int pageIndex) {
         super(null, player, TextHelper.getTextByKey(player, "fuji.inspect.server_commands.gui.title"), entities, pageIndex);
 
         getFooter().setSlot(4, GuiHelper.makeHelpButton(player)
@@ -29,7 +29,7 @@ public class ServerCommandsGui extends PagedGui<ServerCommandNodeWrapper> {
 
     @Override
     protected PagedGui<ServerCommandNodeWrapper> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<ServerCommandNodeWrapper> entities, int pageIndex) {
-        return new ServerCommandsGui(player, entities, pageIndex);
+        return new ServerCommandsInspectionGui(player, entities, pageIndex);
     }
 
     @Override

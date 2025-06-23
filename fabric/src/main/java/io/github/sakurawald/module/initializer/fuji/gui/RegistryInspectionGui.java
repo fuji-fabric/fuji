@@ -20,18 +20,18 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public class RegistryGui extends PagedGui<Identifier> {
+public class RegistryInspectionGui extends PagedGui<Identifier> {
 
     private final boolean isMetaRegistry;
 
-    public RegistryGui(@Nullable SimpleGui parent, ServerPlayerEntity player, boolean isMetaRegistry, @NotNull List<Identifier> entities, int pageIndex) {
+    public RegistryInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, boolean isMetaRegistry, @NotNull List<Identifier> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "registry.list.gui.title"), entities, pageIndex);
         this.isMetaRegistry = isMetaRegistry;
     }
 
     @Override
     protected PagedGui<Identifier> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<Identifier> entities, int pageIndex) {
-        return new RegistryGui(parent, player, this.isMetaRegistry, entities, pageIndex);
+        return new RegistryInspectionGui(parent, player, this.isMetaRegistry, entities, pageIndex);
     }
 
     @SuppressWarnings("UnnecessaryReturnStatement")
@@ -50,7 +50,7 @@ public class RegistryGui extends PagedGui<Identifier> {
                         .map(RegistryKey::getValue)
                         .sorted()
                         .toList();
-                    new RegistryGui(getGui(), getPlayer(), false, list, 0).open();
+                    new RegistryInspectionGui(getGui(), getPlayer(), false, list, 0).open();
                     return;
                 }
 
@@ -58,7 +58,7 @@ public class RegistryGui extends PagedGui<Identifier> {
                 Optional<RegistryLoader.Entry<?>> first = RegistryLoader.DYNAMIC_REGISTRIES.stream().filter(it -> it.comp_985().getValue().equals(entity)).findFirst();
                 if (first.isPresent()) {
                     List<Identifier> list = RegistryHelper.ofRegistry(first.get().comp_985()).getIds().stream().toList();
-                    new RegistryGui(getGui(), getPlayer(), false, list, 0).open();
+                    new RegistryInspectionGui(getGui(), getPlayer(), false, list, 0).open();
                     return;
                 }
 

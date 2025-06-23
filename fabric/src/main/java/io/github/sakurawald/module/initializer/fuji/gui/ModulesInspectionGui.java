@@ -21,15 +21,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ModulesGui extends PagedGui<Pair<String, Boolean>> {
+public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
 
-    public ModulesGui(ServerPlayerEntity player, @NotNull List<Pair<String, Boolean>> entities, int pageIndex) {
+    public ModulesInspectionGui(ServerPlayerEntity player, @NotNull List<Pair<String, Boolean>> entities, int pageIndex) {
         super(null, player, TextHelper.getTextByKey(player, "fuji.inspect.modules.gui.title"), entities, pageIndex);
     }
 
     @Override
     protected PagedGui<Pair<String, Boolean>> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<Pair<String, Boolean>> entities, int pageIndex) {
-        return new ModulesGui(player, entities, pageIndex);
+        return new ModulesInspectionGui(player, entities, pageIndex);
     }
 
     @Override

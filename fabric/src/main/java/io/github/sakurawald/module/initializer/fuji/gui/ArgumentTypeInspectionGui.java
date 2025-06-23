@@ -15,15 +15,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ArgumentTypeGui extends PagedGui<BaseArgumentTypeAdapter> {
+public class ArgumentTypeInspectionGui extends PagedGui<BaseArgumentTypeAdapter> {
 
-    public ArgumentTypeGui(ServerPlayerEntity player, @NotNull List<BaseArgumentTypeAdapter> entities, int pageIndex) {
+    public ArgumentTypeInspectionGui(ServerPlayerEntity player, @NotNull List<BaseArgumentTypeAdapter> entities, int pageIndex) {
         super(null, player, TextHelper.getTextByKey(player, "command.argument.type.gui.title"), entities, pageIndex);
     }
 
     @Override
     protected PagedGui<BaseArgumentTypeAdapter> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<BaseArgumentTypeAdapter> entities, int pageIndex) {
-        return new ArgumentTypeGui(player, entities, pageIndex);
+        return new ArgumentTypeInspectionGui(player, entities, pageIndex);
     }
 
     @Override

@@ -20,11 +20,11 @@ import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.core.structure.Pair;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.fuji.gui.AboutGui;
-import io.github.sakurawald.module.initializer.fuji.gui.ArgumentTypeGui;
-import io.github.sakurawald.module.initializer.fuji.gui.ConfigurationHandlerGui;
-import io.github.sakurawald.module.initializer.fuji.gui.ModulesGui;
-import io.github.sakurawald.module.initializer.fuji.gui.RegistryGui;
-import io.github.sakurawald.module.initializer.fuji.gui.ServerCommandsGui;
+import io.github.sakurawald.module.initializer.fuji.gui.ArgumentTypeInspectionGui;
+import io.github.sakurawald.module.initializer.fuji.gui.ConfigurationHandlerInspectionGui;
+import io.github.sakurawald.module.initializer.fuji.gui.ModulesInspectionGui;
+import io.github.sakurawald.module.initializer.fuji.gui.RegistryInspectionGui;
+import io.github.sakurawald.module.initializer.fuji.gui.ServerCommandsInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.structure.ServerCommandNodeWrapper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModMetadata;
@@ -107,7 +107,7 @@ public class FujiInitializer extends ModuleInitializer {
             .map(ServerCommandNodeWrapper::new)
             .sorted(Comparator.comparing(ServerCommandNodeWrapper::getPath))
             .toList();
-        new ServerCommandsGui(player, entities, 0).open();
+        new ServerCommandsInspectionGui(player, entities, 0).open();
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -121,7 +121,7 @@ public class FujiInitializer extends ModuleInitializer {
             .sorted(Comparator.comparing(Pair::getKey))
             .toList();
 
-        new ModulesGui(player, list, 0).open();
+        new ModulesInspectionGui(player, list, 0).open();
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -145,7 +145,7 @@ public class FujiInitializer extends ModuleInitializer {
         List<BaseArgumentTypeAdapter> adapters = BaseArgumentTypeAdapter.getAdapters();
 
         if (source.isExecutedByPlayer()) {
-            new ArgumentTypeGui(source.getPlayer(), adapters, 0).open();
+            new ArgumentTypeInspectionGui(source.getPlayer(), adapters, 0).open();
         } else {
             adapters.forEach(adapter -> adapter.getTypeStrings().forEach(typeString -> {
                 String typeClass = adapter.getTypeClasses().get(0).getSimpleName();
@@ -165,7 +165,7 @@ public class FujiInitializer extends ModuleInitializer {
             .sorted(Comparator.comparing(BaseConfigurationHandler::getPath))
             .toList();
 
-        new ConfigurationHandlerGui(null, player, list, 0)
+        new ConfigurationHandlerInspectionGui(null, player, list, 0)
             .open();
         return CommandHelper.Return.SUCCESS;
     }
@@ -184,7 +184,7 @@ public class FujiInitializer extends ModuleInitializer {
         identifiers.addAll(dynamicRegistries);
         identifiers.sort(Comparator.comparing(Identifier::toString));
 
-        new RegistryGui(null, player, true, identifiers, 0).open();
+        new RegistryInspectionGui(null, player, true, identifiers, 0).open();
         return CommandHelper.Return.SUCCESS;
     }
 }
