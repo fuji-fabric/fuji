@@ -369,6 +369,7 @@
   "object.top_level": "<blue>頂層 -> %s",
   "object.type": "<blue>Type: `%s`",
   "object.value": "<blue>Value: `%s`",
+  "prompt.click.see_inside": "<dark_green>Click to see inside.",
   "job.list.gui.title": "<blue>排程",
   "job.props.enabled": "<blue>已啟用：%s",
   "job.props.left_times": "<blue>剩餘次數：%s",
