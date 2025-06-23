@@ -4,6 +4,7 @@
   "reject.button": "<red>[❌]</red>",
   "accept.circle": "<green>●</green>",
   "reject.circle": "<red>●</red>",
+  "data.fetching": "<red>The data is now fetching, please wait...",
   "add": "<#FFA1F5>Додати",
   "afk.kick": "<red>Вас кікнули через перебування в AFK.",
   "afk.on": "<gold>режим AFK: увімкнено",

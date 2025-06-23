@@ -4,6 +4,7 @@
   "reject.button": "<red>[❌]</red>",
   "accept.circle": "<green>●</green>",
   "reject.circle": "<red>●</red>",
+  "data.fetching": "<red>The data is now fetching, please wait...",
   "add": "<#FFA1F5>Adaugă",
   "afk.kick": "<red>Ai fost dat afara pentru ca esti afk.",
   "afk.on": "<gold>Mod Afk: pe",

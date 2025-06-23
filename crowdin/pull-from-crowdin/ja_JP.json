@@ -4,6 +4,7 @@
   "reject.button": "<red>[❌]</red>",
   "accept.circle": "<green>●</green>",
   "reject.circle": "<red>●</red>",
+  "data.fetching": "<red>The data is now fetching, please wait...",
   "add": "<#FFA1F5>追加",
   "afk.kick": "<red>あなたは攻撃されてキックされました。",
   "afk.on": "<gold>Afkモード: オン",

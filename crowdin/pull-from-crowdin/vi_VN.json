@@ -4,6 +4,7 @@
   "reject.button": "<red>[❌]</red>",
   "accept.circle": "<green>●</green>",
   "reject.circle": "<red>●</red>",
+  "data.fetching": "<red>The data is now fetching, please wait...",
   "add": "<#FFA1F5>Thêm",
   "afk.kick": "<red>Bạn đã bị mời ra vì afk.",
   "afk.on": "<gold>Chế độ afk: đã bật",
