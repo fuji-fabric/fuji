@@ -15,7 +15,7 @@ public class GlobalMixinConfigPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, @NotNull String mixinClassName) {
-        return Managers.getModuleManager().shouldWeEnableThis(mixinClassName);
+        return Managers.getModuleManager().shouldWeLoadThis(mixinClassName);
     }
 
     @Override

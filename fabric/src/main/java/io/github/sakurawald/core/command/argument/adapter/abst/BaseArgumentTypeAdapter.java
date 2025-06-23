@@ -42,7 +42,7 @@ public abstract class BaseArgumentTypeAdapter {
 
         ReflectionUtil.getGraph(ReflectionUtil.ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME)
             .stream()
-            .filter(className -> Managers.getModuleManager().shouldWeEnableThis(className))
+            .filter(className -> Managers.getModuleManager().shouldWeLoadThis(className))
             .forEach(className -> {
                 try {
                     /* make instance of type adapter */

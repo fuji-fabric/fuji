@@ -122,7 +122,7 @@ public class ModuleManager extends BaseManager {
                     ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING.put(modulePathString, clazz);
 
                     /* Initialize the module initializer. */
-                    boolean enable = Managers.getModuleManager().shouldWeEnableThis(className);
+                    boolean enable = Managers.getModuleManager().shouldWeLoadThis(className);
                     if (!enable) return;
                     this.initializeModuleInitializer(clazz);
                 } catch (Exception e) {
@@ -137,7 +137,7 @@ public class ModuleManager extends BaseManager {
     public <T extends ModuleInitializer> void initializeModuleInitializer(@NotNull Class<T> clazz) {
         if (!MODULE_INITIALIZER_BY_CLASS.containsKey(clazz)) {
             String className = clazz.getName();
-            if (shouldWeEnableThis(className)) {
+            if (shouldWeLoadThis(className)) {
                 try {
                     ModuleInitializer moduleInitializer = clazz.getDeclaredConstructor().newInstance();
                     moduleInitializer.doInitialize();
@@ -196,11 +196,11 @@ public class ModuleManager extends BaseManager {
         LogUtil.info(userGuide);
     }
 
-    public boolean shouldWeEnableThis(String className) {
-        return shouldWeEnableThis(computeModulePathAsList(className));
+    public boolean shouldWeLoadThis(String className) {
+        return shouldWeLoadThis(computeModulePathAsList(className));
     }
 
-    private boolean shouldWeEnableThis(@NotNull List<String> modulePath) {
+    private boolean shouldWeLoadThis(@NotNull List<String> modulePath) {
         if (Configs.mainControlConfig.model().core.debug.disable_all_modules) return false;
         if (modulePath.get(0).equals(CORE_MODULE_ROOT)) return true;
 
