@@ -1,5 +1,3 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
-- [core] feature: optimize the performance of logging.
-- [fuji] feature: add self-document for all `modules`. (Issue `/fuji inspect modules` command to see it)
-- [fuji] feature: now will display the `from package` information for all server commands. (Issue `/fuji inspect server-commands` to see it)
+- [head] feature: now will send the `data fetching` message when the `head category` data is empty. (For the first time setup)

@@ -48,6 +48,14 @@ public class HeadGui extends SimpleGui {
     private void placeCategoryButton(int slotIndex, @NotNull Category category) {
         this.setSlot(slotIndex, category.toItemStack(player), (a, b, c, d) -> {
             List<Head> entities = new ArrayList<>(HeadProvider.getLoadedHeads().get(category));
+
+            /* Wait for data fetching. */
+            if (entities.isEmpty()) {
+                TextHelper.sendMessageByKey(getPlayer(), "data.fetching");
+                close();
+                return;
+            }
+
             Text title = category.getText(player);
             new CategoryHeadsGui(this, player, title, entities, 0)
                 .open();

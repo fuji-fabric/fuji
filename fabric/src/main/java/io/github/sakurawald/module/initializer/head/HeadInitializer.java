@@ -42,7 +42,8 @@ public class HeadInitializer extends ModuleInitializer {
     @CommandNode("gui")
     @Document("Open the head shop GUI.")
     private static int $gui(@CommandSource ServerPlayerEntity player) {
-        new HeadGui(player).open();
+        new HeadGui(player)
+            .open();
         return CommandHelper.Return.SUCCESS;
     }
 }
