@@ -367,7 +367,7 @@
   "fuji.inspect.configuration.path": "<blue>Path: `%s`",
   "object.gui.title": "<blue>Path: <yellow>%s</yellow>",
   "object.top_level": "<blue>Top Level -> %s",
-  "object.field.name": "<yellow>%s",
+  "object.name": "<yellow>%s",
   "object.type": "<blue>Type: `%s`",
   "object.value": "<blue>Value: <i><yellow>%s</yellow></i>",
   "prompt.click.see_inside": "<dark_green><i>Click to see inside.",
