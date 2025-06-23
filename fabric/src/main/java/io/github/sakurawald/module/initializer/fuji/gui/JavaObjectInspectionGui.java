@@ -64,8 +64,6 @@ public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
                 String objectName = entity.getObjectName();
                 List<InspectingObject> newEntities = new ArrayList<>();
 
-                LogUtil.info("value = {}, class = {}", objectToInspect, objectToInspect.getClass().getName());
-
                 /* Special case for Iterable, Map and Map.Entry types.  */
                 if (Iterable.class.isAssignableFrom(objectToInspect.getClass())) {
                     newEntities = ((Collection<?>) objectToInspect)
