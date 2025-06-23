@@ -3,7 +3,6 @@ package io.github.sakurawald.module.initializer.fuji.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.gui.PagedGui;
@@ -55,58 +54,60 @@ public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
             .setName(entity.computeNameText(getPlayer()))
             .setItem(entity.computeItem())
             .setLore(entity.computeLore(getPlayer()))
-            .setCallback(() -> {
-                /* We can't go into the inner of an atom. */
-                if (!entity.canGoInside()) return;
-
-                /* Let's go deeper. */
-                Object objectToInspect = entity.getObjectValue();
-                String objectName = entity.getObjectName();
-                List<InspectingObject> newEntities = new ArrayList<>();
-
-                /* Special case for Iterable, Map and Map.Entry types.  */
-                if (Iterable.class.isAssignableFrom(objectToInspect.getClass())) {
-                    newEntities = ((Collection<?>) objectToInspect)
-                        .stream()
-                        .map(element -> new InspectingObject(element, null, "ELT"))
-                        .toList();
-
-                    objectToInspect = null;
-                } else if (Map.class.isAssignableFrom(objectToInspect.getClass())) {
-                    newEntities = ((Map<?, ?>) objectToInspect)
-                        .entrySet()
-                        .stream()
-                        .map(entry -> {
-                            // NOTE: For json, you can only have `string type` key.
-                            String jsonObjectKeyName = null;
-                            if (String.class.isAssignableFrom(entry.getKey().getClass())) {
-                                jsonObjectKeyName = "\"" + entry.getKey() + "\"";
-                            }
-
-                            return new InspectingObject(entry, null, jsonObjectKeyName);
-                        })
-                        .toList();
-
-                    objectToInspect = null;
-                } else if (Map.Entry.class.isAssignableFrom(objectToInspect.getClass())) {
-                    Map.Entry<?, ?> entry = (Map.Entry<?, ?>) objectToInspect;
-                    InspectingObject entryKeyObject = new InspectingObject(entry.getKey(), null, "KEY");
-                    InspectingObject entryValueObject = new InspectingObject(entry.getValue(), null, "VALUE");
-                    newEntities = List.of(entryKeyObject, entryValueObject);
-
-                    objectToInspect = null;
-                }
-
-                /* Compute the new walking path. */
-                String newWalkingPath = this.walkingPath + "." + objectName;
-                newWalkingPath = StringUtils.strip(newWalkingPath, ".");
-
-                /* Make the deeper GUI and open it. */
-                new JavaObjectInspectionGui(getGui(), objectToInspect, getPlayer(), newEntities, 0, this.fileRelativePath, newWalkingPath)
-                    .open();
-            });
+            .setCallback(() -> onClickToGoInside(entity));
 
         return guiElementBuilder.build();
+    }
+
+    private void onClickToGoInside(InspectingObject entity) {
+        /* We can't go inside an atom. */
+        if (!entity.canGoInside()) return;
+
+        /* Let's go deeper. */
+        Object objectToInspect = entity.getObjectValue();
+        String objectName = entity.getObjectName();
+        List<InspectingObject> newEntities = new ArrayList<>();
+
+        /* Special case for Iterable, Map and Map.Entry types.  */
+        if (Iterable.class.isAssignableFrom(objectToInspect.getClass())) {
+            newEntities = ((Collection<?>) objectToInspect)
+                .stream()
+                .map(element -> new InspectingObject(element, null, "ELT"))
+                .toList();
+
+            objectToInspect = null;
+        } else if (Map.class.isAssignableFrom(objectToInspect.getClass())) {
+            newEntities = ((Map<?, ?>) objectToInspect)
+                .entrySet()
+                .stream()
+                .map(entry -> {
+                    // NOTE: For json, you can only have `string type` key.
+                    String jsonObjectKeyName = null;
+                    if (String.class.isAssignableFrom(entry.getKey().getClass())) {
+                        jsonObjectKeyName = "\"" + entry.getKey() + "\"";
+                    }
+
+                    return new InspectingObject(entry, null, jsonObjectKeyName);
+                })
+                .toList();
+
+            objectToInspect = null;
+        } else if (Map.Entry.class.isAssignableFrom(objectToInspect.getClass())) {
+            Map.Entry<?, ?> entry = (Map.Entry<?, ?>) objectToInspect;
+            InspectingObject entryKeyObject = new InspectingObject(entry.getKey(), null, "KEY");
+            InspectingObject entryValueObject = new InspectingObject(entry.getValue(), null, "VALUE");
+            newEntities = List.of(entryKeyObject, entryValueObject);
+
+            objectToInspect = null;
+        }
+
+        /* Compute the new walking path. */
+        String newWalkingPath = this.walkingPath + "." + objectName;
+        newWalkingPath = StringUtils.strip(newWalkingPath, ".");
+
+        /* Make the deeper GUI and open it. */
+        new JavaObjectInspectionGui(getGui(), objectToInspect, getPlayer(), newEntities, 0, this.fileRelativePath, newWalkingPath)
+            .open();
     }
 
     @Override

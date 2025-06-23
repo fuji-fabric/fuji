@@ -128,7 +128,9 @@ public class InspectingObject {
     }
 
     public Text computeNameText(ServerPlayerEntity player) {
-        return TextHelper.getTextByKey(player,"object.name", this.getObjectName());
+        String objectName = this.getObjectName();
+        objectName = TextHelper.escapeTags(objectName);
+        return TextHelper.getTextByKey(player,"object.name", objectName);
     }
 
     public static List<InspectingObject> inspectJavaObject(@NotNull Object object) {
@@ -178,6 +180,10 @@ public class InspectingObject {
             || Double.class.isAssignableFrom(type)
             || double.class.isAssignableFrom(type)) {
             return Items.GLOWSTONE_DUST;
+        }
+
+        if (Enum.class.isAssignableFrom(type)) {
+            return Items.REPEATER;
         }
 
         return Items.PINK_SHULKER_BOX;

@@ -78,6 +78,7 @@ It's good to have a checklist, to avoid forgetting something.
   - In `online-mode` server.
   - Test `/back` command.
   - Test `/say hello world` command. (The SayCommand uses SignedArgument.)
+- To test `/fuji inspect configurations`, use the config files from `command_menu` module.
 
 ## Publish a new version
 
