@@ -55,7 +55,7 @@ public abstract class BaseConfigurationHandler<T> {
 
     public static final String CONFIG_JSON = "config.json";
 
-    public static final Set<BaseConfigurationHandler<?>> handlers = new HashSet<>();
+    public static final Set<BaseConfigurationHandler<?>> CONFIGURATION_HANDLERS = new HashSet<>();
 
     @Getter
     protected static Gson gson = new GsonBuilder()
@@ -150,7 +150,7 @@ public abstract class BaseConfigurationHandler<T> {
         }
 
         /* track this */
-        handlers.add(this);
+        CONFIGURATION_HANDLERS.add(this);
     }
 
     public void beforeWriteStorage() {

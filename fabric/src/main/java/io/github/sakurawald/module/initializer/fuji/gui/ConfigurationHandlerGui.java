@@ -4,9 +4,11 @@ import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.IOUtil;
+import io.github.sakurawald.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.gui.PagedGui;
+import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -30,28 +32,30 @@ public class ConfigurationHandlerGui extends PagedGui<BaseConfigurationHandler<?
 
     @Override
     protected GuiElementInterface toGuiElement(BaseConfigurationHandler<?> entity) {
-        String modelClassName = entity.getClass().getSimpleName();
-        if (modelClassName.isBlank()) {
-            modelClassName = "ANONYMOUS-CLASS";
-        }
-        Path modelPath = entity.getPath();
-        String topLevelName = IOUtil.computeRelativePath(modelPath.toFile());
+        String configModelClassName = ReflectionUtil.getSimpleClassName(entity.getClass());
+        Path configPath = entity.getPath();
+        String topLevelName = IOUtil.computeRelativePath(configPath.toFile());
+
+        String fromModule = ModuleManager.computeModulePathAsString(entity.model().getClass().getName());
+
+        List<Text> lore = List.of(
+            TextHelper.getTextByKey(getPlayer(), "from_module", fromModule)
+            , TextHelper.getTextByKey(getPlayer(), "fuji.inspect.configuration.class", configModelClassName)
+            , TextHelper.getTextByKey(getPlayer(), "fuji.inspect.configuration.path", configPath)
+        );
 
         return new GuiElementBuilder()
-            .setItem(Items.BOOKSHELF)
-            .setName(Text.literal(IOUtil.computeRelativePath(entity.getPath().toFile())))
-            .setLore(List.of(
-                TextHelper.getTextByKey(getPlayer(), "fuji.inspect.configuration.class", modelClassName)
-                , TextHelper.getTextByKey(getPlayer(), "fuji.inspect.configuration.path", modelPath)
-            ))
-            .setCallback(new JavaObjectGui(getGui(), entity.model(), getPlayer(), new ArrayList<>(), 0, topLevelName, "")::open)
+            .setItem(Items.TRAPPED_CHEST)
+            .setName(Text.literal(topLevelName))
+            .setLore(lore)
+            .setCallback(new JavaObjectGui(getGui(), entity.model(), getPlayer(), new ArrayList<>(), 0, topLevelName, ".")::open)
             .build();
     }
 
     @Override
     protected List<BaseConfigurationHandler<?>> filter(String keyword) {
         return getEntities().stream()
-            .filter(it -> it.getClass().getSimpleName().contains(keyword)
+            .filter(it -> ReflectionUtil.getSimpleClassName(it.getClass()).contains(keyword)
                 || it.getPath().toString().contains(keyword))
             .toList();
     }

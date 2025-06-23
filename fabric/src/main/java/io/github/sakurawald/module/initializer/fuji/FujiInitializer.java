@@ -78,7 +78,7 @@ public class FujiInitializer extends ModuleInitializer {
     @Document("Open fuji about gui.")
     private static int $about(@CommandSource ServerPlayerEntity player) {
         ModMetadata metadata = FabricLoader.getInstance().getModContainer(Fuji.MOD_ID)
-            .orElseThrow(() -> new IllegalStateException("failed to get the metadata of this mod."))
+            .orElseThrow(() -> new IllegalStateException("Failed to get the metadata of this mod."))
             .getMetadata();
 
         List<Person> persons = new ArrayList<>();
@@ -160,12 +160,13 @@ public class FujiInitializer extends ModuleInitializer {
     @CommandNode("inspect configurations")
     @Document("Inspect all loaded configurations files.")
     private static int $inspectConfigurations(@CommandSource ServerPlayerEntity player) {
-        List<BaseConfigurationHandler<?>> list = BaseConfigurationHandler.handlers.stream()
+        List<BaseConfigurationHandler<?>> list = BaseConfigurationHandler.CONFIGURATION_HANDLERS.stream()
             .filter(it -> it instanceof ObjectConfigurationHandler<?>)
             .sorted(Comparator.comparing(BaseConfigurationHandler::getPath))
             .toList();
 
-        new ConfigurationHandlerGui(null, player, list, 0).open();
+        new ConfigurationHandlerGui(null, player, list, 0)
+            .open();
         return CommandHelper.Return.SUCCESS;
     }
 

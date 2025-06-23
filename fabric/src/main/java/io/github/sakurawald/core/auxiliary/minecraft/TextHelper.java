@@ -56,9 +56,9 @@ public class TextHelper {
 
     /* class states */
     private static final int ENSURE_THE_TAGS_ARE_REGISTERED_BEFORE_CREATING_THE_DEFAULT_PARSER = registerExtendedTags();
-    public static final NodeParser DEFAULT_PARSER = makeDefaultParser();
     public static final NodeParser POWERFUL_PARSER = makePowerfulParser();
-    public static final NodeParser PLACEHOLDER_PARSER = makePlaceholderOnlyParser();
+    public static final NodeParser STYLE_ONLY_PARSER = makeStyleOnlyParser();
+    public static final NodeParser PLACEHOLDER_ONLY_PARSER = makePlaceholderOnlyParser();
 
     private static final Map<String, String> player2code = new HashMap<>();
     private static final Map<String, JsonObject> code2json = new HashMap<>();
@@ -71,13 +71,17 @@ public class TextHelper {
         writeDefaultLanguageFilesIfAbsent();
     }
 
-    private static NodeParser makeDefaultParser() {
+    private static NodeParser makeStyleOnlyParser() {
         #if MC_VER <= MC_1_20_2
-        return TextParserV1.createDefault();
+            List<NodeParser> parsers = new ArrayList<>();
+            parsers.add(TextParserV1.createDefault());
+            parsers.add(MarkdownLiteParserV1.ALL);
+            return NodeParser.merge(parsers);
         #elif MC_VER > MC_1_20_2
             return NodeParser.builder()
             .quickText()
             .simplifiedTextFormat()
+            .markdown()
             .build();
         #endif
     }
@@ -288,13 +292,13 @@ public class TextHelper {
     }
 
     public static @NotNull String parsePlaceholder(@Nullable Object audience, String value) {
-        return visitString(TextHelper.getText(PLACEHOLDER_PARSER, audience, false, value));
+        return visitString(TextHelper.getText(PLACEHOLDER_ONLY_PARSER, audience, false, value));
     }
 
     /* This is the core method to map `String` into `Text`.
      *  All methods that return `Vomponent` are converted from this method.
      * */
-    private static @NotNull Text getText(@NonNull NodeParser parser, @Nullable Object audience, boolean isKey, String keyOrValue, Object... args) {
+    public static @NotNull Text getText(@NonNull NodeParser parser, @Nullable Object audience, boolean isKey, String keyOrValue, Object... args) {
         String value = isKey ? getValueByKey(audience, keyOrValue) : keyOrValue;
 
         // suppress this sending?
@@ -577,9 +581,11 @@ public class TextHelper {
     }
 
     public static String escapeTags(String string) {
+        // NOTE: Here are special characters for Text Placeholder API parsers.
         return string
             .replace("<", "\\<")
-            .replace(">", "\\>");
+            .replace(">", "\\>")
+            .replace("*","\\*");
     }
 
     public static Text parseString(NodeParser parser, String input) {

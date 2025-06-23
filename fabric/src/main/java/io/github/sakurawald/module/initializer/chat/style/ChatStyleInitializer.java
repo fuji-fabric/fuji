@@ -45,7 +45,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<ChatFormatModel> chatFormatData = new ObjectConfigurationHandler<>("chat.json", ChatFormatModel.class);
 
-    private static final NodeParser CHAT_STYLE_PARSER = TextHelper.DEFAULT_PARSER;
+    private static final NodeParser CHAT_STYLE_PARSER = TextHelper.STYLE_ONLY_PARSER;
     private static final String DEFAULT_CONTENT_FORMAT = "%message%";
 
     private static final String CHAT_STYLE_TYPE = "chat";

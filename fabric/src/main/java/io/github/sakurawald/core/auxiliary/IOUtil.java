@@ -1,8 +1,8 @@
 package io.github.sakurawald.core.auxiliary;
 
-import io.github.sakurawald.Fuji;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
+import net.fabricmc.loader.api.FabricLoader;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,7 +67,7 @@ public class IOUtil {
     }
 
     public static String computeRelativePath(@NotNull File file) {
-        return computeRelativePath(Fuji.CONFIG_PATH.getParent().toFile(), file);
+        return computeRelativePath(FabricLoader.getInstance().getGameDir().toFile(), file);
     }
 
     public static @NotNull List<Path> listLatestFiles(@NotNull Path path) {

@@ -6,6 +6,7 @@ import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
@@ -66,7 +67,7 @@ public class ReflectionUtil {
             .resolve(others);
     }
 
-    public static boolean isWrapperType(Type type) {
+    public static boolean isPrimitiveWrapperType(Type type) {
         return type == Integer.class
             || type == Float.class
             || type == Byte.class
@@ -91,5 +92,13 @@ public class ReflectionUtil {
         }
 
         return null;
+    }
+
+    public static @NotNull String getSimpleClassName(Class<?> clazz) {
+        String modelClassName = clazz.getSimpleName();
+        if (modelClassName.isBlank()) {
+            modelClassName = "ANONYMOUS-CLASS";
+        }
+        return modelClassName;
     }
 }
