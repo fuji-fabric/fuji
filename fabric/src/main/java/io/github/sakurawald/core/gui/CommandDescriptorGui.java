@@ -9,7 +9,6 @@ import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,16 +29,21 @@ public class CommandDescriptorGui extends PagedGui<CommandDescriptor> {
     private List<Text> computeDocumentsLore(CommandDescriptor entity) {
         List<Text> lore = new ArrayList<>();
 
-        /* method document */
+        /* Attach method document. */
         if (entity.document != null) {
-            lore.add(Text.literal(entity.document).formatted(Formatting.GOLD));
+            List<Text> methodDocumentTextList = TextHelper.getDocumentTextList(getPlayer(), entity.document);
+            lore.addAll(methodDocumentTextList);
         }
 
-        /* parameters document */
-        lore.addAll(entity.arguments.stream()
+        /* Attach parameters document. */
+        List<Text> parameterDocumentTextList = entity.arguments
+            .stream()
             .filter(it -> it.getDocument() != null)
-            .map(it -> (Text) Text.literal("%s -> %s".formatted(it.getArgumentName(), it.getDocument()))
-                .formatted(Formatting.DARK_GREEN)).toList());
+            .map(it -> {
+                Text documentText = TextHelper.getDocumentText(getPlayer(), "◉ %s: %s".formatted(it.getArgumentName(), it.getDocument()));
+                return documentText;
+            }).toList();
+        lore.addAll(parameterDocumentTextList);
 
         return lore;
     }
