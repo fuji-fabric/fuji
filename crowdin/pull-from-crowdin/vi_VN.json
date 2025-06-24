@@ -334,6 +334,7 @@
   "fuji.inspect.modules.gui.title": "<blue>Mô-đun",
   "module.enable.status": "<yellow>Enable: %s",
   "fuji.inspect.fuji_commands.gui.title": "<blue>Fuji Commands",
+  "fuji.inspect.permissions_and_metas.gui.title": "<#B13BFF>Permissions & Metas",
   "fuji.debug.on": "<orange>The fuji debug mode is now on. You can see debug messages in the console!",
   "fuji.debug.off": "<orange>The fuji debug mode is now off",
   "from_module": "<yellow>From Module: %s",
