@@ -14,8 +14,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public class FeedInitializer extends ModuleInitializer {
 
-    @CommandNode("feed")
     @Document("Set food level, saturation level and exhaustion to healthy state.")
+    @CommandNode("feed")
     @CommandRequirement(level = 4)
     private static int $feed(@CommandSource @CommandTarget ServerPlayerEntity source) {
         HungerManager foodData = source.getHungerManager();

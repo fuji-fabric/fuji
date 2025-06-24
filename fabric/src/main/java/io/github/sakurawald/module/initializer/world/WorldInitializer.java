@@ -64,8 +64,8 @@ public class WorldInitializer extends ModuleInitializer {
         }
     }
 
-    @CommandNode("tp")
     @Document("Teleport to the spawnpoint of the world.")
+    @CommandNode("tp")
     private static int $tp(@CommandSource ServerPlayerEntity player, Dimension dimension) {
         ServerWorld world = dimension.getValue();
         WorldHelper.teleportToSafePositionNearOrigin(world, player);
@@ -140,8 +140,8 @@ public class WorldInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("reset")
     @Document("Delete and create the specified world.")
+    @CommandNode("reset")
     private static int $reset(@CommandSource CommandContext<ServerCommandSource> ctx, Optional<Boolean> useTheSameSeed, Dimension dimension) {
         // draw seed and save
         ServerWorld world = dimension.getValue();

@@ -25,22 +25,22 @@ import java.util.Optional;
 @CommandRequirement(level = 4)
 public class PredicateInitializer extends ModuleInitializer {
 
-    @CommandNode("has-perm?")
     @Document("Predicate to test if the player has the string-perm?")
+    @CommandNode("has-perm?")
     private static int hasPerm(@CommandSource ServerCommandSource source, ServerPlayerEntity player, GreedyString stringPermission) {
         boolean value = PermissionHelper.hasPermission(player.getUuid(), new PermissionDescriptor(true, stringPermission.getValue(), null));
         return CommandHelper.Return.outputBoolean(source, value);
     }
 
-    @CommandNode("has-level?")
     @Document("Predicate to test if the player has the level-perm?")
+    @CommandNode("has-level?")
     private static int hasLevel(@CommandSource ServerCommandSource source, ServerPlayerEntity player, int levelPermission) {
         boolean value = player.hasPermissionLevel(levelPermission);
         return CommandHelper.Return.outputBoolean(source, value);
     }
 
-    @CommandNode("has-players?")
     @Document("Predicate if online players >= n.")
+    @CommandNode("has-players?")
     private static int hasPlayers(@CommandSource ServerCommandSource source, Optional<Integer> n) {
         int $n = n.orElse(0);
         boolean value = ServerHelper.getPlayers().size() >= $n;

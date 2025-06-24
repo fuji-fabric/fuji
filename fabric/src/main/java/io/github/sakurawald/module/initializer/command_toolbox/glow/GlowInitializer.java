@@ -12,8 +12,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public class GlowInitializer extends ModuleInitializer {
 
-    @CommandNode("glow")
     @Document("Toggle the glowing state.")
+    @CommandNode("glow")
     private static int $glow(@CommandSource @CommandTarget ServerPlayerEntity player) {
         boolean flag = !player.isGlowing();
         player.setGlowing(flag);

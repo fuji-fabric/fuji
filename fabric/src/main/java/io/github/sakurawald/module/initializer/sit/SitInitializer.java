@@ -60,8 +60,8 @@ public class SitInitializer extends ModuleInitializer {
     }
 
     @SuppressWarnings("deprecation")
-    @CommandNode("sit")
     @Document("Sit in current position.")
+    @CommandNode("sit")
     private static int $sit(@CommandSource @CommandTarget ServerPlayerEntity player) {
         /* Check if we can sit at player's position. */
         // NOTE: Use the stepping block pos, so that we can always get the proper height, even if the player is standing on top of a slab/stair block.

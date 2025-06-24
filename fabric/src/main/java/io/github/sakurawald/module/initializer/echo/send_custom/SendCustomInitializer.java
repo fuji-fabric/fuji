@@ -2,6 +2,7 @@ package io.github.sakurawald.module.initializer.echo.send_custom;
 
 import eu.pb4.sgui.api.elements.BookElementBuilder;
 import eu.pb4.sgui.api.gui.BookGui;
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
@@ -42,6 +43,7 @@ public class SendCustomInitializer extends ModuleInitializer {
         }
     }
 
+    @Document("Send the `custom text` as a `message`.")
     @CommandNode("as-message")
     private static int asMessage(@CommandSource ServerCommandSource source, ServerPlayerEntity player, CustomTextName name) {
         String string = withCustomText(player, name);
@@ -51,6 +53,7 @@ public class SendCustomInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document("Send the `custom text` as a `book`.")
     @CommandNode("as-book")
     private static int asBook(@CommandSource ServerCommandSource source
         , ServerPlayerEntity player

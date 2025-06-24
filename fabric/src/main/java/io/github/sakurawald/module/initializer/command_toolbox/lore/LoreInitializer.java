@@ -19,8 +19,8 @@ import java.util.List;
 @CommandRequirement(level = 4)
 public class LoreInitializer extends ModuleInitializer {
 
-    @CommandNode("unset")
     @Document("Clear all lore in item.")
+    @CommandNode("unset")
     private static int $unset(@CommandSource CommandContext<ServerCommandSource> ctx) {
         return CommandHelper.Pattern.itemInHandCommand(ctx, (player, stack) -> {
             StackHelper.setLore(stack, List.of());
@@ -28,8 +28,8 @@ public class LoreInitializer extends ModuleInitializer {
         });
     }
 
-    @CommandNode("set")
     @Document("Set lore for item.")
+    @CommandNode("set")
     private static int $set(@CommandSource CommandContext<ServerCommandSource> ctx, GreedyString lore) {
         return CommandHelper.Pattern.itemInHandCommand(ctx, (player, stack) -> {
             List<Text> texts = TextHelper.getTextListByValue(player, lore.getValue());

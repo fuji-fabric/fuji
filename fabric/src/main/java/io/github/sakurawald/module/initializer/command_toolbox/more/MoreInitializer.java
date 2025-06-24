@@ -12,9 +12,9 @@ import net.minecraft.server.command.ServerCommandSource;
 
 public class MoreInitializer extends ModuleInitializer {
 
+    @Document("Set the count of item in hand to max count.")
     @CommandNode("more")
     @CommandRequirement(level = 4)
-    @Document("Set the count of item in hand to max count.")
     private static int $more(@CommandSource CommandContext<ServerCommandSource> ctx) {
         return CommandHelper.Pattern.itemInHandCommand(ctx, (player, itemStack) -> {
             itemStack.setCount(itemStack.getMaxCount());

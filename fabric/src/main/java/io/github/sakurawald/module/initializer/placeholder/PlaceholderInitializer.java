@@ -49,18 +49,16 @@ public class PlaceholderInitializer extends ModuleInitializer {
 
     private static final Pattern ESCAPE_PARSER = Pattern.compile("\\s*([\\s\\S]+)\\s+(\\d+)\\s*");
 
-
-
-    @CommandNode("list")
     @Document("List all placeholders registered in server.")
+    @CommandNode("list")
     private static int list(@CommandSource ServerPlayerEntity player) {
         List<Identifier> list = Placeholders.getPlaceholders().keySet().asList();
         new PlaceholderGui(player, list, 0).open();
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("parse")
     @Document("Parse a placeholder with a contextual player.")
+    @CommandNode("parse")
     private static int list(@CommandSource ServerCommandSource source
         , Optional<ServerPlayerEntity> player
         , GreedyString input) {

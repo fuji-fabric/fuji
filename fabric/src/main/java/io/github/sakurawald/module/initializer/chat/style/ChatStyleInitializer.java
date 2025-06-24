@@ -54,6 +54,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
         return StyleStriper.stripe(player, CHAT_STYLE_TYPE, string);
     }
 
+    @Document("Set your personal chat content format.")
     @CommandNode("set")
     private static int setPerPlayerFormat(@CommandSource @CommandTarget ServerPlayerEntity player, GreedyString format) {
         /* Save the new format. */
@@ -73,6 +74,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document("Reset your personal chat content format.")
     @CommandNode("reset")
     private static int resetPerPlayerFormat(@CommandSource @CommandTarget ServerPlayerEntity player) {
         /* Remove the per-player format. */

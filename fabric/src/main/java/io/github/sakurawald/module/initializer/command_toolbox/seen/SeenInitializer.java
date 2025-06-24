@@ -20,9 +20,9 @@ public class SeenInitializer extends ModuleInitializer {
     @Getter
     private static final BaseConfigurationHandler<SeenDataModel> data = new ObjectConfigurationHandler<>("seen.json", SeenDataModel.class);
 
+    @Document("Query the last online time of a player.")
     @CommandNode("seen")
     @CommandRequirement(level = 4)
-    @Document("Query the last online time of a player.")
     private static int $seen(@CommandSource ServerCommandSource source, OfflinePlayerName playerName) {
         String target = playerName.getValue();
 

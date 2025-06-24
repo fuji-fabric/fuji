@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.command_toolbox.fly;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
@@ -12,6 +13,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public class FlyInitializer extends ModuleInitializer {
 
+    @Document("Toggle the fly state of the player.")
     @CommandNode("fly")
     @CommandRequirement(level = 4)
     private static int $fly(@CommandSource @CommandTarget ServerPlayerEntity player) {

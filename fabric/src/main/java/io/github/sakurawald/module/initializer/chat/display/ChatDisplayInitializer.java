@@ -32,18 +32,21 @@ public class ChatDisplayInitializer extends ModuleInitializer {
         TextHelper.sendBroadcastByValue(broadcastText);
     }
 
+    @Document("Show your item in main hand.")
     @CommandNode("chat display item")
     private static int $displayItem(@CommandSource ServerPlayerEntity player) {
         broadcastDisplayText(player, "display.item.broadcast", DisplayHelper.createItemDisplayText(player));
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document("Show your inventory.")
     @CommandNode("chat display inv")
     private static int $displayInv(@CommandSource ServerPlayerEntity player) {
         broadcastDisplayText(player, "display.inventory.broadcast", DisplayHelper.createInvDisplayText(player));
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document("Show your enderchest.")
     @CommandNode("chat display ender")
     private static int $displayEnder(@CommandSource ServerPlayerEntity player) {
         broadcastDisplayText(player, "display.ender_chest.broadcast", DisplayHelper.createEnderDisplayText(player));

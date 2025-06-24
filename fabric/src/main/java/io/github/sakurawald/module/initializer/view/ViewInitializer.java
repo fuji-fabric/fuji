@@ -27,8 +27,8 @@ public class ViewInitializer extends ModuleInitializer {
         }
     }
 
-    @CommandNode("inv")
     @Document("View the player's inventory.")
+    @CommandNode("inv")
     private static int inv(@CommandSource ServerPlayerEntity source, OfflinePlayerName target) {
         checkSelfView(source, target);
 
@@ -36,8 +36,8 @@ public class ViewInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("ender")
     @Document("View the player's enderchest.")
+    @CommandNode("ender")
     private static int ender(@CommandSource ServerPlayerEntity source, OfflinePlayerName target) {
         checkSelfView(source, target);
 

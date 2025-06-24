@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.command_toolbox.god;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
@@ -12,6 +13,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public class GodInitializer extends ModuleInitializer {
 
+    @Document("Toggle the invulnerable state.")
     @CommandNode("god")
     @CommandRequirement(level = 4)
     private static int $god(@CommandSource @CommandTarget ServerPlayerEntity player) {

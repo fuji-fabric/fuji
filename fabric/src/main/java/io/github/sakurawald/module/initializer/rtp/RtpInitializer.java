@@ -43,8 +43,8 @@ public class RtpInitializer extends ModuleInitializer {
         return first.get();
     }
 
-    @CommandNode("rtp")
     @Document("Random rtp in specified dimension.")
+    @CommandNode("rtp")
     private static int $rtp(@CommandSource @CommandTarget ServerPlayerEntity player, Optional<Dimension> dimension) {
         ServerWorld serverWorld = dimension.isPresent() ? dimension.get().getValue() : EntityHelper.getServerWorld(player);
         TeleportSetup setup = withTeleportSetup(player, serverWorld);

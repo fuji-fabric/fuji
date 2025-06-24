@@ -32,6 +32,7 @@ public class DeathLogInitializer extends ModuleInitializer {
         return DEATH_DATA_DIR_PATH.resolve(fileName);
     }
 
+    @Document("Open the `deathlog` GUI.")
     @CommandNode("deathlog")
     @CommandRequirement(level = 4)
     private static int $gui(@CommandSource ServerPlayerEntity player) {

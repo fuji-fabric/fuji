@@ -65,8 +65,8 @@ public class CommandCooldownInitializer extends ModuleInitializer {
             .orElse(-1L);
     }
 
-    @CommandNode("test")
     @Document("Test a named-cooldown, and execute success commands or failed commands.")
+    @CommandNode("test")
     private static int test(@CommandSource ServerCommandSource source
         , @Document("The named-cooldown.") CommandCooldownName name
         , @Document("The target player.") ServerPlayerEntity player
@@ -93,8 +93,8 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("create")
     @Document("Create a named-cooldown.")
+    @CommandNode("create")
     private static int create(@CommandSource ServerCommandSource source
         , @Document("The name for named-cooldown.") String name
         , @Document("How long is the cooling time ms of this named-cooldown.") long cooldownMs
@@ -114,8 +114,8 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("delete")
     @Document("Delete a named-cooldown.")
+    @CommandNode("delete")
     private static int delete(@CommandSource ServerCommandSource source, CommandCooldownName name) {
         ensureExist(source, name);
 
@@ -125,15 +125,15 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("list")
     @Document("List all named-cooldown.")
+    @CommandNode("list")
     private static int list(@CommandSource ServerCommandSource source) {
         config.model().namedCooldown.list.keySet().forEach(it -> source.sendMessage(Text.literal(it)));
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("reset")
     @Document("Reset the timestamp of a named-cooldown for a player. (The usage times will not be reset)")
+    @CommandNode("reset")
     private static int reset(@CommandSource ServerCommandSource source
         , CommandCooldownName name
         , ServerPlayerEntity player) {

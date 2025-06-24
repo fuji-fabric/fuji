@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.command_toolbox.rules;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandSource;
@@ -15,6 +16,7 @@ public class RulesInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<RulesConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, RulesConfigModel.class);
 
+    @Document("Query the server rules.")
     @CommandNode("rules")
     private static int asMessage(@CommandSource @CommandTarget ServerPlayerEntity player) {
         String string = config.model().rules;

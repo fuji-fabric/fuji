@@ -28,6 +28,7 @@ public class CommandMenuInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<CommandMenuConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandMenuConfigModel.class);
     public static final BaseConfigurationHandler<CommandMenuMenusModel> menus = new ObjectConfigurationHandler<>("menus.json", CommandMenuMenusModel.class);
 
+    @Document("Open the specified `menu` for the player.")
     @CommandNode("open")
     private static int $open(@CommandSource ServerCommandSource source, ServerPlayerEntity player, MenuName menuName) {
         /* Check if menu exists. */
@@ -45,6 +46,7 @@ public class CommandMenuInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document("Close the currently `opened GUI` for the player.")
     @CommandNode("close")
     private static int $close(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {
         closeCurrentHandledScreen(player);

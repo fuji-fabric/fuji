@@ -78,8 +78,8 @@ public class CompassInitializer extends ModuleInitializer {
 
     }
 
-    @CommandNode("track pos")
     @Document("Let the compass in hand track a specified position.")
+    @CommandNode("track pos")
     private static int track(@CommandSource @CommandTarget ServerPlayerEntity player, Dimension dimension, BlockPos blockPos) {
         return withCompassInHand(player, (itemStack) -> {
             setTrackedTarget(itemStack, dimension.getValue(), blockPos);
@@ -87,8 +87,8 @@ public class CompassInitializer extends ModuleInitializer {
         });
     }
 
-    @CommandNode("track player")
     @Document("Let the compass in hand track a specified player.")
+    @CommandNode("track player")
     private static int track(@CommandSource @CommandTarget ServerPlayerEntity player, ServerPlayerEntity target) {
         return withCompassInHand(player, (itemStack) -> {
             setTrackedTarget(itemStack, EntityHelper.getServerWorld(target), target.getBlockPos());
@@ -96,8 +96,8 @@ public class CompassInitializer extends ModuleInitializer {
         });
     }
 
-    @CommandNode("reset")
     @Document("Let the compass in hand track nothing.")
+    @CommandNode("reset")
     private static int reset(@CommandSource @CommandTarget ServerPlayerEntity player) {
         return withCompassInHand(player, (itemStack) -> {
             setTrackedTarget(itemStack,null,null);

@@ -13,9 +13,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public class RepairInitializer extends ModuleInitializer {
 
+    @Document("Repair the item in hand.")
     @CommandNode("repair")
     @CommandRequirement(level = 4)
-    @Document("Repair the item in hand.")
     private static int $repair(@CommandSource @CommandTarget ServerPlayerEntity player) {
         player.getMainHandStack().setDamage(0);
         TextHelper.sendMessageByKey(player, "repair");

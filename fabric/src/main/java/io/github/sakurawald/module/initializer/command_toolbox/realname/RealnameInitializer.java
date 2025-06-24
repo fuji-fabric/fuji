@@ -16,8 +16,8 @@ public class RealnameInitializer extends ModuleInitializer {
 
 
     @SuppressWarnings("UnnecessaryLocalVariable")
-    @CommandNode("realname")
     @Document("Query the nickname-realname mapping.")
+    @CommandNode("realname")
     private static int $realname(@CommandSource ServerCommandSource source) {
         MutableText builder = Text.empty();
 

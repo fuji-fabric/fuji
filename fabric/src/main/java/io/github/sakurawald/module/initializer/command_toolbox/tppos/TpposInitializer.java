@@ -27,9 +27,9 @@ import java.util.Optional;
     """)
 public class TpposInitializer extends ModuleInitializer {
 
+    @Document("The unified teleport command.")
     @CommandNode("tppos")
     @CommandRequirement(level = 4)
-    @Document("The unified teleport command.")
     private static int tppos(@CommandSource @CommandTarget ServerPlayerEntity player
         , @Document("the target dimension") Optional<Dimension> dimension
         , @Document("the target x for fixed-tp") Optional<Double> x
@@ -80,9 +80,9 @@ public class TpposInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document("Teleport to the offline position of a player.")
     @CommandNode("tppos offline")
     @CommandRequirement(level = 4)
-    @Document("Teleport to the offline position of a player.")
     private static int tppos(@CommandSource ServerPlayerEntity source, OfflinePlayerName player) {
         ServerPlayerEntity dummy = PlayerHelper.loadOfflinePlayer(player.getValue());
         new GlobalPos(EntityHelper.getServerWorld(dummy), dummy.getX(), dummy.getY(), dummy.getZ(), dummy.getYaw(), dummy.getPitch())

@@ -93,15 +93,15 @@ public class FakePlayerManagerInitializer extends ModuleInitializer {
 
     }
 
-    @CommandNode("player renew")
     @Document("Renew the expiration time of all fake-players spawned by you.")
+    @CommandNode("player renew")
     private static int $renew(@CommandSource ServerPlayerEntity player) {
         renewMyFakePlayers(player);
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("player who")
     @Document("List all fake-players and its owner.")
+    @CommandNode("player who")
     private static int $who(@CommandSource CommandContext<ServerCommandSource> context) {
         /* make table */
         StringBuilder body = new StringBuilder();

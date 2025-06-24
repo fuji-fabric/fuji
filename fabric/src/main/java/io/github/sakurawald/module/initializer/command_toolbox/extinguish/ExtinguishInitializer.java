@@ -13,9 +13,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 public class ExtinguishInitializer extends ModuleInitializer {
 
 
+    @Document("Set fire ticks to 0.")
     @CommandNode("extinguish")
     @CommandRequirement(level = 4)
-    @Document("Set fire ticks to 0.")
     private static int $extinguish(@CommandSource @CommandTarget ServerPlayerEntity player) {
         player.setFireTicks(0);
         return CommandHelper.Return.SUCCESS;

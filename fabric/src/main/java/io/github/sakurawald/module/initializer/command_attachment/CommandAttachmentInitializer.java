@@ -157,8 +157,8 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         setAttachmentModel(uuid, model);
     }
 
-    @CommandNode("attach-item-one")
     @Document("Attach one command to an item.")
+    @CommandNode("attach-item-one")
     private static int attachItemOne(@CommandSource ServerPlayerEntity player
         , @Document("The interaction type to trigger this command.") Optional<InteractType> interactType
         , @Document("Max use times of this command.") Optional<Integer> maxUseTimes
@@ -187,8 +187,8 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("attach-entity-one")
     @Document("Attach one command to an entity.")
+    @CommandNode("attach-entity-one")
     private static int attachEntityOne(@CommandSource ServerPlayerEntity player
         , @Document("The target entity.") Entity entity
         , @Document("The interaction type to trigger this command.") Optional<InteractType> interactType
@@ -213,6 +213,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document("Attach one command to specified block.")
     @CommandNode("attach-block-one")
     private static int attachBlockOne(@CommandSource ServerPlayerEntity player
         , BlockPos blockPos
@@ -239,8 +240,8 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("detach-item-all")
     @Document("Detach all attached commands in the item.")
+    @CommandNode("detach-item-all")
     private static int detachItemAll(@CommandSource ServerPlayerEntity player) {
         ItemStack mainHandStack = player.getMainHandStack();
         CommandHelper.ensureItemInHandNotEmpty(player, mainHandStack);
@@ -250,8 +251,8 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("detach-entity-all")
     @Document("Detach all attached commands in the entity.")
+    @CommandNode("detach-entity-all")
     private static int detachEntityAll(@CommandSource ServerPlayerEntity player, Entity entity) {
         String uuid = entity.getUuidAsString();
 
@@ -259,8 +260,8 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("detach-block-all")
     @Document("Detach all attached commands in the block.")
+    @CommandNode("detach-block-all")
     private static int detachBlockAll(@CommandSource ServerPlayerEntity player, BlockPos blockPos) {
         String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
 
@@ -273,8 +274,8 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         Managers.getAttachmentManager().unsetAttachment(COMMAND_ATTACHMENT_SUBJECT_NAME, uuid);
     }
 
-    @CommandNode("query-item")
     @Document("Query all attached commands in the item.")
+    @CommandNode("query-item")
     private static int queryItem(@CommandSource ServerPlayerEntity player) {
         ItemStack mainHandStack = player.getMainHandStack();
         CommandHelper.ensureItemInHandNotEmpty(player, mainHandStack);
@@ -284,16 +285,16 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("query-entity")
     @Document("Query all attached commands in the entity.")
+    @CommandNode("query-entity")
     private static int queryEntity(@CommandSource ServerPlayerEntity player, Entity entity) {
         String uuid = entity.getUuidAsString();
         doQueryAttachment(player, uuid);
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("query-block")
     @Document("Query all attached commands in the block.")
+    @CommandNode("query-block")
     private static int queryBlock(@CommandSource ServerPlayerEntity player, BlockPos blockPos) {
         String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
         doQueryAttachment(player, uuid);

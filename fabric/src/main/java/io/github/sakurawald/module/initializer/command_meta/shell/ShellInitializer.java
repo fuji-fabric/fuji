@@ -52,9 +52,9 @@ public class ShellInitializer extends ModuleInitializer {
 
     }
 
+    @Document("Execute a shell command in host os.")
     @CommandNode("shell")
     @CommandRequirement(level = 4)
-    @Document("Execute a shell command in host os.")
     private static int shell(@CommandSource CommandContext<ServerCommandSource> ctx, GreedyString rest) {
         checkSecurity(ctx);
 

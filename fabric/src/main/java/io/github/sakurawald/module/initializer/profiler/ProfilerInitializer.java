@@ -19,8 +19,8 @@ public class ProfilerInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<ProfilerConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ProfilerConfigModel.class);
 
-    @CommandNode("profiler")
     @Document("Open the server health status GUI.")
+    @CommandNode("profiler")
     private static int $profiler(@CommandSource ServerPlayerEntity player) {
         new ProfilerGui(player)
             .open();

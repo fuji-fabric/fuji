@@ -36,23 +36,23 @@ public class SkinInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<SkinConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, SkinConfigModel.class);
 
-    @CommandNode("use-default-skins")
     @Document("Set skin to a random default skin.")
+    @CommandNode("use-default-skins")
     private static int useDefault(@CommandSource CommandContext<ServerCommandSource> ctx) {
         doSkin(ctx.getSource(), () -> SkinRestorer.getSkinStorage().getDefaultSkin());
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("use-default-skins")
     @Document("Set skin to a random default skin.")
+    @CommandNode("use-default-skins")
     @CommandRequirement(level = 4)
     private static int useDefaultOthers(@CommandSource CommandContext<ServerCommandSource> ctx, GameProfileCollection target) {
         doSkin(ctx.getSource(), target.getValue(), true, () -> SkinRestorer.getSkinStorage().getDefaultSkin());
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("use-online-skin")
     @Document("Set skin to an online skin of the same name.")
+    @CommandNode("use-online-skin")
     private static int useOnlineSkin(@CommandSource CommandContext<ServerCommandSource> ctx) {
         doSkin(ctx.getSource(), () -> MojangProfileFetcher.fetchOnlineSkin(ctx.getSource().getName()));
         return CommandHelper.Return.SUCCESS;
@@ -64,39 +64,39 @@ public class SkinInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document("Set skin to an online skin of a specified name.")
     @CommandNode("set mojang")
     @CommandRequirement(level = 4)
-    @Document("Set skin to an online skin of a specified name.")
     private static int setMojangTarget(@CommandSource CommandContext<ServerCommandSource> ctx, Word skinName, GameProfileCollection target) {
         doSkin(ctx.getSource(), target.getValue(), true, () -> MojangProfileFetcher.fetchOnlineSkin(skinName.getValue()));
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("set web classic")
     @Document("Set skin to a custom url in steve model.")
+    @CommandNode("set web classic")
     private static int setWebClassic(@CommandSource CommandContext<ServerCommandSource> ctx, String url) {
         doSkin(ctx.getSource(), () -> MineSkinSkinProvider.fetchSkin(url, SkinVariant.CLASSIC));
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document("Set skin to a custom url in steve model.")
     @CommandNode("set web classic")
     @CommandRequirement(level = 4)
-    @Document("Set skin to a custom url in steve model.")
     private static int setWebClassicOthers(@CommandSource CommandContext<ServerCommandSource> ctx, String url, GameProfileCollection target) {
         doSkin(ctx.getSource(), target.getValue(), true, () -> MineSkinSkinProvider.fetchSkin(StringArgumentType.getString(ctx, "url"), SkinVariant.CLASSIC));
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("set web slim")
     @Document("Set skin to a custom url in alex model.")
+    @CommandNode("set web slim")
     private static int setWebSlim(@CommandSource CommandContext<ServerCommandSource> ctx, String url) {
         doSkin(ctx.getSource(), () -> MineSkinSkinProvider.fetchSkin(url, SkinVariant.SLIM));
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document("Set skin to a custom url in alex model.")
     @CommandNode("set web slim")
     @CommandRequirement(level = 4)
-    @Document("Set skin to a custom url in alex model.")
     private static int setWebSlimOthers(@CommandSource CommandContext<ServerCommandSource> ctx, String url, GameProfileCollection target) {
         doSkin(ctx.getSource(), target.getValue(), true, () -> MineSkinSkinProvider.fetchSkin(StringArgumentType.getString(ctx, "url"), SkinVariant.SLIM));
         return CommandHelper.Return.SUCCESS;

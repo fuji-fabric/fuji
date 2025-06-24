@@ -25,9 +25,9 @@ public class HeadInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<HeadConfigModel> head = new ObjectConfigurationHandler<>("head.json", HeadConfigModel.class);
 
+    @Document("Download the head database from the internet. (You need to delete the existing head database file.)")
     @CommandNode("sync")
     @CommandRequirement(level = 4)
-    @Document("Download the head database from the internet. (You need to delete the existing head database file.)")
     private static int $sync(@CommandSource CommandContext<ServerCommandSource> ctx) {
         HeadProvider.syncCategories();
         return CommandHelper.Return.SUCCESS;
@@ -39,8 +39,8 @@ public class HeadInitializer extends ModuleInitializer {
         return $gui(player);
     }
 
-    @CommandNode("gui")
     @Document("Open the head shop GUI.")
+    @CommandNode("gui")
     private static int $gui(@CommandSource ServerPlayerEntity player) {
         new HeadGui(player)
             .open();

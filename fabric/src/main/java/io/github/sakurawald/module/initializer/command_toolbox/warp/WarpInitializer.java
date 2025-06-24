@@ -64,6 +64,7 @@ public class WarpInitializer extends ModuleInitializer {
         TextHelper.sendMessageByKey(player,"warp.tp.success",warpNode.name);
     }
 
+    @Document("Teleport to the specified warp point.")
     @CommandNode("tp")
     private static int $tp(@CommandSource @CommandTarget ServerPlayerEntity player, WarpName warpName) {
         return withWarpNode(player, warpName, warpNode -> {
@@ -72,6 +73,7 @@ public class WarpInitializer extends ModuleInitializer {
         });
     }
 
+    @Document("Delete a warp point.")
     @CommandNode("unset")
     @CommandRequirement(level = 4)
     private static int $unset(@CommandSource ServerPlayerEntity player, WarpName warpName) {
@@ -83,6 +85,7 @@ public class WarpInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document("Set current location as new wrap point.")
     @CommandNode("set")
     @CommandRequirement(level = 4)
     private static int $set(@CommandSource ServerPlayerEntity player, WarpName warpName, Optional<Boolean> override) {
@@ -107,6 +110,7 @@ public class WarpInitializer extends ModuleInitializer {
         return $list(source);
     }
 
+    @Document("List warp points.")
     @CommandNode("list")
     private static int $list(@CommandSource ServerCommandSource source) {
         if (source.isExecutedByPlayer()) {
@@ -119,9 +123,9 @@ public class WarpInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document("Set the display name for a warp.")
     @CommandNode("set-name")
     @CommandRequirement(level = 4)
-    @Document("Set the display name for a warp.")
     private static int $setName(@CommandSource ServerPlayerEntity player, WarpName warp, GreedyString name) {
         return withWarpNode(player, warp, warpNode -> {
             warpNode.setName(name.getValue());
@@ -129,9 +133,9 @@ public class WarpInitializer extends ModuleInitializer {
         });
     }
 
+    @Document("Set the item for a warp.")
     @CommandNode("set-item")
     @CommandRequirement(level = 4)
-    @Document("Set the item for a warp.")
     private static int $setItem(@CommandSource ServerPlayerEntity player, WarpName warp, Item item) {
         return withWarpNode(player, warp, warpNode -> {
             warpNode.setItem(RegistryHelper.ofString(item));
@@ -139,9 +143,9 @@ public class WarpInitializer extends ModuleInitializer {
         });
     }
 
+    @Document("Set the lore for a warp.")
     @CommandNode("set-lore")
     @CommandRequirement(level = 4)
-    @Document("Set the lore for a warp.")
     private static int $setLore(@CommandSource ServerPlayerEntity player, WarpName warp, GreedyString lore) {
         return withWarpNode(player, warp, warpNode -> {
             List<String> split = StringSplitter.split(lore.getValue());

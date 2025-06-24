@@ -11,8 +11,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public class SuicideInitializer extends ModuleInitializer {
 
-    @CommandNode("suicide")
     @Document("Kill yourself.")
+    @CommandNode("suicide")
     private static int $suicide(@CommandSource ServerPlayerEntity player) {
         EntityHelper.killEntity(player);
         return CommandHelper.Return.SUCCESS;

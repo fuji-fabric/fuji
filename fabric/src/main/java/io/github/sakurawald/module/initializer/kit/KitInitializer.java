@@ -23,16 +23,16 @@ import java.util.List;
 @CommandRequirement(level = 4)
 public class KitInitializer extends ModuleInitializer {
 
-    @CommandNode("editor")
     @Document("Open the kit editor GUI.")
+    @CommandNode("editor")
     private static int $editor(@CommandSource ServerPlayerEntity player) {
         List<Kit> kits = KitService.readKits();
         new KitEditorGui(player, kits, 0).open();
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document("Give the kit to the player.")
     @CommandNode("give")
-    @Document("Give a kit to a player.")
     private static int $give(@CommandSource ServerCommandSource source, ServerPlayerEntity player, KitName kit) {
         /* Verify. */
         String kitName = kit.getValue();

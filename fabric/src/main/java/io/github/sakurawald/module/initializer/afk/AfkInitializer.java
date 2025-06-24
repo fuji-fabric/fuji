@@ -38,7 +38,7 @@ public class AfkInitializer extends ModuleInitializer {
 
     public static final Map<String, Long> player2prevInputCounter = new HashMap<>();
 
-    // note: issue command will update lastLastActionTime, so it's impossible to use /afk to disable afk
+    // NOTE: Issue a command will update the lastLastActionTime, so it's impossible to use /afk to disable afk
     @CommandNode("afk")
     @Document("Enter afk state.")
     private static int $afk(@CommandSource @CommandTarget ServerPlayerEntity player) {
@@ -56,6 +56,7 @@ public class AfkInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document("Test if a player is in afk state.")
     @CommandNode("test-afk")
     @CommandRequirement(level = 4)
     private static int testAfk(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {

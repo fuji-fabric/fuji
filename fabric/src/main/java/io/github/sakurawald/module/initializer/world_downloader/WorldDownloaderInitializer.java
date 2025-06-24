@@ -66,8 +66,8 @@ public class WorldDownloaderInitializer extends ModuleInitializer {
         } catch (IllegalArgumentException ignored) {}
     }
 
-    @CommandNode("download")
     @Document("Download the region file around you.")
+    @CommandNode("download")
     private static int $download(@CommandSource ServerPlayerEntity player) {
         /* Ensure the download server is set up. */
         if (httpServer == null) {

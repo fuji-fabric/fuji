@@ -16,8 +16,8 @@ import net.minecraft.world.World;
 
 public class TopInitializer extends ModuleInitializer {
 
-    @CommandNode("top")
     @Document("Teleport to the top of your current position.")
+    @CommandNode("top")
     private static int top(@CommandSource @CommandTarget ServerPlayerEntity player) {
         World world = player.getWorld();
         BlockPos topPosition = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, player.getBlockPos());

@@ -39,8 +39,8 @@ public class TopChunksInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<TopChunksConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, TopChunksConfigModel.class);
 
-    @CommandNode("chunks")
     @Document("List all chunks ordered by lag score.")
+    @CommandNode("chunks")
     private static int $chunks(@CommandSource ServerCommandSource source) {
         CompletableFuture.runAsync(() -> {
             PriorityQueue<ChunkScore> PQ = new PriorityQueue<>();

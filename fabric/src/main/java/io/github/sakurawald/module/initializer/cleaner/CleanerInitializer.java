@@ -73,8 +73,8 @@ public class CleanerInitializer extends ModuleInitializer {
         return regex2age.containsKey(key) && age >= regex2age.get(key);
     }
 
+    @Document("Trigger the cleaner once.")
     @CommandNode("clean")
-    @Document("Trigger the cleaner manually.")
     public static int clean() {
         CompletableFuture.runAsync(() -> {
             Map<String, Integer> counter = new HashMap<>();

@@ -28,8 +28,8 @@ public class NicknameInitializer extends ModuleInitializer {
         return config.model().transform_nickname.formatted(string);
     }
 
-    @CommandNode("set")
     @Document("Set the display name.")
+    @CommandNode("set")
     private static int $set(@CommandSource @CommandTarget ServerPlayerEntity player, GreedyString format) {
         String name = player.getGameProfile().getName();
         String value = format.getValue();
@@ -43,8 +43,8 @@ public class NicknameInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("reset")
     @Document("Clear the display name.")
+    @CommandNode("reset")
     private static int $reset(@CommandSource @CommandTarget ServerPlayerEntity player) {
         String name = player.getGameProfile().getName();
 

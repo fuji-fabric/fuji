@@ -52,9 +52,9 @@ public class BackInitializer extends ModuleInitializer {
         return function.apply(locationHistory);
     }
 
+    @Document("Push current location into the back location history.")
     @CommandNode("back push")
     @CommandRequirement(level = 4)
-    @Document("Push current location into the back location history.")
     private static int $push(@CommandSource @CommandTarget ServerPlayerEntity player) {
         return withLocationHistory(player, locationHistory -> {
             LocationEntry locationEntry = LocationEntry.makeLocationEntry(player);
@@ -63,9 +63,9 @@ public class BackInitializer extends ModuleInitializer {
         });
     }
 
+    @Document("Clear the back location history.")
     @CommandNode("back clear")
     @CommandRequirement(level = 4)
-    @Document("Clear the back location history.")
     private static int $clear(@CommandSource CommandContext<ServerCommandSource> source, @CommandTarget ServerPlayerEntity player) {
         return withLocationHistory(player, locationHistory -> {
             locationHistory.clearEntries();
@@ -74,15 +74,15 @@ public class BackInitializer extends ModuleInitializer {
         });
     }
 
+    @Document("List the back location history.")
     @CommandNode("back list")
     @CommandRequirement(level = 4)
-    @Document("List the back location history.")
     private static int $list(@CommandSource CommandContext<ServerCommandSource> source, ServerPlayerEntity player) {
         return backListWithParameters(source.getSource(), player);
     }
 
-    @CommandNode("back list")
     @Document("List the back location history.")
+    @CommandNode("back list")
     private static int $list(@CommandSource ServerPlayerEntity source) {
         return backListWithParameters(source.getCommandSource(), source);
     }
@@ -110,26 +110,26 @@ public class BackInitializer extends ModuleInitializer {
         });
     }
 
-    @CommandNode("back")
     @Document("Back to the specified location.")
+    @CommandNode("back")
     private static int $back(@CommandSource ServerPlayerEntity player) {
         return backWithParameters(player, 1, null);
     }
 
-    @CommandNode("back")
     @Document("Back to the specified location.")
+    @CommandNode("back")
     private static int $back(@CommandSource ServerPlayerEntity player, int lastNLocation) {
         return backWithParameters(player, lastNLocation, null);
     }
 
-    @CommandNode("back")
     @Document("Back to the specified location.")
+    @CommandNode("back")
     private static int $back(@CommandSource ServerPlayerEntity player, int lastNLocation, Dimension targetDimension) {
         return backWithParameters(player, lastNLocation, targetDimension);
     }
 
-    @CommandNode("back")
     @Document("Back to the specified location.")
+    @CommandNode("back")
     private static int $back(@CommandSource ServerPlayerEntity player, Dimension targetDimension) {
         return backWithParameters(player, 1, targetDimension);
     }

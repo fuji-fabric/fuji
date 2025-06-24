@@ -17,9 +17,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
     """)
 public class ForEachInitializer extends ModuleInitializer {
 
+    @Document("Execute a command targeted on single-player for each player online.")
     @CommandNode("foreach")
     @CommandRequirement(level = 4)
-    @Document("Execute a command targeted on single-player for each player online.")
     private static int foreach(GreedyString rest) {
         String $rest = rest.getValue();
 

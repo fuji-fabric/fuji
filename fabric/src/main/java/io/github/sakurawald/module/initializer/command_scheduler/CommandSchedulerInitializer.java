@@ -42,16 +42,16 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
         reloadJobs();
     }
 
-    @CommandNode("list")
     @Document("List all defined jobs.")
+    @CommandNode("list")
     private static int list(@CommandSource ServerPlayerEntity player) {
         List<Job> jobs = scheduler.model().jobs;
         new JobGui(player, jobs, 0).open();
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("trigger")
     @Document("Trigger a job manually.")
+    @CommandNode("trigger")
     private static int trigger(JobName jobName) {
         scheduler.model().jobs.stream()
             .filter(it -> it.getName().equals(jobName.getValue()))

@@ -54,6 +54,12 @@ import java.util.List;
 @CommandRequirement(level = 4)
 public class FujiInitializer extends ModuleInitializer {
 
+    @Document("""
+        Reload all the configuration files in `/fuji inspect configurations`.
+        Reload all the `enabled` modules in `/fuji inspect modules`.
+
+        NOTE: You have to `re-start` the server, after you enable/disable a module.
+        """)
     @CommandNode("reload")
     private static int $reload(@CommandSource ServerCommandSource source) {
         // Reload main-control file.
@@ -69,6 +75,7 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document("Print the user guide of fuji.")
     @CommandNode("user-guide")
     private static int $userGuide(@CommandSource ServerCommandSource source) {
         ModuleManager.printUserGuide();
@@ -76,7 +83,7 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Open fuji about gui.")
+    @Document("Open the about GUI.")
     @CommandNode("about")
     private static int $about(@CommandSource ServerPlayerEntity player) {
         ModMetadata metadata = FabricLoader.getInstance().getModContainer(Fuji.MOD_ID)
@@ -91,7 +98,7 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Switch the `log_debug_message` option.")
+    @Document("Toggle the debug mode of fuji.")
     @CommandNode("debug")
     private static int $debug(@CommandSource ServerCommandSource source) {
         var config = Configs.mainControlConfig.model().core.debug;

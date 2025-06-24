@@ -28,8 +28,8 @@ public class WorksInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<WorksConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, WorksConfigModel.class);
 
+    @Document("Open works GUI.")
     @CommandNode("works")
-    @Document("Open works gui.")
     private static int $works(@CommandSource ServerPlayerEntity player) {
         new WorksGui(player, works.model().works, 0).open();
         return CommandHelper.Return.SUCCESS;

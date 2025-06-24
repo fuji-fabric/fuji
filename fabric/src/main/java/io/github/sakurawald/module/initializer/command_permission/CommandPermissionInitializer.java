@@ -62,8 +62,8 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("verbose")
     @Document("Toggle the command permission verbose mode.")
+    @CommandNode("verbose")
     public static int $verbose(@CommandSource ServerCommandSource source) {
         verboseModeFlag = !verboseModeFlag;
 
@@ -71,8 +71,8 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("describe")
     @Document("Describe the command path and required permissions of a give command.")
+    @CommandNode("describe")
     public static int $describe(@CommandSource ServerCommandSource source, GreedyString command) {
         /* Parse the command string to get the command context. */
         String $command = command.getValue();

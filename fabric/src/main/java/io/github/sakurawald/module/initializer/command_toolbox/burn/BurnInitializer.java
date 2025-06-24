@@ -11,9 +11,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public class BurnInitializer extends ModuleInitializer {
 
+    @Document("Burn a target player for ticks.")
     @CommandNode("burn")
     @CommandRequirement(level = 4)
-    @Document("Burn a target player for ticks.")
     private static int burn(@CommandSource ServerCommandSource source, ServerPlayerEntity player, int ticks) {
         player.setFireTicks(ticks);
         return CommandHelper.Return.SUCCESS;

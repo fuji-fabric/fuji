@@ -28,8 +28,8 @@ public class ChatSpyInitializer extends ModuleInitializer {
     private static String lastContentString = "";
     public static final BaseConfigurationHandler<ChatSpyConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatSpyConfigModel.class).autoSaveEveryMinute();
 
+    @Document("Enable/disable the chat spy mode for you.")
     @CommandNode("toggle")
-    @Document("Toggle the chat spy mode.")
     private static int toggle(@CommandSource ServerPlayerEntity player) {
         ChatSpyConfigModel.PerPlayerOptions options = withOptions(player);
         options.enabled = !options.enabled;

@@ -14,9 +14,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public class PingInitializer extends ModuleInitializer {
 
+    @Document("Query the ping of a player.")
     @CommandNode("ping")
     @CommandRequirement(level = 4)
-    @Document("Query the ping of a player.")
     private static int $ping(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
         String name = target.getGameProfile().getName();
 

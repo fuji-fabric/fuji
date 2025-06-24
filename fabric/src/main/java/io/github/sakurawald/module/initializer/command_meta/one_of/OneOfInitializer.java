@@ -21,9 +21,9 @@ import java.util.List;
     """)
 public class OneOfInitializer extends ModuleInitializer {
 
+    @Document("One-of command randomly pick one of commands and execute it as console.")
     @CommandNode("one-of")
     @CommandRequirement(level = 4)
-    @Document("One-of command randomly pick one of commands and execute it as console.")
     private static int oneOf(@CommandSource ServerCommandSource source, GreedyString rest) {
         String $rest = rest.getValue();
 

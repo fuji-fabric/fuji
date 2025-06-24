@@ -16,8 +16,8 @@ import java.util.List;
 
 public class HelpOpInitializer extends ModuleInitializer {
 
-    @CommandNode("help-op")
     @Document("Send help messages to online ops.")
+    @CommandNode("help-op")
     private static int helpop(@CommandSource ServerPlayerEntity player, GreedyString message) {
         PlayerManager playerManager = ServerHelper.getServer().getPlayerManager();
         List<ServerPlayerEntity> ops = playerManager.getPlayerList().stream().filter(p -> playerManager.isOperator(p.getGameProfile())).toList();

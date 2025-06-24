@@ -33,8 +33,8 @@ public class CommandBundleInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<CommandBundleConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandBundleConfigModel.class);
 
-    @CommandNode("register")
     @Document("Register all commands defined in bundle-command configuration file.")
+    @CommandNode("register")
     private static int registerAllBundleCommands() {
         LogUtil.info("Register bundle commands.");
 
@@ -48,8 +48,8 @@ public class CommandBundleInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("un-register")
     @Document("Un-register all bundle-commands registered in server.")
+    @CommandNode("un-register")
     private static int unregisterAllBundleCommands() {
         LogUtil.info("Un-register bundle commands.");
 
@@ -64,8 +64,8 @@ public class CommandBundleInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("list")
     @Document("List all registered bundle-commands in server.")
+    @CommandNode("list")
     private static int list(@CommandSource CommandContext<ServerCommandSource> ctx) {
         Stream<CommandDescriptor> commandDescriptorStream = CommandAnnotationProcessor.descriptors
             .stream()

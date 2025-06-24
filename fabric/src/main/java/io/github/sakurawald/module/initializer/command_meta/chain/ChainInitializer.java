@@ -23,9 +23,9 @@ import java.util.regex.Pattern;
 public class ChainInitializer extends ModuleInitializer {
     private static final Pattern CHAIN_COMMAND_PARSER = Pattern.compile("(.+?)\\s+(chain .+)");
 
+    @Document("Chain commands and executes them in sequence, the chain will break if the previous one command fails.")
     @CommandNode("chain")
     @CommandRequirement(level = 4)
-    @Document("Chain commands and executes them in sequence, the chain will break if the previous one command fails.")
     private static int chain(@CommandSource ServerCommandSource source, GreedyString rest) {
         String $rest = rest.getValue();
 
