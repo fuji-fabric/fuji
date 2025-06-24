@@ -6,31 +6,3 @@ Insert the player name in the chat message, and the target player will be mentio
     The \ttt{chat.mention} module partial work with \ttt{Styled Chat} mod.
     You can use \ttt{chat.mention} module with \ttt{Styled Chat} mod, the target player still get mentioned, but the mention\_format will not be rendered.
 \end{note}
-
-\LevelFour{Configuration}
-\begin{Configuration}
-    \item[mention\_player]{
-        \label{itm:mention_player}
-        If you insert \tbf{Steve} in chat message, then the player named Steve will get audio mention.
-
-        \begin{NestedList}
-            \item[sound]{
-                The type of \tbf{sound} used to notify the mentioned player.
-                \begin{tips}{Query all identifiers of sound}
-                    \cmd{/playsound \ldots}
-                \end{tips}
-            }
-
-            \item[volume]
-            \item[pitch]
-            \item[repeat\_count]{
-                The sound repeat count.
-            }
-
-            \item[interval\_ms]{
-                The interval between each repeat.
-            }
-        \end{NestedList}
-
-    }
-\end{Configuration}

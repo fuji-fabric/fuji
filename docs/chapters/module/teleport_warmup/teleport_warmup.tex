@@ -3,33 +3,6 @@
 \LevelTwo{Purpose}
 This module adds a warmup cooldown before player-teleportation.
 
-\LevelTwo{Configuration}
-\begin{Configuration}
-    \item[warmup\_second]{
-        The second to wait before the teleportation.
-    }
-
-    \item[interrupile]{
-        Should we interrupt this teleporation if some conditions meet?
-    }
-
-    \item[dimension]{
-        Per dimension configuration.
-
-        \begin{NestedList}
-            \item[blacklist] {
-                Only apply teleport warmup in the following dimensions.
-
-                \begin{warn}{Dimensions that created by other mods may have special behaviour}
-                    Some other mods will add extra dimension (like, the mod the-bumblezone-fabric).
-                    Their dimension portal may work in a different way, so this module may not be compatible with these mods.\\
-                    In the default options, we only allow this module works in the vanilla minecraft dimensions.
-                \end{warn}
-            }
-        \end{NestedList}
-    }
-\end{Configuration}
-
 \LevelTwo{Meta}
 \begin{description}
     \item [fuji.teleport\_warmup.warmup] The per player teleport warmup time in seconds.

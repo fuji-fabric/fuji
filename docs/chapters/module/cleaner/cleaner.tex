@@ -18,55 +18,6 @@ This module provides the entity cleaner to remove specified entities automatical
     Hover your mouse on the cleaner broadcast, you can see what has been removed.
 \end{tips}
 
-\LevelTwo{Configuration}
-\begin{Configuration}
-    \item[cron]{
-        The cron used to define the job to trigger \cmd{/cleaner clean}.
-    }
-
-    \item[key2age]{
-        The key is translatable key, which you can query in \href{https://github.com/sakurawald/fuji/blob/dev/.github/files/en_us.json}{en\_us.json language file in minecraft 1.21.} \\
-        The translatable key of entity starts with entity.minecraft. \\
-        The translatable key of item starts with item.minecraft and block.minecraft. \\
-        The age is the existence time of the entity, the unit of age is game tick, which means 20 age = 20 ticks = 1 second. \\
-        The cleaner will only remove the entities whose translatable key equals key, and age greater equals the defined age, and the entity must not in the ignore list.
-
-        \begin{example}{Clean the sand-block entity lives longer than 60sec}
-            \begin{jsoncode}
-                "block.minecraft.sand": 1200
-            \end{jsoncode}
-        \end{example}
-    }
-
-    \item[ignore]{
-        Entities match the ignore list will not be cleaned.
-
-        \begin{NestedList}
-            \item[ignore\_item\_entity]{
-                Should we ignore all item entity.
-            }
-
-            \item[ignore\_living\_entity]{
-                Should we ignore all living entity?\\
-                If you want the cleaner to remove monster or animals, you should enable this option.
-            }
-
-            \item[ignore\_named\_entity]{
-                Should we ignore named entity.(With name tag, or name changed by anvil.)
-            }
-
-            \item[ignore\_entity\_with\_vehicle]{
-                Like entity riding in some other entity, \eg minecraft, pig or spider
-            }
-
-            \item[ignore\_entity\_with\_passengers]
-            \item[ignore\_glowing\_entity]
-            \item[ignore\_leashed\_entity]
-        \end{NestedList}
-    }
-
-\end{Configuration}
-
 \begin{samepage}
     \begin{note}{The built-in safety rule}
         The cleaner will \tbf{always ignore} the following types:

@@ -12,52 +12,6 @@ In other words, if the \ttt{afk checker} is defined to run every 5 minutes, a pl
 \LevelTwo{Command}
 \fcmd{/afk}
 
-\LevelTwo{Configuration}
-\begin{Configuration}
-    \item[format]{The \tbf{tab list name} format when a player is afk}
-
-    \item[afk\_checker]{
-        \begin{NestedList}
-            \item[]
-            \item[cron]{The cron to define how the afk\_checker is triggered.}
-        \end{NestedList}
-
-    }
-
-    \item[afk\_event]{
-        Execute commands on afk events.
-        \begin{example}{Kick a player if he enters afk state}
-            \begin{jsoncode}
-                "on_enter_afk": [
-                "send-broadcast <gold>Player %player:name% is now afk",
-                "kick %player:name% You are kicked beacause of afk."
-                ]
-            \end{jsoncode}
-        \end{example}
-    }
-
-
-    \item[event]{
-        Afk effects are applied if a player enters afk state.
-
-        \begin{NestedList}
-            \item[invulnerable]{
-                Immune to all damage?
-            }
-
-            \item[targetable]{
-                Can be targeted by a hostile entity?
-            }
-
-            \item[moveable]{
-                Can be moved if in afk state?
-            }
-
-        \end{NestedList}
-    }
-
-\end{Configuration}
-
 
 
 
