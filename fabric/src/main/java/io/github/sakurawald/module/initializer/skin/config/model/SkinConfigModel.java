@@ -1,12 +1,16 @@
 package io.github.sakurawald.module.initializer.skin.config.model;
 
 import com.mojang.authlib.properties.Property;
+import io.github.sakurawald.core.annotation.Document;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SkinConfigModel {
 
+    @Document("""
+        The defined `default skins` for this server.
+        """)
     public List<Property> default_skins = new ArrayList<>() {
         {
 

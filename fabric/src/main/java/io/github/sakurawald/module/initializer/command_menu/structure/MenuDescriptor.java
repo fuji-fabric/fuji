@@ -1,6 +1,7 @@
 package io.github.sakurawald.module.initializer.command_menu.structure;
 
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.executor.CommandExecutor;
 import io.github.sakurawald.core.command.structure.ExtendedCommandSource;
@@ -16,8 +17,23 @@ import java.util.List;
 @NoArgsConstructor
 public class MenuDescriptor {
 
+    @Document("""
+        The `title` of this GUI.
+        """)
     public String title;
+
+    @Document("""
+        Ranged [1, 6]
+        """)
     public int lines;
+
+
+    @Document("""
+        Should we `close` this GUI automatically when any `slot` is `clicked`?
+
+        Or you need to execute `/command-menu close <player>` command.
+        To close the GUI manually.
+        """)
     public boolean closeMenuOnClicked;
 
     public Commands commands;
@@ -26,8 +42,10 @@ public class MenuDescriptor {
         public List<String> on_closed_commands = new ArrayList<>();
     }
 
+    @Document("""
+        Defined `slots` for this GUI.
+        """)
     public List<SlotDescriptor> slots;
-
     private ScreenHandlerType<?> getScreenHandlerType() {
         if (this.lines == 1) return ScreenHandlerType.GENERIC_9X1;
         if (this.lines == 2) return ScreenHandlerType.GENERIC_9X2;

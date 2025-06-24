@@ -1,13 +1,35 @@
 package io.github.sakurawald.module.initializer.top_chunks.config.model;
 
+import io.github.sakurawald.core.annotation.Document;
+
 import java.util.HashMap;
 
 public class TopChunksConfigModel {
 
+    @Document("""
+        The amount of `top chunks` to list in `all chunks`.
+        """)
     public Top top = new Top();
+    public static class Top {
+        public int rows = 10;
+        public int columns = 10;
+    }
+
+    @Document("""
+        The `max distance` to search `the nearest player` for a `chunk`.
+        """)
     public int nearest_distance = 128;
+
+    @Document("""
+        Should we hide the `location` of `chunk`.
+        """)
     public boolean hide_location = true;
 
+    @Document("""
+        Define the `type` to `score` map.
+
+        The `type` is `translatable key`.
+        """)
     public HashMap<String, Integer> type2score = new HashMap<>() {
         {
             this.put("default", 1);
@@ -68,9 +90,4 @@ public class TopChunksConfigModel {
             this.put("entity.minecraft.hopper_minecart", 20);
         }
     };
-
-    public static class Top {
-        public int rows = 10;
-        public int columns = 10;
-    }
 }

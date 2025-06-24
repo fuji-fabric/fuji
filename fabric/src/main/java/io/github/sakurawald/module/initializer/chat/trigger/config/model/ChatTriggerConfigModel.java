@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.chat.trigger.config.model;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.module.initializer.chat.trigger.structure.ChatTrigger;
 
 import java.util.ArrayList;
@@ -7,6 +8,9 @@ import java.util.List;
 
 public class ChatTriggerConfigModel {
 
+    @Document("""
+        Use `regex` expression to define `triggers`.
+        """)
     public List<ChatTrigger> triggers = new ArrayList<>() {
         {
             this.add(new ChatTrigger("magic", List.of("say magic!")));

@@ -6,7 +6,6 @@ import java.util.Set;
 public class AntiBuildConfigModel {
 
     public Anti anti = new Anti();
-
     public static class Anti {
 
         public BreakBlock break_block = new BreakBlock();

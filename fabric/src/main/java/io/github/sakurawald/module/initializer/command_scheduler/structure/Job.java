@@ -1,6 +1,7 @@
 package io.github.sakurawald.module.initializer.command_scheduler.structure;
 
 import com.google.gson.annotations.SerializedName;
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.command.executor.CommandExecutor;
@@ -15,11 +16,29 @@ import java.util.Random;
 @AllArgsConstructor
 public class Job {
 
+    @Document("""
+        The `unique` name of this `job`.
+        """)
     String name;
+
     boolean enable;
+
+    @Document("""
+        Allowed left times to run.
+        """)
     @SerializedName(value = "left_times", alternate = "left_trigger_times")
     int leftTimes;
+
+    @Document("""
+        Defined `cron` expression list.
+
+        Any met `cron` expression can `trigger` this `job`.
+        """)
     List<String> crons;
+
+    @Document("""
+        The commands to execute when the `job` is `triggered`.
+        """)
     List<List<String>> commands_list;
 
     // for implement simplification, the job will always be scheduled, and the trigger() will always be called.

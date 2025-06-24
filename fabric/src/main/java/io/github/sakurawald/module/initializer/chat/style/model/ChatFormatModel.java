@@ -1,15 +1,17 @@
 package io.github.sakurawald.module.initializer.chat.style.model;
 
-import org.jetbrains.annotations.NotNull;
+import io.github.sakurawald.core.annotation.Document;
 
 import java.util.HashMap;
 
 public class ChatFormatModel {
 
-    public @NotNull Format format = new Format();
-
+    @Document("""
+        Per-player chat content format.
+        """)
+    public Format format = new Format();
     public static class Format {
-        public @NotNull HashMap<String, String> player2format = new HashMap<>() {
+        public HashMap<String, String> player2format = new HashMap<>() {
             {
                 this.put("Steve", "<#FFC7EA>%message%");
             }

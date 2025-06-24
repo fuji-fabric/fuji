@@ -1,12 +1,18 @@
 package io.github.sakurawald.module.initializer.nametag.config.model;
 
+import io.github.sakurawald.core.annotation.Document;
+
 public class NametagConfigModel {
 
+    @Document("""
+        The `cron` expression used to `update` nametags.
+        """)
     public String update_cron = "* * * ? * *";
 
+    @Document("""
+        Define the `style` of nametag.
+        """)
     public Style style = new Style();
-    public Render render = new Render();
-
     public static class Style {
         public String text = "<#B1B2FF>%fuji:player_playtime%\uD83D\uDD25 %fuji:player_mined%⛏ %fuji:player_placed%\uD83D\uDD33 %fuji:player_killed%\uD83D\uDDE1 %fuji:player_moved%\uD83C\uDF0D\n<dark_green>%player:displayname_visual%"; // escape Unicode
 
@@ -58,6 +64,10 @@ public class NametagConfigModel {
 
     }
 
+    @Document("""
+        Define the `render` logic of `nametags`.
+        """)
+    public Render render = new Render();
     public static class Render {
         public boolean see_through_blocks = false;
         public float view_range = 1.0f;

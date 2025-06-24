@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.command_warmup.structure;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.manager.impl.bossbar.structure.Interruptible;
 import io.github.sakurawald.core.structure.Tag;
 import lombok.Data;
@@ -8,12 +9,24 @@ import lombok.Data;
 public class CommandWarmupNode {
 
     final Tag tag;
+
+    @Document("""
+        The `target command` and `warmup time in ms`.
+        """)
     final Command command;
+
     final Interruptible interruptible;
 
     @Data
     public static class Command {
+        @Document("""
+            The `regex` expression used to match the `target command`.
+            """)
         final String regex;
+
+        @Document("""
+            The `warmup time` in ms.
+            """)
         final int ms;
     }
 

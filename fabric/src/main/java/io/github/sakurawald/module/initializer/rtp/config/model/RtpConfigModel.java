@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.rtp.config.model;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.structure.TeleportSetup;
 
 import java.util.ArrayList;
@@ -7,8 +8,10 @@ import java.util.List;
 
 public class RtpConfigModel {
 
+    @Document("""
+        Define `rtp` setup for each `dimension`.
+        """)
     public Setup setup = new Setup();
-
     public static class Setup {
         public List<TeleportSetup> dimension = new ArrayList<>() {
 

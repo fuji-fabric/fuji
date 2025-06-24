@@ -1,9 +1,14 @@
 package io.github.sakurawald.module.initializer.sit.config.model;
 
+import io.github.sakurawald.core.annotation.Document;
+
 public class SitConfigModel {
 
     public RightClickToSit right_click_to_sit = new RightClickToSit();
     public static class RightClickToSit {
+        @Document("""
+            Allow `right click` a `stair block` or `slab block` to sit?
+            """)
         public boolean enable = true;
         public boolean allow_sneaking_to_sit = false;
         public boolean require_empty_hand_to_sit = false;

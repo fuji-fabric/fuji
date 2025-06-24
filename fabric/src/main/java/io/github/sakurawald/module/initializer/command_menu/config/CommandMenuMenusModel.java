@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.command_menu.config;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.module.initializer.command_menu.structure.MenuDescriptor;
 import io.github.sakurawald.module.initializer.command_menu.structure.SlotDescriptor;
@@ -13,6 +14,10 @@ import java.util.Map;
 
 @Data
 public class CommandMenuMenusModel {
+
+    @Document("""
+        Defined `menus`.
+        """)
     public Map<String, MenuDescriptor> menus = new HashMap<>() {
         {
             /* Menu: example-menu */

@@ -1,5 +1,6 @@
 package io.github.sakurawald.core.structure;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.PermissionHelper;
 import lombok.Data;
 import net.minecraft.entity.player.PlayerEntity;
@@ -10,6 +11,10 @@ import java.util.List;
 
 @Data
 public class Tag {
+
+    @Document("""
+        The tag names.
+        """)
     List<String> tags = new ArrayList<>() {
         {
             this.add("default-tag-name");

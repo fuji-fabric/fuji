@@ -19,8 +19,8 @@ public class ConfigModel {
     @Document("""
         Fuji is designed to be fully-modular.
         All modules is `disabled` by default.
-        You can modify the `enable` field to enable a module.
-        Remember to `restart` the server, after you modify the field.
+        You can modify the `enable` field to enable a module <red>after a server re-start</red>.
+        <b>Remember to `restart` the server to apply the modification.
 
         Issue `/fuji inspect modules` to see the module status.
         """)
@@ -55,6 +55,7 @@ public class ConfigModel {
             @Document("""
                 The logger level for `quartz` library.
                 The level is recommended to be higher than `WARN`, to prevent console spam.
+                Acceptable levels: ALL < TRACE < DEBUG < INFO < WARN < ERROR < FATAL < OFF
                 """)
             public String logger_level = "WARN";
         }

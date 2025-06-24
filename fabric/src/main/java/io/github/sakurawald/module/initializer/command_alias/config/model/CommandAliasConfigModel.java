@@ -1,11 +1,16 @@
 package io.github.sakurawald.module.initializer.command_alias.config.model;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.module.initializer.command_alias.structure.CommandPathMappingNode;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CommandAliasConfigModel {
+
+    @Document("""
+        Defined `alias` for `existing commands`.
+        """)
     public List<CommandPathMappingNode> alias = new ArrayList<>() {
         {
             this.add(new CommandPathMappingNode(List.of("r"), List.of("reply")));

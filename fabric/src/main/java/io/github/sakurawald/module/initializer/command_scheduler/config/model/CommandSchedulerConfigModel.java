@@ -1,6 +1,7 @@
 package io.github.sakurawald.module.initializer.command_scheduler.config.model;
 
 import com.google.gson.annotations.SerializedName;
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.module.initializer.command_scheduler.structure.Job;
 import org.jetbrains.annotations.NotNull;
 
@@ -9,6 +10,9 @@ import java.util.List;
 
 public class CommandSchedulerConfigModel {
 
+    @Document("""
+        Defined `scheduler` entry.
+        """)
     @SerializedName(value = "jobs", alternate = "scheduleJobs")
     public @NotNull List<Job> jobs = new ArrayList<>() {
         {

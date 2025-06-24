@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.command_advice.model;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.module.initializer.command_advice.structure.CommandAdviceEntry;
 import io.github.sakurawald.module.initializer.command_advice.structure.CommandAdviceType;
 
@@ -8,6 +9,9 @@ import java.util.List;
 
 public class CommandAdviceConfigModel {
 
+    @Document("""
+        Define `advices` for the `target command`.
+        """)
     public final List<CommandAdviceEntry> entries = new ArrayList<>() {
         {
             this.add(new CommandAdviceEntry("back", true, CommandAdviceType.BEFORE_EXECUTING, List.of("run as fake-op %player:name% say before executing /back for %player:name%")));

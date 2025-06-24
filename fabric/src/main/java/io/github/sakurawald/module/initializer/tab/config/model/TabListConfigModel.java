@@ -1,13 +1,20 @@
 package io.github.sakurawald.module.initializer.tab.config.model;
 
+import io.github.sakurawald.core.annotation.Document;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class TabListConfigModel {
-
-    public Style style = new Style();
+    @Document("""
+        The `cron` expression used to `update` the tab list.
+        """)
     public String update_cron = "* * * ? * *";
 
+    @Document("""
+        Define the style of tab list.
+        """)
+    public Style style = new Style();
     public static class Style {
         public List<String> header = new ArrayList<>() {
             {

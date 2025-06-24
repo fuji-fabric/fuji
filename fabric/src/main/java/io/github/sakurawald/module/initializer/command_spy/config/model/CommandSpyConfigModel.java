@@ -1,12 +1,16 @@
 package io.github.sakurawald.module.initializer.command_spy.config.model;
 
 import com.google.gson.annotations.SerializedName;
+import io.github.sakurawald.core.annotation.Document;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CommandSpyConfigModel {
 
+    @Document("""
+        Ignore and never spy on these commands.
+        """)
     @SerializedName(value = "ignore_commands", alternate = "ignore")
     public List<String> ignore_commands = new ArrayList<>() {
         {
@@ -14,9 +18,17 @@ public class CommandSpyConfigModel {
         }
     };
 
+    @Document("""
+        The `only spy on these commands mode`.
+        """)
     public OnlySpyTheseCommands only_spy_these_commands = new OnlySpyTheseCommands();
     public static class OnlySpyTheseCommands {
+
+        @Document("""
+            Should we `only` spy on these commands?
+            """)
         public boolean enable = false;
+
         public List<String> commands = new ArrayList<>() {
             {
                 this.add("tpa .+");

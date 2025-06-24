@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.command_bundle.config.model;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.command.structure.CommandRequirementDescriptor;
 import io.github.sakurawald.module.initializer.command_bundle.structure.BundleCommandNode;
 import lombok.Data;
@@ -10,6 +11,9 @@ import java.util.List;
 @Data
 public class CommandBundleConfigModel {
 
+    @Document("""
+        Defined `bundle commands`.
+        """)
     public List<BundleCommandNode> entries = new ArrayList<>() {
         {
             /* level 4 commands */

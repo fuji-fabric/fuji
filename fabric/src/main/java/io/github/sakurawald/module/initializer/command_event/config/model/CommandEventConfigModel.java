@@ -1,14 +1,17 @@
 package io.github.sakurawald.module.initializer.command_event.config.model;
 
+import io.github.sakurawald.core.annotation.Document;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class CommandEventConfigModel {
 
+    @Document("""
+        Define `commands` to be execute on `specific events`.
+        """)
     public Event event = new Event();
-
     public static class Event {
-
         public OnPlayerDeath on_player_death = new OnPlayerDeath();
         public AfterPlayerBreakBlock after_player_break_block = new AfterPlayerBreakBlock();
         public AfterPlayerPlaceBlock after_player_place_block = new AfterPlayerPlaceBlock();

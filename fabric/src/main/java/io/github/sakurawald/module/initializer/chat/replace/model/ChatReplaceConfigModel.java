@@ -1,5 +1,6 @@
 package io.github.sakurawald.module.initializer.chat.replace.model;
 
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.structure.RegexRewriteNode;
 
 import java.util.ArrayList;
@@ -7,8 +8,10 @@ import java.util.List;
 
 public class ChatReplaceConfigModel {
 
+    @Document("""
+        Define `regex` expression, to replace `chat string`.
+        """)
     public Replace replace = new Replace();
-
     public static class Replace {
         public List<RegexRewriteNode> regex = new ArrayList<>() {
             {

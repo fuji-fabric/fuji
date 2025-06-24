@@ -4,6 +4,7 @@ import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SlotGuiInterface;
+import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.PermissionHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
@@ -27,12 +28,36 @@ import java.util.List;
 public class SlotDescriptor {
     // NOTE: It's possible only provide the NBT field, but it's hard to use.
 
+    @Document("""
+        Where to place this item in GUI?
+        """)
     public int index = 0;
+
+    @Document("""
+        What is the item?
+        """)
     public String item = "minecraft:stone";
+
+    @Document("""
+        The count of this item.
+        """)
     public int count = 42;
+
+    @Document("""
+        The display name of this item.
+        """)
     public @Nullable String displayName = "<blue>My Nice Item Name";
+
     public boolean hideTooltip = false;
+
+    @Document("""
+        Should we glow this item?
+        """)
     public boolean glow = false;
+
+    @Document("""
+        The lore of this item.
+        """)
     public List<String> lore = new ArrayList<>() {
         {
             this.add("<green>Hello %player:name%");
@@ -40,6 +65,9 @@ public class SlotDescriptor {
         }
     };
 
+    @Document("""
+        The `requirement` to `see` this item in GUI.
+        """)
     public ViewRequirement viewRequirement = new ViewRequirement();
     public static class ViewRequirement {
         // NOTE: The view requirement decides whether the player can see this slot in menu.
@@ -48,7 +76,6 @@ public class SlotDescriptor {
     }
 
     public Commands commands = new Commands();
-
     public static class Commands {
         public List<String> on_left_click_commands = new ArrayList<>(){
             {
