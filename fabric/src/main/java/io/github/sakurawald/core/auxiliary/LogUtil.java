@@ -2,7 +2,6 @@ package io.github.sakurawald.core.auxiliary;
 
 import io.github.sakurawald.Fuji;
 import io.github.sakurawald.core.config.Configs;
-import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import lombok.experimental.UtilityClass;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
@@ -12,9 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Arrays;
-import java.util.List;
 
 @UtilityClass
 public class LogUtil {
@@ -40,7 +36,7 @@ public class LogUtil {
     }
 
     private static String attachSourceModuleInfo(String message) {
-        String prefix = "[%s] ".formatted(findSourceModuleInCurrentStack());
+        String prefix = "[%s] ".formatted(ReflectionUtil.findSourceModuleInCurrentStack());
         return prefix + message;
     }
 
@@ -79,33 +75,4 @@ public class LogUtil {
         MOD_LOGGER.error(message, args);
     }
 
-    private static List<String> getCurrentStackTraceAsClassNames() {
-        return Arrays.stream(Thread.currentThread()
-            .getStackTrace())
-            .map(StackTraceElement::getClassName)
-            .toList();
-    }
-
-    private static List<String> getCurrentStackTraceAsModuleName() {
-        return getCurrentStackTraceAsClassNames()
-            .stream()
-            .map(ModuleManager::computeModulePathAsString)
-            .toList();
-    }
-
-    private static String findSourceModuleInCurrentStack() {
-        return findSourceModule(getCurrentStackTraceAsModuleName());
-    }
-
-    private static String findSourceModule(List<String> joinedModulePath) {
-        /* The most recent module in the stack trace is considered as the source module. */
-        // NOTE: If the logger call is only used in mixin, and no function call in module initializer, then we have no clue to figure out which module it comes.
-        String result = "unknown";
-        for (String moduleName : joinedModulePath) {
-            result = moduleName;
-            if (!result.equals(ModuleManager.CORE_MODULE_ROOT)) return result;
-        }
-
-        return result;
-    }
 }
