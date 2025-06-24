@@ -333,6 +333,7 @@
   "fuji.inspect.server_commands.gui.copy_command_path": "<orange>复制指令路径：`%s` <hover:show_text:'<green>复制到剪切板'><click:copy_to_clipboard:'%s'><green>[复制]</click></hover>",
   "fuji.inspect.modules.gui.title": "<blue>模块",
   "module.enable.status": "<yellow>Enable: %s",
+  "module.registered_commands": "<blue>This module registers `%d` commands.",
   "fuji.inspect.fuji_commands.gui.title": "<blue>Fuji 指令",
   "fuji.inspect.permissions_and_metas.gui.title": "<#A294F9>Permissions & Metas",
   "fuji.inspect.permissions_and_metas.gui.item.name": "<#A294F9>%s",
