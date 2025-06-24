@@ -1,6 +1,7 @@
 package io.github.sakurawald.core.config.model;
 
 import com.google.gson.annotations.SerializedName;
+import io.github.sakurawald.core.annotation.Document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,24 +9,67 @@ import java.util.List;
 /* Sometimes I really hate the typing system of java... */
 public class ConfigModel {
 
+    @Document("""
+        Fuji is composed by `core` and `module`.
+        The `core` config affects `all` modules.
+        The `module` config only affects that specific module.
+        """)
     public Core core = new Core();
+
+    @Document("""
+        Fuji is designed to be fully-modular.
+        All modules is `disabled` by default.
+        You can modify the `enable` field to enable a module.
+        Remember to `restart` the server, after you modify the field.
+
+        Issue `/fuji inspect modules` to see the module status.
+        """)
     public Modules modules = new Modules();
 
     public static class Core {
-
+        @Document("Debug related options.")
         public Debug debug = new Debug();
+
+        @Document("""
+            Fuji will back up the `config/fuji` dir before it loads any module.
+            """)
         public Backup backup = new Backup();
+
+        @Document("""
+            The language related options.
+            """)
         public Language language = new Language();
+
+        @Document("""
+            The permission related options.
+            """)
         public Permission permission = new Permission();
+
+        @Document("""
+            The scheduler related options.
+            The `scheduler` system is used to run `jobs`.
+            """)
         public Scheduler scheduler = new Scheduler();
 
         public static class Scheduler {
+            @Document("""
+                The logger level for `quartz` library.
+                The level is recommended to be higher than `WARN`, to prevent console spam.
+                """)
             public String logger_level = "WARN";
         }
 
         public static class Backup {
 
+            @Document("""
+                How many `backup files` should we keep?
+                """)
             public int max_slots = 15;
+
+            @Document("""
+                The `paths` that should be skipped when backup.
+                The `path` is resolved and related to `config/fuji/` dir.
+                """)
             public List<String> skip = new ArrayList<>() {
                 {
                     this.add("modules/head");
@@ -34,16 +78,37 @@ public class ConfigModel {
         }
 
         public static class Language {
+            @Document("""
+                The `default language` used by Fuji.
+                The language files are located in `config/fuji/lang` dir.
+                """)
             public String default_language = "en_US";
         }
 
-
         public static class Permission {
+            @Document("""
+                Fuji defines commands into 2 groups, for different users.
+                One group for `normal user`, these commands require `level 0 permission` to use.
+                One group for `admin user`, these commands require `level 4 permission` to use.
+
+                If you want to define the permission of commands by yourself,
+                you can enable `this` option.
+                And use `command_permission` module to define permission for each command.
+                """)
             public boolean all_commands_require_level_4_permission_to_use_by_default = false;
         }
 
         public static class Debug {
+            @Document("""
+                Force disable `all` modules.
+                Used to test the compatibility between `fuji` and `other mods`.
+                """)
             public boolean disable_all_modules = false;
+
+            @Document("""
+                Should we log the `debug` level messages into the `console`?
+                This option can be changed using `/fuji debug` command.
+                """)
             public boolean log_debug_messages = false;
         }
     }

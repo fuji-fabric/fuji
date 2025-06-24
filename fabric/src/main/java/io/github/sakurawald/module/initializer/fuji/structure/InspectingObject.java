@@ -221,7 +221,7 @@ public class InspectingObject {
         String documentString = this.getDocumentString();
         if (documentString != null) {
             lore.add(TextHelper.TEXT_EMPTY);
-            lore.add(TextHelper.getDocumentText(player, documentString));
+            lore.addAll(TextHelper.getDocumentTextList(player, documentString));
         }
 
         return lore;
