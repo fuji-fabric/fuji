@@ -18,11 +18,13 @@ import io.github.sakurawald.core.job.abst.BaseJob;
 import io.github.sakurawald.core.manager.Managers;
 import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.core.structure.Pair;
+import io.github.sakurawald.core.structure.descriptor.StringDescriptor;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.fuji.gui.AboutGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ArgumentTypeInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ConfigurationHandlerInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ModulesInspectionGui;
+import io.github.sakurawald.module.initializer.fuji.gui.PermissionsAndMetasInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.RegistryInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ServerCommandsInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.structure.ServerCommandNodeWrapper;
@@ -74,8 +76,8 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("about")
     @Document("Open fuji about gui.")
+    @CommandNode("about")
     private static int $about(@CommandSource ServerPlayerEntity player) {
         ModMetadata metadata = FabricLoader.getInstance().getModContainer(Fuji.MOD_ID)
             .orElseThrow(() -> new IllegalStateException("Failed to get the metadata of this mod."))
@@ -89,8 +91,8 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("debug")
     @Document("Switch the `log_debug_message` option.")
+    @CommandNode("debug")
     private static int $debug(@CommandSource ServerCommandSource source) {
         var config = Configs.mainControlConfig.model().core.debug;
         config.log_debug_messages = !config.log_debug_messages;
@@ -99,8 +101,8 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("inspect server-commands")
     @Document("Inspect all commands registered in server.")
+    @CommandNode("inspect server-commands")
     private static int $inspectServerCommands(@CommandSource ServerPlayerEntity player) {
         List<ServerCommandNodeWrapper> entities = CommandHelper.getCommandNodes()
             .stream()
@@ -111,8 +113,8 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("inspect modules")
     @Document("Inspect all enabled/disabled modules of fuji.")
+    @CommandNode("inspect modules")
     private static int $inspectModules(@CommandSource ServerPlayerEntity player) {
         List<Pair<String, Boolean>> list = ModuleManager.MODULE_ENABLE_STATUS
             .entrySet()
@@ -125,8 +127,8 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("inspect fuji-commands")
     @Document("Inspect all commands registered by fuji.")
+    @CommandNode("inspect fuji-commands")
     private static int $inspectFujiCommands(@CommandSource ServerPlayerEntity player) {
         List<CommandDescriptor> descriptors = CommandAnnotationProcessor
             .descriptors
@@ -139,8 +141,8 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("inspect argument-types")
     @Document("Inspect all argument types registered by fuji.")
+    @CommandNode("inspect argument-types")
     private static int $inspectCommandArgumentTypes(@CommandSource ServerCommandSource source) {
         List<BaseArgumentTypeAdapter> adapters = BaseArgumentTypeAdapter.getAdapters();
 
@@ -157,8 +159,8 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("inspect configurations")
     @Document("Inspect all loaded configurations files.")
+    @CommandNode("inspect configurations")
     private static int $inspectConfigurations(@CommandSource ServerPlayerEntity player) {
         List<BaseConfigurationHandler<?>> list = BaseConfigurationHandler.CONFIGURATION_HANDLERS.stream()
             .filter(it -> it instanceof ObjectConfigurationHandler<?>)
@@ -170,8 +172,8 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode("inspect registry")
     @Document("Inspect all registries in server.")
+    @CommandNode("inspect registry")
     private static int $inspectRegistry(@CommandSource ServerPlayerEntity player) {
         List<Identifier> staticRegistries = Registries.REGISTRIES.getKeys().stream()
             .map(RegistryKey::getValue)
@@ -185,6 +187,20 @@ public class FujiInitializer extends ModuleInitializer {
         identifiers.sort(Comparator.comparing(Identifier::toString));
 
         new RegistryInspectionGui(null, player, true, identifiers, 0).open();
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document("Inspect permissions and metas used by fuji.")
+    @CommandNode("inspect permissions-and-metas")
+    private static int $inspectPermissionsAndMetas(@CommandSource ServerPlayerEntity player) {
+        List<StringDescriptor> entities = StringDescriptor.REGISTERED_STRING_DESCRIPTORS
+            .stream()
+            .sorted(Comparator.comparing(StringDescriptor::getFromModule))
+            .toList();
+
+        new PermissionsAndMetasInspectionGui(null, player, entities, 0)
+            .open();
+
         return CommandHelper.Return.SUCCESS;
     }
 }
