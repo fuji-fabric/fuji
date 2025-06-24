@@ -20,6 +20,7 @@ import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.command_permission.gui.CommandPermissionGui;
 import io.github.sakurawald.module.initializer.command_permission.structure.CommandNodePermission;
 import io.github.sakurawald.module.initializer.command_permission.structure.WrappedPredicate;
+import io.github.sakurawald.core.structure.descriptor.PermissionDescriptor;
 import net.luckperms.api.util.Tristate;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -42,6 +43,13 @@ import java.util.function.Predicate;
 public class CommandPermissionInitializer extends ModuleInitializer {
 
     private static boolean verboseModeFlag = false;
+
+    public static final PermissionDescriptor COMMAND_PERMISSION_UNIFIED_PERMISSION = new PermissionDescriptor("fuji.permission.<command-path>", """
+        To use the `command` with that `command path`.
+        You need the corresponding permission.
+
+        Issue `/command-permission describe` to see details.
+        """);
 
     @CommandNode("gui")
     @Document("Open the command permission gui.")
@@ -125,7 +133,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         TextHelper.sendMessageByKey(source,"command_permission.describe.command_permissions");
         List<String> commandPathPrefixes = CommandHelper.getCommandPathPrefixes(nodes);
         commandPathPrefixes.forEach(path -> {
-            String requiredPermission = computeCommandPermission(path);
+            String requiredPermission = COMMAND_PERMISSION_UNIFIED_PERMISSION.withArguments(path);
             TextHelper.sendMessageByKey(source,"command_permission.describe.command_permission", requiredPermission);
         });
 
@@ -134,15 +142,11 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-
-    public static String computeCommandPermission(String commandPath) {
-        return "fuji.permission.%s".formatted(commandPath);
-    }
-
-    private static void processVerboseMode(ServerCommandSource source, String commandPath, String requiredPermissionToExecuteThisCommand, Tristate state) {
+    private static void processVerboseMode(ServerCommandSource source, String commandPath, Tristate state) {
         if (!verboseModeFlag) return;
 
         // Make description.
+        String requiredPermissionToExecuteThisCommand = COMMAND_PERMISSION_UNIFIED_PERMISSION.withArguments(commandPath);
         String description = makeDescription(state);
 
         // Info in console.
@@ -184,9 +188,8 @@ public class CommandPermissionInitializer extends ModuleInitializer {
 
                    Only valid command has its command path (command-alias also has its path, but it will redirect the execution to the real command-path)
                  */
-                String permission = computeCommandPermission(commandPath);
-                Tristate triState = PermissionHelper.getPermission(source.getPlayer().getUuid(), permission);
-                processVerboseMode(source, commandPath, permission, triState);
+                Tristate triState = PermissionHelper.getPermission(source.getPlayer().getUuid(), COMMAND_PERMISSION_UNIFIED_PERMISSION, commandPath);
+                processVerboseMode(source, commandPath, triState);
 
                 /* If the related permission is UNDEFINED, we just fall back to original predicate. */
                 if (triState != Tristate.UNDEFINED) {

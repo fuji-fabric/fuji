@@ -6,6 +6,7 @@ import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.structure.GlobalPos;
 import io.github.sakurawald.core.structure.TypeFormatter;
+import io.github.sakurawald.core.structure.descriptor.PermissionDescriptor;
 import io.github.sakurawald.module.initializer.top_chunks.TopChunksInitializer;
 import lombok.Data;
 import net.minecraft.block.entity.BlockEntity;
@@ -30,6 +31,10 @@ import java.util.Set;
 @Data
 public class ChunkScore implements Comparable<ChunkScore> {
 
+    private static final PermissionDescriptor CLICK_TO_TELEPORT_TO_CHUNK_LOCATION_PERMISSION = new PermissionDescriptor("top_chunks.teleport", """
+        Click to teleport to the chunk location.
+        """);
+
     /* Chunk global position. */
     private final ServerWorld dimension;
     private final ChunkPos chunkPos;
@@ -47,7 +52,7 @@ public class ChunkScore implements Comparable<ChunkScore> {
     }
 
     public static boolean canClickToTeleportToThisChunk(ServerPlayerEntity player) {
-        return player.hasPermissionLevel(4) || PermissionHelper.hasPermission(player.getUuid(), "top_chunks.teleport");
+        return player.hasPermissionLevel(4) || PermissionHelper.hasPermission(player.getUuid(), CLICK_TO_TELEPORT_TO_CHUNK_LOCATION_PERMISSION);
     }
 
     public void plusEntity(@NotNull Entity entity) {

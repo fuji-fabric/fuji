@@ -45,7 +45,7 @@ public abstract class ServerPlayerMixin {
         if (!PlayerHelper.isRealPlayer(player)) return;
 
         /* Skip the teleport warmup if the player has the bypass permission. */
-        if (PermissionHelper.hasPermission(player.getUuid(), "fuji.teleport_warmup.bypass")) {
+        if (PermissionHelper.hasPermission(player.getUuid(), TeleportWarmupInitializer.TELEPORT_WARMUP_BYPASS_PERMISSION)) {
             return;
         }
 

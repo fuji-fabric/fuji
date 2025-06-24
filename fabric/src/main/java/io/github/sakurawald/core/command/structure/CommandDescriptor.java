@@ -19,6 +19,7 @@ import io.github.sakurawald.core.command.argument.structure.Argument;
 import io.github.sakurawald.core.command.exception.AbortCommandExecutionException;
 import io.github.sakurawald.core.command.processor.CommandAnnotationProcessor;
 import io.github.sakurawald.core.manager.impl.module.ModuleManager;
+import io.github.sakurawald.core.structure.descriptor.PermissionDescriptor;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -77,7 +78,9 @@ public class CommandDescriptor {
         Predicate<ServerCommandSource> predicate = (ctx) -> {
             ServerPlayerEntity player = ctx.getPlayer();
             if (player == null) return true;
-            if (PermissionHelper.hasPermission(player.getUuid(), requirement.getString()))
+            if (requirement.getString() != null
+                && !requirement.getString().isEmpty()
+                && PermissionHelper.hasPermission(player.getUuid(), new PermissionDescriptor(requirement.getString(), "Permission for a command descriptor.")))
                 return true;
             if (ctx.hasPermissionLevel(requirement.getLevel())) return true;
 

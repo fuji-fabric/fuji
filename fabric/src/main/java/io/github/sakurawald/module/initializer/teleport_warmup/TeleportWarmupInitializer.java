@@ -6,6 +6,7 @@ import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.core.manager.Managers;
 import io.github.sakurawald.core.manager.impl.bossbar.BossBarTicket;
 import io.github.sakurawald.core.structure.TeleportTicket;
+import io.github.sakurawald.core.structure.descriptor.PermissionDescriptor;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.teleport_warmup.config.model.TeleportWarmupConfigModel;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -18,6 +19,10 @@ import java.util.Optional;
     Adds a warmup cooldown before player teleportation.
     """)
 public class TeleportWarmupInitializer extends ModuleInitializer {
+
+    public static final PermissionDescriptor TELEPORT_WARMUP_BYPASS_PERMISSION = new PermissionDescriptor("fuji.teleport_warmup.bypass", """
+        To bypass all teleport warmup.
+        """);
 
     public static final BaseConfigurationHandler<TeleportWarmupConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, TeleportWarmupConfigModel.class);
 

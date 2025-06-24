@@ -41,7 +41,7 @@ public class CommandPermissionGui extends PagedGui<CommandNodePermission> {
             .setName(Text.literal(entity.getPath()))
             .setCallback((index, clickType, actionType) -> {
                 String commandPath = entity.getPath();
-                String commandPermission = CommandPermissionInitializer.computeCommandPermission(commandPath);
+                String commandPermission = CommandPermissionInitializer.COMMAND_PERMISSION_UNIFIED_PERMISSION.withArguments(commandPath);
 
                 if (clickType.isLeft) {
                     String executionCommand = "/lp group default permission set %s true".formatted(commandPermission);

@@ -17,6 +17,7 @@ import io.github.sakurawald.core.command.annotation.CommandSource;
 import io.github.sakurawald.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
+import io.github.sakurawald.core.structure.descriptor.PermissionDescriptor;
 import io.github.sakurawald.module.initializer.placeholder.gui.PlaceholderGui;
 import io.github.sakurawald.module.initializer.placeholder.job.UpdateSumUpPlaceholderJob;
 import io.github.sakurawald.module.initializer.placeholder.structure.SumUpPlaceholder;
@@ -46,6 +47,8 @@ public class PlaceholderInitializer extends ModuleInitializer {
     private static final Map<String, Map<String, String>> ROTATE_CACHE = new HashMap<>();
 
     private static final Pattern ESCAPE_PARSER = Pattern.compile("\\s*([\\s\\S]+)\\s+(\\d+)\\s*");
+
+
 
     @CommandNode("list")
     @Document("List all placeholders registered in server.")
@@ -235,7 +238,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
 
     private void registerHasPermissionPlaceholder() {
         PlaceholderHelper.withPlayer("has_permission", (player, args) -> {
-            boolean value = PermissionHelper.hasPermission(player.getUuid(), args);
+            boolean value = PermissionHelper.hasPermission(player.getUuid(), new PermissionDescriptor(true, args, null));
             return Text.literal(String.valueOf(value));
         });
     }

@@ -11,6 +11,7 @@ import io.github.sakurawald.core.command.annotation.CommandSource;
 import io.github.sakurawald.core.command.argument.wrapper.impl.Dimension;
 import io.github.sakurawald.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
+import io.github.sakurawald.core.structure.descriptor.PermissionDescriptor;
 import net.minecraft.command.argument.ItemPredicateArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -27,7 +28,7 @@ public class PredicateInitializer extends ModuleInitializer {
     @CommandNode("has-perm?")
     @Document("Predicate to test if the player has the string-perm?")
     private static int hasPerm(@CommandSource ServerCommandSource source, ServerPlayerEntity player, GreedyString stringPermission) {
-        boolean value = PermissionHelper.hasPermission(player.getUuid(), stringPermission.getValue());
+        boolean value = PermissionHelper.hasPermission(player.getUuid(), new PermissionDescriptor(true, stringPermission.getValue(), null));
         return CommandHelper.Return.outputBoolean(source, value);
     }
 

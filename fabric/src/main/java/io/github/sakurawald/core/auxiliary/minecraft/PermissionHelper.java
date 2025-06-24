@@ -1,5 +1,6 @@
 package io.github.sakurawald.core.auxiliary.minecraft;
 
+import io.github.sakurawald.core.structure.descriptor.PermissionDescriptor;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import net.luckperms.api.LuckPerms;
@@ -19,7 +20,6 @@ import java.util.function.Function;
 public class PermissionHelper {
 
     private static LuckPerms instance;
-
     private static @Nullable LuckPerms getAPI() {
         if (instance == null) {
             try {
@@ -49,9 +49,9 @@ public class PermissionHelper {
         return userFuture.join();
     }
 
-    public static @NotNull Tristate getPermission(@NotNull UUID uuid, @Nullable String permission) {
+    public static @NotNull Tristate getPermission(@NotNull UUID uuid, @Nullable PermissionDescriptor permission, Object... arguments
+    ) {
         if (permission == null) return Tristate.FALSE;
-        if (permission.isBlank()) return Tristate.FALSE;
 
         LuckPerms api = getAPI();
         if (api == null) {
@@ -59,13 +59,18 @@ public class PermissionHelper {
         }
 
         User user = loadUser(api, uuid);
+        String permissionString = permission.withArguments(arguments);
+        if (permissionString == null || permissionString.isEmpty()) {
+            return Tristate.FALSE;
+        }
+
         return user
             .getCachedData()
-            .getPermissionData().checkPermission(permission);
+            .getPermissionData().checkPermission(permissionString);
     }
 
-    public static boolean hasPermission(UUID uuid, @Nullable String permission) {
-        return getPermission(uuid, permission)
+    public static boolean hasPermission(UUID uuid, @Nullable PermissionDescriptor permissionDescriptor, Object... arguments) {
+        return getPermission(uuid, permissionDescriptor, arguments)
             .asBoolean();
     }
 

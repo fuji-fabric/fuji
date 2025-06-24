@@ -12,6 +12,7 @@ import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.executor.CommandExecutor;
 import io.github.sakurawald.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.module.initializer.command_menu.CommandMenuInitializer;
+import io.github.sakurawald.core.structure.descriptor.PermissionDescriptor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.minecraft.screen.slot.SlotActionType;
@@ -26,6 +27,11 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class SlotDescriptor {
+
+    private static final PermissionDescriptor SLOT_VIEW_REQUIREMENT_PERMISSION = new PermissionDescriptor("<specified-permission>", """
+        To view this slot, you need the specified permission.
+        """);
+
     // NOTE: It's possible only provide the NBT field, but it's hard to use.
 
     @Document("""
@@ -95,7 +101,7 @@ public class SlotDescriptor {
         if (!player.hasPermissionLevel(this.viewRequirement.level)) return false;
         if (this.viewRequirement.string != null
             && !this.viewRequirement.string.isEmpty()
-            && !PermissionHelper.hasPermission(player.getUuid(),this.viewRequirement.string)) return false;
+            && !PermissionHelper.hasPermission(player.getUuid(), SLOT_VIEW_REQUIREMENT_PERMISSION, this.viewRequirement.string)) return false;
 
         return true;
     }

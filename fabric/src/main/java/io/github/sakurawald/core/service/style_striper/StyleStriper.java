@@ -2,6 +2,7 @@ package io.github.sakurawald.core.service.style_striper;
 
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.PermissionHelper;
+import io.github.sakurawald.core.structure.descriptor.PermissionDescriptor;
 import lombok.experimental.UtilityClass;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -15,6 +16,12 @@ public class StyleStriper {
 
     @SuppressWarnings("RegExpUnnecessaryNonCapturingGroup")
     private static final Pattern TAG_RESOLVER = Pattern.compile("<([^>]+)>");
+
+    private static final PermissionDescriptor STYLE_TAGS_STRIPER_PERMISSION = new PermissionDescriptor("fuji.style.<type>.<style-tag>"
+        , """
+    The permission used for `style tags striper`.
+    A player requires the `corresponding permission` to use that `style tag` in that `type`.
+    """);
 
     public static String stripe(PlayerEntity player, String type, String input) {
         for (String tag : resolveTags(input)) {
@@ -57,8 +64,7 @@ public class StyleStriper {
     }
 
     private static boolean canUse(PlayerEntity player, String type, String tag) {
-        String permission = "fuji.style.%s.%s".formatted(type, tag);
-        return PermissionHelper.hasPermission(player.getUuid(), permission);
+        return PermissionHelper.hasPermission(player.getUuid(), STYLE_TAGS_STRIPER_PERMISSION, type, tag);
     }
 
 }

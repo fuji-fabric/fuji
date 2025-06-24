@@ -7,6 +7,7 @@ import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.anti_build.config.model.AntiBuildConfigModel;
+import io.github.sakurawald.core.structure.descriptor.PermissionDescriptor;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -25,6 +26,10 @@ import java.util.function.Supplier;
     """)
 public class AntiBuildInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<AntiBuildConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, AntiBuildConfigModel.class);
+
+    private static final PermissionDescriptor ANTI_BUILD_BYPASS_PERMISSION = new PermissionDescriptor("fuji.anti_build.<anti-type>.bypass.<id>", """
+        To bypass a specified `anti type` with specified `id`.
+        """);
 
     public static <T> void checkAntiBuild(PlayerEntity player, String antiType, Set<String> ids, String id, CallbackInfoReturnable<T> cir, T cancelWithValue, Supplier<Boolean> shouldSendFeedback) {
         if (shouldWeCancelTheAction(player, antiType, ids, id)) {
@@ -51,7 +56,7 @@ public class AntiBuildInitializer extends ModuleInitializer {
 
     private static boolean isAllowedByPermission(PlayerEntity player, String antiType, String id) {
         return Optional.ofNullable(player)
-            .map(p -> PermissionHelper.hasPermission(player.getUuid(), "fuji.anti_build.%s.bypass.%s".formatted(antiType, id)))
+            .map(p -> PermissionHelper.hasPermission(player.getUuid(), ANTI_BUILD_BYPASS_PERMISSION, antiType, id))
             .orElse(false);
     }
 }
