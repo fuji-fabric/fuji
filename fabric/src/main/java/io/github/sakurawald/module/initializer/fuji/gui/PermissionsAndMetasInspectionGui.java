@@ -39,8 +39,10 @@ public class PermissionsAndMetasInspectionGui extends PagedGui<StringDescriptor>
         lore.add(TextHelper.TEXT_EMPTY);
         lore.addAll(documentTextList);
 
+        Text nameText = TextHelper.getTextByKey(getPlayer(), "fuji.inspect.permissions_and_metas.gui.item.name", entity.getPattern());
+
         builder.setItem(entity.toItem())
-            .setName(Text.literal(entity.getPattern()))
+            .setName(nameText)
             .setLore(lore);
 
         return builder.build();
