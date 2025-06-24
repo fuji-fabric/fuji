@@ -370,6 +370,7 @@
   "object.name": "<yellow>%s",
   "object.type": "<blue>Type: `%s`",
   "object.value": "<blue>Value: <i><yellow>%s</yellow></i>",
+  "object.value.possible_values": "Possible Values: <i>%s</i>",
   "prompt.click.see_inside": "<dark_green><i>Click to see inside.",
   "job.list.gui.title": "<blue>排程",
   "job.props.enabled": "<blue>已啟用：%s",
