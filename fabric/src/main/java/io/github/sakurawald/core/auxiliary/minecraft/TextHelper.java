@@ -594,7 +594,7 @@ public class TextHelper {
         return parser.parseNode(input).toText();
     }
 
-    private static String decorateDocumentString(String documentString) {
+    public static String decorateDocumentString(String documentString) {
         return Arrays.stream(documentString
                 .split("\n"))
             .map(line -> "<#FFA1F5>" + line)

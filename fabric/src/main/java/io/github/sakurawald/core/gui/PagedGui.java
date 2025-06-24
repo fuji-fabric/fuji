@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 public abstract class PagedGui<T> extends LayeredGui {
 
@@ -88,8 +89,14 @@ public abstract class PagedGui<T> extends LayeredGui {
         make(this.parent, getPlayer(), this.prefixTitle, this.entities, newPageIndex).open();
     }
 
-    protected @NotNull PagedGui<T> search(String keywords) {
+    public @NotNull PagedGui<T> search(String keywords) {
         return make(this.parent, getPlayer(), TextHelper.getTextByKey(getPlayer(), "gui.search.title", keywords), filter(keywords), 0);
+    }
+
+    public @NotNull PagedGui<T> search(Predicate<T> predicate) {
+        List<T> newEntities = entities.stream().filter(predicate).toList();
+
+        return make(this.parent, getPlayer(), TextHelper.getTextByKey(getPlayer(), "gui.search.title", "REF"), newEntities, 0);
     }
 
     @SuppressWarnings("unused")

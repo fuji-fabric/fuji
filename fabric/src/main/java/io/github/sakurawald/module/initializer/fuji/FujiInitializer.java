@@ -8,12 +8,10 @@ import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.core.command.annotation.CommandSource;
 import io.github.sakurawald.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
-import io.github.sakurawald.core.command.processor.CommandAnnotationProcessor;
-import io.github.sakurawald.core.command.structure.CommandDescriptor;
 import io.github.sakurawald.core.config.Configs;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
-import io.github.sakurawald.core.gui.CommandDescriptorGui;
+import io.github.sakurawald.core.gui.inspection.CommandDescriptorGui;
 import io.github.sakurawald.core.job.abst.BaseJob;
 import io.github.sakurawald.core.manager.Managers;
 import io.github.sakurawald.core.manager.impl.module.ModuleManager;
@@ -22,7 +20,7 @@ import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.fuji.gui.AboutGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ArgumentTypeInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ConfigurationHandlerInspectionGui;
-import io.github.sakurawald.core.gui.ModulesInspectionGui;
+import io.github.sakurawald.core.gui.inspection.ModulesInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.PermissionsAndMetasInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.RegistryInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ServerCommandsInspectionGui;
@@ -130,14 +128,8 @@ public class FujiInitializer extends ModuleInitializer {
     @Document("Inspect all commands registered by fuji.")
     @CommandNode("inspect fuji-commands")
     private static int $inspectFujiCommands(@CommandSource ServerPlayerEntity player) {
-        List<CommandDescriptor> descriptors = CommandAnnotationProcessor
-            .descriptors
-            .stream()
-            .sorted(Comparator.comparing(CommandDescriptor::getCommandNodePath))
-            .toList();
-
-        new CommandDescriptorGui(player, descriptors, 0).open();
-
+        CommandDescriptorGui.makeDefault(null, player)
+            .open();
         return CommandHelper.Return.SUCCESS;
     }
 

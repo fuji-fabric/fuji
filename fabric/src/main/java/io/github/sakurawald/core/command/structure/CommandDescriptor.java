@@ -441,4 +441,8 @@ public class CommandDescriptor {
 
         return true;
     }
+
+    public String getSourceModulePath() {
+        return ModuleManager.computeModulePathAsString(this.method.getDeclaringClass().getName());
+    }
 }

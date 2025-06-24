@@ -1,11 +1,12 @@
-package io.github.sakurawald.core.gui;
+package io.github.sakurawald.core.gui.inspection;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.core.command.processor.CommandAnnotationProcessor;
 import io.github.sakurawald.core.command.structure.CommandDescriptor;
-import io.github.sakurawald.core.manager.impl.module.ModuleManager;
+import io.github.sakurawald.core.gui.PagedGui;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -13,17 +14,28 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class CommandDescriptorGui extends PagedGui<CommandDescriptor> {
 
-    public CommandDescriptorGui(ServerPlayerEntity player, @NotNull List<CommandDescriptor> entities, int pageIndex) {
-        super(null, player, TextHelper.getTextByKey(player, "fuji.inspect.fuji_commands.gui.title"), entities, pageIndex);
+    public CommandDescriptorGui(@Nullable SimpleGui parent, ServerPlayerEntity player, @NotNull List<CommandDescriptor> entities, int pageIndex) {
+        super(parent, player, TextHelper.getTextByKey(player, "fuji.inspect.fuji_commands.gui.title"), entities, pageIndex);
+    }
+
+    public static CommandDescriptorGui makeDefault(SimpleGui parent, ServerPlayerEntity player) {
+        List<CommandDescriptor> descriptors = CommandAnnotationProcessor
+            .descriptors
+            .stream()
+            .sorted(Comparator.comparing(CommandDescriptor::getCommandNodePath))
+            .toList();
+
+        return new CommandDescriptorGui(parent, player, descriptors, 0);
     }
 
     @Override
     protected PagedGui<CommandDescriptor> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<CommandDescriptor> entities, int pageIndex) {
-        return new CommandDescriptorGui(player, entities, pageIndex);
+        return new CommandDescriptorGui(parent, player, entities, pageIndex);
     }
 
     private List<Text> computeDocumentsLore(CommandDescriptor entity) {
@@ -53,9 +65,8 @@ public class CommandDescriptorGui extends PagedGui<CommandDescriptor> {
         List<Text> lore = new ArrayList<>();
 
         /* Add basic properties of command descriptor. */
-        String sourceModule = ModuleManager.computeModulePathAsString(entity.method.getDeclaringClass().getName());
         lore.addAll(List.of(
-            TextHelper.getTextByKey(getPlayer(),"from_module", sourceModule)
+            TextHelper.getTextByKey(getPlayer(),"from_module", entity.getSourceModulePath())
             , TextHelper.getTextByKey(getPlayer(), "command.source.can_be_executed_by_console", entity.canBeExecutedByConsole())
             , TextHelper.getTextByKey(getPlayer(), "command.descriptor.type", entity.getClass().getSimpleName())
             , TextHelper.getTextByKey(getPlayer(), "command.requirement.level_permission", entity.getDefaultLevelPermission())
@@ -74,16 +85,14 @@ public class CommandDescriptorGui extends PagedGui<CommandDescriptor> {
             .setName(Text.literal(entity.getCommandSyntax()))
             .setItem(Items.REPEATING_COMMAND_BLOCK)
             .setLore(lore)
-            .setCallback(() -> handleClick(getPlayer(), entity, sourceModule))
+            .setCallback(() -> handleClick(getPlayer(), entity))
             .build();
     }
 
-    private void handleClick(ServerPlayerEntity player, CommandDescriptor entity, String sourceModule) {
-
-        ModulesInspectionGui.makeDefault(player)
-            .search(sourceModule)
-            .open();
-
+    private void handleClick(ServerPlayerEntity player, CommandDescriptor entity) {
+//        ModulesInspectionGui.makeDefault(player)
+//            .search(modulePathString -> modulePathString.getKey().equals(entity.getSourceModulePath()))
+//            .open();
     }
 
     @Override
