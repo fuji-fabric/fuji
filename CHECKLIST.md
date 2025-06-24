@@ -90,3 +90,9 @@ It's good to have a checklist, to avoid forgetting something.
 - modify the `build.yml` file to include the new supported MC version.
 - place a sign and write `/say hi` and `back` command on it.
 - push a git commit with the prefix `[publish]`
+
+
+## Painful things
+- Don't use star import. 
+- Don't use static import in mixin class (Or better just don't use it in the project).
+- Try not use @Redirect and @Override in mixin class.
