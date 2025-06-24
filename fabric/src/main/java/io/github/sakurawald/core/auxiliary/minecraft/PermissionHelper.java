@@ -1,5 +1,6 @@
 package io.github.sakurawald.core.auxiliary.minecraft;
 
+import io.github.sakurawald.core.structure.descriptor.MetaDescriptor;
 import io.github.sakurawald.core.structure.descriptor.PermissionDescriptor;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
@@ -14,7 +15,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 @UtilityClass
 public class PermissionHelper {
@@ -74,18 +74,20 @@ public class PermissionHelper {
             .asBoolean();
     }
 
-    public static <T> @NonNull Optional<T> getMeta(@NotNull UUID uuid, @Nullable String meta, @NonNull Function<String, ? extends T> valueTransformer) {
-        if (meta == null) return Optional.empty();
+    public static <T> @NonNull Optional<T> getMeta(@NotNull UUID uuid, @Nullable MetaDescriptor<T> metaDescriptor, Object... arguments) {
+        if (metaDescriptor == null) return Optional.empty();
 
         LuckPerms api = getAPI();
         if (api == null) {
             return Optional.empty();
         }
 
+        String meta = metaDescriptor.withArguments(arguments);
+
         User user = loadUser(api, uuid);
         return user.getCachedData()
             .getMetaData()
-            .getMetaValue(meta, valueTransformer);
+            .getMetaValue(meta, metaDescriptor.valueTransformer);
     }
 
     public static @Nullable String getPrefix(UUID uuid) {

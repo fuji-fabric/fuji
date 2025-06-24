@@ -90,6 +90,7 @@ io.github.sakurawald.module.initializer.home.HomeInitializer
 io.github.sakurawald.module.initializer.kit.KitInitializer
 io.github.sakurawald.module.initializer.language.LanguageInitializer
 io.github.sakurawald.module.initializer.motd.MotdInitializer
+io.github.sakurawald.module.initializer.multiplier.MultiplierInitializer
 io.github.sakurawald.module.initializer.nametag.NametagInitializer
 io.github.sakurawald.module.initializer.placeholder.PlaceholderInitializer
 io.github.sakurawald.module.initializer.predicate.PredicateInitializer

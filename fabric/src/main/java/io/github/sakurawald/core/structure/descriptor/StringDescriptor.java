@@ -7,13 +7,13 @@ import net.minecraft.item.Items;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class StringDescriptor {
 
-    public static final Set<StringDescriptor> REGISTERED_STRING_DESCRIPTORS = new HashSet<>();
+    public static final List<StringDescriptor> REGISTERED_STRING_DESCRIPTORS = new ArrayList<>();
 
     private final String pattern;
     private String string;
@@ -43,6 +43,10 @@ public class StringDescriptor {
         if (!temporary) {
             REGISTERED_STRING_DESCRIPTORS.add(this);
         }
+    }
+
+    public int sortPriority() {
+        return 0;
     }
 
     public Item toItem() {

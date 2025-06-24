@@ -10,6 +10,7 @@ import io.github.sakurawald.core.command.exception.AbortCommandExecutionExceptio
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.core.structure.GlobalPos;
+import io.github.sakurawald.core.structure.descriptor.MetaDescriptor;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.home.command.argument.wrapper.HomeName;
 import io.github.sakurawald.module.initializer.home.config.model.HomeDataModel;
@@ -24,6 +25,10 @@ import java.util.Optional;
     Allows players to define its home.
     """)
 public class HomeInitializer extends ModuleInitializer {
+
+    private static final MetaDescriptor<Integer> MAX_HOME_AMOUNT_META = new MetaDescriptor<>("fuji.home.home_limit", Integer::valueOf, """
+        The home amount limit for this player.
+        """);
 
     @Getter
     private static final BaseConfigurationHandler<HomeDataModel> storage = new ObjectConfigurationHandler<>("home.json", HomeDataModel.class)
@@ -77,7 +82,7 @@ public class HomeInitializer extends ModuleInitializer {
             }
         }
 
-        Optional<Integer> limit = PermissionHelper.getMeta(player.getUuid(), "fuji.home.home_limit", Integer::valueOf);
+        Optional<Integer> limit = PermissionHelper.getMeta(player.getUuid(), MAX_HOME_AMOUNT_META);
         if (limit.isPresent() && name2position.size() >= limit.get()) {
             TextHelper.sendMessageByKey(player, "home.set.fail.limit");
             return CommandHelper.Return.FAIL;

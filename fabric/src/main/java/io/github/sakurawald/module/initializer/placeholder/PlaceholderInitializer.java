@@ -16,6 +16,7 @@ import io.github.sakurawald.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.core.command.annotation.CommandSource;
 import io.github.sakurawald.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.core.event.impl.ServerLifecycleEvents;
+import io.github.sakurawald.core.structure.descriptor.MetaDescriptor;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.core.structure.descriptor.PermissionDescriptor;
 import io.github.sakurawald.module.initializer.placeholder.gui.PlaceholderGui;
@@ -245,7 +246,8 @@ public class PlaceholderInitializer extends ModuleInitializer {
 
     private void registerGetMetaPlaceholder() {
         PlaceholderHelper.withPlayer("get_meta", (player, args) -> {
-            Optional<String> metaValue = PermissionHelper.getMeta(player.getUuid(), args, String::valueOf);
+            MetaDescriptor<String> tempMeta = new MetaDescriptor<>(true, args, String::valueOf, null);
+            Optional<String> metaValue = PermissionHelper.getMeta(player.getUuid(), tempMeta);
             return Text.literal(metaValue.orElse("META_NOT_FOUND"));
         });
     }

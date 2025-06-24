@@ -17,4 +17,9 @@ public class PermissionDescriptor extends StringDescriptor {
     public Item toItem() {
         return Items.CHERRY_DOOR;
     }
+
+    @Override
+    public int sortPriority() {
+        return -1;
+    }
 }

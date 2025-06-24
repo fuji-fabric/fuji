@@ -52,7 +52,8 @@ public abstract class ServerPlayerMixin {
         /* Add a new teleport ticker if no exists. */
         TeleportTicket ticket = TeleportWarmupInitializer.getTeleportTicket(player);
         if (ticket == null) {
-            Optional<Integer> permission_warmup_time = PermissionHelper.getMeta(player.getUuid(), "fuji.teleport_warmup.warmup", Integer::valueOf);
+            Optional<Integer> permission_warmup_time = PermissionHelper.getMeta(player.getUuid(), TeleportWarmupInitializer.TELEPORT_WARMUP_TIME_META);
+
             //set warmup seconds to LP permission seconds or default config seconds
             int warmup_seconds = permission_warmup_time.orElse(TeleportWarmupInitializer.config.model().warmup_second);
 

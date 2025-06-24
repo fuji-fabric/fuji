@@ -195,7 +195,8 @@ public class FujiInitializer extends ModuleInitializer {
     private static int $inspectPermissionsAndMetas(@CommandSource ServerPlayerEntity player) {
         List<StringDescriptor> entities = StringDescriptor.REGISTERED_STRING_DESCRIPTORS
             .stream()
-            .sorted(Comparator.comparing(StringDescriptor::getFromModule))
+            .sorted(Comparator.comparing(StringDescriptor::getFromModule)
+                .thenComparing(StringDescriptor::sortPriority))
             .toList();
 
         new PermissionsAndMetasInspectionGui(null, player, entities, 0)

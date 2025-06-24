@@ -1,20 +1,34 @@
 package io.github.sakurawald.core.structure.descriptor;
 
+import lombok.NonNull;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class MetaDescriptor extends StringDescriptor{
+import java.util.function.Function;
 
-    public MetaDescriptor(String pattern, String document) {
+public class MetaDescriptor<T> extends StringDescriptor{
+
+    public final @NonNull Function<String, ? extends T> valueTransformer;
+
+    public MetaDescriptor(@NotNull String pattern, @NonNull Function<String, ? extends T> valueTransformer, @Nullable String document) {
         super(pattern, document);
+        this.valueTransformer = valueTransformer;
     }
 
-    public MetaDescriptor(boolean temporary, String pattern, String document) {
+    public MetaDescriptor(boolean temporary, @NotNull String pattern, @NonNull Function<String, ? extends T> valueTransformer, @Nullable String document) {
         super(temporary, pattern, document);
+        this.valueTransformer = valueTransformer;
     }
 
     @Override
     public Item toItem() {
         return Items.BAMBOO_DOOR;
+    }
+
+    @Override
+    public int sortPriority() {
+        return +1;
     }
 }

@@ -6,6 +6,7 @@ import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.core.manager.Managers;
 import io.github.sakurawald.core.manager.impl.bossbar.BossBarTicket;
 import io.github.sakurawald.core.structure.TeleportTicket;
+import io.github.sakurawald.core.structure.descriptor.MetaDescriptor;
 import io.github.sakurawald.core.structure.descriptor.PermissionDescriptor;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.teleport_warmup.config.model.TeleportWarmupConfigModel;
@@ -22,6 +23,10 @@ public class TeleportWarmupInitializer extends ModuleInitializer {
 
     public static final PermissionDescriptor TELEPORT_WARMUP_BYPASS_PERMISSION = new PermissionDescriptor("fuji.teleport_warmup.bypass", """
         To bypass all teleport warmup.
+        """);
+
+    public static final MetaDescriptor<Integer> TELEPORT_WARMUP_TIME_META = new MetaDescriptor<>("fuji.teleport_warmup.warmup", Integer::valueOf, """
+        Specify the teleport warmup time in seconds for this player.
         """);
 
     public static final BaseConfigurationHandler<TeleportWarmupConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, TeleportWarmupConfigModel.class);

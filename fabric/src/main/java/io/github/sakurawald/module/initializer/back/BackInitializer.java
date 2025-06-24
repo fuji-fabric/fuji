@@ -15,6 +15,7 @@ import io.github.sakurawald.core.command.exception.AbortCommandExecutionExceptio
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.core.structure.GlobalPos;
+import io.github.sakurawald.core.structure.descriptor.MetaDescriptor;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.back.config.model.BackConfigModel;
 import io.github.sakurawald.module.initializer.back.config.model.BackLocationHistoryModel;
@@ -39,6 +40,10 @@ public class BackInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<BackLocationHistoryModel> savedPositionConfig = new ObjectConfigurationHandler<>("location-history.json", BackLocationHistoryModel.class)
         .autoSaveEveryMinute();
+
+    private static final MetaDescriptor<Integer> MAX_LOCATION_ENTRIES_TO_SAVE_META = new MetaDescriptor<>("fuji.back.max_location_entries_to_save", Integer::valueOf,"""
+        The max location entries to save for this player.
+        """);
 
     private static <R> R withLocationHistory(@NotNull ServerPlayerEntity player, Function<LocationHistory, R> function) {
         String playerName = player.getGameProfile().getName();
@@ -145,7 +150,7 @@ public class BackInitializer extends ModuleInitializer {
     }
 
     private static int getMaxBackLocationEntriesToSave(@NotNull ServerPlayerEntity player) {
-        Optional<Integer> value = PermissionHelper.getMeta(player.getUuid(), "fuji.back.max_location_entries_to_save", Integer::valueOf);
+        Optional<Integer> value = PermissionHelper.getMeta(player.getUuid(), MAX_LOCATION_ENTRIES_TO_SAVE_META);
         return value.orElse(config.model().max_back_location_entries_to_save);
     }
 
