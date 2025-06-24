@@ -53,8 +53,9 @@ public class CommandDescriptorGui extends PagedGui<CommandDescriptor> {
         List<Text> lore = new ArrayList<>();
 
         /* Add basic properties of command descriptor. */
+        String sourceModule = ModuleManager.computeModulePathAsString(entity.method.getDeclaringClass().getName());
         lore.addAll(List.of(
-            TextHelper.getTextByKey(getPlayer(),"from_module", ModuleManager.computeModulePathAsString(entity.method.getDeclaringClass().getName()))
+            TextHelper.getTextByKey(getPlayer(),"from_module", sourceModule)
             , TextHelper.getTextByKey(getPlayer(), "command.source.can_be_executed_by_console", entity.canBeExecutedByConsole())
             , TextHelper.getTextByKey(getPlayer(), "command.descriptor.type", entity.getClass().getSimpleName())
             , TextHelper.getTextByKey(getPlayer(), "command.requirement.level_permission", entity.getDefaultLevelPermission())
@@ -73,7 +74,16 @@ public class CommandDescriptorGui extends PagedGui<CommandDescriptor> {
             .setName(Text.literal(entity.getCommandSyntax()))
             .setItem(Items.REPEATING_COMMAND_BLOCK)
             .setLore(lore)
+            .setCallback(() -> handleClick(getPlayer(), entity, sourceModule))
             .build();
+    }
+
+    private void handleClick(ServerPlayerEntity player, CommandDescriptor entity, String sourceModule) {
+
+        ModulesInspectionGui.makeDefault(player)
+            .search(sourceModule)
+            .open();
+
     }
 
     @Override

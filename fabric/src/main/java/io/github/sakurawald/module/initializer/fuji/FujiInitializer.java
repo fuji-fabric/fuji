@@ -17,13 +17,12 @@ import io.github.sakurawald.core.gui.CommandDescriptorGui;
 import io.github.sakurawald.core.job.abst.BaseJob;
 import io.github.sakurawald.core.manager.Managers;
 import io.github.sakurawald.core.manager.impl.module.ModuleManager;
-import io.github.sakurawald.core.structure.Pair;
 import io.github.sakurawald.core.structure.descriptor.StringDescriptor;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.fuji.gui.AboutGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ArgumentTypeInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ConfigurationHandlerInspectionGui;
-import io.github.sakurawald.module.initializer.fuji.gui.ModulesInspectionGui;
+import io.github.sakurawald.core.gui.ModulesInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.PermissionsAndMetasInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.RegistryInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ServerCommandsInspectionGui;
@@ -123,14 +122,8 @@ public class FujiInitializer extends ModuleInitializer {
     @Document("Inspect all enabled/disabled modules of fuji.")
     @CommandNode("inspect modules")
     private static int $inspectModules(@CommandSource ServerPlayerEntity player) {
-        List<Pair<String, Boolean>> list = ModuleManager.MODULE_ENABLE_STATUS
-            .entrySet()
-            .stream()
-            .map(it -> new Pair<>(ModuleManager.joinModulePath(it.getKey()), it.getValue()))
-            .sorted(Comparator.comparing(Pair::getKey))
-            .toList();
-
-        new ModulesInspectionGui(player, list, 0).open();
+        ModulesInspectionGui.makeDefault(player)
+            .open();
         return CommandHelper.Return.SUCCESS;
     }
 

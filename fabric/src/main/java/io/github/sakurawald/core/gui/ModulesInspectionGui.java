@@ -1,4 +1,4 @@
-package io.github.sakurawald.module.initializer.fuji.gui;
+package io.github.sakurawald.core.gui;
 
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
@@ -6,7 +6,6 @@ import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
-import io.github.sakurawald.core.gui.PagedGui;
 import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.core.structure.Pair;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
@@ -19,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
@@ -30,6 +30,16 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
     @Override
     protected PagedGui<Pair<String, Boolean>> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<Pair<String, Boolean>> entities, int pageIndex) {
         return new ModulesInspectionGui(player, entities, pageIndex);
+    }
+
+    public static ModulesInspectionGui makeDefault(ServerPlayerEntity player) {
+        List<Pair<String, Boolean>> list = ModuleManager.MODULE_ENABLE_STATUS
+            .entrySet()
+            .stream()
+            .map(it -> new Pair<>(ModuleManager.joinModulePath(it.getKey()), it.getValue()))
+            .sorted(Comparator.comparing(Pair::getKey))
+            .toList();
+        return new ModulesInspectionGui(player, list, 0);
     }
 
     @Override
