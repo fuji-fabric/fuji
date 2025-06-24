@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Data
 public class InspectingObject {
@@ -199,6 +200,17 @@ public class InspectingObject {
         return Items.PINK_SHULKER_BOX;
     }
 
+    private void addPossibleValuesForEnumType(ServerPlayerEntity player, List<Text> lore) {
+        if (!this.getObjectType().isEnum()) return;
+
+        Object[] enumConstants = this.getObjectType().getEnumConstants();
+        String possibleValues = Arrays.stream(enumConstants)
+            .map(Object::toString)
+            .collect(Collectors.joining(", "));
+
+        lore.add(TextHelper.getTextByKey(player, "object.value.possible_values", possibleValues));
+    }
+
     public List<Text> computeLore(ServerPlayerEntity player) {
         List<Text> lore = new ArrayList<>();
 
@@ -211,6 +223,9 @@ public class InspectingObject {
         literalObjectValueString = StringUtils.abbreviate(literalObjectValueString, "...", 128);
         literalObjectValueString = TextHelper.escapeTags(literalObjectValueString);
         lore.add(TextHelper.getText(TextHelper.STYLE_ONLY_PARSER, player, true, "object.value", literalObjectValueString));
+
+        /* Add possible enum values. */
+        addPossibleValuesForEnumType(player, lore);
 
         /* Add click prompt. */
         if (this.canGoInside()) {
