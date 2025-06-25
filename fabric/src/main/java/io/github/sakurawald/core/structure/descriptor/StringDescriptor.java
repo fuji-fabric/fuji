@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class StringDescriptor {
+public abstract class StringDescriptor {
 
     public static final List<StringDescriptor> REGISTERED_STRING_DESCRIPTORS = new ArrayList<>();
 
@@ -48,6 +48,8 @@ public class StringDescriptor {
     public int sortPriority() {
         return 0;
     }
+
+    public abstract String getStringType();
 
     public Item toItem() {
         return Items.IRON_DOOR;

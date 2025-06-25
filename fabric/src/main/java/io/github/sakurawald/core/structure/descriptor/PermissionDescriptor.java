@@ -22,4 +22,9 @@ public class PermissionDescriptor extends StringDescriptor {
     public int sortPriority() {
         return -1;
     }
+
+    @Override
+    public String getStringType() {
+        return "Permission";
+    }
 }

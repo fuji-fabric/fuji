@@ -31,4 +31,9 @@ public class MetaDescriptor<T> extends StringDescriptor{
     public int sortPriority() {
         return +1;
     }
+
+    @Override
+    public String getStringType() {
+        return "Meta";
+    }
 }

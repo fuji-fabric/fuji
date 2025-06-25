@@ -34,6 +34,9 @@ public class PermissionsAndMetasInspectionGui extends PagedGui<StringDescriptor>
         /* Attach the source module. */
         lore.add(TextHelper.getTextByKey(getPlayer(), "from_module", entity.getFromModule()));
 
+        /* Attach the type of string descriptor. */
+        lore.add(TextHelper.getTextByKey(getPlayer(), "object.type", entity.getStringType()));
+
         /* Attach the document string. */
         List<Text> documentTextList = TextHelper.getDocumentTextList(getPlayer(), entity.getDocument());
         lore.add(TextHelper.TEXT_EMPTY);
