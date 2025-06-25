@@ -14,7 +14,7 @@ import java.util.List;
 public class PlaceholderDescriptorInspectionGui extends StringDescriptorInspectionGui{
 
     public PlaceholderDescriptorInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, @NotNull List<StringDescriptor> entities, int pageIndex) {
-        super(parent, player, TextHelper.getTextByKey(player,"fuji.inspect.permissions_and_metas.gui.title"), entities, pageIndex);
+        super(parent, player, TextHelper.getTextByKey(player,"fuji.inspect.placeholders.gui.title"), entities, pageIndex);
     }
 
     @Override
@@ -24,6 +24,6 @@ public class PlaceholderDescriptorInspectionGui extends StringDescriptorInspecti
 
     @Override
     protected Text toNameText(StringDescriptor entity) {
-        return TextHelper.getTextByKey(getPlayer(), "fuji.inspect.permissions_and_metas.gui.item.name", entity.getString());
+        return TextHelper.getTextByKey(getPlayer(), "fuji.inspect.placeholders.gui.item.name", entity.getString());
     }
 }
