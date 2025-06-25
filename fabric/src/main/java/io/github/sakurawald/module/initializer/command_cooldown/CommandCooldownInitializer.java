@@ -165,7 +165,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
 
     @Override
     protected void registerPlaceholder() {
-        PlaceholderHelper.withPlayer("command_cooldown_left_time", (player, args) -> {
+        PlaceholderHelper.registerPlayerPlaceholder("command_cooldown_left_time", (player, args) -> {
             CommandCooldown cooldown = config.model().namedCooldown.list.get(args);
             if (cooldown == null) return NOT_COOLDOWN_FOUND_TEXT;
 
@@ -175,7 +175,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
             return Text.literal(String.valueOf(leftTime));
         });
 
-        PlaceholderHelper.withPlayer("command_cooldown_left_usage", (player, args) -> {
+        PlaceholderHelper.registerPlayerPlaceholder("command_cooldown_left_usage", (player, args) -> {
             CommandCooldown cooldown = config.model().namedCooldown.list.get(args);
             if (cooldown == null) return NOT_COOLDOWN_FOUND_TEXT;
 

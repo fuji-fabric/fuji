@@ -67,8 +67,8 @@ public class StyleStriper {
             pattern = pattern.formatted(styleType);
             String document = """
                 The permission used for `style tags striper`.
-                A player requires the `corresponding permission` to use that `style tag` in that `type`.
-                """;
+                A player requires the `corresponding permission` to use that `style tag` in `%s` style type.
+                """.formatted(styleType);
             return new PermissionDescriptor(pattern, document);
         });
     }

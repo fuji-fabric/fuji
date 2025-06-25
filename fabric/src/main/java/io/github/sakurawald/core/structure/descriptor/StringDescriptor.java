@@ -51,9 +51,7 @@ public abstract class StringDescriptor {
 
     public abstract String getStringType();
 
-    public Item toItem() {
-        return Items.IRON_DOOR;
-    }
+    public abstract Item toItem();
 
     public String withArguments(Object... arguments) {
         if (arguments.length != 0) {

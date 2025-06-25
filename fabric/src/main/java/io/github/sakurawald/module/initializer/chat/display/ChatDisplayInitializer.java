@@ -54,15 +54,15 @@ public class ChatDisplayInitializer extends ModuleInitializer {
     }
 
     private static void registerDisplayEnderPlaceholder() {
-        PlaceholderHelper.withPlayer("ender", DisplayHelper::createEnderDisplayText);
+        PlaceholderHelper.registerPlayerPlaceholder("ender", DisplayHelper::createEnderDisplayText);
     }
 
     private static void registerDisplayInvPlaceholder() {
-        PlaceholderHelper.withPlayer("inv", DisplayHelper::createInvDisplayText);
+        PlaceholderHelper.registerPlayerPlaceholder("inv", DisplayHelper::createInvDisplayText);
     }
 
     private static void registerDisplayItemPlaceholder() {
-        PlaceholderHelper.withPlayer("item", DisplayHelper::createItemDisplayText);
+        PlaceholderHelper.registerPlayerPlaceholder("item", DisplayHelper::createItemDisplayText);
     }
 
     @Override

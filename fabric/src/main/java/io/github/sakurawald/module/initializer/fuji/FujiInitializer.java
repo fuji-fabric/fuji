@@ -15,6 +15,9 @@ import io.github.sakurawald.core.gui.inspection.CommandDescriptorGui;
 import io.github.sakurawald.core.job.abst.BaseJob;
 import io.github.sakurawald.core.manager.Managers;
 import io.github.sakurawald.core.manager.impl.module.ModuleManager;
+import io.github.sakurawald.core.structure.descriptor.MetaDescriptor;
+import io.github.sakurawald.core.structure.descriptor.PermissionDescriptor;
+import io.github.sakurawald.core.structure.descriptor.PlaceholderDescriptor;
 import io.github.sakurawald.core.structure.descriptor.StringDescriptor;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.fuji.gui.AboutGui;
@@ -22,6 +25,7 @@ import io.github.sakurawald.module.initializer.fuji.gui.ArgumentTypeInspectionGu
 import io.github.sakurawald.module.initializer.fuji.gui.ConfigurationHandlerInspectionGui;
 import io.github.sakurawald.core.gui.inspection.ModulesInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.PermissionsAndMetasInspectionGui;
+import io.github.sakurawald.module.initializer.fuji.gui.PlaceholderDescriptorInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.RegistryInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ServerCommandsInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.structure.IdentifierDescriptor;
@@ -152,7 +156,7 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Inspect all loaded configurations files.")
+    @Document("Inspect all loaded configurations files used by fuji.")
     @CommandNode("inspect configurations")
     private static int $inspectConfigurations(@CommandSource ServerPlayerEntity player) {
         List<BaseConfigurationHandler<?>> list = BaseConfigurationHandler.CONFIGURATION_HANDLERS.stream()
@@ -194,11 +198,28 @@ public class FujiInitializer extends ModuleInitializer {
     private static int $inspectPermissionsAndMetas(@CommandSource ServerPlayerEntity player) {
         List<StringDescriptor> entities = StringDescriptor.REGISTERED_STRING_DESCRIPTORS
             .stream()
+            .filter(it -> it instanceof PermissionDescriptor
+            || it instanceof MetaDescriptor<?>)
             .sorted(Comparator.comparing(StringDescriptor::getFromModule)
                 .thenComparing(StringDescriptor::sortPriority))
             .toList();
 
         new PermissionsAndMetasInspectionGui(null, player, entities, 0)
+            .open();
+
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document("Inspect placeholders registered by fuji.")
+    @CommandNode("inspect placeholders")
+    private static int $inspectPlaceholders(@CommandSource ServerPlayerEntity player) {
+        List<StringDescriptor> entities = StringDescriptor.REGISTERED_STRING_DESCRIPTORS
+            .stream()
+            .filter(it -> it instanceof PlaceholderDescriptor)
+            .sorted(Comparator.comparing(StringDescriptor::getFromModule))
+            .toList();
+
+        new PlaceholderDescriptorInspectionGui(null, player, entities,0)
             .open();
 
         return CommandHelper.Return.SUCCESS;
