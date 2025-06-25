@@ -2,4 +2,5 @@
 
 - [core] feature: new `print_user_guide` debug option in `fuji/config.json` file.
 - [fuji] feature: now will display the `string type` for `/fuji inspect permissions-and-metas` command.
+- [fuji] feature: now will display different `permission` for each `style type` in `/fuji inspect permissions-and-metas` command.
 

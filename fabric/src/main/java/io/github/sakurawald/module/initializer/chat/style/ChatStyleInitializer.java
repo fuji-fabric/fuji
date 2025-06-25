@@ -18,6 +18,7 @@ import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.chat.style.model.ChatFormatModel;
 import io.github.sakurawald.module.initializer.chat.style.model.ChatStyleConfigModel;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.message.MessageType;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -50,7 +51,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
 
     private static final String CHAT_STYLE_TYPE = "chat";
 
-    private static String stripeStyleTags(ServerPlayerEntity player, String string) {
+    private static String stripeStyleTags(PlayerEntity player, String string) {
         return StyleStriper.stripe(player, CHAT_STYLE_TYPE, string);
     }
 

@@ -3,7 +3,6 @@ package io.github.sakurawald.module.mixin.color.sign;
 import com.llamalad7.mixinextras.sugar.Local;
 import io.github.sakurawald.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
-import io.github.sakurawald.core.service.style_striper.StyleStriper;
 import io.github.sakurawald.core.structure.GlobalBlockPos;
 import io.github.sakurawald.module.initializer.color.sign.ColorSignInitializer;
 import io.github.sakurawald.module.initializer.color.sign.structure.SignCache;
@@ -57,7 +56,8 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
             if (ColorSignInitializer.config.model().requires_corresponding_permission_to_use_style_tag) {
                 Optional<ServerPlayerEntity> playerOpt = ServerHelper.getPlayerByUuid(getEditor());
                 if (playerOpt.isPresent()) {
-                    string = StyleStriper.stripe(playerOpt.get(), ColorSignInitializer.STYLE_TYPE_SIGN, string);
+                    ServerPlayerEntity player = playerOpt.get();
+                    string = ColorSignInitializer.stripeStyleTags(player, string);
                 }
             }
 
@@ -83,4 +83,5 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
         /* Return the modified text. */
         return new SignText(newMessages, newMessages, signText.getColor(), signText.isGlowing());
     }
+
 }

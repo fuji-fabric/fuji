@@ -6,7 +6,9 @@ import io.github.sakurawald.core.structure.descriptor.PermissionDescriptor;
 import lombok.experimental.UtilityClass;
 import net.minecraft.entity.player.PlayerEntity;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,16 +19,12 @@ public class StyleStriper {
     @SuppressWarnings("RegExpUnnecessaryNonCapturingGroup")
     private static final Pattern TAG_RESOLVER = Pattern.compile("<([^>]+)>");
 
-    private static final PermissionDescriptor STYLE_TAGS_STRIPER_PERMISSION = new PermissionDescriptor("fuji.style.<type>.<style-tag>"
-        , """
-    The permission used for `style tags striper`.
-    A player requires the `corresponding permission` to use that `style tag` in that `type`.
-    """);
+    private static final Map<String, PermissionDescriptor> CREATED_STYLE_TYPES = new HashMap<>();
 
     public static String stripe(PlayerEntity player, String type, String input) {
         for (String tag : resolveTags(input)) {
             String tagType = extractTagType(tag);
-            if (!canUse(player, type, tagType)) {
+            if (!canUseThisTag(player, type, tagType)) {
                 input = input.replace(tag, "");
             }
         }
@@ -63,8 +61,21 @@ public class StyleStriper {
         return tags;
     }
 
-    private static boolean canUse(PlayerEntity player, String type, String tag) {
-        return PermissionHelper.hasPermission(player.getUuid(), STYLE_TAGS_STRIPER_PERMISSION, type, tag);
+    private static PermissionDescriptor getOrCreatePermissionDescriptorForStyleType(String styleType) {
+        return CREATED_STYLE_TYPES.computeIfAbsent(styleType, (it) -> {
+            String pattern = "fuji.style.%s.<style-tag>";
+            pattern = pattern.formatted(styleType);
+            String document = """
+                The permission used for `style tags striper`.
+                A player requires the `corresponding permission` to use that `style tag` in that `type`.
+                """;
+            return new PermissionDescriptor(pattern, document);
+        });
+    }
+
+    private static boolean canUseThisTag(PlayerEntity player, String type, String tag) {
+        PermissionDescriptor permission = getOrCreatePermissionDescriptorForStyleType(type);
+        return PermissionHelper.hasPermission(player.getUuid(), permission, type, tag);
     }
 
 }

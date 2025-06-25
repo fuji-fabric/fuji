@@ -1,8 +1,8 @@
 package io.github.sakurawald.module.mixin.color.anvil;
 
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
-import io.github.sakurawald.core.service.style_striper.StyleStriper;
 import io.github.sakurawald.module.initializer.color.anvil.ColorAnvilInitializer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.ForgingScreenHandler;
@@ -24,9 +24,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 @Mixin(AnvilScreenHandler.class)
 public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
 
-    @Unique
-    private static final String STYLE_TYPE_ANVIL = "anvil";
-
     @Shadow
     private String newItemName;
 
@@ -42,8 +39,10 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
 
     @Unique
     private @NotNull Text parseInputNewItemName() {
+        /* Stripe style tags. */
         if (ColorAnvilInitializer.config.model().requires_corresponding_permission_to_use_style_tag) {
-            newItemName = StyleStriper.stripe(super.player, STYLE_TYPE_ANVIL, newItemName);
+            PlayerEntity player = super.player;
+            newItemName = ColorAnvilInitializer.stripeStyleTags(player, newItemName);
         }
         return TextHelper.getTextByValue(null, newItemName);
     }
