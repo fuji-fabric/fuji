@@ -117,6 +117,7 @@ public class ModuleManager extends BaseManager {
             .forEach(className -> {
                 try {
                     /* Track the module initializer class. */
+                    // NOTE: This does trigger the static initialization.
                     Class<? extends ModuleInitializer> clazz = (Class<? extends ModuleInitializer>) Class.forName(className);
                     String modulePathString = computeModulePathAsString(className);
                     ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING.put(modulePathString, clazz);
@@ -161,7 +162,7 @@ public class ModuleManager extends BaseManager {
     }
 
     private void serverStartupReport() {
-        /* report enabled/disabled modules */
+        /* Report enabled/disabled modules. */
         List<String> enabledModuleList = new ArrayList<>();
         MODULE_ENABLE_STATUS.forEach((module, enable) -> {
             if (enable) enabledModuleList.add(joinModulePath(module));
@@ -170,8 +171,9 @@ public class ModuleManager extends BaseManager {
         enabledModuleList.sort(String::compareTo);
         LogUtil.info("Enabled {}/{} modules -> {}", enabledModuleList.size(), MODULE_ENABLE_STATUS.size(), enabledModuleList);
 
-        /* print first-time helper */
-        if (enabledModuleList.size() == 1 || FabricLoader.getInstance().isDevelopmentEnvironment()) {
+        /* Print user guide. */
+        if (Configs.mainControlConfig.model().core.debug.print_user_guide_in_console
+        || enabledModuleList.size() == 1) {
             printUserGuide();
         }
     }

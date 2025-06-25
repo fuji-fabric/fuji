@@ -111,6 +111,11 @@ public class ConfigModel {
                 This option can be changed using `/fuji debug` command.
                 """)
             public boolean log_debug_messages = false;
+
+            @Document("""
+                Should we print the user guide in the console on server startup?
+                """)
+            public boolean print_user_guide_in_console = false;
         }
     }
 
