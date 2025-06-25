@@ -387,5 +387,6 @@
   "symbol.arrow.right": "<bold><orange>-></bold>",
   "chat.spy.indicator": "<bold><orange>-SPY-></orange></bold>",
   "registry.list.gui.title": "<blue>Registri",
+  "registry.type.is_dynamic": "<yellow>Is dynamic: %s",
   "command_menu.menu.not_found": "<red>Menu %s not found"
 }
