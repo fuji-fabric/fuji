@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
     This module allows you to define a `cooldown` before command execution.
     """)
 public class CommandWarmupInitializer extends ModuleInitializer {
-    public static final BaseConfigurationHandler<CommandWarmupConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandWarmupConfigModel.class);
+    private static final BaseConfigurationHandler<CommandWarmupConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandWarmupConfigModel.class);
 
     public static void processCommandWarmup(ServerPlayerEntity player, String commandString, CallbackInfo ci) {
         LogUtil.debug("Process command warmup: player = {}, command = {}", PlayerHelper.getName(player), commandString);
