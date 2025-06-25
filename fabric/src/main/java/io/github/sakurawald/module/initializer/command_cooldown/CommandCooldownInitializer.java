@@ -16,6 +16,7 @@ import io.github.sakurawald.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.core.structure.Cooldown;
+import io.github.sakurawald.core.structure.descriptor.PlaceholderDescriptor;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.command_cooldown.command.argument.wrapper.CommandCooldownName;
 import io.github.sakurawald.module.initializer.command_cooldown.config.model.CommandCooldownConfigModel;
@@ -49,7 +50,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         }
     }.autoSaveEveryMinute();
 
-    private static final MutableText NOT_COOLDOWN_FOUND_TEXT = Text.literal("NOT_COOLDOWN_FOUND");
+    private static final MutableText NOT_COOLDOWN_FOUND_ERROR_TEXT = Text.literal("NOT_COOLDOWN_FOUND_ERROR");
 
     private static final Map<String, Cooldown<String>> player2cooldown = new HashMap<>();
 
@@ -165,9 +166,12 @@ public class CommandCooldownInitializer extends ModuleInitializer {
 
     @Override
     protected void registerPlaceholder() {
-        PlaceholderHelper.registerPlayerPlaceholder("command_cooldown_left_time", (player, args) -> {
+        PlaceholderDescriptor leftTimeDescriptor = new PlaceholderDescriptor("command_cooldown_left_time", """
+            Returns the `left time` for `specified named cooldown` in mill-seconds.
+            """);
+        PlaceholderHelper.registerPlayerPlaceholder(leftTimeDescriptor, (player, args) -> {
             CommandCooldown cooldown = config.model().namedCooldown.list.get(args);
-            if (cooldown == null) return NOT_COOLDOWN_FOUND_TEXT;
+            if (cooldown == null) return NOT_COOLDOWN_FOUND_ERROR_TEXT;
 
             String key = player.getGameProfile().getName();
             long leftTime = cooldown.getCooldown(key, cooldown.getCooldownMs());
@@ -175,9 +179,12 @@ public class CommandCooldownInitializer extends ModuleInitializer {
             return Text.literal(String.valueOf(leftTime));
         });
 
-        PlaceholderHelper.registerPlayerPlaceholder("command_cooldown_left_usage", (player, args) -> {
+        PlaceholderDescriptor leftUsageDescriptor = new PlaceholderDescriptor("command_cooldown_left_usage", """
+            Returns the `left usage times` for `specified named cooldown` in integer.
+            """);
+        PlaceholderHelper.registerPlayerPlaceholder(leftUsageDescriptor, (player, args) -> {
             CommandCooldown cooldown = config.model().namedCooldown.list.get(args);
-            if (cooldown == null) return NOT_COOLDOWN_FOUND_TEXT;
+            if (cooldown == null) return NOT_COOLDOWN_FOUND_ERROR_TEXT;
 
             String key = player.getGameProfile().getName();
             int usage = cooldown.getUsage().getOrDefault(key, 0);

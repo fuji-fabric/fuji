@@ -32,12 +32,13 @@ public class PlaceholderHelper {
         Placeholders.register(Identifier.of(Fuji.MOD_ID, name), placeholderHandler);
     }
 
-    public static void registerPlayerPlaceholder(String name, BiFunction<ServerPlayerEntity, String, Text> function) {
+    public static void registerPlayerPlaceholder(PlaceholderDescriptor descriptor, BiFunction<ServerPlayerEntity, String, Text> function) {
         PlaceholderHandler placeholderHandler = (ctx, arg) -> {
             if (ctx.player() == null) return PlaceholderResult.value(NO_PLAYER_ERROR_TEXT);
             return PlaceholderResult.value(function.apply(ctx.player(), arg));
         };
 
+        String name = descriptor.getString();
         Placeholders.register(Identifier.of(Fuji.MOD_ID, name), placeholderHandler);
     }
 
@@ -45,7 +46,7 @@ public class PlaceholderHelper {
         registerServerPlaceholder(descriptor, (server, args) -> function.apply(server));
     }
 
-    public static void registerPlayerPlaceholder(String name, Function<ServerPlayerEntity, Text> function) {
-        registerPlayerPlaceholder(name, (player, args) -> function.apply(player));
+    public static void registerPlayerPlaceholder(PlaceholderDescriptor descriptor, Function<ServerPlayerEntity, Text> function) {
+        registerPlayerPlaceholder(descriptor, (player, args) -> function.apply(player));
     }
 }

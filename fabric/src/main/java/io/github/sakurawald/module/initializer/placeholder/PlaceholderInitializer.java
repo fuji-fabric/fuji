@@ -72,75 +72,99 @@ public class PlaceholderInitializer extends ModuleInitializer {
 
     private static void registerServerPlaytimePlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("server_playtime", """
-            The total playtime of all players in the server.
+            Returns the total playtime of all players in the server.
             """);
         PlaceholderHelper.registerServerPlaceholder(descriptor, server -> Text.literal(String.valueOf(SumUpPlaceholder.ofServer().playtime)));
     }
 
     private static void registerPlayerPlaytimePlaceholder() {
-        PlaceholderHelper.registerPlayerPlaceholder("player_playtime", player -> Text.literal(String.valueOf(SumUpPlaceholder.ofPlayer(player.getUuidAsString()).playtime)));
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("player_playtime", """
+            Returns the playtime of the player.
+            """);
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, player -> Text.literal(String.valueOf(SumUpPlaceholder.ofPlayer(player.getUuidAsString()).playtime)));
     }
 
     private static void registerServerMovedPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("server_moved", """
-            The total distance traveled by all players in the server.
+            Returns the total distance traveled by all players in the server.
             """);
         PlaceholderHelper.registerServerPlaceholder(descriptor, server -> Text.literal(String.valueOf(SumUpPlaceholder.ofServer().moved)));
     }
 
     private static void registerPlayerMovedPlaceholder() {
-        PlaceholderHelper.registerPlayerPlaceholder("player_moved", player -> Text.literal(String.valueOf(SumUpPlaceholder.ofPlayer(player.getUuidAsString()).moved)));
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("player_moved", """
+            Returns the distance traveled by the player.
+            """);
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, player -> Text.literal(String.valueOf(SumUpPlaceholder.ofPlayer(player.getUuidAsString()).moved)));
     }
 
     private static void registerServerKilledPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("server_killed", """
-            The total entities killed by all players in the server.
+            Returns the total entities killed by all players in the server.
             """);
         PlaceholderHelper.registerServerPlaceholder(descriptor, server -> Text.literal(String.valueOf(SumUpPlaceholder.ofServer().killed)));
     }
 
     private static void registerPlayerKilledPlaceholder() {
-        PlaceholderHelper.registerPlayerPlaceholder("player_killed", player -> Text.literal(String.valueOf(SumUpPlaceholder.ofPlayer(player.getUuidAsString()).killed)));
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("player_killed", """
+            Returns the killed entities by the player.
+            """);
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, player -> Text.literal(String.valueOf(SumUpPlaceholder.ofPlayer(player.getUuidAsString()).killed)));
     }
 
     private static void registerServerPlacedPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("server_placed", """
-            The total placed blocks by all players in the server.
+            Returns the total placed blocks by all players in the server.
             """);
         PlaceholderHelper.registerServerPlaceholder(descriptor, server -> Text.literal(String.valueOf(SumUpPlaceholder.ofServer().placed)));
     }
 
     private static void registerPlayerPlacedPlaceholder() {
-        PlaceholderHelper.registerPlayerPlaceholder("player_placed", player -> Text.literal(String.valueOf(SumUpPlaceholder.ofPlayer(player.getUuidAsString()).placed)));
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("player_placed", """
+            Returns the placed blocks by the player.
+            """);
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, player -> Text.literal(String.valueOf(SumUpPlaceholder.ofPlayer(player.getUuidAsString()).placed)));
     }
 
     private static void registerServerMinedPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("server_mined", """
-            The total mined blocks by all players in the server.
+            Returns the total mined blocks by all players in the server.
             """);
         PlaceholderHelper.registerServerPlaceholder(descriptor, (server) -> Text.literal(String.valueOf(SumUpPlaceholder.ofServer().mined)));
     }
 
     private static void registerPlayerMinedPlaceholder() {
-        PlaceholderHelper.registerPlayerPlaceholder("player_mined", player -> Text.literal(String.valueOf(SumUpPlaceholder.ofPlayer(player.getUuidAsString()).mined)));
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("player_mined", """
+            Returns the mined blocks by the player.
+            """);
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, player -> Text.literal(String.valueOf(SumUpPlaceholder.ofPlayer(player.getUuidAsString()).mined)));
     }
 
     public static void registerPrefixPlaceholder() {
-        PlaceholderHelper.registerPlayerPlaceholder("player_prefix", (player, arg) -> {
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("player_prefix", """
+            Returns the `luckperms prefix` of the player.
+            """);
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player, arg) -> {
             String prefix = PermissionHelper.getPrefix(player.getUuid());
             return TextHelper.getTextByValue(player, prefix);
         });
     }
 
     public static void registerSuffixPlaceholder() {
-        PlaceholderHelper.registerPlayerPlaceholder("player_suffix", (player, arg) -> {
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("player_suffix", """
+            Returns the `luckperms suffix` of the player.
+            """);
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player, arg) -> {
             String prefix = PermissionHelper.getSuffix(player.getUuid());
             return TextHelper.getTextByValue(player, prefix);
         });
     }
 
     public static void registerPosPlaceholder() {
-        PlaceholderHelper.registerPlayerPlaceholder("pos", (player) -> {
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("pos", """
+            Returns the `location` of the player.
+            """);
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> {
             int x = player.getBlockX();
             int y = player.getBlockY();
             int z = player.getBlockZ();
@@ -264,17 +288,25 @@ public class PlaceholderInitializer extends ModuleInitializer {
     }
 
     private void registerHasPermissionPlaceholder() {
-        PlaceholderHelper.registerPlayerPlaceholder("has_permission", (player, args) -> {
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("has_permission", """
+            The `first string argument` is the `permission` to check.
+            Returns whether the `player` has that permission, in boolean.
+            """);
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player, args) -> {
             boolean value = PermissionHelper.hasPermission(player.getUuid(), new PermissionDescriptor(true, args, null));
             return Text.literal(String.valueOf(value));
         });
     }
 
     private void registerGetMetaPlaceholder() {
-        PlaceholderHelper.registerPlayerPlaceholder("get_meta", (player, args) -> {
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("get_meta", """
+            The `first string argument` is the `luckperms meta` key.
+            Returns the `string` to represent the `meta value`.
+            """);
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player, args) -> {
             MetaDescriptor<String> tempMeta = new MetaDescriptor<>(true, args, String::valueOf, null);
             Optional<String> metaValue = PermissionHelper.getMeta(player.getUuid(), tempMeta);
-            return Text.literal(metaValue.orElse("META_NOT_FOUND"));
+            return Text.literal(metaValue.orElse("META_NOT_FOUND_ERROR"));
         });
     }
 
@@ -313,7 +345,10 @@ public class PlaceholderInitializer extends ModuleInitializer {
     }
 
     private void registerHealthBarPlaceholder() {
-        PlaceholderHelper.registerPlayerPlaceholder("health_bar", player -> {
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("health_bar", """
+            Returns the `health` of the `player`, in visual heart characters.
+            """);
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, player -> {
             int totalHearts = 10;
             int filledHearts = (int) (player.getHealth() / 2);
             int unfilledHearts = totalHearts - filledHearts;

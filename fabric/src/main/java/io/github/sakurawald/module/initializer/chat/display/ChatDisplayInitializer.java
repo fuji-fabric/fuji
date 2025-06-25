@@ -8,6 +8,7 @@ import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandSource;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.core.structure.descriptor.PlaceholderDescriptor;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.chat.display.config.model.ChatDisplayConfigModel;
 import io.github.sakurawald.module.initializer.chat.display.helper.DisplayHelper;
@@ -54,15 +55,24 @@ public class ChatDisplayInitializer extends ModuleInitializer {
     }
 
     private static void registerDisplayEnderPlaceholder() {
-        PlaceholderHelper.registerPlayerPlaceholder("ender", DisplayHelper::createEnderDisplayText);
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("ender", """
+            Create a `enderchest display` and return the `clickable` text to open that display.
+            """);
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, DisplayHelper::createEnderDisplayText);
     }
 
     private static void registerDisplayInvPlaceholder() {
-        PlaceholderHelper.registerPlayerPlaceholder("inv", DisplayHelper::createInvDisplayText);
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("inv", """
+            Create a `inventory display` and return the `clickable` text to open that display.
+            """);
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, DisplayHelper::createInvDisplayText);
     }
 
     private static void registerDisplayItemPlaceholder() {
-        PlaceholderHelper.registerPlayerPlaceholder("item", DisplayHelper::createItemDisplayText);
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("item", """
+            Create a `item display` and return the `clickable` text to open that display.
+            """);
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, DisplayHelper::createItemDisplayText);
     }
 
     @Override
