@@ -7,6 +7,7 @@ import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.gui.PagedGui;
 import io.github.sakurawald.module.initializer.fuji.structure.IdentifierDescriptor;
+import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -38,7 +39,7 @@ public class RegistryInspectionGui extends PagedGui<IdentifierDescriptor> {
     protected GuiElementInterface toGuiElement(IdentifierDescriptor entity) {
         GuiElementBuilder guiElementBuilder = new GuiElementBuilder()
             .setName(Text.of(entity.getIdentifier().toString()))
-            .setItem(this.isMetaRegistry ? Items.BOOK : Items.PAPER)
+            .setItem(getItem(entity))
             .setLore(List.of(
                 TextHelper.getTextByKey(getPlayer(), "registry.type.is_dynamic", entity.isDynamic())
             ))
@@ -50,6 +51,12 @@ public class RegistryInspectionGui extends PagedGui<IdentifierDescriptor> {
 
         return guiElementBuilder
             .build();
+    }
+
+    private Item getItem(IdentifierDescriptor entity) {
+        if (!this.isMetaRegistry) return Items.PAPER;
+
+        return entity.isDynamic() ? Items.WRITABLE_BOOK : Items.BOOK;
     }
 
     @SuppressWarnings("UnnecessaryReturnStatement")

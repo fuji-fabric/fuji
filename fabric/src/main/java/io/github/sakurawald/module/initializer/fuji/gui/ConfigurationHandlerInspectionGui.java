@@ -6,9 +6,11 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.IOUtil;
 import io.github.sakurawald.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.core.config.Configs;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.gui.PagedGui;
 import io.github.sakurawald.core.manager.impl.module.ModuleManager;
+import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -44,12 +46,22 @@ public class ConfigurationHandlerInspectionGui extends PagedGui<BaseConfiguratio
             , TextHelper.getTextByKey(getPlayer(), "fuji.inspect.configuration.path", configPath)
         );
 
-        return new GuiElementBuilder()
-            .setItem(Items.TRAPPED_CHEST)
+        GuiElementBuilder guiElementBuilder = new GuiElementBuilder()
+            .setItem(toItem(entity))
             .setName(Text.literal(topLevelName))
             .setLore(lore)
-            .setCallback(new JavaObjectInspectionGui(getGui(), entity.model(), getPlayer(), new ArrayList<>(), 0, topLevelName, ".")::open)
+            .setCallback(new JavaObjectInspectionGui(getGui(), entity.model(), getPlayer(), new ArrayList<>(), 0, topLevelName, ".")::open);
+
+        return guiElementBuilder
             .build();
+    }
+
+    private static Item toItem(BaseConfigurationHandler<?> entity) {
+        if (entity == Configs.mainControlConfig) {
+            return Items.ENDER_CHEST;
+        }
+
+        return Items.TRAPPED_CHEST;
     }
 
     @Override
