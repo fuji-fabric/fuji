@@ -6,6 +6,7 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.gui.PagedGui;
+import io.github.sakurawald.module.initializer.fuji.structure.IdentifierDescriptor;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -13,64 +14,88 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryLoader;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
 
-public class RegistryInspectionGui extends PagedGui<Identifier> {
+public class RegistryInspectionGui extends PagedGui<IdentifierDescriptor> {
 
     private final boolean isMetaRegistry;
 
-    public RegistryInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, boolean isMetaRegistry, @NotNull List<Identifier> entities, int pageIndex) {
+    public RegistryInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, boolean isMetaRegistry, @NotNull List<IdentifierDescriptor> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "registry.list.gui.title"), entities, pageIndex);
         this.isMetaRegistry = isMetaRegistry;
     }
 
     @Override
-    protected PagedGui<Identifier> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<Identifier> entities, int pageIndex) {
+    protected PagedGui<IdentifierDescriptor> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<IdentifierDescriptor> entities, int pageIndex) {
         return new RegistryInspectionGui(parent, player, this.isMetaRegistry, entities, pageIndex);
     }
 
-    @SuppressWarnings("UnnecessaryReturnStatement")
     @Override
-    protected GuiElementInterface toGuiElement(Identifier entity) {
-        return new GuiElementBuilder()
-            .setName(Text.of(entity.toString()))
+    protected GuiElementInterface toGuiElement(IdentifierDescriptor entity) {
+        GuiElementBuilder guiElementBuilder = new GuiElementBuilder()
+            .setName(Text.of(entity.getIdentifier().toString()))
             .setItem(this.isMetaRegistry ? Items.BOOK : Items.PAPER)
-            .setCallback(() -> {
-                if (!this.isMetaRegistry) return;
+            .setLore(List.of(
+                TextHelper.getTextByKey(getPlayer(), "registry.type.is_dynamic", entity.isDynamic())
+            ))
+            .setCallback(openRegistry(entity));
 
-                /* try to get the registry from static registries */
-                Object o = Registries.REGISTRIES.get(entity);
-                if (o instanceof Registry<?> r) {
-                    List<Identifier> list = r.getKeys().stream()
-                        .map(RegistryKey::getValue)
-                        .sorted()
-                        .toList();
-                    new RegistryInspectionGui(getGui(), getPlayer(), false, list, 0).open();
-                    return;
-                }
+        if (entity.isDynamic()) {
+            guiElementBuilder.glow();
+        }
 
-                /* try to get the registry from dynamic registries */
-                Optional<RegistryLoader.Entry<?>> first = RegistryLoader.DYNAMIC_REGISTRIES.stream().filter(it -> it.comp_985().getValue().equals(entity)).findFirst();
-                if (first.isPresent()) {
-                    List<Identifier> list = RegistryHelper.ofRegistry(first.get().comp_985()).getIds().stream().toList();
-                    new RegistryInspectionGui(getGui(), getPlayer(), false, list, 0).open();
-                    return;
-                }
-
-            })
+        return guiElementBuilder
             .build();
     }
 
+    @SuppressWarnings("UnnecessaryReturnStatement")
+    private @NotNull Runnable openRegistry(IdentifierDescriptor entity) {
+        return () -> {
+            if (!this.isMetaRegistry) return;
+
+            /* try to get the registry from static registries */
+            Object o = Registries.REGISTRIES.get(entity.getIdentifier());
+            if (o instanceof Registry<?> r) {
+                List<IdentifierDescriptor> ids = r.getKeys()
+                    .stream()
+                    .map(RegistryKey::getValue)
+                    .sorted()
+                    .map(identifier -> new IdentifierDescriptor(identifier, false))
+                    .toList();
+                new RegistryInspectionGui(getGui(), getPlayer(), false, ids, 0)
+                    .open();
+                return;
+            }
+
+            /* try to get the registry from dynamic registries */
+            Optional<RegistryLoader.Entry<?>> first = RegistryLoader.DYNAMIC_REGISTRIES
+                .stream()
+                .filter(it -> it.comp_985().getValue().equals(entity.getIdentifier()))
+                .findFirst();
+            if (first.isPresent()) {
+                List<IdentifierDescriptor> ids = RegistryHelper
+                    .ofRegistry(first.get().comp_985())
+                    .getIds()
+                    .stream()
+                    .sorted()
+                    .map(identifier -> new IdentifierDescriptor(identifier, true))
+                    .toList();
+                new RegistryInspectionGui(getGui(), getPlayer(), false, ids, 0).open();
+                return;
+            }
+
+        };
+    }
+
     @Override
-    protected List<Identifier> filter(String keyword) {
+    protected List<IdentifierDescriptor> filter(String keyword) {
         return getEntities()
             .stream()
-            .filter(it -> it.toString().contains(keyword))
+            .filter(it -> it.getIdentifier().toString().contains(keyword))
             .toList();
     }
 }

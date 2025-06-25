@@ -24,6 +24,7 @@ import io.github.sakurawald.core.gui.inspection.ModulesInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.PermissionsAndMetasInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.RegistryInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ServerCommandsInspectionGui;
+import io.github.sakurawald.module.initializer.fuji.structure.IdentifierDescriptor;
 import io.github.sakurawald.module.initializer.fuji.structure.ServerCommandNodeWrapper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModMetadata;
@@ -167,18 +168,24 @@ public class FujiInitializer extends ModuleInitializer {
     @Document("Inspect all registries in server.")
     @CommandNode("inspect registry")
     private static int $inspectRegistry(@CommandSource ServerPlayerEntity player) {
-        List<Identifier> staticRegistries = Registries.REGISTRIES.getKeys().stream()
+        /* Get the identifiers of meta registries. */
+        List<Identifier> staticRegistries = Registries.REGISTRIES.getKeys()
+            .stream()
             .map(RegistryKey::getValue)
             .toList();
+        List<Identifier> dynamicRegistries = RegistryLoader.DYNAMIC_REGISTRIES
+            .stream()
+            .map(it -> it.comp_985().getValue())
+            .toList();
 
-        List<Identifier> dynamicRegistries = RegistryLoader.DYNAMIC_REGISTRIES.stream().map(it -> it.comp_985().getValue()).toList();
+        /* Map it to descriptor. */
+        List<IdentifierDescriptor> ids = new ArrayList<>();
+        staticRegistries.forEach(id -> ids.add(new IdentifierDescriptor(id, false)));
+        dynamicRegistries.forEach(id -> ids.add(new IdentifierDescriptor(id, true)));
+        ids.sort(Comparator.comparing(IdentifierDescriptor::getIdentifier));
 
-        List<Identifier> identifiers = new ArrayList<>();
-        identifiers.addAll(staticRegistries);
-        identifiers.addAll(dynamicRegistries);
-        identifiers.sort(Comparator.comparing(Identifier::toString));
-
-        new RegistryInspectionGui(null, player, true, identifiers, 0).open();
+        new RegistryInspectionGui(null, player, true, ids, 0)
+            .open();
         return CommandHelper.Return.SUCCESS;
     }
 
