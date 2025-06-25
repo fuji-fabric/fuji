@@ -337,6 +337,8 @@
   "fuji.inspect.fuji_commands.gui.title": "<blue>Fuji 指令",
   "fuji.inspect.permissions_and_metas.gui.title": "<#A294F9>Permissions & Metas",
   "fuji.inspect.permissions_and_metas.gui.item.name": "<#A294F9>%s",
+  "fuji.inspect.placeholders.gui.title": "<aqua>Placeholders",
+  "fuji.inspect.placeholders.gui.item.name": "<aqua>%s",
   "fuji.debug.on": "<orange>The fuji debug mode is now on. You can see debug messages in the console!",
   "fuji.debug.off": "<orange>The fuji debug mode is now off",
   "from_module": "<yellow>From Module: %s",
