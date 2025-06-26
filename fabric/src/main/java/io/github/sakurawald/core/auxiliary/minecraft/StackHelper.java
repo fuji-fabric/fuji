@@ -15,6 +15,7 @@ import java.util.Optional;
 #if MC_VER <= MC_1_20_4
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
+
 import java.util.stream.Collectors;
 #elif MC_VER > MC_1_20_4
 import net.minecraft.component.DataComponentTypes;
@@ -60,7 +61,7 @@ public class StackHelper {
 
     public static void setCustomName(ItemStack stack, Text customName) {
         #if MC_VER <= MC_1_20_4
-            stack.setCustomName(customName);
+        stack.setCustomName(customName);
         #elif MC_VER > MC_1_20_4
             stack.set(DataComponentTypes.CUSTOM_NAME, customName);
         #endif
@@ -76,7 +77,7 @@ public class StackHelper {
 
     public static List<Text> getLore(ItemStack stack) {
         #if MC_VER <= MC_1_20_4
-            return stack
+        return stack
             .getOrCreateSubNbt("display")
             .getList("Lore", NbtElement.STRING_TYPE)
             .stream()
@@ -126,4 +127,32 @@ public class StackHelper {
         return Objects.equals(NbtHelper.getNbt(itemStack), NbtHelper.getNbt(itemStack2));
     }
 
+    public static boolean filterItemStack(ItemStack itemStack, String keyword) {
+        /* Filter by item name. */
+        if (filterItemName(itemStack, keyword)) return true;
+
+        /* Filter by item lore. */
+        return filterItemLore(itemStack, keyword);
+    }
+
+    @SuppressWarnings("RedundantIfStatement")
+    public static boolean filterItemName(ItemStack itemStack, String keyword) {
+        String itemName = TextHelper.visitString(itemStack.getName());
+        if (itemName
+            .toLowerCase()
+            .contains(keyword.toLowerCase())) return true;
+        return false;
+    }
+
+    @SuppressWarnings("RedundantIfStatement")
+    public static boolean filterItemLore(ItemStack itemStack, String keyword) {
+        boolean matched = getLore(itemStack)
+            .stream()
+            .anyMatch(text -> TextHelper.visitString(text)
+                .toLowerCase()
+                .contains(keyword.toLowerCase()));
+        if (matched) return true;
+
+        return false;
+    }
 }

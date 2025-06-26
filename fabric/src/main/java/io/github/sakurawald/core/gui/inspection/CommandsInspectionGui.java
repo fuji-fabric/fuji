@@ -85,14 +85,7 @@ public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
             .setName(Text.literal(entity.getCommandSyntax()))
             .setItem(Items.REPEATING_COMMAND_BLOCK)
             .setLore(lore)
-            .setCallback(() -> handleClick(getPlayer(), entity))
             .build();
-    }
-
-    private void handleClick(ServerPlayerEntity player, CommandDescriptor entity) {
-//        ModulesInspectionGui.makeDefault(player)
-//            .search(modulePathString -> modulePathString.getKey().equals(entity.getSourceModulePath()))
-//            .open();
     }
 
     @Override
