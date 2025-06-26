@@ -83,7 +83,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
        /* Click to open the registered commands. */
 //       commandsRegisteredByThisModuleGUI.open();
 
-        ModuleDetailsInspectionGui.make(gui, player, modulePathString)
+        ModuleDetailsInspectionGui.inspectModuleDetails(gui, player, modulePathString)
             .open();
     }
 

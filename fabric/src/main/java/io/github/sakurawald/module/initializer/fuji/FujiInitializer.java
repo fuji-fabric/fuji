@@ -15,8 +15,6 @@ import io.github.sakurawald.core.gui.inspection.CommandDescriptorGui;
 import io.github.sakurawald.core.job.abst.BaseJob;
 import io.github.sakurawald.core.manager.Managers;
 import io.github.sakurawald.core.manager.impl.module.ModuleManager;
-import io.github.sakurawald.core.structure.descriptor.MetaDescriptor;
-import io.github.sakurawald.core.structure.descriptor.PermissionDescriptor;
 import io.github.sakurawald.core.structure.descriptor.PlaceholderDescriptor;
 import io.github.sakurawald.core.structure.descriptor.StringDescriptor;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
@@ -196,17 +194,9 @@ public class FujiInitializer extends ModuleInitializer {
     @Document("Inspect permissions and metas used by fuji.")
     @CommandNode("inspect permissions-and-metas")
     private static int $inspectPermissionsAndMetas(@CommandSource ServerPlayerEntity player) {
-        List<StringDescriptor> entities = StringDescriptor.REGISTERED_STRING_DESCRIPTORS
-            .stream()
-            .filter(it -> it instanceof PermissionDescriptor
-            || it instanceof MetaDescriptor<?>)
-            .sorted(Comparator.comparing(StringDescriptor::getFromModule)
-                .thenComparing(StringDescriptor::sortPriority))
-            .toList();
-
-        new PermissionsAndMetasInspectionGui(null, player, entities, 0)
+        PermissionsAndMetasInspectionGui
+            .inspectAll(null, player)
             .open();
-
         return CommandHelper.Return.SUCCESS;
     }
 
