@@ -193,7 +193,8 @@ public class ModuleManager extends BaseManager {
                 - To use echo commands like `/send-message`, `/send-broadcast` etc, enable the `echo` module.
             - To see the list of modules, and what functionality they provides, read the `fuji manual` pdf file in [2;34mhttps://github.com/sakurawald/fuji/raw/dev/docs/release/fuji.pdf[0m[2;35m
             - To discover new things, use `/fuji inspect` command.
-            - Anything unclear, open an issue in [2;34mhttps://github.com/sakurawald/fuji/issues[0m[2;35m[0m
+            - Anything unclear, open an issue in [2;34mhttps://github.com/sakurawald/fuji/issues[0m[2;35m[0m[2;35m
+            - Now, issue `[2;34m/fuji inspect modules[0m[2;35m` to get started!
            """;
         LogUtil.info(userGuide);
     }
