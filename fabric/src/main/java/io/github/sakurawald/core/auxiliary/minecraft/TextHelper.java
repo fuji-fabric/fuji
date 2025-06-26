@@ -20,6 +20,7 @@ import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.core.config.Configs;
 import io.github.sakurawald.core.config.handler.impl.ResourceConfigurationHandler;
+import io.github.sakurawald.core.service.url_highlighter.UrlHighlighter;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import net.minecraft.entity.player.PlayerEntity;
@@ -50,13 +51,13 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class TextHelper {
 
-    /* constants */
+    /* Constants. */
     public static final Text TEXT_NEWLINE = Text.of("\n");
     public static final Text TEXT_SPACE = Text.of(" ");
     public static final Text TEXT_EMPTY = Text.literal("");
     public static final String LANGUAGE_VALUE_PLACEHOLDER = "%message%";
 
-    /* class states */
+    /* Class states. */
     private static final int ENSURE_THE_TAGS_ARE_REGISTERED_BEFORE_CREATING_THE_DEFAULT_PARSER = registerExtendedTags();
     public static final NodeParser POWERFUL_PARSER = makePowerfulParser();
     public static final NodeParser STYLE_ONLY_PARSER = makeStyleOnlyParser();
@@ -594,11 +595,14 @@ public class TextHelper {
         return parser.parseNode(input).toText();
     }
 
-    public static String decorateDocumentString(String documentString) {
-        return Arrays.stream(documentString
+    private static String decorateDocumentString(String documentString) {
+        String decoratedDocumentString = Arrays.stream(documentString
                 .split("\n"))
             .map(line -> "<#FFA1F5>" + line)
             .collect(Collectors.joining("\n"));
+
+        decoratedDocumentString = UrlHighlighter.highlight(decoratedDocumentString);
+        return decoratedDocumentString;
     }
 
     public static Text getDocumentText(Object audience, String value) {
@@ -610,4 +614,6 @@ public class TextHelper {
         value = decorateDocumentString(value);
         return getTextListByValue(audience, value);
     }
+
 }
+

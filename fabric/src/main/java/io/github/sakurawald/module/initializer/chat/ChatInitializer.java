@@ -9,6 +9,10 @@ import io.github.sakurawald.module.initializer.ModuleInitializer;
     For other `chat-related` mods, you can try and test the compatibility.
     It's likely it will work.
     """)
+@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+   Text Placeholder API - default placeholders
+   https://placeholders.pb4.eu/user/default-placeholders/
+   """)
 public class ChatInitializer extends ModuleInitializer {
 
 }
