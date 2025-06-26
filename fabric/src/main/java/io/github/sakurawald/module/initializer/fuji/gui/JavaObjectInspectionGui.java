@@ -45,7 +45,7 @@ public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
 
     @Override
     protected PagedGui<InspectingObject> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<InspectingObject> entities, int pageIndex) {
-        return new JavaObjectInspectionGui(getParent(), null, player, entities, pageIndex, this.fileRelativePath, this.walkingPath);
+        return new JavaObjectInspectionGui(parent, null, player, entities, pageIndex, this.fileRelativePath, this.walkingPath);
     }
 
     @Override

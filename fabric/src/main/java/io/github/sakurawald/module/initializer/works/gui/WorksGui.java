@@ -39,7 +39,7 @@ public class WorksGui extends PagedGui<Work> {
             getFooter().setSlot(5,
                 GuiHelper.makeLetterAButton(player)
                     .setName(TextHelper.getTextByKey(player, "works.list.my_works"))
-                    .setCallback(() -> search(player.getGameProfile().getName()).open())
+                    .setCallback(() -> saveCurrentGuiAndSearch(player.getGameProfile().getName()).open())
             );
         } else {
             getFooter().setSlot(5,

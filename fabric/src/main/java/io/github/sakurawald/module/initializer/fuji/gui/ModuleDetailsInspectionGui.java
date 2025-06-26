@@ -24,18 +24,18 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
     }
 
     public static ModuleDetailsInspectionGui inspectModuleDetails(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString) {
-
-        /* Search all types of objects of the module.  */
-        List<GuiElementInterface> entities = new ArrayList<>();
-        entities.addAll(searchModuleCommands(parent, player, modulePathString));
-        entities.addAll(searchModulePermissionsAndMetas(parent, player, modulePathString));
-        entities.addAll(searchModulePlaceholders(parent, player, modulePathString));
-        entities.addAll(searchModuleConfigurations(parent, player, modulePathString));
-        entities.addAll(searchModuleArgumentTypes(parent, player, modulePathString));
-
         /* Make the GUI. */
+        List<GuiElementInterface> entities = new ArrayList<>();
         Text title = Text.literal("module details gui");
         ModuleDetailsInspectionGui moduleDetailsInspectionGui = new ModuleDetailsInspectionGui(parent, player, title, entities, 0);
+
+        /* Search all types of objects of the module.  */
+        SimpleGui trueParent = moduleDetailsInspectionGui.getGui();
+        entities.addAll(searchModuleCommands(trueParent, player, modulePathString));
+        entities.addAll(searchModulePermissionsAndMetas(trueParent, player, modulePathString));
+        entities.addAll(searchModulePlaceholders(trueParent, player, modulePathString));
+        entities.addAll(searchModuleArgumentTypes(trueParent, player, modulePathString));
+        entities.addAll(searchModuleConfigurations(trueParent, player, modulePathString));
 
         return moduleDetailsInspectionGui;
     }
@@ -43,35 +43,35 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
     private static List<GuiElementInterface> searchModuleArgumentTypes(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString) {
         return ArgumentTypeInspectionGui
             .inspectAll(parent, player)
-            .search(it -> it.getFromModule().equals(modulePathString))
+            .skipCurrentGuiAndSearch(it -> it.getFromModule().equals(modulePathString))
             .toGuiElements();
     }
 
     private static List<GuiElementInterface> searchModuleConfigurations(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString) {
         return ConfigurationHandlerInspectionGui
             .inspectAll(parent, player)
-            .search(it -> it.getFromModule().equals(modulePathString))
+            .skipCurrentGuiAndSearch(it -> it.getFromModule().equals(modulePathString))
             .toGuiElements();
     }
 
     private static List<GuiElementInterface> searchModulePlaceholders(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString) {
         return PlaceholderDescriptorInspectionGui
             .inspectAll(parent, player)
-            .search(it -> it.getSourceModule().equals(modulePathString))
+            .skipCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
             .toGuiElements();
     }
 
     private static List<GuiElementInterface> searchModuleCommands(SimpleGui parent, ServerPlayerEntity player, String modulePathString) {
         return CommandDescriptorGui
             .inspectAll(parent, player)
-            .search(it -> it.getSourceModule().equals(modulePathString))
+            .skipCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
             .toGuiElements();
     }
 
     private static List<GuiElementInterface> searchModulePermissionsAndMetas(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString) {
         return PermissionsAndMetasInspectionGui
             .inspectAll(parent, player)
-            .search(it -> it.getSourceModule().equals(modulePathString))
+            .skipCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
             .toGuiElements();
     }
 

@@ -56,16 +56,22 @@ public class ConfigurationHandlerInspectionGui extends PagedGui<BaseConfiguratio
             , TextHelper.getTextByKey(getPlayer(), "fuji.inspect.configuration.path", configPath)
         );
 
+        // NOTE: The parent may be different, due to the parent of ConfigurationsInspectionGui may be null or non-null (If it's created and open from ModuleDetailsInspectionGui).
         SimpleGui trueParentGui = this.getParent() != null ? this.getParent() : this.getGui();
 
         GuiElementBuilder guiElementBuilder = new GuiElementBuilder()
             .setItem(toItem(entity))
             .setName(Text.literal(topLevelName))
             .setLore(lore)
-            .setCallback(new JavaObjectInspectionGui(trueParentGui, entity.model(), getPlayer(), new ArrayList<>(), 0, topLevelName, ".")::open);
+            .setCallback(() -> inspectWithJavaObjectInspector(trueParentGui, entity, topLevelName));
 
         return guiElementBuilder
             .build();
+    }
+
+    private void inspectWithJavaObjectInspector(SimpleGui parent, BaseConfigurationHandler<?> entity, String topLevelName) {
+        new JavaObjectInspectionGui(parent, entity.model(), getPlayer(), new ArrayList<>(), 0, topLevelName, ".")
+            .open();
     }
 
     private static Item toItem(BaseConfigurationHandler<?> entity) {

@@ -6,9 +6,7 @@ import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
-import io.github.sakurawald.core.command.structure.CommandDescriptor;
 import io.github.sakurawald.core.gui.PagedGui;
-import io.github.sakurawald.core.gui.inspection.CommandDescriptorGui;
 import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.core.structure.Pair;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
@@ -76,6 +74,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
             .build();
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void openModuleDetailsInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString) {
         ModuleDetailsInspectionGui
             .inspectModuleDetails(parent, player, modulePathString)
