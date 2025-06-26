@@ -26,23 +26,23 @@ import java.util.List;
 
 public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
 
-    public ModulesInspectionGui(ServerPlayerEntity player, @NotNull List<Pair<String, Boolean>> entities, int pageIndex) {
-        super(null, player, TextHelper.getTextByKey(player, "fuji.inspect.modules.gui.title"), entities, pageIndex);
+    public ModulesInspectionGui(SimpleGui parent, ServerPlayerEntity player, @NotNull List<Pair<String, Boolean>> entities, int pageIndex) {
+        super(parent, player, TextHelper.getTextByKey(player, "fuji.inspect.modules.gui.title"), entities, pageIndex);
     }
 
     @Override
     protected PagedGui<Pair<String, Boolean>> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<Pair<String, Boolean>> entities, int pageIndex) {
-        return new ModulesInspectionGui(player, entities, pageIndex);
+        return new ModulesInspectionGui(parent, player, entities, pageIndex);
     }
 
-    public static ModulesInspectionGui inspectAll(ServerPlayerEntity player) {
-        List<Pair<String, Boolean>> list = ModuleManager.MODULE_ENABLE_STATUS
+    public static ModulesInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
+        List<Pair<String, Boolean>> entities = ModuleManager.MODULE_ENABLE_STATUS
             .entrySet()
             .stream()
             .map(it -> new Pair<>(ModuleManager.joinModulePath(it.getKey()), it.getValue()))
             .sorted(Comparator.comparing(Pair::getKey))
             .toList();
-        return new ModulesInspectionGui(player, list, 0);
+        return new ModulesInspectionGui(parent, player, entities, 0);
     }
 
     @Override
@@ -76,32 +76,26 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
             .build();
     }
 
-    private void openModuleDetailsInspectionGui(@Nullable SimpleGui gui, ServerPlayerEntity player, String modulePathString) {
-        /* Attach registered commands info. */
-//        PagedGui<CommandDescriptor> commandsRegisteredByThisModuleGUI = attachModuleCommands(modulePathString, lore);
-
-       /* Click to open the registered commands. */
-//       commandsRegisteredByThisModuleGUI.open();
-
-        ModuleDetailsInspectionGui.inspectModuleDetails(gui, player, modulePathString)
+    private void openModuleDetailsInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString) {
+        ModuleDetailsInspectionGui
+            .inspectModuleDetails(parent, player, modulePathString)
             .open();
     }
 
-    private PagedGui<CommandDescriptor> attachModuleCommands(String modulePathString, List<Text> lore) {
-        PagedGui<CommandDescriptor> commandsRegisteredByThisModuleGUI = CommandDescriptorGui
-            .inspectAll(getGui(), getPlayer())
-            .search(it -> it.getSourceModulePath().equals(modulePathString));
-
-
-        lore.add(TextHelper.TEXT_EMPTY);
-        int registeredCommandsCount = commandsRegisteredByThisModuleGUI.getEntities().size();
-        lore.add(TextHelper.getTextByKey(getPlayer(), "module.registered_commands", registeredCommandsCount));
-        if (registeredCommandsCount != 0) {
-            lore.add(TextHelper.getTextByKey(getPlayer(), "prompt.click.see_it.left_click"));
-        }
-
-        return commandsRegisteredByThisModuleGUI;
-    }
+//    private PagedGui<CommandDescriptor> attachModuleCommands(String modulePathString, List<Text> lore) {
+//        PagedGui<CommandDescriptor> commandsRegisteredByThisModuleGUI = CommandDescriptorGui
+//            .inspectAll(getGui(), getPlayer())
+//            .search(it -> it.getSourceModulePath().equals(modulePathString));
+//
+//        lore.add(TextHelper.TEXT_EMPTY);
+//        int registeredCommandsCount = commandsRegisteredByThisModuleGUI.getEntities().size();
+//        lore.add(TextHelper.getTextByKey(getPlayer(), "module.registered_commands", registeredCommandsCount));
+//        if (registeredCommandsCount != 0) {
+//            lore.add(TextHelper.getTextByKey(getPlayer(), "prompt.click.see_it.left_click"));
+//        }
+//
+//        return commandsRegisteredByThisModuleGUI;
+//    }
 
     private static @Nullable String getDocumentString(Class<? extends ModuleInitializer> moduleInitializerClass) {
         @Nullable String classDocument = ReflectionUtil.getClassDocument(moduleInitializerClass);
@@ -110,8 +104,10 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
 
     @Override
     protected List<Pair<String, Boolean>> filter(String keyword) {
-        return getEntities().stream()
+        return getEntities()
+            .stream()
             .filter(it -> it.getKey().contains(keyword)
-                || it.getValue().toString().contains(keyword)).toList();
+                || it.getValue().toString().contains(keyword))
+            .toList();
     }
 }

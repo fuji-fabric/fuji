@@ -95,7 +95,7 @@ public class FujiInitializer extends ModuleInitializer {
     @CommandNode("inspect modules")
     private static int $inspectModules(@CommandSource ServerPlayerEntity player) {
         ModulesInspectionGui
-            .inspectAll(player)
+            .inspectAll(null, player)
             .open();
         return CommandHelper.Return.SUCCESS;
     }

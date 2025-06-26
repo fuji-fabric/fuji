@@ -90,13 +90,13 @@ public abstract class PagedGui<T> extends LayeredGui {
     }
 
     public @NotNull PagedGui<T> search(String keywords) {
-        return make(this.parent, getPlayer(), TextHelper.getTextByKey(getPlayer(), "gui.search.title", keywords), filter(keywords), 0);
+        return make(this.gui, getPlayer(), TextHelper.getTextByKey(getPlayer(), "gui.search.title", keywords), filter(keywords), 0);
     }
 
     public @NotNull PagedGui<T> search(Predicate<T> predicate) {
         List<T> newEntities = entities.stream().filter(predicate).toList();
 
-        return make(this.parent, getPlayer(), TextHelper.getTextByKey(getPlayer(), "gui.search.title", "REF"), newEntities, 0);
+        return make(this.gui, getPlayer(), TextHelper.getTextByKey(getPlayer(), "gui.search.title", "REF"), newEntities, 0);
     }
 
     @SuppressWarnings("unused")
