@@ -332,6 +332,7 @@
   "fuji.inspect.server_commands.gui.help.lore": "<green>Chuột trái -> sao chép đường dẫn của lệnh",
   "fuji.inspect.server_commands.gui.copy_command_path": "<orange>Sao chép đường dẫn của lệnh: `%s` <hover:show_text:'<green>Sao chép vào bộ nhớ tạm'><click:copy_to_clipboard:'%s'><green>[SAO CHÉP]</click></hover>",
   "fuji.inspect.modules.gui.title": "<blue>Mô-đun",
+  "fuji.inspect.module_details.gui.title": "<blue>Module Details: %s",
   "module.enable.status": "<yellow>Enable: %s",
   "module.registered_commands": "<blue>This module registers `%d` commands.",
   "fuji.inspect.fuji_commands.gui.title": "<blue>Fuji Commands",
