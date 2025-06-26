@@ -1,11 +1,15 @@
 package io.github.sakurawald.module.initializer.fuji.gui;
 
+import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.minecraft.StackHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.gui.PagedGui;
 import io.github.sakurawald.core.gui.inspection.CommandDescriptorGui;
+import io.github.sakurawald.core.manager.impl.module.ModuleManager;
+import io.github.sakurawald.core.structure.descriptor.annotation.ColorBox;
+import io.github.sakurawald.module.initializer.ModuleInitializer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -40,7 +44,35 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         entities.addAll(searchModulePlaceholders(trueParent, player, modulePathString));
         entities.addAll(searchModuleArgumentTypes(trueParent, player, modulePathString));
 
+        /* Attach color blocks of the module. */
+        attachColorBlocks(player, entities, modulePathString);
+
         return moduleDetailsInspectionGui;
+    }
+
+    private static void attachColorBlocks(ServerPlayerEntity player, List<GuiElementInterface> entities, String modulePathString) {
+        /* Get the module initializer class. */
+        Class<? extends ModuleInitializer> moduleInitializerClass = ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING
+            .get(modulePathString);
+        if (moduleInitializerClass == null) return;
+
+        /* Iterate the color boxes. */
+        ColorBox[] boxes = moduleInitializerClass
+            .getDeclaredAnnotationsByType(ColorBox.class);
+
+        for (ColorBox box : boxes) {
+            GuiElementBuilder colorboxElementBuilder = new GuiElementBuilder();
+
+            ColorBox.ColorBlockTypes color = box.color();
+            String documentString = box.value();
+            colorboxElementBuilder
+                .setName(TextHelper.getTextByKey(player, color.toLanguageKey()))
+                .setItem(color.toItem())
+                .setLore(TextHelper.getDocumentTextList(player, documentString));
+
+            entities.add(colorboxElementBuilder.build());
+        }
+
     }
 
     private static List<GuiElementInterface> searchModuleArgumentTypes(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString) {

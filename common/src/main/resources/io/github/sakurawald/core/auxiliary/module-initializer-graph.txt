@@ -2,6 +2,7 @@ io.github.sakurawald.module.initializer.afk.AfkInitializer
 io.github.sakurawald.module.initializer.afk.effect.AfkEffectInitializer
 io.github.sakurawald.module.initializer.anti_build.AntiBuildInitializer
 io.github.sakurawald.module.initializer.back.BackInitializer
+io.github.sakurawald.module.initializer.chat.ChatInitializer
 io.github.sakurawald.module.initializer.chat.display.ChatDisplayInitializer
 io.github.sakurawald.module.initializer.chat.history.ChatHistoryInitializer
 io.github.sakurawald.module.initializer.chat.mention.ChatMentionInitializer

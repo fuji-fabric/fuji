@@ -12,6 +12,7 @@ import io.github.sakurawald.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.core.command.exception.AbortCommandExecutionException;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.core.structure.descriptor.annotation.ColorBox;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.command_meta.shell.config.ShellConfigModel;
 import lombok.Cleanup;
@@ -27,6 +28,10 @@ import java.util.concurrent.CompletableFuture;
 @Document("""
     Provides `/shell` command.
     To execute the `command line` in `host shell`.
+    """)
+@ColorBox(color = ColorBox.ColorBlockTypes.DANGER, value = """
+    This is a `dangerous` module.
+    This module is a powerful and dangerous module, not recommended to enable it.
     """)
 public class ShellInitializer extends ModuleInitializer {
 
