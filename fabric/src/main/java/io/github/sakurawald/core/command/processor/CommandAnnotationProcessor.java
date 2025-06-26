@@ -45,10 +45,8 @@ public class CommandAnnotationProcessor {
      */
     public static final Set<CommandDescriptor> REGISTERED_COMMAND_DESCRIPTORS = ConcurrentHashMap.newKeySet();
 
-    @Getter
-    private static CommandDispatcher<ServerCommandSource> COMMAND_DISPATCHER;
-    @Getter
-    private static CommandRegistryAccess COMMAND_REGISTRY_ACCESS;
+    public static CommandDispatcher<ServerCommandSource> COMMAND_DISPATCHER;
+    public static CommandRegistryAccess COMMAND_REGISTRY_ACCESS;
 
     public static void process() {
         /*

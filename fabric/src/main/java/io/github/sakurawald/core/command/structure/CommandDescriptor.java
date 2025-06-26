@@ -150,7 +150,7 @@ public class CommandDescriptor implements SourceModuleGetter {
             .map(Argument::getArgumentName)
             .toList();
 
-        return CommandAnnotationProcessor.getCommandDispatcher().findNode(prefix);
+        return CommandAnnotationProcessor.COMMAND_DISPATCHER.findNode(prefix);
     }
 
     private static List<ArgumentBuilder<ServerCommandSource, ?>> makeArgumentBuilders(CommandDescriptor descriptor) {
@@ -258,7 +258,7 @@ public class CommandDescriptor implements SourceModuleGetter {
     public void unregister() {
         LogUtil.debug("Un-register command: {}", this);
 
-        RootCommandNode<ServerCommandSource> root = CommandAnnotationProcessor.getCommandDispatcher().getRoot();
+        RootCommandNode<ServerCommandSource> root = CommandAnnotationProcessor.COMMAND_DISPATCHER.getRoot();
 
         assert this.registerReturnValue != null;
         LiteralCommandNode<ServerCommandSource> navigationNode = this.registerReturnValue.build();
@@ -366,7 +366,7 @@ public class CommandDescriptor implements SourceModuleGetter {
         LiteralArgumentBuilder<ServerCommandSource> root = makeRootArgumentBuilder(builders, command);
 
         /* register it */
-        CommandAnnotationProcessor.getCommandDispatcher().register(root);
+        CommandAnnotationProcessor.COMMAND_DISPATCHER.register(root);
 
         return root;
     }

@@ -14,7 +14,7 @@ import java.util.List;
 public class ParticleEffectArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return ParticleEffectArgumentType.particleEffect(CommandAnnotationProcessor.getCommandRegistryAccess());
+        return ParticleEffectArgumentType.particleEffect(CommandAnnotationProcessor.COMMAND_REGISTRY_ACCESS);
     }
 
     @Override

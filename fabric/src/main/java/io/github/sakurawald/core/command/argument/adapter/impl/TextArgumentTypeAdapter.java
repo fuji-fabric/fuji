@@ -17,7 +17,7 @@ public class TextArgumentTypeAdapter extends BaseArgumentTypeAdapter {
         #if MC_VER <= MC_1_20_4
         return TextArgumentType.text();
         #elif MC_VER > MC_1_20_4
-        return TextArgumentType.text(CommandAnnotationProcessor.getCommandRegistryAccess());
+        return TextArgumentType.text(CommandAnnotationProcessor.COMMAND_REGISTRY_ACCESS);
         #endif
     }
 

@@ -15,7 +15,7 @@ public class ItemArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return ItemStackArgumentType.itemStack(CommandAnnotationProcessor.getCommandRegistryAccess());
+        return ItemStackArgumentType.itemStack(CommandAnnotationProcessor.COMMAND_REGISTRY_ACCESS);
     }
 
     @Override
