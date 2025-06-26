@@ -391,5 +391,10 @@
   "chat.spy.indicator": "<bold><orange>-SPY-></orange></bold>",
   "registry.list.gui.title": "<blue>注册表",
   "registry.type.is_dynamic": "<yellow>Is dynamic: %s",
-  "command_menu.menu.not_found": "<red>Menu %s not found"
+  "command_menu.menu.not_found": "<red>Menu %s not found",
+  "colorbox.example.name": "<grey>Example",
+  "colorbox.tips.name": "<green>Tips",
+  "colorbox.info.name": "<blue>info",
+  "colorbox.warning.name": "<yellow>Warning",
+  "colorbox.danger.name": "<red>Danger"
 }
