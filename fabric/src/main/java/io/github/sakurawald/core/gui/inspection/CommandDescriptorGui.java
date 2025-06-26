@@ -23,7 +23,7 @@ public class CommandDescriptorGui extends PagedGui<CommandDescriptor> {
         super(parent, player, TextHelper.getTextByKey(player, "fuji.inspect.fuji_commands.gui.title"), entities, pageIndex);
     }
 
-    public static CommandDescriptorGui makeDefault(SimpleGui parent, ServerPlayerEntity player) {
+    public static CommandDescriptorGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
         List<CommandDescriptor> descriptors = CommandAnnotationProcessor
             .descriptors
             .stream()

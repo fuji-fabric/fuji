@@ -23,7 +23,7 @@ import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.fuji.gui.AboutGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ArgumentTypeInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ConfigurationHandlerInspectionGui;
-import io.github.sakurawald.core.gui.inspection.ModulesInspectionGui;
+import io.github.sakurawald.module.initializer.fuji.gui.ModulesInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.PermissionsAndMetasInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.PlaceholderDescriptorInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.RegistryInspectionGui;
@@ -133,7 +133,7 @@ public class FujiInitializer extends ModuleInitializer {
     @Document("Inspect all commands registered by fuji.")
     @CommandNode("inspect fuji-commands")
     private static int $inspectFujiCommands(@CommandSource ServerPlayerEntity player) {
-        CommandDescriptorGui.makeDefault(null, player)
+        CommandDescriptorGui.inspectAll(null, player)
             .open();
         return CommandHelper.Return.SUCCESS;
     }

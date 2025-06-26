@@ -118,6 +118,13 @@ public abstract class PagedGui<T> extends LayeredGui {
 
     protected abstract List<T> filter(String keyword);
 
+    public List<GuiElementInterface> toGuiElements() {
+        return this.entities
+            .stream()
+            .map(this::toGuiElement)
+            .toList();
+    }
+
     private void drawTitle() {
         MutableText formatted = this.prefixTitle.copy().append(TextHelper.getTextByKey(getPlayer(), "gui.page.title", this.getCurrentPageNumber(), this.getMaxPageNumber()));
         this.setTitle(formatted);

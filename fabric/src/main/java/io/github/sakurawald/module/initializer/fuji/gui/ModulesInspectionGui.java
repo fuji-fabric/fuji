@@ -1,4 +1,4 @@
-package io.github.sakurawald.core.gui.inspection;
+package io.github.sakurawald.module.initializer.fuji.gui;
 
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
@@ -8,6 +8,7 @@ import io.github.sakurawald.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.structure.CommandDescriptor;
 import io.github.sakurawald.core.gui.PagedGui;
+import io.github.sakurawald.core.gui.inspection.CommandDescriptorGui;
 import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.core.structure.Pair;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
@@ -63,29 +64,32 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
             }
         }
 
-        /* Attach registered commands info. */
-        PagedGui<CommandDescriptor> commandsRegisteredByThisModuleGUI = attachModuleCommands(modulePathString, lore);
-
+        /* Make the element. */
         Item itemMaterial = moduleEnable ? Items.GREEN_STAINED_GLASS : Items.RED_STAINED_GLASS;
         Text itemName = Text.literal(modulePathString).formatted(Formatting.YELLOW);
+
         return new GuiElementBuilder()
             .setItem(itemMaterial)
             .setName(itemName)
             .setLore(lore)
-            .setCallback(() -> onClickCommandDescriptor(modulePathString, commandsRegisteredByThisModuleGUI))
+            .setCallback(() -> openModuleDetailsInspectionGui(getGui(), getPlayer(), modulePathString))
             .build();
     }
 
-    private void onClickCommandDescriptor(String modulePathString, PagedGui<CommandDescriptor> commandsRegisteredByThisModuleGUI) {
+    private void openModuleDetailsInspectionGui(@Nullable SimpleGui gui, ServerPlayerEntity player, String modulePathString) {
+        /* Attach registered commands info. */
+//        PagedGui<CommandDescriptor> commandsRegisteredByThisModuleGUI = attachModuleCommands(modulePathString, lore);
 
        /* Click to open the registered commands. */
-       commandsRegisteredByThisModuleGUI.open();
+//       commandsRegisteredByThisModuleGUI.open();
 
+        ModuleDetailsInspectionGui.make(gui, player, modulePathString)
+            .open();
     }
 
     private PagedGui<CommandDescriptor> attachModuleCommands(String modulePathString, List<Text> lore) {
         PagedGui<CommandDescriptor> commandsRegisteredByThisModuleGUI = CommandDescriptorGui
-            .makeDefault(getGui(), getPlayer())
+            .inspectAll(getGui(), getPlayer())
             .search(it -> it.getSourceModulePath().equals(modulePathString));
 
 
