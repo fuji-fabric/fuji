@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -154,6 +155,13 @@ public class InspectingObject {
         Object fieldInstance = object;
         return Arrays
             .stream(object.getClass().getDeclaredFields())
+            .filter(field -> {
+                /* Ignore some fields that is not interested. */
+                int modifiers = field.getModifiers();
+                if (Modifier.isStatic(modifiers)) return false;
+                if (Modifier.isTransient(modifiers)) return false;
+                return true;
+            })
             .map(it -> new InspectingObject(it, fieldInstance, null))
             .toList();
     }
