@@ -11,6 +11,7 @@ import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.core.structure.descriptor.annotation.ColorBox;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +31,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         return new ModuleDetailsInspectionGui(parent, player, title, entities, pageIndex);
     }
 
-    public static ModuleDetailsInspectionGui inspectModuleDetails(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString) {
+    public static ModuleDetailsInspectionGui inspectModuleDetails(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString, boolean moduleEnableStatus) {
         /* Make the GUI. */
         List<GuiElementInterface> entities = new ArrayList<>();
         Text title = TextHelper.getTextByKey(player, "fuji.inspect.module_details.gui.title", modulePathString);
@@ -47,8 +48,26 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         /* Attach color blocks of the module. */
         attachColorBlocks(player, entities, modulePathString);
 
+        /* Fill items. */
+        if (!moduleEnableStatus) {
+            placeModuleDisabledTipsItem(player, moduleDetailsInspectionGui);
+        }
+
         return moduleDetailsInspectionGui;
     }
+
+    private static void placeModuleDisabledTipsItem(ServerPlayerEntity player, ModuleDetailsInspectionGui gui) {
+        GuiElementBuilder builder = new GuiElementBuilder()
+            .setItem(Items.RED_STAINED_GLASS_PANE)
+            .setName(TextHelper.getTextByKey(player, "module.status.disabled.gui.name"))
+            .setLore(TextHelper.getTextListByKey(player, "module.status.disabled.gui.lore"));
+
+        for (int i = 0; i < gui.getSize(); i++) {
+            gui.setSlot(i, builder.build());
+        }
+
+    }
+
 
     private static void attachColorBlocks(ServerPlayerEntity player, List<GuiElementInterface> entities, String modulePathString) {
         /* Get the module initializer class. */

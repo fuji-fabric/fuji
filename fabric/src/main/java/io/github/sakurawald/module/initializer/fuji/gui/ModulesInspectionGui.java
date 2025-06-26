@@ -53,8 +53,8 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
         List<Text> lore = new ArrayList<>();
 
         /* Attach module enable status. */
-        boolean moduleEnable = entity.getValue();
-        lore.add(TextHelper.getTextByKey(getPlayer(), "module.enable.status", moduleEnable));
+        boolean moduleEnableStatus = entity.getValue();
+        lore.add(TextHelper.getTextByKey(getPlayer(), "module.enable.status", moduleEnableStatus));
 
         /* Attach the click prompt. */
         lore.addAll(TextHelper.getTextListByKey(getPlayer(), "prompt.click.see_inside"));
@@ -78,7 +78,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
             .setItem(itemMaterial)
             .setName(itemName)
             .setLore(lore)
-            .setCallback(() -> openModuleDetailsInspectionGui(getGui(), getPlayer(), modulePathString))
+            .setCallback(() -> openModuleDetailsInspectionGui(getGui(), getPlayer(), modulePathString, moduleEnableStatus))
             .build();
     }
 
@@ -93,9 +93,9 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
     }
 
     @SuppressWarnings("SameParameterValue")
-    private void openModuleDetailsInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString) {
+    private void openModuleDetailsInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString, boolean moduleEnableStatus) {
         ModuleDetailsInspectionGui
-            .inspectModuleDetails(parent, player, modulePathString)
+            .inspectModuleDetails(parent, player, modulePathString, moduleEnableStatus)
             .open();
     }
 
