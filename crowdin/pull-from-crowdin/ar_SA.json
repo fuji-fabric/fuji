@@ -332,6 +332,7 @@
   "fuji.inspect.server_commands.gui.help.lore": "<green>Left click -> copy the command path",
   "fuji.inspect.server_commands.gui.copy_command_path": "<orange>Copy the command path: `%s` <hover:show_text:'<green>Copy to clipboard'><click:copy_to_clipboard:'%s'><green>[COPY]</click></hover>",
   "fuji.inspect.modules.gui.title": "<blue>Modules",
+  "fuji.inspect.module_details.gui.title": "<blue>Module Details: %s",
   "module.enable.status": "<yellow>Enable: %s",
   "module.registered_commands": "<blue>This module registers `%d` commands.",
   "fuji.inspect.fuji_commands.gui.title": "<blue>Fuji Commands",
