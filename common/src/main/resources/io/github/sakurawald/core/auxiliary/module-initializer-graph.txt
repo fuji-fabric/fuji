@@ -63,6 +63,7 @@ io.github.sakurawald.module.initializer.command_toolbox.tppos.TpposInitializer
 io.github.sakurawald.module.initializer.command_toolbox.trashcan.TrashCanInitializer
 io.github.sakurawald.module.initializer.command_toolbox.warp.WarpInitializer
 io.github.sakurawald.module.initializer.command_warmup.CommandWarmupInitializer
+io.github.sakurawald.module.initializer.core.CoreInitializer
 io.github.sakurawald.module.initializer.deathlog.DeathLogInitializer
 io.github.sakurawald.module.initializer.echo.send_actionbar.SendActionbar
 io.github.sakurawald.module.initializer.echo.send_bossbar.SendBossbarInitializer
