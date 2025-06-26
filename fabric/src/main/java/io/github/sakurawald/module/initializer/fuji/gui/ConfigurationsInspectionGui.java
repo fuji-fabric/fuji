@@ -29,7 +29,7 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
     }
 
     public static ConfigurationsInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
-        List<BaseConfigurationHandler<?>> entities = BaseConfigurationHandler.CONFIGURATION_HANDLERS
+        List<BaseConfigurationHandler<?>> entities = BaseConfigurationHandler.REGISTERED_CONFIGURATION_HANDLERS
             .stream()
             .filter(it -> it instanceof ObjectConfigurationHandler<?>)
             .sorted(Comparator.comparing(BaseConfigurationHandler::getPath))

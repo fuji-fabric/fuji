@@ -14,6 +14,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -103,6 +104,12 @@ public class ModuleManager extends BaseManager {
 
     public static String joinModulePath(List<String> modulePath) {
         return String.join(".", modulePath);
+    }
+
+    public static List<String> splitModulePath(String modulePath) {
+        return Arrays.stream(modulePath
+            .split("\\."))
+            .toList();
     }
 
     @Override

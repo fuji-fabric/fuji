@@ -21,26 +21,25 @@ import java.util.Optional;
 
 public abstract class BaseArgumentTypeAdapter {
 
-    // predefined only for test env
-    private static final Map<String, Class<?>> predefined = new HashMap<>() {
+    // NOTE: Pre-define these argument types to make the fabric test environment happy.
+    private static final Map<String, Class<?>> PREDEFINED_ARGUMENT_TYPES = new HashMap<>() {
         {
             this.put("str", String.class);
             this.put("int", int.class);
         }
     };
-    private static final Map<String, Class<?>> string2class = new HashMap<>() {
+    private static final Map<String, Class<?>> TYPE_STRING_2_TYPE_CLASS = new HashMap<>() {
         {
-            this.putAll(predefined);
+            this.putAll(PREDEFINED_ARGUMENT_TYPES);
         }
     };
 
-    @Getter
-    private static final List<BaseArgumentTypeAdapter> adapters = new ArrayList<>();
+    public static final List<BaseArgumentTypeAdapter> REGISTERED_COMMAND_ARGUMENT_TYPE_ADAPTERS = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
     public static void registerAdapters() {
         // the `/reload` command will trigger the command registration event.
-        string2class.clear();
+        TYPE_STRING_2_TYPE_CLASS.clear();
 
         ReflectionUtil.getGraph(ReflectionUtil.ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME)
             .stream()
@@ -51,15 +50,15 @@ public abstract class BaseArgumentTypeAdapter {
                     Class<? extends BaseArgumentTypeAdapter> clazz = (Class<? extends BaseArgumentTypeAdapter>) Class.forName(className);
                     Constructor<? extends BaseArgumentTypeAdapter> constructor = clazz.getDeclaredConstructor();
                     BaseArgumentTypeAdapter adapter = constructor.newInstance();
-                    adapters.add(adapter);
+                    REGISTERED_COMMAND_ARGUMENT_TYPE_ADAPTERS.add(adapter);
 
                     /* register type mapping */
                     Class<?> typeClass = adapter.getTypeClasses().get(0);
                     adapter.getTypeStrings().forEach(typeString -> {
-                        if (string2class.containsKey(typeString) && !predefined.containsKey(typeString)) {
+                        if (TYPE_STRING_2_TYPE_CLASS.containsKey(typeString) && !PREDEFINED_ARGUMENT_TYPES.containsKey(typeString)) {
                             throw new IllegalStateException("Type `%s` is already registered".formatted(typeString));
                         }
-                        string2class.put(typeString, typeClass);
+                        TYPE_STRING_2_TYPE_CLASS.put(typeString, typeClass);
                     });
 
                 } catch (Exception e) {
@@ -70,7 +69,7 @@ public abstract class BaseArgumentTypeAdapter {
     }
 
     public static Class<?> toTypeClass(String typeString) {
-        Class<?> type = string2class.get(typeString);
+        Class<?> type = TYPE_STRING_2_TYPE_CLASS.get(typeString);
         if (type == null)
             throw new IllegalArgumentException("Unknown argument type `%s`".formatted(typeString));
 
@@ -87,7 +86,7 @@ public abstract class BaseArgumentTypeAdapter {
     }
 
     public static BaseArgumentTypeAdapter getAdapter(Class<?> type) {
-        for (BaseArgumentTypeAdapter adapter : adapters) {
+        for (BaseArgumentTypeAdapter adapter : REGISTERED_COMMAND_ARGUMENT_TYPE_ADAPTERS) {
             if (adapter.match(type)) {
                 return adapter;
             }
