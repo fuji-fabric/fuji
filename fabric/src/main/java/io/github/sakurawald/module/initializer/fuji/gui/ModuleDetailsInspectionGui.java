@@ -57,13 +57,20 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
     }
 
     private static void placeModuleDisabledTipsItem(ServerPlayerEntity player, ModuleDetailsInspectionGui gui) {
+        /* Make the item. */
         GuiElementBuilder builder = new GuiElementBuilder()
             .setItem(Items.RED_STAINED_GLASS_PANE)
             .setName(TextHelper.getTextByKey(player, "module.status.disabled.gui.name"))
             .setLore(TextHelper.getTextListByKey(player, "module.status.disabled.gui.lore"));
 
+        /* Place it on empty slots. */
         for (int i = 0; i < gui.getSize(); i++) {
-            gui.setSlot(i, builder.build());
+            GuiElementInterface slot = gui.getSlot(i);
+            if (slot == null
+                || slot.getItemStack() == null
+                || slot.getItemStack().isEmpty()) {
+                gui.setSlot(i, builder.build());
+            }
         }
 
     }
