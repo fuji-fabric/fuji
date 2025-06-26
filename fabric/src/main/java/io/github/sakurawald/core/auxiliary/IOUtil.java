@@ -15,6 +15,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.List;
@@ -63,7 +64,10 @@ public class IOUtil {
         String baseStr = base.getCanonicalPath();
         String fileStr = file.getCanonicalPath();
 
-        return fileStr.replace(baseStr, "");
+        Path basePath = Paths.get(baseStr);
+        Path filePath = Paths.get(fileStr);
+        Path relativize = basePath.relativize(filePath);
+        return relativize.toString();
     }
 
     public static String computeRelativePath(@NotNull File file) {
