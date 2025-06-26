@@ -396,5 +396,7 @@
   "colorbox.tips.name": "<green>Tips",
   "colorbox.note.name": "<blue>Note",
   "colorbox.warning.name": "<yellow>Warning",
-  "colorbox.danger.name": "<red>Danger"
+  "colorbox.danger.name": "<red>Danger",
+  "module.status.disabled.gui.name": "<red>Module Disabled",
+  "module.status.disabled.gui.lore": "<red>This module is disabled, you may not see the contents here."
 }
