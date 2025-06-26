@@ -57,21 +57,21 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
     private static List<GuiElementInterface> searchModulePlaceholders(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString) {
         return PlaceholderDescriptorInspectionGui
             .inspectAll(parent, player)
-            .search(it -> it.getFromModule().equals(modulePathString))
+            .search(it -> it.getSourceModule().equals(modulePathString))
             .toGuiElements();
     }
 
     private static List<GuiElementInterface> searchModuleCommands(SimpleGui parent, ServerPlayerEntity player, String modulePathString) {
         return CommandDescriptorGui
             .inspectAll(parent, player)
-            .search(it -> it.getSourceModulePath().equals(modulePathString))
+            .search(it -> it.getSourceModule().equals(modulePathString))
             .toGuiElements();
     }
 
     private static List<GuiElementInterface> searchModulePermissionsAndMetas(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString) {
         return PermissionsAndMetasInspectionGui
             .inspectAll(parent, player)
-            .search(it -> it.getFromModule().equals(modulePathString))
+            .search(it -> it.getSourceModule().equals(modulePathString))
             .toGuiElements();
     }
 

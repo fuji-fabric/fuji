@@ -20,6 +20,7 @@ import io.github.sakurawald.core.command.exception.AbortCommandExecutionExceptio
 import io.github.sakurawald.core.command.processor.CommandAnnotationProcessor;
 import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.core.structure.descriptor.PermissionDescriptor;
+import io.github.sakurawald.core.structure.descriptor.interfaces.SourceModuleGetter;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -37,8 +38,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class CommandDescriptor {
-
+public class CommandDescriptor implements SourceModuleGetter {
     public final Method method;
 
     public final List<Argument> arguments;
@@ -442,7 +442,9 @@ public class CommandDescriptor {
         return true;
     }
 
-    public String getSourceModulePath() {
+    @Override
+    public String getSourceModule() {
         return ModuleManager.computeModulePathAsString(this.method.getDeclaringClass().getName());
     }
+
 }

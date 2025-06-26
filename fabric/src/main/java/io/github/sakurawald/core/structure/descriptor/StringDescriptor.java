@@ -1,9 +1,9 @@
 package io.github.sakurawald.core.structure.descriptor;
 
 import io.github.sakurawald.core.auxiliary.ReflectionUtil;
+import io.github.sakurawald.core.structure.descriptor.interfaces.SourceModuleGetter;
 import lombok.Data;
 import net.minecraft.item.Item;
-import net.minecraft.item.Items;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public abstract class StringDescriptor {
+public abstract class StringDescriptor implements SourceModuleGetter {
 
     public static final List<StringDescriptor> REGISTERED_STRING_DESCRIPTORS = new ArrayList<>();
 
@@ -61,4 +61,8 @@ public abstract class StringDescriptor {
         return this.string;
     }
 
+    @Override
+    public String getSourceModule() {
+        return this.fromModule;
+    }
 }
