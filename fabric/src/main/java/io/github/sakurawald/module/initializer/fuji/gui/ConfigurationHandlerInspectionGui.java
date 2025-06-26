@@ -40,7 +40,7 @@ public class ConfigurationHandlerInspectionGui extends PagedGui<BaseConfiguratio
 
     @Override
     protected PagedGui<BaseConfigurationHandler<?>> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<BaseConfigurationHandler<?>> entities, int pageIndex) {
-        return new ConfigurationHandlerInspectionGui(getGui(), player, entities, pageIndex);
+        return new ConfigurationHandlerInspectionGui(parent, player, entities, pageIndex);
     }
 
     @Override
@@ -56,11 +56,13 @@ public class ConfigurationHandlerInspectionGui extends PagedGui<BaseConfiguratio
             , TextHelper.getTextByKey(getPlayer(), "fuji.inspect.configuration.path", configPath)
         );
 
+        SimpleGui trueParentGui = this.getParent() != null ? this.getParent() : this.getGui();
+
         GuiElementBuilder guiElementBuilder = new GuiElementBuilder()
             .setItem(toItem(entity))
             .setName(Text.literal(topLevelName))
             .setLore(lore)
-            .setCallback(new JavaObjectInspectionGui(getGui(), entity.model(), getPlayer(), new ArrayList<>(), 0, topLevelName, ".")::open);
+            .setCallback(new JavaObjectInspectionGui(trueParentGui, entity.model(), getPlayer(), new ArrayList<>(), 0, topLevelName, ".")::open);
 
         return guiElementBuilder
             .build();
