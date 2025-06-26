@@ -6,6 +6,7 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.core.gui.PagedGui;
+import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -30,11 +31,30 @@ public class ArgumentTypeInspectionGui extends PagedGui<BaseArgumentTypeAdapter>
         return new ArgumentTypeInspectionGui(parent, player, entities, pageIndex);
     }
 
+    private Item toItem(BaseArgumentTypeAdapter adapter) {
+       /* Use Minecart Hopper to represent the vanilla argument adapters. */
+        boolean isVanillaMinecraftArgumentType = adapter.getTypeClasses()
+            .stream()
+            .anyMatch(argumentClass -> {
+                String className = argumentClass.getName();
+                return className.startsWith("net.minecraft")
+                    || className.startsWith("com.mojang")
+                    || className.startsWith("java.lang");
+            });
+
+        if (isVanillaMinecraftArgumentType) {
+            return Items.HOPPER_MINECART;
+        }
+
+        /* The argument type is registered by fuji. */
+        return Items.HOPPER;
+    }
+
     @Override
     protected GuiElementInterface toGuiElement(BaseArgumentTypeAdapter entity) {
         return new GuiElementBuilder()
             .setName(Text.literal(entity.getClass().getSimpleName()))
-            .setItem(Items.HOPPER)
+            .setItem(toItem(entity))
             .setLore(List.of(
                 TextHelper.getTextByKey(getPlayer(),"from_module", entity.getFromModule())
                 , TextHelper.getTextByKey(getPlayer(), "command.argument.type.class", entity.getTypeClasses().stream().map(Class::getSimpleName).toList())
