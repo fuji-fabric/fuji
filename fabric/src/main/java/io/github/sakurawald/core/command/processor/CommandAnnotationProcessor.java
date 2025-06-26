@@ -43,12 +43,12 @@ public class CommandAnnotationProcessor {
      yeah, this is a concurrent hash set.
      Be careful don't write the hashCode() for command descriptor, just use the memory address, use the command path to identify a command descriptor is possible to broken in some cases of register() and unregister().
      */
-    public static final Set<CommandDescriptor> descriptors = ConcurrentHashMap.newKeySet();
+    public static final Set<CommandDescriptor> REGISTERED_COMMAND_DESCRIPTORS = ConcurrentHashMap.newKeySet();
 
     @Getter
-    private static CommandDispatcher<ServerCommandSource> dispatcher;
+    private static CommandDispatcher<ServerCommandSource> COMMAND_DISPATCHER;
     @Getter
-    private static CommandRegistryAccess registryAccess;
+    private static CommandRegistryAccess COMMAND_REGISTRY_ACCESS;
 
     public static void process() {
         /*
@@ -57,14 +57,14 @@ public class CommandAnnotationProcessor {
          */
         CommandEvents.REGISTRATION.register((dispatcher, registryAccess, environment) -> {
             /* environment */
-            CommandAnnotationProcessor.dispatcher = dispatcher;
-            CommandAnnotationProcessor.registryAccess = registryAccess;
+            CommandAnnotationProcessor.COMMAND_DISPATCHER = dispatcher;
+            CommandAnnotationProcessor.COMMAND_REGISTRY_ACCESS = registryAccess;
 
             /* register argument type adapters */
             BaseArgumentTypeAdapter.registerAdapters();
 
             /* register commands */
-            descriptors.clear();
+            REGISTERED_COMMAND_DESCRIPTORS.clear();
             processClasses();
         });
     }

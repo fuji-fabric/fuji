@@ -13,7 +13,7 @@ import java.util.List;
 public class ItemPredicateArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return ItemPredicateArgumentType.itemPredicate(CommandAnnotationProcessor.getRegistryAccess());
+        return ItemPredicateArgumentType.itemPredicate(CommandAnnotationProcessor.getCommandRegistryAccess());
     }
 
     @Override

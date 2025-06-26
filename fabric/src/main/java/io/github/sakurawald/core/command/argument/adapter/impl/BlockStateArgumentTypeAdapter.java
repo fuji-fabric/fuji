@@ -15,7 +15,7 @@ public class BlockStateArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return BlockStateArgumentType.blockState(CommandAnnotationProcessor.getRegistryAccess());
+        return BlockStateArgumentType.blockState(CommandAnnotationProcessor.getCommandRegistryAccess());
     }
 
     @Override

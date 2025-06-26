@@ -24,7 +24,7 @@ public class EntityTypeArgumentAdapter extends BaseArgumentTypeAdapter {
         #if MC_VER <= MC_1_20_4
             return StringArgumentType.greedyString();
         #elif MC_VER > MC_1_20_4
-            return RegistryEntryReferenceArgumentType.registryEntry(CommandAnnotationProcessor.getRegistryAccess(), RegistryKeys.ENTITY_TYPE);
+            return RegistryEntryReferenceArgumentType.registryEntry(CommandAnnotationProcessor.getCommandRegistryAccess(), RegistryKeys.ENTITY_TYPE);
         #endif
     }
 

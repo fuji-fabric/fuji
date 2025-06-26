@@ -25,7 +25,7 @@ public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
 
     public static CommandsInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
         List<CommandDescriptor> descriptors = CommandAnnotationProcessor
-            .descriptors
+            .REGISTERED_COMMAND_DESCRIPTORS
             .stream()
             .sorted(Comparator.comparing(CommandDescriptor::getCommandNodePath))
             .toList();

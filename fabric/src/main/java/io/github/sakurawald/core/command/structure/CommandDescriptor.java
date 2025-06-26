@@ -150,7 +150,7 @@ public class CommandDescriptor implements SourceModuleGetter {
             .map(Argument::getArgumentName)
             .toList();
 
-        return CommandAnnotationProcessor.getDispatcher().findNode(prefix);
+        return CommandAnnotationProcessor.getCommandDispatcher().findNode(prefix);
     }
 
     private static List<ArgumentBuilder<ServerCommandSource, ?>> makeArgumentBuilders(CommandDescriptor descriptor) {
@@ -258,7 +258,7 @@ public class CommandDescriptor implements SourceModuleGetter {
     public void unregister() {
         LogUtil.debug("Un-register command: {}", this);
 
-        RootCommandNode<ServerCommandSource> root = CommandAnnotationProcessor.getDispatcher().getRoot();
+        RootCommandNode<ServerCommandSource> root = CommandAnnotationProcessor.getCommandDispatcher().getRoot();
 
         assert this.registerReturnValue != null;
         LiteralCommandNode<ServerCommandSource> navigationNode = this.registerReturnValue.build();
@@ -270,7 +270,7 @@ public class CommandDescriptor implements SourceModuleGetter {
         }
 
         // sync the registry
-        CommandAnnotationProcessor.descriptors.remove(this);
+        CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS.remove(this);
     }
 
     protected List<Argument> collectArgumentsToMakeObjects() {
@@ -354,7 +354,7 @@ public class CommandDescriptor implements SourceModuleGetter {
         this.registerReturnValue = root;
 
         /* sync the registry */
-        CommandAnnotationProcessor.descriptors.add(this);
+        CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS.add(this);
         return root;
     }
 
@@ -366,7 +366,7 @@ public class CommandDescriptor implements SourceModuleGetter {
         LiteralArgumentBuilder<ServerCommandSource> root = makeRootArgumentBuilder(builders, command);
 
         /* register it */
-        CommandAnnotationProcessor.getDispatcher().register(root);
+        CommandAnnotationProcessor.getCommandDispatcher().register(root);
 
         return root;
     }

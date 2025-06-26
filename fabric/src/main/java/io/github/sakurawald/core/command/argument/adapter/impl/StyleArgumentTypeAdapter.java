@@ -31,7 +31,7 @@ public class StyleArgumentTypeAdapter extends BaseArgumentTypeAdapter {
         #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_20_4
         return StyleArgumentType.style();
         #elif MC_VER > MC_1_20_4
-        return StyleArgumentType.style(CommandAnnotationProcessor.getRegistryAccess());
+        return StyleArgumentType.style(CommandAnnotationProcessor.getCommandRegistryAccess());
         #endif
     }
 

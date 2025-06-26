@@ -53,7 +53,7 @@ public class CommandBundleInitializer extends ModuleInitializer {
     private static int unregisterAllBundleCommands() {
         LogUtil.info("Un-register bundle commands.");
 
-        CommandAnnotationProcessor.descriptors
+        CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS
             .stream()
             .filter(it -> it instanceof BundleCommandDescriptor)
             .forEach(it -> {
@@ -67,7 +67,7 @@ public class CommandBundleInitializer extends ModuleInitializer {
     @Document("List all registered bundle-commands in server.")
     @CommandNode("list")
     private static int list(@CommandSource CommandContext<ServerCommandSource> ctx) {
-        Stream<CommandDescriptor> commandDescriptorStream = CommandAnnotationProcessor.descriptors
+        Stream<CommandDescriptor> commandDescriptorStream = CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS
             .stream()
             .filter(it -> it instanceof BundleCommandDescriptor);
 
