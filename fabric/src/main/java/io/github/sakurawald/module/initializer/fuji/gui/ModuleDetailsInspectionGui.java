@@ -91,20 +91,20 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
 
             ColorBox.ColorBlockTypes color = box.color();
             String documentString = box.value();
+            List<Text> colorBoxTextList = TextHelper.getDocumentTextList(player, documentString);
             colorboxElementBuilder
                 .setName(TextHelper.getTextByKey(player, color.toLanguageKey()))
                 .setItem(color.toItem())
-                .setLore(TextHelper.getDocumentTextList(player, documentString))
-                .setCallback(() -> sendColorBoxMessage(player, documentString));
+                .setLore(colorBoxTextList)
+                .setCallback(() -> sendColorBoxMessage(player, colorBoxTextList));
 
             entities.add(colorboxElementBuilder.build());
         }
 
     }
 
-    private static void sendColorBoxMessage(ServerPlayerEntity player, String documentString) {
-        TextHelper.getDocumentTextList(player, documentString)
-            .forEach(player::sendMessage);
+    private static void sendColorBoxMessage(ServerPlayerEntity player, List<Text> colorBoxTestList) {
+        colorBoxTestList.forEach(player::sendMessage);
     }
 
     private static List<GuiElementInterface> searchModuleArgumentTypes(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString) {
