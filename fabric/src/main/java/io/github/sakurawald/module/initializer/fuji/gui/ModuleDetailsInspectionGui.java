@@ -2,8 +2,11 @@ package io.github.sakurawald.module.initializer.fuji.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.core.auxiliary.minecraft.StackHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.gui.PagedGui;
 import io.github.sakurawald.core.gui.inspection.CommandDescriptorGui;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -80,8 +83,28 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         return entity;
     }
 
+    @SuppressWarnings("RedundantIfStatement")
     @Override
     protected List<GuiElementInterface> filter(String keyword) {
-        return List.of();
+        return getEntities()
+            .stream()
+            .filter(it -> {
+                ItemStack itemStack = it.getItemStack();
+                /* Filter by item name. */
+                String itemName = TextHelper.visitString(itemStack.getName());
+                if (itemName.toLowerCase().contains(keyword.toLowerCase())) return true;
+
+                /* Filter by item lore. */
+                boolean matched = StackHelper.getLore(itemStack)
+                    .stream()
+                    .anyMatch(text -> TextHelper.visitString(text)
+                        .toLowerCase()
+                        .contains(keyword.toLowerCase()));
+                if (matched) return true;
+
+                return false;
+            })
+            .toList();
     }
+
 }
