@@ -46,14 +46,13 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
     @Override
     protected GuiElementInterface toGuiElement(BaseConfigurationHandler<?> entity) {
         String configModelClassName = ReflectionUtil.getSimpleClassName(entity.getClass());
-        Path configPath = entity.getPath();
-        String topLevelName = IOUtil.computeRelativePath(configPath.toFile());
+        String configRelativePath = IOUtil.computeRelativePath(entity.getPath().toFile());
         String fromModule = entity.getFromModule();
 
         List<Text> lore = List.of(
             TextHelper.getTextByKey(getPlayer(), "from_module", fromModule)
             , TextHelper.getTextByKey(getPlayer(), "fuji.inspect.configuration.class", configModelClassName)
-            , TextHelper.getTextByKey(getPlayer(), "fuji.inspect.configuration.path", configPath)
+            , TextHelper.getTextByKey(getPlayer(), "fuji.inspect.configuration.path",  configRelativePath)
         );
 
         // NOTE: The parent may be different, due to the parent of ConfigurationsInspectionGui may be null or non-null (If it's created and open from ModuleDetailsInspectionGui).
@@ -61,9 +60,9 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
 
         GuiElementBuilder guiElementBuilder = new GuiElementBuilder()
             .setItem(toItem(entity))
-            .setName(Text.literal(topLevelName))
+            .setName(Text.literal(configRelativePath))
             .setLore(lore)
-            .setCallback(() -> inspectWithJavaObjectInspector(trueParentGui, entity, topLevelName));
+            .setCallback(() -> inspectWithJavaObjectInspector(trueParentGui, entity, configRelativePath));
 
         return guiElementBuilder
             .build();
