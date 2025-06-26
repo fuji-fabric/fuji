@@ -10,6 +10,7 @@ import io.github.sakurawald.core.gui.inspection.CommandsInspectionGui;
 import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.core.structure.descriptor.annotation.ColorBox;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
+import lombok.NonNull;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -18,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
@@ -75,32 +77,36 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
 
     }
 
-
     private static void attachColorBlocks(ServerPlayerEntity player, List<GuiElementInterface> entities, String modulePathString) {
+        getColorBoxes(modulePathString)
+            .forEach(colorBox -> {
+                GuiElementBuilder colorboxElementBuilder = new GuiElementBuilder();
+
+                ColorBox.ColorBlockTypes color = colorBox.color();
+                String documentString = colorBox.value();
+                List<Text> colorBoxTextList = TextHelper.getDocumentTextList(player, documentString);
+                colorboxElementBuilder
+                    .setName(TextHelper.getTextByKey(player, color.toLanguageKey()))
+                    .setItem(color.toItem())
+                    .setLore(colorBoxTextList)
+                    .setCallback(() -> sendColorBoxMessage(player, colorBoxTextList));
+
+                entities.add(colorboxElementBuilder.build());
+
+            });
+    }
+
+    public static @NonNull List<ColorBox> getColorBoxes(String modulePathString) {
         /* Get the module initializer class. */
         Class<? extends ModuleInitializer> moduleInitializerClass = ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING
             .get(modulePathString);
-        if (moduleInitializerClass == null) return;
+        if (moduleInitializerClass == null) return List.of();
 
         /* Iterate the color boxes. */
         ColorBox[] boxes = moduleInitializerClass
             .getDeclaredAnnotationsByType(ColorBox.class);
 
-        for (ColorBox box : boxes) {
-            GuiElementBuilder colorboxElementBuilder = new GuiElementBuilder();
-
-            ColorBox.ColorBlockTypes color = box.color();
-            String documentString = box.value();
-            List<Text> colorBoxTextList = TextHelper.getDocumentTextList(player, documentString);
-            colorboxElementBuilder
-                .setName(TextHelper.getTextByKey(player, color.toLanguageKey()))
-                .setItem(color.toItem())
-                .setLore(colorBoxTextList)
-                .setCallback(() -> sendColorBoxMessage(player, colorBoxTextList));
-
-            entities.add(colorboxElementBuilder.build());
-        }
-
+        return Arrays.asList(boxes);
     }
 
     private static void sendColorBoxMessage(ServerPlayerEntity player, List<Text> colorBoxTestList) {

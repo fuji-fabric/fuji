@@ -9,6 +9,7 @@ import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.gui.PagedGui;
 import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.core.structure.Pair;
+import io.github.sakurawald.core.structure.descriptor.annotation.ColorBox;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -34,6 +35,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
         return new ModulesInspectionGui(parent, player, entities, pageIndex);
     }
 
+    @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
     public static ModulesInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
         List<Pair<String, Boolean>> entities = ModuleManager.MODULE_ENABLE_STATUS
             .entrySet()
@@ -56,11 +58,17 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
         boolean moduleEnableStatus = entity.getValue();
         lore.add(TextHelper.getTextByKey(getPlayer(), "module.enable.status", moduleEnableStatus));
 
-        /* Attach the click prompt. */
-        lore.addAll(TextHelper.getTextListByKey(getPlayer(), "prompt.click.see_inside"));
+        /* Attach color boxes amount. */
+        String modulePathString = entity.getKey();
+        List<ColorBox> colorBoxes = ModuleDetailsInspectionGui.getColorBoxes(modulePathString);
+
+        /* Attach click prompt. */
+        if (moduleEnableStatus
+            || !colorBoxes.isEmpty()) {
+            lore.addAll(TextHelper.getTextListByKey(getPlayer(), "prompt.click.see_inside"));
+        }
 
         /* Attach @Document information above module initializer. */
-        String modulePathString = entity.getKey();
         Class<? extends ModuleInitializer> moduleInitializerClass = ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING.getOrDefault(modulePathString, null);
         if (moduleInitializerClass != null) {
             String classDocument = getDocumentString(moduleInitializerClass);
@@ -72,7 +80,8 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
 
         /* Make the element. */
         Item itemMaterial = getItemMaterial(entity);
-        Text itemName = Text.literal(modulePathString).formatted(Formatting.YELLOW);
+        Text itemName = Text.literal(modulePathString)
+                            .formatted(Formatting.YELLOW);
 
         return new GuiElementBuilder()
             .setItem(itemMaterial)
