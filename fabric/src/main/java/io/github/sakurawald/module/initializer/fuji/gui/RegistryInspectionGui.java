@@ -15,9 +15,12 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryLoader;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +31,26 @@ public class RegistryInspectionGui extends PagedGui<IdentifierDescriptor> {
     public RegistryInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, boolean isMetaRegistry, @NotNull List<IdentifierDescriptor> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "registry.list.gui.title"), entities, pageIndex);
         this.isMetaRegistry = isMetaRegistry;
+    }
+
+    public static RegistryInspectionGui inspectAll(ServerPlayerEntity player) {
+        /* Get the identifiers of meta registries. */
+        List<Identifier> staticRegistries = Registries.REGISTRIES.getKeys()
+            .stream()
+            .map(RegistryKey::getValue)
+            .toList();
+        List<Identifier> dynamicRegistries = RegistryLoader.DYNAMIC_REGISTRIES
+            .stream()
+            .map(it -> it.comp_985().getValue())
+            .toList();
+
+        /* Map it to descriptor. */
+        List<IdentifierDescriptor> ids = new ArrayList<>();
+        staticRegistries.forEach(id -> ids.add(new IdentifierDescriptor(id, false)));
+        dynamicRegistries.forEach(id -> ids.add(new IdentifierDescriptor(id, true)));
+        ids.sort(Comparator.comparing(IdentifierDescriptor::getIdentifier));
+
+        return new RegistryInspectionGui(null, player, true, ids, 0);
     }
 
     @Override

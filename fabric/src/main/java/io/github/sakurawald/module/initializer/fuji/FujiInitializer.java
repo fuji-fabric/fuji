@@ -22,18 +22,13 @@ import io.github.sakurawald.module.initializer.fuji.gui.PermissionsAndMetasInspe
 import io.github.sakurawald.module.initializer.fuji.gui.PlaceholderDescriptorInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.RegistryInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ServerCommandsInspectionGui;
-import io.github.sakurawald.module.initializer.fuji.structure.IdentifierDescriptor;
 import io.github.sakurawald.module.initializer.fuji.structure.ServerCommandNodeWrapper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.fabricmc.loader.api.metadata.Person;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryLoader;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -162,23 +157,8 @@ public class FujiInitializer extends ModuleInitializer {
     @Document("Inspect all registries in server.")
     @CommandNode("inspect registry")
     private static int $inspectRegistry(@CommandSource ServerPlayerEntity player) {
-        /* Get the identifiers of meta registries. */
-        List<Identifier> staticRegistries = Registries.REGISTRIES.getKeys()
-            .stream()
-            .map(RegistryKey::getValue)
-            .toList();
-        List<Identifier> dynamicRegistries = RegistryLoader.DYNAMIC_REGISTRIES
-            .stream()
-            .map(it -> it.comp_985().getValue())
-            .toList();
-
-        /* Map it to descriptor. */
-        List<IdentifierDescriptor> ids = new ArrayList<>();
-        staticRegistries.forEach(id -> ids.add(new IdentifierDescriptor(id, false)));
-        dynamicRegistries.forEach(id -> ids.add(new IdentifierDescriptor(id, true)));
-        ids.sort(Comparator.comparing(IdentifierDescriptor::getIdentifier));
-
-        new RegistryInspectionGui(null, player, true, ids, 0)
+        RegistryInspectionGui
+            .inspectAll(player)
             .open();
         return CommandHelper.Return.SUCCESS;
     }
