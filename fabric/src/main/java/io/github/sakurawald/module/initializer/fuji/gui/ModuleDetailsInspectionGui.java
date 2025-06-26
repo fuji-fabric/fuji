@@ -39,6 +39,9 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         Text title = TextHelper.getTextByKey(player, "fuji.inspect.module_details.gui.title", modulePathString);
         ModuleDetailsInspectionGui moduleDetailsInspectionGui = new ModuleDetailsInspectionGui(parent, player, title, entities, 0);
 
+        /* Attach color blocks of the module. */
+        attachColorBlocks(player, entities, modulePathString);
+
         /* Search all types of objects of the module.  */
         SimpleGui trueParent = moduleDetailsInspectionGui.getGui();
         entities.addAll(searchModuleConfigurations(trueParent, player, modulePathString));
@@ -47,8 +50,6 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         entities.addAll(searchModulePlaceholders(trueParent, player, modulePathString));
         entities.addAll(searchModuleArgumentTypes(trueParent, player, modulePathString));
 
-        /* Attach color blocks of the module. */
-        attachColorBlocks(player, entities, modulePathString);
 
         /* Fill items. */
         if (!moduleEnableStatus) {
