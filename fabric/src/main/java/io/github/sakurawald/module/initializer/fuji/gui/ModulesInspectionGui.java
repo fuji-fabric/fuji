@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
 
@@ -39,7 +40,11 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
             .stream()
             .map(it -> new Pair<>(ModuleManager.joinModulePath(it.getKey()), it.getValue()))
             .sorted(Comparator.comparing(Pair::getKey))
-            .toList();
+            .collect(Collectors.toList());
+
+        /* Insert the core module as a dummy module. */
+        entities.add(0, new Pair<>(ModuleManager.CORE_MODULE_ROOT, true));
+
         return new ModulesInspectionGui(parent, player, entities, 0);
     }
 
@@ -50,6 +55,9 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
         /* Attach module enable status. */
         boolean moduleEnable = entity.getValue();
         lore.add(TextHelper.getTextByKey(getPlayer(), "module.enable.status", moduleEnable));
+
+        /* Attach the click prompt. */
+        lore.addAll(TextHelper.getTextListByKey(getPlayer(), "prompt.click.see_inside"));
 
         /* Attach @Document information above module initializer. */
         String modulePathString = entity.getKey();
@@ -63,7 +71,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
         }
 
         /* Make the element. */
-        Item itemMaterial = moduleEnable ? Items.GREEN_STAINED_GLASS : Items.RED_STAINED_GLASS;
+        Item itemMaterial = getItemMaterial(entity);
         Text itemName = Text.literal(modulePathString).formatted(Formatting.YELLOW);
 
         return new GuiElementBuilder()
@@ -72,6 +80,16 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
             .setLore(lore)
             .setCallback(() -> openModuleDetailsInspectionGui(getGui(), getPlayer(), modulePathString))
             .build();
+    }
+
+    private static Item getItemMaterial(Pair<String, Boolean> entity) {
+        String modulePathString = entity.getKey();
+        if (modulePathString.equals(ModuleManager.CORE_MODULE_ROOT)) {
+            return Items.TINTED_GLASS;
+        }
+
+        Boolean moduleEnableStatus = entity.getValue();
+        return moduleEnableStatus ? Items.GREEN_STAINED_GLASS : Items.RED_STAINED_GLASS;
     }
 
     @SuppressWarnings("SameParameterValue")

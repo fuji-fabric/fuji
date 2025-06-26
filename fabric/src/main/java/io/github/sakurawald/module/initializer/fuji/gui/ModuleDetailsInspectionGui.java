@@ -34,11 +34,11 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
 
         /* Search all types of objects of the module.  */
         SimpleGui trueParent = moduleDetailsInspectionGui.getGui();
+        entities.addAll(searchModuleConfigurations(trueParent, player, modulePathString));
         entities.addAll(searchModuleCommands(trueParent, player, modulePathString));
         entities.addAll(searchModulePermissionsAndMetas(trueParent, player, modulePathString));
         entities.addAll(searchModulePlaceholders(trueParent, player, modulePathString));
         entities.addAll(searchModuleArgumentTypes(trueParent, player, modulePathString));
-        entities.addAll(searchModuleConfigurations(trueParent, player, modulePathString));
 
         return moduleDetailsInspectionGui;
     }
