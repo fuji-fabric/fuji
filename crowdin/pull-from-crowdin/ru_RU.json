@@ -394,7 +394,7 @@
   "command_menu.menu.not_found": "<red>Menu %s not found",
   "colorbox.example.name": "<grey>Example",
   "colorbox.tips.name": "<green>Tips",
-  "colorbox.info.name": "<blue>info",
+  "colorbox.note.name": "<blue>Note",
   "colorbox.warning.name": "<yellow>Warning",
   "colorbox.danger.name": "<red>Danger"
 }
