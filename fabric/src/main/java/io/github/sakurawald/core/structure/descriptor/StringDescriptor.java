@@ -1,6 +1,7 @@
 package io.github.sakurawald.core.structure.descriptor;
 
 import io.github.sakurawald.core.auxiliary.ReflectionUtil;
+import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.core.structure.descriptor.interfaces.SourceModuleGetter;
 import lombok.Data;
 import net.minecraft.item.Item;
@@ -39,8 +40,18 @@ public abstract class StringDescriptor implements SourceModuleGetter {
         /* Compile the string pattern. */
         this.compilePattern();
 
-        /* Register self for non-temporary descriptor. */
-        if (!temporary) {
+        /* Register self. */
+        tryRegister(temporary, fromModule);
+    }
+
+    private void tryRegister(boolean temporary, String sourceModule) {
+        /* Should not register a temporary descriptor. */
+        if (temporary) return;
+
+        /* Should only register it when the module is enabled. */
+        List<String> modulePathList = ModuleManager.splitModulePath(sourceModule);
+        Boolean moduleEnableStatus = ModuleManager.MODULE_ENABLE_STATUS.getOrDefault(modulePathList, false);
+        if (moduleEnableStatus) {
             REGISTERED_STRING_DESCRIPTORS.add(this);
         }
     }
