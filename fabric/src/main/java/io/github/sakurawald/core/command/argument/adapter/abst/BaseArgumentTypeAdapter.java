@@ -6,9 +6,11 @@ import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.core.command.argument.structure.Argument;
 import io.github.sakurawald.core.manager.Managers;
+import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import lombok.Getter;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -92,6 +94,10 @@ public abstract class BaseArgumentTypeAdapter {
         }
 
         throw new RuntimeException("No adapters match the argument type: " + type.getTypeName());
+    }
+
+    public @NotNull String getFromModule() {
+        return ModuleManager.computeModulePathAsString(this.getClass().getName());
     }
 
     private boolean match(Class<?> clazz) {

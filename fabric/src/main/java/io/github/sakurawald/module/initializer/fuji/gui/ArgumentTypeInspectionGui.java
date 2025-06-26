@@ -6,7 +6,6 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.core.gui.PagedGui;
-import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -17,13 +16,18 @@ import java.util.List;
 
 public class ArgumentTypeInspectionGui extends PagedGui<BaseArgumentTypeAdapter> {
 
-    public ArgumentTypeInspectionGui(ServerPlayerEntity player, @NotNull List<BaseArgumentTypeAdapter> entities, int pageIndex) {
-        super(null, player, TextHelper.getTextByKey(player, "command.argument.type.gui.title"), entities, pageIndex);
+    public ArgumentTypeInspectionGui(SimpleGui parent, ServerPlayerEntity player, @NotNull List<BaseArgumentTypeAdapter> entities, int pageIndex) {
+        super(parent, player, TextHelper.getTextByKey(player, "command.argument.type.gui.title"), entities, pageIndex);
+    }
+
+    public static ArgumentTypeInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
+        List<BaseArgumentTypeAdapter> adapters = BaseArgumentTypeAdapter.getAdapters();
+        return new ArgumentTypeInspectionGui(parent, player, adapters, 0);
     }
 
     @Override
     protected PagedGui<BaseArgumentTypeAdapter> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<BaseArgumentTypeAdapter> entities, int pageIndex) {
-        return new ArgumentTypeInspectionGui(player, entities, pageIndex);
+        return new ArgumentTypeInspectionGui(parent, player, entities, pageIndex);
     }
 
     @Override
@@ -32,7 +36,7 @@ public class ArgumentTypeInspectionGui extends PagedGui<BaseArgumentTypeAdapter>
             .setName(Text.literal(entity.getClass().getSimpleName()))
             .setItem(Items.HOPPER)
             .setLore(List.of(
-                TextHelper.getTextByKey(getPlayer(),"from_module", ModuleManager.computeModulePathAsString(entity.getClass().getName()))
+                TextHelper.getTextByKey(getPlayer(),"from_module", entity.getFromModule())
                 , TextHelper.getTextByKey(getPlayer(), "command.argument.type.class", entity.getTypeClasses().stream().map(Class::getSimpleName).toList())
                 , TextHelper.getTextByKey(getPlayer(), "command.argument.type.string", entity.getTypeStrings())
             ))

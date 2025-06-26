@@ -7,7 +7,6 @@ import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.core.command.annotation.CommandSource;
-import io.github.sakurawald.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.core.config.Configs;
 import io.github.sakurawald.core.gui.inspection.CommandDescriptorGui;
 import io.github.sakurawald.core.job.abst.BaseJob;
@@ -28,7 +27,6 @@ import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.fabricmc.loader.api.metadata.Person;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -129,19 +127,10 @@ public class FujiInitializer extends ModuleInitializer {
 
     @Document("Inspect all argument types registered by fuji.")
     @CommandNode("inspect argument-types")
-    private static int $inspectCommandArgumentTypes(@CommandSource ServerCommandSource source) {
-        List<BaseArgumentTypeAdapter> adapters = BaseArgumentTypeAdapter.getAdapters();
-
-        if (source.isExecutedByPlayer()) {
-            new ArgumentTypeInspectionGui(source.getPlayer(), adapters, 0).open();
-        } else {
-            adapters.forEach(adapter -> adapter.getTypeStrings().forEach(typeString -> {
-                String typeClass = adapter.getTypeClasses().get(0).getSimpleName();
-                String string2types = "%s -> %s".formatted(typeString, typeClass);
-                source.sendMessage(Text.literal(string2types));
-            }));
-        }
-
+    private static int $inspectCommandArgumentTypes(@CommandSource ServerPlayerEntity player) {
+        ArgumentTypeInspectionGui
+            .inspectAll(null, player)
+            .open();
         return CommandHelper.Return.SUCCESS;
     }
 
