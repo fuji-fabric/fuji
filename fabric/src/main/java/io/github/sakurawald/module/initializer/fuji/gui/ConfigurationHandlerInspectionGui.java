@@ -8,8 +8,8 @@ import io.github.sakurawald.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.config.Configs;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.core.gui.PagedGui;
-import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -19,12 +19,23 @@ import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class ConfigurationHandlerInspectionGui extends PagedGui<BaseConfigurationHandler<?>> {
 
     public ConfigurationHandlerInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, @NotNull List<BaseConfigurationHandler<?>> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "fuji.inspect.configuration.gui.title"), entities, pageIndex);
+    }
+
+    public static ConfigurationHandlerInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
+        List<BaseConfigurationHandler<?>> entities = BaseConfigurationHandler.CONFIGURATION_HANDLERS
+            .stream()
+            .filter(it -> it instanceof ObjectConfigurationHandler<?>)
+            .sorted(Comparator.comparing(BaseConfigurationHandler::getPath))
+            .toList();
+
+        return new ConfigurationHandlerInspectionGui(parent, player, entities, 0);
     }
 
     @Override
@@ -37,8 +48,7 @@ public class ConfigurationHandlerInspectionGui extends PagedGui<BaseConfiguratio
         String configModelClassName = ReflectionUtil.getSimpleClassName(entity.getClass());
         Path configPath = entity.getPath();
         String topLevelName = IOUtil.computeRelativePath(configPath.toFile());
-
-        String fromModule = ModuleManager.computeModulePathAsString(entity.model().getClass().getName());
+        String fromModule = entity.getFromModule();
 
         List<Text> lore = List.of(
             TextHelper.getTextByKey(getPlayer(), "from_module", fromModule)

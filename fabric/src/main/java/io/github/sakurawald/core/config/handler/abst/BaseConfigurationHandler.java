@@ -16,6 +16,7 @@ import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.config.job.ConfigurationHandlerSaverJob;
 import io.github.sakurawald.core.config.transformer.abst.ConfigurationTransformer;
 import io.github.sakurawald.core.event.impl.ServerLifecycleEvents;
+import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.core.manager.impl.scheduler.ScheduleManager;
 import lombok.Cleanup;
 import lombok.Getter;
@@ -217,6 +218,10 @@ public abstract class BaseConfigurationHandler<T> {
         }
 
         return this.model;
+    }
+
+    public String getFromModule() {
+        return ModuleManager.computeModulePathAsString(this.model().getClass().getName());
     }
 
 }

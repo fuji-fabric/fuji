@@ -30,12 +30,20 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         entities.addAll(searchModuleCommands(parent, player, modulePathString));
         entities.addAll(searchModulePermissionsAndMetas(parent, player, modulePathString));
         entities.addAll(searchModulePlaceholders(parent, player, modulePathString));
+        entities.addAll(searchModuleConfigurations(parent, player, modulePathString));
 
         /* Make the GUI. */
         Text title = Text.literal("module details gui");
         ModuleDetailsInspectionGui moduleDetailsInspectionGui = new ModuleDetailsInspectionGui(parent, player, title, entities, 0);
 
         return moduleDetailsInspectionGui;
+    }
+
+    private static List<GuiElementInterface> searchModuleConfigurations(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString) {
+        return ConfigurationHandlerInspectionGui
+            .inspectAll(parent, player)
+            .search(it -> it.getFromModule().equals(modulePathString))
+            .toGuiElements();
     }
 
     private static List<GuiElementInterface> searchModulePlaceholders(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString) {

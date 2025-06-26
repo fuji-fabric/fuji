@@ -9,8 +9,6 @@ import io.github.sakurawald.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.core.command.annotation.CommandSource;
 import io.github.sakurawald.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.core.config.Configs;
-import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
-import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.core.gui.inspection.CommandDescriptorGui;
 import io.github.sakurawald.core.job.abst.BaseJob;
 import io.github.sakurawald.core.manager.Managers;
@@ -155,12 +153,8 @@ public class FujiInitializer extends ModuleInitializer {
     @Document("Inspect all loaded configurations files used by fuji.")
     @CommandNode("inspect configurations")
     private static int $inspectConfigurations(@CommandSource ServerPlayerEntity player) {
-        List<BaseConfigurationHandler<?>> list = BaseConfigurationHandler.CONFIGURATION_HANDLERS.stream()
-            .filter(it -> it instanceof ObjectConfigurationHandler<?>)
-            .sorted(Comparator.comparing(BaseConfigurationHandler::getPath))
-            .toList();
-
-        new ConfigurationHandlerInspectionGui(null, player, list, 0)
+        ConfigurationHandlerInspectionGui
+            .inspectAll(null, player)
             .open();
         return CommandHelper.Return.SUCCESS;
     }
