@@ -45,15 +45,12 @@ public class DeathNodeListGui extends PagedGui<DeathNode> {
     }
 
     @Override
-    protected List<DeathNode> filter(String keyword) {
-        return getEntities()
-            .stream()
-            .filter(it -> it.dimension.contains(keyword)
-            || it.time.contains(keyword)
-            || it.reason.toLowerCase().contains(keyword.toLowerCase())
-            || it.main.toString().toLowerCase().contains(keyword.toLowerCase())
-            || it.armor.toString().toLowerCase().contains(keyword.toLowerCase())
-            || it.offhand.toString().toLowerCase().contains(keyword.toLowerCase()))
-            .toList();
+    protected boolean filter(DeathNode entity, String keyword) {
+        return entity.dimension.contains(keyword)
+            || entity.time.contains(keyword)
+            || entity.reason.toLowerCase().contains(keyword.toLowerCase())
+            || entity.main.toString().toLowerCase().contains(keyword.toLowerCase())
+            || entity.armor.toString().toLowerCase().contains(keyword.toLowerCase())
+            || entity.offhand.toString().toLowerCase().contains(keyword.toLowerCase());
     }
 }

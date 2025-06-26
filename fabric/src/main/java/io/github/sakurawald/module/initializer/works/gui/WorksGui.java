@@ -106,15 +106,15 @@ public class WorksGui extends PagedGui<Work> {
     }
 
     @Override
-    @NotNull
-    protected List<Work> filter(@NotNull String keyword) {
-        return this.getEntities().stream().filter(w ->
-            w.creator.contains(keyword)
-                || w.name.contains(keyword)
-                || w.introduction != null && w.introduction.contains(keyword)
-                || w.level.contains(keyword)
-                || w.getIconItemIdentifier().contains(keyword)
-                || w instanceof ProductionWork pw && pw.sample.sampleCounter != null && pw.sample.sampleCounter.keySet().stream().anyMatch(k -> k.contains(keyword))
-        ).toList();
+    protected boolean filter(Work entity, @NotNull String keyword) {
+        return entity.creator.contains(keyword)
+                || entity.name.contains(keyword)
+                || entity.introduction != null && entity.introduction.contains(keyword)
+                || entity.level.contains(keyword)
+                || entity.getIconItemIdentifier().contains(keyword)
+                || (entity instanceof ProductionWork pw
+                     && pw.sample.sampleCounter != null
+                     && pw.sample.sampleCounter.keySet().stream().anyMatch(k -> k.contains(keyword)));
+
     }
 }

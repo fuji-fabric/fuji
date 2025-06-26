@@ -11,7 +11,6 @@ import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.core.structure.descriptor.annotation.ColorBox;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import lombok.NonNull;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -154,28 +153,9 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         return entity;
     }
 
-    @SuppressWarnings("RedundantIfStatement")
     @Override
-    protected List<GuiElementInterface> filter(String keyword) {
-        return getEntities()
-            .stream()
-            .filter(it -> {
-                ItemStack itemStack = it.getItemStack();
-                /* Filter by item name. */
-                String itemName = TextHelper.visitString(itemStack.getName());
-                if (itemName.toLowerCase().contains(keyword.toLowerCase())) return true;
-
-                /* Filter by item lore. */
-                boolean matched = StackHelper.getLore(itemStack)
-                    .stream()
-                    .anyMatch(text -> TextHelper.visitString(text)
-                        .toLowerCase()
-                        .contains(keyword.toLowerCase()));
-                if (matched) return true;
-
-                return false;
-            })
-            .toList();
+    protected boolean filter(GuiElementInterface entity, String keyword) {
+        return StackHelper.filterItemStack(entity.getItemStack(), keyword);
     }
 
 }

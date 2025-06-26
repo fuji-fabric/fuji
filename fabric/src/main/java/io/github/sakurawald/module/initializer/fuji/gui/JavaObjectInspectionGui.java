@@ -111,10 +111,8 @@ public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
     }
 
     @Override
-    protected List<InspectingObject> filter(String keyword) {
-        return getEntities().stream()
-            .filter(it -> it.getObjectName().contains(keyword))
-            .collect(Collectors.toList());
+    protected boolean filter(InspectingObject entity, String keyword) {
+        return entity.getObjectName().contains(keyword);
     }
 
 }

@@ -17,7 +17,6 @@ import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -82,10 +81,8 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
     }
 
     @Override
-    protected List<BaseConfigurationHandler<?>> filter(String keyword) {
-        return getEntities().stream()
-            .filter(it -> ReflectionUtil.getSimpleClassName(it.getClass()).contains(keyword)
-                || it.getPath().toString().contains(keyword))
-            .toList();
+    protected boolean filter(BaseConfigurationHandler<?> entity, String keyword) {
+        return ReflectionUtil.getSimpleClassName(entity.getClass()).contains(keyword)
+                || entity.getPath().toString().contains(keyword);
     }
 }

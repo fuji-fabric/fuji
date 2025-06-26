@@ -61,9 +61,7 @@ public class CommandPermissionGui extends PagedGui<CommandNodePermission> {
     }
 
     @Override
-    protected List<CommandNodePermission> filter(String keyword) {
-        return getEntities().stream()
-            .filter(it -> it.getPath().contains(keyword))
-            .toList();
+    protected boolean filter(CommandNodePermission entity, String keyword) {
+        return entity.getPath().contains(keyword);
     }
 }

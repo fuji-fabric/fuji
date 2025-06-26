@@ -3,7 +3,6 @@ package io.github.sakurawald.module.initializer.kit.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.gui.InputSignGui;
@@ -141,10 +140,7 @@ public class KitEditorGui extends PagedGui<Kit> {
     }
 
     @Override
-    @NotNull
-    protected List<Kit> filter(@NotNull String keyword) {
-        return getEntities().stream()
-            .filter(e -> e.getName().contains(keyword))
-            .toList();
+    protected boolean filter(Kit entity, @NotNull String keyword) {
+        return entity.getName().contains(keyword);
     }
 }

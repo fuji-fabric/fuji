@@ -64,10 +64,8 @@ public class ServerCommandsInspectionGui extends PagedGui<ServerCommandNodeWrapp
     }
 
     @Override
-    protected List<ServerCommandNodeWrapper> filter(String keyword) {
-        return getEntities().stream()
-            .filter(it -> it.path.contains(keyword)
-            || it.fromPackage.contains(keyword))
-            .toList();
+    protected boolean filter(ServerCommandNodeWrapper entity, String keyword) {
+        return entity.path.contains(keyword)
+            || entity.fromPackage.contains(keyword);
     }
 }

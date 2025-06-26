@@ -129,11 +129,8 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
     }
 
     @Override
-    protected List<Pair<String, Boolean>> filter(String keyword) {
-        return getEntities()
-            .stream()
-            .filter(it -> it.getKey().contains(keyword)
-                || it.getValue().toString().contains(keyword))
-            .toList();
+    protected boolean filter(Pair<String, Boolean> entity, String keyword) {
+        return entity.getKey().contains(keyword)
+                || entity.getValue().toString().contains(keyword);
     }
 }

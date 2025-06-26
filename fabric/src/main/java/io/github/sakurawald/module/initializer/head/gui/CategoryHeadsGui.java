@@ -45,12 +45,9 @@ public class CategoryHeadsGui extends PagedGui<Head> {
     }
 
     @Override
-    protected List<Head> filter(String keywords) {
-        return getEntities()
-            .stream()
-            .filter(head -> head.name.toLowerCase().contains(keywords.toLowerCase())
-                || head.getTagsOrEmpty().toLowerCase().contains(keywords.toLowerCase()))
-            .collect(Collectors.toList());
+    protected boolean filter(Head entity, String keywords) {
+        return entity.name.toLowerCase().contains(keywords.toLowerCase())
+                || entity.getTagsOrEmpty().toLowerCase().contains(keywords.toLowerCase());
     }
 
     private void handleEntityClick(@NotNull Head head, @NotNull ClickType type) {

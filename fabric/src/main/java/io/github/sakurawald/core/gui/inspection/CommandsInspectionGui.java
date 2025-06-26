@@ -89,10 +89,8 @@ public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
     }
 
     @Override
-    protected List<CommandDescriptor> filter(String keyword) {
-        return getEntities().stream()
-            .filter(it -> it.toString().contains(keyword)
-            || it.method.getDeclaringClass().getName().contains(keyword))
-            .toList();
+    protected boolean filter(CommandDescriptor entity, String keyword) {
+        return entity.toString().contains(keyword)
+            || entity.method.getDeclaringClass().getName().contains(keyword);
     }
 }

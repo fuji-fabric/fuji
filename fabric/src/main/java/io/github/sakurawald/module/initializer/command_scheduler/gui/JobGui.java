@@ -43,9 +43,7 @@ public class JobGui extends PagedGui<Job> {
     }
 
     @Override
-    protected List<Job> filter(String keyword) {
-        return getEntities().stream()
-            .filter(it -> it.getName().equals(keyword))
-            .toList();
+    protected boolean filter(Job entity, String keyword) {
+        return entity.getName().equals(keyword);
     }
 }

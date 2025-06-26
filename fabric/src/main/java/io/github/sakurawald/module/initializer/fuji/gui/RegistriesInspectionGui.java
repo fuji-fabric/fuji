@@ -122,10 +122,7 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
     }
 
     @Override
-    protected List<IdentifierDescriptor> filter(String keyword) {
-        return getEntities()
-            .stream()
-            .filter(it -> it.getIdentifier().toString().contains(keyword))
-            .toList();
+    protected boolean filter(IdentifierDescriptor entity, String keyword) {
+        return entity.getIdentifier().toString().contains(keyword);
     }
 }

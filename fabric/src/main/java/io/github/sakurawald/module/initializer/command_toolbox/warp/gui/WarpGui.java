@@ -45,12 +45,9 @@ public class WarpGui extends PagedGui<WarpNode> {
     }
 
     @Override
-    protected List<WarpNode> filter(String keyword) {
-        return getEntities()
-            .stream()
-            .filter(it -> it.getName().contains(keyword)
-                || it.getItem().contains(keyword)
-                || it.getPosition().getLevel().contains(keyword))
-            .toList();
+    protected boolean filter(WarpNode entity, String keyword) {
+        return entity.getName().contains(keyword)
+                || entity.getItem().contains(keyword)
+                || entity.getPosition().getLevel().contains(keyword);
     }
 }
