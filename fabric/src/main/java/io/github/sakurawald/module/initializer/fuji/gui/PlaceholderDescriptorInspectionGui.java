@@ -3,18 +3,30 @@ package io.github.sakurawald.module.initializer.fuji.gui;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.gui.PagedGui;
+import io.github.sakurawald.core.structure.descriptor.PlaceholderDescriptor;
 import io.github.sakurawald.core.structure.descriptor.StringDescriptor;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class PlaceholderDescriptorInspectionGui extends StringDescriptorInspectionGui{
 
     public PlaceholderDescriptorInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, @NotNull List<StringDescriptor> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player,"fuji.inspect.placeholders.gui.title"), entities, pageIndex);
+    }
+
+    public static PlaceholderDescriptorInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
+        List<StringDescriptor> entities = StringDescriptor.REGISTERED_STRING_DESCRIPTORS
+            .stream()
+            .filter(it -> it instanceof PlaceholderDescriptor)
+            .sorted(Comparator.comparing(StringDescriptor::getFromModule))
+            .toList();
+
+        return new PlaceholderDescriptorInspectionGui(parent, player, entities,0);
     }
 
     @Override

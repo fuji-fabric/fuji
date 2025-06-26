@@ -15,8 +15,6 @@ import io.github.sakurawald.core.gui.inspection.CommandDescriptorGui;
 import io.github.sakurawald.core.job.abst.BaseJob;
 import io.github.sakurawald.core.manager.Managers;
 import io.github.sakurawald.core.manager.impl.module.ModuleManager;
-import io.github.sakurawald.core.structure.descriptor.PlaceholderDescriptor;
-import io.github.sakurawald.core.structure.descriptor.StringDescriptor;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.fuji.gui.AboutGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ArgumentTypeInspectionGui;
@@ -203,16 +201,11 @@ public class FujiInitializer extends ModuleInitializer {
     @Document("Inspect placeholders registered by fuji.")
     @CommandNode("inspect placeholders")
     private static int $inspectPlaceholders(@CommandSource ServerPlayerEntity player) {
-        List<StringDescriptor> entities = StringDescriptor.REGISTERED_STRING_DESCRIPTORS
-            .stream()
-            .filter(it -> it instanceof PlaceholderDescriptor)
-            .sorted(Comparator.comparing(StringDescriptor::getFromModule))
-            .toList();
-
-        new PlaceholderDescriptorInspectionGui(null, player, entities,0)
+        PlaceholderDescriptorInspectionGui
+            .inspectAll(null, player)
             .open();
-
         return CommandHelper.Return.SUCCESS;
     }
+
 }
 
