@@ -21,7 +21,6 @@ import io.github.sakurawald.module.initializer.fuji.gui.PermissionsAndMetasInspe
 import io.github.sakurawald.module.initializer.fuji.gui.PlaceholderDescriptorInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.RegistryInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ServerCommandsInspectionGui;
-import io.github.sakurawald.module.initializer.fuji.structure.ServerCommandNodeWrapper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.fabricmc.loader.api.metadata.Person;
@@ -29,7 +28,6 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 
@@ -100,19 +98,16 @@ public class FujiInitializer extends ModuleInitializer {
     @Document("Inspect all commands registered in server.")
     @CommandNode("inspect server-commands")
     private static int $inspectServerCommands(@CommandSource ServerPlayerEntity player) {
-        List<ServerCommandNodeWrapper> entities = CommandHelper.getCommandNodes()
-            .stream()
-            .map(ServerCommandNodeWrapper::new)
-            .sorted(Comparator.comparing(ServerCommandNodeWrapper::getPath))
-            .toList();
-        new ServerCommandsInspectionGui(player, entities, 0).open();
+        ServerCommandsInspectionGui.inspectAll(player)
+            .open();
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document("Inspect all enabled/disabled modules of fuji.")
     @CommandNode("inspect modules")
     private static int $inspectModules(@CommandSource ServerPlayerEntity player) {
-        ModulesInspectionGui.makeDefault(player)
+        ModulesInspectionGui
+            .inspectAll(player)
             .open();
         return CommandHelper.Return.SUCCESS;
     }

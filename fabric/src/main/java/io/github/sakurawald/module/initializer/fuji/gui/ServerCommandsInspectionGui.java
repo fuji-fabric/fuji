@@ -4,6 +4,7 @@ import com.mojang.brigadier.tree.CommandNode;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.gui.PagedGui;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class ServerCommandsInspectionGui extends PagedGui<ServerCommandNodeWrapper> {
@@ -25,6 +27,15 @@ public class ServerCommandsInspectionGui extends PagedGui<ServerCommandNodeWrapp
 
         getFooter().setSlot(4, GuiHelper.makeHelpButton(player)
             .setLore(TextHelper.getTextListByKey(player, "fuji.inspect.server_commands.gui.help.lore")));
+    }
+
+    public static ServerCommandsInspectionGui inspectAll(ServerPlayerEntity player) {
+        List<ServerCommandNodeWrapper> entities = CommandHelper.getCommandNodes()
+            .stream()
+            .map(ServerCommandNodeWrapper::new)
+            .sorted(Comparator.comparing(ServerCommandNodeWrapper::getPath))
+            .toList();
+        return new ServerCommandsInspectionGui(player, entities, 0);
     }
 
     @Override

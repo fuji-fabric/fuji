@@ -35,7 +35,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
         return new ModulesInspectionGui(player, entities, pageIndex);
     }
 
-    public static ModulesInspectionGui makeDefault(ServerPlayerEntity player) {
+    public static ModulesInspectionGui inspectAll(ServerPlayerEntity player) {
         List<Pair<String, Boolean>> list = ModuleManager.MODULE_ENABLE_STATUS
             .entrySet()
             .stream()
