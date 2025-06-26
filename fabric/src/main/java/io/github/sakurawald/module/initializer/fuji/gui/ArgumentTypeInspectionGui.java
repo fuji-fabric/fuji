@@ -32,8 +32,14 @@ public class ArgumentTypeInspectionGui extends PagedGui<BaseArgumentTypeAdapter>
     }
 
     private Item toItem(BaseArgumentTypeAdapter adapter) {
-       /* Use Minecart Hopper to represent the vanilla argument adapters. */
-        boolean isVanillaMinecraftArgumentType = adapter.getTypeClasses()
+        if (isVanillaMinecraftArgumentType(adapter)) {
+            return Items.HOPPER_MINECART;
+        }
+        return Items.HOPPER;
+    }
+
+    private static boolean isVanillaMinecraftArgumentType(BaseArgumentTypeAdapter adapter) {
+        return adapter.getTypeClasses()
             .stream()
             .anyMatch(argumentClass -> {
                 String className = argumentClass.getName();
@@ -41,25 +47,24 @@ public class ArgumentTypeInspectionGui extends PagedGui<BaseArgumentTypeAdapter>
                     || className.startsWith("com.mojang")
                     || className.startsWith("java.lang");
             });
-
-        if (isVanillaMinecraftArgumentType) {
-            return Items.HOPPER_MINECART;
-        }
-
-        /* The argument type is registered by fuji. */
-        return Items.HOPPER;
     }
 
     @Override
     protected GuiElementInterface toGuiElement(BaseArgumentTypeAdapter entity) {
-        return new GuiElementBuilder()
+        GuiElementBuilder guiElementBuilder = new GuiElementBuilder()
             .setName(Text.literal(entity.getClass().getSimpleName()))
             .setItem(toItem(entity))
             .setLore(List.of(
-                TextHelper.getTextByKey(getPlayer(),"from_module", entity.getFromModule())
+                TextHelper.getTextByKey(getPlayer(), "from_module", entity.getFromModule())
                 , TextHelper.getTextByKey(getPlayer(), "command.argument.type.class", entity.getTypeClasses().stream().map(Class::getSimpleName).toList())
                 , TextHelper.getTextByKey(getPlayer(), "command.argument.type.string", entity.getTypeStrings())
-            ))
+            ));
+
+        if (!isVanillaMinecraftArgumentType(entity)) {
+            guiElementBuilder.glow();
+        }
+
+        return guiElementBuilder
             .build();
     }
 
