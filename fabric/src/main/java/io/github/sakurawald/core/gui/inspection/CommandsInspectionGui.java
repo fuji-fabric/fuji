@@ -17,25 +17,25 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class CommandDescriptorGui extends PagedGui<CommandDescriptor> {
+public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
 
-    public CommandDescriptorGui(@Nullable SimpleGui parent, ServerPlayerEntity player, @NotNull List<CommandDescriptor> entities, int pageIndex) {
+    public CommandsInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, @NotNull List<CommandDescriptor> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "fuji.inspect.fuji_commands.gui.title"), entities, pageIndex);
     }
 
-    public static CommandDescriptorGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
+    public static CommandsInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
         List<CommandDescriptor> descriptors = CommandAnnotationProcessor
             .descriptors
             .stream()
             .sorted(Comparator.comparing(CommandDescriptor::getCommandNodePath))
             .toList();
 
-        return new CommandDescriptorGui(parent, player, descriptors, 0);
+        return new CommandsInspectionGui(parent, player, descriptors, 0);
     }
 
     @Override
     protected PagedGui<CommandDescriptor> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<CommandDescriptor> entities, int pageIndex) {
-        return new CommandDescriptorGui(parent, player, entities, pageIndex);
+        return new CommandsInspectionGui(parent, player, entities, pageIndex);
     }
 
     private List<Text> computeDocumentsLore(CommandDescriptor entity) {

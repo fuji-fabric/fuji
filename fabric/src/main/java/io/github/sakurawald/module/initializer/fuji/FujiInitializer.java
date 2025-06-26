@@ -7,18 +7,18 @@ import io.github.sakurawald.core.command.annotation.CommandNode;
 import io.github.sakurawald.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.core.command.annotation.CommandSource;
 import io.github.sakurawald.core.config.Configs;
-import io.github.sakurawald.core.gui.inspection.CommandDescriptorGui;
+import io.github.sakurawald.core.gui.inspection.CommandsInspectionGui;
 import io.github.sakurawald.core.job.abst.BaseJob;
 import io.github.sakurawald.core.manager.Managers;
 import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.fuji.gui.AboutGui;
-import io.github.sakurawald.module.initializer.fuji.gui.ArgumentTypeInspectionGui;
-import io.github.sakurawald.module.initializer.fuji.gui.ConfigurationHandlerInspectionGui;
+import io.github.sakurawald.module.initializer.fuji.gui.ArgumentTypesInspectionGui;
+import io.github.sakurawald.module.initializer.fuji.gui.ConfigurationsInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ModulesInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.PermissionsAndMetasInspectionGui;
-import io.github.sakurawald.module.initializer.fuji.gui.PlaceholderDescriptorInspectionGui;
-import io.github.sakurawald.module.initializer.fuji.gui.RegistryInspectionGui;
+import io.github.sakurawald.module.initializer.fuji.gui.PlaceholdersInspectionGui;
+import io.github.sakurawald.module.initializer.fuji.gui.RegistriesInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ServerCommandsInspectionGui;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -103,7 +103,7 @@ public class FujiInitializer extends ModuleInitializer {
     @Document("Inspect all commands registered by fuji.")
     @CommandNode("inspect fuji-commands")
     private static int $inspectFujiCommands(@CommandSource ServerPlayerEntity player) {
-        CommandDescriptorGui
+        CommandsInspectionGui
             .inspectAll(null, player)
             .open();
         return CommandHelper.Return.SUCCESS;
@@ -112,7 +112,7 @@ public class FujiInitializer extends ModuleInitializer {
     @Document("Inspect all argument types registered by fuji.")
     @CommandNode("inspect argument-types")
     private static int $inspectCommandArgumentTypes(@CommandSource ServerPlayerEntity player) {
-        ArgumentTypeInspectionGui
+        ArgumentTypesInspectionGui
             .inspectAll(null, player)
             .open();
         return CommandHelper.Return.SUCCESS;
@@ -121,7 +121,7 @@ public class FujiInitializer extends ModuleInitializer {
     @Document("Inspect all loaded configurations files used by fuji.")
     @CommandNode("inspect configurations")
     private static int $inspectConfigurations(@CommandSource ServerPlayerEntity player) {
-        ConfigurationHandlerInspectionGui
+        ConfigurationsInspectionGui
             .inspectAll(null, player)
             .open();
         return CommandHelper.Return.SUCCESS;
@@ -130,7 +130,7 @@ public class FujiInitializer extends ModuleInitializer {
     @Document("Inspect all registries in server.")
     @CommandNode("inspect registry")
     private static int $inspectRegistry(@CommandSource ServerPlayerEntity player) {
-        RegistryInspectionGui
+        RegistriesInspectionGui
             .inspectAll(player)
             .open();
         return CommandHelper.Return.SUCCESS;
@@ -148,7 +148,7 @@ public class FujiInitializer extends ModuleInitializer {
     @Document("Inspect placeholders registered by fuji.")
     @CommandNode("inspect placeholders")
     private static int $inspectPlaceholders(@CommandSource ServerPlayerEntity player) {
-        PlaceholderDescriptorInspectionGui
+        PlaceholdersInspectionGui
             .inspectAll(null, player)
             .open();
         return CommandHelper.Return.SUCCESS;

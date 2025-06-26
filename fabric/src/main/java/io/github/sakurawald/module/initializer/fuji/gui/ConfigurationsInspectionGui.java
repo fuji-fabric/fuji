@@ -22,25 +22,25 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class ConfigurationHandlerInspectionGui extends PagedGui<BaseConfigurationHandler<?>> {
+public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandler<?>> {
 
-    public ConfigurationHandlerInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, @NotNull List<BaseConfigurationHandler<?>> entities, int pageIndex) {
+    public ConfigurationsInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, @NotNull List<BaseConfigurationHandler<?>> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "fuji.inspect.configuration.gui.title"), entities, pageIndex);
     }
 
-    public static ConfigurationHandlerInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
+    public static ConfigurationsInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
         List<BaseConfigurationHandler<?>> entities = BaseConfigurationHandler.CONFIGURATION_HANDLERS
             .stream()
             .filter(it -> it instanceof ObjectConfigurationHandler<?>)
             .sorted(Comparator.comparing(BaseConfigurationHandler::getPath))
             .toList();
 
-        return new ConfigurationHandlerInspectionGui(parent, player, entities, 0);
+        return new ConfigurationsInspectionGui(parent, player, entities, 0);
     }
 
     @Override
     protected PagedGui<BaseConfigurationHandler<?>> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<BaseConfigurationHandler<?>> entities, int pageIndex) {
-        return new ConfigurationHandlerInspectionGui(parent, player, entities, pageIndex);
+        return new ConfigurationsInspectionGui(parent, player, entities, pageIndex);
     }
 
     @Override

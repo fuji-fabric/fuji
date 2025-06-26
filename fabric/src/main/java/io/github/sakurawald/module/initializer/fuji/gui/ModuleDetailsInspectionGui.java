@@ -6,7 +6,7 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.core.auxiliary.minecraft.StackHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.gui.PagedGui;
-import io.github.sakurawald.core.gui.inspection.CommandDescriptorGui;
+import io.github.sakurawald.core.gui.inspection.CommandsInspectionGui;
 import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.core.structure.descriptor.annotation.ColorBox;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
@@ -108,28 +108,28 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
     }
 
     private static List<GuiElementInterface> searchModuleArgumentTypes(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString) {
-        return ArgumentTypeInspectionGui
+        return ArgumentTypesInspectionGui
             .inspectAll(parent, player)
             .skipCurrentGuiAndSearch(it -> it.getFromModule().equals(modulePathString))
             .toGuiElements();
     }
 
     private static List<GuiElementInterface> searchModuleConfigurations(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString) {
-        return ConfigurationHandlerInspectionGui
+        return ConfigurationsInspectionGui
             .inspectAll(parent, player)
             .skipCurrentGuiAndSearch(it -> it.getFromModule().equals(modulePathString))
             .toGuiElements();
     }
 
     private static List<GuiElementInterface> searchModulePlaceholders(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString) {
-        return PlaceholderDescriptorInspectionGui
+        return PlaceholdersInspectionGui
             .inspectAll(parent, player)
             .skipCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
             .toGuiElements();
     }
 
     private static List<GuiElementInterface> searchModuleCommands(SimpleGui parent, ServerPlayerEntity player, String modulePathString) {
-        return CommandDescriptorGui
+        return CommandsInspectionGui
             .inspectAll(parent, player)
             .skipCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
             .toGuiElements();

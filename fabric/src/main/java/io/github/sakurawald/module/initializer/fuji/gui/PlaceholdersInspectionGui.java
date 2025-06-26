@@ -13,25 +13,25 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Comparator;
 import java.util.List;
 
-public class PlaceholderDescriptorInspectionGui extends StringDescriptorInspectionGui{
+public class PlaceholdersInspectionGui extends StringDescriptorInspectionGui{
 
-    public PlaceholderDescriptorInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, @NotNull List<StringDescriptor> entities, int pageIndex) {
+    public PlaceholdersInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, @NotNull List<StringDescriptor> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player,"fuji.inspect.placeholders.gui.title"), entities, pageIndex);
     }
 
-    public static PlaceholderDescriptorInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
+    public static PlaceholdersInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
         List<StringDescriptor> entities = StringDescriptor.REGISTERED_STRING_DESCRIPTORS
             .stream()
             .filter(it -> it instanceof PlaceholderDescriptor)
             .sorted(Comparator.comparing(StringDescriptor::getFromModule))
             .toList();
 
-        return new PlaceholderDescriptorInspectionGui(parent, player, entities,0);
+        return new PlaceholdersInspectionGui(parent, player, entities,0);
     }
 
     @Override
     protected PagedGui<StringDescriptor> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<StringDescriptor> entities, int pageIndex) {
-        return new PlaceholderDescriptorInspectionGui(parent, player, entities, pageIndex);
+        return new PlaceholdersInspectionGui(parent, player, entities, pageIndex);
     }
 
     @Override

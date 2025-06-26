@@ -15,20 +15,20 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ArgumentTypeInspectionGui extends PagedGui<BaseArgumentTypeAdapter> {
+public class ArgumentTypesInspectionGui extends PagedGui<BaseArgumentTypeAdapter> {
 
-    public ArgumentTypeInspectionGui(SimpleGui parent, ServerPlayerEntity player, @NotNull List<BaseArgumentTypeAdapter> entities, int pageIndex) {
+    public ArgumentTypesInspectionGui(SimpleGui parent, ServerPlayerEntity player, @NotNull List<BaseArgumentTypeAdapter> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "command.argument.type.gui.title"), entities, pageIndex);
     }
 
-    public static ArgumentTypeInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
+    public static ArgumentTypesInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
         List<BaseArgumentTypeAdapter> adapters = BaseArgumentTypeAdapter.getAdapters();
-        return new ArgumentTypeInspectionGui(parent, player, adapters, 0);
+        return new ArgumentTypesInspectionGui(parent, player, adapters, 0);
     }
 
     @Override
     protected PagedGui<BaseArgumentTypeAdapter> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<BaseArgumentTypeAdapter> entities, int pageIndex) {
-        return new ArgumentTypeInspectionGui(parent, player, entities, pageIndex);
+        return new ArgumentTypesInspectionGui(parent, player, entities, pageIndex);
     }
 
     private Item toItem(BaseArgumentTypeAdapter adapter) {

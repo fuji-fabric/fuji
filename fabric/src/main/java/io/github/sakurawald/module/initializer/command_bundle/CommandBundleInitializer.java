@@ -13,7 +13,7 @@ import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.core.event.impl.CommandEvents;
 import io.github.sakurawald.core.event.impl.ServerLifecycleEvents;
-import io.github.sakurawald.core.gui.inspection.CommandDescriptorGui;
+import io.github.sakurawald.core.gui.inspection.CommandsInspectionGui;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.command_bundle.config.model.CommandBundleConfigModel;
 import io.github.sakurawald.module.initializer.command_bundle.structure.BundleCommandDescriptor;
@@ -72,7 +72,7 @@ public class CommandBundleInitializer extends ModuleInitializer {
             .filter(it -> it instanceof BundleCommandDescriptor);
 
         if (ctx.getSource().isExecutedByPlayer()) {
-            new CommandDescriptorGui(null, ctx.getSource().getPlayer(), commandDescriptorStream.toList(), 0).open();
+            new CommandsInspectionGui(null, ctx.getSource().getPlayer(), commandDescriptorStream.toList(), 0).open();
         } else {
             commandDescriptorStream.forEach(it -> ctx.getSource().sendMessage(Text.literal(it.getCommandNodePath())));
         }

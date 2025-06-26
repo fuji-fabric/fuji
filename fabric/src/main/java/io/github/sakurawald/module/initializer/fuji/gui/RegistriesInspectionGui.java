@@ -24,16 +24,16 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-public class RegistryInspectionGui extends PagedGui<IdentifierDescriptor> {
+public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
 
     private final boolean isMetaRegistry;
 
-    public RegistryInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, boolean isMetaRegistry, @NotNull List<IdentifierDescriptor> entities, int pageIndex) {
+    public RegistriesInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, boolean isMetaRegistry, @NotNull List<IdentifierDescriptor> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "registry.list.gui.title"), entities, pageIndex);
         this.isMetaRegistry = isMetaRegistry;
     }
 
-    public static RegistryInspectionGui inspectAll(ServerPlayerEntity player) {
+    public static RegistriesInspectionGui inspectAll(ServerPlayerEntity player) {
         /* Get the identifiers of meta registries. */
         List<Identifier> staticRegistries = Registries.REGISTRIES.getKeys()
             .stream()
@@ -50,12 +50,12 @@ public class RegistryInspectionGui extends PagedGui<IdentifierDescriptor> {
         dynamicRegistries.forEach(id -> ids.add(new IdentifierDescriptor(id, true)));
         ids.sort(Comparator.comparing(IdentifierDescriptor::getIdentifier));
 
-        return new RegistryInspectionGui(null, player, true, ids, 0);
+        return new RegistriesInspectionGui(null, player, true, ids, 0);
     }
 
     @Override
     protected PagedGui<IdentifierDescriptor> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<IdentifierDescriptor> entities, int pageIndex) {
-        return new RegistryInspectionGui(parent, player, this.isMetaRegistry, entities, pageIndex);
+        return new RegistriesInspectionGui(parent, player, this.isMetaRegistry, entities, pageIndex);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class RegistryInspectionGui extends PagedGui<IdentifierDescriptor> {
                     .sorted()
                     .map(identifier -> new IdentifierDescriptor(identifier, false))
                     .toList();
-                new RegistryInspectionGui(getGui(), getPlayer(), false, ids, 0)
+                new RegistriesInspectionGui(getGui(), getPlayer(), false, ids, 0)
                     .open();
                 return;
             }
@@ -114,7 +114,7 @@ public class RegistryInspectionGui extends PagedGui<IdentifierDescriptor> {
                     .sorted()
                     .map(identifier -> new IdentifierDescriptor(identifier, true))
                     .toList();
-                new RegistryInspectionGui(getGui(), getPlayer(), false, ids, 0).open();
+                new RegistriesInspectionGui(getGui(), getPlayer(), false, ids, 0).open();
                 return;
             }
 
