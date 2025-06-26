@@ -66,7 +66,7 @@ public class CommandDescriptorGui extends PagedGui<CommandDescriptor> {
 
         /* Add basic properties of command descriptor. */
         lore.addAll(List.of(
-            TextHelper.getTextByKey(getPlayer(),"from_module", entity.getSourceModulePath())
+            TextHelper.getTextByKey(getPlayer(),"from_module", entity.getSourceModule())
             , TextHelper.getTextByKey(getPlayer(), "command.source.can_be_executed_by_console", entity.canBeExecutedByConsole())
             , TextHelper.getTextByKey(getPlayer(), "command.descriptor.type", entity.getClass().getSimpleName())
             , TextHelper.getTextByKey(getPlayer(), "command.requirement.level_permission", entity.getDefaultLevelPermission())
