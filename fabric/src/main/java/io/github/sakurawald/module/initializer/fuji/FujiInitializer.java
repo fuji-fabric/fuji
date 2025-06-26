@@ -1,6 +1,5 @@
 package io.github.sakurawald.module.initializer.fuji;
 
-import io.github.sakurawald.Fuji;
 import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
@@ -21,14 +20,8 @@ import io.github.sakurawald.module.initializer.fuji.gui.PermissionsAndMetasInspe
 import io.github.sakurawald.module.initializer.fuji.gui.PlaceholderDescriptorInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.RegistryInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ServerCommandsInspectionGui;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.fabricmc.loader.api.metadata.Person;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Document("""
@@ -73,15 +66,9 @@ public class FujiInitializer extends ModuleInitializer {
     @Document("Open the about GUI.")
     @CommandNode("about")
     private static int $about(@CommandSource ServerPlayerEntity player) {
-        ModMetadata metadata = FabricLoader.getInstance().getModContainer(Fuji.MOD_ID)
-            .orElseThrow(() -> new IllegalStateException("Failed to get the metadata of this mod."))
-            .getMetadata();
-
-        List<Person> persons = new ArrayList<>();
-        persons.addAll(metadata.getAuthors());
-        persons.addAll(metadata.getContributors());
-
-        new AboutGui(player, persons, 0).open();
+        AboutGui
+            .make(player)
+            .open();
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -98,7 +85,8 @@ public class FujiInitializer extends ModuleInitializer {
     @Document("Inspect all commands registered in server.")
     @CommandNode("inspect server-commands")
     private static int $inspectServerCommands(@CommandSource ServerPlayerEntity player) {
-        ServerCommandsInspectionGui.inspectAll(player)
+        ServerCommandsInspectionGui
+            .inspectAll(player)
             .open();
         return CommandHelper.Return.SUCCESS;
     }
@@ -115,7 +103,8 @@ public class FujiInitializer extends ModuleInitializer {
     @Document("Inspect all commands registered by fuji.")
     @CommandNode("inspect fuji-commands")
     private static int $inspectFujiCommands(@CommandSource ServerPlayerEntity player) {
-        CommandDescriptorGui.inspectAll(null, player)
+        CommandDescriptorGui
+            .inspectAll(null, player)
             .open();
         return CommandHelper.Return.SUCCESS;
     }

@@ -44,6 +44,18 @@ public class AboutGui extends PagedGui<Person> {
             }));
     }
 
+    public static AboutGui make(ServerPlayerEntity player) {
+        ModMetadata metadata = FabricLoader.getInstance().getModContainer(Fuji.MOD_ID)
+            .orElseThrow(() -> new IllegalStateException("Failed to get the metadata of this mod."))
+            .getMetadata();
+
+        List<Person> persons = new ArrayList<>();
+        persons.addAll(metadata.getAuthors());
+        persons.addAll(metadata.getContributors());
+
+        return new AboutGui(player, persons, 0);
+    }
+
     @Override
     protected void drawPagedGui() {
         super.drawPagedGui();
