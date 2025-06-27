@@ -41,7 +41,7 @@ public class FujiInitializer extends ModuleInitializer {
         NOTE: You have to `re-start` the server, after you enable/disable a module.
         """)
     @CommandNode("reload")
-    private static int $reload(@CommandSource ServerCommandSource source) {
+    public static int $reload(@CommandSource ServerPlayerEntity source) {
         // Reload main-control file.
         Configs.mainControlConfig.readStorage();
 
@@ -57,9 +57,9 @@ public class FujiInitializer extends ModuleInitializer {
 
     @Document("Print the user guide of fuji.")
     @CommandNode("user-guide")
-    private static int $userGuide(@CommandSource ServerCommandSource source) {
+    public static int $userGuide(@CommandSource ServerPlayerEntity player) {
         ModuleManager.printUserGuide();
-        TextHelper.sendMessageByKey(source, "fuji.user_guide");
+        TextHelper.sendMessageByKey(player, "fuji.user_guide");
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -67,7 +67,7 @@ public class FujiInitializer extends ModuleInitializer {
     @CommandNode("about")
     private static int $about(@CommandSource ServerPlayerEntity player) {
         AboutGui
-            .make(player)
+            .make(null, player)
             .open();
         return CommandHelper.Return.SUCCESS;
     }
@@ -103,6 +103,13 @@ public class FujiInitializer extends ModuleInitializer {
     @Document("Alias to `/fuji inspect modules`.")
     @CommandNode()
     private static int $inspectModulesShortcut(@CommandSource ServerPlayerEntity player) {
+        $inspectModules(player);
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document("Alias to `/fuji inspect modules`.")
+    @CommandNode("gui")
+    private static int $gui(@CommandSource ServerPlayerEntity player) {
         $inspectModules(player);
         return CommandHelper.Return.SUCCESS;
     }
