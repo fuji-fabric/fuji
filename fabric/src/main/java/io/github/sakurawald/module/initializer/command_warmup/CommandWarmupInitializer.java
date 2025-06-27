@@ -2,6 +2,7 @@ package io.github.sakurawald.module.initializer.command_warmup;
 
 import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
+import io.github.sakurawald.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
@@ -36,6 +37,11 @@ public class CommandWarmupInitializer extends ModuleInitializer {
 
             /* If a warmup entry matches the command string, then we cancel the usage of the command. */
             if (commandString.matches(entry.getCommand().getRegex())) {
+                /* Should not send the warmup warning or cancel it, if the player can't even use that command. */
+                if (!CommandHelper.canUseThisCommand(player, commandString)) {
+                    break;
+                }
+
                 // Submit the command warmup ticket.
                 Managers.getBossBarManager().addTicket(CommandWarmupTicket.make(player, commandString, entry));
 

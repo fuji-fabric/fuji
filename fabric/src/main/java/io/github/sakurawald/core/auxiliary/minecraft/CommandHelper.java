@@ -1,6 +1,7 @@
 package io.github.sakurawald.core.auxiliary.minecraft;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.context.ParsedCommandNode;
@@ -97,6 +98,29 @@ public class CommandHelper {
             commandPaths.add(rootPath);
         }
         return commandPaths;
+    }
+
+    public static boolean canUseThisCommand(ServerPlayerEntity player, String commandString) {
+        /* Parse the command string into command nodes. */
+        ParseResults<ServerCommandSource> parseResults = ServerHelper
+            .getCommandDispatcher()
+            .parse(commandString, player.getCommandSource());
+        CommandContextBuilder<ServerCommandSource> context = parseResults.getContext();
+
+        /* If any exceptions, refuse to use the command. */
+        if (!parseResults.getExceptions().isEmpty()) {
+            return false;
+        }
+
+        /* If the nodes from parsed result is empty, refuse to use the command. */
+        List<ParsedCommandNode<ServerCommandSource>> nodes = context.getNodes();
+        if (nodes.isEmpty()) return false;
+
+        /* Check the requirement from root to leaf. */
+        return nodes
+            .stream()
+            .map(ParsedCommandNode::getNode)
+            .allMatch(it -> it.canUse(player.getCommandSource()));
     }
 
     @SuppressWarnings("unused")

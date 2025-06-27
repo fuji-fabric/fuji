@@ -78,6 +78,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         String $command = command.getValue();
         ParseResults<ServerCommandSource> parseResults = ServerHelper
             .getCommandDispatcher()
+            // NOTE: The `parse result` depends on the `command source`.
             .parse($command, source);
         CommandContextBuilder<ServerCommandSource> context = parseResults.getContext();
 
