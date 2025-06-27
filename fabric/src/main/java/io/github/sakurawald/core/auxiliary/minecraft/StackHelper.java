@@ -12,10 +12,11 @@ import net.minecraft.text.Text;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.jetbrains.annotations.Nullable;
+
 #if MC_VER <= MC_1_20_4
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Collectors;
 #elif MC_VER > MC_1_20_4
