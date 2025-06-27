@@ -100,6 +100,13 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document("Alias to `/fuji inspect modules`.")
+    @CommandNode()
+    private static int $inspectModulesShortcut(@CommandSource ServerPlayerEntity player) {
+        $inspectModules(player);
+        return CommandHelper.Return.SUCCESS;
+    }
+
     @Document("Inspect all commands registered by fuji.")
     @CommandNode("inspect fuji-commands")
     private static int $inspectFujiCommands(@CommandSource ServerPlayerEntity player) {
