@@ -15,6 +15,7 @@ import java.util.Optional;
 #if MC_VER <= MC_1_20_4
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Collectors;
 #elif MC_VER > MC_1_20_4
@@ -127,7 +128,11 @@ public class StackHelper {
         return Objects.equals(NbtHelper.getNbt(itemStack), NbtHelper.getNbt(itemStack2));
     }
 
-    public static boolean filterItemStack(ItemStack itemStack, String keyword) {
+    public static boolean filterItemStack(@Nullable ItemStack itemStack, String keyword) {
+        /* Nobody wants to get a null item. */
+        if (itemStack == null) return false;
+        if (itemStack.isEmpty()) return false;
+
         /* Filter by item name. */
         if (filterItemName(itemStack, keyword)) return true;
 

@@ -4,9 +4,12 @@ import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import eu.pb4.sgui.api.gui.layered.LayeredGui;
 import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
+import io.github.sakurawald.core.auxiliary.minecraft.StackHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.gui.layer.SingleLineLayer;
+import io.github.sakurawald.core.gui.structure.EntityToElementMapper;
 import lombok.Getter;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
@@ -16,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public abstract class PagedGui<T> extends LayeredGui {
 
@@ -27,6 +31,8 @@ public abstract class PagedGui<T> extends LayeredGui {
     private final Text prefixTitle;
     @Getter
     private final SingleLineLayer footer = new SingleLineLayer();
+
+    private final EntityToElementMapper<T> entityToElementMapper = new EntityToElementMapper<>();
 
     public PagedGui(@Nullable SimpleGui parent, ServerPlayerEntity player, Text prefixTitle, @NotNull List<T> entities, int pageIndex) {
         super(ScreenHandlerType.GENERIC_9X6, player, false);
@@ -61,16 +67,16 @@ public abstract class PagedGui<T> extends LayeredGui {
     }
 
     protected void drawPagedGui() {
-        // draw title
+        // Draw title.
         this.drawTitle();
 
-        // draw entities
+        // Draw entities.
         this.drawPagedGui(entities);
 
-        // draw navigator
+        // Draw navigator.
         this.drawNavigator(pageIndex);
 
-        // draw footer
+        // Draw footer.
         this.addLayer(footer, 0, this.getHeight() - 1);
     }
 
@@ -78,7 +84,7 @@ public abstract class PagedGui<T> extends LayeredGui {
         int slotIndex = 0;
         for (int i = getEntityBeginIndex(this.pageIndex); i < getEntityEndIndex(this.pageIndex); i++) {
             T entity = entities.get(i);
-            this.setSlot(slotIndex++, toGuiElement(entity));
+            this.setSlot(slotIndex++, makeGuiElementAndBindIt(entity));
         }
     }
 
@@ -91,14 +97,18 @@ public abstract class PagedGui<T> extends LayeredGui {
 
     public @NotNull PagedGui<T> saveCurrentGuiAndSearch(String keywords) {
         // NOTE: When search with keywords, we should remember previous GUI.
-        return make(this.gui, getPlayer(), TextHelper.getTextByKey(getPlayer(), "gui.search.title", keywords), filter(keywords), 0);
+        Text resultTitle = TextHelper.getTextByKey(getPlayer(), "gui.search.title", keywords);
+        List<T> resultEntities = filterEntities(keywords);
+        return make(this.gui, getPlayer(), resultTitle, resultEntities, 0);
     }
 
     public @NotNull PagedGui<T> skipCurrentGuiAndSearch(Predicate<T> predicate) {
-        List<T> newEntities = entities.stream().filter(predicate).toList();
-
-        // NOTE: This method is usually called after inspectAll() method, to only filters the GUI elements, and link this GUI to `parent GUI` (The true GUI).
-        return make(this.parent, getPlayer(), TextHelper.getTextByKey(getPlayer(), "gui.search.title", "REF"), newEntities, 0);
+        // NOTE: This method is usually called after inspectAll() method, to only filters the GUI elements, and link this GUI to `parent GUI` (The true GUI). In this use-case, we return an intermediate GUI, someone else wil take bits from it.
+        Text resultTitle = TextHelper.getTextByKey(getPlayer(), "gui.search.title", "YOU SHOULD NOT SEE THIS");
+        List<T> resultEntities = entities.stream()
+            .filter(predicate)
+            .toList();
+        return make(this.parent, getPlayer(), resultTitle, resultEntities, 0);
     }
 
     @SuppressWarnings("unused")
@@ -118,12 +128,47 @@ public abstract class PagedGui<T> extends LayeredGui {
 
     protected abstract GuiElementInterface toGuiElement(T entity);
 
-    protected abstract List<T> filter(String keyword);
+    private @NotNull GuiElementInterface makeGuiElementAndBindIt(T entity) {
+        GuiElementInterface element = this.toGuiElement(entity);
+        this.entityToElementMapper.setBinding(entity, element);
+        return element;
+    }
+
+    protected abstract boolean filter(T entity, String keyword);
+
+    private boolean combinedFilterEntity(T entity, String keyword) {
+        /* Filter using the displaying GUI item stack. (What you see is what you get) */
+        // NOTE: We have to make the GUI element for each entity. It's expensive, but saves time.
+        GuiElementInterface element = entityToElementMapper.getBinding(entity);
+        if (element == null) {
+            element = makeGuiElementAndBindIt(entity);
+        }
+
+        ItemStack itemStack = element.getItemStack();
+        if (StackHelper.filterItemStack(itemStack, keyword)) {
+            return true;
+        }
+
+        /* Filter using the user-defined filter. */
+        if (filter(entity, keyword)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private List<T> filterEntities(String keyword) {
+        return this.entities
+            .stream()
+            .filter(entity -> combinedFilterEntity(entity, keyword))
+            // NOTE: Make a modifiable collection.
+            .collect(Collectors.toList());
+    }
 
     public List<GuiElementInterface> toGuiElements() {
         return this.entities
             .stream()
-            .map(this::toGuiElement)
+            .map(this::makeGuiElementAndBindIt)
             .toList();
     }
 
