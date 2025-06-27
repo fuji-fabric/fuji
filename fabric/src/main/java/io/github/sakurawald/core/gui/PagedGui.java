@@ -216,7 +216,7 @@ public abstract class PagedGui<T> extends LayeredGui {
         }
     }
 
-    protected @Nullable SimpleGui getGui() {
+    public @Nullable SimpleGui getBackendGui() {
         return this.gui;
     }
 }

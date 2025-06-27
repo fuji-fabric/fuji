@@ -59,7 +59,7 @@ public class DeathDataListGui extends PagedGui<String> {
                         .map(it -> DeathNode.fromNbt((NbtCompound) it))
                         .collect(Collectors.toList());
                     Collections.reverse(entries);
-                    new DeathNodeListGui(getGui(), getPlayer(), entity, entries, 0)
+                    new DeathNodeListGui(getBackendGui(), getPlayer(), entity, entries, 0)
                         .open();
                 });
             })

@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
 
@@ -106,7 +105,7 @@ public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
         newWalkingPath = StringUtils.strip(newWalkingPath, ".");
 
         /* Make the deeper GUI and open it. */
-        new JavaObjectInspectionGui(getGui(), objectToInspect, getPlayer(), newEntities, 0, this.fileRelativePath, newWalkingPath)
+        new JavaObjectInspectionGui(getBackendGui(), objectToInspect, getPlayer(), newEntities, 0, this.fileRelativePath, newWalkingPath)
             .open();
     }
 

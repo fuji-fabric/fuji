@@ -39,7 +39,7 @@ public class DeathNodeListGui extends PagedGui<DeathNode> {
     }
 
     private void openDeathNodeDisplayGui(DeathNode entity) {
-        new DeathNodeDisplayGuiFactory(getGui(), entity)
+        new DeathNodeDisplayGuiFactory(getBackendGui(), entity)
             .build(getPlayer())
             .open();
     }

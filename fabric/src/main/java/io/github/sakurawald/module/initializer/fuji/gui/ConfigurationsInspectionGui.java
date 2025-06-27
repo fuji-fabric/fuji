@@ -55,7 +55,7 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
         );
 
         // NOTE: The parent may be different, due to the parent of ConfigurationsInspectionGui may be null or non-null (If it's created and open from ModuleDetailsInspectionGui).
-        SimpleGui trueParentGui = this.getParent() != null ? this.getParent() : this.getGui();
+        SimpleGui trueParentGui = this.getParent() != null ? this.getParent() : this.getBackendGui();
 
         GuiElementBuilder guiElementBuilder = new GuiElementBuilder()
             .setItem(toItem(entity))

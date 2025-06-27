@@ -96,7 +96,7 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
                     .sorted()
                     .map(identifier -> new IdentifierDescriptor(identifier, false))
                     .toList();
-                new RegistriesInspectionGui(getGui(), getPlayer(), false, ids, 0)
+                new RegistriesInspectionGui(getBackendGui(), getPlayer(), false, ids, 0)
                     .open();
                 return;
             }
@@ -114,7 +114,7 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
                     .sorted()
                     .map(identifier -> new IdentifierDescriptor(identifier, true))
                     .toList();
-                new RegistriesInspectionGui(getGui(), getPlayer(), false, ids, 0).open();
+                new RegistriesInspectionGui(getBackendGui(), getPlayer(), false, ids, 0).open();
                 return;
             }
 

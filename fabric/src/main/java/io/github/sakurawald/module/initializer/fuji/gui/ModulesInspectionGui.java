@@ -87,7 +87,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
             .setItem(itemMaterial)
             .setName(itemName)
             .setLore(lore)
-            .setCallback(() -> openModuleDetailsInspectionGui(getGui(), getPlayer(), modulePathString, moduleEnableStatus))
+            .setCallback(() -> openModuleDetailsInspectionGui(getBackendGui(), getPlayer(), modulePathString, moduleEnableStatus))
             .build();
     }
 
@@ -108,21 +108,6 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
             .open();
     }
 
-//    private PagedGui<CommandDescriptor> attachModuleCommands(String modulePathString, List<Text> lore) {
-//        PagedGui<CommandDescriptor> commandsRegisteredByThisModuleGUI = CommandDescriptorGui
-//            .inspectAll(getGui(), getPlayer())
-//            .search(it -> it.getSourceModulePath().equals(modulePathString));
-//
-//        lore.add(TextHelper.TEXT_EMPTY);
-//        int registeredCommandsCount = commandsRegisteredByThisModuleGUI.getEntities().size();
-//        lore.add(TextHelper.getTextByKey(getPlayer(), "module.registered_commands", registeredCommandsCount));
-//        if (registeredCommandsCount != 0) {
-//            lore.add(TextHelper.getTextByKey(getPlayer(), "prompt.click.see_it.left_click"));
-//        }
-//
-//        return commandsRegisteredByThisModuleGUI;
-//    }
-
     private static @Nullable String getDocumentString(Class<? extends ModuleInitializer> moduleInitializerClass) {
         @Nullable String classDocument = ReflectionUtil.getClassDocument(moduleInitializerClass);
         return classDocument;
@@ -130,7 +115,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
 
     @Override
     protected boolean filterEntity(Pair<String, Boolean> entity, String keyword) {
-        return entity.getKey().contains(keyword)
-                || entity.getValue().toString().contains(keyword);
+        return entity.getKey().contains(keyword.toLowerCase())
+                || entity.getValue().toString().contains(keyword.toLowerCase());
     }
 }

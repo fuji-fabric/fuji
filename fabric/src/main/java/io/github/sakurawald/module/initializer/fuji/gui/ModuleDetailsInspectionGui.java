@@ -10,6 +10,7 @@ import io.github.sakurawald.core.gui.inspection.CommandsInspectionGui;
 import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.core.structure.descriptor.annotation.ColorBox;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
+import io.github.sakurawald.module.initializer.fuji.FujiInitializer;
 import lombok.NonNull;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -40,15 +41,15 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
 
         /* Attach color blocks of the module. */
         attachColorBlocks(player, entities, modulePathString);
+        FujiInitializer.attachThingsForCore(player, moduleDetailsInspectionGui,entities);
 
         /* Search all types of objects of the module.  */
-        SimpleGui trueParent = moduleDetailsInspectionGui.getGui();
+        SimpleGui trueParent = moduleDetailsInspectionGui.getBackendGui();
         entities.addAll(searchModuleConfigurations(trueParent, player, modulePathString));
         entities.addAll(searchModuleCommands(trueParent, player, modulePathString));
         entities.addAll(searchModulePermissionsAndMetas(trueParent, player, modulePathString));
         entities.addAll(searchModulePlaceholders(trueParent, player, modulePathString));
         entities.addAll(searchModuleArgumentTypes(trueParent, player, modulePathString));
-
 
         /* Fill items. */
         if (!moduleEnableStatus) {
