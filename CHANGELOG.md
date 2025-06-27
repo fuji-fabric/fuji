@@ -7,3 +7,4 @@
 - [fuji] feature: make the `/fuji` command a shortcut to `/fuji inspect modules`.
 - [fuji] feature: new `/fuji gui` command, as a shortcut to `/fuji inspect modules`.
 - [fuji] feature: display the `relative path` for `/fuji inspect configurations`. (It's shorter, if not harm the readability)
+- [core] refactor: a better implementation to invoke module initializers.

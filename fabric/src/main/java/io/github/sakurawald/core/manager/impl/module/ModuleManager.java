@@ -12,6 +12,7 @@ import io.github.sakurawald.module.mixin.GlobalMixinConfigPlugin;
 import lombok.Getter;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.service.MixinService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -126,7 +127,7 @@ public class ModuleManager extends BaseManager {
                 try {
                     /* Track the module initializer class. */
                     // NOTE: This does trigger the static initialization.
-                    Class<? extends ModuleInitializer> clazz = (Class<? extends ModuleInitializer>) Class.forName(className);
+                    Class<? extends ModuleInitializer> clazz = (Class<? extends ModuleInitializer>) MixinService.getService().getClassProvider().findClass(className, false);
                     String modulePathString = computeModulePathAsString(className);
                     ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING.put(modulePathString, clazz);
 
