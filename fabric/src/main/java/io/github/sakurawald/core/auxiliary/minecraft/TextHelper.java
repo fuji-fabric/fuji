@@ -304,6 +304,11 @@ public class TextHelper {
     public static @NotNull Text getText(@NonNull NodeParser parser, @Nullable Object audience, boolean isKey, String keyOrValue, Object... args) {
         String value = isKey ? getValueByKey(audience, keyOrValue) : keyOrValue;
 
+        // check NPE.
+        if (value == null) {
+            return Text.literal("Value is null: %s".formatted(keyOrValue));
+        }
+
         // suppress this sending?
         if (value.equals(SUPPRESS_SENDING_STRING_MARKER)) {
             return SUPPRESS_SENDING_TEXT_MARKER;
@@ -588,7 +593,8 @@ public class TextHelper {
         return string
             .replace("<", "\\<")
             .replace(">", "\\>")
-            .replace("*","\\*");
+            .replace("*","\\*")
+            .replace("%", "\\%");
     }
 
     public static Text parseString(NodeParser parser, String input) {
@@ -596,6 +602,8 @@ public class TextHelper {
     }
 
     private static String decorateDocumentString(String documentString) {
+        documentString = escapeTags(documentString);
+
         String decoratedDocumentString = Arrays.stream(documentString
                 .split("\n"))
             .map(line -> "<#FFA1F5>" + line)
