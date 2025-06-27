@@ -20,7 +20,6 @@ import io.github.sakurawald.module.initializer.fuji.gui.PermissionsAndMetasInspe
 import io.github.sakurawald.module.initializer.fuji.gui.PlaceholdersInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.RegistriesInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ServerCommandsInspectionGui;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 
@@ -74,7 +73,7 @@ public class FujiInitializer extends ModuleInitializer {
 
     @Document("Toggle the debug mode of fuji.")
     @CommandNode("debug")
-    private static int $debug(@CommandSource ServerCommandSource source) {
+    public static int $debug(@CommandSource ServerPlayerEntity source) {
         var config = Configs.mainControlConfig.model().core.debug;
         config.log_debug_messages = !config.log_debug_messages;
 

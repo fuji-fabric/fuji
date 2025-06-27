@@ -9,6 +9,7 @@ import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.core.gui.layer.SingleLineLayer;
 import io.github.sakurawald.core.gui.structure.EntityToElementMapper;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -33,6 +34,8 @@ public abstract class PagedGui<T> extends LayeredGui {
     private final SingleLineLayer footer = new SingleLineLayer();
 
     private final EntityToElementMapper<T> entityToElementMapper = new EntityToElementMapper<>();
+
+    private boolean openParentGuiWhenClose = true;
 
     public PagedGui(@Nullable SimpleGui parent, ServerPlayerEntity player, Text prefixTitle, @NotNull List<T> entities, int pageIndex) {
         super(ScreenHandlerType.GENERIC_9X6, player, false);
@@ -211,9 +214,15 @@ public abstract class PagedGui<T> extends LayeredGui {
 
     @Override
     public void onClose() {
-        if (this.parent != null) {
+        if (this.openParentGuiWhenClose
+            && this.parent != null) {
             parent.open();
         }
+    }
+
+    public void closeWithoutOpenParentGui() {
+        this.openParentGuiWhenClose = false;
+        this.close();
     }
 
     public @Nullable SimpleGui getBackendGui() {

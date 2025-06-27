@@ -30,8 +30,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class AboutGui extends PagedGui<Person> {
 
-    public AboutGui(ServerPlayerEntity player, @NotNull List<Person> entities, int pageIndex) {
-        super(null, player, TextHelper.getTextByKey(player, "about"), entities, pageIndex);
+    public AboutGui(SimpleGui parent, ServerPlayerEntity player, @NotNull List<Person> entities, int pageIndex) {
+        super(parent, player, TextHelper.getTextByKey(player, "about"), entities, pageIndex);
 
         ModMetadata metadata = FabricLoader.getInstance().getModContainer(Fuji.MOD_ID).get().getMetadata();
         getFooter().setSlot(1, new GuiElementBuilder(Items.BOOK)
@@ -44,7 +44,7 @@ public class AboutGui extends PagedGui<Person> {
             }));
     }
 
-    public static AboutGui make(ServerPlayerEntity player) {
+    public static AboutGui make(@Nullable SimpleGui parent, ServerPlayerEntity player) {
         ModMetadata metadata = FabricLoader.getInstance().getModContainer(Fuji.MOD_ID)
             .orElseThrow(() -> new IllegalStateException("Failed to get the metadata of this mod."))
             .getMetadata();
@@ -53,7 +53,7 @@ public class AboutGui extends PagedGui<Person> {
         persons.addAll(metadata.getAuthors());
         persons.addAll(metadata.getContributors());
 
-        return new AboutGui(player, persons, 0);
+        return new AboutGui(parent, player, persons, 0);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class AboutGui extends PagedGui<Person> {
 
     @Override
     protected PagedGui<Person> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<Person> entities, int pageIndex) {
-        return new AboutGui(player, entities, pageIndex);
+        return new AboutGui(parent, player, entities, pageIndex);
     }
 
     @SuppressWarnings("HttpUrlsUsage")

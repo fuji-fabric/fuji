@@ -3,8 +3,10 @@ package io.github.sakurawald.module.initializer.fuji.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.StackHelper;
 import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.core.config.Configs;
 import io.github.sakurawald.core.gui.PagedGui;
 import io.github.sakurawald.core.gui.inspection.CommandsInspectionGui;
 import io.github.sakurawald.core.manager.impl.module.ModuleManager;
@@ -28,6 +30,58 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         super(parent, player, prefixTitle, entities, pageIndex);
     }
 
+    public static void attachThingsForCore(ServerPlayerEntity player, ModuleDetailsInspectionGui gui, List<GuiElementInterface> entities, String modulePathString) {
+        /* Only attach things for core module. */
+        if (!modulePathString.equals(ModuleManager.CORE_MODULE_ROOT)) return;
+
+        /* Place about button. */
+        GuiElementBuilder aboutButton = new GuiElementBuilder()
+            .setItem(Items.NETHER_STAR)
+            .setName(TextHelper.getTextByKey(player, "about"))
+            .setCallback(() -> AboutGui.make(gui.getBackendGui(), player).open());
+        entities.add(aboutButton.build());
+
+        /* Place user guide button. */
+        GuiElementBuilder userGuideButton = new GuiElementBuilder()
+            .setItem(Items.BOOK)
+            .setName(TextHelper.getTextByKey(player, "user_guide"))
+            .glow()
+            .setCallback(() -> {
+                gui.closeWithoutOpenParentGui();
+                FujiInitializer.$userGuide(player);
+            });
+        entities.add( userGuideButton.build());
+
+        /* Place reload button. */
+        GuiElementBuilder reloadButton = new GuiElementBuilder()
+            .setItem(Items.TARGET)
+            .setName(TextHelper.getTextByKey(player, "reload.gui.name"))
+            .setCallback(() -> {
+                gui.closeWithoutOpenParentGui();
+                FujiInitializer.$reload(player);
+            });
+        entities.add(reloadButton.build());
+
+        /* Place debug button. */
+        var debugConfig = Configs.mainControlConfig.model().core.debug;
+        GuiElementBuilder debugButton = new GuiElementBuilder()
+            .setItem(debugConfig.log_debug_messages ? Items.GREEN_BANNER : Items.RED_BANNER)
+            .setName(TextHelper.getTextByKey(player, "debug"))
+            .setCallback(() -> {
+                gui.closeWithoutOpenParentGui();
+                FujiInitializer.$debug(player);
+            });
+        entities.add(debugButton.build());
+
+        /* Fill the first line. */
+        // NOTE: yy4p
+        entities.add(GuiHelper.makeSlotPlaceholder());
+        entities.add(GuiHelper.makeSlotPlaceholder());
+        entities.add(GuiHelper.makeSlotPlaceholder());
+        entities.add(GuiHelper.makeSlotPlaceholder());
+        entities.add(GuiHelper.makeSlotPlaceholder());
+    }
+
     @Override
     protected PagedGui<GuiElementInterface> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<GuiElementInterface> entities, int pageIndex) {
         return new ModuleDetailsInspectionGui(parent, player, title, entities, pageIndex);
@@ -39,9 +93,11 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         Text title = TextHelper.getTextByKey(player, "fuji.inspect.module_details.gui.title", modulePathString);
         ModuleDetailsInspectionGui moduleDetailsInspectionGui = new ModuleDetailsInspectionGui(parent, player, title, entities, 0);
 
+        /* Attach things for core module. */
+        attachThingsForCore(player, moduleDetailsInspectionGui, entities, modulePathString);
+
         /* Attach color blocks of the module. */
         attachColorBlocks(player, entities, modulePathString);
-        FujiInitializer.attachThingsForCore(player, moduleDetailsInspectionGui,entities);
 
         /* Search all types of objects of the module.  */
         SimpleGui trueParent = moduleDetailsInspectionGui.getBackendGui();
