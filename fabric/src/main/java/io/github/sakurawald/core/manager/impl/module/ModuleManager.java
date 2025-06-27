@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 @Getter
 public class ModuleManager extends BaseManager {
@@ -254,5 +255,15 @@ public class ModuleManager extends BaseManager {
         }
 
         return true;
+    }
+
+    public static <T> T evalWhenEnable(Supplier<T> supplier) {
+        String modulePathString = ReflectionUtil.findSourceModuleInCurrentStack();
+        boolean shouldWeLoadThis = Managers.getModuleManager().shouldWeLoadThis(modulePathString);
+        if (shouldWeLoadThis) {
+            return supplier.get();
+        }
+
+        return null;
     }
 }
