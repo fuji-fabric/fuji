@@ -26,13 +26,14 @@ import net.minecraft.text.Text;
 public class ChatSpyInitializer extends ModuleInitializer {
 
     private static String lastContentString = "";
-    public static final BaseConfigurationHandler<ChatSpyConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatSpyConfigModel.class).autoSaveEveryMinute();
+    public static final BaseConfigurationHandler<ChatSpyConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatSpyConfigModel.class);
 
     @Document("Enable/disable the chat spy mode for you.")
     @CommandNode("toggle")
     private static int toggle(@CommandSource ServerPlayerEntity player) {
         ChatSpyConfigModel.PerPlayerOptions options = withOptions(player);
         options.enabled = !options.enabled;
+        config.writeStorage();
 
         TextHelper.sendMessageByFlag(player, options.enabled);
         return CommandHelper.Return.SUCCESS;

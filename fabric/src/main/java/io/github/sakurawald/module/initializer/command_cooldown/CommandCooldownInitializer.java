@@ -48,7 +48,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
                 // Reset the timestamp for non-persistent cooldown before writing storage.
                 .forEach(it -> it.getTimestamp().clear());
         }
-    }.autoSaveEveryMinute();
+    };
 
     private static final MutableText NOT_COOLDOWN_FOUND_ERROR_TEXT = Text.literal("NOT_COOLDOWN_FOUND_ERROR");
 
@@ -90,6 +90,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         }
 
         cooldown.getUsage().compute(key, (k, v) -> v == null ? 1 : v + 1);
+        config.writeStorage();
         CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), onSuccess.getValue());
         return CommandHelper.Return.SUCCESS;
     }
@@ -110,6 +111,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
 
         CommandCooldown commandCooldown = new CommandCooldown(name, cooldownMs, $maxUsage, $persistent, $global);
         config.model().namedCooldown.list.put(name, commandCooldown);
+        config.writeStorage();
 
         TextHelper.sendMessageByKey(source, "command_cooldown.created", name);
         return CommandHelper.Return.SUCCESS;
@@ -122,6 +124,8 @@ public class CommandCooldownInitializer extends ModuleInitializer {
 
         String key = name.getValue();
         config.model().namedCooldown.list.remove(key);
+        config.writeStorage();
+
         TextHelper.sendMessageByKey(source, "command_cooldown.deleted", name.getValue());
         return CommandHelper.Return.SUCCESS;
     }
@@ -141,6 +145,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         ensureExist(source, name);
 
         CommandCooldown commandCooldown = config.model().namedCooldown.list.get(name.getValue());
+        config.writeStorage();
 
         String key = player.getGameProfile().getName();
         commandCooldown.getTimestamp().put(key, 0L);
