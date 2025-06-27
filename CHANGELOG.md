@@ -3,6 +3,7 @@
 **This version is the `Quality of Life` improvement version.**
 
 - [command_warmup] fix: should not `send warning` or `send bossbar`, if the player can't even use that target command. (#352)
+- fix: should not apply the `auto-save` for some `module control files`, which will `override the file modification`, if the modified file is not re-loaded in a short time. (Affected modules: `command_cooldown`, `command_scheduler` and `chat.style`) (#353)
 - [core] **feature: enhance the `search function` in `all paged GUI`, now we will search any text you can see. (Much better to search a `keyword` inside Item)**
 - [fuji] **feature: adds `about`, `user guide`, `reload` and `debug` buttons for `core` module in `/fuji gui` command.**
 - [fuji] feature: make the `/fuji` command a shortcut to `/fuji inspect modules`.
