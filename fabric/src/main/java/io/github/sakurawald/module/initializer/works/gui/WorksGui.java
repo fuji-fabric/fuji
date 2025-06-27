@@ -106,7 +106,7 @@ public class WorksGui extends PagedGui<Work> {
     }
 
     @Override
-    protected boolean filter(Work entity, @NotNull String keyword) {
+    protected boolean filterEntity(Work entity, @NotNull String keyword) {
         return entity.creator.contains(keyword)
                 || entity.name.contains(keyword)
                 || entity.introduction != null && entity.introduction.contains(keyword)

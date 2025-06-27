@@ -143,7 +143,7 @@ public class AboutGui extends PagedGui<Person> {
     }
 
     @Override
-    protected boolean filter(Person entity, String keyword) {
+    protected boolean filterEntity(Person entity, String keyword) {
         Map<String, String> contact = entity.getContact().asMap();
         return entity.getName().contains(keyword)
             || contact.entrySet().stream().anyMatch(it -> it.getKey().contains(keyword) || it.getValue().contains(keyword));

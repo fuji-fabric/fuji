@@ -61,7 +61,7 @@ public class TopChunksGui extends PagedGui<ChunkScore> {
     }
 
     @Override
-    protected boolean filter(ChunkScore entity, String keyword) {
+    protected boolean filterEntity(ChunkScore entity, String keyword) {
         return entity.computeChunkLocationString(getPlayer().getCommandSource()).contains(keyword)
             || entity.getPlayers().stream().map(String::toLowerCase).anyMatch(playerName -> playerName.contains(keyword))
             || String.valueOf(entity.getScore()).contains(keyword)

@@ -111,7 +111,7 @@ public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
     }
 
     @Override
-    protected boolean filter(InspectingObject entity, String keyword) {
+    protected boolean filterEntity(InspectingObject entity, String keyword) {
         return entity.getObjectName().contains(keyword);
     }
 

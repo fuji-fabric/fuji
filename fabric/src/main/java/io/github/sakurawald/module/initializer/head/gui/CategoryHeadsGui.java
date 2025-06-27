@@ -45,7 +45,7 @@ public class CategoryHeadsGui extends PagedGui<Head> {
     }
 
     @Override
-    protected boolean filter(Head entity, String keywords) {
+    protected boolean filterEntity(Head entity, String keywords) {
         return entity.name.toLowerCase().contains(keywords.toLowerCase())
                 || entity.getTagsOrEmpty().toLowerCase().contains(keywords.toLowerCase());
     }

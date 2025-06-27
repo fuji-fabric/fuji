@@ -39,7 +39,7 @@ public class WorldGui extends PagedGui<DimensionNode> {
     }
 
     @Override
-    protected boolean filter(DimensionNode entity, String keyword) {
+    protected boolean filterEntity(DimensionNode entity, String keyword) {
         return entity.getDimension().contains(keyword)
                 || entity.getDimension_type().contains(keyword);
     }

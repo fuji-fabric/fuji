@@ -43,7 +43,7 @@ public class JobGui extends PagedGui<Job> {
     }
 
     @Override
-    protected boolean filter(Job entity, String keyword) {
+    protected boolean filterEntity(Job entity, String keyword) {
         return entity.getName().equals(keyword);
     }
 }

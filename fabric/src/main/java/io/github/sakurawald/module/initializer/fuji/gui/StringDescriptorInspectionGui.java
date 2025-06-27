@@ -46,7 +46,7 @@ public abstract class StringDescriptorInspectionGui extends PagedGui<StringDescr
     protected abstract Text toNameText(StringDescriptor entity);
 
     @Override
-    protected boolean filter(StringDescriptor entity, String keyword) {
+    protected boolean filterEntity(StringDescriptor entity, String keyword) {
         return entity.getDocument().contains(keyword)
                 || entity.getPattern().contains(keyword)
                 || entity.getFromModule().contains(keyword);

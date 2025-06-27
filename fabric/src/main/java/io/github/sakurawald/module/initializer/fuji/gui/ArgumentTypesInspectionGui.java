@@ -69,7 +69,7 @@ public class ArgumentTypesInspectionGui extends PagedGui<BaseArgumentTypeAdapter
     }
 
     @Override
-    protected boolean filter(BaseArgumentTypeAdapter entity, String keyword) {
+    protected boolean filterEntity(BaseArgumentTypeAdapter entity, String keyword) {
         return entity.getTypeClasses().stream().anyMatch(c -> c.getSimpleName().contains(keyword))
                 || entity.getTypeStrings().stream().anyMatch(s -> s.contains(keyword))
                 || entity.getClass().getName().contains(keyword);

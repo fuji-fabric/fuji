@@ -61,7 +61,7 @@ public class CommandPermissionGui extends PagedGui<CommandNodePermission> {
     }
 
     @Override
-    protected boolean filter(CommandNodePermission entity, String keyword) {
+    protected boolean filterEntity(CommandNodePermission entity, String keyword) {
         return entity.getPath().contains(keyword);
     }
 }

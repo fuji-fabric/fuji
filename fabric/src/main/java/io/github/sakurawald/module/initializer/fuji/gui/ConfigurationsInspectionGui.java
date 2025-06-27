@@ -81,7 +81,7 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
     }
 
     @Override
-    protected boolean filter(BaseConfigurationHandler<?> entity, String keyword) {
+    protected boolean filterEntity(BaseConfigurationHandler<?> entity, String keyword) {
         return ReflectionUtil.getSimpleClassName(entity.getClass()).contains(keyword)
                 || entity.getPath().toString().contains(keyword);
     }
