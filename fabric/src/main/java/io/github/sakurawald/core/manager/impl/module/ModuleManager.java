@@ -257,7 +257,7 @@ public class ModuleManager extends BaseManager {
         return true;
     }
 
-    public static <T> T evalWhenEnable(Supplier<T> supplier) {
+    private static <T> T evalWhenEnable(Supplier<T> supplier) {
         String modulePathString = ReflectionUtil.findSourceModuleInCurrentStack();
         boolean shouldWeLoadThis = Managers.getModuleManager().shouldWeLoadThis(modulePathString);
         if (shouldWeLoadThis) {

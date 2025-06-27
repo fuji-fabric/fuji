@@ -39,15 +39,15 @@ public class ChatStyleInitializer extends ModuleInitializer {
     private static final BaseConfigurationHandler<ChatStyleConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatStyleConfigModel.class);
 
     // To avoid the message type already registered in the client-side, and the client-side message type will influence the client-side decorator.
-    public static final RegistryKey<MessageType> MESSAGE_TYPE_KEY = ModuleManager.evalWhenEnable(() -> RegistryKey.of(RegistryKeys.MESSAGE_TYPE, Identifier.of(Fuji.MOD_ID, "chat_" + FabricLoader.getInstance().getEnvironmentType().toString().toLowerCase())));
+    public static final RegistryKey<MessageType> MESSAGE_TYPE_KEY = RegistryKey.of(RegistryKeys.MESSAGE_TYPE, Identifier.of(Fuji.MOD_ID, "chat_" + FabricLoader.getInstance().getEnvironmentType().toString().toLowerCase()));
 
-    public static final MessageType MESSAGE_TYPE_VALUE = ModuleManager.evalWhenEnable(() -> new MessageType(
+    public static final MessageType MESSAGE_TYPE_VALUE = new MessageType(
         Decoration.ofChat("%s%s"),
-        Decoration.ofChat("%s%s")));
+        Decoration.ofChat("%s%s"));
 
-    private static final BaseConfigurationHandler<ChatFormatModel> chatFormatData = ModuleManager.evalWhenEnable(() -> new ObjectConfigurationHandler<>("chat.json", ChatFormatModel.class));
+    private static final BaseConfigurationHandler<ChatFormatModel> chatFormatData = new ObjectConfigurationHandler<>("chat.json", ChatFormatModel.class);
 
-    private static final NodeParser CHAT_STYLE_PARSER = ModuleManager.evalWhenEnable(() -> TextHelper.STYLE_ONLY_PARSER);
+    private static final NodeParser CHAT_STYLE_PARSER = TextHelper.STYLE_ONLY_PARSER;
     private static final String DEFAULT_CONTENT_FORMAT = "%message%";
 
     private static final String CHAT_STYLE_TYPE = "chat";
