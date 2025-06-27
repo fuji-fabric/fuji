@@ -10,8 +10,8 @@ import io.github.sakurawald.core.config.Configs;
 import io.github.sakurawald.core.gui.inspection.CommandsInspectionGui;
 import io.github.sakurawald.core.job.abst.BaseJob;
 import io.github.sakurawald.core.manager.Managers;
-import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
+import io.github.sakurawald.module.initializer.core.CoreInitializer;
 import io.github.sakurawald.module.initializer.fuji.gui.AboutGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ArgumentTypesInspectionGui;
 import io.github.sakurawald.module.initializer.fuji.gui.ConfigurationsInspectionGui;
@@ -57,7 +57,7 @@ public class FujiInitializer extends ModuleInitializer {
     @Document("Print the user guide of fuji.")
     @CommandNode("user-guide")
     public static int $userGuide(@CommandSource ServerPlayerEntity player) {
-        ModuleManager.printUserGuide();
+        CoreInitializer.printUserGuide();
         TextHelper.sendMessageByKey(player, "fuji.user_guide");
         return CommandHelper.Return.SUCCESS;
     }

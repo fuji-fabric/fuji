@@ -8,11 +8,11 @@ import io.github.sakurawald.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.core.manager.Managers;
 import io.github.sakurawald.core.manager.abst.BaseManager;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
+import io.github.sakurawald.module.initializer.core.CoreInitializer;
 import io.github.sakurawald.module.mixin.GlobalMixinConfigPlugin;
 import lombok.Getter;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.service.MixinService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 public class ModuleManager extends BaseManager {
 
     public static final String ENABLE_SUPPLIER_KEY = "enable";
-    public static final String CORE_MODULE_ROOT = "core";
+    public static final String CORE_MODULE_NAME = "core";
 
     private static final Set<String> MODULE_PATHS = new HashSet<>(ReflectionUtil.getGraph(ReflectionUtil.MODULE_GRAPH_FILE_NAME));
 
@@ -35,7 +35,6 @@ public class ModuleManager extends BaseManager {
     private static final Map<String, String> CLASS_NAME_2_MODULE_PATH_STRING = new HashMap<>();
     public static final Map<Class<? extends ModuleInitializer>, ModuleInitializer> MODULE_INITIALIZER_BY_CLASS = new HashMap<>();
     public static final Map<String, Class<? extends ModuleInitializer>> MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING = new HashMap<>();
-
 
     public static String computeModulePathAsString(@NotNull String className) {
         /* This function wrap the computeModulePathAsList function, and providing a cache layer. */
@@ -73,7 +72,7 @@ public class ModuleManager extends BaseManager {
         }
 
         if (left == -1) {
-            return List.of(CORE_MODULE_ROOT);
+            return List.of(CORE_MODULE_NAME);
         }
 
         String str = className.substring(left);
@@ -84,8 +83,8 @@ public class ModuleManager extends BaseManager {
 
         List<String> modulePath = new ArrayList<>(List.of(str.split("\\.")));
 
-        if (modulePath.get(0).equals(CORE_MODULE_ROOT)) {
-            return List.of(CORE_MODULE_ROOT);
+        if (modulePath.get(0).equals(CORE_MODULE_NAME)) {
+            return List.of(CORE_MODULE_NAME);
         }
 
         /* remove the trailing directories until the string is a module path string */
@@ -117,7 +116,7 @@ public class ModuleManager extends BaseManager {
     @Override
     public void onInitialize() {
         invokeModuleInitializers();
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> this.serverStartupReport());
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> CoreInitializer.onServerStartSuccess());
     }
 
     @SuppressWarnings("unchecked")
@@ -141,9 +140,6 @@ public class ModuleManager extends BaseManager {
             });
     }
 
-    /**
-     * If a module is enabled, but the module doesn't extend AbstractModule, then this method will also return null, but the module doesn't extend AbstractModule, then this method will also return null.
-     */
     public <T extends ModuleInitializer> void initializeModuleInitializer(@NotNull Class<T> clazz) {
         if (!MODULE_INITIALIZER_BY_CLASS.containsKey(clazz)) {
             String className = clazz.getName();
@@ -153,14 +149,17 @@ public class ModuleManager extends BaseManager {
                     moduleInitializer.doInitialize();
                     MODULE_INITIALIZER_BY_CLASS.put(clazz, moduleInitializer);
                 } catch (Exception e) {
-                    LogUtil.error("Failed to invoke doInitialize() of module initializer of module {}", clazz.getSimpleName(), e);
+                    LogUtil.warn("Sorry, failed to initialize the module `{}`. I will crash the server now, to minimize losses.", className);
+                    throw new RuntimeException("Crashed by fuji mod by design, see above.", e);
                 }
             }
         }
     }
 
     public void reloadModuleInitializers() {
-        MODULE_INITIALIZER_BY_CLASS.values().forEach(initializer -> {
+        MODULE_INITIALIZER_BY_CLASS
+            .values()
+            .forEach(initializer -> {
                 try {
                     initializer.doReload();
                 } catch (Exception e) {
@@ -170,51 +169,13 @@ public class ModuleManager extends BaseManager {
         );
     }
 
-    private void serverStartupReport() {
-        /* Report enabled/disabled modules. */
-        List<String> enabledModuleList = new ArrayList<>();
-        MODULE_ENABLE_STATUS.forEach((module, enable) -> {
-            if (enable) enabledModuleList.add(joinModulePath(module));
-        });
-
-        enabledModuleList.sort(String::compareTo);
-        LogUtil.info("Enabled {}/{} modules -> {}", enabledModuleList.size(), MODULE_ENABLE_STATUS.size(), enabledModuleList);
-
-        /* Print user guide. */
-        if (Configs.mainControlConfig.model().core.debug.print_user_guide_in_console
-        || enabledModuleList.size() == 1) {
-            printUserGuide();
-        }
-    }
-
-    public static void printUserGuide() {
-        // NOTE: The generator is https://rebane2001.com/discord-colored-text-generator/
-        String userGuide = """
-            [2;35m[1;35m
-            [Fuji User Guide][0m[2;35m
-            It seems that this is the first time you use fuji mod.
-
-            Here are some important points:
-            - Fuji is designed to be fully-modular, that is to say, [2;34mall modules are disabled by default.[0m[2;35m
-            - To enable a module: modify the `[2;34mconfig/fuji/config.json[0m[2;35m` file, and [2;34mre-start[0m[2;35m the server to apply the modification.
-                - To use `/tpa` command, enable the `tpa` module.
-                - To use placeholders provided by fuji, enable the `placeholder` module.
-                - To use echo commands like `/send-message`, `/send-broadcast` etc, enable the `echo` module.
-            - To see the list of modules, and what functionality they provides, read the `fuji manual` pdf file in [2;34mhttps://github.com/sakurawald/fuji/raw/dev/docs/release/fuji.pdf[0m[2;35m
-            - To discover new things, use `/fuji inspect` command.
-            - Anything unclear, open an issue in [2;34mhttps://github.com/sakurawald/fuji/issues[0m[2;35m[0m[2;35m
-            - Now, issue `[2;34m/fuji inspect modules[0m[2;35m` to get started!
-           """;
-        LogUtil.info(userGuide);
-    }
-
     public boolean shouldWeLoadThis(String className) {
         return shouldWeLoadThis(computeModulePathAsList(className));
     }
 
     private boolean shouldWeLoadThis(@NotNull List<String> modulePath) {
         if (Configs.mainControlConfig.model().core.debug.disable_all_modules) return false;
-        if (modulePath.get(0).equals(CORE_MODULE_ROOT)) return true;
+        if (modulePath.get(0).equals(CORE_MODULE_NAME)) return true;
 
         // cache
         if (MODULE_ENABLE_STATUS.containsKey(modulePath)) {
@@ -250,7 +211,6 @@ public class ModuleManager extends BaseManager {
     }
 
     private boolean isRequiredModsInstalled(@NotNull List<String> modulePath) {
-
         if (modulePath.contains("carpet")) {
             return FabricLoader.getInstance().isModLoaded("carpet");
         }

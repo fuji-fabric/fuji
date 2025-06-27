@@ -22,7 +22,7 @@ public class ModuleDependencyChecker extends FileDependencyChecker {
         for (String ref : dep.getReference()) {
             String reference = ModuleManager.computeModulePathAsString(ref);
             // skip -> common reference
-            if (reference.equals(ModuleManager.CORE_MODULE_ROOT)) continue;
+            if (reference.equals(ModuleManager.CORE_MODULE_NAME)) continue;
             // skip -> self reference
             if (definition.equals(reference)) continue;
             // skip -> parent reference
@@ -31,7 +31,7 @@ public class ModuleDependencyChecker extends FileDependencyChecker {
             referenceList.add(reference);
         }
 
-        if (definition.equals(ModuleManager.CORE_MODULE_ROOT) || definition.equals("tester")) return null;
+        if (definition.equals(ModuleManager.CORE_MODULE_NAME) || definition.equals("tester")) return null;
         if (referenceList.isEmpty()) return null;
         return new Dependency(definition, referenceList);
     }

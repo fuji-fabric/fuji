@@ -1,6 +1,7 @@
 package tests;
 
 import io.github.sakurawald.module.initializer.ModuleInitializer;
+import io.github.sakurawald.module.initializer.core.CoreInitializer;
 import io.github.sakurawald.module.mixin.GlobalMixinConfigPlugin;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -64,6 +65,7 @@ public class CheckDependencyTest {
                 dep.excludeReference(
                     ModuleInitializer.class.getName()
                     , GlobalMixinConfigPlugin.class.getName()
+                    , CoreInitializer.class.getName()
                 );
                 return !dep.getReference().isEmpty();
             });

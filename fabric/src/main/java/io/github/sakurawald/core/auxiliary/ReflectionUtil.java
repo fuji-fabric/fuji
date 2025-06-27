@@ -112,7 +112,7 @@ public class ReflectionUtil {
         String result = "unknown";
         for (String moduleName : joinedModulePath) {
             result = moduleName;
-            if (!result.equals(ModuleManager.CORE_MODULE_ROOT)) return result;
+            if (!result.equals(ModuleManager.CORE_MODULE_NAME)) return result;
         }
 
         return result;

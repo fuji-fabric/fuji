@@ -2,5 +2,5 @@
 
 **This version is the `Quality of Life` improvement version.**
 
-- [core] fix: revert the `invoke intializers` implementations to original one. (New one cause more problems)
+- [core] feature: provide better warning messages when failed to initialize a module on server startup.
  
