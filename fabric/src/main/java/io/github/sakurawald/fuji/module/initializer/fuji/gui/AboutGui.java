@@ -40,7 +40,7 @@ public class AboutGui extends PagedGui<Person> {
             .setName(TextHelper.getTextByKey(player, "homepage.project"))
             .setCallback(() -> {
                 TextHelper.sendMessageByKey(player, "homepage.project.visit", metadata.getContact().get("sources").orElse("can't read project homepage from metadata"));
-                this.close();
+                this.closeWithoutOpenParentGui();
             }));
     }
 
@@ -120,7 +120,7 @@ public class AboutGui extends PagedGui<Person> {
 
             // send it
             getPlayer().sendMessage(text);
-            close();
+            this.closeWithoutOpenParentGui();
         };
     }
 
