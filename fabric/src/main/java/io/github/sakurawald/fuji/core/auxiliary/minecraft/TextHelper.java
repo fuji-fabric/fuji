@@ -363,13 +363,17 @@ public class TextHelper {
     }
 
     private static @NotNull List<Text> getTextList(@Nullable Object audience, boolean isKey, String keyOrValue) {
-        String lines = isKey ? getValueByKey(audience, keyOrValue) : keyOrValue;
+        String value = isKey ? getValueByKey(audience, keyOrValue) : keyOrValue;
 
-        List<Text> ret = new ArrayList<>();
-        for (String line : lines.split("\n|<newline>")) {
-            ret.add(getTextByValue(audience, line));
+        List<Text> lines = new ArrayList<>();
+        for (String line : splitStringLines(value)) {
+            lines.add(getTextByValue(audience, line));
         }
-        return ret;
+        return lines;
+    }
+
+    private static String[] splitStringLines(String value) {
+        return value.split("\n|<newline>");
     }
 
     public static @NotNull List<Text> getTextListByKey(@Nullable Object audience, String key) {
@@ -602,8 +606,6 @@ public class TextHelper {
     }
 
     private static String decorateDocumentString(String documentString) {
-        documentString = escapeTags(documentString);
-
         String decoratedDocumentString = Arrays.stream(documentString
                 .split("\n"))
             .map(line -> "<#FFA1F5>" + line)
@@ -613,14 +615,15 @@ public class TextHelper {
         return decoratedDocumentString;
     }
 
-    public static Text getDocumentText(Object audience, String value) {
+    public static Text getDocumentText(Object audience, String  value) {
         value = decorateDocumentString(value);
-        return getTextByValue(audience, value);
+        return getText(STYLE_ONLY_PARSER, audience, false, value);
     }
 
     public static List<Text> getDocumentTextList(Object audience, String value) {
-        value = decorateDocumentString(value);
-        return getTextListByValue(audience, value);
+        return Arrays.stream(splitStringLines(value))
+            .map(line -> getDocumentText(audience, line))
+            .toList();
     }
 
 }

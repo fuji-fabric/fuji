@@ -7,7 +7,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.PagedGui;
 import io.github.sakurawald.fuji.module.initializer.command_permission.CommandPermissionInitializer;
-import io.github.sakurawald.fuji.module.initializer.command_permission.structure.CommandNodePermission;
+import io.github.sakurawald.fuji.module.initializer.command_permission.structure.CommandNodePermissionWrapper;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -16,9 +16,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class CommandPermissionGui extends PagedGui<CommandNodePermission> {
+public class CommandPermissionGui extends PagedGui<CommandNodePermissionWrapper> {
 
-    public CommandPermissionGui(ServerPlayerEntity player, @NotNull List<CommandNodePermission> entities, int pageIndex) {
+    public CommandPermissionGui(ServerPlayerEntity player, @NotNull List<CommandNodePermissionWrapper> entities, int pageIndex) {
         super(null, player, TextHelper.getTextByKey(player, "command_permission.list.gui.title"), entities, pageIndex);
 
         getFooter().setSlot(4, GuiHelper.makeHelpButton(player)
@@ -26,42 +26,40 @@ public class CommandPermissionGui extends PagedGui<CommandNodePermission> {
     }
 
     @Override
-    protected PagedGui<CommandNodePermission> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<CommandNodePermission> entities, int pageIndex) {
+    protected PagedGui<CommandNodePermissionWrapper> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<CommandNodePermissionWrapper> entities, int pageIndex) {
         return new CommandPermissionGui(player, entities, pageIndex);
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(CommandNodePermission entity) {
+    protected GuiElementInterface toGuiElement(CommandNodePermissionWrapper entity) {
         boolean commandNodeWrapped = CommandPermissionInitializer.isCommandNodeWrapped(entity.getNode());
-
-        List<Text> lore = List.of(TextHelper.getTextByKey(getPlayer(), "command_permission.list.gui.entry.lore", commandNodeWrapped));
 
         return new GuiElementBuilder()
             .setItem(commandNodeWrapped ? Items.GREEN_STAINED_GLASS : Items.RED_STAINED_GLASS)
             .setName(Text.literal(entity.getPath()))
             .setCallback((index, clickType, actionType) -> {
-                String commandPath = entity.getPath();
-                String commandPermission = CommandPermissionInitializer.COMMAND_PERMISSION_UNIFIED_PERMISSION.withArguments(commandPath);
+                String commandPathString = entity.getPath();
+                String commandPermissionString = CommandPermissionInitializer.COMMAND_PERMISSION_UNIFIED_PERMISSION.withArguments(commandPathString);
 
                 if (clickType.isLeft) {
-                    String executionCommand = "/lp group default permission set %s true".formatted(commandPermission);
-                    TextHelper.sendMessageByKey(getPlayer(), "command_permission.command.set_true", commandPath, executionCommand, executionCommand);
+                    String executionCommand = "/lp group default permission set %s true".formatted(commandPermissionString);
+                    TextHelper.sendMessageByKey(getPlayer(), "command_permission.command.set_true", commandPathString, executionCommand, executionCommand);
                 } else if (clickType.isRight) {
-                    String executionCommand = "/lp group default permission set %s false".formatted(commandPermission);
-                    TextHelper.sendMessageByKey(getPlayer(), "command_permission.command.set_false", commandPath, executionCommand, executionCommand);
+                    String executionCommand = "/lp group default permission set %s false".formatted(commandPermissionString);
+                    TextHelper.sendMessageByKey(getPlayer(), "command_permission.command.set_false", commandPathString, executionCommand, executionCommand);
                 } else if (clickType.isMiddle) {
-                    String executionCommand = "/lp group default permission unset %s".formatted(commandPermission);
-                    TextHelper.sendMessageByKey(getPlayer(), "command_permission.command.unset", commandPath, executionCommand, executionCommand);
+                    String executionCommand = "/lp group default permission unset %s".formatted(commandPermissionString);
+                    TextHelper.sendMessageByKey(getPlayer(), "command_permission.command.unset", commandPathString, executionCommand, executionCommand);
                 }
 
                 close();
             })
-            .setLore(lore)
+            .setLore(List.of(TextHelper.getTextByKey(getPlayer(), "command_permission.list.gui.entry.lore", commandNodeWrapped)))
             .build();
     }
 
     @Override
-    protected boolean filterEntity(CommandNodePermission entity, String keyword) {
+    protected boolean filterEntity(CommandNodePermissionWrapper entity, String keyword) {
         return entity.getPath().contains(keyword);
     }
 }

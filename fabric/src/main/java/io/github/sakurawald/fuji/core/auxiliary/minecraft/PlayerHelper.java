@@ -15,6 +15,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 #endif
 
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 #if MC_VER >= MC_1_21_6
@@ -135,5 +136,16 @@ public class PlayerHelper {
 
     public static boolean isServerPlayer(PlayerEntity player) {
         return player instanceof ServerPlayerEntity;
+    }
+
+    public static boolean isOp(PlayerEntity player) {
+        return ServerHelper
+            .getServer()
+            .getPlayerManager()
+            .isOperator(player.getGameProfile());
+    }
+
+    public static boolean isAdmin(ServerCommandSource source) {
+        return source.hasPermissionLevel(4);
     }
 }

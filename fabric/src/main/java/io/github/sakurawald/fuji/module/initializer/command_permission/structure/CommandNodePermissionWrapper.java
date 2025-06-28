@@ -6,11 +6,11 @@ import lombok.Getter;
 import net.minecraft.server.command.ServerCommandSource;
 
 @Getter
-public class CommandNodePermission extends CommandNodeWrapper {
+public class CommandNodePermissionWrapper extends CommandNodeWrapper {
 
     final boolean wrapped;
 
-    public CommandNodePermission(com.mojang.brigadier.tree.CommandNode<ServerCommandSource> commandNode) {
+    public CommandNodePermissionWrapper(com.mojang.brigadier.tree.CommandNode<ServerCommandSource> commandNode) {
         super(commandNode);
         this.wrapped = CommandPermissionInitializer.isCommandNodeWrapped(commandNode);
     }
