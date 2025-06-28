@@ -6,7 +6,6 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.PagedGui;
 import io.github.sakurawald.fuji.core.manager.Managers;
-import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.module.initializer.fuji.structure.JobDescriptor;
 import lombok.SneakyThrows;
 import net.minecraft.item.Items;
@@ -14,7 +13,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
@@ -75,11 +73,10 @@ public class JobsInspectionGui extends PagedGui<JobDescriptor> {
     protected GuiElementInterface toGuiElement(JobDescriptor entity) {
         JobDetail jobDetail = entity.jobDetail;
         JobKey jobKey = jobDetail.getKey();
-        Class<? extends Job> jobClass = jobDetail.getJobClass();
-        String fromModule = ModuleManager.computeModulePathAsString(jobClass.getName());
+        String sourceModule = entity.getSourceModule();
 
         List<Text> lore = new ArrayList<>();
-        lore.add(TextHelper.getTextByKey(getPlayer(), "from_module", fromModule));
+        lore.add(TextHelper.getTextByKey(getPlayer(), "from_module", sourceModule));
         lore.add(TextHelper.getTextByKey(getPlayer(), "job.job_group", jobKey.getGroup()));
         lore.add(TextHelper.getTextByKey(getPlayer(), "job.job_name", jobKey.getName()));
         entity.getTriggersOfJob()

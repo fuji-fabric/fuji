@@ -105,6 +105,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         entities.addAll(searchModuleCommands(trueParent, player, modulePathString));
         entities.addAll(searchModulePermissionsAndMetas(trueParent, player, modulePathString));
         entities.addAll(searchModulePlaceholders(trueParent, player, modulePathString));
+        entities.addAll(searchModuleJobs(trueParent, player, modulePathString));
         entities.addAll(searchModuleArgumentTypes(trueParent, player, modulePathString));
 
         /* Fill items. */
@@ -113,6 +114,13 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         }
 
         return moduleDetailsInspectionGui;
+    }
+
+    private static List<GuiElementInterface> searchModuleJobs(SimpleGui parent, ServerPlayerEntity player, String modulePathString) {
+        return JobsInspectionGui
+            .inspectAll(parent, player)
+            .skipCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
+            .toGuiElements();
     }
 
     private static void placeModuleDisabledTipsItem(ServerPlayerEntity player, ModuleDetailsInspectionGui gui) {
