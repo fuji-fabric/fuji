@@ -6,6 +6,7 @@ import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
+import lombok.Getter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.Level;
@@ -25,19 +26,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+@SuppressWarnings("LombokGetterMayBeUsed")
 public class ScheduleManager extends BaseManager {
 
     public static final String CRON_EVERY_SECOND = "* * * ? * *";
     public static final String CRON_EVERY_MINUTE = "0 * * ? * * *";
 
+    @Getter
     private Scheduler scheduler;
 
     {
-        /* set logger level for quartz */
+        /* Set logger level for quartz. */
         Level level = Level.getLevel(Configs.mainControlConfig.model().core.scheduler.logger_level);
         Configurator.setAllLevels("org.quartz", level);
 
-        // note: for some early initialize, here will cause NPE
+        // NOTE: Reset the scheduler for client-side, to prevent NPE.
         resetScheduler();
     }
 
@@ -56,7 +59,7 @@ public class ScheduleManager extends BaseManager {
     }
 
     public void deleteJobs(Class<?> clazz) {
-        List<JobKey> jobKeys = new ArrayList<>(getJobKeys(clazz.getName()));
+        List<JobKey> jobKeys = new ArrayList<>(this.getJobKeys(clazz.getName()));
         this.deleteJobs(jobKeys);
     }
 
@@ -65,7 +68,7 @@ public class ScheduleManager extends BaseManager {
             LogUtil.debug("Delete job keys: {}", jobKeys);
             this.scheduler.deleteJobs(jobKeys);
         } catch (SchedulerException e) {
-            LogUtil.error("Failed to delete jobs: " + e);
+            LogUtil.error("Failed to delete jobs: jobKeys = {}", jobKeys, e);
         }
     }
 
@@ -74,23 +77,23 @@ public class ScheduleManager extends BaseManager {
         try {
             return scheduler.getJobKeys(groupMatcher);
         } catch (SchedulerException e) {
-            LogUtil.error("Exception in ScheduleUtil.getJobKeys", e);
+            LogUtil.error("Failed to get job keys: jobGroup = {}", jobGroup, e);
         }
         return Collections.emptySet();
     }
 
     public void triggerJobs(@NotNull String jobGroup) {
-        getJobKeys(jobGroup).forEach(jobKey -> {
-            try {
-                scheduler.triggerJob(jobKey);
-            } catch (SchedulerException e) {
-                LogUtil.error("Exception in ScheduleUtil.triggerJobs", e);
-            }
-        });
+        this.getJobKeys(jobGroup)
+            .forEach(jobKey -> {
+                try {
+                    scheduler.triggerJob(jobKey);
+                } catch (SchedulerException e) {
+                    LogUtil.error("Failed to trigger jobs: jobGroup = {}", jobGroup, e);
+                }
+            });
     }
 
     private void resetScheduler() {
-        /* new scheduler */
         try {
             StdSchedulerFactory stdSchedulerFactory = new StdSchedulerFactory();
             scheduler = stdSchedulerFactory.getScheduler();
@@ -100,12 +103,14 @@ public class ScheduleManager extends BaseManager {
     }
 
     private void startScheduler() {
+        /* Make a new scheduler. */
         resetScheduler();
 
+        /* Start the scheduler. */
         try {
             scheduler.start();
         } catch (SchedulerException e) {
-            LogUtil.error("Exception in ScheduleUtil.startScheduler", e);
+            LogUtil.error("Failed to start the scheduler.", e);
         }
     }
 
@@ -113,13 +118,13 @@ public class ScheduleManager extends BaseManager {
         try {
             scheduler.shutdown(false);
 
-            // note: reset scheduler right now to fix client-side NPE
+            // NOTE: Make a new scheduler at once, after shutdown the old one. To prevent NPE in client-side environment.
             if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
                 resetScheduler();
             }
 
         } catch (SchedulerException e) {
-            LogUtil.error("Exception in ScheduleUtil.shutdownScheduler", e);
+            LogUtil.error("Failed to shutdown the scheduler", e);
         }
     }
 }
