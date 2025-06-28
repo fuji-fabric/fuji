@@ -153,35 +153,35 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    private static void processVerboseModeFeature(ServerCommandSource source, String commandPath, String requiredPermissionToExecuteThisCommand, Tristate commandPermissionTestResult) {
+    private static void processVerboseModeFeature(String askWhoForPermissionTestResult, ServerCommandSource source, String commandPath, Tristate commandPermissionTestResult) {
         if (!verboseModeFlag) return;
 
         // Make description.
-        String descriptionForPermissionTestResult = makeDescriptionForPermissionTestResult(commandPermissionTestResult);
+        String explanationForPermissionTestResult = makeExplanationForPermissionTestResult(commandPermissionTestResult);
 
         // Info in console.
         LogUtil.info("""
 
             ◉ Command Source: {}
             ◉ Command Path of the Target Command: {}
-            ◉ The permission used by Luckperms to calculate whether the command source can use the target command: {}
-            ◉ LuckPerms Permission Calculation Result: {}
-            ◉ Description: {}
-            """, source.getName(), commandPath, requiredPermissionToExecuteThisCommand, commandPermissionTestResult, descriptionForPermissionTestResult);
+            ◉ Ask who for permission test result: {}
+            ◉ Permission Test Result: {}
+            ◉ Explanation: {}
+            """, source.getName(), commandPath, askWhoForPermissionTestResult, commandPermissionTestResult, explanationForPermissionTestResult);
     }
 
-    private static @NotNull String makeDescriptionForPermissionTestResult(Tristate state) {
-        String description;
+    private static @NotNull String makeExplanationForPermissionTestResult(Tristate state) {
+        String explanation;
         if (state == Tristate.UNDEFINED) {
-            description = "The permission test result is UNDEFINED, it means command_permission module WILL NOT HANDLE this command. We simply fallback the requirement predicate of this command to its original predicate.";
+            explanation = "The permission test result is UNDEFINED, it means command_permission module WILL NOT HANDLE this command. We simply fallback the requirement predicate of this command to its original predicate.";
         } else if (state == Tristate.TRUE) {
-            description = "The permission test result is TRUE, it means command_permission module WILL ALLOW the command source to use this command.";
+            explanation = "The permission test result is TRUE, it means command_permission module WILL ALLOW the command source to use this command.";
         } else if (state == Tristate.FALSE) {
-            description = "The permission test result is FALSE, it means command_permission module WILL DIS-ALLOW the command source to use this command.";
+            explanation = "The permission test result is FALSE, it means command_permission module WILL DIS-ALLOW the command source to use this command.";
         } else {
-            description = "I don't know why, but the value of Tristate is un-expected.";
+            explanation = "I don't know why, but the value of Tristate is un-expected.";
         }
-        return description;
+        return explanation;
     }
 
     public static @NotNull WrappedPredicate<ServerCommandSource> makeWrappedPredicate(String commandPath, @NotNull Predicate<ServerCommandSource> originalRequirement) {
@@ -190,18 +190,13 @@ public class CommandPermissionInitializer extends ModuleInitializer {
             if (source.getPlayer() == null) return originalRequirement.test(source);
 
             try {
-                /* Define common variables. */
-                String requiredPermissionToExecuteThisCommand = COMMAND_PERMISSION_UNIFIED_PERMISSION.withArguments(commandPath);
-
                 /* Ask the pre-defined rules if the player can use the command. */
+                String requiredPermissionToExecuteThisCommand = COMMAND_PERMISSION_UNIFIED_PERMISSION.withArguments(commandPath);
                 if (!PlayerHelper.isAdmin(source)) {
                     for (CommandPermissionRule rule : config.model().rules) {
-                        if (requiredPermissionToExecuteThisCommand
-                            .matches(rule.permissionPatternRegex)) {
+                        if (requiredPermissionToExecuteThisCommand.matches(rule.permissionPatternRegex)) {
                             Tristate predefinePermissionTestResult = rule.permissionTestResult.toTriState();
-
-                            processVerboseModeFeature(source, commandPath, requiredPermissionToExecuteThisCommand, predefinePermissionTestResult);
-                            LogUtil.debug("Use pre-defined rules for permission test result: command source = {}, command path = {}, permission test result = {}, rule = {}", source.getName(), commandPath, predefinePermissionTestResult, rule);
+                            processVerboseModeFeature("PREDEFINED RULES", source, commandPath, predefinePermissionTestResult);
 
                             return canUseThisCommand(source, predefinePermissionTestResult, originalRequirement);
                         }
@@ -210,8 +205,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
 
                 /* Ask luckperms if the player can use the command. */
                 Tristate luckpermsPermissionTestResult = PermissionHelper.getPermission(source.getPlayer().getUuid(), COMMAND_PERMISSION_UNIFIED_PERMISSION, commandPath);
-                processVerboseModeFeature(source, commandPath, requiredPermissionToExecuteThisCommand, luckpermsPermissionTestResult);
-                LogUtil.debug("Use luckperms for permission test result: command source = {}, command path = {}, permission test result = {}", source.getName(), commandPath, luckpermsPermissionTestResult);
+                processVerboseModeFeature("LUCKPERMS", source, commandPath, luckpermsPermissionTestResult);
 
                 return canUseThisCommand(source, luckpermsPermissionTestResult, originalRequirement);
             } catch (Throwable useOriginalPredicateIfFailed) {
