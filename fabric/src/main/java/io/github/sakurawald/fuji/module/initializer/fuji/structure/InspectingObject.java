@@ -84,13 +84,19 @@ public class InspectingObject {
         return String.valueOf(value);
     }
 
+    @SuppressWarnings("UnnecessaryLocalVariable")
     public @Nullable String getDocumentString() {
+        /* Extract @Document from a field in class. */
         if (this.object instanceof Field field) {
             Document documentAnnotation = field.getAnnotation(Document.class);
             return documentAnnotation != null ? documentAnnotation.value() : null;
         }
 
-        return null;
+        /* Extract @Document from collection and map. */
+        Class<?> objectType = this.getObjectType();
+        String classDocument = ReflectionUtil.getClassDocument(objectType);
+
+        return classDocument;
     }
 
     public Object getObjectValue() {
