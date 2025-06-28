@@ -15,8 +15,8 @@ public class CommandScheduleJob extends CronJob {
     public CommandScheduleJob(JobDataMap jobDataMap, Supplier<String> cronSupplier) {
         super(jobDataMap, cronSupplier);
 
-        // we will handle the un-register ourselves.
-        super.reschedulable = false;
+        // NOTE: We will handle the un-register ourselves.
+        super.canReschedule = false;
     }
 
     @Override

@@ -50,12 +50,22 @@ public class ScheduleManager extends BaseManager {
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> Managers.getScheduleManager().shutdownScheduler());
     }
 
-    public void scheduleJob(JobDetail jobDetail, Trigger trigger) throws SchedulerException {
-        this.scheduler.scheduleJob(jobDetail, trigger);
+    public void scheduleJob(JobDetail jobDetail, Trigger trigger) {
+        try {
+            LogUtil.debug("Schedule job: jobDetail = {}, trigger = {}", jobDetail, trigger);
+            this.scheduler.scheduleJob(jobDetail, trigger);
+        } catch (SchedulerException e) {
+            LogUtil.error("Failed to schedule job: jobDetail = {}, trigger = {}",  jobDetail, trigger, e);
+        }
     }
 
-    public void rescheduleJob(TriggerKey triggerKey, Trigger newTrigger) throws SchedulerException {
-        this.scheduler.rescheduleJob(triggerKey, newTrigger);
+    public void rescheduleJob(TriggerKey triggerKey, Trigger newTrigger) {
+        try {
+            LogUtil.debug("Re-schedule job: triggerKey = {}, newTrigger = {}", triggerKey, newTrigger);
+            this.scheduler.rescheduleJob(triggerKey, newTrigger);
+        } catch (SchedulerException e) {
+            LogUtil.error("Failed to reschedule job: triggerKey = {}, newTrigger = {}",  triggerKey, newTrigger, e);
+        }
     }
 
     public void deleteJobs(Class<?> clazz) {

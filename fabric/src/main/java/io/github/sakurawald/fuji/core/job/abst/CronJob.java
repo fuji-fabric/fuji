@@ -8,21 +8,18 @@ import org.quartz.TriggerBuilder;
 
 import java.util.function.Supplier;
 
-/*
- * Quartz will create a new instance of CronJob each time it calls execute(), so don't store persistent data inside the instance.
-* */
 @NoArgsConstructor
 public abstract class CronJob extends BaseJob {
 
     Supplier<String> cronSupplier;
 
     public CronJob(String jobGroup, String jobName, JobDataMap jobDataMap, Supplier<String> cronSupplier) {
-        super(jobGroup, jobName, jobDataMap);
+        super(jobGroup, jobName, jobDataMap, true);
         this.cronSupplier = cronSupplier;
     }
 
     public CronJob(JobDataMap jobDataMap, Supplier<String> cronSupplier) {
-        super(null, null, jobDataMap);
+        super(null, null, jobDataMap, true);
         this.cronSupplier = cronSupplier;
     }
 
@@ -32,6 +29,10 @@ public abstract class CronJob extends BaseJob {
 
     @Override
     public CronTrigger makeTrigger() {
-        return TriggerBuilder.newTrigger().withIdentity(jobName, jobGroup).withSchedule(CronScheduleBuilder.cronSchedule(this.cronSupplier.get())).build();
+        return TriggerBuilder
+            .newTrigger()
+            .withIdentity(jobName, jobGroup)
+            .withSchedule(CronScheduleBuilder.cronSchedule(this.cronSupplier.get()))
+            .build();
     }
 }

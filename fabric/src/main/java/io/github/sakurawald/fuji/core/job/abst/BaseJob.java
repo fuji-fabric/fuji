@@ -1,12 +1,12 @@
 package io.github.sakurawald.fuji.core.job.abst;
 
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.manager.Managers;
+import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.Nullable;
 import org.quartz.Job;
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
-import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.TriggerKey;
 
@@ -14,21 +14,20 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+// NOTE: The no args constructor is only used for quartz to create the job instance.
+@NoArgsConstructor
 public abstract class BaseJob implements Job {
-    private static final Set<BaseJob> reschedulableJobs = new HashSet<>();
 
-    protected boolean reschedulable = true;
-    protected String jobGroup = null;
-    protected String jobName = null;
-    protected JobDetail jobDetail = null;
-    protected TriggerKey triggerKey = null;
+    private static final Set<BaseJob> RESCHEDULABLE_JOBS = new HashSet<>();
 
-    // note: the no arguments constructor is only used for quartz to create and use the `execute` closure
-    @SuppressWarnings("unused")
-    public BaseJob() {
-    }
+    protected String jobGroup;
+    protected String jobName;
+    protected JobDetail jobDetail;
+    protected TriggerKey triggerKey;
+    protected boolean canReschedule;
 
-    public BaseJob(String jobGroup, String jobName, JobDataMap jobDataMap) {
+    public BaseJob(@Nullable String jobGroup, @Nullable String jobName, @Nullable JobDataMap jobDataMap, boolean canReschedule) {
+        /* Generate the value if null. */
         if (jobGroup == null) {
             jobGroup = this.getClass().getName();
         }
@@ -36,46 +35,43 @@ public abstract class BaseJob implements Job {
             jobName = UUID.randomUUID().toString();
         }
 
-        // note: since quartz will construct AbstractJob using NoArgsConstructor, and all the AbstractJob instances used for `execute closure` have no jobDataMap.
         if (jobDataMap == null) {
             jobDataMap = new JobDataMap();
         }
 
+        /* Initialize the variables. */
         this.jobGroup = jobGroup;
         this.jobName = jobName;
-
-        this.jobDetail = JobBuilder.newJob(this.getClass()).withIdentity(jobName, jobGroup).usingJobData(jobDataMap).build();
+        // Job Detail = Job Class + Job Key + Job Data
+        this.jobDetail = JobBuilder
+            .newJob(this.getClass())
+            .withIdentity(jobName, jobGroup)
+            .usingJobData(jobDataMap)
+            .build();
         this.triggerKey = new TriggerKey(jobName, jobGroup);
+        this.canReschedule = canReschedule;
     }
 
     public static void rescheduleAll() {
-        for (BaseJob reschedulableJob : reschedulableJobs) {
-            reschedulableJob.reschedule();
-        }
+        RESCHEDULABLE_JOBS
+            .forEach(BaseJob::reschedule);
     }
 
     public abstract Trigger makeTrigger();
 
     public void schedule() {
-        try {
-            LogUtil.debug("Schedule job -> {}", this);
-            Managers.getScheduleManager().scheduleJob(this.jobDetail, this.makeTrigger());
-
-            if (this.reschedulable) {
-                reschedulableJobs.add(this);
-            }
-        } catch (SchedulerException e) {
-            LogUtil.error("Failed to schedule job: job = {}",  this, e);
+        Managers
+            .getScheduleManager()
+            .scheduleJob(this.jobDetail, this.makeTrigger());
+        if (this.canReschedule) {
+            RESCHEDULABLE_JOBS.add(this);
         }
     }
 
     public void reschedule() {
-        try {
-            LogUtil.debug("Re-schedule job -> {}", this);
-            Managers.getScheduleManager().rescheduleJob(this.triggerKey, this.makeTrigger());
-        } catch (SchedulerException e) {
-            LogUtil.error("Failed to reschedule job: job = {}",  this, e);
-        }
+        Managers
+            .getScheduleManager()
+            .rescheduleJob(this.triggerKey, this.makeTrigger());
     }
 
     @Override

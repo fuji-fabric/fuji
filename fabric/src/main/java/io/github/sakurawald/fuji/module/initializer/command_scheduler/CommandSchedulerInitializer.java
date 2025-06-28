@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.module.initializer.command_scheduler;
 
-import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
@@ -8,8 +7,9 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
-import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_scheduler.command.argument.wrapper.JobName;
 import io.github.sakurawald.fuji.module.initializer.command_scheduler.config.model.CommandSchedulerConfigModel;
@@ -74,14 +74,19 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
         LogUtil.info("Un-schedule jobs");
         Managers.getScheduleManager().deleteJobs(CommandScheduleJob.class);
 
-        scheduler.model().jobs.forEach(scheduleJob -> {
-            scheduleJob.getCrons().forEach(cron -> new CommandScheduleJob(new JobDataMap() {
-                {
-                    this.put("job", scheduleJob);
-                }
-            }, () -> cron).schedule());
+        scheduler.model().jobs.forEach(definedJob -> {
+            definedJob
+                .getCrons()
+                .forEach(cron -> {
+                    CommandScheduleJob job = new CommandScheduleJob(new JobDataMap() {
+                        {
+                            this.put("job", definedJob);
+                        }
+                    }, () -> cron);
+                    job.schedule();
+                });
 
-            LogUtil.info("Schedule job -> {}", scheduleJob.getName());
+            LogUtil.info("Schedule job -> {}", definedJob.getName());
         });
     }
 
