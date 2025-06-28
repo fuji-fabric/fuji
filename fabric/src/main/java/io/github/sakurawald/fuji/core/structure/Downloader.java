@@ -26,7 +26,7 @@ public abstract class Downloader {
                 onComplete();
                 LogUtil.info("End download file from {} to {}.", url, destination);
             } catch (IOException e) {
-                LogUtil.error("Failed to download file from {} to {}", url, destination);
+                LogUtil.error("Failed to download file from {} to {}", url, destination, e);
             }
         });
     }

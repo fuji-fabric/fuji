@@ -65,7 +65,7 @@ public abstract class BaseJob implements Job {
                 reschedulableJobs.add(this);
             }
         } catch (SchedulerException e) {
-            LogUtil.error("Failed to schedule job: exception = {}, job = {}", e, this);
+            LogUtil.error("Failed to schedule job: job = {}",  this, e);
         }
     }
 
@@ -74,7 +74,7 @@ public abstract class BaseJob implements Job {
             LogUtil.debug("Re-schedule job -> {}", this);
             Managers.getScheduleManager().rescheduleJob(this.triggerKey, this.makeTrigger());
         } catch (SchedulerException e) {
-            LogUtil.error("Failed to reschedule job: exception = {}, job = {}", e, this);
+            LogUtil.error("Failed to reschedule job: job = {}",  this, e);
         }
     }
 

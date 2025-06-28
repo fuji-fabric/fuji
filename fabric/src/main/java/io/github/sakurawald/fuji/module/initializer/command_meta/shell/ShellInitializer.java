@@ -83,7 +83,7 @@ public class ShellInitializer extends ModuleInitializer {
                 LogUtil.info(output.toString());
                 ctx.getSource().sendMessage(Text.literal(output.toString()));
             } catch (IOException | InterruptedException e) {
-                LogUtil.error("Failed to execute a shell command.", e);
+                LogUtil.error("Failed to execute the shell command: {}", $rest, e);
             }
         });
 

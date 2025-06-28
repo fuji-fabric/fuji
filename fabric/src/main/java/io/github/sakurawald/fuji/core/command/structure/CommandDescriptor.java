@@ -224,7 +224,7 @@ public class CommandDescriptor implements SourceModuleGetter {
 
     protected static void reportException(ServerCommandSource source, Method method, Throwable throwable) {
         /* report to console */
-        String string = """
+        String errorString = """
             [Fuji Exception Catcher]
             - Source: %s
             - Module: %s
@@ -236,11 +236,11 @@ public class CommandDescriptor implements SourceModuleGetter {
             , ModuleManager.computeModulePathAsList(method.getDeclaringClass().getName())
             , method.getName()
             , throwable);
-        LogUtil.error(string, throwable);
+        LogUtil.error(errorString, throwable);
 
         /* report to command source */
         String stacktrace = String.join("\n", ReflectionUtil.getStackTraceAsList(throwable));
-        MutableText report = TextHelper.getTextByValue(source, string)
+        MutableText report = TextHelper.getTextByValue(source, errorString)
             .copy()
             .setStyle(Style.EMPTY
                 .withColor(CommandHelper.EXCEPTION_COLOR)

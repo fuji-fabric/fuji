@@ -163,7 +163,7 @@ public class ModuleManager extends BaseManager {
                 try {
                     initializer.doReload();
                 } catch (Exception e) {
-                    LogUtil.error("Failed to reload module.", e);
+                    LogUtil.error("Failed to reload module: initializer = {}", initializer.getClass().getName(), e);
                 }
             }
         );

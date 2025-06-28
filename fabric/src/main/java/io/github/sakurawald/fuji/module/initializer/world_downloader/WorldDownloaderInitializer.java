@@ -56,7 +56,7 @@ public class WorldDownloaderInitializer extends ModuleInitializer {
             httpServer = HttpServer.create(new InetSocketAddress(config.model().port), 0);
             httpServer.start();
         } catch (IOException e) {
-            LogUtil.error("Failed to start http server: {}", e.getMessage());
+            LogUtil.error("Failed to start http server.", e);
         }
     }
 

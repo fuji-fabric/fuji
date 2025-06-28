@@ -82,7 +82,7 @@ public class HeadProvider {
                 }
             }
         } catch (IOException e) {
-            LogUtil.error("Failed to load head category.", e);
+            LogUtil.error("Failed to load head category: {}", category, e);
         }
     }
 }
