@@ -5,7 +5,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
-import io.github.sakurawald.fuji.core.structure.TypeFormatter;
+import io.github.sakurawald.fuji.core.service.type_formatter.TypeFormatter;
 import io.github.sakurawald.fuji.core.structure.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.module.initializer.top_chunks.TopChunksInitializer;
 import lombok.Data;

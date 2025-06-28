@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.structure;
+package io.github.sakurawald.fuji.core.service.date_parser;
 
 import lombok.experimental.UtilityClass;
 
@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 @UtilityClass
 public class DateParser {
 
-    /* DSL definition */
+    /* DSL definition. */
     private static final int SECOND_TO_SECOND = 1;
     private static final int MINUTE_TO_SECOND = 60;
     private static final int HOUR_TO_SECOND = 60 * MINUTE_TO_SECOND;
@@ -21,7 +21,7 @@ public class DateParser {
     private static final Pattern DATE_PARSER_DSL = Pattern.compile("(\\d+)([smhdwMy])");
 
     public static Date parseDate(String period) {
-        /* compute the sum of seconds */
+        /* Compute the sum of seconds. */
         Matcher matcher = DATE_PARSER_DSL.matcher(period);
         int accumulateSeconds = 0;
         while (matcher.find()) {
@@ -54,9 +54,9 @@ public class DateParser {
             }
         }
 
-        /* add delta to now */
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.SECOND, accumulateSeconds);
-        return calendar.getTime();
+        /* Add delta seconds to now. */
+        Calendar nowCalendar = Calendar.getInstance();
+        nowCalendar.add(Calendar.SECOND, accumulateSeconds);
+        return nowCalendar.getTime();
     }
 }

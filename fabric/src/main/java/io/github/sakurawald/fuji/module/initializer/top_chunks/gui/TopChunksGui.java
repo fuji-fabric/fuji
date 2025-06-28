@@ -6,7 +6,7 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.PagedGui;
-import io.github.sakurawald.fuji.core.structure.TypeFormatter;
+import io.github.sakurawald.fuji.core.service.type_formatter.TypeFormatter;
 import io.github.sakurawald.fuji.module.initializer.top_chunks.structure.ChunkScore;
 import net.minecraft.item.Items;
 import net.minecraft.server.command.ServerCommandSource;

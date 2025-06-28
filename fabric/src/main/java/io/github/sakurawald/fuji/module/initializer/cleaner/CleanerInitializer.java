@@ -12,7 +12,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
-import io.github.sakurawald.fuji.core.structure.TypeFormatter;
+import io.github.sakurawald.fuji.core.service.type_formatter.TypeFormatter;
 import io.github.sakurawald.fuji.core.structure.descriptor.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.cleaner.config.model.CleanerConfigModel;

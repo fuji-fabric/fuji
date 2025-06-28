@@ -10,7 +10,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GameProfileCollection;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
-import io.github.sakurawald.fuji.core.structure.DateParser;
+import io.github.sakurawald.fuji.core.service.date_parser.DateParser;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import net.minecraft.command.EntitySelector;
 import net.minecraft.server.BannedIpEntry;

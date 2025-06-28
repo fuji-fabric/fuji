@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.structure;
+package io.github.sakurawald.fuji.core.service.type_formatter;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import lombok.experimental.UtilityClass;
