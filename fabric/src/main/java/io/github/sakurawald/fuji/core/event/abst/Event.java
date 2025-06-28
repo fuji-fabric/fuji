@@ -23,7 +23,7 @@ public class Event<T> {
     }
 
     public void register(T eventCallback) {
-        LogUtil.debug("Register event callback: {}", eventCallback.getClass().getName());
+        LogUtil.debug("Register event callback: event = {}, callback = {}", this.invoker.getClass().getName(), eventCallback.getClass().getName());
         this.handlers.add(eventCallback);
         this.updateInvoker();
     }
