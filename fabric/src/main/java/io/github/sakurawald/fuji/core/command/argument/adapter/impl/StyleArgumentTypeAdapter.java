@@ -15,7 +15,7 @@ import net.minecraft.command.argument.StyleArgumentType;
 
 #if MC_VER <= MC_1_20_2
 #elif MC_VER > MC_1_20_2
-import io.github.sakurawald.core.command.processor.CommandAnnotationProcessor;
+import io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor;
 #endif
 
 import net.minecraft.server.command.ServerCommandSource;

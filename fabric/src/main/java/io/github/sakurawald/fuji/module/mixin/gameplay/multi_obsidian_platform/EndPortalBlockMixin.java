@@ -11,7 +11,7 @@ public class EndPortalBlockMixin {
 
 #elif MC_VER > MC_1_20_6
 import com.llamalad7.mixinextras.sugar.Local;
-import io.github.sakurawald.module.initializer.gameplay.multi_obsidian_platform.MultiObsidianPlatformInitializer;
+import io.github.sakurawald.fuji.module.initializer.gameplay.multi_obsidian_platform.MultiObsidianPlatformInitializer;
 import net.minecraft.block.EndPortalBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.world.ServerWorld;

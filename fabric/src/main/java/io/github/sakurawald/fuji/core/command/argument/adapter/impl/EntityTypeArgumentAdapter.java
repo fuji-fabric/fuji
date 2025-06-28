@@ -10,7 +10,7 @@ import lombok.SneakyThrows;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 #elif MC_VER > MC_1_20_4
-import io.github.sakurawald.core.command.processor.CommandAnnotationProcessor;
+import io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor;
 import net.minecraft.command.argument.RegistryEntryReferenceArgumentType;
 import net.minecraft.registry.RegistryKeys;
 #endif

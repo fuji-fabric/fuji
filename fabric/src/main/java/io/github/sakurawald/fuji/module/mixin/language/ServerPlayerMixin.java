@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.Mixin;
 
 #if MC_VER <= MC_1_20_1
 #elif MC_VER > MC_1_20_1
-import io.github.sakurawald.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import net.minecraft.network.packet.c2s.common.SyncedClientOptions;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.At;

@@ -6,8 +6,8 @@ import org.spongepowered.asm.mixin.Mixin;
 #if MC_VER <= MC_1_20_4
 #elif MC_VER > MC_1_20_4
 import com.google.common.collect.Maps;
-import io.github.sakurawald.module.initializer.world.accessor.IDimensionOptions;
-import io.github.sakurawald.module.initializer.world.structure.FilteredRegistry;
+import io.github.sakurawald.fuji.module.initializer.world.accessor.IDimensionOptions;
+import io.github.sakurawald.fuji.module.initializer.world.structure.FilteredRegistry;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.dimension.DimensionOptions;

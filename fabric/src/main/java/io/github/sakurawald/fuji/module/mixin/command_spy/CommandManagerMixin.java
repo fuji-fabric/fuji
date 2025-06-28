@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.jetbrains.annotations.NotNull;
 import com.mojang.brigadier.ParseResults;
-import io.github.sakurawald.module.initializer.command_spy.CommandSpyInitializer;
+import io.github.sakurawald.fuji.module.initializer.command_spy.CommandSpyInitializer;
 #endif
 
 
