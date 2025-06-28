@@ -57,28 +57,28 @@ import org.jetbrains.annotations.NotNull;
     To set the `prefix` and `suffix` for a player.
 
     You need to install the `luckperms` mod, to provide the `prefix` and `suffix` feature.
-    After install it, issue `/lp group default meta setprefix <yellow>[awesome]` to assign a `prefix`.
+    After install it, issue `/lp group default meta setprefix \\<yellow\\>[awesome]` to assign a `prefix`.
     To use the `prefix`, use the placeholder `%fuji:player_prefix%`.
     """)
 
 @ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
     To set the per-player chat style:
-    `/chat style set prefix + %message% + suffix`
+    Issue `/chat style set prefix + %message% + suffix`.
     """)
 
 @ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
-    To allow players to use `<blue>` tag:
+    To allow players to use `\\<blue\\>` tag:
     Issue `/lp group default permission set fuji.style.chat.blue`.
     """)
 
 @ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
-    To allow players to use `<b>` tag:
+    To allow players to use `\\<b\\>` tag:
     Issue `/lp group default permission set fuji.style.chat.b`.
     """)
 
 @ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
     To allow players to use all tags:
-    All tags also including dangerous tags like `<click>` tag which can run commands on clicked!
+    All tags also including dangerous tags like `\\<click\\>` tag which can run commands on clicked!
     Issue `/lp group default permission set fuji.style.chat.*`
     """)
 
