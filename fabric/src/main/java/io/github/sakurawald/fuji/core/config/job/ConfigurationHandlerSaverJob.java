@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.core.config.job;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.job.abst.CronJob;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -9,6 +10,10 @@ import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 
 import java.util.function.Supplier;
+
+@Document("""
+    This `job` is used to `write data` from `memory` into `storage`.
+    """)
 
 @NoArgsConstructor
 public class ConfigurationHandlerSaverJob extends CronJob {

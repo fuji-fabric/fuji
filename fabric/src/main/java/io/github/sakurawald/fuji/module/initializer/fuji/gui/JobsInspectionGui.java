@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.fuji.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.PagedGui;
 import io.github.sakurawald.fuji.core.manager.Managers;
@@ -13,6 +14,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
@@ -79,15 +81,24 @@ public class JobsInspectionGui extends PagedGui<JobDescriptor> {
         lore.add(TextHelper.getTextByKey(getPlayer(), "from_module", sourceModule));
         lore.add(TextHelper.getTextByKey(getPlayer(), "job.job_group", jobKey.getGroup()));
         lore.add(TextHelper.getTextByKey(getPlayer(), "job.job_name", jobKey.getName()));
+
+        /* Attach fire dates. */
         entity.getTriggersOfJob()
                 .forEach(trigger -> {
                     lore.add(TextHelper.getTextByKey(getPlayer(), "job.fire_dates"));
                     getFireDates(trigger)
                             .forEach(fireDate -> lore.add(TextHelper.getTextByKey(getPlayer(), "job.fire_dates.entry", fireDate)));
-
-
                 });
 
+        /* Attach document string. */
+        Class<? extends Job> jobClass = jobDetail.getJobClass();
+        String jobDocument = ReflectionUtil.getClassDocument(jobClass);
+        if (jobDocument != null) {
+            lore.add(TextHelper.TEXT_EMPTY);
+            lore.addAll(TextHelper.getDocumentTextList(getPlayer(), jobDocument));
+        }
+
+        /* Make the GUI element. */
         GuiElementBuilder guiElementBuilder = new GuiElementBuilder()
                 .setItem(Items.CLOCK)
                 .setName(TextHelper.getTextByKey(getPlayer(), "fuji.inspect.jobs.gui.item.name"))
