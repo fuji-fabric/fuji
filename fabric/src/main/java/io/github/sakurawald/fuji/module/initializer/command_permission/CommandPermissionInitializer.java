@@ -81,7 +81,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Describe the command path and required permissions of a give command.")
+    @Document("Describe the `required permissions` of `the given command`.")
     @CommandNode("describe")
     public static int $describe(@CommandSource ServerCommandSource source, GreedyString command) {
         /* Parse the command string to get the command context. */
