@@ -1,8 +1,8 @@
 package tests;
 
-import io.github.sakurawald.core.command.argument.structure.Argument;
-import io.github.sakurawald.module.initializer.command_bundle.structure.BundleCommandDescriptor;
-import io.github.sakurawald.module.initializer.command_bundle.structure.BundleCommandNode;
+import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
+import io.github.sakurawald.fuji.module.initializer.command_bundle.structure.BundleCommandDescriptor;
+import io.github.sakurawald.fuji.module.initializer.command_bundle.structure.BundleCommandNode;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

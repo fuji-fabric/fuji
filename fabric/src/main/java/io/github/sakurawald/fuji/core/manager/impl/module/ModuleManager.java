@@ -1,0 +1,231 @@
+package io.github.sakurawald.fuji.core.manager.impl.module;
+
+import com.google.gson.JsonObject;
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
+import io.github.sakurawald.fuji.core.config.Configs;
+import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.manager.Managers;
+import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
+import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
+import io.github.sakurawald.fuji.module.initializer.core.CoreInitializer;
+import io.github.sakurawald.fuji.module.mixin.GlobalMixinConfigPlugin;
+import lombok.Getter;
+import net.fabricmc.loader.api.FabricLoader;
+import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.service.MixinService;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Supplier;
+
+@Getter
+public class ModuleManager extends BaseManager {
+
+    public static final String ENABLE_SUPPLIER_KEY = "enable";
+    public static final String CORE_MODULE_NAME = "core";
+
+    private static final Set<String> MODULE_PATHS = new HashSet<>(ReflectionUtil.getGraph(ReflectionUtil.MODULE_GRAPH_FILE_NAME));
+
+    public static final Map<List<String>, Boolean> MODULE_ENABLE_STATUS = new HashMap<>();
+    private static final Map<String, String> CLASS_NAME_2_MODULE_PATH_STRING = new HashMap<>();
+    public static final Map<Class<? extends ModuleInitializer>, ModuleInitializer> MODULE_INITIALIZER_BY_CLASS = new HashMap<>();
+    public static final Map<String, Class<? extends ModuleInitializer>> MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING = new HashMap<>();
+
+    public static String computeModulePathAsString(@NotNull String className) {
+        /* This function wrap the computeModulePathAsList function, and providing a cache layer. */
+        String modulePathString = CLASS_NAME_2_MODULE_PATH_STRING.get(className);
+        if (modulePathString != null) {
+            return modulePathString;
+        }
+
+        String result = joinModulePath(ModuleManager.computeModulePathAsList(className));
+        CLASS_NAME_2_MODULE_PATH_STRING.put(className, result);
+        return result;
+    }
+
+    /**
+     * @return the module path for given class name, if the class is not inside a module, then a special module path List.of("core") will be returned.
+     */
+    public static @NotNull List<String> computeModulePathAsList(@NotNull String className) {
+        if (MODULE_PATHS.isEmpty()) {
+            LogUtil.warn("This is the first time we generating the module graph file, we just ");
+        }
+
+        /* remove leading directories */
+        int left = -1;
+        List<Class<?>> modulePackagePrefixes = List.of(ModuleInitializer.class, GlobalMixinConfigPlugin.class);
+        for (Class<?> modulePackagePrefix : modulePackagePrefixes) {
+            String prefix = modulePackagePrefix.getPackageName();
+            if (className.startsWith(prefix)) {
+
+                // skip self
+                if (className.equals(modulePackagePrefix.getName())) continue;
+
+                left = prefix.length() + 1;
+                break;
+            }
+        }
+
+        if (left == -1) {
+            return List.of(CORE_MODULE_NAME);
+        }
+
+        String str = className.substring(left);
+
+        /* remove trailing directories */
+        int right = str.lastIndexOf(".");
+        str = str.substring(0, right);
+
+        List<String> modulePath = new ArrayList<>(List.of(str.split("\\.")));
+
+        if (modulePath.get(0).equals(CORE_MODULE_NAME)) {
+            return List.of(CORE_MODULE_NAME);
+        }
+
+        /* remove the trailing directories until the string is a module path string */
+        String modulePathString = String.join(".", modulePath);
+        while (!MODULE_PATHS.contains(modulePathString)) {
+            // remove last!
+            if (modulePath.isEmpty()) {
+                throw new RuntimeException("Can't find the module enable-supplier in `config.json` for class name %s. Did you forget to add the enable-supplier key in ConfigModel ?".formatted(className));
+            }
+            modulePath.remove(modulePath.size() - 1);
+
+            // compute it
+            modulePathString = String.join(".", modulePath);
+        }
+
+        return modulePath;
+    }
+
+    public static String joinModulePath(List<String> modulePath) {
+        return String.join(".", modulePath);
+    }
+
+    public static List<String> splitModulePath(String modulePath) {
+        return Arrays.stream(modulePath
+            .split("\\."))
+            .toList();
+    }
+
+    @Override
+    public void onInitialize() {
+        invokeModuleInitializers();
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> CoreInitializer.onServerStartSuccess());
+    }
+
+    @SuppressWarnings("unchecked")
+    private void invokeModuleInitializers() {
+        ReflectionUtil.getGraph(ReflectionUtil.MODULE_INITIALIZER_GRAPH_FILE_NAME)
+            .forEach(className -> {
+                try {
+                    /* Track the module initializer class. */
+                    Class<? extends ModuleInitializer> clazz = (Class<? extends ModuleInitializer>) MixinService.getService().getClassProvider().findClass(className, false);
+                    String modulePathString = computeModulePathAsString(className);
+                    ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING.put(modulePathString, clazz);
+
+                    /* Initialize the module initializer. */
+                    boolean enable = Managers.getModuleManager().shouldWeLoadThis(className);
+                    if (!enable) return;
+                    this.initializeModuleInitializer(clazz);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+    }
+
+    public <T extends ModuleInitializer> void initializeModuleInitializer(@NotNull Class<T> clazz) {
+        if (!MODULE_INITIALIZER_BY_CLASS.containsKey(clazz)) {
+            String className = clazz.getName();
+            if (shouldWeLoadThis(className)) {
+                try {
+                    ModuleInitializer moduleInitializer = clazz.getDeclaredConstructor().newInstance();
+                    moduleInitializer.doInitialize();
+                    MODULE_INITIALIZER_BY_CLASS.put(clazz, moduleInitializer);
+                } catch (Exception e) {
+                    LogUtil.warn("Sorry, failed to initialize the module `{}`. I will crash the server now, to minimize losses.", className);
+                    throw new RuntimeException("Crashed by fuji mod by design, see above.", e);
+                }
+            }
+        }
+    }
+
+    public void reloadModuleInitializers() {
+        MODULE_INITIALIZER_BY_CLASS
+            .values()
+            .forEach(initializer -> {
+                try {
+                    initializer.doReload();
+                } catch (Exception e) {
+                    LogUtil.error("Failed to reload module.", e);
+                }
+            }
+        );
+    }
+
+    public boolean shouldWeLoadThis(String className) {
+        return shouldWeLoadThis(computeModulePathAsList(className));
+    }
+
+    private boolean shouldWeLoadThis(@NotNull List<String> modulePath) {
+        if (Configs.mainControlConfig.model().core.debug.disable_all_modules) return false;
+        if (modulePath.get(0).equals(CORE_MODULE_NAME)) return true;
+
+        // cache
+        if (MODULE_ENABLE_STATUS.containsKey(modulePath)) {
+            return MODULE_ENABLE_STATUS.get(modulePath);
+        }
+
+        // check enable-supplier
+        boolean enable = true;
+        JsonObject parent = Configs.mainControlConfig.convertModelToJsonTree().getAsJsonObject().get("modules").getAsJsonObject();
+        for (String node : modulePath) {
+            parent = parent.getAsJsonObject(node);
+
+            if (parent == null || !parent.has(ModuleManager.ENABLE_SUPPLIER_KEY)) {
+                throw new RuntimeException("missing `enable supplier` key for dir name list `%s`".formatted(modulePath));
+            }
+
+            // only enable a sub-module if the parent module is enabled.
+            if (!parent.getAsJsonPrimitive(ModuleManager.ENABLE_SUPPLIER_KEY).getAsBoolean()) {
+                enable = false;
+                break;
+            }
+        }
+
+        // soft fail if required mod is not installed.
+        if (!isRequiredModsInstalled(modulePath)) {
+            LogUtil.debug("Refuse to enable module {} (reason: the required dependency mod for this module isn't installed, please read the official wiki!)", modulePath);
+            enable = false;
+        }
+
+        // cache
+        MODULE_ENABLE_STATUS.put(modulePath, enable);
+        return enable;
+    }
+
+    private boolean isRequiredModsInstalled(@NotNull List<String> modulePath) {
+        if (modulePath.contains("carpet")) {
+            return FabricLoader.getInstance().isModLoaded("carpet");
+        }
+
+        return true;
+    }
+
+    public static <T> T evalOnEnable(Supplier<T> supplier) {
+        String modulePathString = ReflectionUtil.findSourceModuleInCurrentStack();
+
+        boolean shouldWeLoadThis = Managers.getModuleManager().shouldWeLoadThis(modulePathString);
+        if (shouldWeLoadThis) {
+            return supplier.get();
+        }
+
+        return null;
+    }
+}

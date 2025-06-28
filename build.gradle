@@ -198,7 +198,7 @@ allprojects { p ->
         def sourceDir = project(":crowdin").file("pull-from-crowdin/")
         println("The source dir: " + sourceDir)
 
-        def destinationDir = file("${layout.buildDirectory.get()}/resources/main/io/github/sakurawald/lang/")
+        def destinationDir = file("${layout.buildDirectory.get()}/resources/main/io/github/sakurawald/fuji/lang/")
         println("The destination dir: " + destinationDir)
 
         from(sourceDir)

@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
-import io.github.sakurawald.Fuji;
+import io.github.sakurawald.fuji.Fuji;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;

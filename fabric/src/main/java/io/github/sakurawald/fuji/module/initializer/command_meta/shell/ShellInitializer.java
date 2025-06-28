@@ -1,0 +1,93 @@
+package io.github.sakurawald.fuji.module.initializer.command_meta.shell;
+
+import com.mojang.brigadier.context.CommandContext;
+import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
+import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
+import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
+import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
+import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.structure.descriptor.annotation.ColorBox;
+import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
+import io.github.sakurawald.fuji.module.initializer.command_meta.shell.config.ShellConfigModel;
+import lombok.Cleanup;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.Text;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.concurrent.CompletableFuture;
+
+@Document("""
+    Provides `/shell` command.
+    To execute the `command line` in `host shell`.
+    """)
+@ColorBox(color = ColorBox.ColorBlockTypes.DANGER, value = """
+    This is a `dangerous` module.
+    This module is a powerful and dangerous module, not recommended to enable it.
+    """)
+public class ShellInitializer extends ModuleInitializer {
+
+    private static final BaseConfigurationHandler<ShellConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ShellConfigModel.class);
+
+    private static void checkSecurity(CommandContext<ServerCommandSource> ctx) {
+        var config = ShellInitializer.config.model();
+
+        if (!config.enable_warning.equals("CONFIRM")) {
+            TextHelper.sendMessageByKey(ctx.getSource(), "shell.failed.rtfm");
+            throw new AbortCommandExecutionException();
+        }
+
+        if (config.security.only_allow_console && ctx.getSource().getPlayer() != null) {
+            TextHelper.sendMessageByKey(ctx.getSource(), "command.console_only");
+            throw new AbortCommandExecutionException();
+        }
+
+        if (ctx.getSource().getName() != null && !config.security.allowed_player_names.contains(ctx.getSource().getName())) {
+            TextHelper.sendMessageByKey(ctx.getSource(), "shell.failed.not_in_allowed_list");
+            throw new AbortCommandExecutionException();
+        }
+
+    }
+
+    @Document("Execute a shell command in host os.")
+    @CommandNode("shell")
+    @CommandRequirement(level = 4)
+    private static int shell(@CommandSource CommandContext<ServerCommandSource> ctx, GreedyString rest) {
+        checkSecurity(ctx);
+
+        String $rest = rest.getValue();
+        CompletableFuture.runAsync(() -> {
+            try {
+                LogUtil.info("Shell exec: {}", $rest);
+
+                /* Call the shell. */
+                Process process = Runtime.getRuntime().exec($rest, null, null);
+                InputStream inputStream = process.getInputStream();
+                @Cleanup BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                StringBuilder output = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    output.append(line).append("\n");
+                }
+                process.waitFor();
+
+                // Send feedback.
+                LogUtil.info(output.toString());
+                ctx.getSource().sendMessage(Text.literal(output.toString()));
+            } catch (IOException | InterruptedException e) {
+                LogUtil.error("Failed to execute a shell command.", e);
+            }
+        });
+
+        // The return value of shell command is always treated as SUCCESS.
+        return CommandHelper.Return.SUCCESS;
+    }
+}

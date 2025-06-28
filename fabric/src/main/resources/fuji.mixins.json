@@ -1,7 +1,7 @@
 {
   "required": true,
-  "package": "io.github.sakurawald.module.mixin",
-  "plugin": "io.github.sakurawald.module.mixin.GlobalMixinConfigPlugin",
+  "package": "io.github.sakurawald.fuji.module.mixin",
+  "plugin": "io.github.sakurawald.fuji.module.mixin.GlobalMixinConfigPlugin",
   "server": [
     "anti_build.EntityMixin",
     "color.anvil.AnvilScreenHandlerMixin",

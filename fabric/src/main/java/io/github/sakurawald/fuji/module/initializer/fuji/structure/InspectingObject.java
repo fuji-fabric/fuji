@@ -1,0 +1,253 @@
+package io.github.sakurawald.fuji.module.initializer.fuji.structure;
+
+import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import lombok.Data;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@Data
+public class InspectingObject {
+
+    public final Object object;
+    public final @Nullable Object instanceOfField;
+    public final @Nullable String preferredObjectName;
+
+    public InspectingObject(Object object, @Nullable Object instanceOfField, @Nullable String preferredObjectName) {
+        this.object = object;
+        this.instanceOfField = instanceOfField;
+        this.preferredObjectName = preferredObjectName;
+    }
+
+    @SuppressWarnings("RedundantIfStatement")
+    public boolean canGoInside() {
+        Class<?> type = this.getObjectType();
+
+        /* Treat the following types as atom. */
+        if (type.isPrimitive()) return false;
+        if (ReflectionUtil.isPrimitiveWrapperType(type)) return false;
+
+        if (type.equals(String.class)) return false;
+        if (type.isArray()) return false;
+        if (type.isEnum()) return false;
+        if (type.isAnnotation()) return false;
+
+        /* Treat other else types as non-atom. (Including Iterable and Map) */
+        return true;
+    }
+
+    public Class<?> getObjectType() {
+        // NOTE: The implementation of this.getObjectValue().getClass(); didn't work. (Due to null value)
+
+        /* Get the field type. */
+        if (object instanceof Field field) {
+            return field.getType();
+        }
+
+        return this.object.getClass();
+    }
+
+    public String getObjectValueReadableString() {
+        Object value = this.getObjectValue();
+
+        /* Optimize the readable string for collection types. */
+        if (value instanceof Collection<?> collection) {
+            return "%d elements".formatted(collection.size());
+        }
+        if (value instanceof Map<?, ?> map) {
+            return "%d elements".formatted(map.size());
+        }
+
+        if (value instanceof Map.Entry<?,?> entry) {
+            String keyTypeString = entry.getKey().getClass().getSimpleName();
+            String valueTypeString = entry.getValue().getClass().getSimpleName();
+            return "mapper %s -> %s".formatted(keyTypeString, valueTypeString);
+        }
+
+        /* Call the implementation of toString() of the object. */
+        // NOTE: value.toString() may throw NPE.
+        return String.valueOf(value);
+    }
+
+    public @Nullable String getDocumentString() {
+        if (this.object instanceof Field field) {
+            Document documentAnnotation = field.getAnnotation(Document.class);
+            return documentAnnotation != null ? documentAnnotation.value() : null;
+        }
+
+        return null;
+    }
+
+    public Object getObjectValue() {
+        // NOTE: Be careful of the implicit call to toString() function. Here we should return the object value directly, to prevent NPE.
+
+        /* Get the field value. */
+        if (object instanceof Field field) {
+            Object value;
+            try {
+                field.setAccessible(true);
+                value = field.get(this.instanceOfField);
+            } catch (Exception e) {
+                value = "FAILED-TO-ACCESS";
+            }
+
+            return value;
+        }
+
+        return this.object;
+    }
+
+
+    private boolean isFieldType() {
+        return this.object instanceof Field;
+    }
+
+    public String getObjectName() {
+        /* If preferred object name is specified, simply return it. */
+        if (this.preferredObjectName != null) {
+            return this.preferredObjectName;
+        }
+
+        /* Compute the object name. */
+        String objectName;
+        if (this.isFieldType()) {
+            objectName = ((Field) this.object).getName();
+        } else {
+            objectName = this.object.getClass().getSimpleName();
+        }
+
+        /* Decorate the object name if inspecting object is not a field. (It's an element in collection) */
+        if (!this.isFieldType()) {
+            objectName = "$" + objectName;
+        }
+
+        return objectName;
+    }
+
+    public Text computeNameText(ServerPlayerEntity player) {
+        String objectName = this.getObjectName();
+        objectName = TextHelper.escapeTags(objectName);
+        return TextHelper.getTextByKey(player,"object.name", objectName);
+    }
+
+    public static List<InspectingObject> inspectJavaObject(@NotNull Object object) {
+        /* Ensure the object is unboxed value. */
+        if (object instanceof InspectingObject) {
+            object = ((InspectingObject) object).object;
+        }
+
+        /* Inspect the structure of object. */
+        Object fieldInstance = object;
+        return Arrays
+            .stream(object.getClass().getDeclaredFields())
+            .filter(field -> {
+                /* Ignore some fields that is not interested. */
+                int modifiers = field.getModifiers();
+                if (Modifier.isStatic(modifiers)) return false;
+                if (Modifier.isTransient(modifiers)) return false;
+                return true;
+            })
+            .map(it -> new InspectingObject(it, fieldInstance, null))
+            .toList();
+    }
+
+    public Item computeItem() {
+        Class<?> type = this.getObjectType();
+
+        if (Map.class.isAssignableFrom(type)) return Items.MAP;
+        if (Iterable.class.isAssignableFrom(type)) return Items.CHAIN;
+        if (Boolean.class.isAssignableFrom(type)
+            || boolean.class.isAssignableFrom(type)) {
+            /* If the type of field is boolean, try to get its value. */
+            Boolean booleanValue = (Boolean) this.getObjectValue();
+            return booleanValue ? Items.GREEN_BANNER : Items.RED_BANNER;
+        }
+
+        if (String.class.isAssignableFrom(type)
+            || Character.class.isAssignableFrom(type)
+            || char.class.isAssignableFrom(type)) {
+            return Items.STRING;
+        }
+
+        if (Byte.class.isAssignableFrom(type)
+            || byte.class.isAssignableFrom(type)
+            || Short.class.isAssignableFrom(type)
+            || short.class.isAssignableFrom(type)
+            || Integer.class.isAssignableFrom(type)
+            || int.class.isAssignableFrom(type)
+            || Long.class.isAssignableFrom(type)
+            || long.class.isAssignableFrom(type)) {
+            return Items.REDSTONE;
+        }
+        if (Float.class.isAssignableFrom(type)
+            || float.class.isAssignableFrom(type)
+            || Double.class.isAssignableFrom(type)
+            || double.class.isAssignableFrom(type)) {
+            return Items.GLOWSTONE_DUST;
+        }
+
+        if (Enum.class.isAssignableFrom(type)) {
+            return Items.REPEATER;
+        }
+
+        return Items.PINK_SHULKER_BOX;
+    }
+
+    private void addPossibleValuesForEnumType(ServerPlayerEntity player, List<Text> lore) {
+        if (!this.getObjectType().isEnum()) return;
+
+        Object[] enumConstants = this.getObjectType().getEnumConstants();
+        String possibleValues = Arrays.stream(enumConstants)
+            .map(Object::toString)
+            .collect(Collectors.joining(", "));
+
+        lore.add(TextHelper.getTextByKey(player, "object.value.possible_values", possibleValues));
+    }
+
+    public List<Text> computeLore(ServerPlayerEntity player) {
+        List<Text> lore = new ArrayList<>();
+
+        /* Add object type text. */
+        String objectType = this.getObjectType().getName();
+        lore.add(TextHelper.getTextByKey(player, "object.type", objectType));
+
+        /* Add object value text. */
+        String literalObjectValueString = getObjectValueReadableString();
+        literalObjectValueString = StringUtils.abbreviate(literalObjectValueString, "...", 128);
+        literalObjectValueString = TextHelper.escapeTags(literalObjectValueString);
+        lore.add(TextHelper.getText(TextHelper.STYLE_ONLY_PARSER, player, true, "object.value", literalObjectValueString));
+
+        /* Add possible enum values. */
+        addPossibleValuesForEnumType(player, lore);
+
+        /* Add click prompt. */
+        if (this.canGoInside()) {
+            lore.add(TextHelper.getTextByKey(player, "prompt.click.see_inside"));
+        }
+
+        /* Add @Document text. */
+        String documentString = this.getDocumentString();
+        if (documentString != null) {
+            lore.add(TextHelper.TEXT_EMPTY);
+            lore.addAll(TextHelper.getDocumentTextList(player, documentString));
+        }
+
+        return lore;
+    }
+
+}

@@ -1,0 +1,12 @@
+package io.github.sakurawald.fuji.core.config;
+
+import io.github.sakurawald.fuji.Fuji;
+import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.model.ConfigModel;
+
+public class Configs {
+
+    public static final BaseConfigurationHandler<ConfigModel> mainControlConfig = new ObjectConfigurationHandler<>(Fuji.CONFIG_PATH.resolve(BaseConfigurationHandler.CONFIG_JSON), ConfigModel.class);
+
+}

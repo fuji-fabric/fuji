@@ -1,0 +1,21 @@
+package io.github.sakurawald.fuji.module.initializer.command_toolbox.freeze;
+
+import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
+import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
+import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
+import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
+
+public class FreezeInitializer extends ModuleInitializer {
+
+    @Document("Freeze a player for ticks.")
+    @CommandNode("freeze")
+    @CommandRequirement(level = 4)
+    private static int freeze(@CommandSource ServerCommandSource source, ServerPlayerEntity player, int ticks) {
+        player.setFrozenTicks(ticks);
+        return CommandHelper.Return.SUCCESS;
+    }
+}

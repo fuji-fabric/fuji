@@ -1,10 +1,10 @@
 package structure.dependency_checker;
 
 import com.google.gson.JsonElement;
-import io.github.sakurawald.Fuji;
-import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
-import io.github.sakurawald.core.config.model.ConfigModel;
-import io.github.sakurawald.core.manager.impl.module.ModuleManager;
+import io.github.sakurawald.fuji.Fuji;
+import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.model.ConfigModel;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;

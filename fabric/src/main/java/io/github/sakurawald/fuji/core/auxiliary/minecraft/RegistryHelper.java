@@ -1,0 +1,129 @@
+package io.github.sakurawald.fuji.core.auxiliary.minecraft;
+
+import lombok.experimental.UtilityClass;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.message.MessageType;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
+
+@UtilityClass
+public class RegistryHelper {
+
+    public static @NotNull String ofString(@NotNull Item item) {
+        return Registries.ITEM.getId(item).toString();
+    }
+
+    public static @NotNull String ofString(@NotNull ItemStack itemStack) {
+        return ofString(itemStack.getItem());
+    }
+
+    public static @NotNull String ofString(Block block) {
+        return Registries.BLOCK.getId(block).toString();
+    }
+
+    public static @NotNull String ofString(@NotNull BlockState blockState) {
+        return ofString(blockState.getBlock());
+    }
+
+    public static @NotNull String ofString(@NotNull Entity entity) {
+        return Registries.ENTITY_TYPE.getId(entity.getType()).toString();
+    }
+
+    public static @NotNull String ofString(@NotNull World world) {
+        return world.getRegistryKey().getValue().toString();
+    }
+
+    public static <T> Registry<T> ofRegistry(RegistryKey<? extends Registry<? extends T>> registryKey) {
+        return ServerHelper.getServer()
+            .getCombinedDynamicRegistries()
+            .getCombinedRegistryManager()
+            #if MC_VER <= MC_1_21
+                .get(registryKey);
+            #elif MC_VER > MC_1_21
+                .getOrThrow(registryKey);
+            #endif
+
+    }
+
+    public static <T> RegistryKey<T> ofRegistryKey(@NotNull RegistryKey<? extends Registry<T>> keyOfRegistry, Identifier identifier) {
+        return RegistryKey.of(keyOfRegistry, identifier);
+    }
+
+    public static @Nullable ServerWorld ofServerWorld(String identifier) {
+        RegistryKey<World> key = ofRegistryKey(RegistryKeys.WORLD, RegistryHelper.makeIdentifier(identifier));
+        // get the world instance from the server.
+        return ServerHelper.getServer().getWorld(key);
+    }
+
+    public static @NotNull Item ofItem(@NotNull String identifier) {
+        return Registries.ITEM.get(Identifier.tryParse(identifier));
+    }
+
+    public static RegistryWrapper.WrapperLookup getDefaultWrapperLookup() {
+        return ServerHelper.getServer()
+            .getRegistryManager();
+    }
+
+    public static Identifier makeIdentifier(String identifier) {
+        #if MC_VER <= MC_1_20_6
+            return new Identifier(identifier);
+        #elif MC_VER > MC_1_20_6
+            return Identifier.of(identifier);
+        #endif
+    }
+
+    public static <T> String getIdAsString(RegistryEntry<T> entry) {
+        return entry.getKey().map((registryKey) -> registryKey.getValue().toString()).orElse("[unregistered]");
+    }
+
+    public static <T> @Nullable String findRegistryKeyByRegistryValueInASpecifiedRegistry(RegistryKey<? extends Registry<? extends T>> registrySpecifier, Object theRegistryValue) {
+        var ref = new Object() {
+            String result;
+        };
+
+        RegistryHelper
+            .ofRegistry(registrySpecifier)
+            .streamEntries()
+            .forEach(candidate -> {
+                Optional<RegistryKey<T>> candidateKey = candidate.getKey();
+                // If the candidate didn't have a key, then we have nothing to return.
+                if (candidateKey.isPresent()) {
+                    if (theRegistryValue.equals(candidate.value)) {
+                        ref.result = candidateKey.get().getValue().toString();
+                    }
+                }
+            });
+
+        // Return the identifier.
+        return ref.result;
+    }
+
+    public static String getMessageTypeAsString(MessageType.Parameters parameters) {
+        String messageTypeString;
+
+        #if MC_VER <= MC_1_20_4
+            MessageType messageTypeObj = parameters.type();
+            messageTypeString = RegistryHelper.findRegistryKeyByRegistryValueInASpecifiedRegistry(RegistryKeys.MESSAGE_TYPE, messageTypeObj);
+        #elif MC_VER > MC_1_20_4
+            messageTypeString = parameters.type().getIdAsString();
+        #endif
+
+        return messageTypeString;
+    }
+
+}

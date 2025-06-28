@@ -1,0 +1,139 @@
+package io.github.sakurawald.fuji.core.auxiliary.minecraft;
+
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import lombok.experimental.UtilityClass;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
+#if MC_VER <= MC_1_20_1
+#elif MC_VER > MC_1_20_1
+import net.minecraft.network.packet.c2s.common.SyncedClientOptions;
+#endif
+import net.minecraft.server.MinecraftServer;
+#if MC_VER <= MC_1_20_1
+#elif MC_VER > MC_1_20_1
+import net.minecraft.server.network.ServerPlayNetworkHandler;
+#endif
+
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+#if MC_VER >= MC_1_21_6
+import net.minecraft.storage.ReadView;
+import net.minecraft.util.ErrorReporter;
+#endif
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.UserCache;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
+
+@UtilityClass
+public class PlayerHelper {
+
+    private static final String DIMENSION_NBT_KEY = "Dimension";
+
+    public static ServerPlayerEntity makePlayer(GameProfile gameProfile) {
+        MinecraftServer server = ServerHelper.getServer();
+        #if MC_VER <= MC_1_20_1
+        return new ServerPlayerEntity(server, server.getOverworld(), gameProfile);
+        #elif MC_VER > MC_1_20_1
+        SyncedClientOptions syncedClientOptions = SyncedClientOptions.createDefault();
+        return new ServerPlayerEntity(server, server.getOverworld(), gameProfile, syncedClientOptions);
+        #endif
+    }
+
+    private static void applyPlayerData(ServerPlayerEntity player, @Nullable NbtCompound playerData) {
+        if (playerData == null) return;
+
+        /* Apply saved dimension */
+        if (playerData.contains(DIMENSION_NBT_KEY)) {
+            String dimensionId = NbtHelper.getString(playerData, DIMENSION_NBT_KEY);
+            setServerWorld(player, dimensionId);
+        }
+    }
+
+    #if MC_VER >= MC_1_21_6
+    private static void applyPlayerData(ServerPlayerEntity player, @Nullable ReadView playerData) {
+         playerData.getOptionalString(DIMENSION_NBT_KEY)
+            .ifPresent(dimensionId -> setServerWorld(player, dimensionId));
+    }
+    #endif
+
+    public static boolean isRealPlayer(@NotNull ServerPlayerEntity player) {
+        return player.getClass() == ServerPlayerEntity.class;
+    }
+
+    public static ServerPlayerEntity loadOfflinePlayer(String playerName) {
+        Optional<GameProfile> gameProfile = getGameProfileByName(playerName);
+        if (gameProfile.isEmpty()) {
+            throw new IllegalArgumentException("can't find player %s in usercache.json".formatted(playerName));
+        }
+
+        ServerPlayerEntity player = makePlayer(gameProfile.get());
+
+            /*
+             the default dimension for ServerPlayerEntity instance is minecraft:overworld.
+             in order to keep original dimension, here we should set dimension for the loaded player entity.
+             */
+        #if MC_VER <= MC_1_20_4
+        NbtCompound playerDataOpt = ServerHelper.getPlayerManager().loadPlayerData(player);
+        applyPlayerData(player, playerDataOpt);
+        #elif MC_VER > MC_1_20_4 && MC_VER < MC_1_21_6
+        Optional<NbtCompound> playerDataOpt = ServerHelper.getPlayerManager().loadPlayerData(player);
+        applyPlayerData(player, playerDataOpt.orElse(null));
+        #elif MC_VER >= MC_1_21_6
+        Optional<ReadView> playerDataOpt = ServerHelper.getPlayerManager().loadPlayerData(player, ErrorReporter.Impl.EMPTY);
+        applyPlayerData(player,playerDataOpt.get());
+        #endif
+
+        return player;
+    }
+
+    private static Optional<GameProfile> getGameProfileByName(String playerName) {
+        UserCache userCache = ServerHelper.getServer().getUserCache();
+        if (userCache == null) return Optional.empty();
+
+        return userCache.findByName(playerName);
+    }
+
+    public static void setServerWorld(ServerPlayerEntity player, String dimensionId) {
+        ServerWorld world = RegistryHelper.ofServerWorld(dimensionId);
+        if (world != null) {
+            player.setServerWorld(world);
+        }
+    }
+
+    public static void playSound(ServerPlayerEntity player, SoundEvent soundEvent, SoundCategory soundCategory, float volume, float pitch) {
+        #if MC_VER <= MC_1_20_4
+            player.playSound(soundEvent, soundCategory, volume, pitch);
+        #elif MC_VER > MC_1_20_4
+            player.playSoundToPlayer(soundEvent, soundCategory, volume, pitch);
+        #endif
+    }
+
+    public static int getPing(ServerPlayerEntity player) {
+        #if MC_VER <= MC_1_20_1
+            return player.pingMilliseconds;
+        #elif MC_VER > MC_1_20_1
+            return player.networkHandler.getLatency();
+        #endif
+    }
+
+    public static String getPropertyValue(Property property) {
+        #if MC_VER <= MC_1_20_1
+        return property.getValue();
+        #elif MC_VER > MC_1_20_1
+        return property.value();
+        #endif
+    }
+
+    public static String getName(PlayerEntity player) {
+        return player.getGameProfile().getName();
+    }
+
+    public static boolean isServerPlayer(PlayerEntity player) {
+        return player instanceof ServerPlayerEntity;
+    }
+}

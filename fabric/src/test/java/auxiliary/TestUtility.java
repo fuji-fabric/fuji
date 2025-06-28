@@ -1,7 +1,7 @@
 package auxiliary;
 
 import io.github.classgraph.ClassGraph;
-import io.github.sakurawald.Fuji;
+import io.github.sakurawald.fuji.Fuji;
 import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;

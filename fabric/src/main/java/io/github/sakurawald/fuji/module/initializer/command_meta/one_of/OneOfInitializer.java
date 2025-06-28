@@ -1,0 +1,42 @@
+package io.github.sakurawald.fuji.module.initializer.command_meta.one_of;
+
+import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
+import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
+import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
+import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
+import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
+import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
+import net.minecraft.server.command.ServerCommandSource;
+
+import java.util.Arrays;
+import java.util.List;
+
+@Document("""
+    Provides `/one-of` command, to pick a random command from commands, and execute it.
+    """)
+public class OneOfInitializer extends ModuleInitializer {
+
+    @Document("One-of command randomly pick one of commands and execute it as console.")
+    @CommandNode("one-of")
+    @CommandRequirement(level = 4)
+    private static int oneOf(@CommandSource ServerCommandSource source, GreedyString rest) {
+        String $rest = rest.getValue();
+
+        List<String> commands = Arrays.stream($rest.split("one-of"))
+            .toList();
+
+        String luckyCommand = RandomUtil
+            .drawList(commands)
+            .trim();
+
+        LogUtil.debug("For {}, we pick the command {} to execute.", commands, luckyCommand);
+
+        CommandExecutor.execute(ExtendedCommandSource.fromSource(source), luckyCommand);
+        return CommandHelper.Return.SUCCESS;
+    }
+}

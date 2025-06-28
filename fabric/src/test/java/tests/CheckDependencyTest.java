@@ -1,8 +1,9 @@
 package tests;
 
-import io.github.sakurawald.module.initializer.ModuleInitializer;
-import io.github.sakurawald.module.initializer.core.CoreInitializer;
-import io.github.sakurawald.module.mixin.GlobalMixinConfigPlugin;
+import io.github.sakurawald.fuji.Fuji;
+import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
+import io.github.sakurawald.fuji.module.initializer.core.CoreInitializer;
+import io.github.sakurawald.fuji.module.mixin.GlobalMixinConfigPlugin;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ import java.util.stream.Stream;
 public class CheckDependencyTest {
     private static final Path COMPILE_TIME_SOURCE_PATH = Path.of("src", "main", "java");
 
-    private static final String PROJECT_PACKAGE = "io.github.sakurawald";
+    private static final String PROJECT_PACKAGE = Fuji.class.getPackageName();
     private static final String PROJECT_MODULE_PACKAGE = PROJECT_PACKAGE + ".module";
 
     private static final Path COMPILE_TIME_MAIN_PACKAGE_PATH = COMPILE_TIME_SOURCE_PATH.resolve(PROJECT_PACKAGE.replace(".", "/"));

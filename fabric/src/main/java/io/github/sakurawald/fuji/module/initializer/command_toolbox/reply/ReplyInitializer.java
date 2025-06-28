@@ -1,0 +1,41 @@
+package io.github.sakurawald.fuji.module.initializer.command_toolbox.reply;
+
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
+import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
+import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
+import net.minecraft.server.network.ServerPlayerEntity;
+
+import java.util.HashMap;
+import java.util.Objects;
+
+
+public class ReplyInitializer extends ModuleInitializer {
+
+    private static final HashMap<String, String> player2replyTargetPlayer = new HashMap<>();
+
+    public static void setReplyTarget(String player, String target) {
+        player2replyTargetPlayer.put(player, target);
+    }
+
+    @Document("Reply the player who recently /msg or /tell you.")
+    @CommandNode("reply")
+    private static int $reply(@CommandSource ServerPlayerEntity player, GreedyString message) {
+        String target = player2replyTargetPlayer.get(player.getGameProfile().getName());
+
+        try {
+            Objects.requireNonNull(ServerHelper.getCommandDispatcher())
+                .execute("msg %s %s".formatted(target, message.getValue()), player.getCommandSource());
+        } catch (CommandSyntaxException e) {
+            TextHelper.sendMessageByKey(player, "reply.no_target");
+        }
+
+        return CommandHelper.Return.SUCCESS;
+    }
+
+}
