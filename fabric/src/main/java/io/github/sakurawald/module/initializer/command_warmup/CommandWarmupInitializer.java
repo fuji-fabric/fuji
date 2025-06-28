@@ -9,6 +9,7 @@ import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.core.manager.Managers;
 import io.github.sakurawald.core.structure.Tag;
+import io.github.sakurawald.core.structure.descriptor.annotation.ColorBox;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.command_warmup.config.model.CommandWarmupConfigModel;
 import io.github.sakurawald.module.initializer.command_warmup.structure.CommandWarmupNode;
@@ -20,6 +21,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Document("""
     This module allows you to define a `cooldown` before command execution.
     """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.NOTE, value = """
+    The `command_warmup` module is `before` the command execution.
+    The `command_cooldown` module is `after` the command execution.
+    """)
+
+
 public class CommandWarmupInitializer extends ModuleInitializer {
     private static final BaseConfigurationHandler<CommandWarmupConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandWarmupConfigModel.class);
 

@@ -9,6 +9,7 @@ import io.github.sakurawald.core.command.annotation.CommandSource;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.core.structure.descriptor.PlaceholderDescriptor;
+import io.github.sakurawald.core.structure.descriptor.annotation.ColorBox;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.chat.display.config.model.ChatDisplayConfigModel;
 import io.github.sakurawald.module.initializer.chat.display.helper.DisplayHelper;
@@ -22,6 +23,20 @@ import net.minecraft.text.Text;
     2. Show their inventory.
     3. Show their ender chest.
     """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+    This module is designed to work with other `chat-related` mods.
+    For example, you use this with `Styled Chat` mod.
+    """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+    To define a `chat shortcut` to create a display:
+    You can use `chat.replace` module, to define chat shortcut.
+    The shortcut can be `"item"` for example.
+    Then you can type `"item"` in chat.
+    To create a display directly using chat, without the commands.
+    """)
+
 public class ChatDisplayInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<ChatDisplayConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatDisplayConfigModel.class);

@@ -13,8 +13,8 @@ import io.github.sakurawald.core.command.annotation.CommandTarget;
 import io.github.sakurawald.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
-import io.github.sakurawald.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.core.service.style_striper.StyleStriper;
+import io.github.sakurawald.core.structure.descriptor.annotation.ColorBox;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.chat.style.model.ChatFormatModel;
 import io.github.sakurawald.module.initializer.chat.style.model.ChatStyleConfigModel;
@@ -33,6 +33,56 @@ import org.jetbrains.annotations.NotNull;
     This module allows you to customize global chat style.
     Besides, players can use `/chat style` to set per-player chat style.
     """)
+@ColorBox(color = ColorBox.ColorBlockTypes.WARNING, value = """
+    If you are using `Styled Chat` mod, then you can `disable` this module.
+    Because they provide the same `purpose`.
+    """)
+@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+    The main features of this module:
+    1. You can use `style tags` to define complex `format`.
+    2. You can define the `global format` for all players.
+    3. A player can set its `personal format` using `/chat style` command.
+    4. This module is designed to work with other `chat-related` mods.
+    5. You can control what style tags a player can use, using permissions.
+    """)
+@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+    You can use `style tags` to write `complex format`.
+
+    See the language grammar here:
+    1. https://docs.advntr.dev/minimessage/format.html
+    2. https://placeholders.pb4.eu/user/quicktext
+    """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+    To set the `prefix` and `suffix` for a player.
+
+    You need to install the `luckperms` mod, to provide the `prefix` and `suffix` feature.
+    After install it, issue `/lp group default meta setprefix <yellow>[awesome]` to assign a `prefix`.
+    To use the `prefix`, use the placeholder `%fuji:player_prefix%`.
+    """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+    To set the per-player chat style:
+    `/chat style set prefix + %message% + suffix`
+    """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+    To allow players to use `<blue>` tag:
+    Issue `/lp group default permission set fuji.style.chat.blue`.
+    """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+    To allow players to use `<b>` tag:
+    Issue `/lp group default permission set fuji.style.chat.b`.
+    """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+    To allow players to use all tags:
+    All tags also including dangerous tags like `<click>` tag which can run commands on clicked!
+    Issue `/lp group default permission set fuji.style.chat.*`
+    """)
+
+
 @CommandNode("chat style")
 public class ChatStyleInitializer extends ModuleInitializer {
 
@@ -56,7 +106,10 @@ public class ChatStyleInitializer extends ModuleInitializer {
         return StyleStriper.stripe(player, CHAT_STYLE_TYPE, string);
     }
 
-    @Document("Set your personal chat content format.")
+    @Document("""
+        Set your personal chat content format.
+        For example: `/chat style set prefix + %message% + suffix`
+        """)
     @CommandNode("set")
     private static int setPerPlayerFormat(@CommandSource @CommandTarget ServerPlayerEntity player, GreedyString format) {
         /* Save the new format. */

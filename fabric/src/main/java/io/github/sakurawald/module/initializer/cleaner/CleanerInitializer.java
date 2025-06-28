@@ -13,6 +13,7 @@ import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.core.structure.TypeFormatter;
+import io.github.sakurawald.core.structure.descriptor.annotation.ColorBox;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.cleaner.config.model.CleanerConfigModel;
 import io.github.sakurawald.module.initializer.cleaner.job.CleanerJob;
@@ -35,6 +36,26 @@ import java.util.concurrent.CompletableFuture;
     This module provides the `entity` cleaner.
     To remove specified entities automatically.
     """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.NOTE, value = """
+    You should only use this module to clean some edge-case entity.
+    The vanilla Minecraft also has a `cleaner` to remove dropped items.
+    In normal case, you can rely on the `vanilla cleaner`.
+    But for some special case, you may want to use this module.
+    To clean some `annoying dropped items` or even `entities` (`pig` or `boat`).
+
+    Yeah, the `vanilla cleaner` only cleans `dropped items`.
+    But this module, allows you to define rules, to clean `dropped items` and `entities`.
+    """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.NOTE, value = """
+    For safety, the `cleaner` will `always ignore` the following types:
+    1. player
+    2. any block attached entity (e.g. leash_knot)
+    3. any vehicle entity (e.g. minecart, boat)
+    """)
+
+
 @CommandNode("cleaner")
 @CommandRequirement(level = 4)
 public class CleanerInitializer extends ModuleInitializer {

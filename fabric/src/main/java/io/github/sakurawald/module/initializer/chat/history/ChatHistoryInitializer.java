@@ -5,6 +5,7 @@ import io.github.sakurawald.core.annotation.Document;
 import io.github.sakurawald.core.auxiliary.LogUtil;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.core.structure.descriptor.annotation.ColorBox;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.chat.history.config.model.ChatHistoryConfigModel;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -16,6 +17,13 @@ import java.util.Queue;
     This module will store chat message as history.
     And send them to the player joined the server.
     """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+    This module works with `Styled Chat` mod.
+    You can use this module to provide the `chat history` for it.
+    """)
+
+
 @SuppressWarnings("UnstableApiUsage")
 public class ChatHistoryInitializer extends ModuleInitializer {
 

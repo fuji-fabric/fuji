@@ -10,9 +10,19 @@ import io.github.sakurawald.module.initializer.ModuleInitializer;
     It's likely it will work.
     """)
 @ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
-   Text Placeholder API - default placeholders
-   https://placeholders.pb4.eu/user/default-placeholders/
-   """)
+    The `placeholder` module provides many `extra placeholders` for `Text Placeholder API`.
+    You can enable that module to get more placeholders.
+
+    Text Placeholder API - default placeholders
+    https://placeholders.pb4.eu/user/default-placeholders/
+
+    """)
+@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+    The `luckperms` mod provides the `prefix` and `suffix` for players.
+    Which can be used as the `player title`.
+
+    See: https://luckperms.net/wiki/Prefixes,-Suffixes-&-Meta
+    """)
 public class ChatInitializer extends ModuleInitializer {
 
 }

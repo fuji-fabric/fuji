@@ -10,12 +10,18 @@ import io.github.sakurawald.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.core.command.executor.CommandExecutor;
 import io.github.sakurawald.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.core.event.impl.ServerLifecycleEvents;
+import io.github.sakurawald.core.structure.descriptor.annotation.ColorBox;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+@ColorBox(color = ColorBox.ColorBlockTypes.NOTE, value = """
+    Only use `/delay` to perform short-term job.
+    The `delayed commands` will not be persisted, if the server get a re-start.
+    """)
 
 public class DelayInitializer extends ModuleInitializer {
 

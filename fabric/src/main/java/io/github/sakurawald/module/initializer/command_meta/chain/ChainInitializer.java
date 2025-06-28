@@ -8,6 +8,7 @@ import io.github.sakurawald.core.command.annotation.CommandSource;
 import io.github.sakurawald.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.core.command.executor.CommandExecutor;
 import io.github.sakurawald.core.command.structure.ExtendedCommandSource;
+import io.github.sakurawald.core.structure.descriptor.annotation.ColorBox;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import net.minecraft.server.command.ServerCommandSource;
 
@@ -20,6 +21,15 @@ import java.util.regex.Pattern;
     The first command is any command.
     The second command is the chain command.
     """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.NOTE, value = """
+    In vanilla Minecraft, the return value of a command, is a `integer`.
+    If integer less than zero, it's `failed`.
+    If integer equals zero, it's `passed`.
+    If integer grater than zero, it's `success`.
+    """)
+
+
 public class ChainInitializer extends ModuleInitializer {
     private static final Pattern CHAIN_COMMAND_PARSER = Pattern.compile("(.+?)\\s+(chain .+)");
 

@@ -1,6 +1,7 @@
 package io.github.sakurawald.module.initializer.command_interactive;
 
 import io.github.sakurawald.core.annotation.Document;
+import io.github.sakurawald.core.structure.descriptor.annotation.ColorBox;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import net.minecraft.network.message.ArgumentSignatureDataMap;
 import net.minecraft.network.message.LastSeenMessageList;
@@ -17,6 +18,16 @@ import java.util.Set;
     This module allows you to write commands in `sign` block.
     And then click to execute commands.
     """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+    How it works?
+
+    If a player `right click` a `sign block`.
+    We will check if the `facing texts` contains the `/` character.
+    If contains, we will treat as the player issue the command.
+    """)
+
+
 public class CommandInteractiveInitializer extends ModuleInitializer {
 
     // NOTE: It's annoy, see https://gist.github.com/kennytv/ed783dd244ca0321bbd882c347892874

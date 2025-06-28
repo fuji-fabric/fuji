@@ -9,6 +9,7 @@ import io.github.sakurawald.core.command.annotation.CommandSource;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.core.manager.Managers;
+import io.github.sakurawald.core.structure.descriptor.annotation.ColorBox;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.command_scheduler.command.argument.wrapper.JobName;
 import io.github.sakurawald.module.initializer.command_scheduler.config.model.CommandSchedulerConfigModel;
@@ -25,6 +26,15 @@ import java.util.List;
     This module allows you to define `jobs` using `cron` language.
     To execute commands at schedule.
     """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.NOTE, value = """
+    How it works?
+
+    A `job` is used to execute commands periodically.
+    We use `cron` language to define when the `job` should be `triggered`.
+    """)
+
+
 @CommandNode("command-scheduler")
 @CommandRequirement(level = 4)
 public class CommandSchedulerInitializer extends ModuleInitializer {

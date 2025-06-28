@@ -16,7 +16,8 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 @Document("""
-    This module allows you to ban types of actions for players.
+    This module allows you to ban `types of actions` for players.
+
     Currently supported types are:
     1. Break a specified block.
     2. Place a specified block.
@@ -29,6 +30,8 @@ public class AntiBuildInitializer extends ModuleInitializer {
 
     private static final PermissionDescriptor ANTI_BUILD_BYPASS_PERMISSION = new PermissionDescriptor("fuji.anti_build.<anti-type>.bypass.<id>", """
         To bypass a specified `anti type` with specified `id`.
+
+        For example, the permission `fuji.anti_build.place_block.bypass.minecraft:tnt` allows a player to place the TNT block.
         """);
 
     public static <T> void checkAntiBuild(PlayerEntity player, String antiType, Set<String> ids, String id, CallbackInfoReturnable<T> cir, T cancelWithValue, Supplier<Boolean> shouldSendFeedback) {

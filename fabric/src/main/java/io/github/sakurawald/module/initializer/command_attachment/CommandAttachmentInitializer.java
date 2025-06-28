@@ -22,6 +22,7 @@ import io.github.sakurawald.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.core.manager.Managers;
+import io.github.sakurawald.core.structure.descriptor.annotation.ColorBox;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.command_attachment.command.argument.wrapper.ExecuteAsType;
 import io.github.sakurawald.module.initializer.command_attachment.command.argument.wrapper.InteractType;
@@ -56,6 +57,26 @@ import java.util.Optional;
     2. Attach commands into a block.
     3. Attach commands into an entity.
     """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.NOTE, value = """
+    How it works?
+
+    When you attach commands into an item.
+    We will save a `binding ID` in the item NBT.
+    Every item that has the same `binding ID` in its NBT data, shares the same `binding commands instance`.
+    """)
+
+
+@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+    To give the item with attached commands.
+    You can use `kit` module.
+    The kit module will save the item NBT.
+    So if you define a kit, puts the magic item in it.
+    Then give the kit to a player.
+    The player will get the magic item.
+    """)
+
+
 @CommandNode("command-attachment")
 @CommandRequirement(level = 4)
 public class CommandAttachmentInitializer extends ModuleInitializer {

@@ -10,6 +10,7 @@ import io.github.sakurawald.core.command.executor.CommandExecutor;
 import io.github.sakurawald.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.core.structure.descriptor.annotation.ColorBox;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.command_menu.command.argument.wrapper.MenuName;
 import io.github.sakurawald.module.initializer.command_menu.config.CommandMenuConfigModel;
@@ -21,6 +22,13 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @Document("""
     This module allows you to define `menu` GUI, to execute commands.
     """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.NOTE, value = """
+    The `/command-menu open` command is an `admin-level` command.
+    You need to use `command_bundle` module, to creat a `user-level` command.
+    """)
+
+
 @CommandNode("command-menu")
 @CommandRequirement(level = 4)
 public class CommandMenuInitializer extends ModuleInitializer {

@@ -11,6 +11,7 @@ import io.github.sakurawald.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.core.extension.PlayerCombatExtension;
+import io.github.sakurawald.core.structure.descriptor.annotation.ColorBox;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.afk.accessor.AfkStateAccessor;
 import io.github.sakurawald.module.initializer.afk.config.model.AfkConfigModel;
@@ -31,6 +32,16 @@ import java.util.Map;
     1. Afk detection: If a player idle too long, we will mark it as afk state.
     2. Afk event: Execute commands when a player enters or leaves afk state.
     3. Afk name customization: For a afk player, we can customize its display name in tab list.
+    """)
+@ColorBox("""
+    How it works?
+
+    For each player, define a `number` to track `the last action time`.
+    Actions can be: `mine a block`, `movement`, `issue a command` ...
+    When action received, update the number.
+    Define a `job` using cron, to be triggered periodically.
+    The job will check and compare 2 consecutive value of the `number`.
+    If number is identical, then the player is considered as in `afk`.
     """)
 public class AfkInitializer extends ModuleInitializer {
 

@@ -14,6 +14,7 @@ import io.github.sakurawald.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.core.event.impl.CommandEvents;
 import io.github.sakurawald.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.core.gui.inspection.CommandsInspectionGui;
+import io.github.sakurawald.core.structure.descriptor.annotation.ColorBox;
 import io.github.sakurawald.module.initializer.ModuleInitializer;
 import io.github.sakurawald.module.initializer.command_bundle.config.model.CommandBundleConfigModel;
 import io.github.sakurawald.module.initializer.command_bundle.structure.BundleCommandDescriptor;
@@ -27,6 +28,28 @@ import java.util.stream.Stream;
     1. The new command can accept arguments.
     2. The body of the new command, can be a list of commands.
     """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.NOTE, value = """
+    The features of this module:
+    1. Provide a user-friendly DSL, to create `new custom commands` easily.
+    2. Support the inter-operation with `user-defined variable`, `placeholders` and `target selectors`.
+    3. Support complex `argument types`: `required argument`, `literal argument` and even `optional argument with a specified default value`.
+    4. Pre-defined `type-system`, to use the built-in `argument type`.
+    5. Register and un-register commands on the fly, without a server re-start.
+    """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+    To query all supported `argument types`:
+    Issue `/fuji inspect argument-types`.
+    """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+    You can use command generator to get powerful commands:
+    https://www.gamergeeks.net/apps/minecraft/particle-command-generator
+    """)
+
+
+
 @CommandNode("command-bundle")
 @CommandRequirement(level = 4)
 public class CommandBundleInitializer extends ModuleInitializer {
