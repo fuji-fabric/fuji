@@ -62,7 +62,7 @@ public class InspectingObject {
         return this.object.getClass();
     }
 
-    public String getObjectValueReadableString() {
+    private String getObjectValueReadableString() {
         Object value = this.getObjectValue();
 
         /* Optimize the readable string for collection types. */
@@ -223,13 +223,11 @@ public class InspectingObject {
         List<Text> lore = new ArrayList<>();
 
         /* Add object type text. */
-        String objectType = this.getObjectType().getName();
-        lore.add(TextHelper.getTextByKey(player, "object.type", objectType));
+        String objectTypeString = getObjectTypeString();
+        lore.add(TextHelper.getTextByKey(player, "object.type", objectTypeString));
 
         /* Add object value text. */
-        String literalObjectValueString = getObjectValueReadableString();
-        literalObjectValueString = StringUtils.abbreviate(literalObjectValueString, "...", 128);
-        literalObjectValueString = TextHelper.escapeTags(literalObjectValueString);
+        String literalObjectValueString = getObjectValueString(true);
         lore.add(TextHelper.getText(TextHelper.STYLE_ONLY_PARSER, player, true, "object.value", literalObjectValueString));
 
         /* Add possible enum values. */
@@ -248,6 +246,19 @@ public class InspectingObject {
         }
 
         return lore;
+    }
+
+    public @NotNull String getObjectValueString(boolean abbreviated) {
+        String literalObjectValueString = getObjectValueReadableString();
+        if (abbreviated) {
+            literalObjectValueString = StringUtils.abbreviate(literalObjectValueString, "...", 128);
+        }
+        literalObjectValueString = TextHelper.escapeTags(literalObjectValueString);
+        return literalObjectValueString;
+    }
+
+    private @NotNull String getObjectTypeString() {
+        return this.getObjectType().getName();
     }
 
 }

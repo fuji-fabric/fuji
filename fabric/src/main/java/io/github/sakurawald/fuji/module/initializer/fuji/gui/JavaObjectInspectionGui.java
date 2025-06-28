@@ -53,18 +53,20 @@ public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
             .setName(entity.computeNameText(getPlayer()))
             .setItem(entity.computeItem())
             .setLore(entity.computeLore(getPlayer()))
-            .setCallback(() -> onClickToGoInside(entity));
+            .setCallback(() -> onClickToGoInside(getPlayer(), entity));
 
         return guiElementBuilder.build();
     }
 
-    private void onClickToGoInside(InspectingObject entity) {
+    private void onClickToGoInside(ServerPlayerEntity player, InspectingObject entity) {
+        /* Define variables. */
+        Object objectToInspect = entity.getObjectValue();
+        String objectName = entity.getObjectName();
+
         /* We can't go inside an atom. */
         if (!entity.canGoInside()) return;
 
         /* Let's go deeper. */
-        Object objectToInspect = entity.getObjectValue();
-        String objectName = entity.getObjectName();
         List<InspectingObject> newEntities = new ArrayList<>();
 
         /* Special case for Iterable, Map and Map.Entry types.  */
