@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.works.job;
 
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.job.abst.CronJob;
 import io.github.sakurawald.fuji.module.initializer.works.structure.WorksBinding;
 import io.github.sakurawald.fuji.module.initializer.works.structure.work.abst.Work;
@@ -11,6 +12,10 @@ import org.quartz.JobExecutionContext;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
+
+@Document("""
+    This `job` is used to `end` the `sample` for each `production work`.
+    """)
 
 @NoArgsConstructor
 public class WorksScheduleJob extends CronJob {

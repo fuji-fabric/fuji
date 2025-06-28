@@ -1,9 +1,13 @@
 package io.github.sakurawald.fuji.module.initializer.cleaner.job;
 
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.job.abst.CronJob;
 import io.github.sakurawald.fuji.module.initializer.cleaner.CleanerInitializer;
 import org.quartz.JobExecutionContext;
 
+@Document("""
+    This `job` is used to execute `/cleaner clean` command automatically.
+    """)
 public class CleanerJob extends CronJob {
 
     public CleanerJob() {

@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_scheduler.job;
 
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.job.abst.CronJob;
 import io.github.sakurawald.fuji.module.initializer.command_scheduler.structure.Job;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,11 @@ import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 
 import java.util.function.Supplier;
+
+@Document("""
+    This `job` is defined by `command_schedule` module.
+    And used to `execute specified commands`.
+    """)
 
 @NoArgsConstructor
 public class CommandScheduleJob extends CronJob {

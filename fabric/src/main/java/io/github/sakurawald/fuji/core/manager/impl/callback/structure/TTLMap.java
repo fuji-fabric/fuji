@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.core.manager.impl.callback.structure;
 
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.job.abst.CronJob;
 import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
 import lombok.NoArgsConstructor;
@@ -55,7 +56,10 @@ public class TTLMap<K, V> {
     private record ExpiringValue<V>(V value, long expiryTime) {
     }
 
-    // quartz requires no args constructor to create the instance.
+
+    @Document("""
+        This `job` is used to clean the `map` data structure, based on `TTL`.
+        """)
     @NoArgsConstructor
     public static class CleanTTLMapJob extends CronJob {
 

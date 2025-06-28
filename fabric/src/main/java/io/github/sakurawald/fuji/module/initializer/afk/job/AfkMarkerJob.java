@@ -1,12 +1,16 @@
 package io.github.sakurawald.fuji.module.initializer.afk.job;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.job.abst.CronJob;
 import io.github.sakurawald.fuji.module.initializer.afk.AfkInitializer;
 import io.github.sakurawald.fuji.module.initializer.afk.accessor.AfkStateAccessor;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+@Document("""
+    This `job` is used to check the last action time for each player.
+    """)
 public class AfkMarkerJob extends CronJob {
 
     public AfkMarkerJob() {

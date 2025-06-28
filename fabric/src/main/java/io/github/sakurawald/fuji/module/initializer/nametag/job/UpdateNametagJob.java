@@ -1,9 +1,13 @@
 package io.github.sakurawald.fuji.module.initializer.nametag.job;
 
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.job.abst.CronJob;
 import io.github.sakurawald.fuji.module.initializer.nametag.NametagInitializer;
 import org.quartz.JobExecutionContext;
 
+@Document("""
+    This `job` is used to `update` the nametag for each player.
+    """)
 public class UpdateNametagJob extends CronJob {
 
     public UpdateNametagJob() {
