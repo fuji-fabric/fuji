@@ -10,3 +10,6 @@
 
 # Server-side only.
 - https://vanillatweaks.net/picker/datapacks/
+
+# Reading things
+- https://projectarc.co.uk/sw-engineering/i18n-is-hard-in-so-many-ways

@@ -25,8 +25,4 @@
             - json operations
             - text operation
     - application: /air, /alert, /respawn and /spawn, /vote
-- feature: command_gui module.
 - feature: compare command_cooldown and command_condition.
-- docs: find useful things https://vanillatweaks.net/picker/datapacks/
-- extract the chat.display module into a standalone module.
-- fix: /kit editor in 1.20.6
