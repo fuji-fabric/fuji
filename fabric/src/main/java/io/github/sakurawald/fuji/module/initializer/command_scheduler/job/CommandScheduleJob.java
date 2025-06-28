@@ -12,8 +12,8 @@ import java.util.function.Supplier;
 @NoArgsConstructor
 public class CommandScheduleJob extends CronJob {
 
-    public CommandScheduleJob(JobDataMap jobDataMap, Supplier<String> cronSupplier) {
-        super(jobDataMap, cronSupplier);
+    public CommandScheduleJob(String definedJobName, JobDataMap jobDataMap, Supplier<String> cronSupplier) {
+        super("command_scheduler", definedJobName, jobDataMap, cronSupplier);
 
         // NOTE: We will handle the un-register ourselves.
         super.canReschedule = false;

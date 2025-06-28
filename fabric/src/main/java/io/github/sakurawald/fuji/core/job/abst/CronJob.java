@@ -19,8 +19,7 @@ public abstract class CronJob extends BaseJob {
     }
 
     public CronJob(JobDataMap jobDataMap, Supplier<String> cronSupplier) {
-        super(null, null, jobDataMap, true);
-        this.cronSupplier = cronSupplier;
+        this(null, null, jobDataMap, cronSupplier);
     }
 
     public CronJob(Supplier<String> cronSupplier) {

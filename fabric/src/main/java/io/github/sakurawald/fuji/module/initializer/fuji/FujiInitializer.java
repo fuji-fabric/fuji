@@ -15,6 +15,7 @@ import io.github.sakurawald.fuji.module.initializer.core.CoreInitializer;
 import io.github.sakurawald.fuji.module.initializer.fuji.gui.AboutGui;
 import io.github.sakurawald.fuji.module.initializer.fuji.gui.ArgumentTypesInspectionGui;
 import io.github.sakurawald.fuji.module.initializer.fuji.gui.ConfigurationsInspectionGui;
+import io.github.sakurawald.fuji.module.initializer.fuji.gui.JobsInspectionGui;
 import io.github.sakurawald.fuji.module.initializer.fuji.gui.ModulesInspectionGui;
 import io.github.sakurawald.fuji.module.initializer.fuji.gui.PermissionsAndMetasInspectionGui;
 import io.github.sakurawald.fuji.module.initializer.fuji.gui.PlaceholdersInspectionGui;
@@ -167,5 +168,13 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document("Inspect jobs registered by fuji.")
+    @CommandNode("inspect jobs")
+    private static int $inspectJobs(@CommandSource ServerPlayerEntity player) {
+        JobsInspectionGui
+            .inspectAll(null, player)
+            .open();
+        return CommandHelper.Return.SUCCESS;
+    }
 }
 

@@ -78,7 +78,7 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
             definedJob
                 .getCrons()
                 .forEach(cron -> {
-                    CommandScheduleJob job = new CommandScheduleJob(new JobDataMap() {
+                    CommandScheduleJob job = new CommandScheduleJob(definedJob.getName(), new JobDataMap() {
                         {
                             this.put("job", definedJob);
                         }
