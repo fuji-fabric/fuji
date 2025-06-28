@@ -65,7 +65,7 @@ public class MotdInitializer extends ModuleInitializer {
             byteArrayOutputStream = new ByteArrayOutputStream();
             ImageIO.write(bufferedImage, "PNG", byteArrayOutputStream);
         } catch (Exception e) {
-            LogUtil.error("Failed to read icon %s.".formatted(preferIcon), e);
+            LogUtil.error("Failed to read icon %s, did you forget to put the image file in proper location?".formatted(preferIcon), e);
             return Optional.empty();
         }
 
