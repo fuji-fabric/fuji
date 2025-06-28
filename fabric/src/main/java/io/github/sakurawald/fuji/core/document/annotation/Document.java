@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.annotation;
+package io.github.sakurawald.fuji.core.document.annotation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

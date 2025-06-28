@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_menu.config;
 
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.module.initializer.command_menu.structure.MenuDescriptor;
 import io.github.sakurawald.fuji.module.initializer.command_menu.structure.SlotDescriptor;

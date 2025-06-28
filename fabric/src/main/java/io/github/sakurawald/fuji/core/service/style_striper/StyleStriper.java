@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.core.service.style_striper;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PermissionHelper;
-import io.github.sakurawald.fuji.core.structure.descriptor.PermissionDescriptor;
+import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import lombok.experimental.UtilityClass;
 import net.minecraft.entity.player.PlayerEntity;
 

@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.color.sign;
 
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.UuidHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;

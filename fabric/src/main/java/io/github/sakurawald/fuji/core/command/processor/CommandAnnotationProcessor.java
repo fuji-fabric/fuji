@@ -1,8 +1,8 @@
 package io.github.sakurawald.fuji.core.command.processor;
 
 import com.mojang.brigadier.CommandDispatcher;
-import io.github.sakurawald.fuji.core.annotation.Cite;
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Cite;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;

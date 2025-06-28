@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_alias.config.model;
 
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.command_alias.structure.CommandPathMappingNode;
 
 import java.util.ArrayList;

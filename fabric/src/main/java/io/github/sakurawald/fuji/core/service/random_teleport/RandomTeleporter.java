@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.core.service.random_teleport;
 
 import com.google.common.base.Stopwatch;
-import io.github.sakurawald.fuji.core.annotation.Cite;
+import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;

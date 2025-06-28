@@ -4,7 +4,7 @@ import eu.pb4.placeholders.api.PlaceholderHandler;
 import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
 import io.github.sakurawald.fuji.Fuji;
-import io.github.sakurawald.fuji.core.structure.descriptor.PlaceholderDescriptor;
+import io.github.sakurawald.fuji.core.document.descriptor.PlaceholderDescriptor;
 import lombok.experimental.UtilityClass;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;

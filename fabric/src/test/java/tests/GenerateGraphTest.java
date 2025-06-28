@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import io.github.classgraph.AnnotationInfo;
 import io.github.classgraph.AnnotationParameterValueList;
 import io.github.classgraph.ScanResult;
-import io.github.sakurawald.fuji.core.annotation.Cite;
+import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;

@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.command_meta.shell;
 
 import com.mojang.brigadier.context.CommandContext;
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -12,7 +12,7 @@ import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
-import io.github.sakurawald.fuji.core.structure.descriptor.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_meta.shell.config.ShellConfigModel;
 import lombok.Cleanup;

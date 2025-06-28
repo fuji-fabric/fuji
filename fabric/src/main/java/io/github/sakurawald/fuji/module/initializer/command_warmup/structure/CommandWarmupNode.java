@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_warmup.structure;
 
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.structure.Interruptible;
 import io.github.sakurawald.fuji.core.structure.Tag;
 import lombok.Data;

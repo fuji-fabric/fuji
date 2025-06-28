@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.chat.mention.config.model;
 
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.job.impl.MentionPlayersJob;
 
 public class ChatMentionConfigModel {

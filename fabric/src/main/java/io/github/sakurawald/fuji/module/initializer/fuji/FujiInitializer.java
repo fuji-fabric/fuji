@@ -1,13 +1,13 @@
 package io.github.sakurawald.fuji.module.initializer.fuji;
 
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.config.Configs;
-import io.github.sakurawald.fuji.core.gui.inspection.CommandsInspectionGui;
+import io.github.sakurawald.fuji.core.document.inspection.CommandsInspectionGui;
 import io.github.sakurawald.fuji.core.job.abst.BaseJob;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;

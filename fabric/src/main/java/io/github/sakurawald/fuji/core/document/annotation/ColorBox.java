@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.structure.descriptor.annotation;
+package io.github.sakurawald.fuji.core.document.annotation;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;

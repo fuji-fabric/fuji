@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.chat.replace.model;
 
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.structure.RegexRewriteNode;
 
 import java.util.ArrayList;

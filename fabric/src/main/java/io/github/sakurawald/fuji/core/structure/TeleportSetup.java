@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.core.structure;
 
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import lombok.Data;
 import net.minecraft.server.world.ServerWorld;

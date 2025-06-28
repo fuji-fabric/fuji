@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.world_downloader;
 
 import com.google.common.collect.EvictingQueue;
 import com.sun.net.httpserver.HttpServer;
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.IOUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;

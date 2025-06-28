@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.gameplay.carpet.fake_player_manager;
 
 import com.mojang.brigadier.context.CommandContext;
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;

@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.core;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
-import io.github.sakurawald.fuji.core.structure.descriptor.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 
 import java.util.ArrayList;

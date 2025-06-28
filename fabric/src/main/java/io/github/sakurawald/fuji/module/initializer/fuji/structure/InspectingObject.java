@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.fuji.structure;
 
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import lombok.Data;

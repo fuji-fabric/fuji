@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.command_toolbox.reply;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;

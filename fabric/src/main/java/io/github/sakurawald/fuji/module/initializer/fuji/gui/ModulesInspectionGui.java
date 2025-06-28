@@ -9,7 +9,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.PagedGui;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.structure.Pair;
-import io.github.sakurawald.fuji.core.structure.descriptor.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;

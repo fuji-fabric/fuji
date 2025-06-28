@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_cooldown;
 
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlaceholderHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
@@ -16,7 +16,7 @@ import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.structure.Cooldown;
-import io.github.sakurawald.fuji.core.structure.descriptor.PlaceholderDescriptor;
+import io.github.sakurawald.fuji.core.document.descriptor.PlaceholderDescriptor;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.command.argument.wrapper.CommandCooldownName;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.config.model.CommandCooldownConfigModel;

@@ -1,13 +1,13 @@
 package io.github.sakurawald.fuji.module.initializer.teleport_warmup;
 
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarTicket;
 import io.github.sakurawald.fuji.core.structure.TeleportTicket;
-import io.github.sakurawald.fuji.core.structure.descriptor.MetaDescriptor;
-import io.github.sakurawald.fuji.core.structure.descriptor.PermissionDescriptor;
+import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
+import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.teleport_warmup.config.model.TeleportWarmupConfigModel;
 import net.minecraft.server.network.ServerPlayerEntity;

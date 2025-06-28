@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji;
 
-import io.github.sakurawald.fuji.core.annotation.Cite;
+import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;

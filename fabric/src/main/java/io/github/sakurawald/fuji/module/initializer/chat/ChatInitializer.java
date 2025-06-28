@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.chat;
 
-import io.github.sakurawald.fuji.core.structure.descriptor.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 
 @ColorBox("""

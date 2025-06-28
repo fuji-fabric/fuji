@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.multiplier;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PermissionHelper;
-import io.github.sakurawald.fuji.core.structure.descriptor.MetaDescriptor;
+import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;

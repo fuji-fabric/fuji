@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.back;
 
 import com.mojang.brigadier.context.CommandContext;
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PermissionHelper;
@@ -15,7 +15,7 @@ import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionExc
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
-import io.github.sakurawald.fuji.core.structure.descriptor.MetaDescriptor;
+import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.back.config.model.BackConfigModel;
 import io.github.sakurawald.fuji.module.initializer.back.config.model.BackLocationHistoryModel;

@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.structure.descriptor;
+package io.github.sakurawald.fuji.core.document.descriptor;
 
 import lombok.NonNull;
 import net.minecraft.item.Item;

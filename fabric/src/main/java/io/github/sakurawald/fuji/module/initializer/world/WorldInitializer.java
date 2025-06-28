@@ -1,8 +1,8 @@
 package io.github.sakurawald.fuji.module.initializer.world;
 
 import com.mojang.brigadier.context.CommandContext;
-import io.github.sakurawald.fuji.core.annotation.Cite;
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Cite;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;

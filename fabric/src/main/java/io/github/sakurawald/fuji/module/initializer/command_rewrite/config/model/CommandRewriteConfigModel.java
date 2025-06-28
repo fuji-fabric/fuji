@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.command_rewrite.config.model;
 
 import com.google.gson.annotations.SerializedName;
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.structure.RegexRewriteNode;
 
 import java.util.ArrayList;

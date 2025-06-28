@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_bundle.structure;
 
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.command.structure.CommandRequirementDescriptor;
 import lombok.AllArgsConstructor;
 import lombok.Data;

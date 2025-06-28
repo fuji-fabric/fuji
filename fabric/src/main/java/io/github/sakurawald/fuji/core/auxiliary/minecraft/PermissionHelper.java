@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
-import io.github.sakurawald.fuji.core.structure.descriptor.MetaDescriptor;
-import io.github.sakurawald.fuji.core.structure.descriptor.PermissionDescriptor;
+import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
+import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import net.luckperms.api.LuckPerms;

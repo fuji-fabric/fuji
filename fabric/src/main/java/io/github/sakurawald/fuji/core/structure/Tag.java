@@ -1,8 +1,8 @@
 package io.github.sakurawald.fuji.core.structure;
 
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PermissionHelper;
-import io.github.sakurawald.fuji.core.structure.descriptor.PermissionDescriptor;
+import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import lombok.Data;
 import net.minecraft.entity.player.PlayerEntity;
 import org.jetbrains.annotations.NotNull;

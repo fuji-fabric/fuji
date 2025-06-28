@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.chat.display;
 
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlaceholderHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -8,8 +8,8 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
-import io.github.sakurawald.fuji.core.structure.descriptor.PlaceholderDescriptor;
-import io.github.sakurawald.fuji.core.structure.descriptor.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.descriptor.PlaceholderDescriptor;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.chat.display.config.model.ChatDisplayConfigModel;
 import io.github.sakurawald.fuji.module.initializer.chat.display.helper.DisplayHelper;

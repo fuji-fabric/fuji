@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.chat.spy.config.model;
 
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

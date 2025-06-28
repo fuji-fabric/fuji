@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.chat.trigger.config.model;
 
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.chat.trigger.structure.ChatTrigger;
 
 import java.util.ArrayList;

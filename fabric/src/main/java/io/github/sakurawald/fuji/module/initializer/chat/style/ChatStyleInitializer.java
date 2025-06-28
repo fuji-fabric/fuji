@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.chat.style;
 import eu.pb4.placeholders.api.parsers.NodeParser;
 
 import io.github.sakurawald.fuji.Fuji;
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -14,7 +14,7 @@ import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.service.style_striper.StyleStriper;
-import io.github.sakurawald.fuji.core.structure.descriptor.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.chat.style.model.ChatFormatModel;
 import io.github.sakurawald.fuji.module.initializer.chat.style.model.ChatStyleConfigModel;

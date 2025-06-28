@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.core.auxiliary;
 
 import io.github.sakurawald.fuji.Fuji;
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import lombok.Cleanup;
 import lombok.SneakyThrows;

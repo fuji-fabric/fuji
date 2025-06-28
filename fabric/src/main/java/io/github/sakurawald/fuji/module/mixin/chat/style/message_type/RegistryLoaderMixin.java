@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.mixin.chat.style.message_type;
 
-import io.github.sakurawald.fuji.core.annotation.Cite;
+import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.module.initializer.chat.style.ChatStyleInitializer;
 import net.minecraft.network.message.MessageType;
 import net.minecraft.registry.DynamicRegistryManager;

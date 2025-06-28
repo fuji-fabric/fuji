@@ -1,13 +1,13 @@
 package io.github.sakurawald.fuji.module.initializer.anti_build;
 
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PermissionHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.anti_build.config.model.AntiBuildConfigModel;
-import io.github.sakurawald.fuji.core.structure.descriptor.PermissionDescriptor;
+import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 

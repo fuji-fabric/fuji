@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.gameplay.carpet.better_info;
 
-import io.github.sakurawald.fuji.core.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.impl.CommandEvents;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import net.minecraft.server.command.CommandManager;

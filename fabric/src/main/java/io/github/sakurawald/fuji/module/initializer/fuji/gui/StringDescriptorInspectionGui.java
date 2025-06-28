@@ -5,7 +5,7 @@ import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.PagedGui;
-import io.github.sakurawald.fuji.core.structure.descriptor.StringDescriptor;
+import io.github.sakurawald.fuji.core.document.descriptor.StringDescriptor;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
