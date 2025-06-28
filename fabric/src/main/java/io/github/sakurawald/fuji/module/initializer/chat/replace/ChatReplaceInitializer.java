@@ -34,8 +34,7 @@ public class ChatReplaceInitializer extends ModuleInitializer {
 
         for (RegexRewriteNode rule : config.model().replace.regex) {
             String regex = rule.getRegex();
-            Text replacement = TextHelper.getTextByValue(player, rule.getReplacement());
-            ret = TextHelper.replaceTextWithRegex(ret, regex, () -> replacement);
+            ret = TextHelper.replaceTextWithRegex(ret, regex, () -> TextHelper.getTextByValue(player, rule.getReplacement()));
         }
 
         LogUtil.debug("Replace chat text: old = {}, new = {}", text, ret);
