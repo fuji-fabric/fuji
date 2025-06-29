@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class AttachmentManager extends BaseManager {
 
-    private static final Path ATTACHMENT_STORAGE_PATH = Fuji.CONFIG_PATH.resolve("attachment");
+    private static final Path ATTACHMENT_STORAGE_PATH = Fuji.MOD_CONFIG_PATH.resolve("attachment");
 
     @Override
     public void onInitialize() {

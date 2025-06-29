@@ -62,7 +62,7 @@ public class ReflectionUtil {
 
     public static Path computeModuleConfigPath(String modulePath) {
         String others = modulePath.replace(".", "/");
-        return Fuji.CONFIG_PATH
+        return Fuji.MOD_CONFIG_PATH
             .resolve("modules")
             .resolve(others);
     }

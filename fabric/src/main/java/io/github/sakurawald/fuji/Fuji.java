@@ -17,11 +17,11 @@ import java.nio.file.Path;
 public class Fuji implements ModInitializer {
 
     public static final String MOD_ID = "fuji";
-    public static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve(MOD_ID).toAbsolutePath();
+    public static final Path MOD_CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve(MOD_ID).toAbsolutePath();
 
     @Override
     public void onInitialize() {
-        Managers.getStandardBackupManager().onInitialize();
+        Managers.getPrimaryBackupManager().onInitialize();
         Managers.getBossBarManager().onInitialize();
         Managers.getModuleManager().onInitialize();
         Managers.getCallbackManager().onInitialize();

@@ -2,8 +2,8 @@ package io.github.sakurawald.fuji.core.manager;
 
 import io.github.sakurawald.fuji.core.manager.impl.attachment.AttachmentManager;
 import io.github.sakurawald.fuji.core.manager.impl.backup.BaseBackupManager;
-import io.github.sakurawald.fuji.core.manager.impl.backup.RescueBackupManager;
-import io.github.sakurawald.fuji.core.manager.impl.backup.StandardBackupManager;
+import io.github.sakurawald.fuji.core.manager.impl.backup.RecoveryBackupManager;
+import io.github.sakurawald.fuji.core.manager.impl.backup.PrimaryBackupManager;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarManager;
 import io.github.sakurawald.fuji.core.manager.impl.callback.CallbackManager;
 import io.github.sakurawald.fuji.core.manager.impl.command.CommandManager;
@@ -11,9 +11,7 @@ import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
 import lombok.Getter;
 
-/**
- * To avoid trigger the initialization of static field too early, we should use `lazy` loading.
- */
+// NOTE: Use lazy evaluation, to compute the initialization graph.
 public class Managers {
 
     @Getter(lazy = true)
@@ -26,10 +24,10 @@ public class Managers {
     private static final ScheduleManager scheduleManager = new ScheduleManager();
 
     @Getter(lazy = true)
-    private static final BaseBackupManager standardBackupManager = new StandardBackupManager();
+    private static final BaseBackupManager primaryBackupManager = new PrimaryBackupManager();
 
     @Getter(lazy = true)
-    private static final BaseBackupManager rescueBackupManager = new RescueBackupManager();
+    private static final BaseBackupManager recoveryBackupManager = new RecoveryBackupManager();
 
     @Getter(lazy = true)
     private static final AttachmentManager attachmentManager = new AttachmentManager();

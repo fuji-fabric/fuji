@@ -29,7 +29,7 @@ public class ResourceConfigurationHandler extends BaseConfigurationHandler<JsonE
     }
 
     public ResourceConfigurationHandler(@NotNull String resourcePath) {
-        this(Fuji.CONFIG_PATH.resolve(resourcePath), resourcePath);
+        this(Fuji.MOD_CONFIG_PATH.resolve(resourcePath), resourcePath);
     }
 
     @SneakyThrows(IOException.class)
