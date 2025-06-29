@@ -4,6 +4,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.job.abst.FixedIntervalJob;
+import io.github.sakurawald.fuji.core.manager.Managers;
 import lombok.NoArgsConstructor;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -27,12 +28,13 @@ public class MentionPlayersJob extends FixedIntervalJob {
         int intervalMs = setup.interval_ms;
         int repeatCount = setup.repeat_count;
 
-        new MentionPlayersJob(new JobDataMap() {
+        MentionPlayersJob mentionPlayersJob = new MentionPlayersJob(new JobDataMap() {
             {
                 this.put(List.class.getName(), players);
                 this.put(MentionPlayer.class.getName(), setup);
             }
-        }, intervalMs, repeatCount).schedule();
+        }, intervalMs, repeatCount);
+        Managers.getScheduleManager().scheduleJob(mentionPlayersJob);
     }
 
     public static void submitJob(MentionPlayer setup, ServerPlayerEntity serverPlayer) {

@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.core.job.abst;
 
-import io.github.sakurawald.fuji.core.manager.Managers;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 import org.quartz.Job;
@@ -10,23 +10,20 @@ import org.quartz.JobDetail;
 import org.quartz.Trigger;
 import org.quartz.TriggerKey;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 // NOTE: The no args constructor is only used for quartz to create the job instance.
 @NoArgsConstructor
+@Getter
 public abstract class BaseJob implements Job {
-
-    private static final Set<BaseJob> RESCHEDULABLE_JOBS = new HashSet<>();
 
     protected String jobGroup;
     protected String jobName;
     protected JobDetail jobDetail;
     protected TriggerKey triggerKey;
-    protected boolean canReschedule;
+    protected boolean rescheduleAble;
 
-    public BaseJob(@Nullable String jobGroup, @Nullable String jobName, @Nullable JobDataMap jobDataMap, boolean canReschedule) {
+    public BaseJob(@Nullable String jobGroup, @Nullable String jobName, @Nullable JobDataMap jobDataMap, boolean rescheduleAble) {
         /* Generate the value if null. */
         if (jobGroup == null) {
             jobGroup = this.getClass().getName();
@@ -49,30 +46,10 @@ public abstract class BaseJob implements Job {
             .usingJobData(jobDataMap)
             .build();
         this.triggerKey = new TriggerKey(jobName, jobGroup);
-        this.canReschedule = canReschedule;
-    }
-
-    public static void rescheduleAll() {
-        RESCHEDULABLE_JOBS
-            .forEach(BaseJob::reschedule);
+        this.rescheduleAble = rescheduleAble;
     }
 
     public abstract Trigger makeTrigger();
-
-    public void schedule() {
-        Managers
-            .getScheduleManager()
-            .scheduleJob(this.jobDetail, this.makeTrigger());
-        if (this.canReschedule) {
-            RESCHEDULABLE_JOBS.add(this);
-        }
-    }
-
-    public void reschedule() {
-        Managers
-            .getScheduleManager()
-            .rescheduleJob(this.triggerKey, this.makeTrigger());
-    }
 
     @Override
     public String toString() {

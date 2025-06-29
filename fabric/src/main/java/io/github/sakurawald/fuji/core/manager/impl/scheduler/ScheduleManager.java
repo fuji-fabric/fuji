@@ -4,6 +4,7 @@ package io.github.sakurawald.fuji.core.manager.impl.scheduler;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.job.abst.BaseJob;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import lombok.Getter;
@@ -23,6 +24,7 @@ import org.quartz.impl.matchers.GroupMatcher;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -31,6 +33,8 @@ public class ScheduleManager extends BaseManager {
 
     public static final String CRON_EVERY_SECOND = "* * * ? * *";
     public static final String CRON_EVERY_MINUTE = "0 * * ? * * *";
+
+    private static final Set<BaseJob> RESCHEDULABLE_JOBS = new HashSet<>();
 
     @Getter
     private Scheduler scheduler;
@@ -50,22 +54,40 @@ public class ScheduleManager extends BaseManager {
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> Managers.getScheduleManager().shutdownScheduler());
     }
 
-    public void scheduleJob(JobDetail jobDetail, Trigger trigger) {
+    public void scheduleJob(BaseJob baseJob) {
+        JobDetail jobDetail = baseJob.getJobDetail();
+        Trigger trigger = baseJob.makeTrigger();
+
         try {
             LogUtil.debug("Schedule job: jobDetail = {}, trigger = {}", jobDetail, trigger);
+
+            // Track the reschedule-able job.
+            if (baseJob.isRescheduleAble()) {
+                RESCHEDULABLE_JOBS.add(baseJob);
+            }
+
+            // Scheduler the job.
             this.scheduler.scheduleJob(jobDetail, trigger);
         } catch (SchedulerException e) {
             LogUtil.error("Failed to schedule job: jobDetail = {}, trigger = {}",  jobDetail, trigger, e);
         }
     }
 
-    public void rescheduleJob(TriggerKey triggerKey, Trigger newTrigger) {
+    public void rescheduleJob(BaseJob baseJob) {
+        TriggerKey triggerKey = baseJob.getTriggerKey();
+        Trigger newTrigger = baseJob.makeTrigger();
+
         try {
             LogUtil.debug("Re-schedule job: triggerKey = {}, newTrigger = {}", triggerKey, newTrigger);
             this.scheduler.rescheduleJob(triggerKey, newTrigger);
         } catch (SchedulerException e) {
             LogUtil.error("Failed to reschedule job: triggerKey = {}, newTrigger = {}",  triggerKey, newTrigger, e);
         }
+    }
+
+    public void rescheduleJobs() {
+        RESCHEDULABLE_JOBS
+            .forEach(this::rescheduleJob);
     }
 
     public void deleteJobs(Class<?> clazz) {

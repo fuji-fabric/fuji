@@ -8,6 +8,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.nametag.config.model.NametagConfigModel;
 import io.github.sakurawald.fuji.module.initializer.nametag.job.UpdateNametagJob;
@@ -205,7 +206,10 @@ public class NametagInitializer extends ModuleInitializer {
     @Override
     protected void onInitialize() {
         player2nametag = new ConcurrentHashMap<>();
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> new UpdateNametagJob().schedule());
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            UpdateNametagJob updateNametagJob = new UpdateNametagJob();
+            Managers.getScheduleManager().scheduleJob(updateNametagJob);
+        });
     }
 
     @Override

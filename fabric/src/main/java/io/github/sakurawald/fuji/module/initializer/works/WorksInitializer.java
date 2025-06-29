@@ -7,6 +7,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.works.config.model.WorksConfigModel;
@@ -42,11 +43,14 @@ public class WorksInitializer extends ModuleInitializer {
 
     @Override
     protected void onInitialize() {
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> new WorksScheduleJob(new JobDataMap() {
-            {
-                this.put(MinecraftServer.class.getName(), server);
-            }
-        }, () -> ScheduleManager.CRON_EVERY_MINUTE).schedule());
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            WorksScheduleJob worksScheduleJob = new WorksScheduleJob(new JobDataMap() {
+                {
+                    this.put(MinecraftServer.class.getName(), server);
+                }
+            }, () -> ScheduleManager.CRON_EVERY_MINUTE);
+            Managers.getScheduleManager().scheduleJob(worksScheduleJob);
+        });
     }
 
 }

@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.core.manager.impl.callback.structure;
 
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.job.abst.CronJob;
+import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
 import lombok.NoArgsConstructor;
 import org.quartz.JobDataMap;
@@ -18,11 +19,12 @@ public class TTLMap<K, V> {
 
     public TTLMap() {
         // do the cleanup every minute.
-        new CleanTTLMapJob(new JobDataMap() {
+        CleanTTLMapJob cleanTTLMapJob = new CleanTTLMapJob(new JobDataMap() {
             {
                 this.put(TTLMap.class.getName(), TTLMap.this);
             }
-        }, () -> ScheduleManager.CRON_EVERY_MINUTE).schedule();
+        }, () -> ScheduleManager.CRON_EVERY_MINUTE);
+        Managers.getScheduleManager().scheduleJob(cleanTTLMapJob);
     }
 
     public void put(K key, V value, long ttl, TimeUnit unit) {

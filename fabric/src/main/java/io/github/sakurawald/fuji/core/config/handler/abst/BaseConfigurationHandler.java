@@ -16,6 +16,7 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.job.ConfigurationHandlerSaverJob;
 import io.github.sakurawald.fuji.core.config.transformer.abst.ConfigurationTransformer;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
 import lombok.Cleanup;
@@ -189,11 +190,12 @@ public abstract class BaseConfigurationHandler<T> {
     @SuppressWarnings("SameParameterValue")
     private void scheduleWriteStorageJob(@NotNull String cron) {
         String jobName = this.path.toString();
-        new ConfigurationHandlerSaverJob(jobName, new JobDataMap() {
+        ConfigurationHandlerSaverJob autoSaveJob = new ConfigurationHandlerSaverJob(jobName, new JobDataMap() {
             {
                 this.put(BaseConfigurationHandler.class.getName(), BaseConfigurationHandler.this);
             }
-        }, () -> cron).schedule();
+        }, () -> cron);
+        Managers.getScheduleManager().scheduleJob(autoSaveJob);
 
         // write storage on server stopping.
         ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {

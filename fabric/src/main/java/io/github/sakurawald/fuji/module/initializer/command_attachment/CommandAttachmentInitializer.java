@@ -23,6 +23,7 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.ExecuteAsType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
@@ -338,7 +339,10 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @Override
     protected void onInitialize() {
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> new TestSteppingOnBlockJob().schedule());
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            TestSteppingOnBlockJob testSteppingOnBlockJob = new TestSteppingOnBlockJob();
+            Managers.getScheduleManager().scheduleJob(testSteppingOnBlockJob);
+        });
     }
 
     @Override

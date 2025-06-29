@@ -22,7 +22,7 @@ public class CommandScheduleJob extends CronJob {
         super("command_scheduler", definedJobName, jobDataMap, cronSupplier);
 
         // NOTE: We will handle the un-register ourselves.
-        super.canReschedule = false;
+        super.rescheduleAble = false;
     }
 
     @Override

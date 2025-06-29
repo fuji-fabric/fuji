@@ -12,6 +12,7 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.extension.PlayerCombatExtension;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.afk.accessor.AfkStateAccessor;
 import io.github.sakurawald.fuji.module.initializer.afk.config.model.AfkConfigModel;
@@ -108,7 +109,10 @@ public class AfkInitializer extends ModuleInitializer {
 
     @Override
     protected void onInitialize() {
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> new AfkMarkerJob().schedule());
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            AfkMarkerJob afkMarkerJob = new AfkMarkerJob();
+            Managers.getScheduleManager().scheduleJob(afkMarkerJob);
+        });
     }
 
 }

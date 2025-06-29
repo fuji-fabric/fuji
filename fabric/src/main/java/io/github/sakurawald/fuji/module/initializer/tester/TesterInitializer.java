@@ -36,35 +36,6 @@ public class TesterInitializer extends ModuleInitializer {
     @CommandNode("run")
     private static int $run(@CommandSource ServerPlayerEntity player) {
 
-        Scheduler scheduler = Managers.getScheduleManager().getScheduler();
-
-        List<String> jobGroupNames = scheduler.getJobGroupNames();
-        jobGroupNames.forEach(it -> LogUtil.info("jobGroupName = {}", it));
-
-        Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.anyGroup());
-        jobKeys.forEach(it -> {
-            LogUtil.info("jobKey = {}", it);
-
-            try {
-                List<? extends Trigger> triggersOfJob = scheduler.getTriggersOfJob(it);
-
-                triggersOfJob.forEach(trigger -> {
-                    LogUtil.info("trigger = {}", trigger);
-                    Date nextFireTime = trigger.getNextFireTime();
-                    LogUtil.info("nextFireTime = {}", nextFireTime);
-                });
-
-            } catch (SchedulerException e) {
-                throw new RuntimeException(e);
-            }
-
-        });
-
-        List<String> triggerGroupNames = scheduler.getTriggerGroupNames();
-        LogUtil.info("triggerGroupNames = {}", triggerGroupNames);
-        Set<TriggerKey> triggerKeys = scheduler.getTriggerKeys(GroupMatcher.anyGroup());
-        LogUtil.info("triggerKeys = {}", triggerKeys);
-//        scheduler.trigger
 
         return 0;
     }

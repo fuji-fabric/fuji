@@ -18,6 +18,7 @@ import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.core.document.descriptor.PlaceholderDescriptor;
+import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.module.initializer.placeholder.gui.PlaceholderGui;
@@ -232,7 +233,8 @@ public class PlaceholderInitializer extends ModuleInitializer {
         /* events */
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             SumUpPlaceholder.ofServer();
-            new UpdateSumUpPlaceholderJob().schedule();
+            UpdateSumUpPlaceholderJob updateSumUpPlaceholderJob = new UpdateSumUpPlaceholderJob();
+            Managers.getScheduleManager().scheduleJob(updateSumUpPlaceholderJob);
         });
     }
 
