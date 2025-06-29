@@ -80,14 +80,14 @@ public class RandomTeleporter {
         // Search for a valid y-level (not in a block, underwater, out of the world, etc.)
         final BlockPos targetXZ = getRandomXZ(setup);
 
-        ServerWorld serverWorld = setup.ofWorld();
+        ServerWorld serverWorld = setup.toDimension();
         final Chunk chunk = serverWorld.getChunk(targetXZ);
 
         for (BlockPos.Mutable candidateBlock : getChunkCandidateBlocks(chunk.getPos())) {
             final int x = candidateBlock.getX();
             final int z = candidateBlock.getZ();
 
-            HeightFinder heightFinder = HeightFindingStrategy.forWorld(setup.ofWorld());
+            HeightFinder heightFinder = HeightFindingStrategy.forWorld(setup.toDimension());
             final OptionalInt yOpt = heightFinder.getY(chunk, x, z);
             if (yOpt.isEmpty()) {
                 continue;

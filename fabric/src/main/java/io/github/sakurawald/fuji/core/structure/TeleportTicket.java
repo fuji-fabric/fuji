@@ -36,6 +36,7 @@ public class TeleportTicket extends InterruptibleTicket {
 
         this.destination = destination;
         this.flags = flags;
+
         // set progress
         this.getBossBar().setPercent(progress);
     }

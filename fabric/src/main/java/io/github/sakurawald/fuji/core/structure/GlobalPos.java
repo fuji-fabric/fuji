@@ -35,7 +35,7 @@ public class GlobalPos {
     }
 
     public GlobalPos(@NotNull World level, double x, double y, double z, float yaw, float pitch) {
-        this(level.getRegistryKey().getValue().toString(), x, y, z, yaw, pitch);
+        this(RegistryHelper.ofString(level), x, y, z, yaw, pitch);
     }
 
     public static @NotNull GlobalPos of(@NotNull ServerPlayerEntity player) {
@@ -43,7 +43,7 @@ public class GlobalPos {
     }
 
     public boolean sameLevel(@NotNull World level) {
-        return this.level.equals(level.getRegistryKey().getValue().toString());
+        return this.level.equals(RegistryHelper.ofString(level));
     }
 
     @SuppressWarnings("unused")
@@ -56,18 +56,18 @@ public class GlobalPos {
     }
 
     public void teleport(@NotNull ServerPlayerEntity player, Set<PositionFlag> flags) {
-        RegistryKey<World> worldKey = RegistryKey.of(RegistryKeys.WORLD, RegistryHelper.makeIdentifier(this.level));
-        ServerWorld serverLevel = ServerHelper.getServer().getWorld(worldKey);
-        if (serverLevel == null) {
+        /* Get the dimension instance from server. */
+        ServerWorld dimension = RegistryHelper.ofServerWorld(this.level);
+        if (dimension == null) {
             TextHelper.sendMessageByKey(player, "world.dimension.not_found", this.level);
             return;
         }
 
-        /* make position flags */
+        /* Make position flags. */
         #if MC_VER <= MC_1_21
-            player.teleport(serverLevel, this.x, this.y, this.z, flags, this.yaw, this.pitch);
+            player.teleport(dimension, this.x, this.y, this.z, flags, this.yaw, this.pitch);
         #elif MC_VER > MC_1_21
-            player.teleport(serverLevel, this.x, this.y, this.z, flags, this.yaw, this.pitch, true);
+            player.teleport(dimension, this.x, this.y, this.z, flags, this.yaw, this.pitch, true);
         #endif
     }
 

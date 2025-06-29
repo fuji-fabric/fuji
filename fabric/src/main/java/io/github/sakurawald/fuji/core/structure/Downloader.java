@@ -18,7 +18,7 @@ public abstract class Downloader {
         this.destination = destination;
     }
 
-    public void start() {
+    public void startDownload() {
         CompletableFuture.runAsync(() -> {
             try {
                 LogUtil.info("Start download file from {} to {}.", url, destination);

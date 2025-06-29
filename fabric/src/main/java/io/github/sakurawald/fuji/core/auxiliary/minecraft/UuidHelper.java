@@ -25,7 +25,7 @@ public class UuidHelper {
     }
 
     public static String getAttachedUuid(GlobalBlockPos globalBlockPos) {
-        return getAttachedUuid(globalBlockPos.ofDimension(), globalBlockPos.ofBlockPos());
+        return getAttachedUuid(globalBlockPos.toDimension(), globalBlockPos.toBlockPos());
     }
 
     public static String getAttachedUuid(World world, BlockPos blockPos) {

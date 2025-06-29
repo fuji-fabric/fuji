@@ -23,11 +23,11 @@ public class GlobalBlockPos {
         this.z = blockPos.getZ();
     }
 
-    public ServerWorld ofDimension() {
+    public ServerWorld toDimension() {
         return RegistryHelper.ofServerWorld(this.dimension);
     }
 
-    public @NotNull BlockPos ofBlockPos() {
+    public @NotNull BlockPos toBlockPos() {
         return new BlockPos(this.x, this.y, this.z);
     }
 }

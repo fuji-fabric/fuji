@@ -58,7 +58,7 @@ public class HeadProvider {
                         loadCategory(result, category);
                     }
                 };
-                downloader.start();
+                downloader.startDownload();
             } catch (IOException e) {
                 LogUtil.warn("Failed to download heads file from URL {}", urlString);
             }
