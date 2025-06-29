@@ -22,6 +22,7 @@ import org.quartz.Trigger;
 import org.quartz.impl.matchers.GroupMatcher;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -51,6 +52,8 @@ public class JobsInspectionGui extends PagedGui<JobDescriptor> {
             List<? extends Trigger> triggersOfJob = scheduler.getTriggersOfJob(jobKey);
             entities.add(new JobDescriptor(jobDetail, triggersOfJob));
         }
+
+        entities.sort(Comparator.comparing(it -> it.getJobDetail().getKey().getGroup()));
 
         /* Make the GUI. */
         return new JobsInspectionGui(parent, player, entities, 0);

@@ -32,7 +32,7 @@ public class HomeInitializer extends ModuleInitializer {
 
     @Getter
     private static final BaseConfigurationHandler<HomeDataModel> storage = new ObjectConfigurationHandler<>("home.json", HomeDataModel.class)
-        .autoSaveEveryMinute();
+        .setAutoSaveEveryMinute();
 
     public static Map<String, GlobalPos> withHomes(@NotNull ServerPlayerEntity player) {
         String playerName = player.getGameProfile().getName();

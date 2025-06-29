@@ -12,22 +12,30 @@ import org.quartz.JobExecutionContext;
 import java.util.function.Supplier;
 
 @Document("""
-    This `job` is used to `write data` from `memory` into `storage`.
+    This `job` is used to `write storage` from `memory` into `storage`.
+
+    NOTE: <red>If you modify the `file` in `disk`, then you need to issue `/fuji reload` as soon as possible.</red>
+    NOTE: <red>The `disk` will be `overridden` when `fire` this job.</red>
     """)
 
 @NoArgsConstructor
-public class ConfigurationHandlerSaverJob extends CronJob {
+public class ConfigurationHandlerWriteStorageJob extends CronJob {
 
-    public ConfigurationHandlerSaverJob(String jobName, JobDataMap jobDataMap, Supplier<String> cronSupplier) {
+    public ConfigurationHandlerWriteStorageJob(String jobName, JobDataMap jobDataMap, Supplier<String> cronSupplier) {
         super(null, jobName, jobDataMap, cronSupplier);
     }
 
     @Override
     public void execute(@NotNull JobExecutionContext context) {
-        // the debug() function is not guaranteed to be printed while shutdown the jvm.
-        BaseConfigurationHandler<?> configHandler = (BaseConfigurationHandler<?>) context.getJobDetail().getJobDataMap().get(BaseConfigurationHandler.class.getName());
+        BaseConfigurationHandler<?> configHandler = (BaseConfigurationHandler<?>) context
+            .getJobDetail()
+            .getJobDataMap()
+            .get(BaseConfigurationHandler.class.getName());
+
+        // NOTE: The debug() function is not guaranteed to be printed while shutdown the jvm.
         LogUtil.debug("Save configuration file: {}", configHandler.getPath());
 
+        // Write storage when stopping the server.
         configHandler.writeStorage();
     }
 }

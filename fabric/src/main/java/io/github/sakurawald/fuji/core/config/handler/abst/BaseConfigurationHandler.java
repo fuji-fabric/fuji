@@ -13,7 +13,7 @@ import com.jayway.jsonpath.spi.json.JsonProvider;
 import com.jayway.jsonpath.spi.mapper.GsonMappingProvider;
 import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
-import io.github.sakurawald.fuji.core.config.job.ConfigurationHandlerSaverJob;
+import io.github.sakurawald.fuji.core.config.job.ConfigurationHandlerWriteStorageJob;
 import io.github.sakurawald.fuji.core.config.transformer.abst.ConfigurationTransformer;
 import io.github.sakurawald.fuji.core.document.descriptor.interfaces.SourceModuleGetter;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
@@ -22,6 +22,7 @@ import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
 import lombok.Cleanup;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.quartz.JobDataMap;
 
@@ -180,24 +181,26 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         return gson.toJsonTree(this.model());
     }
 
+    @SneakyThrows
     @SuppressWarnings("SameParameterValue")
     private void scheduleWriteStorageJob(@NotNull String cron) {
-        String jobName = this.path.toString();
-        ConfigurationHandlerSaverJob autoSaveJob = new ConfigurationHandlerSaverJob(jobName, new JobDataMap() {
+        /* Make and schedule the job. */
+        String jobName = this.path.toFile().getCanonicalPath();
+        ConfigurationHandlerWriteStorageJob writeStorageJob = new ConfigurationHandlerWriteStorageJob(jobName, new JobDataMap() {
             {
                 this.put(BaseConfigurationHandler.class.getName(), BaseConfigurationHandler.this);
             }
         }, () -> cron);
-        Managers.getScheduleManager().scheduleJob(autoSaveJob);
+        Managers.getScheduleManager().scheduleJob(writeStorageJob);
 
-        // Write storage on server stopping.
+        /* Write storage on server stopping. */
         ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
             LogUtil.debug("Write storage on server stopping: {}", this.path);
             this.writeStorage();
         });
     }
 
-    public BaseConfigurationHandler<T> autoSaveEveryMinute() {
+    public BaseConfigurationHandler<T> setAutoSaveEveryMinute() {
         this.scheduleWriteStorageJob(ScheduleManager.CRON_EVERY_MINUTE);
         return this;
     }

@@ -25,7 +25,7 @@ import org.quartz.JobDataMap;
 public class WorksInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<WorksDataModel> works = new ObjectConfigurationHandler<>("works.json", WorksDataModel.class)
-        .autoSaveEveryMinute();
+        .setAutoSaveEveryMinute();
 
     public static final BaseConfigurationHandler<WorksConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, WorksConfigModel.class);
 

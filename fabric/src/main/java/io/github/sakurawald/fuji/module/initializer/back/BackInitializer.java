@@ -39,7 +39,7 @@ public class BackInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<BackConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, BackConfigModel.class);
 
     private static final BaseConfigurationHandler<BackLocationHistoryModel> savedPositionConfig = new ObjectConfigurationHandler<>("location-history.json", BackLocationHistoryModel.class)
-        .autoSaveEveryMinute();
+        .setAutoSaveEveryMinute();
 
     private static final MetaDescriptor<Integer> MAX_LOCATION_ENTRIES_TO_SAVE_META = new MetaDescriptor<>("fuji.back.max_location_entries_to_save", Integer::valueOf,"""
         The max location entries to save for this player.
