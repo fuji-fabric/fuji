@@ -36,7 +36,6 @@ public class PrimaryBackupManager extends BaseBackupManager {
         }
     }
 
-    @SneakyThrows(IOException.class)
     @Override
     public void createBackup() {
         trimBackup();
