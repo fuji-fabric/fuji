@@ -6,7 +6,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.github.sakurawald.fuji.core.auxiliary.IOUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
-import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -14,7 +13,6 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 
-@UtilityClass
 public class MojangProfileFetcher {
 
     private static final String API_SERVER = "https://api.mojang.com/users/profiles/minecraft/";

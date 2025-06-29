@@ -2,7 +2,6 @@ package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import lombok.experimental.UtilityClass;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 #if MC_VER <= MC_1_20_1
@@ -30,7 +29,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-@UtilityClass
 public class PlayerHelper {
 
     private static final String DIMENSION_NBT_KEY = "Dimension";

@@ -1,7 +1,6 @@
 package io.github.sakurawald.fuji.core.auxiliary;
 
 import lombok.SneakyThrows;
-import lombok.experimental.UtilityClass;
 import net.fabricmc.loader.api.FabricLoader;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +23,6 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-@UtilityClass
 public class IOUtil {
 
     @SneakyThrows(IOException.class)

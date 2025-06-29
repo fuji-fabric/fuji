@@ -14,7 +14,6 @@ import io.github.sakurawald.fuji.module.initializer.head.structure.Category;
 import io.github.sakurawald.fuji.module.initializer.head.structure.Head;
 import lombok.Cleanup;
 import lombok.Getter;
-import lombok.experimental.UtilityClass;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -22,7 +21,6 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-@UtilityClass
 public class HeadProvider {
 
     private static final Path HEAD_DATA_DIR_PATH = ReflectionUtil.computeModuleConfigPath(HeadInitializer.class).resolve("head-data").toAbsolutePath();

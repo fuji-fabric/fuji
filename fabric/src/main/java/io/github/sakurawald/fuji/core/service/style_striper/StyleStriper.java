@@ -3,7 +3,6 @@ package io.github.sakurawald.fuji.core.service.style_striper;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PermissionHelper;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
-import lombok.experimental.UtilityClass;
 import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.HashMap;
@@ -13,7 +12,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@UtilityClass
 public class StyleStriper {
 
     @SuppressWarnings("RegExpUnnecessaryNonCapturingGroup")

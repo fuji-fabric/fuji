@@ -1,13 +1,11 @@
 package io.github.sakurawald.fuji.core.auxiliary;
 
 import lombok.Getter;
-import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Random;
 
-@UtilityClass
 public class RandomUtil {
 
     @Getter

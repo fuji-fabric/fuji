@@ -21,11 +21,11 @@ public class GuiHelper {
         }
     }
 
-    public boolean isInvalidSlotInsidePlayerInventory(int index) {
+    public static boolean isInvalidSlotInsidePlayerInventory(int index) {
         return index == 41 || index == 42 || index == 43 || index == 44;
     }
 
-    public boolean isInvalidSlotPlaceholder(ItemStack stack) {
+    public static boolean isInvalidSlotPlaceholder(ItemStack stack) {
         return stack.getItem().equals(INVALID_SLOT_PLACEHOLDER_ITEM);
     }
 

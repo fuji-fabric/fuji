@@ -11,7 +11,6 @@ import io.github.sakurawald.fuji.core.service.random_teleport.structure.HeightFi
 import io.github.sakurawald.fuji.core.service.random_teleport.structure.HeightFindingStrategy;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.core.structure.TeleportSetup;
-import lombok.experimental.UtilityClass;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -29,7 +28,6 @@ import java.util.Optional;
 import java.util.OptionalInt;
 
 @Cite("https://github.com/John-Paul-R/Essential-Commands")
-@UtilityClass
 public class RandomTeleporter {
 
     public static void request(@NotNull ServerPlayerEntity player, @NotNull TeleportSetup setup, @Nullable Consumer<GlobalPos> postConsumer) {

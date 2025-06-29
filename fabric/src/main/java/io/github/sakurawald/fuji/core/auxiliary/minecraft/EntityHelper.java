@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
-import lombok.experimental.UtilityClass;
 import net.minecraft.entity.Entity;
 #if MC_VER <= MC_1_20_6
 import net.minecraft.entity.decoration.LeashKnotEntity;
@@ -20,7 +19,6 @@ import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.entity.vehicle.VehicleEntity;
 #endif
 
-@UtilityClass
 public class EntityHelper {
 
     public static void killEntity(Entity entity) {

@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
-import lombok.experimental.UtilityClass;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -21,7 +20,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-@UtilityClass
 public class RegistryHelper {
 
     public static @NotNull String ofString(@NotNull Item item) {

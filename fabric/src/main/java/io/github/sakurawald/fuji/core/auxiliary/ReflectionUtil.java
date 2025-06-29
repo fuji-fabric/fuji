@@ -5,7 +5,6 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
-import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,7 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@UtilityClass
 public class ReflectionUtil {
 
     /* graphs */

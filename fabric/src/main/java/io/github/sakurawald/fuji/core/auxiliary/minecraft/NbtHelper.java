@@ -3,7 +3,6 @@ package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
 import lombok.SneakyThrows;
-import lombok.experimental.UtilityClass;
 #if MC_VER <= MC_1_20_4
 #elif MC_VER > MC_1_20_4
 import net.minecraft.component.DataComponentTypes;
@@ -25,7 +24,6 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-@UtilityClass
 public class NbtHelper {
 
     private static <T extends NbtElement> void setPath(@NotNull NbtCompound root, @NotNull String path, T value) {
@@ -81,7 +79,7 @@ public class NbtHelper {
         return node;
     }
 
-    public NbtElement toNbtAllowEmpty(ItemStack stack, RegistryWrapper.WrapperLookup wrapperLookup) {
+    public static NbtElement toNbtAllowEmpty(ItemStack stack, RegistryWrapper.WrapperLookup wrapperLookup) {
         if (stack.isEmpty()) {
             return new NbtCompound();
         }
@@ -218,7 +216,7 @@ public class NbtHelper {
         #endif
     }
 
-    public void withNbt(ItemStack stack, Consumer<NbtCompound> nbtConsumer) {
+    public static void withNbt(ItemStack stack, Consumer<NbtCompound> nbtConsumer) {
         NbtCompound targetNbt = NbtHelper.getNbt(stack);
         if (targetNbt == null) {
             targetNbt = new NbtCompound();

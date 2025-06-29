@@ -2,7 +2,6 @@ package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.structure.GlobalBlockPos;
-import lombok.experimental.UtilityClass;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
@@ -12,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-@UtilityClass
 public class UuidHelper {
 
     private static final String FUJI_UUID = Fuji.MOD_ID + "$uuid";

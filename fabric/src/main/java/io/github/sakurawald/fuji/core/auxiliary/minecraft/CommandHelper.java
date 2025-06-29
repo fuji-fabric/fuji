@@ -11,7 +11,6 @@ import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
-import lombok.experimental.UtilityClass;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registry;
@@ -34,7 +33,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-@UtilityClass
 public class CommandHelper {
 
     public static final String UUID = "uuid";

@@ -28,7 +28,7 @@ public class StackHelper {
     public static final String LORE_NBT_KEY = "Lore";
     public static final String DISPLAY_NBT_KEY = "display";
 
-    public NbtElement toNbt(ItemStack stack, RegistryWrapper.WrapperLookup wrapperLookup, NbtElement nbtElement) {
+    public static NbtElement toNbt(ItemStack stack, RegistryWrapper.WrapperLookup wrapperLookup, NbtElement nbtElement) {
         if (stack.isEmpty()) {
             throw new IllegalStateException("Cannot encode empty ItemStack");
         }
@@ -44,7 +44,7 @@ public class StackHelper {
 
     }
 
-    public NbtElement encodeAllowEmpty(ItemStack stack, RegistryWrapper.WrapperLookup wrapperLookup) {
+    public static NbtElement encodeAllowEmpty(ItemStack stack, RegistryWrapper.WrapperLookup wrapperLookup) {
         return stack.isEmpty() ? new NbtCompound() : StackHelper.toNbt(stack, wrapperLookup, new NbtCompound());
     }
 

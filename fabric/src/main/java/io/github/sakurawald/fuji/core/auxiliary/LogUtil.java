@@ -2,7 +2,6 @@ package io.github.sakurawald.fuji.core.auxiliary;
 
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.config.Configs;
-import lombok.experimental.UtilityClass;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import org.apache.commons.lang3.StringUtils;
@@ -12,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.jetbrains.annotations.NotNull;
 
-@UtilityClass
 public class LogUtil {
 
     private static final @NotNull Logger MOD_LOGGER = makeLogger(StringUtils.capitalize(Fuji.MOD_ID));

@@ -22,7 +22,6 @@ import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.config.handler.impl.ResourceConfigurationHandler;
 import io.github.sakurawald.fuji.core.service.url_highlighter.UrlHighlighter;
 import lombok.NonNull;
-import lombok.experimental.UtilityClass;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.SubtitleS2CPacket;
 import net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket;
@@ -48,7 +47,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-@UtilityClass
 public class TextHelper {
 
     /* Constants. */
@@ -182,7 +180,7 @@ public class TextHelper {
         }
     }
 
-    private String convertToLanguageCode(String input) {
+    private static String convertToLanguageCode(String input) {
         if (input == null || !input.contains("_")) {
             return input;
         }
@@ -194,7 +192,7 @@ public class TextHelper {
         return language + "_" + region;
     }
 
-    private @NotNull String getClientSideLanguageCode(@Nullable Object audience) {
+    private static @NotNull String getClientSideLanguageCode(@Nullable Object audience) {
         if (audience == null) return getDefaultLanguageCode();
 
         PlayerEntity player = null;
@@ -217,7 +215,7 @@ public class TextHelper {
         return player2code.getOrDefault(player.getGameProfile().getName(), getDefaultLanguageCode());
     }
 
-    private @NotNull JsonObject getLanguageJsonObject(String languageCode) {
+    private static @NotNull JsonObject getLanguageJsonObject(String languageCode) {
         // load language object from disk for the first time
         loadLanguageJsonIfAbsent(languageCode);
 

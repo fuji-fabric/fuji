@@ -11,7 +11,7 @@ import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
 import lombok.Getter;
 
-// NOTE: Use lazy evaluation, to compute the initialization graph.
+// NOTE: Use lazy evaluation, to resolve the dependency graph easily.
 public class Managers {
 
     @Getter(lazy = true)

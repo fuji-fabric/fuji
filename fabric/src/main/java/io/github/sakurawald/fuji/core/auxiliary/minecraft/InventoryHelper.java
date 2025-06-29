@@ -1,7 +1,6 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import com.google.common.collect.ImmutableList;
-import lombok.experimental.UtilityClass;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SimpleInventory;
@@ -10,7 +9,6 @@ import net.minecraft.util.collection.DefaultedList;
 
 import java.util.List;
 
-@UtilityClass
 public class InventoryHelper {
 
     public static final List<EquipmentSlot> PLAYER_ARMOR_SLOTS = List.of(
