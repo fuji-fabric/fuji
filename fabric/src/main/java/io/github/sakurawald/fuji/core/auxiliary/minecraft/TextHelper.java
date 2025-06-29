@@ -21,7 +21,7 @@ import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.config.handler.impl.ResourceConfigurationHandler;
 import io.github.sakurawald.fuji.core.service.url_highlighter.UrlHighlighter;
-import lombok.NonNull;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.SubtitleS2CPacket;
 import net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket;
@@ -299,7 +299,7 @@ public class TextHelper {
     /* This is the core method to map `String` into `Text`.
      *  All methods that return `Vomponent` are converted from this method.
      * */
-    public static @NotNull Text getText(@NonNull NodeParser parser, @Nullable Object audience, boolean isKey, String keyOrValue, Object... args) {
+    public static @NotNull Text getText(@NotNull NodeParser parser, @Nullable Object audience, boolean isKey, String keyOrValue, Object... args) {
         String value = isKey ? getValueByKey(audience, keyOrValue) : keyOrValue;
 
         // check NPE.

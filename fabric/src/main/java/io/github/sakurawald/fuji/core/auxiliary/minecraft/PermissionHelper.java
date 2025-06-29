@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
-import lombok.NonNull;
+
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -35,7 +35,7 @@ public class PermissionHelper {
      * Luckperms will assign the group 'default' for the fake-player, but will never save the User data back to storage.
      * And also, if you issue `/lp user fake_player permission info`, luckperms will say there is no User data for this player.
      */
-    private static User loadUser(@NonNull LuckPerms api, UUID uuid) {
+    private static User loadUser(@NotNull LuckPerms api, UUID uuid) {
         UserManager userManager = api.getUserManager();
 
         // cache
@@ -72,7 +72,7 @@ public class PermissionHelper {
             .asBoolean();
     }
 
-    public static <T> @NonNull Optional<T> getMeta(@NotNull UUID uuid, @Nullable MetaDescriptor<T> metaDescriptor, Object... arguments) {
+    public static <T> @NotNull Optional<T> getMeta(@NotNull UUID uuid, @Nullable MetaDescriptor<T> metaDescriptor, Object... arguments) {
         if (metaDescriptor == null) return Optional.empty();
 
         LuckPerms api = getAPI();

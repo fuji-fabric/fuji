@@ -11,7 +11,7 @@ import io.github.sakurawald.fuji.core.structure.GlobalBlockPos;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.color.sign.config.model.ColorSignConfigModel;
 import io.github.sakurawald.fuji.module.initializer.color.sign.structure.SignCache;
-import lombok.NonNull;
+
 import net.minecraft.entity.player.PlayerEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,7 +28,7 @@ public class ColorSignInitializer extends ModuleInitializer {
     private static final String ATTACHMENT_SUBJECT = "color-sign-cache";
 
 
-    public static @Nullable SignCache readSignCache(@NonNull GlobalBlockPos globalBlockPos) {
+    public static @Nullable SignCache readSignCache(@NotNull GlobalBlockPos globalBlockPos) {
         String uuid = UuidHelper.getAttachedUuid(globalBlockPos);
         if (!Managers.getAttachmentManager().existsAttachment(ATTACHMENT_SUBJECT, uuid)) {
             return null;
@@ -43,7 +43,7 @@ public class ColorSignInitializer extends ModuleInitializer {
         }
     }
 
-    public static void writeSignCache(@NotNull GlobalBlockPos globalBlockPos, @NonNull SignCache signCache) {
+    public static void writeSignCache(@NotNull GlobalBlockPos globalBlockPos, @NotNull SignCache signCache) {
         String uuid = UuidHelper.getAttachedUuid(globalBlockPos);
         String data = BaseConfigurationHandler.getGson().toJson(signCache);
         try {

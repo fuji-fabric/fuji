@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.core.document.descriptor;
 
-import lombok.NonNull;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import org.jetbrains.annotations.NotNull;
@@ -10,14 +10,14 @@ import java.util.function.Function;
 
 public class MetaDescriptor<T> extends StringDescriptor {
 
-    public final @NonNull Function<String, ? extends T> valueTransformer;
+    public final @NotNull Function<String, ? extends T> valueTransformer;
 
-    public MetaDescriptor(@NotNull String pattern, @NonNull Function<String, ? extends T> valueTransformer, @Nullable String document) {
+    public MetaDescriptor(@NotNull String pattern, @NotNull Function<String, ? extends T> valueTransformer, @Nullable String document) {
         super(pattern, document);
         this.valueTransformer = valueTransformer;
     }
 
-    public MetaDescriptor(boolean temporary, @NotNull String pattern, @NonNull Function<String, ? extends T> valueTransformer, @Nullable String document) {
+    public MetaDescriptor(boolean temporary, @NotNull String pattern, @NotNull Function<String, ? extends T> valueTransformer, @Nullable String document) {
         super(temporary, pattern, document);
         this.valueTransformer = valueTransformer;
     }

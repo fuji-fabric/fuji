@@ -13,7 +13,7 @@ import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.fuji.FujiInitializer;
-import lombok.NonNull;
+
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -161,7 +161,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
             });
     }
 
-    public static @NonNull List<ColorBox> getColorBoxes(String modulePathString) {
+    public static @NotNull List<ColorBox> getColorBoxes(String modulePathString) {
         /* Get the module initializer class. */
         Class<? extends ModuleInitializer> moduleInitializerClass = ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING
             .get(modulePathString);
