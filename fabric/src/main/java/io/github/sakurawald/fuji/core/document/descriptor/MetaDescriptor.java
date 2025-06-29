@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-public class MetaDescriptor<T> extends StringDescriptor{
+public class MetaDescriptor<T> extends StringDescriptor {
 
     public final @NonNull Function<String, ? extends T> valueTransformer;
 

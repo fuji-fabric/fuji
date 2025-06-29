@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.fuji.structure;
 
-import io.github.sakurawald.fuji.core.document.descriptor.interfaces.SourceModuleGetter;
+import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import lombok.AllArgsConstructor;
 import lombok.Data;

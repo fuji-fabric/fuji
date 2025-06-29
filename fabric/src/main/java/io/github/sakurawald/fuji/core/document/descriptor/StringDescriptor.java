@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.core.document.descriptor;
 
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
-import io.github.sakurawald.fuji.core.document.descriptor.interfaces.SourceModuleGetter;
+import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
 import lombok.Data;
 import net.minecraft.item.Item;
 import org.jetbrains.annotations.NotNull;

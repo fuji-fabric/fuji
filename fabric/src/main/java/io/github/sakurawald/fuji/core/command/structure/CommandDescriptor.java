@@ -20,7 +20,7 @@ import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionExc
 import io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
-import io.github.sakurawald.fuji.core.document.descriptor.interfaces.SourceModuleGetter;
+import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;

@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.document.inspection;
+package io.github.sakurawald.fuji.core.document.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;

@@ -26,7 +26,7 @@ public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
     public JavaObjectInspectionGui(@Nullable SimpleGui parent, @Nullable Object objectToInspect, ServerPlayerEntity player, @NotNull List<InspectingObject> entities, int pageIndex, String fileRelativePath, @NotNull String walkingPath) {
         super(parent, player, TextHelper.getTextByKey(player, "object.gui.title", walkingPath), entities, pageIndex);
 
-        /* Pass the variables along the inspection path. */
+        /* Pass the variables along the inspecting path. */
         this.fileRelativePath = fileRelativePath;
         this.walkingPath = walkingPath;
 
