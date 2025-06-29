@@ -43,19 +43,20 @@ public class ResourceConfigurationHandler extends BaseConfigurationHandler<JsonE
     }
 
     private void mergeTree(JsonObject dataTree, JsonObject schemaTree) {
-        schemaTree.keySet().stream()
+        schemaTree
+            .keySet()
+            .stream()
             .filter(key -> !dataTree.has(key))
             .forEach(key -> {
                 LogUtil.debug("Add missing language key `{}` for file `{}`", key, this.path);
-                dataTree.add(key, schemaTree.get(key));
+                JsonElement value = schemaTree.get(key);
+                dataTree.add(key, value);
             });
     }
 
-    /**
-     * for resource configuration handler, the type of model is JsonElement, which equals to the type of data tree.
-     */
     @Override
     protected JsonElement getDefaultModel() {
+        // NOTE: For resource configuration handler, the type of model is JsonElement, which equals to the type of data tree.
         return readJsonTreeFromResource(this.resourcePath);
     }
 
@@ -63,12 +64,11 @@ public class ResourceConfigurationHandler extends BaseConfigurationHandler<JsonE
     public void readStorage() {
         super.readStorage();
 
-        // add missing language keys
+        /* Add missing language keys. */
         if (this.model != null) {
             mergeTree(this.model.getAsJsonObject(), this.getDefaultModel().getAsJsonObject());
             this.writeStorage();
         }
-
     }
 
 }

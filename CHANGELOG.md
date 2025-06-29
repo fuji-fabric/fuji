@@ -5,3 +5,4 @@
 - [fuji] feature: new `/fuji inspect jobs` command, to list all `registered jobs` and their `fire dates`.
 - [fuji] feature: attach `jobs` registered by this module in its module details GUI.
 - [fuji] feature: add document string for all jobs.
+- [core] feature: capture all exceptions if I/O failed, and provide the details in console.

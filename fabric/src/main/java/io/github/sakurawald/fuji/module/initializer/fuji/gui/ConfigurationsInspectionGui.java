@@ -46,7 +46,7 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
     protected GuiElementInterface toGuiElement(BaseConfigurationHandler<?> entity) {
         String configModelClassName = ReflectionUtil.getSimpleClassName(entity.getClass());
         String configRelativePath = IOUtil.computeRelativePath(entity.getPath().toFile());
-        String fromModule = entity.getFromModule();
+        String fromModule = entity.getSourceModule();
 
         List<Text> lore = List.of(
             TextHelper.getTextByKey(getPlayer(), "from_module", fromModule)

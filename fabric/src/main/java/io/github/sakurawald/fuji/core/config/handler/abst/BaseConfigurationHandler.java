@@ -15,6 +15,7 @@ import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.job.ConfigurationHandlerSaverJob;
 import io.github.sakurawald.fuji.core.config.transformer.abst.ConfigurationTransformer;
+import io.github.sakurawald.fuji.core.document.descriptor.interfaces.SourceModuleGetter;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
@@ -26,7 +27,6 @@ import org.quartz.JobDataMap;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
@@ -38,22 +38,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * I write some rules here to avoid forgetting.
- * 1. Only use static inner class in config model java object, this is because a historical design problem in java.
- * 2. The new gson type adapter should be registered before the call to loadFromDisk()
- * 3. The type system of java is static, given an object instance, you can use instance.getClass() to get the type of the instance, which means that you don't need to specify the typeOfT for gson library.
- *
- *
- * <p>
- * The configuration handler in module initializer should be static:
- * 1. The major point to make configuration handler a member of class, is that it's easier to control the lifecycle of objects, however, considering the fact that the configuration handler is a mapping between file system and memory, it should be static and unique.
- * 2. Create the instance of configuration handler should have no side effect, until the call to readStorage() and writeStorage()
- * <p>
- * Some other solutions:
- * 1. <a href="https://stackoverflow.com/questions/42503935/how-to-serialize-a-json-object-child-into-a-field">...</a>
+/*
+ * 1. Only use static inner class for a nested structure. (This is because a historical design problem in Java)
+ * 2. If you want to register a new type for gson, just override the template method in module initializer.
+ * 3. The type system of java is static, so you only need to give the object instance to gson.
+ * 4. Define configuration handler using static variable, to ensure it's unique.
  */
-public abstract class BaseConfigurationHandler<T> {
+public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter {
 
     public static final String CONFIG_JSON = "config.json";
 
@@ -61,35 +52,38 @@ public abstract class BaseConfigurationHandler<T> {
 
     @Getter
     protected static Gson gson = new GsonBuilder()
-        // the default naming policy is IDENTIFY, we ensure that the naming style is consistency, whatever the internal name is.
+        // The default naming policy is IDENTIFY, we need to ensure the naming style is consistent.
         .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-        // for readability
+        // Pretty print for readability.
         .setPrettyPrinting()
-        // for mini-message language
+        // Pass through html characters, to support mini language.
         .disableHtmlEscaping()
-        // null-value is legal value, we should serialize it.
+        // Null-value is legal value, we should serialize it.
         .serializeNulls()
         .create();
 
-    /* json path */
-    private static ParseContext jsonPathParser = null;
+    /* Json Path Parser. */
+    private static ParseContext JSON_PATH_PARSER = null;
+
+    /* File path and data model. */
     @Getter
     protected final @NotNull Path path;
-    /* transformer */
-    private final List<ConfigurationTransformer> transformers = new ArrayList<>();
     protected T model;
+
+    /* Transformers applied in this file. */
+    private final List<ConfigurationTransformer> transformers = new ArrayList<>();
 
     public BaseConfigurationHandler(@NotNull Path path) {
         this.path = path;
     }
 
     public static ParseContext getJsonPathParser() {
-        if (jsonPathParser == null) {
+        if (JSON_PATH_PARSER == null) {
             configureJsonPathLibrary();
-            jsonPathParser = JsonPath.using(Configuration.defaultConfiguration());
+            JSON_PATH_PARSER = JsonPath.using(Configuration.defaultConfiguration());
         }
 
-        return jsonPathParser;
+        return JSON_PATH_PARSER;
     }
 
     private static void configureJsonPathLibrary() {
@@ -113,7 +107,10 @@ public abstract class BaseConfigurationHandler<T> {
     }
 
     public static void registerTypeAdapter(Type type, Object typeAdapter) {
-        gson = gson.newBuilder().registerTypeAdapter(type, typeAdapter).create();
+        gson = gson
+            .newBuilder()
+            .registerTypeAdapter(type, typeAdapter)
+            .create();
     }
 
     public BaseConfigurationHandler<T> addTransformer(ConfigurationTransformer transformer) {
@@ -126,32 +123,33 @@ public abstract class BaseConfigurationHandler<T> {
     @SuppressWarnings("unchecked")
     public void readStorage() {
         try {
-            /* apply transformers first*/
+            /* Apply transformers before read the storage. */
             this.transformers.forEach(it -> {
                 it.configure(this.path);
                 it.apply();
             });
 
+            /* Write default configuration into the storage, if file not exists. */
             if (Files.notExists(this.path)) {
                 writeStorage();
             } else {
-                // merge data tree with schema tree: the gson.fromJson() will use defaultModel as the schema tree to generate missing default kv-pairs for data tree.
+                // Merge data tree with schema tree: the gson.fromJson() will use default model as the schema tree, to generate missing default kv-pairs in data tree.
                 @Cleanup Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.path.toFile())));
                 T defaultModel = getDefaultModel();
                 this.model = (T) gson.fromJson(reader, defaultModel.getClass());
 
-                /* write storage back, to:
-                 * 1. keep the sync between memory and disk.
-                 * 2. trigger the field naming conversion in gson.
+                /* Write storage at once, to:
+                 * 1. Keep the sync between memory and disk.
+                 * 2. Trigger the field naming conversion in gson.
                  * */
                 this.writeStorage();
             }
 
-        } catch (IOException e) {
-            LogUtil.error("Failed to read configuration file {} from disk.", this.path, e);
+        } catch (Exception e) {
+            LogUtil.error("Failed to read configuration file {} from storage.", this.path, e);
         }
 
-        /* Register this. */
+        /* Register self. */
         REGISTERED_CONFIGURATION_HANDLERS.add(this);
     }
 
@@ -161,32 +159,27 @@ public abstract class BaseConfigurationHandler<T> {
 
     public void writeStorage() {
         try {
-            // set default data tree
+            /* Ensure the model is initialized. */
             if (this.model == null) {
-                // getDefaultModel() is allowed to throw exception.
                 this.model = this.getDefaultModel();
                 LogUtil.debug("Write default configuration: {}", this.path.toFile().getAbsolutePath());
             }
 
-            // before write storage
+            /* Call hook functions. */
             this.beforeWriteStorage();
 
-            // write data tree to disk
+            /* Write model to storage. */
             Files.createDirectories(this.path.getParent());
             Files.writeString(this.path, gson.toJson(this.model));
-        } catch (IOException e) {
+        } catch (Exception e) {
             LogUtil.error("Failed to write configuration file {} to disk.", this.path, e);
         }
     }
 
     public JsonElement convertModelToJsonTree() {
-        // call model() instead of this.model to ensure the model is loaded.
         return gson.toJsonTree(this.model());
     }
 
-    /**
-     * This method exists for performance purpose.
-     */
     @SuppressWarnings("SameParameterValue")
     private void scheduleWriteStorageJob(@NotNull String cron) {
         String jobName = this.path.toString();
@@ -197,7 +190,7 @@ public abstract class BaseConfigurationHandler<T> {
         }, () -> cron);
         Managers.getScheduleManager().scheduleJob(autoSaveJob);
 
-        // write storage on server stopping.
+        // Write storage on server stopping.
         ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
             LogUtil.debug("Write storage on server stopping: {}", this.path);
             this.writeStorage();
@@ -210,7 +203,7 @@ public abstract class BaseConfigurationHandler<T> {
     }
 
     public @NotNull T model() {
-        // load storage if necessary.
+        /* Ensure the model is initialized. */
         if (this.model == null) {
             this.readStorage();
         }
@@ -222,7 +215,8 @@ public abstract class BaseConfigurationHandler<T> {
         return this.model;
     }
 
-    public String getFromModule() {
+    @Override
+    public String getSourceModule() {
         return ModuleManager.computeModulePathAsString(this.model().getClass().getName());
     }
 

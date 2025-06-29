@@ -71,9 +71,11 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
     }
 
     private void reloadJobs() {
-        LogUtil.info("Un-schedule jobs");
+        /* Un-schedule jobs. */
+        LogUtil.info("Un-schedule jobs.");
         Managers.getScheduleManager().deleteJobs(CommandScheduleJob.class);
 
+        /* Schedule jobs. */
         scheduler.model().jobs.forEach(definedJob -> {
             definedJob
                 .getCrons()

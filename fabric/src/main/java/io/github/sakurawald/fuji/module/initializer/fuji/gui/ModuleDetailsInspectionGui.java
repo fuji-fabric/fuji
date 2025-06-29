@@ -189,7 +189,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
     private static List<GuiElementInterface> searchModuleConfigurations(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString) {
         return ConfigurationsInspectionGui
             .inspectAll(parent, player)
-            .skipCurrentGuiAndSearch(it -> it.getFromModule().equals(modulePathString))
+            .skipCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
             .toGuiElements();
     }
 
