@@ -3,7 +3,6 @@ package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import lombok.experimental.UtilityClass;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -12,7 +11,6 @@ import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
-@UtilityClass
 public class GuiHelper {
 
     private static final Item INVALID_SLOT_PLACEHOLDER_ITEM = Items.BARRIER;

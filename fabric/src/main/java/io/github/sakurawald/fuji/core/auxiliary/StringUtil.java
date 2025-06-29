@@ -1,11 +1,9 @@
 package io.github.sakurawald.fuji.core.auxiliary;
 
-import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
 
-@UtilityClass
 public class StringUtil {
 
     public static String replaceGroupsPlaceholders(Matcher matcher, String string) {

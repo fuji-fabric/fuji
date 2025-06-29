@@ -1,7 +1,6 @@
 package io.github.sakurawald.fuji.core.service.type_formatter;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
-import lombok.experimental.UtilityClass;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -9,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-@UtilityClass
 public class TypeFormatter {
 
     public static @NotNull Text formatTypes(ServerCommandSource source, Map<String, Integer> type2amount) {

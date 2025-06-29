@@ -5,7 +5,6 @@ import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.document.descriptor.PlaceholderDescriptor;
-import lombok.experimental.UtilityClass;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -14,7 +13,6 @@ import net.minecraft.util.Identifier;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-@UtilityClass
 public class PlaceholderHelper {
 
     public static final Text INVALID_ARGS_ERROR_TEXT = Text.literal("[INVALID-ARGS-ERROR]");

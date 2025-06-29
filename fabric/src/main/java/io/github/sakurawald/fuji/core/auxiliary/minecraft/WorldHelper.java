@@ -2,7 +2,6 @@ package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import io.github.sakurawald.fuji.core.service.random_teleport.RandomTeleporter;
 import io.github.sakurawald.fuji.core.structure.TeleportSetup;
-import lombok.experimental.UtilityClass;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -13,7 +12,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.DimensionTypes;
 
-@UtilityClass
 public class WorldHelper {
 
     public static void teleportToSafePositionNearOrigin(ServerWorld world, ServerPlayerEntity player) {

@@ -7,7 +7,6 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.NbtHelper;
 import io.github.sakurawald.fuji.module.initializer.kit.KitInitializer;
 import io.github.sakurawald.fuji.module.initializer.kit.structure.Kit;
 import lombok.SneakyThrows;
-import lombok.experimental.UtilityClass;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtList;
@@ -23,7 +22,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@UtilityClass
 public class KitService {
 
     private static final Path KIT_DATA_DIR_PATH = ReflectionUtil.computeModuleConfigPath(KitInitializer.class).resolve("kit-data");

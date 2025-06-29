@@ -3,7 +3,6 @@ package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import lombok.NonNull;
-import lombok.experimental.UtilityClass;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -16,7 +15,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-@UtilityClass
 public class PermissionHelper {
 
     private static LuckPerms instance;

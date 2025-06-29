@@ -3,10 +3,8 @@ package io.github.sakurawald.fuji.core.auxiliary;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 
-@UtilityClass
 public class JsonUtil {
 
     @SuppressWarnings("RedundantIfStatement")
