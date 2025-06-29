@@ -19,7 +19,8 @@ import java.util.function.Supplier;
 public class CommandScheduleJob extends CronJob {
 
     public CommandScheduleJob(String definedJobName, JobDataMap jobDataMap, Supplier<String> cronSupplier) {
-        super("command_scheduler", definedJobName, jobDataMap, cronSupplier);
+        // NOTE: Use the class name as the group name, to be consistent with the deleteJobs() method.
+        super(null, definedJobName, jobDataMap, cronSupplier);
 
         // NOTE: We will handle the un-register ourselves.
         super.rescheduleAble = false;
