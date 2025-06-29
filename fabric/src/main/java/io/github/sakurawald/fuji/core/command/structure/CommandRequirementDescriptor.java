@@ -26,7 +26,7 @@ public class CommandRequirementDescriptor {
          */
     public static @Nullable CommandRequirementDescriptor of(@Nullable CommandRequirement annotation) {
         /* override the default requirement */
-        if (Configs.mainControlConfig.model().core.permission.all_commands_require_level_4_permission_to_use_by_default) {
+        if (Configs.MAIN_CONTROL_CONFIG.model().core.permission.all_commands_require_level_4_permission_to_use_by_default) {
             return new CommandRequirementDescriptor(4, null);
         }
 

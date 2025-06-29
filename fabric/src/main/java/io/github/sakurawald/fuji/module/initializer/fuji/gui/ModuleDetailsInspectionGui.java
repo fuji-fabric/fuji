@@ -63,7 +63,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         entities.add(reloadButton.build());
 
         /* Place debug button. */
-        var debugConfig = Configs.mainControlConfig.model().core.debug;
+        var debugConfig = Configs.MAIN_CONTROL_CONFIG.model().core.debug;
         GuiElementBuilder debugButton = new GuiElementBuilder()
             .setItem(debugConfig.log_debug_messages ? Items.GREEN_BANNER : Items.RED_BANNER)
             .setName(TextHelper.getTextByKey(player, "debug"))

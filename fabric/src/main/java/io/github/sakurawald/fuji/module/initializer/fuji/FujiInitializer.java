@@ -42,7 +42,7 @@ public class FujiInitializer extends ModuleInitializer {
     @CommandNode("reload")
     public static int $reload(@CommandSource ServerPlayerEntity source) {
         // Reload main-control file.
-        Configs.mainControlConfig.readStorage();
+        Configs.MAIN_CONTROL_CONFIG.readStorage();
 
         // Reload modules.
         Managers.getModuleManager().reloadModuleInitializers();
@@ -74,7 +74,7 @@ public class FujiInitializer extends ModuleInitializer {
     @Document("Toggle the debug mode of fuji.")
     @CommandNode("debug")
     public static int $debug(@CommandSource ServerPlayerEntity source) {
-        var config = Configs.mainControlConfig.model().core.debug;
+        var config = Configs.MAIN_CONTROL_CONFIG.model().core.debug;
         config.log_debug_messages = !config.log_debug_messages;
 
         TextHelper.sendMessageByKey(source, config.log_debug_messages ? "fuji.debug.on" : "fuji.debug.off");

@@ -25,7 +25,7 @@ public class StandardBackupManager extends BaseBackupManager {
     }
 
     protected boolean skipPath(@NotNull Path dir) {
-        for (String other : Configs.mainControlConfig.model().core.backup.skip) {
+        for (String other : Configs.MAIN_CONTROL_CONFIG.model().core.backup.skip) {
             if (dir.equals(Fuji.CONFIG_PATH.resolve(other))) return true;
         }
 
@@ -63,7 +63,7 @@ public class StandardBackupManager extends BaseBackupManager {
     protected void trimBackup() {
         List<Path> latestFiles = IOUtil.listLatestFiles(BACKUP_PATH);
         Iterator<Path> iterator = latestFiles.iterator();
-        while (iterator.hasNext() && latestFiles.size() > Configs.mainControlConfig.model().core.backup.max_slots - 1) {
+        while (iterator.hasNext() && latestFiles.size() > Configs.MAIN_CONTROL_CONFIG.model().core.backup.max_slots - 1) {
             Files.delete(iterator.next());
             iterator.remove();
         }

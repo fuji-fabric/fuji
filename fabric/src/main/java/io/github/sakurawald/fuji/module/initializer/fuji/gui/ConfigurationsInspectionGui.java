@@ -73,7 +73,7 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
     }
 
     private static Item toItem(BaseConfigurationHandler<?> entity) {
-        if (entity == Configs.mainControlConfig) {
+        if (entity == Configs.MAIN_CONTROL_CONFIG) {
             return Items.ENDER_CHEST;
         }
 

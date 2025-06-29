@@ -42,7 +42,7 @@ public class LogUtil {
 
     public static void debug(String message, Object... args) {
         /* Early return for performance. */
-        var debugConfig = Configs.mainControlConfig.model().core.debug;
+        var debugConfig = Configs.MAIN_CONTROL_CONFIG.model().core.debug;
         if (!debugConfig.log_debug_messages) {
             return;
         }

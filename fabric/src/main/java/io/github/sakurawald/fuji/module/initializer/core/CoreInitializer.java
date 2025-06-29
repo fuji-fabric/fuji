@@ -59,7 +59,7 @@ public class CoreInitializer extends ModuleInitializer {
     }
 
     public static void tryPrintUserGuide(List<String> enabledModuleList) {
-        if (Configs.mainControlConfig.model().core.debug.print_user_guide_in_console
+        if (Configs.MAIN_CONTROL_CONFIG.model().core.debug.print_user_guide_in_console
         || enabledModuleList.size() == 1) {
             printUserGuide();
         }
