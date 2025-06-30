@@ -30,41 +30,11 @@ public class ItemStackHelper {
     private static final String LORE_NBT_KEY = "Lore";
     private static final String DISPLAY_NBT_KEY = "display";
 
-    public static NbtElement toNbt(ItemStack stack, RegistryWrapper.WrapperLookup wrapperLookup, NbtElement nbtElement) {
-        if (stack.isEmpty()) {
-            throw new IllegalStateException("Cannot encode empty ItemStack");
-        }
-        #if MC_VER <= MC_1_20_4
-        return ItemStack.CODEC
-            .encode(stack, NbtOps.INSTANCE, nbtElement)
-            .getOrThrow(true, string -> LogUtil.debug("Failed to encode item: {}", string));
-        #elif MC_VER > MC_1_20_4
-        return ItemStack.CODEC
-            .encode(stack, wrapperLookup.getOps(NbtOps.INSTANCE), nbtElement)
-            .getOrThrow();
-        #endif
-
-    }
-
-    public static NbtElement encodeAllowEmpty(ItemStack stack, RegistryWrapper.WrapperLookup wrapperLookup) {
-        return stack.isEmpty() ? new NbtCompound() : ItemStackHelper.toNbt(stack, wrapperLookup, new NbtCompound());
-    }
-
-    public static Optional<ItemStack> fromNbt(RegistryWrapper.WrapperLookup wrapperLookup, NbtElement nbtElement) {
-        return ItemStack.CODEC
-            #if MC_VER <= MC_1_20_4
-            .parse(NbtOps.INSTANCE, nbtElement)
-            #elif MC_VER > MC_1_20_4
-            .parse(wrapperLookup.getOps(NbtOps.INSTANCE), nbtElement)
-            #endif
-            .resultOrPartial(string -> LogUtil.debug("Failed to decode item: '{}'", string));
-    }
-
     public static void setCustomName(ItemStack stack, Text customName) {
         #if MC_VER <= MC_1_20_4
         stack.setCustomName(customName);
         #elif MC_VER > MC_1_20_4
-            stack.set(DataComponentTypes.CUSTOM_NAME, customName);
+        stack.set(DataComponentTypes.CUSTOM_NAME, customName);
         #endif
     }
 
@@ -72,7 +42,7 @@ public class ItemStackHelper {
         #if MC_VER <= MC_1_20_4
         return stack.hasCustomName();
         #elif MC_VER > MC_1_20_4
-            return stack.get(DataComponentTypes.CUSTOM_NAME) != null;
+        return stack.get(DataComponentTypes.CUSTOM_NAME) != null;
         #endif
     }
 
@@ -99,8 +69,8 @@ public class ItemStackHelper {
         }
         display.put(LORE_NBT_KEY, loreItems);
         #elif MC_VER > MC_1_20_4
-            LoreComponent loreComponent = new LoreComponent(texts);
-            stack.set(DataComponentTypes.LORE, loreComponent);
+        LoreComponent loreComponent = new LoreComponent(texts);
+        stack.set(DataComponentTypes.LORE, loreComponent);
         #endif
     }
 
@@ -118,14 +88,14 @@ public class ItemStackHelper {
         #endif
     }
 
-    public static boolean canCombine(ItemStack itemStack, ItemStack itemStack2) {
-        if (!itemStack.isOf(itemStack2.getItem())) {
+    public static boolean canCombine(ItemStack a, ItemStack b) {
+        if (!a.isOf(b.getItem())) {
             return false;
         }
-        if (itemStack.isEmpty() && itemStack2.isEmpty()) {
+        if (a.isEmpty() && b.isEmpty()) {
             return true;
         }
-        return Objects.equals(Nbt.getNbt(itemStack), Nbt.getNbt(itemStack2));
+        return Objects.equals(Nbt.getNbt(a), Nbt.getNbt(b));
     }
 
     public static boolean filterItemStack(@Nullable ItemStack itemStack, String keyword) {
@@ -141,7 +111,7 @@ public class ItemStackHelper {
     }
 
     @SuppressWarnings("RedundantIfStatement")
-    public static boolean filterItemName(ItemStack itemStack, String keyword) {
+    private static boolean filterItemName(ItemStack itemStack, String keyword) {
         String itemName = TextHelper.visitString(itemStack.getName());
         if (itemName
             .toLowerCase()
@@ -150,7 +120,7 @@ public class ItemStackHelper {
     }
 
     @SuppressWarnings("RedundantIfStatement")
-    public static boolean filterItemLore(ItemStack itemStack, String keyword) {
+    private static boolean filterItemLore(ItemStack itemStack, String keyword) {
         boolean matched = getLore(itemStack)
             .stream()
             .anyMatch(text -> TextHelper.visitString(text)
@@ -169,32 +139,34 @@ public class ItemStackHelper {
                 return new NbtCompound();
             }
 
-            #if MC_VER <= MC_1_21
-                return encodeAllowEmpty(stack, wrapperLookup);
-            #elif MC_VER > MC_1_21
-                return StackHelper.toNbt(stack, wrapperLookup, new NbtCompound());
-            #endif
+            return Nbt.toNbt(stack, wrapperLookup, new NbtCompound());
         }
 
-        public static ItemStack fromNbtOrEmpty(RegistryWrapper.WrapperLookup wrapperLookup, NbtCompound nbtCompound) {
+        public static ItemStack fromNbtOrEmpty(RegistryWrapper.WrapperLookup wrapperLookup, @Nullable NbtCompound nbtCompound) {
             /* Return empty item stack if NBT is empty. */
-            if (nbtCompound.isEmpty()) {
+            if (nbtCompound == null || nbtCompound.isEmpty()) {
                 return ItemStack.EMPTY;
             }
 
-            return fromNbt(wrapperLookup, nbtCompound).orElse(ItemStack.EMPTY);
+            return fromNbt(wrapperLookup, nbtCompound)
+                    .orElse(ItemStack.EMPTY);
         }
 
         public static NbtList writeSlotsNode(@NotNull NbtList node, @NotNull List<ItemStack> stackList) {
-            for (ItemStack stack : stackList) {
-                node.add(toNbtAllowEmpty(stack, RegistryHelper.getDefaultWrapperLookup()));
-            }
+            stackList.forEach(itemStack -> {
+                NbtElement nbtAllowEmpty = toNbtAllowEmpty(itemStack, RegistryHelper.getDefaultWrapperLookup());
+                node.add(nbtAllowEmpty);
+            });
             return node;
         }
 
         public static @NotNull List<ItemStack> readSlotsNode(@Nullable NbtList node) {
-            if (node == null) return new ArrayList<>();
+            /* Return empty list. */
+            if (node == null) {
+                return new ArrayList<>();
+            }
 
+            /* Map the NBT to ItemStack. */
             List<ItemStack> ret = new ArrayList<>();
             for (int i = 0; i < node.size(); i++) {
                 ret.add(fromNbtOrEmpty(RegistryHelper.getDefaultWrapperLookup(), NbtHelper.Primitives.getCompound(node, i)));
@@ -209,7 +181,6 @@ public class ItemStackHelper {
             }
 
             nbtConsumer.accept(targetNbt);
-
             setNbt(stack, targetNbt);
         }
 
@@ -228,6 +199,33 @@ public class ItemStackHelper {
             #elif MC_VER > MC_1_20_4
             stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(newNbt));
             #endif
+        }
+
+        public static NbtElement toNbt(ItemStack stack, RegistryWrapper.WrapperLookup wrapperLookup, NbtElement nbtElement) {
+            if (stack.isEmpty()) {
+                throw new IllegalStateException("Cannot encode empty ItemStack");
+            }
+
+            #if MC_VER <= MC_1_20_4
+            return ItemStack.CODEC
+                .encode(stack, NbtOps.INSTANCE, nbtElement)
+                .getOrThrow(true, string -> LogUtil.debug("Failed to encode item: {}", string));
+            #elif MC_VER > MC_1_20_4
+            return ItemStack.CODEC
+                .encode(stack, wrapperLookup.getOps(NbtOps.INSTANCE), nbtElement)
+                .getOrThrow();
+            #endif
+
+        }
+
+        public static Optional<ItemStack> fromNbt(RegistryWrapper.WrapperLookup wrapperLookup, NbtElement nbtElement) {
+            return ItemStack.CODEC
+                #if MC_VER <= MC_1_20_4
+                .parse(NbtOps.INSTANCE, nbtElement)
+                #elif MC_VER > MC_1_20_4
+                .parse(wrapperLookup.getOps(NbtOps.INSTANCE), nbtElement)
+                #endif
+                .resultOrPartial(string -> LogUtil.debug("Failed to decode item: '{}'", string));
         }
     }
 }

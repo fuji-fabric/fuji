@@ -187,7 +187,7 @@ public abstract class Work {
         NbtCompound rootTag = new NbtCompound();
         rootTag.putString("id", this.getIconItemIdentifier());
         rootTag.putInt("Count", 1);
-        Optional<ItemStack> itemStack = ItemStackHelper.fromNbt(ServerHelper.getServer().getRegistryManager(), rootTag);
+        Optional<ItemStack> itemStack = ItemStackHelper.Nbt.fromNbt(ServerHelper.getServer().getRegistryManager(), rootTag);
         if (itemStack.isEmpty()) {
             return Items.BARRIER;
         }
