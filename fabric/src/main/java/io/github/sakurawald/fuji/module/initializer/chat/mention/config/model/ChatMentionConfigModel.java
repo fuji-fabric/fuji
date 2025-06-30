@@ -5,7 +5,7 @@ import io.github.sakurawald.fuji.core.job.impl.PlaySoundJob;
 
 public class ChatMentionConfigModel {
 
-    public PlaySoundJob.PlayerSoundJobSetup mention_player = new PlaySoundJob.PlayerSoundJobSetup();
+    public PlaySoundJob.PlaySoundJobSetup mention_player = new PlaySoundJob.PlaySoundJobSetup();
 
     @Document("""
         The format used in `chat message` when a player is `mentioned`.

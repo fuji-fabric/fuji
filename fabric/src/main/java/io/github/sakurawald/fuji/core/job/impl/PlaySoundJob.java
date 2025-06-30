@@ -26,14 +26,14 @@ public class PlaySoundJob extends FixedIntervalJob {
         super(null, null, jobDataMap, intervalMs, repeatCount);
     }
 
-    public static void scheduleJob(PlayerSoundJobSetup setup, List<ServerPlayerEntity> mentionedPlayers) {
+    public static void scheduleJob(PlaySoundJobSetup setup, List<ServerPlayerEntity> mentionedPlayers) {
         /* Make the job. */
         int intervalMs = setup.interval_ms;
         int repeatCount = setup.repeat_count;
         PlaySoundJob mentionPlayersJob = new PlaySoundJob(new JobDataMap() {
             {
                 this.put(List.class.getName(), mentionedPlayers);
-                this.put(PlayerSoundJobSetup.class.getName(), setup);
+                this.put(PlaySoundJobSetup.class.getName(), setup);
             }
         }, intervalMs, repeatCount);
 
@@ -41,7 +41,7 @@ public class PlaySoundJob extends FixedIntervalJob {
         Managers.getScheduleManager().scheduleJob(mentionPlayersJob);
     }
 
-    public static void scheduleJob(PlayerSoundJobSetup setup, ServerPlayerEntity serverPlayer) {
+    public static void scheduleJob(PlaySoundJobSetup setup, ServerPlayerEntity serverPlayer) {
         scheduleJob(setup, new ArrayList<>(Collections.singletonList(serverPlayer)));
     }
 
@@ -49,7 +49,7 @@ public class PlaySoundJob extends FixedIntervalJob {
     @Override
     public void execute(@NotNull JobExecutionContext context) {
         List<ServerPlayerEntity> players = (List<ServerPlayerEntity>) context.getJobDetail().getJobDataMap().get(List.class.getName());
-        PlayerSoundJobSetup setup = (PlayerSoundJobSetup) context.getJobDetail().getJobDataMap().get(PlayerSoundJobSetup.class.getName());
+        PlaySoundJobSetup setup = (PlaySoundJobSetup) context.getJobDetail().getJobDataMap().get(PlaySoundJobSetup.class.getName());
 
         players
             .stream()
@@ -65,7 +65,7 @@ public class PlaySoundJob extends FixedIntervalJob {
 
     }
 
-    public static class PlayerSoundJobSetup {
+    public static class PlaySoundJobSetup {
         @Document("The `sound` identifier.")
         public @NotNull String sound = "entity.experience_orb.pickup";
 

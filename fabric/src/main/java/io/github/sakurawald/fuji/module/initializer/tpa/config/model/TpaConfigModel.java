@@ -10,5 +10,5 @@ public class TpaConfigModel {
     @Document("This is the timeout.")
     public int request_timeout = 300;
 
-    public PlaySoundJob.PlayerSoundJobSetup mention_player = new PlaySoundJob.PlayerSoundJobSetup();
+    public PlaySoundJob.PlaySoundJobSetup mention_player = new PlaySoundJob.PlaySoundJobSetup();
 }
