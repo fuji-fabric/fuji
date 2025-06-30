@@ -19,6 +19,7 @@ import net.minecraft.nbt.NbtList;
 
 #if MC_VER <= MC_1_20_4
 import java.util.stream.Collectors;
+import net.minecraft.nbt.NbtString;
 #elif MC_VER > MC_1_20_4
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.component.DataComponentTypes;
