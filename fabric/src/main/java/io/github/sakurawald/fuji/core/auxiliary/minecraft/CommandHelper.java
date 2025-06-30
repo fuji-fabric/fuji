@@ -76,12 +76,11 @@ public class CommandHelper {
     }
 
     private static void collectCommandNodes(List<CommandNode<ServerCommandSource>> collector, CommandNode<ServerCommandSource> parent) {
-        /* Walk down. */
+        /* Walk down and collect. */
         parent
             .getChildren()
             .forEach(it -> collectCommandNodes(collector, it));
 
-        // Exclude the `root command node` from the result.
         if (isRootCommandNode(parent)) {
             collector.add(parent);
         }
