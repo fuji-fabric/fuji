@@ -26,7 +26,7 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 #endif
 
-public class StackHelper {
+public class ItemStackHelper {
 
     private static final String LORE_NBT_KEY = "Lore";
     private static final String DISPLAY_NBT_KEY = "display";
@@ -48,7 +48,7 @@ public class StackHelper {
     }
 
     public static NbtElement encodeAllowEmpty(ItemStack stack, RegistryWrapper.WrapperLookup wrapperLookup) {
-        return stack.isEmpty() ? new NbtCompound() : StackHelper.toNbt(stack, wrapperLookup, new NbtCompound());
+        return stack.isEmpty() ? new NbtCompound() : ItemStackHelper.toNbt(stack, wrapperLookup, new NbtCompound());
     }
 
     public static Optional<ItemStack> fromNbt(RegistryWrapper.WrapperLookup wrapperLookup, NbtElement nbtElement) {

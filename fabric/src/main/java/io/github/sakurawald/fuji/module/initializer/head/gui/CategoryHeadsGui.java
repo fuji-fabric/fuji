@@ -4,7 +4,7 @@ import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.StackHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.PagedGui;
 import io.github.sakurawald.fuji.module.initializer.head.HeadInitializer;
@@ -66,7 +66,7 @@ public class CategoryHeadsGui extends PagedGui<Head> {
             } else { // Single click -> buy one.
                 EconomyType.tryPurchaseHeads(player, 1, () -> player.currentScreenHandler.setCursorStack(headStack));
             }
-        } else if (StackHelper.canCombine(headStack, cursorStack)) {
+        } else if (ItemStackHelper.canCombine(headStack, cursorStack)) {
             if (type.isLeft) { // Single click -> buy one.
                 EconomyType.tryPurchaseHeads(player, 1, () -> cursorStack.increment(1));
             } else if (type.isRight) { // Right click -> only allow to return of goods when it's free.

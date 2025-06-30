@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.mixin.command_attachment;
 
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.StackHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.UuidHelper;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.CommandAttachmentInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
@@ -25,7 +25,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
     void onPlayerLeftClick(Hand hand, CallbackInfo ci) {
         if (hand.equals(Hand.MAIN_HAND)) {
             ItemStack mainHandStack = player.getMainHandStack();
-            String uuid = UuidHelper.getAttachedUuid(StackHelper.Nbt.getNbt(mainHandStack));
+            String uuid = UuidHelper.getAttachedUuid(ItemStackHelper.Nbt.getNbt(mainHandStack));
             ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
 
             CommandAttachmentInitializer.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.LEFT, InteractType.BOTH));

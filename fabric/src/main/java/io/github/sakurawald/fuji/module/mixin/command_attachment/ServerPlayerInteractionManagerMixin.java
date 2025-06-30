@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.module.mixin.command_attachment;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.StackHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.UuidHelper;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.CommandAttachmentInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
@@ -33,7 +33,7 @@ public class ServerPlayerInteractionManagerMixin {
 
     @Inject(method = "interactItem", at = @At("HEAD"))
     void onPlayerRightClick(ServerPlayerEntity serverPlayerEntity, World world, @NotNull ItemStack itemStack, Hand hand, @NotNull CallbackInfoReturnable<ActionResult> cir) {
-        String uuid = UuidHelper.getAttachedUuid(StackHelper.Nbt.getNbt(itemStack));
+        String uuid = UuidHelper.getAttachedUuid(ItemStackHelper.Nbt.getNbt(itemStack));
 
         CommandAttachmentInitializer.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.RIGHT, InteractType.BOTH));
     }

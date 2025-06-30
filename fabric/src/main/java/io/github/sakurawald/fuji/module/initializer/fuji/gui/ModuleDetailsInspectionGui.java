@@ -4,7 +4,7 @@ import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.StackHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.gui.PagedGui;
@@ -221,7 +221,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
 
     @Override
     protected boolean filterEntity(GuiElementInterface entity, String keyword) {
-        return StackHelper.filterItemStack(entity.getItemStack(), keyword);
+        return ItemStackHelper.filterItemStack(entity.getItemStack(), keyword);
     }
 
 }

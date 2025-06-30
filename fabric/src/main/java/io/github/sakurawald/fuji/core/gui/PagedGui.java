@@ -4,7 +4,7 @@ import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import eu.pb4.sgui.api.gui.layered.LayeredGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.StackHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.layer.SingleLineLayer;
 import io.github.sakurawald.fuji.core.gui.structure.EntityToElementMapper;
@@ -154,7 +154,7 @@ public abstract class PagedGui<T> extends LayeredGui {
         }
 
         ItemStack itemStack = element.getItemStack();
-        if (StackHelper.filterItemStack(itemStack, keyword)) {
+        if (ItemStackHelper.filterItemStack(itemStack, keyword)) {
             return true;
         }
 

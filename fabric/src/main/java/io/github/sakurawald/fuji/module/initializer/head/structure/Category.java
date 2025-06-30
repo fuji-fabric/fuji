@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.head.structure;
 
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.StackHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -77,7 +77,7 @@ public enum Category {
     }
 
     public @NotNull ItemStack toItemStack(ServerPlayerEntity player) {
-        StackHelper.setCustomName(icon, this.getText(player));
+        ItemStackHelper.setCustomName(icon, this.getText(player));
         return icon;
     }
 

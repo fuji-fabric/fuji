@@ -7,7 +7,7 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.StackHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.PagedGui;
 import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
@@ -85,7 +85,7 @@ public class AboutGui extends PagedGui<Person> {
                     .setCallback(slot.getGuiCallback())
                     .setSkullOwner(gameProfile, ServerHelper.getServer());
 
-                List<Text> lore = StackHelper.getLore(itemStack);
+                List<Text> lore = ItemStackHelper.getLore(itemStack);
                 if (!lore.isEmpty()) {
                     builder.setLore(lore);
                 }

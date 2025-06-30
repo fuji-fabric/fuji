@@ -4,7 +4,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.StackHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -296,7 +296,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @CommandNode("query-item")
     private static int queryItem(@CommandSource ServerPlayerEntity player) {
         return CommandHelper.Pattern.itemInHandCommand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
-            String uuid = UuidHelper.getAttachedUuid(StackHelper.Nbt.getNbt(mainHandStack));
+            String uuid = UuidHelper.getAttachedUuid(ItemStackHelper.Nbt.getNbt(mainHandStack));
 
             doQueryAttachment(player, uuid);
             return CommandHelper.Return.SUCCESS;

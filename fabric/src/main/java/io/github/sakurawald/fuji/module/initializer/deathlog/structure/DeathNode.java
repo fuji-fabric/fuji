@@ -4,7 +4,7 @@ import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.InventoryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.NbtHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.StackHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.module.initializer.deathlog.DeathLogInitializer;
 import lombok.Data;
@@ -76,11 +76,11 @@ public class DeathNode {
         NbtCompound inventoryNode = NbtHelper.Primitives.getCompound(nbt, INVENTORY_KEY);
 
         // restore main stacks (1*9 slots + 3*9 slots)
-        deathNode.main = StackHelper.Nbt.readSlotsNode((NbtList) inventoryNode.get(ITEM_KEY));
+        deathNode.main = ItemStackHelper.Nbt.readSlotsNode((NbtList) inventoryNode.get(ITEM_KEY));
 
-        deathNode.armor = StackHelper.Nbt.readSlotsNode((NbtList) inventoryNode.get(ARMOR_KEY));
+        deathNode.armor = ItemStackHelper.Nbt.readSlotsNode((NbtList) inventoryNode.get(ARMOR_KEY));
 
-        deathNode.offhand = StackHelper.Nbt.readSlotsNode((NbtList) inventoryNode.get(OFFHAND_KEY));
+        deathNode.offhand = ItemStackHelper.Nbt.readSlotsNode((NbtList) inventoryNode.get(OFFHAND_KEY));
 
         deathNode.score = NbtHelper.Primitives.getInt(inventoryNode, SCORE_KEY);
         deathNode.expLevel = NbtHelper.Primitives.getInt(inventoryNode, XP_LEVEL_KEY);
@@ -118,9 +118,9 @@ public class DeathNode {
         NbtCompound inventoryTag = new NbtCompound();
         PlayerInventory inventory = player.getInventory();
 
-        inventoryTag.put(ARMOR_KEY, StackHelper.Nbt.writeSlotsNode(new NbtList(), InventoryHelper.getArmorStacks(player)));
-        inventoryTag.put(OFFHAND_KEY, StackHelper.Nbt.writeSlotsNode(new NbtList(), InventoryHelper.getOffhandStack(player)));
-        inventoryTag.put(ITEM_KEY, StackHelper.Nbt.writeSlotsNode(new NbtList(), InventoryHelper.getMainStacks(player)));
+        inventoryTag.put(ARMOR_KEY, ItemStackHelper.Nbt.writeSlotsNode(new NbtList(), InventoryHelper.getArmorStacks(player)));
+        inventoryTag.put(OFFHAND_KEY, ItemStackHelper.Nbt.writeSlotsNode(new NbtList(), InventoryHelper.getOffhandStack(player)));
+        inventoryTag.put(ITEM_KEY, ItemStackHelper.Nbt.writeSlotsNode(new NbtList(), InventoryHelper.getMainStacks(player)));
 
         inventoryTag.putInt(SCORE_KEY, player.getScore());
         inventoryTag.putInt(XP_LEVEL_KEY, player.experienceLevel);

@@ -10,7 +10,7 @@ import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.StackHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.ConfirmGui;
 import io.github.sakurawald.fuji.core.gui.InputSignGui;
@@ -187,7 +187,7 @@ public abstract class Work {
         NbtCompound rootTag = new NbtCompound();
         rootTag.putString("id", this.getIconItemIdentifier());
         rootTag.putInt("Count", 1);
-        Optional<ItemStack> itemStack = StackHelper.fromNbt(ServerHelper.getServer().getRegistryManager(), rootTag);
+        Optional<ItemStack> itemStack = ItemStackHelper.fromNbt(ServerHelper.getServer().getRegistryManager(), rootTag);
         if (itemStack.isEmpty()) {
             return Items.BARRIER;
         }
