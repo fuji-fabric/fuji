@@ -525,7 +525,7 @@ public class TextHelper {
     public static void sendBroadcastByValue(Text text) {
         LogUtil.info(visitString(text));
 
-        for (ServerPlayerEntity player : ServerHelper.getPlayers()) {
+        for (ServerPlayerEntity player : ServerHelper.getOnlinePlayers()) {
             player.sendMessage(text);
         }
     }

@@ -71,12 +71,12 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
     private void handleRestoreButton(SimpleGui displayGui, ServerPlayerEntity viewingPlayer) {
             /* Ensure the restore target player's inventory is empty. */
             if (!viewingPlayer.getInventory().isEmpty()) {
-                TextHelper.sendMessageByKey(viewingPlayer, "deathlog.restore.target_player.inventory_not_empty", PlayerHelper.getName(viewingPlayer));
+                TextHelper.sendMessageByKey(viewingPlayer, "deathlog.restore.target_player.inventory_not_empty", PlayerHelper.getPlayerName(viewingPlayer));
                 return;
             }
 
             /* Restore the inventory. */
-            LogUtil.debug("Restore the death node {} for target player {}", deathNode, PlayerHelper.getName(viewingPlayer));
+            LogUtil.debug("Restore the death node {} for target player {}", deathNode, PlayerHelper.getPlayerName(viewingPlayer));
             for (int i = 0; i < this.main.size(); i++) {
                 InventoryHelper.getMainStacks(viewingPlayer).set(i, this.deathNode.main.get(i));
             }

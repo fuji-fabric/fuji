@@ -42,12 +42,12 @@ public class ChatMentionInitializer extends ModuleInitializer {
             .filter(chatString::contains)
             // Mention the longest name first.
             .sorted(Comparator.comparingInt(String::length).reversed())
-            .map(ServerHelper::getPlayerByName)
+            .map(ServerHelper::getOnlinePlayerByName)
             .toList();
 
         /* Submit the mention player job. */
         if (!mentionedPlayers.isEmpty()) {
-            LogUtil.debug("Submit new mention job: mentionedPlayers = {}", mentionedPlayers.stream().map(PlayerHelper::getName));
+            LogUtil.debug("Submit new mention job: mentionedPlayers = {}", mentionedPlayers.stream().map(PlayerHelper::getPlayerName));
             MentionPlayersJob.submitJob(config.model().mention_player, mentionedPlayers);
         }
 

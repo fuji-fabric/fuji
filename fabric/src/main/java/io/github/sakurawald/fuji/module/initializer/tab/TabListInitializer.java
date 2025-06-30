@@ -26,7 +26,7 @@ public class TabListInitializer extends ModuleInitializer {
     public static void render() {
         String headerControl = RandomUtil.drawList(config.model().style.header);
         String footerControl = RandomUtil.drawList(config.model().style.footer);
-        for (ServerPlayerEntity player : ServerHelper.getPlayers()) {
+        for (ServerPlayerEntity player : ServerHelper.getOnlinePlayers()) {
             @NotNull Text header = TextHelper.getTextByValue(player, headerControl);
             @NotNull Text footer = TextHelper.getTextByValue(player, footerControl);
             player.networkHandler.sendPacket(new PlayerListHeaderS2CPacket(header, footer));

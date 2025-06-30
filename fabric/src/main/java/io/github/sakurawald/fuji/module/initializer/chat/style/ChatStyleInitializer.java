@@ -113,7 +113,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
     @CommandNode("set")
     private static int setPerPlayerFormat(@CommandSource @CommandTarget ServerPlayerEntity player, GreedyString format) {
         /* Save the new format. */
-        String playerName = PlayerHelper.getName(player);
+        String playerName = PlayerHelper.getPlayerName(player);
         String newFormat = format.getValue();
         newFormat = stripeStyleTags(player, newFormat);
         String stripedFormat = newFormat;
@@ -133,7 +133,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
     @CommandNode("reset")
     private static int resetPerPlayerFormat(@CommandSource @CommandTarget ServerPlayerEntity player) {
         /* Remove the per-player format. */
-        String playerName = PlayerHelper.getName(player);
+        String playerName = PlayerHelper.getPlayerName(player);
         chatFormatData.model().format.player2format.remove(playerName);
         chatFormatData.writeStorage();
 
@@ -149,7 +149,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
 
     public static @NotNull Text parseContentText(@NotNull ServerPlayerEntity player, String message) {
         String contentString = config.model().style.content.formatted(message);
-        String playerName = PlayerHelper.getName(player);
+        String playerName = PlayerHelper.getPlayerName(player);
         contentString = chatFormatData.model().format.player2format.getOrDefault(playerName, DEFAULT_CONTENT_FORMAT)
             .replace("%message%", contentString);
         contentString = stripeStyleTags(player, contentString);

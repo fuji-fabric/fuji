@@ -55,7 +55,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
     private static final Map<String, Cooldown<String>> player2cooldown = new HashMap<>();
 
     public static long computeCooldown(ServerPlayerEntity player, @NotNull String commandLine) {
-        String playerName = PlayerHelper.getName(player);
+        String playerName = PlayerHelper.getPlayerName(player);
         Cooldown<String> cooldown = player2cooldown.computeIfAbsent(playerName, k -> new Cooldown<>());
 
         Optional<Map.Entry<String, Long>> first = config.model().unnamed_cooldown.entrySet()

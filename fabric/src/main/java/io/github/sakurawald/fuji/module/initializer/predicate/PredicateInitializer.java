@@ -43,7 +43,7 @@ public class PredicateInitializer extends ModuleInitializer {
     @CommandNode("has-players?")
     private static int hasPlayers(@CommandSource ServerCommandSource source, Optional<Integer> n) {
         int $n = n.orElse(0);
-        boolean value = ServerHelper.getPlayers().size() >= $n;
+        boolean value = ServerHelper.getOnlinePlayers().size() >= $n;
         return CommandHelper.Return.returnBoolean(source, value);
     }
 

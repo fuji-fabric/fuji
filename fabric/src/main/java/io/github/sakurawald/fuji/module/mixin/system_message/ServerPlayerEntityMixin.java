@@ -29,7 +29,7 @@ public abstract class ServerPlayerEntityMixin {
             // NOTE: If the value is specified to null, then it means we should cancel the sending of it.
             if (key2value.containsKey(translatableKey) && key2value.get(translatableKey) == null) {
                 ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-                LogUtil.debug("Cancel sending message {} to player {}.", translatableKey, PlayerHelper.getName(player));
+                LogUtil.debug("Cancel sending message {} to player {}.", translatableKey, PlayerHelper.getPlayerName(player));
                 ci.cancel();
             }
         }

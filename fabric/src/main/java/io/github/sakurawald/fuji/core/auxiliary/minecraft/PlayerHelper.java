@@ -122,7 +122,7 @@ public class PlayerHelper {
         #endif
     }
 
-    public static String getName(PlayerEntity player) {
+    public static String getPlayerName(PlayerEntity player) {
         return player.getGameProfile().getName();
     }
 

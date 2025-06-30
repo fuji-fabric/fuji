@@ -25,7 +25,7 @@ public abstract class BaseDisplayGuiFactory {
     }
 
     protected BaseDisplayGuiFactory(ServerPlayerEntity sourcePlayer) {
-        this(TextHelper.getTextByKey(sourcePlayer, "display.gui.title", PlayerHelper.getName(sourcePlayer)));
+        this(TextHelper.getTextByKey(sourcePlayer, "display.gui.title", PlayerHelper.getPlayerName(sourcePlayer)));
     }
 
     protected static void placeDisplayItemStack(@NotNull SimpleGui gui, int i, @NotNull ItemStack itemStack, SlotClickForDeeperDisplayCallback slotClickForDeeperDisplayCallback) {

@@ -62,8 +62,8 @@ public class TpaRequest {
     }
 
     private @NotNull Text toSenderText$Description() {
-        return tpahere ? TextHelper.getTextByKey(getSender(), "tpa.others_to_you", PlayerHelper.getName(receiver))
-            : TextHelper.getTextByKey(getSender(), "tpa.you_to_others", PlayerHelper.getName(receiver));
+        return tpahere ? TextHelper.getTextByKey(getSender(), "tpa.others_to_you", PlayerHelper.getPlayerName(receiver))
+            : TextHelper.getTextByKey(getSender(), "tpa.you_to_others", PlayerHelper.getPlayerName(receiver));
     }
 
     public MutableText toSenderText$Sent() {
@@ -72,7 +72,7 @@ public class TpaRequest {
                 .copy()
                 .fillStyle(Style.EMPTY
                     .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(getSender(), "cancel")))
-                    .withClickEvent(TextHelper.ClickEvent.makeRunCommandAction("/tpacancel %s".formatted(PlayerHelper.getName(getReceiver()))))
+                    .withClickEvent(TextHelper.ClickEvent.makeRunCommandAction("/tpacancel %s".formatted(PlayerHelper.getPlayerName(getReceiver()))))
                 );
 
         return toSenderText$Description()
@@ -82,8 +82,8 @@ public class TpaRequest {
     }
 
     private @NotNull Text toReceiverText$Description() {
-        return tpahere ? TextHelper.getTextByKey(getReceiver(), "tpa.you_to_others", PlayerHelper.getName(sender))
-            : TextHelper.getTextByKey(getReceiver(), "tpa.others_to_you", PlayerHelper.getName(sender));
+        return tpahere ? TextHelper.getTextByKey(getReceiver(), "tpa.you_to_others", PlayerHelper.getPlayerName(sender))
+            : TextHelper.getTextByKey(getReceiver(), "tpa.others_to_you", PlayerHelper.getPlayerName(sender));
     }
 
     @NotNull
@@ -92,13 +92,13 @@ public class TpaRequest {
             .copy()
             .fillStyle(Style.EMPTY
                 .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(getReceiver(), "accept")))
-                .withClickEvent(TextHelper.ClickEvent.makeRunCommandAction("/tpaaccept %s".formatted(PlayerHelper.getName(sender)))));
+                .withClickEvent(TextHelper.ClickEvent.makeRunCommandAction("/tpaaccept %s".formatted(PlayerHelper.getPlayerName(sender)))));
 
         Text denyText = TextHelper.getTextByKey(receiver, "reject.button")
                 .copy()
                 .fillStyle(Style.EMPTY
                     .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(getReceiver(), "deny")))
-                    .withClickEvent(TextHelper.ClickEvent.makeRunCommandAction("/tpadeny %s".formatted(PlayerHelper.getName(sender))))
+                    .withClickEvent(TextHelper.ClickEvent.makeRunCommandAction("/tpadeny %s".formatted(PlayerHelper.getPlayerName(sender))))
                 );
 
         return toReceiverText$Description()

@@ -84,7 +84,7 @@ public class ChatSpyInitializer extends ModuleInitializer {
         }
 
         /* Send the notification. */
-        ServerHelper.getPlayers()
+        ServerHelper.getOnlinePlayers()
             .stream()
             .filter(it -> withOptions(it).enabled)
             .forEach(it -> it.sendMessage(notificationText));

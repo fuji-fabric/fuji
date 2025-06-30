@@ -62,7 +62,7 @@ public class ChunkScore implements Comparable<ChunkScore> {
         type2amount.put(type, type2amount.get(type) + 1);
 
         if (entity instanceof ServerPlayerEntity player) {
-            this.players.add(PlayerHelper.getName(player));
+            this.players.add(PlayerHelper.getPlayerName(player));
         }
     }
 

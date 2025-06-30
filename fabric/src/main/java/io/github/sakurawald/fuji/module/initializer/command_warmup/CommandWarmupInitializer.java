@@ -32,7 +32,7 @@ public class CommandWarmupInitializer extends ModuleInitializer {
     private static final BaseConfigurationHandler<CommandWarmupConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandWarmupConfigModel.class);
 
     public static void processCommandWarmup(ServerPlayerEntity player, String commandString, CallbackInfo ci) {
-        LogUtil.debug("Process command warmup: player = {}, command = {}", PlayerHelper.getName(player), commandString);
+        LogUtil.debug("Process command warmup: player = {}, command = {}", PlayerHelper.getPlayerName(player), commandString);
 
         /* Iterate the node entries. */
         var config = CommandWarmupInitializer.config.model();

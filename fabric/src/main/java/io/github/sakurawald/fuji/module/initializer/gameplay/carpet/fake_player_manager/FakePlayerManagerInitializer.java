@@ -58,13 +58,13 @@ public class FakePlayerManagerInitializer extends ModuleInitializer {
                 List<String> newValue = e.getValue()
                     .stream()
                     .filter(fakePlayerName -> {
-                        ServerPlayerEntity fakePlayer = ServerHelper.getPlayerByNameIgnoreCase(fakePlayerName);
+                        ServerPlayerEntity fakePlayer = ServerHelper.getOnlinePlayerByNameIgnoreCase(fakePlayerName);
                         if (fakePlayer == null) return false;
 
                         /* check: expiration */
                         if (currentTimeMs >= expiration) {
                             /* auto-renew the fake players if the owner player is online */
-                            ServerPlayerEntity owner = ServerHelper.getPlayerByNameIgnoreCase(ownerPlayerName);
+                            ServerPlayerEntity owner = ServerHelper.getOnlinePlayerByNameIgnoreCase(ownerPlayerName);
                             if (owner != null) {
                                 renewMyFakePlayers(owner);
                                 return true;
@@ -129,7 +129,7 @@ public class FakePlayerManagerInitializer extends ModuleInitializer {
     public static void invalidFakePlayers() {
         player2fakePlayers.values()
             .forEach(value -> value.removeIf(fakePlayerName -> {
-                ServerPlayerEntity fakePlayer = ServerHelper.getPlayerByNameIgnoreCase(fakePlayerName);
+                ServerPlayerEntity fakePlayer = ServerHelper.getOnlinePlayerByNameIgnoreCase(fakePlayerName);
                 return fakePlayer == null || fakePlayer.isRemoved();
             }));
     }

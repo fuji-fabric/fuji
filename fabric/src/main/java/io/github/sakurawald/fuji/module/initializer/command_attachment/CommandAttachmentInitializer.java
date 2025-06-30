@@ -23,7 +23,6 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
-import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.ExecuteAsType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
@@ -37,7 +36,6 @@ import io.github.sakurawald.fuji.module.initializer.command_attachment.structure
 import lombok.SneakyThrows;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -102,7 +100,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     }
 
     public static void testSteppingBlockForPlayers() {
-        ServerHelper.getPlayers().forEach(CommandAttachmentInitializer::testSteppingBlockForPlayer);
+        ServerHelper.getOnlinePlayers().forEach(CommandAttachmentInitializer::testSteppingBlockForPlayer);
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")

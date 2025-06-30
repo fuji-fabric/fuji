@@ -23,7 +23,7 @@ public class ForEachInitializer extends ModuleInitializer {
     private static int foreach(GreedyString rest) {
         String $rest = rest.getValue();
 
-        for (ServerPlayerEntity player : ServerHelper.getPlayers()) {
+        for (ServerPlayerEntity player : ServerHelper.getOnlinePlayers()) {
             CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), $rest);
         }
         return CommandHelper.Return.SUCCESS;

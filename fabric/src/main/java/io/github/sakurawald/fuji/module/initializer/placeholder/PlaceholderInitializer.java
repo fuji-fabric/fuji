@@ -317,7 +317,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
             Pick a `random` player in `online` players, and returns its `name`.
             """);
         PlaceholderHelper.registerServerPlaceholder(descriptor, (server, args) -> {
-            List<ServerPlayerEntity> playerList = ServerHelper.getPlayers();
+            List<ServerPlayerEntity> playerList = ServerHelper.getOnlinePlayers();
             ServerPlayerEntity serverPlayerEntity = RandomUtil.drawList(playerList);
             return Text.literal(serverPlayerEntity.getGameProfile().getName());
         });

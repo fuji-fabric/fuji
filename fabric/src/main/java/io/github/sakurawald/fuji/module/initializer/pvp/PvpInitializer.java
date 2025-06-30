@@ -27,7 +27,7 @@ public class PvpInitializer extends ModuleInitializer {
     @CommandNode("pvp on")
     private static int $on(@CommandSource @CommandTarget ServerPlayerEntity player) {
         Set<String> whitelist = data.model().whitelist;
-        String playerName = PlayerHelper.getName(player);
+        String playerName = PlayerHelper.getPlayerName(player);
 
         if (!whitelist.contains(playerName)) {
             whitelist.add(playerName);
@@ -45,7 +45,7 @@ public class PvpInitializer extends ModuleInitializer {
     @CommandNode("pvp off")
     private static int $off(@CommandSource @CommandTarget ServerPlayerEntity player) {
         Set<String> whitelist = data.model().whitelist;
-        String playerName = PlayerHelper.getName(player);
+        String playerName = PlayerHelper.getPlayerName(player);
 
         if (whitelist.contains(playerName)) {
             whitelist.remove(playerName);
@@ -63,7 +63,7 @@ public class PvpInitializer extends ModuleInitializer {
     @CommandNode("pvp status")
     private static int $status(@CommandSource @CommandTarget ServerPlayerEntity player) {
         Set<String> whitelist = data.model().whitelist;
-        String playerName = PlayerHelper.getName(player);
+        String playerName = PlayerHelper.getPlayerName(player);
 
         boolean flag = whitelist.contains(playerName);
         player.sendMessage(TextHelper.getTextByKey(player, flag ? "pvp.status.on" : "pvp.status.off"));

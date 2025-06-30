@@ -188,7 +188,7 @@ public class NametagInitializer extends ModuleInitializer {
         player2nametag.entrySet().removeIf(entry -> entry.getKey().isRemoved() || entry.getValue().isRemoved());
 
         // Update
-        ServerHelper.getPlayers().forEach(player -> {
+        ServerHelper.getOnlinePlayers().forEach(player -> {
             // Should we create the nametag for this player?
             if (getNametagDiscardReason(player) != null) return;
 

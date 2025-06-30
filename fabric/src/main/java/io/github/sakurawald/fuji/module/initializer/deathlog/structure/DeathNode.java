@@ -91,7 +91,7 @@ public class DeathNode {
     public static void createDeathNode(@NotNull ServerPlayerEntity player) {
         if (player.getInventory().isEmpty()) return;
 
-        NbtHelper.withNbtFile(DeathLogInitializer.getDeathDataPath(PlayerHelper.getName(player)), root -> {
+        NbtHelper.withNbtFile(DeathLogInitializer.getDeathDataPath(PlayerHelper.getPlayerName(player)), root -> {
             NbtList deathNodeList = NbtHelper.withNbtElement(root, DEATHS_KEY, new NbtList());
             deathNodeList.add(makeDeathNodeNbt(player));
         });
