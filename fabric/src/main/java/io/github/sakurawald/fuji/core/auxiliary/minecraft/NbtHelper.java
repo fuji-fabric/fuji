@@ -9,18 +9,14 @@ import lombok.SneakyThrows;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 #endif
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.registry.RegistryWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -90,46 +86,6 @@ public class NbtHelper {
         }
     }
 
-    public static NbtElement toNbtAllowEmpty(ItemStack stack, RegistryWrapper.WrapperLookup wrapperLookup) {
-        /* Return empty NBT if item stack is empty. */
-        if (stack.isEmpty()) {
-            return new NbtCompound();
-        }
-
-        #if MC_VER <= MC_1_21
-            return StackHelper.encodeAllowEmpty(stack, wrapperLookup);
-        #elif MC_VER > MC_1_21
-            return StackHelper.toNbt(stack, wrapperLookup, new NbtCompound());
-        #endif
-    }
-
-    public static ItemStack fromNbtOrEmpty(RegistryWrapper.WrapperLookup wrapperLookup, NbtCompound nbtCompound) {
-        /* Return empty item stack if NBT is empty. */
-        if (nbtCompound.isEmpty()) {
-            return ItemStack.EMPTY;
-        }
-
-        return StackHelper.fromNbt(wrapperLookup, nbtCompound).orElse(ItemStack.EMPTY);
-    }
-
-
-    public static NbtList writeSlotsNode(@NotNull NbtList node, @NotNull List<ItemStack> stackList) {
-        for (ItemStack stack : stackList) {
-            node.add(toNbtAllowEmpty(stack, RegistryHelper.getDefaultWrapperLookup()));
-        }
-        return node;
-    }
-
-    public static @NotNull List<ItemStack> readSlotsNode(@Nullable NbtList node) {
-        if (node == null) return new ArrayList<>();
-
-        List<ItemStack> ret = new ArrayList<>();
-        for (int i = 0; i < node.size(); i++) {
-            ret.add(fromNbtOrEmpty(RegistryHelper.getDefaultWrapperLookup(), Primitives.getCompound(node, i)));
-        }
-        return ret;
-    }
-
     public static class Storage {
 
         @SneakyThrows
@@ -180,34 +136,6 @@ public class NbtHelper {
                 return null;
             });
         }
-    }
-
-    public static void withNbt(ItemStack stack, Consumer<NbtCompound> nbtConsumer) {
-        NbtCompound targetNbt = NbtHelper.getNbt(stack);
-        if (targetNbt == null) {
-            targetNbt = new NbtCompound();
-        }
-
-        nbtConsumer.accept(targetNbt);
-
-        NbtHelper.setNbt(stack, targetNbt);
-    }
-
-    public static @Nullable NbtCompound getNbt(@NotNull ItemStack stack) {
-        #if MC_VER <= MC_1_20_4
-        return stack.getNbt();
-        #elif MC_VER > MC_1_20_4
-        NbtComponent nbtComponent = stack.get(DataComponentTypes.CUSTOM_DATA);
-        return nbtComponent == null ? null : nbtComponent.copyNbt();
-        #endif
-    }
-
-    public static void setNbt(@NotNull ItemStack stack, @NotNull NbtCompound newNbt) {
-        #if MC_VER <= MC_1_20_4
-        stack.setNbt(newNbt);
-        #elif MC_VER > MC_1_20_4
-        stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(newNbt));
-        #endif
     }
 
     public static class Primitives {

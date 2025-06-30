@@ -4,6 +4,7 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.NbtHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.StackHelper;
 import io.github.sakurawald.fuji.module.initializer.kit.KitInitializer;
 import io.github.sakurawald.fuji.module.initializer.kit.structure.Kit;
 import lombok.SneakyThrows;
@@ -67,7 +68,7 @@ public class KitService {
     public static void createKit(@NotNull Kit kit) {
         NbtHelper.Storage.withNbtFile(getKitPath(kit.getName()), root -> {
             NbtList nbtList = new NbtList();
-            NbtHelper.writeSlotsNode(nbtList, kit.getStackList());
+            StackHelper.Nbt.writeSlotsNode(nbtList, kit.getStackList());
             LogUtil.debug("createKit: nbtList = {}", nbtList);
             root.put(INVENTORY_KEY, nbtList);
         });
@@ -82,7 +83,7 @@ public class KitService {
 
             /* Read slots from inventory tag. */
             NbtList nbtList = (NbtList) root.get(INVENTORY_KEY);
-            return NbtHelper.readSlotsNode(nbtList);
+            return StackHelper.Nbt.readSlotsNode(nbtList);
         });
 
         return new Kit(kitName, kitStacks);

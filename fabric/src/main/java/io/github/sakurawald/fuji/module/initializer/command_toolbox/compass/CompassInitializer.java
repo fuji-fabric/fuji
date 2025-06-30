@@ -1,9 +1,9 @@
 package io.github.sakurawald.fuji.module.initializer.command_toolbox.compass;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.StackHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.NbtHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
@@ -48,7 +48,7 @@ public class CompassInitializer extends ModuleInitializer {
     private static void setTrackedTarget(ItemStack itemStack, @Nullable ServerWorld world, @Nullable BlockPos blockPos) {
 
         #if MC_VER <= MC_1_20_4
-        NbtHelper.withNbt(itemStack, tag -> {
+        StackHelper.Nbt.withNbt(itemStack, tag -> {
             if (world == null) {
                 tag.remove("LodestoneTracked");
                 tag.remove("LodestoneDimension");
