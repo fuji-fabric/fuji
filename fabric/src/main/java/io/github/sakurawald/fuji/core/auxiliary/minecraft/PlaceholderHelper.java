@@ -22,22 +22,29 @@ public class PlaceholderHelper {
     @SuppressWarnings("resource")
     public static void registerServerPlaceholder(PlaceholderDescriptor descriptor, BiFunction<MinecraftServer, String, Text> function) {
         PlaceholderHandler placeholderHandler = (ctx, arg) -> {
-            if (ctx.server() == null) return PlaceholderResult.value(PlaceholderHelper.NO_SERVER_ERROR_TEXT);
-            return PlaceholderResult.value(function.apply(ctx.server(), arg));
+            // NOTE: The `arg` should be verified by the placeholder itself.
+            if (ctx.server() == null) {
+                return PlaceholderResult.value(PlaceholderHelper.NO_SERVER_ERROR_TEXT);
+            }
+            Text resultText = function.apply(ctx.server(), arg);
+            return PlaceholderResult.value(resultText);
         };
 
-        String name = descriptor.getString();
-        Placeholders.register(Identifier.of(Fuji.MOD_ID, name), placeholderHandler);
+        String placeholderName = descriptor.getString();
+        Placeholders.register(Identifier.of(Fuji.MOD_ID, placeholderName), placeholderHandler);
     }
 
     public static void registerPlayerPlaceholder(PlaceholderDescriptor descriptor, BiFunction<ServerPlayerEntity, String, Text> function) {
         PlaceholderHandler placeholderHandler = (ctx, arg) -> {
-            if (ctx.player() == null) return PlaceholderResult.value(NO_PLAYER_ERROR_TEXT);
-            return PlaceholderResult.value(function.apply(ctx.player(), arg));
+            if (ctx.player() == null) {
+                return PlaceholderResult.value(NO_PLAYER_ERROR_TEXT);
+            }
+            Text resultText = function.apply(ctx.player(), arg);
+            return PlaceholderResult.value(resultText);
         };
 
-        String name = descriptor.getString();
-        Placeholders.register(Identifier.of(Fuji.MOD_ID, name), placeholderHandler);
+        String placeholderName = descriptor.getString();
+        Placeholders.register(Identifier.of(Fuji.MOD_ID, placeholderName), placeholderHandler);
     }
 
     public static void registerServerPlaceholder(PlaceholderDescriptor descriptor, Function<MinecraftServer, Text> function) {

@@ -62,7 +62,9 @@ public class RegistryHelper {
         return RegistryKey.of(keyOfRegistry, identifier);
     }
 
-    public static @Nullable ServerWorld ofServerWorld(String identifier) {
+    public static @Nullable ServerWorld ofServerWorld(@Nullable String identifier) {
+        if (identifier == null) return null;
+
         RegistryKey<World> key = ofRegistryKey(RegistryKeys.WORLD, RegistryHelper.makeIdentifier(identifier));
         // get the world instance from the server.
         return ServerHelper.getServer().getWorld(key);

@@ -10,6 +10,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.module.initializer.profiler.ProfilerInitializer;
+import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -273,8 +274,15 @@ public class ProfilerGui extends SimpleGui {
             String committed = StringUtil.formatBytes(memoryUsage.getCommitted());
             String max = StringUtil.formatBytes(memoryUsage.getMax());
 
+            Item item;
+            if (memoryType == MemoryType.HEAP) {
+                item = Items.ENCHANTED_BOOK;
+            } else {
+                item = Items.BOOK;
+            }
+
             GuiElementBuilder guiElementBuilder = new GuiElementBuilder()
-                .setItem(Items.BOOK)
+                .setItem(item)
                 .setName(TextHelper.getTextByKey(getPlayer(), "profiler.memory"))
                 .setLore(List.of(
                     TextHelper.getTextByKey(getPlayer(), "profiler.memory.name", memoryName)
@@ -284,10 +292,6 @@ public class ProfilerGui extends SimpleGui {
                     , TextHelper.getTextByKey(getPlayer(), "profiler.memory.committed", committed)
                     , TextHelper.getTextByKey(getPlayer(), "profiler.memory.max", max)
                 ));
-
-            if (memoryType == MemoryType.HEAP) {
-                guiElementBuilder.glow();
-            }
 
             elements.add(guiElementBuilder.build());
         }

@@ -31,10 +31,9 @@ import java.util.Optional;
 
 public class PlayerHelper {
 
-    private static final String DIMENSION_NBT_KEY = "Dimension";
-
-    public static ServerPlayerEntity makePlayer(GameProfile gameProfile) {
+    private static ServerPlayerEntity makePlayer(@NotNull GameProfile gameProfile) {
         MinecraftServer server = ServerHelper.getServer();
+
         #if MC_VER <= MC_1_20_1
         return new ServerPlayerEntity(server, server.getOverworld(), gameProfile);
         #elif MC_VER > MC_1_20_1
@@ -43,10 +42,11 @@ public class PlayerHelper {
         #endif
     }
 
-    private static void applyPlayerData(ServerPlayerEntity player, @Nullable NbtCompound playerData) {
+    private static void applyPlayerData(@NotNull ServerPlayerEntity player, @Nullable NbtCompound playerData) {
         if (playerData == null) return;
 
-        /* Apply saved dimension */
+        /* Apply saved dimension. */
+        final String DIMENSION_NBT_KEY = "Dimension";
         if (playerData.contains(DIMENSION_NBT_KEY)) {
             String dimensionId = NbtHelper.getString(playerData, DIMENSION_NBT_KEY);
             setServerWorld(player, dimensionId);
@@ -60,22 +60,16 @@ public class PlayerHelper {
     }
     #endif
 
-    public static boolean isRealPlayer(@NotNull ServerPlayerEntity player) {
-        return player.getClass() == ServerPlayerEntity.class;
-    }
-
     public static ServerPlayerEntity loadOfflinePlayer(String playerName) {
+        /* Load game profile. */
         Optional<GameProfile> gameProfile = getGameProfileByName(playerName);
         if (gameProfile.isEmpty()) {
-            throw new IllegalArgumentException("can't find player %s in usercache.json".formatted(playerName));
+            throw new IllegalArgumentException("Can't find player %s in usercache.json".formatted(playerName));
         }
 
+        /* Make the player instance. */
         ServerPlayerEntity player = makePlayer(gameProfile.get());
 
-            /*
-             the default dimension for ServerPlayerEntity instance is minecraft:overworld.
-             in order to keep original dimension, here we should set dimension for the loaded player entity.
-             */
         #if MC_VER <= MC_1_20_4
         NbtCompound playerDataOpt = ServerHelper.getPlayerManager().loadPlayerData(player);
         applyPlayerData(player, playerDataOpt);
@@ -97,7 +91,7 @@ public class PlayerHelper {
         return userCache.findByName(playerName);
     }
 
-    public static void setServerWorld(ServerPlayerEntity player, String dimensionId) {
+    public static void setServerWorld(@NotNull ServerPlayerEntity player, @Nullable String dimensionId) {
         ServerWorld world = RegistryHelper.ofServerWorld(dimensionId);
         if (world != null) {
             player.setServerWorld(world);
@@ -106,17 +100,17 @@ public class PlayerHelper {
 
     public static void playSound(ServerPlayerEntity player, SoundEvent soundEvent, SoundCategory soundCategory, float volume, float pitch) {
         #if MC_VER <= MC_1_20_4
-            player.playSound(soundEvent, soundCategory, volume, pitch);
+        player.playSound(soundEvent, soundCategory, volume, pitch);
         #elif MC_VER > MC_1_20_4
-            player.playSoundToPlayer(soundEvent, soundCategory, volume, pitch);
+        player.playSoundToPlayer(soundEvent, soundCategory, volume, pitch);
         #endif
     }
 
     public static int getPing(ServerPlayerEntity player) {
         #if MC_VER <= MC_1_20_1
-            return player.pingMilliseconds;
+        return player.pingMilliseconds;
         #elif MC_VER > MC_1_20_1
-            return player.networkHandler.getLatency();
+        return player.networkHandler.getLatency();
         #endif
     }
 
@@ -130,6 +124,11 @@ public class PlayerHelper {
 
     public static String getName(PlayerEntity player) {
         return player.getGameProfile().getName();
+    }
+
+    public static boolean isRealPlayer(@NotNull ServerPlayerEntity player) {
+        // NOTE: The carpet mod subclassing the ServerPlayerEntity.
+        return player.getClass() == ServerPlayerEntity.class;
     }
 
     public static boolean isServerPlayer(PlayerEntity player) {
