@@ -346,12 +346,13 @@ public class TextHelper {
         return getText(audience, true, key, args);
     }
 
-    public static String getKeywordValue(@Nullable Object audience, String keyword) {
-        return getValueByKey(audience, "keyword." + keyword);
+    public static String getValueByKeyword(@Nullable Object audience, String keyword) {
+        String key = "keyword." + keyword;
+        return getValueByKey(audience, key);
     }
 
     public static MutableText getTextByKeyWithKeyword(@Nullable Object audience, String key, String keyword) {
-        String replacement = getKeywordValue(audience, keyword);
+        String replacement = getValueByKeyword(audience, keyword);
         String value = getValueByKey(audience, key, replacement);
         return Text.literal(value);
     }
