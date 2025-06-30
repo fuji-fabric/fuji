@@ -144,7 +144,7 @@ public class TextHelper {
     }
 
     private static void writeDefaultLanguageFilesIfAbsent() {
-        for (String languageFile : ReflectionUtil.getGraph(ReflectionUtil.LANGUAGE_GRAPH_FILE_NAME)) {
+        for (String languageFile : ReflectionUtil.getCompileTimeGraph(ReflectionUtil.LANGUAGE_GRAPH_FILE_NAME)) {
             new ResourceConfigurationHandler("lang/" + languageFile).readStorage();
         }
     }

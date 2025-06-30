@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.core.auxiliary;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
+import jdk.internal.reflect.CallerSensitive;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -19,32 +20,26 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ReflectionUtil {
 
-    /* graphs */
+    /* Compile-time generated graphs. */
     public static final String MODULE_INITIALIZER_GRAPH_FILE_NAME = "module-initializer-graph.txt";
     public static final String ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME = "argument-type-adapter-graph.txt";
     public static final String LANGUAGE_GRAPH_FILE_NAME = "language-graph.txt";
     public static final String MODULE_GRAPH_FILE_NAME = "module-graph.txt";
 
-    public static List<Method> getMethodsWithAnnotation(Class<?> clazz, Class<? extends Annotation> annotation) {
-        return Arrays.stream(clazz.getDeclaredMethods())
-            .filter(it -> it.isAnnotationPresent(annotation))
-            .toList();
-    }
-
     @SneakyThrows(IOException.class)
-    public static List<String> getGraph(String graphName) {
-        InputStream inputStream = ReflectionUtil.class.getResourceAsStream(graphName);
-
-        if (inputStream == null) {
-            LogUtil.info("The inputStream of {} is null, we just simply return an empty graph for that.", graphName);
-            return new ArrayList<>();
+    public static List<String> getCompileTimeGraph(String graphName) {
+        /* Retrieve the resource file from virtual jar file. */
+        InputStream virtualInputStream = ReflectionUtil.class.getResourceAsStream(graphName);
+        if (virtualInputStream == null) {
+            LogUtil.warn("Failed to load the graph {} from virtual jar file. (Is the jar file damaged?)", graphName);
+            throw new RuntimeException("Failed to load the graph " + graphName);
         }
 
-        @Cleanup BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        /* Read the bits from the virtual input stream. */
+        @Cleanup BufferedReader reader = new BufferedReader(new InputStreamReader(virtualInputStream));
         List<String> lines = new ArrayList<>();
         String line;
         while ((line = reader.readLine()) != null) {
@@ -53,8 +48,15 @@ public class ReflectionUtil {
         return lines;
     }
 
+    public static List<Method> getMethodsWithAnnotation(Class<?> clazz, Class<? extends Annotation> annotation) {
+        return Arrays
+            .stream(clazz.getDeclaredMethods())
+            .filter(it -> it.isAnnotationPresent(annotation))
+            .toList();
+    }
+
     public static Path computeModuleConfigPath(Class<?> clazz) {
-        String modulePath = ModuleManager.computeModulePathAsString(clazz.getName());
+        String modulePath = ModuleManager.computeJoinedModulePath(clazz.getName());
         return computeModuleConfigPath(modulePath);
     }
 
@@ -78,9 +80,10 @@ public class ReflectionUtil {
     }
 
     public static List<String> getStackTraceAsList(Throwable throwable) {
-        return Arrays.stream(throwable.getStackTrace())
+        return Arrays
+            .stream(throwable.getStackTrace())
             .map(StackTraceElement::toString)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     public static @Nullable String getClassDocument(Class<?> clazz) {
@@ -93,22 +96,25 @@ public class ReflectionUtil {
     }
 
     public static @NotNull String getSimpleClassName(Class<?> clazz) {
-        String modelClassName = clazz.getSimpleName();
-        if (modelClassName.isBlank()) {
-            modelClassName = "ANONYMOUS-CLASS";
+        /* Handle the special case for anonymous class. */
+        String simpleClassName = clazz.getSimpleName();
+        if (simpleClassName.isBlank()) {
+            simpleClassName = "ANONYMOUS-CLASS";
         }
-        return modelClassName;
+        return simpleClassName;
     }
 
-    public static String findSourceModuleInCurrentStack() {
+    @CallerSensitive
+    public static String findSourceModuleInCurrentStackTrace() {
         return findSourceModule(getCurrentStackTraceAsModuleName());
     }
 
-    private static String findSourceModule(List<String> joinedModulePath) {
+    @CallerSensitive
+    private static String findSourceModule(List<String> splitModulePathList) {
         /* The most recent module in the stack trace is considered as the source module. */
-        // NOTE: If the logger call is only used in mixin, and no function call in module initializer, then we have no clue to figure out which module it comes.
+        // NOTE: The function defined in mixin class will be injected into the target class. We have no clue to find the source module, for the calls to that function.
         String result = "unknown";
-        for (String moduleName : joinedModulePath) {
+        for (String moduleName : splitModulePathList) {
             result = moduleName;
             if (!result.equals(ModuleManager.CORE_MODULE_NAME)) return result;
         }
@@ -126,7 +132,7 @@ public class ReflectionUtil {
     private static List<String> getCurrentStackTraceAsModuleName() {
         return getCurrentStackTraceAsClassNames()
             .stream()
-            .map(ModuleManager::computeModulePathAsString)
+            .map(ModuleManager::computeJoinedModulePath)
             .toList();
     }
 }

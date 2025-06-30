@@ -40,7 +40,7 @@ public abstract class BaseArgumentTypeAdapter {
         // the `/reload` command will trigger the command registration event.
         TYPE_STRING_2_TYPE_CLASS.clear();
 
-        ReflectionUtil.getGraph(ReflectionUtil.ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME)
+        ReflectionUtil.getCompileTimeGraph(ReflectionUtil.ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME)
             .stream()
             .filter(className -> Managers.getModuleManager().shouldWeLoadThis(className))
             .forEach(className -> {
@@ -95,7 +95,7 @@ public abstract class BaseArgumentTypeAdapter {
     }
 
     public @NotNull String getFromModule() {
-        return ModuleManager.computeModulePathAsString(this.getClass().getName());
+        return ModuleManager.computeJoinedModulePath(this.getClass().getName());
     }
 
     private boolean match(Class<?> clazz) {

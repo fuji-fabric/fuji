@@ -233,7 +233,7 @@ public class CommandDescriptor implements SourceModuleGetter {
 
             """.formatted(
             source.getName()
-            , ModuleManager.computeModulePathAsList(method.getDeclaringClass().getName())
+            , ModuleManager.computeSplitModulePath(method.getDeclaringClass().getName())
             , method.getName()
             , throwable);
         LogUtil.error(errorString, throwable);
@@ -444,7 +444,7 @@ public class CommandDescriptor implements SourceModuleGetter {
 
     @Override
     public String getSourceModule() {
-        return ModuleManager.computeModulePathAsString(this.method.getDeclaringClass().getName());
+        return ModuleManager.computeJoinedModulePath(this.method.getDeclaringClass().getName());
     }
 
 }

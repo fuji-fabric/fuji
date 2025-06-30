@@ -30,21 +30,21 @@ public class ModuleManager extends BaseManager {
     public static final String ENABLE_SUPPLIER_KEY = "enable";
     public static final String CORE_MODULE_NAME = "core";
 
-    private static final Set<String> MODULE_PATHS = new HashSet<>(ReflectionUtil.getGraph(ReflectionUtil.MODULE_GRAPH_FILE_NAME));
+    private static final Set<String> MODULE_PATHS = new HashSet<>(ReflectionUtil.getCompileTimeGraph(ReflectionUtil.MODULE_GRAPH_FILE_NAME));
 
     public static final Map<List<String>, Boolean> MODULE_ENABLE_STATUS = new HashMap<>();
     private static final Map<String, String> CLASS_NAME_2_MODULE_PATH_STRING = new HashMap<>();
     public static final Map<Class<? extends ModuleInitializer>, ModuleInitializer> MODULE_INITIALIZER_BY_CLASS = new HashMap<>();
     public static final Map<String, Class<? extends ModuleInitializer>> MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING = new HashMap<>();
 
-    public static String computeModulePathAsString(@NotNull String className) {
+    public static String computeJoinedModulePath(@NotNull String className) {
         /* This function wrap the computeModulePathAsList function, and providing a cache layer. */
         String modulePathString = CLASS_NAME_2_MODULE_PATH_STRING.get(className);
         if (modulePathString != null) {
             return modulePathString;
         }
 
-        String result = joinModulePath(ModuleManager.computeModulePathAsList(className));
+        String result = joinModulePath(ModuleManager.computeSplitModulePath(className));
         CLASS_NAME_2_MODULE_PATH_STRING.put(className, result);
         return result;
     }
@@ -52,7 +52,7 @@ public class ModuleManager extends BaseManager {
     /**
      * @return the module path for given class name, if the class is not inside a module, then a special module path List.of("core") will be returned.
      */
-    public static @NotNull List<String> computeModulePathAsList(@NotNull String className) {
+    public static @NotNull List<String> computeSplitModulePath(@NotNull String className) {
         if (MODULE_PATHS.isEmpty()) {
             LogUtil.warn("This is the first time we generating the module graph file, we just ");
         }
@@ -122,12 +122,12 @@ public class ModuleManager extends BaseManager {
 
     @SuppressWarnings("unchecked")
     private void invokeModuleInitializers() {
-        ReflectionUtil.getGraph(ReflectionUtil.MODULE_INITIALIZER_GRAPH_FILE_NAME)
+        ReflectionUtil.getCompileTimeGraph(ReflectionUtil.MODULE_INITIALIZER_GRAPH_FILE_NAME)
             .forEach(className -> {
                 try {
                     /* Track the module initializer class. */
                     Class<? extends ModuleInitializer> clazz = (Class<? extends ModuleInitializer>) MixinService.getService().getClassProvider().findClass(className, false);
-                    String modulePathString = computeModulePathAsString(className);
+                    String modulePathString = computeJoinedModulePath(className);
                     ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING.put(modulePathString, clazz);
 
                     /* Initialize the module initializer. */
@@ -170,7 +170,7 @@ public class ModuleManager extends BaseManager {
     }
 
     public boolean shouldWeLoadThis(String className) {
-        return shouldWeLoadThis(computeModulePathAsList(className));
+        return shouldWeLoadThis(computeSplitModulePath(className));
     }
 
     private boolean shouldWeLoadThis(@NotNull List<String> modulePath) {
@@ -219,7 +219,7 @@ public class ModuleManager extends BaseManager {
     }
 
     public static <T> T evalOnEnable(Supplier<T> supplier) {
-        String modulePathString = ReflectionUtil.findSourceModuleInCurrentStack();
+        String modulePathString = ReflectionUtil.findSourceModuleInCurrentStackTrace();
 
         boolean shouldWeLoadThis = Managers.getModuleManager().shouldWeLoadThis(modulePathString);
         if (shouldWeLoadThis) {

@@ -220,7 +220,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
 
     @Override
     public String getSourceModule() {
-        return ModuleManager.computeModulePathAsString(this.model().getClass().getName());
+        return ModuleManager.computeJoinedModulePath(this.model().getClass().getName());
     }
 
 }

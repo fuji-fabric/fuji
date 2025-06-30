@@ -22,7 +22,7 @@ public class JobDescriptor implements SourceModuleGetter {
         JobDetail jobDetail = this.jobDetail;
         JobKey jobKey = jobDetail.getKey();
         Class<? extends Job> jobClass = jobDetail.getJobClass();
-        return ModuleManager.computeModulePathAsString(jobClass.getName());
+        return ModuleManager.computeJoinedModulePath(jobClass.getName());
     }
 
 }

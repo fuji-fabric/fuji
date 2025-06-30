@@ -79,6 +79,7 @@ It's good to have a checklist, to avoid forgetting something.
   - Test `/back` command.
   - Test `/say hello world` command. (The SayCommand uses SignedArgument.)
 - To test `/fuji inspect configurations`, use the config files from `command_menu` module.
+- Issue `/fuji reload`, to see if `command scheduler` jobs are `re-scheduled`.
 
 ## Publish a new version
 
