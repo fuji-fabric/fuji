@@ -99,7 +99,7 @@ public class WorldInitializer extends ModuleInitializer {
         Identifier dimensionIdentifier = Identifier.of(FUJI_DIMENSION_NAMESPACE, name);
 
         /* check exist */
-        if (ServerHelper.getWorlds().stream().anyMatch(it -> RegistryHelper.ofString(it).equals(dimensionIdentifier.toString()))) {
+        if (ServerHelper.getWorlds().stream().anyMatch(it -> RegistryHelper.toString(it).equals(dimensionIdentifier.toString()))) {
             TextHelper.sendMessageByKey(ctx.getSource(), "world.dimension.exist");
             return CommandHelper.Return.FAIL;
         }
@@ -121,7 +121,7 @@ public class WorldInitializer extends ModuleInitializer {
     private static int $delete(@CommandSource CommandContext<ServerCommandSource> ctx, Dimension dimension) {
         /* check blacklist */
         ServerWorld world = dimension.getValue();
-        String identifier = RegistryHelper.ofString(world);
+        String identifier = RegistryHelper.toString(world);
         checkBlacklist(ctx, identifier);
 
         /* request to deletion */
@@ -145,7 +145,7 @@ public class WorldInitializer extends ModuleInitializer {
     private static int $reset(@CommandSource CommandContext<ServerCommandSource> ctx, Optional<Boolean> useTheSameSeed, Dimension dimension) {
         // draw seed and save
         ServerWorld world = dimension.getValue();
-        String identifier = RegistryHelper.ofString(world);
+        String identifier = RegistryHelper.toString(world);
         checkBlacklist(ctx, identifier);
 
         Optional<DimensionNode> dimensionEntryOpt = storage.model().dimension_list.stream().filter(o -> o.getDimension().equals(identifier)).findFirst();

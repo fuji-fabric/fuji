@@ -54,7 +54,7 @@ public class CompassInitializer extends ModuleInitializer {
                 tag.remove("LodestoneDimension");
             } else {
                 tag.putBoolean("LodestoneTracked", false);
-                tag.putString("LodestoneDimension", RegistryHelper.ofString(world));
+                tag.putString("LodestoneDimension", RegistryHelper.toString(world));
             }
 
             if (blockPos == null) {

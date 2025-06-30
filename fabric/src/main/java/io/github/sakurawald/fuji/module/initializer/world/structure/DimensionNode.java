@@ -17,6 +17,6 @@ public class DimensionNode {
     long seed;
 
     public boolean isDimensionLoaded() {
-        return ServerHelper.getWorlds().stream().anyMatch(it -> RegistryHelper.ofString(it).equals(this.dimension));
+        return ServerHelper.getWorlds().stream().anyMatch(it -> RegistryHelper.toString(it).equals(this.dimension));
     }
 }

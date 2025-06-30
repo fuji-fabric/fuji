@@ -18,7 +18,7 @@ public class BlockItemMixin {
     @Inject(method = "canPlace", at = @At("RETURN"), cancellable = true)
     void handlePlaceBlock(@NotNull ItemPlacementContext itemPlacementContext, BlockState blockState, @NotNull CallbackInfoReturnable<Boolean> cir) {
         PlayerEntity player = itemPlacementContext.getPlayer();
-        String id = RegistryHelper.ofString(itemPlacementContext.getStack());
+        String id = RegistryHelper.toString(itemPlacementContext.getStack());
 
         AntiBuildInitializer.checkAntiBuild(player, "place_block", AntiBuildInitializer.config.model().anti.place_block.id, id, cir, false, () -> true);
     }

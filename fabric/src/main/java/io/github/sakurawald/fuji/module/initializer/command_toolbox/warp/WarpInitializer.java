@@ -138,7 +138,7 @@ public class WarpInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     private static int $setItem(@CommandSource ServerPlayerEntity player, WarpName warp, Item item) {
         return withWarpNode(player, warp, warpNode -> {
-            warpNode.setItem(RegistryHelper.ofString(item));
+            warpNode.setItem(RegistryHelper.toString(item));
             return CommandHelper.Return.SUCCESS;
         });
     }

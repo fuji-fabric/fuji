@@ -73,7 +73,7 @@ public class TpposInitializer extends ModuleInitializer {
         int $maxY = maxY.orElse(WorldHelper.getTopY(world));
         int $maxTryTimes = maxTryTimes.orElse(8);
 
-        TeleportSetup teleportSetup = new TeleportSetup(RegistryHelper.ofString(world), $centerX, $centerZ, $circle, $minRange, $maxRange, $minY
+        TeleportSetup teleportSetup = new TeleportSetup(RegistryHelper.toString(world), $centerX, $centerZ, $circle, $minRange, $maxRange, $minY
             , $maxY, $maxTryTimes);
 
         RandomTeleporter.request(player, teleportSetup, null);

@@ -80,7 +80,7 @@ public class WorldManager {
 
     private static boolean tryCreateWorld(@NotNull DimensionNode dimensionNode) {
         // wait until the deletion of this dimension is completed.
-        if (deletionQueue.stream().anyMatch(it -> RegistryHelper.ofString(it).equals(dimensionNode.getDimension()))) {
+        if (deletionQueue.stream().anyMatch(it -> RegistryHelper.toString(it).equals(dimensionNode.getDimension()))) {
             return false;
         }
 

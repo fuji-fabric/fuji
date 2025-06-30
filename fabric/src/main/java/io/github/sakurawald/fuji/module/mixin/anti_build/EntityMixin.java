@@ -19,7 +19,7 @@ public abstract class EntityMixin {
     @Inject(method = "interact", at = @At("HEAD"), cancellable = true)
     void handleInteractEntity(@NotNull PlayerEntity player, Hand hand, @NotNull CallbackInfoReturnable<ActionResult> cir) {
         Entity entity = (Entity) (Object) this;
-        String id = RegistryHelper.ofString(entity);
+        String id = RegistryHelper.toString(entity);
 
         AntiBuildInitializer.checkAntiBuild(player, "interact_entity", AntiBuildInitializer.config.model().anti.interact_entity.id, id, cir, ActionResult.FAIL, () -> hand == Hand.MAIN_HAND);
     }

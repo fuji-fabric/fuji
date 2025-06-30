@@ -30,7 +30,7 @@ public class DimensionArgumentTypeAdapter extends BaseArgumentTypeAdapter {
              */
         return super.makeRequiredArgumentBuilder(argumentName).suggests(
             (ctx, builder) -> {
-                ServerHelper.getWorlds().forEach(it -> builder.suggest(RegistryHelper.ofString(it)));
+                ServerHelper.getWorlds().forEach(it -> builder.suggest(RegistryHelper.toString(it)));
                 return builder.buildFuture();
             }
         );

@@ -22,32 +22,33 @@ import java.util.Optional;
 
 public class RegistryHelper {
 
-    public static @NotNull String ofString(@NotNull Item item) {
+    public static @NotNull String toString(@NotNull Item item) {
         return Registries.ITEM.getId(item).toString();
     }
 
-    public static @NotNull String ofString(@NotNull ItemStack itemStack) {
-        return ofString(itemStack.getItem());
+    public static @NotNull String toString(@NotNull ItemStack itemStack) {
+        return toString(itemStack.getItem());
     }
 
-    public static @NotNull String ofString(Block block) {
+    public static @NotNull String toString(Block block) {
         return Registries.BLOCK.getId(block).toString();
     }
 
-    public static @NotNull String ofString(@NotNull BlockState blockState) {
-        return ofString(blockState.getBlock());
+    public static @NotNull String toString(@NotNull BlockState blockState) {
+        return toString(blockState.getBlock());
     }
 
-    public static @NotNull String ofString(@NotNull Entity entity) {
+    public static @NotNull String toString(@NotNull Entity entity) {
         return Registries.ENTITY_TYPE.getId(entity.getType()).toString();
     }
 
-    public static @NotNull String ofString(@NotNull World world) {
+    public static @NotNull String toString(@NotNull World world) {
         return world.getRegistryKey().getValue().toString();
     }
 
     public static <T> Registry<T> ofRegistry(RegistryKey<? extends Registry<? extends T>> registryKey) {
-        return ServerHelper.getServer()
+        return ServerHelper
+            .getServer()
             .getCombinedDynamicRegistries()
             .getCombinedRegistryManager()
             #if MC_VER <= MC_1_21
@@ -66,8 +67,9 @@ public class RegistryHelper {
         if (identifier == null) return null;
 
         RegistryKey<World> key = ofRegistryKey(RegistryKeys.WORLD, RegistryHelper.makeIdentifier(identifier));
-        // get the world instance from the server.
-        return ServerHelper.getServer().getWorld(key);
+        return ServerHelper
+            .getServer()
+            .getWorld(key);
     }
 
     public static @NotNull Item ofItem(@NotNull String identifier) {
@@ -75,7 +77,8 @@ public class RegistryHelper {
     }
 
     public static RegistryWrapper.WrapperLookup getDefaultWrapperLookup() {
-        return ServerHelper.getServer()
+        return ServerHelper
+            .getServer()
             .getRegistryManager();
     }
 
@@ -88,10 +91,13 @@ public class RegistryHelper {
     }
 
     public static <T> String getIdAsString(RegistryEntry<T> entry) {
-        return entry.getKey().map((registryKey) -> registryKey.getValue().toString()).orElse("[unregistered]");
+        return entry
+            .getKey()
+            .map((registryKey) -> registryKey.getValue().toString())
+            .orElse("[unregistered]");
     }
 
-    public static <T> @Nullable String findRegistryKeyByRegistryValueInASpecifiedRegistry(RegistryKey<? extends Registry<? extends T>> registrySpecifier, Object theRegistryValue) {
+    public static <T> @Nullable String findRegistryKeyByRegistryValueInTheSpecifiedRegistry(RegistryKey<? extends Registry<? extends T>> registrySpecifier, Object theRegistryValue) {
         var ref = new Object() {
             String result;
         };
@@ -117,8 +123,8 @@ public class RegistryHelper {
         String messageTypeString;
 
         #if MC_VER <= MC_1_20_4
-            MessageType messageTypeObj = parameters.type();
-            messageTypeString = RegistryHelper.findRegistryKeyByRegistryValueInASpecifiedRegistry(RegistryKeys.MESSAGE_TYPE, messageTypeObj);
+        MessageType messageTypeObj = parameters.type();
+        messageTypeString = RegistryHelper.findRegistryKeyByRegistryValueInTheSpecifiedRegistry(RegistryKeys.MESSAGE_TYPE, messageTypeObj);
         #elif MC_VER > MC_1_20_4
             messageTypeString = parameters.type().getIdAsString();
         #endif

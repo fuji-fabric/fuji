@@ -32,7 +32,7 @@ public class UuidHelper {
     }
 
     public static String toUuid(World world, BlockPos blockPos) {
-        String dimension = RegistryHelper.ofString(world);
+        String dimension = RegistryHelper.toString(world);
         String pos = blockPos.getX() + "#" + blockPos.getY() + "#" + blockPos.getZ();
         return dimension + "#" + pos;
     }

@@ -1,13 +1,10 @@
 package io.github.sakurawald.fuji.core.structure;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import lombok.Data;
 import lombok.With;
 import net.minecraft.network.packet.s2c.play.PositionFlag;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
@@ -35,7 +32,7 @@ public class GlobalPos {
     }
 
     public GlobalPos(@NotNull World level, double x, double y, double z, float yaw, float pitch) {
-        this(RegistryHelper.ofString(level), x, y, z, yaw, pitch);
+        this(RegistryHelper.toString(level), x, y, z, yaw, pitch);
     }
 
     public static @NotNull GlobalPos of(@NotNull ServerPlayerEntity player) {
@@ -43,7 +40,7 @@ public class GlobalPos {
     }
 
     public boolean sameLevel(@NotNull World level) {
-        return this.level.equals(RegistryHelper.ofString(level));
+        return this.level.equals(RegistryHelper.toString(level));
     }
 
     @SuppressWarnings("unused")

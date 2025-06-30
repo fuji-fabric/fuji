@@ -95,7 +95,7 @@ public class ChunkScore implements Comparable<ChunkScore> {
         /* Make hover text. */
         MutableText hoverText = Text.empty()
             .formatted(Formatting.GOLD)
-            .append(TextHelper.getTextByKey(source, "top_chunks.prop.dimension", RegistryHelper.ofString(this.dimension)))
+            .append(TextHelper.getTextByKey(source, "top_chunks.prop.dimension", RegistryHelper.toString(this.dimension)))
             .append(TextHelper.TEXT_NEWLINE)
             .append(TextHelper.getTextByKey(source, "top_chunks.prop.chunk", computeChunkLocationString(source)))
             .append(TextHelper.TEXT_NEWLINE)

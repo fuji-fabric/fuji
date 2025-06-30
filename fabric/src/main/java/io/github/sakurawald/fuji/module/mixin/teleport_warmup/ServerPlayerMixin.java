@@ -33,7 +33,7 @@ public abstract class ServerPlayerMixin {
         #endif
     {
         /* Skip the teleport warmup if target dimension is not inside effective dimensions */
-        if (!TeleportWarmupInitializer.config.model().dimension.effective_dimensions.contains(RegistryHelper.ofString(serverWorld))) {
+        if (!TeleportWarmupInitializer.config.model().dimension.effective_dimensions.contains(RegistryHelper.toString(serverWorld))) {
             return;
         }
 

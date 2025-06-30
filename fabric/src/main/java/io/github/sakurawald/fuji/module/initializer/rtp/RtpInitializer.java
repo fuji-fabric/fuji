@@ -32,11 +32,11 @@ public class RtpInitializer extends ModuleInitializer {
 
     private static @NotNull TeleportSetup withTeleportSetup(@NotNull ServerPlayerEntity player, @NotNull ServerWorld world) {
         List<TeleportSetup> list = config.model().setup.dimension;
-        String dimension = RegistryHelper.ofString(world);
+        String dimension = RegistryHelper.toString(world);
 
         Optional<TeleportSetup> first = list.stream().filter(o -> o.getDimension().equals(dimension)).findFirst();
         if (first.isEmpty()) {
-            TextHelper.sendMessageByKey(player, "rtp.dimension.disallow", RegistryHelper.ofString(world));
+            TextHelper.sendMessageByKey(player, "rtp.dimension.disallow", RegistryHelper.toString(world));
             throw new AbortCommandExecutionException();
         }
 

@@ -17,7 +17,7 @@ public class GlobalBlockPos {
     int z;
 
     public GlobalBlockPos(World world, BlockPos blockPos) {
-        this.dimension = RegistryHelper.ofString(world);
+        this.dimension = RegistryHelper.toString(world);
         this.x = blockPos.getX();
         this.y = blockPos.getY();
         this.z = blockPos.getZ();

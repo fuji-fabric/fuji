@@ -17,7 +17,7 @@ public class WorldHelper {
     public static void teleportToSafePositionNearOrigin(ServerWorld world, ServerPlayerEntity player) {
         RandomTeleporter.request(player,
             new TeleportSetup(
-                RegistryHelper.ofString(world)
+                RegistryHelper.toString(world)
                 ,0
                 , 0
                 , false
