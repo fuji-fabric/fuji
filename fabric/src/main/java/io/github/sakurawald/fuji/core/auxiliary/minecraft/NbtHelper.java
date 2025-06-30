@@ -106,7 +106,7 @@ public class NbtHelper {
             #endif
         }
 
-        public static <T> T withNbtFileAndGettingReturnValue(@NotNull Path filePath, @NotNull Function<NbtCompound, T> function) {
+        public static <T> T withNbtFileAndGetReturnValue(@NotNull Path filePath, @NotNull Function<NbtCompound, T> function) {
             /* Ensure file exists. */
             if (Files.notExists(filePath)) {
                 writeNbtFile(new NbtCompound(), filePath);
@@ -130,7 +130,7 @@ public class NbtHelper {
         }
 
         public static void withNbtFile(@NotNull Path filePath, @NotNull Consumer<NbtCompound> function) {
-            withNbtFileAndGettingReturnValue(filePath, (root) -> {
+            withNbtFileAndGetReturnValue(filePath, (root) -> {
                 function.accept(root);
                 // Discard the return value.
                 return null;
