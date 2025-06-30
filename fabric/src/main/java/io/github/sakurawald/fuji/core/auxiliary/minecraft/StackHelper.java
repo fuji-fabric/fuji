@@ -25,8 +25,8 @@ import net.minecraft.component.type.LoreComponent;
 
 public class StackHelper {
 
-    public static final String LORE_NBT_KEY = "Lore";
-    public static final String DISPLAY_NBT_KEY = "display";
+    private static final String LORE_NBT_KEY = "Lore";
+    private static final String DISPLAY_NBT_KEY = "display";
 
     public static NbtElement toNbt(ItemStack stack, RegistryWrapper.WrapperLookup wrapperLookup, NbtElement nbtElement) {
         if (stack.isEmpty()) {
@@ -77,8 +77,8 @@ public class StackHelper {
     public static List<Text> getLore(ItemStack stack) {
         #if MC_VER <= MC_1_20_4
         return stack
-            .getOrCreateSubNbt("display")
-            .getList("Lore", NbtElement.STRING_TYPE)
+            .getOrCreateSubNbt(DISPLAY_NBT_KEY)
+            .getList(LORE_NBT_KEY, NbtElement.STRING_TYPE)
             .stream()
             .map(tag -> TextHelper.fromJson(tag.asString()))
             .collect(Collectors.toList());
@@ -90,12 +90,12 @@ public class StackHelper {
 
     public static void setLore(ItemStack stack, List<Text> texts) {
         #if MC_VER <= MC_1_20_4
-        NbtCompound display = stack.getOrCreateSubNbt("display");
+        NbtCompound display = stack.getOrCreateSubNbt(DISPLAY_NBT_KEY);
         NbtList loreItems = new NbtList();
         for (Text text : texts) {
             loreItems.add(NbtString.of(TextHelper.toJson(text)));
         }
-        display.put("Lore", loreItems);
+        display.put(LORE_NBT_KEY, loreItems);
         #elif MC_VER > MC_1_20_4
             LoreComponent loreComponent = new LoreComponent(texts);
             stack.set(DataComponentTypes.LORE, loreComponent);

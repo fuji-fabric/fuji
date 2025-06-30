@@ -4,6 +4,7 @@ import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.structure.GlobalBlockPos;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -13,50 +14,62 @@ import java.util.UUID;
 
 public class UuidHelper {
 
-    private static final String FUJI_UUID = Fuji.MOD_ID + "$uuid";
+    private static final String FUJI_UUID_NBT_KEY = Fuji.MOD_ID + "$uuid";
 
-    public static @Nullable String getAttachedUuid(@Nullable NbtCompound root) {
-        if (root == null) return null;
-
-        if (!root.contains(FUJI_UUID)) return null;
-        return NbtHelper.getString(root, FUJI_UUID);
-    }
-
-    public static String getAttachedUuid(GlobalBlockPos globalBlockPos) {
-        return getAttachedUuid(globalBlockPos.toDimension(), globalBlockPos.toBlockPos());
-    }
-
-    public static String getAttachedUuid(World world, BlockPos blockPos) {
-        byte[] bytes = toUuid(world, blockPos).getBytes();
+    public static @NotNull String convertStringToUUID(@NotNull String string) {
+        // NOTE: Convert to UUID, to ensure the string is valid filesystem path.
+        byte[] bytes = string.getBytes();
         return UUID.nameUUIDFromBytes(bytes).toString();
     }
 
-    public static String toUuid(World world, BlockPos blockPos) {
-        String dimension = RegistryHelper.toString(world);
-        String pos = blockPos.getX() + "#" + blockPos.getY() + "#" + blockPos.getZ();
-        return dimension + "#" + pos;
+    public static @Nullable String getAttachedUuid(@Nullable NbtCompound root) {
+        if (root == null) return null;
+        if (!root.contains(FUJI_UUID_NBT_KEY)) return null;
+
+        return NbtHelper.Primitives.getString(root, FUJI_UUID_NBT_KEY);
     }
 
-    public static @NotNull String getOrSetAttachedUuid(ItemStack itemStack) {
+    public static String getAttachedUuid(@NotNull GlobalBlockPos globalBlockPos) {
+        ServerWorld dimension = globalBlockPos.toDimension();
+        BlockPos blockPos = globalBlockPos.toBlockPos();
+        return getAttachedUuid(dimension, blockPos);
+    }
+
+    public static @NotNull String getAttachedUuid(@NotNull World world, @NotNull BlockPos blockPos) {
+        // NOTE: Some global pos may face the hash collision.
+        String string = toString(world, blockPos);
+        return convertStringToUUID(string);
+    }
+
+    public static @NotNull String toString(@NotNull World world, @NotNull BlockPos blockPos) {
+        String dimensionString = RegistryHelper.toString(world);
+        String blockPosString = blockPos.getX() + "#" + blockPos.getY() + "#" + blockPos.getZ();
+        return dimensionString + "#" + blockPosString;
+    }
+
+    public static @NotNull String getOrSetAttachedUuid(@NotNull ItemStack itemStack) {
         NbtCompound nbt = NbtHelper.getNbt(itemStack);
+
+        /* Set the attached UUID first if absent. */
         if (getAttachedUuid(nbt) == null) {
-            nbt = setGeneratedUuidIfAbsent(nbt);
+            nbt = attachRandomUuidToNbtCompoundIfAbsent(nbt);
             NbtHelper.setNbt(itemStack, nbt);
         }
 
-        //noinspection DataFlowIssue
+        /* Get the attached UUID. */
         return getAttachedUuid(nbt);
     }
 
-    private static @NotNull NbtCompound setGeneratedUuidIfAbsent(@Nullable NbtCompound root) {
-        /* extract nbt compound */
+    private static @NotNull NbtCompound attachRandomUuidToNbtCompoundIfAbsent(@Nullable NbtCompound root) {
+        /* Ensure the nbt is not null. */
         if (root == null) {
             root = new NbtCompound();
         }
 
-        /* put uuid if not exists */
-        if (!root.contains(FUJI_UUID)) {
-            root.putString(FUJI_UUID, String.valueOf(UUID.randomUUID()));
+        /* Attach a new UUID if not existed. */
+        if (!root.contains(FUJI_UUID_NBT_KEY)) {
+            String uuidString = String.valueOf(UUID.randomUUID());
+            root.putString(FUJI_UUID_NBT_KEY, uuidString);
         }
 
         return root;

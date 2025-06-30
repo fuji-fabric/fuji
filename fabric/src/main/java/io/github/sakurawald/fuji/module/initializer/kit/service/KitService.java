@@ -65,7 +65,7 @@ public class KitService {
     }
 
     public static void createKit(@NotNull Kit kit) {
-        NbtHelper.withNbtFile(getKitPath(kit.getName()), root -> {
+        NbtHelper.Storage.withNbtFile(getKitPath(kit.getName()), root -> {
             NbtList nbtList = new NbtList();
             NbtHelper.writeSlotsNode(nbtList, kit.getStackList());
             LogUtil.debug("createKit: nbtList = {}", nbtList);
@@ -74,7 +74,7 @@ public class KitService {
     }
 
     public static @NotNull Kit readKit(@NotNull String kitName) {
-        List<ItemStack> kitStacks = NbtHelper.withNbtFileAndGettingReturnValue(getKitPath(kitName), root -> {
+        List<ItemStack> kitStacks = NbtHelper.Storage.withNbtFileAndGettingReturnValue(getKitPath(kitName), root -> {
             /* Write empty list if there is no INVENTORY tag. */
             if (root.get(INVENTORY_KEY) == null) {
                 root.put(INVENTORY_KEY, new NbtList());

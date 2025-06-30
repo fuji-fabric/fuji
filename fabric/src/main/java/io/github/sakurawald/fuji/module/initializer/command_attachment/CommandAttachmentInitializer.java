@@ -250,7 +250,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         ExecuteAsType $executeAsType = executeAsType.orElse(ExecuteAsType.FAKE_OP);
         Integer $maxUseTimes = maxUseTimes.orElse(Integer.MAX_VALUE);
 
-        String createdIn = UuidHelper.toUuid(player.getWorld(), blockPos);
+        String createdIn = UuidHelper.toString(player.getWorld(), blockPos);
         model.getEntries().add(new BlockCommandAttachmentNode(createdIn, $command, $interactType, $executeAsType, $maxUseTimes, 0));
 
         // save model

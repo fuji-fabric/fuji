@@ -49,7 +49,7 @@ public class PlayerHelper {
 
         /* Apply saved dimension. */
         if (playerData.contains(DIMENSION_NBT_KEY)) {
-            String dimensionId = NbtHelper.getString(playerData, DIMENSION_NBT_KEY);
+            String dimensionId = NbtHelper.Primitives.getString(playerData, DIMENSION_NBT_KEY);
             setServerWorld(player, dimensionId);
         }
     }

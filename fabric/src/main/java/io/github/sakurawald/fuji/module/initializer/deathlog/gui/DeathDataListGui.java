@@ -46,7 +46,7 @@ public class DeathDataListGui extends PagedGui<String> {
             .setItem(Items.SKELETON_SKULL)
             .setName(Text.literal(entity))
             .setCallback(() -> {
-                NbtHelper.withNbtFile(DeathLogInitializer.getDeathDataPath(entity), root -> {
+                NbtHelper.Storage.withNbtFile(DeathLogInitializer.getDeathDataPath(entity), root -> {
                     /* Check if it has death nodes. */
                     if (!hasDeathData(getPlayer(), root, entity)) {
                         close();
@@ -54,7 +54,7 @@ public class DeathDataListGui extends PagedGui<String> {
                     }
 
                     /* Read death node list. */
-                    NbtList deathNodeList = NbtHelper.withNbtElement(root, DeathNode.DEATHS_KEY, new NbtList());
+                    NbtList deathNodeList = NbtHelper.Walker.withNbtElement(root, DeathNode.DEATHS_KEY, new NbtList());
                     List<DeathNode> entries = deathNodeList.stream()
                         .map(it -> DeathNode.fromNbt((NbtCompound) it))
                         .collect(Collectors.toList());
