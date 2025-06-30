@@ -7,7 +7,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
-import io.github.sakurawald.fuji.core.job.impl.MentionPlayersJob;
+import io.github.sakurawald.fuji.core.job.impl.PlaySoundJob;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.tpa.config.model.TpaConfigModel;
@@ -116,7 +116,7 @@ public class TpaInitializer extends ModuleInitializer {
         if (status == ResponseStatus.ACCEPT) {
             ServerPlayerEntity who = request.getTeleportWho();
             ServerPlayerEntity to = request.getTeleportTo();
-            MentionPlayersJob.submitJob(config.model().mention_player, request.isTpahere() ? to : who);
+            PlaySoundJob.scheduleJob(config.model().mention_player, request.isTpahere() ? to : who);
             new GlobalPos(to.getWorld(), to.getX(), to.getY(), to.getZ(), to.getYaw(), to.getPitch())
                 .teleport(who);
 
@@ -155,7 +155,7 @@ public class TpaInitializer extends ModuleInitializer {
         /* Submit the request. */
         requests.add(request);
         request.startTimeout();
-        MentionPlayersJob.submitJob(config.model().mention_player, request.getReceiver());
+        PlaySoundJob.scheduleJob(config.model().mention_player, request.getReceiver());
 
         /* Send feedback messages. */
         request.getReceiver().sendMessage(request.toReceiverText$Sent());

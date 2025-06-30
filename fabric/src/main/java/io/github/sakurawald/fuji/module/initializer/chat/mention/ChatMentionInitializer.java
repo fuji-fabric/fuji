@@ -7,7 +7,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
-import io.github.sakurawald.fuji.core.job.impl.MentionPlayersJob;
+import io.github.sakurawald.fuji.core.job.impl.PlaySoundJob;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.chat.mention.config.model.ChatMentionConfigModel;
@@ -48,7 +48,7 @@ public class ChatMentionInitializer extends ModuleInitializer {
         /* Submit the mention player job. */
         if (!mentionedPlayers.isEmpty()) {
             LogUtil.debug("Submit new mention job: mentionedPlayers = {}", mentionedPlayers.stream().map(PlayerHelper::getPlayerName));
-            MentionPlayersJob.submitJob(config.model().mention_player, mentionedPlayers);
+            PlaySoundJob.scheduleJob(config.model().mention_player, mentionedPlayers);
         }
 
         return mentionedPlayers;

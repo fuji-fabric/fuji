@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.tpa.config.model;
 
 import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
-import io.github.sakurawald.fuji.core.job.impl.MentionPlayersJob;
+import io.github.sakurawald.fuji.core.job.impl.PlaySoundJob;
 
 public class TpaConfigModel {
 
@@ -10,5 +10,5 @@ public class TpaConfigModel {
     @Document("This is the timeout.")
     public int request_timeout = 300;
 
-    public MentionPlayersJob.MentionPlayer mention_player = new MentionPlayersJob.MentionPlayer();
+    public PlaySoundJob.PlayerSoundJobSetup mention_player = new PlaySoundJob.PlayerSoundJobSetup();
 }
