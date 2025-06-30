@@ -62,7 +62,7 @@ public abstract class PagedGui<T> extends LayeredGui {
             @Override
             public void onClose() {
                 String keyword = reduceInputOrEmpty();
-                saveCurrentGuiAndSearch(keyword).open();
+                linkCurrentGuiAndSearch(keyword).open();
             }
         }.open()));
         this.addLayer(pageLayer, 0, this.getHeight() - 1);
@@ -97,11 +97,18 @@ public abstract class PagedGui<T> extends LayeredGui {
         make(this.parent, getPlayer(), this.prefixTitle, this.entities, newPageIndex).open();
     }
 
-    public @NotNull PagedGui<T> saveCurrentGuiAndSearch(String keywords) {
+    public @NotNull PagedGui<T> linkCurrentGuiAndSearch(String keywords) {
         // NOTE: When search with keywords, we should remember previous GUI.
         Text resultTitle = TextHelper.getTextByKey(getPlayer(), "gui.search.title", keywords);
         List<T> resultEntities = filterEntities(keywords);
-        return make(this.gui, getPlayer(), resultTitle, resultEntities, 0);
+
+        /* Skip the linking, if the none entity is filtered. */
+        SimpleGui trueParent = this.gui;
+        if (resultEntities.size() == this.getEntitySize()) {
+            trueParent = this.parent;
+        }
+
+        return make(trueParent, getPlayer(), resultTitle, resultEntities, 0);
     }
 
     public @NotNull PagedGui<T> skipCurrentGuiAndSearch(Predicate<T> predicate) {
