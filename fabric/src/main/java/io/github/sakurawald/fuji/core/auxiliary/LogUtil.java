@@ -18,13 +18,17 @@ public class LogUtil {
     private static @NotNull Logger makeLogger(String name) {
         Logger logger = LogManager.getLogger(name);
         try {
-            // You can see the `debug` logs in `logs/debug.txt` file
-            String level = System.getProperty("%s.level".formatted(Fuji.MOD_ID));
-            Configurator.setLevel(logger, Level.getLevel(level));
+            configureLogger(logger);
         } catch (Exception e) {
             return logger;
         }
         return logger;
+    }
+
+    private static void configureLogger(Logger logger) {
+        // You can see the `debug` logs in `logs/debug.txt` file
+        String levelDefinedInEnv = System.getProperty("%s.level".formatted(Fuji.MOD_ID));
+        Configurator.setLevel(logger, Level.getLevel(levelDefinedInEnv));
     }
 
     private static final boolean isConsoleSupportAnsiColor = isConsoleSupportAnsiColor();
@@ -33,7 +37,7 @@ public class LogUtil {
         return FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER;
     }
 
-    private static String attachSourceModuleInfo(String message) {
+    private static String attachSourceModulePrefix(String message) {
         String prefix = "[%s] ".formatted(ReflectionUtil.findSourceModuleInCurrentStackTrace());
         return prefix + message;
     }
@@ -46,11 +50,11 @@ public class LogUtil {
         }
 
         /* Attach the module info. */
-        message = attachSourceModuleInfo(message);
+        message = attachSourceModulePrefix(message);
 
         /* Process the debug config. */
         if (debugConfig.log_debug_messages) {
-            String prefix = isConsoleSupportAnsiColor ? "\u001B[37m" : ""; // escape for the ansi color code
+            String prefix = isConsoleSupportAnsiColor ? "\u001B[37m" : ""; // Escape for the ansi color code.
             String format = prefix + message;
             MOD_LOGGER.info(format, args);
         } else {
@@ -59,17 +63,17 @@ public class LogUtil {
     }
 
     public static void info(String message, Object... args) {
-        message = attachSourceModuleInfo(message);
+        message = attachSourceModulePrefix(message);
         MOD_LOGGER.info(message, args);
     }
 
     public static void warn(String message, Object... args) {
-        message = attachSourceModuleInfo(message);
+        message = attachSourceModulePrefix(message);
         MOD_LOGGER.warn(message, args);
     }
 
     public static void error(String message, Object... args) {
-        message = attachSourceModuleInfo(message);
+        message = attachSourceModulePrefix(message);
         MOD_LOGGER.error(message, args);
     }
 

@@ -114,8 +114,8 @@ public class ReflectionUtil {
         /* The most recent module in the stack trace is considered as the source module. */
         // NOTE: The function defined in mixin class will be injected into the target class. We have no clue to find the source module, for the calls to that function.
         String result = "unknown";
-        for (String moduleName : splitModulePathList) {
-            result = moduleName;
+        for (String splitModulePath : splitModulePathList) {
+            result = splitModulePath;
             if (!result.equals(ModuleManager.CORE_MODULE_NAME)) return result;
         }
 
@@ -123,7 +123,8 @@ public class ReflectionUtil {
     }
 
     private static List<String> getCurrentStackTraceAsClassNames() {
-        return Arrays.stream(Thread.currentThread()
+        return Arrays
+            .stream(Thread.currentThread()
             .getStackTrace())
             .map(StackTraceElement::getClassName)
             .toList();
