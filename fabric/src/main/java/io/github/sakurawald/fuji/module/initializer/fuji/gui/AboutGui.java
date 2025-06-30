@@ -135,7 +135,7 @@ public class AboutGui extends PagedGui<Person> {
 
     @Override
     protected GuiElementInterface toGuiElement(Person entity) {
-        return GuiHelper.makeUnknownPlayerSkull()
+        return GuiHelper.makeLuckyBlockSkull()
             .setName(TextHelper.getTextByKey(getPlayer(), "contact.name", entity.getName()))
             .setLore(makeTextListFromContact(entity.getContact()))
             .setCallback(makeCallback(entity))

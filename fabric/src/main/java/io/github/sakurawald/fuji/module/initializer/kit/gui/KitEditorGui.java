@@ -65,7 +65,7 @@ public class KitEditorGui extends PagedGui<Kit> {
 
         /* Place the forbidden zone placeholder items. */
         for (int i = 41; i <= 44; i++) {
-            simpleInventory.setStack(i, GuiHelper.makeBarrier().getItemStack());
+            simpleInventory.setStack(i, GuiHelper.makeBarrierButton().getItemStack());
         }
 
         /* Make a generic container GUI for kit editing. */

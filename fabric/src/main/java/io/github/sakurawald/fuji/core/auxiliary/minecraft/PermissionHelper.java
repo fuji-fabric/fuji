@@ -31,61 +31,71 @@ public class PermissionHelper {
     }
 
     /*
-     * If you loadUser() for a fake-player spawned by carpet-fabric, then the User data will be loaded into the memory by luckperms.
-     * Luckperms will assign the group 'default' for the fake-player, but will never save the User data back to storage.
-     * And also, if you issue `/lp user fake_player permission info`, luckperms will say there is no User data for this player.
+     * 1. If you loadUser() for a fake-player spawned by carpet-fabric, then the User data will be loaded into the memory by luckperms.
+     * 2. Luckperms will assign the group 'default' for the fake-player, but will never save the User data back to storage.
+     * 3. If you issue `/lp user fake_player permission info`, luckperms will say there is no User data for this player.
      */
     private static User loadUser(@NotNull LuckPerms api, UUID uuid) {
         UserManager userManager = api.getUserManager();
 
-        // cache
+        /* Load the user from luckperms cache. */
         if (userManager.isLoaded(uuid)) {
             return userManager.getUser(uuid);
         }
 
+        /* Ask to load the user, and wait until the user is loaded. */
         CompletableFuture<User> userFuture = userManager.loadUser(uuid);
         return userFuture.join();
     }
 
-    public static @NotNull Tristate getPermission(@NotNull UUID uuid, @Nullable PermissionDescriptor permission, Object... arguments
-    ) {
-        if (permission == null) return Tristate.FALSE;
+    public static @NotNull Tristate getPermission(@NotNull UUID uuid, @Nullable PermissionDescriptor permission, Object... arguments) {
+        // NOTE: The convention is, own a `positive permission` is a `good` thing.
 
+        /* If luckperms mod is not installed, then there is no `string permission`. */
         LuckPerms api = getAPI();
         if (api == null) {
-            return Tristate.UNDEFINED;
+            return Tristate.FALSE;
         }
 
-        User user = loadUser(api, uuid);
+        /* For a `null permission`, it's im-possible to have it. */
+        if (permission == null) return Tristate.FALSE;
         String permissionString = permission.withArguments(arguments);
         if (permissionString == null || permissionString.isEmpty()) {
             return Tristate.FALSE;
         }
 
+        /* Test the permission for the user. */
+        User user = loadUser(api, uuid);
         return user
             .getCachedData()
-            .getPermissionData().checkPermission(permissionString);
+            .getPermissionData()
+            .checkPermission(permissionString);
     }
 
-    public static boolean hasPermission(UUID uuid, @Nullable PermissionDescriptor permissionDescriptor, Object... arguments) {
+    public static boolean hasPermission(@NotNull UUID uuid, @Nullable PermissionDescriptor permissionDescriptor, Object... arguments) {
         return getPermission(uuid, permissionDescriptor, arguments)
             .asBoolean();
     }
 
     public static <T> @NotNull Optional<T> getMeta(@NotNull UUID uuid, @Nullable MetaDescriptor<T> metaDescriptor, Object... arguments) {
-        if (metaDescriptor == null) return Optional.empty();
-
+        /* If luckperms is not installed, then there is no meta. */
         LuckPerms api = getAPI();
         if (api == null) {
             return Optional.empty();
         }
 
-        String meta = metaDescriptor.withArguments(arguments);
+        /* For a `null meta`, it's im-possible to have it. */
+        if (metaDescriptor == null) return Optional.empty();
+        String metaString = metaDescriptor.withArguments(arguments);
+        if (metaString == null || metaString.isEmpty()) {
+            return Optional.empty();
+        }
 
+        /* Retrieve the meta for the user. */
         User user = loadUser(api, uuid);
         return user.getCachedData()
             .getMetaData()
-            .getMetaValue(meta, metaDescriptor.valueTransformer);
+            .getMetaValue(metaString, metaDescriptor.valueTransformer);
     }
 
     public static @Nullable String getPrefix(UUID uuid) {
@@ -95,7 +105,6 @@ public class PermissionHelper {
         }
 
         User user = loadUser(api, uuid);
-
         return user
             .getCachedData()
             .getMetaData()
@@ -110,7 +119,6 @@ public class PermissionHelper {
         }
 
         User user = loadUser(api, uuid);
-
         return user
             .getCachedData()
             .getMetaData()

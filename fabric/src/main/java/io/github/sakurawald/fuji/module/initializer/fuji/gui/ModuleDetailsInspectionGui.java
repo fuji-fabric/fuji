@@ -75,11 +75,11 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
 
         /* Fill the first line. */
         // NOTE: yy4p
-        entities.add(GuiHelper.makeSlotPlaceholder());
-        entities.add(GuiHelper.makeSlotPlaceholder());
-        entities.add(GuiHelper.makeSlotPlaceholder());
-        entities.add(GuiHelper.makeSlotPlaceholder());
-        entities.add(GuiHelper.makeSlotPlaceholder());
+        entities.add(GuiHelper.makeSlotPlaceholderButton());
+        entities.add(GuiHelper.makeSlotPlaceholderButton());
+        entities.add(GuiHelper.makeSlotPlaceholderButton());
+        entities.add(GuiHelper.makeSlotPlaceholderButton());
+        entities.add(GuiHelper.makeSlotPlaceholderButton());
     }
 
     @Override

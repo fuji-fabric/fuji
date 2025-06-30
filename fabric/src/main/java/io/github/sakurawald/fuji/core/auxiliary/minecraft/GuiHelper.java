@@ -41,7 +41,7 @@ public class GuiHelper {
     }
 
     public static GuiElementBuilder hideTooltip(GuiElementBuilder builder) {
-        // NODE: In higher MC version, hides the tooltip will also hides the lore.
+        // NOTE: In higher MC version, hides the tooltip will also hide the lore.
 
         #if MC_VER <= MC_1_20_4
             builder.hideFlags();
@@ -52,15 +52,13 @@ public class GuiHelper {
         return builder;
     }
 
-    public static GuiElementInterface makeBarrier() {
-        return hideTooltip(new GuiElementBuilder()
-            .setItem(Items.BARRIER))
+    public static GuiElementInterface makeBarrierButton() {
+        return hideTooltip(new GuiElementBuilder().setItem(Items.BARRIER))
             .build();
     }
 
-    public static GuiElementInterface makeSlotPlaceholder() {
-        return hideTooltip(new GuiElementBuilder()
-            .setItem(Items.GRAY_STAINED_GLASS_PANE))
+    public static GuiElementInterface makeSlotPlaceholderButton() {
+        return hideTooltip(new GuiElementBuilder().setItem(Items.GRAY_STAINED_GLASS_PANE))
             .build();
     }
 
@@ -88,7 +86,8 @@ public class GuiHelper {
     public static GuiElementBuilder makeSearchButton(ServerPlayerEntity player) {
         return new GuiElementBuilder()
             .setItem(Items.COMPASS)
-            .setName(TextHelper.getTextByKey(player, "search"));
+            .setName(TextHelper.getTextByKey(player, "search"))
+            .glow();
     }
 
     public static GuiElementBuilder makeAddButton(ServerPlayerEntity player) {
@@ -101,8 +100,8 @@ public class GuiHelper {
             .setName(TextHelper.getTextByKey(player, "help"));
     }
 
-    public static GuiElementBuilder makeUnknownPlayerSkull() {
-        return makeSkullButton(Icon.PLAYER_PLACEHOLDER_ICON);
+    public static GuiElementBuilder makeLuckyBlockSkull() {
+        return makeSkullButton(Icon.LUCKY_BLOCK_ICON);
     }
 
     public static GuiElementBuilder makeQuestionMarkButton(ServerPlayerEntity player) {
@@ -114,18 +113,18 @@ public class GuiHelper {
     }
 
     public static GuiElementBuilder makeLetterAButton(ServerPlayerEntity player) {
-        return makeSkullButton(Icon.A_ICON);
+        return makeSkullButton(Icon.LETTER_A_ICON);
     }
 
     private static class Icon {
-        public static final String PLAYER_PLACEHOLDER_ICON = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWQ5Y2M1OGFkMjVhMWFiMTZkMzZiYjVkNmQ0OTNjOGY1ODk4YzJiZjMwMmI2NGUzMjU5MjFjNDFjMzU4NjcifX19";
+        public static final String LUCKY_BLOCK_ICON = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWQ5Y2M1OGFkMjVhMWFiMTZkMzZiYjVkNmQ0OTNjOGY1ODk4YzJiZjMwMmI2NGUzMjU5MjFjNDFjMzU4NjcifX19";
 
         public static final String PREVIOUS_PAGE_ICON = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWYxMzNlOTE5MTlkYjBhY2VmZGMyNzJkNjdmZDg3YjRiZTg4ZGM0NGE5NTg5NTg4MjQ0NzRlMjFlMDZkNTNlNiJ9fX0=";
         public static final String NEXT_PAGE_ICON = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTNmYzUyMjY0ZDhhZDllNjU0ZjQxNWJlZjAxYTIzOTQ3ZWRiY2NjY2Y2NDkzNzMyODliZWE0ZDE0OTU0MWY3MCJ9fX0=";
 
         public static final String PLUS_ICON = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDdhMGZjNmRjZjczOWMxMWZlY2U0M2NkZDE4NGRlYTc5MWNmNzU3YmY3YmQ5MTUzNmZkYmM5NmZhNDdhY2ZiIn19fQ==";
         public static final String HEART_ICON = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMDlhNTJjYjUwOTkyZDgzYzU1OTlmZDZlNDFhNmNlOTljZjdmMWU2MjAzNjExOTYzZGMyYzJmZGEwYjU1NTgzIn19fQ==";
-        public static final String A_ICON = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDJjZDVhMWI1Mjg4Y2FhYTIxYTZhY2Q0Yzk4Y2VhZmQ0YzE1ODhjOGIyMDI2Yzg4YjcwZDNjMTU0ZDM5YmFiIn19fQ==";
+        public static final String LETTER_A_ICON = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDJjZDVhMWI1Mjg4Y2FhYTIxYTZhY2Q0Yzk4Y2VhZmQ0YzE1ODhjOGIyMDI2Yzg4YjcwZDNjMTU0ZDM5YmFiIn19fQ==";
         public static final String QUESTION_MARK_ICON = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmMyNzEwNTI3MTllZjY0MDc5ZWU4YzE0OTg5NTEyMzhhNzRkYWM0YzI3Yjk1NjQwZGI2ZmJkZGMyZDZiNWI2ZSJ9fX0=";
 
     }

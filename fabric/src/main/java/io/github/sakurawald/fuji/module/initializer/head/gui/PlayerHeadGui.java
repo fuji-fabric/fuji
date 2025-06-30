@@ -27,13 +27,13 @@ public class PlayerHeadGui extends AnvilInputGui {
         super(parentGui.player, false);
         this.parentGui = parentGui;
         this.setTitle(TextHelper.getTextByKey(player, "head.category.player"));
-        this.setSlot(1, GuiHelper.makeBarrier());
+        this.setSlot(1, GuiHelper.makeBarrierButton());
         this.resetResultSlot();
     }
 
     @Override
     public void setDefaultInputValue(String input) {
-        this.setSlot(0, GuiHelper.makeBarrier());
+        this.setSlot(0, GuiHelper.makeBarrierButton());
         super.setDefaultInputValue("");
     }
 
@@ -49,7 +49,7 @@ public class PlayerHeadGui extends AnvilInputGui {
     }
 
     private void resetResultSlot() {
-        this.setSlot(2, GuiHelper.makeBarrier());
+        this.setSlot(2, GuiHelper.makeBarrierButton());
     }
 
     @Override

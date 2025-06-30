@@ -11,14 +11,15 @@ import java.util.List;
 
 public class InventoryHelper {
 
-    public static final List<EquipmentSlot> PLAYER_ARMOR_SLOTS = List.of(
+    private static final List<EquipmentSlot> PLAYER_ARMOR_SLOTS = List.of(
             EquipmentSlot.HEAD
             , EquipmentSlot.CHEST
             , EquipmentSlot.LEGS
             , EquipmentSlot.FEET);
 
-    // Main Stacks (1*9 slots + 3*9 slots)
     public static DefaultedList<ItemStack> getMainStacks(PlayerEntity player) {
+        // Main Stacks (1*9 slots + 3*9 slots)
+
         #if MC_VER <= MC_1_21_4
         return player.getInventory().main;
         #elif MC_VER >= MC_1_21_5
@@ -26,19 +27,23 @@ public class InventoryHelper {
         #endif
     }
 
-    // Offhand (1 slot) = EquipmentSlot.OFFHAND
     public static DefaultedList<ItemStack> getOffhandStack(PlayerEntity player) {
+        // Offhand (1 slot) = EquipmentSlot.OFFHAND
+
         DefaultedList<ItemStack> itemStacks = DefaultedList.ofSize(1, ItemStack.EMPTY);
-        itemStacks.set(0, player.getEquippedStack(EquipmentSlot.OFFHAND));
+        EquipmentSlot offhand = EquipmentSlot.OFFHAND;
+        itemStacks.set(0, player.getEquippedStack(offhand));
         return itemStacks;
     }
 
-    // Armor (4 slots) = EquipmentSlot.HEAD + EquipmentSlot.CHEST + EquipmentSlot.LEGS + EquipmentSlot.FEET
     public static DefaultedList<ItemStack> getArmorStacks(PlayerEntity player) {
+        // Armor (4 slots) = EquipmentSlot.HEAD + EquipmentSlot.CHEST + EquipmentSlot.LEGS + EquipmentSlot.FEET
+
         DefaultedList<ItemStack> itemStacks = DefaultedList.ofSize(PLAYER_ARMOR_SLOTS.size(), ItemStack.EMPTY);
 
         for (int i = 0; i < PLAYER_ARMOR_SLOTS.size(); i++) {
-            itemStacks.set(i, player.getEquippedStack(PLAYER_ARMOR_SLOTS.get(i)));
+            EquipmentSlot equipmentSlot = PLAYER_ARMOR_SLOTS.get(i);
+            itemStacks.set(i, player.getEquippedStack(equipmentSlot));
         }
 
         return itemStacks;
@@ -60,24 +65,25 @@ public class InventoryHelper {
         if (stacks.isEmpty()) return;
 
         #if MC_VER < MC_1_21_5
-            player.getInventory().offHand.set(0, stacks.get(0));
+        player.getInventory().offHand.set(0, stacks.get(0));
         #elif MC_VER >= MC_1_21_5
-            player.equipment.put(EquipmentSlot.OFFHAND, stacks.getFirst());
+        player.equipment.put(EquipmentSlot.OFFHAND, stacks.getFirst());
         #endif
 
     }
 
     public static List<DefaultedList<ItemStack>> getCombinedInventory(PlayerEntity player) {
-        return ImmutableList.of(InventoryHelper.getMainStacks(player)
-                , InventoryHelper.getArmorStacks(player)
-                , InventoryHelper.getOffhandStack(player));
+        return ImmutableList.of(
+            InventoryHelper.getMainStacks(player)
+            , InventoryHelper.getArmorStacks(player)
+            , InventoryHelper.getOffhandStack(player));
     }
 
     public static DefaultedList<ItemStack> getHeldStacks(SimpleInventory inventory) {
         #if MC_VER <= MC_1_20_2
-            return inventory.stacks;
+        return inventory.stacks;
         #elif MC_VER > MC_1_20_2
-            return inventory.getHeldStacks();
+        return inventory.getHeldStacks();
         #endif
     }
 }

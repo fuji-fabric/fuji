@@ -55,7 +55,7 @@ public abstract class PagedGui<T> extends LayeredGui {
     protected abstract PagedGui<T> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<T> entities, int pageIndex);
 
     private void drawNavigator(int pageIndex) {
-        SingleLineLayer pageLayer = new SingleLineLayer(GuiHelper.makeSlotPlaceholder());
+        SingleLineLayer pageLayer = new SingleLineLayer(GuiHelper.makeSlotPlaceholderButton());
         pageLayer.setSlot(0, GuiHelper.makePreviousPageButton(getPlayer()).setCallback(() -> tryChangePage(pageIndex - 1)));
         pageLayer.setSlot(this.getWidth() - 1, GuiHelper.makeNextPageButton(getPlayer()).setCallback(() -> tryChangePage(pageIndex + 1)));
         pageLayer.setSlot(this.getWidth() - 2, GuiHelper.makeSearchButton(getPlayer()).setCallback(() -> new InputSignGui(getPlayer(), null) {
