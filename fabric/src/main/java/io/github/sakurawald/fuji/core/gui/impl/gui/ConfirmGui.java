@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.gui;
+package io.github.sakurawald.fuji.core.gui.impl.gui;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import net.minecraft.server.network.ServerPlayerEntity;

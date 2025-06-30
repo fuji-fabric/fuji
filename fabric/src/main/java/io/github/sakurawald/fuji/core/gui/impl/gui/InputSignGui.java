@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.gui;
+package io.github.sakurawald.fuji.core.gui.impl.gui;
 
 import eu.pb4.sgui.api.gui.SignGui;
 import net.minecraft.block.Blocks;
