@@ -21,8 +21,8 @@ public class LoreInitializer extends ModuleInitializer {
 
     @Document("Clear all lore in item.")
     @CommandNode("unset")
-    private static int $unset(@CommandSource CommandContext<ServerCommandSource> ctx) {
-        return CommandHelper.Pattern.itemInHandCommand(ctx, (player, stack) -> {
+    private static int $unset(@CommandSource ServerCommandSource source) {
+        return CommandHelper.Pattern.itemInHandCommand(source, (player, stack) -> {
             StackHelper.setLore(stack, List.of());
             return CommandHelper.Return.SUCCESS;
         });
@@ -30,8 +30,8 @@ public class LoreInitializer extends ModuleInitializer {
 
     @Document("Set lore for item.")
     @CommandNode("set")
-    private static int $set(@CommandSource CommandContext<ServerCommandSource> ctx, GreedyString lore) {
-        return CommandHelper.Pattern.itemInHandCommand(ctx, (player, stack) -> {
+    private static int $set(@CommandSource ServerCommandSource source, GreedyString lore) {
+        return CommandHelper.Pattern.itemInHandCommand(source, (player, stack) -> {
             List<Text> texts = TextHelper.getTextListByValue(player, lore.getValue());
             StackHelper.setLore(stack, texts);
             return CommandHelper.Return.SUCCESS;

@@ -188,25 +188,23 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         , @Document("Should we destroy the item if the use times exceed.") Optional<Boolean> destroyItem
         , @Document("The command.") GreedyString command
     ) {
-        // get model
-        ItemStack mainHandStack = player.getMainHandStack();
-        CommandHelper.ensureItemInHandNotEmpty(player, mainHandStack);
+        return CommandHelper.Pattern.itemInHandCommand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
+            String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
+            CommandAttachmentModel model = getAttachmentModel(uuid);
 
-        String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
-        CommandAttachmentModel model = getAttachmentModel(uuid);
+            // new entry
+            String $command = command.getValue();
+            InteractType $interactType = interactType.orElse(InteractType.BOTH);
+            ExecuteAsType $executeAsType = executeAsType.orElse(ExecuteAsType.FAKE_OP);
+            Integer $maxUseTimes = maxUseTimes.orElse(Integer.MAX_VALUE);
+            Boolean $destroyItem = destroyItem.orElse(true);
 
-        // new entry
-        String $command = command.getValue();
-        InteractType $interactType = interactType.orElse(InteractType.BOTH);
-        ExecuteAsType $executeAsType = executeAsType.orElse(ExecuteAsType.FAKE_OP);
-        Integer $maxUseTimes = maxUseTimes.orElse(Integer.MAX_VALUE);
-        Boolean $destroyItem = destroyItem.orElse(true);
+            model.getEntries().add(new ItemStackCommandAttachmentNode($command, $interactType, $executeAsType, $maxUseTimes, 0, $destroyItem));
 
-        model.getEntries().add(new ItemStackCommandAttachmentNode($command, $interactType, $executeAsType, $maxUseTimes, 0, $destroyItem));
-
-        // save model
-        setAttachmentModel(uuid, model);
-        return CommandHelper.Return.SUCCESS;
+            // save model
+            setAttachmentModel(uuid, model);
+            return CommandHelper.Return.SUCCESS;
+        });
     }
 
     @Document("Attach one command to an entity.")
@@ -265,12 +263,12 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @Document("Detach all attached commands in the item.")
     @CommandNode("detach-item-all")
     private static int detachItemAll(@CommandSource ServerPlayerEntity player) {
-        ItemStack mainHandStack = player.getMainHandStack();
-        CommandHelper.ensureItemInHandNotEmpty(player, mainHandStack);
-        String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
+        return CommandHelper.Pattern.itemInHandCommand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
+            String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
 
-        doDetachAttachment(player, uuid);
-        return CommandHelper.Return.SUCCESS;
+            doDetachAttachment(player, uuid);
+            return CommandHelper.Return.SUCCESS;
+        });
     }
 
     @Document("Detach all attached commands in the entity.")
@@ -299,12 +297,12 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @Document("Query all attached commands in the item.")
     @CommandNode("query-item")
     private static int queryItem(@CommandSource ServerPlayerEntity player) {
-        ItemStack mainHandStack = player.getMainHandStack();
-        CommandHelper.ensureItemInHandNotEmpty(player, mainHandStack);
-        String uuid = UuidHelper.getAttachedUuid(NbtHelper.getNbt(mainHandStack));
+        return CommandHelper.Pattern.itemInHandCommand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
+            String uuid = UuidHelper.getAttachedUuid(NbtHelper.getNbt(mainHandStack));
 
-        doQueryAttachment(player, uuid);
-        return CommandHelper.Return.SUCCESS;
+            doQueryAttachment(player, uuid);
+            return CommandHelper.Return.SUCCESS;
+        });
     }
 
     @Document("Query all attached commands in the entity.")

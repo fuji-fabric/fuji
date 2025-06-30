@@ -2,7 +2,6 @@ package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
-import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
@@ -28,7 +27,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -39,7 +37,7 @@ public class CommandHelper {
     public static final String UUID_ARGUMENT_NAME = "uuid";
     public static final int COMMAND_EXCEPTION_COLOR = 16736000;
 
-    public static @NotNull String computeCommandNodePath(@NotNull CommandNode<ServerCommandSource> node) {
+    public static @NotNull String findCommandNodePath(@NotNull CommandNode<ServerCommandSource> node) {
         CommandDispatcher<ServerCommandSource> dispatcher = ServerHelper.getCommandDispatcher();
         assert dispatcher != null;
 
@@ -54,39 +52,44 @@ public class CommandHelper {
         return StringUtils.strip(path, ".");
     }
 
-    public static @NotNull String computeCommandNodePath(List<ParsedCommandNode<ServerCommandSource>> nodes) {
-        return nodes.stream()
+    public static @NotNull String joinCommandNodePath(List<ParsedCommandNode<ServerCommandSource>> nodes) {
+        // Compute the `command node path` from the only one possible path.
+        return nodes
+            .stream()
             .map(it -> it.getNode().getName())
             .collect(Collectors.joining("."));
     }
 
     public static void updateCommandTree() {
         CommandManager commandManager = ServerHelper.getServer().getCommandManager();
-        ServerHelper.getPlayers().forEach(commandManager::sendCommandTree);
+        ServerHelper
+            .getPlayers()
+            .forEach(commandManager::sendCommandTree);
     }
 
     public static List<CommandNode<ServerCommandSource>> getCommandNodes() {
-        List<CommandNode<ServerCommandSource>> ret = new ArrayList<>();
-        RootCommandNode<ServerCommandSource> root = Objects.requireNonNull(ServerHelper.getCommandDispatcher()).getRoot();
-        getCommandNodes(ret, root);
-        return ret;
+        List<CommandNode<ServerCommandSource>> result = new ArrayList<>();
+        CommandDispatcher<ServerCommandSource> commandDispatcher = ServerHelper.getCommandDispatcher();
+        assert commandDispatcher != null;
+        RootCommandNode<ServerCommandSource> root = commandDispatcher.getRoot();
+        collectCommandNodes(result, root);
+        return result;
     }
 
-    private static void getCommandNodes(List<CommandNode<ServerCommandSource>> collector, CommandNode<ServerCommandSource> parent) {
-        parent.getChildren()
-            .forEach(it -> getCommandNodes(collector, it));
+    private static void collectCommandNodes(List<CommandNode<ServerCommandSource>> collector, CommandNode<ServerCommandSource> parent) {
+        /* Walk down. */
+        parent
+            .getChildren()
+            .forEach(it -> collectCommandNodes(collector, it));
 
         // Exclude the `root command node` from the result.
-        if (!parent.getName().isEmpty()) {
+        if (isRootCommandNode(parent)) {
             collector.add(parent);
         }
     }
 
-    public static void ensureItemInHandNotEmpty(ServerPlayerEntity player, ItemStack stack) {
-        if (stack.isEmpty()) {
-            TextHelper.sendMessageByKey(player, "item.empty.not_allow");
-            throw new AbortCommandExecutionException();
-        }
+    private static boolean isRootCommandNode(CommandNode<ServerCommandSource> node) {
+        return !node.getName().isEmpty();
     }
 
     public static @NotNull List<String> getCommandPathPrefixes(List<ParsedCommandNode<ServerCommandSource>> nodes) {
@@ -166,18 +169,18 @@ public class CommandHelper {
 
     public static class Pattern {
 
-        public static int playerOnlyCommand(@NotNull CommandContext<ServerCommandSource> ctx, @NotNull Function<ServerPlayerEntity, Integer> function) {
-            ServerPlayerEntity player = ctx.getSource().getPlayer();
+        public static int playerOnlyCommand(@NotNull ServerCommandSource source, @NotNull Function<ServerPlayerEntity, Integer> function) {
+            ServerPlayerEntity player = source.getPlayer();
             if (player == null) {
-                TextHelper.sendMessageByKey(ctx.getSource(), "command.player_only");
+                TextHelper.sendMessageByKey(source, "command.player_only");
                 return Return.SUCCESS;
             }
 
             return function.apply(player);
         }
 
-        public static int itemInHandCommand(@NotNull CommandContext<ServerCommandSource> ctx, @NotNull BiFunction<ServerPlayerEntity, ItemStack, Integer> consumer) {
-            return playerOnlyCommand(ctx, player -> {
+        public static int itemInHandCommand(@NotNull ServerCommandSource source, @NotNull BiFunction<ServerPlayerEntity, ItemStack, Integer> consumer) {
+            return playerOnlyCommand(source, player -> {
                 ItemStack mainHandStack = player.getMainHandStack();
                 if (mainHandStack.isEmpty()) {
                     TextHelper.sendMessageByKey(player, "item.empty.not_allow");
