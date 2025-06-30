@@ -7,6 +7,7 @@
 - https://minecraft.fandom.com/wiki/Entity_format
 - https://minecraft.wiki/w/Data_component_format
 - https://colorhunt.co/palettes/popular
+- https://jd.papermc.io/paper/1.21.6/
 
 # Server-side only.
 - https://vanillatweaks.net/picker/datapacks/
