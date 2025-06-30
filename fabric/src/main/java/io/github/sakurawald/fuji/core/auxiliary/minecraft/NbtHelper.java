@@ -93,7 +93,7 @@ public class NbtHelper {
             #if MC_VER <= MC_1_20_2
             NbtIo.write(nbt, filePath.toFile());
             #elif MC_VER > MC_1_20_2
-            NbtIo.write(nbt, path);
+            NbtIo.write(nbt, filePath);
             #endif
         }
 
@@ -102,7 +102,7 @@ public class NbtHelper {
             #if MC_VER <= MC_1_20_2
             return NbtIo.read(filePath.toFile());
             #elif MC_VER > MC_1_20_2
-            return NbtIo.read(path);
+            return NbtIo.read(filePath);
             #endif
         }
 
