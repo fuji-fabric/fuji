@@ -16,11 +16,11 @@ import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
 
 #if MC_VER <= MC_1_20_4
 import java.util.stream.Collectors;
 #elif MC_VER > MC_1_20_4
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 #endif
@@ -78,11 +78,11 @@ public class ItemStackHelper {
         #if MC_VER <= MC_1_20_4
         return stack.getSubNbt("SkullOwner");
         #elif MC_VER > MC_1_20_4 && MC_VER < MC_1_21_5
-        NbtCompound nbt = NbtHelper.getNbt(stack);
+        NbtCompound nbt = ItemStackHelper.Nbt.getNbt(stack);
         if (nbt == null) return null;
         return nbt.getCompound("SkullOwner");
         #elif MC_VER >= MC_1_21_5
-        NbtCompound nbt = NbtHelper.getNbt(stack);
+        NbtCompound nbt = ItemStackHelper.Nbt.getNbt(stack);
         if (nbt == null) return null;
         return nbt.getCompound("SkullOwner").get();
         #endif
