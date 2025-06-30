@@ -31,17 +31,17 @@ public class WorldHelper {
 
     public static int getTopY(Chunk chunk) {
         #if MC_VER <= MC_1_21
-            return chunk.getTopY();
+        return chunk.getTopY();
         #elif MC_VER > MC_1_21
-            return chunk.getTopYInclusive();
+        return chunk.getTopYInclusive();
         #endif
     }
 
     public static int getTopY(World world) {
         #if MC_VER <= MC_1_21
-            return world.getTopY();
+        return world.getTopY();
         #elif MC_VER > MC_1_21
-            return world.getTopYInclusive();
+        return world.getTopYInclusive();
         #endif
     }
 
@@ -49,8 +49,7 @@ public class WorldHelper {
         return Vec3d.add(pos, 0.5, 0.0, 0.5);
     }
 
-
-    public static Item getSensibleWorldItem(String dimension) {
+    public static Item toGuiItem(String dimension) {
         if (dimension.equals(DimensionTypes.OVERWORLD_ID.toString())) {
             return Items.GRASS_BLOCK;
         }

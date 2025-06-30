@@ -31,6 +31,8 @@ import java.util.Optional;
 
 public class PlayerHelper {
 
+    private static final String DIMENSION_NBT_KEY = "Dimension";
+
     private static ServerPlayerEntity makePlayer(@NotNull GameProfile gameProfile) {
         MinecraftServer server = ServerHelper.getServer();
 
@@ -46,7 +48,6 @@ public class PlayerHelper {
         if (playerData == null) return;
 
         /* Apply saved dimension. */
-        final String DIMENSION_NBT_KEY = "Dimension";
         if (playerData.contains(DIMENSION_NBT_KEY)) {
             String dimensionId = NbtHelper.getString(playerData, DIMENSION_NBT_KEY);
             setServerWorld(player, dimensionId);

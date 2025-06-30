@@ -101,7 +101,7 @@ public class ProfilerGui extends SimpleGui {
             }
 
             GuiElement element = new GuiElementBuilder()
-                .setItem(WorldHelper.getSensibleWorldItem(RegistryHelper.toString(world)))
+                .setItem(WorldHelper.toGuiItem(RegistryHelper.toString(world)))
                 .setName(TextHelper.getTextByKey(getPlayer(), "profiler.dimension"))
                 .setLore(lore)
                 .build();

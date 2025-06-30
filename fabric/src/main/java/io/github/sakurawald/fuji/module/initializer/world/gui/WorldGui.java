@@ -29,7 +29,7 @@ public class WorldGui extends PagedGui<DimensionNode> {
     protected GuiElementInterface toGuiElement(DimensionNode entity) {
         return new GuiElementBuilder()
             .setName(Text.of(entity.getDimension()))
-            .setItem(WorldHelper.getSensibleWorldItem(entity.getDimension_type()))
+            .setItem(WorldHelper.toGuiItem(entity.getDimension_type()))
             .setLore(List.of(
                 TextHelper.getTextByKey(getPlayer(), "world.dimension.loaded", entity.isDimensionLoaded())
                 , TextHelper.getTextByKey(getPlayer(), "world.dimension.dimension_type", entity.getDimension_type())
