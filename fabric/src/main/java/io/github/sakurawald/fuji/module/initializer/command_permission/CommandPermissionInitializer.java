@@ -142,7 +142,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
 
         /* Describe the command permissions. */
         TextHelper.sendMessageByKey(source,"command_permission.describe.command_permissions");
-        List<String> commandPathPrefixes = CommandHelper.getCommandPathPrefixes(nodes);
+        List<String> commandPathPrefixes = CommandHelper.getPrefixesOfCommandPath(nodes);
         commandPathPrefixes.forEach(path -> {
             String requiredPermission = COMMAND_PERMISSION_UNIFIED_PERMISSION.withArguments(path);
             TextHelper.sendMessageByKey(source,"command_permission.describe.command_permission", requiredPermission);

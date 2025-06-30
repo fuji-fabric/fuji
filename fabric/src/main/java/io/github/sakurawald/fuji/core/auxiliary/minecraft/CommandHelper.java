@@ -9,7 +9,6 @@ import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
-import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registry;
@@ -92,30 +91,33 @@ public class CommandHelper {
         return !node.getName().isEmpty();
     }
 
-    public static @NotNull List<String> getCommandPathPrefixes(List<ParsedCommandNode<ServerCommandSource>> nodes) {
-        List<String> commandPaths = new ArrayList<>();
-        String rootPath = "";
+    public static @NotNull List<String> getPrefixesOfCommandPath(List<ParsedCommandNode<ServerCommandSource>> nodes) {
+        List<String> prefixes = new ArrayList<>();
+
+        String walkingPath = "";
         for (ParsedCommandNode<ServerCommandSource> node : nodes) {
-            rootPath = rootPath + "." + node.getNode().getName();
-            rootPath = trimPathString(rootPath);
-            commandPaths.add(rootPath);
+            String currentNodeName = node.getNode().getName();
+            walkingPath = walkingPath + "." + currentNodeName;
+            walkingPath = trimPathString(walkingPath);
+            prefixes.add(walkingPath);
         }
-        return commandPaths;
+        return prefixes;
     }
 
     public static boolean canUseThisCommand(ServerPlayerEntity player, String commandString) {
         /* Parse the command string into command nodes. */
+        ServerCommandSource commandSource = player.getCommandSource();
         ParseResults<ServerCommandSource> parseResults = ServerHelper
             .getCommandDispatcher()
-            .parse(commandString, player.getCommandSource());
+            .parse(commandString, commandSource);
         CommandContextBuilder<ServerCommandSource> context = parseResults.getContext();
 
-        /* If any exceptions, refuse to use the command. */
+        /* If any exceptions, refuse to use that command. */
         if (!parseResults.getExceptions().isEmpty()) {
             return false;
         }
 
-        /* If the nodes from parsed result is empty, refuse to use the command. */
+        /* If the nodes from parsed result is empty, refuse to use that command. */
         List<ParsedCommandNode<ServerCommandSource>> nodes = context.getNodes();
         if (nodes.isEmpty()) return false;
 
@@ -123,7 +125,7 @@ public class CommandHelper {
         return nodes
             .stream()
             .map(ParsedCommandNode::getNode)
-            .allMatch(it -> it.canUse(player.getCommandSource()));
+            .allMatch(it -> it.canUse(commandSource));
     }
 
     @SuppressWarnings("unused")
@@ -136,7 +138,7 @@ public class CommandHelper {
             return value ? SUCCESS : FAIL;
         }
 
-        public static int outputBoolean(ServerCommandSource source, boolean value) {
+        public static int returnBoolean(ServerCommandSource source, boolean value) {
             return fromBoolean(value);
         }
     }
@@ -161,9 +163,10 @@ public class CommandHelper {
         }
 
         public static <T> @NotNull SuggestionProvider<ServerCommandSource> identifiers(RegistryKey<? extends Registry<T>> registryKey) {
-            return iterable(() -> RegistryHelper
-                .ofRegistry(registryKey)
-                .getIds());
+            return iterable(() ->
+                RegistryHelper
+                    .ofRegistry(registryKey)
+                    .getIds());
         }
     }
 
@@ -200,13 +203,13 @@ public class CommandHelper {
     }
 
     public static <S> boolean isExecutedOnServerSide(CommandContextBuilder<S> context) {
-        // NOTE: in client-side, the S is not guarantee to be ServerCommandSource.
+        // NOTE: in client-side, the S is not guarantee to be ServerCommandSource. (Can be ClientCommandSource)
         return context.getSource() instanceof ServerCommandSource;
     }
 
     public static String getCommandNodeType(CommandNode<ServerCommandSource> node) {
         if (node instanceof LiteralCommandNode<ServerCommandSource>) return "LiteralCommandNode";
-        if (node instanceof ArgumentCommandNode<?,?>) return "ArgumentCommandNode";
+        if (node instanceof ArgumentCommandNode<?, ?>) return "ArgumentCommandNode";
         if (node instanceof RootCommandNode<ServerCommandSource>) return "RootCommandNode";
 
         return "Unknown";

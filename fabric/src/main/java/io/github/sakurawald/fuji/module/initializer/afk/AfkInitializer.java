@@ -73,7 +73,7 @@ public class AfkInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     private static int testAfk(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {
         boolean value = isAfk(player);
-        return CommandHelper.Return.outputBoolean(source, value);
+        return CommandHelper.Return.returnBoolean(source, value);
     }
 
     public static boolean isAfk(Entity entity) {
