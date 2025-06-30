@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.predicate;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PermissionHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
@@ -28,7 +28,7 @@ public class PredicateInitializer extends ModuleInitializer {
     @Document("Predicate to test if the player has the string-perm?")
     @CommandNode("has-perm?")
     private static int hasPerm(@CommandSource ServerCommandSource source, ServerPlayerEntity player, GreedyString stringPermission) {
-        boolean value = PermissionHelper.hasPermission(player.getUuid(), new PermissionDescriptor(true, stringPermission.getValue(), null));
+        boolean value = LuckpermsHelper.hasPermission(player.getUuid(), new PermissionDescriptor(true, stringPermission.getValue(), null));
         return CommandHelper.Return.returnBoolean(source, value);
     }
 

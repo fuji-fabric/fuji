@@ -7,7 +7,7 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PermissionHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlaceholderHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -146,7 +146,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
             Returns the `luckperms prefix` of the player.
             """);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player, arg) -> {
-            String prefix = PermissionHelper.getPrefix(player.getUuid());
+            String prefix = LuckpermsHelper.getPrefix(player.getUuid());
             return TextHelper.getTextByValue(player, prefix);
         });
     }
@@ -156,7 +156,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
             Returns the `luckperms suffix` of the player.
             """);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player, arg) -> {
-            String prefix = PermissionHelper.getSuffix(player.getUuid());
+            String prefix = LuckpermsHelper.getSuffix(player.getUuid());
             return TextHelper.getTextByValue(player, prefix);
         });
     }
@@ -295,7 +295,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
             Returns whether the `player` has that permission, in boolean.
             """);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player, args) -> {
-            boolean value = PermissionHelper.hasPermission(player.getUuid(), new PermissionDescriptor(true, args, null));
+            boolean value = LuckpermsHelper.hasPermission(player.getUuid(), new PermissionDescriptor(true, args, null));
             return Text.literal(String.valueOf(value));
         });
     }
@@ -307,7 +307,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
             """);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player, args) -> {
             MetaDescriptor<String> tempMeta = new MetaDescriptor<>(true, args, String::valueOf, null);
-            Optional<String> metaValue = PermissionHelper.getMeta(player.getUuid(), tempMeta);
+            Optional<String> metaValue = LuckpermsHelper.getMeta(player.getUuid(), tempMeta);
             return Text.literal(metaValue.orElse("META_NOT_FOUND_ERROR"));
         });
     }

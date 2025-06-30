@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.home;
 
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PermissionHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -82,7 +82,7 @@ public class HomeInitializer extends ModuleInitializer {
             }
         }
 
-        Optional<Integer> limit = PermissionHelper.getMeta(player.getUuid(), MAX_HOME_AMOUNT_META);
+        Optional<Integer> limit = LuckpermsHelper.getMeta(player.getUuid(), MAX_HOME_AMOUNT_META);
         if (limit.isPresent() && name2position.size() >= limit.get()) {
             TextHelper.sendMessageByKey(player, "home.set.fail.limit");
             return CommandHelper.Return.FAIL;

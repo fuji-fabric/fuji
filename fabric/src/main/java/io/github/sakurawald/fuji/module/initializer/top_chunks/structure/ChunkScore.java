@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.top_chunks.structure;
 
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PermissionHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -52,7 +52,7 @@ public class ChunkScore implements Comparable<ChunkScore> {
     }
 
     public static boolean canClickToTeleportToThisChunk(ServerPlayerEntity player) {
-        return player.hasPermissionLevel(4) || PermissionHelper.hasPermission(player.getUuid(), CLICK_TO_TELEPORT_TO_CHUNK_LOCATION_PERMISSION);
+        return player.hasPermissionLevel(4) || LuckpermsHelper.hasPermission(player.getUuid(), CLICK_TO_TELEPORT_TO_CHUNK_LOCATION_PERMISSION);
     }
 
     public void plusEntity(@NotNull Entity entity) {

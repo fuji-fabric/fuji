@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public class PermissionHelper {
+public class LuckpermsHelper {
 
     private static LuckPerms instance;
     private static @Nullable LuckPerms getAPI() {

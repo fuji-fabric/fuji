@@ -12,7 +12,7 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PermissionHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
@@ -80,7 +80,7 @@ public class CommandDescriptor implements SourceModuleGetter {
             if (player == null) return true;
             if (requirement.getString() != null
                 && !requirement.getString().isEmpty()
-                && PermissionHelper.hasPermission(player.getUuid(), new PermissionDescriptor(requirement.getString(), "Permission for a command descriptor.")))
+                && LuckpermsHelper.hasPermission(player.getUuid(), new PermissionDescriptor(requirement.getString(), "Permission for a command descriptor.")))
                 return true;
             if (ctx.hasPermissionLevel(requirement.getLevel())) return true;
 

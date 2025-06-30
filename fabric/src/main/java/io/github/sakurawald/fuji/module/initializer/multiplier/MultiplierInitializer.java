@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.multiplier;
 
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PermissionHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -15,7 +15,7 @@ public class MultiplierInitializer extends ModuleInitializer{
         """);
 
     public static float transform(@NotNull ServerPlayerEntity player, String type, String key, float f) {
-        Optional<Float> meta = PermissionHelper.getMeta(player.getUuid(), MULTIPLIER_META, type, key);
+        Optional<Float> meta = LuckpermsHelper.getMeta(player.getUuid(), MULTIPLIER_META, type, key);
         return meta.map(factor -> f * factor).orElse(f);
     }
 }

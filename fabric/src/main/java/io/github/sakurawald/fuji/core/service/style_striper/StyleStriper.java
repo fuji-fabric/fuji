@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.core.service.style_striper;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PermissionHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -73,7 +73,7 @@ public class StyleStriper {
 
     private static boolean canUseThisTag(PlayerEntity player, String type, String tag) {
         PermissionDescriptor permission = getOrCreatePermissionDescriptorForStyleType(type);
-        return PermissionHelper.hasPermission(player.getUuid(), permission, type, tag);
+        return LuckpermsHelper.hasPermission(player.getUuid(), permission, type, tag);
     }
 
 }

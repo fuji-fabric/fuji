@@ -6,7 +6,7 @@ import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PermissionHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
@@ -101,7 +101,7 @@ public class SlotDescriptor {
         if (!player.hasPermissionLevel(this.viewRequirement.level)) return false;
         if (this.viewRequirement.string != null
             && !this.viewRequirement.string.isEmpty()
-            && !PermissionHelper.hasPermission(player.getUuid(), SLOT_VIEW_REQUIREMENT_PERMISSION, this.viewRequirement.string)) return false;
+            && !LuckpermsHelper.hasPermission(player.getUuid(), SLOT_VIEW_REQUIREMENT_PERMISSION, this.viewRequirement.string)) return false;
 
         return true;
     }

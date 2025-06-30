@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.core.structure;
 
 import io.github.sakurawald.fuji.core.document.annotation.Document;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PermissionHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import lombok.Data;
 import net.minecraft.entity.player.PlayerEntity;
@@ -43,7 +43,7 @@ public class Tag {
         boolean result = false;
         for (String tag : tagNames) {
             PermissionDescriptor permission = getOrCreateTagPermission(tagType);
-            if (PermissionHelper.hasPermission(player.getUuid(), permission, tagType, tag)) {
+            if (LuckpermsHelper.hasPermission(player.getUuid(), permission, tagType, tag)) {
                 result = true;
                 break;
             }

@@ -4,7 +4,7 @@ import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PermissionHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
@@ -150,7 +150,7 @@ public class BackInitializer extends ModuleInitializer {
     }
 
     private static int getMaxBackLocationEntriesToSave(@NotNull ServerPlayerEntity player) {
-        Optional<Integer> value = PermissionHelper.getMeta(player.getUuid(), MAX_LOCATION_ENTRIES_TO_SAVE_META);
+        Optional<Integer> value = LuckpermsHelper.getMeta(player.getUuid(), MAX_LOCATION_ENTRIES_TO_SAVE_META);
         return value.orElse(config.model().max_back_location_entries_to_save);
     }
 

@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.anti_build;
 
 import io.github.sakurawald.fuji.core.document.annotation.Document;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PermissionHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
@@ -59,7 +59,7 @@ public class AntiBuildInitializer extends ModuleInitializer {
 
     private static boolean isAllowedByPermission(PlayerEntity player, String antiType, String id) {
         return Optional.ofNullable(player)
-            .map(p -> PermissionHelper.hasPermission(player.getUuid(), ANTI_BUILD_BYPASS_PERMISSION, antiType, id))
+            .map(p -> LuckpermsHelper.hasPermission(player.getUuid(), ANTI_BUILD_BYPASS_PERMISSION, antiType, id))
             .orElse(false);
     }
 }

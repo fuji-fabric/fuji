@@ -8,7 +8,7 @@ import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PermissionHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -204,7 +204,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
                 }
 
                 /* Ask luckperms if the player can use the command. */
-                Tristate luckpermsPermissionTestResult = PermissionHelper.getPermission(source.getPlayer().getUuid(), COMMAND_PERMISSION_UNIFIED_PERMISSION, commandPath);
+                Tristate luckpermsPermissionTestResult = LuckpermsHelper.getPermission(source.getPlayer().getUuid(), COMMAND_PERMISSION_UNIFIED_PERMISSION, commandPath);
                 processVerboseModeFeature("LUCKPERMS", source, commandPath, luckpermsPermissionTestResult);
 
                 return canUseThisCommand(source, luckpermsPermissionTestResult, originalRequirement);

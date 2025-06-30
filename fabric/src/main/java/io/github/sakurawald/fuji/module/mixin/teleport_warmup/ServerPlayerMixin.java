@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.mixin.teleport_warmup;
 
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PermissionHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -45,14 +45,14 @@ public abstract class ServerPlayerMixin {
         if (!PlayerHelper.isRealPlayer(player)) return;
 
         /* Skip the teleport warmup if the player has the bypass permission. */
-        if (PermissionHelper.hasPermission(player.getUuid(), TeleportWarmupInitializer.TELEPORT_WARMUP_BYPASS_PERMISSION)) {
+        if (LuckpermsHelper.hasPermission(player.getUuid(), TeleportWarmupInitializer.TELEPORT_WARMUP_BYPASS_PERMISSION)) {
             return;
         }
 
         /* Add a new teleport ticker if no exists. */
         TeleportTicket ticket = TeleportWarmupInitializer.getTeleportTicket(player);
         if (ticket == null) {
-            Optional<Integer> permission_warmup_time = PermissionHelper.getMeta(player.getUuid(), TeleportWarmupInitializer.TELEPORT_WARMUP_TIME_META);
+            Optional<Integer> permission_warmup_time = LuckpermsHelper.getMeta(player.getUuid(), TeleportWarmupInitializer.TELEPORT_WARMUP_TIME_META);
 
             //set warmup seconds to LP permission seconds or default config seconds
             int warmup_seconds = permission_warmup_time.orElse(TeleportWarmupInitializer.config.model().warmup_second);
