@@ -243,7 +243,7 @@ public class CommandDescriptor implements SourceModuleGetter {
         MutableText report = TextHelper.getTextByValue(source, errorString)
             .copy()
             .setStyle(Style.EMPTY
-                .withColor(CommandHelper.EXCEPTION_COLOR)
+                .withColor(CommandHelper.COMMAND_EXCEPTION_COLOR)
                 .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(Text.of("Click to copy the stacktrace.")))
                 .withClickEvent(TextHelper.ClickEvent.makeCopyToClipboardAction(stacktrace)));
 

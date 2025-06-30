@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import io.github.classgraph.AnnotationInfo;
 import io.github.classgraph.AnnotationParameterValueList;
 import io.github.classgraph.ScanResult;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
@@ -13,7 +14,6 @@ import io.github.sakurawald.fuji.core.config.model.ConfigModel;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -88,7 +88,7 @@ public class GenerateGraphTest {
         // go down
         parent.keySet().stream()
             .filter(key -> parent.get(key).isJsonObject())
-            .forEach(key -> searchModule(parent.getAsJsonObject(key), StringUtils.strip(level + "." + key, "."), out));
+            .forEach(key -> searchModule(parent.getAsJsonObject(key), CommandHelper.trimPathString(level + "." + key), out));
 
         // go up
         if (parent.has(ModuleManager.ENABLE_SUPPLIER_KEY)) {

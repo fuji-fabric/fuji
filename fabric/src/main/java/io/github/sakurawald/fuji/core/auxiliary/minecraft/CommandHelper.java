@@ -23,6 +23,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 #endif
 
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -35,20 +36,22 @@ import java.util.stream.Collectors;
 
 public class CommandHelper {
 
-    public static final String UUID = "uuid";
-    public static final int EXCEPTION_COLOR = 16736000;
+    public static final String UUID_ARGUMENT_NAME = "uuid";
+    public static final int COMMAND_EXCEPTION_COLOR = 16736000;
 
-    public static @NotNull String computeCommandNodePath(CommandNode<ServerCommandSource> node) {
+    public static @NotNull String computeCommandNodePath(@NotNull CommandNode<ServerCommandSource> node) {
         CommandDispatcher<ServerCommandSource> dispatcher = ServerHelper.getCommandDispatcher();
         assert dispatcher != null;
-        String[] array = dispatcher.getPath(node).toArray(new String[]{});
+
+        // Find the first encountered path in root tree, ignore other paths if there are `forks` or `redirects`.
+        String[] array = dispatcher
+            .getPath(node)
+            .toArray(new String[]{});
         return String.join(".", array);
     }
 
-    public static String trimPath(String path) {
-        if (path.endsWith(".")) path = path.substring(0, path.length() - 1);
-        if (path.startsWith(".")) path = path.substring(1);
-        return path;
+    public static String trimPathString(String path) {
+        return StringUtils.strip(path, ".");
     }
 
     public static @NotNull String computeCommandNodePath(List<ParsedCommandNode<ServerCommandSource>> nodes) {
@@ -91,7 +94,7 @@ public class CommandHelper {
         String rootPath = "";
         for (ParsedCommandNode<ServerCommandSource> node : nodes) {
             rootPath = rootPath + "." + node.getNode().getName();
-            rootPath = trimPath(rootPath);
+            rootPath = trimPathString(rootPath);
             commandPaths.add(rootPath);
         }
         return commandPaths;

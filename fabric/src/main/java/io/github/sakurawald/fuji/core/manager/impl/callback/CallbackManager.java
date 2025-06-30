@@ -32,14 +32,14 @@ public class CallbackManager extends BaseManager {
     private void registerCLI() {
         CommandEvents.REGISTRATION.register((dispatcher, registryAccess, environment) -> dispatcher.register(
             literal(COMMAND_CALLBACK)
-                .then(argument(CommandHelper.UUID, StringArgumentType.greedyString())
+                .then(argument(CommandHelper.UUID_ARGUMENT_NAME, StringArgumentType.greedyString())
                     .executes(this::$executeCallback)
                 )));
     }
 
     private int $executeCallback(CommandContext<ServerCommandSource> ctx) {
         return CommandHelper.Pattern.playerOnlyCommand(ctx, player -> {
-            String uuid = StringArgumentType.getString(ctx, CommandHelper.UUID);
+            String uuid = StringArgumentType.getString(ctx, CommandHelper.UUID_ARGUMENT_NAME);
 
             this.executeCallback(uuid, player);
             return CommandHelper.Return.SUCCESS;

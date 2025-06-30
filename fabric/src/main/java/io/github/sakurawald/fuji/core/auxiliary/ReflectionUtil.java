@@ -3,7 +3,6 @@ package io.github.sakurawald.fuji.core.auxiliary;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
-import jdk.internal.reflect.CallerSensitive;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -104,12 +103,10 @@ public class ReflectionUtil {
         return simpleClassName;
     }
 
-    @CallerSensitive
     public static String findSourceModuleInCurrentStackTrace() {
         return findSourceModule(getCurrentStackTraceAsModuleName());
     }
 
-    @CallerSensitive
     private static String findSourceModule(List<String> splitModulePathList) {
         /* The most recent module in the stack trace is considered as the source module. */
         // NOTE: The function defined in mixin class will be injected into the target class. We have no clue to find the source module, for the calls to that function.
