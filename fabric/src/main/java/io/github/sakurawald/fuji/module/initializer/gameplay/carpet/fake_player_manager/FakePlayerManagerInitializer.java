@@ -123,7 +123,7 @@ public class FakePlayerManagerInitializer extends ModuleInitializer {
         long newExpiration = System.currentTimeMillis() + renewDuration;
         player2expiration.put(player.getGameProfile().getName(), newExpiration);
 
-        TextHelper.sendMessageByKey(player, "fake_player_manager.renew.success", ChronosUtil.toStandardDateFormat(newExpiration));
+        TextHelper.sendMessageByKey(player, "fake_player_manager.renew.success", ChronosUtil.toDefaultDateFormat(newExpiration));
     }
 
     public static void invalidFakePlayers() {

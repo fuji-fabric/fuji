@@ -28,7 +28,7 @@ public class SeenInitializer extends ModuleInitializer {
 
         if (data.model().player2seen.containsKey(target)) {
             Long time = data.model().player2seen.get(target);
-            TextHelper.sendMessageByKey(source, "seen.success", target, ChronosUtil.toStandardDateFormat(time));
+            TextHelper.sendMessageByKey(source, "seen.success", target, ChronosUtil.toDefaultDateFormat(time));
         } else {
             TextHelper.sendMessageByKey(source, "seen.fail");
         }

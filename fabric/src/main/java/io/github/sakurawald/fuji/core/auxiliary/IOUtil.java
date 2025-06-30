@@ -25,6 +25,8 @@ import java.util.zip.ZipOutputStream;
 
 public class IOUtil {
 
+    public static final String THE_MOST_POPULAR_BROWSER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36";
+
     @SneakyThrows(IOException.class)
     public static void compressFiles(@NotNull File base, @NotNull List<File> input, @NotNull File output) {
         final int BUFFER_SIZE = 4096;
@@ -33,27 +35,26 @@ public class IOUtil {
              ZipOutputStream zos = new ZipOutputStream(fos)) {
 
             for (File file : input) {
-                if (file.isFile()) {
-                    try (FileInputStream fis = new FileInputStream(file)) {
+                if (!file.isFile()) continue;
 
-                        ZipEntry zipEntry = new ZipEntry(computeEntryName(base, file));
-                        zos.putNextEntry(zipEntry);
+                try (FileInputStream fis = new FileInputStream(file)) {
+                    ZipEntry zipEntry = new ZipEntry(computeArchiveEntryName(base, file));
+                    zos.putNextEntry(zipEntry);
 
-                        byte[] buffer = new byte[BUFFER_SIZE];
-                        int length;
+                    byte[] buffer = new byte[BUFFER_SIZE];
+                    int length;
 
-                        while ((length = fis.read(buffer)) > 0) {
-                            zos.write(buffer, 0, length);
-                        }
-
-                        zos.closeEntry();
+                    while ((length = fis.read(buffer)) > 0) {
+                        zos.write(buffer, 0, length);
                     }
+
+                    zos.closeEntry();
                 }
             }
         }
     }
 
-    private static @NotNull String computeEntryName(@NotNull File base, @NotNull File file) {
+    private static @NotNull String computeArchiveEntryName(@NotNull File base, @NotNull File file) {
         return computeRelativePath(base, file);
     }
 
@@ -68,7 +69,7 @@ public class IOUtil {
         return relativize.toString();
     }
 
-    public static String computeRelativePath(@NotNull File file) {
+    public static String computeRelativePathBasedOnGameDir(@NotNull File file) {
         return computeRelativePath(FabricLoader.getInstance().getGameDir().toFile(), file);
     }
 
@@ -98,7 +99,7 @@ public class IOUtil {
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setRequestProperty("Accept", "application/json");
-        connection.setRequestProperty("User-Agent", "Fuji");
+        connection.setRequestProperty("User-Agent", THE_MOST_POPULAR_BROWSER_AGENT);
         connection.setDoOutput(true);
         connection.setDoInput(true);
 
