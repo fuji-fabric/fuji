@@ -61,7 +61,7 @@ public abstract class PagedGui<T> extends LayeredGui {
         pageLayer.setSlot(this.getWidth() - 2, GuiHelper.makeSearchButton(getPlayer()).setCallback(() -> new InputSignGui(getPlayer(), null) {
             @Override
             public void onClose() {
-                String keyword = reduceInputOrEmpty();
+                String keyword = joinStrings();
                 linkCurrentGuiAndSearch(keyword).open();
             }
         }.open()));

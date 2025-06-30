@@ -20,25 +20,15 @@ public class InputSignGui extends SignGui {
         this.setAutoUpdate(false);
     }
 
-    private @NotNull String reduce() {
+    @SuppressWarnings("UnnecessaryLocalVariable")
+    protected @NotNull String joinStrings() {
         StringBuilder sb = new StringBuilder();
-        sb.delete(0, sb.length());
         for (int i = 0; i < 4; i++) {
-            sb.append(this.getLine(i).getString().trim());
+            String line = this.getLine(i).getString().trim();
+            sb.append(line);
         }
-        return sb.toString().trim();
-    }
-
-    protected @Nullable String reduceInput() {
-        String lines = reduce();
-        if (lines.isBlank()) return null;
-        return lines;
-    }
-
-    protected @NotNull String reduceInputOrEmpty() {
-        String lines = reduce();
-        if (lines.isBlank()) return "";
-        return lines;
+        String joinedString = sb.toString().trim();
+        return joinedString;
     }
 
 }

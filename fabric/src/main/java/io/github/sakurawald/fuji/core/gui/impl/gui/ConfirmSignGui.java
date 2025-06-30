@@ -3,9 +3,9 @@ package io.github.sakurawald.fuji.core.gui.impl.gui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-public abstract class ConfirmGui extends InputSignGui {
+public abstract class ConfirmSignGui extends InputSignGui {
 
-    public ConfirmGui(ServerPlayerEntity player) {
+    public ConfirmSignGui(ServerPlayerEntity player) {
         super(player, TextHelper.getTextByKeyWithKeyword(player, "prompt.input.confirm", "confirm"));
     }
 

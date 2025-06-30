@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.head.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.module.initializer.head.privoder.HeadProvider;
 import io.github.sakurawald.fuji.module.initializer.head.structure.Category;
@@ -38,9 +39,8 @@ public class HeadGui extends SimpleGui {
             .setCallback(() -> new PlayerHeadGui(this).open()));
 
         /* Place search button. */
-        this.setSlot(this.getSize() - 1, new GuiElementBuilder()
-            .setItem(Items.COMPASS)
-            .setName(TextHelper.getTextByKey(player, "search"))
+        this.setSlot(this.getSize() - 1, GuiHelper
+            .makeSearchButton(player)
             .setCallback(() -> new SearchHeadsInputGui(this).open()));
 
     }

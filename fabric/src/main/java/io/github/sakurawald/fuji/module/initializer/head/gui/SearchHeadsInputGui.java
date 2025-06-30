@@ -21,10 +21,10 @@ public class SearchHeadsInputGui extends InputSignGui {
 
     @Override
     public void onClose() {
-        String keywords = reduceInputOrEmpty();
+        String keywords = joinStrings();
 
         /* If no user input, re-open the parent gui. */
-        if (keywords.isEmpty()) {
+        if (keywords.isBlank()) {
             parentGui.open();
             return;
         }

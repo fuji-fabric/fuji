@@ -7,7 +7,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
-import io.github.sakurawald.fuji.core.gui.impl.gui.ConfirmGui;
+import io.github.sakurawald.fuji.core.gui.impl.gui.ConfirmSignGui;
 import io.github.sakurawald.fuji.core.gui.impl.gui.InputSignGui;
 import io.github.sakurawald.fuji.module.initializer.works.WorksInitializer;
 import io.github.sakurawald.fuji.module.initializer.works.structure.WorksBinding;
@@ -143,7 +143,7 @@ public class ProductionWork extends Work {
             .setItem(Items.CLOCK)
             .setName(TextHelper.getTextByKey(player, "works.production_work.set.sample"))
             .setLore(TextHelper.getTextListByKey(player, "works.production_work.set.sample.lore"))
-            .setCallback(() -> new ConfirmGui(player) {
+            .setCallback(() -> new ConfirmSignGui(player) {
                     @Override
                     public void onConfirm() {
                         openInputSampleDistanceGui(player);

@@ -12,7 +12,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
-import io.github.sakurawald.fuji.core.gui.impl.gui.ConfirmGui;
+import io.github.sakurawald.fuji.core.gui.impl.gui.ConfirmSignGui;
 import io.github.sakurawald.fuji.core.gui.impl.gui.InputSignGui;
 import io.github.sakurawald.fuji.module.initializer.works.WorksInitializer;
 import io.github.sakurawald.fuji.module.initializer.works.structure.work.impl.NonProductionWork;
@@ -112,8 +112,8 @@ public abstract class Work {
             .setCallback(() -> new InputSignGui(player, null) {
                 @Override
                 public void onClose() {
-                    String newValue = this.reduceInput();
-                    if (newValue == null) {
+                    String newValue = this.joinStrings();
+                    if (newValue.isBlank()) {
                         TextHelper.sendActionBarByKey(player, "works.work.add.empty_name");
                         return;
                     }
@@ -128,8 +128,11 @@ public abstract class Work {
             .setCallback(() -> new InputSignGui(player, null) {
                 @Override
                 public void onClose() {
-                    work.introduction = this.reduceInput();
-                    TextHelper.sendMessageByKey(player, "works.work.set.done", work.introduction);
+                    String newIntroduction = this.joinStrings();
+                    if (!newIntroduction.isBlank()) {
+                        work.introduction = newIntroduction;
+                        TextHelper.sendMessageByKey(player, "works.work.set.done", work.introduction);
+                    }
                 }
             }.open())
         );
@@ -164,7 +167,7 @@ public abstract class Work {
         gui.addSlot(new GuiElementBuilder()
             .setItem(Items.BARRIER)
             .setName(TextHelper.getTextByKey(player, "works.work.set.target.delete"))
-            .setCallback(() -> new ConfirmGui(player) {
+            .setCallback(() -> new ConfirmSignGui(player) {
                 @Override
                 public void onConfirm() {
                     WorksInitializer.works.model().works.remove(work);
