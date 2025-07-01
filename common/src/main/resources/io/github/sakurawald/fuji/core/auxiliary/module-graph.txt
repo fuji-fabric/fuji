@@ -62,6 +62,7 @@ command_toolbox.rules
 command_toolbox.seen
 command_toolbox.suicide
 command_toolbox.top
+command_toolbox.tphere
 command_toolbox.tppos
 command_toolbox.trashcan
 command_toolbox.warp

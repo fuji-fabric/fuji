@@ -34,7 +34,7 @@ public class CommandExecutor {
                 .requireNonNull(ServerHelper.getCommandDispatcher())
                 .execute(command, context.getExecutingSource());
         } catch (CommandSyntaxException e) {
-            /* Escape tags. (e.g. "/run as console aa <yellow> bb")*/
+            /* Escape tags when reporting an exception. (e.g. "/run as console aa <yellow> bb")*/
             command = TextHelper.escapeTags(command);
 
             /* Echo to the executing source. */

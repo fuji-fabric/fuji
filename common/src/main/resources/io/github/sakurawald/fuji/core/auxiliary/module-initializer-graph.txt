@@ -59,6 +59,7 @@ io.github.sakurawald.fuji.module.initializer.command_toolbox.rules.RulesInitiali
 io.github.sakurawald.fuji.module.initializer.command_toolbox.seen.SeenInitializer
 io.github.sakurawald.fuji.module.initializer.command_toolbox.suicide.SuicideInitializer
 io.github.sakurawald.fuji.module.initializer.command_toolbox.top.TopInitializer
+io.github.sakurawald.fuji.module.initializer.command_toolbox.tphere.TphereInitializer
 io.github.sakurawald.fuji.module.initializer.command_toolbox.tppos.TpposInitializer
 io.github.sakurawald.fuji.module.initializer.command_toolbox.trashcan.TrashCanInitializer
 io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.WarpInitializer

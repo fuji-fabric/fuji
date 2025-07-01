@@ -618,6 +618,7 @@ public class ConfigModel {
             public Top top = new Top();
             public TrashCan trashcan = new TrashCan();
             public Tppos tppos = new Tppos();
+            public Tphere tphere = new Tphere();
             public Warp warp = new Warp();
             public Burn burn = new Burn();
             public HelpOp help_op = new HelpOp();
@@ -711,6 +712,10 @@ public class ConfigModel {
             }
 
             public static class Tppos {
+                public boolean enable = false;
+            }
+
+            public static class Tphere {
                 public boolean enable = false;
             }
 
