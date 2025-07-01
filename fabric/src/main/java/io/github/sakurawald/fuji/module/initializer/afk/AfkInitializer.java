@@ -92,7 +92,7 @@ public class AfkInitializer extends ModuleInitializer {
     }
 
     public static Text getAfkText(ServerPlayerEntity player) {
-        return TextHelper.getTextByValue(player, AfkInitializer.config.model().format);
+        return TextHelper.getTextByValue(player, AfkInitializer.config.model().afk_display_name_format);
     }
 
     public static boolean isPlayerVelocityNotZero(MovementType movementType, Vec3d vec3d) {

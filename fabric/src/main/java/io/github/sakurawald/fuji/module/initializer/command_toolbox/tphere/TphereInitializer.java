@@ -13,6 +13,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 @Document("""
     This is a convenient command, to teleport `others` to `you`.
+    Similar to `/tp @a <player>`.
 
     For example:
     1. `/tphere Steve` to teleport `Steve` to `you`.

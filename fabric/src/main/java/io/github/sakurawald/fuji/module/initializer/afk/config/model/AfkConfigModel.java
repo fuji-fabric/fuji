@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.afk.config.model;
 
+import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 
 import java.util.ArrayList;
@@ -7,9 +8,10 @@ import java.util.List;
 
 public class AfkConfigModel {
     @Document("""
-        The display name of an afk player in `tab` list.
+        The `display name` of an afk player in `tab` list.
         """)
-    public String format = "<gray>[AFK] %player:displayname_visual%";
+    @SerializedName(value = "afk_display_name_format", alternate = "format")
+    public String afk_display_name_format = "<gray>[AFK] %player:displayname_visual%";
 
     @Document("""
         Afk checker is `triggered` periodically.

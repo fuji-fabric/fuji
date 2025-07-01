@@ -131,7 +131,7 @@ public abstract class PagedGui<T> extends LayeredGui {
         this.reopen();
     }
 
-    protected void reopen() {
+    private void reopen() {
         make(this.parent, getPlayer(), this.prefixTitle, this.entities, 0).open();
     }
 
