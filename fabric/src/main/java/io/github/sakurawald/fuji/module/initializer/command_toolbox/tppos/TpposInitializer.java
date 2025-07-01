@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_toolbox.tppos;
 
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.PlayerCollection;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
@@ -16,6 +17,7 @@ import io.github.sakurawald.fuji.core.service.random_teleport.RandomTeleporter;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.core.structure.TeleportSetup;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
+import java.util.Collection;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import java.util.Optional;
@@ -23,7 +25,7 @@ import java.util.Optional;
 
 @Document("""
     Provides `/tppos` command.
-    A `unified` teleport command.
+    A `unified` and `powerful` teleport command.
 
     For example:
     1. `/tppos --z 64 --x 32 --y 128` to teleport to `a specified position`
@@ -31,6 +33,7 @@ import java.util.Optional;
     3. `/tppos offline Alex` to teleport to the `offline position of Alex`.
     4. `/tppos --dimension` to specify the `target dimension`, and start `a random tp`.
     5. `/tppos --minRange 1000 --maxRange 2000` to specify the setup for `a random tp`.
+    6. `/tppos here @a` to teleport `all online players` to `you`.
     """)
 public class TpposInitializer extends ModuleInitializer {
 
@@ -94,6 +97,22 @@ public class TpposInitializer extends ModuleInitializer {
         ServerPlayerEntity dummy = PlayerHelper.loadOfflinePlayer(player.getValue());
         new GlobalPos(EntityHelper.getServerWorld(dummy), dummy.getX(), dummy.getY(), dummy.getZ(), dummy.getYaw(), dummy.getPitch())
             .teleport(source);
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document("""
+    Teleport `others` to `you`.
+
+    For example:
+    1. `/tppos here Steve` to teleport `Steve` to `you`.
+    2. `/tppos here @a` to teleport `all online players` to `you`.
+    """)
+    @CommandNode("tppos here")
+    @CommandRequirement(level = 4)
+    private static int tppos(@CommandSource ServerPlayerEntity source, PlayerCollection targets) {
+        Collection<ServerPlayerEntity> $targets = targets.getValue();
+        GlobalPos globalPos = GlobalPos.of(source);
+        $targets.forEach(globalPos::teleport);
         return CommandHelper.Return.SUCCESS;
     }
 
