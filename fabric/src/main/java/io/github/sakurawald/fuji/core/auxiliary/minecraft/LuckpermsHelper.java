@@ -54,14 +54,14 @@ public class LuckpermsHelper {
         /* If luckperms mod is not installed, then there is no `string permission`. */
         LuckPerms api = getAPI();
         if (api == null) {
-            return Tristate.FALSE;
+            return Tristate.UNDEFINED;
         }
 
         /* For a `null permission`, it's im-possible to have it. */
-        if (permission == null) return Tristate.FALSE;
+        if (permission == null) return Tristate.UNDEFINED;
         String permissionString = permission.withArguments(arguments);
         if (permissionString == null || permissionString.isEmpty()) {
-            return Tristate.FALSE;
+            return Tristate.UNDEFINED;
         }
 
         /* Test the permission for the user. */
