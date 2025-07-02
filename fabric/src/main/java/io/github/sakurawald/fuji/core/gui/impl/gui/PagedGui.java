@@ -6,6 +6,7 @@ import eu.pb4.sgui.api.gui.layered.LayeredGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.gui.impl.layer.SingleLineLayer;
 import io.github.sakurawald.fuji.core.gui.structure.EntityToElementMapper;
 import lombok.Getter;
@@ -29,6 +30,8 @@ public abstract class PagedGui<T> extends LayeredGui {
     private final List<T> entities;
     private final int pageIndex;
     private final Text prefixTitle;
+
+    @Document("For Paged Gui, the last line is always used as footer.")
     @Getter
     private final SingleLineLayer footer = new SingleLineLayer();
 

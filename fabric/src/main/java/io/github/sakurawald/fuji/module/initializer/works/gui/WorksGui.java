@@ -11,7 +11,7 @@ import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.works.WorksInitializer;
 import io.github.sakurawald.fuji.module.initializer.works.structure.work.abst.Work;
-import io.github.sakurawald.fuji.module.initializer.works.structure.work.impl.ProductionWork;
+import java.util.List;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -20,7 +20,6 @@ import net.minecraft.text.Text;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.util.List;
 
 
 public class WorksGui extends PagedGui<Work> {
@@ -28,36 +27,43 @@ public class WorksGui extends PagedGui<Work> {
     public WorksGui(ServerPlayerEntity player, @NotNull List<Work> entities, int pageIndex) {
         super(null, player, TextHelper.getTextByKey(player, "works.list.title"), entities, pageIndex);
 
-        getFooter().setSlot(3, GuiHelper.makeAddButton(player)
+        /* Place buttons in footer. */
+        getFooter().setSlot(3, GuiHelper
+            .makeAddButton(player)
             .setName(TextHelper.getTextByKey(player, "works.list.add"))
             .setCallback(() -> new AddWorkGui(player).open())
         );
-        getFooter().setSlot(4, GuiHelper.makeHelpButton(player)
+        getFooter().setSlot(4, GuiHelper
+            .makeHelpButton(player)
             .setLore(TextHelper.getTextListByKey(player, "works.list.help.lore")));
 
-        if (entities == WorksInitializer.works.model().works) {
-            getFooter().setSlot(5,
-                GuiHelper.makeLetterAButton(player)
-                    .setName(TextHelper.getTextByKey(player, "works.list.my_works"))
-                    .setCallback(() -> linkCurrentGuiAndSearch(player.getGameProfile().getName()).open())
+        if (isViewingAllWorks(entities)) {
+            getFooter().setSlot(5, GuiHelper
+                .makeLetterAButton(player)
+                .setName(TextHelper.getTextByKey(player, "works.list.my_works"))
+                .setCallback(() -> linkCurrentGuiAndSearch(player.getGameProfile().getName()).open())
             );
         } else {
-            getFooter().setSlot(5,
-                GuiHelper.makeHeartButton(player)
-                    .setName(TextHelper.getTextByKey(player, "works.list.all_works"))
-                    .setCallback(() -> new WorksGui(player, WorksInitializer.works.model().works, 0).open())
+            getFooter().setSlot(5, GuiHelper
+                .makeHeartButton(player)
+                .setName(TextHelper.getTextByKey(player, "works.list.all_works"))
+                .setCallback(() -> new WorksGui(player, WorksInitializer.works.model().works, 0).open())
             );
         }
-    }
-
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    private boolean hasPermission(@NotNull ServerPlayerEntity player, @NotNull Work work) {
-        return player.getGameProfile().getName().equals(work.creator) || player.hasPermissionLevel(4);
     }
 
     @Override
     protected PagedGui<Work> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<Work> entities, int pageIndex) {
         return new WorksGui(player, entities, pageIndex);
+    }
+
+    private static boolean isViewingAllWorks(@NotNull List<Work> entities) {
+        return entities == WorksInitializer.works.model().works;
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    private boolean hasPermission(@NotNull ServerPlayerEntity player, @NotNull Work work) {
+        return player.getGameProfile().getName().equals(work.creator) || player.hasPermissionLevel(4);
     }
 
     @Override
@@ -107,14 +113,6 @@ public class WorksGui extends PagedGui<Work> {
 
     @Override
     protected boolean filterEntity(Work entity, @NotNull String keyword) {
-        return entity.creator.contains(keyword)
-                || entity.name.contains(keyword)
-                || entity.introduction != null && entity.introduction.contains(keyword)
-                || entity.level.contains(keyword)
-                || entity.getIconItemIdentifier().contains(keyword)
-                || (entity instanceof ProductionWork pw
-                     && pw.sample.sampleCounter != null
-                     && pw.sample.sampleCounter.keySet().stream().anyMatch(k -> k.contains(keyword)));
-
+        return false;
     }
 }

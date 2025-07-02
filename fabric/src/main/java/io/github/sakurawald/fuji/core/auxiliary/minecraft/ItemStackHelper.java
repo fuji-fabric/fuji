@@ -107,8 +107,17 @@ public class ItemStackHelper {
         /* Filter by item name. */
         if (filterItemName(itemStack, keyword)) return true;
 
+        /* Filter by item material. */
+        if (filterItemMaterial(itemStack, keyword)) return true;
+
         /* Filter by item lore. */
         return filterItemLore(itemStack, keyword);
+    }
+
+    private static boolean filterItemMaterial(@NotNull ItemStack itemStack, String keyword) {
+        return RegistryHelper.toString(itemStack.getItem())
+            .toLowerCase()
+            .contains(keyword.toLowerCase());
     }
 
     @SuppressWarnings("RedundantIfStatement")
