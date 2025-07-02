@@ -4,6 +4,7 @@ import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -62,17 +63,19 @@ public class WorksGui extends PagedGui<Work> {
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    private boolean hasPermission(@NotNull ServerPlayerEntity player, @NotNull Work work) {
-        return player.getGameProfile().getName().equals(work.creator) || player.hasPermissionLevel(4);
+    private boolean canOperateOnThisEntity(@NotNull ServerPlayerEntity player, @NotNull Work work) {
+        return PlayerHelper.getPlayerName(player).equals(work.creator)
+            || player.hasPermissionLevel(4);
     }
 
     @Override
     protected GuiElementInterface toGuiElement(@NotNull Work entity) {
         ServerPlayerEntity player = getPlayer();
+
         return new GuiElementBuilder()
             .setItem(entity.getIconItem())
             .setName(TextHelper.getTextByValue(null, entity.name))
-            .setLore(entity.asLore(player))
+            .setLore(entity.ofLore(player))
             .setCallback((index, clickType, actionType) -> {
                 /* left click -> visit */
                 if (clickType.isLeft) {
@@ -90,7 +93,7 @@ public class WorksGui extends PagedGui<Work> {
                 }
                 /* shift + right click -> specialized settings */
                 if (clickType.isRight && clickType.shift) {
-                    if (!hasPermission(player, entity)) {
+                    if (!canOperateOnThisEntity(player, entity)) {
                         TextHelper.sendActionBarByKey(player, "works.work.set.no_perm");
                         return;
                     }
@@ -101,7 +104,7 @@ public class WorksGui extends PagedGui<Work> {
                 /* right click -> general settings */
                 if (clickType.isRight) {
                     // check permission
-                    if (!hasPermission(player, entity)) {
+                    if (!canOperateOnThisEntity(player, entity)) {
                         TextHelper.sendActionBarByKey(player, "works.work.set.no_perm");
                         return;
                     }

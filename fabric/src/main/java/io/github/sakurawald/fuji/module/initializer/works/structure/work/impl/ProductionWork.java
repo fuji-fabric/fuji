@@ -11,6 +11,7 @@ import io.github.sakurawald.fuji.core.gui.impl.gui.ConfirmSignGui;
 import io.github.sakurawald.fuji.core.gui.impl.gui.InputSignGui;
 import io.github.sakurawald.fuji.core.job.interfaces.Schedulable;
 import io.github.sakurawald.fuji.module.initializer.works.WorksInitializer;
+import io.github.sakurawald.fuji.module.initializer.works.structure.WorkType;
 import io.github.sakurawald.fuji.module.initializer.works.structure.WorksBinding;
 import io.github.sakurawald.fuji.module.initializer.works.structure.work.abst.Work;
 import lombok.NoArgsConstructor;
@@ -47,8 +48,8 @@ public class ProductionWork extends Work implements Schedulable {
     }
 
     @Override
-    protected @NotNull String getType() {
-        return Work.WorkType.ProductionWork.name();
+    protected @NotNull String getEntityType() {
+        return WorkType.ProductionWork.name();
     }
 
     private @NotNull List<Text> formatSampleCounter(ServerPlayerEntity player) {
@@ -73,9 +74,9 @@ public class ProductionWork extends Work implements Schedulable {
     }
 
     @Override
-    public @NotNull List<Text> asLore(ServerPlayerEntity player) {
+    public @NotNull List<Text> ofLore(ServerPlayerEntity player) {
         /* construct lore */
-        List<Text> ret = super.asLore(player);
+        List<Text> ret = super.ofLore(player);
         // note: hide sample info in lore if sample not exists
         if (this.sample.sampleStartTimeMS == 0) {
             ret.addAll(TextHelper.getTextListByKey(player, "works.production_work.sample.not_exists"));
@@ -101,7 +102,7 @@ public class ProductionWork extends Work implements Schedulable {
     }
 
     @Override
-    protected @NotNull String getDefaultIconItemIdentifier() {
+    protected @NotNull String getDefaultEntityIcon() {
         return "minecraft:redstone";
     }
 
@@ -160,12 +161,6 @@ public class ProductionWork extends Work implements Schedulable {
 
     private boolean isSampling() {
         return System.currentTimeMillis() < this.sample.sampleEndTimeMS;
-    }
-
-    @SuppressWarnings("EmptyMethod")
-    @Override
-    public Item getIconItem() {
-        return super.getIconItem();
     }
 
     private boolean insideSampleDistance(@NotNull BlockPos position, @NotNull BlockPos blockPos) {

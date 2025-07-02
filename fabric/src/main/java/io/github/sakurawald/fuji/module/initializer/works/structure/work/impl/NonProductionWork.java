@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.works.structure.work.impl;
 
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.module.initializer.works.structure.WorkType;
 import io.github.sakurawald.fuji.module.initializer.works.structure.work.abst.Work;
 import lombok.NoArgsConstructor;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -14,12 +15,12 @@ public class NonProductionWork extends Work {
     }
 
     @Override
-    protected @NotNull String getType() {
-        return Work.WorkType.NonProductionWork.name();
+    protected @NotNull String getEntityType() {
+        return WorkType.NonProductionWork.name();
     }
 
     @Override
-    protected @NotNull String getDefaultIconItemIdentifier() {
+    protected @NotNull String getDefaultEntityIcon() {
         return "minecraft:gunpowder";
     }
 

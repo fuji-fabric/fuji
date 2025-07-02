@@ -1,9 +1,5 @@
 package io.github.sakurawald.fuji.module.initializer.works.structure.work.abst;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
@@ -18,8 +14,6 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.gui.impl.gui.ConfirmSignGui;
 import io.github.sakurawald.fuji.core.gui.impl.gui.InputSignGui;
 import io.github.sakurawald.fuji.module.initializer.works.WorksInitializer;
-import io.github.sakurawald.fuji.module.initializer.works.structure.work.impl.NonProductionWork;
-import io.github.sakurawald.fuji.module.initializer.works.structure.work.impl.ProductionWork;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.minecraft.item.Item;
@@ -33,13 +27,12 @@ import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@NoArgsConstructor // for gson instance creator
+@NoArgsConstructor
 @Data
 public abstract class Work {
 
@@ -72,7 +65,7 @@ public abstract class Work {
     public @Nullable String icon;
 
     public Work(@NotNull ServerPlayerEntity player, String name) {
-        this.type = getType();
+        this.type = getEntityType();
         this.id = generateID();
         this.createTimeMS = System.currentTimeMillis();
         this.creator = PlayerHelper.getPlayerName(player);
@@ -95,7 +88,7 @@ public abstract class Work {
             .orElse(null);
     }
 
-    protected abstract String getType();
+    protected abstract String getEntityType();
 
     @Override
     public boolean equals(@Nullable Object o) {
@@ -110,7 +103,7 @@ public abstract class Work {
         return id.hashCode();
     }
 
-    protected abstract String getDefaultIconItemIdentifier();
+    protected abstract String getDefaultEntityIcon();
 
     public abstract void openSpecializedSettingsGui(ServerPlayerEntity player, SimpleGui parentGui);
 
@@ -201,7 +194,7 @@ public abstract class Work {
     public Item getIconItem() {
         /* make item stack from identifier */
         NbtCompound rootTag = new NbtCompound();
-        rootTag.putString("id", this.getIconItemIdentifier());
+        rootTag.putString("id", this.getEntityIcon());
         rootTag.putInt("Count", 1);
         Optional<ItemStack> itemStack = ItemStackHelper.Nbt.fromNbt(ServerHelper.getServer().getRegistryManager(), rootTag);
         if (itemStack.isEmpty()) {
@@ -211,11 +204,11 @@ public abstract class Work {
         return itemStack.get().getItem();
     }
 
-    public @NotNull String getIconItemIdentifier() {
-        return this.icon == null ? getDefaultIconItemIdentifier() : this.icon;
+    public @NotNull String getEntityIcon() {
+        return this.icon == null ? getDefaultEntityIcon() : this.icon;
     }
 
-    public List<Text> asLore(ServerPlayerEntity player) {
+    public List<Text> ofLore(ServerPlayerEntity player) {
         List<Text> ret = new ArrayList<>();
         ret.add(TextHelper.getTextByKey(player, "works.work.prop.creator", this.creator));
         if (this.introduction != null) {
@@ -235,21 +228,6 @@ public abstract class Work {
         return ret;
     }
 
-    public enum WorkType {NonProductionWork, ProductionWork}
-
-    public static class WorkTypeAdapter implements JsonDeserializer<Work> {
-        @Override
-        public @Nullable Work deserialize(@NotNull JsonElement json, Type typeOfT, @NotNull JsonDeserializationContext context) throws JsonParseException {
-            String type = json.getAsJsonObject().get("type").getAsString();
-
-            if (type.equals(WorkType.NonProductionWork.name()))
-                return context.deserialize(json, NonProductionWork.class);
-            if (type.equals(WorkType.ProductionWork.name()))
-                return context.deserialize(json, ProductionWork.class);
-
-            return null;
-        }
-    }
 }
 
 
