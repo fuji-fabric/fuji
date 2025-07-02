@@ -26,8 +26,8 @@ public class KitInitializer extends ModuleInitializer {
     @Document("Open the kit editor GUI.")
     @CommandNode("editor")
     private static int $editor(@CommandSource ServerPlayerEntity player) {
-        List<Kit> kits = KitService.readKits();
-        new KitEditorGui(player, kits, 0).open();
+        KitEditorGui.make(player)
+            .open();
         return CommandHelper.Return.SUCCESS;
     }
 

@@ -50,6 +50,11 @@ public class KitEditorGui extends PagedGui<Kit> {
         }.open()));
     }
 
+    public static KitEditorGui make(@NotNull ServerPlayerEntity player) {
+        List<Kit> kits = KitService.readKits();
+        return new KitEditorGui(player, kits, 0);
+    }
+
     private void openKitEditingGui(@NotNull ServerPlayerEntity player, @NotNull Kit kit) {
         /* Place kit stacks. */
         int rows = 5;
@@ -132,7 +137,9 @@ public class KitEditorGui extends PagedGui<Kit> {
                 // Shift + Right Click  -> Delete the kit.
                 if (event.shift && event.isRight) {
                     KitService.deleteKit(entity.getName());
-                    deleteEntity(entity);
+
+                    KitEditorGui.make(getPlayer()).open();
+
                     TextHelper.sendActionBarByKey(getPlayer(), "deleted");
                 }
 

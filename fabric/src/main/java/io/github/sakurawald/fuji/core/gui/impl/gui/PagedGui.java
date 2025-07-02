@@ -123,21 +123,6 @@ public abstract class PagedGui<T> extends LayeredGui {
         return make(this.parent, getPlayer(), resultTitle, resultEntities, 0);
     }
 
-    @SuppressWarnings("unused")
-    protected void addEntity(T entity) {
-        this.entities.add(entity);
-        this.reopen();
-    }
-
-    protected void deleteEntity(T entity) {
-        this.entities.remove(entity);
-        this.reopen();
-    }
-
-    private void reopen() {
-        make(this.parent, getPlayer(), this.prefixTitle, this.entities, 0).open();
-    }
-
     protected abstract GuiElementInterface toGuiElement(T entity);
 
     private @NotNull GuiElementInterface makeGuiElementAndBindIt(T entity) {
