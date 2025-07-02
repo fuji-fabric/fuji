@@ -114,6 +114,7 @@
   "operation.cancelled": "<red>該操作已取消",
   "operation.fail": "<red>操作失敗。",
   "operation.success": "<green>操作成功。",
+  "operation.no_permission": "<red>You don't have permission to do this.",
   "ping.player": "<gold>玩家 %s 的延遲：%d 毫秒",
   "placeholder.pos": "<#2596be>[%d %d %d, %s]",
   "player.not_found": "<red>找不到玩家",

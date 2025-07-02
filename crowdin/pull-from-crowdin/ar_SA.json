@@ -114,6 +114,7 @@
   "operation.cancelled": "<red>تم إلغاء هذه العملية",
   "operation.fail": "<red>العملية فشلت.",
   "operation.success": "<green>نجاح العملية.",
+  "operation.no_permission": "<red>You don't have permission to do this.",
   "ping.player": "<gold>Ping of %s: %d ms",
   "placeholder.pos": "<#2596be>[%d %d %d، %s]",
   "player.not_found": "<red>Player not found",

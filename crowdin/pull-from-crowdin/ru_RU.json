@@ -114,6 +114,7 @@
   "operation.cancelled": "<red>Эта операция отменена",
   "operation.fail": "<red>Операция не выполнена.",
   "operation.success": "<green>Operation success.",
+  "operation.no_permission": "<red>You don't have permission to do this.",
   "ping.player": "<gold>Пинг %s: %d мс",
   "placeholder.pos": "<#2596be>[%d %d %d, %s]",
   "player.not_found": "<red>Игрок не найден",

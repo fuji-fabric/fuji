@@ -114,6 +114,7 @@
   "operation.cancelled": "<red>Αυτή η ενέργεια ακυρώθηκε",
   "operation.fail": "Η λειτουργία <red>απέτυχε.",
   "operation.success": "<green>Επιτυχία λειτουργίας.",
+  "operation.no_permission": "<red>You don't have permission to do this.",
   "ping.player": "<gold>Ping από %s: %d ms",
   "placeholder.pos": "<#2596be>[%d %d %d, %s]",
   "player.not_found": "Δεν βρέθηκε <red>Player",
