@@ -2,7 +2,10 @@ package io.github.sakurawald.fuji.module.initializer.note;
 
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -76,5 +79,26 @@ public class NoteInitializer extends ModuleInitializer {
         players.add(playerNotes);
         data.writeStorage();
         return playerNotes;
+    }
+
+    public static void processNotify(ServerPlayerEntity targetPlayer, boolean isJoin) {
+        /* Does the player have any notes? */
+        String playerName = PlayerHelper.getPlayerName(targetPlayer);
+        PlayerNotes playerNotes = withPlayerNotes(playerName);
+        if (playerNotes.notes.isEmpty()) return;
+
+        /* Send notify to online staffs. */
+        ServerHelper
+            .getOnlinePlayers()
+            .stream()
+            .filter(it -> LuckpermsHelper.hasPermission(it.getUuid(),NOTIFY_NOTES_PERMISSION ))
+            .forEach(it -> {
+                int notesSize = playerNotes.notes.size();
+                if (isJoin) {
+                    TextHelper.sendMessageByKey(it, "note.notify.join", playerName, notesSize);
+                } else {
+                    TextHelper.sendMessageByKey(it, "note.notify.leave", playerName, notesSize);
+                }
+            });
     }
 }
