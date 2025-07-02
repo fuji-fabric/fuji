@@ -115,6 +115,7 @@
   "operation.fail": "<red>Operasjon feilet.",
   "operation.success": "<green>Operasjon vellykket.",
   "operation.no_permission": "<red>You don't have permission to do this.",
+  "no_permission": "<red>No permission",
   "ping.player": "<gold>Ping av %s: %d ms",
   "placeholder.pos": "<#2596be>[%d %d %d, %s]",
   "player.not_found": "<red>spiller ikke funnet",
@@ -413,6 +414,7 @@
   "note.list.gui.title": "<#5EABD6>Player %s's Notes",
   "note.list.gui.name": "<#5EABD6>Note",
   "note.list.gui.help.lore": "<green> - Left click -> Edit note\n<green> - Right click -> Delete note",
+  "note.notify": "<yellow>The player %s with %d notes joined the server!",
   "entity.created_by_player": "<blue>Created by player: `%s`",
   "entity.created_timestamp": "<blue>Created time: `%s`",
   "entity.description": "<blue>Description: <yellow>%s</yellow>"
