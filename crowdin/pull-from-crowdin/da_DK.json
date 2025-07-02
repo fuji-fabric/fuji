@@ -411,7 +411,8 @@
   "note.gui.title": "<#5EABD6>Note",
   "note.list.gui.title": "<#5EABD6>Player %s's Notes",
   "note.list.gui.name": "<#5EABD6>Note",
-  "entity.created_by_player": "<blue>Created by player: %s",
-  "entity.created_timestamp": "<blue>Created time: %s",
-  "entity.description": "<blue>Description %s"
+  "note.list.gui.help.lore": "<green> - Left click -> Edit note\n<green> - Right click -> Delete note",
+  "entity.created_by_player": "<blue>Created by player: `%s`",
+  "entity.created_timestamp": "<blue>Created time: `%s`",
+  "entity.description": "<blue>Description: `%s`"
 }
