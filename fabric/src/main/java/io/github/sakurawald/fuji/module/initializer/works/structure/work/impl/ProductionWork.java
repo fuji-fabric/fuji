@@ -48,7 +48,7 @@ public class ProductionWork extends Work implements Schedulable {
     }
 
     @Override
-    protected @NotNull String getEntityType() {
+    public @NotNull String getObjectTypeString() {
         return WorkType.ProductionWork.name();
     }
 

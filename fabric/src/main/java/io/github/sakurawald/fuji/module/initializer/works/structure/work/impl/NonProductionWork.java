@@ -17,7 +17,7 @@ public class NonProductionWork extends Work {
     }
 
     @Override
-    protected @NotNull String getEntityType() {
+    public @NotNull String getObjectTypeString() {
         return WorkType.NonProductionWork.name();
     }
 

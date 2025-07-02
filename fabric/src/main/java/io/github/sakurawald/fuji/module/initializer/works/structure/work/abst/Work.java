@@ -6,6 +6,7 @@ import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.config.interfaces.ObjectTypeStringGetter;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.works.gui.WorkGeneralSettingsGui;
 import lombok.Data;
@@ -21,7 +22,7 @@ import java.util.List;
 
 @NoArgsConstructor
 @Data
-public abstract class Work {
+public abstract class Work implements ObjectTypeStringGetter {
 
     @Document("The type of this work.")
     public String type;
@@ -52,7 +53,7 @@ public abstract class Work {
     public @Nullable String icon;
 
     public Work(@NotNull ServerPlayerEntity player, String name) {
-        this.type = getEntityType();
+        this.type = getObjectTypeString();
         this.id = RandomUtil.randomUUID();
         this.createTimeMS = System.currentTimeMillis();
         this.creator = PlayerHelper.getPlayerName(player);
@@ -66,8 +67,6 @@ public abstract class Work {
         this.pitch = player.getPitch();
         this.icon = null;
     }
-
-    protected abstract String getEntityType();
 
     protected abstract Item getDefaultEntityIcon();
 
