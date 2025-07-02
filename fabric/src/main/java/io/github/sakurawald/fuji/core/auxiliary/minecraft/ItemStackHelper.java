@@ -4,6 +4,7 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
@@ -226,6 +227,15 @@ public class ItemStackHelper {
                 .getOrThrow();
             #endif
 
+        }
+
+        public static @NotNull ItemStack fromNbtOrBarrier(NbtElement nbtElement) {
+            Optional<ItemStack> itemStack = fromNbt(RegistryHelper.getDefaultWrapperLookup(), nbtElement);
+            return itemStack.orElseGet(Items.BARRIER::getDefaultStack);
+        }
+
+        public static Optional<ItemStack> fromNbt(NbtElement nbtElement) {
+            return fromNbt(RegistryHelper.getDefaultWrapperLookup(), nbtElement);
         }
 
         public static Optional<ItemStack> fromNbt(RegistryWrapper.WrapperLookup wrapperLookup, NbtElement nbtElement) {

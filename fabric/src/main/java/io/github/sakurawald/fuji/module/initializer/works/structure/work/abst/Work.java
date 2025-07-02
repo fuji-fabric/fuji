@@ -3,12 +3,11 @@ package io.github.sakurawald.fuji.module.initializer.works.structure.work.abst;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
+import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.gui.impl.gui.ConfirmSignGui;
@@ -19,7 +18,6 @@ import lombok.NoArgsConstructor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -29,8 +27,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @NoArgsConstructor
 @Data
@@ -66,7 +62,7 @@ public abstract class Work {
 
     public Work(@NotNull ServerPlayerEntity player, String name) {
         this.type = getEntityType();
-        this.id = generateID();
+        this.id = RandomUtil.randomUUID();
         this.createTimeMS = System.currentTimeMillis();
         this.creator = PlayerHelper.getPlayerName(player);
         this.name = name;
@@ -80,30 +76,17 @@ public abstract class Work {
         this.icon = null;
     }
 
-    private static @Nullable Work getWorkByID(String uuid) {
-        return WorksInitializer.works.model().works
-            .stream()
-            .filter(it -> it.getId().equals(uuid))
-            .findFirst()
-            .orElse(null);
-    }
-
     protected abstract String getEntityType();
 
-    @Override
-    public boolean equals(@Nullable Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Work work = (Work) o;
-        return id.equals(work.id);
-    }
+    protected abstract Item getDefaultEntityIcon();
 
-    @Override
-    public int hashCode() {
-        return id.hashCode();
-    }
+    public Item getEntityIcon() {
+        if (this.icon == null) {
+            return this.getDefaultEntityIcon();
+        }
 
-    protected abstract String getDefaultEntityIcon();
+        return RegistryHelper.ofItem(this.icon);
+    }
 
     public abstract void openSpecializedSettingsGui(ServerPlayerEntity player, SimpleGui parentGui);
 
@@ -191,23 +174,6 @@ public abstract class Work {
         gui.open();
     }
 
-    public Item getIconItem() {
-        /* make item stack from identifier */
-        NbtCompound rootTag = new NbtCompound();
-        rootTag.putString("id", this.getEntityIcon());
-        rootTag.putInt("Count", 1);
-        Optional<ItemStack> itemStack = ItemStackHelper.Nbt.fromNbt(ServerHelper.getServer().getRegistryManager(), rootTag);
-        if (itemStack.isEmpty()) {
-            return Items.BARRIER;
-        }
-
-        return itemStack.get().getItem();
-    }
-
-    public @NotNull String getEntityIcon() {
-        return this.icon == null ? getDefaultEntityIcon() : this.icon;
-    }
-
     public List<Text> ofLore(ServerPlayerEntity player) {
         List<Text> ret = new ArrayList<>();
         ret.add(TextHelper.getTextByKey(player, "works.work.prop.creator", this.creator));
@@ -217,14 +183,6 @@ public abstract class Work {
         ret.add(TextHelper.getTextByKey(player, "works.work.prop.time", ChronosUtil.toDefaultDateFormat(this.createTimeMS)));
         ret.add(TextHelper.getTextByKey(player, "works.work.prop.dimension", this.level));
         ret.add(TextHelper.getTextByKey(player, "works.work.prop.coordinate", this.x, this.y, this.z));
-        return ret;
-    }
-
-    private @NotNull String generateID() {
-        String ret = null;
-        while (ret == null || getWorkByID(ret) != null) {
-            ret = UUID.randomUUID().toString().substring(0, 8);
-        }
         return ret;
     }
 

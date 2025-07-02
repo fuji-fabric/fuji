@@ -102,8 +102,8 @@ public class ProductionWork extends Work implements Schedulable {
     }
 
     @Override
-    protected @NotNull String getDefaultEntityIcon() {
-        return "minecraft:redstone";
+    protected @NotNull Item getDefaultEntityIcon() {
+        return Items.REDSTONE;
     }
 
     public void openInputSampleDistanceGui(@NotNull ServerPlayerEntity player) {

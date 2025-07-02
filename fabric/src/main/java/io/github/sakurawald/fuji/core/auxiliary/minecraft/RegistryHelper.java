@@ -1,10 +1,12 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.network.message.MessageType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -73,7 +75,13 @@ public class RegistryHelper {
     }
 
     public static @NotNull Item ofItem(@NotNull String identifier) {
-        return Registries.ITEM.get(Identifier.tryParse(identifier));
+        // NOTE: For un-existed identifier, it will always return minecraft:air as the dummy item.
+        Item item = Registries.ITEM.get(Identifier.tryParse(identifier));
+        if (Items.AIR.equals(item)) {
+            LogUtil.warn("Failed to find the item {} in registry, we will return BARRIER instead.", identifier);
+            return Items.BARRIER;
+        }
+        return item;
     }
 
     public static RegistryWrapper.WrapperLookup getDefaultWrapperLookup() {

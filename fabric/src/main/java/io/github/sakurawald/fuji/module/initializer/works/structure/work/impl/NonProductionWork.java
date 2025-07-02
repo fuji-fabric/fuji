@@ -5,6 +5,8 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.module.initializer.works.structure.WorkType;
 import io.github.sakurawald.fuji.module.initializer.works.structure.work.abst.Work;
 import lombok.NoArgsConstructor;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,8 +22,8 @@ public class NonProductionWork extends Work {
     }
 
     @Override
-    protected @NotNull String getDefaultEntityIcon() {
-        return "minecraft:gunpowder";
+    protected @NotNull Item getDefaultEntityIcon() {
+        return Items.GUNPOWDER;
     }
 
     @Override

@@ -73,7 +73,7 @@ public class WorksGui extends PagedGui<Work> {
         ServerPlayerEntity player = getPlayer();
 
         return new GuiElementBuilder()
-            .setItem(entity.getIconItem())
+            .setItem(entity.getEntityIcon())
             .setName(TextHelper.getTextByValue(null, entity.name))
             .setLore(entity.ofLore(player))
             .setCallback((index, clickType, actionType) -> {
