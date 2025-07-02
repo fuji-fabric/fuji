@@ -343,7 +343,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @Override
     protected void registerGsonTypeAdapter() {
-        BaseConfigurationHandler.registerTypeAdapter(CommandAttachmentNode.class, new CommandAttachmentNodeAdapter());
+        BaseConfigurationHandler.registerGsonTypeAdapter(CommandAttachmentNode.class, new CommandAttachmentNodeAdapter());
     }
 
     private static class CommandAttachmentNodeAdapter implements JsonDeserializer<CommandAttachmentNode> {

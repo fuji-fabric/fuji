@@ -107,7 +107,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         });
     }
 
-    public static void registerTypeAdapter(Type type, Object typeAdapter) {
+    public static void registerGsonTypeAdapter(Type type, Object typeAdapter) {
         gson = gson
             .newBuilder()
             .registerTypeAdapter(type, typeAdapter)
