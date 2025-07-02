@@ -115,6 +115,7 @@
   "operation.fail": "<red>Operation fail.",
   "operation.success": "<green>Operation success.",
   "operation.no_permission": "<red>You don't have permission to do this.",
+  "no_permission": "<red>No permission",
   "ping.player": "<gold>Ping of %s: %d ms",
   "placeholder.pos": "<#2596be>[%d %d %d, %s]",
   "player.not_found": "<red>Player not found",
