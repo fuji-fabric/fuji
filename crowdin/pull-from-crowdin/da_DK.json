@@ -114,6 +114,7 @@
   "operation.cancelled": "<red>Denne handling er annulleret",
   "operation.fail": "<red>operation mislykkedes.",
   "operation.success": "<green>Operationen lykkedes.",
+  "operation.no_permission": "<red>You don't have permission to do this.",
   "ping.player": "<gold>Ping af %s: %d ms",
   "placeholder.pos": "<#2596be>[%d %d %d, %s]",
   "player.not_found": "<red>Spiller ikke fundet",

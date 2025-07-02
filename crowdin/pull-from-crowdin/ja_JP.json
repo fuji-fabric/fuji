@@ -114,6 +114,7 @@
   "operation.cancelled": "<red>この操作はキャンセルされました",
   "operation.fail": "<red>操作に失敗しました。",
   "operation.success": "<green>操作に成功しました。",
+  "operation.no_permission": "<red>You don't have permission to do this.",
   "ping.player": "<gold> %sの Ping : %d ms",
   "placeholder.pos": "<#2596be>[%d %d %d, %s]",
   "player.not_found": "<red>プレイヤーが見つかりません",
