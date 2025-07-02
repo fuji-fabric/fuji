@@ -1,11 +1,13 @@
 package io.github.sakurawald.fuji.core.gui.impl.gui;
 
 import eu.pb4.sgui.api.ClickType;
+import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import java.util.List;
+import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -16,23 +18,63 @@ public abstract class CrudPagedGui<T> extends PagedGui<T> {
     public CrudPagedGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull Text prefixTitle, @NotNull List<T> entities, int pageIndex) {
         super(parent, player, prefixTitle, entities, pageIndex);
 
-        getFooter().setSlot(3, GuiHelper
-            .makeAddButton(player)
-            .setName(TextHelper.getTextByKey(player, "add"))
-            .setCallback(() -> onCreateEntity())
-        );
+        if (this.canCreateEntity()) {
+            getFooter().setSlot(3, GuiHelper
+                .makeAddButton(player)
+                .setName(TextHelper.getTextByKey(player, "add"))
+                .setCallback(this::doCreateEntity)
+            );
+        }
 
         getFooter().setSlot(4, GuiHelper
             .makeHelpButton(player)
             .setLore(TextHelper.getTextListByKey(player, getGuiHelpLoreKey())));
     }
 
+    private void doCreateEntity() {
+        if (!this.canCreateEntity()) {
+            TextHelper.sendMessageByKey(getPlayer(), "operation.no_permission");
+            return;
+        }
+
+        this.onCreateEntity();
+    }
+
+    @Override
+    protected final GuiElementInterface toGuiElement(T entity) {
+        /* Hide the entity if no permission to view. */
+        if (!this.canReadEntity(entity)) {
+            return new GuiElementBuilder()
+                .setItem(Items.BARRIER)
+                .setName(TextHelper.getTextByKey(entity, "no_permission"))
+                .build();
+        }
+
+        /* Let subclass build the object first. */
+        GuiElementBuilder builder = this.toGuiElementBuilder(entity);
+
+        /* Set click callback. */
+        builder.setCallback(dispatchClickType(getBackendGui(), entity));
+
+        return builder.build();
+    }
+
+    protected abstract GuiElementBuilder toGuiElementBuilder(T entity);
+
     protected abstract @NotNull String getGuiHelpLoreKey();
 
     protected abstract void onCreateEntity();
 
+    protected abstract boolean canCreateEntity();
+
+    protected abstract boolean canReadEntity(T entity);
+
+    protected abstract boolean canUpdateEntity(T entity);
+
+    protected abstract boolean canDeleteEntity(T entity);
+
     @SuppressWarnings("UnnecessaryReturnStatement")
-    protected GuiElementInterface.@NotNull ItemClickCallback dispatchClickType(@NotNull SimpleGui backendGui, T entity) {
+    private GuiElementInterface.@NotNull ItemClickCallback dispatchClickType(@NotNull SimpleGui backendGui, T entity) {
         return (index, clickType, actionType) -> {
             GuiElementInterface element = backendGui.getSlot(index);
 

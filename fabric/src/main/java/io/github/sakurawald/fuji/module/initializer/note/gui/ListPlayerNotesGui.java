@@ -1,9 +1,9 @@
 package io.github.sakurawald.fuji.module.initializer.note.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.ConfirmSignGui;
 import io.github.sakurawald.fuji.core.gui.impl.gui.CrudPagedGui;
@@ -39,7 +39,7 @@ public class ListPlayerNotesGui extends CrudPagedGui<Note> {
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(Note entity) {
+    protected GuiElementBuilder toGuiElementBuilder(Note entity) {
         GuiElementBuilder builder = new GuiElementBuilder();
 
         builder
@@ -51,9 +51,7 @@ public class ListPlayerNotesGui extends CrudPagedGui<Note> {
                 , TextHelper.getTextByKey(getPlayer(),"entity.description", entity.description)
             ));
 
-        builder.setCallback(dispatchClickType(getBackendGui(), entity));
-
-        return builder.build();
+        return builder;
     }
 
     @Override
@@ -90,9 +88,32 @@ public class ListPlayerNotesGui extends CrudPagedGui<Note> {
     }
 
     @Override
-    protected void onLeftClickEntity(Note entity) {
-        String originalDescription = entity.description;
+    protected boolean canCreateEntity() {
+        return LuckpermsHelper.hasPermission(getPlayer().getUuid(), NoteInitializer.CREATE_NOTES_PERMISSION);
+    }
 
+    @Override
+    protected boolean canReadEntity(Note entity) {
+        return LuckpermsHelper.hasPermission(getPlayer().getUuid(), NoteInitializer.READ_NOTES_PERMISSION);
+    }
+
+    @Override
+    protected boolean canUpdateEntity(Note entity) {
+        return LuckpermsHelper.hasPermission(getPlayer().getUuid(), NoteInitializer.UPDATE_NOTES_PERMISSION);
+    }
+
+    @Override
+    protected boolean canDeleteEntity(Note entity) {
+        return LuckpermsHelper.hasPermission(getPlayer().getUuid(), NoteInitializer.DELETE_NOTES_PERMISSION);
+    }
+
+    @Override
+    protected void onLeftClickEntity(Note entity) {
+        if (!this.canUpdateEntity(entity)) {
+            return;
+        }
+
+        String originalDescription = entity.description;
         new EditSignGui(getPlayer(), originalDescription) {
             @Override
             public void onClose() {
@@ -109,6 +130,10 @@ public class ListPlayerNotesGui extends CrudPagedGui<Note> {
 
     @Override
     protected void onRightClickEntity(Note entity) {
+        if (!canDeleteEntity(entity)) {
+            return;
+        }
+
         new ConfirmSignGui(getPlayer()) {
             @Override
             public void onConfirm() {

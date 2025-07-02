@@ -27,16 +27,21 @@ import net.minecraft.server.network.ServerPlayerEntity;
     """)
 public class NoteInitializer extends ModuleInitializer {
 
-    public static PermissionDescriptor VIEW_NOTES_PERMISSION = new PermissionDescriptor("fuji.note.view", """
-        To `view` the `warnings` of a `player`.
-        """);
 
     public static PermissionDescriptor CREATE_NOTES_PERMISSION = new PermissionDescriptor("fuji.note.create", """
         To `create` a new `note` for a `player`.
         """);
 
+    public static PermissionDescriptor READ_NOTES_PERMISSION = new PermissionDescriptor("fuji.note.read", """
+        To `read` the `notes` of a `player`.
+        """);
+
+    public static PermissionDescriptor UPDATE_NOTES_PERMISSION = new PermissionDescriptor("fuji.note.update", """
+        To `update` the `notes` of a `player`.
+        """);
+
     public static PermissionDescriptor DELETE_NOTES_PERMISSION = new PermissionDescriptor("fuji.note.delete", """
-        To `delete` a new `note` for a `player`.
+        To `delete` an existed `note` of a `player`.
         """);
 
     public static PermissionDescriptor NOTIFY_NOTES_PERMISSION = new PermissionDescriptor("fuji.note.notify", """
@@ -48,7 +53,7 @@ public class NoteInitializer extends ModuleInitializer {
     @Document("Open the note GUI.")
     @CommandNode("note")
     @CommandRequirement(level = 4)
-    private static int $warning(@CommandSource ServerPlayerEntity player) {
+    private static int $note(@CommandSource ServerPlayerEntity player) {
         List<String> offlinePlayerNames = ServerHelper.getOfflinePlayerNames();
         new NoteGui(null, player, offlinePlayerNames, 0)
             .open();

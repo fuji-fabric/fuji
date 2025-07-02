@@ -76,7 +76,7 @@ public abstract class PagedGui<T> extends LayeredGui {
         this.drawTitle();
 
         // Draw entities.
-        this.drawPagedGui(entities);
+        this.drawEntitiesOnThisPage(entities);
 
         // Draw navigator.
         this.drawNavigator(pageIndex);
@@ -85,7 +85,7 @@ public abstract class PagedGui<T> extends LayeredGui {
         this.addLayer(footer, 0, this.getHeight() - 1);
     }
 
-    private void drawPagedGui(@NotNull List<T> entities) {
+    private void drawEntitiesOnThisPage(@NotNull List<T> entities) {
         int slotIndex = 0;
         for (int i = getEntityBeginIndex(this.pageIndex); i < getEntityEndIndex(this.pageIndex); i++) {
             T entity = entities.get(i);
@@ -219,7 +219,7 @@ public abstract class PagedGui<T> extends LayeredGui {
         this.close();
     }
 
-    public @Nullable SimpleGui getBackendGui() {
+    public @NotNull SimpleGui getBackendGui() {
         return this.gui;
     }
 }
