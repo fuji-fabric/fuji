@@ -1,13 +1,16 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
+import com.mojang.authlib.GameProfile;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import java.util.Optional;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,6 +52,16 @@ public class GuiHelper {
             builder.hideTooltip();
         #endif
 
+        return builder;
+    }
+
+    public static GuiElementBuilder setPlayerHeadTexture(GuiElementBuilder builder, String playerName) {
+        builder.setItem(Items.PLAYER_HEAD);
+
+        Optional<GameProfile> gameProfileByName = PlayerHelper.getGameProfileByName(playerName);
+        MinecraftServer server = ServerHelper.getServer();
+
+        gameProfileByName.ifPresent(gameProfile -> builder.setSkullOwner(gameProfile, server));
         return builder;
     }
 

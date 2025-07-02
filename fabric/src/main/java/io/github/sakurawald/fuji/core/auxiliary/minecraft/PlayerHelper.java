@@ -85,7 +85,7 @@ public class PlayerHelper {
         return player;
     }
 
-    private static Optional<GameProfile> getGameProfileByName(String playerName) {
+    public static Optional<GameProfile> getGameProfileByName(String playerName) {
         UserCache userCache = ServerHelper.getServer().getUserCache();
         if (userCache == null) return Optional.empty();
 

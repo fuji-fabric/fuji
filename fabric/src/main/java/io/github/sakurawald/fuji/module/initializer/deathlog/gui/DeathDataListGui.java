@@ -3,22 +3,21 @@ package io.github.sakurawald.fuji.module.initializer.deathlog.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.NbtHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
 import io.github.sakurawald.fuji.module.initializer.deathlog.DeathLogInitializer;
 import io.github.sakurawald.fuji.module.initializer.deathlog.structure.DeathNode;
-import net.minecraft.item.Items;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class DeathDataListGui extends PagedGui<String> {
 
@@ -42,9 +41,11 @@ public class DeathDataListGui extends PagedGui<String> {
 
     @Override
     protected GuiElementInterface toGuiElement(String entity) {
-        return new GuiElementBuilder()
-            .setItem(Items.SKELETON_SKULL)
-            .setName(Text.literal(entity))
+        GuiElementBuilder builder = new GuiElementBuilder();
+
+        GuiHelper.setPlayerHeadTexture(builder, entity);
+
+        builder.setName(Text.literal(entity))
             .setCallback(() -> {
                 NbtHelper.Storage.withNbtFile(DeathLogInitializer.getDeathDataPath(entity), root -> {
                     /* Check if it has death nodes. */
@@ -62,8 +63,9 @@ public class DeathDataListGui extends PagedGui<String> {
                     new DeathNodeListGui(getBackendGui(), getPlayer(), entity, entries, 0)
                         .open();
                 });
-            })
-            .build();
+            });
+
+        return builder.build();
     }
 
     @Override
