@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.initializer.warning.gui;
+package io.github.sakurawald.fuji.module.initializer.note.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
@@ -29,8 +29,9 @@ public class WarningGui extends PagedGui<String> {
         GuiHelper.setPlayerHeadTexture(builder, entity);
 
         builder
-            .setName(Text.literal(entity));
-
+            .setName(Text.literal(entity))
+            .setCallback(() -> ListPlayerNotesGui.make(getBackendGui(), getPlayer(), entity)
+                .open());
 
         return builder.build();
     }

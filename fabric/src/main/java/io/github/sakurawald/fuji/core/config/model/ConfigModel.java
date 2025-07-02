@@ -164,7 +164,7 @@ public class ConfigModel {
         public Skin skin = new Skin();
         public WorldDownloader world_downloader = new WorldDownloader();
         public Whitelist whitelist = new Whitelist();
-        public Warning warning = new Warning();
+        public Note note = new Note();
         public Head head = new Head();
         public Profiler profiler = new Profiler();
         public Tester tester = new Tester();
@@ -783,7 +783,7 @@ public class ConfigModel {
             public boolean enable = false;
         }
 
-        public static class Warning {
+        public static class Note {
             public boolean enable = false;
         }
 

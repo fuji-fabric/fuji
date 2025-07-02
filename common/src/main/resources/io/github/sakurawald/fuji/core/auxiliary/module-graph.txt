@@ -106,6 +106,7 @@ language
 motd
 multiplier
 nametag
+note
 placeholder
 predicate
 profiler
@@ -121,7 +122,6 @@ tester
 top_chunks
 tpa
 view
-warning
 whitelist
 works
 world

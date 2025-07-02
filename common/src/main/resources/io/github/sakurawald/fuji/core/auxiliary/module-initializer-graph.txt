@@ -95,6 +95,7 @@ io.github.sakurawald.fuji.module.initializer.language.LanguageInitializer
 io.github.sakurawald.fuji.module.initializer.motd.MotdInitializer
 io.github.sakurawald.fuji.module.initializer.multiplier.MultiplierInitializer
 io.github.sakurawald.fuji.module.initializer.nametag.NametagInitializer
+io.github.sakurawald.fuji.module.initializer.note.NoteInitializer
 io.github.sakurawald.fuji.module.initializer.placeholder.PlaceholderInitializer
 io.github.sakurawald.fuji.module.initializer.predicate.PredicateInitializer
 io.github.sakurawald.fuji.module.initializer.profiler.ProfilerInitializer
@@ -110,7 +111,6 @@ io.github.sakurawald.fuji.module.initializer.tester.TesterInitializer
 io.github.sakurawald.fuji.module.initializer.top_chunks.TopChunksInitializer
 io.github.sakurawald.fuji.module.initializer.tpa.TpaInitializer
 io.github.sakurawald.fuji.module.initializer.view.ViewInitializer
-io.github.sakurawald.fuji.module.initializer.warning.WarningInitializer
 io.github.sakurawald.fuji.module.initializer.works.WorksInitializer
 io.github.sakurawald.fuji.module.initializer.world.WorldInitializer
 io.github.sakurawald.fuji.module.initializer.world_downloader.WorldDownloaderInitializer
