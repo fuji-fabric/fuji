@@ -1,5 +1,4 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
 
-- **chore: support `MC 1.21.7` version**.
-- [command_permission] fix: when `luckperms` mod not installed, the `command_permission` module should not reject to use all commands. (It should fall back to the original requirement, instead of reject to execute all commands.)
+- [works] feature: adjust the trigger duration of schedule jobs from `every minute` to `every 5 seconds`. (This allows to use a short sample duration, less than 1 minute.)

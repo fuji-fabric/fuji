@@ -4,7 +4,7 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 
 public class WorksConfigModel {
     @Document("""
-        The `duration` used to `sample` for `production work`.
+        The `duration` used for `sample` for `production work`.
         """)
     public int sample_time_ms = 60 * 1000 * 60;
 
