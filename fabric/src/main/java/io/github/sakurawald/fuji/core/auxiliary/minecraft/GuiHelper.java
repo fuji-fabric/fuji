@@ -4,7 +4,11 @@ import com.mojang.authlib.GameProfile;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import eu.pb4.sgui.api.gui.layered.LayeredGui;
+import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -12,6 +16,7 @@ import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 public class GuiHelper {
@@ -41,6 +46,22 @@ public class GuiHelper {
         if (screenHandlerType == ScreenHandlerType.GENERIC_9X6) return 6;
 
         throw new IllegalArgumentException("Unknown screen handler type: " + screenHandlerType);
+    }
+
+    public static GuiElementBuilder fromSlot(GuiElementInterface slot) {
+        GuiElementBuilder builder = new GuiElementBuilder();
+        ItemStack itemStack = slot.getItemStack();
+
+        /* Copy data from slot into builder. */
+        builder.setItem(itemStack.getItem());
+        builder.setName(itemStack.getName());
+        List<Text> lore = ItemStackHelper.getLore(itemStack);
+        if (!lore.isEmpty()) {
+            builder.setLore(lore);
+        }
+        builder.setCallback(slot.getGuiCallback());
+
+        return builder;
     }
 
     public static GuiElementBuilder hideTooltip(GuiElementBuilder builder) {
@@ -127,6 +148,39 @@ public class GuiHelper {
 
     public static GuiElementBuilder makeLetterAButton(ServerPlayerEntity player) {
         return makeSkullButton(Icon.LETTER_A_ICON);
+    }
+
+    public static void fetchHeads(LayeredGui gui, Runnable drawCallback) {
+        final int guiSize = gui.getSize();
+        for (int i = 0; i < guiSize; i++) {
+            GuiElementInterface previousSlot = gui.getSlot(i);
+            if (previousSlot == null) return;
+
+            /* Run async method to fetch game profile. */
+            int finalI = i;
+            CompletableFuture.runAsync(() -> {
+                ItemStack itemStack = previousSlot.getItemStack();
+
+                // Fetch the game profile from mojang server.
+                String onlinePlayerName = itemStack.getName().getString().trim();
+                GameProfile gameProfile = MojangProfileFetcher.makeOnlineGameProfile(onlinePlayerName);
+
+                // Apply the game profile.
+                GuiElementBuilder builder = fromSlot(previousSlot);
+                builder.setSkullOwner(gameProfile, ServerHelper.getServer());
+                for (int j = 0; j < guiSize; j++) {
+                    GuiElementInterface currentSlot = gui.getSlot(j);
+                    if (currentSlot == null) continue;
+                    if (currentSlot.getItemStack() == previousSlot.getItemStack()) {
+                        gui.setSlot(finalI, builder);
+                        break;
+                    }
+                }
+
+                // Call draw to re-draw it.
+                drawCallback.run();
+            });
+        }
     }
 
     private static class Icon {

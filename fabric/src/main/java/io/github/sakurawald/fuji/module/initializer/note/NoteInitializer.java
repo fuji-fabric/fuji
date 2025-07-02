@@ -48,7 +48,7 @@ public class NoteInitializer extends ModuleInitializer {
         """);
 
     public static PermissionDescriptor NOTIFY_NOTES_PERMISSION = new PermissionDescriptor("fuji.note.notify", """
-        When a `player` with `notes` join the server, you will get notified.
+        When a `player` with `notes` join/leave the server, you will get notified.
         """);
 
     public static final BaseConfigurationHandler<NoteDataModel> data = new ObjectConfigurationHandler<>("note-data.json", NoteDataModel.class);

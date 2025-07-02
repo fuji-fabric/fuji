@@ -1,21 +1,16 @@
 package io.github.sakurawald.fuji.module.initializer.fuji.gui;
 
-import com.mojang.authlib.GameProfile;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
-import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ContactInformation;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.fabricmc.loader.api.metadata.Person;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
@@ -26,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 public class AboutGui extends PagedGui<Person> {
 
@@ -60,42 +54,7 @@ public class AboutGui extends PagedGui<Person> {
     protected void drawPagedGui() {
         super.drawPagedGui();
 
-        // fetch heads async
-        fetchHeads();
-    }
-
-    private void fetchHeads() {
-        for (int i = 0; i < 54; i++) {
-            GuiElementInterface slot = this.getSlot(i);
-            if (slot == null) return;
-
-            /* run async for each head */
-            int finalI = i;
-            CompletableFuture.runAsync(() -> {
-                ItemStack itemStack = slot.getItemStack();
-
-                // get the player name from the item name
-                String onlinePlayerName = itemStack.getName().getString().trim();
-                GameProfile gameProfile = MojangProfileFetcher.makeOnlineGameProfile(onlinePlayerName);
-
-                // with gui slot
-                GuiElementBuilder builder = new GuiElementBuilder()
-                    .setItem(itemStack.getItem())
-                    .setName(itemStack.getName())
-                    .setCallback(slot.getGuiCallback())
-                    .setSkullOwner(gameProfile, ServerHelper.getServer());
-
-                List<Text> lore = ItemStackHelper.getLore(itemStack);
-                if (!lore.isEmpty()) {
-                    builder.setLore(lore);
-                }
-
-                setSlot(finalI, builder);
-
-                // draw it
-                draw();
-            });
-        }
+        GuiHelper.fetchHeads(this, this::draw);
     }
 
     @Override

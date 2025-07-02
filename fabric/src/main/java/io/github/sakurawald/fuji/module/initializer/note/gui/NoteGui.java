@@ -24,15 +24,22 @@ public class NoteGui extends PagedGui<String> {
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(String entity) {
-        GuiElementBuilder builder = new GuiElementBuilder();
+    protected void drawPagedGui() {
+        super.drawPagedGui();
 
-        GuiHelper.setPlayerHeadTexture(builder, entity);
+        GuiHelper.fetchHeads(this, this::draw);
+    }
+
+    @Override
+    protected GuiElementInterface toGuiElement(String entity) {
+        GuiElementBuilder builder = GuiHelper.makeLuckyBlockSkull();
         builder
             .setName(Text.literal(entity))
             .setCallback(() -> ListPlayerNotesGui.make(getBackendGui(), getPlayer(), entity).open());
+
         return builder.build();
     }
+
 
     @Override
     protected boolean filterEntity(String entity, String keyword) {
