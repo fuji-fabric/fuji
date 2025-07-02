@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.core.auxiliary;
 
+import java.util.UUID;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,4 +15,9 @@ public class RandomUtil {
     public static <T> T drawList(@NotNull List<T> list) {
         return list.get(random.nextInt(list.size()));
     }
+
+    public static String randomUUID() {
+        return UUID.randomUUID().toString();
+    }
+
 }

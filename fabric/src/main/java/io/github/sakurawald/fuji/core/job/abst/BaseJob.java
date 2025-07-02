@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.core.job.abst;
 
+import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.Nullable;
@@ -9,8 +10,6 @@ import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
 import org.quartz.TriggerKey;
-
-import java.util.UUID;
 
 // NOTE: The no args constructor is only used for quartz to create the job instance.
 @NoArgsConstructor
@@ -29,7 +28,7 @@ public abstract class BaseJob implements Job {
             jobGroup = this.getClass().getName();
         }
         if (jobName == null) {
-            jobName = UUID.randomUUID().toString();
+            jobName = RandomUtil.randomUUID();
         }
 
         if (jobDataMap == null) {

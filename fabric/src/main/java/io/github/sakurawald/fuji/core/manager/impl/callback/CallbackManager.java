@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.core.manager.impl.callback;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.event.impl.CommandEvents;
@@ -12,7 +13,6 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.ClickEvent;
 
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -61,7 +61,7 @@ public class CallbackManager extends BaseManager {
     }
 
     public String makeCallbackCommand(Consumer<ServerPlayerEntity> callback, long ttl, TimeUnit timeUnit) {
-        return this.makeCallbackCommand(UUID.randomUUID().toString(), callback, ttl, timeUnit);
+        return this.makeCallbackCommand(RandomUtil.randomUUID(), callback, ttl, timeUnit);
     }
 
     private ClickEvent makeCallbackEvent(String uuid, Consumer<ServerPlayerEntity> callback, long ttl, TimeUnit timeUnit) {
@@ -72,6 +72,6 @@ public class CallbackManager extends BaseManager {
     }
 
     public ClickEvent makeCallbackEvent(Consumer<ServerPlayerEntity> callback, long ttl, TimeUnit timeUnit) {
-        return this.makeCallbackEvent(UUID.randomUUID().toString(), callback, ttl, timeUnit);
+        return this.makeCallbackEvent(RandomUtil.randomUUID(), callback, ttl, timeUnit);
     }
 }

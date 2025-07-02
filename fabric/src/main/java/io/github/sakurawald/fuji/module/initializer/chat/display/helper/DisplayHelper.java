@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.chat.display.helper;
 
+import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.chat.display.ChatDisplayInitializer;
@@ -17,7 +18,6 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class DisplayHelper {
@@ -25,7 +25,7 @@ public class DisplayHelper {
     private static final SoftReferenceMap<String, BaseDisplayGuiFactory> uuid2gui = new SoftReferenceMap<>();
 
     private static String bindUUID(BaseDisplayGuiFactory displayGuiFactory) {
-        String uuid = UUID.randomUUID().toString();
+        String uuid = RandomUtil.randomUUID();
         uuid2gui.put(uuid, displayGuiFactory);
         return uuid;
     }

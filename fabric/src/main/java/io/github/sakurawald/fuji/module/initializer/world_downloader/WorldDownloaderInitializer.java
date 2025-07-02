@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.world_downloader;
 
 import com.google.common.collect.EvictingQueue;
 import com.sun.net.httpserver.HttpServer;
+import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.IOUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
@@ -84,7 +85,7 @@ public class WorldDownloaderInitializer extends ModuleInitializer {
         String url = config.model().url_format;
         int port = config.model().port;
         url = url.replace("%port%", String.valueOf(port));
-        String path = "/world-download/" + UUID.randomUUID();
+        String path = "/world-download/" + RandomUtil.randomUUID();
         url = url.replace("%path%", path);
         downloadContextQueue.add(path);
 

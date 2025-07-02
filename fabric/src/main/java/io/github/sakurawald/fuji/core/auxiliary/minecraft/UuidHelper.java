@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import io.github.sakurawald.fuji.Fuji;
+import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.structure.GlobalBlockPos;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -68,7 +69,7 @@ public class UuidHelper {
 
         /* Attach a new UUID if not existed. */
         if (!root.contains(FUJI_UUID_NBT_KEY)) {
-            String uuidString = String.valueOf(UUID.randomUUID());
+            String uuidString = RandomUtil.randomUUID();
             root.putString(FUJI_UUID_NBT_KEY, uuidString);
         }
 
