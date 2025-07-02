@@ -234,7 +234,7 @@
   "works.production_work.prop.sample_coordinate": "<#A076F9>采样坐标: %.3f %.3f %.3f",
   "works.production_work.prop.sample_counter": "<#A076F9>采样计数器",
   "works.production_work.prop.sample_counter.empty": "<#A076F9> - 无任何物品",
-  "works.production_work.prop.sample_counter.entry": "<#A076F9> - [物品] * %d (%.1f/h)",
+  "works.production_work.prop.sample_counter.entry": "<#A076F9> - [item] * %d (%.1f/h)",
   "works.production_work.prop.sample_dimension": "<#A076F9>采样维度: %s",
   "works.production_work.prop.sample_distance": "<#A076F9>采样距离: %d",
   "works.production_work.prop.sample_end_time": "<#A076F9>采样结束时间: %s",
