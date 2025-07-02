@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.ConfirmSignGui;
 import io.github.sakurawald.fuji.core.gui.impl.gui.InputSignGui;
+import io.github.sakurawald.fuji.core.job.interfaces.Schedulable;
 import io.github.sakurawald.fuji.module.initializer.works.WorksInitializer;
 import io.github.sakurawald.fuji.module.initializer.works.structure.WorksBinding;
 import io.github.sakurawald.fuji.module.initializer.works.structure.work.abst.Work;
@@ -37,7 +38,7 @@ import java.util.stream.Stream;
 
 @NoArgsConstructor
 
-public class ProductionWork extends Work {
+public class ProductionWork extends Work implements Schedulable {
 
     public @NotNull Sample sample = new Sample();
 

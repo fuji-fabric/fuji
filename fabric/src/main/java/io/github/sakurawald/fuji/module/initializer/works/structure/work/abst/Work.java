@@ -9,6 +9,8 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -47,6 +49,7 @@ public abstract class Work {
     @Document("The unique id of this work.")
     public String id;
 
+    @Document("The create time of this work.")
     public long createTimeMS;
 
     @Document("Which player created this work.")
@@ -72,10 +75,10 @@ public abstract class Work {
         this.type = getType();
         this.id = generateID();
         this.createTimeMS = System.currentTimeMillis();
-        this.creator = player.getGameProfile().getName();
+        this.creator = PlayerHelper.getPlayerName(player);
         this.name = name;
         this.introduction = null;
-        this.level = player.getWorld().getRegistryKey().getValue().toString();
+        this.level = RegistryHelper.toString(player.getWorld());
         this.x = player.getPos().x;
         this.y = player.getPos().y;
         this.z = player.getPos().z;
@@ -108,10 +111,6 @@ public abstract class Work {
     }
 
     protected abstract String getDefaultIconItemIdentifier();
-
-    public void onSchedule() {
-        // no-op
-    }
 
     public abstract void openSpecializedSettingsGui(ServerPlayerEntity player, SimpleGui parentGui);
 
