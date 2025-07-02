@@ -114,6 +114,7 @@
   "operation.cancelled": "<red>Hành động này đã được huỷ bỏ",
   "operation.fail": "<red>Hành động thất bại.",
   "operation.success": "<green>Hành động thành công.",
+  "operation.no_permission": "<red>You don't have permission to do this.",
   "ping.player": "<gold>Ping của %s: %d ms",
   "placeholder.pos": "<#2596be>[%d %d %d, %s]",
   "player.not_found": "<red>Không tìm thấy người chơi",
