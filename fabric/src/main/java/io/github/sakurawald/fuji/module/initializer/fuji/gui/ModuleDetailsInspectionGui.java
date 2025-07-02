@@ -148,13 +148,14 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
                 GuiElementBuilder colorboxElementBuilder = new GuiElementBuilder();
 
                 ColorBox.ColorBlockTypes color = colorBox.color();
+                Text colorBoxName = TextHelper.getTextByKey(player, color.toLanguageKey());
                 String documentString = colorBox.value();
                 List<Text> colorBoxTextList = TextHelper.getDocumentTextList(player, documentString);
                 colorboxElementBuilder
-                    .setName(TextHelper.getTextByKey(player, color.toLanguageKey()))
+                    .setName(colorBoxName)
                     .setItem(color.toItem())
                     .setLore(colorBoxTextList)
-                    .setCallback(() -> sendColorBoxMessage(player, colorBoxTextList));
+                    .setCallback(() -> sendColorBoxMessage(player, colorBoxName, colorBoxTextList));
 
                 entities.add(colorboxElementBuilder.build());
 
@@ -174,8 +175,10 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         return Arrays.asList(boxes);
     }
 
-    private static void sendColorBoxMessage(ServerPlayerEntity player, List<Text> colorBoxTestList) {
+    private static void sendColorBoxMessage(ServerPlayerEntity player, Text colorBoxName, List<Text> colorBoxTestList) {
+        player.sendMessage(colorBoxName);
         colorBoxTestList.forEach(player::sendMessage);
+        player.sendMessage(TextHelper.TEXT_EMPTY);
         player.sendMessage(TextHelper.TEXT_EMPTY);
     }
 
