@@ -12,6 +12,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.gui.impl.gui.ConfirmSignGui;
 import io.github.sakurawald.fuji.core.gui.impl.gui.InputSignGui;
 import io.github.sakurawald.fuji.module.initializer.works.WorksInitializer;
@@ -40,18 +41,31 @@ import java.util.UUID;
 @Data
 public abstract class Work {
 
+    @Document("The type of this work.")
     public String type;
+
+    @Document("The unique id of this work.")
     public String id;
+
     public long createTimeMS;
+
+    @Document("Which player created this work.")
     public String creator;
+
+    @Document("The display name of this work.")
     public String name;
+
+    @Document("The introduction of this work.")
     public @Nullable String introduction;
+
     public String level;
     public double x;
     public double y;
     public double z;
     public float yaw;
     public float pitch;
+
+    @Document("The display item of this work.")
     public @Nullable String icon;
 
     public Work(@NotNull ServerPlayerEntity player, String name) {
