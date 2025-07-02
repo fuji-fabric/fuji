@@ -23,16 +23,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-public class WorksGui extends PagedGui<Work> {
+public class ListWorksGui extends PagedGui<Work> {
 
-    public WorksGui(ServerPlayerEntity player, @NotNull List<Work> entities, int pageIndex) {
+    public ListWorksGui(ServerPlayerEntity player, @NotNull List<Work> entities, int pageIndex) {
         super(null, player, TextHelper.getTextByKey(player, "works.list.title"), entities, pageIndex);
 
         /* Place buttons in footer. */
         getFooter().setSlot(3, GuiHelper
             .makeAddButton(player)
             .setName(TextHelper.getTextByKey(player, "works.list.add"))
-            .setCallback(() -> new AddWorkGui(player).open())
+            .setCallback(() -> new CreateWorkGui(player).open())
         );
         getFooter().setSlot(4, GuiHelper
             .makeHelpButton(player)
@@ -48,14 +48,14 @@ public class WorksGui extends PagedGui<Work> {
             getFooter().setSlot(5, GuiHelper
                 .makeHeartButton(player)
                 .setName(TextHelper.getTextByKey(player, "works.list.all_works"))
-                .setCallback(() -> new WorksGui(player, WorksInitializer.works.model().works, 0).open())
+                .setCallback(() -> new ListWorksGui(player, WorksInitializer.works.model().works, 0).open())
             );
         }
     }
 
     @Override
     protected PagedGui<Work> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<Work> entities, int pageIndex) {
-        return new WorksGui(player, entities, pageIndex);
+        return new ListWorksGui(player, entities, pageIndex);
     }
 
     private static boolean isViewingAllWorks(@NotNull List<Work> entities) {
@@ -76,42 +76,46 @@ public class WorksGui extends PagedGui<Work> {
             .setItem(entity.getEntityIcon())
             .setName(TextHelper.getTextByValue(null, entity.name))
             .setLore(entity.ofLore(player))
-            .setCallback((index, clickType, actionType) -> {
-                /* left click -> visit */
-                if (clickType.isLeft) {
-                    RegistryKey<World> worldKey = RegistryKey.of(RegistryKeys.WORLD, RegistryHelper.makeIdentifier(entity.level));
-                    ServerWorld level = ServerHelper.getServer().getWorld(worldKey);
-                    if (level != null) {
-                        new GlobalPos(level, entity.x, entity.y, entity.z, entity.yaw, entity.pitch)
-                            .teleport(player);
-                    } else {
-                        TextHelper.sendMessageByKey(player, "world.dimension.not_found", entity.level);
-                    }
+            .setCallback(handleClick(entity, player)).build();
+    }
 
-                    this.close();
+    private GuiElementInterface.ItemClickCallback handleClick(@NotNull Work entity, ServerPlayerEntity player) {
+        return (index, clickType, actionType) -> {
+            /* left click -> visit */
+            if (clickType.isLeft) {
+                RegistryKey<World> worldKey = RegistryKey.of(RegistryKeys.WORLD, RegistryHelper.makeIdentifier(entity.level));
+                ServerWorld level = ServerHelper.getServer().getWorld(worldKey);
+                if (level != null) {
+                    new GlobalPos(level, entity.x, entity.y, entity.z, entity.yaw, entity.pitch)
+                        .teleport(player);
+                } else {
+                    TextHelper.sendMessageByKey(player, "world.dimension.not_found", entity.level);
+                }
+
+                this.close();
+                return;
+            }
+            /* shift + right click -> specialized settings */
+            if (clickType.isRight && clickType.shift) {
+                if (!canOperateOnThisEntity(player, entity)) {
+                    TextHelper.sendActionBarByKey(player, "works.work.set.no_perm");
                     return;
                 }
-                /* shift + right click -> specialized settings */
-                if (clickType.isRight && clickType.shift) {
-                    if (!canOperateOnThisEntity(player, entity)) {
-                        TextHelper.sendActionBarByKey(player, "works.work.set.no_perm");
-                        return;
-                    }
-                    entity.openSpecializedSettingsGui(player, gui);
-                    this.close();
+                entity.openSpecializedSettingsGui(player, gui);
+                this.close();
+                return;
+            }
+            /* right click -> general settings */
+            if (clickType.isRight) {
+                // check permission
+                if (!canOperateOnThisEntity(player, entity)) {
+                    TextHelper.sendActionBarByKey(player, "works.work.set.no_perm");
                     return;
                 }
-                /* right click -> general settings */
-                if (clickType.isRight) {
-                    // check permission
-                    if (!canOperateOnThisEntity(player, entity)) {
-                        TextHelper.sendActionBarByKey(player, "works.work.set.no_perm");
-                        return;
-                    }
-                    entity.openGeneralSettingsGui(player, gui);
-                    this.close();
-                }
-            }).build();
+                entity.openGeneralSettingsGui(player, gui);
+                this.close();
+            }
+        };
     }
 
     @Override

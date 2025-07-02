@@ -11,7 +11,7 @@ import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.works.config.model.WorksConfigModel;
 import io.github.sakurawald.fuji.module.initializer.works.config.model.WorksDataModel;
-import io.github.sakurawald.fuji.module.initializer.works.gui.WorksGui;
+import io.github.sakurawald.fuji.module.initializer.works.gui.ListWorksGui;
 import io.github.sakurawald.fuji.module.initializer.works.job.WorksOnScheduleDispatcherJob;
 import io.github.sakurawald.fuji.module.initializer.works.structure.WorkTypeAdapter;
 import io.github.sakurawald.fuji.module.initializer.works.structure.work.abst.Work;
@@ -30,7 +30,7 @@ public class WorksInitializer extends ModuleInitializer {
     @Document("Open the works GUI.")
     @CommandNode("works")
     private static int $works(@CommandSource ServerPlayerEntity player) {
-        new WorksGui(player, works.model().works, 0)
+        new ListWorksGui(player, works.model().works, 0)
             .open();
         return CommandHelper.Return.SUCCESS;
     }

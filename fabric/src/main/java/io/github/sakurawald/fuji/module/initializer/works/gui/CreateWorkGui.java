@@ -15,9 +15,9 @@ import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
-public class AddWorkGui extends InputSignGui {
+public class CreateWorkGui extends InputSignGui {
 
-    public AddWorkGui(@NotNull ServerPlayerEntity player) {
+    public CreateWorkGui(@NotNull ServerPlayerEntity player) {
         super(player, TextHelper.getTextByKey(player, "works.work.add.prompt.input.name"));
     }
 

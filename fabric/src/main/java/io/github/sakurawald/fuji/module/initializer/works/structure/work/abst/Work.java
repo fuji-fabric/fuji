@@ -82,10 +82,6 @@ public abstract class Work implements ObjectTypeStringGetter {
 
     public void openGeneralSettingsGui(@NotNull ServerPlayerEntity player, @NotNull SimpleGui parentGui) {
         Work work = this;
-        makeGeneralSettingsGui(player, parentGui, work);
-    }
-
-    private static void makeGeneralSettingsGui(@NotNull ServerPlayerEntity player, @NotNull SimpleGui parentGui, Work work) {
         new WorkGeneralSettingsGui(parentGui, player, work)
             .open();
     }
