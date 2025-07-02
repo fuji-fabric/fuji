@@ -11,4 +11,7 @@ public class PlayerNotes {
 
     public List<Note> notes = new ArrayList<>();
 
+    public PlayerNotes(String player) {
+        this.player = player;
+    }
 }

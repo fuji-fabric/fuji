@@ -12,6 +12,7 @@ import io.github.sakurawald.fuji.module.initializer.deathlog.structure.DeathNode
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -43,9 +44,9 @@ public class DeathDataListGui extends PagedGui<String> {
     protected GuiElementInterface toGuiElement(String entity) {
         GuiElementBuilder builder = new GuiElementBuilder();
 
-        GuiHelper.setPlayerHeadTexture(builder, entity);
-
-        builder.setName(Text.literal(entity))
+        builder
+            .setItem(Items.SKELETON_SKULL)
+            .setName(Text.literal(entity))
             .setCallback(() -> {
                 NbtHelper.Storage.withNbtFile(DeathLogInitializer.getDeathDataPath(entity), root -> {
                     /* Check if it has death nodes. */
