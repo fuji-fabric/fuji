@@ -47,6 +47,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+
+// The design of language system:
+// 1. The language value should be simple enough. (Reduce the use of long sentence)
+// 2. Reduce the use of `click event` tag and `hover event` tag in `language value`. (Use composition to attach then)
+
 public class TextHelper {
 
     /* Constants. */

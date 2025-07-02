@@ -45,6 +45,7 @@ public class JobsInspectionGui extends PagedGui<JobDescriptor> {
         /* Get all jobs. */
         Scheduler scheduler = Managers.getScheduleManager().getScheduler();
 
+        // NOTE: Match all jobs, including `CronJob` and `FixedIntervalJob`.
         GroupMatcher<JobKey> jobKeyGroupMatcher = GroupMatcher.anyJobGroup();
         Set<JobKey> jobKeys = scheduler.getJobKeys(jobKeyGroupMatcher);
         for (JobKey jobKey : jobKeys) {

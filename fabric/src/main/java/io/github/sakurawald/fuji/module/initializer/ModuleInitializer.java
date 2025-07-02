@@ -7,7 +7,7 @@ import lombok.SneakyThrows;
 
 import java.lang.reflect.Field;
 
-/**
+/*
  * Tips:
  * 1. Don't catch and handle the command exception, just use @SneakThrow and CommandSyntaxException.
  * 2. Use CommandHelper.Return to provide useful return value.
@@ -16,9 +16,6 @@ import java.lang.reflect.Field;
  */
 public class ModuleInitializer {
 
-    /**
-     * The template-method
-     */
     public final void doInitialize() {
         this.registerGsonTypeAdapter();
         this.loadConfigurationFiles();
