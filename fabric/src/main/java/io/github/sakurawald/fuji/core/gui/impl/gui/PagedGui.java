@@ -36,7 +36,7 @@ public abstract class PagedGui<T> extends LayeredGui {
 
     private boolean openParentGuiWhenClose = true;
 
-    public PagedGui(@Nullable SimpleGui parent, ServerPlayerEntity player, Text prefixTitle, @NotNull List<T> entities, int pageIndex) {
+    public PagedGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull Text prefixTitle, @NotNull List<T> entities, int pageIndex) {
         super(ScreenHandlerType.GENERIC_9X6, player, false);
         this.parent = parent;
         this.prefixTitle = prefixTitle;
