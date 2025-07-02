@@ -1,17 +1,8 @@
 package io.github.sakurawald.fuji.module.initializer.fuji.structure;
 
-import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
-import lombok.Data;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -20,6 +11,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.Data;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Data
 public class InspectingObject {
@@ -73,7 +72,7 @@ public class InspectingObject {
             return "%d elements".formatted(map.size());
         }
 
-        if (value instanceof Map.Entry<?,?> entry) {
+        if (value instanceof Map.Entry<?, ?> entry) {
             String keyTypeString = entry.getKey().getClass().getSimpleName();
             String valueTypeString = entry.getValue().getClass().getSimpleName();
             return "mapper %s -> %s".formatted(keyTypeString, valueTypeString);
@@ -148,7 +147,31 @@ public class InspectingObject {
     public Text computeNameText(ServerPlayerEntity player) {
         String objectName = this.getObjectName();
         objectName = TextHelper.escapeTags(objectName);
-        return TextHelper.getTextByKey(player,"object.name", objectName);
+        return TextHelper.getTextByKey(player, "object.name", objectName);
+    }
+
+
+    private static List<Field> gatherDeclaredFieldsRecursively(List<Field> result, Class<?> clazz) {
+
+        /* Print this node. */
+        Field[] declaredFields = clazz.getDeclaredFields();
+        result.addAll(Arrays.asList(declaredFields));
+
+        /* Go down. */
+        Class<?> superclass = clazz.getSuperclass();
+        if (superclass != Object.class) {
+            gatherDeclaredFieldsRecursively(result, superclass);
+        }
+
+        /* Go up. */
+        return result;
+    }
+
+    private static List<Field> gatherDeclaredFields(Class<?> clazz) {
+        List<Field> allDeclaredFields = new ArrayList<>();
+        gatherDeclaredFieldsRecursively(allDeclaredFields, clazz);
+
+        return allDeclaredFields;
     }
 
     public static List<InspectingObject> inspectJavaObject(@NotNull Object object) {
@@ -159,8 +182,9 @@ public class InspectingObject {
 
         /* Inspect the structure of object. */
         Object fieldInstance = object;
-        return Arrays
-            .stream(object.getClass().getDeclaredFields())
+        Class<?> inspectingObjectClass = object.getClass();
+        return gatherDeclaredFields(inspectingObjectClass)
+            .stream()
             .filter(field -> {
                 /* Ignore some fields that is not interested. */
                 int modifiers = field.getModifiers();
