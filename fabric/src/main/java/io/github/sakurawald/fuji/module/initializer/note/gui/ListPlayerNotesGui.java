@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.note.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.ConfirmSignGui;
 import io.github.sakurawald.fuji.core.gui.impl.gui.CrudPagedGui;
@@ -72,7 +73,7 @@ public class ListPlayerNotesGui extends CrudPagedGui<Note> {
                 }
 
                 PlayerNotes playerNotes = NoteInitializer.getPlayerNotes(targetPlayerName);
-                Note note = Note.makeNote(player, description);
+                Note note = Note.makeNote(PlayerHelper.getPlayerName(player), description);
                 playerNotes.notes.add(note);
                 NoteInitializer.data.writeStorage();
 

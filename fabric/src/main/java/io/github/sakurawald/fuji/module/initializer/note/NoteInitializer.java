@@ -10,6 +10,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlayerName;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
@@ -68,6 +69,75 @@ public class NoteInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document("Create a new note for the player.")
+    @CommandNode("note create")
+    @CommandRequirement(level = 4)
+    private static int $createNote(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer, GreedyString note) {
+        String creatorName = source.getName();
+        String noteDescription = note.getValue();
+        Note newNote = Note.makeNote(creatorName, noteDescription);
+
+        String targetPlayerName = targetPlayer.getValue();
+        NoteInitializer
+            .getPlayerNotes(targetPlayerName)
+            .notes
+            .add(newNote);
+        NoteInitializer.data.writeStorage();
+
+        TextHelper.sendMessageByKey(source, "note.created", targetPlayerName);
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document("List the notes of a player.")
+    @CommandNode("note list")
+    @CommandRequirement(level = 4)
+    private static int $listNote(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer) {
+        String targetPlayerName = targetPlayer.getValue();
+        PlayerNotes playerNotes = NoteInitializer.getPlayerNotes(targetPlayerName);
+        TextHelper.sendMessageByKey(source, "note.list.message", targetPlayerName, playerNotes.notes.size());
+
+        playerNotes.notes.forEach(note -> {
+            note
+                .asLore(source)
+                .forEach(source::sendMessage);
+
+            source.sendMessage(TextHelper.TEXT_EMPTY);
+        });
+
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document("Clear the notes of a player.")
+    @CommandNode("note clear")
+    @CommandRequirement(level = 4)
+    private static int $clearNote(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer) {
+        String targetPlayerName = targetPlayer.getValue();
+        List<Note> notes = NoteInitializer.getPlayerNotes(targetPlayerName).notes;
+        int originalSize = notes.size();
+        notes.clear();
+        NoteInitializer.data.writeStorage();
+
+        TextHelper.sendMessageByKey(source, "note.clear", originalSize, targetPlayerName);
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document("Clear all notes for all players.")
+    @CommandNode("note clear-all")
+    @CommandRequirement(level = 4)
+    private static int $clearAllNote(@CommandSource ServerCommandSource source, Optional<Boolean> confirm) {
+        Boolean confirmed = confirm.orElse(false);
+        if (!confirmed) {
+            TextHelper.sendMessageByKey(source, "operation.cancelled");
+            return CommandHelper.Return.SUCCESS;
+        }
+
+        NoteInitializer.data.model().players = new ArrayList<>();
+        NoteInitializer.data.writeStorage();
+
+        TextHelper.sendMessageByKey(source, "note.clear_all");
+        return CommandHelper.Return.SUCCESS;
+    }
+
     public static PlayerNotes getPlayerNotes(String playerName) {
         /* Return existed player notes. */
         List<PlayerNotes> players = data.model().players;
@@ -84,66 +154,6 @@ public class NoteInitializer extends ModuleInitializer {
         players.add(playerNotes);
         data.writeStorage();
         return playerNotes;
-    }
-
-    @Document("Create a new note for the player.")
-    @CommandNode("note create")
-    @CommandRequirement(level = 4)
-    private static int $createNote(@CommandSource ServerCommandSource source, ServerPlayerEntity player, GreedyString note) {
-        Note newNote = Note.makeNote(player, note.getValue());
-        String playerName = PlayerHelper.getPlayerName(player);
-        NoteInitializer.getPlayerNotes(playerName)
-            .notes.add(newNote);
-        NoteInitializer.data.writeStorage();
-
-        TextHelper.sendMessageByKey(source, "note.created", playerName);
-        return CommandHelper.Return.SUCCESS;
-    }
-
-    @Document("List the notes of a player.")
-    @CommandNode("note list")
-    @CommandRequirement(level = 4)
-    private static int $listNote(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {
-        String playerName = PlayerHelper.getPlayerName(player);
-
-        PlayerNotes playerNotes = NoteInitializer.getPlayerNotes(playerName);
-        TextHelper.sendMessageByKey(source, "note.list.message", playerName, playerNotes.notes.size());
-
-        playerNotes.notes.forEach(note -> {
-            note
-                .asLore(source)
-                .forEach(source::sendMessage);
-
-            source.sendMessage(TextHelper.TEXT_EMPTY);
-        });
-
-        return CommandHelper.Return.SUCCESS;
-    }
-
-    @Document("Clear the notes of a player.")
-    @CommandNode("note clear")
-    @CommandRequirement(level = 4)
-    private static int $clearNote(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {
-        String playerName = PlayerHelper.getPlayerName(player);
-
-        PlayerNotes playerNotes = NoteInitializer.getPlayerNotes(playerName);
-        playerNotes.notes.clear();
-        NoteInitializer.data.writeStorage();
-
-        TextHelper.sendMessageByKey(source, "note.clear", playerNotes.notes.size(), playerName);
-
-        return CommandHelper.Return.SUCCESS;
-    }
-
-    @Document("Clear all notes for all players.")
-    @CommandNode("note clear-all")
-    @CommandRequirement(level = 4)
-    private static int $clearAllNote(@CommandSource ServerCommandSource source, Optional<Boolean> confirm) {
-        NoteInitializer.data.model().players = new ArrayList<>();
-        NoteInitializer.data.writeStorage();
-
-        TextHelper.sendMessageByKey(source, "note.clear_all");
-        return CommandHelper.Return.SUCCESS;
     }
 
     @Override
