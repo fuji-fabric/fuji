@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.note;
 
 
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
@@ -11,17 +12,23 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlayerName;
+import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
+import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.core.event.impl.PlayerEvents;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
+import io.github.sakurawald.fuji.module.initializer.note.config.model.NoteConfigModel;
 import io.github.sakurawald.fuji.module.initializer.note.config.model.NoteDataModel;
 import io.github.sakurawald.fuji.module.initializer.note.gui.NoteGui;
+import io.github.sakurawald.fuji.module.initializer.note.service.NoteService;
 import io.github.sakurawald.fuji.module.initializer.note.structure.Note;
+import io.github.sakurawald.fuji.module.initializer.note.structure.NoteRule;
 import io.github.sakurawald.fuji.module.initializer.note.structure.PlayerNotes;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
@@ -57,10 +64,20 @@ public class NoteInitializer extends ModuleInitializer {
         When a `player` with `notes` join/leave the server, you will get notified.
         """);
 
+    public static final BaseConfigurationHandler<NoteConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, NoteConfigModel.class);
+
     public static final BaseConfigurationHandler<NoteDataModel> data = new ObjectConfigurationHandler<>("note-data.json", NoteDataModel.class);
 
     @Document("Open the note GUI.")
     @CommandNode("note")
+    @CommandRequirement(level = 4)
+    private static int $noteRoot(@CommandSource ServerPlayerEntity player) {
+        $noteGui(player);
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document("Open the note GUI.")
+    @CommandNode("note gui")
     @CommandRequirement(level = 4)
     private static int $noteGui(@CommandSource ServerPlayerEntity player) {
         List<String> offlinePlayerNames = ServerHelper.getOfflinePlayerNames();
@@ -74,16 +91,10 @@ public class NoteInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     private static int $createNote(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer, GreedyString note) {
         String creatorName = source.getName();
-        String noteDescription = note.getValue();
-        Note newNote = Note.makeNote(creatorName, noteDescription);
-
         String targetPlayerName = targetPlayer.getValue();
-        NoteInitializer
-            .getPlayerNotes(targetPlayerName)
-            .notes
-            .add(newNote);
-        NoteInitializer.data.writeStorage();
+        String noteDescription = note.getValue();
 
+        NoteService.createNote(creatorName, targetPlayerName, noteDescription);
         TextHelper.sendMessageByKey(source, "note.created", targetPlayerName);
         return CommandHelper.Return.SUCCESS;
     }
@@ -181,5 +192,38 @@ public class NoteInitializer extends ModuleInitializer {
                     TextHelper.sendMessageByKey(it, "note.notify.leave", playerName, notesSize);
                 }
             });
+    }
+
+
+    public static void processNoteRules(String targetPlayerName) {
+        Optional<NoteRule> first = config.model().rules
+            .stream()
+            // Sort the higher value first.
+            .sorted(Comparator
+                .comparing(NoteRule::getIfNumberOfRulesGreaterEqualThan)
+                .reversed())
+            .filter(it -> {
+                int numberOfNotes = NoteInitializer.getPlayerNotes(targetPlayerName)
+                    .notes.size();
+                return numberOfNotes >= it.getIfNumberOfRulesGreaterEqualThan();
+            })
+            .findFirst();
+
+        if (first.isPresent()) {
+            NoteRule noteRule = first.get();
+
+            /* Execute the note rule. */
+            LogUtil.info("Execute the note rule for player {}: note rule = {}", targetPlayerName, noteRule);
+
+            // NOTE: Load the dummy offline server player entity, to provide the placeholder parsing context. (Use `/when-online` to execute commands on real server player entity.)
+            ServerCommandSource offlineServerCommandSource = PlayerHelper
+                .loadOfflinePlayer(targetPlayerName)
+                .getCommandSource();
+            ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(offlineServerCommandSource);
+
+            List<String> commands = noteRule.commands;
+            CommandExecutor.execute(extendedCommandSource, commands);
+        }
+
     }
 }

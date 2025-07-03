@@ -11,6 +11,7 @@ import io.github.sakurawald.fuji.core.gui.impl.gui.EditSignGui;
 import io.github.sakurawald.fuji.core.gui.impl.gui.InputSignGui;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
 import io.github.sakurawald.fuji.module.initializer.note.NoteInitializer;
+import io.github.sakurawald.fuji.module.initializer.note.service.NoteService;
 import io.github.sakurawald.fuji.module.initializer.note.structure.Note;
 import io.github.sakurawald.fuji.module.initializer.note.structure.PlayerNotes;
 import java.util.List;
@@ -65,17 +66,15 @@ public class ListPlayerNotesGui extends CrudPagedGui<Note> {
         new InputSignGui(getPlayer(), null) {
             @Override
             public void onClose() {
-                String description = joinStrings();
-                if (description.isBlank()) {
+                String noteDescription = joinStrings();
+                if (noteDescription.isBlank()) {
                     ListPlayerNotesGui.make(getParent(), player, targetPlayerName)
                         .open();
                     return;
                 }
 
-                PlayerNotes playerNotes = NoteInitializer.getPlayerNotes(targetPlayerName);
-                Note note = Note.makeNote(PlayerHelper.getPlayerName(player), description);
-                playerNotes.notes.add(note);
-                NoteInitializer.data.writeStorage();
+                String creatorName = PlayerHelper.getPlayerName(player);
+                NoteService.createNote(creatorName, targetPlayerName, noteDescription);
 
                 ListPlayerNotesGui.make(getParent(), player, targetPlayerName)
                     .open();
@@ -133,11 +132,7 @@ public class ListPlayerNotesGui extends CrudPagedGui<Note> {
         new ConfirmSignGui(getPlayer()) {
             @Override
             public void onConfirm() {
-                NoteInitializer.getPlayerNotes(targetPlayerName)
-                    .notes
-                    .remove(entity);
-                NoteInitializer.data.writeStorage();
-
+                NoteService.deleteNote(targetPlayerName, entity);
                 ListPlayerNotesGui.make(getParent(), getPlayer(),targetPlayerName)
                     .open();
             }
