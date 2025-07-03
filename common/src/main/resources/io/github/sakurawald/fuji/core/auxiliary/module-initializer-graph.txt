@@ -30,6 +30,7 @@ io.github.sakurawald.fuji.module.initializer.command_meta.json.JsonInitializer
 io.github.sakurawald.fuji.module.initializer.command_meta.one_of.OneOfInitializer
 io.github.sakurawald.fuji.module.initializer.command_meta.run.RunInitializer
 io.github.sakurawald.fuji.module.initializer.command_meta.shell.ShellInitializer
+io.github.sakurawald.fuji.module.initializer.command_meta.when_online.WhenOnlineInitializer
 io.github.sakurawald.fuji.module.initializer.command_permission.CommandPermissionInitializer
 io.github.sakurawald.fuji.module.initializer.command_rewrite.CommandRewriteInitializer
 io.github.sakurawald.fuji.module.initializer.command_scheduler.CommandSchedulerInitializer

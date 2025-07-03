@@ -15,6 +15,7 @@ import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.job.ConfigurationHandlerWriteStorageJob;
 import io.github.sakurawald.fuji.core.config.transformer.abst.ConfigurationTransformer;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.manager.Managers;
@@ -39,12 +40,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/*
- * 1. Only use static inner class for a nested structure. (This is because a historical design problem in Java)
- * 2. If you want to register a new type for gson, just override the template method in module initializer.
- * 3. The type system of java is static, so you only need to give the object instance to gson.
- * 4. Define configuration handler using static variable, to ensure it's unique.
- */
+@ForDeveloper("""
+    1. Only use static inner class for a nested structure. (This is because a historical design problem in Java)
+    2. If you want to register a new type for gson, just override the template method in module initializer.
+    3. The type system of java is static, so you only need to give the object instance to gson.
+    4. Define configuration handler using static variable, to ensure it's unique.
+    """)
 public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter {
 
     public static final String CONFIG_JSON = "config.json";

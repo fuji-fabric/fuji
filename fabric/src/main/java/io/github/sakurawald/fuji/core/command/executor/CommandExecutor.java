@@ -44,6 +44,11 @@ public class CommandExecutor {
             if (!context.sameSource()) {
                 TextHelper.sendMessageByKey(context.getInitiatingSource(), "command.execute.echo.initiating_source", command, context.getExecutingSource().getName(), e.getMessage());
             }
+
+            /* Echo to the console, if the command is executed by console. */
+            if (!context.getExecutingSource().isExecutedByPlayer()) {
+                LogUtil.warn("Failed to execute command: command = {}, context = {}", command, context);
+            }
         }
 
         return CommandHelper.Return.FAIL;

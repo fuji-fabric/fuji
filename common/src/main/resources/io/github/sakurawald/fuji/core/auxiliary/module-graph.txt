@@ -32,6 +32,7 @@ command_meta.json
 command_meta.one_of
 command_meta.run
 command_meta.shell
+command_meta.when_online
 command_permission
 command_rewrite
 command_scheduler

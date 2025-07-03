@@ -560,6 +560,7 @@ public class ConfigModel {
             public Json json = new Json();
             public Attachment attachment = new Attachment();
             public Shell shell = new Shell();
+            public WhenOnline when_online = new WhenOnline();
 
             public static class Run {
                 public boolean enable = false;
@@ -590,6 +591,10 @@ public class ConfigModel {
             }
 
             public static class Shell {
+                public boolean enable = false;
+            }
+
+            public static class WhenOnline {
                 public boolean enable = false;
             }
         }

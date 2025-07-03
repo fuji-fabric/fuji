@@ -1,0 +1,84 @@
+package io.github.sakurawald.fuji.module.initializer.command_meta.when_online;
+
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
+import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
+import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlayerName;
+import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
+import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
+import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.event.impl.PlayerEvents;
+import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
+import io.github.sakurawald.fuji.module.initializer.command_meta.when_online.config.model.WhenOnlineDataModel;
+import io.github.sakurawald.fuji.module.initializer.command_meta.when_online.structure.WhenOnlineTicket;
+import java.util.List;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
+
+@Document("""
+    This module provides the `/when-online \\<player\\> \\<cmd\\>` command.
+    To execute a specified command `exactly once` when the target player is `online`.
+
+    1. If the target player is `online` now, the command will be executed `at once`.
+    2. If the target player is `offline` now, the command will be executed `when the player online`.
+
+    You use `/when-online list` to manage `submitted commands`.
+    """)
+public class WhenOnlineInitializer extends ModuleInitializer {
+
+    public static BaseConfigurationHandler<WhenOnlineDataModel> data = new ObjectConfigurationHandler<>("when-online-data.json", WhenOnlineDataModel.class);
+
+    @CommandNode("when-online")
+    @CommandRequirement(level = 4)
+    private static int $whenOnline(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer, GreedyString command) {
+        String $creatorName = source.getName();
+        String $targetPlayerName = targetPlayer.getValue();
+        String $command = command.getValue();
+
+        WhenOnlineTicket ticket = WhenOnlineTicket.make($creatorName, $targetPlayerName, $command);
+        data.model().tickets.add(ticket);
+        data.writeStorage();
+
+        processWhenOnlineTickets();
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Override
+    protected void onInitialize() {
+        PlayerEvents.ON_PLAYER_JOINED.register(p -> processWhenOnlineTickets());
+    }
+
+    private static void processWhenOnlineTickets() {
+        /* Get the online players. */
+        List<String> onlinePlayerNames = ServerHelper.getOnlinePlayerNames();
+
+        /* Find un-executed tickets, and match it with online players. */
+        data.model().tickets
+            .stream()
+            .filter(ticket -> ticket.executedTimestamp == null
+                && onlinePlayerNames.contains(ticket.targetPlayer))
+            .forEach(ticket -> {
+                LogUtil.debug("Execute the ticket: {}", ticket);
+
+                /* Consume the ticket. */
+                ticket.executedTimestamp = System.currentTimeMillis();
+
+                /* Execute the specified command. */
+                ServerPlayerEntity onlinePlayer = ServerHelper.getOnlinePlayerByName(ticket.targetPlayer);
+                ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(onlinePlayer.getCommandSource());
+                String commandString = ticket.command;
+                CommandExecutor.execute(extendedCommandSource, commandString);
+            });
+
+        /* Save the result. */
+        data.writeStorage();
+    }
+
+
+}

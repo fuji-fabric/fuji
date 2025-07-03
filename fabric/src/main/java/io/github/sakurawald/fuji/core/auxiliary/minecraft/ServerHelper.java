@@ -51,6 +51,13 @@ public class ServerHelper {
         return getPlayerManager().getPlayerList();
     }
 
+    public static List<String> getOnlinePlayerNames() {
+        return getOnlinePlayers()
+            .stream()
+            .map(PlayerHelper::getPlayerName)
+            .toList();
+    }
+
     public static @Nullable ServerPlayerEntity getOnlinePlayerByName(String name) {
         return getOnlinePlayers()
             .stream()
