@@ -46,7 +46,6 @@ public class CommandBundleConfigModel {
             this.add(new BundleCommandNode(new CommandRequirementDescriptor(4, null), "move-speed set <double double-arg>", List.of("run as player %player:name% attribute %player:name% minecraft:generic.movement_speed base set $double-arg")));
             this.add(new BundleCommandNode(new CommandRequirementDescriptor(4, null), "move-speed reset", List.of("run as player %player:name% attribute %player:name% minecraft:generic.movement_speed base set 0.10000000149011612")));
 
-            this.add(new BundleCommandNode(new CommandRequirementDescriptor(4, null), "warn <player player-arg> <greedy greedy-arg>", List.of("run as player %player:name% send-message $player-arg <red>You are warned: $greedy-arg")));
 
             /* level 0 commands */
             this.add(new BundleCommandNode(new CommandRequirementDescriptor(0, null), "introduce-me", List.of("run as fake-op %player:name% me i am %player:name%")));
