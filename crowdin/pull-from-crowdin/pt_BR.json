@@ -417,6 +417,7 @@
   "note.list.gui.help.lore": "<green> - Left click -> Edit note\n<green> - Right click -> Delete note",
   "note.list.message": "<green>Player %s has %d notes.",
   "note.clear": "<green>Clear %d notes for player %s.",
+  "note.clear_all": "<green>Clear all notes for all players done.",
   "note.notify.join": "<dark_red>The player %s with %d notes joined the server!",
   "note.notify.leave": "<dark_red>The player %s with %d notes left the server!",
   "note.created": "<green>New note created for player %s.",
