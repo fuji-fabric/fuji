@@ -36,6 +36,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 @Document("""
     This module provides the `information management` for `staffs`.
+    A shared `note book` to `track` the behaviours of players, between `staffs`.
     You can `create` a `note/warning` for a `player`.
     All `staffs` can `view` the `notes/warnings` of a `player`.
 
