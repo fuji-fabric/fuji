@@ -13,6 +13,7 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
+import io.github.sakurawald.fuji.core.event.impl.PlayerEvents;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.note.config.model.NoteDataModel;
 import io.github.sakurawald.fuji.module.initializer.note.gui.NoteGui;
@@ -79,6 +80,11 @@ public class NoteInitializer extends ModuleInitializer {
         players.add(playerNotes);
         data.writeStorage();
         return playerNotes;
+    }
+
+    @Override
+    protected void onInitialize() {
+        PlayerEvents.ON_PLAYER_JOINED.register(player -> processNotify(player, true));
     }
 
     public static void processNotify(ServerPlayerEntity targetPlayer, boolean isJoin) {

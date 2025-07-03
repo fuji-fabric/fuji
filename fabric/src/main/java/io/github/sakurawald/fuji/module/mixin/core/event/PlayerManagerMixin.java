@@ -1,6 +1,6 @@
-package io.github.sakurawald.fuji.module.mixin.note;
+package io.github.sakurawald.fuji.module.mixin.core.event;
 
-import io.github.sakurawald.fuji.module.initializer.note.NoteInitializer;
+import io.github.sakurawald.fuji.core.event.impl.PlayerEvents;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -19,14 +19,14 @@ import net.minecraft.server.network.ConnectedClientData;
 public class PlayerManagerMixin {
 
     #if MC_VER <= MC_1_20_1
-    @Inject(method = "onPlayerConnect", at = @At("TAIL"))
-    void onPlayerJoined(ClientConnection clientConnection, ServerPlayerEntity player, CallbackInfo ci)
-    #elif MC_VER > MC_1_20_1
+       @Inject(method = "onPlayerConnect", at = @At("TAIL"))
+       void onPlayerJoined(ClientConnection clientConnection, ServerPlayerEntity player, CallbackInfo ci)
+       #elif MC_VER > MC_1_20_1
     @Inject(method = "onPlayerConnect", at = @At("TAIL"))
     void onPlayerJoined(ClientConnection clientConnection, @NotNull ServerPlayerEntity player, ConnectedClientData connectedClientData, CallbackInfo ci)
     #endif
     {
-        NoteInitializer.processNotify(player, true);
+        PlayerEvents.ON_PLAYER_JOINED.invoker().fire(player);
     }
 
 }
