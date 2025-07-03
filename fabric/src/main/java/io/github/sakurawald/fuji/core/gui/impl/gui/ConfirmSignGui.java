@@ -13,10 +13,13 @@ public abstract class ConfirmSignGui extends InputSignGui {
     public void onClose() {
         if (!this.isConfirmed()) {
             TextHelper.sendActionBarByKey(player, "operation.cancelled");
+            onCancelled();
             return;
         }
         onConfirm();
     }
+
+    protected void onCancelled() {}
 
     private boolean isConfirmed() {
         String confirmationString = TextHelper.getValueByKeyword(getPlayer(), "confirm");

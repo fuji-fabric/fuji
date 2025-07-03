@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.core.auxiliary;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
+import org.jetbrains.annotations.Nullable;
 
 public class ChronosUtil {
 
@@ -16,7 +17,11 @@ public class ChronosUtil {
         return formatter.format(System.currentTimeMillis());
     }
 
-    public static @NotNull String toDefaultDateFormat(long timeMillis) {
+    public static @NotNull String toDefaultDateFormat(@Nullable Long timeMillis) {
+        if (timeMillis == null) {
+            return "NONE";
+        }
+
         return DEFAULT_DATE_FORMAT.format(timeMillis);
     }
 

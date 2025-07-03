@@ -16,6 +16,7 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.impl.PlayerEvents;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_meta.when_online.config.model.WhenOnlineDataModel;
+import io.github.sakurawald.fuji.module.initializer.command_meta.when_online.gui.ListWhenOnlineTicketsGui;
 import io.github.sakurawald.fuji.module.initializer.command_meta.when_online.structure.WhenOnlineTicket;
 import java.util.List;
 import net.minecraft.server.command.ServerCommandSource;
@@ -28,7 +29,11 @@ import net.minecraft.server.network.ServerPlayerEntity;
     1. If the target player is `online` now, the command will be executed `at once`.
     2. If the target player is `offline` now, the command will be executed `when the player online`.
 
-    You use `/when-online list` to manage `submitted commands`.
+    Besides, you use `/when-online list` to manage `submitted commands`.
+
+    For example:
+    1. `/when-online Steve give %player:name% minecraft:apple 3`.
+    2. `/when-online Alex delay 8 say Hi %player:name%`.
     """)
 public class WhenOnlineInitializer extends ModuleInitializer {
 
@@ -46,6 +51,16 @@ public class WhenOnlineInitializer extends ModuleInitializer {
         data.writeStorage();
 
         processWhenOnlineTickets();
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @CommandNode("when-online list")
+    @CommandRequirement(level = 4)
+    private static int $list(@CommandSource ServerPlayerEntity player) {
+
+        ListWhenOnlineTicketsGui
+            .make(player)
+            .open();
         return CommandHelper.Return.SUCCESS;
     }
 

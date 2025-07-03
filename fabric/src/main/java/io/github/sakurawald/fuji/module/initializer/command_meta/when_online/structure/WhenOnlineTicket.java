@@ -25,4 +25,7 @@ public class WhenOnlineTicket {
         return whenOnlineTicket;
     }
 
+    public boolean isExecuted() {
+        return this.executedTimestamp != null;
+    }
 }
