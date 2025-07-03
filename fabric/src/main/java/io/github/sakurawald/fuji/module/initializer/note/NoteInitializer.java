@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
@@ -17,9 +18,11 @@ import io.github.sakurawald.fuji.core.event.impl.PlayerEvents;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.note.config.model.NoteDataModel;
 import io.github.sakurawald.fuji.module.initializer.note.gui.NoteGui;
+import io.github.sakurawald.fuji.module.initializer.note.structure.Note;
 import io.github.sakurawald.fuji.module.initializer.note.structure.PlayerNotes;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 @Document("""
@@ -57,7 +60,7 @@ public class NoteInitializer extends ModuleInitializer {
     @Document("Open the note GUI.")
     @CommandNode("note")
     @CommandRequirement(level = 4)
-    private static int $note(@CommandSource ServerPlayerEntity player) {
+    private static int $noteGui(@CommandSource ServerPlayerEntity player) {
         List<String> offlinePlayerNames = ServerHelper.getOfflinePlayerNames();
         new NoteGui(null, player, offlinePlayerNames, 0)
             .open();
@@ -82,6 +85,55 @@ public class NoteInitializer extends ModuleInitializer {
         return playerNotes;
     }
 
+    @Document("Create a new note for the player.")
+    @CommandNode("note create")
+    @CommandRequirement(level = 4)
+    private static int $createNote(@CommandSource ServerCommandSource source, ServerPlayerEntity player, GreedyString note) {
+        Note newNote = Note.makeNote(player, note.getValue());
+        String playerName = PlayerHelper.getPlayerName(player);
+        NoteInitializer.getPlayerNotes(playerName)
+            .notes.add(newNote);
+        NoteInitializer.data.writeStorage();
+
+        TextHelper.sendMessageByKey(source, "note.created", playerName);
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document("List the notes of a player.")
+    @CommandNode("note list")
+    @CommandRequirement(level = 4)
+    private static int $listNote(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {
+        String playerName = PlayerHelper.getPlayerName(player);
+
+        PlayerNotes playerNotes = NoteInitializer.getPlayerNotes(playerName);
+        TextHelper.sendMessageByKey(source, "note.list.message", playerName, playerNotes.notes.size());
+
+        playerNotes.notes.forEach(note -> {
+            note
+                .asLore(source)
+                .forEach(source::sendMessage);
+
+            source.sendMessage(TextHelper.TEXT_EMPTY);
+        });
+
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document("Clear the notes of a player.")
+    @CommandNode("note clear")
+    @CommandRequirement(level = 4)
+    private static int $clearNote(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {
+        String playerName = PlayerHelper.getPlayerName(player);
+
+        PlayerNotes playerNotes = NoteInitializer.getPlayerNotes(playerName);
+        playerNotes.notes.clear();
+        NoteInitializer.data.writeStorage();
+
+        TextHelper.sendMessageByKey(source, "note.clear", playerNotes.notes.size(), playerName);
+
+        return CommandHelper.Return.SUCCESS;
+    }
+
     @Override
     protected void onInitialize() {
         PlayerEvents.ON_PLAYER_JOINED.register(player -> processNotify(player, true));
@@ -98,7 +150,7 @@ public class NoteInitializer extends ModuleInitializer {
         ServerHelper
             .getOnlinePlayers()
             .stream()
-            .filter(it -> LuckpermsHelper.hasPermission(it.getUuid(),NOTIFY_NOTES_PERMISSION ))
+            .filter(it -> LuckpermsHelper.hasPermission(it.getUuid(), NOTIFY_NOTES_PERMISSION))
             .forEach(it -> {
                 int notesSize = playerNotes.notes.size();
                 if (isJoin) {

@@ -2,7 +2,6 @@ package io.github.sakurawald.fuji.module.initializer.note.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.ConfirmSignGui;
@@ -45,11 +44,7 @@ public class ListPlayerNotesGui extends CrudPagedGui<Note> {
         builder
             .setItem(Items.PAPER)
             .setName(TextHelper.getTextByKey(getPlayer(), "note.list.gui.name"))
-            .setLore(List.of(
-                TextHelper.getTextByKey(getPlayer(), "entity.created_by_player", entity.createdByPlayer)
-                , TextHelper.getTextByKey(getPlayer(), "entity.created_timestamp", ChronosUtil.toDefaultDateFormat(entity.createdTimestamp))
-                , TextHelper.getTextByKey(getPlayer(),"entity.description", entity.description)
-            ));
+            .setLore(entity.asLore(getPlayer()));
 
         return builder;
     }

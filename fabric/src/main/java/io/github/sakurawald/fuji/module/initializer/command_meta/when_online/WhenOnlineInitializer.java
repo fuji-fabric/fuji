@@ -56,7 +56,6 @@ public class WhenOnlineInitializer extends ModuleInitializer {
     @CommandNode("when-online list")
     @CommandRequirement(level = 4)
     private static int $list(@CommandSource ServerPlayerEntity player) {
-
         ListWhenOnlineTicketsGui
             .make(player)
             .open();
