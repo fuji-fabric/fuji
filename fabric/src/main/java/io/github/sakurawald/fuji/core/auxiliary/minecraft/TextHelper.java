@@ -401,28 +401,54 @@ public class TextHelper {
             return;
         }
 
-
-        /* extract the source */
+        /* Unbox the command context, to get the command source. */
         if (audience instanceof CommandContext<?> ctx) {
             audience = ctx.getSource();
         }
 
-        /* dispatch by type */
+        /* Dispatch the message sending method, by audience type. */
+        if (audience instanceof ServerPlayerEntity serverPlayerEntity) {
+            sendMessageToServerPlayerEntity(serverPlayerEntity, text);
+            return;
+        }
+
         if (audience instanceof PlayerEntity playerEntity) {
-            playerEntity.sendMessage(text, false);
+            sendMessageToPlayerEntity(playerEntity, text);
             return;
         }
 
         if (audience instanceof ServerCommandSource serverCommandSource) {
-            serverCommandSource.sendMessage(text);
+            if (serverCommandSource.getPlayer() != null) {
+                ServerPlayerEntity player = serverCommandSource.getPlayer();
+                sendMessageToServerPlayerEntity(player, text);
+                return;
+            }
+            sendMessageToServerCommandSource(serverCommandSource, text);
             return;
         }
 
+        /* Unknown audience type. */
         LogUtil.error("""
             Can't send message to unknown audience type: {}
             Key: {}
             Args: {}
             """, audience == null ? null : audience.getClass().getName(), key, args);
+    }
+
+    private static void sendMessageToPlayerEntity(PlayerEntity playerEntity, Text text) {
+        playerEntity.sendMessage(text, false);
+    }
+
+    private static void sendMessageToServerCommandSource(ServerCommandSource serverCommandSource, Text text) {
+        serverCommandSource.sendMessage(text);
+    }
+
+    private static void sendMessageToServerPlayerEntity(ServerPlayerEntity serverPlayerEntity, Text text) {
+        if (serverPlayerEntity.networkHandler == null) {
+            LogUtil.warn("Failed to send the message to player {}, because its network handler is null. (Is it an dummy offline player entity?): text = {}", serverPlayerEntity, text);
+            return;
+        }
+        serverPlayerEntity.sendMessage(text, false);
     }
 
     public static void sendActionBarByKey(@NotNull ServerPlayerEntity player, String key, Object... args) {
