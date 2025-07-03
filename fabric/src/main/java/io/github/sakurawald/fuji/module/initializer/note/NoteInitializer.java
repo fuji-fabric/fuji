@@ -200,12 +200,12 @@ public class NoteInitializer extends ModuleInitializer {
             .stream()
             // Sort the higher value first.
             .sorted(Comparator
-                .comparing(NoteRule::getIfNumberOfRulesGreaterEqualThan)
+                .comparing(NoteRule::getIfNumberOfNotesGreaterEqualThan)
                 .reversed())
             .filter(it -> {
                 int numberOfNotes = NoteInitializer.getPlayerNotes(targetPlayerName)
                     .notes.size();
-                return numberOfNotes >= it.getIfNumberOfRulesGreaterEqualThan();
+                return numberOfNotes >= it.getIfNumberOfNotesGreaterEqualThan();
             })
             .findFirst();
 
