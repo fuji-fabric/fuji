@@ -389,6 +389,7 @@
   "prompt.click.see_it.middle_click": "<dark_green><i>Middle Click to see it.",
   "prompt.click.see_it.shift_and_left_click": "<dark_green><i>Shift + Left Click to see it.",
   "prompt.click.see_it.shift_and_right_click": "<dark_green><i>Shift + Right Click to see it.",
+  "prompt.click.delete.right_click": "<red><i>Right click to delete it.",
   "job.list.gui.title": "<blue>Tugas",
   "job.props.enabled": "<blue>Diaktifkan: %s",
   "job.props.left_times": "<blue>Sisa Waktu: %s",
