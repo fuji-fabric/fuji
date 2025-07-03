@@ -24,16 +24,15 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 @Document("""
     This module provides the `/when-online \\<player\\> \\<cmd\\>` command.
-    To execute a specified command `exactly once` when the target player is `online`.
-
+    To execute a specified command `exactly once` when the target player is `online`:
     1. If the target player is `online` now, the command will be executed `at once`.
     2. If the target player is `offline` now, the command will be executed `when the player online`.
 
     Besides, you use `/when-online list` to manage `submitted commands`.
 
     For example:
-    1. `/when-online Steve give %player:name% minecraft:apple 3`.
-    2. `/when-online Alex delay 8 say Hi %player:name%`.
+    1. `/when-online Steve give %player:name% minecraft:apple 3`
+    2. `/when-online Alex delay 8 say Hi %player:name%`
     """)
 public class WhenOnlineInitializer extends ModuleInitializer {
 
@@ -75,6 +74,9 @@ public class WhenOnlineInitializer extends ModuleInitializer {
 
         /* Find un-executed tickets, and match it with online players. */
         data.model().tickets
+            .stream()
+            // Make a new List, to support recursion. (e.g. `/when-online Steve when-online %player:name% say Triggered.`)
+            .toList()
             .stream()
             .filter(ticket -> ticket.executedTimestamp == null
                 && onlinePlayerNames.contains(ticket.targetPlayer))
