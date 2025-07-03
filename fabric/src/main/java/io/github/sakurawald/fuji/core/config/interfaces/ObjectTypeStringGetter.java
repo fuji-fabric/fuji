@@ -1,9 +1,9 @@
 package io.github.sakurawald.fuji.core.config.interfaces;
 
-import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import org.jetbrains.annotations.NotNull;
 
-@Document("""
+@ForDeveloper("""
     This interface provides the method to get the `object type string`.
 
     The returned type string should not be the simple class name of the object.
