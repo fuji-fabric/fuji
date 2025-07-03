@@ -24,7 +24,8 @@ public class CommandExecutor {
      * - /run as console run as player <player> run as console bad command
      */
     public static int execute(@NotNull ExtendedCommandSource context, @NotNull String command) {
-        /* expand the command */
+
+        /* Expand the command. */
         command = context.expandCommand(command);
         LogUtil.debug("Executing command: command = `{}`, context = {}", command, context);
 
@@ -37,18 +38,20 @@ public class CommandExecutor {
             /* Escape tags when reporting an exception. (e.g. "/run as console aa <yellow> bb")*/
             command = TextHelper.escapeTags(command);
 
+            // NOTE: Log the console first. (Make the debug easier)
+            if (!context.getExecutingSource().isExecutedByPlayer()) {
+                LogUtil.warn("Failed to execute command: command = {}, context = {}", command, context);
+            }
+
             /* Echo to the executing source. */
             TextHelper.sendMessageByKey(context.getExecutingSource(), "command.execute.echo.executing_source", command, e.getMessage());
 
             /* Echo to the initiating source. */
             if (!context.sameSource()) {
+                // NOTE: If the executing command source is a dummy server player, then its network handler is null.
                 TextHelper.sendMessageByKey(context.getInitiatingSource(), "command.execute.echo.initiating_source", command, context.getExecutingSource().getName(), e.getMessage());
             }
 
-            /* Echo to the console, if the command is executed by console. */
-            if (!context.getExecutingSource().isExecutedByPlayer()) {
-                LogUtil.warn("Failed to execute command: command = {}, context = {}", command, context);
-            }
         }
 
         return CommandHelper.Return.FAIL;
