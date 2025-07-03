@@ -20,7 +20,7 @@ public abstract class CommandManagerMixin {
     private CommandDispatcher<ServerCommandSource> dispatcher;
 
     @Inject(at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/CommandDispatcher;setConsumer(Lcom/mojang/brigadier/ResultConsumer;)V", remap = false), method = "<init>")
-    private void fabric_addCommands(CommandManager.RegistrationEnvironment environment, CommandRegistryAccess registryAccess, CallbackInfo ci) {
+    private void onCommandRegistration(CommandManager.RegistrationEnvironment environment, CommandRegistryAccess registryAccess, CallbackInfo ci) {
         CommandEvents.REGISTRATION.invoker().fire(this.dispatcher, registryAccess, environment);
     }
 }
