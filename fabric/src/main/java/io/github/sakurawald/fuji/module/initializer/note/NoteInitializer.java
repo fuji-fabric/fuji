@@ -20,6 +20,7 @@ import io.github.sakurawald.fuji.module.initializer.note.config.model.NoteDataMo
 import io.github.sakurawald.fuji.module.initializer.note.gui.NoteGui;
 import io.github.sakurawald.fuji.module.initializer.note.structure.Note;
 import io.github.sakurawald.fuji.module.initializer.note.structure.PlayerNotes;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
@@ -131,6 +132,17 @@ public class NoteInitializer extends ModuleInitializer {
 
         TextHelper.sendMessageByKey(source, "note.clear", playerNotes.notes.size(), playerName);
 
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document("Clear all notes for all players.")
+    @CommandNode("note clear-all")
+    @CommandRequirement(level = 4)
+    private static int $clearAllNote(@CommandSource ServerCommandSource source, Optional<Boolean> confirm) {
+        NoteInitializer.data.model().players = new ArrayList<>();
+        NoteInitializer.data.writeStorage();
+
+        TextHelper.sendMessageByKey(source, "note.clear_all");
         return CommandHelper.Return.SUCCESS;
     }
 
