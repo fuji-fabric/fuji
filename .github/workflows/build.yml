@@ -23,7 +23,7 @@ jobs:
       - name: crowdin action
         uses: crowdin/github-action@v2
         # If we parallel run the crowdin action, it will fail with 409 error.
-        if: github.ref == 'refs/heads/dev' && matrix.target-mc-version == '1.21.6'
+        if: github.ref == 'refs/heads/dev' && matrix.target-mc-version == '1.21.7'
         with:
             # Define the location of crowdin.yml file.
             config: "crowdin/crowdin.yml"
