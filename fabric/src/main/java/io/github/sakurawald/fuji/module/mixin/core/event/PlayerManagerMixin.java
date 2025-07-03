@@ -29,4 +29,9 @@ public class PlayerManagerMixin {
         PlayerEvents.ON_PLAYER_JOINED.invoker().fire(player);
     }
 
+    @Inject(method = "remove", at = @At("HEAD"))
+    void onPlayerLeave(ServerPlayerEntity player, CallbackInfo ci) {
+        PlayerEvents.ON_PLAYER_LEAVE.invoker().fire(player);
+    }
+
 }

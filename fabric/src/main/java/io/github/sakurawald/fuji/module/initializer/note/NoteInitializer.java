@@ -85,6 +85,7 @@ public class NoteInitializer extends ModuleInitializer {
     @Override
     protected void onInitialize() {
         PlayerEvents.ON_PLAYER_JOINED.register(player -> processNotify(player, true));
+        PlayerEvents.ON_PLAYER_LEAVE.register(player -> processNotify(player, false));
     }
 
     public static void processNotify(ServerPlayerEntity targetPlayer, boolean isJoin) {

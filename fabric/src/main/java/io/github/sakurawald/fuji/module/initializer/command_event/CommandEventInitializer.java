@@ -23,6 +23,7 @@ public class CommandEventInitializer extends ModuleInitializer {
     @Override
     protected void onInitialize() {
         PlayerEvents.ON_PLAYER_JOINED.register(CommandEventInitializer::processOnPlayerJoinedEvent);
+        PlayerEvents.ON_PLAYER_LEAVE.register(CommandEventInitializer::processOnPlayerLeaveEvent);
     }
 
     public static void executeCommandOnEvent(ServerPlayerEntity player, List<String> commands) {
@@ -40,6 +41,13 @@ public class CommandEventInitializer extends ModuleInitializer {
             if (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.LEAVE_GAME)) < 1) {
                 CommandEventInitializer.executeCommandOnEvent(player, onPlayerFirstJoinedConfig.command_list);
             }
+        }
+    }
+
+    private static void processOnPlayerLeaveEvent(ServerPlayerEntity player) {
+        var config = CommandEventInitializer.config.model().event.on_player_left;
+        if (config.enable) {
+            executeCommandOnEvent(player, config.command_list);
         }
     }
 

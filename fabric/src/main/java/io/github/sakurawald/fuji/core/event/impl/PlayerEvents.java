@@ -11,14 +11,17 @@ public class PlayerEvents {
         The monitor event, if the `damage` actually happened.
         """)
     public static final Event<PlayerOnDamagedCallback> ON_DAMAGED = new Event<>((listeners) -> (p, s, a) -> listeners.forEach(listener -> listener.fire(p, s, a)));
-
     public interface PlayerOnDamagedCallback {
         void fire(ServerPlayerEntity player, DamageSource damageSource, float amount);
     }
 
     public static final Event<PlayerJoinedEvent> ON_PLAYER_JOINED = new Event<>((listeners) -> (p) -> listeners.forEach(listener -> listener.fire(p)));
-
     public interface PlayerJoinedEvent {
+        void fire(ServerPlayerEntity player);
+    }
+
+    public static final Event<PlayerLeaveEvent> ON_PLAYER_LEAVE = new Event<>((listeners) -> (p) -> listeners.forEach(listener -> listener.fire(p)));
+    public interface PlayerLeaveEvent {
         void fire(ServerPlayerEntity player);
     }
 }

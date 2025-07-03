@@ -15,6 +15,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
+import io.github.sakurawald.fuji.core.event.impl.PlayerEvents;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.core.document.descriptor.PlaceholderDescriptor;
@@ -196,8 +197,14 @@ public class PlaceholderInitializer extends ModuleInitializer {
         });
     }
 
+    private static void removeSumUpPlaceholderOnPlayerLeft(ServerPlayerEntity player) {
+        SumUpPlaceholder.uuid2stats.remove(player.getUuidAsString());
+    }
+
     @Override
     protected void onInitialize() {
+        PlayerEvents.ON_PLAYER_LEAVE.register(PlaceholderInitializer::removeSumUpPlaceholderOnPlayerLeft);
+
         /* register placeholders */
         registerPlayerMinedPlaceholder();
         registerServerMinedPlaceholder();

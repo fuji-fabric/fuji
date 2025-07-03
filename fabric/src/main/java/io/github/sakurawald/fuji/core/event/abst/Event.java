@@ -23,7 +23,7 @@ import java.util.function.Function;
 
     In most case, the `mixin` is just better than `event`:
     1. Mixin gives you fine-grained control on time sequence.
-    2. Mixin gives you the proper way to handle `priority` and `cancelled event`.
+    2. Mixin gives you the proper way to handle `priority` and `cancelled event`. (Better injection point)
     3. Mixin has better performance.
     4. Mixin gives you the tool to make events.
 
