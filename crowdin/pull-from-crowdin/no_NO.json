@@ -417,6 +417,12 @@
   "note.notify.join": "<dark_red>The player %s with %d notes joined the server!",
   "note.notify.leave": "<dark_red>The player %s with %d notes left the server!",
   "entity.created_by_player": "<blue>Created by player: `%s`",
+  "entity.creator_name": "<blue>Creator Name: `%s`",
   "entity.created_timestamp": "<blue>Created time: `%s`",
-  "entity.description": "<blue>Description: <yellow>%s</yellow>"
+  "entity.executed_timestamp": "<blue>Executed time: `%s`",
+  "entity.description": "<blue>Description: <yellow>%s</yellow>",
+  "command_meta.when_online.gui.title": "<blue>When Online Tickets",
+  "command_meta.when_online.gui.name": "<blue>When Online Ticket",
+  "player.target_player.name": "<blue>Target player: `%s`",
+  "command": "<blue>Command: `%s`"
 }
