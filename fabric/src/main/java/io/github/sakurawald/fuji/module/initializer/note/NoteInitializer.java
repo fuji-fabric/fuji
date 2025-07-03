@@ -63,7 +63,7 @@ public class NoteInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    public static PlayerNotes withPlayerNotes(String playerName) {
+    public static PlayerNotes getPlayerNotes(String playerName) {
         /* Return existed player notes. */
         List<PlayerNotes> players = data.model().players;
         Optional<PlayerNotes> playerNotesOpt = players
@@ -84,7 +84,7 @@ public class NoteInitializer extends ModuleInitializer {
     public static void processNotify(ServerPlayerEntity targetPlayer, boolean isJoin) {
         /* Does the player have any notes? */
         String playerName = PlayerHelper.getPlayerName(targetPlayer);
-        PlayerNotes playerNotes = withPlayerNotes(playerName);
+        PlayerNotes playerNotes = getPlayerNotes(playerName);
         if (playerNotes.notes.isEmpty()) return;
 
         /* Send notify to online staffs. */

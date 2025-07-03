@@ -34,7 +34,7 @@ public class ListPlayerNotesGui extends CrudPagedGui<Note> {
     }
 
     public static ListPlayerNotesGui make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull String targetPlayerName) {
-        PlayerNotes playerNotes = NoteInitializer.withPlayerNotes(targetPlayerName);
+        PlayerNotes playerNotes = NoteInitializer.getPlayerNotes(targetPlayerName);
         return new ListPlayerNotesGui(parent, player, targetPlayerName, playerNotes.notes, 0);
     }
 
@@ -76,7 +76,7 @@ public class ListPlayerNotesGui extends CrudPagedGui<Note> {
                     return;
                 }
 
-                PlayerNotes playerNotes = NoteInitializer.withPlayerNotes(targetPlayerName);
+                PlayerNotes playerNotes = NoteInitializer.getPlayerNotes(targetPlayerName);
                 Note note = Note.makeNote(player, description);
                 playerNotes.notes.add(note);
                 NoteInitializer.data.writeStorage();
@@ -137,7 +137,7 @@ public class ListPlayerNotesGui extends CrudPagedGui<Note> {
         new ConfirmSignGui(getPlayer()) {
             @Override
             public void onConfirm() {
-                NoteInitializer.withPlayerNotes(targetPlayerName)
+                NoteInitializer.getPlayerNotes(targetPlayerName)
                     .notes
                     .remove(entity);
                 NoteInitializer.data.writeStorage();
