@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.initializer.note.structure;
+package io.github.sakurawald.fuji.module.initializer.warning.structure;
 
 import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
@@ -9,19 +9,19 @@ import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 @Data
-public class Note {
+public class Warning {
 
     public long createdTimestamp;
     @SerializedName(value = "creatorName", alternate = "createdByPlayer")
     public String creatorName;
     public String description;
 
-    public static Note makeNote(String creatorName, String description) {
-        Note note = new Note();
-        note.createdTimestamp = System.currentTimeMillis();
-        note.creatorName = creatorName;
-        note.description = description;
-        return note;
+    public static Warning makeWarning(String creatorName, String description) {
+        Warning warning = new Warning();
+        warning.createdTimestamp = System.currentTimeMillis();
+        warning.creatorName = creatorName;
+        warning.description = description;
+        return warning;
     }
 
     @NotNull
