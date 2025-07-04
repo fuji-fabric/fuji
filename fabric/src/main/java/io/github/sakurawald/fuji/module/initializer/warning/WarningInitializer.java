@@ -1,10 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.warning;
 
 
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
@@ -12,8 +9,6 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlayerName;
-import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
-import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
@@ -24,11 +19,7 @@ import io.github.sakurawald.fuji.module.initializer.warning.config.model.Warning
 import io.github.sakurawald.fuji.module.initializer.warning.config.model.WarningDataModel;
 import io.github.sakurawald.fuji.module.initializer.warning.gui.WarningGui;
 import io.github.sakurawald.fuji.module.initializer.warning.service.WarningService;
-import io.github.sakurawald.fuji.module.initializer.warning.structure.Warning;
-import io.github.sakurawald.fuji.module.initializer.warning.structure.WarningRule;
 import io.github.sakurawald.fuji.module.initializer.warning.structure.PlayerWarnings;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
@@ -105,7 +96,7 @@ public class WarningInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     private static int $listWarning(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer) {
         String targetPlayerName = targetPlayer.getValue();
-        PlayerWarnings playerWarnings = WarningInitializer.getPlayerWarnings(targetPlayerName);
+        PlayerWarnings playerWarnings = WarningService.getPlayerWarnings(targetPlayerName);
         TextHelper.sendMessageByKey(source, "warning.list.message", targetPlayerName, playerWarnings.warnings.size());
 
         playerWarnings.warnings.forEach(warning -> {
@@ -124,10 +115,7 @@ public class WarningInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     private static int $clearWarning(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer) {
         String targetPlayerName = targetPlayer.getValue();
-        List<Warning> warnings = WarningInitializer.getPlayerWarnings(targetPlayerName).warnings;
-        int originalSize = warnings.size();
-        warnings.clear();
-        WarningInitializer.data.writeStorage();
+        int originalSize = WarningService.clearWarnings(targetPlayerName);
 
         TextHelper.sendMessageByKey(source, "warning.clear", originalSize, targetPlayerName);
         return CommandHelper.Return.SUCCESS;
@@ -143,88 +131,16 @@ public class WarningInitializer extends ModuleInitializer {
             return CommandHelper.Return.SUCCESS;
         }
 
-        WarningInitializer.data.model().players = new ArrayList<>();
-        WarningInitializer.data.writeStorage();
+        WarningService.clearAllWarnings();
 
         TextHelper.sendMessageByKey(source, "warning.clear_all");
         return CommandHelper.Return.SUCCESS;
     }
 
-    public static PlayerWarnings getPlayerWarnings(String playerName) {
-        /* Return existed player warnings. */
-        List<PlayerWarnings> players = data.model().players;
-        Optional<PlayerWarnings> playerWarningsOpt = players
-            .stream()
-            .filter(it -> it.player.equals(playerName))
-            .findFirst();
-        if (playerWarningsOpt.isPresent()) {
-            return playerWarningsOpt.get();
-        }
-
-        /* Make a new one. */
-        PlayerWarnings playerWarnings = new PlayerWarnings(playerName);
-        players.add(playerWarnings);
-        data.writeStorage();
-        return playerWarnings;
-    }
-
     @Override
     protected void onInitialize() {
-        PlayerEvents.ON_PLAYER_JOINED.register(player -> processNotify(player, true));
-        PlayerEvents.ON_PLAYER_LEAVE.register(player -> processNotify(player, false));
+        PlayerEvents.ON_PLAYER_JOINED.register(player -> WarningService.processNotify(player, true));
+        PlayerEvents.ON_PLAYER_LEAVE.register(player -> WarningService.processNotify(player, false));
     }
 
-    public static void processNotify(ServerPlayerEntity targetPlayer, boolean isJoin) {
-        /* Does the player have any warnings? */
-        String playerName = PlayerHelper.getPlayerName(targetPlayer);
-        PlayerWarnings playerWarnings = getPlayerWarnings(playerName);
-        if (playerWarnings.warnings.isEmpty()) return;
-
-        /* Send notify to online staffs. */
-        ServerHelper
-            .getOnlinePlayers()
-            .stream()
-            .filter(it -> LuckpermsHelper.hasPermission(it.getUuid(), NOTIFY_WARNINGS_PERMISSION))
-            .forEach(it -> {
-                int warningsSize = playerWarnings.warnings.size();
-                if (isJoin) {
-                    TextHelper.sendMessageByKey(it, "warning.notify.join", playerName, warningsSize);
-                } else {
-                    TextHelper.sendMessageByKey(it, "warning.notify.leave", playerName, warningsSize);
-                }
-            });
-    }
-
-
-    public static void processWarningRules(String targetPlayerName) {
-        Optional<WarningRule> first = config.model().rules
-            .stream()
-            // Sort the higher value first.
-            .sorted(Comparator
-                .comparing(WarningRule::getIfNumberOfWarningsGreaterEqualThan)
-                .reversed())
-            .filter(it -> {
-                int numberOfWarnings = WarningInitializer.getPlayerWarnings(targetPlayerName)
-                    .warnings.size();
-                return numberOfWarnings >= it.getIfNumberOfWarningsGreaterEqualThan();
-            })
-            .findFirst();
-
-        if (first.isPresent()) {
-            WarningRule warningRule = first.get();
-
-            /* Execute the warning rule. */
-            LogUtil.info("Execute the warning rule for player {}: warning rule = {}", targetPlayerName, warningRule);
-
-            // NOTE: Load the dummy offline server player entity, to provide the placeholder parsing context. (Use `/when-online` to execute commands on real server player entity.)
-            ServerCommandSource offlineServerCommandSource = PlayerHelper
-                .loadOfflinePlayer(targetPlayerName)
-                .getCommandSource();
-            ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(offlineServerCommandSource);
-
-            List<String> commands = warningRule.commands;
-            CommandExecutor.execute(extendedCommandSource, commands);
-        }
-
-    }
 }
