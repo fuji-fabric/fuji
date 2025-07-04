@@ -65,6 +65,9 @@ dependencies {
     include(modImplementation("eu.pb4:sgui:${project.sgui_version}"))
     include(modImplementation("eu.pb4:placeholder-api:${project.placeholder_api_version}"))
 
+    /* For economy system: common economy api */
+    include(modImplementation("eu.pb4:common-economy-api:${project.common_economy_api_version}"))
+
     /* For scheduler: quartz */
     include(implementation "org.quartz-scheduler:quartz:${project.quartz_version}")
 
