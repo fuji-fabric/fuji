@@ -81,6 +81,7 @@ echo.send_broadcast
 echo.send_chat
 echo.send_console
 echo.send_custom
+echo.send_dialog
 echo.send_message
 echo.send_title
 echo.send_toast

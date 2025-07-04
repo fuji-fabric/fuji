@@ -311,6 +311,7 @@ public class ConfigModel {
             public SendBossbar send_bossbar = new SendBossbar();
             public SendCustom send_custom = new SendCustom();
             public SendConsole send_console = new SendConsole();
+            public SendDialog send_dialog = new SendDialog();
 
             public static class SendMessage {
                 public boolean enable = true;
@@ -345,6 +346,10 @@ public class ConfigModel {
             }
 
             public static class SendConsole {
+                public boolean enable = true;
+            }
+
+            public static class SendDialog {
                 public boolean enable = true;
             }
         }

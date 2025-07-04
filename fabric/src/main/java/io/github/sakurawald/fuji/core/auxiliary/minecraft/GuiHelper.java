@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import eu.pb4.sgui.api.gui.layered.LayeredGui;
 import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
 import java.util.List;
@@ -37,6 +38,18 @@ public class GuiHelper {
         return stack.getItem().equals(INVALID_SLOT_PLACEHOLDER_ITEM);
     }
 
+    @SuppressWarnings("IfStatementWithIdenticalBranches")
+    public static ScreenHandlerType<GenericContainerScreenHandler> getGenericContainerType(int rows) {
+        if (rows == 1) return ScreenHandlerType.GENERIC_9X1;
+        if (rows == 2) return ScreenHandlerType.GENERIC_9X2;
+        if (rows == 3) return ScreenHandlerType.GENERIC_9X3;
+        if (rows == 4) return ScreenHandlerType.GENERIC_9X4;
+        if (rows == 5) return ScreenHandlerType.GENERIC_9X5;
+        if (rows == 6) return ScreenHandlerType.GENERIC_9X6;
+
+        throw new IllegalArgumentException("The rows should be ranged [1, 6].");
+    }
+
     public static int getRows(ScreenHandlerType<GenericContainerScreenHandler> screenHandlerType) {
         if (screenHandlerType == ScreenHandlerType.GENERIC_9X1) return 1;
         if (screenHandlerType == ScreenHandlerType.GENERIC_9X2) return 2;
@@ -62,6 +75,10 @@ public class GuiHelper {
         builder.setCallback(slot.getGuiCallback());
 
         return builder;
+    }
+
+    public static boolean isValidSlotIndex(SlotGuiInterface gui, int slotIndex) {
+        return slotIndex >= 0 && slotIndex < gui.getSize();
     }
 
     public static GuiElementBuilder hideTooltip(GuiElementBuilder builder) {
@@ -180,6 +197,21 @@ public class GuiHelper {
                 // Call draw to re-draw it.
                 drawCallback.run();
             });
+        }
+    }
+
+    public static void fillEmptySlots(SlotGuiInterface gui, GuiElementBuilder builder) {
+        fillEmptySlots(gui, builder.build());
+    }
+
+    public static void fillEmptySlots(SlotGuiInterface gui, GuiElementInterface guiElementInterface) {
+        for (int i = 0; i < gui.getSize(); i++) {
+            GuiElementInterface slot = gui.getSlot(i);
+            if (slot == null
+                || slot.getItemStack() == null
+                || slot.getItemStack().isEmpty()) {
+                gui.setSlot(i, guiElementInterface);
+            }
         }
     }
 

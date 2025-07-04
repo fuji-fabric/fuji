@@ -1,5 +1,5 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
-**This version contains BREAKING CHANGES if you are using them.**
+- feature: new module `echo.send_dialog`, to send the text using `dialog GUI`.
 
-- refactor: rename `note` module into `warning` module. (The latter name is more intuitive, and easier to understand.)
+

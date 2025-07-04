@@ -131,16 +131,8 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
             .setLore(TextHelper.getTextListByKey(player, "module.status.disabled.gui.lore"));
 
         /* Place it on empty slots. */
-        for (int i = 0; i < gui.getSize(); i++) {
-            GuiElementInterface slot = gui.getSlot(i);
-            if (slot == null
-                || slot.getItemStack() == null
-                || slot.getItemStack().isEmpty()) {
-                gui.setSlot(i, builder.build());
-            }
-        }
-
-    }
+        GuiHelper.fillEmptySlots(gui, builder);
+   }
 
     private static void attachColorBlocks(ServerPlayerEntity player, List<GuiElementInterface> entities, String modulePathString) {
         getColorBoxes(modulePathString)
