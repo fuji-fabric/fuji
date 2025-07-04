@@ -3,8 +3,8 @@ package io.github.sakurawald.fuji.module.initializer.fuji.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.fuji.structure.JobDescriptor;
@@ -96,7 +96,7 @@ public class JobsInspectionGui extends PagedGui<JobDescriptor> {
 
         /* Attach document string. */
         Class<? extends Job> jobClass = jobDetail.getJobClass();
-        String jobDocument = ReflectionUtil.getClassDocument(jobClass);
+        String jobDocument = DocumentUtil.getClassDocumentString(jobClass);
         if (jobDocument != null) {
             lore.add(TextHelper.TEXT_EMPTY);
             lore.addAll(TextHelper.getDocumentTextList(getPlayer(), jobDocument));

@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.fuji.structure;
 
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
-import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -87,13 +87,12 @@ public class InspectingObject {
     public @Nullable String getDocumentString() {
         /* Extract @Document from a field in class. */
         if (this.object instanceof Field field) {
-            Document documentAnnotation = field.getAnnotation(Document.class);
-            return documentAnnotation != null ? documentAnnotation.value() : null;
+            return DocumentUtil.getFieldDocumentString(field);
         }
 
         /* Extract @Document from collection and map. */
         Class<?> objectType = this.getObjectType();
-        String classDocument = ReflectionUtil.getClassDocument(objectType);
+        String classDocument = DocumentUtil.getClassDocumentString(objectType);
 
         return classDocument;
     }

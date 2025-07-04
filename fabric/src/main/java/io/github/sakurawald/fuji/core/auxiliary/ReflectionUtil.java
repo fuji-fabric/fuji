@@ -1,12 +1,10 @@
 package io.github.sakurawald.fuji.core.auxiliary;
 
 import io.github.sakurawald.fuji.Fuji;
-import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -83,15 +81,6 @@ public class ReflectionUtil {
             .stream(throwable.getStackTrace())
             .map(StackTraceElement::toString)
             .toList();
-    }
-
-    public static @Nullable String getClassDocument(Class<?> clazz) {
-        Document annotation = clazz.getAnnotation(Document.class);
-        if (annotation != null) {
-            return annotation.value();
-        }
-
-        return null;
     }
 
     public static @NotNull String getSimpleClassName(Class<?> clazz) {

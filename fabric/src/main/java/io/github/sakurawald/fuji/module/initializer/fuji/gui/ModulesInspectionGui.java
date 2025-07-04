@@ -4,8 +4,8 @@ package io.github.sakurawald.fuji.module.initializer.fuji.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.structure.Pair;
@@ -109,7 +109,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
     }
 
     private static @Nullable String getDocumentString(Class<? extends ModuleInitializer> moduleInitializerClass) {
-        @Nullable String classDocument = ReflectionUtil.getClassDocument(moduleInitializerClass);
+        @Nullable String classDocument = DocumentUtil.getClassDocumentString(moduleInitializerClass);
         return classDocument;
     }
 
