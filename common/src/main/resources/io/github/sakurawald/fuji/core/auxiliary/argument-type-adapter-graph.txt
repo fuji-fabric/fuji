@@ -29,7 +29,8 @@ io.github.sakurawald.fuji.core.command.argument.adapter.impl.LongArgumentTypeAda
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.NbtCompoundArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.NbtElementArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.NbtPathArgumentTypeAdapter
-io.github.sakurawald.fuji.core.command.argument.adapter.impl.OfflinePlayerArgumentTypeAdapter
+io.github.sakurawald.fuji.core.command.argument.adapter.impl.OfflineGameProfileArgumentTypeAdapter
+io.github.sakurawald.fuji.core.command.argument.adapter.impl.OfflinePlayerNameArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.OperationArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.ParticleEffectArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.PlayerArgumentTypeAdapter

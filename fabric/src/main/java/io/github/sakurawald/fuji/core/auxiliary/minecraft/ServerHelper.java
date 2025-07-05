@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +8,6 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
-import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ChunkHolder;
@@ -121,6 +121,17 @@ public class ServerHelper {
         #endif
 
         return chunkHolders;
+    }
+
+    public static Optional<GameProfile> getOfflineGameProfileByName(String playerName) {
+        UserCache userCache = ServerHelper.getServer().getUserCache();
+        if (userCache == null) return Optional.empty();
+
+        UserCache.Entry entry = userCache.byName.get(playerName);
+        if (entry == null || entry.getProfile() == null) {
+            return Optional.empty();
+        }
+        return Optional.of(entry.getProfile());
     }
 
 

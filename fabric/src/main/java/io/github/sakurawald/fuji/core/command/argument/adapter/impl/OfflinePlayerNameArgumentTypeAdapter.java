@@ -12,7 +12,7 @@ import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
 
-public class OfflinePlayerArgumentTypeAdapter extends BaseArgumentTypeAdapter {
+public class OfflinePlayerNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     public ArgumentType<?> makeArgumentType() {
