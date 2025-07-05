@@ -330,16 +330,15 @@ public class CommandDescriptor implements SourceModuleGetter {
     protected Command<ServerCommandSource> makeCommandFunctionClosure() {
         return (ctx) -> {
 
-            /* verify command source */
-            if (!verifyCommandSource(ctx, this)) {
-                return CommandHelper.Return.FAIL;
-            }
-
-            /* invoke the command function */
-            List<Object> args = makeObjectsByArguments(ctx);
-
             int value;
             try {
+                /* verify command source */
+                if (!verifyCommandSource(ctx, this)) {
+                    return CommandHelper.Return.FAIL;
+                }
+
+                /* invoke the command function */
+                List<Object> args = makeObjectsByArguments(ctx);
                 value = (int) this.method.invoke(null, args.toArray());
             } catch (Exception wrappedOrUnwrappedException) {
                 return handleCommandException(ctx, this.method, wrappedOrUnwrappedException);
