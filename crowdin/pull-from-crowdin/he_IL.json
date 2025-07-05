@@ -439,5 +439,7 @@
   "economy.currency.name": "<dark_green>⚪ Currency Name: `%s`",
   "economy.currency.icon": "<dark_green>⚪ Currency Icon: `%s`",
   "economy.account.name": "<blue> ◉ Account ID: `%s`",
-  "economy.account.formatted_balance": "<blue> ◉ Account Balance: `%s`"
+  "economy.account.formatted_balance": "<blue> ◉ Account Balance: `%s`",
+  "economy.balance.top.gui.title": "<blue>Balance Top: `%s`",
+  "economy.balance": "<blue>Balance: `%s`"
 }
