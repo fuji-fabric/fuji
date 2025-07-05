@@ -62,3 +62,6 @@ accessible field net/minecraft/entity/player/PlayerInventory combinedInventory L
 
 # InventoryHelper
 accessible field net/minecraft/inventory/SimpleInventory stacks Lnet/minecraft/util/collection/DefaultedList;
+
+# common economy api
+accessible field net/minecraft/server/network/ServerPlayerEntity server Lnet/minecraft/server/MinecraftServer;

@@ -61,3 +61,6 @@ accessible class net/minecraft/server/network/ServerPlayNetworkHandler$Interacti
 
 # player
 accessible field net/minecraft/entity/LivingEntity equipment Lnet/minecraft/entity/EntityEquipment;
+
+# common economy api
+accessible field net/minecraft/server/network/ServerPlayerEntity server Lnet/minecraft/server/MinecraftServer;
