@@ -73,6 +73,7 @@ public class CustomEconomyProvider implements EconomyProvider {
 
     @Override
     public @Nullable EconomyAccount getAccount(MinecraftServer server, GameProfile gameProfile, String pathOfCurrencyId) {
+        // NOTE: The getAccount() method only use the `path` component of `identifier` for `currency`.
         Optional<EconomyAccount> first =
             getAccounts(server, gameProfile)
                 .stream()
@@ -83,7 +84,7 @@ public class CustomEconomyProvider implements EconomyProvider {
                 .findFirst();
 
         if (first.isEmpty()) {
-            LogUtil.error("getAccount(): gameProfile = {}, pathOfCurrencyId = {}", gameProfile, pathOfCurrencyId);
+            LogUtil.error("getAccount(): gameProfile = {}, pathOfCurrencyId = {}", gameProfile.getName(), pathOfCurrencyId);
             throw new IllegalArgumentException("Failed to get account for specified account ID.");
         }
 
@@ -103,6 +104,8 @@ public class CustomEconomyProvider implements EconomyProvider {
 
     @Override
     public @Nullable EconomyCurrency getCurrency(MinecraftServer server, String pathOfCurrencyId) {
+        // NOTE: The getCurrency() method only use the `path` component of `identifier` for `currency`.
+
         Optional<Map.Entry<Identifier, CustomEconomyCurrency>> currencyOpt =
             CURRENCY_ID_2_CURRENCY
                 .entrySet()
@@ -127,10 +130,9 @@ public class CustomEconomyProvider implements EconomyProvider {
     }
 
     @Override
-    public @Nullable String defaultAccount(MinecraftServer server, GameProfile profile, EconomyCurrency currency) {
-        // What is this?
-        LogUtil.info("defaultAccount: profile = {}, currency = {}", profile, currency);
-        return "FUJI default account";
+    public @Nullable String defaultAccount(MinecraftServer server, GameProfile gameProfile, EconomyCurrency currency) {
+        // NOTE: Pass the path of currency ID.
+        return currency.id().getPath();
     }
 
 }

@@ -146,4 +146,16 @@ public class EconomyInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+
+    @Document("Clear the `amount` of the player's `account` for `specified currency`.")
+    @CommandNode("economy clear")
+    @CommandRequirement(level = 4)
+    private static int $clear(@CommandSource ServerCommandSource source, ServerPlayerEntity player, CurrencyId currencyId) {
+        String $currencyId = currencyId.getValue();
+        EconomyAccount economyAccount = EconomyService.getUserAccount(player.getGameProfile(), $currencyId);
+
+        EconomyTransaction economyTransaction = economyAccount.decreaseBalance(economyAccount.balance());
+        source.sendMessage(economyTransaction.message());
+        return CommandHelper.Return.SUCCESS;
+    }
 }

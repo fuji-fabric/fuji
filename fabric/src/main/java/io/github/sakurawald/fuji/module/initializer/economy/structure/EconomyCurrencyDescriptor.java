@@ -20,7 +20,7 @@ public class EconomyCurrencyDescriptor {
     public double defaultFaceBalance;
 
     @Document("The `formatted string` of this currency.")
-    public String formatValueString = "$%.2f";
+    public String formatValueString = "%.2f";
 
     @Document("The `formatted text` of this currency.")
     public String formatValueText = "<yellow>$%.2f";

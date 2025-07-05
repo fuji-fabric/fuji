@@ -14,6 +14,7 @@ import io.github.sakurawald.fuji.module.initializer.economy.structure.EconomyCur
 import java.util.UUID;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
 
 public class CustomEconomyAccount implements EconomyAccount {
@@ -33,14 +34,18 @@ public class CustomEconomyAccount implements EconomyAccount {
 
     @Override
     public UUID owner() {
-        // return Util.NIL_UUID if this is a console account.
-        return gameProfile.getId();
+        if (this.gameProfile != null) {
+            return this.gameProfile.getId();
+        }
+
+        // NOTE: This is a server/console account.
+        return Util.NIL_UUID;
     }
 
     @Override
     public Identifier id() {
-        // what is this?
-        return RegistryHelper.makeIdentifier("fuji:economy_account_id_what");
+        // NOTE: Make the `account ID` identical to `currency ID`, for simplicity.
+        return RegistryHelper.makeIdentifier(this.currencyDescriptor.currencyId);
     }
 
     @Override

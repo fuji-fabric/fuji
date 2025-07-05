@@ -45,8 +45,11 @@ public class CustomEconomyCurrency implements EconomyCurrency {
 
     @Override
     public Text formatValueText(long value, boolean precise) {
-        String formatValueString = formatValue(value, precise);
-        return TextHelper.getTextByValue(null, formatValueString);
+        String formatValueText = this.currencyDescriptor.formatValueText;
+        double faceValue = value / CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR;
+        formatValueText = String.format(formatValueText, faceValue);
+
+        return TextHelper.getTextByValue(null, formatValueText);
     }
 
     @Override
