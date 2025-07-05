@@ -1,5 +1,6 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
+
 - **feature: new module `economy` module. (To enable the `economy gameplay` in fabric server)**
   - feature: integrate with the `common economy api`, to work with any other mods who support it.
   - feature: define your own `currencies` type using easy config.
