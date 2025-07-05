@@ -119,6 +119,7 @@
   "ping.player": "<gold>玩家 %s 的延遲：%d 毫秒",
   "placeholder.pos": "<#2596be>[%d %d %d, %s]",
   "player.not_found": "<red>找不到玩家",
+  "player.unknown_player": "<red>Unknown player in server user cache.",
   "previous_page": "<#FFA1F5>上一頁",
   "profiler.gui.title": "<dark_green>Profiler",
   "profiler.os": "<blue>Operating System",

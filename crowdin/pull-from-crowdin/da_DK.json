@@ -119,6 +119,7 @@
   "ping.player": "<gold>Ping af %s: %d ms",
   "placeholder.pos": "<#2596be>[%d %d %d, %s]",
   "player.not_found": "<red>Spiller ikke fundet",
+  "player.unknown_player": "<red>Unknown player in server user cache.",
   "previous_page": "<#FFA1F5>Forrige Side",
   "profiler.gui.title": "<dark_green>Profiler",
   "profiler.os": "<blue>Operating System",
