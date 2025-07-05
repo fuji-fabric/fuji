@@ -430,5 +430,14 @@
   "command_meta.when_online.gui.title": "<blue>When Online Tickets",
   "command_meta.when_online.gui.name": "<blue>When Online Ticket",
   "player.target_player.name": "<blue>Target player: `%s`",
-  "command": "<blue>Command: `%s`"
+  "command": "<blue>Command: `%s`",
+  "line.separator": "<grey>----------------------------------------",
+  "economy.provider.id": "<blue>⚫ Provider ID: `%s`",
+  "economy.provider.name": "<blue>⚫ Provider Name: `%s`",
+  "economy.provider.icon": "<blue>⚫ Provider Icon: `%s`",
+  "economy.currency.id": "<dark_green>⚪ Currency ID: `%s`",
+  "economy.currency.name": "<dark_green>⚪ Currency Name: `%s`",
+  "economy.currency.icon": "<dark_green>⚪ Currency Icon: `%s`",
+  "economy.account.name": "<blue> ◉ Account ID: `%s`",
+  "economy.account.formatted_balance": "<blue> ◉ Account Balance: `%s`"
 }
