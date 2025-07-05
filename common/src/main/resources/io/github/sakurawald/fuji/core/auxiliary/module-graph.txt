@@ -85,6 +85,7 @@ echo.send_dialog
 echo.send_message
 echo.send_title
 echo.send_toast
+economy
 fuji
 functional
 functional.anvil

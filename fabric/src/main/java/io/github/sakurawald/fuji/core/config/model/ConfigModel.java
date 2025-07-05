@@ -165,6 +165,7 @@ public class ConfigModel {
         public WorldDownloader world_downloader = new WorldDownloader();
         public Whitelist whitelist = new Whitelist();
         public Warning warning = new Warning();
+        public Economy economy = new Economy();
         public Head head = new Head();
         public Profiler profiler = new Profiler();
         public Tester tester = new Tester();
@@ -794,6 +795,10 @@ public class ConfigModel {
         }
 
         public static class Warning {
+            public boolean enable = false;
+        }
+
+        public static class Economy {
             public boolean enable = false;
         }
 

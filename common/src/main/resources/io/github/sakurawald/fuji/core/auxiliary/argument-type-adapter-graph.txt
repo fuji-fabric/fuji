@@ -60,5 +60,6 @@ io.github.sakurawald.fuji.module.initializer.command_scheduler.command.argument.
 io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.command.argument.adapter.WarpNameArgumentTypeAdapter
 io.github.sakurawald.fuji.module.initializer.echo.send_custom.command.argument.adapter.CustomTextNameArgumentTypeAdapter
 io.github.sakurawald.fuji.module.initializer.echo.send_toast.command.argument.adapter.AdvancementFrameArgumentTypeAdapter
+io.github.sakurawald.fuji.module.initializer.economy.command.argument.adapter.CurrencyIdArgumentTypeAdapter
 io.github.sakurawald.fuji.module.initializer.home.command.argument.adapter.HomeNameArgumentTypeAdapter
 io.github.sakurawald.fuji.module.initializer.kit.command.argument.adapter.KitNameArgumentTypeAdapter

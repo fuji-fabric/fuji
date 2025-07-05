@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import com.google.gson.JsonObject;
+import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.context.CommandContext;
 import eu.pb4.placeholders.api.ParserContext;
 import eu.pb4.placeholders.api.PlaceholderContext;
@@ -336,6 +337,8 @@ public class TextHelper {
         PlaceholderContext placeholderContext;
         if (audience instanceof PlayerEntity playerEntity) {
             placeholderContext = PlaceholderContext.of(playerEntity);
+        } else if (audience instanceof GameProfile gameProfile) {
+            placeholderContext = PlaceholderContext.of(gameProfile, ServerHelper.getServer());
         } else {
             placeholderContext = PlaceholderContext.of(ServerHelper.getServer());
         }

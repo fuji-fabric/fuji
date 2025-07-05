@@ -77,6 +77,7 @@ io.github.sakurawald.fuji.module.initializer.echo.send_dialog.SendDialogInitiali
 io.github.sakurawald.fuji.module.initializer.echo.send_message.SendMessageInitializer
 io.github.sakurawald.fuji.module.initializer.echo.send_title.SendTitleInitializer
 io.github.sakurawald.fuji.module.initializer.echo.send_toast.SendToastInitializer
+io.github.sakurawald.fuji.module.initializer.economy.EconomyInitializer
 io.github.sakurawald.fuji.module.initializer.fuji.FujiInitializer
 io.github.sakurawald.fuji.module.initializer.functional.anvil.AnvilInitializer
 io.github.sakurawald.fuji.module.initializer.functional.cartography.CartographyInitializer
