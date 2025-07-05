@@ -1,7 +1,9 @@
 package io.github.sakurawald.fuji.module.initializer.economy.config.structure;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import lombok.Data;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 @Data
@@ -34,4 +36,7 @@ public class CustomEconomyCurrencyDescriptor {
         return descriptor;
     }
 
+    public Identifier toIdentifier() {
+        return RegistryHelper.makeIdentifier(this.currencyId);
+    }
 }

@@ -47,9 +47,8 @@ public class CustomEconomyProvider implements EconomyProvider {
         registerDefinedFujiCurrencies();
     }
 
-    public static CustomEconomyCurrency getCustomEconomyCurrency(String currencyId) {
-        Identifier currencyIdentifier = RegistryHelper.makeIdentifier(currencyId);
-        return CURRENCY_ID_2_CURRENCY.get(currencyIdentifier);
+    public static CustomEconomyCurrency getCustomEconomyCurrency(Identifier currencyId) {
+        return CURRENCY_ID_2_CURRENCY.get(currencyId);
     }
 
     @Override
@@ -65,6 +64,8 @@ public class CustomEconomyProvider implements EconomyProvider {
     private static void registerDefinedFujiCurrencies() {
         EconomyInitializer.config.model().currencies.forEach(descriptor -> {
             Identifier currencyId = RegistryHelper.makeIdentifier(descriptor.currencyId);
+            RegistryHelper.ensureIdentifierNamespaceIfFuji(currencyId);
+
             CustomEconomyCurrency customEconomyCurrency = new CustomEconomyCurrency(descriptor);
             LogUtil.debug("Register custom economy currency: currencyId = {}, currencyDescriptor = {}", currencyId, customEconomyCurrency);
             CURRENCY_ID_2_CURRENCY.put(currencyId, customEconomyCurrency);

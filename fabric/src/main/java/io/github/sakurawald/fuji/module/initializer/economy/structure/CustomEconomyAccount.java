@@ -50,13 +50,13 @@ public class CustomEconomyAccount implements EconomyAccount {
 
     @Override
     public long balance() {
-        CustomEconomyAccountNode accountNode = EconomyService.getCustomAccountNode(this.gameProfile, this.currencyDescriptor.currencyId);
+        CustomEconomyAccountNode accountNode = EconomyService.getCustomAccountNode(this.gameProfile, this.currencyDescriptor.toIdentifier());
         return accountNode.balance;
     }
 
     @Override
     public void setBalance(long value) {
-        CustomEconomyAccountNode accountNode = EconomyService.getCustomAccountNode(this.gameProfile, this.currencyDescriptor.currencyId);
+        CustomEconomyAccountNode accountNode = EconomyService.getCustomAccountNode(this.gameProfile, this.currencyDescriptor.toIdentifier());
         accountNode.balance = value;
         EconomyInitializer.data.writeStorage();
     }
@@ -81,7 +81,8 @@ public class CustomEconomyAccount implements EconomyAccount {
         /* Check bounds. */
         boolean isSuccessful;
         Text feedbackText;
-        EconomyAccount economyAccount = EconomyService.getUserAccount(this.gameProfile, this.currencyDescriptor.currencyId);
+        Identifier currencyId = this.currencyDescriptor.toIdentifier();
+        EconomyAccount economyAccount = EconomyService.getUserAccount(this.gameProfile, currencyId);
 
         if (finalBalance < 0
             || (transactionAmount > 0 && previousBalance > Long.MAX_VALUE - transactionAmount)
@@ -105,7 +106,7 @@ public class CustomEconomyAccount implements EconomyAccount {
 
     @Override
     public EconomyCurrency currency() {
-        return CustomEconomyProvider.getCustomEconomyCurrency(this.currencyDescriptor.currencyId);
+        return CustomEconomyProvider.getCustomEconomyCurrency(this.currencyDescriptor.toIdentifier());
     }
 
 }

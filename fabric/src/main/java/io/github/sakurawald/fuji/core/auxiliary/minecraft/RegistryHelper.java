@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
+import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -138,6 +139,12 @@ public class RegistryHelper {
         #endif
 
         return messageTypeString;
+    }
+
+    public static void ensureIdentifierNamespaceIfFuji(Identifier identifier) {
+        if (!identifier.getNamespace().equals(Fuji.MOD_ID)) {
+            throw new IllegalArgumentException("The namespace of identifier must be \"fuji\": " + identifier);
+        }
     }
 
 }

@@ -7,10 +7,10 @@ import eu.pb4.common.economy.api.EconomyCurrency;
 import eu.pb4.common.economy.api.EconomyProvider;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.module.initializer.economy.EconomyInitializer;
-import io.github.sakurawald.fuji.module.initializer.economy.structure.CustomEconomyCurrency;
-import io.github.sakurawald.fuji.module.initializer.economy.structure.CustomEconomyProvider;
 import io.github.sakurawald.fuji.module.initializer.economy.config.structure.CustomEconomyAccountNode;
 import io.github.sakurawald.fuji.module.initializer.economy.config.structure.CustomEconomyCurrencyNode;
+import io.github.sakurawald.fuji.module.initializer.economy.structure.CustomEconomyCurrency;
+import io.github.sakurawald.fuji.module.initializer.economy.structure.CustomEconomyProvider;
 import java.util.Collection;
 import java.util.Optional;
 import net.minecraft.server.MinecraftServer;
@@ -31,10 +31,10 @@ public class EconomyService {
             .toList();
     }
 
-    public static boolean isCurrencyInstalledOnThisServer(String currencyId) {
+    public static boolean isCurrencyInstalledOnThisServer(Identifier currencyId) {
         return getServerCurrencyIds()
             .stream()
-            .anyMatch(it -> it.toString().equals(currencyId));
+            .anyMatch(it -> it.equals(currencyId));
     }
 
     public static Collection<EconomyProvider> getProviders() {
@@ -46,13 +46,15 @@ public class EconomyService {
         return CommonEconomy.getAccounts(server, gameProfile);
     }
 
-    public static @NotNull EconomyAccount getUserAccount(GameProfile gameProfile, String currencyId) {
-        Collection<EconomyAccount> accounts = getUserAccounts(gameProfile);
-
-        Optional<EconomyAccount> accountForThatCurrencyId = accounts
-            .stream()
-            .filter(account -> account.currency().id().toString().equals(currencyId))
-            .findFirst();
+    public static @NotNull EconomyAccount getUserAccount(GameProfile gameProfile, Identifier currencyId) {
+        Optional<EconomyAccount> accountForThatCurrencyId =
+            getUserAccounts(gameProfile)
+                .stream()
+                .filter(account -> {
+                    Identifier id = account.currency().id();
+                    return id.equals(currencyId);
+                })
+                .findFirst();
 
         if (accountForThatCurrencyId.isEmpty()) {
             throw new IllegalArgumentException("Player %s didn't have the account for currency ID %s."
@@ -62,17 +64,17 @@ public class EconomyService {
         return accountForThatCurrencyId.get();
     }
 
-    public static CustomEconomyCurrencyNode getCustomCurrencyNode(String currencyId) {
+    public static CustomEconomyCurrencyNode getCustomCurrencyNode(Identifier currencyId) {
         Optional<CustomEconomyCurrencyNode> currencyNoteOpt = EconomyInitializer.data.model()
             .currencies
             .stream()
-            .filter(currency -> currency.currencyId.equals(currencyId))
+            .filter(currency -> currency.currencyId.equals(currencyId.toString()))
             .findFirst();
 
-        /* Check if currency node exists. */
+        /* Make a new currency node. */
         if (currencyNoteOpt.isEmpty()) {
             if (isCurrencyInstalledOnThisServer(currencyId)) {
-                CustomEconomyCurrencyNode customEconomyCurrencyNode = CustomEconomyCurrencyNode.make(currencyId);
+                CustomEconomyCurrencyNode customEconomyCurrencyNode = CustomEconomyCurrencyNode.make(currencyId.toString());
                 EconomyInitializer.data.model().currencies.add(customEconomyCurrencyNode);
                 EconomyInitializer.data.writeStorage();
                 return customEconomyCurrencyNode;
@@ -84,7 +86,8 @@ public class EconomyService {
         return currencyNoteOpt.get();
     }
 
-    public static CustomEconomyAccountNode getCustomAccountNode(GameProfile gameProfile, String currencyId) {
+    public static CustomEconomyAccountNode getCustomAccountNode(GameProfile gameProfile, Identifier currencyId) {
+        /* Find the account of the game profile for the currency. */
         CustomEconomyCurrencyNode currencyNode = getCustomCurrencyNode(currencyId);
         Optional<CustomEconomyAccountNode> accountNodeOpt = currencyNode
             .accounts
@@ -92,6 +95,7 @@ public class EconomyService {
             .filter(it -> it.ownerName.equals(gameProfile.getName()))
             .findFirst();
 
+        /* Make a new account node. */
         if (accountNodeOpt.isEmpty()) {
             CustomEconomyCurrency customEconomyCurrency = CustomEconomyProvider.getCustomEconomyCurrency(currencyId);
             long defaultBalance = (long) (customEconomyCurrency.currencyDescriptor.defaultFaceBalance * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);

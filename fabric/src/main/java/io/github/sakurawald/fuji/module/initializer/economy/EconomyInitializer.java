@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.module.initializer.economy;
 
-import eu.pb4.common.economy.api.CommonEconomy;
 import eu.pb4.common.economy.api.EconomyAccount;
 import eu.pb4.common.economy.api.EconomyCurrency;
 import eu.pb4.common.economy.api.EconomyProvider;
@@ -26,6 +25,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 @Document("""
     This module allows you to enable the `economy gameplay`.
@@ -63,7 +63,7 @@ public class EconomyInitializer extends ModuleInitializer {
             source.sendMessage(Text.literal("- Provider name: %s".formatted(provider.name())));
             source.sendMessage(Text.literal("- Provider icon: %s".formatted(provider.icon())));
 
-            Collection<EconomyCurrency> currencies = CommonEconomy.getCurrencies(server);
+            Collection<EconomyCurrency> currencies = provider.getCurrencies(server);
             currencies.forEach(currency -> {
                 source.sendMessage(Text.literal("-- Currency Id: %s".formatted(currency.id())));
                 source.sendMessage(Text.literal("-- Currency Name: %s".formatted(currency.name())));
@@ -104,7 +104,7 @@ public class EconomyInitializer extends ModuleInitializer {
     @CommandNode("economy account")
     @CommandRequirement(level = 4)
     private static int $account(@CommandSource ServerCommandSource source, ServerPlayerEntity player, CurrencyId currencyId) {
-        String $currencyId = currencyId.getValue();
+        Identifier $currencyId = currencyId.getValue();
         EconomyAccount economyAccount = EconomyService.getUserAccount(player.getGameProfile(), $currencyId);
         printEconomyAccountInfo(source, economyAccount);
 
@@ -124,7 +124,7 @@ public class EconomyInitializer extends ModuleInitializer {
     @CommandNode("economy give")
     @CommandRequirement(level = 4)
     private static int $give(@CommandSource ServerCommandSource source, ServerPlayerEntity player, CurrencyId currencyId, double amount) {
-        String $currencyId = currencyId.getValue();
+        Identifier $currencyId = currencyId.getValue();
         EconomyAccount economyAccount = EconomyService.getUserAccount(player.getGameProfile(), $currencyId);
         long deltaValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
         EconomyTransaction economyTransaction = economyAccount.increaseBalance(deltaValue);
@@ -137,7 +137,7 @@ public class EconomyInitializer extends ModuleInitializer {
     @CommandNode("economy take")
     @CommandRequirement(level = 4)
     private static int $take(@CommandSource ServerCommandSource source, ServerPlayerEntity player, CurrencyId currencyId, double amount) {
-        String $currencyId = currencyId.getValue();
+        Identifier $currencyId = currencyId.getValue();
         EconomyAccount economyAccount = EconomyService.getUserAccount(player.getGameProfile(), $currencyId);
         long deltaValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
         EconomyTransaction economyTransaction = economyAccount.decreaseBalance(deltaValue);
@@ -146,16 +146,25 @@ public class EconomyInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @SuppressWarnings("SameParameterValue")
+    @Document("Set the `amount` of the player's `account` for `specified currency`.")
+    @CommandNode("economy set")
+    @CommandRequirement(level = 4)
+    private static int $set(@CommandSource ServerCommandSource source, ServerPlayerEntity player, CurrencyId currencyId, double amount) {
+        Identifier $currencyId = currencyId.getValue();
+        EconomyAccount economyAccount = EconomyService.getUserAccount(player.getGameProfile(), $currencyId);
+
+        long finalValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
+        economyAccount.setBalance(finalValue);
+        TextHelper.getTextByValue(source, "operation.success");
+        return CommandHelper.Return.SUCCESS;
+    }
 
     @Document("Clear the `amount` of the player's `account` for `specified currency`.")
     @CommandNode("economy clear")
     @CommandRequirement(level = 4)
     private static int $clear(@CommandSource ServerCommandSource source, ServerPlayerEntity player, CurrencyId currencyId) {
-        String $currencyId = currencyId.getValue();
-        EconomyAccount economyAccount = EconomyService.getUserAccount(player.getGameProfile(), $currencyId);
-
-        EconomyTransaction economyTransaction = economyAccount.decreaseBalance(economyAccount.balance());
-        source.sendMessage(economyTransaction.message());
+        $set(source, player, currencyId, 0);
         return CommandHelper.Return.SUCCESS;
     }
 }

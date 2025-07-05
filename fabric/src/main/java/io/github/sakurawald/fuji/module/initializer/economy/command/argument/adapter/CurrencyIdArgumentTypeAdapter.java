@@ -22,7 +22,7 @@ public class CurrencyIdArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
         Identifier identifier = IdentifierArgumentType.getIdentifier(context, argument.getArgumentName());
-        return new CurrencyId(identifier.toString());
+        return new CurrencyId(identifier);
     }
 
     @Override
