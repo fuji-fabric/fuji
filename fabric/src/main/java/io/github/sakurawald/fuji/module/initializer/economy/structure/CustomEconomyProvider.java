@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.initializer.economy.integration.structure;
+package io.github.sakurawald.fuji.module.initializer.economy.structure;
 
 import com.mojang.authlib.GameProfile;
 import eu.pb4.common.economy.api.CommonEconomy;

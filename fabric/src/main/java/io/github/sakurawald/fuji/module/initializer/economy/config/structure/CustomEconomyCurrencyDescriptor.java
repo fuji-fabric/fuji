@@ -1,11 +1,11 @@
-package io.github.sakurawald.fuji.module.initializer.economy.structure;
+package io.github.sakurawald.fuji.module.initializer.economy.config.structure;
 
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
 @Data
-public class EconomyCurrencyDescriptor {
+public class CustomEconomyCurrencyDescriptor {
 
     @Document("The `custom currency` identifier. The `namespace` must be `fuji`.")
     public String currencyId;
@@ -25,8 +25,8 @@ public class EconomyCurrencyDescriptor {
     @Document("The `formatted text` of this currency.")
     public String formatValueText = "<yellow>$%.2f";
 
-    public static EconomyCurrencyDescriptor make(@NotNull String currencyId, @NotNull String currencyName, @NotNull String currencyIconItem, double defaultFaceBalance) {
-        EconomyCurrencyDescriptor descriptor = new EconomyCurrencyDescriptor();
+    public static CustomEconomyCurrencyDescriptor make(@NotNull String currencyId, @NotNull String currencyName, @NotNull String currencyIconItem, double defaultFaceBalance) {
+        CustomEconomyCurrencyDescriptor descriptor = new CustomEconomyCurrencyDescriptor();
         descriptor.currencyId = currencyId;
         descriptor.currencyName = currencyName;
         descriptor.currencyIconItem = currencyIconItem;

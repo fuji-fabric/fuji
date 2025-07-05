@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.initializer.economy.integration.service;
+package io.github.sakurawald.fuji.module.initializer.economy.service;
 
 import com.mojang.authlib.GameProfile;
 import eu.pb4.common.economy.api.CommonEconomy;
@@ -7,10 +7,10 @@ import eu.pb4.common.economy.api.EconomyCurrency;
 import eu.pb4.common.economy.api.EconomyProvider;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.module.initializer.economy.EconomyInitializer;
-import io.github.sakurawald.fuji.module.initializer.economy.integration.structure.CustomEconomyCurrency;
-import io.github.sakurawald.fuji.module.initializer.economy.integration.structure.CustomEconomyProvider;
-import io.github.sakurawald.fuji.module.initializer.economy.structure.EconomyAccountNode;
-import io.github.sakurawald.fuji.module.initializer.economy.structure.EconomyCurrencyNode;
+import io.github.sakurawald.fuji.module.initializer.economy.structure.CustomEconomyCurrency;
+import io.github.sakurawald.fuji.module.initializer.economy.structure.CustomEconomyProvider;
+import io.github.sakurawald.fuji.module.initializer.economy.config.structure.CustomEconomyAccountNode;
+import io.github.sakurawald.fuji.module.initializer.economy.config.structure.CustomEconomyCurrencyNode;
 import java.util.Collection;
 import java.util.Optional;
 import net.minecraft.server.MinecraftServer;
@@ -62,8 +62,8 @@ public class EconomyService {
         return accountForThatCurrencyId.get();
     }
 
-    public static EconomyCurrencyNode getCurrencyNode(String currencyId) {
-        Optional<EconomyCurrencyNode> currencyNoteOpt = EconomyInitializer.data.model()
+    public static CustomEconomyCurrencyNode getCustomCurrencyNode(String currencyId) {
+        Optional<CustomEconomyCurrencyNode> currencyNoteOpt = EconomyInitializer.data.model()
             .currencies
             .stream()
             .filter(currency -> currency.currencyId.equals(currencyId))
@@ -72,10 +72,10 @@ public class EconomyService {
         /* Check if currency node exists. */
         if (currencyNoteOpt.isEmpty()) {
             if (isCurrencyInstalledOnThisServer(currencyId)) {
-                EconomyCurrencyNode economyCurrencyNode = EconomyCurrencyNode.make(currencyId);
-                EconomyInitializer.data.model().currencies.add(economyCurrencyNode);
+                CustomEconomyCurrencyNode customEconomyCurrencyNode = CustomEconomyCurrencyNode.make(currencyId);
+                EconomyInitializer.data.model().currencies.add(customEconomyCurrencyNode);
                 EconomyInitializer.data.writeStorage();
-                return economyCurrencyNode;
+                return customEconomyCurrencyNode;
             }
 
             throw new IllegalArgumentException("There is no currency ID %s in data file.".formatted(currencyId));
@@ -84,9 +84,9 @@ public class EconomyService {
         return currencyNoteOpt.get();
     }
 
-    public static EconomyAccountNode getAccountNode(GameProfile gameProfile, String currencyId) {
-        EconomyCurrencyNode currencyNode = getCurrencyNode(currencyId);
-        Optional<EconomyAccountNode> accountNodeOpt = currencyNode
+    public static CustomEconomyAccountNode getCustomAccountNode(GameProfile gameProfile, String currencyId) {
+        CustomEconomyCurrencyNode currencyNode = getCustomCurrencyNode(currencyId);
+        Optional<CustomEconomyAccountNode> accountNodeOpt = currencyNode
             .accounts
             .stream()
             .filter(it -> it.ownerName.equals(gameProfile.getName()))
@@ -96,10 +96,10 @@ public class EconomyService {
             CustomEconomyCurrency customEconomyCurrency = CustomEconomyProvider.getCustomEconomyCurrency(currencyId);
             long defaultBalance = (long) (customEconomyCurrency.currencyDescriptor.defaultFaceBalance * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
 
-            EconomyAccountNode economyAccountNode = EconomyAccountNode.make(gameProfile, defaultBalance);
-            currencyNode.accounts.add(economyAccountNode);
+            CustomEconomyAccountNode customEconomyAccountNode = CustomEconomyAccountNode.make(gameProfile, defaultBalance);
+            currencyNode.accounts.add(customEconomyAccountNode);
             EconomyInitializer.data.writeStorage();
-            return economyAccountNode;
+            return customEconomyAccountNode;
         }
 
         return accountNodeOpt.get();

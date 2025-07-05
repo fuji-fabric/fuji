@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.initializer.economy.integration.structure;
+package io.github.sakurawald.fuji.module.initializer.economy.structure;
 
 import com.mojang.authlib.GameProfile;
 import eu.pb4.common.economy.api.EconomyAccount;
@@ -8,9 +8,9 @@ import eu.pb4.common.economy.api.EconomyTransaction;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.module.initializer.economy.EconomyInitializer;
-import io.github.sakurawald.fuji.module.initializer.economy.integration.service.EconomyService;
-import io.github.sakurawald.fuji.module.initializer.economy.structure.EconomyAccountNode;
-import io.github.sakurawald.fuji.module.initializer.economy.structure.EconomyCurrencyDescriptor;
+import io.github.sakurawald.fuji.module.initializer.economy.service.EconomyService;
+import io.github.sakurawald.fuji.module.initializer.economy.config.structure.CustomEconomyAccountNode;
+import io.github.sakurawald.fuji.module.initializer.economy.config.structure.CustomEconomyCurrencyDescriptor;
 import java.util.UUID;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -20,9 +20,9 @@ import org.jetbrains.annotations.NotNull;
 public class CustomEconomyAccount implements EconomyAccount {
 
     private final @NotNull GameProfile gameProfile;
-    private final @NotNull EconomyCurrencyDescriptor currencyDescriptor;
+    private final @NotNull CustomEconomyCurrencyDescriptor currencyDescriptor;
 
-    public CustomEconomyAccount(@NotNull GameProfile gameProfile, @NotNull EconomyCurrencyDescriptor currencyDescriptor) {
+    public CustomEconomyAccount(@NotNull GameProfile gameProfile, @NotNull CustomEconomyCurrencyDescriptor currencyDescriptor) {
         this.gameProfile = gameProfile;
         this.currencyDescriptor = currencyDescriptor;
     }
@@ -50,13 +50,13 @@ public class CustomEconomyAccount implements EconomyAccount {
 
     @Override
     public long balance() {
-        EconomyAccountNode accountNode = EconomyService.getAccountNode(this.gameProfile, this.currencyDescriptor.currencyId);
+        CustomEconomyAccountNode accountNode = EconomyService.getCustomAccountNode(this.gameProfile, this.currencyDescriptor.currencyId);
         return accountNode.balance;
     }
 
     @Override
     public void setBalance(long value) {
-        EconomyAccountNode accountNode = EconomyService.getAccountNode(this.gameProfile, this.currencyDescriptor.currencyId);
+        CustomEconomyAccountNode accountNode = EconomyService.getCustomAccountNode(this.gameProfile, this.currencyDescriptor.currencyId);
         accountNode.balance = value;
         EconomyInitializer.data.writeStorage();
     }

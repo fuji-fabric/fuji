@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.initializer.economy.integration.structure;
+package io.github.sakurawald.fuji.module.initializer.economy.structure;
 
 import eu.pb4.common.economy.api.EconomyAccount;
 import eu.pb4.common.economy.api.EconomyTransaction;

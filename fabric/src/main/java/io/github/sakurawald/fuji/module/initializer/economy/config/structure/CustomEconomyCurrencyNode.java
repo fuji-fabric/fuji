@@ -1,0 +1,24 @@
+package io.github.sakurawald.fuji.module.initializer.economy.config.structure;
+
+import io.github.sakurawald.fuji.core.document.annotation.Document;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.Data;
+import org.jetbrains.annotations.NotNull;
+
+@Data
+public class CustomEconomyCurrencyNode {
+
+    @Document("The `ID` of this `currency` type.")
+    public String currencyId;
+
+    @Document("The saved `accounts` for this type of `currency`.")
+    public List<CustomEconomyAccountNode> accounts = new ArrayList<>();
+
+    public static CustomEconomyCurrencyNode make(@NotNull String currencyId) {
+        CustomEconomyCurrencyNode customEconomyCurrencyNode = new CustomEconomyCurrencyNode();
+        customEconomyCurrencyNode.currencyId = currencyId;
+        return customEconomyCurrencyNode;
+    }
+
+}

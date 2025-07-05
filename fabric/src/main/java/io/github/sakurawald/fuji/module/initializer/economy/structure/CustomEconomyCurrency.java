@@ -1,11 +1,10 @@
-package io.github.sakurawald.fuji.module.initializer.economy.integration.structure;
+package io.github.sakurawald.fuji.module.initializer.economy.structure;
 
 import eu.pb4.common.economy.api.EconomyCurrency;
 import eu.pb4.common.economy.api.EconomyProvider;
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
-import io.github.sakurawald.fuji.module.initializer.economy.structure.EconomyCurrencyDescriptor;
+import io.github.sakurawald.fuji.module.initializer.economy.config.structure.CustomEconomyCurrencyDescriptor;
 import lombok.Data;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -15,9 +14,9 @@ import org.jetbrains.annotations.NotNull;
 @Data
 public class CustomEconomyCurrency implements EconomyCurrency {
 
-    public final @NotNull EconomyCurrencyDescriptor currencyDescriptor;
+    public final @NotNull CustomEconomyCurrencyDescriptor currencyDescriptor;
 
-    public CustomEconomyCurrency(@NotNull EconomyCurrencyDescriptor currencyDescriptor) {
+    public CustomEconomyCurrency(@NotNull CustomEconomyCurrencyDescriptor currencyDescriptor) {
         this.currencyDescriptor = currencyDescriptor;
     }
 

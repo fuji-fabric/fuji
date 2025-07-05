@@ -7,7 +7,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
 import io.github.sakurawald.fuji.module.initializer.economy.command.argument.wrapper.CurrencyId;
-import io.github.sakurawald.fuji.module.initializer.economy.integration.service.EconomyService;
+import io.github.sakurawald.fuji.module.initializer.economy.service.EconomyService;
 import java.util.List;
 import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
