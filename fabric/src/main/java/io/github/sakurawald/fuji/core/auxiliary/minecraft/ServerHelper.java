@@ -123,6 +123,16 @@ public class ServerHelper {
         return chunkHolders;
     }
 
+    public static List<GameProfile> getOfflineGameProfiles() {
+        UserCache userCache = ServerHelper.getServer().getUserCache();
+        if (userCache == null) return List.of();
+
+        return userCache.byName.values()
+            .stream()
+            .map(UserCache.Entry::getProfile)
+            .toList();
+    }
+
     public static Optional<GameProfile> getOfflineGameProfileByName(String playerName) {
         UserCache userCache = ServerHelper.getServer().getUserCache();
         if (userCache == null) return Optional.empty();

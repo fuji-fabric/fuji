@@ -19,6 +19,7 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.economy.command.argument.wrapper.CurrencyId;
 import io.github.sakurawald.fuji.module.initializer.economy.config.model.EconomyConfigModel;
 import io.github.sakurawald.fuji.module.initializer.economy.config.model.EconomyDataModel;
+import io.github.sakurawald.fuji.module.initializer.economy.gui.BalanceTopGui;
 import io.github.sakurawald.fuji.module.initializer.economy.service.EconomyService;
 import io.github.sakurawald.fuji.module.initializer.economy.structure.CustomEconomyProvider;
 import java.util.Collection;
@@ -123,6 +124,16 @@ public class EconomyInitializer extends ModuleInitializer {
     private static int $balance(@CommandSource ServerPlayerEntity player) {
         OfflineGameProfile offlineGameProfile = new OfflineGameProfile(player.getGameProfile());
         $accounts(player.getCommandSource(), offlineGameProfile);
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document("""
+        List the top players of specified currency.
+        """)
+    @CommandNode("economy balance-top")
+    private static int $balanceTop(@CommandSource ServerPlayerEntity player, CurrencyId currencyId) {
+        BalanceTopGui.make(player, currencyId.getValue())
+            .open();
         return CommandHelper.Return.SUCCESS;
     }
 

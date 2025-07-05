@@ -1,0 +1,75 @@
+package io.github.sakurawald.fuji.module.initializer.economy.gui;
+
+import eu.pb4.common.economy.api.EconomyAccount;
+import eu.pb4.sgui.api.elements.GuiElementBuilder;
+import eu.pb4.sgui.api.elements.GuiElementInterface;
+import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
+import io.github.sakurawald.fuji.module.initializer.economy.service.EconomyService;
+import io.github.sakurawald.fuji.module.initializer.economy.structure.GameProfileAndEconomyAccount;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public class BalanceTopGui extends PagedGui<GameProfileAndEconomyAccount> {
+
+    private final Identifier currencyId;
+
+    public BalanceTopGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Identifier currencyId, @NotNull List<GameProfileAndEconomyAccount> entities, int pageIndex) {
+        super(parent, player, TextHelper.getTextByKey(player, "economy.balance.top.gui.title", currencyId), entities, pageIndex);
+        this.currencyId = currencyId;
+    }
+
+    @Override
+    protected PagedGui<GameProfileAndEconomyAccount> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<GameProfileAndEconomyAccount> entities, int pageIndex) {
+        return new BalanceTopGui(parent, player, this.currencyId, entities, pageIndex);
+    }
+
+    public static BalanceTopGui make(ServerPlayerEntity player, Identifier currencyId) {
+        List<GameProfileAndEconomyAccount> entities = ServerHelper
+            .getOfflineGameProfiles()
+            .stream()
+            .map(gameProfile -> {
+                EconomyAccount economyAccount = EconomyService.getUserAccount(gameProfile, currencyId);
+                return new GameProfileAndEconomyAccount(gameProfile, economyAccount);
+            })
+            .sorted(Comparator.comparing(GameProfileAndEconomyAccount::getEconomyBalance)
+                .reversed())
+            .toList();
+
+        return new BalanceTopGui(null, player, currencyId, entities, 0);
+    }
+
+    @Override
+    protected GuiElementInterface toGuiElement(GameProfileAndEconomyAccount entity) {
+        List<Text> lore = new ArrayList<>();
+        lore.add(TextHelper.getTextByKey(getPlayer(), "economy.balance", TextHelper.visitString(entity.economyAccount.formattedBalance())));
+
+        GuiElementBuilder builder = GuiHelper
+            .makeLuckyBlockSkull()
+            .setName(Text.literal(entity.gameProfile.getName()))
+            .setLore(lore);
+
+        return builder.build();
+    }
+
+    @Override
+    protected void drawPagedGui() {
+        super.drawPagedGui();
+
+        GuiHelper.fetchHeads(this, this::draw);
+    }
+
+    @Override
+    protected boolean filterEntity(GameProfileAndEconomyAccount entity, String keyword) {
+        return false;
+    }
+}
