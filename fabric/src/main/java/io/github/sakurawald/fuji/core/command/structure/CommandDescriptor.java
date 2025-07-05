@@ -8,6 +8,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
@@ -239,13 +240,20 @@ public class CommandDescriptor implements SourceModuleGetter {
         LogUtil.error(errorString, throwable);
 
         /* report to command source */
-        String stacktrace = String.join("\n", ReflectionUtil.getStackTraceAsList(throwable));
+        Style style = Style.EMPTY
+            .withColor(CommandHelper.COMMAND_EXCEPTION_COLOR);
+
+        // NOTE: Only send the stack trace if the command source is admin.
+        if (PlayerHelper.isAdmin(source)) {
+            String stacktrace = String.join("\n", ReflectionUtil.getStackTraceAsList(throwable));
+            style
+                .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(Text.of("Click to copy the stacktrace.")))
+                .withClickEvent(TextHelper.ClickEvent.makeCopyToClipboardAction(stacktrace));
+        }
+
         MutableText report = TextHelper.getTextByValue(source, errorString)
             .copy()
-            .setStyle(Style.EMPTY
-                .withColor(CommandHelper.COMMAND_EXCEPTION_COLOR)
-                .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(Text.of("Click to copy the stacktrace.")))
-                .withClickEvent(TextHelper.ClickEvent.makeCopyToClipboardAction(stacktrace)));
+            .setStyle(style);
 
         source.sendMessage(report);
     }
