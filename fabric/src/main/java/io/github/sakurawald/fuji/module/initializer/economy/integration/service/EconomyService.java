@@ -93,7 +93,7 @@ public class EconomyService {
             .findFirst();
 
         if (accountNodeOpt.isEmpty()) {
-            CustomEconomyCurrency customEconomyCurrency = EconomyInitializer.getCustomEconomyCurrency(currencyId);
+            CustomEconomyCurrency customEconomyCurrency = CustomEconomyProvider.getCustomEconomyCurrency(currencyId);
             long defaultBalance = (long) (customEconomyCurrency.currencyDescriptor.defaultFaceBalance * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
 
             EconomyAccountNode economyAccountNode = EconomyAccountNode.make(gameProfile, defaultBalance);

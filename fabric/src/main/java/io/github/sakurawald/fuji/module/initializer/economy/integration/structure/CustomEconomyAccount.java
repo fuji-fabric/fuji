@@ -100,7 +100,7 @@ public class CustomEconomyAccount implements EconomyAccount {
 
     @Override
     public EconomyCurrency currency() {
-        return EconomyInitializer.getCustomEconomyCurrency(this.currencyDescriptor.currencyId);
+        return CustomEconomyProvider.getCustomEconomyCurrency(this.currencyDescriptor.currencyId);
     }
 
 }

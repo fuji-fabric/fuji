@@ -13,13 +13,13 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.economy.command.argument.wrapper.CurrencyId;
 import io.github.sakurawald.fuji.module.initializer.economy.config.model.EconomyConfigModel;
 import io.github.sakurawald.fuji.module.initializer.economy.config.model.EconomyDataModel;
 import io.github.sakurawald.fuji.module.initializer.economy.integration.service.EconomyService;
-import io.github.sakurawald.fuji.module.initializer.economy.integration.structure.CustomEconomyCurrency;
 import io.github.sakurawald.fuji.module.initializer.economy.integration.structure.CustomEconomyProvider;
 import java.util.Collection;
 import net.minecraft.server.MinecraftServer;
@@ -28,10 +28,15 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
 @Document("""
-    This module provides `/economy` command.
+    This module allows you to enable the `economy gameplay`.
+    And define your `custom currency types`.
 
     One `player` can have many `accounts`.
     One `account` holds one type of `currency`.
+    """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+    You can use this module with `Universal Shops` mod.
     """)
 public class EconomyInitializer extends ModuleInitializer {
 
@@ -54,7 +59,9 @@ public class EconomyInitializer extends ModuleInitializer {
 
         providers.forEach(provider -> {
             MinecraftServer server = ServerHelper.getServer();
-            source.sendMessage(Text.literal("- Provider Name: %s".formatted(provider.id())));
+            source.sendMessage(Text.literal("- Provider Id: %s".formatted(provider.id())));
+            source.sendMessage(Text.literal("- Provider name: %s".formatted(provider.name())));
+            source.sendMessage(Text.literal("- Provider icon: %s".formatted(provider.icon())));
 
             Collection<EconomyCurrency> currencies = CommonEconomy.getCurrencies(server);
             currencies.forEach(currency -> {
@@ -69,7 +76,7 @@ public class EconomyInitializer extends ModuleInitializer {
     }
 
     @Document("""
-        List all `accounts` owned by a `player`.
+        List all `accounts` owned by the `player`.
         """)
     @CommandNode("economy accounts")
     @CommandRequirement(level = 4)
@@ -100,6 +107,7 @@ public class EconomyInitializer extends ModuleInitializer {
         String $currencyId = currencyId.getValue();
         EconomyAccount economyAccount = EconomyService.getUserAccount(player.getGameProfile(), $currencyId);
         printEconomyAccountInfo(source, economyAccount);
+
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -112,7 +120,7 @@ public class EconomyInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-
+    @Document("Give `amount` to the player's `account` for `specified currency`.")
     @CommandNode("economy give")
     @CommandRequirement(level = 4)
     private static int $give(@CommandSource ServerCommandSource source, ServerPlayerEntity player, CurrencyId currencyId, double amount) {
@@ -120,10 +128,12 @@ public class EconomyInitializer extends ModuleInitializer {
         EconomyAccount economyAccount = EconomyService.getUserAccount(player.getGameProfile(), $currencyId);
         long deltaValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
         EconomyTransaction economyTransaction = economyAccount.increaseBalance(deltaValue);
+
         source.sendMessage(economyTransaction.message());
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document("Take `amount` from the player's `account` for `specified currency`.")
     @CommandNode("economy take")
     @CommandRequirement(level = 4)
     private static int $take(@CommandSource ServerCommandSource source, ServerPlayerEntity player, CurrencyId currencyId, double amount) {
@@ -131,11 +141,9 @@ public class EconomyInitializer extends ModuleInitializer {
         EconomyAccount economyAccount = EconomyService.getUserAccount(player.getGameProfile(), $currencyId);
         long deltaValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
         EconomyTransaction economyTransaction = economyAccount.decreaseBalance(deltaValue);
+
         source.sendMessage(economyTransaction.message());
         return CommandHelper.Return.SUCCESS;
     }
 
-    public static CustomEconomyCurrency getCustomEconomyCurrency(String currencyId) {
-        return CustomEconomyProvider.CURRENCY_ID_2_CURRENCY.get(currencyId);
-    }
 }

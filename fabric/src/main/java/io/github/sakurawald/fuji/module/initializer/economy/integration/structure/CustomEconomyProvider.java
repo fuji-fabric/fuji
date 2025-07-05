@@ -5,39 +5,51 @@ import eu.pb4.common.economy.api.CommonEconomy;
 import eu.pb4.common.economy.api.EconomyAccount;
 import eu.pb4.common.economy.api.EconomyCurrency;
 import eu.pb4.common.economy.api.EconomyProvider;
+import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.module.initializer.economy.EconomyInitializer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 @ForDeveloper("""
     Each mod should register its own economy provider, to provide new types of currencies.
     One economy provider, can provide many many types of currencies.
-    For each player, one economy account, hold one type of economy currency.
+    For each player, one economy account, holds one economy currency type.
 
     """)
 public class CustomEconomyProvider implements EconomyProvider {
 
-    public static final double SUPPORTED_PRECISE_FACTOR = 100.0;
+    public static final String CUSTOM_ECONOMY_PROVIDER_NAMESPACE = Fuji.MOD_ID;
     public static CustomEconomyProvider INSTANCE = new CustomEconomyProvider();
-    public static Map<String, CustomEconomyCurrency> CURRENCY_ID_2_CURRENCY = new HashMap<>();
+
+    public static final double SUPPORTED_PRECISE_FACTOR = 100.0;
+    public static Map<Identifier, CustomEconomyCurrency> CURRENCY_ID_2_CURRENCY = new HashMap<>();
 
     public static void initializeCustomEconomyProvider() {
         // no-op
     }
 
     static {
-        CommonEconomy.register("fuji_economy_provider", INSTANCE);
+        // NOTE: The provider ID is a namespace, not an identifier.
+        CommonEconomy.register(CUSTOM_ECONOMY_PROVIDER_NAMESPACE, INSTANCE);
         registerDefinedFujiCurrencies();
+    }
+
+    public static CustomEconomyCurrency getCustomEconomyCurrency(String currencyId) {
+        Identifier currencyIdentifier = RegistryHelper.makeIdentifier(currencyId);
+        return CURRENCY_ID_2_CURRENCY.get(currencyIdentifier);
     }
 
     @Override
@@ -52,38 +64,60 @@ public class CustomEconomyProvider implements EconomyProvider {
 
     private static void registerDefinedFujiCurrencies() {
         EconomyInitializer.config.model().currencies.forEach(descriptor -> {
-            String currencyId = descriptor.currencyId;
+            Identifier currencyId = RegistryHelper.makeIdentifier(descriptor.currencyId);
             CustomEconomyCurrency customEconomyCurrency = new CustomEconomyCurrency(descriptor);
+            LogUtil.debug("Register custom economy currency: currencyId = {}, currencyDescriptor = {}", currencyId, customEconomyCurrency);
             CURRENCY_ID_2_CURRENCY.put(currencyId, customEconomyCurrency);
         });
     }
 
     @Override
-    public @Nullable EconomyAccount getAccount(MinecraftServer server, GameProfile profile, String accountId) {
-        LogUtil.info("get account: profile = {}, accountId = {}", profile.getId(), accountId);
-        return null;
+    public @Nullable EconomyAccount getAccount(MinecraftServer server, GameProfile gameProfile, String pathOfCurrencyId) {
+        Optional<EconomyAccount> first =
+            getAccounts(server, gameProfile)
+                .stream()
+                .filter(account -> {
+                    String path = account.currency().id().getPath();
+                    return path.equals(pathOfCurrencyId);
+                })
+                .findFirst();
+
+        if (first.isEmpty()) {
+            LogUtil.error("getAccount(): gameProfile = {}, pathOfCurrencyId = {}", gameProfile, pathOfCurrencyId);
+            throw new IllegalArgumentException("Failed to get account for specified account ID.");
+        }
+
+        return first.get();
     }
 
     @Override
-    public Collection<EconomyAccount> getAccounts(MinecraftServer server, GameProfile profile) {
-        LogUtil.info("Get Accounts: profile = {}", profile.getId());
-        List<EconomyAccount> accounts = new ArrayList<>();
-
-        EconomyInitializer
+    public Collection<EconomyAccount> getAccounts(MinecraftServer server, GameProfile gameProfile) {
+        return EconomyInitializer
             .config
             .model()
             .currencies
-            .forEach(economyCurrencyDescriptor -> {
-                CustomEconomyAccount customEconomyAccount = new CustomEconomyAccount(profile, economyCurrencyDescriptor);
-                accounts.add(customEconomyAccount);
-            });
-
-        return accounts;
+            .stream()
+            .map(economyCurrencyDescriptor -> new CustomEconomyAccount(gameProfile, economyCurrencyDescriptor))
+            .collect(Collectors.toList());
     }
 
     @Override
-    public @Nullable EconomyCurrency getCurrency(MinecraftServer server, String currencyId) {
-        return CURRENCY_ID_2_CURRENCY.get(currencyId);
+    public @Nullable EconomyCurrency getCurrency(MinecraftServer server, String pathOfCurrencyId) {
+        Optional<Map.Entry<Identifier, CustomEconomyCurrency>> currencyOpt =
+            CURRENCY_ID_2_CURRENCY
+                .entrySet()
+                .stream()
+                .filter((entry) -> {
+                    String path = entry.getKey().getPath();
+                    return path.equals(pathOfCurrencyId);
+                })
+                .findFirst();
+
+        if (currencyOpt.isEmpty()) {
+            throw new IllegalArgumentException("Failed to find custom currency in server: path of currency ID = " + pathOfCurrencyId);
+        }
+
+        return currencyOpt.get().getValue();
     }
 
     @Override
@@ -95,6 +129,7 @@ public class CustomEconomyProvider implements EconomyProvider {
     @Override
     public @Nullable String defaultAccount(MinecraftServer server, GameProfile profile, EconomyCurrency currency) {
         // What is this?
+        LogUtil.info("defaultAccount: profile = {}, currency = {}", profile, currency);
         return "FUJI default account";
     }
 
