@@ -39,6 +39,13 @@ import net.minecraft.util.Identifier;
 @ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
     You can use this module with `Universal Shops` mod.
     """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+    You can use `command_bundle` module.
+    To create a `/balance` command, to wrap the `/economy account %player:name% fuji:gold` command.
+    """)
+
+
 public class EconomyInitializer extends ModuleInitializer {
 
     public static BaseConfigurationHandler<EconomyConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, EconomyConfigModel.class);
@@ -60,15 +67,17 @@ public class EconomyInitializer extends ModuleInitializer {
 
         providers.forEach(provider -> {
             MinecraftServer server = ServerHelper.getServer();
-            source.sendMessage(Text.literal("- Provider Id: %s".formatted(provider.id())));
-            source.sendMessage(Text.literal("- Provider name: %s".formatted(provider.name())));
-            source.sendMessage(Text.literal("- Provider icon: %s".formatted(provider.icon())));
+
+            TextHelper.sendMessageByKey(source, "line.separator");
+            TextHelper.sendMessageByKey(source, "economy.provider.id", provider.id());
+            TextHelper.sendMessageByKey(source, "economy.provider.name", TextHelper.visitString(provider.name()));
+            TextHelper.sendMessageByKey(source, "economy.provider.icon", provider.icon().getItem());
 
             Collection<EconomyCurrency> currencies = provider.getCurrencies(server);
             currencies.forEach(currency -> {
-                source.sendMessage(Text.literal("-- Currency Id: %s".formatted(currency.id())));
-                source.sendMessage(Text.literal("-- Currency Name: %s".formatted(currency.name())));
-                source.sendMessage(Text.literal("-- Currency Icon: %s".formatted(currency.icon().getItem())));
+                TextHelper.sendMessageByKey(source, "economy.currency.id", currency.id());
+                TextHelper.sendMessageByKey(source, "economy.currency.name", TextHelper.visitString(currency.name()));
+                TextHelper.sendMessageByKey(source, "economy.currency.icon", currency.icon().getItem());
                 source.sendMessage(TextHelper.TEXT_EMPTY);
             });
         });
@@ -83,20 +92,15 @@ public class EconomyInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     private static int $accounts(@CommandSource ServerCommandSource source, OfflineGameProfile player) {
         Collection<EconomyAccount> accounts = EconomyService.getUserAccounts(player.getValue());
-        accounts.forEach(account -> {
-            printEconomyAccountInfo(source, account);
-        });
+        accounts.forEach(account -> printEconomyAccountInfo(source, account));
 
         return CommandHelper.Return.SUCCESS;
     }
 
     private static void printEconomyAccountInfo(ServerCommandSource source, EconomyAccount account) {
-        source.sendMessage(Text.literal("- Account Id: %s".formatted(account.id())));
-        source.sendMessage(Text.literal("-- Account Name: %s".formatted(account.name())));
-        source.sendMessage(Text.literal("-- Account Icon: %s".formatted(account.accountIcon().getItem())));
-        source.sendMessage(Text.literal("-- Account Owner: %s".formatted(account.owner())));
-        source.sendMessage(Text.literal("-- Account Balance: %s".formatted(account.formattedBalance())));
-        source.sendMessage(Text.literal("-- Account Currency Id: %s".formatted(account.currency().id())));
+        TextHelper.sendMessageByKey(source, "economy.account.name", TextHelper.visitString(account.name()));
+        TextHelper.sendMessageByKey(source, "economy.account.formatted_balance", TextHelper.visitString(account.formattedBalance()));
+        source.sendMessage(TextHelper.TEXT_EMPTY);
     }
 
     @Document("""
@@ -148,6 +152,26 @@ public class EconomyInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document("Pay specified `amount` of `currency` to another player's account.")
+    @CommandNode("economy pay")
+    private static int $pay(@CommandSource ServerPlayerEntity source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
+        EconomyService.transferCurrency(source, player, currencyId.getValue(), amount);
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    @Document("Has the specified amount of currency?")
+    @CommandNode("has-currency?")
+    @CommandRequirement(level = 4)
+    private static int $hasCurrency(@CommandSource ServerCommandSource source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
+        Identifier $currencyId = currencyId.getValue();
+        EconomyAccount economyAccount = EconomyService.getUserAccount(player.getValue(), $currencyId);
+        long finalValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
+
+        boolean value = economyAccount.balance() >= finalValue;
+        return CommandHelper.Return.returnBoolean(source, value);
+    }
+
     @SuppressWarnings("SameParameterValue")
     @Document("Set the `amount` of the player's `account` for `specified currency`.")
     @CommandNode("economy set")
@@ -161,6 +185,7 @@ public class EconomyInitializer extends ModuleInitializer {
         TextHelper.sendMessageByKey(source, "operation.success");
         return CommandHelper.Return.SUCCESS;
     }
+
 
     @Document("Clear the `amount` of the player's `account` for `specified currency`.")
     @CommandNode("economy clear")

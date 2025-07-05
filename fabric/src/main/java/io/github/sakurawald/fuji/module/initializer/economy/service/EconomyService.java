@@ -5,7 +5,10 @@ import eu.pb4.common.economy.api.CommonEconomy;
 import eu.pb4.common.economy.api.EconomyAccount;
 import eu.pb4.common.economy.api.EconomyCurrency;
 import eu.pb4.common.economy.api.EconomyProvider;
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflineGameProfile;
 import io.github.sakurawald.fuji.module.initializer.economy.EconomyInitializer;
 import io.github.sakurawald.fuji.module.initializer.economy.config.structure.CustomEconomyAccountNode;
 import io.github.sakurawald.fuji.module.initializer.economy.config.structure.CustomEconomyCurrencyNode;
@@ -14,6 +17,7 @@ import io.github.sakurawald.fuji.module.initializer.economy.structure.CustomEcon
 import java.util.Collection;
 import java.util.Optional;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
@@ -107,5 +111,35 @@ public class EconomyService {
         }
 
         return accountNodeOpt.get();
+    }
+
+    public static void transferCurrency(ServerPlayerEntity source, OfflineGameProfile player, Identifier currencyId, double amount) {
+        long deltaValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
+        deltaValue = Math.max(0, deltaValue);
+
+        EconomyAccount fromAccount = getUserAccount(source.getGameProfile(), currencyId);
+        EconomyAccount toAccount = getUserAccount(player.getValue(), currencyId);
+
+        long fromAccountPreviousBalance = fromAccount.balance();
+        long toAccountPreviousBalance = toAccount.balance();
+
+        if (fromAccount.canDecreaseBalance(deltaValue).isSuccessful()
+            && toAccount.canIncreaseBalance(deltaValue).isSuccessful()) {
+
+            try {
+                fromAccount.decreaseBalance(deltaValue);
+                toAccount.increaseBalance(deltaValue);
+
+                TextHelper.sendMessageByKey(source, "operation.success");
+            } catch (Exception rollbackIfFailed) {
+                LogUtil.error("Failed to transfer currency {} with amount {} from account {} to account {}", currencyId, amount, fromAccount, toAccount, rollbackIfFailed);
+                fromAccount.setBalance(fromAccountPreviousBalance);
+                toAccount.setBalance(toAccountPreviousBalance);
+                TextHelper.sendMessageByKey(source, "operation.fail");
+            }
+
+        } else {
+            TextHelper.sendMessageByKey(source, "operation.fail");
+        }
     }
 }

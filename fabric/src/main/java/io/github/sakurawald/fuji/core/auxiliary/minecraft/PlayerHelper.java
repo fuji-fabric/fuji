@@ -86,6 +86,7 @@ public class PlayerHelper {
     }
 
     public static Optional<GameProfile> getGameProfileByName(String playerName) {
+        // NOTE: Get the game profile used by this server.
         UserCache userCache = ServerHelper.getServer().getUserCache();
         if (userCache == null) return Optional.empty();
 
