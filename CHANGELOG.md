@@ -1,9 +1,10 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
-- [top_chunks] fix: failed to open the GUI using `/chunks` command.
-- [top_chunks] fix: should respect the `top.rows` and `top.columns` options, while display the `Top Chunks` GUI.
-- [top_chunks] fix: should attach the `nearest players` into `chunk scores` while displaying the `Top Chunks` GUI.
-- [core] feature: simplify the language system, and enhance the `debug messages` for language system. (Make it easier to debug.)
-
-
+- [core] feature: now you can insert `language instructions` in `language value`.
+  - feature: if the `language value` starts with `[send-action-bar]`, then this `language key` is sending via the `action bar`.
+  - feature: if the `language value` starts with `[send-main-title]`, then this `language key` is sending via the `main title`.
+  - feature: if the `language value` starts with `[send-sub-title]`, then this `language key` is sending via the `sub title`.
+  - feature: if the `language value` starts with `[suppress-sending]`, then the sending of this `language key` will be cancelled.
+- [core] feature: enhance the debug messages for language system. (Make the debug easier.)
+- [command_meta.when_online] fix: should display the raw command when there are style tags inside the command in `/when-online list` GUI.
 

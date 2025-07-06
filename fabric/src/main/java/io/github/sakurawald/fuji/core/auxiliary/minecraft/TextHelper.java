@@ -61,7 +61,6 @@ public class TextHelper {
     public static final Text TEXT_NEWLINE = Text.of("\n");
     public static final Text TEXT_SPACE = Text.of(" ");
     public static final Text TEXT_EMPTY = Text.literal("");
-    public static final String MESSAGE_PLACEHOLDER = "%message%";
 
     static {
         Loader.writeDefaultLanguageFilesIfAbsent();
@@ -482,8 +481,8 @@ public class TextHelper {
                     The arguments are `{}`.
 
                     There may be a syntax mistake in the language file.
-                    Note that, you have to write `%%` to mean `%` if the Java Standard String Formatter is in use.
-                    See the grammar of Java Standard String formatter in: https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html
+                    Note that, you have to write `%%` to mean `%` inside the Java Standard String Formatter.
+                    See the grammar of Java Standard String formatter in https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html
                     """, string, args, e);
             }
         }
@@ -533,11 +532,12 @@ public class TextHelper {
         return getTextList(audience, false, value);
     }
 
+    @ForDeveloper("Use this function to send a text to an audience.")
     public static void sendTextByKey(@NotNull Object audience, String languageKey, Object... args) {
-        /* Get the text by language key for that audience. */
+        /* Get the language value by language key for that audience. */
         String languageValue = Translator.getLanguageValueByKey(audience, languageKey);
 
-        /* Process the hacking in language value. */
+        /* Process the instructions in language value. */
         if (languageValue.startsWith(Sender.SUPPRESS_SENDING_STRING_MARKER)) {
             LogUtil.debug("Suppress the sending of text: audience = {}, languageKey = {}, args = {}", audience, languageKey, args);
             return;
