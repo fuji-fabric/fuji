@@ -188,6 +188,11 @@ public class TextHelper {
 
             return placeholderContext;
         }
+
+        public static @NotNull String parsePlaceholderString(@Nullable Object audience, String value) {
+            Text text = TextHelper.getText(PLACEHOLDER_ONLY_PARSER, audience, false, value);
+            return Operators.visitString(text);
+        }
     }
 
     @ForDeveloper("The functions used to load language file from storage into memory, and resolve the suitable language json for given audience.")
@@ -449,12 +454,6 @@ public class TextHelper {
         }
     }
 
-
-    public static @NotNull String parsePlaceholder(@Nullable Object audience, String value) {
-        Text text = TextHelper.getText(Parsers.PLACEHOLDER_ONLY_PARSER, audience, false, value);
-        return Operators.visitString(text);
-    }
-
     @ForDeveloper("This is the core method to map String into Text.")
     public static @NotNull Text getText(@NotNull NodeParser parser, @Nullable Object audience, boolean isKey, String keyOrValue, Object... args) {
         String value = isKey ? getValueByKey(audience, keyOrValue) : keyOrValue;
@@ -478,12 +477,12 @@ public class TextHelper {
         return parser.parseText(TextNode.of(value), parserContext);
     }
 
-    private static @NotNull Text getText(@Nullable Object audience, boolean isKey, String keyOrValue, Object... args) {
-        return getText(Parsers.POWERFUL_PARSER, audience, isKey, keyOrValue, args);
+    public static @NotNull Text getTextByKey(@Nullable Object audience, String key, Object... args) {
+        return getText(Parsers.POWERFUL_PARSER, audience, true, key, args);
     }
 
-    public static @NotNull Text getTextByKey(@Nullable Object audience, String key, Object... args) {
-        return getText(audience, true, key, args);
+    public static @NotNull Text getTextByValue(@Nullable Object audience, String value, Object... args) {
+        return getText(Parsers.POWERFUL_PARSER, audience, false, value, args);
     }
 
     public static String getValueByKeyword(@Nullable Object audience, String keyword) {
@@ -495,10 +494,6 @@ public class TextHelper {
         String replacement = getValueByKeyword(audience, keyword);
         String value = getValueByKey(audience, key, replacement);
         return Text.literal(value);
-    }
-
-    public static @NotNull Text getTextByValue(@Nullable Object audience, String value, Object... args) {
-        return getText(audience, false, value, args);
     }
 
     private static @NotNull List<Text> getTextList(@Nullable Object audience, boolean isKey, String keyOrValue) {
@@ -521,6 +516,10 @@ public class TextHelper {
 
     public static @NotNull List<Text> getTextListByValue(@Nullable Object audience, String value) {
         return getTextList(audience, false, value);
+    }
+
+    public static class Getter {
+
     }
 
     public static void sendMessageByFlag(@NotNull Object audience, boolean flag) {

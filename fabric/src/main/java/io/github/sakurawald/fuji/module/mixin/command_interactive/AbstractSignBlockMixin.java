@@ -64,7 +64,7 @@ public class AbstractSignBlockMixin {
                 /* Send command execution packets. */
                 List<String> commands = splitCommands(facingSignLines)
                     .stream()
-                    .map(str -> TextHelper.parsePlaceholder(player, str))
+                    .map(str -> TextHelper.Parsers.parsePlaceholderString(player, str))
                     .toList();
 
                 commands.forEach(commandString -> CommandInteractiveInitializer.mimicCommandExecutionPacket((ServerPlayerEntity) player, commandString));

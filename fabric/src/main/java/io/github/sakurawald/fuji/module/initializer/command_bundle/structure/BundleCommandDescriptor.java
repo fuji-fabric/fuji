@@ -104,7 +104,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
 
         /* Resolve the placeholders. */
         ServerCommandSource source = ctx.getSource();
-        commands = commands.stream().map(command -> TextHelper.parsePlaceholder(source, command)).toList();
+        commands = commands.stream().map(command -> TextHelper.Parsers.parsePlaceholderString(source, command)).toList();
 
         /* Execute the commands. */
         LogUtil.debug("Execute bundle command: {}", commands);
