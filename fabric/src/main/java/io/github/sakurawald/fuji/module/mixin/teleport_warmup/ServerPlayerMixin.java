@@ -68,7 +68,7 @@ public abstract class ServerPlayerMixin {
             Managers.getBossBarManager().addTicket(ticket);
             cir.cancel();
         } else if (!ticket.isCompleted()) {
-            TextHelper.sendActionBarByKey(player, "teleport_warmup.another_teleportation_in_progress");
+            TextHelper.sendTextByKey(player, "teleport_warmup.another_teleportation_in_progress");
             cir.cancel();
         }
 

@@ -15,7 +15,7 @@ public class LogicHelper {
 
     public static void tryOperateOnThisEntity(ServerPlayerEntity player, boolean canOperate, Runnable runnable) {
         if (!canOperate) {
-            TextHelper.sendActionBarByKey(player, "works.work.set.no_perm");
+            TextHelper.sendTextByKey(player, "works.work.set.no_perm");
             return;
         }
 

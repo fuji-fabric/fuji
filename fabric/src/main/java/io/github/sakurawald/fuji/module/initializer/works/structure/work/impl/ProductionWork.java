@@ -115,12 +115,12 @@ public class ProductionWork extends Work implements Schedulable {
                 try {
                     current = Integer.parseInt(this.getLine(0).getString());
                 } catch (NumberFormatException e) {
-                    TextHelper.sendActionBarByKey(player, "input.syntax.error");
+                    TextHelper.sendTextByKey(player, "input.syntax.error");
                     return;
                 }
 
                 if (current > limit) {
-                    TextHelper.sendActionBarByKey(player, "input.limit.error");
+                    TextHelper.sendTextByKey(player, "input.limit.error");
                     return;
                 }
 

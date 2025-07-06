@@ -40,7 +40,7 @@ public class KitEditorGui extends PagedGui<Kit> {
                 /* Get input kit name. */
                 String name = getLine(0).getString().trim();
                 if (name.isEmpty()) {
-                    TextHelper.sendActionBarByKey(player, "operation.cancelled");
+                    TextHelper.sendTextByKey(player, "operation.cancelled");
                     return;
                 }
 
@@ -140,7 +140,7 @@ public class KitEditorGui extends PagedGui<Kit> {
 
                     KitEditorGui.make(getPlayer()).open();
 
-                    TextHelper.sendActionBarByKey(getPlayer(), "deleted");
+                    TextHelper.sendTextByKey(getPlayer(), "deleted");
                 }
 
             }).build();

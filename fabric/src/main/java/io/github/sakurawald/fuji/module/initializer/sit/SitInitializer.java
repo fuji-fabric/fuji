@@ -70,7 +70,7 @@ public class SitInitializer extends ModuleInitializer {
         if (!canSitNow(player)
             || steppingBlockState.isAir()
             || steppingBlockState.isLiquid()) {
-            TextHelper.sendActionBarByKey(player, "sit.fail");
+            TextHelper.sendTextByKey(player, "sit.fail");
             return CommandHelper.Return.FAIL;
         }
 

@@ -40,7 +40,7 @@ public abstract class InterruptibleTicket extends BossBarTicket {
 
         // check in combat
         if (this.interruptible.isInterruptInCombat() && ((PlayerCombatExtension) player).fuji$inCombat()) {
-            TextHelper.sendActionBarByKey(player, "teleport_warmup.in_combat");
+            TextHelper.sendTextByKey(player, "teleport_warmup.in_combat");
             return false;
         }
 

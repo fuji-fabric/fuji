@@ -98,7 +98,7 @@ public class ListWorksGui extends PagedGui<Work> {
             /* shift + right click -> specialized settings */
             if (clickType.isRight && clickType.shift) {
                 if (!canOperateOnThisEntity(player, entity)) {
-                    TextHelper.sendActionBarByKey(player, "works.work.set.no_perm");
+                    TextHelper.sendTextByKey(player, "works.work.set.no_perm");
                     return;
                 }
                 entity.openSpecializedSettingsGui(player, gui);
@@ -108,7 +108,7 @@ public class ListWorksGui extends PagedGui<Work> {
             /* right click -> general settings */
             if (clickType.isRight) {
                 if (!canOperateOnThisEntity(player, entity)) {
-                    TextHelper.sendActionBarByKey(player, "works.work.set.no_perm");
+                    TextHelper.sendTextByKey(player, "works.work.set.no_perm");
                     return;
                 }
                 entity.openGeneralSettingsGui(player, gui);

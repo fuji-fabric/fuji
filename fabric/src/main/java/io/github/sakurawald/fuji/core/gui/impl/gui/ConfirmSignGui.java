@@ -12,7 +12,7 @@ public abstract class ConfirmSignGui extends InputSignGui {
     @Override
     public void onClose() {
         if (!this.isConfirmed()) {
-            TextHelper.sendActionBarByKey(player, "operation.cancelled");
+            TextHelper.sendTextByKey(player, "operation.cancelled");
             onCancelled();
             return;
         }

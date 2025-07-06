@@ -664,11 +664,6 @@ public class TextHelper {
         }
     }
 
-    public static void sendActionBarByKey(@NotNull ServerPlayerEntity player, String key, Object... args) {
-        Text text = getTextByKey(player, key, args);
-        player.sendMessage(text, true);
-    }
-
     public static void sendBroadcastByKey(@NotNull String key, Object... args) {
         /* Log the console, using the default language. */
         Text text = getTextByKey(null, key, args);

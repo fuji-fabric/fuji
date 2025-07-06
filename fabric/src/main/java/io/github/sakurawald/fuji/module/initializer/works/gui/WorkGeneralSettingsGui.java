@@ -43,7 +43,7 @@ public class WorkGeneralSettingsGui extends SimpleGui {
                 @Override
                 public void onConfirm() {
                     WorksInitializer.works.model().works.remove(work);
-                    TextHelper.sendActionBarByKey(player, "works.work.delete.done");
+                    TextHelper.sendTextByKey(player, "works.work.delete.done");
                 }
             }.open())
 
@@ -58,7 +58,7 @@ public class WorkGeneralSettingsGui extends SimpleGui {
                 /* Verify. */
                 ItemStack mainHandItem = player.getMainHandStack();
                 if (mainHandItem.isEmpty()) {
-                    TextHelper.sendActionBarByKey(player, "works.work.set.target.icon.no_item");
+                    TextHelper.sendTextByKey(player, "works.work.set.target.icon.no_item");
                     close();
                     return;
                 }
@@ -112,7 +112,7 @@ public class WorkGeneralSettingsGui extends SimpleGui {
                 public void onClose() {
                     String newValue = this.joinStrings();
                     if (newValue.isBlank()) {
-                        TextHelper.sendActionBarByKey(player, "works.work.add.empty_name");
+                        TextHelper.sendTextByKey(player, "works.work.add.empty_name");
                         return;
                     }
 

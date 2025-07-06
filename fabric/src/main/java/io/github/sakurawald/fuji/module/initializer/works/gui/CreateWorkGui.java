@@ -26,7 +26,7 @@ public class CreateWorkGui extends InputSignGui {
         /* input name */
         String name = this.getLine(0).getString().trim();
         if (name.isBlank()) {
-            TextHelper.sendActionBarByKey(player, "works.work.add.empty_name");
+            TextHelper.sendTextByKey(player, "works.work.add.empty_name");
             return;
         }
 
@@ -39,7 +39,7 @@ public class CreateWorkGui extends InputSignGui {
         selectWorkTypeGui.setSlot(11, new GuiElementBuilder().setItem(Items.GUNPOWDER).setName(TextHelper.getTextByKey(player, "works.non_production_work.name")).setCallback(() -> {
             // add
             worksHandler.model().works.add(0, new NonProductionWork(player, name));
-            TextHelper.sendActionBarByKey(player, "works.work.add.done");
+            TextHelper.sendTextByKey(player, "works.work.add.done");
             TextHelper.sendBroadcastByKey("works.work.add.broadcast", player.getGameProfile().getName(), name);
             selectWorkTypeGui.close();
         }));
@@ -48,7 +48,7 @@ public class CreateWorkGui extends InputSignGui {
             // add
             ProductionWork work = new ProductionWork(player, name);
             worksHandler.model().works.add(0, work);
-            TextHelper.sendActionBarByKey(player, "works.work.add.done");
+            TextHelper.sendTextByKey(player, "works.work.add.done");
             TextHelper.sendBroadcastByKey("works.work.add.broadcast", player.getGameProfile().getName(), name);
             selectWorkTypeGui.close();
 

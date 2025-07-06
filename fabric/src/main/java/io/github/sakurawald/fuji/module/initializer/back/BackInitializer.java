@@ -139,7 +139,7 @@ public class BackInitializer extends ModuleInitializer {
             // find location entry.
             LocationEntry latestEntry = locationHistory.findEntry(lastNLocation, targetDimension);
             if (latestEntry == null) {
-                TextHelper.sendActionBarByKey(player, "back.no_previous_position");
+                TextHelper.sendTextByKey(player, "back.no_previous_position");
                 throw new AbortCommandExecutionException();
             }
 

@@ -49,7 +49,7 @@ public class RtpInitializer extends ModuleInitializer {
         ServerWorld serverWorld = dimension.isPresent() ? dimension.get().getValue() : EntityHelper.getServerWorld(player);
         TeleportSetup setup = withTeleportSetup(player, serverWorld);
 
-        TextHelper.sendActionBarByKey(player, "rtp.tip");
+        TextHelper.sendTextByKey(player, "rtp.tip");
         RandomTeleporter.request(player, setup, (position) -> TextHelper.sendTextByKey(player, "rtp.success"));
         return CommandHelper.Return.SUCCESS;
     }
