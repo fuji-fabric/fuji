@@ -11,7 +11,7 @@ public class LanguageInitializer extends ModuleInitializer {
 
     @Override
     protected void onReload() {
-        TextHelper.clearLoadedLanguageJsons();
+        TextHelper.Loader.clearLoadedLanguageJsons();
     }
 
 }

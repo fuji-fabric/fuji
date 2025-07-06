@@ -257,7 +257,7 @@ public class InspectingObject {
 
         /* Add object value text. */
         String literalObjectValueString = getObjectValueString(true);
-        lore.add(TextHelper.getText(TextHelper.STYLE_ONLY_PARSER, player, true, "object.value", literalObjectValueString));
+        lore.add(TextHelper.getText(TextHelper.Parsers.STYLE_ONLY_PARSER, player, true, "object.value", literalObjectValueString));
 
         /* Add possible enum values. */
         addPossibleValuesForEnumType(player, lore);

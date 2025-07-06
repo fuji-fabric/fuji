@@ -22,7 +22,7 @@ public abstract class ServerPlayerMixin {
     @Inject(method = "setClientOptions", at = @At("HEAD"))
     public void putClientSideLanguage(@NotNull SyncedClientOptions clientInformation, CallbackInfo ci) {
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-        TextHelper.setClientSideLanguageCode(player.getGameProfile().getName(), clientInformation.comp_1951());
+        TextHelper.Loader.setClientSideLanguageCode(player.getGameProfile().getName(), clientInformation.comp_1951());
     }
     #endif
 
