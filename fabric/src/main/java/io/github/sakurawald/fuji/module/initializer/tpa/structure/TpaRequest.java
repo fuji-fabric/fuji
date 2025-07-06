@@ -71,8 +71,8 @@ public class TpaRequest {
             TextHelper.getTextByKey(sender, "reject.button")
                 .copy()
                 .fillStyle(Style.EMPTY
-                    .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(getSender(), "cancel")))
-                    .withClickEvent(TextHelper.ClickEvent.makeRunCommandAction("/tpacancel %s".formatted(PlayerHelper.getPlayerName(getReceiver()))))
+                    .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(getSender(), "cancel")))
+                    .withClickEvent(TextHelper.Events.ClickEvent.makeRunCommandAction("/tpacancel %s".formatted(PlayerHelper.getPlayerName(getReceiver()))))
                 );
 
         return toSenderText$Description()
@@ -91,14 +91,14 @@ public class TpaRequest {
         Text acceptText = TextHelper.getTextByKey(receiver, "accept.button")
             .copy()
             .fillStyle(Style.EMPTY
-                .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(getReceiver(), "accept")))
-                .withClickEvent(TextHelper.ClickEvent.makeRunCommandAction("/tpaaccept %s".formatted(PlayerHelper.getPlayerName(sender)))));
+                .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(getReceiver(), "accept")))
+                .withClickEvent(TextHelper.Events.ClickEvent.makeRunCommandAction("/tpaaccept %s".formatted(PlayerHelper.getPlayerName(sender)))));
 
         Text denyText = TextHelper.getTextByKey(receiver, "reject.button")
                 .copy()
                 .fillStyle(Style.EMPTY
-                    .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(getReceiver(), "deny")))
-                    .withClickEvent(TextHelper.ClickEvent.makeRunCommandAction("/tpadeny %s".formatted(PlayerHelper.getPlayerName(sender))))
+                    .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(getReceiver(), "deny")))
+                    .withClickEvent(TextHelper.Events.ClickEvent.makeRunCommandAction("/tpadeny %s".formatted(PlayerHelper.getPlayerName(sender))))
                 );
 
         return toReceiverText$Description()

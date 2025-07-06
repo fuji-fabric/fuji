@@ -142,7 +142,7 @@ public class CleanerInitializer extends ModuleInitializer {
                 .append(TextHelper.getTextByKey(player, "cleaner.broadcast", counter.values().stream().mapToInt(Integer::intValue).sum()))
                 .fillStyle(
                     Style.EMPTY
-                        .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(hoverText)));
+                        .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(hoverText)));
             player.sendMessage(text);
         }
     }

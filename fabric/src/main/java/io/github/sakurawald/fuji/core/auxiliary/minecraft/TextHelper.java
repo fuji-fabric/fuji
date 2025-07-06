@@ -21,6 +21,7 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.config.handler.impl.ResourceConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.service.url_highlighter.UrlHighlighter;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -48,27 +49,29 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+@ForDeveloper("""
+    The design of language system.
+    1. Use hash map to map the language key into language value.
+    2. Teh language value should be simple enough. (Reduce the usage of long sentence)
+    3. Reduce the usage of `click event` and `hover event` tag in language value. (Use programmatically way to attach them)
 
-// The design of language system:
-// 1. The language value should be simple enough. (Reduce the use of long sentence)
-// 2. Reduce the use of `click event` tag and `hover event` tag in `language value`. (Use composition to attach then)
-
+    """)
 public class TextHelper {
 
     /* Constants. */
     public static final Text TEXT_NEWLINE = Text.of("\n");
     public static final Text TEXT_SPACE = Text.of(" ");
     public static final Text TEXT_EMPTY = Text.literal("");
-    public static final String LANGUAGE_VALUE_PLACEHOLDER = "%message%";
+    public static final String MESSAGE_PLACEHOLDER = "%message%";
 
     /* Class states. */
-    private static final int ENSURE_THE_TAGS_ARE_REGISTERED_BEFORE_CREATING_THE_DEFAULT_PARSER = registerExtendedTags();
+    private static final int THIS_STATIC_VARIABLE_IS_USED_TO_ENSURE_THE_EXTENDED_TAGS_ARE_REGISTERED_BEFORE_CREATING_THE_DEFAULT_PARSER = registerExtendedTags();
     public static final NodeParser POWERFUL_PARSER = makePowerfulParser();
     public static final NodeParser STYLE_ONLY_PARSER = makeStyleOnlyParser();
     public static final NodeParser PLACEHOLDER_ONLY_PARSER = makePlaceholderOnlyParser();
 
-    private static final Map<String, String> player2code = new HashMap<>();
-    private static final Map<String, JsonObject> code2json = new HashMap<>();
+    private static final Map<String, String> PLAYER_2_LANGUAGE_CODE = new HashMap<>();
+    private static final Map<String, JsonObject> LANGUAGE_CODE_2_LANGUAGE_JSON = new HashMap<>();
     private static final JsonObject UNSUPPORTED_LANGUAGE_MARKER = new JsonObject();
 
     private static final String SUPPRESS_SENDING_STRING_MARKER = "[suppress-sending]";
@@ -160,16 +163,16 @@ public class TextHelper {
      * Note that once the attempt to load a language file from storage is failed, a JsonObject marker named `UNSUPPORTED LANGUAGE` will be put into the map, leading the subsequent attempts simply return the marker.
      */
     public static void clearLoadedLanguageJsons() {
-        code2json.clear();
+        LANGUAGE_CODE_2_LANGUAGE_JSON.clear();
     }
 
     public static void setClientSideLanguageCode(String playerName, String languageRepresentationUsedByMojang) {
         // mojang network protocol use a strange language representation, mojang use `en_us` instead of `en_US`
-        player2code.put(playerName, convertToLanguageCode(languageRepresentationUsedByMojang));
+        PLAYER_2_LANGUAGE_CODE.put(playerName, convertToLanguageCode(languageRepresentationUsedByMojang));
     }
 
     private static void loadLanguageJsonIfAbsent(String languageCode) {
-        if (code2json.containsKey(languageCode)) return;
+        if (LANGUAGE_CODE_2_LANGUAGE_JSON.containsKey(languageCode)) return;
 
         try {
             String languageFile = languageCode + ".json";
@@ -178,10 +181,10 @@ public class TextHelper {
             //read it
             resourceConfigurationHandler.readStorage();
 
-            code2json.put(languageCode, resourceConfigurationHandler.model().getAsJsonObject());
+            LANGUAGE_CODE_2_LANGUAGE_JSON.put(languageCode, resourceConfigurationHandler.model().getAsJsonObject());
             LogUtil.info("Language {} loaded.", languageCode);
         } catch (Exception e) {
-            code2json.put(languageCode, UNSUPPORTED_LANGUAGE_MARKER);
+            LANGUAGE_CODE_2_LANGUAGE_JSON.put(languageCode, UNSUPPORTED_LANGUAGE_MARKER);
             LogUtil.warn("Failed to load language `{}`", languageCode);
         }
     }
@@ -218,14 +221,14 @@ public class TextHelper {
         // always use default_language for non-player object.
         if (player == null) return getDefaultLanguageCode();
 
-        return player2code.getOrDefault(player.getGameProfile().getName(), getDefaultLanguageCode());
+        return PLAYER_2_LANGUAGE_CODE.getOrDefault(player.getGameProfile().getName(), getDefaultLanguageCode());
     }
 
     private static @NotNull JsonObject getLanguageJsonObject(String languageCode) {
         // load language object from disk for the first time
         loadLanguageJsonIfAbsent(languageCode);
 
-        return code2json.get(languageCode);
+        return LANGUAGE_CODE_2_LANGUAGE_JSON.get(languageCode);
     }
 
     private static String getDefaultLanguageCode() {
@@ -575,35 +578,6 @@ public class TextHelper {
         player.networkHandler.sendPacket(new SubtitleS2CPacket(subTitle));
     }
 
-    public static class ClickEvent {
-
-        public static net.minecraft.text.ClickEvent makeRunCommandAction(String command) {
-            #if MC_VER <= MC_1_21_4
-                return new net.minecraft.text.ClickEvent(net.minecraft.text.ClickEvent.Action.RUN_COMMAND, command);
-            #elif MC_VER >= MC_1_21_5
-                return new net.minecraft.text.ClickEvent.RunCommand(command);
-            #endif
-        }
-
-        public static net.minecraft.text.ClickEvent makeCopyToClipboardAction(String string) {
-            #if MC_VER <= MC_1_21_4
-                return new net.minecraft.text.ClickEvent(net.minecraft.text.ClickEvent.Action.COPY_TO_CLIPBOARD, string);
-            #elif MC_VER >= MC_1_21_5
-                return new net.minecraft.text.ClickEvent.CopyToClipboard(string);
-            #endif
-        }
-    }
-
-    public static class HoverEvent {
-
-        public static net.minecraft.text.HoverEvent makeShowTextAction(Text hoverText) {
-            #if MC_VER <= MC_1_21_4
-            return new net.minecraft.text.HoverEvent(net.minecraft.text.HoverEvent.Action.SHOW_TEXT, hoverText);
-            #elif MC_VER >= MC_1_21_5
-                return new net.minecraft.text.HoverEvent.ShowText(hoverText);
-            #endif
-        }
-    }
 
     public static Text fromJson(String tagString) {
         #if MC_VER <= MC_1_20_2
@@ -659,5 +633,37 @@ public class TextHelper {
             .toList();
     }
 
+    public static class Events {
+
+        public static class ClickEvent {
+
+            public static net.minecraft.text.ClickEvent makeRunCommandAction(String command) {
+                #if MC_VER <= MC_1_21_4
+                    return new net.minecraft.text.ClickEvent(net.minecraft.text.ClickEvent.Action.RUN_COMMAND, command);
+                #elif MC_VER >= MC_1_21_5
+                return new net.minecraft.text.ClickEvent.RunCommand(command);
+                #endif
+            }
+
+            public static net.minecraft.text.ClickEvent makeCopyToClipboardAction(String string) {
+                #if MC_VER <= MC_1_21_4
+                    return new net.minecraft.text.ClickEvent(net.minecraft.text.ClickEvent.Action.COPY_TO_CLIPBOARD, string);
+                #elif MC_VER >= MC_1_21_5
+                return new net.minecraft.text.ClickEvent.CopyToClipboard(string);
+                #endif
+            }
+        }
+
+        public static class HoverEvent {
+
+            public static net.minecraft.text.HoverEvent makeShowTextAction(Text hoverText) {
+                #if MC_VER <= MC_1_21_4
+                return new net.minecraft.text.HoverEvent(net.minecraft.text.HoverEvent.Action.SHOW_TEXT, hoverText);
+                #elif MC_VER >= MC_1_21_5
+                return new net.minecraft.text.HoverEvent.ShowText(hoverText);
+                #endif
+            }
+        }
+    }
 }
 

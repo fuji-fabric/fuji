@@ -45,7 +45,7 @@ public class DisplayHelper {
             .copy()
             .fillStyle(
                 Style.EMPTY
-                    .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(sharingPlayer, "display.click.prompt")))
+                    .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(sharingPlayer, "display.click.prompt")))
                     .withClickEvent(makeDisplayClickEvent(displayUUID))
             );
     }
@@ -55,7 +55,7 @@ public class DisplayHelper {
         return TextHelper.getTextByKey(sharingPlayer, "display.inventory.text")
             .copy()
             .fillStyle(Style.EMPTY
-                .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(sharingPlayer, "display.click.prompt")))
+                .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(sharingPlayer, "display.click.prompt")))
                 .withClickEvent(makeDisplayClickEvent(displayUUID))
             );
     }
@@ -76,7 +76,7 @@ public class DisplayHelper {
         /* Make display text. */
         MutableText translatable = Text.translatable(sharingPlayer.getMainHandStack().getItem().getTranslationKey());
         translatable.fillStyle(Style.EMPTY
-            .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(sharingPlayer, "display.click.prompt")))
+            .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(sharingPlayer, "display.click.prompt")))
             .withClickEvent(makeDisplayClickEvent(displayUUID))
         );
 

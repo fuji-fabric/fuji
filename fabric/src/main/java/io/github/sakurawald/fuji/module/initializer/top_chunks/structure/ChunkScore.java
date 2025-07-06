@@ -109,7 +109,7 @@ public class ChunkScore implements Comparable<ChunkScore> {
         return Text.empty()
             .append(Text.literal(this.toString()))
             .fillStyle(Style.EMPTY
-                .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(hoverText))
+                .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(hoverText))
                 .withFormatting(this.players.isEmpty() ? Formatting.GRAY : Formatting.DARK_GREEN)
             );
     }

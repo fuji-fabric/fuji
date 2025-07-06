@@ -247,8 +247,8 @@ public class CommandDescriptor implements SourceModuleGetter {
         if (PlayerHelper.isAdmin(source)) {
             String stacktrace = String.join("\n", ReflectionUtil.getStackTraceAsList(throwable));
             style
-                .withHoverEvent(TextHelper.HoverEvent.makeShowTextAction(Text.of("Click to copy the stacktrace.")))
-                .withClickEvent(TextHelper.ClickEvent.makeCopyToClipboardAction(stacktrace));
+                .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(Text.of("Click to copy the stacktrace.")))
+                .withClickEvent(TextHelper.Events.ClickEvent.makeCopyToClipboardAction(stacktrace));
         }
 
         MutableText report = TextHelper.getTextByValue(source, errorString)
