@@ -126,7 +126,7 @@ public class TopChunksInitializer extends ModuleInitializer {
             BlockPos blockPos = chunkPos.getStartPos();
             PlayerEntity nearestPlayer = world.getClosestPlayer(blockPos.getX(), blockPos.getY(), blockPos.getZ(), config.model().nearest_distance, false);
             if (nearestPlayer != null) {
-                chunkScore.getPlayers().add(TextHelper.getValueByKey(source, "top_chunks.prop.players.nearest", nearestPlayer.getGameProfile().getName()));
+                chunkScore.getPlayers().add(TextHelper.Mapper.getLanguageValueByKey(source, "top_chunks.prop.players.nearest", nearestPlayer.getGameProfile().getName()));
             }
         }
     }

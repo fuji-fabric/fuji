@@ -121,9 +121,9 @@ public class ChatStyleInitializer extends ModuleInitializer {
         chatFormatData.writeStorage();
 
         /* Feedback. */
-        newFormat = TextHelper.getValueByKey(player, "chat.format.set");
+        newFormat = TextHelper.Mapper.getLanguageValueByKey(player, "chat.format.set");
         newFormat = newFormat.replace("%s", stripedFormat);
-        newFormat = newFormat.replace("%message%", TextHelper.getValueByKey(player, "chat.format.show"));
+        newFormat = newFormat.replace("%message%", TextHelper.Mapper.getLanguageValueByKey(player, "chat.format.show"));
         Text text = TextHelper.getTextByValue(player, newFormat);
         player.sendMessage(text);
         return CommandHelper.Return.SUCCESS;

@@ -22,7 +22,7 @@ public abstract class ConfirmSignGui extends InputSignGui {
     protected void onCancelled() {}
 
     private boolean isConfirmed() {
-        String confirmationString = TextHelper.getValueByKeyword(getPlayer(), "confirm");
+        String confirmationString = TextHelper.Mapper.getValueByKeyword(getPlayer(), "confirm");
         return this.getLine(0).getString().equals(confirmationString);
     }
 
