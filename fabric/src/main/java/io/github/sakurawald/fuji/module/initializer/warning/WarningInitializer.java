@@ -11,6 +11,7 @@ import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlayerName;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.core.event.impl.PlayerEvents;
@@ -33,6 +34,16 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
     You can use `warnings` to `track` the behaviours of a `player`.
     """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+    You can use `command_scheduler` module, to define a `job`.
+    To execute `/warning clear-all --confirm true` command automatically. (e.g. every week)
+    """)
+
+@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+    You can use `command_bundle` module, to define `template` for `warnings`.
+    """)
+
 public class WarningInitializer extends ModuleInitializer {
 
 
