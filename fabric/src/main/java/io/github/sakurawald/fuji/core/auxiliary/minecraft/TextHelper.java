@@ -64,13 +64,8 @@ public class TextHelper {
     public static final Text TEXT_EMPTY = Text.literal("");
     public static final String MESSAGE_PLACEHOLDER = "%message%";
 
-    private static final Map<String, String> PLAYER_2_LANGUAGE_CODE = new HashMap<>();
-    private static final Map<String, JsonObject> LANGUAGE_CODE_2_LANGUAGE_JSON = new HashMap<>();
-
     private static final String SUPPRESS_SENDING_STRING_MARKER = "[suppress-sending]";
     private static final Text SUPPRESS_SENDING_TEXT_MARKER = Text.literal("[suppress-sending]");
-
-    private static final String LANGUAGE_FILE_PATH = "lang/";
 
     static {
         Loader.writeDefaultLanguageFilesIfAbsent();
@@ -196,6 +191,9 @@ public class TextHelper {
 
     @ForDeveloper("The functions used to load language file from storage into memory, and resolve the suitable language json for given audience.")
     public static class Loader {
+        private static final String LANGUAGE_FILE_PATH = "lang/";
+        private static final Map<String, String> PLAYER_2_LANGUAGE_CODE = new HashMap<>();
+        private static final Map<String, JsonObject> LANGUAGE_CODE_2_LANGUAGE_JSON = new HashMap<>();
         private static final JsonObject UNSUPPORTED_LANGUAGE_MARKER = new JsonObject();
 
         private static void writeDefaultLanguageFilesIfAbsent() {
