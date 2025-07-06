@@ -47,7 +47,7 @@ public class CallbackManager extends BaseManager {
     private void executeCallbackCommand(String uuid, ServerPlayerEntity player) {
         Consumer<ServerPlayerEntity> consumer = this.uuid2consumer.get(uuid);
         if (consumer == null) {
-            TextHelper.sendMessageByKey(player, "callback.invalid");
+            TextHelper.sendTextByKey(player, "callback.invalid");
             return;
         }
 

@@ -46,12 +46,12 @@ public class CommandExecutor {
             }
 
             /* Echo to the executing source. */
-            TextHelper.sendMessageByKey(context.getExecutingSource(), "command.execute.echo.executing_source", command, e.getMessage());
+            TextHelper.sendTextByKey(context.getExecutingSource(), "command.execute.echo.executing_source", command, e.getMessage());
 
             /* Echo to the initiating source. */
             if (!context.sameSource()) {
                 // NOTE: If the executing command source is a dummy server player, then its network handler is null.
-                TextHelper.sendMessageByKey(context.getInitiatingSource(), "command.execute.echo.initiating_source", command, context.getExecutingSource().getName(), e.getMessage());
+                TextHelper.sendTextByKey(context.getInitiatingSource(), "command.execute.echo.initiating_source", command, context.getExecutingSource().getName(), e.getMessage());
             }
 
         }

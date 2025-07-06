@@ -35,7 +35,7 @@ public class ChatSpyInitializer extends ModuleInitializer {
         options.enabled = !options.enabled;
         config.writeStorage();
 
-        TextHelper.sendMessageByKey(player, options.enabled ? "on" : "off");
+        TextHelper.sendTextByKey(player, options.enabled ? "on" : "off");
         return CommandHelper.Return.SUCCESS;
     }
 

@@ -41,17 +41,17 @@ public class ShellInitializer extends ModuleInitializer {
         var config = ShellInitializer.config.model();
 
         if (!config.enable_warning.equals("CONFIRM")) {
-            TextHelper.sendMessageByKey(ctx.getSource(), "shell.failed.rtfm");
+            TextHelper.sendTextByKey(ctx.getSource(), "shell.failed.rtfm");
             throw new AbortCommandExecutionException();
         }
 
         if (config.security.only_allow_console && ctx.getSource().getPlayer() != null) {
-            TextHelper.sendMessageByKey(ctx.getSource(), "command.console_only");
+            TextHelper.sendTextByKey(ctx.getSource(), "command.console_only");
             throw new AbortCommandExecutionException();
         }
 
         if (ctx.getSource().getName() != null && !config.security.allowed_player_names.contains(ctx.getSource().getName())) {
-            TextHelper.sendMessageByKey(ctx.getSource(), "shell.failed.not_in_allowed_list");
+            TextHelper.sendTextByKey(ctx.getSource(), "shell.failed.not_in_allowed_list");
             throw new AbortCommandExecutionException();
         }
 

@@ -32,7 +32,7 @@ public class ReplyInitializer extends ModuleInitializer {
             Objects.requireNonNull(ServerHelper.getCommandDispatcher())
                 .execute("msg %s %s".formatted(target, message.getValue()), player.getCommandSource());
         } catch (CommandSyntaxException e) {
-            TextHelper.sendMessageByKey(player, "reply.no_target");
+            TextHelper.sendTextByKey(player, "reply.no_target");
         }
 
         return CommandHelper.Return.SUCCESS;

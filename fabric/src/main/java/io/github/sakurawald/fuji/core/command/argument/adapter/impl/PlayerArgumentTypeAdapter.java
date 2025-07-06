@@ -44,7 +44,7 @@ public class PlayerArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     public boolean verifyCommandSource(CommandContext<ServerCommandSource> context) {
         ServerPlayerEntity player = context.getSource().getPlayer();
         if (player == null) {
-            TextHelper.sendMessageByKey(context.getSource(), "command.player_only");
+            TextHelper.sendTextByKey(context.getSource(), "command.player_only");
             return false;
         }
 

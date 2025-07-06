@@ -25,7 +25,7 @@ public class FlyInitializer extends ModuleInitializer {
         }
 
         player.sendAbilitiesUpdate();
-        TextHelper.sendMessageByKey(player, flag ? "fly.on" : "fly.off");
+        TextHelper.sendTextByKey(player, flag ? "fly.on" : "fly.off");
         return CommandHelper.Return.SUCCESS;
     }
 }

@@ -39,7 +39,7 @@ public class NicknameInitializer extends ModuleInitializer {
         data.writeStorage();
         ServerHelper.updateDisplayName();
 
-        TextHelper.sendMessageByKey(player, "nickname.set");
+        TextHelper.sendTextByKey(player, "nickname.set");
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -52,7 +52,7 @@ public class NicknameInitializer extends ModuleInitializer {
         data.writeStorage();
         ServerHelper.updateDisplayName();
 
-        TextHelper.sendMessageByKey(player, "nickname.unset");
+        TextHelper.sendTextByKey(player, "nickname.unset");
         return CommandHelper.Return.SUCCESS;
     }
 }

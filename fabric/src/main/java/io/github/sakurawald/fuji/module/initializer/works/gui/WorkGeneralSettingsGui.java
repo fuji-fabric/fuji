@@ -65,7 +65,7 @@ public class WorkGeneralSettingsGui extends SimpleGui {
 
                 /* Primary. */
                 work.icon = RegistryHelper.toString(mainHandItem);
-                TextHelper.sendMessageByKey(player, "works.work.set.done", work.icon);
+                TextHelper.sendTextByKey(player, "works.work.set.done", work.icon);
                 close();
             })
         );
@@ -80,7 +80,7 @@ public class WorkGeneralSettingsGui extends SimpleGui {
                 work.x = player.getPos().x;
                 work.y = player.getPos().y;
                 work.z = player.getPos().z;
-                TextHelper.sendMessageByKey(player, "works.work.set.done", "(%s, %f, %f, %f)".formatted(work.level, work.x, work.y, work.z));
+                TextHelper.sendTextByKey(player, "works.work.set.done", "(%s, %f, %f, %f)".formatted(work.level, work.x, work.y, work.z));
                 close();
             })
         );
@@ -96,7 +96,7 @@ public class WorkGeneralSettingsGui extends SimpleGui {
                     String newIntroduction = this.joinStrings();
                     LogicHelper.tryOrCancel(player, newIntroduction.isBlank(), () -> {
                         work.introduction = newIntroduction;
-                        TextHelper.sendMessageByKey(player, "works.work.set.done", work.introduction);
+                        TextHelper.sendTextByKey(player, "works.work.set.done", work.introduction);
                     });
                 }
             }.open())
@@ -117,7 +117,7 @@ public class WorkGeneralSettingsGui extends SimpleGui {
                     }
 
                     work.name = newValue;
-                    TextHelper.sendMessageByKey(player, "works.work.set.done", work.name);
+                    TextHelper.sendTextByKey(player, "works.work.set.done", work.name);
                 }
             }.open())
         );

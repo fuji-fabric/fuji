@@ -1,10 +1,8 @@
 package io.github.sakurawald.fuji.module.initializer.command_toolbox.compass;
 
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -21,7 +19,6 @@ import java.util.Optional;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -38,7 +35,7 @@ public class CompassInitializer extends ModuleInitializer {
     private static int withCompassInHand(ServerPlayerEntity source, Function<ItemStack, Integer> function) {
         ItemStack itemStack = source.getMainHandStack();
         if (!itemStack.getItem().equals(Items.COMPASS)) {
-            TextHelper.sendMessageByKey(source, "compass.no_compass");
+            TextHelper.sendTextByKey(source, "compass.no_compass");
             return CommandHelper.Return.FAIL;
         }
 

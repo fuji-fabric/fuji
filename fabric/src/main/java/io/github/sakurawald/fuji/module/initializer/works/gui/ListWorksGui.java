@@ -89,7 +89,7 @@ public class ListWorksGui extends PagedGui<Work> {
                     new GlobalPos(level, entity.x, entity.y, entity.z, entity.yaw, entity.pitch)
                         .teleport(player);
                 } else {
-                    TextHelper.sendMessageByKey(player, "world.dimension.not_found", entity.level);
+                    TextHelper.sendTextByKey(player, "world.dimension.not_found", entity.level);
                 }
 
                 this.close();

@@ -77,7 +77,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
     public static int $verbose(@CommandSource ServerCommandSource source) {
         verboseModeFlag = !verboseModeFlag;
 
-        TextHelper.sendMessageByKey(source, verboseModeFlag ? "command_permission.verbose.on" : "command_permission.verbose.off");
+        TextHelper.sendTextByKey(source, verboseModeFlag ? "command_permission.verbose.on" : "command_permission.verbose.off");
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -94,24 +94,24 @@ public class CommandPermissionInitializer extends ModuleInitializer {
 
         /* Describe the command string. */
         String commandString = TextHelper.Parsers.escapeTags(parseResults.getReader().getString());
-        TextHelper.sendMessageByKey(source,"command_permission.describe.command_string", commandString);
+        TextHelper.sendTextByKey(source,"command_permission.describe.command_string", commandString);
 
         /* Check if there is early exceptions. */
         @Nullable CommandSyntaxException earlyException = CommandManager.getException(parseResults);
         if (earlyException != null) {
-            TextHelper.sendMessageByKey(source,"command_permission.describe.command_string.parser.exceptions");
-            TextHelper.sendMessageByKey(source,"command_permission.describe.command_string.parser.early_exception", earlyException);
+            TextHelper.sendTextByKey(source,"command_permission.describe.command_string.parser.exceptions");
+            TextHelper.sendTextByKey(source,"command_permission.describe.command_string.parser.early_exception", earlyException);
             return CommandHelper.Return.SUCCESS;
         }
 
         /* Report the parser exceptions. */
         var exceptions = parseResults.getExceptions();
         if (!exceptions.isEmpty()) {
-            TextHelper.sendMessageByKey(source,"command_permission.describe.command_string.parser.exceptions");
+            TextHelper.sendTextByKey(source,"command_permission.describe.command_string.parser.exceptions");
             exceptions.forEach((k, v)-> {
                 String nodeName = k.getName();
                 String exception = v.toString();
-                TextHelper.sendMessageByKey(source,"command_permission.describe.command_string.parser.exception", nodeName, exception);
+                TextHelper.sendTextByKey(source,"command_permission.describe.command_string.parser.exception", nodeName, exception);
             });
 
             /* Terminate the describing, to avoid misleading. */
@@ -121,10 +121,10 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         /* Describe the command nodes. */
         List<ParsedCommandNode<ServerCommandSource>> nodes = context.getNodes();
         List<String> nodesName = nodes.stream().map(it -> it.getNode().getName()).toList();
-        TextHelper.sendMessageByKey(source,"command_permission.describe.command_node.nodes", nodesName);
+        TextHelper.sendTextByKey(source,"command_permission.describe.command_node.nodes", nodesName);
 
         if (nodesName.isEmpty()) {
-            TextHelper.sendMessageByKey(source,"command_permission.describe.command_node.empty");
+            TextHelper.sendTextByKey(source,"command_permission.describe.command_node.empty");
             return CommandHelper.Return.SUCCESS;
         }
 
@@ -133,19 +133,19 @@ public class CommandPermissionInitializer extends ModuleInitializer {
             String nodeName = node.getName();
             String nodeType = CommandHelper.getCommandNodeType(node);
             boolean nodeWrapped = isCommandNodeWrapped(node);
-            TextHelper.sendMessageByKey(source, "command_permission.describe.command_node.node", nodeName, nodeType, nodeWrapped);
+            TextHelper.sendTextByKey(source, "command_permission.describe.command_node.node", nodeName, nodeType, nodeWrapped);
         });
 
         /* Describe the command path. */
         String commandPath = CommandHelper.joinCommandNodePath(context.getNodes());
-        TextHelper.sendMessageByKey(source,"command_permission.describe.command_path", commandPath);
+        TextHelper.sendTextByKey(source,"command_permission.describe.command_path", commandPath);
 
         /* Describe the command permissions. */
-        TextHelper.sendMessageByKey(source,"command_permission.describe.command_permissions");
+        TextHelper.sendTextByKey(source,"command_permission.describe.command_permissions");
         List<String> commandPathPrefixes = CommandHelper.getPrefixesOfCommandPath(nodes);
         commandPathPrefixes.forEach(path -> {
             String requiredPermission = COMMAND_PERMISSION_UNIFIED_PERMISSION.withArguments(path);
-            TextHelper.sendMessageByKey(source,"command_permission.describe.command_permission", requiredPermission);
+            TextHelper.sendTextByKey(source,"command_permission.describe.command_permission", requiredPermission);
         });
 
         /* Newline. */

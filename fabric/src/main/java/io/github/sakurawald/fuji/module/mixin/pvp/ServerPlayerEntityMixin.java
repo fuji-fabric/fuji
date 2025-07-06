@@ -37,7 +37,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
         /* Okay, the damage source player should enable pvp first. */
         ServerPlayerEntity damageSourcePlayer = (ServerPlayerEntity) playerEntity;
         if (!PvpInitializer.isPvpEnabled(PlayerHelper.getPlayerName(damageSourcePlayer))) {
-            TextHelper.sendMessageByKey(damageSourcePlayer, "pvp.check.off.me");
+            TextHelper.sendTextByKey(damageSourcePlayer, "pvp.check.off.me");
             cir.setReturnValue(false);
             return;
         }
@@ -45,7 +45,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
         /* Then, the damage target player should enable pvp. */
         String myName = PlayerHelper.getPlayerName(this);
         if (!PvpInitializer.isPvpEnabled(myName)) {
-            TextHelper.sendMessageByKey(damageSourcePlayer, "pvp.check.off.others", myName);
+            TextHelper.sendTextByKey(damageSourcePlayer, "pvp.check.off.others", myName);
             cir.setReturnValue(false);
         }
     }

@@ -31,7 +31,6 @@ import java.net.InetSocketAddress;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @SuppressWarnings("UnstableApiUsage")
 @Document("""
@@ -94,7 +93,7 @@ public class WorldDownloaderInitializer extends ModuleInitializer {
         TextHelper.sendBroadcastByKey("world_downloader.request", player.getGameProfile().getName(), file.length() / BYTE_TO_MEGABYTE);
 
         httpServer.createContext(path, new FileDownloadHandler(file, config.model().bytes_per_second_limit));
-        TextHelper.sendMessageByKey(player, "world_downloader.response", url);
+        TextHelper.sendTextByKey(player, "world_downloader.response", url);
         return CommandHelper.Return.SUCCESS;
     }
 

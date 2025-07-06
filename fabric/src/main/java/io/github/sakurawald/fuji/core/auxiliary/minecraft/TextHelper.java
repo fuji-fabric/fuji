@@ -533,7 +533,7 @@ public class TextHelper {
         return getTextList(audience, false, value);
     }
 
-    public static void sendMessageByKey(@NotNull Object audience, String languageKey, Object... args) {
+    public static void sendTextByKey(@NotNull Object audience, String languageKey, Object... args) {
         /* Get the text by language key for that audience. */
         String languageValue = Translator.getLanguageValueByKey(audience, languageKey);
 
@@ -676,7 +676,7 @@ public class TextHelper {
 
         /* Send the text using the player's client side language. */
         for (ServerPlayerEntity player : ServerHelper.getOnlinePlayers()) {
-            TextHelper.sendMessageByKey(player, key, args);
+            TextHelper.sendTextByKey(player, key, args);
         }
     }
 

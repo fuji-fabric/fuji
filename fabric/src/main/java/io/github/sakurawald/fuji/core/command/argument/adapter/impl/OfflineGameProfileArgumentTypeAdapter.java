@@ -37,7 +37,7 @@ public class OfflineGameProfileArgumentTypeAdapter extends BaseArgumentTypeAdapt
 
         // Verify the game profile exists.
         if (offlineGameProfileByName.isEmpty()) {
-            TextHelper.sendMessageByKey(context.getSource(), "player.unknown_player");
+            TextHelper.sendTextByKey(context.getSource(), "player.unknown_player");
             throw new AbortCommandExecutionException();
         }
 

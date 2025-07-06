@@ -59,7 +59,7 @@ public class WorldInitializer extends ModuleInitializer {
 
     private static void checkBlacklist(CommandContext<ServerCommandSource> ctx, String identifier) {
         if (config.model().blacklist.dimension_list.contains(identifier)) {
-            TextHelper.sendMessageByKey(ctx.getSource(), "world.dimension.blacklist", identifier);
+            TextHelper.sendTextByKey(ctx.getSource(), "world.dimension.blacklist", identifier);
             throw new AbortCommandExecutionException();
         }
     }
@@ -83,7 +83,7 @@ public class WorldInitializer extends ModuleInitializer {
             ServerHelper.getWorlds().forEach(world -> {
                 String dimensionType = RegistryHelper.getIdAsString(world.getDimensionEntry());
                 String dimension = String.valueOf(world.getRegistryKey().getValue());
-                TextHelper.sendMessageByKey(source, "world.dimension.list.entry", dimension, dimensionType);
+                TextHelper.sendTextByKey(source, "world.dimension.list.entry", dimension, dimensionType);
             });
         }
 
@@ -100,7 +100,7 @@ public class WorldInitializer extends ModuleInitializer {
 
         /* check exist */
         if (ServerHelper.getWorlds().stream().anyMatch(it -> RegistryHelper.toString(it).equals(dimensionIdentifier.toString()))) {
-            TextHelper.sendMessageByKey(ctx.getSource(), "world.dimension.exist");
+            TextHelper.sendTextByKey(ctx.getSource(), "world.dimension.exist");
             return CommandHelper.Return.FAIL;
         }
 
@@ -130,7 +130,7 @@ public class WorldInitializer extends ModuleInitializer {
         /* write entry */
         Optional<DimensionNode> first = storage.model().dimension_list.stream().filter(o -> o.getDimension().equals(identifier)).findFirst();
         if (first.isEmpty()) {
-            TextHelper.sendMessageByKey(ctx.getSource(), "world.dimension.not_found", identifier);
+            TextHelper.sendTextByKey(ctx.getSource(), "world.dimension.not_found", identifier);
             return CommandHelper.Return.FAIL;
         }
         storage.model().dimension_list.remove(first.get());
@@ -150,7 +150,7 @@ public class WorldInitializer extends ModuleInitializer {
 
         Optional<DimensionNode> dimensionEntryOpt = storage.model().dimension_list.stream().filter(o -> o.getDimension().equals(identifier)).findFirst();
         if (dimensionEntryOpt.isEmpty()) {
-            TextHelper.sendMessageByKey(ctx.getSource(), "world.dimension.not_found");
+            TextHelper.sendTextByKey(ctx.getSource(), "world.dimension.not_found");
             return CommandHelper.Return.FAIL;
         }
 

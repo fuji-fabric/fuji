@@ -49,7 +49,7 @@ public abstract class PlayerCommandMixin {
 
         /* check: caps */
         if (!FakePlayerManagerInitializer.canSpawnFakePlayer(player)) {
-            TextHelper.sendMessageByKey(player, "fake_player_manager.spawn.limit_exceed");
+            TextHelper.sendTextByKey(player, "fake_player_manager.spawn.limit_exceed");
             cir.setReturnValue(CommandHelper.Return.FAIL);
         }
     }
@@ -71,7 +71,7 @@ public abstract class PlayerCommandMixin {
         String playerArg = StringArgumentType.getString(context, "player");
 
         if (!FakePlayerManagerInitializer.canManipulateFakePlayer(context, playerArg)) {
-            TextHelper.sendMessageByKey(context.getSource(), "fake_player_manager.manipulate.forbidden");
+            TextHelper.sendTextByKey(context.getSource(), "fake_player_manager.manipulate.forbidden");
             cir.setReturnValue(true);
         }
     }

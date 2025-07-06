@@ -84,9 +84,9 @@ public class WarningService {
             .forEach(it -> {
                 int warningsSize = playerWarnings.warnings.size();
                 if (isJoin) {
-                    TextHelper.sendMessageByKey(it, "warning.notify.join", playerName, warningsSize);
+                    TextHelper.sendTextByKey(it, "warning.notify.join", playerName, warningsSize);
                 } else {
-                    TextHelper.sendMessageByKey(it, "warning.notify.leave", playerName, warningsSize);
+                    TextHelper.sendTextByKey(it, "warning.notify.leave", playerName, warningsSize);
                 }
             });
     }

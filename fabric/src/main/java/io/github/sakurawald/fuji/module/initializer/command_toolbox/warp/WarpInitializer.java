@@ -42,7 +42,7 @@ public class WarpInitializer extends ModuleInitializer {
     private static void ensureWarpExists(ServerPlayerEntity player, WarpName warpName) {
         String name = warpName.getValue();
         if (!data.model().name2warp.containsKey(name)) {
-            TextHelper.sendMessageByKey(player, "warp.not_found", name);
+            TextHelper.sendTextByKey(player, "warp.not_found", name);
             throw new AbortCommandExecutionException();
         }
     }
@@ -61,7 +61,7 @@ public class WarpInitializer extends ModuleInitializer {
             ExtendedCommandSource.asConsole(player.getCommandSource())
             , warpNode.getEvent().on_warped.command_list);
 
-        TextHelper.sendMessageByKey(player,"warp.tp.success",warpNode.name);
+        TextHelper.sendTextByKey(player,"warp.tp.success",warpNode.name);
     }
 
     @Document("Teleport to the specified warp point.")
@@ -81,7 +81,7 @@ public class WarpInitializer extends ModuleInitializer {
 
         String name = warpName.getValue();
         data.model().name2warp.remove(name);
-        TextHelper.sendMessageByKey(player, "warp.unset.success", name);
+        TextHelper.sendTextByKey(player, "warp.unset.success", name);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -93,7 +93,7 @@ public class WarpInitializer extends ModuleInitializer {
 
         if (data.model().name2warp.containsKey(name)) {
             if (!override.orElse(false)) {
-                TextHelper.sendMessageByKey(player, "warp.set.fail.need_override", name);
+                TextHelper.sendTextByKey(player, "warp.set.fail.need_override", name);
                 return CommandHelper.Return.FAIL;
             }
         }
@@ -101,7 +101,7 @@ public class WarpInitializer extends ModuleInitializer {
         WarpNode value = new WarpNode(GlobalPos.of(player))
             .withName(name);
         data.model().name2warp.put(name, value);
-        TextHelper.sendMessageByKey(player, "warp.set.success", name);
+        TextHelper.sendTextByKey(player, "warp.set.success", name);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -117,7 +117,7 @@ public class WarpInitializer extends ModuleInitializer {
             List<WarpNode> list = data.model().name2warp.values().stream().toList();
             new WarpGui(source.getPlayer(), list, 0).open();
         } else {
-            TextHelper.sendMessageByKey(source, "warp.list", data.model().name2warp.keySet());
+            TextHelper.sendTextByKey(source, "warp.list", data.model().name2warp.keySet());
         }
 
         return CommandHelper.Return.SUCCESS;

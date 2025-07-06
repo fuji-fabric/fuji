@@ -3,7 +3,6 @@ package io.github.sakurawald.fuji.module.initializer.deathlog.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.NbtHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
@@ -28,7 +27,7 @@ public class DeathDataListGui extends PagedGui<String> {
 
     public static boolean hasDeathData(ServerPlayerEntity player, NbtCompound root, String deadPlayerName) {
         if (root == null || root.isEmpty()) {
-            TextHelper.sendMessageByKey(player, "deathlog.death_data.empty", deadPlayerName);
+            TextHelper.sendTextByKey(player, "deathlog.death_data.empty", deadPlayerName);
             return false;
         }
 

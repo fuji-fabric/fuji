@@ -54,7 +54,7 @@ public class HomeInitializer extends ModuleInitializer {
 
     private static void ensureHomeExists(ServerPlayerEntity player, Map<String, GlobalPos> homes, String homeName) {
         if (!homes.containsKey(homeName)) {
-            TextHelper.sendMessageByKey(player, "home.not_found", homeName);
+            TextHelper.sendTextByKey(player, "home.not_found", homeName);
             throw new AbortCommandExecutionException();
         }
     }
@@ -66,7 +66,7 @@ public class HomeInitializer extends ModuleInitializer {
         ensureHomeExists(player, homes, homeName);
 
         homes.remove(homeName);
-        TextHelper.sendMessageByKey(player, "home.unset.success", homeName);
+        TextHelper.sendTextByKey(player, "home.unset.success", homeName);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -77,25 +77,25 @@ public class HomeInitializer extends ModuleInitializer {
 
         if (name2position.containsKey(homeName)) {
             if (!override.orElse(false)) {
-                TextHelper.sendMessageByKey(player, "home.set.fail.need_override", homeName);
+                TextHelper.sendTextByKey(player, "home.set.fail.need_override", homeName);
                 return CommandHelper.Return.FAIL;
             }
         }
 
         Optional<Integer> limit = LuckpermsHelper.getMeta(player.getUuid(), MAX_HOME_AMOUNT_META);
         if (limit.isPresent() && name2position.size() >= limit.get()) {
-            TextHelper.sendMessageByKey(player, "home.set.fail.limit");
+            TextHelper.sendTextByKey(player, "home.set.fail.limit");
             return CommandHelper.Return.FAIL;
         }
 
         name2position.put(homeName, GlobalPos.of(player));
-        TextHelper.sendMessageByKey(player, "home.set.success", homeName);
+        TextHelper.sendTextByKey(player, "home.set.success", homeName);
         return CommandHelper.Return.SUCCESS;
     }
 
     @CommandNode("home list")
     private static int $list(@CommandSource ServerPlayerEntity player) {
-        TextHelper.sendMessageByKey(player, "home.list", withHomes(player).keySet());
+        TextHelper.sendTextByKey(player, "home.list", withHomes(player).keySet());
         return CommandHelper.Return.SUCCESS;
     }
 

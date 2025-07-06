@@ -36,13 +36,13 @@ public class BedInitializer extends ModuleInitializer {
 
         ServerWorld world = ServerHelper.getServer().getWorld(respawnDimension);
         if (respawnPosition == null || world == null) {
-            TextHelper.sendMessageByKey(player, "bed.not_found");
+            TextHelper.sendTextByKey(player, "bed.not_found");
             return CommandHelper.Return.FAIL;
         }
 
         new GlobalPos(world, respawnPosition.getX(), respawnPosition.getY(), respawnPosition.getZ(), player.getYaw(), player.getPitch())
             .teleport(player);
-        TextHelper.sendMessageByKey(player, "bed.success");
+        TextHelper.sendTextByKey(player, "bed.success");
         return CommandHelper.Return.SUCCESS;
     }
 }

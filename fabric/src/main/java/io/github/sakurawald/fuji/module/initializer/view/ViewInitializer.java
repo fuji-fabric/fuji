@@ -22,7 +22,7 @@ public class ViewInitializer extends ModuleInitializer {
 
     private static void checkSelfView(ServerPlayerEntity source, OfflinePlayerName target) {
         if (source.getGameProfile().getName().equals(target.getValue())) {
-            TextHelper.sendMessageByKey(source, "view.failed.self_view");
+            TextHelper.sendTextByKey(source, "view.failed.self_view");
             throw new AbortCommandExecutionException();
         }
     }

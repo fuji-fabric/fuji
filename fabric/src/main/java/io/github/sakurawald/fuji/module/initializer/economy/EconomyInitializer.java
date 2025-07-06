@@ -69,16 +69,16 @@ public class EconomyInitializer extends ModuleInitializer {
         providers.forEach(provider -> {
             MinecraftServer server = ServerHelper.getServer();
 
-            TextHelper.sendMessageByKey(source, "line.separator");
-            TextHelper.sendMessageByKey(source, "economy.provider.id", provider.id());
-            TextHelper.sendMessageByKey(source, "economy.provider.name", TextHelper.Operators.visitString(provider.name()));
-            TextHelper.sendMessageByKey(source, "economy.provider.icon", provider.icon().getItem());
+            TextHelper.sendTextByKey(source, "line.separator");
+            TextHelper.sendTextByKey(source, "economy.provider.id", provider.id());
+            TextHelper.sendTextByKey(source, "economy.provider.name", TextHelper.Operators.visitString(provider.name()));
+            TextHelper.sendTextByKey(source, "economy.provider.icon", provider.icon().getItem());
 
             Collection<EconomyCurrency> currencies = provider.getCurrencies(server);
             currencies.forEach(currency -> {
-                TextHelper.sendMessageByKey(source, "economy.currency.id", currency.id());
-                TextHelper.sendMessageByKey(source, "economy.currency.name", TextHelper.Operators.visitString(currency.name()));
-                TextHelper.sendMessageByKey(source, "economy.currency.icon", currency.icon().getItem());
+                TextHelper.sendTextByKey(source, "economy.currency.id", currency.id());
+                TextHelper.sendTextByKey(source, "economy.currency.name", TextHelper.Operators.visitString(currency.name()));
+                TextHelper.sendTextByKey(source, "economy.currency.icon", currency.icon().getItem());
                 source.sendMessage(TextHelper.TEXT_EMPTY);
             });
         });
@@ -99,8 +99,8 @@ public class EconomyInitializer extends ModuleInitializer {
     }
 
     private static void printEconomyAccountInfo(ServerCommandSource source, EconomyAccount account) {
-        TextHelper.sendMessageByKey(source, "economy.account.name", TextHelper.Operators.visitString(account.name()));
-        TextHelper.sendMessageByKey(source, "economy.account.formatted_balance", TextHelper.Operators.visitString(account.formattedBalance()));
+        TextHelper.sendTextByKey(source, "economy.account.name", TextHelper.Operators.visitString(account.name()));
+        TextHelper.sendTextByKey(source, "economy.account.formatted_balance", TextHelper.Operators.visitString(account.formattedBalance()));
         source.sendMessage(TextHelper.TEXT_EMPTY);
     }
 
@@ -193,7 +193,7 @@ public class EconomyInitializer extends ModuleInitializer {
 
         long finalValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
         economyAccount.setBalance(finalValue);
-        TextHelper.sendMessageByKey(source, "operation.success");
+        TextHelper.sendTextByKey(source, "operation.success");
         return CommandHelper.Return.SUCCESS;
     }
 

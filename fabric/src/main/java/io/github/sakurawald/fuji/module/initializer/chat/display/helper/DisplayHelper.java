@@ -33,7 +33,7 @@ public class DisplayHelper {
     private static void viewDisplayGui(@NotNull ServerPlayerEntity viewingPlayer, String displayUUID) {
         BaseDisplayGuiFactory baseDisplayGui = uuid2gui.get(displayUUID);
         if (baseDisplayGui == null) {
-            TextHelper.sendMessageByKey(viewingPlayer, "display.invalid");
+            TextHelper.sendTextByKey(viewingPlayer, "display.invalid");
             return;
         }
         baseDisplayGui.build(viewingPlayer).open();

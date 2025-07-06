@@ -33,7 +33,7 @@ public class AboutGui extends PagedGui<Person> {
         getFooter().setSlot(4, new GuiElementBuilder(Items.NETHER_STAR)
             .setName(TextHelper.getTextByKey(player, "homepage.project"))
             .setCallback(() -> {
-                TextHelper.sendMessageByKey(player, "homepage.project.visit", metadata.getContact().get("sources").orElse("can't read project homepage from metadata"));
+                TextHelper.sendTextByKey(player, "homepage.project.visit", metadata.getContact().get("sources").orElse("can't read project homepage from metadata"));
                 this.closeWithoutOpenParentGui();
             }));
     }

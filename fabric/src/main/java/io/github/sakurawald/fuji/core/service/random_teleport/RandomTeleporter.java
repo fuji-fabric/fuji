@@ -38,7 +38,7 @@ public class RandomTeleporter {
             ServerWorld world = RegistryHelper.ofServerWorld(setup.getDimension());
             if (world == null) {
                 LogUtil.debug("Abort rtp for {} (target dimension not found in server)", player);
-                TextHelper.sendMessageByKey(player, "world.dimension.not_found");
+                TextHelper.sendTextByKey(player, "world.dimension.not_found");
                 return;
             }
 
@@ -52,7 +52,7 @@ public class RandomTeleporter {
 
             if (result.isEmpty()) {
                 LogUtil.debug("Abort rtp for {} (run out max tried times)", player);
-                TextHelper.sendMessageByKey(player, "rtp.fail");
+                TextHelper.sendTextByKey(player, "rtp.fail");
                 return;
             }
 

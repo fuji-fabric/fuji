@@ -22,7 +22,7 @@ public class FeedInitializer extends ModuleInitializer {
         foodData.setFoodLevel(20);
         foodData.setSaturationLevel(5);
 
-        TextHelper.sendMessageByKey(source, "feed");
+        TextHelper.sendTextByKey(source, "feed");
         return CommandHelper.Return.SUCCESS;
     }
 }

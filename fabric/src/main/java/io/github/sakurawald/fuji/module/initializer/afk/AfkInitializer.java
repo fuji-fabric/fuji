@@ -59,12 +59,12 @@ public class AfkInitializer extends ModuleInitializer {
             || player.inPowderSnow
             || ((PlayerCombatExtension) player).fuji$inCombat()) {
 
-            TextHelper.sendMessageByKey(player, "afk.on.failed");
+            TextHelper.sendTextByKey(player, "afk.on.failed");
             return CommandHelper.Return.FAIL;
         }
 
         ((AfkStateAccessor) player).fuji$changeAfk(true);
-        TextHelper.sendMessageByKey(player, "afk.on");
+        TextHelper.sendTextByKey(player, "afk.on");
         return CommandHelper.Return.SUCCESS;
     }
 

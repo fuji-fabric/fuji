@@ -36,7 +36,7 @@ public class AttachmentInitializer extends ModuleInitializer {
     @CommandNode("unset")
     private static int unset(@CommandSource CommandContext<ServerCommandSource> ctx, SubjectName subject, SubjectId uuid) {
         boolean flag = Managers.getAttachmentManager().unsetAttachment(subject.getValue(), uuid.getValue());
-        TextHelper.sendMessageByKey(ctx.getSource(), flag ? "operation.success" : "operation.fail");
+        TextHelper.sendTextByKey(ctx.getSource(), flag ? "operation.success" : "operation.fail");
         return CommandHelper.Return.SUCCESS;
     }
 

@@ -98,7 +98,7 @@ public class WarningInitializer extends ModuleInitializer {
         String warningDescription = warning.getValue();
 
         WarningService.createWarning(creatorName, targetPlayerName, warningDescription);
-        TextHelper.sendMessageByKey(source, "warning.created", targetPlayerName);
+        TextHelper.sendTextByKey(source, "warning.created", targetPlayerName);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -108,7 +108,7 @@ public class WarningInitializer extends ModuleInitializer {
     private static int $listWarning(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer) {
         String targetPlayerName = targetPlayer.getValue();
         PlayerWarnings playerWarnings = WarningService.getPlayerWarnings(targetPlayerName);
-        TextHelper.sendMessageByKey(source, "warning.list.message", targetPlayerName, playerWarnings.warnings.size());
+        TextHelper.sendTextByKey(source, "warning.list.message", targetPlayerName, playerWarnings.warnings.size());
 
         playerWarnings.warnings.forEach(warning -> {
             warning
@@ -128,7 +128,7 @@ public class WarningInitializer extends ModuleInitializer {
         String targetPlayerName = targetPlayer.getValue();
         int originalSize = WarningService.clearWarnings(targetPlayerName);
 
-        TextHelper.sendMessageByKey(source, "warning.clear", originalSize, targetPlayerName);
+        TextHelper.sendTextByKey(source, "warning.clear", originalSize, targetPlayerName);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -138,13 +138,13 @@ public class WarningInitializer extends ModuleInitializer {
     private static int $clearAllWarnings(@CommandSource ServerCommandSource source, Optional<Boolean> confirm) {
         Boolean confirmed = confirm.orElse(false);
         if (!confirmed) {
-            TextHelper.sendMessageByKey(source, "operation.cancelled");
+            TextHelper.sendTextByKey(source, "operation.cancelled");
             return CommandHelper.Return.SUCCESS;
         }
 
         WarningService.clearAllWarnings();
 
-        TextHelper.sendMessageByKey(source, "warning.clear_all");
+        TextHelper.sendTextByKey(source, "warning.clear_all");
         return CommandHelper.Return.SUCCESS;
     }
 

@@ -14,8 +14,6 @@ import io.github.sakurawald.fuji.module.initializer.kit.structure.Kit;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-import java.util.List;
-
 @Document("""
     Make a set of items as kit, and give the kit to players.
     """)
@@ -37,7 +35,7 @@ public class KitInitializer extends ModuleInitializer {
         /* Verify. */
         String kitName = kit.getValue();
         if (!KitService.hasKit(kitName)) {
-            TextHelper.sendMessageByKey(source, "kit.kit.empty");
+            TextHelper.sendTextByKey(source, "kit.kit.empty");
             return CommandHelper.Return.FAIL;
         }
 

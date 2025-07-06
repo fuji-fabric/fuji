@@ -33,7 +33,7 @@ public abstract class CrudPagedGui<T> extends PagedGui<T> {
 
     private void doCreateEntity() {
         if (!this.canCreateEntity()) {
-            TextHelper.sendMessageByKey(getPlayer(), "operation.no_permission");
+            TextHelper.sendTextByKey(getPlayer(), "operation.no_permission");
             return;
         }
 

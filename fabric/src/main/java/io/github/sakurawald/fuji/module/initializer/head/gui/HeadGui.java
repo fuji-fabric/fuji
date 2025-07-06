@@ -51,7 +51,7 @@ public class HeadGui extends SimpleGui {
 
             /* Wait for data fetching. */
             if (entities.isEmpty()) {
-                TextHelper.sendMessageByKey(getPlayer(), "data.fetching");
+                TextHelper.sendTextByKey(getPlayer(), "data.fetching");
                 close();
                 return;
             }

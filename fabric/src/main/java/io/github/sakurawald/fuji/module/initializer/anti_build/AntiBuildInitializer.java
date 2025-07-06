@@ -38,7 +38,7 @@ public class AntiBuildInitializer extends ModuleInitializer {
         if (shouldWeCancelTheAction(player, antiType, ids, id)) {
             /* Send the cation cancelled message to the player. */
             if (shouldSendFeedback.get()) {
-                TextHelper.sendMessageByKey(player, "anti_build.disallow");
+                TextHelper.sendTextByKey(player, "anti_build.disallow");
             }
 
             /* Cancel the call with specified value. */

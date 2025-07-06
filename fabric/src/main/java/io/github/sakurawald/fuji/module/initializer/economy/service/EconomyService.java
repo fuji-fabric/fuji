@@ -130,16 +130,16 @@ public class EconomyService {
                 fromAccount.decreaseBalance(deltaValue);
                 toAccount.increaseBalance(deltaValue);
 
-                TextHelper.sendMessageByKey(source, "operation.success");
+                TextHelper.sendTextByKey(source, "operation.success");
             } catch (Exception rollbackIfFailed) {
                 LogUtil.error("Failed to transfer currency {} with amount {} from account {} to account {}", currencyId, amount, fromAccount, toAccount, rollbackIfFailed);
                 fromAccount.setBalance(fromAccountPreviousBalance);
                 toAccount.setBalance(toAccountPreviousBalance);
-                TextHelper.sendMessageByKey(source, "operation.fail");
+                TextHelper.sendTextByKey(source, "operation.fail");
             }
 
         } else {
-            TextHelper.sendMessageByKey(source, "operation.fail");
+            TextHelper.sendTextByKey(source, "operation.fail");
         }
     }
 }

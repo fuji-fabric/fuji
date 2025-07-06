@@ -49,7 +49,7 @@ public class SendBossbarInitializer extends ModuleInitializer {
             CommandExecutor.execute(extendedCommandSource, $commandList.getValue());
 
             if ($notifyMeOnComplete) {
-                TextHelper.sendMessageByKey(source, "echo.send_bossbar.notify", player.getGameProfile().getName(), $commandList.getValue());
+                TextHelper.sendTextByKey(source, "echo.send_bossbar.notify", player.getGameProfile().getName(), $commandList.getValue());
             }
         });
 

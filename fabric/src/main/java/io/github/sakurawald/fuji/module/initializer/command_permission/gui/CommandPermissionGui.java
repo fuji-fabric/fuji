@@ -43,13 +43,13 @@ public class CommandPermissionGui extends PagedGui<CommandNodePermissionWrapper>
 
                 if (clickType.isLeft) {
                     String executionCommand = "/lp group default permission set %s true".formatted(commandPermissionString);
-                    TextHelper.sendMessageByKey(getPlayer(), "command_permission.command.set_true", commandPathString, executionCommand, executionCommand);
+                    TextHelper.sendTextByKey(getPlayer(), "command_permission.command.set_true", commandPathString, executionCommand, executionCommand);
                 } else if (clickType.isRight) {
                     String executionCommand = "/lp group default permission set %s false".formatted(commandPermissionString);
-                    TextHelper.sendMessageByKey(getPlayer(), "command_permission.command.set_false", commandPathString, executionCommand, executionCommand);
+                    TextHelper.sendTextByKey(getPlayer(), "command_permission.command.set_false", commandPathString, executionCommand, executionCommand);
                 } else if (clickType.isMiddle) {
                     String executionCommand = "/lp group default permission unset %s".formatted(commandPermissionString);
-                    TextHelper.sendMessageByKey(getPlayer(), "command_permission.command.unset", commandPathString, executionCommand, executionCommand);
+                    TextHelper.sendTextByKey(getPlayer(), "command_permission.command.unset", commandPathString, executionCommand, executionCommand);
                 }
 
                 close();

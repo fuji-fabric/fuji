@@ -25,7 +25,7 @@ public class TopInitializer extends ModuleInitializer {
         GlobalPos globalPos = GlobalPos.of(player).withY(topPosition.getY());
         globalPos.teleport(player);
 
-        TextHelper.sendMessageByKey(player, "top");
+        TextHelper.sendTextByKey(player, "top");
         return CommandHelper.Return.SUCCESS;
     }
 

@@ -71,7 +71,7 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
     private void handleRestoreButton(SimpleGui displayGui, ServerPlayerEntity viewingPlayer) {
             /* Ensure the restore target player's inventory is empty. */
             if (!viewingPlayer.getInventory().isEmpty()) {
-                TextHelper.sendMessageByKey(viewingPlayer, "deathlog.restore.target_player.inventory_not_empty", PlayerHelper.getPlayerName(viewingPlayer));
+                TextHelper.sendTextByKey(viewingPlayer, "deathlog.restore.target_player.inventory_not_empty", PlayerHelper.getPlayerName(viewingPlayer));
                 return;
             }
 
@@ -87,6 +87,6 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
             viewingPlayer.experienceLevel = this.deathNode.expLevel;
             viewingPlayer.experienceProgress = this.deathNode.expProgress;
 
-            TextHelper.sendMessageByKey(viewingPlayer, "deathlog.restore.success");
+            TextHelper.sendTextByKey(viewingPlayer, "deathlog.restore.success");
     }
 }

@@ -33,11 +33,11 @@ public class PvpInitializer extends ModuleInitializer {
             whitelist.add(playerName);
             data.writeStorage();
 
-            TextHelper.sendMessageByKey(player, "pvp.on");
+            TextHelper.sendTextByKey(player, "pvp.on");
             return CommandHelper.Return.SUCCESS;
         }
 
-        TextHelper.sendMessageByKey(player, "pvp.on.already");
+        TextHelper.sendTextByKey(player, "pvp.on.already");
         return CommandHelper.Return.FAIL;
     }
 
@@ -51,11 +51,11 @@ public class PvpInitializer extends ModuleInitializer {
             whitelist.remove(playerName);
             data.writeStorage();
 
-            TextHelper.sendMessageByKey(player, "pvp.off");
+            TextHelper.sendTextByKey(player, "pvp.off");
             return CommandHelper.Return.SUCCESS;
         }
 
-        TextHelper.sendMessageByKey(player, "pvp.off.already");
+        TextHelper.sendTextByKey(player, "pvp.off.already");
         return CommandHelper.Return.FAIL;
     }
 
@@ -74,7 +74,7 @@ public class PvpInitializer extends ModuleInitializer {
     @CommandNode("pvp list")
     private static int $list(@CommandSource ServerCommandSource source) {
         Set<String> whitelist = data.model().whitelist;
-        TextHelper.sendMessageByKey(source, "pvp.list", whitelist);
+        TextHelper.sendTextByKey(source, "pvp.list", whitelist);
         return CommandHelper.Return.SUCCESS;
     }
 

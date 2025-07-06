@@ -210,7 +210,7 @@ public class ProductionWork extends Work implements Schedulable {
             }
         }
 
-        TextHelper.sendMessageByKey(player, "works.production_work.sample.resolve_hoppers.response", hopperBlockCount, minecartHopperCount);
+        TextHelper.sendTextByKey(player, "works.production_work.sample.resolve_hoppers.response", hopperBlockCount, minecartHopperCount);
         return hopperBlockCount + minecartHopperCount;
     }
 
@@ -230,7 +230,7 @@ public class ProductionWork extends Work implements Schedulable {
         this.sample.sampleZ = player.getZ();
         this.sample.sampleCounter = new HashMap<>();
         if (this.resolveHoppers(player) == 0) {
-            TextHelper.sendMessageByKey(player, "operation.cancelled");
+            TextHelper.sendTextByKey(player, "operation.cancelled");
             return;
         }
 

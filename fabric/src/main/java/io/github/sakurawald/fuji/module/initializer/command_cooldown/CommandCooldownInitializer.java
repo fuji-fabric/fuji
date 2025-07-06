@@ -113,7 +113,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         config.model().namedCooldown.list.put(name, commandCooldown);
         config.writeStorage();
 
-        TextHelper.sendMessageByKey(source, "command_cooldown.created", name);
+        TextHelper.sendTextByKey(source, "command_cooldown.created", name);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -126,7 +126,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         config.model().namedCooldown.list.remove(key);
         config.writeStorage();
 
-        TextHelper.sendMessageByKey(source, "command_cooldown.deleted", name.getValue());
+        TextHelper.sendTextByKey(source, "command_cooldown.deleted", name.getValue());
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -150,20 +150,20 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         String key = player.getGameProfile().getName();
         commandCooldown.getTimestamp().put(key, 0L);
 
-        TextHelper.sendMessageByKey(source, "command_cooldown.reset", key, name.getValue());
+        TextHelper.sendTextByKey(source, "command_cooldown.reset", key, name.getValue());
         return CommandHelper.Return.SUCCESS;
     }
 
     private static void ensureExist(ServerCommandSource source, CommandCooldownName name) {
         if (!config.model().namedCooldown.list.containsKey(name.getValue())) {
-            TextHelper.sendMessageByKey(source, "command_cooldown.not_found", name.getValue());
+            TextHelper.sendTextByKey(source, "command_cooldown.not_found", name.getValue());
             throw new AbortCommandExecutionException();
         }
     }
 
     private static void ensureNotExist(ServerCommandSource source, String name) {
         if (config.model().namedCooldown.list.containsKey(name)) {
-            TextHelper.sendMessageByKey(source, "command_cooldown.already_exists", name);
+            TextHelper.sendTextByKey(source, "command_cooldown.already_exists", name);
             throw new AbortCommandExecutionException();
         }
     }

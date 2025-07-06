@@ -38,7 +38,7 @@ public class SendCustomInitializer extends ModuleInitializer {
         try {
             return Files.readString(resolve);
         } catch (IOException e) {
-            TextHelper.sendMessageByKey(player, "echo.send_custom.custom_text.not_found", value);
+            TextHelper.sendTextByKey(player, "echo.send_custom.custom_text.not_found", value);
             throw new AbortCommandExecutionException();
         }
     }

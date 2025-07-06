@@ -50,7 +50,7 @@ public class FujiInitializer extends ModuleInitializer {
         // Reload jobs.
         Managers.getScheduleManager().rescheduleJobs();
 
-        TextHelper.sendMessageByKey(source, "reload");
+        TextHelper.sendTextByKey(source, "reload");
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -58,7 +58,7 @@ public class FujiInitializer extends ModuleInitializer {
     @CommandNode("user-guide")
     public static int $userGuide(@CommandSource ServerPlayerEntity player) {
         CoreInitializer.printUserGuide();
-        TextHelper.sendMessageByKey(player, "fuji.user_guide");
+        TextHelper.sendTextByKey(player, "fuji.user_guide");
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -77,7 +77,7 @@ public class FujiInitializer extends ModuleInitializer {
         var config = Configs.MAIN_CONTROL_CONFIG.model().core.debug;
         config.log_debug_messages = !config.log_debug_messages;
 
-        TextHelper.sendMessageByKey(source, config.log_debug_messages ? "fuji.debug.on" : "fuji.debug.off");
+        TextHelper.sendTextByKey(source, config.log_debug_messages ? "fuji.debug.on" : "fuji.debug.off");
         return CommandHelper.Return.SUCCESS;
     }
 

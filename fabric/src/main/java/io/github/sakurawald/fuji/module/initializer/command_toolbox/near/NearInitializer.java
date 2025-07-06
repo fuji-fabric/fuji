@@ -34,7 +34,7 @@ public class NearInitializer extends ModuleInitializer {
             .map(p -> p.getGameProfile().getName())
             .toList();
 
-        TextHelper.sendMessageByKey(player, "near.format", result);
+        TextHelper.sendTextByKey(player, "near.format", result);
         return CommandHelper.Return.SUCCESS;
     }
 

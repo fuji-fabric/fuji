@@ -138,7 +138,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
         chatFormatData.writeStorage();
 
         /* Feedback. */
-        TextHelper.sendMessageByKey(player, "chat.format.reset");
+        TextHelper.sendTextByKey(player, "chat.format.reset");
         return CommandHelper.Return.SUCCESS;
     }
 

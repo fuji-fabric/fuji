@@ -52,7 +52,7 @@ public class PagedMessageText extends PagedText {
     private String makeClickCallbackCommand(int pageIndex) {
         return Managers.getCallbackManager().makeCallbackCommand((player) -> {
             if (pageIndex < 0 || pageIndex >= this.getPages().size()) {
-                TextHelper.sendMessageByKey(player, "echo.send_custom.custom_text.invalid_page");
+                TextHelper.sendTextByKey(player, "echo.send_custom.custom_text.invalid_page");
                 return;
             }
 

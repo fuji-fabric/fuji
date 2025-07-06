@@ -6,7 +6,7 @@ public class LogicHelper {
 
     public static void tryOrCancel(ServerPlayerEntity player, boolean shouldCancel, Runnable runnable) {
         if (shouldCancel) {
-            TextHelper.sendMessageByKey(player, "operation.cancelled");
+            TextHelper.sendTextByKey(player, "operation.cancelled");
             return;
         }
 

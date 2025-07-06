@@ -323,7 +323,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     private static void doQueryAttachment(ServerPlayerEntity player, String uuid) {
         /* Check if attachment exists. */
         if (!Managers.getAttachmentManager().existsAttachment(COMMAND_ATTACHMENT_SUBJECT_NAME, uuid)) {
-            TextHelper.sendMessageByKey(player, "command_attachment.query.no_attachment");
+            TextHelper.sendTextByKey(player, "command_attachment.query.no_attachment");
             throw new AbortCommandExecutionException();
         }
 

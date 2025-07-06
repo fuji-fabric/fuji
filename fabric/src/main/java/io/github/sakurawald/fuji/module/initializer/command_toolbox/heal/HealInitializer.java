@@ -19,7 +19,7 @@ public class HealInitializer extends ModuleInitializer {
     private static int $heal(@CommandSource @CommandTarget ServerPlayerEntity player) {
         player.setHealth(player.getMaxHealth());
         player.getHungerManager().setFoodLevel(20);
-        TextHelper.sendMessageByKey(player, "heal");
+        TextHelper.sendTextByKey(player, "heal");
         return CommandHelper.Return.SUCCESS;
     }
 

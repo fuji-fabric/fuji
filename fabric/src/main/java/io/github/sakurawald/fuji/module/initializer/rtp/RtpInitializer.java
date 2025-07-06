@@ -36,7 +36,7 @@ public class RtpInitializer extends ModuleInitializer {
 
         Optional<TeleportSetup> first = list.stream().filter(o -> o.getDimension().equals(dimension)).findFirst();
         if (first.isEmpty()) {
-            TextHelper.sendMessageByKey(player, "rtp.dimension.disallow", RegistryHelper.toString(world));
+            TextHelper.sendTextByKey(player, "rtp.dimension.disallow", RegistryHelper.toString(world));
             throw new AbortCommandExecutionException();
         }
 
@@ -50,7 +50,7 @@ public class RtpInitializer extends ModuleInitializer {
         TeleportSetup setup = withTeleportSetup(player, serverWorld);
 
         TextHelper.sendActionBarByKey(player, "rtp.tip");
-        RandomTeleporter.request(player, setup, (position) -> TextHelper.sendMessageByKey(player, "rtp.success"));
+        RandomTeleporter.request(player, setup, (position) -> TextHelper.sendTextByKey(player, "rtp.success"));
         return CommandHelper.Return.SUCCESS;
     }
 }

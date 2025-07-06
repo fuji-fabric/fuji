@@ -36,7 +36,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                 cir.setReturnValue(ActionResult.FAIL);
 
                 if (hand == Hand.MAIN_HAND) {
-                    TextHelper.sendMessageByKey(source, "fake_player_manager.manipulate.forbidden");
+                    TextHelper.sendTextByKey(source, "fake_player_manager.manipulate.forbidden");
                 }
             }
         }

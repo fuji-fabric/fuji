@@ -17,7 +17,7 @@ public class GlowInitializer extends ModuleInitializer {
     private static int $glow(@CommandSource @CommandTarget ServerPlayerEntity player) {
         boolean flag = !player.isGlowing();
         player.setGlowing(flag);
-        TextHelper.sendMessageByKey(player, flag ? "glow.on" : "glow.off");
+        TextHelper.sendTextByKey(player, flag ? "glow.on" : "glow.off");
         return CommandHelper.Return.SUCCESS;
     }
 

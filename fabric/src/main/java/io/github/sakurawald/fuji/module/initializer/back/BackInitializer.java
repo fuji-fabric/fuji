@@ -69,7 +69,7 @@ public class BackInitializer extends ModuleInitializer {
     private static int $clear(@CommandSource CommandContext<ServerCommandSource> source, @CommandTarget ServerPlayerEntity player) {
         return withLocationHistory(player, locationHistory -> {
             locationHistory.clearEntries();
-            TextHelper.sendMessageByKey(source, "back.clear", player.getGameProfile().getName());
+            TextHelper.sendTextByKey(source, "back.clear", player.getGameProfile().getName());
             return CommandHelper.Return.SUCCESS;
         });
     }
@@ -91,14 +91,14 @@ public class BackInitializer extends ModuleInitializer {
         return withLocationHistory(player, locationHistory -> {
             // Print header.
             String targetPlayerName = player.getGameProfile().getName();
-            TextHelper.sendMessageByKey(source, "back.list", targetPlayerName);
+            TextHelper.sendTextByKey(source, "back.list", targetPlayerName);
 
             // Print body.
             locationHistory
                 .listEntries()
                 .forEachRemaining(it -> {
                     GlobalPos location = it.getLocation();
-                    TextHelper.sendMessageByKey(source, "back.list.entry"
+                    TextHelper.sendTextByKey(source, "back.list.entry"
                         , location.getLevel()
                         , location.getX()
                         , location.getY()

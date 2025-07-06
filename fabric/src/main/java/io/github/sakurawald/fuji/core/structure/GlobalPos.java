@@ -56,7 +56,7 @@ public class GlobalPos {
         /* Get the dimension instance from server. */
         ServerWorld dimension = RegistryHelper.ofServerWorld(this.level);
         if (dimension == null) {
-            TextHelper.sendMessageByKey(player, "world.dimension.not_found", this.level);
+            TextHelper.sendTextByKey(player, "world.dimension.not_found", this.level);
             return;
         }
 

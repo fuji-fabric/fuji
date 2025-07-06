@@ -21,7 +21,7 @@ public class PingInitializer extends ModuleInitializer {
         String name = target.getGameProfile().getName();
 
         int latency = PlayerHelper.getPing(target);
-        TextHelper.sendMessageByKey(source, "ping.player", name, latency);
+        TextHelper.sendTextByKey(source, "ping.player", name, latency);
 
         return CommandHelper.Return.SUCCESS;
     }
