@@ -19,8 +19,6 @@ import lombok.SneakyThrows;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-
 
 @ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
   <json>
@@ -49,15 +47,6 @@ public class TesterInitializer extends ModuleInitializer {
     @SneakyThrows(Exception.class)
     @CommandNode("run")
     private static int $run(@CommandSource ServerPlayerEntity player) {
-
-        EconomyProvider fuji = CommonEconomy.getProvider("fuji");
-        LogUtil.info("provider = {}", fuji);
-
-        EconomyCurrency currency = CommonEconomy.getCurrency(player.getServer(), Identifier.of("fuji:gold"));
-        LogUtil.info("first currency = {}", currency);
-
-        EconomyAccount account = CommonEconomy.getAccount(player, Identifier.of("fuji:gold"));
-        LogUtil.info("account = {}", account);
 
 
         return 0;
