@@ -303,29 +303,54 @@ public class TextHelper {
 
     }
 
-    private static @NotNull String formatStringArgs(@NotNull String string, Object... args) {
-        // NOTE: This brings the in-consistent between Text Placeholder API. (e.g. `%player:name%` and `%%player:name%%`.)
-        // NOTE: When `Java Standard Formatter` is used, you have to write `%%` to mean the `%` for `Text Placeholder API`.
-        if (args.length > 0) {
-            try {
-                return String.format(string, args);
-            } catch (Exception e) {
-                LogUtil.error("""
-                    Failed to format arguments in language value.
-                    The language value is `{}`.
-                    The arguments are `{}`.
+    @ForDeveloper("The functions to map language key into language value for specified language code.")
+    public static class Translator {
 
-                    There may be a syntax mistake in the language file.
-                    Note that, you have to write `%%` to mean `%` if the Java Standard String Formatter is in use.
-                    See the grammar of Java Standard String formatter in: https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html
-                    """, string, args, e);
+        private static @Nullable String getLanguageValueFromLanguageJson(@NotNull String languageCode, @NotNull String languageKey) {
+            /* Get the language json object. */
+            JsonObject languageJson = Loader.getLanguageJsonObject(languageCode);
+
+            /* If the client-side language is not supported in server side, fallback to specified default language. */
+            if (languageJson == Loader.UNSUPPORTED_LANGUAGE_MARKER) {
+                languageCode = Loader.getDefaultLanguageCode();
+                languageJson = Loader.getLanguageJsonObject(languageCode);
             }
+
+            /* Get the language value from language json object. */
+            if (languageJson.has(languageKey)) {
+                return languageJson.get(languageKey).getAsString();
+            }
+
+            // Use partial locale. (Fallback to default language for one missing key)
+            // NOTE: Actually, we will add the missing keys when loading a language file.
+            if (!Loader.isDefaultLanguageCode(languageCode)) {
+                String defaultLanguageCode = Loader.getDefaultLanguageCode();
+                LogUtil.warn("There is no language key {} in language code {}. We will fallback to default language code {} for this key.", languageKey, languageCode, defaultLanguageCode);
+                return getLanguageValueFromLanguageJson(defaultLanguageCode, languageKey);
+            }
+
+            // If the language key is missing in the default language, then we have nothing to do.
+            LogUtil.error("Failed to load the language key {} in the default language code.", languageKey);
+            return null;
         }
 
-        // No args to format, return the original string directly.
-        return string;
+        public static @NotNull String getLanguageValueByKey(@Nullable Object audience, @NotNull String languageKey) {
+            /* Get the language value for that audience. */
+            String languageCode = Loader.getAudienceLanguageCode(audience);
+            String languageValue = getLanguageValueFromLanguageJson(languageCode, languageKey);
+            if (languageValue != null) {
+                return languageValue;
+            }
+
+            /* Return a dummy value for easier debugging. */
+            String dummyLanguageValue = "(No key `%s` in language `%s`)".formatted(languageKey, languageCode);
+            LogUtil.warn("Failed to get language value: language code = {}, language key = {}, audience = {}", languageCode, languageKey, audience);
+            return dummyLanguageValue;
+        }
+
     }
 
+    @ForDeveloper("The functions to operate on the Text domain entity.")
     public static class Operators {
 
         private static String visitString(TextContent textContent) {
@@ -425,7 +450,7 @@ public class TextHelper {
     @ForDeveloper("This is the core method to map String into Text.")
     public static @NotNull Text getText(@NotNull NodeParser parser, @Nullable Object audience, boolean isKey, String keyOrValue, Object... args) {
         // Retrieve the language value.
-        String languageValue = isKey ? Mapper.getLanguageValueByKey(audience, keyOrValue) : keyOrValue;
+        String languageValue = isKey ? Translator.getLanguageValueByKey(audience, keyOrValue) : keyOrValue;
 
         // Check NPE.
         if (languageValue == null) {
@@ -449,6 +474,30 @@ public class TextHelper {
         return parser.parseText(TextNode.of(languageValue), parserContext);
     }
 
+    private static @NotNull String formatStringArgs(@NotNull String string, Object... args) {
+        // NOTE: This brings the in-consistent between Text Placeholder API. (e.g. `%player:name%` and `%%player:name%%`.)
+        // NOTE: When `Java Standard Formatter` is used, you have to write `%%` to mean the `%` for `Text Placeholder API`.
+        if (args.length > 0) {
+            try {
+                return String.format(string, args);
+            } catch (Exception e) {
+                LogUtil.error("""
+                    Failed to format arguments in language value.
+                    The language value is `{}`.
+                    The arguments are `{}`.
+
+                    There may be a syntax mistake in the language file.
+                    Note that, you have to write `%%` to mean `%` if the Java Standard String Formatter is in use.
+                    See the grammar of Java Standard String formatter in: https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html
+                    """, string, args, e);
+            }
+        }
+
+        // No args to format, return the original string directly.
+        return string;
+    }
+
+
     public static @NotNull Text getTextByKey(@Nullable Object audience, String key, Object... args) {
         return getText(Parsers.POWERFUL_PARSER, audience, true, key, args);
     }
@@ -457,14 +506,17 @@ public class TextHelper {
         return getText(Parsers.POWERFUL_PARSER, audience, false, value, args);
     }
 
-    public static MutableText getTextByKeyWithKeyword(@Nullable Object audience, String key, String keyword) {
-        String replacement = Mapper.getValueByKeyword(audience, keyword);
-        String value = Mapper.getLanguageValueByKey(audience, key, replacement);
-        return Text.literal(value);
+    public static Text getTextByKeyAndReplaceTheKeyword(@Nullable Object audience, String languageKey, String keywordName) {
+        /* Get the keyword value. */
+        String keywordKey = "keyword." + keywordName;
+        String keywordValue = Translator.getLanguageValueByKey(audience, keywordKey);
+
+        /* Replace with the keyword value. */
+        return getTextByKey(audience, languageKey, keywordValue);
     }
 
     private static @NotNull List<Text> getTextList(@Nullable Object audience, boolean isKey, String keyOrValue) {
-        String value = isKey ? Mapper.getLanguageValueByKey(audience, keyOrValue) : keyOrValue;
+        String value = isKey ? Translator.getLanguageValueByKey(audience, keyOrValue) : keyOrValue;
 
         return Arrays
             .stream(splitStringLines(value))
@@ -484,61 +536,6 @@ public class TextHelper {
         return getTextList(audience, false, value);
     }
 
-    @ForDeveloper("The functions to map language key into language value for specified language code.")
-    public static class Mapper {
-
-        public static @NotNull String getLanguageValueByKey(@Nullable Object audience, @NotNull String languageKey) {
-            /* Get the language value for that audience. */
-            String languageCode = Loader.getAudienceLanguageCode(audience);
-            String languageValue = getLanguageValue(languageCode, languageKey);
-            if (languageValue != null) {
-                return languageValue;
-            }
-
-            /* Return a dummy value for easier debugging. */
-            String dummyLanguageValue = "(No key `%s` in language `%s`)".formatted(languageKey, languageCode);
-            LogUtil.warn("Failed to get language value: language code = {}, language key = {}, audience = {}", languageCode, languageKey, audience);
-            return dummyLanguageValue;
-        }
-
-        private static @Nullable String getLanguageValue(@NotNull String languageCode, @NotNull String languageKey) {
-            /* Get the language json object. */
-            JsonObject languageJson = Loader.getLanguageJsonObject(languageCode);
-
-            /* If the client-side language is not supported in server side, fallback to specified default language. */
-            if (languageJson == Loader.UNSUPPORTED_LANGUAGE_MARKER) {
-                languageCode = Loader.getDefaultLanguageCode();
-                languageJson = Loader.getLanguageJsonObject(languageCode);
-            }
-
-            /* Get the language value from language json object. */
-            if (languageJson.has(languageKey)) {
-                return languageJson.get(languageKey).getAsString();
-            }
-
-            // Use partial locale. (Fallback to default language for one missing key)
-            // NOTE: Actually, we will add the missing keys when loading a language file.
-            if (!Loader.isDefaultLanguageCode(languageCode)) {
-                String defaultLanguageCode = Loader.getDefaultLanguageCode();
-                LogUtil.warn("There is no language key {} in language code {}. We will fallback to default language code {} for this key.", languageKey, languageCode, defaultLanguageCode);
-                return getLanguageValue(defaultLanguageCode, languageKey);
-            }
-
-            // If the language key is missing in the default language, then we have nothing to do.
-            LogUtil.error("Failed to load the language key {} in the default language code.", languageKey);
-            return null;
-        }
-
-        public static String getValueByKeyword(@Nullable Object audience, String keyword) {
-            String key = "keyword." + keyword;
-            return getLanguageValueByKey(audience, key);
-        }
-
-        public static @NotNull String getLanguageValueByKey(@Nullable Object audience, String languageKey, Object... args) {
-            String languageValue = getLanguageValueByKey(audience, languageKey);
-            return formatStringArgs(languageValue, args);
-        }
-    }
 
     public static void sendMessageByFlag(@NotNull Object audience, boolean flag) {
         sendMessageByKey(audience, flag ? "on" : "off");

@@ -6,7 +6,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 public abstract class ConfirmSignGui extends InputSignGui {
 
     public ConfirmSignGui(ServerPlayerEntity player) {
-        super(player, TextHelper.getTextByKeyWithKeyword(player, "prompt.input.confirm", "confirm"));
+        super(player, TextHelper.getTextByKeyAndReplaceTheKeyword(player, "prompt.input.confirm", "confirm"));
     }
 
     @Override
@@ -22,7 +22,7 @@ public abstract class ConfirmSignGui extends InputSignGui {
     protected void onCancelled() {}
 
     private boolean isConfirmed() {
-        String confirmationString = TextHelper.Mapper.getValueByKeyword(getPlayer(), "confirm");
+        String confirmationString = TextHelper.Translator.getLanguageValueByKey(getPlayer(), "keyword.confirm");
         return this.getLine(0).getString().equals(confirmationString);
     }
 

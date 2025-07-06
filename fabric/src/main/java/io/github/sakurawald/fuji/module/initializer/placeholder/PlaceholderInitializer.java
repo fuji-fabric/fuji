@@ -171,20 +171,20 @@ public class PlaceholderInitializer extends ModuleInitializer {
             int y = player.getBlockY();
             int z = player.getBlockZ();
             String dim_name = player.getWorld().getRegistryKey().getValue().toString();
-            String dim_display_name = TextHelper.Mapper.getLanguageValueByKey(player, dim_name);
-            String hoverString = TextHelper.Mapper.getLanguageValueByKey(player, "chat.current_pos");
+            String dim_display_name = TextHelper.Translator.getLanguageValueByKey(player, dim_name);
+            String hoverString = TextHelper.Translator.getLanguageValueByKey(player, "chat.current_pos");
             switch (dim_name) {
                 case "minecraft:overworld":
-                    hoverString += "\n" + TextHelper.Mapper.getLanguageValueByKey(player, "minecraft:the_nether")
+                    hoverString += "\n" + TextHelper.Translator.getLanguageValueByKey(player, "minecraft:the_nether")
                         + ": %d %s %d".formatted(x / 8, y, z / 8);
                     break;
                 case "minecraft:the_nether":
-                    hoverString += "\n" + TextHelper.Mapper.getLanguageValueByKey(player, "minecraft:overworld")
+                    hoverString += "\n" + TextHelper.Translator.getLanguageValueByKey(player, "minecraft:overworld")
                         + ": %d %s %d".formatted(x * 8, y, z * 8);
                     break;
             }
 
-            String clickCommand = TextHelper.Mapper.getLanguageValueByKey(player, "chat.xaero_waypoint_add.command");
+            String clickCommand = TextHelper.Translator.getLanguageValueByKey(player, "chat.xaero_waypoint_add.command");
 
             return TextHelper.getTextByKey(player, "placeholder.pos", x, y, z, dim_display_name)
                 .copy()
