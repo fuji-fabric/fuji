@@ -169,6 +169,25 @@ public class TextHelper {
         public static Text parseString(NodeParser parser, String input) {
             return parser.parseNode(input).toText();
         }
+
+        private static @NotNull PlaceholderContext makePlaceholderContext(@Nullable Object audience) {
+            /* Unbox the player from server command source. */
+            if (audience instanceof ServerCommandSource) {
+                audience = ((ServerCommandSource) audience).getPlayer();
+            }
+
+            /* Dispatch the audience type, and provide the bits to make the placeholder context. */
+            PlaceholderContext placeholderContext;
+            if (audience instanceof PlayerEntity playerEntity) {
+                placeholderContext = PlaceholderContext.of(playerEntity);
+            } else if (audience instanceof GameProfile gameProfile) {
+                placeholderContext = PlaceholderContext.of(gameProfile, ServerHelper.getServer());
+            } else {
+                placeholderContext = PlaceholderContext.of(ServerHelper.getServer());
+            }
+
+            return placeholderContext;
+        }
     }
 
     @ForDeveloper("The functions used to load language file from storage into memory, and resolve the suitable language json for given audience.")
@@ -355,7 +374,7 @@ public class TextHelper {
 
         public static MutableText replaceTextWithRegex(Text text, String regex, Supplier<Text> nonMemorizedReplacementSupplier) {
             // memorize the supplier
-            nonMemorizedReplacementSupplier = memoizeSupplier(nonMemorizedReplacementSupplier);
+            nonMemorizedReplacementSupplier = makeMemoizeSupplier(nonMemorizedReplacementSupplier);
 
             return replaceText(text, Pattern.compile(regex), nonMemorizedReplacementSupplier);
         }
@@ -417,7 +436,7 @@ public class TextHelper {
             return ret;
         }
 
-        private static <T> Supplier<T> memoizeSupplier(Supplier<T> delegate) {
+        private static <T> Supplier<T> makeMemoizeSupplier(Supplier<T> delegate) {
             AtomicReference<T> value = new AtomicReference<>();
             return () -> {
                 T val = value.get();
@@ -432,12 +451,11 @@ public class TextHelper {
 
 
     public static @NotNull String parsePlaceholder(@Nullable Object audience, String value) {
-        return Operators.visitString(TextHelper.getText(Parsers.PLACEHOLDER_ONLY_PARSER, audience, false, value));
+        Text text = TextHelper.getText(Parsers.PLACEHOLDER_ONLY_PARSER, audience, false, value);
+        return Operators.visitString(text);
     }
 
-    /* This is the core method to map `String` into `Text`.
-     *  All methods that return `Vomponent` are converted from this method.
-     * */
+    @ForDeveloper("This is the core method to map String into Text.")
     public static @NotNull Text getText(@NotNull NodeParser parser, @Nullable Object audience, boolean isKey, String keyOrValue, Object... args) {
         String value = isKey ? getValueByKey(audience, keyOrValue) : keyOrValue;
 
@@ -454,29 +472,10 @@ public class TextHelper {
         // resolve args
         value = resolveArgs(value, args);
 
-        PlaceholderContext placeholderContext = makePlaceholderContext(audience);
+        PlaceholderContext placeholderContext = Parsers.makePlaceholderContext(audience);
         ParserContext parserContext = ParserContext.of(PlaceholderContext.KEY, placeholderContext);
 
         return parser.parseText(TextNode.of(value), parserContext);
-    }
-
-    private static @NotNull PlaceholderContext makePlaceholderContext(@Nullable Object audience) {
-        /* extract the player from source */
-        if (audience instanceof ServerCommandSource) {
-            audience = ((ServerCommandSource) audience).getPlayer();
-        }
-
-        /* case type */
-        PlaceholderContext placeholderContext;
-        if (audience instanceof PlayerEntity playerEntity) {
-            placeholderContext = PlaceholderContext.of(playerEntity);
-        } else if (audience instanceof GameProfile gameProfile) {
-            placeholderContext = PlaceholderContext.of(gameProfile, ServerHelper.getServer());
-        } else {
-            placeholderContext = PlaceholderContext.of(ServerHelper.getServer());
-        }
-
-        return placeholderContext;
     }
 
     private static @NotNull Text getText(@Nullable Object audience, boolean isKey, String keyOrValue, Object... args) {
