@@ -13,6 +13,7 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.top_chunks.config.model.TopChunksConfigModel;
 import io.github.sakurawald.fuji.module.initializer.top_chunks.gui.TopChunksGui;
 import io.github.sakurawald.fuji.module.initializer.top_chunks.structure.ChunkScore;
+import java.util.List;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -135,6 +136,12 @@ public class TopChunksInitializer extends ModuleInitializer {
                 chunkScore.getPlayers().add(nearestPlayerString);
             }
         }
+    }
+
+    public static List<ChunkScore> trimChunkScoreList(List<ChunkScore> chunkScores) {
+        int begin = 0;
+        int end = Math.min(chunkScores.size(), getMaxDisplayChunkScore());
+        return chunkScores.subList(begin, end);
     }
 
     public static int getMaxDisplayChunkScore() {

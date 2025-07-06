@@ -22,7 +22,8 @@ import java.util.List;
 public class TopChunksGui extends PagedGui<ChunkScore> {
 
     public TopChunksGui(ServerPlayerEntity player, @NotNull List<ChunkScore> entities, int pageIndex) {
-        super(null, player, TextHelper.getTextByKey(player, "top_chunks.list.gui.title"), entities.subList(0, TopChunksInitializer.getMaxDisplayChunkScore()), pageIndex);
+        super(null, player, TextHelper.getTextByKey(player, "top_chunks.list.gui.title"),
+            TopChunksInitializer.trimChunkScoreList(entities), pageIndex);
     }
 
     @Override
