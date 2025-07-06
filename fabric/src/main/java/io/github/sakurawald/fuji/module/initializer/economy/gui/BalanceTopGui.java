@@ -51,7 +51,7 @@ public class BalanceTopGui extends PagedGui<GameProfileAndEconomyAccount> {
     @Override
     protected GuiElementInterface toGuiElement(GameProfileAndEconomyAccount entity) {
         List<Text> lore = new ArrayList<>();
-        lore.add(TextHelper.getTextByKey(getPlayer(), "economy.balance", TextHelper.visitString(entity.economyAccount.formattedBalance())));
+        lore.add(TextHelper.getTextByKey(getPlayer(), "economy.balance", TextHelper.Operators.visitString(entity.economyAccount.formattedBalance())));
 
         GuiElementBuilder builder = GuiHelper
             .makeLuckyBlockSkull()

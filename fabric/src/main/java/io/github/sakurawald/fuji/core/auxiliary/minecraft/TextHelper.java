@@ -156,6 +156,19 @@ public class TextHelper {
 
             return 0;
         }
+
+        public static String escapeTags(String string) {
+            // NOTE: Here are special characters for Text Placeholder API parsers.
+            return string
+                .replace("<", "\\<")
+                .replace(">", "\\>")
+                .replace("*","\\*")
+                .replace("%", "\\%");
+        }
+
+        public static Text parseString(NodeParser parser, String input) {
+            return parser.parseNode(input).toText();
+        }
     }
 
     @ForDeveloper("The functions used to load language file from storage into memory, and resolve the suitable language json for given audience.")
@@ -321,12 +334,105 @@ public class TextHelper {
         return string;
     }
 
-    public static String visitString(Text text) {
-        return text.getString();
+    public static class Operators {
+
+        private static String visitString(TextContent textContent) {
+            StringBuilder stringBuilder = new StringBuilder();
+            textContent.visit(string -> {
+                stringBuilder.append(string);
+                return Optional.empty();
+            });
+            return stringBuilder.toString();
+        }
+
+        public static String visitString(Text text) {
+            return text.getString();
+        }
+
+        public static MutableText replaceTextWithMarker(Text text, String marker, Supplier<Text> replacementSupplier) {
+            return replaceTextWithRegex(text, "\\[%s\\]".formatted(marker), replacementSupplier);
+        }
+
+        public static MutableText replaceTextWithRegex(Text text, String regex, Supplier<Text> nonMemorizedReplacementSupplier) {
+            // memorize the supplier
+            nonMemorizedReplacementSupplier = memoizeSupplier(nonMemorizedReplacementSupplier);
+
+            return replaceText(text, Pattern.compile(regex), nonMemorizedReplacementSupplier);
+        }
+
+        private static MutableText replaceText(Text text, Pattern pattern, Supplier<Text> replacementSupplier) {
+            MutableText replacedText;
+
+            /* process the atom */
+            String textString = visitString(text.getContent());
+            @Nullable List<Text> splits = trySplitString(textString, pattern, replacementSupplier);
+
+            if (splits == null) {
+                replacedText = text.copyContentOnly();
+            } else {
+                // use a dummy root to represent the replaced node.
+                MutableText dummyRoot = Text.empty();
+                replacedText = dummyRoot;
+                splits.forEach(dummyRoot::append);
+            }
+            replacedText.fillStyle(text.getStyle());
+
+            /* go down */
+            for (Text sibling : text.getSiblings()) {
+                MutableText replacedSibling = replaceText(sibling, pattern, replacementSupplier);
+                replacedText.append(replacedSibling);
+            }
+
+            return replacedText;
+        }
+
+        private static @Nullable List<Text> trySplitString(String string, Pattern pattern, Supplier<Text> replacementSupplier) {
+            /* quick return */
+            Matcher matcher = pattern.matcher(string);
+
+            List<Text> ret = new ArrayList<>();
+            int startIndex = 0;
+            while (matcher.find()) {
+                int i = matcher.start();
+
+                // append the head text if exists
+                if (i != startIndex) {
+                    ret.add(Text.literal(string.substring(startIndex, i)));
+                }
+
+                // append the replacement text
+                ret.add(replacementSupplier.get());
+
+                startIndex = matcher.end();
+            }
+
+            // return null if nothing is replaced.
+            if (ret.isEmpty()) return null;
+
+            /* append the tail string if exists */
+            if (startIndex < string.length()) {
+                ret.add(Text.literal(string.substring(startIndex)));
+            }
+
+            return ret;
+        }
+
+        private static <T> Supplier<T> memoizeSupplier(Supplier<T> delegate) {
+            AtomicReference<T> value = new AtomicReference<>();
+            return () -> {
+                T val = value.get();
+                if (val == null) {
+                    val = value.updateAndGet(cur -> cur == null ?
+                        Objects.requireNonNull(delegate.get()) : cur);
+                }
+                return val;
+            };
+        }
     }
 
+
     public static @NotNull String parsePlaceholder(@Nullable Object audience, String value) {
-        return visitString(TextHelper.getText(Parsers.PLACEHOLDER_ONLY_PARSER, audience, false, value));
+        return Operators.visitString(TextHelper.getText(Parsers.PLACEHOLDER_ONLY_PARSER, audience, false, value));
     }
 
     /* This is the core method to map `String` into `Text`.
@@ -418,10 +524,6 @@ public class TextHelper {
         return getTextList(audience, false, value);
     }
 
-    public static class Sender {
-
-    }
-
     public static void sendMessageByFlag(@NotNull Object audience, boolean flag) {
         sendMessageByKey(audience, flag ? "on" : "off");
     }
@@ -492,104 +594,15 @@ public class TextHelper {
     public static void sendBroadcastByKey(@NotNull String key, Object... args) {
         // fix: log broadcast for console
         Text text = getTextByKey(null, key, args);
-        LogUtil.info(visitString(text));
+        LogUtil.info(Operators.visitString(text));
 
         for (ServerPlayerEntity player : ServerHelper.getServer().getPlayerManager().getPlayerList()) {
             TextHelper.sendMessageByKey(player, key, args);
         }
     }
 
-    private static String visitString(TextContent textContent) {
-        StringBuilder stringBuilder = new StringBuilder();
-        textContent.visit(string -> {
-            stringBuilder.append(string);
-            return Optional.empty();
-        });
-        return stringBuilder.toString();
-    }
-
-    public static MutableText replaceTextWithMarker(Text text, String marker, Supplier<Text> replacementSupplier) {
-        return replaceTextWithRegex(text, "\\[%s\\]".formatted(marker), replacementSupplier);
-    }
-
-    public static MutableText replaceTextWithRegex(Text text, String regex, Supplier<Text> nonMemorizedReplacementSupplier) {
-        // memorize the supplier
-        nonMemorizedReplacementSupplier = memoizeSupplier(nonMemorizedReplacementSupplier);
-
-        return replaceText(text, Pattern.compile(regex), nonMemorizedReplacementSupplier);
-    }
-
-    private static MutableText replaceText(Text text, Pattern pattern, Supplier<Text> replacementSupplier) {
-        MutableText replacedText;
-
-        /* process the atom */
-        String textString = visitString(text.getContent());
-        @Nullable List<Text> splits = trySplitString(textString, pattern, replacementSupplier);
-
-        if (splits == null) {
-            replacedText = text.copyContentOnly();
-        } else {
-            // use a dummy root to represent the replaced node.
-            MutableText dummyRoot = Text.empty();
-            replacedText = dummyRoot;
-            splits.forEach(dummyRoot::append);
-        }
-        replacedText.fillStyle(text.getStyle());
-
-        /* go down */
-        for (Text sibling : text.getSiblings()) {
-            MutableText replacedSibling = replaceText(sibling, pattern, replacementSupplier);
-            replacedText.append(replacedSibling);
-        }
-
-        return replacedText;
-    }
-
-    private static @Nullable List<Text> trySplitString(String string, Pattern pattern, Supplier<Text> replacementSupplier) {
-        /* quick return */
-        Matcher matcher = pattern.matcher(string);
-
-        List<Text> ret = new ArrayList<>();
-        int startIndex = 0;
-        while (matcher.find()) {
-            int i = matcher.start();
-
-            // append the head text if exists
-            if (i != startIndex) {
-                ret.add(Text.literal(string.substring(startIndex, i)));
-            }
-
-            // append the replacement text
-            ret.add(replacementSupplier.get());
-
-            startIndex = matcher.end();
-        }
-
-        // return null if nothing is replaced.
-        if (ret.isEmpty()) return null;
-
-        /* append the tail string if exists */
-        if (startIndex < string.length()) {
-            ret.add(Text.literal(string.substring(startIndex)));
-        }
-
-        return ret;
-    }
-
-    private static <T> Supplier<T> memoizeSupplier(Supplier<T> delegate) {
-        AtomicReference<T> value = new AtomicReference<>();
-        return () -> {
-            T val = value.get();
-            if (val == null) {
-                val = value.updateAndGet(cur -> cur == null ?
-                    Objects.requireNonNull(delegate.get()) : cur);
-            }
-            return val;
-        };
-    }
-
     public static void sendBroadcastByValue(Text text) {
-        LogUtil.info(visitString(text));
+        LogUtil.info(Operators.visitString(text));
 
         for (ServerPlayerEntity player : ServerHelper.getOnlinePlayers()) {
             player.sendMessage(text);
@@ -625,19 +638,6 @@ public class TextHelper {
         #elif MC_VER >= MC_1_20_5
             throw new UnsupportedOperationException();
         #endif
-    }
-
-    public static String escapeTags(String string) {
-        // NOTE: Here are special characters for Text Placeholder API parsers.
-        return string
-            .replace("<", "\\<")
-            .replace(">", "\\>")
-            .replace("*","\\*")
-            .replace("%", "\\%");
-    }
-
-    public static Text parseString(NodeParser parser, String input) {
-        return parser.parseNode(input).toText();
     }
 
     private static String decorateDocumentString(String documentString) {

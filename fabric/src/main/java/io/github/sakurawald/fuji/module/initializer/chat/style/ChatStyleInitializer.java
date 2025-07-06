@@ -154,7 +154,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
             .replace("%message%", contentString);
         contentString = stripeStyleTags(player, contentString);
 
-        return TextHelper.parseString(CHAT_STYLE_PARSER, contentString);
+        return TextHelper.Parsers.parseString(CHAT_STYLE_PARSER, contentString);
     }
 
 }

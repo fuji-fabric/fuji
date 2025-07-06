@@ -93,7 +93,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         CommandContextBuilder<ServerCommandSource> context = parseResults.getContext();
 
         /* Describe the command string. */
-        String commandString = TextHelper.escapeTags(parseResults.getReader().getString());
+        String commandString = TextHelper.Parsers.escapeTags(parseResults.getReader().getString());
         TextHelper.sendMessageByKey(source,"command_permission.describe.command_string", commandString);
 
         /* Check if there is early exceptions. */

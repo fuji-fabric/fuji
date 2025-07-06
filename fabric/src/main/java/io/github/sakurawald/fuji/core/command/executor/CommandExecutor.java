@@ -36,7 +36,7 @@ public class CommandExecutor {
                 .execute(command, context.getExecutingSource());
         } catch (CommandSyntaxException e) {
             /* Escape tags when reporting an exception. (e.g. "/run as console aa <yellow> bb")*/
-            command = TextHelper.escapeTags(command);
+            command = TextHelper.Parsers.escapeTags(command);
 
             // NOTE: Log the console first. (Make the debug easier)
             if (!context.getExecutingSource().isExecutedByPlayer()) {

@@ -123,7 +123,7 @@ public class ItemStackHelper {
 
     @SuppressWarnings("RedundantIfStatement")
     private static boolean filterItemName(ItemStack itemStack, String keyword) {
-        String itemName = TextHelper.visitString(itemStack.getName());
+        String itemName = TextHelper.Operators.visitString(itemStack.getName());
         if (itemName
             .toLowerCase()
             .contains(keyword.toLowerCase())) return true;
@@ -134,7 +134,7 @@ public class ItemStackHelper {
     private static boolean filterItemLore(ItemStack itemStack, String keyword) {
         boolean matched = getLore(itemStack)
             .stream()
-            .anyMatch(text -> TextHelper.visitString(text)
+            .anyMatch(text -> TextHelper.Operators.visitString(text)
                 .toLowerCase()
                 .contains(keyword.toLowerCase()));
         if (matched) return true;

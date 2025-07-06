@@ -145,7 +145,7 @@ public class InspectingObject {
 
     public Text computeNameText(ServerPlayerEntity player) {
         String objectName = this.getObjectName();
-        objectName = TextHelper.escapeTags(objectName);
+        objectName = TextHelper.Parsers.escapeTags(objectName);
         return TextHelper.getTextByKey(player, "object.name", objectName);
     }
 
@@ -282,7 +282,7 @@ public class InspectingObject {
         if (abbreviated) {
             literalObjectValueString = StringUtils.abbreviate(literalObjectValueString, "...", 128);
         }
-        literalObjectValueString = TextHelper.escapeTags(literalObjectValueString);
+        literalObjectValueString = TextHelper.Parsers.escapeTags(literalObjectValueString);
         return literalObjectValueString;
     }
 
