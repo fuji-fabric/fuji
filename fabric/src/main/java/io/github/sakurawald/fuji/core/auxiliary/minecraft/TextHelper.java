@@ -77,22 +77,25 @@ public class TextHelper {
     private static final String SUPPRESS_SENDING_STRING_MARKER = "[suppress-sending]";
     private static final Text SUPPRESS_SENDING_TEXT_MARKER = Text.literal("[suppress-sending]");
 
+    private static final String LANGUAGE_FILE_PATH = "lang/";
+
     static {
         writeDefaultLanguageFilesIfAbsent();
     }
 
+    @ForDeveloper("The style-only parser should support mini-message language and markdown language.")
     private static NodeParser makeStyleOnlyParser() {
         #if MC_VER <= MC_1_20_2
-            List<NodeParser> parsers = new ArrayList<>();
-            parsers.add(TextParserV1.createDefault());
-            parsers.add(MarkdownLiteParserV1.ALL);
-            return NodeParser.merge(parsers);
+        List<NodeParser> parsers = new ArrayList<>();
+        parsers.add(TextParserV1.createDefault());
+        parsers.add(MarkdownLiteParserV1.ALL);
+        return NodeParser.merge(parsers);
         #elif MC_VER > MC_1_20_2
-            return NodeParser.builder()
-            .quickText()
-            .simplifiedTextFormat()
-            .markdown()
-            .build();
+        return NodeParser.builder()
+        .quickText()
+        .simplifiedTextFormat()
+        .markdown()
+        .build();
         #endif
     }
 
@@ -114,15 +117,16 @@ public class TextHelper {
     }
 
     private static NodeParser makePlaceholderOnlyParser() {
-        // NOTE: The placeholder-only parser should only parse placeholders, for command executing. it should not parse the <red> tags or other tags.
+        // NOTE: The placeholder-only parser should only parse placeholders, for command executing. It should not parse the <red> tags or other tags.
 
         #if MC_VER <= MC_1_20_2
         List<NodeParser> parsers = new ArrayList<>();
         parsers.add(Placeholders.DEFAULT_PLACEHOLDER_PARSER);
         return NodeParser.merge(parsers);
         #elif MC_VER > MC_1_20_2
-        return NodeParser.builder()
-        .globalPlaceholders().build();
+        return NodeParser
+            .builder()
+            .globalPlaceholders().build();
         #endif
     }
 
@@ -153,87 +157,102 @@ public class TextHelper {
     }
 
     private static void writeDefaultLanguageFilesIfAbsent() {
-        for (String languageFile : ReflectionUtil.getCompileTimeGraph(ReflectionUtil.LANGUAGE_GRAPH_FILE_NAME)) {
-            new ResourceConfigurationHandler("lang/" + languageFile).readStorage();
+        for (String languageFileName : ReflectionUtil.getCompileTimeGraph(ReflectionUtil.LANGUAGE_GRAPH_FILE_NAME)) {
+            new ResourceConfigurationHandler(LANGUAGE_FILE_PATH + languageFileName)
+                .readStorage();
         }
     }
 
-    /**
-     * Clear the language file loaded into the memory.
-     * Note that once the attempt to load a language file from storage is failed, a JsonObject marker named `UNSUPPORTED LANGUAGE` will be put into the map, leading the subsequent attempts simply return the marker.
-     */
+    @ForDeveloper("""
+        Clear the loaded language file in memory.
+        Note that once teh attempt to load a language file from storage is failed, a JsonObject maker named `UNSUPPORTED LANGUAGE` will be put into the map.
+        Leading the subsequent attempts imply returns the marker.
+        """)
     public static void clearLoadedLanguageJsons() {
         LANGUAGE_CODE_2_LANGUAGE_JSON.clear();
     }
 
     public static void setClientSideLanguageCode(String playerName, String languageRepresentationUsedByMojang) {
-        // mojang network protocol use a strange language representation, mojang use `en_us` instead of `en_US`
-        PLAYER_2_LANGUAGE_CODE.put(playerName, convertToLanguageCode(languageRepresentationUsedByMojang));
+        // NOTE: Mojang network protocol use a stupid language representation, mojang use `en_us` instead of `en_US`, so we need to unify it.
+        String unifiedLanguageCode = unifyLanguageCode(languageRepresentationUsedByMojang);
+        PLAYER_2_LANGUAGE_CODE.put(playerName, unifiedLanguageCode);
     }
 
     private static void loadLanguageJsonIfAbsent(String languageCode) {
-        if (LANGUAGE_CODE_2_LANGUAGE_JSON.containsKey(languageCode)) return;
+        // Skip reading the language file from storage, if there is language json in memory.
+        // NOTE: The language json can be UNSUPPORTED_LANGUAGE json marker.
+        if (LANGUAGE_CODE_2_LANGUAGE_JSON.containsKey(languageCode)) {
+            return;
+        }
 
         try {
-            String languageFile = languageCode + ".json";
-            ResourceConfigurationHandler resourceConfigurationHandler = new ResourceConfigurationHandler("lang/" + languageFile);
-
-            //read it
+            String languageFileName = languageCode + ".json";
+            ResourceConfigurationHandler resourceConfigurationHandler = new ResourceConfigurationHandler(LANGUAGE_FILE_PATH + languageFileName);
             resourceConfigurationHandler.readStorage();
 
             LANGUAGE_CODE_2_LANGUAGE_JSON.put(languageCode, resourceConfigurationHandler.model().getAsJsonObject());
             LogUtil.info("Language {} loaded.", languageCode);
         } catch (Exception e) {
             LANGUAGE_CODE_2_LANGUAGE_JSON.put(languageCode, UNSUPPORTED_LANGUAGE_MARKER);
-            LogUtil.warn("Failed to load language `{}`", languageCode);
+            LogUtil.error("Failed to load language `{}` from storage.", languageCode, e);
         }
     }
 
-    private static String convertToLanguageCode(String input) {
+    private static String unifyLanguageCode(String input) {
         if (input == null || !input.contains("_")) {
             return input;
         }
 
-        String[] parts = input.split("_");
-
-        String language = parts[0].toLowerCase();
-        String region = parts[1].toUpperCase();
+        String[] components = input.split("_");
+        String language = components[0].toLowerCase();
+        String region = components[1].toUpperCase();
         return language + "_" + region;
     }
 
     private static @NotNull String getClientSideLanguageCode(@Nullable Object audience) {
-        if (audience == null) return getDefaultLanguageCode();
+        // If audience is null, just use the default language.
+        if (audience == null) {
+            return getDefaultLanguageCode();
+        }
 
+        // If audience is non-null, but we have no clue what is the source player, then still use the default language.
+        @Nullable PlayerEntity player = tryExtractPlayerEntity(audience);
+        if (player == null) return getDefaultLanguageCode();
+
+        // Get the language code used by the player.
+        String playerName = PlayerHelper.getPlayerName(player);
+        String defaultLanguageCode = getDefaultLanguageCode();
+        return PLAYER_2_LANGUAGE_CODE.getOrDefault(playerName, defaultLanguageCode);
+    }
+
+    @SuppressWarnings({"IfCanBeSwitch", "PatternVariableCanBeUsed"})
+    private static @Nullable PlayerEntity tryExtractPlayerEntity(@NotNull Object audience) {
         PlayerEntity player = null;
+
         if (audience instanceof ServerPlayerEntity) {
             player = ((ServerPlayerEntity) audience);
-        }
-        else if (audience instanceof PlayerEntity) {
+        } else if (audience instanceof PlayerEntity) {
             player = (PlayerEntity) audience;
-        }
-        else if (audience instanceof ServerCommandSource) {
+        } else if (audience instanceof ServerCommandSource) {
             ServerCommandSource commandSource = (ServerCommandSource) audience;
             if (commandSource.getPlayer() != null) {
                 player = commandSource.getPlayer();
             }
         }
-
-        // always use default_language for non-player object.
-        if (player == null) return getDefaultLanguageCode();
-
-        return PLAYER_2_LANGUAGE_CODE.getOrDefault(player.getGameProfile().getName(), getDefaultLanguageCode());
+        return player;
     }
 
     private static @NotNull JsonObject getLanguageJsonObject(String languageCode) {
-        // load language object from disk for the first time
+        // Ensure the language json is loaded into memory.
         loadLanguageJsonIfAbsent(languageCode);
 
+        // Get the language json object from memory.
         return LANGUAGE_CODE_2_LANGUAGE_JSON.get(languageCode);
     }
 
     private static String getDefaultLanguageCode() {
-        // allow user to write `en_us` in `config.json`.
-        return convertToLanguageCode(Configs.MAIN_CONTROL_CONFIG.model().core.language.default_language);
+        // NOTE: Unify the user input language code, to allow the user writes `en_us` to mean `en_US`.
+        return unifyLanguageCode(Configs.MAIN_CONTROL_CONFIG.model().core.language.default_language);
     }
 
     private static boolean isDefaultLanguageCode(String languageCode) {
@@ -633,6 +652,7 @@ public class TextHelper {
             .toList();
     }
 
+    @ForDeveloper("The abstraction for text events.")
     public static class Events {
 
         public static class ClickEvent {
