@@ -97,7 +97,7 @@ public class ChunkScore implements Comparable<ChunkScore> {
             .formatted(Formatting.GOLD)
             .append(TextHelper.getTextByKey(source, "top_chunks.prop.dimension", RegistryHelper.toString(this.dimension)))
             .append(TextHelper.TEXT_NEWLINE)
-            .append(TextHelper.getTextByKey(source, "top_chunks.prop.chunk", computeChunkLocationString(source)))
+            .append(this.computeChunkLocationText(source))
             .append(TextHelper.TEXT_NEWLINE)
             .append(TextHelper.getTextByKey(source, "top_chunks.prop.score", this.score))
             .append(TextHelper.TEXT_NEWLINE)
@@ -114,18 +114,17 @@ public class ChunkScore implements Comparable<ChunkScore> {
             );
     }
 
-    public String computeChunkLocationString(@NotNull ServerCommandSource source) {
-        String chunkLocation;
+    public Text computeChunkLocationText(@NotNull ServerCommandSource source) {
         if (TopChunksInitializer.config.model().hide_location) {
-            chunkLocation = TextHelper.Mapper.getLanguageValueByKey(source, "top_chunks.prop.hidden");
             if (source.hasPermissionLevel(4)) {
-                chunkLocation = TextHelper.Mapper.getLanguageValueByKey(source, "top_chunks.prop.hidden.bypass", this.chunkPos.toString());
+                return TextHelper.getTextByKey(source, "top_chunks.prop.chunk.hide_location.bypass", this.chunkPos.toString());
+            } else {
+                return TextHelper.getTextByKey(source, "top_chunks.prop.chunk.hide_location");
             }
-        } else {
-            chunkLocation = this.chunkPos.toString();
-        }
 
-        return chunkLocation;
+        } else {
+            return TextHelper.getTextByKey(source, "top_chunks.prop.chunk.display_location", this.chunkPos.toString());
+        }
     }
 
     public void teleportToThisChunk(ServerPlayerEntity player) {

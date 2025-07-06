@@ -7,6 +7,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
 import io.github.sakurawald.fuji.core.service.type_formatter.TypeFormatter;
+import io.github.sakurawald.fuji.module.initializer.top_chunks.TopChunksInitializer;
 import io.github.sakurawald.fuji.module.initializer.top_chunks.structure.ChunkScore;
 import net.minecraft.item.Items;
 import net.minecraft.server.command.ServerCommandSource;
@@ -21,7 +22,7 @@ import java.util.List;
 public class TopChunksGui extends PagedGui<ChunkScore> {
 
     public TopChunksGui(ServerPlayerEntity player, @NotNull List<ChunkScore> entities, int pageIndex) {
-        super(null, player, TextHelper.getTextByKey(player, "top_chunks.list.gui.title"), entities, pageIndex);
+        super(null, player, TextHelper.getTextByKey(player, "top_chunks.list.gui.title"), entities.subList(0, TopChunksInitializer.getMaxDisplayChunkScore()), pageIndex);
     }
 
     @Override
@@ -35,8 +36,7 @@ public class TopChunksGui extends PagedGui<ChunkScore> {
 
         List<Text> lore = new ArrayList<>();
         lore.add(TextHelper.getTextByKey(getPlayer(), "top_chunks.prop.dimension", RegistryHelper.toString(entity.getDimension())));
-        String chunkLocationString = entity.computeChunkLocationString(commandSource);
-        lore.add(TextHelper.getTextByKey(getPlayer(), "top_chunks.prop.chunk", chunkLocationString));
+        lore.add(entity.computeChunkLocationText(commandSource));
         lore.add(TextHelper.getTextByKey(getPlayer(), "top_chunks.prop.players", entity.getPlayers()));
         lore.add(TypeFormatter.formatTypes(commandSource, entity.getType2amount()));
 
@@ -62,9 +62,6 @@ public class TopChunksGui extends PagedGui<ChunkScore> {
 
     @Override
     protected boolean filterEntity(ChunkScore entity, String keyword) {
-        return entity.computeChunkLocationString(getPlayer().getCommandSource()).contains(keyword)
-            || entity.getPlayers().stream().map(String::toLowerCase).anyMatch(playerName -> playerName.contains(keyword))
-            || String.valueOf(entity.getScore()).contains(keyword)
-            || entity.getType2amount().toString().contains(keyword);
+        return false;
     }
 }

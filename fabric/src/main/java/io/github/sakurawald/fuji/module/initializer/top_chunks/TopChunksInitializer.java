@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.top_chunks;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
@@ -78,6 +79,9 @@ public class TopChunksInitializer extends ModuleInitializer {
                 });
             }
 
+            /* Attach nearest player into chunks. */
+            attachNearestPlayerIntoChunkScore(source, PQ, getMaxDisplayChunkScore());
+
             /* Send top chunks report. */
             sendTopChunksReport(source, PQ);
         });
@@ -100,7 +104,6 @@ public class TopChunksInitializer extends ModuleInitializer {
 
     private static void sendTopChunksReportAsMessage(ServerCommandSource source, PriorityQueue<ChunkScore> PQ) {
         var config = TopChunksInitializer.config.model();
-        computeNearestPlayer(source, PQ, config.top.rows * config.top.columns);
 
         MutableText reportText = Text.empty();
         outer:
@@ -116,7 +119,7 @@ public class TopChunksInitializer extends ModuleInitializer {
         source.sendMessage(reportText);
     }
 
-    private static void computeNearestPlayer(ServerCommandSource source, @NotNull PriorityQueue<ChunkScore> PQ, int topN) {
+    private static void attachNearestPlayerIntoChunkScore(ServerCommandSource source, @NotNull PriorityQueue<ChunkScore> PQ, int topN) {
         int count = 0;
         for (ChunkScore chunkScore : PQ) {
             if (count++ >= topN) break;
@@ -125,10 +128,17 @@ public class TopChunksInitializer extends ModuleInitializer {
             ChunkPos chunkPos = chunkScore.getChunkPos();
             BlockPos blockPos = chunkPos.getStartPos();
             PlayerEntity nearestPlayer = world.getClosestPlayer(blockPos.getX(), blockPos.getY(), blockPos.getZ(), config.model().nearest_distance, false);
+
             if (nearestPlayer != null) {
-                chunkScore.getPlayers().add(TextHelper.Mapper.getLanguageValueByKey(source, "top_chunks.prop.players.nearest", nearestPlayer.getGameProfile().getName()));
+                String nearestPlayerName = PlayerHelper.getPlayerName(nearestPlayer);
+                String nearestPlayerString = TextHelper.Operators.visitString(TextHelper.getTextByKey(source, "top_chunks.prop.players.nearest", nearestPlayerName));
+                chunkScore.getPlayers().add(nearestPlayerString);
             }
         }
     }
 
+    public static int getMaxDisplayChunkScore() {
+        var top = config.model().top;
+        return top.rows * top.columns;
+    }
 }
