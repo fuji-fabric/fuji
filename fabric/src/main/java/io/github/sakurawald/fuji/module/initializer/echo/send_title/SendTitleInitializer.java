@@ -33,7 +33,7 @@ public class SendTitleInitializer extends ModuleInitializer {
         Text mainTitleText = TextHelper.getTextByValue(player, $mainTitle);
         Text subTitleText = TextHelper.getTextByValue(player, $subTitle);
 
-        TextHelper.Sender.sendTitleByText(player, $fadeInTicks, $stayTicks, $fadeOutTicks, mainTitleText, subTitleText);
+        TextHelper.Sender.sendTitleToServerPlayerEntity(player, $fadeInTicks, $stayTicks, $fadeOutTicks, mainTitleText, subTitleText);
         return CommandHelper.Return.SUCCESS;
     }
 

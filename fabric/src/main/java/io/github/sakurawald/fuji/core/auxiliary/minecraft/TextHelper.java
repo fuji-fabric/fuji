@@ -596,14 +596,6 @@ public class TextHelper {
         public static final String SEND_MAIN_TITLE_MARKER = "[send-main-title]";
         public static final String SEND_SUB_TITLE_MARKER = "[send-sub-title]";
 
-        private static void sendMessageToPlayerEntity(PlayerEntity playerEntity, Text text) {
-            playerEntity.sendMessage(text, false);
-        }
-
-        private static void sendMessageToServerCommandSource(ServerCommandSource serverCommandSource, Text text) {
-            serverCommandSource.sendMessage(text);
-        }
-
         private static void sendMessageToServerPlayerEntity(ServerPlayerEntity serverPlayerEntity, Text text) {
             if (serverPlayerEntity.networkHandler == null) {
                 LogUtil.warn("Failed to send the message to player {}, because its network handler is null. (Is it an dummy offline player entity?): text = {}", serverPlayerEntity, text);
@@ -625,9 +617,9 @@ public class TextHelper {
         private static void sendTitleToAudience(Object audience, Text text, boolean useMainTitle) {
             if (audience instanceof ServerPlayerEntity serverPlayerEntity) {
                 if (useMainTitle) {
-                    sendTitleByText(serverPlayerEntity, text, Text.empty());
+                    sendTitleToServerPlayerEntity(serverPlayerEntity, text, Text.empty());
                 } else {
-                    sendTitleByText(serverPlayerEntity, Text.empty(), text);
+                    sendTitleToServerPlayerEntity(serverPlayerEntity, Text.empty(), text);
                 }
                 return;
             }
@@ -643,7 +635,7 @@ public class TextHelper {
             }
 
             if (audience instanceof PlayerEntity playerEntity) {
-                sendMessageToPlayerEntity(playerEntity, text);
+                playerEntity.sendMessage(text, false);
                 return;
             }
 
@@ -653,7 +645,7 @@ public class TextHelper {
                     sendMessageToServerPlayerEntity(player, text);
                     return;
                 }
-                sendMessageToServerCommandSource(serverCommandSource, text);
+                serverCommandSource.sendMessage(text);
                 return;
             }
 
@@ -661,11 +653,11 @@ public class TextHelper {
             throw new IllegalStateException();
         }
 
-        public static void sendTitleByText(@NotNull ServerPlayerEntity player, @NotNull Text mainTitle, @NotNull Text subTitle) {
-            sendTitleByText(player,10,70,20, mainTitle, subTitle);
+        public static void sendTitleToServerPlayerEntity(@NotNull ServerPlayerEntity player, @NotNull Text mainTitle, @NotNull Text subTitle) {
+            sendTitleToServerPlayerEntity(player, 10, 70, 20, mainTitle, subTitle);
         }
 
-        public static void sendTitleByText(ServerPlayerEntity player, int fadeInTicks, int stayTicks, int fadeOutTicks, Text mainTitle, Text subTitle) {
+        public static void sendTitleToServerPlayerEntity(ServerPlayerEntity player, int fadeInTicks, int stayTicks, int fadeOutTicks, Text mainTitle, Text subTitle) {
             player.networkHandler.sendPacket(new TitleFadeS2CPacket(fadeInTicks, stayTicks, fadeOutTicks));
             player.networkHandler.sendPacket(new TitleS2CPacket(mainTitle));
             player.networkHandler.sendPacket(new SubtitleS2CPacket(subTitle));
