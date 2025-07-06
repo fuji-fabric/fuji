@@ -22,7 +22,7 @@ import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.config.handler.impl.ResourceConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
-import io.github.sakurawald.fuji.core.service.url_highlighter.UrlHighlighter;
+import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.SubtitleS2CPacket;
@@ -47,7 +47,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @ForDeveloper("""
     The design of language system.
@@ -514,15 +513,17 @@ public class TextHelper {
     }
 
     private static @NotNull List<Text> getTextList(@Nullable Object audience, boolean isKey, String keyOrValue) {
-        String value = isKey ? Translator.getLanguageValueByKey(audience, keyOrValue) : keyOrValue;
+        /* Get the language value string first. */
+        String languageValue = isKey ? Translator.getLanguageValueByKey(audience, keyOrValue) : keyOrValue;
 
+        /* Split the language value string into lines, and parse it into text list. */
         return Arrays
-            .stream(splitStringLines(value))
+            .stream(splitStringIntoLines(languageValue))
             .map(line -> getTextByValue(audience, line))
             .toList();
     }
 
-    private static String[] splitStringLines(String string) {
+    private static String[] splitStringIntoLines(String string) {
         return string.split("\n|<newline>");
     }
 
@@ -652,23 +653,14 @@ public class TextHelper {
         #endif
     }
 
-    private static String decorateDocumentString(String documentString) {
-        String decoratedDocumentString = Arrays.stream(documentString
-                .split("\n"))
-            .map(line -> "<#FFA1F5>" + line)
-            .collect(Collectors.joining("\n"));
-
-        decoratedDocumentString = UrlHighlighter.highlight(decoratedDocumentString);
-        return decoratedDocumentString;
+    public static Text getDocumentText(Object audience, String docString) {
+        docString = DocumentUtil.compileDocumentString(docString);
+        return getText(Parsers.STYLE_ONLY_PARSER, audience, false, docString);
     }
 
-    public static Text getDocumentText(Object audience, String  value) {
-        value = decorateDocumentString(value);
-        return getText(Parsers.STYLE_ONLY_PARSER, audience, false, value);
-    }
-
-    public static List<Text> getDocumentTextList(Object audience, String value) {
-        return Arrays.stream(splitStringLines(value))
+    public static List<Text> getDocumentTextList(Object audience, String docString) {
+        return Arrays
+            .stream(splitStringIntoLines(docString))
             .map(line -> getDocumentText(audience, line))
             .toList();
     }
