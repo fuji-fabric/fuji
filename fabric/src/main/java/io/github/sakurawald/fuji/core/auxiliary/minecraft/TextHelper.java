@@ -543,18 +543,16 @@ public class TextHelper {
             return;
         }
 
-        boolean sendTextViaActionBar = false;
-        boolean sendTextViaMainTitle = false;
-        boolean sendTextViaSubTitle = false;
+        Sender.TextLocation textLocation = Sender.TextLocation.MESSAGE;
         if (languageValue.startsWith(Sender.SEND_ACTION_BAR_MARKER)) {
             languageValue = languageValue.substring(Sender.SEND_ACTION_BAR_MARKER.length());
-            sendTextViaActionBar = true;
+            textLocation = Sender.TextLocation.ACTION_BAR;
         } else if (languageValue.startsWith(Sender.SEND_MAIN_TITLE_MARKER)) {
             languageValue = languageValue.substring(Sender.SEND_MAIN_TITLE_MARKER.length());
-            sendTextViaMainTitle = true;
+            textLocation = Sender.TextLocation.MAIN_TITLE;
         } else if (languageValue.startsWith(Sender.SEND_SUB_TITLE_MARKER)) {
             languageValue = languageValue.substring(Sender.SEND_SUB_TITLE_MARKER.length());
-            sendTextViaSubTitle = true;
+            textLocation = Sender.TextLocation.SUB_TITLE;
         }
 
         /* Parse the language value into text using parsers. */
@@ -567,11 +565,11 @@ public class TextHelper {
         }
 
         try {
-            if (sendTextViaActionBar) {
+            if (textLocation == Sender.TextLocation.ACTION_BAR) {
                 Sender.sendActionBarToAudience(audience, text);
-            } else if (sendTextViaMainTitle) {
+            } else if (textLocation == Sender.TextLocation.MAIN_TITLE) {
                 Sender.sendTitleToAudience(audience, text, true);
-            } else if (sendTextViaSubTitle) {
+            } else if (textLocation == Sender.TextLocation.SUB_TITLE) {
                 Sender.sendTitleToAudience(audience, text, false);
             } else {
                 Sender.sendMessageToAudience(audience, text);
@@ -661,6 +659,10 @@ public class TextHelper {
             player.networkHandler.sendPacket(new TitleFadeS2CPacket(fadeInTicks, stayTicks, fadeOutTicks));
             player.networkHandler.sendPacket(new TitleS2CPacket(mainTitle));
             player.networkHandler.sendPacket(new SubtitleS2CPacket(subTitle));
+        }
+
+        public enum TextLocation {
+            MESSAGE, ACTION_BAR, MAIN_TITLE, SUB_TITLE
         }
     }
 
