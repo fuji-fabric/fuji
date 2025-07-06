@@ -63,9 +63,6 @@ public class TextHelper {
     public static final Text TEXT_EMPTY = Text.literal("");
     public static final String MESSAGE_PLACEHOLDER = "%message%";
 
-    private static final String SUPPRESS_SENDING_STRING_MARKER = "[suppress-sending]";
-    private static final Text SUPPRESS_SENDING_TEXT_MARKER = Text.literal("[suppress-sending]");
-
     static {
         Loader.writeDefaultLanguageFilesIfAbsent();
     }
@@ -268,6 +265,12 @@ public class TextHelper {
         private static @Nullable PlayerEntity tryExtractPlayerEntity(@NotNull Object audience) {
             PlayerEntity player = null;
 
+            /* Unbox the command source from command context first. */
+            if (audience instanceof CommandContext<?> commandContext) {
+                audience = commandContext.getSource();
+            }
+
+            /* Try extract the player entity from the audience. */
             if (audience instanceof ServerPlayerEntity) {
                 player = ((ServerPlayerEntity) audience);
             } else if (audience instanceof PlayerEntity) {
@@ -455,11 +458,6 @@ public class TextHelper {
             return Text.literal("The language value is null, see the console.");
         }
 
-        // Should return the sending suppressor marker?
-        if (languageValue.startsWith(SUPPRESS_SENDING_STRING_MARKER)) {
-            return SUPPRESS_SENDING_TEXT_MARKER;
-        }
-
         // Format string arguments.
         languageValue = formatStringArgs(languageValue, args);
 
@@ -537,63 +535,141 @@ public class TextHelper {
 
     public static void sendMessageByKey(@NotNull Object audience, String languageKey, Object... args) {
         /* Get the text by language key for that audience. */
-        Text text = getTextByKey(audience, languageKey, args);
+        String languageValue = Translator.getLanguageValueByKey(audience, languageKey);
 
-        /* Should we suppress this sending? */
-        if (text == SUPPRESS_SENDING_TEXT_MARKER) {
-            LogUtil.debug("Suppress the sending of message: audience = {}, key = {}, args = {}", audience, languageKey, args);
+        /* Process the hacking in language value. */
+        if (languageValue.startsWith(Sender.SUPPRESS_SENDING_STRING_MARKER)) {
+            LogUtil.debug("Suppress the sending of text: audience = {}, languageKey = {}, args = {}", audience, languageKey, args);
             return;
         }
 
-        /* Unbox the command context, to get the command source. */
+        boolean sendTextViaActionBar = false;
+        boolean sendTextViaMainTitle = false;
+        boolean sendTextViaSubTitle = false;
+        if (languageValue.startsWith(Sender.SEND_ACTION_BAR_MARKER)) {
+            languageValue = languageValue.substring(Sender.SEND_ACTION_BAR_MARKER.length());
+            sendTextViaActionBar = true;
+        } else if (languageValue.startsWith(Sender.SEND_MAIN_TITLE_MARKER)) {
+            languageValue = languageValue.substring(Sender.SEND_MAIN_TITLE_MARKER.length());
+            sendTextViaMainTitle = true;
+        } else if (languageValue.startsWith(Sender.SEND_SUB_TITLE_MARKER)) {
+            languageValue = languageValue.substring(Sender.SEND_SUB_TITLE_MARKER.length());
+            sendTextViaSubTitle = true;
+        }
+
+        /* Parse the language value into text using parsers. */
+        Text text = getTextByValue(audience, languageValue, args);
+
+        /* Pick the way to send the text to the audience. */
+        // Unbox the command context, to get the command source.
         if (audience instanceof CommandContext<?> ctx) {
             audience = ctx.getSource();
         }
 
-        /* Dispatch the message sending method, by audience type. */
-        if (audience instanceof ServerPlayerEntity serverPlayerEntity) {
-            sendMessageToServerPlayerEntity(serverPlayerEntity, text);
-            return;
+        try {
+            if (sendTextViaActionBar) {
+                Sender.sendActionBarToAudience(audience, text);
+            } else if (sendTextViaMainTitle) {
+                Sender.sendTitleToAudience(audience, text, true);
+            } else if (sendTextViaSubTitle) {
+                Sender.sendTitleToAudience(audience, text, false);
+            } else {
+                Sender.sendMessageToAudience(audience, text);
+            }
+        } catch (Exception e) {
+            Object audienceType = (audience == null ? null : audience.getClass().getName());
+
+            LogUtil.error("""
+            Failed to send a text to the audience {}.
+            ◉ Audience Type: {}
+            ◉ Language Key: {}
+            ◉ Args: {}
+            ◉ Language Value: {}
+            """, audience, audienceType, languageKey, args, languageValue, e);
+        }
+    }
+
+    @ForDeveloper("The functions to send a text to the audience.")
+    public static class Sender {
+        private static final String SUPPRESS_SENDING_STRING_MARKER = "[suppress-sending]";
+        public static final String SEND_ACTION_BAR_MARKER = "[send-action-bar]";
+        public static final String SEND_MAIN_TITLE_MARKER = "[send-main-title]";
+        public static final String SEND_SUB_TITLE_MARKER = "[send-sub-title]";
+
+        private static void sendMessageToPlayerEntity(PlayerEntity playerEntity, Text text) {
+            playerEntity.sendMessage(text, false);
         }
 
-        if (audience instanceof PlayerEntity playerEntity) {
-            sendMessageToPlayerEntity(playerEntity, text);
-            return;
+        private static void sendMessageToServerCommandSource(ServerCommandSource serverCommandSource, Text text) {
+            serverCommandSource.sendMessage(text);
         }
 
-        if (audience instanceof ServerCommandSource serverCommandSource) {
-            if (serverCommandSource.getPlayer() != null) {
-                ServerPlayerEntity player = serverCommandSource.getPlayer();
-                sendMessageToServerPlayerEntity(player, text);
+        private static void sendMessageToServerPlayerEntity(ServerPlayerEntity serverPlayerEntity, Text text) {
+            if (serverPlayerEntity.networkHandler == null) {
+                LogUtil.warn("Failed to send the message to player {}, because its network handler is null. (Is it an dummy offline player entity?): text = {}", serverPlayerEntity, text);
                 return;
             }
-            sendMessageToServerCommandSource(serverCommandSource, text);
-            return;
+            serverPlayerEntity.sendMessage(text, false);
         }
 
-        /* Unknown audience type. */
-        Object unknownAudienceType = (audience == null ? null : audience.getClass().getName());
-        LogUtil.error("""
-            Can't send message to unknown audience type: {}
-            Language Key: {}
-            Args: {}
-            """, unknownAudienceType, languageKey, args);
-    }
+        private static void sendActionBarToAudience(Object audience, Text text) {
+            if (audience instanceof PlayerEntity playerEntity) {
+                playerEntity.sendMessage(text, true);
+                return;
+            }
 
-    private static void sendMessageToPlayerEntity(PlayerEntity playerEntity, Text text) {
-        playerEntity.sendMessage(text, false);
-    }
-
-    private static void sendMessageToServerCommandSource(ServerCommandSource serverCommandSource, Text text) {
-        serverCommandSource.sendMessage(text);
-    }
-
-    private static void sendMessageToServerPlayerEntity(ServerPlayerEntity serverPlayerEntity, Text text) {
-        if (serverPlayerEntity.networkHandler == null) {
-            LogUtil.warn("Failed to send the message to player {}, because its network handler is null. (Is it an dummy offline player entity?): text = {}", serverPlayerEntity, text);
-            return;
+            LogUtil.warn("Don't know how to send an ACTION-BAR to audience {}. (text = {})", audience, text);
+            throw new IllegalStateException();
         }
-        serverPlayerEntity.sendMessage(text, false);
+
+        private static void sendTitleToAudience(Object audience, Text text, boolean useMainTitle) {
+            if (audience instanceof ServerPlayerEntity serverPlayerEntity) {
+                if (useMainTitle) {
+                    sendTitleByText(serverPlayerEntity, text, Text.empty());
+                } else {
+                    sendTitleByText(serverPlayerEntity, Text.empty(), text);
+                }
+                return;
+            }
+
+            LogUtil.warn("Don't know how to send a TITLE to audience {}. (text = {})", audience, text);
+            throw new IllegalStateException();
+        }
+
+        private static void sendMessageToAudience(Object audience, Text text) {
+            if (audience instanceof ServerPlayerEntity serverPlayerEntity) {
+                sendMessageToServerPlayerEntity(serverPlayerEntity, text);
+                return;
+            }
+
+            if (audience instanceof PlayerEntity playerEntity) {
+                sendMessageToPlayerEntity(playerEntity, text);
+                return;
+            }
+
+            if (audience instanceof ServerCommandSource serverCommandSource) {
+                if (serverCommandSource.getPlayer() != null) {
+                    ServerPlayerEntity player = serverCommandSource.getPlayer();
+                    sendMessageToServerPlayerEntity(player, text);
+                    return;
+                }
+                sendMessageToServerCommandSource(serverCommandSource, text);
+                return;
+            }
+
+            LogUtil.warn("Don't know how to send a MESSAGE to audience {}. (text = {})", audience, text);
+            throw new IllegalStateException();
+        }
+
+        public static void sendTitleByText(@NotNull ServerPlayerEntity player, @NotNull Text mainTitle, @NotNull Text subTitle) {
+            sendTitleByText(player,10,70,20, mainTitle, subTitle);
+        }
+
+        public static void sendTitleByText(ServerPlayerEntity player, int fadeInTicks, int stayTicks, int fadeOutTicks, Text mainTitle, Text subTitle) {
+            player.networkHandler.sendPacket(new TitleFadeS2CPacket(fadeInTicks, stayTicks, fadeOutTicks));
+            player.networkHandler.sendPacket(new TitleS2CPacket(mainTitle));
+            player.networkHandler.sendPacket(new SubtitleS2CPacket(subTitle));
+        }
     }
 
     public static void sendActionBarByKey(@NotNull ServerPlayerEntity player, String key, Object... args) {
@@ -621,17 +697,6 @@ public class TextHelper {
             player.sendMessage(text);
         }
     }
-
-    public static void sendTitleByText(@NotNull ServerPlayerEntity player, @NotNull Text mainTitle, @NotNull Text subTitle) {
-        sendTitleByText(player,10,70,20, mainTitle, subTitle);
-    }
-
-    public static void sendTitleByText(ServerPlayerEntity player, int fadeInTicks, int stayTicks, int fadeOutTicks, Text mainTitle, Text subTitle) {
-        player.networkHandler.sendPacket(new TitleFadeS2CPacket(fadeInTicks, stayTicks, fadeOutTicks));
-        player.networkHandler.sendPacket(new TitleS2CPacket(mainTitle));
-        player.networkHandler.sendPacket(new SubtitleS2CPacket(subTitle));
-    }
-
 
     public static Text fromJson(String tagString) {
         #if MC_VER <= MC_1_20_2

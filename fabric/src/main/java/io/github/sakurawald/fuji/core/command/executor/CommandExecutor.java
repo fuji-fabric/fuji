@@ -6,6 +6,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -17,12 +18,13 @@ public class CommandExecutor {
         commands.forEach(command -> execute(context, command));
     }
 
-    /**
-     * cases:
-     * - /run as console bad command
-     * - /run as console run as player bad command
-     * - /run as console run as player <player> run as console bad command
-     */
+    @ForDeveloper("""
+        Cases:
+        1. /run as console bad command
+        2. /run as console run as player bad command
+        3. /run as console run as player <player> run as console bad command
+        4. /run as console run as player %player:name% run as fake-op %player:name% say I am %player:name%
+        """)
     public static int execute(@NotNull ExtendedCommandSource context, @NotNull String command) {
 
         /* Expand the command. */

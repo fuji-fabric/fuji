@@ -44,7 +44,7 @@ public class CommandManagerMixin {
         if (cooldownMs > 0) {
             long leftTimeSecond = cooldownMs / 1000;
             Text text = TextHelper.getTextByKey(player, "command_cooldown.cooldown", leftTimeSecond);
-            TextHelper.sendTitleByText(player, text, Text.empty());
+            TextHelper.Sender.sendTitleByText(player, text, Text.empty());
 
             ci.cancel();
         }
