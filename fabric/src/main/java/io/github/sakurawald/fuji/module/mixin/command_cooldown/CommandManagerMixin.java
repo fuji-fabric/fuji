@@ -43,8 +43,7 @@ public class CommandManagerMixin {
         long cooldownMs = CommandCooldownInitializer.computeCooldown(player, string);
         if (cooldownMs > 0) {
             long leftTimeSecond = cooldownMs / 1000;
-            Text text = TextHelper.getTextByKey(player, "command_cooldown.cooldown", leftTimeSecond);
-            TextHelper.Sender.sendTitleToServerPlayerEntity(player, text, Text.empty());
+            TextHelper.sendTextByKey(player, "command_cooldown.cooldown", leftTimeSecond);
 
             ci.cancel();
         }

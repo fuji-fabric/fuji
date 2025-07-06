@@ -55,8 +55,7 @@ public class CommandWarmupInitializer extends ModuleInitializer {
 
                 // Send warning for movement.
                 if (config.warn_for_move) {
-                    Text text = TextHelper.getTextByKey(player, "command_warmup.warn_for_move", entry.getInterruptible().getInterruptDistance());
-                    TextHelper.Sender.sendTitleToServerPlayerEntity(player, text, Text.empty());
+                    TextHelper.sendTextByKey(player, "command_warmup.warn_for_move", entry.getInterruptible().getInterruptDistance());
                 }
 
                 // Cancel the issue of command string.

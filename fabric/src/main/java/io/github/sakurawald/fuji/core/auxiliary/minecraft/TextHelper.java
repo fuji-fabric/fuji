@@ -653,7 +653,7 @@ public class TextHelper {
             throw new IllegalStateException();
         }
 
-        public static void sendTitleToServerPlayerEntity(@NotNull ServerPlayerEntity player, @NotNull Text mainTitle, @NotNull Text subTitle) {
+        private static void sendTitleToServerPlayerEntity(@NotNull ServerPlayerEntity player, @NotNull Text mainTitle, @NotNull Text subTitle) {
             sendTitleToServerPlayerEntity(player, 10, 70, 20, mainTitle, subTitle);
         }
 
