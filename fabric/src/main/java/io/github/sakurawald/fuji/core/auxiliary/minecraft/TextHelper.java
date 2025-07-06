@@ -496,12 +496,12 @@ public class TextHelper {
     }
 
 
-    public static @NotNull Text getTextByKey(@Nullable Object audience, String key, Object... args) {
-        return getText(Parsers.POWERFUL_PARSER, audience, true, key, args);
+    public static @NotNull Text getTextByKey(@Nullable Object audience, String languageKey, Object... args) {
+        return getText(Parsers.POWERFUL_PARSER, audience, true, languageKey, args);
     }
 
-    public static @NotNull Text getTextByValue(@Nullable Object audience, String value, Object... args) {
-        return getText(Parsers.POWERFUL_PARSER, audience, false, value, args);
+    public static @NotNull Text getTextByValue(@Nullable Object audience, String languageValue, Object... args) {
+        return getText(Parsers.POWERFUL_PARSER, audience, false, languageValue, args);
     }
 
     public static Text getTextByKeyAndReplaceTheKeyword(@Nullable Object audience, String languageKey, String keywordName) {
@@ -534,17 +534,13 @@ public class TextHelper {
         return getTextList(audience, false, value);
     }
 
+    public static void sendMessageByKey(@NotNull Object audience, String languageKey, Object... args) {
+        /* Get the text by language key for that audience. */
+        Text text = getTextByKey(audience, languageKey, args);
 
-    public static void sendMessageByFlag(@NotNull Object audience, boolean flag) {
-        sendMessageByKey(audience, flag ? "on" : "off");
-    }
-
-    public static void sendMessageByKey(@NotNull Object audience, String key, Object... args) {
-        Text text = getTextByKey(audience, key, args);
-
-        /* suppress this sending ? */
+        /* Should we suppress this sending? */
         if (text == SUPPRESS_SENDING_TEXT_MARKER) {
-            LogUtil.debug("Suppress the sending of message: audience = {}, key = {}, args = {}", audience, key, args);
+            LogUtil.debug("Suppress the sending of message: audience = {}, key = {}, args = {}", audience, languageKey, args);
             return;
         }
 
@@ -575,11 +571,12 @@ public class TextHelper {
         }
 
         /* Unknown audience type. */
+        Object unknownAudienceType = (audience == null ? null : audience.getClass().getName());
         LogUtil.error("""
             Can't send message to unknown audience type: {}
-            Key: {}
+            Language Key: {}
             Args: {}
-            """, audience == null ? null : audience.getClass().getName(), key, args);
+            """, unknownAudienceType, languageKey, args);
     }
 
     private static void sendMessageToPlayerEntity(PlayerEntity playerEntity, Text text) {
@@ -599,32 +596,36 @@ public class TextHelper {
     }
 
     public static void sendActionBarByKey(@NotNull ServerPlayerEntity player, String key, Object... args) {
-        player.sendMessage(getTextByKey(player, key, args), true);
+        Text text = getTextByKey(player, key, args);
+        player.sendMessage(text, true);
     }
 
     public static void sendBroadcastByKey(@NotNull String key, Object... args) {
-        // fix: log broadcast for console
+        /* Log the console, using the default language. */
         Text text = getTextByKey(null, key, args);
         LogUtil.info(Operators.visitString(text));
 
-        for (ServerPlayerEntity player : ServerHelper.getServer().getPlayerManager().getPlayerList()) {
+        /* Send the text using the player's client side language. */
+        for (ServerPlayerEntity player : ServerHelper.getOnlinePlayers()) {
             TextHelper.sendMessageByKey(player, key, args);
         }
     }
 
-    public static void sendBroadcastByValue(Text text) {
+    public static void sendBroadcastByText(Text text) {
+        /* Log the console, using the given text. */
         LogUtil.info(Operators.visitString(text));
 
+        /* Send the text, using the given text. */
         for (ServerPlayerEntity player : ServerHelper.getOnlinePlayers()) {
             player.sendMessage(text);
         }
     }
 
-    public static void sendTitle(@NotNull ServerPlayerEntity player, @NotNull Text mainTitle, @NotNull Text subTitle) {
-        sendTitle(player,10,70,20, mainTitle, subTitle);
+    public static void sendTitleByText(@NotNull ServerPlayerEntity player, @NotNull Text mainTitle, @NotNull Text subTitle) {
+        sendTitleByText(player,10,70,20, mainTitle, subTitle);
     }
 
-    public static void sendTitle(ServerPlayerEntity player, int fadeInTicks, int stayTicks, int fadeOutTicks, Text mainTitle, Text subTitle) {
+    public static void sendTitleByText(ServerPlayerEntity player, int fadeInTicks, int stayTicks, int fadeOutTicks, Text mainTitle, Text subTitle) {
         player.networkHandler.sendPacket(new TitleFadeS2CPacket(fadeInTicks, stayTicks, fadeOutTicks));
         player.networkHandler.sendPacket(new TitleS2CPacket(mainTitle));
         player.networkHandler.sendPacket(new SubtitleS2CPacket(subTitle));

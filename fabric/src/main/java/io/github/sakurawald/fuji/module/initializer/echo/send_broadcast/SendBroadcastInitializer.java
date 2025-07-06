@@ -16,7 +16,7 @@ public class SendBroadcastInitializer extends ModuleInitializer {
         String message = rest.getValue();
 
         Text broadcastText = TextHelper.getTextByValue(null, message);
-        TextHelper.sendBroadcastByValue(broadcastText);
+        TextHelper.sendBroadcastByText(broadcastText);
         return CommandHelper.Return.SUCCESS;
     }
 
