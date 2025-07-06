@@ -480,9 +480,10 @@ public class TextHelper {
                     The language value is `{}`.
                     The arguments are `{}`.
 
-                    There may be a syntax mistake in the language file.
-                    Note that, you have to write `%%` to mean `%` inside the Java Standard String Formatter.
-                    See the grammar of Java Standard String formatter in https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html
+                    Possible reasons:
+                    1. There may be a syntax mistake in the language file. (Try fix it, and issue `/fuji reload` to reload the language file)
+                    2. You have to write `%%` to mean `%` inside the Java Standard String Formatter. (https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html)
+                    3. Outdated language value. (The number of args is mis-matched, try delete the old language value, and issue `/fuji reload` to re-generate a new default value.)
                     """, string, args, e);
             }
         }

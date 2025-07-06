@@ -2,11 +2,8 @@ package io.github.sakurawald.fuji.module.initializer.tester;
 
 
 import com.mojang.brigadier.context.CommandContext;
-import eu.pb4.common.economy.api.CommonEconomy;
-import eu.pb4.common.economy.api.EconomyAccount;
-import eu.pb4.common.economy.api.EconomyCurrency;
-import eu.pb4.common.economy.api.EconomyProvider;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -47,6 +44,12 @@ public class TesterInitializer extends ModuleInitializer {
     @SneakyThrows(Exception.class)
     @CommandNode("run")
     private static int $run(@CommandSource ServerPlayerEntity player) {
+
+        TextHelper.sendTextByKey(player, "gui.search.title", "Hello");
+        TextHelper.sendTextByKey(player, "gui.search.title", "Hello", "Second");
+        TextHelper.sendTextByKey(player, "gui.search.title" );
+
+        "Value = %s".formatted();
 
 
         return 0;
