@@ -3,6 +3,7 @@ package tests;
 import auxiliary.TestUtil;
 import com.google.gson.JsonObject;
 import io.github.classgraph.AnnotationInfo;
+import io.github.classgraph.AnnotationInfoList;
 import io.github.classgraph.AnnotationParameterValueList;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.MethodParameterInfo;
@@ -10,6 +11,7 @@ import io.github.classgraph.ScanResult;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.document.structure.DocString;
@@ -23,13 +25,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 public class GenerateDocStringTest {
 
-    @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
     @SneakyThrows
     @Test
     public void generateDocStringListInRuntimeEnvironment() {
@@ -40,7 +42,11 @@ public class GenerateDocStringTest {
             /* Make the doc string list. */
             List<DocString> docStringList = new ArrayList<>();
             docStringList.addAll(makeDocStringFromDocumentAnnotation(scanResult));
+            docStringList.addAll(makeDocStringFromColorBoxAnnotation(scanResult));
             LogUtil.info("There are {} doc strings.", docStringList.size());
+
+            /* Remove test purpose doc string. */
+            docStringList.removeIf(docString -> docString.getId() == -1L);
 
             /* Check duplicated doc string. */
             checkDuplicateDocString(docStringList);
@@ -83,7 +89,7 @@ public class GenerateDocStringTest {
     }
 
     private static @NotNull List<DocString> makeDocStringFromDocumentAnnotation(ScanResult scanResult) {
-        return findTargetAnnotationInstancesAnywhere(scanResult, Document.class)
+        return findTargetAnnotationInstancesAnywhere(scanResult, Document.class, false)
             .stream()
             .map(annotationInfo -> {
                 AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
@@ -93,6 +99,19 @@ public class GenerateDocStringTest {
             })
             .toList();
     }
+
+    private @NotNull List<DocString> makeDocStringFromColorBoxAnnotation(ScanResult scanResult) {
+        return findTargetAnnotationInstancesAnywhere(scanResult, ColorBox.class, true)
+            .stream()
+            .map(annotationInfo -> {
+                AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
+                long id = (long) parameterValues.getValue("id");
+                String value = (String) parameterValues.getValue("value");
+                return new DocString(id, value);
+            })
+            .toList();
+    }
+
 
     private static void checkDuplicateDocString(List<DocString> docStringList) {
         List<Long> duplicateIds = docStringList
@@ -125,7 +144,7 @@ public class GenerateDocStringTest {
     }
 
     @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
-    private static List<AnnotationInfo> findTargetAnnotationInstancesAnywhere(ScanResult scanResult, Class<? extends Annotation> targetAnnotation) {
+    private static List<AnnotationInfo> findTargetAnnotationInstancesAnywhere(ScanResult scanResult, Class<? extends Annotation> targetAnnotation, boolean isRepeatableAnnotation) {
         List<AnnotationInfo> targetAnnotationInstanceAnywhere = new ArrayList<>();
 
         /* Collect target annotation instances on class. */
@@ -133,7 +152,14 @@ public class GenerateDocStringTest {
             scanResult
                 .getClassesWithAnnotation(targetAnnotation)
                 .stream()
-                .map(classInfo -> classInfo.getAnnotationInfo(targetAnnotation))
+                .flatMap(classInfo -> {
+                    if (isRepeatableAnnotation) {
+                        AnnotationInfoList annotationInfoRepeatable = classInfo.getAnnotationInfoRepeatable(targetAnnotation);
+                        return annotationInfoRepeatable.stream();
+                    } else {
+                        return Stream.of(classInfo.getAnnotationInfo(targetAnnotation));
+                    }
+                })
                 .toList();
         targetAnnotationInstanceAnywhere.addAll(targetAnnotationOnClass);
 
@@ -147,7 +173,13 @@ public class GenerateDocStringTest {
                     fieldInfoList
                         .stream()
                         .filter(fieldInfo -> fieldInfo.hasAnnotation(targetAnnotation)))
-                .map(fieldInfo -> fieldInfo.getAnnotationInfo(targetAnnotation))
+                .flatMap(fieldInfo -> {
+                    if (isRepeatableAnnotation) {
+                        return fieldInfo.getAnnotationInfoRepeatable(targetAnnotation).stream();
+                    } else {
+                        return Stream.of(fieldInfo.getAnnotationInfo(targetAnnotation));
+                    }
+                })
                 .toList();
         targetAnnotationInstanceAnywhere.addAll(targetAnnotationOnField);
 
@@ -160,7 +192,13 @@ public class GenerateDocStringTest {
                 methodInfoList
                     .stream()
                     .filter(methodInfo -> methodInfo.hasAnnotation(targetAnnotation)))
-            .map(methodInfo -> methodInfo.getAnnotationInfo(targetAnnotation))
+            .flatMap(methodInfo -> {
+                if (isRepeatableAnnotation) {
+                    return methodInfo.getAnnotationInfoRepeatable(targetAnnotation).stream();
+                } else {
+                    return Stream.of(methodInfo.getAnnotationInfo(targetAnnotation));
+                }
+            })
             .toList();
         targetAnnotationInstanceAnywhere.addAll(targetAnnotationOnMethod);
 
@@ -178,7 +216,13 @@ public class GenerateDocStringTest {
                 return Arrays.stream(parameterInfo);
             })
             .filter(methodParameterInfo -> methodParameterInfo.hasAnnotation(targetAnnotation))
-            .map(methodParameterInfo -> methodParameterInfo.getAnnotationInfo(targetAnnotation))
+            .flatMap(methodParameterInfo -> {
+                if (isRepeatableAnnotation) {
+                    return methodParameterInfo.getAnnotationInfoRepeatable(targetAnnotation).stream();
+                } else {
+                    return Stream.of(methodParameterInfo.getAnnotationInfo(targetAnnotation));
+                }
+            })
             .toList();
 
         targetAnnotationInstanceAnywhere.addAll(targetAnnotationOnMethodParameters);
