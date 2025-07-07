@@ -45,6 +45,9 @@ public class GenerateDocStringTest {
             /* Check duplicated doc string. */
             checkDuplicateDocString(docStringList);
 
+            /* Check invalid doc string. */
+            checkInvalidDocString(docStringList);
+
             /* Override the doc string into the default language file. */
             writeDocStringListIntoDefaultLanguageFile(docStringList);
         }
@@ -104,6 +107,20 @@ public class GenerateDocStringTest {
         LogUtil.info("There are {} duplicate doc strings. (IDs = {})", duplicateIds.size(), duplicateIds);
         if (!duplicateIds.isEmpty()) {
             throw new RuntimeException("Duplicated IDs: " + duplicateIds);
+        }
+    }
+
+    private static void checkInvalidDocString(List<DocString> docStringList) {
+        List<DocString> invalidDocStringList = docStringList
+            .stream()
+            .filter(docString -> {
+                long id = docString.getId();
+                return id < 1735689600000L || id > 2051222400000L;
+            })
+            .toList();
+
+        if (!invalidDocStringList.isEmpty()) {
+            throw new RuntimeException("Invalid IDs: " + invalidDocStringList);
         }
     }
 
