@@ -4,74 +4,68 @@ import auxiliary.TestUtility;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 import io.github.sakurawald.fuji.Fuji;
-import lombok.Cleanup;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.spongepowered.asm.mixin.Mixin;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.List;
-
 public class CheckMixinRegistryTest {
 
-    private List<JsonElement> collectJsonArray(JsonElement jsonElement, String key) {
+    private List<JsonElement> collectJsonArray(JsonElement jsonElement, String jsonKey) {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
-        if (!jsonObject.has(key)) return List.of();
+        // NOTE: Allow to not write the `client` key.
+        if (!jsonObject.has(jsonKey)) return Collections.emptyList();
 
-        JsonArray mixinsArray = jsonObject.get(key).getAsJsonArray();
+        JsonArray mixinsArray = jsonObject.get(jsonKey).getAsJsonArray();
         return mixinsArray.asList();
     }
 
-    private List<String> collectMixins(JsonElement jsonElement, String key) {
-        List<JsonElement> jsonElements = collectJsonArray(jsonElement, key);
-        return jsonElements.stream().map(JsonElement::getAsString).toList();
+    private List<String> collectMixins(JsonElement jsonElement, String jsonKey) {
+        List<JsonElement> jsonElements = collectJsonArray(jsonElement, jsonKey);
+        return jsonElements
+            .stream()
+            .map(JsonElement::getAsString)
+            .toList();
     }
 
-    @SneakyThrows(IOException.class)
+    @SneakyThrows
     @Test
-    void test() {
-
-        /* read file */
-        File file = new File("src/main/resources/fuji.mixins.json");
-        @Cleanup Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-        JsonElement jsonElement = JsonParser.parseReader(reader);
-
+    public void ensureAllMixinClassIsRegisteredInMixinJsonFile() {
+        /* Read the fuji.mixins.json file, to get the registered mixins. */
+        Path mixinJsonFilePath = Path.of("src/main/resources/fuji.mixins.json");
+        JsonElement mixinJsonFileJson = TestUtility.readJsonElement(mixinJsonFilePath);
         List<String> registeredMixins = new ArrayList<>();
-        registeredMixins.addAll(collectMixins(jsonElement, "mixins"));
-        registeredMixins.addAll(collectMixins(jsonElement, "client"));
-        registeredMixins.addAll(collectMixins(jsonElement, "server"));
+        registeredMixins.addAll(collectMixins(mixinJsonFileJson, "mixins"));
+        registeredMixins.addAll(collectMixins(mixinJsonFileJson, "client"));
+        registeredMixins.addAll(collectMixins(mixinJsonFileJson, "server"));
 
-        /* reflect */
+        /* Scan the codebase, to find un-registered mixins. */
         String mixinPackage = Fuji.class.getPackageName() + ".module.mixin";
         List<String> unregisteredMixins = new ArrayList<>();
-
-
-        try (ScanResult scanResult = TestUtility.makeBaseClassGraph()
+        try (ScanResult scanResult = TestUtility
+            .makeBaseClassGraph()
             .enableAllInfo()
             .scan()) {
 
             for (ClassInfo classInfo : scanResult.getClassesWithAnnotation(Mixin.class)) {
-                String mixinName = classInfo.getName().substring(mixinPackage.length() + 1);
-
-                if (!registeredMixins.contains(mixinName)) {
-                    unregisteredMixins.add(mixinName);
+                String mixinSimpleName = classInfo.getName().substring(mixinPackage.length() + 1);
+                if (!registeredMixins.contains(mixinSimpleName)) {
+                    unregisteredMixins.add(mixinSimpleName);
                 }
             }
         }
 
+        /* Check result. */
         if (!unregisteredMixins.isEmpty()) {
-            throw new RuntimeException("Mixins not registered: " + unregisteredMixins);
+            throw new RuntimeException("The following mixins are not registered: " + unregisteredMixins);
         }
     }
+
 }
 
