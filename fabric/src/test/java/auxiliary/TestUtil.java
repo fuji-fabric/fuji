@@ -21,7 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @UtilityClass
-public class TestUtility {
+public class TestUtil {
 
     public static ClassGraph makeBaseClassGraph() {
         return new ClassGraph()

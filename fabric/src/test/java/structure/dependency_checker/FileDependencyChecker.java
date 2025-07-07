@@ -1,6 +1,6 @@
 package structure.dependency_checker;
 
-import auxiliary.TestUtility;
+import auxiliary.TestUtil;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 
@@ -21,8 +21,8 @@ public class FileDependencyChecker extends BaseDependencyChecker {
         String text = FileUtils.readFileToString(Path.of(file).toFile(), Charset.defaultCharset());
 
         List<String> statements = new ArrayList<>();
-        statements.addAll(TestUtility.extractMatches(importPattern, text, 1));
-        statements.addAll(TestUtility.extractMatches(staticImportPattern, text, 1));
+        statements.addAll(TestUtil.extractMatches(importPattern, text, 1));
+        statements.addAll(TestUtil.extractMatches(staticImportPattern, text, 1));
         return statements;
     }
 

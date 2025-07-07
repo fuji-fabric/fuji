@@ -1,6 +1,6 @@
 package tests;
 
-import auxiliary.TestUtility;
+import auxiliary.TestUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -39,7 +39,7 @@ public class CheckMixinRegistryTest {
     public void ensureAllMixinClassIsRegisteredInMixinJsonFile() {
         /* Read the fuji.mixins.json file, to get the registered mixins. */
         Path mixinJsonFilePath = Path.of("src/main/resources/fuji.mixins.json");
-        JsonElement mixinJsonFileJson = TestUtility.readJsonElement(mixinJsonFilePath);
+        JsonElement mixinJsonFileJson = TestUtil.readJsonElement(mixinJsonFilePath);
         List<String> registeredMixins = new ArrayList<>();
         registeredMixins.addAll(collectMixins(mixinJsonFileJson, "mixins"));
         registeredMixins.addAll(collectMixins(mixinJsonFileJson, "client"));
@@ -48,7 +48,7 @@ public class CheckMixinRegistryTest {
         /* Scan the codebase, to find un-registered mixins. */
         String mixinPackage = Fuji.class.getPackageName() + ".module.mixin";
         List<String> unregisteredMixins = new ArrayList<>();
-        try (ScanResult scanResult = TestUtility
+        try (ScanResult scanResult = TestUtil
             .makeBaseClassGraph()
             .enableAllInfo()
             .scan()) {

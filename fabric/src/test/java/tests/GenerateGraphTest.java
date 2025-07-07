@@ -1,6 +1,6 @@
 package tests;
 
-import auxiliary.TestUtility;
+import auxiliary.TestUtil;
 import com.google.gson.JsonObject;
 import io.github.classgraph.AnnotationInfo;
 import io.github.classgraph.AnnotationParameterValueList;
@@ -32,13 +32,15 @@ public class GenerateGraphTest {
 
     public static final Path COMPILE_TIME_GRAPH_PATH = COMPILE_TIME_RESOURCE_PATH.resolve(ReflectionUtil.class.getPackageName().replace(".", "/"));
 
-    public static final Path COMPILE_TIME_LANGUAGE_PATH = Path.of("../crowdin/pull-from-crowdin/");
+    public static final Path COMPILE_TIME_CROWDIN_PATH = Path.of("../crowdin/");
+    public static final Path COMPILE_TIME_PULL_FROM_CROWDIN_LANGUAGE_PATH = COMPILE_TIME_CROWDIN_PATH.resolve("pull-from-crowdin/");
+    public static final Path COMPILE_TIME_PUSH_TO_CROWDIN_LANGUAGE_PATH = COMPILE_TIME_CROWDIN_PATH.resolve("push-to-crowdin/");
 
     @SneakyThrows(IOException.class)
     @Test
     void generateStuffsFromRuntimeEnvironment() {
         // scan source
-        try (ScanResult scanResult = TestUtility.makeBaseClassGraph()
+        try (ScanResult scanResult = TestUtil.makeBaseClassGraph()
             .enableAllInfo()
             .scan()) {
 
@@ -78,7 +80,7 @@ public class GenerateGraphTest {
         /* Generate language-graph.txt file. */
         File languageGraphFile = COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.LANGUAGE_GRAPH_FILE_NAME).toFile();
         try (PrintWriter writer = new PrintWriter(languageGraphFile)) {
-            File languageFilesPath = COMPILE_TIME_LANGUAGE_PATH.toFile();
+            File languageFilesPath = COMPILE_TIME_PULL_FROM_CROWDIN_LANGUAGE_PATH.toFile();
             Arrays.stream(Objects.requireNonNull(languageFilesPath.listFiles()))
                 .forEach(file -> writer.println(file.getName()));
         }

@@ -1,28 +1,36 @@
 package tests;
 
-import auxiliary.TestUtility;
+import auxiliary.TestUtil;
+import com.google.gson.JsonObject;
 import io.github.classgraph.AnnotationInfo;
 import io.github.classgraph.AnnotationParameterValueList;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.MethodParameterInfo;
 import io.github.classgraph.ScanResult;
+import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.structure.DocString;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 public class GenerateDocStringTest {
 
+    @SneakyThrows
     @Test
-    void generateDocStringListInRuntimeEnvironment() {
-        try (ScanResult scanResult = TestUtility.makeBaseClassGraph()
+    public void generateDocStringListInRuntimeEnvironment() {
+        try (ScanResult scanResult = TestUtil.makeBaseClassGraph()
             .enableAllInfo()
             .scan()) {
 
@@ -32,7 +40,26 @@ public class GenerateDocStringTest {
 
             /* Check duplicated doc string. */
             checkDuplicateDocString(docStringList);
+
+            /* Override the doc string into the default language file. */
+            writeDocStringListIntoDefaultLanguageFile(docStringList);
         }
+
+    }
+
+    private static void writeDocStringListIntoDefaultLanguageFile(List<DocString> docStringList) throws IOException {
+        /* Read the default language json. */
+        Path defaultLanguageFilePath = GenerateGraphTest.COMPILE_TIME_PUSH_TO_CROWDIN_LANGUAGE_PATH.resolve("en_US.json");
+        JsonObject defaultLanguageJson = TestUtil.readJsonElement(defaultLanguageFilePath).getAsJsonObject();
+        if (JsonUtil.isEmpty(defaultLanguageJson)) {
+            throw new RuntimeException("Default language file is empty.");
+        }
+
+        /* Sort the json. */
+        defaultLanguageJson = JsonUtil.makeSortedJsonObject(defaultLanguageJson);
+
+        String jsonString = BaseConfigurationHandler.getGson().toJson(defaultLanguageJson);
+        Files.writeString(defaultLanguageFilePath, jsonString);
     }
 
     private static @NotNull List<DocString> makeDocStringFromDocumentAnnotation(ScanResult scanResult) {

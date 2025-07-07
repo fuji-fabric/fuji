@@ -3,6 +3,8 @@ package io.github.sakurawald.fuji.core.auxiliary;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import java.util.Map;
+import java.util.TreeMap;
 import org.jetbrains.annotations.NotNull;
 
 public class JsonUtil {
@@ -46,5 +48,19 @@ public class JsonUtil {
     public static boolean isEmpty(JsonObject obj) {
         // NOTE: The JsonObject.isEmpty() is not exist in old version gson, so the sinytra-connector will fail to load the mod.
         return obj.size() == 0;
+    }
+
+    public static JsonObject makeSortedJsonObject(@NotNull JsonObject original) {
+        Map<String, JsonElement> sortedMap = new TreeMap<>();
+        for (Map.Entry<String, JsonElement> entry : original.entrySet()) {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+
+        JsonObject sortedJson = new JsonObject();
+        for (Map.Entry<String, JsonElement> entry : sortedMap.entrySet()) {
+            sortedJson.add(entry.getKey(), entry.getValue());
+        }
+
+        return sortedJson;
     }
 }
