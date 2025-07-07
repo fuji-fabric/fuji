@@ -252,7 +252,9 @@ public class TextHelper {
 
             // If audience is non-null, but we have no clue what is the source player, then still use the default language.
             @Nullable PlayerEntity player = tryExtractPlayerEntity(audience);
-            if (player == null) return getDefaultLanguageCode();
+            if (player == null) {
+                return getDefaultLanguageCode();
+            }
 
             // Get the language code used by the player.
             String playerName = PlayerHelper.getPlayerName(player);
@@ -300,6 +302,10 @@ public class TextHelper {
             return languageCode.equals(getDefaultLanguageCode());
         }
 
+        public static boolean isDefaultLanguageCodeEnUS() {
+            return getDefaultLanguageCode().equalsIgnoreCase("en_US");
+        }
+
     }
 
     @ForDeveloper("The functions to map language key into language value for specified language code.")
@@ -310,8 +316,9 @@ public class TextHelper {
             JsonObject languageJson = Loader.getLanguageJsonObject(languageCode);
 
             /* If the client-side language is not supported in server side, fallback to specified default language. */
+            String defaultLanguageCode = Loader.getDefaultLanguageCode();
             if (languageJson == Loader.UNSUPPORTED_LANGUAGE_MARKER) {
-                languageCode = Loader.getDefaultLanguageCode();
+                languageCode = defaultLanguageCode;
                 languageJson = Loader.getLanguageJsonObject(languageCode);
             }
 
@@ -323,13 +330,12 @@ public class TextHelper {
             // Use partial locale. (Fallback to default language for one missing key)
             // NOTE: Actually, we will add the missing keys when loading a language file.
             if (!Loader.isDefaultLanguageCode(languageCode)) {
-                String defaultLanguageCode = Loader.getDefaultLanguageCode();
                 LogUtil.warn("There is no language key {} in language code {}. We will fallback to default language code {} for this key.", languageKey, languageCode, defaultLanguageCode);
                 return getLanguageValueFromLanguageJson(defaultLanguageCode, languageKey);
             }
 
             // If the language key is missing in the default language, then we have nothing to do.
-            LogUtil.error("Failed to load the language key {} in the default language code.", languageKey);
+            LogUtil.error("Failed to load the language key {} in the default language code. (default language code = {})", languageKey, defaultLanguageCode);
             return null;
         }
 

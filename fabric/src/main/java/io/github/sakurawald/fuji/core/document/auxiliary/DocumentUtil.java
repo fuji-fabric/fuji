@@ -1,22 +1,38 @@
 package io.github.sakurawald.fuji.core.document.auxiliary;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.service.url_highlighter.UrlHighlighter;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class DocumentUtil {
 
     public static final String DOC_STRING_KEY_PREFIX = "docstring.";
 
-    private static @Nullable String getDocumentString(Document annotation) {
-        if (annotation != null) {
+    @SuppressWarnings("UnnecessaryLocalVariable")
+    private static @NotNull String getDocString(long id) {
+        String languageKey = DOC_STRING_KEY_PREFIX + id;
+        // NOTE: For doc string, we always use the default language to display language values.
+        String languageValue = TextHelper.Translator.getLanguageValueByKey(null, languageKey);
+        return languageValue;
+    }
+
+    private static @Nullable String getDocumentString(@Nullable Document annotation) {
+        if (annotation == null) {
+            return null;
+        }
+
+        /* Always provide the latest version for en_US users. */
+        if (TextHelper.Loader.isDefaultLanguageCodeEnUS()) {
             return annotation.value();
         }
 
-        return null;
+        /* Retrieve the doc string from language file. */
+        return getDocString(annotation.id());
     }
 
     public static @Nullable String getClassDocumentString(Class<?> clazz) {
