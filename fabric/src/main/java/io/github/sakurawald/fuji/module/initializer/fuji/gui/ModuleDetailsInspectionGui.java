@@ -7,6 +7,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.Configs;
+import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
 import io.github.sakurawald.fuji.core.document.gui.CommandsInspectionGui;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
@@ -97,7 +98,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         attachThingsForCore(player, moduleDetailsInspectionGui, entities, modulePathString);
 
         /* Attach color blocks of the module. */
-        attachColorBlocks(player, entities, modulePathString);
+        attachColorBoxes(player, entities, modulePathString);
 
         /* Search all types of objects of the module.  */
         SimpleGui trueParent = moduleDetailsInspectionGui.getBackendGui();
@@ -134,14 +135,15 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         GuiHelper.fillEmptySlots(gui, builder);
    }
 
-    private static void attachColorBlocks(ServerPlayerEntity player, List<GuiElementInterface> entities, String modulePathString) {
+    private static void attachColorBoxes(ServerPlayerEntity player, List<GuiElementInterface> entities, String modulePathString) {
         getColorBoxes(modulePathString)
             .forEach(colorBox -> {
                 GuiElementBuilder colorboxElementBuilder = new GuiElementBuilder();
 
                 ColorBox.ColorBlockTypes color = colorBox.color();
                 Text colorBoxName = TextHelper.getTextByKey(player, color.toLanguageKey());
-                String documentString = colorBox.value();
+
+                String documentString = DocumentUtil.getColorBoxString(colorBox);
                 List<Text> colorBoxTextList = TextHelper.getDocumentTextList(player, documentString);
                 colorboxElementBuilder
                     .setName(colorBoxName)

@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.core.document.auxiliary;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.service.url_highlighter.UrlHighlighter;
 import java.lang.reflect.Field;
@@ -22,6 +23,20 @@ public class DocumentUtil {
     }
 
     private static @Nullable String getDocumentString(@Nullable Document annotation) {
+        if (annotation == null) {
+            return null;
+        }
+
+        /* Always provide the latest version for en_US users. */
+        if (TextHelper.Loader.isDefaultLanguageCodeEnUS()) {
+            return annotation.value();
+        }
+
+        /* Retrieve the doc string from language file. */
+        return getDocString(annotation.id());
+    }
+
+    public static @Nullable String getColorBoxString(@Nullable ColorBox annotation) {
         if (annotation == null) {
             return null;
         }
