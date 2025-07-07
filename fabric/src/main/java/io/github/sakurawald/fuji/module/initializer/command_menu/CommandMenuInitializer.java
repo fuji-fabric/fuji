@@ -23,7 +23,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     This module allows you to define `menu` GUI, to execute commands.
     """)
 
-@ColorBox(color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751870445592L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     The `/command-menu open` command is an `admin-level` command.
     You need to use `command_bundle` module, to creat a `user-level` command.
     """)

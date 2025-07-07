@@ -57,7 +57,7 @@ import java.util.Optional;
     3. Attach commands into an entity.
     """)
 
-@ColorBox(color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751870462624L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     How it works?
 
     When you attach commands into an item.
@@ -66,7 +66,7 @@ import java.util.Optional;
     """)
 
 
-@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870464919L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     To give the item with attached commands.
     You can use `kit` module.
     The kit module will save the item NBT.

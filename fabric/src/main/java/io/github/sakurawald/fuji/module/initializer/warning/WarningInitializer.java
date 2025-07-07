@@ -35,12 +35,12 @@ import net.minecraft.server.network.ServerPlayerEntity;
     You can use `warnings` to `track` the behaviours of a `player`.
     """)
 
-@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870593979L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     You can use `command_scheduler` module, to define a `job`.
     To execute `/warning clear-all --confirm true` command automatically. (e.g. every week)
     """)
 
-@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870597904L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     You can use `command_bundle` module, to define `template` for `warnings`.
     """)
 

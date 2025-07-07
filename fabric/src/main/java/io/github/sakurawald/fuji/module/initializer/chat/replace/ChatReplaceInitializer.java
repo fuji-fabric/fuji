@@ -17,7 +17,7 @@ import net.minecraft.text.Text;
     This module allows you to replace `chat string` with a given `chat text`. (Including placeholder parsing)
     """)
 
-@ColorBox(color = ColorBox.ColorBlockTypes.WARNING, value = """
+@ColorBox(id = 1751870539707L, color = ColorBox.ColorBlockTypes.WARNING, value = """
     This module didn't work with `Styled Chat` mod.
     The `chat.replace` module does work with `chat.style` module.
     But if you are using the `Styled Chat` mod, then it didn't work.

@@ -9,7 +9,7 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import java.util.ArrayList;
 import java.util.List;
 
-@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870436910L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     How to use fuji?
 
     All `modules` are `disabled` by default.
@@ -18,7 +18,7 @@ import java.util.List;
     After that, `re-start` the server, to apply the `module enable status`.
     """)
 
-@ColorBox(color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751870440489L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     Does fuji support the `hot reload`?
 
     Yes, fuji does support to `hot reload` the `files` from a `enabled module`.

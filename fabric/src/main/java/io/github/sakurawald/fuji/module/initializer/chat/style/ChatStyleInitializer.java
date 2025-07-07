@@ -33,11 +33,11 @@ import org.jetbrains.annotations.NotNull;
     This module allows you to customize global chat style.
     Besides, players can use `/chat style` to set per-player chat style.
     """)
-@ColorBox(color = ColorBox.ColorBlockTypes.WARNING, value = """
+@ColorBox(id = 1751870542664L, color = ColorBox.ColorBlockTypes.WARNING, value = """
     If you are using `Styled Chat` mod, then you can `disable` this module.
     Because they provide the same `purpose`.
     """)
-@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870544482L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     The main features of this module:
     1. You can use `style tags` to define complex `format`.
     2. You can define the `global format` for all players.
@@ -45,7 +45,7 @@ import org.jetbrains.annotations.NotNull;
     4. This module is designed to work with other `chat-related` mods.
     5. You can control what style tags a player can use, using permissions.
     """)
-@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870547482L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     You can use `style tags` to write `complex format`.
 
     See the language grammar here:
@@ -53,7 +53,7 @@ import org.jetbrains.annotations.NotNull;
     2. https://placeholders.pb4.eu/user/quicktext
     """)
 
-@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870549047L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     To set the `prefix` and `suffix` for a player.
 
     You need to install the `luckperms` mod, to provide the `prefix` and `suffix` feature.
@@ -61,22 +61,22 @@ import org.jetbrains.annotations.NotNull;
     To use the `prefix`, use the placeholder `%fuji:player_prefix%`.
     """)
 
-@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870550677L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     To set the per-player chat style:
     Issue `/chat style set prefix + %message% + suffix`.
     """)
 
-@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870552243L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     To allow players to use `\\<blue\\>` tag:
     Issue `/lp group default permission set fuji.style.chat.blue`.
     """)
 
-@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870553872L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     To allow players to use `\\<b\\>` tag:
     Issue `/lp group default permission set fuji.style.chat.b`.
     """)
 
-@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870555712L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     To allow players to use all tags:
     All tags also including dangerous tags like `\\<click\\>` tag which can run commands on clicked!
     Issue `/lp group default permission set fuji.style.chat.*`

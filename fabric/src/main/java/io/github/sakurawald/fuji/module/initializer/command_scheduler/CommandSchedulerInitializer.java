@@ -27,7 +27,7 @@ import java.util.List;
     To execute commands at schedule.
     """)
 
-@ColorBox(color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751870574475L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     How it works?
 
     A `job` is used to execute commands periodically.

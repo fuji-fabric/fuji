@@ -29,7 +29,7 @@ import java.util.stream.Stream;
     2. The body of the new command, can be a list of commands.
     """)
 
-@ColorBox(color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751870454656L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     The features of this module:
     1. Provide a user-friendly DSL, to create `new custom commands` easily.
     2. Support the inter-operation with `user-defined variable`, `placeholders` and `target selectors`.
@@ -38,12 +38,12 @@ import java.util.stream.Stream;
     5. Register and un-register commands on the fly, without a server re-start.
     """)
 
-@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870456781L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     To query all supported `argument types`:
     Issue `/fuji inspect argument-types`.
     """)
 
-@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870458514L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     You can use command generator to get powerful commands:
     https://www.gamergeeks.net/apps/minecraft/particle-command-generator
     """)

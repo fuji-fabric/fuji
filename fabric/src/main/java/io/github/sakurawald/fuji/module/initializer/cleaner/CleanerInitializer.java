@@ -38,7 +38,7 @@ import java.util.concurrent.CompletableFuture;
     To remove specified entities automatically.
     """)
 
-@ColorBox(color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751870582940L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     You should only use this module to clean some edge-case entity.
     The vanilla Minecraft also has a `cleaner` to remove dropped items.
     In normal case, you can rely on the `vanilla cleaner`.
@@ -49,7 +49,7 @@ import java.util.concurrent.CompletableFuture;
     But this module, allows you to define rules, to clean `dropped items` and `entities`.
     """)
 
-@ColorBox(color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751870585373L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     For safety, the `cleaner` will `always ignore` the following types:
     1. player
     2. any block attached entity (e.g. leash_knot)

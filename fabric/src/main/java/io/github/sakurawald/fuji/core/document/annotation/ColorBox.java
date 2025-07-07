@@ -14,9 +14,11 @@ import java.lang.annotation.Target;
 @Repeatable(value = ColorBoxes.class)
 public @interface ColorBox {
 
+    long id();
+
     ColorBlockTypes color() default ColorBlockTypes.NOTE;
 
-    String value() default "The value of this color box is empty";
+    String value();
 
     enum ColorBlockTypes {
         EXAMPLE("colorbox.example.name", Items.WHITE_CANDLE)

@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-@ColorBox(color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751870419626L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     Only use `/delay` to perform short-term job.
     The `delayed commands` will not be persisted, if the server get a re-start.
     """)

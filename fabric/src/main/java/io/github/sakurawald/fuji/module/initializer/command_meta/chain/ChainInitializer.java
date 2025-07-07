@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
     The second command is the chain command.
     """)
 
-@ColorBox(color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751870431402L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     In vanilla Minecraft, the return value of a command, is a `integer`.
     If integer less than zero, it's `failed`.
     If integer equals zero, it's `passed`.

@@ -37,11 +37,11 @@ import net.minecraft.util.Identifier;
     One `account` holds one type of `currency`.
     """)
 
-@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870587446L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     You can use this module with `Universal Shops` mod.
     """)
 
-@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870591800L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     You can use `command_bundle` module.
     To create a `/balance` command, to wrap the `/economy account %player:name% fuji:gold` command.
     """)

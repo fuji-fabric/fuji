@@ -24,12 +24,12 @@ import net.minecraft.text.Text;
     3. Show their ender chest.
     """)
 
-@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870533687L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     This module is designed to work with other `chat-related` mods.
     For example, you use this with `Styled Chat` mod.
     """)
 
-@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870535947L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     To define a `chat shortcut` to create a display:
     You can use `chat.replace` module, to define chat shortcut.
     The shortcut can be `"item"` for example.

@@ -29,7 +29,7 @@ import java.util.concurrent.CompletableFuture;
     Provides `/shell` command.
     To execute the `command line` in `host shell`.
     """)
-@ColorBox(color = ColorBox.ColorBlockTypes.DANGER, value = """
+@ColorBox(id = 1751870434188L, color = ColorBox.ColorBlockTypes.DANGER, value = """
     This is a `dangerous` module.
     This module is a powerful and dangerous module, not recommended to enable it.
     """)
