@@ -96,7 +96,7 @@ public class JobsInspectionGui extends PagedGui<JobDescriptor> {
 
         /* Attach document string. */
         Class<? extends Job> jobClass = jobDetail.getJobClass();
-        String jobDocument = DocumentUtil.getClassDocumentString(jobClass);
+        String jobDocument = DocumentUtil.getClassDocumentString(getPlayer(), jobClass);
         if (jobDocument != null) {
             lore.add(TextHelper.TEXT_EMPTY);
             lore.addAll(TextHelper.getDocumentTextList(getPlayer(), jobDocument));

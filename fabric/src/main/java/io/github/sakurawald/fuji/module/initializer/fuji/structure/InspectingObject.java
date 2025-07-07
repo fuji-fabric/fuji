@@ -84,15 +84,15 @@ public class InspectingObject {
     }
 
     @SuppressWarnings("UnnecessaryLocalVariable")
-    public @Nullable String getDocumentString() {
+    public @Nullable String getDocumentString(ServerPlayerEntity player) {
         /* Extract @Document from a field in class. */
         if (this.object instanceof Field field) {
-            return DocumentUtil.getFieldDocumentString(field);
+            return DocumentUtil.getFieldDocumentString(player, field);
         }
 
         /* Extract @Document from collection and map. */
         Class<?> objectType = this.getObjectType();
-        String classDocument = DocumentUtil.getClassDocumentString(objectType);
+        String classDocument = DocumentUtil.getClassDocumentString(player, objectType);
 
         return classDocument;
     }
@@ -268,7 +268,7 @@ public class InspectingObject {
         }
 
         /* Add @Document text. */
-        String documentString = this.getDocumentString();
+        String documentString = this.getDocumentString(player);
         if (documentString != null) {
             lore.add(TextHelper.TEXT_EMPTY);
             lore.addAll(TextHelper.getDocumentTextList(player, documentString));

@@ -14,14 +14,14 @@ import org.jetbrains.annotations.Nullable;
 public class DocumentUtil {
 
     @SuppressWarnings("UnnecessaryLocalVariable")
-    private static @NotNull String getDocString(long id) {
+    private static @NotNull String getDocString(@Nullable Object audience, long id) {
         String languageKey = DocString.DOC_STRING_KEY_PREFIX + id;
         // NOTE: For doc string, we always use the default language to display language values.
-        String languageValue = TextHelper.Translator.getLanguageValueByKey(null, languageKey);
+        String languageValue = TextHelper.Translator.getLanguageValueByKey(audience, languageKey);
         return languageValue;
     }
 
-    private static @Nullable String getDocumentString(@Nullable Document annotation) {
+    private static @Nullable String getDocumentString(@Nullable Object audience, @Nullable Document annotation) {
         if (annotation == null) {
             return null;
         }
@@ -32,10 +32,10 @@ public class DocumentUtil {
         }
 
         /* Retrieve the doc string from language file. */
-        return getDocString(annotation.id());
+        return getDocString(audience, annotation.id());
     }
 
-    public static @Nullable String getColorBoxString(@Nullable ColorBox annotation) {
+    public static @Nullable String getColorBoxString(@Nullable Object audience, @Nullable ColorBox annotation) {
         if (annotation == null) {
             return null;
         }
@@ -46,17 +46,17 @@ public class DocumentUtil {
         }
 
         /* Retrieve the doc string from language file. */
-        return getDocString(annotation.id());
+        return getDocString(audience, annotation.id());
     }
 
-    public static @Nullable String getClassDocumentString(Class<?> clazz) {
+    public static @Nullable String getClassDocumentString(@Nullable Object audience, Class<?> clazz) {
         Document annotation = clazz.getAnnotation(Document.class);
-        return getDocumentString(annotation);
+        return getDocumentString(audience, annotation);
     }
 
-    public static @Nullable String getFieldDocumentString(Field field) {
+    public static @Nullable String getFieldDocumentString(@Nullable Object audience, Field field) {
         Document annotation = field.getAnnotation(Document.class);
-        return getDocumentString(annotation);
+        return getDocumentString(audience, annotation);
     }
 
     public static String compileDocumentString(String documentString) {

@@ -143,7 +143,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
                 ColorBox.ColorBlockTypes color = colorBox.color();
                 Text colorBoxName = TextHelper.getTextByKey(player, color.toLanguageKey());
 
-                String documentString = DocumentUtil.getColorBoxString(colorBox);
+                String documentString = DocumentUtil.getColorBoxString(player, colorBox);
                 List<Text> colorBoxTextList = TextHelper.getDocumentTextList(player, documentString);
                 colorboxElementBuilder
                     .setName(colorBoxName)

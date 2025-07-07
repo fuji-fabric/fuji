@@ -71,7 +71,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
         /* Attach @Document information above module initializer. */
         Class<? extends ModuleInitializer> moduleInitializerClass = ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING.getOrDefault(modulePathString, null);
         if (moduleInitializerClass != null) {
-            String classDocument = getDocumentString(moduleInitializerClass);
+            String classDocument = DocumentUtil.getClassDocumentString(getPlayer(), moduleInitializerClass);
             if (classDocument != null) {
                 lore.add(TextHelper.TEXT_EMPTY);
                 lore.addAll(TextHelper.getDocumentTextList(getPlayer(), classDocument ));
@@ -106,11 +106,6 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
         ModuleDetailsInspectionGui
             .inspectModuleDetails(parent, player, modulePathString, moduleEnableStatus)
             .open();
-    }
-
-    private static @Nullable String getDocumentString(Class<? extends ModuleInitializer> moduleInitializerClass) {
-        @Nullable String classDocument = DocumentUtil.getClassDocumentString(moduleInitializerClass);
-        return classDocument;
     }
 
     @Override
