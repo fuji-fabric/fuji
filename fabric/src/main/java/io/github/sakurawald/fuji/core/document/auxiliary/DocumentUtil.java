@@ -9,6 +9,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class DocumentUtil {
 
+    public static final String DOC_STRING_KEY_PREFIX = "docstring.";
+
     private static @Nullable String getDocumentString(Document annotation) {
         if (annotation != null) {
             return annotation.value();

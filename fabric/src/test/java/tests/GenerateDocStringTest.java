@@ -11,6 +11,7 @@ import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.document.structure.DocString;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -18,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,6 +29,7 @@ import org.junit.jupiter.api.Test;
 
 public class GenerateDocStringTest {
 
+    @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
     @SneakyThrows
     @Test
     public void generateDocStringListInRuntimeEnvironment() {
@@ -35,7 +38,8 @@ public class GenerateDocStringTest {
             .scan()) {
 
             /* Make the doc string list. */
-            List<DocString> docStringList = makeDocStringFromDocumentAnnotation(scanResult);
+            List<DocString> docStringList = new ArrayList<>();
+            docStringList.addAll(makeDocStringFromDocumentAnnotation(scanResult));
             LogUtil.info("There are {} doc strings.", docStringList.size());
 
             /* Check duplicated doc string. */
@@ -58,6 +62,19 @@ public class GenerateDocStringTest {
         /* Sort the json. */
         defaultLanguageJson = JsonUtil.makeSortedJsonObject(defaultLanguageJson);
 
+        /* Delete the existed docstring keys. */
+        defaultLanguageJson.keySet().removeIf(key -> key.startsWith(DocumentUtil.DOC_STRING_KEY_PREFIX));
+
+        /* Append the doc string into the default language json. */
+        docStringList.sort(Comparator.comparing(DocString::getId));
+        for (DocString docString : docStringList) {
+            String jsonKey = DocumentUtil.DOC_STRING_KEY_PREFIX + docString.getId();
+            String jsonValue = docString.getValue();
+            defaultLanguageJson.addProperty(jsonKey, jsonValue);
+        }
+        LogUtil.info("Write {} doc strings into the default language file.", docStringList.size());
+
+        /* Override the default language file. */
         String jsonString = BaseConfigurationHandler.getGson().toJson(defaultLanguageJson);
         Files.writeString(defaultLanguageFilePath, jsonString);
     }
