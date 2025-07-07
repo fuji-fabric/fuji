@@ -1,6 +1,7 @@
 package tests;
 
 import auxiliary.TestUtil;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.classgraph.AnnotationInfo;
 import io.github.classgraph.AnnotationInfoList;
@@ -13,7 +14,6 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
-import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.document.structure.DocString;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -21,9 +21,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.SneakyThrows;
@@ -46,7 +46,7 @@ public class GenerateDocStringTest {
             LogUtil.info("There are {} doc strings.", docStringList.size());
 
             /* Remove test purpose doc string. */
-            docStringList.removeIf(docString -> docString.getId() == -1L);
+            docStringList.removeIf(docString -> docString.getId() == 0L);
 
             /* Check duplicated doc string. */
             checkDuplicateDocString(docStringList);
@@ -68,20 +68,22 @@ public class GenerateDocStringTest {
             throw new RuntimeException("Default language file is empty.");
         }
 
-        /* Sort the json. */
-        defaultLanguageJson = JsonUtil.makeSortedJsonObject(defaultLanguageJson);
-
-        /* Delete the existed docstring keys. */
-        defaultLanguageJson.keySet().removeIf(key -> key.startsWith(DocumentUtil.DOC_STRING_KEY_PREFIX));
-
         /* Append the doc string into the default language json. */
-        docStringList.sort(Comparator.comparing(DocString::getId));
         for (DocString docString : docStringList) {
-            String jsonKey = DocumentUtil.DOC_STRING_KEY_PREFIX + docString.getId();
+            String jsonKey = DocString.DOC_STRING_KEY_PREFIX + docString.getId();
             String jsonValue = docString.getValue();
+
+            // We will never remove the existed doc string key.
+            if (defaultLanguageJson.has(jsonKey)) {
+                defaultLanguageJson.remove(jsonKey);
+            }
+
             defaultLanguageJson.addProperty(jsonKey, jsonValue);
         }
         LogUtil.info("Write {} doc strings into the default language file.", docStringList.size());
+
+        /* Sort the json. */
+        defaultLanguageJson = makeSortedLanguageJsonObject(defaultLanguageJson);
 
         /* Override the default language file. */
         String jsonString = BaseConfigurationHandler.getGson().toJson(defaultLanguageJson);
@@ -231,5 +233,34 @@ public class GenerateDocStringTest {
         return targetAnnotationInstanceAnywhere;
     }
 
+    private static JsonObject makeSortedLanguageJsonObject(@NotNull JsonObject original) {
+        Map<String, JsonElement> sortedMap = new TreeMap<>((a, b) -> {
+            boolean aIsDocString = a.startsWith(DocString.DOC_STRING_KEY_PREFIX);
+            boolean bIsDocString = b.startsWith(DocString.DOC_STRING_KEY_PREFIX);
+
+            if (aIsDocString && !bIsDocString) return +1;
+            if (!aIsDocString && bIsDocString) return -1;
+
+            //noinspection ConstantValue
+            if (aIsDocString && bIsDocString) {
+                long aId = DocString.parseDocStringId(a);
+                long bId = DocString.parseDocStringId(b);
+                return Long.compare(aId, bId);
+            }
+
+            return a.compareTo(b);
+        });
+
+        for (Map.Entry<String, JsonElement> entry : original.entrySet()) {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+
+        JsonObject sortedJson = new JsonObject();
+        for (Map.Entry<String, JsonElement> entry : sortedMap.entrySet()) {
+            sortedJson.add(entry.getKey(), entry.getValue());
+        }
+
+        return sortedJson;
+    }
 
 }

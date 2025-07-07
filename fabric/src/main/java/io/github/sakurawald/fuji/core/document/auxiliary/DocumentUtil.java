@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.core.document.auxiliary;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.document.structure.DocString;
 import io.github.sakurawald.fuji.core.service.url_highlighter.UrlHighlighter;
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -12,11 +13,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class DocumentUtil {
 
-    public static final String DOC_STRING_KEY_PREFIX = "docstring.";
-
     @SuppressWarnings("UnnecessaryLocalVariable")
     private static @NotNull String getDocString(long id) {
-        String languageKey = DOC_STRING_KEY_PREFIX + id;
+        String languageKey = DocString.DOC_STRING_KEY_PREFIX + id;
         // NOTE: For doc string, we always use the default language to display language values.
         String languageValue = TextHelper.Translator.getLanguageValueByKey(null, languageKey);
         return languageValue;

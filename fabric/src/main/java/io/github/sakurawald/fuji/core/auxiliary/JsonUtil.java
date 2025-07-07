@@ -50,17 +50,4 @@ public class JsonUtil {
         return obj.size() == 0;
     }
 
-    public static JsonObject makeSortedJsonObject(@NotNull JsonObject original) {
-        Map<String, JsonElement> sortedMap = new TreeMap<>();
-        for (Map.Entry<String, JsonElement> entry : original.entrySet()) {
-            sortedMap.put(entry.getKey(), entry.getValue());
-        }
-
-        JsonObject sortedJson = new JsonObject();
-        for (Map.Entry<String, JsonElement> entry : sortedMap.entrySet()) {
-            sortedJson.add(entry.getKey(), entry.getValue());
-        }
-
-        return sortedJson;
-    }
 }
