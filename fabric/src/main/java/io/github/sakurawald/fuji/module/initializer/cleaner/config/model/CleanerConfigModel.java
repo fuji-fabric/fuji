@@ -8,12 +8,12 @@ import java.util.Map;
 
 public class CleanerConfigModel {
 
-    @Document("""
+    @Document(id = 1751826888205L, value = """
         The `cron` expression used to trigger entity `cleaner`.
         """)
     public String cron = "0 * * ? * * *";
 
-    @Document("""
+    @Document(id = 1751826890149L, value = """
         The `translatable key` to `age` map.
 
         The `translatable key` defines which `entity` should we remove.
@@ -30,7 +30,7 @@ public class CleanerConfigModel {
         }
     };
 
-    @Document("""
+    @Document(id = 1751826892450L, value = """
         Ignore and never remove entities that meet the condition.
         """)
     public Ignore ignore = new Ignore();

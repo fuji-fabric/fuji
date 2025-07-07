@@ -11,13 +11,13 @@ import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-@Document("""
+@Document(id = 1751823973159L, value = """
     Provides `/foreach` command.
     If a command is only targets on single player, you can use `/foreach` to apply it for each online player.
     """)
 public class ForEachInitializer extends ModuleInitializer {
 
-    @Document("Execute a command targeted on single-player for each player online.")
+    @Document(id = 1751823980406L, value = "Execute a command targeted on single-player for each player online.")
     @CommandNode("foreach")
     @CommandRequirement(level = 4)
     private static int foreach(GreedyString rest) {

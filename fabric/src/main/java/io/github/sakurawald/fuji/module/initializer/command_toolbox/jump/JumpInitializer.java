@@ -19,9 +19,9 @@ public class JumpInitializer extends ModuleInitializer {
 
     @CommandNode("jump")
     @CommandRequirement(level = 4)
-    @Document("Jump to the position looking at.")
+    @Document(id = 1751825104871L, value = "Jump to the position looking at.")
     private static int jump(@CommandSource @CommandTarget ServerPlayerEntity player
-        , @Document("The max distance to jump.") Optional<Integer> distance) {
+        , @Document(id = 1751825110041L, value = "The max distance to jump.") Optional<Integer> distance) {
         int $distance = distance.orElse(128);
         HitResult raycast = player.raycast($distance, 0, false);
         Vec3d hitPos = raycast.getPos();

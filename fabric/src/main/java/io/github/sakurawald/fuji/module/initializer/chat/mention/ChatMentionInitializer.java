@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-@Document("""
+@Document(id = 1751826738578L, value = """
     This module allows you to mention another online player in chat:
     1. The target player name will be highlighted.
     2. The target player will be sound notified.

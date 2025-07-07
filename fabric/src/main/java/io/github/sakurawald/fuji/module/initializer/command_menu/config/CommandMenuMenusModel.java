@@ -15,7 +15,7 @@ import java.util.Map;
 @Data
 public class CommandMenuMenusModel {
 
-    @Document("""
+    @Document(id = 1751824827629L, value = """
         Defined `menus`.
         """)
     public Map<String, MenuDescriptor> menus = new HashMap<>() {

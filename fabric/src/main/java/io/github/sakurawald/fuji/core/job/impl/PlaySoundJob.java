@@ -66,16 +66,16 @@ public class PlaySoundJob extends FixedIntervalJob {
     }
 
     public static class PlaySoundJobSetup {
-        @Document("The `sound` identifier.")
+        @Document(id = 1751823822772L, value = "The `sound` identifier.")
         public @NotNull String sound = "entity.experience_orb.pickup";
 
         public float volume = 100f;
         public float pitch = 1f;
 
-        @Document("The times to play this sound.")
+        @Document(id = 1751823830414L, value = "The times to play this sound.")
         public int repeat_count = 3;
 
-        @Document("The interval between each sound play.")
+        @Document(id = 1751823834755L, value = "The interval between each sound play.")
         public int interval_ms = 1000;
     }
 }

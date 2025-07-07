@@ -9,7 +9,7 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_rewrite.config.model.CommandRewriteConfigModel;
 import org.jetbrains.annotations.NotNull;
 
-@Document("""
+@Document(id = 1751826288031L, value = """
     This module allows you to define `regex` to rewrite the command line a player issued.
     """)
 public class CommandRewriteInitializer extends ModuleInitializer {

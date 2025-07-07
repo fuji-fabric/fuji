@@ -7,7 +7,7 @@ import java.util.List;
 
 public class EconomyConfigModel {
 
-    @Document("Define your `custom economy currency` types.")
+    @Document(id = 1751826966542L, value = "Define your `custom economy currency` types.")
     public List<CustomEconomyCurrencyDescriptor> currencies = new ArrayList<>() {
         {
             this.add(CustomEconomyCurrencyDescriptor.make("fuji:gold","<gold>Fuji Gold" , "minecraft:gold_ingot", 100.0));

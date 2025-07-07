@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 public class CommandBundleConfigModel {
 
-    @Document("""
+    @Document(id = 1751826342919L, value = """
         Defined `bundle commands`.
         """)
     public List<BundleCommandNode> entries = new ArrayList<>() {

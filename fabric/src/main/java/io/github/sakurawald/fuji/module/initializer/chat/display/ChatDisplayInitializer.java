@@ -17,7 +17,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
-@Document("""
+@Document(id = 1751826642157L, value = """
     This module allows players to show things to others:
     1. Show their item in main hand.
     2. Show their inventory.
@@ -48,21 +48,21 @@ public class ChatDisplayInitializer extends ModuleInitializer {
         TextHelper.sendBroadcastByText(broadcastText);
     }
 
-    @Document("Show your item in main hand.")
+    @Document(id = 1751826645846L, value = "Show your item in main hand.")
     @CommandNode("chat display item")
     private static int $displayItem(@CommandSource ServerPlayerEntity player) {
         broadcastDisplayText(player, "display.item.broadcast", DisplayHelper.createItemDisplayText(player));
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Show your inventory.")
+    @Document(id = 1751826648229L, value = "Show your inventory.")
     @CommandNode("chat display inv")
     private static int $displayInv(@CommandSource ServerPlayerEntity player) {
         broadcastDisplayText(player, "display.inventory.broadcast", DisplayHelper.createInvDisplayText(player));
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Show your enderchest.")
+    @Document(id = 1751826650468L, value = "Show your enderchest.")
     @CommandNode("chat display ender")
     private static int $displayEnder(@CommandSource ServerPlayerEntity player) {
         broadcastDisplayText(player, "display.ender_chest.broadcast", DisplayHelper.createEnderDisplayText(player));

@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-@Document("""
+@Document(id = 1751827009997L, value = """
     This module makes every `ender portal frame` generates its own `obsidian platform`.
     """)
 public class MultiObsidianPlatformInitializer extends ModuleInitializer {

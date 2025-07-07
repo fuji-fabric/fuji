@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Document("""
+@Document(id = 1751827019419L, value = """
     This module provides `fake player management` for `carpet` mod.
     """)
 public class FakePlayerManagerInitializer extends ModuleInitializer {
@@ -94,14 +94,14 @@ public class FakePlayerManagerInitializer extends ModuleInitializer {
 
     }
 
-    @Document("Renew the expiration time of all fake-players spawned by you.")
+    @Document(id = 1751827022331L, value = "Renew the expiration time of all fake-players spawned by you.")
     @CommandNode("player renew")
     private static int $renew(@CommandSource ServerPlayerEntity player) {
         renewMyFakePlayers(player);
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("List all fake-players and its owner.")
+    @Document(id = 1751827025708L, value = "List all fake-players and its owner.")
     @CommandNode("player who")
     private static int $who(@CommandSource CommandContext<ServerCommandSource> context) {
         /* make table */

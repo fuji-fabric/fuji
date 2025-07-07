@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.color.anvil.config.model;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 
 public class ColorAnvilConfigModel {
-    @Document("""
+    @Document(id = 1751824937869L, value = """
         By default, any player can use `all style tags`.
         Enable this option requires the player to has `corresponding permission` to use that `style tag`.
 

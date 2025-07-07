@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class WarningRule {
 
-    @Document("If the `number of warnings` of the `player` >= `the defined value`, then execute the commands.")
+    @Document(id = 1751827030101L, value = "If the `number of warnings` of the `player` >= `the defined value`, then execute the commands.")
     public int IfNumberOfWarningsGreaterEqualThan;
     public List<String> commands;
 

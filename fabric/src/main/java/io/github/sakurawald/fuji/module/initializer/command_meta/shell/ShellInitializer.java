@@ -25,7 +25,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.concurrent.CompletableFuture;
 
-@Document("""
+@Document(id = 1751824777515L, value = """
     Provides `/shell` command.
     To execute the `command line` in `host shell`.
     """)
@@ -57,7 +57,7 @@ public class ShellInitializer extends ModuleInitializer {
 
     }
 
-    @Document("Execute a shell command in host os.")
+    @Document(id = 1751824784016L, value = "Execute a shell command in host os.")
     @CommandNode("shell")
     @CommandRequirement(level = 4)
     private static int shell(@CommandSource CommandContext<ServerCommandSource> ctx, GreedyString rest) {

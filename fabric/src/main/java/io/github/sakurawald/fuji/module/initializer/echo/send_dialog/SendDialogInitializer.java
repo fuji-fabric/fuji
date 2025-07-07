@@ -16,7 +16,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
-@Document("""
+@Document(id = 1751826984411L, value = """
     Send text using the `dialog GUI`.
 
     For example:
@@ -27,7 +27,7 @@ import net.minecraft.text.Text;
 
 public class SendDialogInitializer extends ModuleInitializer {
 
-    @Document("Send a dialog GUI to a player.")
+    @Document(id = 1751826986144L, value = "Send a dialog GUI to a player.")
     @CommandNode("send-dialog")
     @CommandRequirement(level = 4)
     private static int $sendDialog(@CommandSource ServerCommandSource source

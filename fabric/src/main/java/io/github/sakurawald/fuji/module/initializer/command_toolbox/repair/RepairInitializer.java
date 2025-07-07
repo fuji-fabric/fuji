@@ -13,7 +13,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public class RepairInitializer extends ModuleInitializer {
 
-    @Document("Repair the item in hand.")
+    @Document(id = 1751825460772L, value = "Repair the item in hand.")
     @CommandNode("repair")
     @CommandRequirement(level = 4)
     private static int $repair(@CommandSource @CommandTarget ServerPlayerEntity player) {

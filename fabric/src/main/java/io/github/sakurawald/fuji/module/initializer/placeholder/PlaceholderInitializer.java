@@ -41,7 +41,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-@Document("""
+@Document(id = 1751826512394L, value = """
     Provides extra placeholders for `Text Placeholder API` mod.
     """)
 @CommandNode("placeholder")
@@ -52,7 +52,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
 
     private static final Pattern ESCAPE_PARSER = Pattern.compile("\\s*([\\s\\S]+)\\s+(\\d+)\\s*");
 
-    @Document("List all placeholders registered in server.")
+    @Document(id = 1751826515140L, value = "List all placeholders registered in server.")
     @CommandNode("list")
     private static int list(@CommandSource ServerPlayerEntity player) {
         List<Identifier> list = Placeholders.getPlaceholders().keySet().asList();
@@ -60,7 +60,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Parse a placeholder with a contextual player.")
+    @Document(id = 1751826519376L, value = "Parse a placeholder with a contextual player.")
     @CommandNode("parse")
     private static int list(@CommandSource ServerCommandSource source
         , Optional<ServerPlayerEntity> player

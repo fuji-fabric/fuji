@@ -21,7 +21,7 @@ public class NearInitializer extends ModuleInitializer {
         return (int) a.getBlockPos().getSquaredDistance(b.getBlockPos().toCenterPos());
     }
 
-    @Document("List nearby players.")
+    @Document(id = 1751825090796L, value = "List nearby players.")
     @CommandNode("near")
     @CommandRequirement(level = 4)
     private static int near(@CommandSource ServerPlayerEntity player, Optional<Integer> distance) {

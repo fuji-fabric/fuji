@@ -8,7 +8,7 @@ import java.util.List;
 
 public class RtpConfigModel {
 
-    @Document("""
+    @Document(id = 1751826332128L, value = """
         Define `rtp` setup for each `dimension`.
         """)
     public Setup setup = new Setup();

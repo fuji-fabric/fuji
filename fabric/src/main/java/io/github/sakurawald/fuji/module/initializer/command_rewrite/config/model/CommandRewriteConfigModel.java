@@ -9,7 +9,7 @@ import java.util.List;
 
 public class CommandRewriteConfigModel {
 
-    @Document("""
+    @Document(id = 1751826280914L, value = """
         Defined `rewrite` entries.
         """)
     @SerializedName(value = "rewrite", alternate = "regex")

@@ -18,7 +18,7 @@ import java.util.List;
 @CommandRequirement(level = 4)
 public class LoreInitializer extends ModuleInitializer {
 
-    @Document("Clear all lore in item.")
+    @Document(id =1751825438214L, value = "Clear all lore in item.")
     @CommandNode("unset")
     private static int $unset(@CommandSource ServerCommandSource source) {
         return CommandHelper.Pattern.itemInHandCommand(source, (player, stack) -> {
@@ -27,7 +27,7 @@ public class LoreInitializer extends ModuleInitializer {
         });
     }
 
-    @Document("Set lore for item.")
+    @Document(id = 1751825447182L, value = "Set lore for item.")
     @CommandNode("set")
     private static int $set(@CommandSource ServerCommandSource source, GreedyString lore) {
         return CommandHelper.Pattern.itemInHandCommand(source, (player, stack) -> {

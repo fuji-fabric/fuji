@@ -22,7 +22,7 @@ import java.util.List;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-@Document("""
+@Document(id = 1751824024333L, value = """
     This module provides the `/when-online \\<player\\> \\<cmd\\>` command.
     To execute a specified command `exactly once` when the target player is `online`:
     1. If the target player is `online` now, the command will be executed `at once`.

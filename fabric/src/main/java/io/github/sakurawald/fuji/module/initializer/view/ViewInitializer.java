@@ -13,7 +13,7 @@ import io.github.sakurawald.fuji.module.initializer.view.gui.EnderChestRedirectS
 import io.github.sakurawald.fuji.module.initializer.view.gui.InventoryRedirectScreenFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-@Document("""
+@Document(id = 1751824970923L, value = """
     Allow you to edit player's inventory and enderchest.
     """)
 @CommandNode("view")
@@ -27,7 +27,7 @@ public class ViewInitializer extends ModuleInitializer {
         }
     }
 
-    @Document("View the player's inventory.")
+    @Document(id = 1751824976609L, value = "View the player's inventory.")
     @CommandNode("inv")
     private static int inv(@CommandSource ServerPlayerEntity source, OfflinePlayerName target) {
         checkSelfView(source, target);
@@ -36,7 +36,7 @@ public class ViewInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("View the player's enderchest.")
+    @Document(id = 1751824982580L, value = "View the player's enderchest.")
     @CommandNode("ender")
     private static int ender(@CommandSource ServerPlayerEntity source, OfflinePlayerName target) {
         checkSelfView(source, target);

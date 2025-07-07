@@ -16,7 +16,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
-@Document("""
+@Document(id = 1751826913154L, value = """
     Customize the TAB list.
     """)
 public class TabListInitializer extends ModuleInitializer {

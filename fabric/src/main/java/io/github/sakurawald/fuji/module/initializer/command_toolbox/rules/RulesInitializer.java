@@ -16,7 +16,7 @@ public class RulesInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<RulesConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, RulesConfigModel.class);
 
-    @Document("Query the server rules.")
+    @Document(id = 1751825371097L, value = "Query the server rules.")
     @CommandNode("rules")
     private static int asMessage(@CommandSource @CommandTarget ServerPlayerEntity player) {
         String string = config.model().rules;

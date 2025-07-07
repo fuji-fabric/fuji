@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 
 public class BedInitializer extends ModuleInitializer {
 
-    @Document("Teleport to the bed location.")
+    @Document(id = 1751825169906L, value = "Teleport to the bed location.")
     @CommandNode("bed")
     private static int $bed(@CommandSource @CommandTarget ServerPlayerEntity player) {
         #if MC_VER < MC_1_21_5

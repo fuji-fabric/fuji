@@ -16,12 +16,12 @@ import net.minecraft.server.command.ServerCommandSource;
 import java.util.Arrays;
 import java.util.List;
 
-@Document("""
+@Document(id = 1751824713488L, value = """
     Provides `/one-of` command, to pick a random command from commands, and execute it.
     """)
 public class OneOfInitializer extends ModuleInitializer {
 
-    @Document("One-of command randomly pick one of commands and execute it as console.")
+    @Document(id = 1751824718640L, value = "One-of command randomly pick one of commands and execute it as console.")
     @CommandNode("one-of")
     @CommandRequirement(level = 4)
     private static int oneOf(@CommandSource ServerCommandSource source, GreedyString rest) {

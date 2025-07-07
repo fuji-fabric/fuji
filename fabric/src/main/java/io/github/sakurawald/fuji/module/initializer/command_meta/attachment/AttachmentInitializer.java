@@ -18,7 +18,7 @@ import net.minecraft.text.Text;
 
 import java.io.IOException;
 
-@Document("""
+@Document(id = 1751824793427L, value = """
     Provides a unified attachment facility, to attach any data to any object.
     """)
 @CommandNode("attachment")

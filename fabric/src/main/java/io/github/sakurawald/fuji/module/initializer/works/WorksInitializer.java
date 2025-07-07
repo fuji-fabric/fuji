@@ -17,7 +17,7 @@ import io.github.sakurawald.fuji.module.initializer.works.structure.WorkTypeAdap
 import io.github.sakurawald.fuji.module.initializer.works.structure.work.abst.Work;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-@Document("""
+@Document(id = 1751825536620L, value = """
     Provides a `bill-board`, for `players` to post and share their works.
     """)
 public class WorksInitializer extends ModuleInitializer {
@@ -27,7 +27,7 @@ public class WorksInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<WorksConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, WorksConfigModel.class);
 
-    @Document("Open the works GUI.")
+    @Document(id = 1751825541296L, value = "Open the works GUI.")
     @CommandNode("works")
     private static int $works(@CommandSource ServerPlayerEntity player) {
         new ListWorksGui(player, works.model().works, 0)

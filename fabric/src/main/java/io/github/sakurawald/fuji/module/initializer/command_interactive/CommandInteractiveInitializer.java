@@ -3,18 +3,21 @@ package io.github.sakurawald.fuji.module.initializer.command_interactive;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.network.message.ArgumentSignatureDataMap;
-import net.minecraft.network.message.LastSeenMessageList;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 
+#if MC_VER <= MC_1_20_4
 import java.time.Instant;
 import java.util.BitSet;
+import net.minecraft.network.message.ArgumentSignatureDataMap;
+import net.minecraft.network.message.LastSeenMessageList;
+#endif
+
 import java.util.HashSet;
 import java.util.Set;
 
-@Document("""
+@Document(id = 1751824965598L, value = """
     This module allows you to write commands in `sign` block.
     And then click to execute commands.
     """)

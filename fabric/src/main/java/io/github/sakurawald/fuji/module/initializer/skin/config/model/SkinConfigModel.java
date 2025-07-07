@@ -8,7 +8,7 @@ import java.util.List;
 
 public class SkinConfigModel {
 
-    @Document("""
+    @Document(id = 1751826804319L, value = """
         The defined `default skins` for this server.
         """)
     public List<Property> default_skins = new ArrayList<>() {

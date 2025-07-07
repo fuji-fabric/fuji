@@ -26,7 +26,7 @@ import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-@Document("""
+@Document(id = 1751827033037L, value = """
     This module provides the `information management` for `staffs`.
     A shared `warning GUI` to `track` the behaviours of players, between `staffs`.
     You can `create` a `warning` for a `player`.
@@ -71,7 +71,7 @@ public class WarningInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<WarningDataModel> data = new ObjectConfigurationHandler<>("warning-data.json", WarningDataModel.class);
 
-    @Document("Open the warning GUI.")
+    @Document(id = 1751827034962L, value = "Open the warning GUI.")
     @CommandNode("warning")
     @CommandRequirement(level = 4)
     private static int $warningRoot(@CommandSource ServerPlayerEntity player) {
@@ -79,7 +79,7 @@ public class WarningInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Open the warning GUI.")
+    @Document(id = 1751827036716L, value = "Open the warning GUI.")
     @CommandNode("warning gui")
     @CommandRequirement(level = 4)
     private static int $warningGui(@CommandSource ServerPlayerEntity player) {
@@ -89,7 +89,7 @@ public class WarningInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Create a new warning for the player.")
+    @Document(id = 1751827038512L, value = "Create a new warning for the player.")
     @CommandNode("warning create")
     @CommandRequirement(level = 4)
     private static int $createWarning(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer, GreedyString warning) {
@@ -102,7 +102,7 @@ public class WarningInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("List the warnings of a player.")
+    @Document(id = 1751827040456L, value = "List the warnings of a player.")
     @CommandNode("warning list")
     @CommandRequirement(level = 4)
     private static int $listWarning(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer) {
@@ -121,7 +121,7 @@ public class WarningInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Clear the warnings of a player.")
+    @Document(id = 1751827043371L, value = "Clear the warnings of a player.")
     @CommandNode("warning clear")
     @CommandRequirement(level = 4)
     private static int $clearWarning(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer) {
@@ -132,7 +132,7 @@ public class WarningInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Clear all warnings for all players.")
+    @Document(id = 1751827045167L, value = "Clear all warnings for all players.")
     @CommandNode("warning clear-all")
     @CommandRequirement(level = 4)
     private static int $clearAllWarnings(@CommandSource ServerCommandSource source, Optional<Boolean> confirm) {

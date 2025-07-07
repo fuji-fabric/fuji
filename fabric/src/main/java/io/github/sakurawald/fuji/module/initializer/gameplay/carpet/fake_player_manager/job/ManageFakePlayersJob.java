@@ -7,7 +7,7 @@ import io.github.sakurawald.fuji.module.initializer.gameplay.carpet.fake_player_
 import org.jetbrains.annotations.NotNull;
 import org.quartz.JobExecutionContext;
 
-@Document("""
+@Document(id = 1751827017263L, value = """
     This `job` is used to check the `fake-player limits` for each player.
     """)
 public class ManageFakePlayersJob extends CronJob {

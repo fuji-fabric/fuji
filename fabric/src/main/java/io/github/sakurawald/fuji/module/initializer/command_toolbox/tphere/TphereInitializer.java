@@ -11,7 +11,7 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import java.util.Collection;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-@Document("""
+@Document(id = 1751825147630L, value = """
     This is a convenient command, to teleport `others` to `you`.
     Similar to `/tp @a <player>`.
 

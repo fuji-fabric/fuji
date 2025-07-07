@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CommandSpyConfigModel {
 
-    @Document("""
+    @Document(id = 1751826793929L, value = """
         Ignore and never spy on these commands.
         """)
     @SerializedName(value = "ignore_commands", alternate = "ignore")
@@ -18,13 +18,13 @@ public class CommandSpyConfigModel {
         }
     };
 
-    @Document("""
+    @Document(id = 1751826795935L, value = """
         The `only spy on these commands mode`.
         """)
     public OnlySpyTheseCommands only_spy_these_commands = new OnlySpyTheseCommands();
     public static class OnlySpyTheseCommands {
 
-        @Document("""
+        @Document(id = 1751826797690L, value = """
             Should we `only` spy on these commands?
             """)
         public boolean enable = false;

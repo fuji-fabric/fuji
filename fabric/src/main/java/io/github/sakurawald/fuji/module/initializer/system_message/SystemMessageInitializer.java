@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
-@Document("""
+@Document(id = 1751824913807L, value = """
     Customize the `translatable text`, like most of `system messages`.
     """)
 public class SystemMessageInitializer extends ModuleInitializer {

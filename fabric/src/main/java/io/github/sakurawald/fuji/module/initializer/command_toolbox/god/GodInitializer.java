@@ -13,7 +13,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public class GodInitializer extends ModuleInitializer {
 
-    @Document("Toggle the invulnerable state.")
+    @Document(id = 1751825142583L, value = "Toggle the invulnerable state.")
     @CommandNode("god")
     @CommandRequirement(level = 4)
     private static int $god(@CommandSource @CommandTarget ServerPlayerEntity player) {

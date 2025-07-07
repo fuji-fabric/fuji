@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-@Document("""
+@Document(id = 1751826866342L, value = """
     Customize the MOTD of the server.
     """)
 public class MotdInitializer extends ModuleInitializer {

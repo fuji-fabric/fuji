@@ -5,22 +5,22 @@ import lombok.Data;
 
 @Data
 public class Interruptible {
-    @Document("""
+    @Document(id = 1751823914000L, value = """
         Is this request interruptible?
         """)
     final boolean enable;
 
-    @Document("""
+    @Document(id = 1751823921153L, value = """
         The max distance to interrupt this request.
         """)
     final double interruptDistance;
 
-    @Document("""
+    @Document(id = 1751823933921L, value = """
         Interrupt this request when player damaged.
         """)
     final boolean interruptOnDamaged;
 
-    @Document("""
+    @Document(id = 1751823938547L, value = """
         Interrupt this request if player in combat.
         """)
     final boolean interruptInCombat;

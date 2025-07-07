@@ -34,7 +34,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Cite("https://github.com/BradBot1/FabricSit")
-@Document("""
+@Document(id = 1751826999379L, value = """
     Provides a facility to sit on blocks.
     """)
 public class SitInitializer extends ModuleInitializer {
@@ -60,7 +60,7 @@ public class SitInitializer extends ModuleInitializer {
     }
 
     @SuppressWarnings("deprecation")
-    @Document("Sit in current position.")
+    @Document(id = 1751827002061L, value = "Sit in current position.")
     @CommandNode("sit")
     private static int $sit(@CommandSource @CommandTarget ServerPlayerEntity player) {
         /* Check if we can sit at player's position. */

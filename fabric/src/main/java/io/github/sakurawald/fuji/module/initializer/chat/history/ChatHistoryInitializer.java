@@ -13,7 +13,7 @@ import net.minecraft.text.Text;
 
 import java.util.Queue;
 
-@Document("""
+@Document(id = 1751826684077L, value = """
     This module will store chat message as history.
     And send them to the player joined the server.
     """)

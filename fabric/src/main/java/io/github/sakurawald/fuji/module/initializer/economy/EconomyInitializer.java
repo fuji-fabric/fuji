@@ -29,7 +29,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-@Document("""
+@Document(id = 1751826915564L, value = """
     This module allows you to enable the `economy gameplay`.
     And define your `custom currency types`.
 
@@ -57,7 +57,7 @@ public class EconomyInitializer extends ModuleInitializer {
         CustomEconomyProvider.initializeCustomEconomyProvider();
     }
 
-    @Document("""
+    @Document(id = 1751826918349L, value = """
         List all installed `economy providers`, and what `economy currencies` they provided.
         """)
     @CommandNode("economy providers")
@@ -86,7 +86,7 @@ public class EconomyInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("""
+    @Document(id = 1751826920505L, value = """
         List all `accounts` owned by the `player`.
         """)
     @CommandNode("economy accounts")
@@ -104,7 +104,7 @@ public class EconomyInitializer extends ModuleInitializer {
         source.sendMessage(TextHelper.TEXT_EMPTY);
     }
 
-    @Document("""
+    @Document(id = 1751826922680L, value = """
         Get the `player`'s `account` for `currency ID`.
         """)
     @CommandNode("economy account")
@@ -117,7 +117,7 @@ public class EconomyInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("""
+    @Document(id = 1751826925194L, value = """
         Query your economy `accounts`.
         """)
     @CommandNode("economy balance")
@@ -127,7 +127,7 @@ public class EconomyInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("""
+    @Document(id = 1751826927389L, value = """
         List the top players of specified currency.
         """)
     @CommandNode("economy balance-top")
@@ -137,7 +137,7 @@ public class EconomyInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Give `amount` to the player's `account` for `specified currency`.")
+    @Document(id = 1751826931165L, value = "Give `amount` to the player's `account` for `specified currency`.")
     @CommandNode("economy give")
     @CommandRequirement(level = 4)
     private static int $give(@CommandSource ServerCommandSource source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
@@ -150,7 +150,7 @@ public class EconomyInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Take `amount` from the player's `account` for `specified currency`.")
+    @Document(id = 1751826933066L, value = "Take `amount` from the player's `account` for `specified currency`.")
     @CommandNode("economy take")
     @CommandRequirement(level = 4)
     private static int $take(@CommandSource ServerCommandSource source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
@@ -163,7 +163,7 @@ public class EconomyInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Pay specified `amount` of `currency` to another player's account.")
+    @Document(id = 1751826934778L, value = "Pay specified `amount` of `currency` to another player's account.")
     @CommandNode("economy pay")
     private static int $pay(@CommandSource ServerPlayerEntity source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
         EconomyService.transferCurrency(source, player, currencyId.getValue(), amount);
@@ -171,7 +171,7 @@ public class EconomyInitializer extends ModuleInitializer {
     }
 
     @SuppressWarnings("SameParameterValue")
-    @Document("Has the specified amount of currency?")
+    @Document(id = 1751826937120L, value = "Has the specified amount of currency?")
     @CommandNode("has-currency?")
     @CommandRequirement(level = 4)
     private static int $hasCurrency(@CommandSource ServerCommandSource source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
@@ -184,7 +184,7 @@ public class EconomyInitializer extends ModuleInitializer {
     }
 
     @SuppressWarnings("SameParameterValue")
-    @Document("Set the `amount` of the player's `account` for `specified currency`.")
+    @Document(id = 1751826939422L, value = "Set the `amount` of the player's `account` for `specified currency`.")
     @CommandNode("economy set")
     @CommandRequirement(level = 4)
     private static int $set(@CommandSource ServerCommandSource source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
@@ -198,7 +198,7 @@ public class EconomyInitializer extends ModuleInitializer {
     }
 
 
-    @Document("Clear the `amount` of the player's `account` for `specified currency`.")
+    @Document(id = 1751826942040L, value = "Clear the `amount` of the player's `account` for `specified currency`.")
     @CommandNode("economy clear")
     @CommandRequirement(level = 4)
     private static int $clear(@CommandSource ServerCommandSource source, OfflineGameProfile player, CurrencyId currencyId) {

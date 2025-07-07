@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class EconomyDataModel {
 
-    @Document("Saved `accounts` for each `currency`.")
+    @Document(id = 1751826945592L, value = "Saved `accounts` for each `currency`.")
     public List<CustomEconomyCurrencyNode> currencies = new ArrayList<>();
 
 }

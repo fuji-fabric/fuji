@@ -32,7 +32,7 @@ import org.joml.Vector3f;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Document("""
+@Document(id = 1751825018627L, value = """
     Customize the nametag above the players.
     """)
 public class NametagInitializer extends ModuleInitializer {

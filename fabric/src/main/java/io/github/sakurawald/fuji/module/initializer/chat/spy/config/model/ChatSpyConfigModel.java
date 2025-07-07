@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ChatSpyConfigModel {
 
-    @Document("""
+    @Document(id = 1751826718752L, value = """
         Only accept and spy on `messages` whose `message type` meets the `whitelist`.
         """)
     public MessageType message_type = new MessageType();
@@ -26,17 +26,17 @@ public class ChatSpyConfigModel {
 
     }
 
-    @Document("""
+    @Document(id = 1751826720527L, value = """
         Should not spy on `consecutive same text`.
         """)
     public boolean ignore_consecutive_same_text = true;
 
-    @Document("""
+    @Document(id = 1751826722259L, value = """
         Should we also log the `console` what is spied?
         """)
     public boolean log_console = false;
 
-    @Document("""
+    @Document(id = 1751826724306L, value = """
         Saved per-player options.
         """)
     public final HashMap<String, PerPlayerOptions> options = new HashMap<>();
@@ -44,7 +44,7 @@ public class ChatSpyConfigModel {
     @Data
     @NoArgsConstructor
     public static class PerPlayerOptions {
-        @Document("""
+        @Document(id = 1751826726521L, value = """
             Is `chat spy` mode enabled?
             """)
         public boolean enabled = false;

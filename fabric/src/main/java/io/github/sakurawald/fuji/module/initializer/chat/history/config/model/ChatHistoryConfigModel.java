@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChatHistoryConfigModel {
-    @Document("""
+    @Document(id = 1751826688467L, value = """
         Max stored `chat message` in history.
         """)
     public int buffer_size = 50;
 
-    @Document("""
+    @Document(id = 1751826690768L, value = """
         Only accept and save messages with these `message types`.
         """)
     public List<String> message_type_filters = new ArrayList<>() {
@@ -25,29 +25,29 @@ public class ChatHistoryConfigModel {
         }
     };
 
-    @Document("""
+    @Document(id = 1751826693489L, value = """
         Should reject and never save messages that meet the `rejector`.
         """)
     public MessageRejectors message_rejectors = new MessageRejectors();
     public static class MessageRejectors {
 
-        @Document("""
+        @Document(id = 1751826695706L, value = """
             Should reject and never save messages whose `content` meets the rejector.
             """)
         public ContentRejector content_rejector = new ContentRejector();
         public static class ContentRejector {
-            @Document("""
+            @Document(id = 1751826699229L, value = """
                 Define `regex` expression to match `message content`
                 """)
             public List<String> rules = new ArrayList<>() {};
         }
 
-        @Document("""
+        @Document(id = 1751826702393L, value = """
             Should reject and never save messages whose `parameter` meets the rejector.
             """)
         public ParameterRejector parameter_rejector = new ParameterRejector();
         public static class ParameterRejector {
-            @Document("""
+            @Document(id = 1751826704630L, value = """
                 Use `regex` expression to match `message parameter`.
 
                 Issue `/fuji debug` to see the `parameter` of a message.

@@ -7,7 +7,7 @@ public class ChatMentionConfigModel {
 
     public PlaySoundJob.PlaySoundJobSetup mention_player = new PlaySoundJob.PlaySoundJobSetup();
 
-    @Document("""
+    @Document(id = 1751826735560L, value = """
         The format used in `chat message` when a player is `mentioned`.
         """)
     public String mention_format = "<aqua>@%s</aqua>";

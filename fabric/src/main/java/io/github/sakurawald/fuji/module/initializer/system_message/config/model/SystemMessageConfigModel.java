@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SystemMessageConfigModel {
-    @Document("""
+    @Document(id = 1751824921414L, value = """
         The defined `translatable text` override.
 
         The `key` is `translatable key`.

@@ -17,27 +17,27 @@ import java.util.Random;
 @AllArgsConstructor
 public class Job {
 
-    @Document("""
+    @Document(id = 1751826743418L, value = """
         The `unique` name of this `job`.
         """)
     String name;
 
     boolean enable;
 
-    @Document("""
+    @Document(id = 1751826745342L, value = """
         Allowed left times to run.
         """)
     @SerializedName(value = "left_times", alternate = "left_trigger_times")
     int leftTimes;
 
-    @Document("""
+    @Document(id = 1751826746949L, value = """
         Defined `cron` expression list.
 
         Any met `cron` expression can `trigger` this `job`.
         """)
     List<String> crons;
 
-    @Document("""
+    @Document(id = 1751826749083L, value = """
         The commands to execute when the `job` is `triggered`.
         """)
     List<List<String>> commands_list;

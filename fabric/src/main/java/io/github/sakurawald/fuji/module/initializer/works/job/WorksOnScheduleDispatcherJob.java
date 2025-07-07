@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
 
-@Document("""
+@Document(id = 1751825531415L, value = """
     This `job` is used to dispatch the `onSchedule` event for each `work`.
 
     For example:

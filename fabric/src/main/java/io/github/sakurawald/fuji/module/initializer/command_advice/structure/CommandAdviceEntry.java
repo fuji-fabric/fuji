@@ -10,22 +10,22 @@ import java.util.List;
 @AllArgsConstructor
 public class CommandAdviceEntry {
 
-    @Document("""
+    @Document(id = 1751826314407L, value = """
         The `regex` expression used to match the `target command`.
         """)
     public String matchCommandStringRegex;
 
-    @Document("""
+    @Document(id = 1751826318098L, value = """
         Is this `advice` only valid, when the target command is executed by a player?
         """)
     public boolean onlyValidWhenCommandIsExecutedByPlayer;
 
-    @Document("""
+    @Document(id = 1751826320651L, value = """
         The type of this advice.
         """)
     public CommandAdviceType adviceType;
 
-    @Document("""
+    @Document(id = 1751826322556L, value = """
         The commands to execute when `perform` this `advice`.
         """)
     public List<String> commands;

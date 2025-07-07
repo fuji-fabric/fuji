@@ -8,7 +8,7 @@ import java.util.List;
 
 public class MotdConfigModel {
 
-    @Document("""
+    @Document(id = 1751826857082L, value = """
         Defined `motd` entry.
         """)
     public List<MotdEntry> entries = new ArrayList<>() {

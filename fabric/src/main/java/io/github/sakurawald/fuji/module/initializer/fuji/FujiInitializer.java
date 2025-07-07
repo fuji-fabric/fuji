@@ -23,7 +23,7 @@ import io.github.sakurawald.fuji.module.initializer.fuji.gui.ServerCommandsInspe
 import net.minecraft.server.network.ServerPlayerEntity;
 
 
-@Document("""
+@Document(id = 1751826545831L, value = """
     Provides `/fuji` command.
     To reload the configs of fuji.
     To inspect states of fuji.
@@ -33,7 +33,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @CommandRequirement(level = 4)
 public class FujiInitializer extends ModuleInitializer {
 
-    @Document("""
+    @Document(id = 1751826549358L, value = """
         Reload all the configuration files in `/fuji inspect configurations`.
         Reload all the `enabled` modules in `/fuji inspect modules`.
 
@@ -54,7 +54,7 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Print the user guide of fuji.")
+    @Document(id = 1751826551723L, value = "Print the user guide of fuji.")
     @CommandNode("user-guide")
     public static int $userGuide(@CommandSource ServerPlayerEntity player) {
         CoreInitializer.printUserGuide();
@@ -62,7 +62,7 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Open the about GUI.")
+    @Document(id = 1751826554192L, value = "Open the about GUI.")
     @CommandNode("about")
     private static int $about(@CommandSource ServerPlayerEntity player) {
         AboutGui
@@ -71,7 +71,7 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Toggle the debug mode of fuji.")
+    @Document(id = 1751826556095L, value = "Toggle the debug mode of fuji.")
     @CommandNode("debug")
     public static int $debug(@CommandSource ServerPlayerEntity source) {
         var config = Configs.MAIN_CONTROL_CONFIG.model().core.debug;
@@ -81,7 +81,7 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Inspect all commands registered in server.")
+    @Document(id = 1751826560904L, value = "Inspect all commands registered in server.")
     @CommandNode("inspect server-commands")
     private static int $inspectServerCommands(@CommandSource ServerPlayerEntity player) {
         ServerCommandsInspectionGui
@@ -90,7 +90,7 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Inspect all enabled/disabled modules of fuji.")
+    @Document(id = 1751826563793L, value = "Inspect all enabled/disabled modules of fuji.")
     @CommandNode("inspect modules")
     private static int $inspectModules(@CommandSource ServerPlayerEntity player) {
         ModulesInspectionGui
@@ -99,21 +99,21 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Alias to `/fuji inspect modules`.")
+    @Document(id = 1751826565988L, value = "Alias to `/fuji inspect modules`.")
     @CommandNode()
     private static int $inspectModulesShortcut(@CommandSource ServerPlayerEntity player) {
         $inspectModules(player);
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Alias to `/fuji inspect modules`.")
+    @Document(id = 1751826568226L, value = "Alias to `/fuji inspect modules`.")
     @CommandNode("gui")
     private static int $gui(@CommandSource ServerPlayerEntity player) {
         $inspectModules(player);
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Inspect all commands registered by fuji.")
+    @Document(id = 1751826570905L, value = "Inspect all commands registered by fuji.")
     @CommandNode("inspect fuji-commands")
     private static int $inspectFujiCommands(@CommandSource ServerPlayerEntity player) {
         CommandsInspectionGui
@@ -122,7 +122,7 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Inspect all argument types registered by fuji.")
+    @Document(id = 1751826572555L, value = "Inspect all argument types registered by fuji.")
     @CommandNode("inspect argument-types")
     private static int $inspectCommandArgumentTypes(@CommandSource ServerPlayerEntity player) {
         ArgumentTypesInspectionGui
@@ -131,7 +131,7 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Inspect all loaded configurations files used by fuji.")
+    @Document(id = 1751826574793L, value = "Inspect all loaded configurations files used by fuji.")
     @CommandNode("inspect configurations")
     private static int $inspectConfigurations(@CommandSource ServerPlayerEntity player) {
         ConfigurationsInspectionGui
@@ -140,7 +140,7 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Inspect all registries in server.")
+    @Document(id = 1751826576778L, value = "Inspect all registries in server.")
     @CommandNode("inspect registry")
     private static int $inspectRegistry(@CommandSource ServerPlayerEntity player) {
         RegistriesInspectionGui
@@ -149,7 +149,7 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Inspect permissions and metas used by fuji.")
+    @Document(id = 1751826579437L, value = "Inspect permissions and metas used by fuji.")
     @CommandNode("inspect permissions-and-metas")
     private static int $inspectPermissionsAndMetas(@CommandSource ServerPlayerEntity player) {
         PermissionsAndMetasInspectionGui
@@ -158,7 +158,7 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Inspect placeholders registered by fuji.")
+    @Document(id = 1751826581359L, value = "Inspect placeholders registered by fuji.")
     @CommandNode("inspect placeholders")
     private static int $inspectPlaceholders(@CommandSource ServerPlayerEntity player) {
         PlaceholdersInspectionGui
@@ -167,7 +167,7 @@ public class FujiInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Inspect jobs registered by fuji.")
+    @Document(id = 1751826583345L, value = "Inspect jobs registered by fuji.")
     @CommandNode("inspect jobs")
     private static int $inspectJobs(@CommandSource ServerPlayerEntity player) {
         JobsInspectionGui

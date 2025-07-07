@@ -11,7 +11,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public class FreezeInitializer extends ModuleInitializer {
 
-    @Document("Freeze a player for ticks.")
+    @Document(id = 1751825159763L, value = "Freeze a player for ticks.")
     @CommandNode("freeze")
     @CommandRequirement(level = 4)
     private static int freeze(@CommandSource ServerCommandSource source, ServerPlayerEntity player, int ticks) {

@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TabListConfigModel {
-    @Document("""
+    @Document(id = 1751826903818L, value = """
         The `cron` expression used to `update` the tab list.
         """)
     public String update_cron = "* * * ? * *";
 
-    @Document("""
+    @Document(id = 1751826905489L, value = """
         Define the style of tab list.
         """)
     public Style style = new Style();

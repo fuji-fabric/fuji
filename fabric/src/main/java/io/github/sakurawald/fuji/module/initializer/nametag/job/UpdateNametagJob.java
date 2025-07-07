@@ -5,7 +5,7 @@ import io.github.sakurawald.fuji.core.job.abst.CronJob;
 import io.github.sakurawald.fuji.module.initializer.nametag.NametagInitializer;
 import org.quartz.JobExecutionContext;
 
-@Document("""
+@Document(id = 1751825006787L, value = """
     This `job` is used to `update` the nametag for each player.
     """)
 public class UpdateNametagJob extends CronJob {

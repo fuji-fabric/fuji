@@ -9,7 +9,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class WorksDataModel {
 
-    @Document("The created `work` list.")
+    @Document(id = 1751825466814L, value = "The created `work` list.")
     public @NotNull List<Work> works = new CopyOnWriteArrayList<>();
 
 }

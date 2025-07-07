@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-@Document("""
+@Document(id = 1751826238005L, value = """
     This module provides:
     1. Afk detection: If a player idle too long, we will mark it as afk state.
     2. Afk event: Execute commands when a player enters or leaves afk state.
@@ -52,7 +52,7 @@ public class AfkInitializer extends ModuleInitializer {
 
     // NOTE: Issue a command will update the lastLastActionTime, so it's impossible to use /afk to disable afk
     @CommandNode("afk")
-    @Document("Enter afk state.")
+    @Document(id = 1751826266551L, value = "Enter afk state.")
     private static int $afk(@CommandSource @CommandTarget ServerPlayerEntity player) {
         if (!player.isOnGround()
             || player.isOnFire()
@@ -68,7 +68,7 @@ public class AfkInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Test if a player is in afk state.")
+    @Document(id = 1751826271499L, value = "Test if a player is in afk state.")
     @CommandNode("test-afk")
     @CommandRequirement(level = 4)
     private static int testAfk(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {

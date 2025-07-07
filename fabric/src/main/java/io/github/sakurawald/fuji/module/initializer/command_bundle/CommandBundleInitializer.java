@@ -23,7 +23,7 @@ import net.minecraft.text.Text;
 
 import java.util.stream.Stream;
 
-@Document("""
+@Document(id = 1751826356909L, value = """
     This module allows you to create new command:
     1. The new command can accept arguments.
     2. The body of the new command, can be a list of commands.
@@ -56,7 +56,7 @@ public class CommandBundleInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<CommandBundleConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandBundleConfigModel.class);
 
-    @Document("Register all commands defined in bundle-command configuration file.")
+    @Document(id = 1751826359683L, value = "Register all commands defined in bundle-command configuration file.")
     @CommandNode("register")
     private static int registerAllBundleCommands() {
         LogUtil.info("Register bundle commands.");
@@ -71,7 +71,7 @@ public class CommandBundleInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Un-register all bundle-commands registered in server.")
+    @Document(id = 1751826362252L, value = "Un-register all bundle-commands registered in server.")
     @CommandNode("un-register")
     private static int unregisterAllBundleCommands() {
         LogUtil.info("Un-register bundle commands.");
@@ -87,7 +87,7 @@ public class CommandBundleInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("List all registered bundle-commands in server.")
+    @Document(id = 1751826364625L, value = "List all registered bundle-commands in server.")
     @CommandNode("list")
     private static int list(@CommandSource CommandContext<ServerCommandSource> ctx) {
         Stream<CommandDescriptor> commandDescriptorStream = CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS

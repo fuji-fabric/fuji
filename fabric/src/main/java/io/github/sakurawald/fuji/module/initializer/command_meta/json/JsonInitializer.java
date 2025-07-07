@@ -20,7 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.BiFunction;
 
-@Document("""
+@Document(id = 1751823967217L, value = """
     Provides `/json` command.
     A powerful tool to edit json file.
     """)

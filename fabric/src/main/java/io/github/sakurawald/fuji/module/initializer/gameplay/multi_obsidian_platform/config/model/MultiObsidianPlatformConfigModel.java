@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.gameplay.multi_obsidian_pla
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 
 public class MultiObsidianPlatformConfigModel {
-    @Document("""
+    @Document(id = 1751827012236L, value = """
         The `coordinate scale factor` between `overworld` and `the_end`.
         """)
     public double factor = 4;

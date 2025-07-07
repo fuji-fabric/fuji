@@ -5,12 +5,12 @@ import lombok.Data;
 
 @Data
 public class RegexRewriteNode {
-    @Document("""
+    @Document(id = 1751823950782L, value = """
         The `regex` expression used to match the `target string`.
         """)
     final String regex;
 
-    @Document("""
+    @Document(id = 1751823954950L, value = """
         The `pattern` used to replace the `matched target string`.
         """)
     final String replacement;

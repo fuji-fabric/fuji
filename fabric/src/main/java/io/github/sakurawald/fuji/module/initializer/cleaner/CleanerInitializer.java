@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-@Document("""
+@Document(id = 1751826898176L, value = """
     This module provides the `entity` cleaner.
     To remove specified entities automatically.
     """)
@@ -95,7 +95,7 @@ public class CleanerInitializer extends ModuleInitializer {
         return regex2age.containsKey(key) && age >= regex2age.get(key);
     }
 
-    @Document("Trigger the cleaner once.")
+    @Document(id = 1751826901492L, value = "Trigger the cleaner once.")
     @CommandNode("clean")
     public static int clean() {
         CompletableFuture.runAsync(() -> {

@@ -9,10 +9,10 @@ import org.jetbrains.annotations.NotNull;
 @Data
 public class CustomEconomyCurrencyNode {
 
-    @Document("The `ID` of this `currency` type.")
+    @Document(id = 1751826953095L, value = "The `ID` of this `currency` type.")
     public String currencyId;
 
-    @Document("The saved `accounts` for this type of `currency`.")
+    @Document(id = 1751826955882L, value = "The saved `accounts` for this type of `currency`.")
     public List<CustomEconomyAccountNode> accounts = new ArrayList<>();
 
     public static CustomEconomyCurrencyNode make(@NotNull String currencyId) {

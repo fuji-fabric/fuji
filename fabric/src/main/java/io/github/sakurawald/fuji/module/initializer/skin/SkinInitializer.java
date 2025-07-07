@@ -28,7 +28,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Supplier;
 
-@Document("""
+@Document(id = 1751826807167L, value = """
     Customize the skins of players.
     """)
 @CommandNode("skin")
@@ -36,14 +36,14 @@ public class SkinInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<SkinConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, SkinConfigModel.class);
 
-    @Document("Set skin to a random default skin.")
+    @Document(id = 1751826809279L, value = "Set skin to a random default skin.")
     @CommandNode("use-default-skins")
     private static int useDefault(@CommandSource CommandContext<ServerCommandSource> ctx) {
         doSkin(ctx.getSource(), () -> SkinRestorer.getSkinStorage().getDefaultSkin());
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Set skin to a random default skin.")
+    @Document(id = 1751826811767L, value = "Set skin to a random default skin.")
     @CommandNode("use-default-skins")
     @CommandRequirement(level = 4)
     private static int useDefaultOthers(@CommandSource CommandContext<ServerCommandSource> ctx, GameProfileCollection target) {
@@ -51,7 +51,7 @@ public class SkinInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Set skin to an online skin of the same name.")
+    @Document(id = 1751826814466L, value = "Set skin to an online skin of the same name.")
     @CommandNode("use-online-skin")
     private static int useOnlineSkin(@CommandSource CommandContext<ServerCommandSource> ctx) {
         doSkin(ctx.getSource(), () -> MojangProfileFetcher.fetchOnlineSkin(ctx.getSource().getName()));
@@ -64,7 +64,7 @@ public class SkinInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Set skin to an online skin of a specified name.")
+    @Document(id = 1751826816766L, value = "Set skin to an online skin of a specified name.")
     @CommandNode("set mojang")
     @CommandRequirement(level = 4)
     private static int setMojangTarget(@CommandSource CommandContext<ServerCommandSource> ctx, Word skinName, GameProfileCollection target) {
@@ -72,14 +72,14 @@ public class SkinInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Set skin to a custom url in steve model.")
+    @Document(id = 1751826819277L, value = "Set skin to a custom url in steve model.")
     @CommandNode("set web classic")
     private static int setWebClassic(@CommandSource CommandContext<ServerCommandSource> ctx, String url) {
         doSkin(ctx.getSource(), () -> MineSkinSkinProvider.fetchSkin(url, SkinVariant.CLASSIC));
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Set skin to a custom url in steve model.")
+    @Document(id = 1751826822477L, value = "Set skin to a custom url in steve model.")
     @CommandNode("set web classic")
     @CommandRequirement(level = 4)
     private static int setWebClassicOthers(@CommandSource CommandContext<ServerCommandSource> ctx, String url, GameProfileCollection target) {
@@ -87,14 +87,14 @@ public class SkinInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Set skin to a custom url in alex model.")
+    @Document(id = 1751826827369L, value = "Set skin to a custom url in alex model.")
     @CommandNode("set web slim")
     private static int setWebSlim(@CommandSource CommandContext<ServerCommandSource> ctx, String url) {
         doSkin(ctx.getSource(), () -> MineSkinSkinProvider.fetchSkin(url, SkinVariant.SLIM));
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Set skin to a custom url in alex model.")
+    @Document(id = 1751826829102L, value = "Set skin to a custom url in alex model.")
     @CommandNode("set web slim")
     @CommandRequirement(level = 4)
     private static int setWebSlimOthers(@CommandSource CommandContext<ServerCommandSource> ctx, String url, GameProfileCollection target) {

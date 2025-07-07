@@ -10,7 +10,7 @@ import java.util.List;
 
 public class CommandSchedulerConfigModel {
 
-    @Document("""
+    @Document(id = 1751826740777L, value = """
         Defined `scheduler` entry.
         """)
     @SerializedName(value = "jobs", alternate = "scheduleJobs")

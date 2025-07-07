@@ -5,7 +5,7 @@ import io.github.sakurawald.fuji.core.job.abst.CronJob;
 import io.github.sakurawald.fuji.module.initializer.tab.TabListInitializer;
 import org.quartz.JobExecutionContext;
 
-@Document("""
+@Document(id = 1751826908172L, value = """
     This `job` is used to `update` the `header` and `footer` in `tab` list.
     """)
 public class RenderHeaderAndFooterJob extends CronJob {

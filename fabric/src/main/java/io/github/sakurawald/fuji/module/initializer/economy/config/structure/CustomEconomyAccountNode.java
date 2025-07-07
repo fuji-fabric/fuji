@@ -7,10 +7,10 @@ import lombok.Data;
 @Data
 public class CustomEconomyAccountNode {
 
-    @Document("The owner of this account.")
+    @Document(id = 1751826959911L, value = "The owner of this account.")
     public String ownerName;
 
-    @Document("The balance of this account.")
+    @Document(id = 1751826963753L, value = "The balance of this account.")
     public long balance;
 
     public static CustomEconomyAccountNode make(GameProfile gameProfile, long balance) {

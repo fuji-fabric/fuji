@@ -17,18 +17,18 @@ import java.util.List;
 @NoArgsConstructor
 public class MenuDescriptor {
 
-    @Document("""
+    @Document(id = 1751824832095L, value = """
         The `title` of this GUI.
         """)
     public String title;
 
-    @Document("""
+    @Document(id = 1751824836843L, value = """
         Ranged [1, 6]
         """)
     public int lines;
 
 
-    @Document("""
+    @Document(id = 1751824840934L, value = """
         Should we `close` this GUI automatically when any `slot` is `clicked`?
 
         Or you need to execute `/command-menu close <player>` command.
@@ -42,7 +42,7 @@ public class MenuDescriptor {
         public List<String> on_closed_commands = new ArrayList<>();
     }
 
-    @Document("""
+    @Document(id = 1751824845545L, value = """
         Defined `slots` for this GUI.
         """)
     public List<SlotDescriptor> slots;

@@ -14,14 +14,14 @@ import io.github.sakurawald.fuji.module.initializer.kit.structure.Kit;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-@Document("""
+@Document(id = 1751824812720L, value = """
     Make a set of items as kit, and give the kit to players.
     """)
 @CommandNode("kit")
 @CommandRequirement(level = 4)
 public class KitInitializer extends ModuleInitializer {
 
-    @Document("Open the kit editor GUI.")
+    @Document(id = 1751824817401L, value = "Open the kit editor GUI.")
     @CommandNode("editor")
     private static int $editor(@CommandSource ServerPlayerEntity player) {
         KitEditorGui.make(player)
@@ -29,7 +29,7 @@ public class KitInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Give the kit to the player.")
+    @Document(id = 1751824821391L, value = "Give the kit to the player.")
     @CommandNode("give")
     private static int $give(@CommandSource ServerCommandSource source, ServerPlayerEntity player, KitName kit) {
         /* Verify. */

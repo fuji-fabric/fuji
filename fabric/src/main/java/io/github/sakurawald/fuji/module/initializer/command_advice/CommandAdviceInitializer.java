@@ -22,7 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-@Document("""
+@Document(id = 1751826306321L, value = """
     This module allows you to decorate existing commands:
     1. Run other commands `before` executing the target command.
     2. Run other commands `after` executing the target command.

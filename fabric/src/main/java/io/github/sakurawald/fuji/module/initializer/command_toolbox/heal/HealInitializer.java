@@ -13,7 +13,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public class HealInitializer extends ModuleInitializer {
 
-    @Document("Fill the `health` and `hunger` for the player.")
+    @Document(id = 1751825152795L, value = "Fill the `health` and `hunger` for the player.")
     @CommandNode("heal")
     @CommandRequirement(level = 4)
     private static int $heal(@CommandSource @CommandTarget ServerPlayerEntity player) {

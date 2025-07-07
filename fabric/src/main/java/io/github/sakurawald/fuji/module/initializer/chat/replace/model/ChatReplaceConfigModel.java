@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ChatReplaceConfigModel {
 
-    @Document("""
+    @Document(id = 1751826659782L, value = """
         Define `regex` expression, to replace `chat string`.
         """)
     public Replace replace = new Replace();

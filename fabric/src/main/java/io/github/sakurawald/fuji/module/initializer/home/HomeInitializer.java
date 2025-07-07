@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Optional;
 
-@Document("""
+@Document(id = 1751827004970L, value = """
     Allows players to define its home.
     """)
 public class HomeInitializer extends ModuleInitializer {

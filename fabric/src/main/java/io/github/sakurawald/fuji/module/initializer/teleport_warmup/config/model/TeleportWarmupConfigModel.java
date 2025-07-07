@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class TeleportWarmupConfigModel {
 
-    @Document("""
+    @Document(id = 1751826785758L, value = """
         The `warmup seconds` for `all` teleports.
         """)
     public int warmup_second = 3;
@@ -19,7 +19,7 @@ public class TeleportWarmupConfigModel {
     public Dimension dimension = new Dimension();
     public static class Dimension {
 
-        @Document("""
+        @Document(id = 1751826788564L, value = """
             Define the `effective dimensions` for `teleport warmup`.
             """)
         @SerializedName(value = "effective_dimensions", alternate = {"list", "blacklist"})

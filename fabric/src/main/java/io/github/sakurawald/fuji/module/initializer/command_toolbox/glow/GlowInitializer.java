@@ -12,7 +12,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public class GlowInitializer extends ModuleInitializer {
 
-    @Document("Toggle the glowing state.")
+    @Document(id = 1751825116796L, value = "Toggle the glowing state.")
     @CommandNode("glow")
     private static int $glow(@CommandSource @CommandTarget ServerPlayerEntity player) {
         boolean flag = !player.isGlowing();

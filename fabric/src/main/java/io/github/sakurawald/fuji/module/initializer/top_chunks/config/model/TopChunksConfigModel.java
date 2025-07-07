@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 public class TopChunksConfigModel {
 
-    @Document("""
+    @Document(id = 1751826524292L, value = """
         The amount of `top chunks` to list in `all chunks`.
         """)
     public Top top = new Top();
@@ -15,17 +15,17 @@ public class TopChunksConfigModel {
         public int columns = 10;
     }
 
-    @Document("""
+    @Document(id = 1751826526870L, value = """
         The `max distance` to search `the nearest player` for a `chunk`.
         """)
     public int nearest_distance = 128;
 
-    @Document("""
+    @Document(id = 1751826529360L, value = """
         Should we hide the `location` of `chunk`.
         """)
     public boolean hide_location = true;
 
-    @Document("""
+    @Document(id = 1751826531304L, value = """
         Define the `type` to `score` map.
 
         The `type` is `translatable key`.

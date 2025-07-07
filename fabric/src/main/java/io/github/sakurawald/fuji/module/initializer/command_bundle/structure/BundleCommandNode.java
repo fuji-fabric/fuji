@@ -11,17 +11,17 @@ import java.util.List;
 @AllArgsConstructor
 public class BundleCommandNode {
 
-    @Document("""
+    @Document(id = 1751826346275L, value = """
         The requirement to use this `bundle command`.
         """)
     CommandRequirementDescriptor requirement;
 
-    @Document("""
+    @Document(id = 1751826349060L, value = """
         The `syntax pattern` for this `bundle command`.
         """)
     String pattern;
 
-    @Document("""
+    @Document(id = 1751826352098L, value = """
         The `body` of this `bundle command`.
 
         The `body` is a list of commands.

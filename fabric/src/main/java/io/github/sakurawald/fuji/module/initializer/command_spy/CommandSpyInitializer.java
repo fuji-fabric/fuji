@@ -9,7 +9,7 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_spy.config.model.CommandSpyConfigModel;
 import net.minecraft.server.command.ServerCommandSource;
 
-@Document("""
+@Document(id = 1751826800901L, value = """
     This module logs the `command issue` into the console.
     """)
 public class CommandSpyInitializer extends ModuleInitializer {

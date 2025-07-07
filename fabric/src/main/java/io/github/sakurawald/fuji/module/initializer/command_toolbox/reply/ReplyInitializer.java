@@ -23,7 +23,7 @@ public class ReplyInitializer extends ModuleInitializer {
         player2replyTargetPlayer.put(player, target);
     }
 
-    @Document("Reply the player who recently /msg or /tell you.")
+    @Document(id = 1751825375878L, value = "Reply the player who recently /msg or /tell you.")
     @CommandNode("reply")
     private static int $reply(@CommandSource ServerPlayerEntity player, GreedyString message) {
         String target = player2replyTargetPlayer.get(player.getGameProfile().getName());

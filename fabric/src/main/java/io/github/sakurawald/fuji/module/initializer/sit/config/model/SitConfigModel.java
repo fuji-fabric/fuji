@@ -6,7 +6,7 @@ public class SitConfigModel {
 
     public RightClickToSit right_click_to_sit = new RightClickToSit();
     public static class RightClickToSit {
-        @Document("""
+        @Document(id = 1751826996214L, value = """
             Allow `right click` a `stair block` or `slab block` to sit?
             """)
         public boolean enable = true;

@@ -56,7 +56,7 @@ public class TTLMap<K, V> {
 
     private record ExpiringValue<V>(V value, long expiryTime) {}
 
-    @Document("""
+    @Document(id = 1751823961060L, value = """
         This `job` is used to clean up the `TTL Map` data structure, and remove `expired entries`.
         """)
     @NoArgsConstructor

@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.function.Function;
 
-@Document("""
+@Document(id = 1751825568845L, value = """
     THis module allows the player to teleport back to:
     1. His last teleport point.
     2. His death point.
@@ -52,7 +52,7 @@ public class BackInitializer extends ModuleInitializer {
         return function.apply(locationHistory);
     }
 
-    @Document("Push current location into the back location history.")
+    @Document(id = 1751825574805L, value = "Push current location into the back location history.")
     @CommandNode("back push")
     @CommandRequirement(level = 4)
     private static int $push(@CommandSource @CommandTarget ServerPlayerEntity player) {
@@ -63,7 +63,7 @@ public class BackInitializer extends ModuleInitializer {
         });
     }
 
-    @Document("Clear the back location history.")
+    @Document(id = 1751825581305L, value = "Clear the back location history.")
     @CommandNode("back clear")
     @CommandRequirement(level = 4)
     private static int $clear(@CommandSource CommandContext<ServerCommandSource> source, @CommandTarget ServerPlayerEntity player) {
@@ -74,14 +74,14 @@ public class BackInitializer extends ModuleInitializer {
         });
     }
 
-    @Document("List the back location history.")
+    @Document(id = 1751825587373L, value = "List the back location history.")
     @CommandNode("back list")
     @CommandRequirement(level = 4)
     private static int $list(@CommandSource CommandContext<ServerCommandSource> source, ServerPlayerEntity player) {
         return backListWithParameters(source.getSource(), player);
     }
 
-    @Document("List the back location history.")
+    @Document(id = 1751825593993L, value = "List the back location history.")
     @CommandNode("back list")
     private static int $list(@CommandSource ServerPlayerEntity source) {
         return backListWithParameters(source.getCommandSource(), source);
@@ -110,25 +110,25 @@ public class BackInitializer extends ModuleInitializer {
         });
     }
 
-    @Document("Back to the specified location.")
+    @Document(id = 1751825598230L, value = "Back to the specified location.")
     @CommandNode("back")
     private static int $back(@CommandSource ServerPlayerEntity player) {
         return backWithParameters(player, 1, null);
     }
 
-    @Document("Back to the specified location.")
+    @Document(id = 1751825604578L, value = "Back to the specified location.")
     @CommandNode("back")
     private static int $back(@CommandSource ServerPlayerEntity player, int lastNLocation) {
         return backWithParameters(player, lastNLocation, null);
     }
 
-    @Document("Back to the specified location.")
+    @Document(id = 1751825608994L, value = "Back to the specified location.")
     @CommandNode("back")
     private static int $back(@CommandSource ServerPlayerEntity player, int lastNLocation, Dimension targetDimension) {
         return backWithParameters(player, lastNLocation, targetDimension);
     }
 
-    @Document("Back to the specified location.")
+    @Document(id = 1751825615959L, value = "Back to the specified location.")
     @CommandNode("back")
     private static int $back(@CommandSource ServerPlayerEntity player, Dimension targetDimension) {
         return backWithParameters(player, 1, targetDimension);

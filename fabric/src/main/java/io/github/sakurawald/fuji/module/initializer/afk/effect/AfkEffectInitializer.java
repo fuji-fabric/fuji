@@ -6,7 +6,7 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.afk.effect.config.model.AfkEffectConfigModel;
 
-@Document("""
+@Document(id = 1751826206965L, value = """
     This module provides special effects for afk player:
     1. Invulnerable: the afk player is immune to all damage.
     2. Targetable: the afk player can not be targeted by a hostile entity.

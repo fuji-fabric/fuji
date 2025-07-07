@@ -11,7 +11,7 @@ import io.github.sakurawald.fuji.module.initializer.profiler.config.ProfilerConf
 import io.github.sakurawald.fuji.module.initializer.profiler.gui.ProfilerGui;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-@Document("""
+@Document(id = 1751824800643L, value = """
     To query the server health status.
     Including: os, vm, cpu, disk, ram, tps, mspt and gc.
     """)
@@ -19,7 +19,7 @@ public class ProfilerInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<ProfilerConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ProfilerConfigModel.class);
 
-    @Document("Open the server health status GUI.")
+    @Document(id = 1751824806374L, value = "Open the server health status GUI.")
     @CommandNode("profiler")
     private static int $profiler(@CommandSource ServerPlayerEntity player) {
         new ProfilerGui(player)

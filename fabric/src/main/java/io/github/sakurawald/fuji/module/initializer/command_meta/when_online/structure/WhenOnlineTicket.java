@@ -8,11 +8,11 @@ import org.jetbrains.annotations.Nullable;
 public class WhenOnlineTicket {
 
     public long createdTimestamp;
-    @Document("Who created this ticket?")
+    @Document(id = 1751824011538L, value = "Who created this ticket?")
     public String creatorName;
     public String targetPlayer;
     public String command;
-    @Document("When the command is executed? (If not executed, the time is null)")
+    @Document(id = 1751824017011L, value = "When the command is executed? (If not executed, the time is null)")
     public @Nullable Long executedTimestamp;
 
     public static WhenOnlineTicket make(String creatorName, String targetPlayer, String command) {

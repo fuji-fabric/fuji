@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
-@Document("""
+@Document(id = 1751825625507L, value = """
     This module allows you to ban `types of actions` for players.
 
     Currently supported types are:

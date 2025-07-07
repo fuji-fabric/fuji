@@ -20,7 +20,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 
-@Document("""
+@Document(id = 1751826834086L, value = """
     This module stores the `inventory` as death log on player death.
     """)
 public class DeathLogInitializer extends ModuleInitializer {
@@ -32,7 +32,7 @@ public class DeathLogInitializer extends ModuleInitializer {
         return DEATH_DATA_DIR_PATH.resolve(fileName);
     }
 
-    @Document("Open the `deathlog` GUI.")
+    @Document(id = 1751826836196L, value = "Open the `deathlog` GUI.")
     @CommandNode("deathlog")
     @CommandRequirement(level = 4)
     private static int $gui(@CommandSource ServerPlayerEntity player) {

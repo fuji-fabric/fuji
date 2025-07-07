@@ -17,7 +17,7 @@ public class Tag {
 
     private static final Map<String, PermissionDescriptor> CREATED_TAG_PERMISSIONS = new HashMap<>();
 
-    @Document("""
+    @Document(id = 1751823907693L, value = """
         Attached `tag name` list for this `configuration section`.
         """)
     public List<String> tags = new ArrayList<>() {

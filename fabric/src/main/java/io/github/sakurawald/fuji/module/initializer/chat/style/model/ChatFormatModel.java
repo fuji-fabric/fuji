@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 public class ChatFormatModel {
 
-    @Document("""
+    @Document(id = 1751826664764L, value = """
         Per-player chat content format.
         """)
     public Format format = new Format();

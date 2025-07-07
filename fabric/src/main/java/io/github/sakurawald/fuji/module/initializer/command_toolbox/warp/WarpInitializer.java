@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-@Document("""
+@Document(id = 1751825390723L, value = """
     Provides `/warp` command.
     As a public teleport point.
     """)
@@ -64,7 +64,7 @@ public class WarpInitializer extends ModuleInitializer {
         TextHelper.sendTextByKey(player,"warp.tp.success",warpNode.name);
     }
 
-    @Document("Teleport to the specified warp point.")
+    @Document(id = 1751825396093L, value = "Teleport to the specified warp point.")
     @CommandNode("tp")
     private static int $tp(@CommandSource @CommandTarget ServerPlayerEntity player, WarpName warpName) {
         return withWarpNode(player, warpName, warpNode -> {
@@ -73,7 +73,7 @@ public class WarpInitializer extends ModuleInitializer {
         });
     }
 
-    @Document("Delete a warp point.")
+    @Document(id = 1751825400830L, value = "Delete a warp point.")
     @CommandNode("unset")
     @CommandRequirement(level = 4)
     private static int $unset(@CommandSource ServerPlayerEntity player, WarpName warpName) {
@@ -85,7 +85,7 @@ public class WarpInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Set current location as new wrap point.")
+    @Document(id = 1751825406388L, value = "Set current location as new wrap point.")
     @CommandNode("set")
     @CommandRequirement(level = 4)
     private static int $set(@CommandSource ServerPlayerEntity player, WarpName warpName, Optional<Boolean> override) {
@@ -110,7 +110,7 @@ public class WarpInitializer extends ModuleInitializer {
         return $list(source);
     }
 
-    @Document("List warp points.")
+    @Document(id = 1751825410558L, value = "List warp points.")
     @CommandNode("list")
     private static int $list(@CommandSource ServerCommandSource source) {
         if (source.isExecutedByPlayer()) {
@@ -123,7 +123,7 @@ public class WarpInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Set the display name for a warp.")
+    @Document(id = 1751825417554L, value = "Set the display name for a warp.")
     @CommandNode("set-name")
     @CommandRequirement(level = 4)
     private static int $setName(@CommandSource ServerPlayerEntity player, WarpName warp, GreedyString name) {
@@ -133,7 +133,7 @@ public class WarpInitializer extends ModuleInitializer {
         });
     }
 
-    @Document("Set the item for a warp.")
+    @Document(id = 1751825422424L, value = "Set the item for a warp.")
     @CommandNode("set-item")
     @CommandRequirement(level = 4)
     private static int $setItem(@CommandSource ServerPlayerEntity player, WarpName warp, Item item) {
@@ -143,7 +143,7 @@ public class WarpInitializer extends ModuleInitializer {
         });
     }
 
-    @Document("Set the lore for a warp.")
+    @Document(id = 1751825427963L, value = "Set the lore for a warp.")
     @CommandNode("set-lore")
     @CommandRequirement(level = 4)
     private static int $setLore(@CommandSource ServerPlayerEntity player, WarpName warp, GreedyString lore) {

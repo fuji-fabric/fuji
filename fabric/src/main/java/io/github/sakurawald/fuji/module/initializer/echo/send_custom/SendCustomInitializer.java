@@ -43,7 +43,7 @@ public class SendCustomInitializer extends ModuleInitializer {
         }
     }
 
-    @Document("Send the `custom text` as a `message`.")
+    @Document(id = 1751826990344L, value = "Send the `custom text` as a `message`.")
     @CommandNode("as-message")
     private static int asMessage(@CommandSource ServerCommandSource source, ServerPlayerEntity player, CustomTextName name) {
         String string = withCustomText(player, name);
@@ -53,7 +53,7 @@ public class SendCustomInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Send the `custom text` as a `book`.")
+    @Document(id = 1751826992414L, value = "Send the `custom text` as a `book`.")
     @CommandNode("as-book")
     private static int asBook(@CommandSource ServerCommandSource source
         , ServerPlayerEntity player

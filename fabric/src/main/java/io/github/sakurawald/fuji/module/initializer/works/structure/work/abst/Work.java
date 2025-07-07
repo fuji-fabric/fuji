@@ -24,22 +24,22 @@ import java.util.List;
 @Data
 public abstract class Work implements ObjectTypeStringGetter {
 
-    @Document("The type of this work.")
+    @Document(id = 1751825471703L, value = "The type of this work.")
     public String type;
 
-    @Document("The unique id of this work.")
+    @Document(id = 1751825477130L, value = "The unique id of this work.")
     public String id;
 
-    @Document("The create time of this work.")
+    @Document(id = 1751825483661L, value = "The create time of this work.")
     public long createTimeMS;
 
-    @Document("Which player created this work.")
+    @Document(id = 1751825488761L, value = "Which player created this work.")
     public String creator;
 
-    @Document("The display name of this work.")
+    @Document(id = 1751825493597L, value = "The display name of this work.")
     public String name;
 
-    @Document("The introduction of this work.")
+    @Document(id = 1751825497322L, value = "The introduction of this work.")
     public @Nullable String introduction;
 
     public String level;
@@ -49,7 +49,7 @@ public abstract class Work implements ObjectTypeStringGetter {
     public float yaw;
     public float pitch;
 
-    @Document("The display item of this work.")
+    @Document(id = 1751825502471L, value = "The display item of this work.")
     public @Nullable String icon;
 
     public Work(@NotNull ServerPlayerEntity player, String name) {

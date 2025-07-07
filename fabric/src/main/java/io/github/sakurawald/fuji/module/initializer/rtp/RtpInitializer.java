@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
-@Document("""
+@Document(id = 1751826337744L, value = """
     Provides random teleportation.
     """)
 public class RtpInitializer extends ModuleInitializer {
@@ -43,7 +43,7 @@ public class RtpInitializer extends ModuleInitializer {
         return first.get();
     }
 
-    @Document("Random rtp in specified dimension.")
+    @Document(id = 1751826340406L, value = "Random rtp in specified dimension.")
     @CommandNode("rtp")
     private static int $rtp(@CommandSource @CommandTarget ServerPlayerEntity player, Optional<Dimension> dimension) {
         ServerWorld serverWorld = dimension.isPresent() ? dimension.get().getValue() : EntityHelper.getServerWorld(player);

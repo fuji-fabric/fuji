@@ -19,7 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-@Document("""
+@Document(id = 1751826730890L, value = """
     This module allows you to define magic spells in chat, to execute commands.
     """)
 public class ChatTriggerInitializer extends ModuleInitializer {

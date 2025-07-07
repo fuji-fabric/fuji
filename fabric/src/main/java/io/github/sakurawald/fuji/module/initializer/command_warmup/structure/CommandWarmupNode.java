@@ -10,7 +10,7 @@ public class CommandWarmupNode {
 
     final Tag tag;
 
-    @Document("""
+    @Document(id = 1751826877229L, value = """
         The `target command` and `warmup time in ms`.
         """)
     final Command command;
@@ -19,12 +19,12 @@ public class CommandWarmupNode {
 
     @Data
     public static class Command {
-        @Document("""
+        @Document(id = 1751826879068L, value = """
             The `regex` expression used to match the `target command`.
             """)
         final String regex;
 
-        @Document("""
+        @Document(id = 1751826881411L, value = """
             The `warmup time` in ms.
             """)
         final int ms;

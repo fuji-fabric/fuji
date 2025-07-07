@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-@Document("""
+@Document(id = 1751826791752L, value = """
     Adds a warmup cooldown before player teleportation.
     """)
 public class TeleportWarmupInitializer extends ModuleInitializer {

@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CommandAliasConfigModel {
 
-    @Document("""
+    @Document(id = 1751826293492L, value = """
         Defined `alias` for `existing commands`.
         """)
     public List<CommandPathMappingNode> alias = new ArrayList<>() {

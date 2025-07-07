@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-@Document("""
+@Document(id = 1751825174228L, value = """
     Allow you to set the target point of a compass item.
     """)
 @CommandNode("compass")
@@ -78,7 +78,7 @@ public class CompassInitializer extends ModuleInitializer {
 
     }
 
-    @Document("Let the compass in hand track a specified position.")
+    @Document(id = 1751825179946L, value = "Let the compass in hand track a specified position.")
     @CommandNode("track pos")
     private static int track(@CommandSource @CommandTarget ServerPlayerEntity player, Dimension dimension, BlockPos blockPos) {
         return withCompassInHand(player, (itemStack) -> {
@@ -87,7 +87,7 @@ public class CompassInitializer extends ModuleInitializer {
         });
     }
 
-    @Document("Let the compass in hand track a specified player.")
+    @Document(id = 1751825185305L, value = "Let the compass in hand track a specified player.")
     @CommandNode("track player")
     private static int track(@CommandSource @CommandTarget ServerPlayerEntity player, ServerPlayerEntity target) {
         return withCompassInHand(player, (itemStack) -> {
@@ -96,7 +96,7 @@ public class CompassInitializer extends ModuleInitializer {
         });
     }
 
-    @Document("Let the compass in hand track nothing.")
+    @Document(id = 1751825191491L, value = "Let the compass in hand track nothing.")
     @CommandNode("reset")
     private static int reset(@CommandSource @CommandTarget ServerPlayerEntity player) {
         return withCompassInHand(player, (itemStack) -> {

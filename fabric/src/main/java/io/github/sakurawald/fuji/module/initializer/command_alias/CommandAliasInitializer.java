@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@Document("""
+@Document(id = 1751826302190L, value = """
     This module allows you to define alias for existing commands.
     The defined alies command will redirect to the existing command node.
     """)

@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
-@Document("""
+@Document(id = 1751824932882L, value = """
     This module allows you to use color tags in `sign` blocks.
     """)
 public class ColorSignInitializer extends ModuleInitializer {

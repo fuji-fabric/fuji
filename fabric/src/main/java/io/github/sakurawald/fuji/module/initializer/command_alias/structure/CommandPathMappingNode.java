@@ -8,12 +8,12 @@ import java.util.List;
 @SuppressWarnings("unused")
 @Data
 public class CommandPathMappingNode {
-    @Document("""
+    @Document(id = 1751826295900L, value = """
         The `path` of `source command`.
         """)
     final List<String> from;
 
-    @Document("""
+    @Document(id = 1751826299340L, value = """
         The `path` of `destination command`.
         """)
     final List<String> to;

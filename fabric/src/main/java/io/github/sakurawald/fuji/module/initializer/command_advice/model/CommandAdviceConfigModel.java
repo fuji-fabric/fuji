@@ -9,7 +9,7 @@ import java.util.List;
 
 public class CommandAdviceConfigModel {
 
-    @Document("""
+    @Document(id = 1751826311892L, value = """
         Define `advices` for the `target command`.
         """)
     public final List<CommandAdviceEntry> entries = new ArrayList<>() {

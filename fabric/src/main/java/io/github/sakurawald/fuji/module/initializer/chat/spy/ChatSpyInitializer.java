@@ -18,7 +18,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
-@Document("""
+@Document(id = 1751826708198L, value = """
     This module allows you to spy on specified chat message type. (Mainly used for private message types)
     """)
 @CommandNode("chat spy")
@@ -28,7 +28,7 @@ public class ChatSpyInitializer extends ModuleInitializer {
     private static String lastContentString = "";
     public static final BaseConfigurationHandler<ChatSpyConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatSpyConfigModel.class);
 
-    @Document("Enable/disable the chat spy mode for you.")
+    @Document(id = 1751826711342L, value = "Enable/disable the chat spy mode for you.")
     @CommandNode("toggle")
     private static int toggle(@CommandSource ServerPlayerEntity player) {
         ChatSpyConfigModel.PerPlayerOptions options = withOptions(player);

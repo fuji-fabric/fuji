@@ -29,7 +29,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-@Document("""
+@Document(id = 1751826676414L, value = """
     This module allows you to customize global chat style.
     Besides, players can use `/chat style` to set per-player chat style.
     """)
@@ -106,7 +106,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
         return StyleStriper.stripe(player, CHAT_STYLE_TYPE, string);
     }
 
-    @Document("""
+    @Document(id = 1751826679326L, value = """
         Set your personal chat content format.
         For example: `/chat style set prefix + %message% + suffix`
         """)
@@ -129,7 +129,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Reset your personal chat content format.")
+    @Document(id = 1751826681754L, value = "Reset your personal chat content format.")
     @CommandNode("reset")
     private static int resetPerPlayerFormat(@CommandSource @CommandTarget ServerPlayerEntity player) {
         /* Remove the per-player format. */

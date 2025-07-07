@@ -17,7 +17,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 @Cite("https://github.com/PotatoPresident/HeadIndex")
-@Document("""
+@Document(id = 1751826596329L, value = """
     This module allows player to buy decorative heads from a head shop.
     """)
 @CommandNode("head")
@@ -25,7 +25,7 @@ public class HeadInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<HeadConfigModel> head = new ObjectConfigurationHandler<>("head.json", HeadConfigModel.class);
 
-    @Document("Download the head database from the internet. (You need to delete the existing head database file.)")
+    @Document(id = 1751826598337L, value = "Download the head database from the internet. (You need to delete the existing head database file.)")
     @CommandNode("sync")
     @CommandRequirement(level = 4)
     private static int $sync(@CommandSource CommandContext<ServerCommandSource> ctx) {
@@ -34,12 +34,12 @@ public class HeadInitializer extends ModuleInitializer {
     }
 
     @CommandNode
-    @Document("See /head gui")
+    @Document(id = 1751826599924L, value = "See /head gui")
     private static int $head(@CommandSource ServerPlayerEntity player) {
         return $gui(player);
     }
 
-    @Document("Open the head shop GUI.")
+    @Document(id = 1751826601972L, value = "Open the head shop GUI.")
     @CommandNode("gui")
     private static int $gui(@CommandSource ServerPlayerEntity player) {
         new HeadGui(player)

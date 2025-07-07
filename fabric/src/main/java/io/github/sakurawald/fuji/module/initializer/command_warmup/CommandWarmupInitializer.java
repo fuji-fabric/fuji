@@ -15,10 +15,9 @@ import io.github.sakurawald.fuji.module.initializer.command_warmup.config.model.
 import io.github.sakurawald.fuji.module.initializer.command_warmup.structure.CommandWarmupNode;
 import io.github.sakurawald.fuji.module.initializer.command_warmup.structure.CommandWarmupTicket;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Document("""
+@Document(id = 1751826885335L, value = """
     This module allows you to define a `cooldown` before command execution.
     """)
 

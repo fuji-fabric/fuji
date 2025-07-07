@@ -15,7 +15,7 @@ import net.minecraft.util.Hand;
 
 public class HatInitializer extends ModuleInitializer {
 
-    @Document("Wear the item in hand.")
+    @Document(id = 1751825381383L, value = "Wear the item in hand.")
     @CommandNode("hat")
     private static int $hat(@CommandSource @CommandTarget ServerPlayerEntity player) {
         ItemStack mainHandItem = player.getMainHandStack();

@@ -27,7 +27,7 @@ public class DelayInitializer extends ModuleInitializer {
 
     private static final ScheduledExecutorService DELAY_COMMAND_EXECUTOR = Executors.newSingleThreadScheduledExecutor();
 
-    @Document("Execute a command in seconds.")
+    @Document(id = 1751824706971L, value = "Execute a command in seconds.")
     @CommandNode("delay")
     @CommandRequirement(level = 4)
     private static int delay(@CommandSource ServerCommandSource source, double time, GreedyString rest) {

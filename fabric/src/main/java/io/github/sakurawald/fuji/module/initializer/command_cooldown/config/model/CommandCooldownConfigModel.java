@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class CommandCooldownConfigModel {
 
-    @Document("""
+    @Document(id = 1751826371102L, value = """
         The `unnamed cooldown` is applied `per-player`.
 
         Define the `regex` expression to match the `target command`.
@@ -27,7 +27,7 @@ public class CommandCooldownConfigModel {
         }
     };
 
-    @Document("""
+    @Document(id = 1751826373554L, value = """
         The `named cooldown` is created by `/command-cooldown create` command.
         """)
     public NamedCooldown namedCooldown = new NamedCooldown();

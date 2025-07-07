@@ -16,14 +16,14 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.Set;
 
-@Document("""
+@Document(id = 1751826840711L, value = """
     Provides PvP management for players.
     """)
 public class PvpInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<PvPDataModel> data = new ObjectConfigurationHandler<>("pvp.json", PvPDataModel.class);
 
-    @Document("Enable the PvP for the player.")
+    @Document(id = 1751826842506L, value = "Enable the PvP for the player.")
     @CommandNode("pvp on")
     private static int $on(@CommandSource @CommandTarget ServerPlayerEntity player) {
         Set<String> whitelist = data.model().whitelist;
@@ -41,7 +41,7 @@ public class PvpInitializer extends ModuleInitializer {
         return CommandHelper.Return.FAIL;
     }
 
-    @Document("Disable the PvP for the player.")
+    @Document(id = 1751826844847L, value = "Disable the PvP for the player.")
     @CommandNode("pvp off")
     private static int $off(@CommandSource @CommandTarget ServerPlayerEntity player) {
         Set<String> whitelist = data.model().whitelist;
@@ -59,7 +59,7 @@ public class PvpInitializer extends ModuleInitializer {
         return CommandHelper.Return.FAIL;
     }
 
-    @Document("Query the status of PvP for the player.")
+    @Document(id = 1751826847105L, value = "Query the status of PvP for the player.")
     @CommandNode("pvp status")
     private static int $status(@CommandSource @CommandTarget ServerPlayerEntity player) {
         Set<String> whitelist = data.model().whitelist;
@@ -70,7 +70,7 @@ public class PvpInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("List the players that enable the PvP.")
+    @Document(id = 1751826854234L, value = "List the players that enable the PvP.")
     @CommandNode("pvp list")
     private static int $list(@CommandSource ServerCommandSource source) {
         Set<String> whitelist = data.model().whitelist;

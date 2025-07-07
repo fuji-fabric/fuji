@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ChatTriggerConfigModel {
 
-    @Document("""
+    @Document(id = 1751826732919L, value = """
         Use `regex` expression to define `triggers`.
         """)
     public List<ChatTrigger> triggers = new ArrayList<>() {

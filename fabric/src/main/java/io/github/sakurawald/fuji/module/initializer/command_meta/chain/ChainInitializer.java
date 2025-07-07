@@ -15,7 +15,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Document("""
+@Document(id = 1751824730196L, value = """
     Provides `/chain` command.
     It allows you to run another 2 commands.
     The first command is any command.
@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
 public class ChainInitializer extends ModuleInitializer {
     private static final Pattern CHAIN_COMMAND_PARSER = Pattern.compile("(.+?)\\s+(chain .+)");
 
-    @Document("Chain commands and executes them in sequence, the chain will break if the previous one command fails.")
+    @Document(id = 1751824736793L, value = "Chain commands and executes them in sequence, the chain will break if the previous one command fails.")
     @CommandNode("chain")
     @CommandRequirement(level = 4)
     private static int chain(@CommandSource ServerCommandSource source, GreedyString rest) {

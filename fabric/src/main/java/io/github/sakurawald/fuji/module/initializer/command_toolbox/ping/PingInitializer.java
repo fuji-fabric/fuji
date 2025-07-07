@@ -14,7 +14,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public class PingInitializer extends ModuleInitializer {
 
-    @Document("Query the ping of a player.")
+    @Document(id = 1751825386112L, value = "Query the ping of a player.")
     @CommandNode("ping")
     @CommandRequirement(level = 4)
     private static int $ping(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {

@@ -14,7 +14,7 @@ import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.Objects;
 
-@Document("""
+@Document(id = 1751827007525L, value = """
     This module provides debug tools for executing commands.
     """)
 public class CommandDebugInitializer extends ModuleInitializer {

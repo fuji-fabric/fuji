@@ -9,14 +9,14 @@ import java.util.List;
 /* Sometimes I really hate the typing system of java... */
 public class ConfigModel {
 
-    @Document("""
+    @Document(id = 1751823676896L, value = """
         Fuji is composed by `core` and `module`.
         The `core` config affects `all` modules.
         The `module` config only affects that specific module.
         """)
     public Core core = new Core();
 
-    @Document("""
+    @Document(id = 1751823688579L, value = """
         Fuji is designed to be fully-modular.
         All modules is `disabled` by default.
         You can modify the `enable` field to enable a module <red>after a server re-start</red>.
@@ -27,32 +27,32 @@ public class ConfigModel {
     public Modules modules = new Modules();
 
     public static class Core {
-        @Document("Debug related options.")
+        @Document(id = 1751823723851L, value = "Debug related options.")
         public Debug debug = new Debug();
 
-        @Document("""
+        @Document(id = 1751823731455L, value = """
             Fuji will back up the `config/fuji` dir before it loads any module.
             """)
         public Backup backup = new Backup();
 
-        @Document("""
+        @Document(id = 1751823748647L, value = """
             The language related options.
             """)
         public Language language = new Language();
 
-        @Document("""
+        @Document(id = 1751823755527L, value = """
             The permission related options.
             """)
         public Permission permission = new Permission();
 
-        @Document("""
+        @Document(id = 1751823761222L, value = """
             The scheduler related options.
             The `scheduler` system is used to run `jobs`.
             """)
         public Scheduler scheduler = new Scheduler();
 
         public static class Scheduler {
-            @Document("""
+            @Document(id = 1751823767950L, value = """
                 The logger level for `quartz` library.
                 The level is recommended to be higher than `WARN`, to prevent console spam.
                 Acceptable levels: ALL < TRACE < DEBUG < INFO < WARN < ERROR < FATAL < OFF
@@ -62,12 +62,12 @@ public class ConfigModel {
 
         public static class Backup {
 
-            @Document("""
+            @Document(id = 1751823774480L, value = """
                 How many `backup files` should we keep?
                 """)
             public int max_slots = 15;
 
-            @Document("""
+            @Document(id = 1751823780583L, value = """
                 The `paths` that should be skipped when backup.
                 The `path` is resolved and related to `config/fuji/` dir.
                 """)
@@ -79,7 +79,7 @@ public class ConfigModel {
         }
 
         public static class Language {
-            @Document("""
+            @Document(id = 1751823787824L, value = """
                 The `default language` used by Fuji.
                 The language files are located in `config/fuji/lang` dir.
                 """)
@@ -87,7 +87,7 @@ public class ConfigModel {
         }
 
         public static class Permission {
-            @Document("""
+            @Document(id = 1751823793347L, value = """
                 Fuji defines commands into 2 groups, for different users.
                 One group for `normal user`, these commands require `level 0 permission` to use.
                 One group for `admin user`, these commands require `level 4 permission` to use.
@@ -100,19 +100,19 @@ public class ConfigModel {
         }
 
         public static class Debug {
-            @Document("""
+            @Document(id = 1751823800414L, value = """
                 Force disable `all` modules.
                 Used to test the compatibility between `fuji` and `other mods`.
                 """)
             public boolean disable_all_modules = false;
 
-            @Document("""
+            @Document(id = 1751823806770L, value = """
                 Should we log the `debug` level messages into the `console`?
                 This option can be changed using `/fuji debug` command.
                 """)
             public boolean log_debug_messages = false;
 
-            @Document("""
+            @Document(id = 1751823813518L, value = """
                 Should we print the user guide in the console on server startup?
                 """)
             public boolean print_user_guide_in_console = false;

@@ -9,12 +9,12 @@ import java.util.List;
 
 public class CommandWarmupConfigModel {
 
-    @Document("""
+    @Document(id = 1751826870516L, value = """
         Should we send a warning message for no movement?
         """)
     public boolean warn_for_move = true;
 
-    @Document("""
+    @Document(id = 1751826873894L, value = """
         Defined `warmup` entry.
         """)
     public List<CommandWarmupNode> entries = new ArrayList<>() {

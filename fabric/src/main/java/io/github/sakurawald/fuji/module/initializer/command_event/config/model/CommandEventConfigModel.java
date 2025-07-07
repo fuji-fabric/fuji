@@ -7,7 +7,7 @@ import java.util.List;
 
 public class CommandEventConfigModel {
 
-    @Document("""
+    @Document(id = 1751826631166L, value = """
         Define `commands` to be execute on `specific events`.
         """)
     public Event event = new Event();

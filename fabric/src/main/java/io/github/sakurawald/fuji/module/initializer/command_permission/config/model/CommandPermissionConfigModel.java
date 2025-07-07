@@ -9,7 +9,7 @@ import java.util.List;
 
 public class CommandPermissionConfigModel {
 
-    @Document("""
+    @Document(id = 1751826769068L, value = """
         You can define `rules` to handle `special case`.
         If the `command permission` is `matched` by the `rule`.
         We return the pre-defined `permission test result` directly, without asking the luckperms.

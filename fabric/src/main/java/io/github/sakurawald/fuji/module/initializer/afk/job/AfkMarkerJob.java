@@ -8,7 +8,7 @@ import io.github.sakurawald.fuji.module.initializer.afk.accessor.AfkStateAccesso
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-@Document("""
+@Document(id = 1751826177457L, value = """
     This `job` is used to check the last action time for each player.
     """)
 public class AfkMarkerJob extends CronJob {

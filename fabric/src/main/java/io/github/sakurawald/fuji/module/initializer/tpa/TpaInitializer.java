@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
-@Document("This module provides `/tpa` and `/tpahere` commands.")
+@Document(id = 1751826540953L, value = "This module provides `/tpa` and `/tpahere` commands.")
 public class TpaInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<TpaConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, TpaConfigModel.class);

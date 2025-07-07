@@ -13,7 +13,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import java.util.List;
 import net.minecraft.stat.Stats;
 
-@Document("""
+@Document(id = 1751826634816L, value = """
     This module allows you to execute commands on specified events.
     """)
 public class CommandEventInitializer extends ModuleInitializer {

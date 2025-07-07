@@ -9,13 +9,13 @@ import lombok.Data;
 @Data
 public class WarningConfigModel {
 
-    @Document("""
+    @Document(id = 1751827028093L, value = """
         Define `warning rules`, to execute `punishment commands`.
-
+        
         When a new `warning` is `added` to a player, we will process the `warning rules`.
         And then pick up `one warning rule` to execute its commands.
         We will pick the `highest` number of warnings satisfied first.
-
+        
         """)
     public List<WarningRule> rules = new ArrayList<>() {
         {

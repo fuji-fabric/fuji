@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-@Document("""
+@Document(id = 1751826613773L, value = """
     Allows a player to download nearest `region` file.
     Useful for `redstone` debug.
     """)
@@ -66,7 +66,7 @@ public class WorldDownloaderInitializer extends ModuleInitializer {
         } catch (IllegalArgumentException ignored) {}
     }
 
-    @Document("Download the region file around you.")
+    @Document(id = 1751826617256L, value = "Download the region file around you.")
     @CommandNode("download")
     private static int $download(@CommandSource ServerPlayerEntity player) {
         /* Ensure the download server is set up. */

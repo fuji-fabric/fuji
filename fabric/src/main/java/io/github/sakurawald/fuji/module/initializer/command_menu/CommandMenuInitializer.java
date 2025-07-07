@@ -19,7 +19,7 @@ import io.github.sakurawald.fuji.module.initializer.command_menu.structure.MenuD
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-@Document("""
+@Document(id = 1751824895470L, value = """
     This module allows you to define `menu` GUI, to execute commands.
     """)
 
@@ -36,7 +36,7 @@ public class CommandMenuInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<CommandMenuConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandMenuConfigModel.class);
     public static final BaseConfigurationHandler<CommandMenuMenusModel> menus = new ObjectConfigurationHandler<>("menus.json", CommandMenuMenusModel.class);
 
-    @Document("Open the specified `menu` for the player.")
+    @Document(id = 1751824900662L, value = "Open the specified `menu` for the player.")
     @CommandNode("open")
     private static int $open(@CommandSource ServerCommandSource source, ServerPlayerEntity player, MenuName menuName) {
         /* Check if menu exists. */
@@ -54,7 +54,7 @@ public class CommandMenuInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Close the currently `opened GUI` for the player.")
+    @Document(id = 1751824905935L, value = "Close the currently `opened GUI` for the player.")
     @CommandNode("close")
     private static int $close(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {
         closeCurrentHandledScreen(player);

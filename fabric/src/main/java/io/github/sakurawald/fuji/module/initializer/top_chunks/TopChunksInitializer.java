@@ -34,14 +34,14 @@ import java.util.PriorityQueue;
 import java.util.concurrent.CompletableFuture;
 
 
-@Document("""
+@Document(id = 1751826535209L, value = """
     Analyze all chunks of the server, and find the most lagged chunks.
     """)
 public class TopChunksInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<TopChunksConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, TopChunksConfigModel.class);
 
-    @Document("List all chunks ordered by lag score.")
+    @Document(id = 1751826537195L, value = "List all chunks ordered by lag score.")
     @CommandNode("chunks")
     private static int $chunks(@CommandSource ServerCommandSource source) {
         CompletableFuture.runAsync(() -> {

@@ -8,7 +8,7 @@ import io.github.sakurawald.fuji.module.initializer.placeholder.structure.SumUpP
 import org.jetbrains.annotations.NotNull;
 import org.quartz.JobExecutionContext;
 
-@Document("""
+@Document(id = 1751826509334L, value = """
     This `job` is used to `update` the `sum up placeholders` of the `server`.
     """)
 public class UpdateSumUpPlaceholderJob extends CronJob {

@@ -46,7 +46,7 @@ import java.util.Optional;
  */
 
 @Cite("https://github.com/NucleoidMC/fantasy")
-@Document("""
+@Document(id = 1751826605981L, value = """
     Provides a unified world management.
     """)
 @CommandNode("world")
@@ -64,7 +64,7 @@ public class WorldInitializer extends ModuleInitializer {
         }
     }
 
-    @Document("Teleport to the spawnpoint of the world.")
+    @Document(id = 1751826609063L, value = "Teleport to the spawnpoint of the world.")
     @CommandNode("tp")
     private static int $tp(@CommandSource ServerPlayerEntity player, Dimension dimension) {
         ServerWorld world = dimension.getValue();
@@ -140,7 +140,7 @@ public class WorldInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Delete and create the specified world.")
+    @Document(id = 1751826611302L, value = "Delete and create the specified world.")
     @CommandNode("reset")
     private static int $reset(@CommandSource CommandContext<ServerCommandSource> ctx, Optional<Boolean> useTheSameSeed, Dimension dimension) {
         // draw seed and save

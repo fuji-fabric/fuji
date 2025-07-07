@@ -22,7 +22,7 @@ import org.quartz.JobDataMap;
 import java.util.List;
 
 
-@Document("""
+@Document(id = 1751826754641L, value = """
     This module allows you to define `jobs` using `cron` language.
     To execute commands at schedule.
     """)
@@ -51,7 +51,7 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
         reloadJobs();
     }
 
-    @Document("List all defined jobs.")
+    @Document(id = 1751826757048L, value = "List all defined jobs.")
     @CommandNode("list")
     private static int list(@CommandSource ServerPlayerEntity player) {
         List<Job> jobs = scheduler.model().jobs;
@@ -59,7 +59,7 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Trigger a job manually.")
+    @Document(id = 1751826758887L, value = "Trigger a job manually.")
     @CommandNode("trigger")
     private static int trigger(JobName jobName) {
         scheduler.model().jobs.stream()

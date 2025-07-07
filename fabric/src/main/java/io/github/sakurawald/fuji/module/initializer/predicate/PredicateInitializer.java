@@ -19,27 +19,27 @@ import net.minecraft.world.GameMode;
 
 import java.util.Optional;
 
-@Document("""
+@Document(id = 1751826497994L, value = """
     Provides `predicate` commands, suffix with `?`.
     """)
 @CommandRequirement(level = 4)
 public class PredicateInitializer extends ModuleInitializer {
 
-    @Document("Predicate to test if the player has the string-perm?")
+    @Document(id = 1751826499684L, value = "Predicate to test if the player has the string-perm?")
     @CommandNode("has-perm?")
     private static int hasPerm(@CommandSource ServerCommandSource source, ServerPlayerEntity player, GreedyString stringPermission) {
         boolean value = LuckpermsHelper.hasPermission(player.getUuid(), new PermissionDescriptor(true, stringPermission.getValue(), null));
         return CommandHelper.Return.returnBoolean(source, value);
     }
 
-    @Document("Predicate to test if the player has the level-perm?")
+    @Document(id = 1751826502598L, value = "Predicate to test if the player has the level-perm?")
     @CommandNode("has-level?")
     private static int hasLevel(@CommandSource ServerCommandSource source, ServerPlayerEntity player, int levelPermission) {
         boolean value = player.hasPermissionLevel(levelPermission);
         return CommandHelper.Return.returnBoolean(source, value);
     }
 
-    @Document("Predicate if online players >= n.")
+    @Document(id = 1751826504480L, value = "Predicate if online players >= n.")
     @CommandNode("has-players?")
     private static int hasPlayers(@CommandSource ServerCommandSource source, Optional<Integer> n) {
         int $n = n.orElse(0);

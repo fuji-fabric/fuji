@@ -4,12 +4,12 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 
 public class NametagConfigModel {
 
-    @Document("""
+    @Document(id = 1751824986864L, value = """
         The `cron` expression used to `update` nametags.
         """)
     public String update_cron = "* * * ? * *";
 
-    @Document("""
+    @Document(id = 1751824993802L, value = """
         Define the `style` of nametag.
         """)
     public Style style = new Style();
@@ -64,7 +64,7 @@ public class NametagConfigModel {
 
     }
 
-    @Document("""
+    @Document(id = 1751825000155L, value = """
         Define the `render` logic of `nametags`.
         """)
     public Render render = new Render();

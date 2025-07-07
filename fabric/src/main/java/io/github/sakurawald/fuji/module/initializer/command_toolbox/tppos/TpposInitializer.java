@@ -23,7 +23,7 @@ import net.minecraft.server.world.ServerWorld;
 import java.util.Optional;
 
 
-@Document("""
+@Document(id = 1751825242047L, value = """
     Provides `/tppos` command.
     A `unified` and `powerful` teleport command.
 
@@ -37,24 +37,24 @@ import java.util.Optional;
     """)
 public class TpposInitializer extends ModuleInitializer {
 
-    @Document("The unified teleport command.")
+    @Document(id = 1751825250986L, value = "The unified teleport command.")
     @CommandNode("tppos")
     @CommandRequirement(level = 4)
     private static int tppos(@CommandSource @CommandTarget ServerPlayerEntity player
-        , @Document("the target dimension") Optional<Dimension> dimension
-        , @Document("the target x for fixed-tp") Optional<Double> x
-        , @Document("the target y for fixed-tp") Optional<Double> y
-        , @Document("the target z for fixed-tp") Optional<Double> z
-        , @Document("the target yaw for fixed-tp") Optional<Float> yaw
-        , @Document("the target pitch for fixed-tp") Optional<Float> pitch
-        , @Document("center x for rtp") Optional<Integer> centerX
-        , @Document("center z for rtp") Optional<Integer> centerZ
-        , @Document("is the shape of rtp circle or square") Optional<Boolean> circle
-        , @Document("min radius for rtp") Optional<Integer> minRange
-        , @Document("max radius for rtp") Optional<Integer> maxRange
-        , @Document("min y for rtp") Optional<Integer> minY
-        , @Document("max y for rtp") Optional<Integer> maxY
-        , @Document("max try times for rtp") Optional<Integer> maxTryTimes
+        , @Document(id = 1751825286136L, value = "the target dimension") Optional<Dimension> dimension
+        , @Document(id = 1751825291728L, value = "the target x for fixed-tp") Optional<Double> x
+        , @Document(id = 1751825295183L, value = "the target y for fixed-tp") Optional<Double> y
+        , @Document(id = 1751825298686L, value = "the target z for fixed-tp") Optional<Double> z
+        , @Document(id = 1751825302162L, value = "the target yaw for fixed-tp") Optional<Float> yaw
+        , @Document(id = 1751825308511L, value = "the target pitch for fixed-tp") Optional<Float> pitch
+        , @Document(id = 1751825312187L, value = "center x for rtp") Optional<Integer> centerX
+        , @Document(id = 1751825318126L, value = "center z for rtp") Optional<Integer> centerZ
+        , @Document(id = 1751825322575L, value = "is the shape of rtp circle or square") Optional<Boolean> circle
+        , @Document(id = 1751825327440L, value = "min radius for rtp") Optional<Integer> minRange
+        , @Document(id = 1751825331634L, value = "max radius for rtp") Optional<Integer> maxRange
+        , @Document(id = 1751825335795L, value = "min y for rtp") Optional<Integer> minY
+        , @Document(id = 1751825340303L, value = "max y for rtp") Optional<Integer> maxY
+        , @Document(id = 1751825344683L, value = "max try times for rtp") Optional<Integer> maxTryTimes
     ) {
         /* specify the dimension */
         ServerWorld world = dimension.isPresent() ? dimension.get().getValue() : EntityHelper.getServerWorld(player);
@@ -90,7 +90,7 @@ public class TpposInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Teleport to the offline position of a player.")
+    @Document(id = 1751825355777L, value = "Teleport to the offline position of a player.")
     @CommandNode("tppos offline")
     @CommandRequirement(level = 4)
     private static int tppos(@CommandSource ServerPlayerEntity source, OfflinePlayerName player) {
@@ -100,13 +100,13 @@ public class TpposInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("""
-    Teleport `others` to `you`.
+    @Document(id = 1751825360963L, value = """
+        Teleport `others` to `you`.
 
-    For example:
-    1. `/tppos here Steve` to teleport `Steve` to `you`.
-    2. `/tppos here @a` to teleport `all online players` to `you`.
-    """)
+        For example:
+        1. `/tppos here Steve` to teleport `Steve` to `you`.
+        2. `/tppos here @a` to teleport `all online players` to `you`.
+        """)
     @CommandNode("tppos here")
     @CommandRequirement(level = 4)
     private static int tppos(@CommandSource ServerPlayerEntity source, PlayerCollection targets) {

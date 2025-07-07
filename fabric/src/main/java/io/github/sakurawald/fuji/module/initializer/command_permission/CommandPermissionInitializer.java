@@ -40,7 +40,7 @@ import java.util.function.Predicate;
 
 
 @Cite("https://github.com/DrexHD/VanillaPermissions")
-@Document("""
+@Document(id = 1751826772214L, value = """
     This module provides the `luckperms permissions` for `all commands`.
     """)
 @CommandNode("command-permission")
@@ -61,7 +61,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         """);
 
     @CommandNode("gui")
-    @Document("Open the command permission gui.")
+    @Document(id = 1751826777672L, value = "Open the command permission gui.")
     public static int $gui(@CommandSource ServerPlayerEntity player) {
         List<CommandNodePermissionWrapper> entities = CommandHelper.getCommandNodes().stream()
             .map(CommandNodePermissionWrapper::new)
@@ -72,7 +72,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Toggle the command permission verbose mode.")
+    @Document(id = 1751826779531L, value = "Toggle the command permission verbose mode.")
     @CommandNode("verbose")
     public static int $verbose(@CommandSource ServerCommandSource source) {
         verboseModeFlag = !verboseModeFlag;
@@ -81,7 +81,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document("Describe the `required permissions` of `the given command`.")
+    @Document(id = 1751826781243L, value = "Describe the `required permissions` of `the given command`.")
     @CommandNode("describe")
     public static int $describe(@CommandSource ServerCommandSource source, GreedyString command) {
         /* Parse the command string to get the command context. */

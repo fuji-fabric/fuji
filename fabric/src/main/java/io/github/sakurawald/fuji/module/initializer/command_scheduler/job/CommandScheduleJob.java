@@ -10,7 +10,7 @@ import org.quartz.JobExecutionContext;
 
 import java.util.function.Supplier;
 
-@Document("""
+@Document(id = 1751826752357L, value = """
     This `job` is defined by `command_schedule` module.
     And used to `execute specified commands`.
     """)

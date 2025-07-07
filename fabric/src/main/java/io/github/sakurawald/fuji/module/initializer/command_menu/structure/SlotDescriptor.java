@@ -34,34 +34,34 @@ public class SlotDescriptor {
 
     // NOTE: It's possible only provide the NBT field, but it's hard to use.
 
-    @Document("""
+    @Document(id = 1751824853240L, value = """
         Where to place this item in GUI?
         """)
     public int index = 0;
 
-    @Document("""
+    @Document(id = 1751824861377L, value = """
         What is the item?
         """)
     public String item = "minecraft:stone";
 
-    @Document("""
+    @Document(id = 1751824865422L, value = """
         The count of this item.
         """)
     public int count = 42;
 
-    @Document("""
+    @Document(id = 1751824870793L, value = """
         The display name of this item.
         """)
     public @Nullable String displayName = "<blue>My Nice Item Name";
 
     public boolean hideTooltip = false;
 
-    @Document("""
+    @Document(id = 1751824877459L, value = """
         Should we glow this item?
         """)
     public boolean glow = false;
 
-    @Document("""
+    @Document(id = 1751824881740L, value = """
         The lore of this item.
         """)
     public List<String> lore = new ArrayList<>() {
@@ -71,7 +71,7 @@ public class SlotDescriptor {
         }
     };
 
-    @Document("""
+    @Document(id = 1751824886812L, value = """
         The `requirement` to `see` this item in GUI.
         """)
     public ViewRequirement viewRequirement = new ViewRequirement();

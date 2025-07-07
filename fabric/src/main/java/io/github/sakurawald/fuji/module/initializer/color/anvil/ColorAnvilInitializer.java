@@ -8,7 +8,7 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.color.anvil.config.model.ColorAnvilConfigModel;
 import net.minecraft.entity.player.PlayerEntity;
 
-@Document("""
+@Document(id = 1751824946979L, value = """
     This module allows you to use color tags in `anvil` screen.
     """)
 public class ColorAnvilInitializer extends ModuleInitializer {

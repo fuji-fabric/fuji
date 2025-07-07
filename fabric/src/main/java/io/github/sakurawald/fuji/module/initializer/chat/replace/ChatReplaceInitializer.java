@@ -13,7 +13,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
-@Document("""
+@Document(id = 1751826656743L, value = """
     This module allows you to replace `chat string` with a given `chat text`. (Including placeholder parsing)
     """)
 

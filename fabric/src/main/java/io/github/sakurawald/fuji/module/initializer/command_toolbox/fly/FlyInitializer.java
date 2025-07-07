@@ -13,7 +13,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public class FlyInitializer extends ModuleInitializer {
 
-    @Document("Toggle the fly state of the player.")
+    @Document(id = 1751825231545L, value = "Toggle the fly state of the player.")
     @CommandNode("fly")
     @CommandRequirement(level = 4)
     private static int $fly(@CommandSource @CommandTarget ServerPlayerEntity player) {
