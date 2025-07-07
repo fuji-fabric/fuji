@@ -17,23 +17,23 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
-@ColorBox(color = ColorBox.ColorBlockTypes.TIPS, value = """
-  <json>
-  "core": {
-    "debug": {
-      "disable_all_modules": false,
-      "log_debug_messages": false,
-      "print_user_guide_in_console": false
-    },
-    "backup": {
-      "max_slots": 15,
-      "skip": [
-        "modules/head"
-      ]
-    },
-  </json>
+@ColorBox(id = -1L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    <json>
+    "core": {
+      "debug": {
+        "disable_all_modules": false,
+        "log_debug_messages": false,
+        "print_user_guide_in_console": false
+      },
+      "backup": {
+        "max_slots": 15,
+        "skip": [
+          "modules/head"
+        ]
+      },
+    </json>
 
-  """)
+    """)
 
 @CommandNode("tester")
 @CommandRequirement(level = 4)
@@ -50,7 +50,6 @@ public class TesterInitializer extends ModuleInitializer {
         TextHelper.sendTextByKey(player, "gui.search.title" );
 
         "Value = %s".formatted();
-
 
         return 0;
     }
