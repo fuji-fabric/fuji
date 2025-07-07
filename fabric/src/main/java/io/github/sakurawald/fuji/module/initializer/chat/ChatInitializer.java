@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.chat;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 
-@ColorBox(id = 1751870564305L, value = """
+@ColorBox(id = 1751870564305L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     All sub-modules of `chat` module are designed to work with `other mods`.
     Especially, provides the first support to work with `Styled Chat` mod.
     For other `chat-related` mods, you can try and test the compatibility.

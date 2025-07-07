@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.anti_build;
 
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -25,6 +26,30 @@ import java.util.function.Supplier;
     4. Interact with a specified block.
     5. Interact with a specified entity.
     """)
+
+@ColorBox(id = 1751896813134L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    Read the document to see the definition of `identifier` in Minecraft.
+    """)
+
+@ColorBox(id = 1751896904529L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    Use the `command suggestion` from `luckperms` mod to see the supported types by this module.
+    """)
+
+@ColorBox(id = 1751897087633L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    To ban the placement of TNT block:
+    Just add the `minecraft:tnt` into the `place_block` list.
+    """)
+
+@ColorBox(id = 1751897135695L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    To ban the placement of TNT block, but allow a specific player to use it.
+    Grant a `bypass permission` for that player: `/lp user \\<player\\> permission set fuji.anti_build.place_block.bypass.minecraft:tnt`.
+    """)
+
+@ColorBox(id = 1751897263346L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    Dis-allow to place any blocks.
+    Use `*` as the wildcard character, put it into the `place_block` list.
+    """)
+
 public class AntiBuildInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<AntiBuildConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, AntiBuildConfigModel.class);
 

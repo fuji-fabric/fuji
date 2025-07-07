@@ -16,7 +16,7 @@ public @interface ColorBox {
 
     long id();
 
-    ColorBlockTypes color() default ColorBlockTypes.NOTE;
+    ColorBlockTypes color();
 
     String value();
 
