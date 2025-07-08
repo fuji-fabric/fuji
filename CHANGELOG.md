@@ -8,9 +8,9 @@
   - feature: if the `language value` starts with `[send-main-title]`, then this `language key` is sending via the `main title`.
   - feature: if the `language value` starts with `[send-sub-title]`, then this `language key` is sending via the `sub title`.
   - feature: if the `language value` starts with `[suppress-sending]`, then the sending of this `language key` will be cancelled.
+- [fuji] feature: new `/fuji inspect languages` command, to inspect `loaded language files` and who is using them.
 - [core] feature: enhance the debug messages for language system. (Make the debug easier.)
 - [core] feature: now will `sort` the language keys inside language files automatically.
-- [fuji] feature: new `/fuji inspect languages` command, to inspect `loaded language files` and who is using them.
 - [fuji] feature: increase the color contrast of `colored candles`. (UX improvement)
 - [fuji] feature: sort the `colored candles` by its `color`. (UX improvement)
 - [chat.style & color.sign] fix: should not have the ability to use the `markdown` parser.
