@@ -27,13 +27,13 @@ import java.util.List;
     To execute commands at schedule.
     """)
 @ColorBox(id = 1751870574475L, color = ColorBox.ColorBlockTypes.NOTE, value = """
-    How it works?
+    ◉ How it works?
 
     A `job` is used to execute commands periodically.
     We use `cron` language to define when the `job` should be `triggered`.
     """)
 @ColorBox(id = 1751972254866L, color = ColorBox.ColorBlockTypes.TIPS, value = """
-    You can use `cron expression` generator, to specify when the job should be triggered.
+    ◉ You can use `cron expression` generator, to specify when the job should be triggered.
     See https://www.freeformatter.com/cron-expression-generator-quartz.html
 
     Issue `/fuji inspect jobs` to see the `fire dates` of defined `jobs`.

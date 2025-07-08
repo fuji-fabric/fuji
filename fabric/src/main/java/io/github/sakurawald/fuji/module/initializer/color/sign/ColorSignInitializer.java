@@ -24,7 +24,7 @@ import java.io.IOException;
     """)
 
 @ColorBox(id = 1751900015107L, color = ColorBox.ColorBlockTypes.TIPS, value = """
-    You can write `style tags` on the sign.
+    ◉ You can write `style tags` on the sign.
     Foe example: `\\<red\\>`, `\\<rb\\>`, `\\<bold\\>` and `\\<i\\>`.
     """)
 

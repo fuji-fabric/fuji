@@ -22,7 +22,7 @@ import java.util.Set;
     And then click to execute commands.
     """)
 @ColorBox(id = 1751870448041L, color = ColorBox.ColorBlockTypes.TIPS, value = """
-    How it works?
+    ◉ How it works?
 
     If a player `right click` a `sign block`.
     We will check if the `facing texts` contains the `/` character.

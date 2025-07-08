@@ -19,7 +19,7 @@ import java.util.Queue;
     """)
 
 @ColorBox(id = 1751870560992L, color = ColorBox.ColorBlockTypes.TIPS, value = """
-    This module works with `Styled Chat` mod.
+    ◉ This module works with `Styled Chat` mod.
     You can use this module to provide the `chat history` for it.
     """)
 

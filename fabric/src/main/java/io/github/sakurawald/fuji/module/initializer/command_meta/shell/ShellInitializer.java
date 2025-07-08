@@ -32,7 +32,7 @@ import java.util.concurrent.CompletableFuture;
     A `powerful` and `dangerous` module.
     """)
 @ColorBox(id = 1751870434188L, color = ColorBox.ColorBlockTypes.DANGER, value = """
-    This is a `dangerous` module.
+    ◉ This is a `dangerous` module.
     This module is a powerful and dangerous module, not recommended to enable it.
     """)
 @ColorBox(id = 1751970272178L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """

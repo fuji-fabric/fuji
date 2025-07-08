@@ -18,7 +18,7 @@ import net.minecraft.stat.Stats;
     This module allows you to execute commands on specified events.
     """)
 @ColorBox(id = 1751904334639L, color = ColorBox.ColorBlockTypes.NOTE, value = """
-    How it works?
+    ◉ How it works?
     When an interested event occurs, this module will execute specified commands for that event as console.
     The `contextual player` in that `event` will be used as the `placeholder context`, to parse the `placeholders` in the `command string`.
     """)

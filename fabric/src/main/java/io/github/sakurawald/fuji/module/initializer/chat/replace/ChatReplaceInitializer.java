@@ -18,7 +18,7 @@ import net.minecraft.text.Text;
     """)
 
 @ColorBox(id = 1751870539707L, color = ColorBox.ColorBlockTypes.WARNING, value = """
-    This module didn't work with `Styled Chat` mod.
+    ◉ This module didn't work with `Styled Chat` mod.
     The `chat.replace` module does work with `chat.style` module.
     But if you are using the `Styled Chat` mod, then it didn't work.
     However, since `Styled Chat` mod allows you to define custom `emotions`.
@@ -26,7 +26,7 @@ import net.minecraft.text.Text;
     """)
 
 @ColorBox(id = 1751899554713L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    Define a chat shortcut, to evaluate a placeholder.
+    ◉ Define a chat shortcut, to evaluate a placeholder.
     Regex: `(?<=^|\\\\s)uuid(?=\\\\s|$)`
     Replacement: `my uuid is %player:uuid%`
     """)

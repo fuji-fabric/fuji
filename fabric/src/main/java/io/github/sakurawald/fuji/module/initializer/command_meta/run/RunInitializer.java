@@ -17,19 +17,19 @@ import net.minecraft.server.network.ServerPlayerEntity;
     Provides `/run` command, to run a command with context.
     """)
 @ColorBox(id = 1751968631536L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    Give random amount of diamonds to online players.
+    ◉ Give random amount of diamonds to online players.
     Issue: `/run as console give @a minecraft:diamond %fuji:random 8 32%`
     """)
 @ColorBox(id = 1751968672241L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    Give online players random amount of diamonds.
+    ◉ Give online players random amount of diamonds.
     Issue: `/run as console foreach give %fuji:escape player:name% minecraft:diamond %fuji:escape fuji:random 8 32 1%`
     """)
 @ColorBox(id = 1751968707088L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    Execute a command as a specified player.
+    ◉ Execute a command as a specified player.
     Issue: `/run as player \\<player\\> back`
     """)
 @ColorBox(id = 1751968753602L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    Execute a command as a fake-op.
+    ◉ Execute a command as a fake-op.
     Issue: `/run as fake-op \\<player\\> give %player:name% minecraft:apple 1`
     """)
 

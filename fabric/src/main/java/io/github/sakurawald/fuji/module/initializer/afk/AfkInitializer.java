@@ -35,7 +35,7 @@ import java.util.Map;
     3. Afk name customization: For a afk player, we can customize its display name in tab list.
     """)
 @ColorBox(id = 1751870451351L, color = ColorBox.ColorBlockTypes.NOTE, value = """
-    How it works?
+    ◉ How it works?
 
     For each player, define a `number` to track `the last action time`.
     Actions can be: `mine a block`, `movement`, `issue a command` ...

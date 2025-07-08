@@ -25,13 +25,13 @@ import java.util.stream.Collectors;
     """)
 
 @ColorBox(id = 1751899049909L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    To define a simple magic spell in chat string.
+    ◉ To define a simple magic spell in chat string.
     Regex: `magic`
     Commands: `say magic!`
     """)
 
 @ColorBox(id = 1751899198263L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    To define a complex magic spell with arguments in chat string.
+    ◉ To define a complex magic spell with arguments in chat string.
     Regex: `i am (.+)`
     Commands:
     1. `say You just said: $0`
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
     """)
 
 @ColorBox(id = 1751899201560L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    To define a shortcut for chat display module with Styled Chat mod.
+    ◉ To define a shortcut for chat display module with Styled Chat mod.
     Regex: `(?<=^|\\\\s)item(?=\\\\s|$)`
     Commands: `run as fake-op %player:name% chat display item`
     """)

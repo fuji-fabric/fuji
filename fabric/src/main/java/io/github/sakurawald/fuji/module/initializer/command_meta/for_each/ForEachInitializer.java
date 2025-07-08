@@ -17,7 +17,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     If a command is only targets on single player, you can use `/foreach` to apply it for each online player.
     """)
 @ColorBox(id = 1751968810100L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    Say hello to online players.
+    ◉ Say hello to online players.
     Issue: `/foreach say hello %player:name%`
     """)
 public class ForEachInitializer extends ModuleInitializer {

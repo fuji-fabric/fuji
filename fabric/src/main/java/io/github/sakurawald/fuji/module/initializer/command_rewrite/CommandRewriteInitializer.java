@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
     This module allows you to define `regex` to rewrite the command line a player issued.
     """)
 @ColorBox(id = 1751971914915L, color = ColorBox.ColorBlockTypes.TIPS, value = """
-    You can use this module to shorten the command string.
+    ◉ You can use this module to shorten the command string.
     Like, rewrite the command string `/home` into `/home tp default`.
     And provide a shortcut, for `/home tp default` command.
     """)

@@ -21,7 +21,7 @@ import java.util.List;
     Provides `/one-of` command, to pick a random command from commands, and execute it.
     """)
 @ColorBox(id = 1751968881805L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    Pick a lucky command from specified command list, and then execute it.
+    ◉ Pick a lucky command from specified command list, and then execute it.
     Issue: `/one-of say 1 one-of say 2 one-of say lucky %player:name%`
     """)
 

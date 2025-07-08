@@ -37,8 +37,6 @@ import java.util.regex.Pattern;
     ◉ Use chain command with predicate command
     Issue: `/run as player \\<player\\> chain test-level-perm %player:name% 4 chain say value is true`
     """)
-
-
 public class ChainInitializer extends ModuleInitializer {
     private static final Pattern CHAIN_COMMAND_PARSER = Pattern.compile("(.+?)\\s+(chain .+)");
 

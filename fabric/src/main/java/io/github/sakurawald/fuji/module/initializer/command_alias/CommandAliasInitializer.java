@@ -25,7 +25,7 @@ import java.util.List;
     """)
 
 @ColorBox(id = 1751900420030L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    Define a `new shortcut command` as an alias to `an existing command`.
+    ◉ Define a `new shortcut command` as an alias to `an existing command`.
     For example:
     1. Define a new `/r` command, as alias to `/reply` command.
     2. Define a new `/sudo` command, as alias to `/run as fake-op` command.

@@ -57,7 +57,7 @@ import java.util.Optional;
     3. Attach commands into an entity.
     """)
 @ColorBox(id = 1751870462624L, color = ColorBox.ColorBlockTypes.NOTE, value = """
-    How it works?
+    ◉ How it works?
 
     When you attach commands into an item.
     We will save a `binding ID` in the item NBT.
@@ -72,11 +72,11 @@ import java.util.Optional;
     The player will get the magic item.
     """)
 @ColorBox(id = 1751900879800L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    Make a magic-stick, which heals the player on clicked.
+    ◉ Make a magic-stick, which heals the player on clicked.
     Issue `/command-attachment attach-item-one heal`
     """)
 @ColorBox(id = 1751900919703L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    Make a magic-stick, which:
+    ◉ Make a magic-stick, which:
     1. Gives diamonds * 1 on left clicked. (With use limit 3)
     2. Gives gold_ingot *1 on right clicked. (With use limit 5)
 
@@ -85,19 +85,19 @@ import java.util.Optional;
     2. `/command-attachment attach-item-one --maxUseTimes 5 --interactType RIGHT give %player:name% minecraft:gold_ingot 1`
     """)
 @ColorBox(id = 1751901028033L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    Make a magic-stick, which gives apple * 1, with use limit 3 times, and keep the item without destroying it.
+    ◉ Make a magic-stick, which gives apple * 1, with use limit 3 times, and keep the item without destroying it.
     Issue: `/command-attachment attach-item-one --maxUseTimes 3 --destroyItem false give %player:name% minecraft:apple 1`.
     """)
 @ColorBox(id = 1751901112988L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    Query the attached commands in a specific item.
+    ◉ Query the attached commands in a specific item.
     Issue `/command-attachment query-item`.
     """)
 @ColorBox(id = 1751901147901L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    Let an entity say hello on right clicked.
+    ◉ Let an entity say hello on right clicked.
     Issue: `/command-attachment attach-entity-one \\<entity-id\\> say hello %player:name%`
     """)
 @ColorBox(id = 1751901221023L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    Make a portal block.
+    ◉ Make a portal block.
     Issue: `/command-attachment attach-block-one 0 0 0 --interactType STEP_ON tppos --targetPlayer %player:name% --dimension minecraft:the_end --x 0 --y 66 --z 0 %player:name%`.
     """)
 

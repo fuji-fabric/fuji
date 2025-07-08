@@ -26,12 +26,12 @@ import net.minecraft.text.Text;
     """)
 
 @ColorBox(id = 1751870533687L, color = ColorBox.ColorBlockTypes.TIPS, value = """
-    This module is designed to work with other `chat-related` mods.
+    ◉ This module is designed to work with other `chat-related` mods.
     For example, you use this with `Styled Chat` mod.
     """)
 
 @ColorBox(id = 1751870535947L, color = ColorBox.ColorBlockTypes.TIPS, value = """
-    To define a `chat shortcut` to create a display:
+    ◉ Define a `chat shortcut` to create a display
     You can use `chat.replace` module, to define chat shortcut.
     The shortcut can be `"item"` for example.
     Then you can type `"item"` in chat.

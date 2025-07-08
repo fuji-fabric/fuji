@@ -37,17 +37,17 @@ import java.util.function.Supplier;
     """)
 
 @ColorBox(id = 1751897087633L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    To ban the placement of TNT block:
+    ◉ To ban the placement of TNT block:
     Just add the `minecraft:tnt` into the `place_block` list.
     """)
 
 @ColorBox(id = 1751897135695L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    To ban the placement of TNT block, but allow a specific player to use it.
+    ◉ To ban the placement of TNT block, but allow a specific player to use it.
     Grant a `bypass permission` for that player: `/lp user \\<player\\> permission set fuji.anti_build.place_block.bypass.minecraft:tnt`.
     """)
 
 @ColorBox(id = 1751897263346L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    Dis-allow to place any blocks.
+    ◉ Dis-allow to place any blocks.
     Use `*` as the wildcard character, put it into the `place_block` list.
     """)
 

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ColorBox(id = 1751870436910L, color = ColorBox.ColorBlockTypes.TIPS, value = """
-    How to use fuji?
+    ◉ How to use fuji?
 
     All `modules` are `disabled` by default.
     You can only enable the `interested modules`.
@@ -19,7 +19,7 @@ import java.util.List;
     """)
 
 @ColorBox(id = 1751870440489L, color = ColorBox.ColorBlockTypes.NOTE, value = """
-    Does fuji support the `hot reload`?
+    ◉ Does fuji support the `hot reload`?
 
     Yes, fuji does support to `hot reload` the `files` from a `enabled module`.
     To do that, just issue `/fuji reload`.
@@ -30,7 +30,6 @@ import java.util.List;
     1. For flexible, you can `disable any module` you don't like.
     2. If any other mods conflicts with `a module`, you can just `disable that module`.
     3. You only enable the `interested modules`, and there is no performance paying for `disabled module`.
-
     """)
 
 
