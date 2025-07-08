@@ -152,6 +152,7 @@
   "fuji.inspect.fuji_commands.gui.title": "<blue>Fuji Commands",
   "fuji.inspect.jobs.gui.item.name": "<yellow>Job",
   "fuji.inspect.jobs.gui.title": "<yellow>Jobs",
+  "fuji.inspect.languages.gui.title": "<blue>Languages",
   "fuji.inspect.module_details.gui.title": "<blue>Module Details: <yellow>%s",
   "fuji.inspect.modules.gui.title": "<blue>Modules",
   "fuji.inspect.permissions_and_metas.gui.item.name": "<#A294F9>%s",
@@ -213,6 +214,12 @@
   "kit.gui.editor.kit.title": "<blue>Kit %s",
   "kit.gui.editor.title": "<blue>Kit Editor",
   "kit.kit.empty": "<red>The kit is empty",
+  "language": "<dark_green>Language",
+  "language.code": "<yellow>Language Code: `%s`",
+  "language.is_default": "<yellow>Is Default: `%s`",
+  "language.is_supported": "<yellow>Is Supported: `%s`",
+  "language.name": "<yellow>%s",
+  "language.number_of_users": "<blue>Used by players: `%d`",
   "line.separator": "<grey>----------------------------------------",
   "minecraft:overworld": "overworld",
   "minecraft:the_end": "the end",
@@ -243,6 +250,7 @@
   "pitch": "<gold>Pitch: %.2f",
   "placeholder.list.gui.title": "<pink>Placeholder",
   "placeholder.pos": "<#2596be>[%d %d %d, %s]",
+  "player.name": "<dark_green>%s",
   "player.not_found": "<red>Player not found",
   "player.target_player.name": "<blue>Target player: `%s`",
   "player.unknown_player": "<red>Unknown player in server user cache.",
@@ -1112,5 +1120,6 @@
   "docstring.1752000399374": "To `read` the `warnings` of a `player`.",
   "docstring.1752000453811": "To `update` the `warnings` of a `player`.",
   "docstring.1752000473509": "To `delete` an existed `warning` of a `player`.",
-  "docstring.1752000488085": "When a `player` with `warnings` join/leave the server, you will get notified."
+  "docstring.1752000488085": "When a `player` with `warnings` join/leave the server, you will get notified.",
+  "docstring.1752003106392": "Inspect loaded language files by fuji."
 }

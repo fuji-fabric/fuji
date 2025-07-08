@@ -54,6 +54,17 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
             });
         entities.add( userGuideButton.build());
 
+        /* Place languages button. */
+        GuiElementBuilder languagesButton = new GuiElementBuilder()
+            .setItem(Items.CARTOGRAPHY_TABLE)
+            .setName(TextHelper.getTextByKey(player, "language"))
+            .setCallback(() -> {
+                LanguagesInspectionGui
+                    .inspectAll(gui.getBackendGui(), player)
+                    .open();
+            });
+        entities.add( languagesButton.build());
+
         /* Place reload button. */
         GuiElementBuilder reloadButton = new GuiElementBuilder()
             .setItem(Items.TARGET)
@@ -76,8 +87,6 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         entities.add(debugButton.build());
 
         /* Fill the first line. */
-        // NOTE: yy4p
-        entities.add(GuiHelper.makeSlotPlaceholderButton());
         entities.add(GuiHelper.makeSlotPlaceholderButton());
         entities.add(GuiHelper.makeSlotPlaceholderButton());
         entities.add(GuiHelper.makeSlotPlaceholderButton());

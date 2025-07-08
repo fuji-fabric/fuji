@@ -27,6 +27,7 @@ import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 
 import io.github.sakurawald.fuji.core.document.structure.DocString;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.SubtitleS2CPacket;
 import net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket;
@@ -41,7 +42,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -204,8 +204,8 @@ public class TextHelper {
     @ForDeveloper("The functions used to load language file from storage into memory, and resolve the suitable language json for given audience.")
     public static class Loader {
         private static final String LANGUAGE_FILE_PATH = "lang/";
-        private static final Map<String, String> PLAYER_2_LANGUAGE_CODE = new HashMap<>();
-        private static final Map<String, JsonObject> LANGUAGE_CODE_2_LANGUAGE_JSON = new HashMap<>();
+        public static final Map<String, String> PLAYER_2_LANGUAGE_CODE = new ConcurrentHashMap<>();
+        public static final Map<String, JsonObject> LANGUAGE_CODE_2_LANGUAGE_JSON = new ConcurrentHashMap<>();
         private static final JsonObject UNSUPPORTED_LANGUAGE_MARKER = new JsonObject();
 
         private static void writeDefaultLanguageFilesIfAbsent() {
@@ -320,7 +320,7 @@ public class TextHelper {
             return unifyLanguageCode(Configs.MAIN_CONTROL_CONFIG.model().core.language.default_language);
         }
 
-        private static boolean isDefaultLanguageCode(String languageCode) {
+        public static boolean isDefaultLanguageCode(String languageCode) {
             return languageCode.equals(getDefaultLanguageCode());
         }
 
@@ -357,6 +357,10 @@ public class TextHelper {
 
             return sortedJson;
         }
+
+        public static boolean isUnSupportedLanguageJsonObject(JsonObject languageJson) {
+            return languageJson == UNSUPPORTED_LANGUAGE_MARKER;
+        }
     }
 
     @ForDeveloper("The functions to map language key into language value for specified language code.")
@@ -368,7 +372,7 @@ public class TextHelper {
 
             /* If the client-side language is not supported in server side, fallback to specified default language. */
             String defaultLanguageCode = Loader.getDefaultLanguageCode();
-            if (languageJson == Loader.UNSUPPORTED_LANGUAGE_MARKER) {
+            if (Loader.isUnSupportedLanguageJsonObject(languageJson)) {
                 languageCode = defaultLanguageCode;
                 languageJson = Loader.getLanguageJsonObject(languageCode);
             }

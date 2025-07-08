@@ -7,6 +7,7 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import eu.pb4.sgui.api.gui.layered.LayeredGui;
 import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -28,6 +29,23 @@ public class GuiHelper {
         for (int i = 0; i < gui.getSize(); i++) {
             gui.setSlot(i, itemStack);
         }
+    }
+
+    public static List<GuiElementInterface> fillUntilEndOfLine(int filledSlotsSize) {
+        final int LINE_SIZE = 9;
+
+        int remainder = filledSlotsSize % LINE_SIZE;
+        if (remainder == 0) {
+            return List.of();
+        }
+
+        List<GuiElementInterface> elements = new ArrayList<>();
+        int unfilledSlotsSize = LINE_SIZE - remainder;
+        for (int i = 0; i < unfilledSlotsSize; i++) {
+            elements.add(makeSlotPlaceholderButton());
+        }
+
+        return elements;
     }
 
     public static boolean isInvalidSlotInsidePlayerInventory(int index) {

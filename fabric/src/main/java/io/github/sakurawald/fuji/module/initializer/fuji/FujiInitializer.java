@@ -15,6 +15,7 @@ import io.github.sakurawald.fuji.module.initializer.fuji.gui.AboutGui;
 import io.github.sakurawald.fuji.module.initializer.fuji.gui.ArgumentTypesInspectionGui;
 import io.github.sakurawald.fuji.module.initializer.fuji.gui.ConfigurationsInspectionGui;
 import io.github.sakurawald.fuji.module.initializer.fuji.gui.JobsInspectionGui;
+import io.github.sakurawald.fuji.module.initializer.fuji.gui.LanguagesInspectionGui;
 import io.github.sakurawald.fuji.module.initializer.fuji.gui.ModulesInspectionGui;
 import io.github.sakurawald.fuji.module.initializer.fuji.gui.PermissionsAndMetasInspectionGui;
 import io.github.sakurawald.fuji.module.initializer.fuji.gui.PlaceholdersInspectionGui;
@@ -171,6 +172,15 @@ public class FujiInitializer extends ModuleInitializer {
     @CommandNode("inspect jobs")
     private static int $inspectJobs(@CommandSource ServerPlayerEntity player) {
         JobsInspectionGui
+            .inspectAll(null, player)
+            .open();
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document(id = 1752003106392L, value = "Inspect loaded language files by fuji.")
+    @CommandNode("inspect languages")
+    private static int $inspectLanguages(@CommandSource ServerPlayerEntity player) {
+        LanguagesInspectionGui
             .inspectAll(null, player)
             .open();
         return CommandHelper.Return.SUCCESS;
