@@ -59,6 +59,20 @@ import java.util.stream.Stream;
     Bundle:
     1. `run as player %player:name% send-message $player-arg \\<red\\>You are warned: $greedy-arg`
     """)
+@ColorBox(id = 1751983696805L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Transform the form of a command. (List 1)
+    - `/blocknbt` -> `/data get block`
+    - `/entitynbt` -> `/data get entity`
+    - `/gm`, `/gms` and `/gmc` -> `/gamemode`
+    - `/findbiome` -> `/locate biome`
+    - `/flyspeed` -> `/attribute \\<player\\> minecraft:generic.flying_speed`
+    - `/walkspeed` -> `/attribute \\<player\\> minecraft:movement_speed`
+    - `/maxhealth` -> `/attribute \\<player\\> minecraft:generic.max_health`
+    - `/groundclean` -> `/kill @e[type=...]`
+    - `/spawnmob` -> `/summon`
+    - `/shoot` -> `/summon` with motion
+    - `/smite` and `/thunder` -> `/summon minecraft:lighting_bolt`
+    """)
 
 
 @CommandNode("command-bundle")

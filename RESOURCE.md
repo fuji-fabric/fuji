@@ -12,6 +12,7 @@
 
 # Server-side only.
 - https://vanillatweaks.net/picker/datapacks/
+- https://crafting.thedestruc7i0n.ca/
 
 # Reading things
 - https://projectarc.co.uk/sw-engineering/i18n-is-hard-in-so-many-ways

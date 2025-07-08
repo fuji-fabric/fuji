@@ -6,69 +6,38 @@ A \ttt{permission} is used to decide whether \ttt{a player} can do something or 
 \LevelOne{Types}
 To make the discussion clearer, we define the types of \ttt{permission} as follows:
 \begin{description}
-    \item [level permission] A permission level is a non-negative number used in vanilla minecraft.
+    \item [level permission] A permission level is a non-negative number used in vanilla Minecraft.
     The higher number means the higher authority.
-    \item[string permission] Usually, a \ttt{string permission} is introduced by a \ttt{permission plugin}, such as \ttt{luckperms}.
+    \item[string permission] Usually, a \ttt{string permission} is introduced by a \ttt{permission plugin}, such as \ttt{luckperms} mod.
 \end{description}
 \clearpage
 
 \LevelOne{What is the permission system used by fuji?}
-
 \LevelTwo{Explanation}
-Fuji use the mojang's \ttt{vanilla permission system}, which is based on \ttt{level permission}.\\
+Fuji use the mojang's \ttt{vanilla Minecraft permission system}, which is based on \ttt{level permission}.\\
 \\
 As a convention, most of the commands registered by fuji, requires \ttt{level permission} to be \ttt{0} to use.
 Only a few of the commands require the \ttt{level permission} to be \ttt{4} to use.
 
+\begin{tips}{Modify the default required level permission to be 4 for all fuji commands}
+   You may want to prohibit the player from using any commands registered by fuji.
+   And then assign the proper permission for each command one by one.
+   In this case, you can set the \str{all\_commands\_require\_level\_4\_permission\_to\_use\_by\_default} in \mainconfig file to be \tbf{true}.
+\end{tips}
+
 \LevelTwo{Set a string permission for a command}
 By default, fuji only use the \ttt{level permission} as \ttt{the requirement of} a command.
-However, if you want to use \ttt{string permission} for a \ttt{command}, you can use~\nameref{ch:command_permission} module, which is used to \ttt{override} the requirement of an existing command.
+However, if you want to use \ttt{string permission} for a \ttt{command}, you can use \tbf{command\_permission} module, to provide luckperms permissions for each command.
 
-\begin{example}{Allow players to use /seed command}
-    The command \cmd{/seed} provided by mojang requires \ttt{level permission} to be \ttt{3} to use.
-    If you want to allow players to use \cmd{/seed} command, but you don't want to grant \ttt{op} for them.
-    Then in this situation, you can grant the \ttt{string permission} for them: \cmd{/lp group default permission set fuji.permission.seed true}, which means that: set the requirement of command \cmd{/seed} to string permission \ttt{fuji.permission.seed}.
-\end{example}
-
-\begin{example}{Dis-allow players to use /list command}
-    The command \cmd{/list} provided by mojang required \ttt{level permission} to be \ttt{0} to use.
-    If you want to dis-allow players to use \cmd{/list} command, but because this command requires no \ttt{string permission} to use, so it's impossible to ban it via \ttt{luckperms}.
-    In this situation, you can grant a \ttt{string permission}: \cmd{/lp group default permission set fuji.permission.list false} for them, which means that: set the requirement of command \cmd{/list} to string permission \ttt{fuji.permission.list}.
-\end{example}
-
-\begin {example}{Unset the override of requirement of the command}
-    To undo the operation in \ttt{the first example}, just issue \cmd{/lp group default permission unset fuji.permission.seed}
-\end{example}
-
-\LevelOne{Getting Started}
-Ensure you have enabled the ~\nameref{ch:command_permission} module in \mainconfig file, and re-start your server to apply the change.
-
-\begin{tips}{Query the required permission for a command string}
-    Let's say you want to grant the \tbf{proper permision} for \cmd{/back} command, so that your players can use it.
-    Here comes the problem, what is the proper permission for this command?
-    Okay, don't worry, just issue the \cmd{/command-permission describe back} command, and fuji will describe it.
+\begin{tips}{Query all registered string permissions.}
+    Issue \cmd{/fuji inspect permissions-and-metas} command, to see all the registered permissions.
 \end{tips}
 
-\begin{tips}{Setup multiple permissions at one shot}
-    A permission node may have children permissions.
-    You may want to grant one permission and all of its children permission.
-    Of course, the luckperms allows you to grant multiple permissions at one shot.
-    See more in~\nameref{ch:command_permission}.
-\end{tips}
-
-\LevelOne{Advanced Usage}
-\LevelTwo{The string permission is calculated with a context}
-The luckperms mod provides the \ttt{context} to calculate a string permission.
-A context is a predicate which accepts a player, and output a boolean value according to its conditions.
-Luckperms pre-define some useful context like:
-\begin{description}
-    \item[world context]: the player should in a specified world, so that this string permission is valid.
-    \item[temporal context]: current time should not exceed the expiration time, so that this string permission is valid.
-\end{description}
 
 
 \LevelOne{Reference}
 \begin{enumerate}
     \item \url{https://minecraft.fandom.com/wiki/Permission\_level}
+    \item \url{https://luckperms.net/wiki/Home}
 \end{enumerate}
 

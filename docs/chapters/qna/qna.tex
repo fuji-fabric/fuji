@@ -1,17 +1,18 @@
 \LevelZero{Q\&A}\label{ch:q&a}
 
 
-\LevelOne{Where is the configuration files?}
+\LevelOne{Where is the configuration files of fuji?}
 As a convention, all the files are placed in \ttt{config/fuji/} directory.
 
 
 \LevelOne{What is .json file?}
-A json file is a text file, whose name normally ends with \tbf{.json}.
+A json file is a text file, whose file name normally ends with \tbf{.json}.
 
 
 \LevelOne{How can I edit a configuration file?}
-To ensure the \ttt{readable} and \ttt{transparent}, most of the files are saved as \ttt{pure text format}.
+To ensure the \ttt{readibility} and \ttt{compatibility}, most of the files are saved as \ttt{pure text format}.
 You can open them with a \ttt{text editor}.
+Remember to issue \cmd{/fuji reload} command to apply your modification.
 
 \begin{tips}{Use a moderen text editor.}
     Some files may have a large number of lines, so it's highly recommended to use a \ttt{modern} text editor, which can highlight symbols and reveal the structure of the file, such as:
@@ -32,34 +33,36 @@ To open such a file, you need to use a \ttt{NBT Editor}, such as \ttt{NBTExplore
 
 \LevelOne{How to update fuji to a new version?}
 
-\LevelTwo{Backup the data}
-Back up the \ttt{config/fuji} directory.
-
-\LevelTwo{Test the new version in your test-environment}
-Put the new version of fuji into \ttt{mods/} directory, start the server, and adjust the configuration to what you want.
+Please follow the steps:
+\begin{description}
+    \item[1. Backup the data] {Back up the \ttt{config/fuji} directory.}
+    \item[2. Test the new version in your test-environment] {Put the new version of fuji into \ttt{mods/} directory, start the server, and adjust the configuration to your desired effect.}
+    \item[3. Apply the changes to production-environment] {Now, it's ready to apply the changes to your production-environment.}
+\end{description}
 
 \begin{warn}{Don't test new changes directly in your production-environment}
-    It's highly recommended to setup a test-environment for a network-maintainer, so that you can test and tweak installed mods into what you want, and avoid un-expected situations.
+    It's highly recommended to setup a test-environment for a network-maintainer, so that you can test and tweak installed mods into the desired effect, and avoid un-expected situations.
 \end{warn}
-
-\LevelTwo{Apply the changes to production-environment}
-Now, it's ready to apply the changes to your production-environment.
 
 
 \LevelOne{Fuji conflits with one of my mods.}
-You can \ttt{disable} the \ttt{conflicting module}.
-If possible, create an issue at \issueurl, so that we can solve this later.
+You can \ttt{disable} that \ttt{conflicting module} and re-start your server.
+If possible, create an issue at \issueurl, so that we can solve it later.
 
 \LevelOne{Can I ask the forge or neoforge support?}
-We have no plan for forge or neoforge platform.However, you can try running this mod via \tbf{sinytra-connector} mod.
-It's tested the mod works in the following environment (105/105 modules works):
+We have no plan for forge or neoforge platform.
+However, you can try running this mod via \tbf{sinytra-connector} mod.
+It's tested in the following environment (105/105 modules works):
 \begin{shcode}
-    Loader: NeoForge v21.1.73:server for Minecraft 1.21.1
+    Loader: Forge mod loading, version 47.4.0, for MC 1.20.1 with MCP 20230612.114412
     Mods:
-    - connector-2.0.0-beta.3+1.21.1-full.jar
-    - forgified-fabric-api-0.104.0+2.0.15+1.21.1.jar
-    - fuji-4.3.0-5518b05201-mc1.21.jar
+    - connector-1.0.0-beta.46+1.20.1
+    - forgified-fabric-api-0.92.2+1.11.12+1.20.1
+    - fuji-fabric-7.4.0-b93ba03936-mc1.20.1
 \end{shcode}
+
+If you encounter issues in forge or neoforge environment, you can still open an issue in github.
+We provide the support for forge and neoforge, if it's possible and handy.
 
 \LevelOne{How can I report bugs or suggest new features?}
 You can create an issue at \issueurl

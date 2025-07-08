@@ -19,6 +19,7 @@ import net.minecraft.advancement.AdvancementFrame;
 import net.minecraft.advancement.AdvancementProgress;
 
 #if MC_VER <= MC_1_20_1
+import java.util.HashMap;
 #elif MC_VER > MC_1_20_1
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.AdvancementRequirements;

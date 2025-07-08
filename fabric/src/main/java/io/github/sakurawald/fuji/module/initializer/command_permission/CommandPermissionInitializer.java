@@ -44,7 +44,7 @@ import java.util.function.Predicate;
     This module provides the `luckperms permissions` for `all commands`.
     """)
 @ColorBox(id = 1751970566759L, color = ColorBox.ColorBlockTypes.NOTE, value = """
-    How it works?
+    ◉ How it works?
     The vanilla Minecraft use a command system, named `brigadier command system`.
     All `commands` are `registered`, `parsed` and `executed` by this system.
     In the design of this command system, all commands are built into a `tree structure`.
@@ -109,6 +109,42 @@ import java.util.function.Predicate;
     You can use `command_bundle` to create a `user-level` command, to wrap the `/gamemode` command.
     Like, create a new command named `/switch-to-survival`, as a wrapper command for `/gamemode` command.
     """)
+@ColorBox(id = 1751990106002L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Allow players to use `/seed` command.
+    The `/seed` command provided by Mojang, requires `level permission` to be `3` to use.
+    If you want to `allow` players to use `/seed` command, but you don't want to grant `op` for them.
+    Then, you can `set` a `positive string permission` for them.
+    Issue `/lp group default permission set fuji.permission.seed true`.
+    It says `allow` the players to use `/seed` command.
+
+    Issue `/command-permission describe seed` command, to see how it works.
+    """)
+@ColorBox(id = 1751990203999L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Dis-allow players to use `/list` command.
+    The `/list` command provided by Mojang, requires `level permission` to be `0` to use.
+    If you want to `dis-allow` players to use `/list` command.
+    But because this command requires no string permission to use.
+    So it's impossible to ban it via `luckperms` mod.
+
+    In this case, you `can` set a `negative string permission` for them.
+    Issue `/lp group default permission set fuji.permission.list false`.
+    It says `dis-allow` the players to use `/list` command.
+
+    Issue `/command-permission describe list` command, to see how it works.
+    """)
+@ColorBox(id = 1751990343803L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Unset the override of requirement of a specific command.
+    To `undo` the operation in the `/seed` example.
+    You can `unset` the assigned permission before.
+    Issue `/lp group default permission unset fuji.permission.seed` command, to unset the assign permission.
+    """)
+@ColorBox(id = 1751990466823L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ Advanced Usage
+    The `luckperms` mod have a feature named `permission context`.
+    Which allows you to specify the `per-dimension permission` and `temporary permission`.
+    If you are interested, see the details in their official wiki.
+    """)
+
 
 
 @CommandNode("command-permission")
