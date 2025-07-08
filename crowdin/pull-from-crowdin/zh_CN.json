@@ -78,7 +78,7 @@
   "confirm": "<#FFA1F5>确认",
   "contact.click.prompt": "<blue>点此前往",
   "contact.entry": "<orange>◉ %s -> %s",
-  "contact.name": "",
+  "contact.name": "<dark_green>%s",
   "contact.visit.entry.is_not_url": "<orange>◉ %s -> %s <hover:show_text:'<green>复制到剪切板'><click:copy_to_clipboard:'%s'><green>[复制]</click></hover>",
   "contact.visit.entry.is_url": "<orange>◉ %s -> %s <hover:show_text:'<green>打开这个链接'><click:open_url:'%s'><blue>[打开]</click></hover>",
   "contact.visit.name": "<dark_green>%s",
