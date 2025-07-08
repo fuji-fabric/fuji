@@ -9,6 +9,7 @@
   - feature: if the `language value` starts with `[send-sub-title]`, then this `language key` is sending via the `sub title`.
   - feature: if the `language value` starts with `[suppress-sending]`, then the sending of this `language key` will be cancelled.
 - [core] feature: enhance the debug messages for language system. (Make the debug easier.)
+- [core] feature: now will `sort` the language keys inside language files automatically.
 - [fuji] feature: increase the color contrast of `colored candles`. (UX improvement)
 - [fuji] feature: sort the `colored candles` by its `color`. (UX improvement)
 - [command_meta.when_online] fix: should display the raw command when there are style tags inside the command in `/when-online list` GUI.

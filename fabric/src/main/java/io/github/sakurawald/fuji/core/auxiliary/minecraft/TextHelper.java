@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.context.CommandContext;
@@ -24,6 +25,8 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ResourceConfigurationH
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 
+import io.github.sakurawald.fuji.core.document.structure.DocString;
+import java.util.TreeMap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.SubtitleS2CPacket;
 import net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket;
@@ -222,10 +225,15 @@ public class TextHelper {
 
             try {
                 String languageFileName = languageCode + ".json";
-                ResourceConfigurationHandler resourceConfigurationHandler = new ResourceConfigurationHandler(LANGUAGE_FILE_PATH + languageFileName);
-                resourceConfigurationHandler.readStorage();
+                ResourceConfigurationHandler languageFileHandler = new ResourceConfigurationHandler(LANGUAGE_FILE_PATH + languageFileName) {
+                    @Override
+                    public void beforeWriteStorage() {
+                        this.model = makeSortedLanguageJsonObject((JsonObject) this.model);
+                    }
+                };
+                languageFileHandler.readStorage();
 
-                LANGUAGE_CODE_2_LANGUAGE_JSON.put(languageCode, resourceConfigurationHandler.model().getAsJsonObject());
+                LANGUAGE_CODE_2_LANGUAGE_JSON.put(languageCode, languageFileHandler.model().getAsJsonObject());
                 LogUtil.info("Language {} loaded.", languageCode);
             } catch (Exception e) {
                 LANGUAGE_CODE_2_LANGUAGE_JSON.put(languageCode, UNSUPPORTED_LANGUAGE_MARKER);
@@ -306,6 +314,35 @@ public class TextHelper {
             return getDefaultLanguageCode().equalsIgnoreCase("en_US");
         }
 
+        public static JsonObject makeSortedLanguageJsonObject(@NotNull JsonObject original) {
+            Map<String, JsonElement> sortedMap = new TreeMap<>((a, b) -> {
+                boolean aIsDocString = a.startsWith(DocString.DOC_STRING_KEY_PREFIX);
+                boolean bIsDocString = b.startsWith(DocString.DOC_STRING_KEY_PREFIX);
+
+                if (aIsDocString && !bIsDocString) return +1;
+                if (!aIsDocString && bIsDocString) return -1;
+
+                //noinspection ConstantValue
+                if (aIsDocString && bIsDocString) {
+                    long aId = DocString.parseDocStringId(a);
+                    long bId = DocString.parseDocStringId(b);
+                    return Long.compare(aId, bId);
+                }
+
+                return a.compareTo(b);
+            });
+
+            for (Map.Entry<String, JsonElement> entry : original.entrySet()) {
+                sortedMap.put(entry.getKey(), entry.getValue());
+            }
+
+            JsonObject sortedJson = new JsonObject();
+            for (Map.Entry<String, JsonElement> entry : sortedMap.entrySet()) {
+                sortedJson.add(entry.getKey(), entry.getValue());
+            }
+
+            return sortedJson;
+        }
     }
 
     @ForDeveloper("The functions to map language key into language value for specified language code.")

@@ -1,7 +1,6 @@
 package tests;
 
 import auxiliary.TestUtil;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.classgraph.AnnotationInfo;
 import io.github.classgraph.AnnotationInfoList;
@@ -11,6 +10,7 @@ import io.github.classgraph.MethodParameterInfo;
 import io.github.classgraph.ScanResult;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.SneakyThrows;
@@ -83,7 +82,7 @@ public class GenerateDocStringTest {
         LogUtil.info("Write {} doc strings into the default language file.", docStringList.size());
 
         /* Sort the json. */
-        defaultLanguageJson = makeSortedLanguageJsonObject(defaultLanguageJson);
+        defaultLanguageJson = TextHelper.Loader.makeSortedLanguageJsonObject(defaultLanguageJson);
 
         /* Override the default language file. */
         String jsonString = BaseConfigurationHandler.getGson().toJson(defaultLanguageJson);
@@ -231,36 +230,6 @@ public class GenerateDocStringTest {
 
         /* Return the result. */
         return targetAnnotationInstanceAnywhere;
-    }
-
-    private static JsonObject makeSortedLanguageJsonObject(@NotNull JsonObject original) {
-        Map<String, JsonElement> sortedMap = new TreeMap<>((a, b) -> {
-            boolean aIsDocString = a.startsWith(DocString.DOC_STRING_KEY_PREFIX);
-            boolean bIsDocString = b.startsWith(DocString.DOC_STRING_KEY_PREFIX);
-
-            if (aIsDocString && !bIsDocString) return +1;
-            if (!aIsDocString && bIsDocString) return -1;
-
-            //noinspection ConstantValue
-            if (aIsDocString && bIsDocString) {
-                long aId = DocString.parseDocStringId(a);
-                long bId = DocString.parseDocStringId(b);
-                return Long.compare(aId, bId);
-            }
-
-            return a.compareTo(b);
-        });
-
-        for (Map.Entry<String, JsonElement> entry : original.entrySet()) {
-            sortedMap.put(entry.getKey(), entry.getValue());
-        }
-
-        JsonObject sortedJson = new JsonObject();
-        for (Map.Entry<String, JsonElement> entry : sortedMap.entrySet()) {
-            sortedJson.add(entry.getKey(), entry.getValue());
-        }
-
-        return sortedJson;
     }
 
 }
