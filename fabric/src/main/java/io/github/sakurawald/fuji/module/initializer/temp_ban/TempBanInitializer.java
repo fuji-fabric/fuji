@@ -10,6 +10,8 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GameProfileCollection;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.service.date_parser.DateParser;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import net.minecraft.command.EntitySelector;
@@ -23,6 +25,17 @@ import net.minecraft.text.Text;
 
 import java.util.Date;
 import java.util.List;
+
+@Document(id = 1751980813637L, value = """
+    This module provides the `/temp-ban` command.
+    So that you can specify `the duration` for `/ban` command.
+    """)
+@ColorBox(id = 1751980845082L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ All in one example
+    Issue: `/temp-ban player \\<player\\> 1s2m3h4d5w6M7y bad boy`
+    """)
+
+
 
 @CommandNode("temp-ban")
 @CommandRequirement(level = 4)

@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.predicate;
 
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
@@ -20,8 +21,23 @@ import net.minecraft.world.GameMode;
 import java.util.Optional;
 
 @Document(id = 1751826497994L, value = """
-    Provides `predicate` commands, suffix with `?`.
+    Provides `predicate` commands, which suffix with `?`.
     """)
+
+@ColorBox(id = 1751978705157L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ How it works?
+    A `predicate command` will returns `SUCCESS` if `true`, and `FAILED` if `false`.
+    It relies on the `return value of command` in vanilla Minecraft.
+    See https://minecraft.fandom.com/wiki/Commands/return
+
+    Actually, you can also use the `predicate command` with `command block`.
+    """)
+@ColorBox(id = 1751978789271L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Test a condition, and then run a command if success.
+    Issue: `/run as player \\<player\\> chain has-perm? %player:name% 4 chain say value is true`
+    """)
+
+
 @CommandRequirement(level = 4)
 public class PredicateInitializer extends ModuleInitializer {
 

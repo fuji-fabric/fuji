@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.placeholder;
 import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
 import io.github.sakurawald.fuji.Fuji;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
@@ -44,6 +45,18 @@ import java.util.regex.Pattern;
 @Document(id = 1751826512394L, value = """
     Provides extra placeholders for `Text Placeholder API` mod.
     """)
+@ColorBox(id = 1751978623242L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ Use `placeholder` in `language file`
+    Actually, you can write the `placeholder` in the `language file`.
+    The `contextual player` will be used to parse the placeholders.
+    """)
+@ColorBox(id = 1751978671933L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ Install more mods to provide extra placeholders.
+    See https://placeholders.pb4.eu/user/mod-placeholders/
+    """)
+
+
+
 @CommandNode("placeholder")
 @CommandRequirement(level = 4)
 public class PlaceholderInitializer extends ModuleInitializer {

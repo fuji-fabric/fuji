@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.motd;
 
 import com.google.common.base.Preconditions;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
@@ -27,6 +28,15 @@ import java.util.stream.Stream;
 
 @Document(id = 1751826866342L, value = """
     Customize the MOTD of the server.
+    """)
+@ColorBox(id = 1751978213888L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Configure server icons.
+    You can put `64x64 pixels .png image file` into the directory `config/fuji/modules/motd/icon` dir.
+    The module will pick up a random image as the icon of the server.
+    To respond the server status request.
+    """)
+@ColorBox(id = 1751978273696L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    Online MOTD editor: https://colorize.fun/en/minecraft
     """)
 public class MotdInitializer extends ModuleInitializer {
 

@@ -36,6 +36,12 @@ import net.minecraft.text.Text;
 
     """)
 
+@Document(id = 1751980891153L, value = """
+    This module is only used for `development`.
+    If you are a developer, you can try new things here.
+    You don't need to enable this module in production environment.
+    It does not harm, but also not useful.
+    """)
 @CommandNode("tester")
 @CommandRequirement(level = 4)
 public class TesterInitializer extends ModuleInitializer {
@@ -50,7 +56,6 @@ public class TesterInitializer extends ModuleInitializer {
         TextHelper.sendTextByKey(player, "gui.search.title", "Hello", "Second");
         TextHelper.sendTextByKey(player, "gui.search.title" );
 
-        "Value = %s".formatted();
 
         return 0;
     }

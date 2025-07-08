@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.tab;
 
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
@@ -18,6 +19,14 @@ import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826913154L, value = """
     Customize the TAB list.
+    """)
+@ColorBox(id = 1751980365809L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ I want a complex `tab` list.
+    If you want to design a complex and advanced `tab` list.
+    I would recommend to use https://github.com/NEZNAMY/TAB
+
+    ◉ I want to customize the `scoreboard`.
+    Use the mod mentioned above. It works perfect.
     """)
 public class TabListInitializer extends ModuleInitializer {
 

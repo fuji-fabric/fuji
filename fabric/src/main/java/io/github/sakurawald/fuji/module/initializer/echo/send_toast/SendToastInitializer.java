@@ -9,6 +9,8 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementCriterion;
@@ -40,13 +42,19 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-
+@Document(id = 1751976160832L, value = """
+    This module provides `/send-toast` command.
+    To send the `text` as `toast` to a specified player.
+    """)
+@ColorBox(id = 1751976364671L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Send a toast to a player.
+    Issue: `/send-toast \\<player\\> --icon minecraft:golden_carrot \\<rb\\>eat this carrot`
+    """)
 public class SendToastInitializer extends ModuleInitializer {
 
     private static final String IMPOSSIBLE = "impossible";

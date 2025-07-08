@@ -10,6 +10,8 @@ import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.StringList;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarTicket;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -21,10 +23,21 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import java.util.Collections;
 import java.util.Optional;
 
-@CommandRequirement(level = 4)
+@Document(id = 1751976322975L, value = """
+    This module provides `/send-bossbar` command.
+    To send a `text` as the `bossbar` to a specified player.
+    """)
+@ColorBox(id = 1751976574472L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ A simple example.
+    Issue: `/send-bossbar \\<player\\> Hello World`
+
+    ◉ All in one example.
+    Issue: `/send-bossbar \\<player\\> --stepType BACKWARD --totalMs 5000 --color PURPLE --style NOTCHED_6 --notifyMeOnComplete true --commandList "say the player %player:name% is healed|heal others %player:name%" \\<rb\\>Healing is coming [elapsed_time]/[total_time]/[left_time]`
+    """)
 public class SendBossbarInitializer extends ModuleInitializer {
 
     @CommandNode("send-bossbar")
+    @CommandRequirement(level = 4)
     private static int sendBossbar(@CommandSource ServerCommandSource source
         , ServerPlayerEntity player
         , Optional<Integer> totalMs

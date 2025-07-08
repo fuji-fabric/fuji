@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 @Document(id = 1751827004970L, value = """
-    Allows players to define its home.
+    Allows players to define their homes.
     """)
 public class HomeInitializer extends ModuleInitializer {
 

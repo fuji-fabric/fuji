@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.echo.send_custom;
 
 import eu.pb4.sgui.api.elements.BookElementBuilder;
 import eu.pb4.sgui.api.gui.BookGui;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -24,6 +25,20 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
+
+@Document(id = 1751976654799L, value = """
+    This module provides `/send-custom` command.
+    To define `custom text` and auto-page them.
+    And then send it `as message` or `as book` to a specified player.
+    """)
+@ColorBox(id = 1751976733551L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Send a custom text as a book.
+    Issue: `/send-custom as-book \\<player\\> guide --author "alice" --title "<rb>The Guide" --giveBook true --openBook true`
+
+    ◉ Send a custom text as a message.
+    Issue: `/send-custom as-message \\<player\\> guide`
+    """)
+
 
 @CommandNode("send-custom")
 @CommandRequirement(level = 4)

@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.works;
 
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
@@ -19,6 +20,22 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 @Document(id = 1751825536620L, value = """
     Provides a `bill-board`, for `players` to post and share their works.
+    """)
+@ColorBox(id = 1751981616732L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ The difference between `non-production work` and `production work`.
+    For a `production work`, we provide the `production sample` to count the `hopper` and `minecart-hopper`.
+    """)
+@ColorBox(id = 1751981677001L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ What is the `sample` in a `production work`?
+    It's a counter for `hopper` and `minecart-hopper`.
+    It will counts the `rate of items transferred` in defined sample duration.
+    For example, you can use it to count how many `bone`, `string` and `coal` is transferred during the sample duration.
+
+    It's something like the `hopper counter` in `carpet` mod.
+    You can use both of them at the same time.
+
+    The `hopper counter` provided by `carpet` mod will destroy the output item.
+    But the hopper counter provided by this module will not.
     """)
 public class WorksInitializer extends ModuleInitializer {
 

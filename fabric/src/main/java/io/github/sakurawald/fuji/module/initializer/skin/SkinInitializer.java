@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -31,6 +32,22 @@ import java.util.function.Supplier;
 @Document(id = 1751826807167L, value = """
     Customize the skins of players.
     """)
+@ColorBox(id = 1751979120689L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Set a skin from mojang
+    Issue: `/skin set mojang dream`
+
+    ◉ Set a skin from custom URL
+    Issue: `/skin set web slim "https://s.namemc.com/i/bd53d152d0cd91d0.png"`
+
+    ◉ Use the default skins defined by the server
+    Issue: `/skin use-default-skins`
+
+    ◉ Use the online skin of your player name.
+    Issue: `/skin use-online-skin`
+    """)
+
+
+
 @CommandNode("skin")
 public class SkinInitializer extends ModuleInitializer {
 

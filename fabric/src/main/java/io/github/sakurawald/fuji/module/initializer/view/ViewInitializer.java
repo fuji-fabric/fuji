@@ -14,8 +14,13 @@ import io.github.sakurawald.fuji.module.initializer.view.gui.InventoryRedirectSc
 import net.minecraft.server.network.ServerPlayerEntity;
 
 @Document(id = 1751824970923L, value = """
-    Allow you to edit player's inventory and enderchest.
+    Allow you to edit a player's `slots`.
+
+    1. Edit an online/offline player's `inventory`.
+    2. Edit an online/offline player's `enderchest`.
     """)
+
+
 @CommandNode("view")
 @CommandRequirement(level = 4)
 public class ViewInitializer extends ModuleInitializer {

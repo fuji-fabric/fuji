@@ -32,10 +32,13 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("UnstableApiUsage")
 @Document(id = 1751826613773L, value = """
     Allows a player to download nearest `region` file.
-    Useful for `redstone` debug.
+
+    It's useful for players to save and debug a `redstone structure`.
+    It simply downloads the `identical` region file used by the server.
+    Simple, no surprises.
+    It's also useful for players to download other's buildings, or their own buildings.
     """)
 public class WorldDownloaderInitializer extends ModuleInitializer {
 

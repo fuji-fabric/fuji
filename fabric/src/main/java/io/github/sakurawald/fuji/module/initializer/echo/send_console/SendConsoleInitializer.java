@@ -5,8 +5,18 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 
+@Document(id = 1751976790532L, value = """
+    This module provides the `/send-console` command.
+    To send a string into the `console`.
+    """)
+@ColorBox(id = 1751976813043L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Send a string to the console.
+    Issue: `/send-console Hello World`
+    """)
 public class SendConsoleInitializer extends ModuleInitializer {
 
     @CommandNode("send-console")

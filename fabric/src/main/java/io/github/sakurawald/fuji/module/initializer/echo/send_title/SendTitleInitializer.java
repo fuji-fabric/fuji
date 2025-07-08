@@ -5,6 +5,8 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -12,6 +14,17 @@ import net.minecraft.text.Text;
 
 import java.util.Optional;
 
+@Document(id = 1751975985135L, value = """
+    This module provides `/send-title` command.
+    To send the `text` as `title` to a specified player.
+    """)
+@ColorBox(id = 1751976416056L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Send a title to a player.
+    Issue: `/send-title \\<player\\> --mainTitle "\\<rainbow\\>Hello" --subTitle "\\<blue\\>World" --fadeInTicks 60 --stayTicks 60 --fadeOutTicks 60`
+
+    ◉ Send a title to online players.
+    Issue: `/foreach send-title %player:name% --mainTitle "\\<rainbow\\>Hello %player:name%"`
+    """)
 public class SendTitleInitializer extends ModuleInitializer {
 
     @CommandNode("send-title")

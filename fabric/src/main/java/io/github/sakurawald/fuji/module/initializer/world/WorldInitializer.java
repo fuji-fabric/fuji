@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.world;
 
 import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.document.annotation.Cite;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -49,6 +50,38 @@ import java.util.Optional;
 @Document(id = 1751826605981L, value = """
     Provides a unified world management.
     """)
+@ColorBox(id = 1751981919874L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ The definition of `world`, `dimension` and `dimension type`.
+    In early Minecraft, a `world` only contains `1 dimension` (The overworld dimension).
+    In modern Minecraft, a `world` can contain `3 or more dimensions`. (The overworld, the end and the nether)
+
+    Each `dimension` has its `dimension type`.
+    The `dimension type` defines the `chunk generator`.
+
+    See also: https://minecraft.wiki/w/Dimension_definition
+    See also: https://minecraft.wiki/w/Dimension_type
+    """)
+@ColorBox(id = 1751982071236L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Create an extra `the_nether` dimension
+    Issue: `/world create my_nether minecraft:the_nether`
+
+    ◉ Delete the extra dimension
+    Issue: `/world delete fuji:my_nether`
+
+    ◉ Reset the extra dimension with random seed.
+    Issue: `/world reset fuji:my_nether`
+
+    ◉ Specify a seed for an extra dimension.
+    1. `/world create my_nether --seed 1234567890 minecraft:the_nether`
+    2. `/world reset --useTheSameSeed true fuji:my_nether`
+    """)
+@ColorBox(id = 1751982158414L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ Make a resource world that reset automatically every day.
+    You can use `command_scheduler` module, to execute `/world reset` command automatically.
+    """)
+
+
+
 @CommandNode("world")
 @CommandRequirement(level = 4)
 public class WorldInitializer extends ModuleInitializer {

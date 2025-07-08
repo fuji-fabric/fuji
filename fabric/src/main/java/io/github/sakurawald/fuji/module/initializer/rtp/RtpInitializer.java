@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.rtp;
 
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
@@ -25,6 +26,24 @@ import java.util.Optional;
 
 @Document(id = 1751826337744L, value = """
     Provides random teleportation.
+    """)
+@ColorBox(id = 1751978911201L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ The feature of this module
+    1. Per-dimension configurable
+    2. Ignore unsafe blocks. (e.g. fluid blocks, powered snow)
+    """)
+@ColorBox(id = 1751978954547L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ Improve the performance of rtp.
+    It's highly recommended to pre generate the world chunks using `chunky` mod.
+    If the `target chunk` is not generated, then we have to generate it while doing the random teleport.
+    To generate a chunk requires about 2 seconds to 10 seconds.
+    Which will slow down the process of `/rtp`.
+    If you pre generates the world chunks, then it will be fast.
+    """)
+@ColorBox(id = 1751979061910L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ Limit the usage of `/rtp` command
+    You can use `command_cooldown` module, to setup a `cooldown` for `/rtp` command.
+    To prevent abuse.
     """)
 public class RtpInitializer extends ModuleInitializer {
 

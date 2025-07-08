@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.top_chunks;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
@@ -35,7 +36,20 @@ import java.util.concurrent.CompletableFuture;
 
 
 @Document(id = 1751826535209L, value = """
-    Analyze all chunks of the server, and find the most lagged chunks.
+    Analyze all loaded chunks of the server, and find the most lagged chunks.
+    """)
+@ColorBox(id = 1751981000562L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ How it works?
+    This module use a `simple statistical method` to estimate the `degree of lag of a chunk`.
+    The method is simple, it simply counts the `entities` and `block entities` inside a `chunk`.
+    And sum up the `score` by the `type` of `entity` or `block entity`.
+
+    It's simple, fast and useful.
+    You can define the score of `a zombie` as `4`.
+    The score of `a bee` as `15`.
+    And the score of `a piston` as `10`.
+    That depends on your case.
+    Simple method often works.
     """)
 public class TopChunksInitializer extends ModuleInitializer {
 

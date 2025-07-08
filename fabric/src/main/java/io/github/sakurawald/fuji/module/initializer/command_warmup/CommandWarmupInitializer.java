@@ -24,8 +24,31 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
     The `command_warmup` module is `before` the command execution.
     The `command_cooldown` module is `after` the command execution.
     """)
+@ColorBox(id = 1751974763151L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Set up the warmup for all commands.
+    Regex: `.+`
 
+    The `.` character in regex means `match any character`.
+    The `+` character in regex means `a quantifier, one or more times`.
+    """)
+@ColorBox(id = 1751974917420L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Set up the warmup for all commands, but specify a special setup for `/back` command.
+    You can just write the `config section` for `/back` command `at the top` of rules.
+    The `rules` are `matched` from up to down, and `the first matched rule` will be used.
+    So, you can just write the `special rule` at the top of other rules.
+    """)
+@ColorBox(id = 1751975050645L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Set up the warmup for all command, except the `/back` command.
+    Regex: `(?!back).+`
 
+    The regex use the `negative lookahead`, to exclude the string that `starts with back`.
+    """)
+@ColorBox(id = 1751975123435L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Share the same warmup setup for multiple commands.
+    Regex: `(back)|(heal)|(feed)`
+
+    You can use the `alternative character |` in `regex`.
+    """)
 public class CommandWarmupInitializer extends ModuleInitializer {
     private static final BaseConfigurationHandler<CommandWarmupConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandWarmupConfigModel.class);
 

@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.nametag;
 
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
@@ -34,6 +35,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Document(id = 1751825018627L, value = """
     Customize the nametag above the players.
+    """)
+@ColorBox(id = 1751978505336L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Set the background of nametag to blue color.
+    Set `background` to `-16776961` (The integer representation of blue color)
+
+    ◉ Set the half transparency for nametag.
+    Set `text_opacity` to `128`.
+
+    ◉ Scale the size of text into double.
+    Set the `x`, `y`, and `z` in `scale` to `2.0`.
     """)
 public class NametagInitializer extends ModuleInitializer {
 

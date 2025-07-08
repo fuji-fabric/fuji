@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.profiler;
 
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
@@ -14,6 +15,11 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @Document(id = 1751824800643L, value = """
     To query the server health status.
     Including: os, vm, cpu, disk, ram, tps, mspt and gc.
+    """)
+@ColorBox(id = 1751978840922L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ Install the `spark` mod to display the `TPS`, `MSPT` and `CPU` info.
+    You need to install the `spark` mod, to provide the `placeholders`.
+    To display `tps`, `mspt` and `cpu` info.
     """)
 public class ProfilerInitializer extends ModuleInitializer {
 

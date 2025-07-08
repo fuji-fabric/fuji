@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.gameplay.multi_obsidian_platform;
 
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
@@ -17,6 +18,10 @@ import java.util.Map;
 
 @Document(id = 1751827009997L, value = """
     This module makes every `ender portal frame` generates its own `obsidian platform`.
+    """)
+@ColorBox(id = 1751976988699L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ All the obsidian platforms are vanilla-respect.
+    That's to say, all the extra obsidian platforms have the `identical` behaviour as the vanilla one, which locates in (100, 50, 0).
     """)
 public class MultiObsidianPlatformInitializer extends ModuleInitializer {
 

@@ -5,9 +5,19 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
+@Document(id = 1751975862231L, value = """
+    This module provides the `/send-message` command.
+    To send the `text` as `message` to a specified player.
+    """)
+@ColorBox(id = 1751976017118L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Say hello to a player
+    Issue: `/send-message \\<player\\> \\<blue\\>Hello %player:name%`
+    """)
 public class SendMessageInitializer extends ModuleInitializer {
 
     @CommandNode("send-message")
