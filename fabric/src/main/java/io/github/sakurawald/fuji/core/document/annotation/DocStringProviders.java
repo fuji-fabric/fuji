@@ -7,6 +7,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.CONSTRUCTOR, ElementType.METHOD})
-public @interface Cite {
-    String[] value() default {};
+public @interface DocStringProviders {
+    DocStringProvider[] value();
 }
