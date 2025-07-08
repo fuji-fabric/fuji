@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -155,14 +156,15 @@ public class CommandPermissionInitializer extends ModuleInitializer {
 
     private static boolean verboseModeFlag = false;
 
-    public static final PermissionDescriptor COMMAND_PERMISSION_UNIFIED_PERMISSION = new PermissionDescriptor("fuji.permission.<command-path>", """
+    @DocStringProvider(id = 1752000303860L, value = """
         To use the `command` with that `command path`.
         You need the corresponding permission.
 
         Issue `/command-permission describe` to see details.
         1. `/command-permission describe fly`
         2. `/command-permission describe fly others @r`
-        """);
+        """)
+    public static final PermissionDescriptor COMMAND_PERMISSION_UNIFIED_PERMISSION = new PermissionDescriptor("fuji.permission.<command-path>", 1752000303860L);
 
     @CommandNode("gui")
     @Document(id = 1751826777672L, value = "Open the command permission gui.")

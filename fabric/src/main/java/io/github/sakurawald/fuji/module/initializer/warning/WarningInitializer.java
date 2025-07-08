@@ -12,6 +12,7 @@ import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlaye
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.core.event.impl.PlayerEvents;
@@ -34,38 +35,29 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
     You can use `warnings` to `track` the behaviours of a `player`.
     """)
-
 @ColorBox(id = 1751870593979L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     You can use `command_scheduler` module, to define a `job`.
     To execute `/warning clear-all --confirm true` command automatically. (e.g. every week)
     """)
-
 @ColorBox(id = 1751870597904L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     You can use `command_bundle` module, to define `template` for `warnings`.
     """)
-
 public class WarningInitializer extends ModuleInitializer {
 
+    @DocStringProvider(id = 1752000385223L, value = "To `create` a new `warning` for a `player`.")
+    public static PermissionDescriptor CREATE_WARNINGS_PERMISSION = new PermissionDescriptor("fuji.warning.create", 1752000385223L);
 
-    public static PermissionDescriptor CREATE_WARNINGS_PERMISSION = new PermissionDescriptor("fuji.warning.create", """
-        To `create` a new `warning` for a `player`.
-        """);
+    @DocStringProvider(id = 1752000399374L, value = "To `read` the `warnings` of a `player`.")
+    public static PermissionDescriptor READ_WARNINGS_PERMISSION = new PermissionDescriptor("fuji.warning.read", 1752000399374L);
 
-    public static PermissionDescriptor READ_WARNINGS_PERMISSION = new PermissionDescriptor("fuji.warning.read", """
-        To `read` the `warnings` of a `player`.
-        """);
+    @DocStringProvider(id = 1752000453811L, value = "To `update` the `warnings` of a `player`.")
+    public static PermissionDescriptor UPDATE_WARNINGS_PERMISSION = new PermissionDescriptor("fuji.warning.update", 1752000453811L);
 
-    public static PermissionDescriptor UPDATE_WARNINGS_PERMISSION = new PermissionDescriptor("fuji.warning.update", """
-        To `update` the `warnings` of a `player`.
-        """);
+    @DocStringProvider(id = 1752000473509L, value = "To `delete` an existed `warning` of a `player`.")
+    public static PermissionDescriptor DELETE_WARNINGS_PERMISSION = new PermissionDescriptor("fuji.warning.delete", 1752000473509L);
 
-    public static PermissionDescriptor DELETE_WARNINGS_PERMISSION = new PermissionDescriptor("fuji.warning.delete", """
-        To `delete` an existed `warning` of a `player`.
-        """);
-
-    public static PermissionDescriptor NOTIFY_WARNINGS_PERMISSION = new PermissionDescriptor("fuji.warning.notify", """
-        When a `player` with `warnings` join/leave the server, you will get notified.
-        """);
+    @DocStringProvider(id = 1752000488085L, value = "When a `player` with `warnings` join/leave the server, you will get notified.")
+    public static PermissionDescriptor NOTIFY_WARNINGS_PERMISSION = new PermissionDescriptor("fuji.warning.notify", 1752000488085L);
 
     public static final BaseConfigurationHandler<WarningConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, WarningConfigModel.class);
 

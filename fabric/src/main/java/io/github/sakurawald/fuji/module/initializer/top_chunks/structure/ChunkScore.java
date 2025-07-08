@@ -4,6 +4,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.core.service.type_formatter.TypeFormatter;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
@@ -31,9 +32,10 @@ import java.util.Set;
 @Data
 public class ChunkScore implements Comparable<ChunkScore> {
 
-    private static final PermissionDescriptor CLICK_TO_TELEPORT_TO_CHUNK_LOCATION_PERMISSION = new PermissionDescriptor("top_chunks.teleport", """
+    @DocStringProvider(id = 1752000233472L, value = """
         Click to teleport to the chunk location.
-        """);
+        """)
+    private static final PermissionDescriptor CLICK_TO_TELEPORT_TO_CHUNK_LOCATION_PERMISSION = new PermissionDescriptor("top_chunks.teleport", 1752000233472L);
 
     /* Chunk global position. */
     private final ServerWorld dimension;

@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.multiplier;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -35,9 +36,10 @@ import java.util.Optional;
     """)
 public class MultiplierInitializer extends ModuleInitializer{
 
-    public static final MetaDescriptor<Float> MULTIPLIER_META = new MetaDescriptor<>("fuji.multiplier.<multiplier-type>.<id>", Float::valueOf, """
+    @DocStringProvider(id = 1752000356004L, value = """
         Specify the `multiply factor` for a specified `type` for this player.
-        """);
+        """)
+    public static final MetaDescriptor<Float> MULTIPLIER_META = new MetaDescriptor<>("fuji.multiplier.<multiplier-type>.<id>", Float::valueOf, 1752000356004L);
 
     public static float transform(@NotNull ServerPlayerEntity player, String type, String key, float f) {
         Optional<Float> meta = LuckpermsHelper.getMeta(player.getUuid(), MULTIPLIER_META, type, key);

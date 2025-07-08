@@ -10,7 +10,7 @@ import io.github.sakurawald.fuji.module.initializer.command_spy.config.model.Com
 import net.minecraft.server.command.ServerCommandSource;
 
 @Document(id = 1751826800901L, value = """
-    This module logs the `command issue` into the console.
+    This module logs the `issued commands` into the console.
     """)
 public class CommandSpyInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<CommandSpyConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandSpyConfigModel.class);

@@ -3,12 +3,11 @@ package io.github.sakurawald.fuji.core.document.descriptor;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class PlaceholderDescriptor extends StringDescriptor{
 
-    public PlaceholderDescriptor(@NotNull String pattern, @Nullable String document) {
-        super(pattern, document);
+    public PlaceholderDescriptor(@NotNull String pattern, long docStringId) {
+        super(pattern, docStringId);
     }
 
     @Override

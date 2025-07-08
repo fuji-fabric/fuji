@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.chat.display;
 
+import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlaceholderHelper;
@@ -69,24 +70,28 @@ public class ChatDisplayInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @DocStringProvider(id = 1752000261529L, value = """
+        Create a `enderchest display` and return the `clickable` text to open that display.
+        """)
     private static void registerDisplayEnderPlaceholder() {
-        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("ender", """
-            Create a `enderchest display` and return the `clickable` text to open that display.
-            """);
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("ender", 1752000261529L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, DisplayHelper::createEnderDisplayText);
     }
 
+    @DocStringProvider(id = 1752000274945L, value = """
+        Create a `inventory display` and return the `clickable` text to open that display.
+        """)
     private static void registerDisplayInvPlaceholder() {
-        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("inv", """
-            Create a `inventory display` and return the `clickable` text to open that display.
-            """);
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("inv", 1752000274945L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, DisplayHelper::createInvDisplayText);
     }
 
+
+    @DocStringProvider(id = 1752000288451L, value = """
+        Create a `item display` and return the `clickable` text to open that display.
+        """)
     private static void registerDisplayItemPlaceholder() {
-        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("item", """
-            Create a `item display` and return the `clickable` text to open that display.
-            """);
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("item", 1752000288451L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, DisplayHelper::createItemDisplayText);
     }
 

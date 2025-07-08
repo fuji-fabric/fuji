@@ -32,7 +32,7 @@ public abstract class StringDescriptorInspectionGui extends PagedGui<StringDescr
         lore.add(TextHelper.getTextByKey(getPlayer(), "object.type", entity.getStringType()));
 
         /* Attach the document string. */
-        List<Text> documentTextList = TextHelper.getDocumentTextList(getPlayer(), entity.getDocument());
+        List<Text> documentTextList = TextHelper.getDocumentTextList(getPlayer(), entity.getDocumentString(getPlayer()));
         lore.add(TextHelper.TEXT_EMPTY);
         lore.addAll(documentTextList);
 
@@ -47,7 +47,7 @@ public abstract class StringDescriptorInspectionGui extends PagedGui<StringDescr
 
     @Override
     protected boolean filterEntity(StringDescriptor entity, String keyword) {
-        return entity.getDocument().contains(keyword)
+        return entity.getDocumentString(getPlayer()).contains(keyword)
                 || entity.getPattern().contains(keyword)
                 || entity.getFromModule().contains(keyword);
     }

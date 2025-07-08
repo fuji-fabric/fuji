@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.back;
 
 import com.mojang.brigadier.context.CommandContext;
+import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -41,9 +42,10 @@ public class BackInitializer extends ModuleInitializer {
     private static final BaseConfigurationHandler<BackLocationHistoryModel> savedPositionConfig = new ObjectConfigurationHandler<>("location-history.json", BackLocationHistoryModel.class)
         .setAutoSaveEveryMinute();
 
-    private static final MetaDescriptor<Integer> MAX_LOCATION_ENTRIES_TO_SAVE_META = new MetaDescriptor<>("fuji.back.max_location_entries_to_save", Integer::valueOf,"""
+    @DocStringProvider(id = 1751999540893L, value = """
         The max location entries to save for this player.
-        """);
+        """)
+    private static final MetaDescriptor<Integer> MAX_LOCATION_ENTRIES_TO_SAVE_META = new MetaDescriptor<>("fuji.back.max_location_entries_to_save", Integer::valueOf, 1751999540893L);
 
     private static <R> R withLocationHistory(@NotNull ServerPlayerEntity player, Function<LocationHistory, R> function) {
         String playerName = player.getGameProfile().getName();

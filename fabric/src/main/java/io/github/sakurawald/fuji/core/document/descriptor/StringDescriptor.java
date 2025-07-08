@@ -1,12 +1,12 @@
 package io.github.sakurawald.fuji.core.document.descriptor;
 
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
+import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
 import lombok.Data;
 import net.minecraft.item.Item;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,21 +18,25 @@ public abstract class StringDescriptor implements SourceModuleGetter {
 
     private final String pattern;
     private String string;
-    private final String document;
+    private final long docStringId;
     private final String fromModule;
+
+    public @NotNull String getDocumentString(Object audience) {
+        return DocumentUtil.getDocString(audience, this.docStringId);
+    }
 
     private void compilePattern() {
         // We need the `pattern` for named variables, since we don't want to display the `%s` directly.
         this.string = pattern.replaceAll("<.*?>", "%s");
     }
 
-    public StringDescriptor(@NotNull String pattern, @Nullable String document) {
-        this(false, pattern, document);
+    public StringDescriptor(@NotNull String pattern, long docStringId) {
+        this(false, pattern, docStringId);
     }
 
-    public StringDescriptor(boolean temporary, @NotNull String pattern, @Nullable String document) {
+    public StringDescriptor(boolean temporary, @NotNull String pattern, long docStringId) {
         this.pattern = pattern;
-        this.document = document;
+        this.docStringId = docStringId;
 
         /* Set the source module. */
         this.fromModule = ReflectionUtil.findSourceModuleInCurrentStackTrace();

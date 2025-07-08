@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.teleport_warmup;
 
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
@@ -38,13 +39,15 @@ import java.util.Optional;
     """)
 public class TeleportWarmupInitializer extends ModuleInitializer {
 
-    public static final PermissionDescriptor TELEPORT_WARMUP_BYPASS_PERMISSION = new PermissionDescriptor("fuji.teleport_warmup.bypass", """
+    @DocStringProvider(id = 1752000321033L, value = """
         To bypass all teleport warmup.
-        """);
+        """)
+    public static final PermissionDescriptor TELEPORT_WARMUP_BYPASS_PERMISSION = new PermissionDescriptor("fuji.teleport_warmup.bypass", 1752000321033L);
 
-    public static final MetaDescriptor<Integer> TELEPORT_WARMUP_TIME_META = new MetaDescriptor<>("fuji.teleport_warmup.warmup", Integer::valueOf, """
+    @DocStringProvider(id = 1752000334206L, value = """
         Specify the teleport warmup time in seconds for this player.
-        """);
+        """)
+    public static final MetaDescriptor<Integer> TELEPORT_WARMUP_TIME_META = new MetaDescriptor<>("fuji.teleport_warmup.warmup", Integer::valueOf, 1752000334206L);
 
     public static final BaseConfigurationHandler<TeleportWarmupConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, TeleportWarmupConfigModel.class);
 

@@ -18,24 +18,6 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
-@ColorBox(id = 0L, color = ColorBox.ColorBlockTypes.TIPS, value = """
-    <json>
-    "core": {
-      "debug": {
-        "disable_all_modules": false,
-        "log_debug_messages": false,
-        "print_user_guide_in_console": false
-      },
-      "backup": {
-        "max_slots": 15,
-        "skip": [
-          "modules/head"
-        ]
-      },
-    </json>
-
-    """)
-
 @Document(id = 1751980891153L, value = """
     This module is only used for `development`.
     If you are a developer, you can try new things here.
@@ -46,15 +28,10 @@ import net.minecraft.text.Text;
 @CommandRequirement(level = 4)
 public class TesterInitializer extends ModuleInitializer {
 
-    public static int x = ModuleManager.evalOnEnable(()->3);
-
     @SneakyThrows(Exception.class)
     @CommandNode("run")
     private static int $run(@CommandSource ServerPlayerEntity player) {
 
-        TextHelper.sendTextByKey(player, "gui.search.title", "Hello");
-        TextHelper.sendTextByKey(player, "gui.search.title", "Hello", "Second");
-        TextHelper.sendTextByKey(player, "gui.search.title" );
 
 
         return 0;

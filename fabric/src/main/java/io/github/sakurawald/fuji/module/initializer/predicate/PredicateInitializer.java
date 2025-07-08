@@ -41,10 +41,9 @@ import java.util.Optional;
 @CommandRequirement(level = 4)
 public class PredicateInitializer extends ModuleInitializer {
 
-    @Document(id = 1751826499684L, value = "Predicate to test if the player has the string-perm?")
     @CommandNode("has-perm?")
     private static int hasPerm(@CommandSource ServerCommandSource source, ServerPlayerEntity player, GreedyString stringPermission) {
-        boolean value = LuckpermsHelper.hasPermission(player.getUuid(), new PermissionDescriptor(true, stringPermission.getValue(), null));
+        boolean value = LuckpermsHelper.hasPermission(player.getUuid(), new PermissionDescriptor(true, stringPermission.getValue(), 0));
         return CommandHelper.Return.returnBoolean(source, value);
     }
 

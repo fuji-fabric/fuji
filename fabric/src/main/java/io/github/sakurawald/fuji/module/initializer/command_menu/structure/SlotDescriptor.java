@@ -4,6 +4,7 @@ import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SlotGuiInterface;
+import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
@@ -28,9 +29,10 @@ import java.util.List;
 @NoArgsConstructor
 public class SlotDescriptor {
 
-    private static final PermissionDescriptor SLOT_VIEW_REQUIREMENT_PERMISSION = new PermissionDescriptor("<specified-permission>", """
-        To view this slot, you need the specified permission.
-        """);
+    @DocStringProvider(id = 1751999474601L, value = """
+        To view this slot, you need the defined `specified permission` for this slot.
+        """)
+    private static final PermissionDescriptor SLOT_VIEW_REQUIREMENT_PERMISSION = new PermissionDescriptor("<specified-permission>", 1751999474601L);
 
     // NOTE: It's possible only provide the NBT field, but it's hard to use.
 

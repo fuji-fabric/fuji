@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.core.service.style_striper;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
+import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -59,6 +60,8 @@ public class StyleStriper {
         return tags;
     }
 
+    @DocStringProvider(id = 1751999453562L, value = """
+        """)
     private static PermissionDescriptor getOrCreatePermissionDescriptorForStyleType(String styleType) {
         return CREATED_STYLE_TYPES.computeIfAbsent(styleType, (it) -> {
             String pattern = "fuji.style.%s.<style-tag>";
@@ -67,7 +70,7 @@ public class StyleStriper {
                 The permission used for `style tags striper`.
                 A player requires the `corresponding permission` to use that `style tag` in `%s` style type.
                 """.formatted(styleType);
-            return new PermissionDescriptor(pattern, document);
+            return new PermissionDescriptor(pattern, 1751999453562L);
         });
     }
 

@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.home;
 
+import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
@@ -26,9 +27,10 @@ import java.util.Optional;
     """)
 public class HomeInitializer extends ModuleInitializer {
 
-    private static final MetaDescriptor<Integer> MAX_HOME_AMOUNT_META = new MetaDescriptor<>("fuji.home.home_limit", Integer::valueOf, """
+    @DocStringProvider(id = 1752000367398L, value = """
         The home amount limit for this player.
-        """);
+        """)
+    private static final MetaDescriptor<Integer> MAX_HOME_AMOUNT_META = new MetaDescriptor<>("fuji.home.home_limit", Integer::valueOf, 1752000367398L);
 
     @Getter
     private static final BaseConfigurationHandler<HomeDataModel> storage = new ObjectConfigurationHandler<>("home.json", HomeDataModel.class)

@@ -14,7 +14,9 @@ import org.jetbrains.annotations.Nullable;
 public class DocumentUtil {
 
     @SuppressWarnings("UnnecessaryLocalVariable")
-    private static @NotNull String getDocString(@Nullable Object audience, long id) {
+    public static @NotNull String getDocString(@Nullable Object audience, long id) {
+        if (id == 0) return "DUMMY-DOC-STRING";
+
         String languageKey = DocString.DOC_STRING_KEY_PREFIX + id;
         // NOTE: For doc string, we always use the default language to display language values.
         String languageValue = TextHelper.Translator.getLanguageValueByKey(audience, languageKey);

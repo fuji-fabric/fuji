@@ -5,12 +5,12 @@ import net.minecraft.item.Items;
 
 public class PermissionDescriptor extends StringDescriptor {
 
-    public PermissionDescriptor(String pattern, String document) {
-        super(pattern, document);
+    public PermissionDescriptor(String pattern, long docStringId) {
+        super(pattern, docStringId);
     }
 
-    public PermissionDescriptor(boolean temporary, String pattern, String document) {
-        super(temporary, pattern, document);
+    public PermissionDescriptor(boolean temporary, String pattern, long docStringId) {
+        super(temporary, pattern, docStringId);
     }
 
     @Override

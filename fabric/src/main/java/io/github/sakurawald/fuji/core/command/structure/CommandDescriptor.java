@@ -9,6 +9,7 @@ import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
@@ -70,6 +71,7 @@ public class CommandDescriptor implements SourceModuleGetter {
         return BaseArgumentTypeAdapter.getAdapter(argument.getType()).makeRequiredArgumentBuilder(argument.getArgumentName());
     }
 
+    @DocStringProvider(id = 1751999362278L, value = "The permission used as the default string permission, for a command descriptor.")
     @SuppressWarnings("RedundantIfStatement")
     private static void setRequirementForArgumentBuilder(@NotNull ArgumentBuilder<ServerCommandSource, ?> builder, @Nullable CommandRequirementDescriptor requirement) {
         // don't override the command requirement if the annotation is null
@@ -81,7 +83,7 @@ public class CommandDescriptor implements SourceModuleGetter {
             if (player == null) return true;
             if (requirement.getString() != null
                 && !requirement.getString().isEmpty()
-                && LuckpermsHelper.hasPermission(player.getUuid(), new PermissionDescriptor(requirement.getString(), "Permission for a command descriptor.")))
+                && LuckpermsHelper.hasPermission(player.getUuid(), new PermissionDescriptor(requirement.getString(), 1751999362278L)))
                 return true;
             if (ctx.hasPermissionLevel(requirement.getLevel())) return true;
 
@@ -270,7 +272,7 @@ public class CommandDescriptor implements SourceModuleGetter {
 
         assert this.registerReturnValue != null;
         LiteralCommandNode<ServerCommandSource> navigationNode = this.registerReturnValue.build();
-        com.mojang.brigadier.tree.CommandNode<ServerCommandSource> targetNode = root.getChild(navigationNode.getName());
+        CommandNode<ServerCommandSource> targetNode = root.getChild(navigationNode.getName());
         if (targetNode != null) {
             if (CommandDescriptor.unregister(targetNode, navigationNode)) {
                 root.getChildren().removeIf(p -> p.getName().equals(navigationNode.getName()));

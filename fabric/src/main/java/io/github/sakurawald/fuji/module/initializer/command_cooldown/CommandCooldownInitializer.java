@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.command_cooldown;
 
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlaceholderHelper;
@@ -206,11 +207,15 @@ public class CommandCooldownInitializer extends ModuleInitializer {
     }
 
 
+    @DocStringProvider(id = 1751999769680L, value = """
+        Returns the `left time` for `specified named cooldown` in mill-seconds.
+        """)
+    @DocStringProvider(id = 1751999791863L, value = """
+        Returns the `left usage times` for `specified named cooldown` in integer.
+        """)
     @Override
     protected void registerPlaceholder() {
-        PlaceholderDescriptor leftTimeDescriptor = new PlaceholderDescriptor("command_cooldown_left_time", """
-            Returns the `left time` for `specified named cooldown` in mill-seconds.
-            """);
+        PlaceholderDescriptor leftTimeDescriptor = new PlaceholderDescriptor("command_cooldown_left_time", 1751999769680L);
         PlaceholderHelper.registerPlayerPlaceholder(leftTimeDescriptor, (player, args) -> {
             CommandCooldown cooldown = config.model().namedCooldown.list.get(args);
             if (cooldown == null) return NOT_COOLDOWN_FOUND_ERROR_TEXT;
@@ -221,9 +226,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
             return Text.literal(String.valueOf(leftTime));
         });
 
-        PlaceholderDescriptor leftUsageDescriptor = new PlaceholderDescriptor("command_cooldown_left_usage", """
-            Returns the `left usage times` for `specified named cooldown` in integer.
-            """);
+        PlaceholderDescriptor leftUsageDescriptor = new PlaceholderDescriptor("command_cooldown_left_usage", 1751999791863L);
         PlaceholderHelper.registerPlayerPlaceholder(leftUsageDescriptor, (player, args) -> {
             CommandCooldown cooldown = config.model().namedCooldown.list.get(args);
             if (cooldown == null) return NOT_COOLDOWN_FOUND_ERROR_TEXT;

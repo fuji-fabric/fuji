@@ -13,6 +13,7 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.structure.DocString;
 import java.io.IOException;
@@ -42,6 +43,7 @@ public class GenerateDocStringTest {
             List<DocString> docStringList = new ArrayList<>();
             docStringList.addAll(makeDocStringFromDocumentAnnotation(scanResult));
             docStringList.addAll(makeDocStringFromColorBoxAnnotation(scanResult));
+            docStringList.addAll(makeDocStringFromDocStringProviderAnnotation(scanResult));
             LogUtil.info("There are {} doc strings.", docStringList.size());
 
             /* Remove test purpose doc string. */
@@ -57,6 +59,18 @@ public class GenerateDocStringTest {
             writeDocStringListIntoDefaultLanguageFile(docStringList);
         }
 
+    }
+
+    private List<DocString> makeDocStringFromDocStringProviderAnnotation(ScanResult scanResult) {
+        return findTargetAnnotationInstancesAnywhere(scanResult, DocStringProvider.class, true)
+            .stream()
+            .map(annotationInfo -> {
+                AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
+                long id = (long) parameterValues.getValue("id");
+                String value = (String) parameterValues.getValue("value");
+                return new DocString(id, value);
+            })
+            .toList();
     }
 
     private static void writeDocStringListIntoDefaultLanguageFile(List<DocString> docStringList) throws IOException {
