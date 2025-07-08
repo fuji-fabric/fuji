@@ -18,14 +18,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+@Document(id = 1751969384267L, value = """
+    This module provides the `/delay` command.
+    To allow you `delay` the `execution time` of a specified command.
+    """)
 @ColorBox(id = 1751870419626L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     Only use `/delay` to perform short-term job.
     The `delayed commands` will not be persisted, if the server get a re-start.
     """)
-
 public class DelayInitializer extends ModuleInitializer {
 
-    private static final ScheduledExecutorService DELAY_COMMAND_EXECUTOR = Executors.newSingleThreadScheduledExecutor();
+    private static ScheduledExecutorService DELAY_COMMAND_EXECUTOR;
 
     @Document(id = 1751824706971L, value = "Execute a command in seconds.")
     @CommandNode("delay")
@@ -42,8 +45,17 @@ public class DelayInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    private static void resetDelaySchedulerExecutor() {
+        DELAY_COMMAND_EXECUTOR = Executors.newSingleThreadScheduledExecutor();
+    }
+
+    private static void shutdownDelaySchedulerExecutor() {
+        DELAY_COMMAND_EXECUTOR.shutdown();
+    }
+
     @Override
     protected void onInitialize() {
-        ServerLifecycleEvents.SERVER_STOPPING.register((server) -> DELAY_COMMAND_EXECUTOR.shutdown());
+        ServerLifecycleEvents.SERVER_STARTED.register((server) -> resetDelaySchedulerExecutor());
+        ServerLifecycleEvents.SERVER_STOPPING.register((server) -> shutdownDelaySchedulerExecutor());
     }
 }

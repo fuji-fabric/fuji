@@ -7,4 +7,5 @@
   - feature: if the `language value` starts with `[suppress-sending]`, then the sending of this `language key` will be cancelled.
 - [core] feature: enhance the debug messages for language system. (Make the debug easier.)
 - [command_meta.when_online] fix: should display the raw command when there are style tags inside the command in `/when-online list` GUI.
+- [command_meta.delay] fix: the re-entrance problem of `/delay` command when using `fuji` mod in `client-sdie`.
 
