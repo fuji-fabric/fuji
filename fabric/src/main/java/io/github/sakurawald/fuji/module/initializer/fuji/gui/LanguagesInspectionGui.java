@@ -35,12 +35,15 @@ public class LanguagesInspectionGui extends PagedGui<GuiElementInterface> {
                     .toList()
                     .size();
 
+                boolean isSupportedLanguage = !TextHelper.Loader.isUnSupportedLanguageJsonObject(languageJson);
+                boolean isDefaultLanguage = TextHelper.Loader.isDefaultLanguageCode(languageCode);
+
                 GuiElementBuilder builder = new GuiElementBuilder()
-                    .setItem(Items.MAP)
+                    .setItem(isDefaultLanguage ? Items.MAP : Items.PAPER)
                     .setName(TextHelper.getTextByKey(player, "language.name", languageCode))
                     .setLore(List.of(
-                        TextHelper.getTextByKey(player, "language.is_supported", !TextHelper.Loader.isUnSupportedLanguageJsonObject(languageJson))
-                        , TextHelper.getTextByKey(player, "language.is_default", TextHelper.Loader.isDefaultLanguageCode(languageCode))
+                        TextHelper.getTextByKey(player, "language.is_supported", isSupportedLanguage)
+                        , TextHelper.getTextByKey(player, "language.is_default", isDefaultLanguage)
                         , TextHelper.getTextByKey(player, "language.number_of_users", numberOfUsers)));
 
                 entities.add(builder.build());

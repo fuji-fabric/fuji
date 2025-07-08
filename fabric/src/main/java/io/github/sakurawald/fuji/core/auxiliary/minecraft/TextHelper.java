@@ -250,6 +250,7 @@ public class TextHelper {
                 LANGUAGE_CODE_2_LANGUAGE_JSON.put(languageCode, languageFileHandler.model().getAsJsonObject());
                 LogUtil.info("Language {} loaded.", languageCode);
             } catch (Exception e) {
+                // NOTE: When `language` module is enabled, and a player joined with an un-supported language the first time, the error will be printed on the console.
                 LANGUAGE_CODE_2_LANGUAGE_JSON.put(languageCode, UNSUPPORTED_LANGUAGE_MARKER);
                 LogUtil.error("Failed to load language `{}` from storage.", languageCode, e);
             }
