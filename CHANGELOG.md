@@ -1,5 +1,6 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
+
 - **docs: fix typos in the document. (Thanks to our new contributor @pinarruiz)**
 - docs: simplify the `pdf document`, and migrate most contents into the `in-game GUI`. (Now the `document` is built into the Minecraft game, and it's play-able.)
 - docs: new `language` chapter, to describe how the new language system works.
