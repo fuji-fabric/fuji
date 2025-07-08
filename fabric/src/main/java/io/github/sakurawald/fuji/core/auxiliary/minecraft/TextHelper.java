@@ -281,7 +281,7 @@ public class TextHelper {
             // Get the language code used by the player.
             String playerName = PlayerHelper.getPlayerName(player);
             String defaultLanguageCode = getDefaultLanguageCode();
-            return PLAYER_2_LANGUAGE_CODE.getOrDefault(playerName, defaultLanguageCode);
+            return PLAYER_2_LANGUAGE_CODE.computeIfAbsent(playerName, k -> defaultLanguageCode);
         }
 
         @SuppressWarnings({"IfCanBeSwitch", "PatternVariableCanBeUsed"})
