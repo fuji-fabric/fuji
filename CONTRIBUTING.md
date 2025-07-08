@@ -4,7 +4,7 @@
 
 Help us translate this project, you can do it in the following ways:
 1. **The first way**: Submit your translation work via [crowdin-project](https://crowdin.com/project/fuji-fabric) using your crowdin account, and let the `crowdin-bot` create the pull-request in github for you.
-2. **The second way**: Clone the `dev` branch, and do the translation work offline, then create a pull-request using `your github account` in github. (The translation files are located in [here](https://github.com/sakurawald/fuji/tree/dev/crowdin))
+2. **The second way**: Clone the `dev` branch, and do the translation work offline, then create a pull-request using `your github account` in github. (The translation files are located in [here](https://github.com/sakurawald/fuji/tree/dev/crowdin/pull-from-crowdin))
 
 ### How the language file works 
 The `language file` speaks a language combines the following languages:
@@ -44,4 +44,4 @@ the first string is banana and the second string is apple
 Read the chapter `Development` in fuji manual.
 
 ## Don't forget to write your name in the contributor list
-You are welcome to open a `pull-request` in github to add your name into the `contributor list` locates in [here](https://github.com/sakurawald/fuji/blob/dev/src/main/resources/fabric.mod.json).
+You are welcome to open a `pull-request` in github to add your name into the `contributor list` locates in [here](https://github.com/sakurawald/fuji/blob/dev/fabric/src/main/resources/fabric.mod.json).
