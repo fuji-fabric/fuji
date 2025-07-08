@@ -1,6 +1,8 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
 - docs: fix typos in the document. (Thanks to @pinarruiz)
+- docs: simplify the `pdf document`, and migrate most of content into the `in-game GUI`.
+- docs: new `language` chapter, to describe how the new language system works.
 - [core] feature: now you can insert `language instructions` in `language value`.
   - feature: if the `language value` starts with `[send-action-bar]`, then this `language key` is sending via the `action bar`.
   - feature: if the `language value` starts with `[send-main-title]`, then this `language key` is sending via the `main title`.

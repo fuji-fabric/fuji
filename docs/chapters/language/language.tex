@@ -1,0 +1,25 @@
+\LevelZero{Language}\label{ch:language}
+
+\LevelOne{Definition}
+The files inside \tbf{config/fuji/lang/} directory are called \tbf{language files}. \\
+Each \tbf{language file} defines a table to map a \tbf{language key} into a \tbf{language value}.
+
+\LevelOne{Modify the default language used by fuji.}
+You can modify the \tbf{default language} in \mainconfig file.
+After that, issue \cmd{/fuji reload} command to apply the changes.
+
+\LevelOne{Control how the text is sent.}
+The \tbf{language value} only defines what is the text.
+It didn't define how to use that text.
+You can use \tbf{language instructions} to specify how to use that \tbf{language value}. \\
+Currently supported language instructions:
+\begin{description}
+    \item [1. Send the text via action bar] {If the language value starts with \str{[send-action-bar]}}
+    \item [2. Send the text via main title] {If the language value starts with \str{[send-main-title]}}
+    \item [3. Send the text via sub title] {If the language value starts with \str{[send-sub-title]}}
+    \item [4. Suppress the sending of this text] {If the language value starts with \str{[suppress-sending]}}
+\end{description}
+If no \tbf{language instruction} is used, we will send the \tbf{text} via the \tbf{message}.
+
+\LevelOne{Enable multiple language support and respect the client side language.}
+You can enable the \str{language} module, to provide the multiple language support for each player, and respect their client side language option.
