@@ -15,6 +15,7 @@ import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.fuji.FujiInitializer;
 
+import java.util.Comparator;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -156,6 +157,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
             });
     }
 
+    @SuppressWarnings("UnnecessaryLocalVariable")
     public static @NotNull List<ColorBox> getColorBoxes(String modulePathString) {
         /* Get the module initializer class. */
         Class<? extends ModuleInitializer> moduleInitializerClass = ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING
@@ -166,7 +168,14 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         ColorBox[] boxes = moduleInitializerClass
             .getDeclaredAnnotationsByType(ColorBox.class);
 
-        return Arrays.asList(boxes);
+        /* Sort the color box by its colors. */
+        List<ColorBox> colorBoxes = Arrays
+            .stream(boxes)
+            .sorted(Comparator.comparing(ColorBox::color)
+                .reversed())
+            .toList();
+
+        return colorBoxes;
     }
 
     private static void sendColorBoxMessage(ServerPlayerEntity player, Text colorBoxName, List<Text> colorBoxTestList) {
