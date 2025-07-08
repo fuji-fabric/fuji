@@ -83,13 +83,14 @@ public class ShellInitializer extends ModuleInitializer {
     private static int shell(@CommandSource CommandContext<ServerCommandSource> ctx, GreedyString rest) {
         checkSecurity(ctx);
 
-        String $rest = rest.getValue();
+        String commandString = rest.getValue();
         CompletableFuture.runAsync(() -> {
             try {
-                LogUtil.info("Shell exec: {}", $rest);
+                LogUtil.info("Shell exec: {}", commandString);
 
                 /* Call the shell. */
-                Process process = Runtime.getRuntime().exec($rest, null, null);
+                String[] commandTokens = commandString.split("\\s");
+                Process process = Runtime.getRuntime().exec(commandTokens, null, null);
                 InputStream inputStream = process.getInputStream();
                 @Cleanup BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
                 StringBuilder output = new StringBuilder();
@@ -103,7 +104,7 @@ public class ShellInitializer extends ModuleInitializer {
                 LogUtil.info(output.toString());
                 ctx.getSource().sendMessage(Text.literal(output.toString()));
             } catch (IOException | InterruptedException e) {
-                LogUtil.error("Failed to execute the shell command: {}", $rest, e);
+                LogUtil.error("Failed to execute the shell command: {}", commandString, e);
             }
         });
 
