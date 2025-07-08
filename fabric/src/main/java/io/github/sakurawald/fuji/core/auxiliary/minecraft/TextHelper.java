@@ -74,7 +74,21 @@ public class TextHelper {
         private static final int THIS_STATIC_VARIABLE_IS_USED_TO_ENSURE_THE_EXTENDED_TAGS_ARE_REGISTERED_BEFORE_CREATING_THE_DEFAULT_PARSER = registerExtendedTags();
         public static final NodeParser POWERFUL_PARSER = makePowerfulParser();
         public static final NodeParser STYLE_ONLY_PARSER = makeStyleOnlyParser();
+        public static final NodeParser MINI_MESSAGE_ONLY_PARSER = makeMiniMessageOnlyParser();
         public static final NodeParser PLACEHOLDER_ONLY_PARSER = makePlaceholderOnlyParser();
+
+        private static NodeParser makeMiniMessageOnlyParser() {
+            #if MC_VER <= MC_1_20_2
+            List<NodeParser> parsers = new ArrayList<>();
+            parsers.add(TextParserV1.createDefault());
+            return NodeParser.merge(parsers);
+            #elif MC_VER > MC_1_20_2
+            return NodeParser.builder()
+                .quickText()
+                .simplifiedTextFormat()
+                .build();
+            #endif
+        }
 
         @ForDeveloper("The style-only parser should support mini-message language and markdown language.")
         private static NodeParser makeStyleOnlyParser() {

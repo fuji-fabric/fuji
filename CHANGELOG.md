@@ -12,6 +12,7 @@
 - [core] feature: now will `sort` the language keys inside language files automatically.
 - [fuji] feature: increase the color contrast of `colored candles`. (UX improvement)
 - [fuji] feature: sort the `colored candles` by its `color`. (UX improvement)
+- [chat.style & color.sign] fix: should not have the ability to use the `markdown` parser.
 - [command_meta.when_online] fix: should display the raw command when there are style tags inside the command in `/when-online list` GUI.
 - [command_meta.delay] fix: the re-entrance problem of `/delay` command when using `fuji` mod in `client-sdie`.
 
