@@ -12,7 +12,7 @@ import org.quartz.JobExecutionContext;
 import java.util.function.Supplier;
 
 @Document(id = 1751823659459L, value = """
-    This `job` is used to `write storage` from `memory` into `storage`.
+    This `job` is used to `write data` from `memory` into `storage`.
 
     NOTE: <red>If you modify the `file` in `disk`, then you need to issue `/fuji reload` as soon as possible.</red>
     NOTE: <red>The `disk` will be `overridden` when `fire` this job.</red>

@@ -12,7 +12,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 
-
+@Document(id = 1751972399779L, value = """
+    This module provides the `/hat` command.
+    And allows a player to put `any item` in the `head slot`.
+    """)
 public class HatInitializer extends ModuleInitializer {
 
     @Document(id = 1751825381383L, value = "Wear the item in hand.")

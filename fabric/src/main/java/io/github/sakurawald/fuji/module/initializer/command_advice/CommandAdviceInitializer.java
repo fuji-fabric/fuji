@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_advice;
 
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
@@ -24,9 +25,21 @@ import java.util.stream.Collectors;
 
 @Document(id = 1751826306321L, value = """
     This module allows you to decorate existing commands:
-    1. Run other commands `before` executing the target command.
-    2. Run other commands `after` executing the target command.
+    1. Run other commands `before` execution the target command.
+    2. Run other commands `after` execution the target command.
     3. Cancel the execution of the target command, and run other commands.
+    """)
+@ColorBox(id = 1751900137390L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    Execute other commands before/after a target command.
+    """)
+@ColorBox(id = 1751900375812L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    Decorate an existing command with other commands.
+    """)
+@ColorBox(id = 1751900379675L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    Cancel the execution of the target command, and execute other commands instead.
+    """)
+@ColorBox(id = 1751900258020L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    This module provides `similar` functions to `command_bundle` module.
     """)
 public class CommandAdviceInitializer extends ModuleInitializer {
 

@@ -25,6 +25,12 @@ import net.minecraft.text.Text;
     So you can `disable` this module, if you are using that mod.
     """)
 
+@ColorBox(id = 1751899554713L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    Define a chat shortcut, to evaluate a placeholder.
+    Regex: `(?<=^|\\\\s)uuid(?=\\\\s|$)`
+    Replacement: `my uuid is %player:uuid%`
+    """)
+
 public class ChatReplaceInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<ChatReplaceConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatReplaceConfigModel.class);

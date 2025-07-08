@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.command_meta.attachment;
 
 import com.mojang.brigadier.context.CommandContext;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -21,6 +22,16 @@ import java.io.IOException;
 @Document(id = 1751824793427L, value = """
     Provides a unified attachment facility, to attach any data to any object.
     """)
+@ColorBox(id = 1751970220438L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Set a attachment.
+    Issue: `/attachment set news today hello world`
+
+    ◉ Get a attachment.
+    Issue: `/attachment get news today`
+    """)
+
+
+
 @CommandNode("attachment")
 @CommandRequirement(level = 4)
 public class AttachmentInitializer extends ModuleInitializer {

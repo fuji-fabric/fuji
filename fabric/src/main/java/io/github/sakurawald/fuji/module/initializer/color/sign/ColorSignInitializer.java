@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.color.sign;
 
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.UuidHelper;
@@ -21,6 +22,12 @@ import java.io.IOException;
 @Document(id = 1751824932882L, value = """
     This module allows you to use color tags in `sign` blocks.
     """)
+
+@ColorBox(id = 1751900015107L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    You can write `style tags` on the sign.
+    Foe example: `\\<red\\>`, `\\<rb\\>`, `\\<bold\\>` and `\\<i\\>`.
+    """)
+
 public class ColorSignInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<ColorSignConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ColorSignConfigModel.class);

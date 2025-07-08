@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_toolbox.lore;
 
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
@@ -13,6 +14,12 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
 import java.util.List;
+
+@ColorBox(id = 1751972580951L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Set lore for item in mainhand.
+    Issue: `/lore set <rainbow>the first line<newline><bold><green>the second`
+    """)
+
 
 @CommandNode("lore")
 @CommandRequirement(level = 4)

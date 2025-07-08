@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.command_meta.json;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.mojang.brigadier.context.CommandContext;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
@@ -22,8 +23,25 @@ import java.util.function.BiFunction;
 
 @Document(id = 1751823967217L, value = """
     Provides `/json` command.
-    A powerful tool to edit json file.
+    A powerful and unified tool to edit json file.
     """)
+@ColorBox(id = 1751969995780L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Read a json key.
+    Issue: `/json read "config/fuji/config.json" "$.core.debug"`
+
+    ◉ List json keys.
+    Issue: `/json read "config/fuji/config.json" "$.modules.keys()"`
+
+    ◉ Set the value of a json key.
+    Issue: `/json write "config/fuji/config.json" "$.core.debug.log_debug_messages" BOOLEAN true`
+    """)
+@ColorBox(id = 1751970168900L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    Read the detailed document for `Json Path`:
+    See https://goessner.net/articles/JsonPath/
+    """)
+
+
+
 @CommandNode("json")
 @CommandRequirement(level = 4)
 public class JsonInitializer extends ModuleInitializer {

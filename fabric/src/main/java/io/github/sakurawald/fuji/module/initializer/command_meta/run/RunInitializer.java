@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_meta.run;
 
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
@@ -15,6 +16,25 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @Document(id = 1751823988812L, value = """
     Provides `/run` command, to run a command with context.
     """)
+@ColorBox(id = 1751968631536L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    Give random amount of diamonds to online players.
+    Issue: `/run as console give @a minecraft:diamond %fuji:random 8 32%`
+    """)
+@ColorBox(id = 1751968672241L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    Give online players random amount of diamonds.
+    Issue: `/run as console foreach give %fuji:escape player:name% minecraft:diamond %fuji:escape fuji:random 8 32 1%`
+    """)
+@ColorBox(id = 1751968707088L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    Execute a command as a specified player.
+    Issue: `/run as player \\<player\\> back`
+    """)
+@ColorBox(id = 1751968753602L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    Execute a command as a fake-op.
+    Issue: `/run as fake-op \\<player\\> give %player:name% minecraft:apple 1`
+    """)
+
+
+
 @CommandNode("run")
 @CommandRequirement(level = 4)
 public class RunInitializer extends ModuleInitializer {

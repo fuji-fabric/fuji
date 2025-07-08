@@ -5,6 +5,7 @@ import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.sakurawald.fuji.core.document.annotation.Cite;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -38,11 +39,78 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 
-
 @Cite("https://github.com/DrexHD/VanillaPermissions")
 @Document(id = 1751826772214L, value = """
     This module provides the `luckperms permissions` for `all commands`.
     """)
+@ColorBox(id = 1751970566759L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    How it works?
+    The vanilla Minecraft use a command system, named `brigadier command system`.
+    All `commands` are `registered`, `parsed` and `executed` by this system.
+    In the design of this command system, all commands are built into a `tree structure`.
+    That is the `command tree`.
+    All commands starts with the `root command`, and walking down the `path` of the `command tree`.
+    All commands are a `direct child` or `in-direct child` of the `root command node`.
+    Based on these facts, we can `identify` a `command node` using its `path` in the `command tree`.
+
+    For example, the command string `/gamemode creative Steve`.
+    Can be parsed into command nodes: `gamemode`, `creative` and `Steve`.
+    And its `command path` is `gamemode.gamemode.target`.
+
+    You can issue `/command-permission describe gamemode creative Steve` to see what is happening.
+    To see the `tree structure` of this command node, issue `/help gamemode` command.
+
+    To open the command permission GUI, issue `/command-permission gui` command.
+    To list all commands and their command path, issue `/fuji inspect server-commands` command.
+    """)
+@ColorBox(id = 1751970931219L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    Let's continue, the `brigadier command system`, organize all `command nodes` into a `tree structure`.
+    And for each `command node`, there is a `requirement` option, it's a `predicate`, to decide whether the `command source` can use this `command node`.
+
+    That's the core part.
+    The `command_permission` module, will walk down the entire `command tree`.
+    And `wrap` the `requirement` option for each `command node`.
+    And then, we can assign a `luckperms permission` for each `command node`.
+    That's because, we can `identify` a `command node` using its `command path` in the `command tree`.
+
+    Issue: `/command-permission describe gamemode creative Steve` to see how it works.
+    """)
+@ColorBox(id = 1751971202478L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ How does `command_permission` module handles the `inheritance permission`, `wildcard permission` and `regex permission`?
+
+    Actually, the `command_permission` module didn't handle them.
+    The module only does one simple thing: Let's check if the command source has the corresponding luckperms permission `fuji.permission.\\<command path of that target command\\>`.
+    The complex things like `inheritance permission`, `wildcard permission` and `regex permission` are all processed by `luckperms` mod.
+    Yeah, the `luckperms` mod does the complex `permission calculation`.
+    """)
+@ColorBox(id = 1751971384898L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Allow everyone to use `/gamemode` command.
+    You can issue `/lp group default permission set fuji.permission.gamemode true`
+
+    NOTE: If you want to allow the client-side to use the gamemode switcher menu, you have to install extra mods in the client-side, to let the client-side believe they are `op`, and they can switch the gamemode.
+    The mod can be https://modrinth.com/mod/switcher
+    """)
+@ColorBox(id = 1751971538425L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Allow everyone to use `/gamemode` command, except the player Alice.
+    Issue the commands:
+    1. `/lp group default permission set fuji.permission.gamemode true`
+    2. `/lp user Alice permission set fuji.permission.gamemode false`
+    """)
+@ColorBox(id = 1751971597924L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Allow everyone to use `/gamemode spectator`, but disallows the `/gamemode creative`.
+    You have touch the core, and the tricky things.
+    Now, issue `/command-permission describe gamemode spectator` command.
+    You will find that, the second command node `creative` is actually `an argument`.
+    Its `argument` whose argument type is `gamemode`, and accepts the possible values `adventure`, `creative`, `spectator` and `survival`.
+    All 4 gamemodes are possible values for `gamemode argument type`.
+    That's the reason why you can't just ban the `creative` gamemode.
+
+    If you really want to allow the user to use `/gamemode spectator`, and ban the `/gamemode creative`.
+    You can use `command_bundle` to create a `user-level` command, to wrap the `/gamemode` command.
+    Like, create a new command named `/switch-to-survival`, as a wrapper command for `/gamemode` command.
+    """)
+
+
 @CommandNode("command-permission")
 @CommandRequirement(level = 4)
 public class CommandPermissionInitializer extends ModuleInitializer {

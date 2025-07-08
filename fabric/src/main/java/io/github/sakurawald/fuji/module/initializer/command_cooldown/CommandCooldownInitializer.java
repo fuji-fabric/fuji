@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_cooldown;
 
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlaceholderHelper;
@@ -35,6 +36,42 @@ import java.util.Optional;
 @Document(id = 1751826375815L, value = """
     This module allows you to define a `cooldown` for specified commands.
     """)
+
+@ColorBox(id = 1751902763633L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    There are 2 types of `cooldown`.
+    1. `Unnamed Cooldown`: You can use it to define a cooldown time for a specified command. (The cooldown is tested and managed automatically)
+    2. `Named Cooldown`: You have to use commands to create `named cooldown`, and use commands to `test it`.
+
+    NOTE: If you only want to define a `cooldown` for some commands, just use `unnamed cooldown`.
+    """)
+@ColorBox(id = 1751902885278L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    Create a named cooldown. (With 3 seconds cooldown)
+    Issue: `/command-cooldown create example 3000`
+    """)
+@ColorBox(id = 1751903050083L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    Test a named cooldown.
+    Issue: `/command-cooldown test example \\<player\\> --onFailed "say false %fuji:command_cooldown_left_time example%/%fuji:command_cooldown_left_usage example%" say true`
+    """)
+@ColorBox(id = 1751903086020L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    Reset a named cooldown for a player.
+    Issue: `/command-cooldown reset example \\<player\\>`
+    """)
+@ColorBox(id = 1751903125621L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    Create a named cooldown. (With 15 seconds cooldown, and 3 max usage times)
+    Issue: `/command-cooldown create example 15000 --maxUsage 3`
+    """)
+@ColorBox(id = 1751903203558L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    Create a named cooldown. (Global, all players shares the same cooldown instance)
+    Issue: `/command-cooldown create example 3000 --global true`
+    """)
+@ColorBox(id = 1751903262817L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    By default, a `named cooldown` will be `persisted` on the `storage`.
+    However, you can create a `non-persist named cooldown`.
+    Issue: `/command-cooldown create example 999999999999 --persistent false`
+    This cooldown says that, it can be used only once after each server re-start.
+    """)
+
+
 @CommandNode("command-cooldown")
 @CommandRequirement(level = 4)
 public class CommandCooldownInitializer extends ModuleInitializer {

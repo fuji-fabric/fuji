@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_meta.for_each;
 
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
@@ -14,6 +15,10 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @Document(id = 1751823973159L, value = """
     Provides `/foreach` command.
     If a command is only targets on single player, you can use `/foreach` to apply it for each online player.
+    """)
+@ColorBox(id = 1751968810100L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    Say hello to online players.
+    Issue: `/foreach say hello %player:name%`
     """)
 public class ForEachInitializer extends ModuleInitializer {
 

@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_rewrite;
 
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
@@ -11,6 +12,17 @@ import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826288031L, value = """
     This module allows you to define `regex` to rewrite the command line a player issued.
+    """)
+@ColorBox(id = 1751971914915L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    You can use this module to shorten the command string.
+    Like, rewrite the command string `/home` into `/home tp default`.
+    And provide a shortcut, for `/home tp default` command.
+    """)
+@ColorBox(id = 1751971980398L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ The different compared to `command_alias` module and `command_bundle` module.
+    1. The `command alias` module allows you to define `new command`, and redirects it into `an existing command`.
+    2. The `command bundle` module allows you to define `new command`, and define the argument and body of the new command.
+    3. The `command rewrite` module didn't define any new command. It just works in `network packet` level, and modifies the `issued command string` from the command source player.
     """)
 public class CommandRewriteInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<CommandRewriteConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandRewriteConfigModel.class);

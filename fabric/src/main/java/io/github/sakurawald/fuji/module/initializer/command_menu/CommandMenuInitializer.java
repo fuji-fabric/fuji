@@ -22,10 +22,13 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @Document(id = 1751824895470L, value = """
     This module allows you to define `menu` GUI, to execute commands.
     """)
-
 @ColorBox(id = 1751870445592L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     The `/command-menu open` command is an `admin-level` command.
     You need to use `command_bundle` module, to creat a `user-level` command.
+    """)
+@ColorBox(id = 1751968513281L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    If you want to create a `nested menu`, you need to disable the `close menu on click` option.
+    And handle the `menu close` using the `/command-menu close \\<player\\>` command.
     """)
 
 

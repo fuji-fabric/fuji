@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.command_toolbox.reply;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
@@ -15,6 +16,13 @@ import java.util.HashMap;
 import java.util.Objects;
 
 
+@Document(id = 1751972433657L, value = """
+    This module provides the `/reply` command.
+    To reply the player who recently `/msg` or `/tell` you.
+    """)
+@ColorBox(id = 1751972495394L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    You can use `command_alias` module, to create a new command `/r` as the alias to `/reply` command.
+    """)
 public class ReplyInitializer extends ModuleInitializer {
 
     private static final HashMap<String, String> player2replyTargetPlayer = new HashMap<>();

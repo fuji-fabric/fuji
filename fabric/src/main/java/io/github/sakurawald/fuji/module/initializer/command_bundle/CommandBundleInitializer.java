@@ -28,7 +28,6 @@ import java.util.stream.Stream;
     1. The new command can accept arguments.
     2. The body of the new command, can be a list of commands.
     """)
-
 @ColorBox(id = 1751870454656L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     The features of this module:
     1. Provide a user-friendly DSL, to create `new custom commands` easily.
@@ -37,17 +36,29 @@ import java.util.stream.Stream;
     4. Pre-defined `type-system`, to use the built-in `argument type`.
     5. Register and un-register commands on the fly, without a server re-start.
     """)
-
 @ColorBox(id = 1751870456781L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     To query all supported `argument types`:
     Issue `/fuji inspect argument-types`.
     """)
-
 @ColorBox(id = 1751870458514L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     You can use command generator to get powerful commands:
     https://www.gamergeeks.net/apps/minecraft/particle-command-generator
     """)
-
+@ColorBox(id = 1751901598337L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    Combine many commands into one command.
+    Pattern: `composite-heal`
+    Bundle:
+    1. `say before heal %player:name%`
+    2. `run as fake-op %player:name% particle minecraft:heart ~ ~2 ~`
+    3. `run as player %player:name% heal`
+    4. `say after heal %player:name%`
+    """)
+@ColorBox(id = 1751901750629L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    Transform the form of a command. (Can be used as a shortcut command)
+    Pattern: `warn \\<player player-arg\\> \\<greedy greedy-arg\\>`
+    Bundle:
+    1. `run as player %player:name% send-message $player-arg \\<red\\>You are warned: $greedy-arg`
+    """)
 
 
 @CommandNode("command-bundle")

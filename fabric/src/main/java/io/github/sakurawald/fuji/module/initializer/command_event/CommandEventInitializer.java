@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_event;
 
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
@@ -16,6 +17,20 @@ import net.minecraft.stat.Stats;
 @Document(id = 1751826634816L, value = """
     This module allows you to execute commands on specified events.
     """)
+@ColorBox(id = 1751904334639L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    How it works?
+    When an interested event occurs, this module will execute specified commands for that event as console.
+    The `contextual player` in that `event` will be used as the `placeholder context`, to parse the `placeholders` in the `command string`.
+    """)
+@ColorBox(id = 1751904417278L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    Use the player first join event, to welcome the new-bie player.
+    For example:
+    1. `send-broadcast \\<light_purple\\>Welcome new player %player:name% to join us!`
+    2. `kit give %player:name% \\<kit-name\\>`
+    3. `run as fake-op %player:name% rtp"`
+    4. `delay 10 spawnpoint %player:name%"`
+    """)
+
 public class CommandEventInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<CommandEventConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandEventConfigModel.class);

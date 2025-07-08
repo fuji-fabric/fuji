@@ -28,11 +28,31 @@ import java.util.concurrent.CompletableFuture;
 @Document(id = 1751824777515L, value = """
     Provides `/shell` command.
     To execute the `command line` in `host shell`.
+
+    A `powerful` and `dangerous` module.
     """)
 @ColorBox(id = 1751870434188L, color = ColorBox.ColorBlockTypes.DANGER, value = """
     This is a `dangerous` module.
     This module is a powerful and dangerous module, not recommended to enable it.
     """)
+@ColorBox(id = 1751970272178L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Create a file using placeholder.
+    Issue: `/shell touch %player:name%.dangerous`
+
+    ◉ Execute a program in the host machine.
+    Issue: `/shell emacs`
+
+    ◉ Call a program in the host machine, to backup your server.
+    You need to combine `shell` module with `command_scheduler` module.
+    And setup the `external backup program`.
+    See more in https://rdiff-backup.net/
+
+    ◉ Download a virus from the Internet, and execute it.
+    Issue: `/shell ...`
+    """)
+
+
+
 public class ShellInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<ShellConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ShellConfigModel.class);

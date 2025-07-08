@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.chat.trigger;
 
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
@@ -22,6 +23,27 @@ import java.util.stream.Collectors;
 @Document(id = 1751826730890L, value = """
     This module allows you to define magic spells in chat, to execute commands.
     """)
+
+@ColorBox(id = 1751899049909L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    To define a simple magic spell in chat string.
+    Regex: `magic`
+    Commands: `say magic!`
+    """)
+
+@ColorBox(id = 1751899198263L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    To define a complex magic spell with arguments in chat string.
+    Regex: `i am (.+)`
+    Commands:
+    1. `say You just said: $0`
+    2. `say Hello $1`
+    """)
+
+@ColorBox(id = 1751899201560L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    To define a shortcut for chat display module with Styled Chat mod.
+    Regex: `(?<=^|\\\\s)item(?=\\\\s|$)`
+    Commands: `run as fake-op %player:name% chat display item`
+    """)
+
 public class ChatTriggerInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<ChatTriggerConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatTriggerConfigModel.class);

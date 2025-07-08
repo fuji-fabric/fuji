@@ -26,6 +26,17 @@ import java.util.concurrent.TimeUnit;
     Only use `/delay` to perform short-term job.
     The `delayed commands` will not be persisted, if the server get a re-start.
     """)
+@ColorBox(id = 1751969752045L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ A basic usage.
+    Issue: `/delay 3 say three seconds passed`
+
+    ◉ A nested delay.
+    Issue: `/delay 1 delay 2 delay 3 say 6 seconds passed`
+
+    ◉ A fine-grained delay.
+    Issue: `/delay 3.1415926 say pi seconds passed`
+    """)
+
 public class DelayInitializer extends ModuleInitializer {
 
     private static ScheduledExecutorService DELAY_COMMAND_EXECUTOR;

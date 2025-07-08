@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_toolbox.warp;
 
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
@@ -33,6 +34,16 @@ import java.util.function.Function;
     Provides `/warp` command.
     As a public teleport point.
     """)
+@ColorBox(id = 1751972643858L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Set a display name for a warp.
+    Issue: `/warp set-name \\<warp\\> \\<blue\\>This is the display name`
+
+    ◉ Set a lore for a warp.
+    Issue: `/warp set-lore \\<warp\\> \\<blue\\>This is the first line|<red>This is the second line`
+
+    """)
+
+
 @CommandNode("warp")
 public class WarpInitializer extends ModuleInitializer {
 
