@@ -56,6 +56,13 @@
         "role": "contributor",
         "homepage": "https://github.com/phaldan"
       }
+    },
+    {
+      "name": "pinarruiz",
+      "contact": {
+        "role": "contributor",
+        "homepage": "https://github.com/pinarruiz"
+      }
     }
   ],
   "environment": "*",
