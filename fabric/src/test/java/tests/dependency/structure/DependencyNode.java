@@ -1,5 +1,6 @@
 package tests.dependency.structure;
 
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +17,7 @@ public class DependencyNode {
 
     public static void tryReportViolationDependencyNodes(List<DependencyNode> dependencyNodes, String reason) {
         if (!dependencyNodes.isEmpty()) {
-            System.out.println("===== The following dependency nodes violates the rule =====");
+            LogUtil.warn("===== The following dependency nodes violates the rule =====");
             dependencyNodes.forEach(System.out::println);
             throw new RuntimeException(reason);
         }
