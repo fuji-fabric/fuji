@@ -52,7 +52,6 @@ import org.jetbrains.annotations.NotNull;
     1. https://docs.advntr.dev/minimessage/format.html
     2. https://placeholders.pb4.eu/user/quicktext
     """)
-
 @ColorBox(id = 1751870549047L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     ◉ To set the `prefix` and `suffix` for a player.
 
@@ -60,27 +59,28 @@ import org.jetbrains.annotations.NotNull;
     After install it, issue `/lp group default meta setprefix \\<yellow\\>[awesome]` to assign a `prefix`.
     To use the `prefix`, use the placeholder `%fuji:player_prefix%`.
     """)
-
 @ColorBox(id = 1751870550677L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     ◉ To set the per-player chat style:
     Issue `/chat style set prefix + %message% + suffix`.
     """)
-
 @ColorBox(id = 1751870552243L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     ◉ To allow players to use `\\<blue\\>` tag:
     Issue `/lp group default permission set fuji.style.chat.blue`.
     """)
-
 @ColorBox(id = 1751870553872L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     ◉ To allow players to use `\\<b\\>` tag:
     Issue `/lp group default permission set fuji.style.chat.b`.
     """)
-
 @ColorBox(id = 1751870555712L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     ◉ To allow players to use all tags:
     All tags also including dangerous tags like `\\<click\\>` tag which can run commands on clicked!
     Issue `/lp group default permission set fuji.style.chat.*`
     """)
+@ColorBox(id = 1752175232049L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ Customize the chat format using placeholders.
+    You may want to enable `placeholder` module, to provide more useful placeholders.
+    """)
+
 
 
 @CommandNode("chat style")
