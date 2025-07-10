@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.core.service.random_teleport;
 
 import com.google.common.base.Stopwatch;
+import io.github.sakurawald.fuji.core.AsyncUtil;
 import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
@@ -22,7 +23,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.Iterator;
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.Optional;
 import java.util.OptionalInt;
@@ -31,7 +31,7 @@ import java.util.OptionalInt;
 public class RandomTeleporter {
 
     public static void request(@NotNull ServerPlayerEntity player, @NotNull TeleportSetup setup, @Nullable Consumer<GlobalPos> postConsumer) {
-        CompletableFuture.runAsync(() -> {
+        AsyncUtil.runAsyncAndHandleExceptions(() -> {
             LogUtil.info("Request rtp: {}", player.getGameProfile().getName());
             Stopwatch timer = Stopwatch.createStarted();
 

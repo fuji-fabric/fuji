@@ -1,12 +1,12 @@
 package io.github.sakurawald.fuji.core.structure;
 
+import io.github.sakurawald.fuji.core.AsyncUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.concurrent.CompletableFuture;
 
 public abstract class Downloader {
 
@@ -19,7 +19,7 @@ public abstract class Downloader {
     }
 
     public void startDownload() {
-        CompletableFuture.runAsync(() -> {
+        AsyncUtil.runAsyncAndHandleExceptions(() -> {
             try {
                 LogUtil.info("Start download file from {} to {}.", url, destination);
                 FileUtils.copyURLToFile(url, destination.toFile());

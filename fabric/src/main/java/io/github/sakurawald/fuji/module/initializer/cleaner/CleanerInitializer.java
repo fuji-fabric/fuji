@@ -1,23 +1,25 @@
 package io.github.sakurawald.fuji.module.initializer.cleaner;
 
-import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.service.type_formatter.TypeFormatter;
-import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.cleaner.config.model.CleanerConfigModel;
 import io.github.sakurawald.fuji.module.initializer.cleaner.job.CleanerJob;
+import java.util.HashMap;
+import java.util.Map;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
@@ -28,10 +30,6 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 @Document(id = 1751826898176L, value = """
     This module provides the `entity` cleaner.
@@ -98,30 +96,28 @@ public class CleanerInitializer extends ModuleInitializer {
     @Document(id = 1751826901492L, value = "Trigger the cleaner once.")
     @CommandNode("clean")
     public static int clean() {
-        CompletableFuture.runAsync(() -> {
-            Map<String, Integer> counter = new HashMap<>();
+        Map<String, Integer> counter = new HashMap<>();
 
-            for (ServerWorld world : ServerHelper.getServer().getWorlds()) {
-                for (Entity entity : world.iterateEntities()) {
-                    if (ignoreEntity(entity)) continue;
+        for (ServerWorld world : ServerHelper.getWorlds()) {
+            for (Entity entity : world.iterateEntities()) {
+                if (ignoreEntity(entity)) continue;
 
-                    String key;
-                    if (entity instanceof ItemEntity itemEntity) {
-                        key = itemEntity.getStack().getItem().getTranslationKey();
-                    } else {
-                        key = entity.getType().getTranslationKey();
-                    }
+                String key;
+                if (entity instanceof ItemEntity itemEntity) {
+                    key = itemEntity.getStack().getItem().getTranslationKey();
+                } else {
+                    key = entity.getType().getTranslationKey();
+                }
 
-                    if (shouldRemove(key, entity.age)) {
-                        counter.put(key, counter.getOrDefault(key, 0) + 1);
-                        entity.discard();
-                    }
+                if (shouldRemove(key, entity.age)) {
+                    counter.put(key, counter.getOrDefault(key, 0) + 1);
+                    entity.discard();
                 }
             }
+        }
 
-            // output
-            sendCleanerBroadcast(counter);
-        });
+        // output
+        sendCleanerBroadcast(counter);
 
         return CommandHelper.Return.SUCCESS;
     }

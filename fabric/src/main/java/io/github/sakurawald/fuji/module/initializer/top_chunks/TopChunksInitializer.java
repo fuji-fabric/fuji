@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.top_chunks;
 
+import io.github.sakurawald.fuji.core.AsyncUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
@@ -32,7 +33,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.concurrent.CompletableFuture;
 
 
 @Document(id = 1751826535209L, value = """
@@ -58,7 +58,7 @@ public class TopChunksInitializer extends ModuleInitializer {
     @Document(id = 1751826537195L, value = "List all chunks ordered by lag score.")
     @CommandNode("chunks")
     private static int $chunks(@CommandSource ServerCommandSource source) {
-        CompletableFuture.runAsync(() -> {
+        AsyncUtil.runAsyncAndHandleExceptions(() -> {
             PriorityQueue<ChunkScore> PQ = new PriorityQueue<>();
 
             /* Enumerate worlds. */

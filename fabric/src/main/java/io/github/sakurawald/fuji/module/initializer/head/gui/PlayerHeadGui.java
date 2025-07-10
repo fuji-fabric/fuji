@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.AnvilInputGui;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.fuji.core.AsyncUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
@@ -15,8 +16,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.concurrent.CompletableFuture;
 
 public class PlayerHeadGui extends AnvilInputGui {
 
@@ -58,7 +57,7 @@ public class PlayerHeadGui extends AnvilInputGui {
         if (apiDebounceTimeMs != 0 && apiDebounceTimeMs <= System.currentTimeMillis()) {
             apiDebounceTimeMs = 0;
 
-            CompletableFuture.runAsync(() -> {
+            AsyncUtil.runAsyncAndSwallowExceptions(() -> {
                 /* Make gui element. */
                 GameProfile gameProfile = MojangProfileFetcher.makeOnlineGameProfile(this.getInput());
                 GuiElementBuilder builder = new GuiElementBuilder()

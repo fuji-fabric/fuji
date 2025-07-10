@@ -6,11 +6,11 @@ import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import eu.pb4.sgui.api.gui.layered.LayeredGui;
+import io.github.sakurawald.fuji.core.AsyncUtil;
 import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -193,7 +193,7 @@ public class GuiHelper {
 
             /* Run async method to fetch game profile. */
             int finalI = i;
-            CompletableFuture.runAsync(() -> {
+            AsyncUtil.runAsyncAndSwallowExceptions(() -> {
                 ItemStack itemStack = previousSlot.getItemStack();
 
                 // Fetch the game profile from mojang server.

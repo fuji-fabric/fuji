@@ -537,6 +537,7 @@ public class TextHelper {
             try {
                 return String.format(string, args);
             } catch (Exception e) {
+                // NOTE: The Java standard formatter will not throw any exception, if given arguments are too many.
                 LogUtil.error("""
                     Failed to format arguments in language value.
                     The language value is `{}`.
