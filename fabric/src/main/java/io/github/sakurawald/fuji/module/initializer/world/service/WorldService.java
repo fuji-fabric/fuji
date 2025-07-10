@@ -95,74 +95,10 @@ public class WorldService {
 
     private static void createDimension(@NotNull DimensionNode dimensionNode) {
         MinecraftServer server = ServerHelper.getServer();
-        Identifier dimension = RegistryHelper.makeIdentifier(dimensionNode.dimension);
-        Identifier dimensionType = RegistryHelper.makeIdentifier(dimensionNode.dimension_type);
+        Identifier dimensionIdentifier = RegistryHelper.makeIdentifier(dimensionNode.dimension);
+        Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(dimensionNode.dimension_type);
         long seed = dimensionNode.seed;
-        registerWorld(server, dimension, dimensionType, seed);
-    }
 
-
-    private static void evacuatePlayers(@NotNull ServerWorld dimension) {
-        ServerWorld safeDimension = dimension.getServer().getOverworld();
-        BlockPos safeBlockPos = safeDimension.getSpawnPos();
-
-        List<ServerPlayerEntity> players = new ArrayList<>(dimension.getPlayers());
-        for (ServerPlayerEntity player : players) {
-            GlobalPos from = GlobalPos.of(player);
-            GlobalPos to = new GlobalPos(safeDimension, safeBlockPos.getX() + 0.5, safeBlockPos.getY() + 0.5, safeBlockPos.getZ() + 0.5, 0, 0);
-            TeleportTicket teleportTicket = TeleportTicket.makeVipTicket(player, from, to);
-
-            Managers.getBossBarManager().addTicket(teleportTicket);
-        }
-    }
-
-    private static void deleteDimension(@NotNull ServerWorld world) {
-        MinecraftServer server = world.getServer();
-
-        RegistryKey<World> dimensionKey = world.getRegistryKey();
-        if (server.worlds.remove(dimensionKey, world)) {
-            // fire unload event
-            ServerWorldEvents.UNLOAD.invoker().fire(server, world);
-
-            // remove the entry from registry
-            SimpleRegistry<DimensionOptions> dimensionsRegistry = (SimpleRegistry<DimensionOptions>) RegistryHelper.ofRegistry(RegistryKeys.DIMENSION);
-            SimpleRegistryExtension.remove(dimensionsRegistry, dimensionKey.getValue());
-
-            // delete files
-            File worldDirectory = server.session.getWorldDirectory(dimensionKey).toFile();
-            deleteFiles(worldDirectory);
-        }
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    private static void deleteFiles(@NotNull File file) {
-        if (file.exists() && file.isDirectory()) {
-            File[] files = file.listFiles();
-            if (files == null) return;
-            for (File child : files) {
-                if (child.isDirectory()) {
-                    deleteFiles(child);
-                } else {
-                    child.delete();
-                }
-            }
-        }
-    }
-
-    private static @Nullable DimensionOptions getDimensionOptionsAsTemplate(@NotNull Registry<DimensionOptions> registry, Identifier dimensionTypeIdentifier) {
-        return registry.get(dimensionTypeIdentifier);
-    }
-
-    /**
-     * To avoid share the same reference of the vanilla minecraft default `DimensionOptions` instance,
-     * we must create new instance.
-     */
-    private static @NotNull DimensionOptions makeDimensionOptions(DimensionOptions template) {
-        return new DimensionOptions(template.dimensionTypeEntry(), template.chunkGenerator());
-    }
-
-    @SuppressWarnings("deprecation")
-    private static void registerWorld(@NotNull MinecraftServer server, Identifier dimensionIdentifier, @NotNull Identifier dimenstionTypeIdentifier, long seed) {
         /* create the world */
         // note: we use the same WorldData from OVERWORLD
         MyWorldProperties worldProperties = new MyWorldProperties(server.getSaveProperties(), seed);
@@ -170,10 +106,9 @@ public class WorldService {
         RegistryKey<World> worldRegistryKey = RegistryKey.of(RegistryKeys.WORLD, dimensionIdentifier);
         LogUtil.debug("Make instance of world with registry key of type `World`: {}", worldRegistryKey);
 
-        Registry<DimensionOptions> registry = RegistryHelper.ofRegistry(RegistryKeys.DIMENSION);
-        @Nullable DimensionOptions template = getDimensionOptionsAsTemplate(registry, dimenstionTypeIdentifier);
+        @Nullable DimensionOptions template = makeDimensionOptions(dimensionTypeIdentifier);
         if (template == null) {
-            LogUtil.error("Can't use {} dimension-type as the template to create extra fuji worlds.", dimenstionTypeIdentifier);
+            LogUtil.error("Can't use {} dimension-type as the template to create extra fuji worlds.", dimensionTypeIdentifier);
             return;
         }
 
@@ -195,12 +130,12 @@ public class WorldService {
                 true,
                 null);
         } catch (Exception e) {
-            LogUtil.error("Failed to make ServerWorld instance: dimensionId = {}, dimensionTypeId = {}", dimensionIdentifier, dimenstionTypeIdentifier, e);
+            LogUtil.error("Failed to make ServerWorld instance: dimensionId = {}, dimensionTypeId = {}", dimensionIdentifier, dimensionTypeIdentifier, e);
             return;
         }
 
         // start dragon fight if the dimension type is the end.
-        if (dimenstionTypeIdentifier.equals(DimensionTypes.THE_END_ID)) {
+        if (dimensionTypeIdentifier.equals(DimensionTypes.THE_END_ID)) {
             world.setEnderDragonFight(new EnderDragonFight(world, world.getSeed(), EnderDragonFight.Data.DEFAULT));
         }
 
@@ -226,4 +161,63 @@ public class WorldService {
 
         world.tick(() -> true);
     }
+
+    private static void evacuatePlayers(@NotNull ServerWorld dimension) {
+        ServerWorld safeDimension = dimension.getServer().getOverworld();
+        BlockPos safeBlockPos = safeDimension.getSpawnPos();
+
+        List<ServerPlayerEntity> players = new ArrayList<>(dimension.getPlayers());
+        for (ServerPlayerEntity player : players) {
+            GlobalPos from = GlobalPos.of(player);
+            GlobalPos to = new GlobalPos(safeDimension, safeBlockPos.getX() + 0.5, safeBlockPos.getY() + 0.5, safeBlockPos.getZ() + 0.5, 0, 0);
+            TeleportTicket teleportTicket = TeleportTicket.makeVipTicket(player, from, to);
+
+            Managers.getBossBarManager().addTicket(teleportTicket);
+        }
+    }
+
+    private static void deleteDimension(@NotNull ServerWorld world) {
+        MinecraftServer server = world.getServer();
+
+        // FIXME: Use the vanilla function to handle dimension shutdown.
+        RegistryKey<World> dimensionKey = world.getRegistryKey();
+        if (server.worlds.remove(dimensionKey, world)) {
+            /* Fire an unload event */
+            ServerWorldEvents.UNLOAD.invoker().fire(server, world);
+
+            /* remove the entry from registry */
+            SimpleRegistry<DimensionOptions> dimensionsRegistry = (SimpleRegistry<DimensionOptions>) RegistryHelper.ofRegistry(RegistryKeys.DIMENSION);
+            SimpleRegistryExtension.remove(dimensionsRegistry, dimensionKey.getValue());
+
+            /* Delete world files. */
+            File worldDirectory = server.session.getWorldDirectory(dimensionKey).toFile();
+            deleteFiles(worldDirectory);
+        }
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private static void deleteFiles(@NotNull File file) {
+        if (file.exists() && file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files == null) return;
+            for (File child : files) {
+                if (child.isDirectory()) {
+                    deleteFiles(child);
+                } else {
+                    child.delete();
+                }
+            }
+        }
+    }
+
+    private static @Nullable DimensionOptions makeDimensionOptions(Identifier dimensionTypeIdentifier) {
+        Registry<DimensionOptions> registry = RegistryHelper.ofRegistry(RegistryKeys.DIMENSION);
+        return registry.get(dimensionTypeIdentifier);
+    }
+
+    private static @NotNull DimensionOptions makeDimensionOptions(DimensionOptions template) {
+        // NOTE: Clone a DimensionOptions instance from existing one.
+        return new DimensionOptions(template.dimensionTypeEntry(), template.chunkGenerator());
+    }
+
 }
