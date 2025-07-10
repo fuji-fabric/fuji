@@ -10,20 +10,26 @@ A mod that ports EssentialsX / CMI from bukkit to fabric.
 
 ## Feature
 
-- **light**: modules are designed to be simple.
-- **modular**: you can disable any module if you don't like.
-- **fast**: code with performance in mind.
-- **easy**: text-based manual included.
+- **fast**: written with performance in mind.
+- **simple**: modules are designed to be simple, for one purpose.
+- **modular**: design with a minimal core, to load only the specified modules.
+- **flexible**: enable the modules you want to use, customize the module config, shape this mod to fit your server.
+- **clear**: a text-based pdf manual, and an in-game inspector to describe things.
 - **free**: it's free, open source, and GPL-licensed.
 
 ## Manual
 
-Download a copy of [fuji-manual.pdf](
-https://github.com/sakurawald/fuji/raw/dev/docs/release/fuji.pdf)
+Download a copy of [fuji-manual.pdf](https://github.com/sakurawald/fuji/raw/dev/docs/release/fuji.pdf)
 
 ## Contributing
 
-See [contributing](https://github.com/sakurawald/fuji/blob/dev/CONTRIBUTING.md)
+For User: You can report bugs or suggest new features by opening an issue. Share your feedback and experience to help up improve this project.
+
+For Translator: You can help us translate the `user interface` and `doc string` in [crowdin-project](https://crowdin.com/project/fuji-fabric).
+
+For Developer: You can make any changes or improvements to this mod, which you think would be beneficial to others. (Especially if your changes are bug fixes!)
+
+For any contributors, you are welcome to open a `pull-request` in github to add your name into the [contributor list](https://github.com/sakurawald/fuji/blob/dev/fabric/src/main/resources/fabric.mod.json).
 
 ## Cite
 
