@@ -2,12 +2,15 @@ package tests.dependency.structure;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
 public class DependencyNode {
+    public static final DependencyNode IGNORE_THIS_DEPENDENCY_NODE = new DependencyNode(null, null);
+
     String definition;
     List<String> reference;
 
@@ -17,7 +20,7 @@ public class DependencyNode {
             .filter(referenceName -> Arrays
                 .stream(prefixes)
                 .anyMatch(referenceName::startsWith))
-            .toList();
+            .collect(Collectors.toList());
     }
 
     public void excludeReference(String... prefixes) {
@@ -26,7 +29,7 @@ public class DependencyNode {
             .filter(referenceName -> Arrays
                 .stream(prefixes)
                 .noneMatch(referenceName::startsWith))
-            .toList();
+            .collect(Collectors.toList());
     }
 
     @Override

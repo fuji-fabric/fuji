@@ -28,7 +28,7 @@ import java.util.function.Supplier;
 public class ModuleManager extends BaseManager {
 
     public static final String ENABLE_SUPPLIER_KEY = "enable";
-    public static final String CORE_MODULE_NAME = "core";
+    public static final String CORE_MODULE_PATH = "core";
 
     private static final Set<String> MODULE_PATHS = new HashSet<>(ReflectionUtil.getCompileTimeGraph(ReflectionUtil.MODULE_GRAPH_FILE_NAME));
 
@@ -73,7 +73,7 @@ public class ModuleManager extends BaseManager {
         }
 
         if (left == -1) {
-            return List.of(CORE_MODULE_NAME);
+            return List.of(CORE_MODULE_PATH);
         }
 
         String str = className.substring(left);
@@ -84,8 +84,8 @@ public class ModuleManager extends BaseManager {
 
         List<String> modulePath = new ArrayList<>(List.of(str.split("\\.")));
 
-        if (modulePath.get(0).equals(CORE_MODULE_NAME)) {
-            return List.of(CORE_MODULE_NAME);
+        if (modulePath.get(0).equals(CORE_MODULE_PATH)) {
+            return List.of(CORE_MODULE_PATH);
         }
 
         /* remove the trailing directories until the string is a module path string */
@@ -175,7 +175,7 @@ public class ModuleManager extends BaseManager {
 
     private boolean shouldWeLoadThis(@NotNull List<String> modulePath) {
         if (Configs.MAIN_CONTROL_CONFIG.model().core.debug.disable_all_modules) return false;
-        if (modulePath.get(0).equals(CORE_MODULE_NAME)) return true;
+        if (modulePath.get(0).equals(CORE_MODULE_PATH)) return true;
 
         // cache
         if (MODULE_ENABLE_STATUS.containsKey(modulePath)) {

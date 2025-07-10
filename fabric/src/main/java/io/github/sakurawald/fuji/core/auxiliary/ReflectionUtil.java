@@ -102,7 +102,7 @@ public class ReflectionUtil {
         String result = "unknown";
         for (String splitModulePath : splitModulePathList) {
             result = splitModulePath;
-            if (!result.equals(ModuleManager.CORE_MODULE_NAME)) return result;
+            if (!result.equals(ModuleManager.CORE_MODULE_PATH)) return result;
         }
 
         return result;

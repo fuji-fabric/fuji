@@ -37,20 +37,23 @@ public abstract class BaseDependencyChecker {
         return groupedNodes.values().stream().toList();
     }
 
-    public abstract DependencyNode makeDependencyNode(Path file);
+    public abstract @NotNull DependencyNode makeDependencyNode(Path file);
 
     @SneakyThrows(IOException.class)
-    public List<DependencyNode> makeDependencyNodes(Path dir) {
+    public @NotNull List<DependencyNode> makeDependencyNodes(Path dir) {
         /* Walk the file directory to make node for each file. */
         List<DependencyNode> dependencyNodes = new ArrayList<>();
         Files.walkFileTree(dir, new SimpleFileVisitor<>() {
             @Override
             public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
                 DependencyNode node = makeDependencyNode(path);
-                if (node != null) {
-                    dependencyNodes.add(node);
+                /* Should we ignore this dependency node? */
+                if (node == DependencyNode.IGNORE_THIS_DEPENDENCY_NODE) {
+                    return FileVisitResult.CONTINUE;
                 }
 
+                /* Collect this dependency node. */
+                dependencyNodes.add(node);
                 return FileVisitResult.CONTINUE;
             }
         });

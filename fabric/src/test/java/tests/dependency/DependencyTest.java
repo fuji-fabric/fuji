@@ -23,14 +23,14 @@ import java.util.stream.Stream;
     When you reference a symbol, it will trigger the loading of mixins, which introduces the possibility to crash the server.
     Especially when the server is not initialized fully.
     """)
-public class CheckDependencyTest {
+public class DependencyTest {
 
     private static final String PROJECT_PACKAGE = Fuji.class.getPackageName();
     private static final String PROJECT_MODULE_PACKAGE = PROJECT_PACKAGE + ".module";
 
     private static final Path COMPILE_TIME_JAVA_SOURCE_PATH = Path.of("src", "main", "java");
     private static final Path COMPILE_TIME_MAIN_FUNCTION_PACKAGE_PATH = COMPILE_TIME_JAVA_SOURCE_PATH.resolve(PROJECT_PACKAGE.replace(".", "/"));
-    public static final Path COMPILE_TIME_CORE_PACKAGE_PATH = COMPILE_TIME_MAIN_FUNCTION_PACKAGE_PATH.resolve("core");
+    private static final Path COMPILE_TIME_CORE_PACKAGE_PATH = COMPILE_TIME_MAIN_FUNCTION_PACKAGE_PATH.resolve("core");
 
     private static class WellKnownPackages {
         private static final String JAVA_PACKAGE = "java.";
@@ -50,6 +50,7 @@ public class CheckDependencyTest {
     };
 
     @Test
+//    @Disabled("Enable this test to see the detailed result of dependency nodes.")
     public void listFileDependencies() {
         new FileDependencyChecker()
             .makeDependencyNodes(COMPILE_TIME_JAVA_SOURCE_PATH)
@@ -58,11 +59,13 @@ public class CheckDependencyTest {
 
     @Test
     void testModuleDependency() {
-        List<DependencyNode> dependencies = new ModuleDependencyChecker().makeDependencyNodes(COMPILE_TIME_JAVA_SOURCE_PATH);
+        List<DependencyNode> dependencies = new ModuleDependencyChecker()
+            .makeDependencyNodes(COMPILE_TIME_JAVA_SOURCE_PATH);
 
         if (!dependencies.isEmpty()) {
+            System.out.println("===== The following dependency nodes violates the rule =====");
             dependencies.forEach(System.out::println);
-            throw new RuntimeException("one module references other modules.");
+            throw new RuntimeException("One module references other modules directly.");
         }
     }
 

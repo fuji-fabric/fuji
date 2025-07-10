@@ -1,11 +1,8 @@
 package tests.dependency.structure;
 
-import com.google.gson.JsonElement;
 import io.github.sakurawald.fuji.Fuji;
-import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
-import io.github.sakurawald.fuji.core.config.model.ConfigModel;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -13,36 +10,42 @@ import java.util.List;
 
 public class ModuleDependencyChecker extends FileDependencyChecker {
 
-    public static final JsonElement DUMMY_MAIN_CONTROL_FILE_JSON = BaseConfigurationHandler.getGson().toJsonTree(new ConfigModel());
+    @SuppressWarnings("UnnecessaryLocalVariable")
+    private @NotNull DependencyNode groupReferencesByModulePath(DependencyNode node) {
+        /* Detect cross modules references. */
+        String definitionClassName = node.definition;
+        String definitionModulePath = ModuleManager.computeJoinedModulePath(definitionClassName);
+        List<String> bannedReferenceNames = new ArrayList<>();
+        for (String referenceClassName : node.getReference()) {
+            String referenceModulePath = ModuleManager.computeJoinedModulePath(referenceClassName);
 
-    private @Nullable DependencyNode groupSymbol(DependencyNode node) {
-        String definition = ModuleManager.computeJoinedModulePath(node.getDefinition());
-        List<String> referenceList = new ArrayList<>();
+            /* Allow to reference symbols from core module. */
+            if (referenceModulePath.equals(ModuleManager.CORE_MODULE_PATH)) continue;
 
-        for (String ref : node.getReference()) {
-            String reference = ModuleManager.computeJoinedModulePath(ref);
-            // skip -> common reference
-            if (reference.equals(ModuleManager.CORE_MODULE_NAME)) continue;
-            // skip -> self reference
-            if (definition.equals(reference)) continue;
-            // skip -> parent reference
-            if (definition.startsWith(reference)) continue;
+            /* Allow to reference symbols from self-module or parent-module. */
+            if (definitionModulePath.startsWith(referenceModulePath)) continue;
 
-            referenceList.add(reference);
+            bannedReferenceNames.add(referenceModulePath);
         }
 
-        if (definition.equals(ModuleManager.CORE_MODULE_NAME) || definition.equals("tester")) return null;
-        if (referenceList.isEmpty()) return null;
-        return new DependencyNode(definition, referenceList);
+        if (bannedReferenceNames.isEmpty()) {
+            return DependencyNode.IGNORE_THIS_DEPENDENCY_NODE;
+        }
+
+        /* Return the violation node. */
+        DependencyNode violationDependencyNode = new DependencyNode(definitionModulePath, bannedReferenceNames);
+        return violationDependencyNode;
     }
 
     @Override
-    public @Nullable DependencyNode makeDependencyNode(Path filePath) {
+    public @NotNull DependencyNode makeDependencyNode(Path filePath) {
+        /* Make the dependency nodes by file. */
         DependencyNode dependency = super.makeDependencyNode(filePath);
 
-        // filter: only collect project source file, and group them into modules.
+        /* We only cares the files from this project. */
         dependency.includeReference(Fuji.class.getPackageName());
 
-        return groupSymbol(dependency);
+        /* Group the references by module path. */
+        return groupReferencesByModulePath(dependency);
     }
 }

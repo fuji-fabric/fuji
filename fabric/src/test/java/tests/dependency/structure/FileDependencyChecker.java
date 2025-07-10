@@ -18,7 +18,7 @@ public class FileDependencyChecker extends BaseDependencyChecker {
     private static final Pattern JAVA_STATIC_IMPORT_STATEMENT_PATTERN = Pattern.compile("import\\s+static\\s+(\\S+)\\.\\S+;");
 
     @Override
-    public DependencyNode makeDependencyNode(Path filePath) {
+    public @NotNull DependencyNode makeDependencyNode(Path filePath) {
         String className = mapFilePathToClassName(filePath);
         List<String> classNames = analyzeImportStatements(filePath);
 
