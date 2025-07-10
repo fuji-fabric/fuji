@@ -8,9 +8,9 @@ import io.github.sakurawald.fuji.module.mixin.GlobalMixinConfigPlugin;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.junit.jupiter.api.Test;
-import structure.dependency_checker.Dependency;
-import structure.dependency_checker.FileDependencyChecker;
-import structure.dependency_checker.ModuleDependencyChecker;
+import tests.dependency.structure.Dependency;
+import tests.dependency.structure.FileDependencyChecker;
+import tests.dependency.structure.ModuleDependencyChecker;
 
 import java.nio.file.Path;
 import java.util.List;

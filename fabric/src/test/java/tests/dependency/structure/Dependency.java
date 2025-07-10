@@ -1,4 +1,4 @@
-package structure.dependency_checker;
+package tests.dependency.structure;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package structure.dependency_checker;
+package tests.dependency.structure;
 
 import com.google.gson.JsonElement;
 import io.github.sakurawald.fuji.Fuji;
