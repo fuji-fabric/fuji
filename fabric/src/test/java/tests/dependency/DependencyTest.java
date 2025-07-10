@@ -35,8 +35,6 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.scoreboard.ScoreboardCriterion;
-import net.minecraft.scoreboard.ScoreboardDisplaySlot;
-import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
@@ -97,138 +95,138 @@ public class DependencyTest {
 
 //    private static final Path COMPILE_TIME_CORE_CONFIG_PACKAGE_PATH = COMPILE_TIME_CORE_PACKAGE_PATH.resolve("config");
 
-    private static @NotNull String[] getAllowedPackagesInCore() {
-        List<String> allowedPackages = new ArrayList<>();
+    private static @NotNull String[] getAllowedReferencesInCore() {
+        List<String> allowedReferences = new ArrayList<>();
 
         /* Handle special class files. */
-        allowedPackages.add(Fuji.class.getPackage().getName());
-        allowedPackages.add(ModuleInitializer.class.getPackage().getName());
-        allowedPackages.add(CoreInitializer.class.getPackage().getName());
-        allowedPackages.add(GlobalMixinConfigPlugin.class.getName());
+        allowedReferences.add(Fuji.class.getPackage().getName());
+        allowedReferences.add(ModuleInitializer.class.getPackage().getName());
+        allowedReferences.add(CoreInitializer.class.getPackage().getName());
+        allowedReferences.add(GlobalMixinConfigPlugin.class.getName());
 
         /* Treat the classes inside core package as a whole. */
-        allowedPackages.add(PROJECT_CORE_PACKAGE_NAME);
+        allowedReferences.add(PROJECT_CORE_PACKAGE_NAME);
 
         /* Allowed non-Minecraft libraries. */
-        allowedPackages.add("java.");
-        allowedPackages.add("org.jetbrains.");
-        allowedPackages.add("lombok.");
-        allowedPackages.add("com.google.gson.");
-        allowedPackages.add("com.google.common.");
-        allowedPackages.add("org.quartz.");
-        allowedPackages.add("com.jayway.jsonpath.");
-        allowedPackages.add("org.apache.");
+        allowedReferences.add("java.");
+        allowedReferences.add("org.jetbrains.");
+        allowedReferences.add("lombok.");
+        allowedReferences.add("com.google.gson.");
+        allowedReferences.add("com.google.common.");
+        allowedReferences.add("org.quartz.");
+        allowedReferences.add("com.jayway.jsonpath.");
+        allowedReferences.add("org.apache.");
 
         /* Allowed Minecraft libraries. */
-        allowedPackages.add("eu.pb4.");
-        allowedPackages.add("net.luckperms.api.");
-        allowedPackages.add("com.mojang.brigadier.");
-        allowedPackages.add("com.mojang.authlib.");
-        allowedPackages.add("net.fabricmc.api.");
-        allowedPackages.add("net.fabricmc.loader.api.");
-        allowedPackages.add("org.spongepowered.asm.");
+        allowedReferences.add("eu.pb4.");
+        allowedReferences.add("net.luckperms.api.");
+        allowedReferences.add("com.mojang.brigadier.");
+        allowedReferences.add("com.mojang.authlib.");
+        allowedReferences.add("net.fabricmc.api.");
+        allowedReferences.add("net.fabricmc.loader.api.");
+        allowedReferences.add("org.spongepowered.asm.");
 
         /* Allowed Minecraft entities. */
-        allowedPackages.add(MinecraftServer.class.getName());
-        allowedPackages.add(PlayerManager.class.getName());
-        allowedPackages.add(UserCache.class.getName());
+        allowedReferences.add(MinecraftServer.class.getName());
+        allowedReferences.add(PlayerManager.class.getName());
+        allowedReferences.add(UserCache.class.getName());
 
-        allowedPackages.add(Registry.class.getName());
-        allowedPackages.add(Registries.class.getName());
-        allowedPackages.add(RegistryKeys.class.getName());
-        allowedPackages.add(RegistryKey.class.getName());
-        allowedPackages.add(RegistryEntry.class.getName());
-        allowedPackages.add(Identifier.class.getName());
-        allowedPackages.add(SimpleRegistry.class.getName());
+        allowedReferences.add(Registry.class.getName());
+        allowedReferences.add(Registries.class.getName());
+        allowedReferences.add(RegistryKeys.class.getName());
+        allowedReferences.add(RegistryKey.class.getName());
+        allowedReferences.add(RegistryEntry.class.getName());
+        allowedReferences.add(Identifier.class.getName());
+        allowedReferences.add(SimpleRegistry.class.getName());
 
-        allowedPackages.add("net.minecraft.nbt.");
-        allowedPackages.add("net.minecraft.storage.ReadView");
-        allowedPackages.add(ErrorReporter.class.getName());
+        allowedReferences.add("net.minecraft.nbt.");
+        allowedReferences.add("net.minecraft.storage.ReadView");
+        allowedReferences.add(ErrorReporter.class.getName());
 
-        allowedPackages.add("net.minecraft.component.");
+        allowedReferences.add("net.minecraft.component.");
 
-        allowedPackages.add(MessageType.class.getName());
+        allowedReferences.add(MessageType.class.getName());
 
 
-        allowedPackages.add(ServerPlayerEntity.class.getName());
-        allowedPackages.add(PlayerEntity.class.getName());
-        allowedPackages.add("net.minecraft.entity.Leashable");
-        allowedPackages.add("net.minecraft.entity.decoration.BlockAttachedEntity");
-        allowedPackages.add("net.minecraft.entity.decoration.LeashKnotEntity");
-        allowedPackages.add("net.minecraft.entity.vehicle.AbstractMinecartEntity");
-        allowedPackages.add("net.minecraft.entity.vehicle.BoatEntity");
-        allowedPackages.add("net.minecraft.entity.vehicle.VehicleEntity");
+        allowedReferences.add(ServerPlayerEntity.class.getName());
+        allowedReferences.add(PlayerEntity.class.getName());
+        allowedReferences.add("net.minecraft.entity.Leashable");
+        allowedReferences.add("net.minecraft.entity.decoration.BlockAttachedEntity");
+        allowedReferences.add("net.minecraft.entity.decoration.LeashKnotEntity");
+        allowedReferences.add("net.minecraft.entity.vehicle.AbstractMinecartEntity");
+        allowedReferences.add("net.minecraft.entity.vehicle.BoatEntity");
+        allowedReferences.add("net.minecraft.entity.vehicle.VehicleEntity");
 
-        allowedPackages.add(ServerCommandSource.class.getName());
-        allowedPackages.add(CommandManager.class.getName());
-        allowedPackages.add(CommandRegistryAccess.class.getName());
+        allowedReferences.add(ServerCommandSource.class.getName());
+        allowedReferences.add(CommandManager.class.getName());
+        allowedReferences.add(CommandRegistryAccess.class.getName());
 
-        allowedPackages.add(Text.class.getName());
-        allowedPackages.add(Style.class.getName());
-        allowedPackages.add(Formatting.class.getName());
-        allowedPackages.add(MutableText.class.getName());
-        allowedPackages.add(ClickEvent.class.getName());
+        allowedReferences.add(Text.class.getName());
+        allowedReferences.add(Style.class.getName());
+        allowedReferences.add(Formatting.class.getName());
+        allowedReferences.add(MutableText.class.getName());
+        allowedReferences.add(ClickEvent.class.getName());
 
-        allowedPackages.add(ItemStack.class.getName());
+        allowedReferences.add(ItemStack.class.getName());
 
-        allowedPackages.add(World.class.getName());
-        allowedPackages.add(ServerWorld.class.getName());
-        allowedPackages.add(Chunk.class.getName());
-        allowedPackages.add(ChunkPos.class.getName());
-        allowedPackages.add(ChunkHolder.class.getName());
-        allowedPackages.add(ChunkSectionPos.class.getName());
-        allowedPackages.add(Direction.class.getName());
-        allowedPackages.add(DimensionType.class.getName());
-        allowedPackages.add(DimensionTypes.class.getName());
+        allowedReferences.add(World.class.getName());
+        allowedReferences.add(ServerWorld.class.getName());
+        allowedReferences.add(Chunk.class.getName());
+        allowedReferences.add(ChunkPos.class.getName());
+        allowedReferences.add(ChunkHolder.class.getName());
+        allowedReferences.add(ChunkSectionPos.class.getName());
+        allowedReferences.add(Direction.class.getName());
+        allowedReferences.add(DimensionType.class.getName());
+        allowedReferences.add(DimensionTypes.class.getName());
 
-        allowedPackages.add(Vec3d.class.getName());
-        allowedPackages.add(Vec2f.class.getName());
+        allowedReferences.add(Vec3d.class.getName());
+        allowedReferences.add(Vec2f.class.getName());
 
-        allowedPackages.add(Item.class.getName());
+        allowedReferences.add(Item.class.getName());
 
-        allowedPackages.add(Block.class.getName());
-        allowedPackages.add(Blocks.class.getName());
-        allowedPackages.add(BlockPos.class.getName());
-        allowedPackages.add(BlockItem.class.getName());
-        allowedPackages.add(BlockState.class.getName());
+        allowedReferences.add(Block.class.getName());
+        allowedReferences.add(Blocks.class.getName());
+        allowedReferences.add(BlockPos.class.getName());
+        allowedReferences.add(BlockItem.class.getName());
+        allowedReferences.add(BlockState.class.getName());
 
-        allowedPackages.add(Entity.class.getName());
-        allowedPackages.add(MobEntity.class.getName());
+        allowedReferences.add(Entity.class.getName());
+        allowedReferences.add(MobEntity.class.getName());
 
-        allowedPackages.add(DamageSource.class.getName());
+        allowedReferences.add(DamageSource.class.getName());
 
-        allowedPackages.add(BossBar.class.getName());
-        allowedPackages.add(ServerBossBar.class.getName());
+        allowedReferences.add(BossBar.class.getName());
+        allowedReferences.add(ServerBossBar.class.getName());
 
-        allowedPackages.add(ScreenHandlerType.class.getName());
-        allowedPackages.add(GenericContainerScreenHandler.class.getName());
-        allowedPackages.add(EquipmentSlot.class.getName());
-        allowedPackages.add(SimpleInventory.class.getName());
-        allowedPackages.add(DefaultedList.class.getName());
+        allowedReferences.add(ScreenHandlerType.class.getName());
+        allowedReferences.add(GenericContainerScreenHandler.class.getName());
+        allowedReferences.add(EquipmentSlot.class.getName());
+        allowedReferences.add(SimpleInventory.class.getName());
+        allowedReferences.add(DefaultedList.class.getName());
 
-        allowedPackages.add(DyeColor.class.getName());
+        allowedReferences.add(DyeColor.class.getName());
 
-        allowedPackages.add(SoundEvent.class.getName());
-        allowedPackages.add(SoundCategory.class.getName());
+        allowedReferences.add(SoundEvent.class.getName());
+        allowedReferences.add(SoundCategory.class.getName());
 
-        allowedPackages.add("net.minecraft.network.packet.");
-        allowedPackages.add(ServerPlayNetworkHandler.class.getName());
+        allowedReferences.add("net.minecraft.network.packet.");
+        allowedReferences.add(ServerPlayNetworkHandler.class.getName());
 
-        allowedPackages.add("net.minecraft.command.argument.");
-        allowedPackages.add("net.minecraft.scoreboard.ScoreboardDisplaySlot");
-        allowedPackages.add("net.minecraft.scoreboard.ScoreboardObjective");
-        allowedPackages.add(NumberRange.class.getName());
-        allowedPackages.add(SlotRange.class.getName());
-        allowedPackages.add(ColumnPos.class.getName());
-        allowedPackages.add(Team.class.getName());
-        allowedPackages.add(ParticleEffect.class.getName());
-        allowedPackages.add(GameMode.class.getName());
-        allowedPackages.add(CommandFunction.class.getName());
-        allowedPackages.add(ScoreboardCriterion.class.getName());
+        allowedReferences.add("net.minecraft.command.argument.");
+        allowedReferences.add("net.minecraft.scoreboard.ScoreboardDisplaySlot");
+        allowedReferences.add("net.minecraft.scoreboard.ScoreboardObjective");
+        allowedReferences.add(NumberRange.class.getName());
+        allowedReferences.add("net.minecraft.inventory.SlotRange");
+        allowedReferences.add(ColumnPos.class.getName());
+        allowedReferences.add(Team.class.getName());
+        allowedReferences.add(ParticleEffect.class.getName());
+        allowedReferences.add(GameMode.class.getName());
+        allowedReferences.add(CommandFunction.class.getName());
+        allowedReferences.add(ScoreboardCriterion.class.getName());
 
-        allowedPackages.add(ShulkerBoxBlock.class.getName());
+        allowedReferences.add(ShulkerBoxBlock.class.getName());
 
-        return allowedPackages.toArray(new String[0]);
+        return allowedReferences.toArray(new String[0]);
     }
 
     @Test
@@ -258,7 +256,7 @@ public class DependencyTest {
                 );
 
                 /* Allow the core to reference these classes directly. */
-                node.excludeReference(getAllowedPackagesInCore());
+                node.excludeReference(getAllowedReferencesInCore());
 
                 return !node.reference.isEmpty();
             })
@@ -280,7 +278,7 @@ public class DependencyTest {
             .stream()
             .filter(node -> {
                 /* Only allow to reference these symbols in main control file, to avoid early class loading. */
-                node.excludeReference(getAllowedPackagesInCore());
+                node.excludeReference(getAllowedReferencesInCore());
                 return !node.reference.isEmpty();
             })
             .toList();
