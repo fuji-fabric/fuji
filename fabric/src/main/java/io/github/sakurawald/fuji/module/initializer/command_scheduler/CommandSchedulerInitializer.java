@@ -59,7 +59,7 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
 
     @Document(id = 1751826757048L, value = "List all defined jobs.")
     @CommandNode("list")
-    private static int list(@CommandSource ServerPlayerEntity player) {
+    private static int $list(@CommandSource ServerPlayerEntity player) {
         List<Job> jobs = scheduler.model().jobs;
         new JobGui(player, jobs, 0).open();
         return CommandHelper.Return.SUCCESS;
@@ -67,7 +67,7 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
 
     @Document(id = 1751826758887L, value = "Trigger a job manually.")
     @CommandNode("trigger")
-    private static int trigger(JobName jobName) {
+    private static int $trigger(JobName jobName) {
         scheduler.model().jobs.stream()
             .filter(it -> it.getName().equals(jobName.getValue()))
             .findFirst()

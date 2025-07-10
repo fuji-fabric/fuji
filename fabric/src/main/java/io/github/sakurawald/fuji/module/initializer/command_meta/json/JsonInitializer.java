@@ -64,7 +64,7 @@ public class JsonInitializer extends ModuleInitializer {
     }
 
     @CommandNode("read")
-    private static int read(@CommandSource CommandContext<ServerCommandSource> ctx, String filePath, String jsonPath) {
+    private static int $read(@CommandSource CommandContext<ServerCommandSource> ctx, String filePath, String jsonPath) {
         operateJson(filePath, (documentContext, path) -> {
             Object read = documentContext.read(jsonPath);
             ctx.getSource().sendMessage(Text.literal(read.toString()));
@@ -74,7 +74,7 @@ public class JsonInitializer extends ModuleInitializer {
     }
 
     @CommandNode("write")
-    private static int write(@CommandSource CommandContext<ServerCommandSource> ctx, String filePath, String jsonPath, JsonValueType valueType, GreedyString value) {
+    private static int $write(@CommandSource CommandContext<ServerCommandSource> ctx, String filePath, String jsonPath, JsonValueType valueType, GreedyString value) {
         operateJson(filePath, (documentContext, path) -> {
             Object obj = valueType.parse(value.getValue());
             documentContext.set(jsonPath, obj);
@@ -84,7 +84,7 @@ public class JsonInitializer extends ModuleInitializer {
     }
 
     @CommandNode("delete")
-    private static int delete(@CommandSource CommandContext<ServerCommandSource> ctx, String filePath, String jsonPath) {
+    private static int $delete(@CommandSource CommandContext<ServerCommandSource> ctx, String filePath, String jsonPath) {
         operateJson(filePath, (documentContext, path) -> {
             documentContext.delete(jsonPath);
             return true;
@@ -93,7 +93,7 @@ public class JsonInitializer extends ModuleInitializer {
     }
 
     @CommandNode("put")
-    private static int put(@CommandSource CommandContext<ServerCommandSource> ctx, String filePath, String jsonPath, String jsonKey, JsonValueType valueType, GreedyString value) {
+    private static int $put(@CommandSource CommandContext<ServerCommandSource> ctx, String filePath, String jsonPath, String jsonKey, JsonValueType valueType, GreedyString value) {
         operateJson(filePath, (documentContext, path) -> {
             Object obj = valueType.parse(value.getValue());
             documentContext.put(jsonPath, jsonKey, obj);
@@ -103,7 +103,7 @@ public class JsonInitializer extends ModuleInitializer {
     }
 
     @CommandNode("renameKey")
-    private static int renameKey(@CommandSource CommandContext<ServerCommandSource> ctx, String filePath, String jsonPath, String oldJsonKey, String newJsonKey) {
+    private static int $renameKey(@CommandSource CommandContext<ServerCommandSource> ctx, String filePath, String jsonPath, String oldJsonKey, String newJsonKey) {
         operateJson(filePath, (documentContext, path) -> {
             documentContext.renameKey(jsonPath, oldJsonKey, newJsonKey);
             return true;

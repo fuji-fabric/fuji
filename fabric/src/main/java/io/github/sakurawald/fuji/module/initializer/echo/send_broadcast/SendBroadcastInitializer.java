@@ -17,7 +17,7 @@ public class SendBroadcastInitializer extends ModuleInitializer {
 
     @CommandNode("send-broadcast")
     @CommandRequirement(level = 4)
-    private static int sendBroadcast(GreedyString rest) {
+    private static int $sendBroadcast(GreedyString rest) {
         String message = rest.getValue();
 
         Text broadcastText = TextHelper.getTextByValue(null, message);

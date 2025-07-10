@@ -14,7 +14,7 @@ public class FreezeInitializer extends ModuleInitializer {
     @Document(id = 1751825159763L, value = "Freeze a player for ticks.")
     @CommandNode("freeze")
     @CommandRequirement(level = 4)
-    private static int freeze(@CommandSource ServerCommandSource source, ServerPlayerEntity player, int ticks) {
+    private static int $freeze(@CommandSource ServerCommandSource source, ServerPlayerEntity player, int ticks) {
         player.setFrozenTicks(ticks);
         return CommandHelper.Return.SUCCESS;
     }

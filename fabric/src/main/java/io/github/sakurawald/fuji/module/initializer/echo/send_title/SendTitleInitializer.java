@@ -29,7 +29,7 @@ public class SendTitleInitializer extends ModuleInitializer {
 
     @CommandNode("send-title")
     @CommandRequirement(level = 4)
-    private static int sendTitle(@CommandSource ServerCommandSource source, ServerPlayerEntity player
+    private static int $sendTitle(@CommandSource ServerCommandSource source, ServerPlayerEntity player
         , Optional<String> mainTitle
         , Optional<String> subTitle
         , Optional<Integer> fadeInTicks

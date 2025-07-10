@@ -30,7 +30,7 @@ public class OneOfInitializer extends ModuleInitializer {
     @Document(id = 1751824718640L, value = "One-of command randomly pick one of commands and execute it as console.")
     @CommandNode("one-of")
     @CommandRequirement(level = 4)
-    private static int oneOf(@CommandSource ServerCommandSource source, GreedyString rest) {
+    private static int $oneOf(@CommandSource ServerCommandSource source, GreedyString rest) {
         String $rest = rest.getValue();
 
         List<String> commands = Arrays.stream($rest.split("one-of"))

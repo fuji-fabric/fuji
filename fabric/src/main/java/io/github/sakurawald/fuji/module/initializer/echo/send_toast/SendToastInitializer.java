@@ -214,7 +214,7 @@ public class SendToastInitializer extends ModuleInitializer {
 
     @CommandNode("send-toast")
     @CommandRequirement(level = 4)
-    private static int sendToast(@CommandSource ServerCommandSource source
+    private static int $sendToast(@CommandSource ServerCommandSource source
         , ServerPlayerEntity player
         , Optional<AdvancementFrame> toastType
         , Optional<Item> icon

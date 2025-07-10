@@ -18,7 +18,7 @@ public class RulesInitializer extends ModuleInitializer {
 
     @Document(id = 1751825371097L, value = "Query the server rules.")
     @CommandNode("rules")
-    private static int asMessage(@CommandSource @CommandTarget ServerPlayerEntity player) {
+    private static int $rules(@CommandSource @CommandTarget ServerPlayerEntity player) {
         String string = config.model().rules;
 
         PagedMessageText pagedMessageText = new PagedMessageText(player, string);

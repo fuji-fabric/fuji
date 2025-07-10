@@ -41,7 +41,7 @@ public class ChatSpyInitializer extends ModuleInitializer {
 
     @Document(id = 1751826711342L, value = "Enable/disable the chat spy mode for you.")
     @CommandNode("toggle")
-    private static int toggle(@CommandSource ServerPlayerEntity player) {
+    private static int $toggle(@CommandSource ServerPlayerEntity player) {
         ChatSpyConfigModel.PerPlayerOptions options = withOptions(player);
         options.enabled = !options.enabled;
         config.writeStorage();

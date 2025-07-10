@@ -41,20 +41,20 @@ public class RunInitializer extends ModuleInitializer {
 
     @Document(id = 1751823993461L, value = "Execute a command as console.")
     @CommandNode("as console")
-    private static int runAsConsole(@CommandSource ServerCommandSource source, GreedyString rest) {
+    private static int $runAsConsole(@CommandSource ServerCommandSource source, GreedyString rest) {
         CommandExecutor.execute(ExtendedCommandSource.asConsole(source), rest.getValue());
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1751823999061L, value = "Execute a command as a player.")
     @CommandNode("as player")
-    private static int runAsPlayer(@CommandSource ServerCommandSource source, ServerPlayerEntity player, GreedyString rest) {
+    private static int $runAsPlayer(@CommandSource ServerCommandSource source, ServerPlayerEntity player, GreedyString rest) {
         return CommandExecutor.execute(ExtendedCommandSource.asPlayer(source, player), rest.getValue());
     }
 
     @Document(id = 1751824003937L, value = "Execute a command as a player with fake-op.")
     @CommandNode("as fake-op")
-    private static int runAsFakeOp(@CommandSource ServerCommandSource source, ServerPlayerEntity player, GreedyString rest) {
+    private static int $runAsFakeOp(@CommandSource ServerCommandSource source, ServerPlayerEntity player, GreedyString rest) {
         return CommandExecutor.execute(ExtendedCommandSource.asFakeOp(source, player), rest.getValue());
     }
 }

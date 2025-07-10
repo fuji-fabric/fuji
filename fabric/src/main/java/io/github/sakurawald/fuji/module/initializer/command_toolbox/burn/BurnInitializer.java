@@ -14,7 +14,7 @@ public class BurnInitializer extends ModuleInitializer {
     @Document(id = 1751825133157L, value = "Burn a target player for ticks.")
     @CommandNode("burn")
     @CommandRequirement(level = 4)
-    private static int burn(@CommandSource ServerCommandSource source, ServerPlayerEntity player, int ticks) {
+    private static int $burn(@CommandSource ServerCommandSource source, ServerPlayerEntity player, int ticks) {
         player.setFireTicks(ticks);
         return CommandHelper.Return.SUCCESS;
     }

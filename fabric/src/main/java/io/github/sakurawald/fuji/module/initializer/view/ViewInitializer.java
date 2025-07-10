@@ -34,7 +34,7 @@ public class ViewInitializer extends ModuleInitializer {
 
     @Document(id = 1751824976609L, value = "View the player's inventory.")
     @CommandNode("inv")
-    private static int inv(@CommandSource ServerPlayerEntity source, OfflinePlayerName target) {
+    private static int $inv(@CommandSource ServerPlayerEntity source, OfflinePlayerName target) {
         checkSelfView(source, target);
 
         source.openHandledScreen(new InventoryRedirectScreenFactory(source, target.getValue()).makeFactory());
@@ -43,7 +43,7 @@ public class ViewInitializer extends ModuleInitializer {
 
     @Document(id = 1751824982580L, value = "View the player's enderchest.")
     @CommandNode("ender")
-    private static int ender(@CommandSource ServerPlayerEntity source, OfflinePlayerName target) {
+    private static int $ender(@CommandSource ServerPlayerEntity source, OfflinePlayerName target) {
         checkSelfView(source, target);
 
         source.openHandledScreen(new EnderChestRedirectScreenFactory(source, target.getValue()).makeFactory());

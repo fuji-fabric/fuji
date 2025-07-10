@@ -21,7 +21,7 @@ public class SendConsoleInitializer extends ModuleInitializer {
 
     @CommandNode("send-console")
     @CommandRequirement(level = 4)
-    private static int sendConsole(GreedyString message) {
+    private static int $sendConsole(GreedyString message) {
         LogUtil.info("Send Console: {}", message.getValue());
         return CommandHelper.Return.SUCCESS;
     }

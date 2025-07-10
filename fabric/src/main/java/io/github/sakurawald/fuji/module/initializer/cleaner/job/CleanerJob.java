@@ -16,6 +16,6 @@ public class CleanerJob extends CronJob {
 
     @Override
     public void execute(JobExecutionContext context) {
-        CleanerInitializer.clean();
+        CleanerInitializer.$clean();
     }
 }

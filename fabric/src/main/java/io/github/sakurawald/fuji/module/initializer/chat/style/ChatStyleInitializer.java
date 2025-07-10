@@ -111,7 +111,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
         For example: `/chat style set prefix + %message% + suffix`
         """)
     @CommandNode("set")
-    private static int setPerPlayerFormat(@CommandSource @CommandTarget ServerPlayerEntity player, GreedyString format) {
+    private static int $setPerPlayerFormat(@CommandSource @CommandTarget ServerPlayerEntity player, GreedyString format) {
         /* Save the new format. */
         String playerName = PlayerHelper.getPlayerName(player);
         String newFormat = format.getValue();
@@ -131,7 +131,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
 
     @Document(id = 1751826681754L, value = "Reset your personal chat content format.")
     @CommandNode("reset")
-    private static int resetPerPlayerFormat(@CommandSource @CommandTarget ServerPlayerEntity player) {
+    private static int $resetPerPlayerFormat(@CommandSource @CommandTarget ServerPlayerEntity player) {
         /* Remove the per-player format. */
         String playerName = PlayerHelper.getPlayerName(player);
         chatFormatData.model().format.player2format.remove(playerName);

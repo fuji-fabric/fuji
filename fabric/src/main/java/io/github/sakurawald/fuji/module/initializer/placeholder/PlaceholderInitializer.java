@@ -68,7 +68,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
 
     @Document(id = 1751826515140L, value = "List all placeholders registered in server.")
     @CommandNode("list")
-    private static int list(@CommandSource ServerPlayerEntity player) {
+    private static int $list(@CommandSource ServerPlayerEntity player) {
         List<Identifier> list = Placeholders.getPlaceholders().keySet().asList();
         new PlaceholderGui(player, list, 0).open();
         return CommandHelper.Return.SUCCESS;
@@ -76,7 +76,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
 
     @Document(id = 1751826519376L, value = "Parse a placeholder with a contextual player.")
     @CommandNode("parse")
-    private static int list(@CommandSource ServerCommandSource source
+    private static int $parse(@CommandSource ServerCommandSource source
         , Optional<ServerPlayerEntity> player
         , GreedyString input) {
         ServerPlayerEntity target = player.orElse(null);

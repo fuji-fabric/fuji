@@ -80,7 +80,7 @@ public class ShellInitializer extends ModuleInitializer {
     @Document(id = 1751824784016L, value = "Execute a shell command in host os.")
     @CommandNode("shell")
     @CommandRequirement(level = 4)
-    private static int shell(@CommandSource CommandContext<ServerCommandSource> ctx, GreedyString rest) {
+    private static int $shell(@CommandSource CommandContext<ServerCommandSource> ctx, GreedyString rest) {
         checkSecurity(ctx);
 
         String commandString = rest.getValue();

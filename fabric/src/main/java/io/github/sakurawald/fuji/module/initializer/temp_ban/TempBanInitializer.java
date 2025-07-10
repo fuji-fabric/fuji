@@ -44,7 +44,7 @@ public class TempBanInitializer extends ModuleInitializer {
     // NOTE: The recreation of BanCommand and BanIpCommand, but with a specified expiry date.
 
     @CommandNode("ip")
-    private static int ip(@CommandSource ServerCommandSource source, String ip, String expiry, GreedyString reason) throws CommandSyntaxException {
+    private static int $ip(@CommandSource ServerCommandSource source, String ip, String expiry, GreedyString reason) throws CommandSyntaxException {
 
         if (!InetAddresses.isInetAddress(ip)) {
             throw new SimpleCommandExceptionType(Text.translatable("commands.banip.invalid")).create();
@@ -69,7 +69,7 @@ public class TempBanInitializer extends ModuleInitializer {
     }
 
     @CommandNode("player")
-    private static int player(@CommandSource ServerCommandSource source, GameProfileCollection collection, String expiry, GreedyString reason) {
+    private static int $player(@CommandSource ServerCommandSource source, GameProfileCollection collection, String expiry, GreedyString reason) {
         MinecraftServer server = source.getServer();
         PlayerManager playerManager = server.getPlayerManager();
         Date expire = DateParser.parseDate(expiry);

@@ -25,7 +25,7 @@ public class SendActionbarInitializer extends ModuleInitializer {
 
     @CommandNode("send-actionbar")
     @CommandRequirement(level = 4)
-    private static int sendActionBar(ServerPlayerEntity player, GreedyString rest) {
+    private static int $sendActionBar(ServerPlayerEntity player, GreedyString rest) {
         player.sendMessage(TextHelper.getTextByValue(player, rest.getValue()), true);
         return CommandHelper.Return.SUCCESS;
     }

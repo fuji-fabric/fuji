@@ -42,58 +42,58 @@ import java.util.Optional;
 public class PredicateInitializer extends ModuleInitializer {
 
     @CommandNode("has-perm?")
-    private static int hasPerm(@CommandSource ServerCommandSource source, ServerPlayerEntity player, GreedyString stringPermission) {
+    private static int $hasPerm(@CommandSource ServerCommandSource source, ServerPlayerEntity player, GreedyString stringPermission) {
         boolean value = LuckpermsHelper.hasPermission(player.getUuid(), new PermissionDescriptor(true, stringPermission.getValue(), 0));
         return CommandHelper.Return.returnBoolean(source, value);
     }
 
     @Document(id = 1751826502598L, value = "Predicate to test if the player has the level-perm?")
     @CommandNode("has-level?")
-    private static int hasLevel(@CommandSource ServerCommandSource source, ServerPlayerEntity player, int levelPermission) {
+    private static int $hasLevel(@CommandSource ServerCommandSource source, ServerPlayerEntity player, int levelPermission) {
         boolean value = player.hasPermissionLevel(levelPermission);
         return CommandHelper.Return.returnBoolean(source, value);
     }
 
     @Document(id = 1751826504480L, value = "Predicate if online players >= n.")
     @CommandNode("has-players?")
-    private static int hasPlayers(@CommandSource ServerCommandSource source, Optional<Integer> n) {
+    private static int $hasPlayers(@CommandSource ServerCommandSource source, Optional<Integer> n) {
         int $n = n.orElse(0);
         boolean value = ServerHelper.getOnlinePlayers().size() >= $n;
         return CommandHelper.Return.returnBoolean(source, value);
     }
 
     @CommandNode("is-op?")
-    private static int isOp(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {
+    private static int $isOp(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {
         boolean value = ServerHelper.getPlayerManager().isOperator(player.getGameProfile());
         return CommandHelper.Return.returnBoolean(source, value);
     }
 
     @CommandNode("is-holding?")
-    private static int isHolding(@CommandSource ServerCommandSource source, ServerPlayerEntity player, ItemPredicateArgumentType.ItemStackPredicateArgument itemPredicate) {
+    private static int $isHolding(@CommandSource ServerCommandSource source, ServerPlayerEntity player, ItemPredicateArgumentType.ItemStackPredicateArgument itemPredicate) {
         boolean value = player.isHolding(itemPredicate);
         return CommandHelper.Return.returnBoolean(source, value);
     }
 
     @CommandNode("has-exp?")
-    private static int hasExp(@CommandSource ServerCommandSource source, ServerPlayerEntity player, int exp) {
+    private static int $hasExp(@CommandSource ServerCommandSource source, ServerPlayerEntity player, int exp) {
         boolean value = player.totalExperience >= exp;
         return CommandHelper.Return.returnBoolean(source, value);
     }
 
     @CommandNode("has-exp-level?")
-    private static int hasExpLevel(@CommandSource ServerCommandSource source, ServerPlayerEntity player, int expLevel) {
+    private static int $hasExpLevel(@CommandSource ServerCommandSource source, ServerPlayerEntity player, int expLevel) {
         boolean value = player.experienceLevel >= expLevel;
         return CommandHelper.Return.returnBoolean(source, value);
     }
 
     @CommandNode("is-in-world?")
-    private static int isInWorld(@CommandSource ServerCommandSource source, ServerPlayerEntity player, Dimension dimension) {
+    private static int $isInWorld(@CommandSource ServerCommandSource source, ServerPlayerEntity player, Dimension dimension) {
         boolean value = EntityHelper.getServerWorld(player).equals(dimension.getValue());
         return CommandHelper.Return.returnBoolean(source, value);
     }
 
     @CommandNode("is-in-gamemode?")
-    private static int isInGameMode(@CommandSource ServerCommandSource source, ServerPlayerEntity player, GameMode gameMode) {
+    private static int $isInGameMode(@CommandSource ServerCommandSource source, ServerPlayerEntity player, GameMode gameMode) {
         boolean value = player.interactionManager.getGameMode().equals(gameMode);
         return CommandHelper.Return.returnBoolean(source, value);
     }

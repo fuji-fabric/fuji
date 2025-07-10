@@ -37,7 +37,7 @@ public class TesterInitializer extends ModuleInitializer {
     }
 
     @CommandNode("text-replace")
-    private static int testTextReplace(@CommandSource ServerPlayerEntity player) {
+    private static int $testTextReplace(@CommandSource ServerPlayerEntity player) {
         TestFunctions.testTextReplacement(player);
         return 1;
     }

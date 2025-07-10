@@ -40,7 +40,7 @@ public class TpposInitializer extends ModuleInitializer {
     @Document(id = 1751825250986L, value = "The unified teleport command.")
     @CommandNode("tppos")
     @CommandRequirement(level = 4)
-    private static int tppos(@CommandSource @CommandTarget ServerPlayerEntity player
+    private static int $tppos(@CommandSource @CommandTarget ServerPlayerEntity player
         , @Document(id = 1751825286136L, value = "the target dimension") Optional<Dimension> dimension
         , @Document(id = 1751825291728L, value = "the target x for fixed-tp") Optional<Double> x
         , @Document(id = 1751825295183L, value = "the target y for fixed-tp") Optional<Double> y
@@ -93,7 +93,7 @@ public class TpposInitializer extends ModuleInitializer {
     @Document(id = 1751825355777L, value = "Teleport to the offline position of a player.")
     @CommandNode("tppos offline")
     @CommandRequirement(level = 4)
-    private static int tppos(@CommandSource ServerPlayerEntity source, OfflinePlayerName player) {
+    private static int $tppos(@CommandSource ServerPlayerEntity source, OfflinePlayerName player) {
         ServerPlayerEntity dummy = PlayerHelper.loadOfflinePlayer(player.getValue());
         new GlobalPos(EntityHelper.getServerWorld(dummy), dummy.getX(), dummy.getY(), dummy.getZ(), dummy.getYaw(), dummy.getPitch())
             .teleport(source);
@@ -109,7 +109,7 @@ public class TpposInitializer extends ModuleInitializer {
         """)
     @CommandNode("tppos here")
     @CommandRequirement(level = 4)
-    private static int tppos(@CommandSource ServerPlayerEntity source, PlayerCollection targets) {
+    private static int $tppos(@CommandSource ServerPlayerEntity source, PlayerCollection targets) {
         Collection<ServerPlayerEntity> $targets = targets.getValue();
         GlobalPos globalPos = GlobalPos.of(source);
         $targets.forEach(globalPos::teleport);

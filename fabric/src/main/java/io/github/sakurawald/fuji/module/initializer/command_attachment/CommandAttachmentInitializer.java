@@ -205,7 +205,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @Document(id = 1751826433455L, value = "Attach one command to an item.")
     @CommandNode("attach-item-one")
-    private static int attachItemOne(@CommandSource ServerPlayerEntity player
+    private static int $attachItemOne(@CommandSource ServerPlayerEntity player
         , @Document(id = 1751826436283L, value = "The interaction type to trigger this command.") Optional<InteractType> interactType
         , @Document(id = 1751826438227L, value = "Max use times of this command.") Optional<Integer> maxUseTimes
         , @Document(id = 1751826442468L, value = "Execute this command as who?") Optional<ExecuteAsType> executeAsType
@@ -233,7 +233,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @Document(id = 1751826450179L, value = "Attach one command to an entity.")
     @CommandNode("attach-entity-one")
-    private static int attachEntityOne(@CommandSource ServerPlayerEntity player
+    private static int $attachEntityOne(@CommandSource ServerPlayerEntity player
         , @Document(id = 1751826451977L, value = "The target entity.") Entity entity
         , @Document(id = 1751826454446L, value = "The interaction type to trigger this command.") Optional<InteractType> interactType
         , @Document(id = 1751826456136L, value = "Max use times of this command.") Optional<Integer> maxUseTimes
@@ -259,7 +259,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @Document(id = 1751826465183L, value = "Attach one command to specified block.")
     @CommandNode("attach-block-one")
-    private static int attachBlockOne(@CommandSource ServerPlayerEntity player
+    private static int $attachBlockOne(@CommandSource ServerPlayerEntity player
         , BlockPos blockPos
         , @Document(id = 1751826466665L, value = "The interaction type to trigger this command.") Optional<InteractType> interactType
         , @Document(id = 1751826468188L, value = "Max use times of this command.") Optional<Integer> maxUseTimes
@@ -286,7 +286,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @Document(id = 1751826477036L, value = "Detach all attached commands in the item.")
     @CommandNode("detach-item-all")
-    private static int detachItemAll(@CommandSource ServerPlayerEntity player) {
+    private static int $detachItemAll(@CommandSource ServerPlayerEntity player) {
         return CommandHelper.Pattern.itemInHandCommand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
             String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
 
@@ -297,7 +297,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @Document(id = 1751826478770L, value = "Detach all attached commands in the entity.")
     @CommandNode("detach-entity-all")
-    private static int detachEntityAll(@CommandSource ServerPlayerEntity player, Entity entity) {
+    private static int $detachEntityAll(@CommandSource ServerPlayerEntity player, Entity entity) {
         String uuid = entity.getUuidAsString();
 
         doDetachAttachment(player, uuid);
@@ -306,7 +306,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @Document(id = 1751826482248L, value = "Detach all attached commands in the block.")
     @CommandNode("detach-block-all")
-    private static int detachBlockAll(@CommandSource ServerPlayerEntity player, BlockPos blockPos) {
+    private static int $detachBlockAll(@CommandSource ServerPlayerEntity player, BlockPos blockPos) {
         String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
 
         doDetachAttachment(player, uuid);
@@ -320,7 +320,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @Document(id = 1751826486559L, value = "Query all attached commands in the item.")
     @CommandNode("query-item")
-    private static int queryItem(@CommandSource ServerPlayerEntity player) {
+    private static int $queryItem(@CommandSource ServerPlayerEntity player) {
         return CommandHelper.Pattern.itemInHandCommand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
             String uuid = UuidHelper.getAttachedUuid(ItemStackHelper.Nbt.getNbt(mainHandStack));
 
@@ -331,7 +331,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @Document(id = 1751826488228L, value = "Query all attached commands in the entity.")
     @CommandNode("query-entity")
-    private static int queryEntity(@CommandSource ServerPlayerEntity player, Entity entity) {
+    private static int $queryEntity(@CommandSource ServerPlayerEntity player, Entity entity) {
         String uuid = entity.getUuidAsString();
         doQueryAttachment(player, uuid);
         return CommandHelper.Return.SUCCESS;
@@ -339,7 +339,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @Document(id = 1751826492923L, value = "Query all attached commands in the block.")
     @CommandNode("query-block")
-    private static int queryBlock(@CommandSource ServerPlayerEntity player, BlockPos blockPos) {
+    private static int $queryBlock(@CommandSource ServerPlayerEntity player, BlockPos blockPos) {
         String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
         doQueryAttachment(player, uuid);
         return CommandHelper.Return.SUCCESS;

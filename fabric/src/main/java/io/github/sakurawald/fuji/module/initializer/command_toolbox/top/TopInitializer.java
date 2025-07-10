@@ -18,7 +18,7 @@ public class TopInitializer extends ModuleInitializer {
 
     @Document(id = 1751825123433L, value = "Teleport to the top of your current position.")
     @CommandNode("top")
-    private static int top(@CommandSource @CommandTarget ServerPlayerEntity player) {
+    private static int $top(@CommandSource @CommandTarget ServerPlayerEntity player) {
         World world = player.getWorld();
         BlockPos topPosition = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, player.getBlockPos());
 

@@ -25,7 +25,7 @@ public class ForEachInitializer extends ModuleInitializer {
     @Document(id = 1751823980406L, value = "Execute a command targeted on single-player for each player online.")
     @CommandNode("foreach")
     @CommandRequirement(level = 4)
-    private static int foreach(GreedyString rest) {
+    private static int $foreach(GreedyString rest) {
         String $rest = rest.getValue();
 
         for (ServerPlayerEntity player : ServerHelper.getOnlinePlayers()) {

@@ -71,7 +71,7 @@ public class AfkInitializer extends ModuleInitializer {
     @Document(id = 1751826271499L, value = "Test if a player is in afk state.")
     @CommandNode("test-afk")
     @CommandRequirement(level = 4)
-    private static int testAfk(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {
+    private static int $testAfk(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {
         boolean value = isAfk(player);
         return CommandHelper.Return.returnBoolean(source, value);
     }

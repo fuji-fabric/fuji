@@ -24,7 +24,7 @@ public class NearInitializer extends ModuleInitializer {
     @Document(id = 1751825090796L, value = "List nearby players.")
     @CommandNode("near")
     @CommandRequirement(level = 4)
-    private static int near(@CommandSource ServerPlayerEntity player, Optional<Integer> distance) {
+    private static int $near(@CommandSource ServerPlayerEntity player, Optional<Integer> distance) {
         int $distance = distance.orElse(128);
 
         int sd = $distance * $distance;

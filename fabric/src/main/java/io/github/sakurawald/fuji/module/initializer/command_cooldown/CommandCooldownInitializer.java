@@ -106,7 +106,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
 
     @Document(id = 1751826379596L, value = "Test a named-cooldown, and execute success commands or failed commands.")
     @CommandNode("test")
-    private static int test(@CommandSource ServerCommandSource source
+    private static int $test(@CommandSource ServerCommandSource source
         , @Document(id = 1751826381620L, value = "The named-cooldown.") CommandCooldownName name
         , @Document(id = 1751826385172L, value = "The target player.") ServerPlayerEntity player
         , @Document(id = 1751826387810L, value = "The commands to execute if the test is failed.") Optional<StringList> onFailed
@@ -135,7 +135,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
 
     @Document(id = 1751826400837L, value = "Create a named-cooldown.")
     @CommandNode("create")
-    private static int create(@CommandSource ServerCommandSource source
+    private static int $create(@CommandSource ServerCommandSource source
         , @Document(id = 1751826403270L, value = "The name for named-cooldown.") String name
         , @Document(id = 1751826405378L, value = "How long is the cooling time ms of this named-cooldown.") long cooldownMs
         , @Document(id = 1751826407322L, value = "Max usage times of this named-cooldown. (per-player/global)") Optional<Integer> maxUsage
@@ -157,7 +157,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
 
     @Document(id = 1751826416666L, value = "Delete a named-cooldown.")
     @CommandNode("delete")
-    private static int delete(@CommandSource ServerCommandSource source, CommandCooldownName name) {
+    private static int $delete(@CommandSource ServerCommandSource source, CommandCooldownName name) {
         ensureExist(source, name);
 
         String key = name.getValue();
@@ -170,14 +170,14 @@ public class CommandCooldownInitializer extends ModuleInitializer {
 
     @Document(id = 1751826418447L, value = "List all named-cooldown.")
     @CommandNode("list")
-    private static int list(@CommandSource ServerCommandSource source) {
+    private static int $list(@CommandSource ServerCommandSource source) {
         config.model().namedCooldown.list.keySet().forEach(it -> source.sendMessage(Text.literal(it)));
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1751826420385L, value = "Reset the timestamp of a named-cooldown for a player. (The usage times will not be reset)")
     @CommandNode("reset")
-    private static int reset(@CommandSource ServerCommandSource source
+    private static int $reset(@CommandSource ServerCommandSource source
         , CommandCooldownName name
         , ServerPlayerEntity player) {
         ensureExist(source, name);

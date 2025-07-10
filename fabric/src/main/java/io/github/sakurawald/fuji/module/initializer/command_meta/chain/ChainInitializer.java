@@ -43,7 +43,7 @@ public class ChainInitializer extends ModuleInitializer {
     @Document(id = 1751824736793L, value = "Chain commands and executes them in sequence, the chain will break if the previous one command fails.")
     @CommandNode("chain")
     @CommandRequirement(level = 4)
-    private static int chain(@CommandSource ServerCommandSource source, GreedyString rest) {
+    private static int $chain(@CommandSource ServerCommandSource source, GreedyString rest) {
         String $rest = rest.getValue();
 
         Matcher matcher = CHAIN_COMMAND_PARSER.matcher($rest);

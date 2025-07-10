@@ -44,7 +44,7 @@ public class DelayInitializer extends ModuleInitializer {
     @Document(id = 1751824706971L, value = "Execute a command in seconds.")
     @CommandNode("delay")
     @CommandRequirement(level = 4)
-    private static int delay(@CommandSource ServerCommandSource source, double time, GreedyString rest) {
+    private static int $delay(@CommandSource ServerCommandSource source, double time, GreedyString rest) {
         String $rest = rest.getValue();
 
         long scheduleTimeMs = (long) (1000 * time);

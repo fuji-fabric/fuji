@@ -83,7 +83,7 @@ public class CommandBundleInitializer extends ModuleInitializer {
 
     @Document(id = 1751826359683L, value = "Register all commands defined in bundle-command configuration file.")
     @CommandNode("register")
-    private static int registerAllBundleCommands() {
+    private static int $registerAllBundleCommands() {
         LogUtil.info("Register bundle commands.");
 
         config.model().getEntries().stream()
@@ -98,7 +98,7 @@ public class CommandBundleInitializer extends ModuleInitializer {
 
     @Document(id = 1751826362252L, value = "Un-register all bundle-commands registered in server.")
     @CommandNode("un-register")
-    private static int unregisterAllBundleCommands() {
+    private static int $unregisterAllBundleCommands() {
         LogUtil.info("Un-register bundle commands.");
 
         CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS
@@ -114,7 +114,7 @@ public class CommandBundleInitializer extends ModuleInitializer {
 
     @Document(id = 1751826364625L, value = "List all registered bundle-commands in server.")
     @CommandNode("list")
-    private static int list(@CommandSource CommandContext<ServerCommandSource> ctx) {
+    private static int $list(@CommandSource CommandContext<ServerCommandSource> ctx) {
         Stream<CommandDescriptor> commandDescriptorStream = CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS
             .stream()
             .filter(it -> it instanceof BundleCommandDescriptor);
@@ -132,17 +132,17 @@ public class CommandBundleInitializer extends ModuleInitializer {
     protected void onInitialize() {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             // register in server started.
-            registerAllBundleCommands();
+            $registerAllBundleCommands();
 
             // to register bundle-commands automatically after `/reload` command.
-            CommandEvents.REGISTRATION.register((a, b, c) -> registerAllBundleCommands());
+            CommandEvents.REGISTRATION.register((a, b, c) -> $registerAllBundleCommands());
         });
     }
 
     @Override
     protected void onReload() {
-        unregisterAllBundleCommands();
-        registerAllBundleCommands();
+        $unregisterAllBundleCommands();
+        $registerAllBundleCommands();
     }
 
 }

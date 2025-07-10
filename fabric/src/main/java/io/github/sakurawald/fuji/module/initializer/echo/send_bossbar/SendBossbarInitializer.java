@@ -38,7 +38,7 @@ public class SendBossbarInitializer extends ModuleInitializer {
 
     @CommandNode("send-bossbar")
     @CommandRequirement(level = 4)
-    private static int sendBossbar(@CommandSource ServerCommandSource source
+    private static int $sendBossbar(@CommandSource ServerCommandSource source
         , ServerPlayerEntity player
         , Optional<Integer> totalMs
         , Optional<BossBar.Color> color

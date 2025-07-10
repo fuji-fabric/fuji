@@ -95,7 +95,7 @@ public class CleanerInitializer extends ModuleInitializer {
 
     @Document(id = 1751826901492L, value = "Trigger the cleaner once.")
     @CommandNode("clean")
-    public static int clean() {
+    public static int $clean() {
         Map<String, Integer> counter = new HashMap<>();
 
         for (ServerWorld world : ServerHelper.getWorlds()) {

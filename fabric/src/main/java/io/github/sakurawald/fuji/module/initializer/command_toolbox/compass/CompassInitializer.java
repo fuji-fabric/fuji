@@ -80,7 +80,7 @@ public class CompassInitializer extends ModuleInitializer {
 
     @Document(id = 1751825179946L, value = "Let the compass in hand track a specified position.")
     @CommandNode("track pos")
-    private static int track(@CommandSource @CommandTarget ServerPlayerEntity player, Dimension dimension, BlockPos blockPos) {
+    private static int $track(@CommandSource @CommandTarget ServerPlayerEntity player, Dimension dimension, BlockPos blockPos) {
         return withCompassInHand(player, (itemStack) -> {
             setTrackedTarget(itemStack, dimension.getValue(), blockPos);
             return CommandHelper.Return.SUCCESS;
@@ -89,7 +89,7 @@ public class CompassInitializer extends ModuleInitializer {
 
     @Document(id = 1751825185305L, value = "Let the compass in hand track a specified player.")
     @CommandNode("track player")
-    private static int track(@CommandSource @CommandTarget ServerPlayerEntity player, ServerPlayerEntity target) {
+    private static int $track(@CommandSource @CommandTarget ServerPlayerEntity player, ServerPlayerEntity target) {
         return withCompassInHand(player, (itemStack) -> {
             setTrackedTarget(itemStack, EntityHelper.getServerWorld(target), target.getBlockPos());
             return CommandHelper.Return.SUCCESS;
@@ -98,7 +98,7 @@ public class CompassInitializer extends ModuleInitializer {
 
     @Document(id = 1751825191491L, value = "Let the compass in hand track nothing.")
     @CommandNode("reset")
-    private static int reset(@CommandSource @CommandTarget ServerPlayerEntity player) {
+    private static int $reset(@CommandSource @CommandTarget ServerPlayerEntity player) {
         return withCompassInHand(player, (itemStack) -> {
             setTrackedTarget(itemStack,null,null);
             return CommandHelper.Return.SUCCESS;
