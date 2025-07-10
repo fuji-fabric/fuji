@@ -61,7 +61,9 @@ public class DelayInitializer extends ModuleInitializer {
     }
 
     private static void shutdownDelaySchedulerExecutor() {
-        DELAY_COMMAND_EXECUTOR.shutdown();
+        if (DELAY_COMMAND_EXECUTOR != null) {
+            DELAY_COMMAND_EXECUTOR.shutdown();
+        }
     }
 
     @Override

@@ -158,8 +158,10 @@ public class ModuleManager extends BaseManager {
             .forEach(initializer -> {
                 try {
                     initializer.doReload();
-                } catch (Exception e) {
-                    LogUtil.error("Failed to reload module: initializer = {}", initializer.getClass().getName(), e);
+                } catch (Exception originalException) {
+                    LogUtil.error("Failed to reload the module: initializer = {}", initializer.getClass().getName(), originalException);
+                    // NOTE: Throw the original exception to surrounding exception handler.
+                    throw originalException;
                 }
             }
         );
