@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.tester;
 
 import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -11,6 +12,8 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.tester.functions.TestFunctions;
 
 import lombok.SneakyThrows;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -29,6 +32,9 @@ public class TesterInitializer extends ModuleInitializer {
     @CommandNode("run")
     private static int $run(@CommandSource ServerPlayerEntity player) {
 
+        ItemStack mainHandStack = player.getMainHandStack();
+        NbtCompound nbt = ItemStackHelper.Nbt.getNbt(mainHandStack);
+        player.sendMessage(Text.literal(nbt.toString()));
 
 
         LogUtil.info("Done");

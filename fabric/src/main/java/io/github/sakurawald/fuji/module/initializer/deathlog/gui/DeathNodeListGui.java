@@ -46,6 +46,7 @@ public class DeathNodeListGui extends PagedGui<DeathNode> {
 
     @Override
     protected boolean filterEntity(DeathNode entity, String keyword) {
+        // NOTE: Make it possible to search a specific item in death node.
         return entity.dimension.contains(keyword)
             || entity.time.contains(keyword)
             || entity.reason.toLowerCase().contains(keyword.toLowerCase())

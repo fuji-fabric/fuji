@@ -42,8 +42,4 @@ public class JobGui extends PagedGui<Job> {
         return entity.isEnable() ? Items.GREEN_STAINED_GLASS : Items.RED_STAINED_GLASS;
     }
 
-    @Override
-    protected boolean filterEntity(Job entity, String keyword) {
-        return entity.getName().equals(keyword);
-    }
 }

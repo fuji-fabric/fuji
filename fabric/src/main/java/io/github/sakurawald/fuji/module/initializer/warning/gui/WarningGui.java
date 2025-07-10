@@ -40,9 +40,4 @@ public class WarningGui extends PagedGui<String> {
         return builder.build();
     }
 
-
-    @Override
-    protected boolean filterEntity(String entity, String keyword) {
-        return false;
-    }
 }

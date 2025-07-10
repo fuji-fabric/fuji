@@ -234,9 +234,4 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         return entity;
     }
 
-    @Override
-    protected boolean filterEntity(GuiElementInterface entity, String keyword) {
-        return ItemStackHelper.filterItemStack(entity.getItemStack(), keyword);
-    }
-
 }

@@ -108,9 +108,4 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
             .open();
     }
 
-    @Override
-    protected boolean filterEntity(Pair<String, Boolean> entity, String keyword) {
-        return entity.getKey().contains(keyword.toLowerCase())
-                || entity.getValue().toString().contains(keyword.toLowerCase());
-    }
 }

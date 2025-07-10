@@ -146,8 +146,4 @@ public class KitEditorGui extends PagedGui<Kit> {
             }).build();
     }
 
-    @Override
-    protected boolean filterEntity(Kit entity, @NotNull String keyword) {
-        return entity.getName().contains(keyword);
-    }
 }

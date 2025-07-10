@@ -89,8 +89,4 @@ public class ListWhenOnlineTicketsGui extends PagedGui<WhenOnlineTicket> {
         };
     }
 
-    @Override
-    protected boolean filterEntity(WhenOnlineTicket entity, String keyword) {
-        return false;
-    }
 }

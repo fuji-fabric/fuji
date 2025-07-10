@@ -117,8 +117,4 @@ public class ListWorksGui extends PagedGui<Work> {
         };
     }
 
-    @Override
-    protected boolean filterEntity(Work entity, @NotNull String keyword) {
-        return false;
-    }
 }

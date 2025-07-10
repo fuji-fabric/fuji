@@ -20,7 +20,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class AboutGui extends PagedGui<Person> {
 
@@ -101,10 +100,4 @@ public class AboutGui extends PagedGui<Person> {
             .build();
     }
 
-    @Override
-    protected boolean filterEntity(Person entity, String keyword) {
-        Map<String, String> contact = entity.getContact().asMap();
-        return entity.getName().contains(keyword)
-            || contact.entrySet().stream().anyMatch(it -> it.getKey().contains(keyword) || it.getValue().contains(keyword));
-    }
 }

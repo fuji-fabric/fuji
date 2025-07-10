@@ -68,8 +68,4 @@ public class BalanceTopGui extends PagedGui<GameProfileAndEconomyAccount> {
         GuiHelper.fetchHeads(this, this::draw);
     }
 
-    @Override
-    protected boolean filterEntity(GameProfileAndEconomyAccount entity, String keyword) {
-        return false;
-    }
 }

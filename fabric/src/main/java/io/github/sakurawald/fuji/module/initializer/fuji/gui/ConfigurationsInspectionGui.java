@@ -80,9 +80,4 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
         return Items.TRAPPED_CHEST;
     }
 
-    @Override
-    protected boolean filterEntity(BaseConfigurationHandler<?> entity, String keyword) {
-        return ReflectionUtil.getSimpleClassName(entity.getClass()).contains(keyword)
-                || entity.getPath().toString().contains(keyword);
-    }
 }

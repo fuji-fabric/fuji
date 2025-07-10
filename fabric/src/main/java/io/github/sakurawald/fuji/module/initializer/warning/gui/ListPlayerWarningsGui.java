@@ -52,11 +52,6 @@ public class ListPlayerWarningsGui extends CrudPagedGui<Warning> {
     }
 
     @Override
-    protected boolean filterEntity(Warning entity, String keyword) {
-        return false;
-    }
-
-    @Override
     protected @NotNull String getGuiHelpLoreKey() {
         return "warning.list.gui.help.lore";
     }

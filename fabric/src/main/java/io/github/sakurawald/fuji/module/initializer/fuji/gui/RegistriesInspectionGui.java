@@ -121,8 +121,4 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
         };
     }
 
-    @Override
-    protected boolean filterEntity(IdentifierDescriptor entity, String keyword) {
-        return entity.getIdentifier().toString().contains(keyword);
-    }
 }

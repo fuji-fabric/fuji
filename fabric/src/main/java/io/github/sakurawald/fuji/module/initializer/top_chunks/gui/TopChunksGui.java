@@ -61,8 +61,4 @@ public class TopChunksGui extends PagedGui<ChunkScore> {
             .build();
     }
 
-    @Override
-    protected boolean filterEntity(ChunkScore entity, String keyword) {
-        return false;
-    }
 }

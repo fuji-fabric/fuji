@@ -110,8 +110,4 @@ public class JobsInspectionGui extends PagedGui<JobDescriptor> {
         return guiElementBuilder.build();
     }
 
-    @Override
-    protected boolean filterEntity(JobDescriptor entity, String keyword) {
-        return false;
-    }
 }

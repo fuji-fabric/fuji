@@ -33,8 +33,4 @@ public class PlaceholderGui extends PagedGui<Identifier> {
             .build();
     }
 
-    @Override
-    protected boolean filterEntity(Identifier entity, String keyword) {
-        return entity.toString().contains(keyword);
-    }
 }

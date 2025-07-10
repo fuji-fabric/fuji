@@ -76,8 +76,4 @@ public class LanguagesInspectionGui extends PagedGui<GuiElementInterface> {
         return entity;
     }
 
-    @Override
-    protected boolean filterEntity(GuiElementInterface entity, String keyword) {
-        return false;
-    }
 }

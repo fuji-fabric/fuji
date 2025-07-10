@@ -63,9 +63,4 @@ public class ServerCommandsInspectionGui extends PagedGui<ServerCommandNodeWrapp
             .build();
     }
 
-    @Override
-    protected boolean filterEntity(ServerCommandNodeWrapper entity, String keyword) {
-        return entity.path.contains(keyword)
-            || entity.fromPackage.contains(keyword);
-    }
 }

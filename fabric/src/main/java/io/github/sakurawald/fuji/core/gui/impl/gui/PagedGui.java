@@ -131,7 +131,9 @@ public abstract class PagedGui<T> extends LayeredGui {
         return element;
     }
 
-    protected abstract boolean filterEntity(T entity, String keyword);
+    protected boolean filterEntity(T entity, String keyword) {
+        return false;
+    }
 
     private boolean combinedFilterEntity(T entity, String keyword) {
         /* Filter using the displaying GUI item stack. (What you see is what you get) */

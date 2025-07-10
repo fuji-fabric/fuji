@@ -68,8 +68,4 @@ public class DeathDataListGui extends PagedGui<String> {
         return builder.build();
     }
 
-    @Override
-    protected boolean filterEntity(String entity, String keyword) {
-        return entity.toLowerCase().contains(keyword.toLowerCase());
-    }
 }
