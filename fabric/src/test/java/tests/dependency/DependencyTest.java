@@ -56,7 +56,6 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.DyeColor;
-import net.minecraft.util.ErrorReporter;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.UserCache;
@@ -143,8 +142,7 @@ public class DependencyTest {
 
         allowedReferences.add("net.minecraft.nbt.");
         allowedReferences.add("net.minecraft.storage.ReadView");
-        allowedReferences.add(ErrorReporter.class.getName());
-
+        allowedReferences.add("net.minecraft.util.ErrorReporter");
         allowedReferences.add("net.minecraft.component.");
 
         allowedReferences.add(MessageType.class.getName());
