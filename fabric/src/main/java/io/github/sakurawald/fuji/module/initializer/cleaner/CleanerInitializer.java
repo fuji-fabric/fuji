@@ -89,9 +89,9 @@ public class CleanerInitializer extends ModuleInitializer {
     }
 
     private static boolean shouldRemoveThisEntity(String key, int age) {
-        Map<String, Integer> regex2age = config.model().key2age;
-        return regex2age.keySet().stream().anyMatch(key::matches)
-            && age >= regex2age.get(key);
+        Map<String, Integer> key2age = config.model().key2age;
+        return key2age.containsKey(key)
+            && age >= key2age.get(key);
     }
 
     @Document(id = 1751826901492L, value = "Trigger the cleaner once.")
@@ -103,12 +103,7 @@ public class CleanerInitializer extends ModuleInitializer {
             for (Entity entity : world.iterateEntities()) {
                 if (shouldIgnoreEntity(entity)) continue;
 
-                String key;
-                if (entity instanceof ItemEntity itemEntity) {
-                    key = itemEntity.getStack().getItem().getTranslationKey();
-                } else {
-                    key = entity.getType().getTranslationKey();
-                }
+                String key = getTranslatableKey(entity);
 
                 if (shouldRemoveThisEntity(key, entity.age)) {
                     Integer originalAmount = cleanedEntities.getOrDefault(key, 0);
@@ -121,6 +116,16 @@ public class CleanerInitializer extends ModuleInitializer {
         /* Send cleaning report. */
         sendCleanerBroadcast(cleanedEntities);
         return CommandHelper.Return.SUCCESS;
+    }
+
+    private static String getTranslatableKey(Entity entity) {
+        String key;
+        if (entity instanceof ItemEntity itemEntity) {
+            key = itemEntity.getStack().getItem().getTranslationKey();
+        } else {
+            key = entity.getType().getTranslationKey();
+        }
+        return key;
     }
 
     private static void sendCleanerBroadcast(Map<String, Integer> counter) {
