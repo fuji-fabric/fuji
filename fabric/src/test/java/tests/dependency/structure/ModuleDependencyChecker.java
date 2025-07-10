@@ -13,13 +13,13 @@ import java.util.List;
 
 public class ModuleDependencyChecker extends FileDependencyChecker {
 
-    public static final JsonElement rcConfig = BaseConfigurationHandler.getGson().toJsonTree(new ConfigModel());
+    public static final JsonElement DUMMY_MAIN_CONTROL_FILE_JSON = BaseConfigurationHandler.getGson().toJsonTree(new ConfigModel());
 
-    private @Nullable Dependency groupSymbol(Dependency dep) {
-        String definition = ModuleManager.computeJoinedModulePath(dep.getDefinition());
+    private @Nullable DependencyNode groupSymbol(DependencyNode node) {
+        String definition = ModuleManager.computeJoinedModulePath(node.getDefinition());
         List<String> referenceList = new ArrayList<>();
 
-        for (String ref : dep.getReference()) {
+        for (String ref : node.getReference()) {
             String reference = ModuleManager.computeJoinedModulePath(ref);
             // skip -> common reference
             if (reference.equals(ModuleManager.CORE_MODULE_NAME)) continue;
@@ -33,15 +33,15 @@ public class ModuleDependencyChecker extends FileDependencyChecker {
 
         if (definition.equals(ModuleManager.CORE_MODULE_NAME) || definition.equals("tester")) return null;
         if (referenceList.isEmpty()) return null;
-        return new Dependency(definition, referenceList);
+        return new DependencyNode(definition, referenceList);
     }
 
     @Override
-    public @Nullable Dependency makeDependency(Path file) {
-        Dependency dependency = super.makeDependency(file);
+    public @Nullable DependencyNode makeDependencyNode(Path filePath) {
+        DependencyNode dependency = super.makeDependencyNode(filePath);
 
         // filter: only collect project source file, and group them into modules.
-        dependency.filterReference(Fuji.class.getPackageName());
+        dependency.includeReference(Fuji.class.getPackageName());
 
         return groupSymbol(dependency);
     }

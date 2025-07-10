@@ -1,5 +1,6 @@
 package tests.dependency.structure;
 
+import java.util.Comparator;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,48 +15,47 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public abstract class BaseDependencyChecker {
 
-    private @NotNull List<Dependency> reduce(@NotNull List<Dependency> deps) {
-        // merge
-        Map<String, Dependency> map = new HashMap<>();
-        for (Dependency dep : deps) {
-            map.putIfAbsent(dep.definition, dep);
-            map.get(dep.definition).getReference().addAll(dep.reference);
+    private @NotNull List<DependencyNode> simplify(@NotNull List<DependencyNode> nodes) {
+        /* Group the nodes into single definition name, and merge their reference names. */
+        Map<String, DependencyNode> groupedNodes = new HashMap<>();
+        for (DependencyNode node : nodes) {
+            groupedNodes.putIfAbsent(node.definition, node);
+            groupedNodes.get(node.definition).reference.addAll(node.reference);
         }
 
-        //reduce
-        for (Dependency dep : map.values()) {
-            Set<String> set = new HashSet<>(dep.reference);
-            dep.reference.clear();
-            dep.reference.addAll(set);
+        /* Remove duplicated reference names. */
+        for (DependencyNode groupedNode : groupedNodes.values()) {
+            groupedNode.reference = new ArrayList<>(new HashSet<>(groupedNode.reference));
         }
 
-        return map.values().stream().toList();
+        /* Sort the reference names. */
+        groupedNodes.values().forEach(node -> node.reference.sort(Comparator.naturalOrder()));
+
+        return groupedNodes.values().stream().toList();
     }
 
-    public abstract Dependency makeDependency(Path file);
+    public abstract DependencyNode makeDependencyNode(Path file);
 
     @SneakyThrows(IOException.class)
-    public List<Dependency> makeDependencies(Path dir) {
-        /* make */
-        List<Dependency> dependencies = new ArrayList<>();
-
+    public List<DependencyNode> makeDependencyNodes(Path dir) {
+        /* Walk the file directory to make node for each file. */
+        List<DependencyNode> dependencyNodes = new ArrayList<>();
         Files.walkFileTree(dir, new SimpleFileVisitor<>() {
             @Override
             public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
-                Dependency dependency = makeDependency(path);
-                if (dependency != null) {
-                    dependencies.add(dependency);
+                DependencyNode node = makeDependencyNode(path);
+                if (node != null) {
+                    dependencyNodes.add(node);
                 }
 
                 return FileVisitResult.CONTINUE;
             }
         });
 
-        /* reduce */
-        return this.reduce(dependencies);
+        /* Simplify and return the nodes. */
+        return this.simplify(dependencyNodes);
     }
 }
