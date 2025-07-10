@@ -10,13 +10,16 @@ import io.github.classgraph.MethodParameterInfo;
 import io.github.classgraph.ScanResult;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.structure.DocString;
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.SneakyThrows;
@@ -32,8 +36,26 @@ import org.junit.jupiter.api.Test;
 
 public class GenerateDocStringTest {
 
-    @SneakyThrows
+    private static final Path COMPILE_TIME_CROWDIN_PATH = TestUtil.PROJECT_ROOT_PATH.resolve("crowdin/");
+    private static final Path COMPILE_TIME_PULL_FROM_CROWDIN_LANGUAGE_PATH = COMPILE_TIME_CROWDIN_PATH.resolve("pull-from-crowdin/");
+    private static final Path COMPILE_TIME_PUSH_TO_CROWDIN_LANGUAGE_PATH = COMPILE_TIME_CROWDIN_PATH.resolve("push-to-crowdin/");
+
     @Test
+    @SneakyThrows(IOException.class)
+    public void generateLanguageGraphFile() {
+        /* Generate language-graph.txt file. */
+        File languageGraphFile = GenerateGraphTest.COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.LANGUAGE_GRAPH_FILE_NAME).toFile();
+        try (PrintWriter writer = new PrintWriter(languageGraphFile)) {
+            File languageFilesPath = GenerateDocStringTest.COMPILE_TIME_PULL_FROM_CROWDIN_LANGUAGE_PATH.toFile();
+            Arrays
+                .stream(Objects.requireNonNull(languageFilesPath.listFiles()))
+                .map(File::getName)
+                .forEach(writer::println);
+        }
+    }
+
+    @Test
+    @SneakyThrows
     public void generateDocStringListInRuntimeEnvironment() {
         try (ScanResult scanResult = TestUtil.makeBaseClassGraph()
             .enableAllInfo()
@@ -75,8 +97,8 @@ public class GenerateDocStringTest {
 
     private static void writeDocStringListIntoDefaultLanguageFile(List<DocString> docStringList) throws IOException {
         /* Read the default language json. */
-        Path defaultLanguageFilePath = GenerateGraphTest.COMPILE_TIME_PUSH_TO_CROWDIN_LANGUAGE_PATH.resolve("en_US.json");
-        JsonObject defaultLanguageJson = TestUtil.readJsonElement(defaultLanguageFilePath).getAsJsonObject();
+        Path defaultLanguageFilePath = COMPILE_TIME_PUSH_TO_CROWDIN_LANGUAGE_PATH.resolve("en_US.json");
+        JsonObject defaultLanguageJson = JsonUtil.readJsonElement(defaultLanguageFilePath).getAsJsonObject();
         if (JsonUtil.isEmpty(defaultLanguageJson)) {
             throw new RuntimeException("Default language file is empty.");
         }

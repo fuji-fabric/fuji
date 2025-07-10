@@ -2,9 +2,16 @@ package io.github.sakurawald.fuji.core.auxiliary;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import java.util.Map;
-import java.util.TreeMap;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.file.Path;
+import lombok.Cleanup;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 public class JsonUtil {
@@ -50,4 +57,9 @@ public class JsonUtil {
         return obj.size() == 0;
     }
 
+    @SneakyThrows(IOException.class)
+    public static JsonElement readJsonElement(Path path) {
+        @Cleanup Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path.toFile())));
+        return JsonParser.parseReader(reader);
+    }
 }

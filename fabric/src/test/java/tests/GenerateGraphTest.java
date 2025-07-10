@@ -24,88 +24,99 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public class GenerateGraphTest {
 
-    public static final Path COMPILE_TIME_RESOURCE_PATH = Path.of("../common/src/main/resources/");
-
+    public static final Path COMPILE_TIME_RESOURCE_PATH = TestUtil.PROJECT_ROOT_PATH.resolve("common/src/main/resources/");
     public static final Path COMPILE_TIME_GRAPH_PATH = COMPILE_TIME_RESOURCE_PATH.resolve(ReflectionUtil.class.getPackageName().replace(".", "/"));
 
-    public static final Path COMPILE_TIME_CROWDIN_PATH = Path.of("../crowdin/");
-    public static final Path COMPILE_TIME_PULL_FROM_CROWDIN_LANGUAGE_PATH = COMPILE_TIME_CROWDIN_PATH.resolve("pull-from-crowdin/");
-    public static final Path COMPILE_TIME_PUSH_TO_CROWDIN_LANGUAGE_PATH = COMPILE_TIME_CROWDIN_PATH.resolve("push-to-crowdin/");
-
-    @SneakyThrows(IOException.class)
     @Test
-    void generateStuffsFromRuntimeEnvironment() {
-        // scan source
-        try (ScanResult scanResult = TestUtil.makeBaseClassGraph()
+    @SneakyThrows(IOException.class)
+    public void generateBitsFromCodebase() {
+        /* Scan the codebase. */
+        try (ScanResult scanResult = TestUtil
+            .makeBaseClassGraph()
             .enableAllInfo()
             .scan()) {
 
-            Path path = COMPILE_TIME_GRAPH_PATH;
-            Files.createDirectories(path);
+            Files.createDirectories(COMPILE_TIME_GRAPH_PATH);
 
             /* Generate module-initializer-graph.txt file. */
-            File moduleInitializerGraphFile = path.resolve(ReflectionUtil.MODULE_INITIALIZER_GRAPH_FILE_NAME).toFile();
-            try (PrintWriter writer = new PrintWriter(moduleInitializerGraphFile)) {
-                scanResult.getSubclasses(ModuleInitializer.class).getNames().stream().sorted().forEach(writer::println);
-            }
+            generateModuleInitializerGraphFile(scanResult);
 
             /* Generate argument-type-adapter-graph.txt file. */
-            File argumentAdapterGraphFile = path.resolve(ReflectionUtil.ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME).toFile();
-            try (PrintWriter writer = new PrintWriter(argumentAdapterGraphFile)) {
-                scanResult.getSubclasses(BaseArgumentTypeAdapter.class).getNames().stream().sorted().forEach(writer::println);
-            }
+            generateArgumentTypeAdapterGraphFile(scanResult);
 
             /* Generate CITE file. */
-            try (PrintWriter writer = new PrintWriter(Path.of("../CITE").toFile())) {
-                List<String> cites = new ArrayList<>();
-                scanResult.getClassesWithAnnotation(Cite.class).forEach(clazz -> {
-                    AnnotationInfo annotationInfo = clazz.getAnnotationInfo(Cite.class);
+            generateCiteFile(scanResult);
+        }
+    }
+
+    @SneakyThrows
+    private static void generateCiteFile(ScanResult scanResult) {
+        try (PrintWriter writer = new PrintWriter(Path.of("../CITE").toFile())) {
+            scanResult
+                .getClassesWithAnnotation(Cite.class)
+                .stream()
+                .flatMap(classInfo -> {
+                    AnnotationInfo annotationInfo = classInfo.getAnnotationInfo(Cite.class);
                     AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
                     String[] value = (String[]) parameterValues.get("value").getValue();
-                    cites.addAll(Arrays.asList(value));
-                });
-                cites.sort(String::compareTo);
-                cites.forEach(writer::println);
-            }
+                    return Arrays.stream(value);
+                })
+                .sorted()
+                .forEach(writer::println);
         }
     }
 
-    @SneakyThrows(IOException.class)
-    @Test
-    void generateFromResource() {
-        /* Generate language-graph.txt file. */
-        File languageGraphFile = COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.LANGUAGE_GRAPH_FILE_NAME).toFile();
-        try (PrintWriter writer = new PrintWriter(languageGraphFile)) {
-            File languageFilesPath = COMPILE_TIME_PULL_FROM_CROWDIN_LANGUAGE_PATH.toFile();
-            Arrays.stream(Objects.requireNonNull(languageFilesPath.listFiles()))
-                .forEach(file -> writer.println(file.getName()));
+    @SneakyThrows
+    private static void generateArgumentTypeAdapterGraphFile(ScanResult scanResult) {
+        File argumentAdapterGraphFile = COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME).toFile();
+        try (PrintWriter writer = new PrintWriter(argumentAdapterGraphFile)) {
+            scanResult
+                .getSubclasses(BaseArgumentTypeAdapter.class)
+                .getNames()
+                .stream()
+                .sorted()
+                .forEach(writer::println);
         }
     }
 
-    void searchModule(JsonObject parent, String level, List<String> out) {
-        // go down
-        parent.keySet().stream()
+    @SneakyThrows
+    private static void generateModuleInitializerGraphFile(ScanResult scanResult) {
+        File moduleInitializerGraphFile = COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.MODULE_INITIALIZER_GRAPH_FILE_NAME).toFile();
+        try (PrintWriter writer = new PrintWriter(moduleInitializerGraphFile)) {
+            scanResult
+                .getSubclasses(ModuleInitializer.class)
+                .getNames()
+                .stream()
+                .sorted()
+                .forEach(writer::println);
+        }
+    }
+
+    private void searchDefinedModules(JsonObject parent, String level, List<String> result) {
+        /* Go down. */
+        parent
+            .keySet()
+            .stream()
             .filter(key -> parent.get(key).isJsonObject())
-            .forEach(key -> searchModule(parent.getAsJsonObject(key), CommandHelper.trimPathString(level + "." + key), out));
+            .forEach(key -> searchDefinedModules(parent.getAsJsonObject(key), CommandHelper.trimPathString(level + "." + key), result));
 
-        // go up
+        /* Go up. */
         if (parent.has(ModuleManager.ENABLE_SUPPLIER_KEY)) {
-            out.add(level);
+            result.add(level);
         }
     }
 
     @SneakyThrows(IOException.class)
     @Test
-    void generateFromJson() {
+    public void generateModulesGraphFile() {
         /* Generate module-graph.txt file. */
         JsonObject modules = BaseConfigurationHandler.getGson().toJsonTree(new ConfigModel())
             .getAsJsonObject().getAsJsonObject("modules");
         ArrayList<String> result = new ArrayList<>();
-        searchModule(modules, "", result);
+        searchDefinedModules(modules, "", result);
         result.sort(String::compareTo);
 
         Path moduleGraphFile = COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.MODULE_GRAPH_FILE_NAME);

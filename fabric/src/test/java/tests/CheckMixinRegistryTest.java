@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 import io.github.sakurawald.fuji.Fuji;
+import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +40,7 @@ public class CheckMixinRegistryTest {
     public void ensureAllMixinClassIsRegisteredInMixinJsonFile() {
         /* Read the fuji.mixins.json file, to get the registered mixins. */
         Path mixinJsonFilePath = Path.of("src/main/resources/fuji.mixins.json");
-        JsonElement mixinJsonFileJson = TestUtil.readJsonElement(mixinJsonFilePath);
+        JsonElement mixinJsonFileJson = JsonUtil.readJsonElement(mixinJsonFilePath);
         List<String> registeredMixins = new ArrayList<>();
         registeredMixins.addAll(collectMixins(mixinJsonFileJson, "mixins"));
         registeredMixins.addAll(collectMixins(mixinJsonFileJson, "client"));
