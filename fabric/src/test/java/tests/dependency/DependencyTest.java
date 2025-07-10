@@ -1,6 +1,9 @@
 package tests.dependency;
 
+import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.Fuji;
+import io.github.sakurawald.fuji.core.config.model.ConfigModel;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.core.CoreInitializer;
@@ -21,7 +24,6 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.inventory.SlotRange;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -93,7 +95,7 @@ public class DependencyTest {
     private static final Path COMPILE_TIME_MAIN_FUNCTION_PACKAGE_PATH = COMPILE_TIME_JAVA_SOURCE_PATH.resolve(PROJECT_ROOT_PACKAGE_NAME.replace(".", "/"));
     private static final Path COMPILE_TIME_CORE_PACKAGE_PATH = COMPILE_TIME_MAIN_FUNCTION_PACKAGE_PATH.resolve("core");
 
-//    private static final Path COMPILE_TIME_CORE_CONFIG_PACKAGE_PATH = COMPILE_TIME_CORE_PACKAGE_PATH.resolve("config");
+    private static final Path COMPILE_TIME_MAIN_CONTROL_FILE_PATH = COMPILE_TIME_JAVA_SOURCE_PATH.resolve(ConfigModel.class.getName().replace(".", "/") + ".java");
 
     private static @NotNull String[] getAllowedReferencesInCore() {
         List<String> allowedReferences = new ArrayList<>();
@@ -274,16 +276,20 @@ public class DependencyTest {
     @Test
     public void banUnnecessaryImportsInCoreConfigPackage() {
         List<DependencyNode> violationNodes = new FileDependencyChecker()
-            .makeDependencyNodes(COMPILE_TIME_CORE_PACKAGE_PATH)
+            .makeDependencyNodes(COMPILE_TIME_MAIN_CONTROL_FILE_PATH)
             .stream()
             .filter(node -> {
                 /* Only allow to reference these symbols in main control file, to avoid early class loading. */
-                node.excludeReference(getAllowedReferencesInCore());
+                node.excludeReference(
+                    SerializedName.class.getName()
+                    , Document.class.getName()
+                    , List.class.getName()
+                    , ArrayList.class.getName());
                 return !node.reference.isEmpty();
             })
             .toList();
 
-        DependencyNode.tryReportViolationDependencyNodes(violationNodes, "The `core.config` package references banned packages.");
+        DependencyNode.tryReportViolationDependencyNodes(violationNodes, "The `Main Config File` package references banned packages.");
     }
 
 }
