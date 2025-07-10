@@ -1,9 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.world;
 
 import com.mojang.brigadier.context.CommandContext;
-import io.github.sakurawald.fuji.core.document.annotation.Cite;
-import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
-import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
@@ -18,12 +15,18 @@ import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.DimensionTyp
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.Cite;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.world.config.model.WorldConfigModel;
 import io.github.sakurawald.fuji.module.initializer.world.config.model.WorldDataModel;
 import io.github.sakurawald.fuji.module.initializer.world.gui.WorldGui;
+import io.github.sakurawald.fuji.module.initializer.world.service.WorldService;
 import io.github.sakurawald.fuji.module.initializer.world.structure.DimensionNode;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -31,9 +34,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.RandomSeed;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-import java.util.Optional;
 
 /*
  * RegistryKeys.DIMENSION_TYPE only returns registered `dimension type`.
@@ -81,13 +81,11 @@ import java.util.Optional;
     """)
 
 
-
 @CommandNode("world")
 @CommandRequirement(level = 4)
 public class WorldInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<WorldConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, WorldConfigModel.class);
-
     private static final BaseConfigurationHandler<WorldDataModel> storage = new ObjectConfigurationHandler<>("world.json", WorldDataModel.class);
 
     private static void checkBlacklist(CommandContext<ServerCommandSource> ctx, String identifier) {
@@ -107,17 +105,18 @@ public class WorldInitializer extends ModuleInitializer {
 
     @CommandNode("list")
     private static int $list(@CommandSource ServerCommandSource source) {
-
         if (source.isExecutedByPlayer()) {
             List<DimensionNode> entities = storage.model().dimension_list;
-            new WorldGui(source.getPlayer(), entities, 0).open();
-
+            new WorldGui(source.getPlayer(), entities, 0)
+                .open();
         } else {
-            ServerHelper.getWorlds().forEach(world -> {
-                String dimensionType = RegistryHelper.getIdAsString(world.getDimensionEntry());
-                String dimension = String.valueOf(world.getRegistryKey().getValue());
-                TextHelper.sendTextByKey(source, "world.dimension.list.entry", dimension, dimensionType);
-            });
+            ServerHelper
+                .getWorlds()
+                .forEach(world -> {
+                    String dimensionType = RegistryHelper.getIdAsString(world.getDimensionEntry());
+                    String dimension = String.valueOf(world.getRegistryKey().getValue());
+                    TextHelper.sendTextByKey(source, "world.dimension.list.entry", dimension, dimensionType);
+                });
         }
 
         return CommandHelper.Return.SUCCESS;
@@ -145,7 +144,7 @@ public class WorldInitializer extends ModuleInitializer {
         storage.writeStorage();
 
         /* request creation */
-        WorldManager.requestToCreateWorld(dimensionNode);
+        WorldService.requestToCreateDimension(dimensionNode);
         TextHelper.sendBroadcastByKey("world.dimension.created", dimensionIdentifier);
         return CommandHelper.Return.SUCCESS;
     }
@@ -158,7 +157,7 @@ public class WorldInitializer extends ModuleInitializer {
         checkBlacklist(ctx, identifier);
 
         /* request to deletion */
-        WorldManager.requestToDeleteWorld(world);
+        WorldService.requestToDeleteDimension(world);
 
         /* write entry */
         Optional<DimensionNode> first = storage.model().dimension_list.stream().filter(o -> o.getDimension().equals(identifier)).findFirst();
@@ -188,7 +187,7 @@ public class WorldInitializer extends ModuleInitializer {
         }
 
         // request the deletion
-        WorldManager.requestToDeleteWorld(world);
+        WorldService.requestToDeleteDimension(world);
 
         // set the new seed
         Boolean $useTheSameSeed = useTheSameSeed.orElse(false);
@@ -197,7 +196,7 @@ public class WorldInitializer extends ModuleInitializer {
         storage.writeStorage();
 
         // request the creation
-        WorldManager.requestToCreateWorld(dimensionEntryOpt.get());
+        WorldService.requestToCreateDimension(dimensionEntryOpt.get());
 
         TextHelper.sendBroadcastByKey("world.dimension.reset", identifier);
         return CommandHelper.Return.SUCCESS;
@@ -209,11 +208,12 @@ public class WorldInitializer extends ModuleInitializer {
     }
 
     private void loadWorlds(@NotNull MinecraftServer server) {
-        storage.model().dimension_list.stream()
+        storage.model().dimension_list
+            .stream()
             .filter(DimensionNode::isEnable)
             .forEach(it -> {
                 try {
-                    WorldManager.requestToCreateWorld(it);
+                    WorldService.requestToCreateDimension(it);
                     LogUtil.info("Load dimension {} into the server done.", it.getDimension());
                 } catch (Exception e) {
                     LogUtil.error("Failed to load dimension `{}`", it, e);

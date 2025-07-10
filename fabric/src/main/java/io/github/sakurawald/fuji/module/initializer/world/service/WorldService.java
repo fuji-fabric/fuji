@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.initializer.world;
+package io.github.sakurawald.fuji.module.initializer.world.service;
 
 import com.google.common.collect.ImmutableList;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
@@ -44,86 +44,79 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class WorldManager {
+public class WorldService {
 
-    private static final Set<ServerWorld> deletionQueue = new ReferenceOpenHashSet<>();
-    private static final Set<DimensionNode> creationQueue = new ReferenceOpenHashSet<>();
+    private static final Set<ServerWorld> dimensionDeletionQueue = new ReferenceOpenHashSet<>();
+    private static final Set<DimensionNode> dimensionCreationQueue = new ReferenceOpenHashSet<>();
 
     static {
-        ServerTickEvents.START_SERVER_TICK.register(server -> tick());
+        ServerTickEvents.START_SERVER_TICK.register(server -> processDimensionCreationAndDeletionQueue());
+    }
+
+    private static void processDimensionCreationAndDeletionQueue() {
+        dimensionDeletionQueue.removeIf(WorldService::tryDeleteDimension);
+        dimensionCreationQueue.removeIf(WorldService::tryCreateDimension);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void requestToDeleteWorld(@NotNull ServerWorld world) {
-        MinecraftServer server = world.getServer();
-        server.submit(() -> {
-            deletionQueue.add(world);
-        });
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void requestToCreateWorld(DimensionNode dimensionNode) {
+    public static void requestToDeleteDimension(@NotNull ServerWorld world) {
         ServerHelper.getServer().submit(() -> {
-            creationQueue.add(dimensionNode);
+            dimensionDeletionQueue.add(world);
         });
     }
 
-    private static void tick() {
-        if (!deletionQueue.isEmpty()) {
-            deletionQueue.removeIf(WorldManager::tryDeleteWorld);
-        }
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static void requestToCreateDimension(DimensionNode dimensionNode) {
+        ServerHelper.getServer().submit(() -> {
+            dimensionCreationQueue.add(dimensionNode);
+        });
+    }
 
-        if (!creationQueue.isEmpty()) {
-            creationQueue.removeIf(WorldManager::tryCreateWorld);
+    private static boolean tryDeleteDimension(@NotNull ServerWorld world) {
+        if (world.getPlayers().isEmpty()) {
+            deleteDimension(world);
+            return true;
+        } else {
+            evacuatePlayers(world);
+            return false;
         }
     }
 
-    private static boolean tryCreateWorld(@NotNull DimensionNode dimensionNode) {
-        // wait until the deletion of this dimension is completed.
-        if (deletionQueue.stream().anyMatch(it -> RegistryHelper.toString(it).equals(dimensionNode.getDimension()))) {
+
+    private static boolean tryCreateDimension(@NotNull DimensionNode dimensionNode) {
+        // NOTE: Wait the target dimension to be deleted first (If there is a deletion ticket for it).
+        if (dimensionDeletionQueue.stream().anyMatch(it -> RegistryHelper.toString(it).equals(dimensionNode.dimension))) {
             return false;
         }
 
-        // register the dimension
-        MinecraftServer server = ServerHelper.getServer();
-        Identifier dimension = RegistryHelper.makeIdentifier(dimensionNode.getDimension());
-        Identifier dimensionType = RegistryHelper.makeIdentifier(dimensionNode.getDimension_type());
-        long seed = dimensionNode.getSeed();
-        registerWorld(server, dimension, dimensionType, seed);
+        createDimension(dimensionNode);
         return true;
     }
 
-    private static boolean tryDeleteWorld(@NotNull ServerWorld world) {
-        if (world.getPlayers().isEmpty()) {
-            deleteWorld(world);
-            return true;
-        } else {
-            kickPlayers(world);
-            return false;
-        }
+    private static void createDimension(@NotNull DimensionNode dimensionNode) {
+        MinecraftServer server = ServerHelper.getServer();
+        Identifier dimension = RegistryHelper.makeIdentifier(dimensionNode.dimension);
+        Identifier dimensionType = RegistryHelper.makeIdentifier(dimensionNode.dimension_type);
+        long seed = dimensionNode.seed;
+        registerWorld(server, dimension, dimensionType, seed);
     }
 
-    private static void kickPlayers(@NotNull ServerWorld world) {
-        if (world.getPlayers().isEmpty()) {
-            return;
-        }
 
-        ServerWorld overworld = world.getServer().getOverworld();
-        BlockPos spawnPos = overworld.getSpawnPos();
+    private static void evacuatePlayers(@NotNull ServerWorld dimension) {
+        ServerWorld safeDimension = dimension.getServer().getOverworld();
+        BlockPos safeBlockPos = safeDimension.getSpawnPos();
 
-        List<ServerPlayerEntity> players = new ArrayList<>(world.getPlayers());
+        List<ServerPlayerEntity> players = new ArrayList<>(dimension.getPlayers());
         for (ServerPlayerEntity player : players) {
-            // fix: if the player is inside resource-world while resetting the worlds, then resource worlds will delay its deletion until the player left the resource-world.
             GlobalPos from = GlobalPos.of(player);
-            GlobalPos to = new GlobalPos(overworld, spawnPos.getX() + 0.5, spawnPos.getY() + 0.5, spawnPos.getZ() + 0.5, 0, 0);
-
-            // totalMs = 1000, the value is unused
+            GlobalPos to = new GlobalPos(safeDimension, safeBlockPos.getX() + 0.5, safeBlockPos.getY() + 0.5, safeBlockPos.getZ() + 0.5, 0, 0);
             TeleportTicket teleportTicket = TeleportTicket.makeVipTicket(player, from, to);
+
             Managers.getBossBarManager().addTicket(teleportTicket);
         }
     }
 
-    private static void deleteWorld(@NotNull ServerWorld world) {
+    private static void deleteDimension(@NotNull ServerWorld world) {
         MinecraftServer server = world.getServer();
 
         RegistryKey<World> dimensionKey = world.getRegistryKey();

@@ -7,12 +7,11 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
 import io.github.sakurawald.fuji.module.initializer.world.structure.DimensionNode;
+import java.util.List;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class WorldGui extends PagedGui<DimensionNode> {
 
@@ -28,7 +27,7 @@ public class WorldGui extends PagedGui<DimensionNode> {
     @Override
     protected GuiElementInterface toGuiElement(DimensionNode entity) {
         return new GuiElementBuilder()
-            .setName(Text.of(entity.getDimension()))
+            .setName(Text.literal(entity.getDimension()))
             .setItem(WorldHelper.toGuiItem(entity.getDimension_type()))
             .setLore(List.of(
                 TextHelper.getTextByKey(getPlayer(), "world.dimension.loaded", entity.isDimensionLoaded())

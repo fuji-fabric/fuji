@@ -1121,5 +1121,9 @@
   "docstring.1752000453811": "To `update` the `warnings` of a `player`.",
   "docstring.1752000473509": "To `delete` an existed `warning` of a `player`.",
   "docstring.1752000488085": "When a `player` with `warnings` join/leave the server, you will get notified.",
-  "docstring.1752003106392": "Inspect loaded language files by fuji."
+  "docstring.1752003106392": "Inspect loaded language files by fuji.",
+  "docstring.1752170874671": "A `dimension node` is used to describe a created `extra dimension`.\nIt contains the `metadata` of a `dimension`.\n",
+  "docstring.1752170969085": "Should we `load` this `dimension` on server startup?\n",
+  "docstring.1752170986625": "The `identifier` of this `dimension`.\n",
+  "docstring.1752171006784": "The `dimension type` of this `dimension`.\nNote that the `dimension type` defines the `chunk generator` and `dimension features`.\n"
 }
