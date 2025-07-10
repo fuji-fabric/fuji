@@ -2,9 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.tab;
 
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
-import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
@@ -12,10 +10,6 @@ import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.tab.config.model.TabListConfigModel;
 import io.github.sakurawald.fuji.module.initializer.tab.job.RenderHeaderAndFooterJob;
-import net.minecraft.network.packet.s2c.play.PlayerListHeaderS2CPacket;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826913154L, value = """
     Customize the TAB list.
@@ -31,17 +25,6 @@ import org.jetbrains.annotations.NotNull;
 public class TabListInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<TabListConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, TabListConfigModel.class);
-
-    public static void render() {
-        String headerControl = RandomUtil.drawList(config.model().style.header);
-        String footerControl = RandomUtil.drawList(config.model().style.footer);
-        for (ServerPlayerEntity player : ServerHelper.getOnlinePlayers()) {
-            @NotNull Text header = TextHelper.getTextByValue(player, headerControl);
-            @NotNull Text footer = TextHelper.getTextByValue(player, footerControl);
-            player.networkHandler.sendPacket(new PlayerListHeaderS2CPacket(header, footer));
-        }
-
-    }
 
     @Override
     protected void onInitialize() {
