@@ -76,7 +76,7 @@ public class DependencyTest {
     }
 
     @Test
-    void testCoreDependency() {
+    void banDirectReferencesBetweenCoreAndModules() {
         List<DependencyNode> violationNodes = new FileDependencyChecker()
             .makeDependencyNodes(
                 COMPILE_TIME_CORE_PACKAGE_PATH)
@@ -98,7 +98,7 @@ public class DependencyTest {
     }
 
     @Test
-    void testCoreConfigDependency() {
+    void banUnnecessaryImportsInCoreConfigPackage() {
         List<DependencyNode> violationNodes = new FileDependencyChecker()
             .makeDependencyNodes(COMPILE_TIME_CORE_CONFIG_PACKAGE_PATH)
             .stream()
@@ -109,7 +109,7 @@ public class DependencyTest {
             })
             .toList();
 
-        DependencyNode.tryReportViolationDependencyNodes(violationNodes, "The `core.config` package references mojang classes.");
+        DependencyNode.tryReportViolationDependencyNodes(violationNodes, "The `core.config` package references banned packages.");
     }
 
 }
