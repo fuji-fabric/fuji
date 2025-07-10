@@ -35,7 +35,6 @@ import net.minecraft.util.Formatting;
     This module provides the `entity` cleaner.
     To remove specified entities automatically.
     """)
-
 @ColorBox(id = 1751870582940L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     You should only use this module to clean some edge-case entity.
     The vanilla Minecraft also has a `cleaner` to remove dropped items.
@@ -46,7 +45,6 @@ import net.minecraft.util.Formatting;
     Yeah, the `vanilla cleaner` only cleans `dropped items`.
     But this module, allows you to define rules, to clean `dropped items` and `entities`.
     """)
-
 @ColorBox(id = 1751870585373L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     For safety, the `cleaner` will `always ignore` the following types:
     1. player
@@ -62,13 +60,14 @@ public class CleanerInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<CleanerConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CleanerConfigModel.class);
 
     @SuppressWarnings("RedundantIfStatement")
-    private static boolean ignoreEntity(Entity entity) {
+    private static boolean shouldIgnoreEntity(Entity entity) {
+        /* Always ignore these entities. */
         if (entity.getType().equals(EntityType.PLAYER)) return true;
         if (EntityHelper.isBlockAttachedEntity(entity)) return true;
         if (EntityHelper.isVehicleEntity(entity)) return true;
 
+        /* Ignore entities based on config. */
         var config = CleanerInitializer.config.model().ignore;
-
         if (config.ignore_item_entity && entity instanceof ItemEntity) return true;
         if (config.ignore_living_entity && entity.isLiving()) return true;
         if (config.ignore_named_entity) {
@@ -85,22 +84,24 @@ public class CleanerInitializer extends ModuleInitializer {
         if (config.ignore_glowing_entity && entity.isGlowing()) return true;
         if (config.ignore_leashed_entity && EntityHelper.isLeashed(entity)) return true;
 
+        /* Should not ignore this entity. */
         return false;
     }
 
-    private static boolean shouldRemove(String key, int age) {
+    private static boolean shouldRemoveThisEntity(String key, int age) {
         Map<String, Integer> regex2age = config.model().key2age;
-        return regex2age.containsKey(key) && age >= regex2age.get(key);
+        return regex2age.keySet().stream().anyMatch(key::matches)
+            && age >= regex2age.get(key);
     }
 
     @Document(id = 1751826901492L, value = "Trigger the cleaner once.")
     @CommandNode("clean")
     public static int $clean() {
-        Map<String, Integer> counter = new HashMap<>();
-
+        /* Clean entities in the server. */
+        Map<String, Integer> cleanedEntities = new HashMap<>();
         for (ServerWorld world : ServerHelper.getWorlds()) {
             for (Entity entity : world.iterateEntities()) {
-                if (ignoreEntity(entity)) continue;
+                if (shouldIgnoreEntity(entity)) continue;
 
                 String key;
                 if (entity instanceof ItemEntity itemEntity) {
@@ -109,21 +110,20 @@ public class CleanerInitializer extends ModuleInitializer {
                     key = entity.getType().getTranslationKey();
                 }
 
-                if (shouldRemove(key, entity.age)) {
-                    counter.put(key, counter.getOrDefault(key, 0) + 1);
+                if (shouldRemoveThisEntity(key, entity.age)) {
+                    Integer originalAmount = cleanedEntities.getOrDefault(key, 0);
+                    cleanedEntities.put(key, originalAmount + 1);
                     entity.discard();
                 }
             }
         }
 
-        // output
-        sendCleanerBroadcast(counter);
-
+        /* Send cleaning report. */
+        sendCleanerBroadcast(cleanedEntities);
         return CommandHelper.Return.SUCCESS;
     }
 
     private static void sendCleanerBroadcast(Map<String, Integer> counter) {
-        // avoid spam
         if (counter.isEmpty()) return;
 
         LogUtil.info("Remove entities: {}", counter);
@@ -134,12 +134,13 @@ public class CleanerInitializer extends ModuleInitializer {
                 .append(TypeFormatter.formatTypes(null, counter));
 
         for (ServerPlayerEntity player : ServerHelper.getOnlinePlayers()) {
-            MutableText text = Text.empty()
-                .append(TextHelper.getTextByKey(player, "cleaner.broadcast", counter.values().stream().mapToInt(Integer::intValue).sum()))
+            int numberOfCleanedEntities = counter.values().stream().mapToInt(Integer::intValue).sum();
+            MutableText reportText = Text.empty()
+                .append(TextHelper.getTextByKey(player, "cleaner.broadcast", numberOfCleanedEntities))
                 .fillStyle(
                     Style.EMPTY
                         .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(hoverText)));
-            player.sendMessage(text);
+            player.sendMessage(reportText);
         }
     }
 
