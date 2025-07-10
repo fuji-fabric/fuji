@@ -23,11 +23,11 @@ Download a copy of [fuji-manual.pdf](https://github.com/sakurawald/fuji/raw/dev/
 
 ## Contributing
 
-For User: You can report bugs or suggest new features by opening an issue. Share your feedback and experience to help up improve this project.
+- For User: You can report bugs or suggest new features by opening an issue. Share your feedback and experience to help up improve this project.
 
-For Translator: You can help us translate the `user interface` and `doc string` in [crowdin-project](https://crowdin.com/project/fuji-fabric).
+- For Translator: You can help us translate the `user interface` and `doc string` in [crowdin-project](https://crowdin.com/project/fuji-fabric).
 
-For Developer: You can make any changes or improvements to this mod, which you think would be beneficial to others. (Especially if your changes are bug fixes!)
+- For Developer: You can make any changes or improvements to this mod, which you think would be beneficial to others. (Especially if your changes are bug fixes!)
 
 For any contributors, you are welcome to open a `pull-request` in github to add your name into the [contributor list](https://github.com/sakurawald/fuji/blob/dev/fabric/src/main/resources/fabric.mod.json).
 
