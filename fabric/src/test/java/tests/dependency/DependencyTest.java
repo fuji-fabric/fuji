@@ -5,17 +5,14 @@ import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.core.CoreInitializer;
 import io.github.sakurawald.fuji.module.mixin.GlobalMixinConfigPlugin;
+import java.nio.file.Path;
+import java.util.List;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import tests.dependency.structure.DependencyNode;
 import tests.dependency.structure.FileDependencyChecker;
 import tests.dependency.structure.ModuleDependencyChecker;
-
-import java.nio.file.Path;
-import java.util.List;
-import java.util.stream.Stream;
 
 @ForDeveloper("""
     You may ask why we are so strict with the symbol reference, it's mainly because the loading mechanism of JVM.
@@ -31,6 +28,7 @@ public class DependencyTest {
     private static final Path COMPILE_TIME_JAVA_SOURCE_PATH = Path.of("src", "main", "java");
     private static final Path COMPILE_TIME_MAIN_FUNCTION_PACKAGE_PATH = COMPILE_TIME_JAVA_SOURCE_PATH.resolve(PROJECT_PACKAGE.replace(".", "/"));
     private static final Path COMPILE_TIME_CORE_PACKAGE_PATH = COMPILE_TIME_MAIN_FUNCTION_PACKAGE_PATH.resolve("core");
+    private static final Path COMPILE_TIME_CORE_CONFIG_PACKAGE_PATH = COMPILE_TIME_CORE_PACKAGE_PATH.resolve("config");
 
     private static class WellKnownPackages {
         private static final String JAVA_PACKAGE = "java.";
@@ -58,54 +56,50 @@ public class DependencyTest {
     }
 
     @Test
-    void testModuleDependency() {
-        List<DependencyNode> dependencies = new ModuleDependencyChecker()
+    void banDirectReferencesBetweenModules() {
+        List<DependencyNode> dependencyNodes = new ModuleDependencyChecker()
             .makeDependencyNodes(COMPILE_TIME_JAVA_SOURCE_PATH);
-
-        if (!dependencies.isEmpty()) {
-            System.out.println("===== The following dependency nodes violates the rule =====");
-            dependencies.forEach(System.out::println);
-            throw new RuntimeException("One module references other modules directly.");
-        }
+        DependencyNode.tryReportViolationDependencyNodes(dependencyNodes, "One module references other modules directly.");
     }
 
     @Test
     void testCoreDependency() {
-        Stream<DependencyNode> dependencies = new FileDependencyChecker().makeDependencyNodes(
+        List<DependencyNode> violationNodes = new FileDependencyChecker()
+            .makeDependencyNodes(
                 COMPILE_TIME_CORE_PACKAGE_PATH)
             .stream()
-            .filter(dep -> {
-                dep.includeReference(
+            .filter(node -> {
+                /* Only care classes from this project. */
+                node.includeReference(
                     PROJECT_MODULE_PACKAGE
                 );
-                dep.excludeReference(
-                    ModuleInitializer.class.getName()
-                    , GlobalMixinConfigPlugin.class.getName()
-                    , CoreInitializer.class.getName()
-                );
-                return !dep.getReference().isEmpty();
-            });
 
-        dependencies.forEach(dep -> {
-            System.out.println(dep);
-            throw new RuntimeException("the `core` package references the `module` package.");
-        });
+                /* Allow the core to reference these classes directly. */
+                node.excludeReference(
+                    ModuleInitializer.class.getName()
+                    , CoreInitializer.class.getName()
+                    , GlobalMixinConfigPlugin.class.getName()
+                );
+
+                return !node.reference.isEmpty();
+            })
+            .toList();
+
+        DependencyNode.tryReportViolationDependencyNodes(violationNodes, "The `core` package should not reference the `module` package.");
     }
 
     @Test
     void testCoreConfigDependency() {
-        Stream<DependencyNode> dependencies = new FileDependencyChecker().makeDependencyNodes(
-                COMPILE_TIME_CORE_PACKAGE_PATH.resolve("config"))
+        List<DependencyNode> violationNodes = new FileDependencyChecker()
+            .makeDependencyNodes(COMPILE_TIME_CORE_CONFIG_PACKAGE_PATH)
             .stream()
             .filter(dep -> {
                 dep.includeReference(WellKnownPackages.MOJANG_PACKAGES);
-                return !dep.getReference().isEmpty();
-            });
+                return !dep.reference.isEmpty();
+            })
+            .toList();
 
-        dependencies.forEach(dep -> {
-            System.out.println(dep);
-            throw new RuntimeException("the `core.config` package references mojang classes.");
-        });
+        DependencyNode.tryReportViolationDependencyNodes(violationNodes,"the `core.config` package references mojang classes.");
     }
 
 }

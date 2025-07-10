@@ -11,8 +11,16 @@ import lombok.Data;
 public class DependencyNode {
     public static final DependencyNode IGNORE_THIS_DEPENDENCY_NODE = new DependencyNode(null, null);
 
-    String definition;
-    List<String> reference;
+    public String definition;
+    public List<String> reference;
+
+    public static void tryReportViolationDependencyNodes(List<DependencyNode> dependencyNodes, String reason) {
+        if (!dependencyNodes.isEmpty()) {
+            System.out.println("===== The following dependency nodes violates the rule =====");
+            dependencyNodes.forEach(System.out::println);
+            throw new RuntimeException(reason);
+        }
+    }
 
     public void includeReference(String... prefixes) {
         this.reference = this.reference
