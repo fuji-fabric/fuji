@@ -6,7 +6,7 @@ import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import eu.pb4.sgui.api.gui.layered.LayeredGui;
-import io.github.sakurawald.fuji.core.AsyncUtil;
+import io.github.sakurawald.fuji.core.auxiliary.AsyncUtil;
 import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
 import java.util.ArrayList;
 import java.util.List;

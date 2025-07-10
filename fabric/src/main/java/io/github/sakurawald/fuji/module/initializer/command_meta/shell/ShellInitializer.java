@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.command_meta.shell;
 
 import com.mojang.brigadier.context.CommandContext;
-import io.github.sakurawald.fuji.core.AsyncUtil;
+import io.github.sakurawald.fuji.core.auxiliary.AsyncUtil;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;

@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.core.structure;
 
-import io.github.sakurawald.fuji.core.AsyncUtil;
+import io.github.sakurawald.fuji.core.auxiliary.AsyncUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import org.apache.commons.io.FileUtils;
 

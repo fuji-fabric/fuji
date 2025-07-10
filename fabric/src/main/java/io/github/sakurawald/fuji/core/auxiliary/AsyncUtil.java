@@ -1,6 +1,5 @@
-package io.github.sakurawald.fuji.core;
+package io.github.sakurawald.fuji.core.auxiliary;
 
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import java.util.concurrent.CompletableFuture;
 
 public class AsyncUtil {

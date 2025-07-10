@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.top_chunks;
 
-import io.github.sakurawald.fuji.core.AsyncUtil;
+import io.github.sakurawald.fuji.core.auxiliary.AsyncUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
