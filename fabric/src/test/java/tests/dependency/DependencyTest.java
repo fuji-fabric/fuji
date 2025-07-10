@@ -267,12 +267,6 @@ public class DependencyTest {
 
     @Test
     public void banUnnecessaryImportsInMainControlModel() {
-
-    }
-
-
-    @Test
-    public void banUnnecessaryImportsInCoreConfigPackage() {
         List<DependencyNode> violationNodes = new FileDependencyChecker()
             .makeDependencyNodes(COMPILE_TIME_MAIN_CONTROL_FILE_PATH)
             .stream()

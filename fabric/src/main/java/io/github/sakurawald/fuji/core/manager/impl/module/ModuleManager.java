@@ -4,11 +4,9 @@ import com.google.gson.JsonObject;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.config.Configs;
-import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
-import io.github.sakurawald.fuji.module.initializer.core.CoreInitializer;
 import io.github.sakurawald.fuji.module.mixin.GlobalMixinConfigPlugin;
 import lombok.Getter;
 import net.fabricmc.loader.api.FabricLoader;
@@ -22,7 +20,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Supplier;
 
 @Getter
 public class ModuleManager extends BaseManager {
@@ -117,7 +114,6 @@ public class ModuleManager extends BaseManager {
     @Override
     public void onInitialize() {
         invokeModuleInitializers();
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> CoreInitializer.onServerStartSuccess());
     }
 
     @SuppressWarnings("unchecked")
@@ -173,6 +169,7 @@ public class ModuleManager extends BaseManager {
         return shouldWeLoadThis(computeSplitModulePath(className));
     }
 
+    @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
     private boolean shouldWeLoadThis(@NotNull List<String> modulePath) {
         if (Configs.MAIN_CONTROL_CONFIG.model().core.debug.disable_all_modules) return false;
         if (modulePath.get(0).equals(CORE_MODULE_PATH)) return true;
@@ -218,14 +215,4 @@ public class ModuleManager extends BaseManager {
         return true;
     }
 
-    public static <T> T evalOnEnable(Supplier<T> supplier) {
-        String modulePathString = ReflectionUtil.findSourceModuleInCurrentStackTrace();
-
-        boolean shouldWeLoadThis = Managers.getModuleManager().shouldWeLoadThis(modulePathString);
-        if (shouldWeLoadThis) {
-            return supplier.get();
-        }
-
-        return null;
-    }
 }

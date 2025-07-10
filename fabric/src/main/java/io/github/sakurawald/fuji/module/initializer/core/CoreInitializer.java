@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.core;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.Configs;
+import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -35,6 +36,10 @@ import java.util.List;
 
 public class CoreInitializer extends ModuleInitializer {
 
+    @Override
+    protected void onInitialize() {
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> CoreInitializer.onServerStartSuccess());
+    }
 
     public static void printUserGuide() {
         // NOTE: The generator is https://rebane2001.com/discord-colored-text-generator/
@@ -57,14 +62,14 @@ public class CoreInitializer extends ModuleInitializer {
         LogUtil.info(userGuide);
     }
 
-    public static void tryPrintUserGuide(List<String> enabledModuleList) {
+    private static void tryPrintUserGuide(List<String> enabledModuleList) {
         if (Configs.MAIN_CONTROL_CONFIG.model().core.debug.print_user_guide_in_console
         || enabledModuleList.size() == 1) {
             printUserGuide();
         }
     }
 
-    public static void onServerStartSuccess() {
+    private static void onServerStartSuccess() {
         /* Report enabled/disabled modules. */
         List<String> enabledModuleList = new ArrayList<>();
         ModuleManager.MODULE_ENABLE_STATUS.forEach((module, enable) -> {
