@@ -22,27 +22,40 @@ import tests.dependency.structure.ModuleDependencyChecker;
     """)
 public class DependencyTest {
 
-    private static final String PROJECT_PACKAGE = Fuji.class.getPackageName();
-    private static final String PROJECT_MODULE_PACKAGE = PROJECT_PACKAGE + ".module";
+    private static final String PROJECT_ROOT_PACKAGE_NAME = Fuji.class.getPackageName();
+    private static final String PROJECT_CORE_PACKAGE_NAME = PROJECT_ROOT_PACKAGE_NAME + ".core";
+    private static final String PROJECT_MODULE_PACKAGE_NAME = PROJECT_ROOT_PACKAGE_NAME + ".module";
 
     private static final Path COMPILE_TIME_JAVA_SOURCE_PATH = Path.of("src", "main", "java");
-    private static final Path COMPILE_TIME_MAIN_FUNCTION_PACKAGE_PATH = COMPILE_TIME_JAVA_SOURCE_PATH.resolve(PROJECT_PACKAGE.replace(".", "/"));
+    private static final Path COMPILE_TIME_MAIN_FUNCTION_PACKAGE_PATH = COMPILE_TIME_JAVA_SOURCE_PATH.resolve(PROJECT_ROOT_PACKAGE_NAME.replace(".", "/"));
     private static final Path COMPILE_TIME_CORE_PACKAGE_PATH = COMPILE_TIME_MAIN_FUNCTION_PACKAGE_PATH.resolve("core");
     private static final Path COMPILE_TIME_CORE_CONFIG_PACKAGE_PATH = COMPILE_TIME_CORE_PACKAGE_PATH.resolve("config");
 
     private static class WellKnownPackages {
-        private static final String JAVA_PACKAGE = "java.";
-        private static final String JETBRAINS_ANNOTATION_PACKAGE = "org.jetbrains";
-        private static final String LOMBOK_PACKAGE = "lombok.";
-        private static final String NET_MINECRAFT_PACKAGE = "net.minecraft";
-        private static final String COM_MOJANG_PACKAGE = "com.mojang";
-        private static final String[] MOJANG_PACKAGES = new String[]{COM_MOJANG_PACKAGE, NET_MINECRAFT_PACKAGE};
+        private static final String JAVA_PACKAGE_PREFIX = "java.";
+        private static final String JETBRAINS_ANNOTATION_PACKAGE_PREFIX = "org.jetbrains.";
+        private static final String LOMBOK_PACKAGE_PREFIX = "lombok.";
+        private static final String GSON_PACKAGE_PREFIX = "com.google.gson.";
+        private static final String QUARTZ_PACKAGE_PREFIX = "org.quartz.";
+        private static final String JSON_PATH_PACKAGE_PREFIX = "com.jayway.jsonpath.";
+
+        private static final String NET_MINECRAFT_PACKAGE_PREFIX = "net.minecraft.";
+        private static final String COM_MOJANG_PACKAGE_PREFIX = "com.mojang.";
+        private static final String[] MOJANG_PACKAGES_PREFIX = new String[]{COM_MOJANG_PACKAGE_PREFIX, NET_MINECRAFT_PACKAGE_PREFIX};
     }
 
-    private static final String[] BASE_PACKAGES = new String[]{
-        WellKnownPackages.JAVA_PACKAGE
-        , WellKnownPackages.JETBRAINS_ANNOTATION_PACKAGE
-        , WellKnownPackages.LOMBOK_PACKAGE
+    private static final String[] ALLOWED_PACKAGES_IN_CORE = new String[]{
+        PROJECT_CORE_PACKAGE_NAME
+        , Fuji.class.getPackage().getName()
+        , ModuleInitializer.class.getPackage().getName()
+        , CoreInitializer.class.getPackage().getName()
+        , GlobalMixinConfigPlugin.class.getName()
+        , WellKnownPackages.JAVA_PACKAGE_PREFIX
+        , WellKnownPackages.JETBRAINS_ANNOTATION_PACKAGE_PREFIX
+        , WellKnownPackages.LOMBOK_PACKAGE_PREFIX
+        , WellKnownPackages.GSON_PACKAGE_PREFIX
+        , WellKnownPackages.QUARTZ_PACKAGE_PREFIX
+        , WellKnownPackages.JSON_PATH_PACKAGE_PREFIX
         , MinecraftServer.class.getName()
         , ServerPlayerEntity.class.getName()
     };
@@ -71,15 +84,11 @@ public class DependencyTest {
             .filter(node -> {
                 /* Only care classes from this project. */
                 node.includeReference(
-                    PROJECT_MODULE_PACKAGE
+                    PROJECT_MODULE_PACKAGE_NAME
                 );
 
                 /* Allow the core to reference these classes directly. */
-                node.excludeReference(
-                    ModuleInitializer.class.getName()
-                    , CoreInitializer.class.getName()
-                    , GlobalMixinConfigPlugin.class.getName()
-                );
+                node.excludeReference(ALLOWED_PACKAGES_IN_CORE);
 
                 return !node.reference.isEmpty();
             })
@@ -93,13 +102,14 @@ public class DependencyTest {
         List<DependencyNode> violationNodes = new FileDependencyChecker()
             .makeDependencyNodes(COMPILE_TIME_CORE_CONFIG_PACKAGE_PATH)
             .stream()
-            .filter(dep -> {
-                dep.includeReference(WellKnownPackages.MOJANG_PACKAGES);
-                return !dep.reference.isEmpty();
+            .filter(node -> {
+                /* Only allow to reference these symbols in main control file, to avoid early class loading. */
+                node.excludeReference(ALLOWED_PACKAGES_IN_CORE);
+                return !node.reference.isEmpty();
             })
             .toList();
 
-        DependencyNode.tryReportViolationDependencyNodes(violationNodes,"the `core.config` package references mojang classes.");
+        DependencyNode.tryReportViolationDependencyNodes(violationNodes, "The `core.config` package references mojang classes.");
     }
 
 }
