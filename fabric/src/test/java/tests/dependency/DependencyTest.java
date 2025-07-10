@@ -106,7 +106,7 @@ public class DependencyTest {
         allowedPackages.add(CoreInitializer.class.getPackage().getName());
         allowedPackages.add(GlobalMixinConfigPlugin.class.getName());
 
-        /* Treat the classes inside core package as a group. */
+        /* Treat the classes inside core package as a whole. */
         allowedPackages.add(PROJECT_CORE_PACKAGE_NAME);
 
         /* Allowed non-Minecraft libraries. */
@@ -215,8 +215,8 @@ public class DependencyTest {
         allowedPackages.add(ServerPlayNetworkHandler.class.getName());
 
         allowedPackages.add("net.minecraft.command.argument.");
-        allowedPackages.add(ScoreboardDisplaySlot.class.getName());
-        allowedPackages.add(ScoreboardObjective.class.getName());
+        allowedPackages.add("net.minecraft.scoreboard.ScoreboardDisplaySlot");
+        allowedPackages.add("net.minecraft.scoreboard.ScoreboardObjective");
         allowedPackages.add(NumberRange.class.getName());
         allowedPackages.add(SlotRange.class.getName());
         allowedPackages.add(ColumnPos.class.getName());
