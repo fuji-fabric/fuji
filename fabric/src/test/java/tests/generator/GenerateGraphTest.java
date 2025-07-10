@@ -1,4 +1,4 @@
-package tests;
+package tests.generator;
 
 import auxiliary.TestUtil;
 import com.google.gson.JsonObject;
@@ -29,6 +29,7 @@ public class GenerateGraphTest {
 
     public static final Path COMPILE_TIME_RESOURCE_PATH = TestUtil.PROJECT_ROOT_PATH.resolve("common/src/main/resources/");
     public static final Path COMPILE_TIME_GRAPH_PATH = COMPILE_TIME_RESOURCE_PATH.resolve(ReflectionUtil.class.getPackageName().replace(".", "/"));
+    public static final Path COMPILE_TIME_CITE_FILE_PATH = TestUtil.PROJECT_ROOT_PATH.resolve("CITE");
 
     @Test
     @SneakyThrows(IOException.class)
@@ -54,7 +55,8 @@ public class GenerateGraphTest {
 
     @SneakyThrows
     private static void generateCiteFile(ScanResult scanResult) {
-        try (PrintWriter writer = new PrintWriter(Path.of("../CITE").toFile())) {
+        try (PrintWriter writer = new PrintWriter(
+            COMPILE_TIME_CITE_FILE_PATH.toFile())) {
             scanResult
                 .getClassesWithAnnotation(Cite.class)
                 .stream()

@@ -1,4 +1,4 @@
-package tests;
+package tests.mixin;
 
 import auxiliary.TestUtil;
 import com.google.gson.JsonArray;

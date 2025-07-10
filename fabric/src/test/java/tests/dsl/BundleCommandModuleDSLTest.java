@@ -1,4 +1,4 @@
-package tests;
+package tests.dsl;
 
 import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
 import io.github.sakurawald.fuji.module.initializer.command_bundle.structure.BundleCommandDescriptor;

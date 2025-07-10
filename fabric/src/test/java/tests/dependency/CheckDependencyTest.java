@@ -1,6 +1,7 @@
-package tests;
+package tests.dependency;
 
 import io.github.sakurawald.fuji.Fuji;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.core.CoreInitializer;
 import io.github.sakurawald.fuji.module.mixin.GlobalMixinConfigPlugin;
@@ -15,18 +16,20 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Stream;
 
-/**
- * You may ask why we are so strict with the symbol reference, it's mainly because the loading mechanism of jvm.
- * Each time you `import` a file, the jvm will trigger the static initialization process, which also introduce the possibility to crash the server.
- * The import of symbols, trigger the loading of mixins, possibly registered by other mods.
- */
+@ForDeveloper("""
+    You may ask why we are so strict with the symbol reference, it's mainly because the loading mechanism of JVM.
+
+    When you reference a symbol, it will trigger the loading of mixins, which introduces the possibility to crash the server.
+    Especially when the server is not initialized fully.
+    """)
 public class CheckDependencyTest {
-    private static final Path COMPILE_TIME_SOURCE_PATH = Path.of("src", "main", "java");
 
     private static final String PROJECT_PACKAGE = Fuji.class.getPackageName();
     private static final String PROJECT_MODULE_PACKAGE = PROJECT_PACKAGE + ".module";
 
-    private static final Path COMPILE_TIME_MAIN_PACKAGE_PATH = COMPILE_TIME_SOURCE_PATH.resolve(PROJECT_PACKAGE.replace(".", "/"));
+    private static final Path COMPILE_TIME_JAVA_SOURCE_PATH = Path.of("src", "main", "java");
+    private static final Path COMPILE_TIME_MAIN_FUNCTION_PACKAGE_PATH = COMPILE_TIME_JAVA_SOURCE_PATH.resolve(PROJECT_PACKAGE.replace(".", "/"));
+    public static final Path COMPILE_TIME_CORE_PACKAGE_PATH = COMPILE_TIME_MAIN_FUNCTION_PACKAGE_PATH.resolve("core");
 
     private static final String JAVA_PACKAGE = "java.";
     private static final String JETBRAINS_ANNOTATION_PACKAGE = "org.jetbrains";
@@ -46,7 +49,7 @@ public class CheckDependencyTest {
 
     @Test
     void testModuleDependency() {
-        List<Dependency> dependencies = new ModuleDependencyChecker().makeDependencies(COMPILE_TIME_SOURCE_PATH);
+        List<Dependency> dependencies = new ModuleDependencyChecker().makeDependencies(COMPILE_TIME_JAVA_SOURCE_PATH);
 
         if (!dependencies.isEmpty()) {
             dependencies.forEach(System.out::println);
@@ -57,7 +60,7 @@ public class CheckDependencyTest {
     @Test
     void testCoreDependency() {
         Stream<Dependency> dependencies = new FileDependencyChecker().makeDependencies(
-                COMPILE_TIME_MAIN_PACKAGE_PATH.resolve("core"))
+                COMPILE_TIME_CORE_PACKAGE_PATH)
             .stream()
             .filter(dep -> {
                 dep.filterReference(
@@ -80,7 +83,7 @@ public class CheckDependencyTest {
     @Test
     void testCoreConfigDependency() {
         Stream<Dependency> dependencies = new FileDependencyChecker().makeDependencies(
-                COMPILE_TIME_MAIN_PACKAGE_PATH.resolve("core").resolve("config"))
+                COMPILE_TIME_CORE_PACKAGE_PATH.resolve("config"))
             .stream()
             .filter(dep -> {
                 dep.filterReference(MOJANG_PACKAGES);

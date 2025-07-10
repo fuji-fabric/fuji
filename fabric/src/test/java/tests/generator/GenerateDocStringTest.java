@@ -1,4 +1,4 @@
-package tests;
+package tests.generator;
 
 import auxiliary.TestUtil;
 import com.google.gson.JsonObject;
@@ -39,6 +39,7 @@ public class GenerateDocStringTest {
     private static final Path COMPILE_TIME_CROWDIN_PATH = TestUtil.PROJECT_ROOT_PATH.resolve("crowdin/");
     private static final Path COMPILE_TIME_PULL_FROM_CROWDIN_LANGUAGE_PATH = COMPILE_TIME_CROWDIN_PATH.resolve("pull-from-crowdin/");
     private static final Path COMPILE_TIME_PUSH_TO_CROWDIN_LANGUAGE_PATH = COMPILE_TIME_CROWDIN_PATH.resolve("push-to-crowdin/");
+    private static final Path COMPILE_TIME_DEFAULT_LANGUAGE_FILE_PATH = COMPILE_TIME_PUSH_TO_CROWDIN_LANGUAGE_PATH.resolve("en_US.json");
 
     @Test
     @SneakyThrows(IOException.class)
@@ -97,8 +98,7 @@ public class GenerateDocStringTest {
 
     private static void writeDocStringListIntoDefaultLanguageFile(List<DocString> docStringList) throws IOException {
         /* Read the default language json. */
-        Path defaultLanguageFilePath = COMPILE_TIME_PUSH_TO_CROWDIN_LANGUAGE_PATH.resolve("en_US.json");
-        JsonObject defaultLanguageJson = JsonUtil.readJsonElement(defaultLanguageFilePath).getAsJsonObject();
+        JsonObject defaultLanguageJson = JsonUtil.readJsonElement(COMPILE_TIME_DEFAULT_LANGUAGE_FILE_PATH).getAsJsonObject();
         if (JsonUtil.isEmpty(defaultLanguageJson)) {
             throw new RuntimeException("Default language file is empty.");
         }
@@ -122,7 +122,7 @@ public class GenerateDocStringTest {
 
         /* Override the default language file. */
         String jsonString = BaseConfigurationHandler.getGson().toJson(defaultLanguageJson);
-        Files.writeString(defaultLanguageFilePath, jsonString);
+        Files.writeString(COMPILE_TIME_DEFAULT_LANGUAGE_FILE_PATH, jsonString);
     }
 
     private static @NotNull List<DocString> makeDocStringFromDocumentAnnotation(ScanResult scanResult) {
