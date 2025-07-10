@@ -8,12 +8,12 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.gameplay.multi_obsidian_platform.config.model.MultiObsidianPlatformConfigModel;
+import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.block.Blocks;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Document(id = 1751827009997L, value = """
@@ -25,7 +25,7 @@ import java.util.Map;
     """)
 public class MultiObsidianPlatformInitializer extends ModuleInitializer {
 
-    private static final Map<BlockPos, BlockPos> TRANSFORM_CACHE = new HashMap<>();
+    private static final Map<BlockPos, BlockPos> TRANSFORM_CACHE = new ConcurrentHashMap<>();
 
     private static final BaseConfigurationHandler<MultiObsidianPlatformConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, MultiObsidianPlatformConfigModel.class);
 
@@ -99,4 +99,9 @@ public class MultiObsidianPlatformInitializer extends ModuleInitializer {
         return TRANSFORM_CACHE.get(bp);
     }
 
+    @Override
+    protected void onReload() {
+        // NOTE: Provide a way to clear the cache after the ENDER_PORTAL_FRAME block is broken and re-placed.
+        TRANSFORM_CACHE.clear();
+    }
 }
