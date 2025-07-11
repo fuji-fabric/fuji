@@ -11,7 +11,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(EndGatewayBlockEntity.class)
 public abstract class EndGatewayBlockEntityMixin {
 
-    // note: for a resource end, we force make World.END == World.END a true condition, so that the end gateway in resource end can work.
+    // NOTE: In vanilla Minecraft, the EndGatewayBlockEntity only checks the serverWorld.getRegistryKey() == World.END condition.
+    // To make it working in extra dimensions, we make the expression to be always TRUE. (Actually, the EndGatewayBlockEntity will only appear in the_end dimension type)
+
     #if MC_VER <= MC_1_20_6
     @Redirect(method = "tryTeleportingEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getRegistryKey()Lnet/minecraft/registry/RegistryKey;"))
     private static RegistryKey<World> letExitPortalsInExtraDimensionsWork(World instance) {

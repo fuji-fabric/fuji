@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.module.initializer.world;
 
-import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
@@ -85,12 +84,20 @@ import org.jetbrains.annotations.NotNull;
 @CommandRequirement(level = 4)
 public class WorldInitializer extends ModuleInitializer {
 
-    private static final BaseConfigurationHandler<WorldConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, WorldConfigModel.class);
-    private static final BaseConfigurationHandler<WorldDataModel> storage = new ObjectConfigurationHandler<>("world.json", WorldDataModel.class);
+    public static final BaseConfigurationHandler<WorldConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, WorldConfigModel.class);
+    public static final BaseConfigurationHandler<WorldDataModel> storage = new ObjectConfigurationHandler<>("world.json", WorldDataModel.class);
 
-    private static void checkBlacklist(CommandContext<ServerCommandSource> ctx, String identifier) {
+    private static void checkBlacklist(ServerCommandSource source, String identifier) {
+        /* Should not operate on blacklisted dimensions. */
         if (config.model().blacklist.dimension_list.contains(identifier)) {
-            TextHelper.sendTextByKey(ctx.getSource(), "world.dimension.blacklist", identifier);
+            TextHelper.sendTextByKey(source, "world.dimension.blacklist", identifier);
+            throw new AbortCommandExecutionException();
+        }
+    }
+
+    private static void ensureDimensionIdNotExists(ServerCommandSource source, Identifier identifier) {
+        if (WorldService.existsDimension(identifier)) {
+            TextHelper.sendTextByKey(source, "world.dimension.exist");
             throw new AbortCommandExecutionException();
         }
     }
@@ -123,66 +130,54 @@ public class WorldInitializer extends ModuleInitializer {
     }
 
     @CommandNode("create")
-    private static int $create(@CommandSource CommandContext<ServerCommandSource> ctx, String name,
+    private static int $create(@CommandSource ServerCommandSource source, String name,
                                Optional<Long> seed, DimensionType dimensionType) {
 
-        /* make dimension identifier */
-        String FUJI_DIMENSION_NAMESPACE = "fuji";
+        /* Make identifier for the new dimension. */
+        final String FUJI_DIMENSION_NAMESPACE = "fuji";
         Identifier dimensionIdentifier = Identifier.of(FUJI_DIMENSION_NAMESPACE, name);
+        ensureDimensionIdNotExists(source, dimensionIdentifier);
 
-        /* check exist */
-        if (ServerHelper.getWorlds().stream().anyMatch(it -> RegistryHelper.toString(it).equals(dimensionIdentifier.toString()))) {
-            TextHelper.sendTextByKey(ctx.getSource(), "world.dimension.exist");
-            return CommandHelper.Return.FAIL;
-        }
-
-        /* make dimension entry */
+        /* Make dimension entry */
         long $seed = seed.orElse(RandomSeed.getSeed());
         Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(dimensionType.getValue());
         DimensionNode dimensionNode = new DimensionNode(true, dimensionIdentifier.toString(), dimensionTypeIdentifier.toString(), $seed);
         storage.model().dimension_list.add(dimensionNode);
         storage.writeStorage();
 
-        /* request creation */
+        /* Request to create the dimension. */
         WorldService.requestToCreateDimension(dimensionNode);
         TextHelper.sendBroadcastByKey("world.dimension.created", dimensionIdentifier);
         return CommandHelper.Return.SUCCESS;
     }
 
     @CommandNode("delete")
-    private static int $delete(@CommandSource CommandContext<ServerCommandSource> ctx, Dimension dimension) {
-        /* check blacklist */
-        ServerWorld world = dimension.getValue();
-        String identifier = RegistryHelper.toString(world);
-        checkBlacklist(ctx, identifier);
+    private static int $delete(@CommandSource ServerCommandSource source, Dimension dimension) {
+        ServerWorld dimensionInstance = dimension.getValue();
+        String dimensionId = RegistryHelper.toString(dimensionInstance);
+        checkBlacklist(source, dimensionId);
 
-        /* request to deletion */
-        WorldService.requestToDeleteDimension(world);
+        /* Request to delete. */
+        WorldService.requestToDeleteDimension(dimensionInstance);
 
-        /* write entry */
-        Optional<DimensionNode> first = storage.model().dimension_list.stream().filter(o -> o.getDimension().equals(identifier)).findFirst();
-        if (first.isEmpty()) {
-            TextHelper.sendTextByKey(ctx.getSource(), "world.dimension.not_found", identifier);
-            return CommandHelper.Return.FAIL;
-        }
-        storage.model().dimension_list.remove(first.get());
-        storage.writeStorage();
+        /* Remove the node from storage. */
+        WorldService.deleteDimensionNode(source, dimensionId);
 
-        TextHelper.sendBroadcastByKey("world.dimension.deleted", identifier);
+        TextHelper.sendBroadcastByKey("world.dimension.deleted", dimensionId);
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1751826611302L, value = "Delete and create the specified world.")
     @CommandNode("reset")
-    private static int $reset(@CommandSource CommandContext<ServerCommandSource> ctx, Optional<Boolean> useTheSameSeed, Dimension dimension) {
+    private static int $reset(@CommandSource ServerCommandSource source, Optional<Boolean> useTheSameSeed, Dimension dimension) {
         // draw seed and save
         ServerWorld world = dimension.getValue();
         String identifier = RegistryHelper.toString(world);
-        checkBlacklist(ctx, identifier);
+        checkBlacklist(source, identifier);
 
         Optional<DimensionNode> dimensionEntryOpt = storage.model().dimension_list.stream().filter(o -> o.getDimension().equals(identifier)).findFirst();
         if (dimensionEntryOpt.isEmpty()) {
-            TextHelper.sendTextByKey(ctx.getSource(), "world.dimension.not_found");
+            TextHelper.sendTextByKey(source, "world.dimension.not_found");
             return CommandHelper.Return.FAIL;
         }
 

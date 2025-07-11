@@ -23,7 +23,7 @@ public abstract class ServerWorldMixin {
             value = "INVOKE",
             target = "Lnet/minecraft/server/PlayerManager;sendToAll(Lnet/minecraft/network/packet/Packet;)V"
         )
-        // this mixin will fail to mixin in neoforge platform.
+        // This mixin will fail to mixin in neoforge platform.
         , require = 0
     )
     private void dontSendWeatherPacketsToAllWorlds(PlayerManager instance, Packet<?> packet) {

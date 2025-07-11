@@ -10,23 +10,26 @@ import io.github.sakurawald.fuji.core.extension.SimpleRegistryExtension;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.core.structure.TeleportTicket;
+import io.github.sakurawald.fuji.module.initializer.world.WorldInitializer;
 import io.github.sakurawald.fuji.module.initializer.world.accessor.IDimensionOptions;
 import io.github.sakurawald.fuji.module.initializer.world.structure.DimensionNode;
 import io.github.sakurawald.fuji.module.initializer.world.structure.MyServerWorld;
 import io.github.sakurawald.fuji.module.initializer.world.structure.MyWorldProperties;
 import io.github.sakurawald.fuji.module.initializer.world.structure.VoidWorldGenerationProgressListener;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import net.minecraft.entity.boss.dragon.EnderDragonFight;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.SimpleRegistry;
-#if MC_VER <= MC_1_20_4
-import com.mojang.serialization.Lifecycle;
-#elif MC_VER > MC_1_20_4
 import net.minecraft.registry.entry.RegistryEntryInfo;
-#endif
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
@@ -38,11 +41,6 @@ import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 public class WorldService {
 
@@ -99,22 +97,21 @@ public class WorldService {
         Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(dimensionNode.dimension_type);
         long seed = dimensionNode.seed;
 
-        /* create the world */
+        /* Make the dimension properties. */
         // note: we use the same WorldData from OVERWORLD
         MyWorldProperties worldProperties = new MyWorldProperties(server.getSaveProperties(), seed);
 
-        RegistryKey<World> worldRegistryKey = RegistryKey.of(RegistryKeys.WORLD, dimensionIdentifier);
-        LogUtil.debug("Make instance of world with registry key of type `World`: {}", worldRegistryKey);
-
-        @Nullable DimensionOptions template = makeDimensionOptions(dimensionTypeIdentifier);
-        if (template == null) {
+        /* Make the dimension options. */
+        @Nullable DimensionOptions dimensionOptions = makeDimensionOptions(dimensionTypeIdentifier);
+        if (dimensionOptions == null) {
             LogUtil.error("Can't use {} dimension-type as the template to create extra fuji worlds.", dimensionTypeIdentifier);
             return;
         }
-
-        DimensionOptions dimensionOptions = makeDimensionOptions(template);
         ((IDimensionOptions) (Object) dimensionOptions).fuji$setSaveProperties(false);
 
+        /* Make the dimension instance. */
+        RegistryKey<World> worldRegistryKey = RegistryKey.of(RegistryKeys.WORLD, dimensionIdentifier);
+        LogUtil.debug("Make instance of world with registry key of type `World`: {}", worldRegistryKey);
         ServerWorld world;
         try {
             world = new MyServerWorld(server,
@@ -139,7 +136,7 @@ public class WorldService {
             world.setEnderDragonFight(new EnderDragonFight(world, world.getSeed(), EnderDragonFight.Data.DEFAULT));
         }
 
-        /* register the world */
+        /* Register the dimension. */
         SimpleRegistry<DimensionOptions> dimensionOptionsRegistry = (SimpleRegistry<DimensionOptions>) RegistryHelper.ofRegistry(RegistryKeys.DIMENSION);
         boolean original = ((SimpleRegistryExtension<?>) dimensionOptionsRegistry).fuji$isFrozen();
         ((SimpleRegistryExtension<?>) dimensionOptionsRegistry).fuji$setFrozen(false);
@@ -159,6 +156,7 @@ public class WorldService {
         server.worlds.put(world.getRegistryKey(), world);
         ServerWorldEvents.LOAD.invoker().fire(server, world);
 
+        /* Start ticking it. */
         world.tick(() -> true);
     }
 
@@ -211,13 +209,30 @@ public class WorldService {
     }
 
     private static @Nullable DimensionOptions makeDimensionOptions(Identifier dimensionTypeIdentifier) {
+        /* Get an existing dimension options from registry. */
         Registry<DimensionOptions> registry = RegistryHelper.ofRegistry(RegistryKeys.DIMENSION);
-        return registry.get(dimensionTypeIdentifier);
-    }
+        @Nullable DimensionOptions originalDimensionOptions = registry.get(dimensionTypeIdentifier);
+        if (originalDimensionOptions == null) {
+            return null;
+        }
 
-    private static @NotNull DimensionOptions makeDimensionOptions(DimensionOptions template) {
         // NOTE: Clone a DimensionOptions instance from existing one.
-        return new DimensionOptions(template.dimensionTypeEntry(), template.chunkGenerator());
+        return new DimensionOptions(originalDimensionOptions.dimensionTypeEntry(), originalDimensionOptions.chunkGenerator());
     }
 
+    public static boolean existsDimension(Identifier dimensionId) {
+        // Check the existence of dimensions using the runtime worlds variable.
+        return ServerHelper
+            .getWorlds()
+            .stream()
+            .anyMatch(it -> RegistryHelper.toString(it).equals(dimensionId.toString()));
+    }
+
+    public static void deleteDimensionNode(ServerCommandSource source, String dimensionId) {
+        Optional<DimensionNode> first = WorldInitializer.storage.model().dimension_list.stream().filter(o -> o.getDimension().equals(dimensionId)).findFirst();
+        first.ifPresent(dimensionNode -> {
+            WorldInitializer.storage.model().dimension_list.remove(dimensionNode);
+            WorldInitializer.storage.writeStorage();
+        });
+    }
 }

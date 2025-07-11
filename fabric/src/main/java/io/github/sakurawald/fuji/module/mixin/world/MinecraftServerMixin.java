@@ -13,9 +13,7 @@ import java.util.Iterator;
 
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
-    /* After issue /world reset, then it's possible that all the worlds will be ticked 2 times.
-       and do it again it's 3 times...
-     */
+    // NOTE: After issue /world reset, it's possible that all the worlds will be ticked twice.
     @Redirect(method = "tickWorlds", at = @At(value = "INVOKE", target = "Ljava/lang/Iterable;iterator()Ljava/util/Iterator;", ordinal = 0), require = 0)
     private @NotNull Iterator<ServerWorld> fuji$copyBeforeTicking(Iterable<ServerWorld> instance) {
         return new SafeIterator<>((Collection<ServerWorld>) instance);
