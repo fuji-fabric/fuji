@@ -19,17 +19,18 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.concurrent.Executor;
 
-public class MyServerWorld extends ServerWorld {
+public class RuntimeWorld extends ServerWorld {
 
     #if MC_VER <= MC_1_20_2
-    public MyServerWorld(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, WorldGenerationProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List<Spawner> spawners, boolean shouldTickTime, @Nullable RandomSequencesState randomSequencesState) {
+    public RuntimeWorld(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, WorldGenerationProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List<Spawner> spawners, boolean shouldTickTime, @Nullable RandomSequencesState randomSequencesState) {
         super(server, workerExecutor, session, properties, worldKey, dimensionOptions, worldGenerationProgressListener, debugWorld, seed, spawners, shouldTickTime, randomSequencesState);
     }
     #elif MC_VER > MC_1_20_2
-    public MyServerWorld(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, WorldGenerationProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List<SpecialSpawner> spawners, boolean shouldTickTime, @Nullable RandomSequencesState randomSequencesState) {
+    public RuntimeWorld(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, WorldGenerationProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List<SpecialSpawner> spawners, boolean shouldTickTime, @Nullable RandomSequencesState randomSequencesState) {
         super(server, workerExecutor, session, properties, worldKey, dimensionOptions, worldGenerationProgressListener, debugWorld, seed, spawners, shouldTickTime, randomSequencesState);
     }
     #endif
+
 
     /*
         The main issue is that the runtime world must return the custom seed through World#getSeed, including within the ServerWorld constructor.
@@ -39,7 +40,7 @@ public class MyServerWorld extends ServerWorld {
      */
     @Override
     public long getSeed() {
-        return ((MyWorldProperties) this.properties).getSeed();
+        return ((RuntimeWorldProperties) this.properties).dimensionNode.seed;
     }
 
     @Override

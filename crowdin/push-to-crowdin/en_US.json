@@ -1126,5 +1126,7 @@
   "docstring.1752170969085": "Should we `load` this `dimension` on server startup?\n",
   "docstring.1752170986625": "The `identifier` of this `dimension`.\n",
   "docstring.1752171006784": "The `dimension type` of this `dimension`.\nNote that the `dimension type` defines the `chunk generator` and `dimension features`.\n",
-  "docstring.1752175232049": "◉ Customize the chat format using placeholders.\nYou may want to enable `placeholder` module, to provide more useful placeholders.\n"
+  "docstring.1752175232049": "◉ Customize the chat format using placeholders.\nYou may want to enable `placeholder` module, to provide more useful placeholders.\n",
+  "docstring.1752246657296": "Should we tick the time of this dimension? (Do the day night cycle?)\n",
+  "docstring.1752246679197": "The `seed` used for the chunk generator of this dimension.\n"
 }

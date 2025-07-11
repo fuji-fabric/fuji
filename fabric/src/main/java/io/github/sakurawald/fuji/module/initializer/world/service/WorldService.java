@@ -13,8 +13,8 @@ import io.github.sakurawald.fuji.core.structure.TeleportTicket;
 import io.github.sakurawald.fuji.module.initializer.world.WorldInitializer;
 import io.github.sakurawald.fuji.module.initializer.world.accessor.IDimensionOptions;
 import io.github.sakurawald.fuji.module.initializer.world.structure.DimensionNode;
-import io.github.sakurawald.fuji.module.initializer.world.structure.MyServerWorld;
-import io.github.sakurawald.fuji.module.initializer.world.structure.MyWorldProperties;
+import io.github.sakurawald.fuji.module.initializer.world.structure.RuntimeWorld;
+import io.github.sakurawald.fuji.module.initializer.world.structure.RuntimeWorldProperties;
 import io.github.sakurawald.fuji.module.initializer.world.structure.VoidWorldGenerationProgressListener;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import java.io.File;
@@ -95,11 +95,10 @@ public class WorldService {
         MinecraftServer server = ServerHelper.getServer();
         Identifier dimensionIdentifier = RegistryHelper.makeIdentifier(dimensionNode.dimension);
         Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(dimensionNode.dimension_type);
-        long seed = dimensionNode.seed;
 
         /* Make the dimension properties. */
         // note: we use the same WorldData from OVERWORLD
-        MyWorldProperties worldProperties = new MyWorldProperties(server.getSaveProperties(), seed);
+        RuntimeWorldProperties worldProperties = new RuntimeWorldProperties(server.getSaveProperties(), dimensionNode);
 
         /* Make the dimension options. */
         @Nullable DimensionOptions dimensionOptions = makeDimensionOptions(dimensionTypeIdentifier);
@@ -114,7 +113,7 @@ public class WorldService {
         LogUtil.debug("Make instance of world with registry key of type `World`: {}", worldRegistryKey);
         ServerWorld world;
         try {
-            world = new MyServerWorld(server,
+            world = new RuntimeWorld(server,
                 Util.getMainWorkerExecutor(),
                 server.session,
                 worldProperties,
@@ -122,9 +121,9 @@ public class WorldService {
                 dimensionOptions,
                 VoidWorldGenerationProgressListener.INSTANCE,
                 false,
-                BiomeAccess.hashSeed(seed),
+                BiomeAccess.hashSeed(dimensionNode.seed),
                 ImmutableList.of(),
-                true,
+                dimensionNode.shouldTickTime,
                 null);
         } catch (Exception e) {
             LogUtil.error("Failed to make ServerWorld instance: dimensionId = {}, dimensionTypeId = {}", dimensionIdentifier, dimensionTypeIdentifier, e);
