@@ -27,7 +27,12 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.SimpleRegistry;
+
+#if MC_VER <= MC_1_20_4
+#elif MC_VER > MC_1_20_4
 import net.minecraft.registry.entry.RegistryEntryInfo;
+#endif
+
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -234,4 +239,11 @@ public class WorldService {
             WorldInitializer.storage.writeStorage();
         });
     }
+
+    public static void saveRuntimeWorldConfigs() {
+        WorldInitializer.config.writeStorage();
+    }
+
 }
+
+

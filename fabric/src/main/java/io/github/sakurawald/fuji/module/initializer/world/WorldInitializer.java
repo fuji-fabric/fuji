@@ -85,7 +85,9 @@ import org.jetbrains.annotations.NotNull;
 public class WorldInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<WorldConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, WorldConfigModel.class);
-    public static final BaseConfigurationHandler<WorldDataModel> storage = new ObjectConfigurationHandler<>("world.json", WorldDataModel.class);
+
+    public static final BaseConfigurationHandler<WorldDataModel> storage = new ObjectConfigurationHandler<>("world.json", WorldDataModel.class)
+        .setAutoSaveEveryMinute();
 
     private static void checkBlacklist(ServerCommandSource source, String identifier) {
         /* Should not operate on blacklisted dimensions. */
@@ -198,6 +200,18 @@ public class WorldInitializer extends ModuleInitializer {
         WorldService.requestToCreateDimension(dimensionEntryOpt.get());
 
         TextHelper.sendBroadcastByKey("world.dimension.reset", identifier);
+        return CommandHelper.Return.SUCCESS;
+    }
+
+
+    @Document(id = 1752248825291L, value = """
+        Saves the config of all extra dimensions into the storage.
+        """)
+    @CommandNode("save-configs")
+    @CommandRequirement(level = 4)
+    private static int $saveConfigs(@CommandSource ServerCommandSource source) {
+        WorldService.saveRuntimeWorldConfigs();
+        TextHelper.sendTextByKey(source, "operation.success");
         return CommandHelper.Return.SUCCESS;
     }
 

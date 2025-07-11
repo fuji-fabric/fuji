@@ -6,9 +6,6 @@ import net.minecraft.world.SaveProperties;
 import net.minecraft.world.level.UnmodifiableLevelProperties;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * The only purpose of this class is to warp the seed.
- **/
 public final class RuntimeWorldProperties extends UnmodifiableLevelProperties {
 
     public final DimensionNode dimensionNode;
@@ -27,5 +24,60 @@ public final class RuntimeWorldProperties extends UnmodifiableLevelProperties {
     @Override
     public long getTimeOfDay() {
         return dimensionNode.timeOfDay;
+    }
+
+    @Override
+    public void setTimeOfDay(long l) {
+        this.dimensionNode.timeOfDay = l;
+    }
+
+    @Override
+    public boolean isRaining() {
+        return dimensionNode.isRaining;
+    }
+
+    @Override
+    public void setRaining(boolean bl) {
+        this.dimensionNode.isRaining = bl;
+    }
+
+    @Override
+    public int getRainTime() {
+        return dimensionNode.rainTime;
+    }
+
+    @Override
+    public void setRainTime(int i) {
+        this.dimensionNode.rainTime = i;
+    }
+
+    @Override
+    public boolean isThundering() {
+        return dimensionNode.isThundering;
+    }
+
+    @Override
+    public void setThundering(boolean bl) {
+        this.dimensionNode.isThundering = bl;
+    }
+
+    @Override
+    public int getThunderTime() {
+        return dimensionNode.thunderTime;
+    }
+
+    @Override
+    public void setThunderTime(int i) {
+        this.dimensionNode.thunderTime = i;
+    }
+
+    @Override
+    public int getClearWeatherTime() {
+        return dimensionNode.sunnyTime;
+    }
+
+    @Override
+    public void setClearWeatherTime(int i) {
+        this.dimensionNode.sunnyTime = i;
     }
 }

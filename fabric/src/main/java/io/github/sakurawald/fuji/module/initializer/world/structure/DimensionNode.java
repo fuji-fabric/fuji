@@ -45,6 +45,12 @@ public class DimensionNode {
     public Difficulty difficulty = Difficulty.NORMAL;
     public long timeOfDay = 6000;
 
+    public int sunnyTime = Integer.MAX_VALUE;
+    public boolean isRaining;
+    public int rainTime;
+    public boolean isThundering;
+    public int thunderTime;
+
     public boolean isDimensionLoaded() {
         return ServerHelper
             .getWorlds()
