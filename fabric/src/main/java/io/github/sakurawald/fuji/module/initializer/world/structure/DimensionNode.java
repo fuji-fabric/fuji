@@ -8,7 +8,6 @@ import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.Gam
 import lombok.Data;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
-import net.minecraft.world.border.WorldBorder;
 
 @Document(id = 1752170874671L, value = """
     A `dimension node` is used to describe a created `extra dimension`.
@@ -45,8 +44,6 @@ public class DimensionNode {
 
     public Difficulty difficulty = Difficulty.NORMAL;
     public GameRuleStore gameRules = new GameRuleStore();
-
-    public WorldBorder.Properties worldBorder = WorldBorder.DEFAULT_BORDER;
 
     public long timeOfDay = 6000;
 

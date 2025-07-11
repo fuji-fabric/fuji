@@ -222,7 +222,7 @@ public class WorldInitializer extends ModuleInitializer {
 
     @Override
     protected void onInitialize() {
-        ServerLifecycleEvents.SERVER_STARTED.register(this::loadWorlds);
+        ServerLifecycleEvents.SERVER_STARTED.register(this::loadDimensions);
     }
 
     @Override
@@ -231,14 +231,14 @@ public class WorldInitializer extends ModuleInitializer {
         BaseConfigurationHandler.registerGsonTypeAdapter(Reference2IntMap.class, new IntegerGameRuleMapAdapter());
     }
 
-    private void loadWorlds(@NotNull MinecraftServer server) {
+    private void loadDimensions(@NotNull MinecraftServer server) {
         storage.model().dimension_list
             .stream()
             .filter(DimensionNode::isEnable)
             .forEach(it -> {
                 try {
                     WorldService.requestToCreateDimension(it);
-                    LogUtil.info("Load dimension {} into the server done.", it.getDimension());
+                    LogUtil.info("Load dimension {} into the server.", it.getDimension());
                 } catch (Exception e) {
                     LogUtil.error("Failed to load dimension `{}`", it, e);
                 }

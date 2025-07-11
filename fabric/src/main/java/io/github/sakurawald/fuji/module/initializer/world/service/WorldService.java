@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.world.service;
 
 import com.google.common.collect.ImmutableList;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.event.impl.ServerTickEvents;
@@ -23,6 +24,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import net.minecraft.entity.boss.dragon.EnderDragonFight;
+import net.minecraft.network.packet.s2c.play.WorldBorderCenterChangedS2CPacket;
+import net.minecraft.network.packet.s2c.play.WorldBorderInitializeS2CPacket;
+import net.minecraft.network.packet.s2c.play.WorldBorderInterpolateSizeS2CPacket;
+import net.minecraft.network.packet.s2c.play.WorldBorderSizeChangedS2CPacket;
+import net.minecraft.network.packet.s2c.play.WorldBorderWarningBlocksChangedS2CPacket;
+import net.minecraft.network.packet.s2c.play.WorldBorderWarningTimeChangedS2CPacket;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -42,6 +49,8 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.source.BiomeAccess;
+import net.minecraft.world.border.WorldBorder;
+import net.minecraft.world.border.WorldBorderListener;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionTypes;
 import org.jetbrains.annotations.NotNull;
@@ -117,9 +126,9 @@ public class WorldService {
         /* Make the dimension instance. */
         RegistryKey<World> worldRegistryKey = RegistryKey.of(RegistryKeys.WORLD, dimensionIdentifier);
         LogUtil.debug("Make instance of world with registry key of type `World`: {}", worldRegistryKey);
-        ServerWorld world;
+        ServerWorld dimension;
         try {
-            world = new RuntimeWorld(server,
+            dimension = new RuntimeWorld(server,
                 Util.getMainWorkerExecutor(),
                 server.session,
                 worldProperties,
@@ -138,7 +147,7 @@ public class WorldService {
 
         // start dragon fight if the dimension type is the end.
         if (dimensionTypeIdentifier.equals(DimensionTypes.THE_END_ID)) {
-            world.setEnderDragonFight(new EnderDragonFight(world, world.getSeed(), EnderDragonFight.Data.DEFAULT));
+            dimension.setEnderDragonFight(new EnderDragonFight(dimension, dimension.getSeed(), EnderDragonFight.Data.DEFAULT));
         }
 
         /* Register the dimension. */
@@ -158,11 +167,11 @@ public class WorldService {
         }
         ((SimpleRegistryExtension<?>) dimensionOptionsRegistry).fuji$setFrozen(original);
 
-        server.worlds.put(world.getRegistryKey(), world);
-        ServerWorldEvents.LOAD.invoker().fire(server, world);
+        server.worlds.put(dimension.getRegistryKey(), dimension);
+        ServerWorldEvents.LOAD.invoker().fire(server, dimension);
 
         /* Start ticking it. */
-        world.tick(() -> true);
+        dimension.tick(() -> true);
     }
 
     private static void evacuatePlayers(@NotNull ServerWorld dimension) {
@@ -243,6 +252,25 @@ public class WorldService {
 
     public static void saveRuntimeWorldConfigs() {
         WorldInitializer.config.writeStorage();
+    }
+
+    public static void syncWorldBorder() {
+        ServerHelper
+            .getOnlinePlayers()
+            .forEach(WorldService::syncWorldBorder);
+
+    }
+
+    public static void syncWorldBorder(ServerPlayerEntity player) {
+        ServerWorld world = player.getWorld();
+        WorldBorder worldBorder = world.getWorldBorder();
+
+        LogUtil.debug("Sync world border: player = {}, world = {}, size = {}", PlayerHelper.getPlayerName(player), RegistryHelper.toString(world), worldBorder.getSize());
+        player.networkHandler.sendPacket(new WorldBorderCenterChangedS2CPacket(worldBorder));
+        player.networkHandler.sendPacket(new WorldBorderSizeChangedS2CPacket(worldBorder));
+        player.networkHandler.sendPacket(new WorldBorderWarningBlocksChangedS2CPacket(worldBorder));
+        player.networkHandler.sendPacket(new WorldBorderWarningTimeChangedS2CPacket(worldBorder));
+//        player.networkHandler.sendPacket(new WorldBorderInterpolateSizeS2CPacket(worldBorder));
     }
 
 }

@@ -37,17 +37,6 @@ public final class RuntimeWorldProperties extends UnmodifiableLevelProperties {
         return this.gameRules;
     }
 
-
-    @Override
-    public WorldBorder.Properties getWorldBorder() {
-        return dimensionNode.worldBorder;
-    }
-
-    @Override
-    public void setWorldBorder(WorldBorder.Properties properties) {
-        dimensionNode.worldBorder = properties;
-    }
-
     @Override
     public long getTimeOfDay() {
         return dimensionNode.timeOfDay;
