@@ -1,8 +1,10 @@
 package io.github.sakurawald.fuji.module.initializer.world.structure;
 
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.SaveProperties;
+import net.minecraft.world.border.WorldBorder;
 import net.minecraft.world.level.UnmodifiableLevelProperties;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,6 +21,16 @@ public final class RuntimeWorldProperties extends UnmodifiableLevelProperties {
     @Override
     public Difficulty getDifficulty() {
         return dimensionNode.difficulty;
+    }
+
+    @Override
+    public WorldBorder.Properties getWorldBorder() {
+        return dimensionNode.worldBorder;
+    }
+
+    @Override
+    public void setWorldBorder(WorldBorder.Properties properties) {
+        dimensionNode.worldBorder = properties;
     }
 
     @Override

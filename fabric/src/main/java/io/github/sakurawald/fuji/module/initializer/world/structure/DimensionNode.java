@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.border.WorldBorder;
 
 @Document(id = 1752170874671L, value = """
     A `dimension node` is used to describe a created `extra dimension`.
@@ -43,7 +44,11 @@ public class DimensionNode {
     public boolean shouldTickTime = true;
 
     public Difficulty difficulty = Difficulty.NORMAL;
+
+    public WorldBorder.Properties worldBorder = WorldBorder.DEFAULT_BORDER;
+
     public long timeOfDay = 6000;
+
 
     public int sunnyTime = Integer.MAX_VALUE;
     public boolean isRaining;

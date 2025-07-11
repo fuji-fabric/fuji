@@ -48,4 +48,6 @@ public class RuntimeWorld extends ServerWorld {
         // Tick the time, but should not set the ServerWorld.worldProperties, or it may break some datapacks in scheduled functions.
          this.setTimeOfDay(this.properties.getTimeOfDay() + 1L);
     }
+
 }
+
