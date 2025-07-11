@@ -96,6 +96,7 @@ public class WorldService {
         return true;
     }
 
+    @SuppressWarnings("deprecation")
     private static void createDimension(@NotNull DimensionNode dimensionNode) {
         MinecraftServer server = ServerHelper.getServer();
         Identifier dimensionIdentifier = RegistryHelper.makeIdentifier(dimensionNode.dimension);

@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.world.structure;
 
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.SaveProperties;
@@ -10,18 +10,33 @@ import org.jetbrains.annotations.NotNull;
 
 public final class RuntimeWorldProperties extends UnmodifiableLevelProperties {
 
-    public final DimensionNode dimensionNode;
+    public DimensionNode dimensionNode;
     private GameRules gameRules;
 
     public RuntimeWorldProperties(@NotNull SaveProperties saveProperties, DimensionNode dimensionNode) {
         super(saveProperties, saveProperties.getMainWorldProperties());
         this.dimensionNode = dimensionNode;
+
+        applyGameRules(saveProperties, dimensionNode);
+    }
+
+    private void applyGameRules(@NotNull SaveProperties saveProperties, DimensionNode dimensionNode) {
+        this.gameRules = new GameRules(saveProperties.getEnabledFeatures());
+        dimensionNode.gameRules.applyTo(this.gameRules, ServerHelper.getServer());
     }
 
     @Override
     public Difficulty getDifficulty() {
         return dimensionNode.difficulty;
     }
+
+
+    @Override
+    public GameRules getGameRules() {
+//        LogUtil.info("getGameRules(): {}", this.gameRules);
+        return this.gameRules;
+    }
+
 
     @Override
     public WorldBorder.Properties getWorldBorder() {

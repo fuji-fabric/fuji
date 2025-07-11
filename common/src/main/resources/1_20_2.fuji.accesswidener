@@ -10,6 +10,9 @@ accessible field net/minecraft/registry/entry/RegistryEntry$Reference value Ljav
 accessible field net/minecraft/server/MinecraftServer worlds Ljava/util/Map;
 accessible field net/minecraft/server/MinecraftServer session Lnet/minecraft/world/level/storage/LevelStorage$Session;
 accessible field net/minecraft/world/dimension/DimensionOptionsRegistryHolder comp_1014 Lnet/minecraft/registry/Registry;
+accessible field net/minecraft/world/GameRules$IntRule value I
+accessible field net/minecraft/world/GameRules RULE_TYPES Ljava/util/Map;
+accessible field net/minecraft/world/GameRules rules Ljava/util/Map;
 
 # command warmup module
 #accessible method net/minecraft/server/network/ServerPlayNetworkHandler executeCommand (Ljava/lang/String;)V

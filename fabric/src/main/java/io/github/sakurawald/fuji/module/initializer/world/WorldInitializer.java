@@ -24,6 +24,10 @@ import io.github.sakurawald.fuji.module.initializer.world.config.model.WorldData
 import io.github.sakurawald.fuji.module.initializer.world.gui.WorldGui;
 import io.github.sakurawald.fuji.module.initializer.world.service.WorldService;
 import io.github.sakurawald.fuji.module.initializer.world.structure.DimensionNode;
+import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.BooleanGameRuleMapAdapter;
+import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.IntegerGameRuleMapAdapter;
+import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.server.MinecraftServer;
@@ -147,6 +151,7 @@ public class WorldInitializer extends ModuleInitializer {
         dimensionNode.dimension = dimensionIdentifier.toString();
         dimensionNode.dimension_type = dimensionTypeIdentifier.toString();
         dimensionNode.seed = $seed;
+        dimensionNode.setShouldTickTime(true);
 
         storage.model().dimension_list.add(dimensionNode);
         storage.writeStorage();
@@ -218,6 +223,12 @@ public class WorldInitializer extends ModuleInitializer {
     @Override
     protected void onInitialize() {
         ServerLifecycleEvents.SERVER_STARTED.register(this::loadWorlds);
+    }
+
+    @Override
+    protected void registerGsonTypeAdapter() {
+        BaseConfigurationHandler.registerGsonTypeAdapter(Reference2BooleanMap.class, new BooleanGameRuleMapAdapter());
+        BaseConfigurationHandler.registerGsonTypeAdapter(Reference2IntMap.class, new IntegerGameRuleMapAdapter());
     }
 
     private void loadWorlds(@NotNull MinecraftServer server) {

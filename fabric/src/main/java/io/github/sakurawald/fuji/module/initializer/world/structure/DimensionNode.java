@@ -4,10 +4,10 @@ import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.GameRuleStore;
 import lombok.Data;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.border.WorldBorder;
 
 @Document(id = 1752170874671L, value = """
@@ -41,9 +41,10 @@ public class DimensionNode {
     @Document(id = 1752246657296L, value = """
         Should we tick the time of this dimension? (Do the day night cycle?)
         """)
-    public boolean shouldTickTime = true;
+    public boolean shouldTickTime;
 
     public Difficulty difficulty = Difficulty.NORMAL;
+    public GameRuleStore gameRules = new GameRuleStore();
 
     public WorldBorder.Properties worldBorder = WorldBorder.DEFAULT_BORDER;
 
@@ -55,6 +56,12 @@ public class DimensionNode {
     public int rainTime;
     public boolean isThundering;
     public int thunderTime;
+
+
+    public void setShouldTickTime(boolean shouldTickTime) {
+        this.shouldTickTime = shouldTickTime;
+        this.gameRules.setBooleanRule(GameRules.DO_DAYLIGHT_CYCLE, shouldTickTime);
+    }
 
     public boolean isDimensionLoaded() {
         return ServerHelper

@@ -5,6 +5,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.WorldGenerationProgressListener;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.random.RandomSequencesState;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.level.ServerWorldProperties;
@@ -40,7 +41,11 @@ public class RuntimeWorld extends ServerWorld {
      */
     @Override
     public long getSeed() {
-        return ((RuntimeWorldProperties) this.properties).dimensionNode.seed;
+        return getRuntimeWorldProperties().dimensionNode.seed;
+    }
+
+    private RuntimeWorldProperties getRuntimeWorldProperties() {
+        return (RuntimeWorldProperties) this.properties;
     }
 
     @Override
@@ -49,5 +54,10 @@ public class RuntimeWorld extends ServerWorld {
          this.setTimeOfDay(this.properties.getTimeOfDay() + 1L);
     }
 
+    @Override
+    public GameRules getGameRules() {
+        // NOTE: For `keepInventory` game rule. Its value is checked in copyFrom() method after the player is dead. The value comes from the re-spawn dimension's world properties.
+        return getRuntimeWorldProperties().getGameRules();
+    }
 }
 
