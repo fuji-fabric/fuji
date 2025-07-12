@@ -38,9 +38,9 @@ public final class GameRuleStore {
 
     @SuppressWarnings("UnnecessaryLocalVariable")
     public static GameRules makeGameRules() {
-        #if MC_VER <= MC_1_20_5
+        #if MC_VER <= MC_1_21
         GameRules gameRules = new GameRules();
-        #elif MC_VER > MC_1_20_5
+        #elif MC_VER > MC_1_21
         GameRules gameRules = new GameRules(ServerHelper.getServer().getOverworld().getEnabledFeatures());
         #endif
 
