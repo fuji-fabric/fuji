@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public final class RuntimeWorldProperties extends UnmodifiableLevelProperties {
 
-    private SaveProperties saveProperties;
+    private final SaveProperties saveProperties;
     public @NotNull DimensionNode dimensionNode;
 
     private GameRules gameRules;
@@ -42,7 +42,7 @@ public final class RuntimeWorldProperties extends UnmodifiableLevelProperties {
         if (newDimensionNodeOpt.isPresent()) {
             DimensionNode newDimensionNode = newDimensionNodeOpt.get();
             if (originalDimensionNode != newDimensionNode) {
-                LogUtil.info("The config for dimension {} is modified, now apply the new config.", originalDimensionNode.dimension);
+                LogUtil.info("The config for dimension {} is modified, I will apply the new config now!", originalDimensionNode.dimension);
                 this.dimensionNode = newDimensionNode;
                 this.applyDimensionNode(this.dimensionNode);
             }

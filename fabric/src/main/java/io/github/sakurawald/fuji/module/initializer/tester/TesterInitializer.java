@@ -5,6 +5,7 @@ import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -17,14 +18,18 @@ import lombok.SneakyThrows;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.WorldBorderSizeChangedS2CPacket;
+import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.SaveProperties;
+import net.minecraft.world.World;
 import net.minecraft.world.border.WorldBorder;
 import net.minecraft.world.border.WorldBorderListener;
+import net.minecraft.world.level.ServerWorldProperties;
 
 @Document(id = 1751980891153L, value = """
     This module is only used for `development`.
@@ -44,7 +49,6 @@ public class TesterInitializer extends ModuleInitializer {
 //        NbtCompound nbt = ItemStackHelper.Nbt.getNbt(mainHandStack);
 //        player.sendMessage(Text.literal(nbt.toString()));
 
-        ServerWorld world = source.getWorld();
 //
 //        boolean keepInventory = world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY);
 //        player.sendMessage(Text.literal("keepInventory = " + keepInventory));
