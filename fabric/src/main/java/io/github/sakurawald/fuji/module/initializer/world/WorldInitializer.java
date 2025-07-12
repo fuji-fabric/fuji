@@ -82,6 +82,14 @@ import org.jetbrains.annotations.NotNull;
     ◉ Make a resource world that reset automatically every day.
     You can use `command_scheduler` module, to execute `/world reset` command automatically.
     """)
+@ColorBox(id = 1752261661452L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ The logic of `/time` command.
+    It always sets the `day of time` for `all` dimensions.
+
+
+
+    """)
+
 
 
 @CommandNode("world")

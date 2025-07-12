@@ -1130,5 +1130,6 @@
   "docstring.1752246657296": "Should we tick the time of this dimension? (Do the day night cycle?)\n",
   "docstring.1752246679197": "The `seed` used for the chunk generator of this dimension.\n",
   "docstring.1752248825291": "Saves the config of all extra dimensions into the storage.\n",
-  "docstring.1752254462732": "This structure is used to store the `game rules`.\nIt stores both `boolean rules` and `int rules`.\n"
+  "docstring.1752254462732": "This structure is used to store the `game rules`.\nIt stores both `boolean rules` and `int rules`.\n",
+  "docstring.1752261661452": "◉ The logic of `/time` command.\nIt always sets the `day of time` for `all` dimensions.\n\n\n\n"
 }
