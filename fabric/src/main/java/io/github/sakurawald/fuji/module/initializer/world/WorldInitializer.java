@@ -18,6 +18,7 @@ import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.world.config.model.WorldConfigModel;
 import io.github.sakurawald.fuji.module.initializer.world.config.model.WorldDataModel;
@@ -174,11 +175,15 @@ public class WorldInitializer extends ModuleInitializer {
         }
     }
 
-    @Document(id = 1751826609063L, value = "Teleport to the spawnpoint of the world.")
+    @Document(id = 1751826609063L, value = "Teleport to the target dimension with the same coordinate.")
     @CommandNode("tp")
     private static int $tp(@CommandSource ServerPlayerEntity player, Dimension dimension) {
-        ServerWorld world = dimension.getValue();
-        WorldHelper.teleportToSafePositionNearOrigin(world, player);
+        ServerWorld targetDimension = dimension.getValue();
+
+        GlobalPos
+            .of(player)
+            .withLevel(RegistryHelper.toString(targetDimension))
+            .teleport(player);
         return CommandHelper.Return.SUCCESS;
     }
 

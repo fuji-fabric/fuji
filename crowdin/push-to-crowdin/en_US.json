@@ -747,7 +747,7 @@
   "docstring.1751826599924": "See /head gui",
   "docstring.1751826601972": "Open the head shop GUI.",
   "docstring.1751826605981": "Provides a unified world management.\n",
-  "docstring.1751826609063": "Teleport to the spawnpoint of the world.",
+  "docstring.1751826609063": "Teleport to the target dimension with the same coordinate.",
   "docstring.1751826611302": "Delete and create the specified world.",
   "docstring.1751826613773": "Allows a player to download nearest `region` file.\n\nIt's useful for players to save and debug a `redstone structure`.\nIt simply downloads the `identical` region file used by the server.\nSimple, no surprises.\nIt's also useful for players to download other's buildings, or their own buildings.\n",
   "docstring.1751826617256": "Download the region file around you.",
