@@ -52,6 +52,7 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
             TextHelper.getTextByKey(getPlayer(), "from_module", fromModule)
             , TextHelper.getTextByKey(getPlayer(), "fuji.inspect.configuration.class", configModelClassName)
             , TextHelper.getTextByKey(getPlayer(), "fuji.inspect.configuration.path",  configRelativePath)
+            , TextHelper.getTextByKey(getPlayer(), "prompt.click.see_inside")
         );
 
         // NOTE: The parent may be different, due to the parent of ConfigurationsInspectionGui may be null or non-null (If it's created and open from ModuleDetailsInspectionGui).
