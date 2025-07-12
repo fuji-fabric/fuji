@@ -2,112 +2,142 @@ package io.github.sakurawald.fuji.module.initializer.world.structure;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.fuji.module.initializer.world.service.WorldService;
+import java.util.Optional;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.SaveProperties;
-import net.minecraft.world.border.WorldBorder;
 import net.minecraft.world.level.UnmodifiableLevelProperties;
 import org.jetbrains.annotations.NotNull;
 
 public final class RuntimeWorldProperties extends UnmodifiableLevelProperties {
 
-    public DimensionNode dimensionNode;
+    private SaveProperties saveProperties;
+    public @NotNull DimensionNode dimensionNode;
+
     private GameRules gameRules;
 
-    public RuntimeWorldProperties(@NotNull SaveProperties saveProperties, DimensionNode dimensionNode) {
+    public RuntimeWorldProperties(@NotNull SaveProperties saveProperties, @NotNull DimensionNode dimensionNode) {
         super(saveProperties, saveProperties.getMainWorldProperties());
+        this.saveProperties = saveProperties;
         this.dimensionNode = dimensionNode;
 
-        applyGameRules(saveProperties, dimensionNode);
+        applyDimensionNode(dimensionNode);
     }
 
-    private void applyGameRules(@NotNull SaveProperties saveProperties, DimensionNode dimensionNode) {
-        this.gameRules = new GameRules(saveProperties.getEnabledFeatures());
+    private void applyDimensionNode(DimensionNode dimensionNode) {
+        applyGameRules(dimensionNode);
+    }
+
+    private void applyGameRules(DimensionNode dimensionNode) {
+        this.gameRules = new GameRules(this.saveProperties.getEnabledFeatures());
         dimensionNode.gameRules.applyTo(this.gameRules, ServerHelper.getServer());
+    }
+
+    private DimensionNode getEffectiveDimensionNode() {
+        /* Detect the changes of dimension node in storage. */
+        DimensionNode originalDimensionNode = dimensionNode;
+        Optional<DimensionNode> newDimensionNodeOpt = WorldService.getDimensionNode(originalDimensionNode.dimension);
+        if (newDimensionNodeOpt.isPresent()) {
+            DimensionNode newDimensionNode = newDimensionNodeOpt.get();
+            if (originalDimensionNode != newDimensionNode) {
+                LogUtil.info("The config for dimension {} is modified, now apply the new config.", originalDimensionNode.dimension);
+                this.dimensionNode = newDimensionNode;
+                this.applyDimensionNode(this.dimensionNode);
+            }
+        }
+
+        /* Return the effective dimension node. */
+        return this.dimensionNode;
     }
 
     @Override
     public Difficulty getDifficulty() {
-        return dimensionNode.difficulty;
+        return getEffectiveDimensionNode().difficulty;
     }
 
 
     @Override
     public GameRules getGameRules() {
-//        LogUtil.info("getGameRules(): {}", this.gameRules);
         return this.gameRules;
     }
 
     @Override
+    public long getTime() {
+        // NOTE: We just mirror the `Time` in `level.dat`.
+        return super.getTime();
+    }
+
+    @Override
     public long getTimeOfDay() {
-        return dimensionNode.timeOfDay;
+        return this.getEffectiveDimensionNode().timeOfDay;
     }
 
     @Override
     public void setTimeOfDay(long l) {
-        this.dimensionNode.timeOfDay = l;
+        this.getEffectiveDimensionNode().timeOfDay = l;
     }
 
     @Override
     public boolean isRaining() {
-        return dimensionNode.isRaining;
+        return this.getEffectiveDimensionNode().weather.isRaining;
     }
 
     @Override
     public void setRaining(boolean bl) {
-        this.dimensionNode.isRaining = bl;
+        this.getEffectiveDimensionNode().weather.isRaining = bl;
     }
 
     @Override
     public int getRainTime() {
-        return dimensionNode.rainTime;
+        return this.getEffectiveDimensionNode().weather.rainTime;
     }
 
     @Override
     public void setRainTime(int i) {
-        this.dimensionNode.rainTime = i;
+        this.getEffectiveDimensionNode().weather.rainTime = i;
     }
 
     @Override
     public boolean isThundering() {
-        return dimensionNode.isThundering;
+        return this.getEffectiveDimensionNode().weather.isThundering;
     }
 
     @Override
     public void setThundering(boolean bl) {
-        this.dimensionNode.isThundering = bl;
+        this.getEffectiveDimensionNode().weather.isThundering = bl;
     }
 
     @Override
     public int getThunderTime() {
-        return dimensionNode.thunderTime;
+        return this.getEffectiveDimensionNode().weather.thunderTime;
     }
 
     @Override
     public void setThunderTime(int i) {
-        this.dimensionNode.thunderTime = i;
+        this.getEffectiveDimensionNode().weather.thunderTime = i;
     }
 
     @Override
     public int getClearWeatherTime() {
-        return dimensionNode.sunnyTime;
+        return this.getEffectiveDimensionNode().weather.sunnyTime;
     }
 
     @Override
     public void setClearWeatherTime(int i) {
-        this.dimensionNode.sunnyTime = i;
+        this.getEffectiveDimensionNode().weather.sunnyTime = i;
     }
 
     @Override
     public BlockPos getSpawnPos() {
-        LogUtil.info("getSpawnPos: {}", super.getSpawnPos());
+//        LogUtil.info("getSpawnPos: {}", super.getSpawnPos());
         return super.getSpawnPos();
     }
 
     @Override
     public void setSpawnPos(BlockPos blockPos, float f) {
-        LogUtil.info("set spawn point = {}, f = {}", blockPos, f);
+//        LogUtil.info("set spawn point = {}, f = {}", blockPos, f);
         super.setSpawnPos(blockPos, f);
     }
 }

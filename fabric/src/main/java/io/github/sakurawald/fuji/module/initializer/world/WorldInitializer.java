@@ -104,9 +104,23 @@ import org.jetbrains.annotations.NotNull;
 
     ◉ The logic of `/time {set/add} ...` command.
     For command `/time {set/add}`, it operates on `all dimensions` in the server.
+    """)
+@ColorBox(id = 1752287089199L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ The `weather system` of the `world`.
+    There are 3 types of `weather`: `clear`, `rain` and `thunder`.
+    If `clear`, then both `rain` and `thunder` is false.
+    If `thunder`, then `rain` is true.
 
 
+    The `weather system` will be `tick` if:
+    1. The `dimension options` of the `world` has `skylight`.
+    2. The `gamerule DO_WEATHER_CYCLE` of the `world` is true.
 
+    ◉ The logic of `/weather` command.
+    The `/weather` command `only` sets the `weather` of `minecraft:overworld`.
+
+    ◉ Set the weather per-dimension.
+    You can modify the weather directly in config file, and issue `/fuji reload` to apply it.
     """)
 
 

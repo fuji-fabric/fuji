@@ -37,25 +37,21 @@ public class DimensionNode {
         """)
     public long seed;
 
+    public Difficulty difficulty = Difficulty.NORMAL;
+
+    public GameRuleStore gameRules = new GameRuleStore();
+
     @Document(id = 1752246657296L, value = """
         Should we tick the time of this dimension? (Do the day night cycle?)
         """)
     public boolean shouldTickTime;
-    public Difficulty difficulty = Difficulty.NORMAL;
-
-    public GameRuleStore gameRules = new GameRuleStore();
 
     @Document(id = 1752286206946L, value = """
         The equivalent to `DayTime` in `level.dat`.
         """)
     public long timeOfDay = 6000;
 
-
-    public int sunnyTime = Integer.MAX_VALUE;
-    public boolean isRaining;
-    public int rainTime;
-    public boolean isThundering;
-    public int thunderTime;
+    public Weather weather = new Weather();
 
 
     public void setShouldTickTime(boolean shouldTickTime) {
@@ -68,5 +64,13 @@ public class DimensionNode {
             .getWorlds()
             .stream()
             .anyMatch(it -> RegistryHelper.toString(it).equals(this.dimension));
+    }
+
+    public static class Weather {
+        public int sunnyTime;
+        public boolean isRaining;
+        public int rainTime;
+        public boolean isThundering;
+        public int thunderTime;
     }
 }

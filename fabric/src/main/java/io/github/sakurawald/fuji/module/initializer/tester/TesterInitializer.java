@@ -44,8 +44,7 @@ public class TesterInitializer extends ModuleInitializer {
 //        NbtCompound nbt = ItemStackHelper.Nbt.getNbt(mainHandStack);
 //        player.sendMessage(Text.literal(nbt.toString()));
 
-//        ServerWorld world = player.getWorld();
-//        player.sendMessage(Text.literal("world = " + RegistryHelper.toString(world)));
+        ServerWorld world = source.getWorld();
 //
 //        boolean keepInventory = world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY);
 //        player.sendMessage(Text.literal("keepInventory = " + keepInventory));
