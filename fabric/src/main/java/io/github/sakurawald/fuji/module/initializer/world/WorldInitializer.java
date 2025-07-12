@@ -25,6 +25,7 @@ import io.github.sakurawald.fuji.module.initializer.world.gui.WorldGui;
 import io.github.sakurawald.fuji.module.initializer.world.service.WorldService;
 import io.github.sakurawald.fuji.module.initializer.world.structure.DimensionNode;
 import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.BooleanGameRuleMapAdapter;
+import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.GameRuleStore;
 import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.IntegerGameRuleMapAdapter;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
@@ -37,6 +38,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.RandomSeed;
+import net.minecraft.world.GameRules;
+import net.minecraft.world.WorldProperties;
 import org.jetbrains.annotations.NotNull;
 
 /*
@@ -123,6 +126,17 @@ import org.jetbrains.annotations.NotNull;
     ◉ Set the weather per-dimension.
     You can modify the weather directly in config file, and issue `/fuji reload` to apply it.
     """)
+@ColorBox(id = 1752292508145L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ The logic of `/gamerule` command.
+    The `/gamerule` command `only` operates on `minecraft:overworld` dimension.
+
+    To see the `true info` of `a specified dimension`, you should use `/world info` command.
+
+    ◉ Set the `per-dimension gamerules` using commands.
+    You can install the `WorldGameRules` mod to provide such commands.
+    See https://github.com/DrexHD/WorldGameRules
+    """)
+
 
 
 
@@ -194,6 +208,7 @@ public class WorldInitializer extends ModuleInitializer {
         dimensionNode.dimension_type = dimensionTypeIdentifier.toString();
         dimensionNode.seed = $seed;
         dimensionNode.setShouldTickTime(true);
+        dimensionNode.gameRules = GameRuleStore.makeDefault();
 
         storage.model().dimension_list.add(dimensionNode);
         storage.writeStorage();
@@ -270,15 +285,29 @@ public class WorldInitializer extends ModuleInitializer {
     private static int $info(@CommandSource ServerCommandSource source, Dimension dimension) {
         ServerWorld dimensionInstance = dimension.getValue();
 
-        StringBuffer report = new StringBuffer();
-        report
-            .append("[Basic Info]").append(System.lineSeparator())
-            .append("Dimension Id: %s".formatted(RegistryHelper.toString(dimensionInstance))).append(System.lineSeparator())
-            .append("Dimension Type: %s".formatted(dimensionInstance.getDimension())).append(System.lineSeparator())
-        ;
+        source.sendMessage(Text.literal("◉ Dimension Id: " + RegistryHelper.toString(dimensionInstance)));
+//        source.sendMessage(Text.literal("◉ Dimension Type Id: " + dimensionInstance.getDimension()));
+        source.sendMessage(Text.literal("◉ Difficulty: " + dimensionInstance.getDifficulty()));
+        source.sendMessage(Text.literal("◉ Seed: " + dimensionInstance.getSeed()));
+        source.sendMessage(Text.literal("◉ Dimension Options: " + dimensionInstance.getDimension()));
+
+        WorldProperties levelProperties = dimensionInstance.getLevelProperties();
+        source.sendMessage(Text.literal("◉ Dimension Properties: " + levelProperties));
 
 
-        source.sendMessage(Text.literal(report.toString()));
+        source.sendMessage(Text.literal("◉ Dimension GameRules: " ));
+        GameRules gameRules = dimensionInstance.getGameRules();
+        gameRules.accept(new GameRules.Visitor() {
+            @Override
+            public <T extends GameRules.Rule<T>> void visit(GameRules.Key<T> key, GameRules.Type<T> type) {
+                String gameRuleName = key.getName();
+                T gameRuleValue = gameRules.get(key);
+                source.sendMessage(Text.literal("- GameRule %s = %s".formatted(gameRuleName, gameRuleValue)));
+            }
+        });
+
+
+
         return CommandHelper.Return.SUCCESS;
     }
 

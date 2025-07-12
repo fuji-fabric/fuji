@@ -84,11 +84,12 @@
     "temp_ban.PlayerManagerMixin",
     "whitelist.UserWhiteListMixin",
     "works.HopperBlockEntityMixin",
-    "world.persist.DimensionOptionsMixin",
     "world.fix_end_gateway_block_entity.EndGatewayBlockEntityMixin",
+    "world.keep_inventory_rule.ServerPlayerEntityMixin",
+    "world.persist.DimensionOptionsMixin",
+    "world.persist.WorldGenSettingsMixin",
     "world.tick.MinecraftServerMixin",
-    "world.weather.ServerWorldMixin",
-    "world.persist.WorldGenSettingsMixin"
+    "world.weather.ServerWorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1

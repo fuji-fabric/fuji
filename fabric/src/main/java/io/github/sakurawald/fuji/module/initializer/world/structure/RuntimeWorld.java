@@ -11,7 +11,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.random.RandomSequencesState;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldProperties;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.level.ServerWorldProperties;
 import net.minecraft.world.level.storage.LevelStorage;
@@ -62,14 +61,21 @@ public class RuntimeWorld extends ServerWorld {
 
     @Override
     protected void tickTime() {
-        // Tick the time, but should not set the ServerWorld.worldProperties, or it may break some datapacks in scheduled functions.
-         this.setTimeOfDay(this.properties.getTimeOfDay() + 1L);
+        this.getRuntimeWorldProperties().ifPresentOrElse(runtimeWorldProperties -> {
+            if (!runtimeWorldProperties.dimensionNode.shouldTickTime) {
+                return;
+            }
+
+            // NOTE: Ignore the step logics for `Time` in `level.dat`, simply mirror it. (Or the scheduled functions will be broken).
+            if (runtimeWorldProperties.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)) {
+                runtimeWorldProperties.setTimeOfDay(runtimeWorldProperties.getTimeOfDay() + 1L);
+            }
+
+        }, super::tickTime);
     }
 
     @Override
     public GameRules getGameRules() {
-        // NOTE: For `keepInventory` game rule. Its value is checked in copyFrom() method after the player is dead. The value comes from the re-spawn dimension's world properties.
-
         Optional<RuntimeWorldProperties> opt = getRuntimeWorldProperties();
         return opt
             .map(RuntimeWorldProperties::getGameRules)
