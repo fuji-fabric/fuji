@@ -34,6 +34,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.RandomSeed;
 import org.jetbrains.annotations.NotNull;
@@ -83,8 +84,26 @@ import org.jetbrains.annotations.NotNull;
     You can use `command_scheduler` module, to execute `/world reset` command automatically.
     """)
 @ColorBox(id = 1752261661452L, color = ColorBox.ColorBlockTypes.TIPS, value = """
-    ◉ The logic of `/time` command.
-    It always sets the `day of time` for `all` dimensions.
+    ◉ The logic of `passed ticks` is per-dimension.
+    Each fuji runtime dimension will save its own `time_of_day` (The equivalent to `DayTime` in `level.dat`).
+
+    ◉ The duration of `one day` in Minecraft.
+    The `total ticks of one day` is `24000 ticks` or `20 minutes`.
+    It is `10 minutes of day time` + `10 minutes of night time`.
+
+    ◉ The saved `passed ticks` and `/time` command.
+    The value of `Time` in `level.dat` = `/time query gametime`.
+    The value of `DayTime` in `level.dat` = `/time query day` * 24000 + `/time query daytime`.
+
+    NOTE: The `/time set {day/midnight/night/noon} command directly sets the `DayTime` to the first day.
+
+    ◉ The logic of `/time query ...` command.
+    For `/time query daytime` command, it returns the `DayTime % 24000` of `the world of the command source`:
+    1. If the `command source` is `a player`, then the `world` is `the world where the player is`.
+    2. If the `command source` is `the console`, then the `world` is `minecraft:overworld`.
+
+    ◉ The logic of `/time {set/add} ...` command.
+    For command `/time {set/add}`, it operates on `all dimensions` in the server.
 
 
 
@@ -227,6 +246,27 @@ public class WorldInitializer extends ModuleInitializer {
         TextHelper.sendTextByKey(source, "operation.success");
         return CommandHelper.Return.SUCCESS;
     }
+
+    @Document(id = 1752283075945L, value = """
+        List the debug info of specified dimension.
+        """)
+    @CommandNode("info")
+    @CommandRequirement(level = 4)
+    private static int $info(@CommandSource ServerCommandSource source, Dimension dimension) {
+        ServerWorld dimensionInstance = dimension.getValue();
+
+        StringBuffer report = new StringBuffer();
+        report
+            .append("[Basic Info]").append(System.lineSeparator())
+            .append("Dimension Id: %s".formatted(RegistryHelper.toString(dimensionInstance))).append(System.lineSeparator())
+            .append("Dimension Type: %s".formatted(dimensionInstance.getDimension())).append(System.lineSeparator())
+        ;
+
+
+        source.sendMessage(Text.literal(report.toString()));
+        return CommandHelper.Return.SUCCESS;
+    }
+
 
     @Override
     protected void onInitialize() {

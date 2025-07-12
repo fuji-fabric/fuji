@@ -1,6 +1,8 @@
 package io.github.sakurawald.fuji.module.initializer.world.structure;
 
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.SaveProperties;
@@ -95,5 +97,17 @@ public final class RuntimeWorldProperties extends UnmodifiableLevelProperties {
     @Override
     public void setClearWeatherTime(int i) {
         this.dimensionNode.sunnyTime = i;
+    }
+
+    @Override
+    public BlockPos getSpawnPos() {
+        LogUtil.info("getSpawnPos: {}", super.getSpawnPos());
+        return super.getSpawnPos();
+    }
+
+    @Override
+    public void setSpawnPos(BlockPos blockPos, float f) {
+        LogUtil.info("set spawn point = {}, f = {}", blockPos, f);
+        super.setSpawnPos(blockPos, f);
     }
 }

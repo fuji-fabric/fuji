@@ -41,10 +41,13 @@ public class DimensionNode {
         Should we tick the time of this dimension? (Do the day night cycle?)
         """)
     public boolean shouldTickTime;
-
     public Difficulty difficulty = Difficulty.NORMAL;
+
     public GameRuleStore gameRules = new GameRuleStore();
 
+    @Document(id = 1752286206946L, value = """
+        The equivalent to `DayTime` in `level.dat`.
+        """)
     public long timeOfDay = 6000;
 
 

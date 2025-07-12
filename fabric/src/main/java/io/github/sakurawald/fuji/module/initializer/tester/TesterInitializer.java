@@ -38,7 +38,7 @@ public class TesterInitializer extends ModuleInitializer {
 
     @SneakyThrows(Exception.class)
     @CommandNode("run")
-    private static int $run(@CommandSource ServerPlayerEntity player) {
+    private static int $run(@CommandSource ServerCommandSource source) {
 
 //        ItemStack mainHandStack = player.getMainHandStack();
 //        NbtCompound nbt = ItemStackHelper.Nbt.getNbt(mainHandStack);
