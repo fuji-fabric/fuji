@@ -136,76 +136,7 @@ public class FilteredRegistry<T> extends SimpleRegistry<T> {
         }
         return set;
     }
-
-    @Override
-    public Set<RegistryKey<T>> getKeys() {
-        return null;
-    }
-
-    @Override
-    public Optional<RegistryEntry.Reference<T>> getRandom(net.minecraft.util.math.random.Random random) {
-        return Optional.empty();
-    }
-
-    @Override
-    public boolean containsId(Identifier id) {
-        return this.source.containsId(id);
-    }
-
-    @Override
-    public boolean contains(RegistryKey<T> key) {
-        return this.source.contains(key);
-    }
-
-    @Override
-    public Registry<T> freeze() {
-        return this;
-    }
-
-    @Override
-    public RegistryEntry.Reference<T> createEntry(T value) {
-        return null;
-    }
-
-    @Override
-    public Optional<RegistryEntry.Reference<T>> getEntry(int rawId) {
-        return this.source.getEntry(rawId);
-    }
-
-    @Override
-    public Optional<RegistryEntry.Reference<T>> getEntry(RegistryKey<T> key) {
-        return this.source.getEntry(key);
-    }
-
-    @Override
-    public Optional<RegistryEntryList.Named<T>> getEntryList(TagKey<T> tag) {
-        return Optional.empty();
-    }
-
-    @Override
-    public RegistryEntryList.Named<T> getOrCreateEntryList(TagKey<T> tag) {
-        return null;
-    }
-
-    @Override
-    public Stream<Pair<TagKey<T>, RegistryEntryList.Named<T>>> streamTagsAndEntries() {
-        return null;
-    }
-
-    @Override
-    public Stream<TagKey<T>> streamTags() {
-        return null;
-    }
-
-    @Override
-    public void clearTags() {
-
-    }
-
-    @Override
-    public void populateTags(Map<TagKey<T>, List<RegistryEntry<T>>> tagEntries) {
-
-    }
+    
 
     @NotNull
     @Override

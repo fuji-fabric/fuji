@@ -149,9 +149,9 @@ public class PlayerHelper {
     }
 
     public static ServerWorld getServerWorld(ServerPlayerEntity player) {
-        #if MC_VER <= MC_1_20_5
+        #if MC_VER <= MC_1_21_5
         return (ServerWorld) player.getWorld();
-        #elif MC_VER > MC_1_20_5
+        #elif MC_VER > MC_1_21_5
         return player.getWorld();
         #endif
     }
