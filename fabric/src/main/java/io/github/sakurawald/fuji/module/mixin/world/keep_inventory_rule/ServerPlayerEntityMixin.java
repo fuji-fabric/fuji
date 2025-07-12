@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class ServerPlayerEntityMixin {
 
     @ModifyExpressionValue(method = "copyFrom", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/GameRules;getBoolean(Lnet/minecraft/world/GameRules$Key;)Z"))
-    boolean f(boolean original, @Local(argsOnly = true) ServerPlayerEntity oldPlayer) {
+    boolean useOriginalPlayerGameRules(boolean original, @SuppressWarnings("UnresolvedLocalCapture") @Local(argsOnly = true) ServerPlayerEntity oldPlayer) {
         // NOTE: For `keepInventory` game rule. Its value is checked in copyFrom() method after the player is dead. The value comes from the re-spawn dimension's world properties.
         return oldPlayer.getWorld().getGameRules().getBoolean(GameRules.KEEP_INVENTORY);
     }

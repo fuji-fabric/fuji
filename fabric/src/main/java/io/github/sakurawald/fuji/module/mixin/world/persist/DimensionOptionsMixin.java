@@ -1,12 +1,12 @@
 package io.github.sakurawald.fuji.module.mixin.world.persist;
 
-import io.github.sakurawald.fuji.module.initializer.world.accessor.IDimensionOptions;
+import io.github.sakurawald.fuji.module.initializer.world.accessor.ExtendedDimensionOptions;
 import net.minecraft.world.dimension.DimensionOptions;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(DimensionOptions.class)
-public class DimensionOptionsMixin implements IDimensionOptions {
+public class DimensionOptionsMixin implements ExtendedDimensionOptions {
 
     @Unique
     private boolean fuji$saveProperties = true;

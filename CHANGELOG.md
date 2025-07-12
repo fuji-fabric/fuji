@@ -1,5 +1,6 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
+- (< MC 1.20.5) [world] fix: the `world` module crash the server bug.
 - [world] refactor: new implementation of `world` module.
   - feature: improve the compatibility with other mods.
   - feature: support `per-dimension difficulty`.

@@ -12,7 +12,7 @@ import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.core.structure.TeleportTicket;
 import io.github.sakurawald.fuji.module.initializer.world.WorldInitializer;
-import io.github.sakurawald.fuji.module.initializer.world.accessor.IDimensionOptions;
+import io.github.sakurawald.fuji.module.initializer.world.accessor.ExtendedDimensionOptions;
 import io.github.sakurawald.fuji.module.initializer.world.structure.DimensionNode;
 import io.github.sakurawald.fuji.module.initializer.world.structure.RuntimeWorld;
 import io.github.sakurawald.fuji.module.initializer.world.structure.RuntimeWorldProperties;
@@ -20,15 +20,11 @@ import io.github.sakurawald.fuji.module.initializer.world.structure.VoidWorldGen
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import net.minecraft.entity.boss.dragon.EnderDragonFight;
 import net.minecraft.network.packet.s2c.play.WorldBorderCenterChangedS2CPacket;
-import net.minecraft.network.packet.s2c.play.WorldBorderInitializeS2CPacket;
-import net.minecraft.network.packet.s2c.play.WorldBorderInterpolateSizeS2CPacket;
 import net.minecraft.network.packet.s2c.play.WorldBorderSizeChangedS2CPacket;
 import net.minecraft.network.packet.s2c.play.WorldBorderWarningBlocksChangedS2CPacket;
 import net.minecraft.network.packet.s2c.play.WorldBorderWarningTimeChangedS2CPacket;
@@ -53,7 +49,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.border.WorldBorder;
-import net.minecraft.world.border.WorldBorderListener;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionTypes;
 import org.jetbrains.annotations.NotNull;
@@ -124,7 +119,7 @@ public class WorldService {
             LogUtil.error("Can't use {} dimension-type as the template to create extra fuji worlds.", dimensionTypeIdentifier);
             return;
         }
-        ((IDimensionOptions) (Object) dimensionOptions).fuji$setSaveProperties(false);
+        ((ExtendedDimensionOptions) (Object) dimensionOptions).fuji$setSaveProperties(false);
 
         /* Make the dimension instance. */
         RegistryKey<World> worldRegistryKey = RegistryKey.of(RegistryKeys.WORLD, dimensionIdentifier);

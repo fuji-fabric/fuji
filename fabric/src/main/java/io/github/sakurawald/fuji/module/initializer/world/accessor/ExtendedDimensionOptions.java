@@ -5,13 +5,13 @@ import net.minecraft.world.dimension.DimensionOptions;
 
 import java.util.function.Predicate;
 
-public interface IDimensionOptions {
+public interface ExtendedDimensionOptions {
 
     Predicate<DimensionOptions> SAVE_PROPERTIES_PREDICATE = (it) -> {
         // the `it` will be null, for `fuji:1` dimension.
         boolean test = false;
         if (it != null) {
-            test = ((IDimensionOptions) (Object) it).fuji$getSaveProperties();
+            test = ((ExtendedDimensionOptions) (Object) it).fuji$getSaveProperties();
         }
 
         LogUtil.debug("SAVE_PROPERTIES_PREDICATE: it = {}, test = {}", it, test);

@@ -36,9 +36,14 @@ public final class GameRuleStore {
         return this.booleanRules.containsKey(key) || this.intRules.containsKey(key);
     }
 
+    @SuppressWarnings("UnnecessaryLocalVariable")
     public static GameRules makeGameRules() {
-//        GameRules gameRules = new GameRules(enabledFeatures);
+        #if MC_VER <= MC_1_20_5
         GameRules gameRules = new GameRules();
+        #elif MC_VER > MC_1_20_5
+        GameRules gameRules = new GameRules(ServerHelper.getServer().getOverworld().getEnabledFeatures());
+        #endif
+
         return gameRules;
     }
 

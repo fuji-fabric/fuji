@@ -58,7 +58,7 @@ import org.jetbrains.annotations.NotNull;
     Provides a unified world management.
     """)
 @ColorBox(id = 1751981919874L, color = ColorBox.ColorBlockTypes.NOTE, value = """
-    ◉ The definition of `world`, `dimension` and `dimension type`.
+    ◉ The definition of `world`, ` dimension` and `dimension type`.
     In early Minecraft, a `world` only contains `1 dimension` (The overworld dimension).
     In modern Minecraft, a `world` can contain `3 or more dimensions`. (The overworld, the end and the nether)
 
@@ -68,6 +68,16 @@ import org.jetbrains.annotations.NotNull;
     See also: https://minecraft.wiki/w/Dimension_definition
     See also: https://minecraft.wiki/w/Dimension_type
     """)
+@ColorBox(id = 1752297520453L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ Advanced World Management and Per-world rules.
+    The `world` module provided by fuji is a simple module.
+    If you want a more powerful tool, you can try use `WorldManager` mod and `WorldGameRules` mod.
+
+    See:
+    1. https://github.com/DrexHD/WorldManager
+    2. https://github.com/DrexHD/WorldGameRules
+    """)
+
 @ColorBox(id = 1751982071236L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Create an extra `the_nether` dimension
     Issue: `/world create my_nether minecraft:the_nether`
