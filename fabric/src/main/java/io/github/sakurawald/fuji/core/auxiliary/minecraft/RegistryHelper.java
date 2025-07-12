@@ -49,6 +49,10 @@ public class RegistryHelper {
         return world.getRegistryKey().getValue().toString();
     }
 
+    public static @NotNull String toString(@NotNull RegistryKey<?> registryKey) {
+        return registryKey.getValue().toString();
+    }
+
     public static <T> Registry<T> ofRegistry(RegistryKey<? extends Registry<? extends T>> registryKey) {
         return ServerHelper
             .getServer()

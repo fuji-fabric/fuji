@@ -20,7 +20,9 @@ import io.github.sakurawald.fuji.module.initializer.world.structure.VoidWorldGen
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import net.minecraft.entity.boss.dragon.EnderDragonFight;
@@ -272,6 +274,15 @@ public class WorldService {
         player.networkHandler.sendPacket(new WorldBorderWarningTimeChangedS2CPacket(worldBorder));
 //        player.networkHandler.sendPacket(new WorldBorderInterpolateSizeS2CPacket(worldBorder));
     }
+
+    public static Optional<DimensionNode> getDimensionNode(String dimensionId) {
+        return WorldInitializer.storage.model()
+            .dimension_list
+            .stream()
+            .filter(it -> it.dimension.equalsIgnoreCase(dimensionId))
+            .findFirst();
+    }
+
 
 }
 

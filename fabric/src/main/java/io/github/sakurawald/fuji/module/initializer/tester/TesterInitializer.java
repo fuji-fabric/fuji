@@ -44,18 +44,18 @@ public class TesterInitializer extends ModuleInitializer {
 //        NbtCompound nbt = ItemStackHelper.Nbt.getNbt(mainHandStack);
 //        player.sendMessage(Text.literal(nbt.toString()));
 
-        ServerWorld world = player.getWorld();
-        player.sendMessage(Text.literal("world = " + RegistryHelper.toString(world)));
+//        ServerWorld world = player.getWorld();
+//        player.sendMessage(Text.literal("world = " + RegistryHelper.toString(world)));
+//
+//        boolean keepInventory = world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY);
+//        player.sendMessage(Text.literal("keepInventory = " + keepInventory));
+//
+//        WorldBorder worldBorder = world.getWorldBorder();
+//        player.sendMessage(Text.literal("worldBorder = " + worldBorder.getSize()));
 
-        boolean keepInventory = world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY);
-        player.sendMessage(Text.literal("keepInventory = " + keepInventory));
 
-        WorldBorder worldBorder = world.getWorldBorder();
-        player.sendMessage(Text.literal("worldBorder = " + worldBorder.getSize()));
-
-
-        player.networkHandler.sendPacket(new WorldBorderSizeChangedS2CPacket(worldBorder));
-
+//        player.networkHandler.sendPacket(new WorldBorderSizeChangedS2CPacket(worldBorder));
+//
 //        GameRules.RULE_TYPES
 //            .entrySet()
 //            .stream()
