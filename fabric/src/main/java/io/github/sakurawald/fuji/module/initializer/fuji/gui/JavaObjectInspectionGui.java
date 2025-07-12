@@ -61,6 +61,12 @@ public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
     private void onClickToGoInside(ServerPlayerEntity player, InspectingObject entity) {
         /* Define variables. */
         Object objectToInspect = entity.getObjectValue();
+
+        // NOTE: The value of user-defined object may be `null` in some case.
+        if (objectToInspect == null) {
+            return;
+        }
+
         String objectName = entity.getObjectName();
 
         /* We can't go inside an atom. */
