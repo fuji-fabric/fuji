@@ -129,15 +129,4 @@ public final class RuntimeWorldProperties extends UnmodifiableLevelProperties {
         this.getEffectiveDimensionNode().weather.sunnyTime = i;
     }
 
-    @Override
-    public BlockPos getSpawnPos() {
-//        LogUtil.info("getSpawnPos: {}", super.getSpawnPos());
-        return super.getSpawnPos();
-    }
-
-    @Override
-    public void setSpawnPos(BlockPos blockPos, float f) {
-//        LogUtil.info("set spawn point = {}, f = {}", blockPos, f);
-        super.setSpawnPos(blockPos, f);
-    }
 }
