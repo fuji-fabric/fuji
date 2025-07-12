@@ -239,7 +239,7 @@ public class WorldInitializer extends ModuleInitializer {
         WorldService.requestToDeleteDimension(dimensionInstance);
 
         /* Remove the node from storage. */
-        WorldService.deleteDimensionNode(source, dimensionId);
+        WorldService.deleteDimensionNode(dimensionId);
 
         TextHelper.sendBroadcastByKey("world.dimension.deleted", dimensionId);
         return CommandHelper.Return.SUCCESS;

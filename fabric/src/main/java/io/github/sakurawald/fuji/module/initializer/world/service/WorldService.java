@@ -240,7 +240,7 @@ public class WorldService {
             .anyMatch(it -> RegistryHelper.toString(it).equals(dimensionId.toString()));
     }
 
-    public static void deleteDimensionNode(ServerCommandSource source, String dimensionId) {
+    public static void deleteDimensionNode(String dimensionId) {
         Optional<DimensionNode> first = WorldInitializer.storage.model().dimension_list.stream().filter(o -> o.getDimension().equals(dimensionId)).findFirst();
         first.ifPresent(dimensionNode -> {
             WorldInitializer.storage.model().dimension_list.remove(dimensionNode);
