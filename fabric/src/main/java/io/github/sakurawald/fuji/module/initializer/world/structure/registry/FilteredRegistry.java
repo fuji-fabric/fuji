@@ -93,7 +93,7 @@ public class FilteredRegistry<T> extends SimpleRegistry<T> {
     @Nullable
     @Override
     public T get(@Nullable Identifier id) {
-        return this.get(id);
+        return this.source.get(id);
     }
 
     #if MC_VER < MC_1_20_5
@@ -110,7 +110,7 @@ public class FilteredRegistry<T> extends SimpleRegistry<T> {
 
     @Override
     public Set<Identifier> getIds() {
-        return this.getIds();
+        return this.source.getIds();
     }
 
     @Override
@@ -210,7 +210,7 @@ public class FilteredRegistry<T> extends SimpleRegistry<T> {
     @NotNull
     @Override
     public Iterator<T> iterator() {
-        return Iterators.filter(this.source.iterator(), e -> this.filter.test(e));
+        return Iterators.filter(this.source.iterator(), this.filter::test);
     }
 
 }

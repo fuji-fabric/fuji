@@ -248,30 +248,30 @@ public class WorldInitializer extends ModuleInitializer {
     @Document(id = 1751826611302L, value = "Delete and create the specified world.")
     @CommandNode("reset")
     private static int $reset(@CommandSource ServerCommandSource source, Optional<Boolean> useTheSameSeed, Dimension dimension) {
-        // draw seed and save
-        ServerWorld world = dimension.getValue();
-        String identifier = RegistryHelper.toString(world);
-        checkBlacklist(source, identifier);
+        /* Get the original dimension node. */
+        ServerWorld dimensionInstance = dimension.getValue();
+        String dimensionIdentifier = RegistryHelper.toString(dimensionInstance);
+        checkBlacklist(source, dimensionIdentifier);
 
-        Optional<DimensionNode> dimensionEntryOpt = storage.model().dimension_list.stream().filter(o -> o.getDimension().equals(identifier)).findFirst();
+        Optional<DimensionNode> dimensionEntryOpt = WorldService.getDimensionNode(dimensionIdentifier);
         if (dimensionEntryOpt.isEmpty()) {
             TextHelper.sendTextByKey(source, "world.dimension.not_found");
             return CommandHelper.Return.FAIL;
         }
+        DimensionNode dimensionNode = dimensionEntryOpt.get();
 
-        // request the deletion
-        WorldService.requestToDeleteDimension(world);
+        /* Delete the dimension instance. */
+        WorldService.requestToDeleteDimension(dimensionInstance);
 
-        // set the new seed
+        /* Draw the seed. */
         Boolean $useTheSameSeed = useTheSameSeed.orElse(false);
-        long newSeed = $useTheSameSeed ? dimensionEntryOpt.get().getSeed() : RandomSeed.getSeed();
-        dimensionEntryOpt.get().setSeed(newSeed);
+        dimensionNode.seed = $useTheSameSeed ? dimensionNode.seed : RandomSeed.getSeed();
         storage.writeStorage();
 
-        // request the creation
-        WorldService.requestToCreateDimension(dimensionEntryOpt.get());
+        /* Create a new dimension instance. */
+        WorldService.requestToCreateDimension(dimensionNode);
 
-        TextHelper.sendBroadcastByKey("world.dimension.reset", identifier);
+        TextHelper.sendBroadcastByKey("world.dimension.reset", dimensionIdentifier);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -303,7 +303,6 @@ public class WorldInitializer extends ModuleInitializer {
 
         WorldProperties levelProperties = dimensionInstance.getLevelProperties();
         source.sendMessage(Text.literal("◉ Dimension Properties: " + levelProperties));
-
 
         source.sendMessage(Text.literal("◉ Dimension GameRules: " ));
         GameRules gameRules = dimensionInstance.getGameRules();
