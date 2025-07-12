@@ -1,6 +1,6 @@
-package io.github.sakurawald.fuji.module.mixin.world;
+package io.github.sakurawald.fuji.module.mixin.world.tick;
 
-import io.github.sakurawald.fuji.module.initializer.world.structure.SafeIterator;
+import io.github.sakurawald.fuji.module.initializer.world.structure.registry.SafeIterator;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import org.jetbrains.annotations.NotNull;

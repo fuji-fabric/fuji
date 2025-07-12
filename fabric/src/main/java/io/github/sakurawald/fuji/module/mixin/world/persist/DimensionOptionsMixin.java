@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.mixin.world;
+package io.github.sakurawald.fuji.module.mixin.world.persist;
 
 import io.github.sakurawald.fuji.module.initializer.world.accessor.IDimensionOptions;
 import net.minecraft.world.dimension.DimensionOptions;

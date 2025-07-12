@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.mixin.world;
+package io.github.sakurawald.fuji.module.mixin.world.persist;
 
 import net.minecraft.world.level.WorldGenSettings;
 import org.spongepowered.asm.mixin.Mixin;
@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 #elif MC_VER > MC_1_20_4
 import com.google.common.collect.Maps;
 import io.github.sakurawald.fuji.module.initializer.world.accessor.IDimensionOptions;
-import io.github.sakurawald.fuji.module.initializer.world.structure.FilteredRegistry;
+import io.github.sakurawald.fuji.module.initializer.world.structure.registry.FilteredRegistry;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.dimension.DimensionOptions;

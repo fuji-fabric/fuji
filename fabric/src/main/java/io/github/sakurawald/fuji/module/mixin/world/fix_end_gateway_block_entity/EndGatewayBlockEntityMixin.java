@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.mixin.world;
+package io.github.sakurawald.fuji.module.mixin.world.fix_end_gateway_block_entity;
 
 import net.minecraft.block.entity.EndGatewayBlockEntity;
 import net.minecraft.registry.RegistryKey;

@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.mixin.world;
+package io.github.sakurawald.fuji.module.mixin.world.weather;
 
 import net.minecraft.network.packet.Packet;
 import net.minecraft.registry.RegistryKey;
