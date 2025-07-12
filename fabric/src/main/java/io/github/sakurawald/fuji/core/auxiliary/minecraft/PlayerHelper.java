@@ -147,4 +147,12 @@ public class PlayerHelper {
     public static boolean isAdmin(ServerCommandSource source) {
         return source.hasPermissionLevel(4);
     }
+
+    public static ServerWorld getServerWorld(ServerPlayerEntity player) {
+        #if MC_VER <= MC_1_20_4
+        return (ServerWorld) player.getWorld();
+        #elif MC_VER > MC_1_20_4
+        return player.getWorld();
+        #endif
+    }
 }

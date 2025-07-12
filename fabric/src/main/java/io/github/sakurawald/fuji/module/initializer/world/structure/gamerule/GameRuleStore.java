@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.module.initializer.world.structure.gamerule;
 
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import it.unimi.dsi.fastutil.objects.*;
@@ -37,11 +36,17 @@ public final class GameRuleStore {
         return this.booleanRules.containsKey(key) || this.intRules.containsKey(key);
     }
 
+    public static GameRules makeGameRules() {
+//        GameRules gameRules = new GameRules(enabledFeatures);
+        GameRules gameRules = new GameRules();
+        return gameRules;
+    }
+
     public static GameRuleStore makeDefault() {
         GameRuleStore defaultGameRuleStore = new GameRuleStore();
 
         FeatureSet enabledFeatures = ServerHelper.getServer().getSaveProperties().getEnabledFeatures();
-        GameRules gameRules = new GameRules(enabledFeatures);
+        GameRules gameRules = makeGameRules();
 
         gameRules.accept(new GameRules.Visitor() {
             @SuppressWarnings("unchecked")

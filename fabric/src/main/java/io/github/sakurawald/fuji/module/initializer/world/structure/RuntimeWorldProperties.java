@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.world.structure;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.module.initializer.world.service.WorldService;
+import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.GameRuleStore;
 import java.util.Optional;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
@@ -31,7 +32,7 @@ public final class RuntimeWorldProperties extends UnmodifiableLevelProperties {
     }
 
     private void applyGameRules(DimensionNode dimensionNode) {
-        this.gameRules = new GameRules(this.saveProperties.getEnabledFeatures());
+        this.gameRules = GameRuleStore.makeGameRules();
         dimensionNode.gameRules.applyTo(this.gameRules, ServerHelper.getServer());
     }
 
