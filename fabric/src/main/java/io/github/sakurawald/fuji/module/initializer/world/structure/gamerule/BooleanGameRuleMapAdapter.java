@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanOpenHashMap;
 import java.lang.reflect.Type;
@@ -50,7 +51,8 @@ public class BooleanGameRuleMapAdapter implements JsonSerializer<Reference2Boole
                 .findFirst();
 
             if (gameRuleEntryOptional.isEmpty()) {
-                throw new RuntimeException("Invalid game rule name: " + jsonKey);
+                LogUtil.warn("Unknown game rule name {}, we will ignore it.", jsonKey);
+                continue;
             }
 
             Map.Entry<GameRules.Key<?>, GameRules.Type<?>> gameRuleEntry = gameRuleEntryOptional.get();

@@ -51,7 +51,8 @@ public class IntegerGameRuleMapAdapter implements JsonSerializer<Reference2IntMa
                 .findFirst();
 
             if (gameRuleEntryOptional.isEmpty()) {
-                throw new RuntimeException("Invalid game rule name: " + jsonKey);
+                LogUtil.warn("Unknown game rule name {}, we will ignore it.", jsonKey);
+                continue;
             }
 
             Map.Entry<GameRules.Key<?>, GameRules.Type<?>> gameRuleEntry = gameRuleEntryOptional.get();
