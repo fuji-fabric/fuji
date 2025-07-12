@@ -60,12 +60,16 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
 
     @Override
     protected GuiElementInterface toGuiElement(IdentifierDescriptor entity) {
+        List<Text> lore = new ArrayList<>();
+        lore.add(TextHelper.getTextByKey(getPlayer(), "registry.type.is_dynamic", entity.isDynamic()));
+        if (this.isMetaRegistry) {
+            lore.add(TextHelper.getTextByKey(getPlayer(), "prompt.click.see_inside"));
+        }
+
         GuiElementBuilder guiElementBuilder = new GuiElementBuilder()
             .setName(Text.of(entity.getIdentifier().toString()))
             .setItem(getItem(entity))
-            .setLore(List.of(
-                TextHelper.getTextByKey(getPlayer(), "registry.type.is_dynamic", entity.isDynamic())
-            ))
+            .setLore(lore)
             .setCallback(openRegistry(entity));
 
         if (entity.isDynamic()) {
