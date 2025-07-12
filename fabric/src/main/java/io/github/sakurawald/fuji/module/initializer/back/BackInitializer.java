@@ -195,4 +195,9 @@ public class BackInitializer extends ModuleInitializer {
         locationHistory.trimEntries(getMaxBackLocationEntriesToSave(player));
     }
 
+    public static void trySaveCurrentLocationOnTeleport(ServerPlayerEntity player) {
+        if (config.model().enable_back_on_teleport) {
+            trySaveCurrentLocation(player);
+        }
+    }
 }
