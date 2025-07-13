@@ -2,11 +2,6 @@
   "required": true,
   "package": "io.github.sakurawald.fuji.module.mixin",
   "plugin": "io.github.sakurawald.fuji.module.mixin.GlobalMixinConfigPlugin",
-  "server": [
-    "anti_build.EntityMixin",
-    "color.anvil.AnvilScreenHandlerMixin",
-    "color.sign.SignBlockEntityMixin"
-  ],
   "mixins": [
     "afk.ServerPlayerEntityMixin",
     "afk.effect.LivingEntityMixin",
@@ -89,7 +84,10 @@
     "world.persist.DimensionOptionsMixin",
     "world.persist.WorldGenSettingsMixin",
     "world.tick.MinecraftServerMixin",
-    "world.weather.ServerWorldMixin"
+    "world.weather.ServerWorldMixin",
+    "anti_build.EntityMixin",
+    "color.anvil.AnvilScreenHandlerMixin",
+    "color.sign.SignBlockEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
