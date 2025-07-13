@@ -39,7 +39,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.RandomSeed;
 import net.minecraft.world.GameRules;
-import net.minecraft.world.WorldProperties;
 import org.jetbrains.annotations.NotNull;
 
 @Cite("https://github.com/NucleoidMC/fantasy")
@@ -292,27 +291,24 @@ public class WorldInitializer extends ModuleInitializer {
     private static int $info(@CommandSource ServerCommandSource source, Dimension dimension) {
         ServerWorld dimensionInstance = dimension.getValue();
 
-        source.sendMessage(Text.literal("◉ Dimension Id: " + RegistryHelper.toString(dimensionInstance)));
-//        source.sendMessage(Text.literal("◉ Dimension Type Id: " + dimensionInstance.getDimension()));
-        source.sendMessage(Text.literal("◉ Difficulty: " + dimensionInstance.getDifficulty()));
-        source.sendMessage(Text.literal("◉ Seed: " + dimensionInstance.getSeed()));
-        source.sendMessage(Text.literal("◉ Dimension Options: " + dimensionInstance.getDimension()));
+        TextHelper.sendTextByKey(source, "dimension.id", RegistryHelper.toString(dimensionInstance));
+        TextHelper.sendTextByKey(source, "dimension.difficulty", dimensionInstance.getDifficulty());
+        TextHelper.sendTextByKey(source, "dimension.seed", dimensionInstance.getSeed());
+        TextHelper.sendTextByKey(source, "dimension.options", dimensionInstance.getDimension());
+        TextHelper.sendTextByKey(source, "dimension.properties", dimensionInstance.getLevelProperties());
+        TextHelper.sendTextByKey(source, "dimension.chunk_generator", dimensionInstance.getChunkManager().getChunkGenerator());
 
-        WorldProperties levelProperties = dimensionInstance.getLevelProperties();
-        source.sendMessage(Text.literal("◉ Dimension Properties: " + levelProperties));
-
-        source.sendMessage(Text.literal("◉ Dimension GameRules: " ));
+        TextHelper.sendTextByKey(source, "dimension.gamerules");
         GameRules gameRules = dimensionInstance.getGameRules();
         gameRules.accept(new GameRules.Visitor() {
             @Override
             public <T extends GameRules.Rule<T>> void visit(GameRules.Key<T> key, GameRules.Type<T> type) {
                 String gameRuleName = key.getName();
                 T gameRuleValue = gameRules.get(key);
-                source.sendMessage(Text.literal("- GameRule %s = %s".formatted(gameRuleName, gameRuleValue)));
+
+                TextHelper.sendTextByKey(source,"dimension.gamerules.entry", gameRuleName, gameRuleValue);
             }
         });
-
-
 
         return CommandHelper.Return.SUCCESS;
     }

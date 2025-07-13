@@ -100,6 +100,14 @@
   "deleted": "<red>Deleted.",
   "deny": "<red>Deny",
   "dimension": "<gold>Dimension: %s",
+  "dimension.chunk_generator": "<blue>◉ Chunk Generator: `%s`",
+  "dimension.difficulty": "<blue>◉ Difficulty: `%s`",
+  "dimension.gamerules": "<blue>◉ Dimension GameRules: ",
+  "dimension.gamerules.entry": "<yellow>- GameRule `%s` = `%s`",
+  "dimension.id": "<blue>◉ Dimension Id: `%s`",
+  "dimension.options": "<blue>◉ Dimension Options: `%s`",
+  "dimension.properties": "<blue>◉ Dimension Properties: `%s`",
+  "dimension.seed": "<blue>◉ Seed: `%s`",
   "display.click.prompt": "<#D2E0FB>Click to view this display",
   "display.ender_chest.broadcast": "<#FFA1F5>Player %player:name% just share an ender display: <#D2E0FB>[display]",
   "display.ender_chest.text": "<#D2E0FB>[EnderChest Display]",
@@ -1136,5 +1144,6 @@
   "docstring.1752286206946": "The equivalent to `DayTime` in `level.dat`.\n",
   "docstring.1752287089199": "◉ The `weather system` of the `world`.\nThere are 3 types of `weather`: `clear`, `rain` and `thunder`.\nIf `clear`, then both `rain` and `thunder` is false.\nIf `thunder`, then `rain` is true.\n\n\nThe `weather system` will be `tick` if:\n1. The `dimension options` of the `world` has `skylight`.\n2. The `gamerule DO_WEATHER_CYCLE` of the `world` is true.\n\n◉ The logic of `/weather` command.\nThe `/weather` command `only` sets the `weather` of `minecraft:overworld`.\n\n◉ Set the weather per-dimension.\nYou can modify the weather directly in config file, and issue `/fuji reload` to apply it.\n",
   "docstring.1752292508145": "◉ The logic of `/gamerule` command.\nThe `/gamerule` command `only` operates on `minecraft:overworld` dimension.\n\nTo see the `true info` of `a specified dimension`, you should use `/world info` command.\n\n◉ Set the `per-dimension gamerules` using commands.\nYou can install the `WorldGameRules` mod to provide such commands.\nSee https://github.com/DrexHD/WorldGameRules\n",
-  "docstring.1752297520453": "◉ Advanced World Management and Per-world rules.\nThe `world` module provided by fuji is a simple module.\nIf you want a more powerful tool, you can try use `WorldManager` mod and `WorldGameRules` mod.\n\nSee:\n1. https://github.com/DrexHD/WorldManager\n2. https://github.com/DrexHD/WorldGameRules\n"
+  "docstring.1752297520453": "◉ Advanced World Management and Per-world rules.\nThe `world` module provided by fuji is a simple module.\nIf you want a more powerful tool, you can try use `WorldManager` mod and `WorldGameRules` mod.\n\nSee:\n1. https://github.com/DrexHD/WorldManager\n2. https://github.com/DrexHD/WorldGameRules\n",
+  "docstring.1752429441664": "◉ Does the `runtime world` support `datapack`?\nIt depends on how the `datapack` interfaces with the `world`.\nMost of datapack should work.\nAnyway, always backup your world data before install a new datapack.\n"
 }
