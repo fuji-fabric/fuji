@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.world;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -30,7 +31,9 @@ import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.Int
 import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -39,6 +42,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.RandomSeed;
 import net.minecraft.world.GameRules;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Cite("https://github.com/NucleoidMC/fantasy")
 @Document(id = 1751826605981L, value = """
@@ -307,6 +311,61 @@ public class WorldInitializer extends ModuleInitializer {
         WorldService.saveRuntimeWorldConfigs();
         TextHelper.sendTextByKey(source, "operation.success");
         return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document(id = 1752433782557L, value = """
+        List the dimensions each player is in.
+        """)
+    @CommandNode("who")
+    @CommandRequirement(level = 4)
+    private static int $who(@CommandSource ServerCommandSource source) {
+        printGroupedPlayersByDimension(source, null);
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document(id = 1752434557605L, value = """
+        List the players in specified dimension.
+        """)
+    @CommandNode("who")
+    @CommandRequirement(level = 4)
+    private static int $who(@CommandSource ServerCommandSource source, Dimension dimension) {
+        printGroupedPlayersByDimension(source, dimension);
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document(id = 1752435062516L, value = """
+        Query which dimension the player is in.
+        """)
+    @CommandNode("who")
+    @CommandRequirement(level = 4)
+    private static int $who(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {
+        String playerName = PlayerHelper.getPlayerName(player);
+        String locationDimensionId = RegistryHelper.toString(player.getWorld());
+        TextHelper.sendTextByKey(source, "world.who.player", playerName, locationDimensionId);
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    private static void printGroupedPlayersByDimension(ServerCommandSource source, @Nullable Dimension specifiedDimension) {
+        Map<@NotNull String, List<String>> groupedPlayers = ServerHelper
+            .getWorlds()
+            .stream()
+            .collect(Collectors.toMap(
+                RegistryHelper::toString
+                , world -> world.getPlayers().stream().map(PlayerHelper::getPlayerName).toList()));
+
+        groupedPlayers
+            .entrySet()
+            .stream()
+            .filter(entry -> {
+                if (specifiedDimension == null) return true;
+                String filterDimension = RegistryHelper.toString(specifiedDimension.getValue());
+                return entry.getKey().equals(filterDimension);
+            })
+            .forEach(entry -> {
+                String dimensionId = entry.getKey();
+                List<String> players = entry.getValue();
+                TextHelper.sendTextByKey(source, "world.who.dimension", dimensionId, players);
+        });
     }
 
     @Document(id = 1752283075945L, value = """

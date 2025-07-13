@@ -2,6 +2,10 @@
 
 - [world] refactor: now `/world tp` simply teleports to the `target dimension` with the same coordinate, instead of starting a rtp process. (The rtp is likely to failed, and cost too much. The `/world tp` command is an admin-level command for debug, if you really need a user-level rtp command, use `rtp` module.)
 - [world] feature: add `--confirm` argument for `/world {delete/reset}` command.
+- [world] feature: add `/world who` command, to query the dimensions each player is in.
+  - example: `/world who` to list all dimensions and their players.
+  - example: `/world who <dimension>` to list the players of a specified dimension.
+  - example: `/world who <player>` to list the dimension of a specified player.
 - [anti_build] fix: when using in `client-side`, the `place block` and `interact_entity` type will send the feedback message twice.
 - [core] fix: make it possible to use `color.sign`, `color.anvil` modules when install the mod in `client side`.
 

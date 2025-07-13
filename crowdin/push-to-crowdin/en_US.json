@@ -453,6 +453,8 @@
   "world.dimension.not_found": "<red>The dimension %s not exists.",
   "world.dimension.reset": "<gold>Start to reset resource dimension %s",
   "world.dimension.seed": "<blue>Dimension Seed -> %s",
+  "world.who.dimension": "<yellow>Dimension %s: <dark_green>%s",
+  "world.who.player": "<yellow>The player `%s` is in dimension `%s`.",
   "world_downloader.request": "<#8DDFCB>Player %s just requested to download world file (Size: %.2f MB)",
   "world_downloader.response": "<#8DDFCB>Download link generated: <hover:show_text:'<green>Open this link'><click:open_url:'%s'><green>[OPEN]</click></hover>",
   "x": "<gold>X: %.2f",
@@ -1147,5 +1149,8 @@
   "docstring.1752292508145": "◉ The logic of `/gamerule` command.\nThe `/gamerule` command `only` operates on `minecraft:overworld` dimension.\n\nTo see the `true info` of `a specified dimension`, you should use `/world info` command.\n\n◉ Set the `per-dimension gamerules` using commands.\nYou can install the `WorldGameRules` mod to provide such commands.\nSee https://github.com/DrexHD/WorldGameRules\n",
   "docstring.1752297520453": "◉ Advanced World Management and Per-world rules.\nThe `world` module provided by fuji is a simple module.\nIf you want a more powerful tool, you can try use `WorldManager` mod and `WorldGameRules` mod.\n\nSee:\n1. https://github.com/DrexHD/WorldManager\n2. https://github.com/DrexHD/WorldGameRules\n",
   "docstring.1752429441664": "◉ Does the `runtime world` support `datapack`?\nIt depends on how the `datapack` interfaces with the `world`.\nMost of datapack should work.\nAnyway, always backup your world data before install a new datapack.\n",
-  "docstring.1752431019812": "◉ The logic of `nether portal` and `ender portal`.\nIn vanilla Minecraft, there are only 3 dimensions.\nThey are `minecraft:overworld`, `minecraft:the_nether` and `minecraft:the_end`.\nThey are `hard coded` dimensions.\nThe linkage of `nether portal` and `ender portal` use the `hard coded` dimensions.\n\n◉ Can I create `nether portal` in `runtime world`?\nNo, you can't create any `nether portal` in runtime world.\n\n◉ Can I create `ender portal` in `runtime world`?\nYes, but the destination dimension is hard-coded, it is always the `minecraft:the_end`.\n\nThe logic of `EnderPortalBlockEntity`:\n1. If the player is now in `minecraft:the_end`, then destination dimension is `minecraft:overworld`.\n2. Else the destination dimension is `minecraft:the_end`.\n"
+  "docstring.1752431019812": "◉ The logic of `nether portal` and `ender portal`.\nIn vanilla Minecraft, there are only 3 dimensions.\nThey are `minecraft:overworld`, `minecraft:the_nether` and `minecraft:the_end`.\nThey are `hard coded` dimensions.\nThe linkage of `nether portal` and `ender portal` use the `hard coded` dimensions.\n\n◉ Can I create `nether portal` in `runtime world`?\nNo, you can't create any `nether portal` in runtime world.\n\n◉ Can I create `ender portal` in `runtime world`?\nYes, but the destination dimension is hard-coded, it is always the `minecraft:the_end`.\n\nThe logic of `EnderPortalBlockEntity`:\n1. If the player is now in `minecraft:the_end`, then destination dimension is `minecraft:overworld`.\n2. Else the destination dimension is `minecraft:the_end`.\n",
+  "docstring.1752433782557": "List the dimensions each player is in.\n",
+  "docstring.1752434557605": "List the players in specified dimension.\n",
+  "docstring.1752435062516": "Query which dimension the player is in.\n"
 }
