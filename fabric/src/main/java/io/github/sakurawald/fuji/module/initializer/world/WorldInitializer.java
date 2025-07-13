@@ -35,7 +35,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.RandomSeed;
 import net.minecraft.world.GameRules;
@@ -70,14 +69,14 @@ import org.jetbrains.annotations.NotNull;
     Issue: `/world create my_nether minecraft:the_nether`
 
     ◉ Delete the extra dimension
-    Issue: `/world delete fuji:my_nether`
+    Issue: `/world delete fuji:my_nether --confirm true`
 
     ◉ Reset the extra dimension with random seed.
-    Issue: `/world reset fuji:my_nether`
+    Issue: `/world reset fuji:my_nether --confirm true`
 
     ◉ Specify a seed for an extra dimension.
     1. `/world create my_nether --seed 1234567890 minecraft:the_nether`
-    2. `/world reset --useTheSameSeed true fuji:my_nether`
+    2. `/world reset fuji:my_nether --useTheSameSeed true --confirm true`
     """)
 @ColorBox(id = 1751982158414L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     ◉ Make a resource world that reset automatically every day.
@@ -139,6 +138,23 @@ import org.jetbrains.annotations.NotNull;
     Most of datapack should work.
     Anyway, always backup your world data before install a new datapack.
     """)
+@ColorBox(id = 1752431019812L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ The logic of `nether portal` and `ender portal`.
+    In vanilla Minecraft, there are only 3 dimensions.
+    They are `minecraft:overworld`, `minecraft:the_nether` and `minecraft:the_end`.
+    They are `hard coded` dimensions.
+    The linkage of `nether portal` and `ender portal` use the `hard coded` dimensions.
+
+    ◉ Can I create `nether portal` in `runtime world`?
+    No, you can't create any `nether portal` in runtime world.
+
+    ◉ Can I create `ender portal` in `runtime world`?
+    Yes, but the destination dimension is hard-coded, it is always the `minecraft:the_end`.
+
+    The logic of `EnderPortalBlockEntity`:
+    1. If the player is now in `minecraft:the_end`, then destination dimension is `minecraft:overworld`.
+    2. Else the destination dimension is `minecraft:the_end`.
+    """)
 
 
 
@@ -199,7 +215,7 @@ public class WorldInitializer extends ModuleInitializer {
 
     @CommandNode("create")
     private static int $create(@CommandSource ServerCommandSource source, String name,
-                               Optional<Long> seed, DimensionType dimensionType) {
+                               DimensionType dimensionType, Optional<Long> seed) {
 
         /* Make identifier for the new dimension. */
         final String FUJI_DIMENSION_NAMESPACE = "fuji";
@@ -226,10 +242,15 @@ public class WorldInitializer extends ModuleInitializer {
     }
 
     @CommandNode("delete")
-    private static int $delete(@CommandSource ServerCommandSource source, Dimension dimension) {
+    private static int $delete(@CommandSource ServerCommandSource source, Dimension dimension, Optional<Boolean> confirm) {
         ServerWorld dimensionInstance = dimension.getValue();
         String dimensionId = RegistryHelper.toString(dimensionInstance);
         checkBlacklist(source, dimensionId);
+
+        /* Check the command confirm. */
+        if (!CommandHelper.Pattern.isCommandConfirmed(source, confirm)) {
+            return CommandHelper.Return.FAIL;
+        }
 
         /* Request to delete. */
         WorldService.requestToDeleteDimension(dimensionInstance);
@@ -243,7 +264,12 @@ public class WorldInitializer extends ModuleInitializer {
 
     @Document(id = 1751826611302L, value = "Delete and create the specified world.")
     @CommandNode("reset")
-    private static int $reset(@CommandSource ServerCommandSource source, Optional<Boolean> useTheSameSeed, Dimension dimension) {
+    private static int $reset(@CommandSource ServerCommandSource source, Dimension dimension, Optional<Boolean> useTheSameSeed, Optional<Boolean> confirm) {
+        /* Check the command confirm. */
+        if (!CommandHelper.Pattern.isCommandConfirmed(source, confirm)) {
+            return CommandHelper.Return.FAIL;
+        }
+
         /* Get the original dimension node. */
         ServerWorld dimensionInstance = dimension.getValue();
         String dimensionIdentifier = RegistryHelper.toString(dimensionInstance);

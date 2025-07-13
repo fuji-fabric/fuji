@@ -9,6 +9,7 @@ import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
+import java.util.Optional;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registry;
@@ -190,6 +191,15 @@ public class CommandHelper {
                 }
                 return consumer.apply(player, mainHandStack);
             });
+        }
+
+        public static boolean isCommandConfirmed(ServerCommandSource source, Optional<Boolean> confirm) {
+            boolean confirmed = confirm.orElse(false);
+            if (!confirmed) {
+                TextHelper.sendTextByKey(source, "operation.confirm.failed");
+            }
+
+            return confirmed;
         }
     }
 

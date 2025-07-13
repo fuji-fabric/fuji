@@ -128,10 +128,8 @@ public class WarningInitializer extends ModuleInitializer {
     @CommandNode("warning clear-all")
     @CommandRequirement(level = 4)
     private static int $clearAllWarnings(@CommandSource ServerCommandSource source, Optional<Boolean> confirm) {
-        Boolean confirmed = confirm.orElse(false);
-        if (!confirmed) {
-            TextHelper.sendTextByKey(source, "operation.cancelled");
-            return CommandHelper.Return.SUCCESS;
+        if (!CommandHelper.Pattern.isCommandConfirmed(source, confirm)) {
+            return CommandHelper.Return.FAIL;
         }
 
         WarningService.clearAllWarnings();
