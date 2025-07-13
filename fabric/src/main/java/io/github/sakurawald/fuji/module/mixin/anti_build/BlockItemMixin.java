@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.mixin.anti_build;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.module.initializer.anti_build.AntiBuildInitializer;
 import net.minecraft.block.BlockState;
@@ -19,6 +20,11 @@ public class BlockItemMixin {
     @Inject(method = "canPlace", at = @At("RETURN"), cancellable = true)
     void handlePlaceBlock(@NotNull ItemPlacementContext itemPlacementContext, BlockState blockState, @NotNull CallbackInfoReturnable<Boolean> cir) {
         PlayerEntity player = itemPlacementContext.getPlayer();
+        // NOTE: The canPlace() function will be called twice, one in client-side, one in server-side. (One ClientPlayerEntity and one ServerPlayerEntity)
+        if (!PlayerHelper.isServerPlayer(player)) {
+            return;
+        }
+
         String id = RegistryHelper.toString(itemPlacementContext.getStack());
         Hand hand = itemPlacementContext.getHand();
 

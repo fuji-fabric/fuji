@@ -4,6 +4,8 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
 import lombok.Getter;
 import lombok.Setter;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.server.MinecraftServer;
@@ -156,5 +158,13 @@ public class ServerHelper {
             .stream()
             .map(it -> it.getProfile().getName())
             .toList();
+    }
+
+    public static boolean isClientSide() {
+        return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
+    }
+
+    public static boolean isServerSide() {
+        return FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER;
     }
 }
