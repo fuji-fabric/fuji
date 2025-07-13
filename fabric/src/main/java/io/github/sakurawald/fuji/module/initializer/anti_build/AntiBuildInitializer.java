@@ -65,6 +65,7 @@ public class AntiBuildInitializer extends ModuleInitializer {
         if (shouldWeCancelTheAction(player, antiType, ids, id)) {
             /* Send the cation cancelled message to the player. */
             if (shouldSendFeedback.get()) {
+                // NOTE: You may see the double message if you install the mod in client-side.
                 TextHelper.sendTextByKey(player, "anti_build.disallow");
             }
 
