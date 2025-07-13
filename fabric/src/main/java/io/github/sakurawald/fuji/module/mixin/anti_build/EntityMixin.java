@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.mixin.anti_build;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.module.initializer.anti_build.AntiBuildInitializer;
 import net.minecraft.entity.Entity;
@@ -18,6 +19,9 @@ public abstract class EntityMixin {
 
     @Inject(method = "interact", at = @At("HEAD"), cancellable = true)
     void handleInteractEntity(@NotNull PlayerEntity player, Hand hand, @NotNull CallbackInfoReturnable<ActionResult> cir) {
+        if (!PlayerHelper.isServerPlayer(player)) {
+            return;
+        }
         Entity entity = (Entity) (Object) this;
         String id = RegistryHelper.toString(entity);
 
