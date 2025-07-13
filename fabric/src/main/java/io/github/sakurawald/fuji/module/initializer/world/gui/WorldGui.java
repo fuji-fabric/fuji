@@ -6,26 +6,26 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
-import io.github.sakurawald.fuji.module.initializer.world.structure.DimensionNode;
+import io.github.sakurawald.fuji.module.initializer.world.structure.RuntimeWorldDescriptor;
 import java.util.List;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class WorldGui extends PagedGui<DimensionNode> {
+public class WorldGui extends PagedGui<RuntimeWorldDescriptor> {
 
-    public WorldGui(ServerPlayerEntity player, @NotNull List<DimensionNode> entities, int pageIndex) {
+    public WorldGui(ServerPlayerEntity player, @NotNull List<RuntimeWorldDescriptor> entities, int pageIndex) {
         super(null, player, TextHelper.getTextByKey(player, "world.dimension.list.gui.title"), entities, pageIndex);
     }
 
     @Override
-    protected PagedGui<DimensionNode> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<DimensionNode> entities, int pageIndex) {
+    protected PagedGui<RuntimeWorldDescriptor> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<RuntimeWorldDescriptor> entities, int pageIndex) {
         return new WorldGui(player, entities, pageIndex);
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(DimensionNode entity) {
+    protected GuiElementInterface toGuiElement(RuntimeWorldDescriptor entity) {
         return new GuiElementBuilder()
             .setName(Text.literal(entity.getDimension()))
             .setItem(WorldHelper.toGuiItem(entity.getDimension_type()))

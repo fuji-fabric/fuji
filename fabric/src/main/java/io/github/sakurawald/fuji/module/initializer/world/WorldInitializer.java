@@ -5,7 +5,6 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -24,7 +23,7 @@ import io.github.sakurawald.fuji.module.initializer.world.config.model.WorldConf
 import io.github.sakurawald.fuji.module.initializer.world.config.model.WorldDataModel;
 import io.github.sakurawald.fuji.module.initializer.world.gui.WorldGui;
 import io.github.sakurawald.fuji.module.initializer.world.service.WorldService;
-import io.github.sakurawald.fuji.module.initializer.world.structure.DimensionNode;
+import io.github.sakurawald.fuji.module.initializer.world.structure.RuntimeWorldDescriptor;
 import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.BooleanGameRuleMapAdapter;
 import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.GameRuleStore;
 import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.IntegerGameRuleMapAdapter;
@@ -42,17 +41,6 @@ import net.minecraft.util.math.random.RandomSeed;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.WorldProperties;
 import org.jetbrains.annotations.NotNull;
-
-/*
- * RegistryKeys.DIMENSION_TYPE only returns registered `dimension type`.
- *
- * To list multi dimensions, use `RegistryKeys.DIMENSION`.
- * DimensionArgumentType.dimension() is equals to RegistryKeys.DIMENSION, but the DimensionArgumentType()'s suggestion will not suggest new added dimension types.
- *
- * The `RegistryKeys.WORLD` and `RegistryKeys.DIMENSION` can be cast to each other.
- * public static final RegistryKey<Registry<World>> WORLD = RegistryKeys.of("dimension");
- * public static final RegistryKey<Registry<DimensionOptions>> DIMENSION = RegistryKeys.of("dimension");
- */
 
 @Cite("https://github.com/NucleoidMC/fantasy")
 @Document(id = 1751826605981L, value = """
@@ -78,7 +66,6 @@ import org.jetbrains.annotations.NotNull;
     1. https://github.com/DrexHD/WorldManager
     2. https://github.com/DrexHD/WorldGameRules
     """)
-
 @ColorBox(id = 1751982071236L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Create an extra `the_nether` dimension
     Issue: `/world create my_nether minecraft:the_nether`
@@ -147,7 +134,12 @@ import org.jetbrains.annotations.NotNull;
     You can install the `WorldGameRules` mod to provide such commands.
     See https://github.com/DrexHD/WorldGameRules
     """)
-
+@ColorBox(id = 1752429441664L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ Does the `runtime world` support `datapack`?
+    It depends on how the `datapack` interfaces with the `world`.
+    Most of datapack should work.
+    Anyway, always backup your world data before install a new datapack.
+    """)
 
 
 
@@ -190,7 +182,7 @@ public class WorldInitializer extends ModuleInitializer {
     @CommandNode("list")
     private static int $list(@CommandSource ServerCommandSource source) {
         if (source.isExecutedByPlayer()) {
-            List<DimensionNode> entities = storage.model().dimension_list;
+            List<RuntimeWorldDescriptor> entities = storage.model().dimension_list;
             new WorldGui(source.getPlayer(), entities, 0)
                 .open();
         } else {
@@ -218,18 +210,18 @@ public class WorldInitializer extends ModuleInitializer {
         /* Make dimension entry */
         long $seed = seed.orElse(RandomSeed.getSeed());
         Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(dimensionType.getValue());
-        DimensionNode dimensionNode = new DimensionNode();
-        dimensionNode.dimension = dimensionIdentifier.toString();
-        dimensionNode.dimension_type = dimensionTypeIdentifier.toString();
-        dimensionNode.seed = $seed;
-        dimensionNode.setShouldTickTime(true);
-        dimensionNode.gameRules = GameRuleStore.makeDefault();
+        RuntimeWorldDescriptor runtimeWorldDescriptor = new RuntimeWorldDescriptor();
+        runtimeWorldDescriptor.dimension = dimensionIdentifier.toString();
+        runtimeWorldDescriptor.dimension_type = dimensionTypeIdentifier.toString();
+        runtimeWorldDescriptor.seed = $seed;
+        runtimeWorldDescriptor.setShouldTickTime(true);
+        runtimeWorldDescriptor.gameRules = GameRuleStore.makeDefault();
 
-        storage.model().dimension_list.add(dimensionNode);
+        storage.model().dimension_list.add(runtimeWorldDescriptor);
         storage.writeStorage();
 
         /* Request to create the dimension. */
-        WorldService.requestToCreateDimension(dimensionNode);
+        WorldService.requestToCreateDimension(runtimeWorldDescriptor);
         TextHelper.sendBroadcastByKey("world.dimension.created", dimensionIdentifier);
         return CommandHelper.Return.SUCCESS;
     }
@@ -258,23 +250,23 @@ public class WorldInitializer extends ModuleInitializer {
         String dimensionIdentifier = RegistryHelper.toString(dimensionInstance);
         checkBlacklist(source, dimensionIdentifier);
 
-        Optional<DimensionNode> dimensionEntryOpt = WorldService.getDimensionNode(dimensionIdentifier);
+        Optional<RuntimeWorldDescriptor> dimensionEntryOpt = WorldService.getDimensionNode(dimensionIdentifier);
         if (dimensionEntryOpt.isEmpty()) {
             TextHelper.sendTextByKey(source, "world.dimension.not_found");
             return CommandHelper.Return.FAIL;
         }
-        DimensionNode dimensionNode = dimensionEntryOpt.get();
+        RuntimeWorldDescriptor runtimeWorldDescriptor = dimensionEntryOpt.get();
 
         /* Delete the dimension instance. */
         WorldService.requestToDeleteDimension(dimensionInstance);
 
         /* Draw the seed. */
         Boolean $useTheSameSeed = useTheSameSeed.orElse(false);
-        dimensionNode.seed = $useTheSameSeed ? dimensionNode.seed : RandomSeed.getSeed();
+        runtimeWorldDescriptor.seed = $useTheSameSeed ? runtimeWorldDescriptor.seed : RandomSeed.getSeed();
         storage.writeStorage();
 
         /* Create a new dimension instance. */
-        WorldService.requestToCreateDimension(dimensionNode);
+        WorldService.requestToCreateDimension(runtimeWorldDescriptor);
 
         TextHelper.sendBroadcastByKey("world.dimension.reset", dimensionIdentifier);
         return CommandHelper.Return.SUCCESS;
@@ -340,7 +332,7 @@ public class WorldInitializer extends ModuleInitializer {
     private void loadDimensions(@NotNull MinecraftServer server) {
         storage.model().dimension_list
             .stream()
-            .filter(DimensionNode::isEnable)
+            .filter(RuntimeWorldDescriptor::isAuto_load_on_server_startup)
             .forEach(it -> {
                 try {
                     WorldService.requestToCreateDimension(it);

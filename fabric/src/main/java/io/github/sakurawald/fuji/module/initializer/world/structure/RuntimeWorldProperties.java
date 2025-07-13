@@ -5,7 +5,6 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.module.initializer.world.service.WorldService;
 import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.GameRuleStore;
 import java.util.Optional;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.SaveProperties;
@@ -15,42 +14,42 @@ import org.jetbrains.annotations.NotNull;
 public final class RuntimeWorldProperties extends UnmodifiableLevelProperties {
 
     private final SaveProperties saveProperties;
-    public @NotNull DimensionNode dimensionNode;
+    public @NotNull RuntimeWorldDescriptor runtimeWorldDescriptor;
 
     private GameRules gameRules;
 
-    public RuntimeWorldProperties(@NotNull SaveProperties saveProperties, @NotNull DimensionNode dimensionNode) {
+    public RuntimeWorldProperties(@NotNull SaveProperties saveProperties, @NotNull RuntimeWorldDescriptor runtimeWorldDescriptor) {
         super(saveProperties, saveProperties.getMainWorldProperties());
         this.saveProperties = saveProperties;
-        this.dimensionNode = dimensionNode;
+        this.runtimeWorldDescriptor = runtimeWorldDescriptor;
 
-        applyDimensionNode(dimensionNode);
+        applyDimensionNode(runtimeWorldDescriptor);
     }
 
-    private void applyDimensionNode(DimensionNode dimensionNode) {
-        applyGameRules(dimensionNode);
+    private void applyDimensionNode(RuntimeWorldDescriptor runtimeWorldDescriptor) {
+        applyGameRules(runtimeWorldDescriptor);
     }
 
-    private void applyGameRules(DimensionNode dimensionNode) {
+    private void applyGameRules(RuntimeWorldDescriptor runtimeWorldDescriptor) {
         this.gameRules = GameRuleStore.makeGameRules();
-        dimensionNode.gameRules.applyTo(this.gameRules, ServerHelper.getServer());
+        runtimeWorldDescriptor.gameRules.applyTo(this.gameRules, ServerHelper.getServer());
     }
 
-    private DimensionNode getEffectiveDimensionNode() {
+    private RuntimeWorldDescriptor getEffectiveDimensionNode() {
         /* Detect the changes of dimension node in storage. */
-        DimensionNode originalDimensionNode = dimensionNode;
-        Optional<DimensionNode> newDimensionNodeOpt = WorldService.getDimensionNode(originalDimensionNode.dimension);
+        RuntimeWorldDescriptor originalRuntimeWorldDescriptor = runtimeWorldDescriptor;
+        Optional<RuntimeWorldDescriptor> newDimensionNodeOpt = WorldService.getDimensionNode(originalRuntimeWorldDescriptor.dimension);
         if (newDimensionNodeOpt.isPresent()) {
-            DimensionNode newDimensionNode = newDimensionNodeOpt.get();
-            if (originalDimensionNode != newDimensionNode) {
-                LogUtil.info("The config for dimension {} is modified, I will apply the new config now!", originalDimensionNode.dimension);
-                this.dimensionNode = newDimensionNode;
-                this.applyDimensionNode(this.dimensionNode);
+            RuntimeWorldDescriptor newRuntimeWorldDescriptor = newDimensionNodeOpt.get();
+            if (originalRuntimeWorldDescriptor != newRuntimeWorldDescriptor) {
+                LogUtil.info("The config for dimension {} is modified, I will apply the new config now!", originalRuntimeWorldDescriptor.dimension);
+                this.runtimeWorldDescriptor = newRuntimeWorldDescriptor;
+                this.applyDimensionNode(this.runtimeWorldDescriptor);
             }
         }
 
         /* Return the effective dimension node. */
-        return this.dimensionNode;
+        return this.runtimeWorldDescriptor;
     }
 
     @Override

@@ -13,7 +13,7 @@ import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.core.structure.TeleportTicket;
 import io.github.sakurawald.fuji.module.initializer.world.WorldInitializer;
 import io.github.sakurawald.fuji.module.initializer.world.accessor.ExtendedDimensionOptions;
-import io.github.sakurawald.fuji.module.initializer.world.structure.DimensionNode;
+import io.github.sakurawald.fuji.module.initializer.world.structure.RuntimeWorldDescriptor;
 import io.github.sakurawald.fuji.module.initializer.world.structure.RuntimeWorld;
 import io.github.sakurawald.fuji.module.initializer.world.structure.RuntimeWorldProperties;
 import io.github.sakurawald.fuji.module.initializer.world.structure.VoidWorldGenerationProgressListener;
@@ -40,7 +40,6 @@ import net.minecraft.registry.entry.RegistryEntryInfo;
 #endif
 
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
@@ -57,7 +56,7 @@ import org.jetbrains.annotations.Nullable;
 public class WorldService {
 
     private static final Set<ServerWorld> dimensionDeletionQueue = new ReferenceOpenHashSet<>();
-    private static final Set<DimensionNode> dimensionCreationQueue = new ReferenceOpenHashSet<>();
+    private static final Set<RuntimeWorldDescriptor> dimensionCreationQueue = new ReferenceOpenHashSet<>();
 
     static {
         ServerTickEvents.START_SERVER_TICK.register(server -> processDimensionCreationAndDeletionQueue());
@@ -76,9 +75,9 @@ public class WorldService {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void requestToCreateDimension(DimensionNode dimensionNode) {
+    public static void requestToCreateDimension(RuntimeWorldDescriptor runtimeWorldDescriptor) {
         ServerHelper.getServer().submit(() -> {
-            dimensionCreationQueue.add(dimensionNode);
+            dimensionCreationQueue.add(runtimeWorldDescriptor);
         });
     }
 
@@ -93,25 +92,25 @@ public class WorldService {
     }
 
 
-    private static boolean tryCreateDimension(@NotNull DimensionNode dimensionNode) {
+    private static boolean tryCreateDimension(@NotNull RuntimeWorldDescriptor runtimeWorldDescriptor) {
         // NOTE: Wait the target dimension to be deleted first (If there is a deletion ticket for it).
-        if (dimensionDeletionQueue.stream().anyMatch(it -> RegistryHelper.toString(it).equals(dimensionNode.dimension))) {
+        if (dimensionDeletionQueue.stream().anyMatch(it -> RegistryHelper.toString(it).equals(runtimeWorldDescriptor.dimension))) {
             return false;
         }
 
-        createDimension(dimensionNode);
+        createDimension(runtimeWorldDescriptor);
         return true;
     }
 
     @SuppressWarnings("deprecation")
-    private static void createDimension(@NotNull DimensionNode dimensionNode) {
+    private static void createDimension(@NotNull RuntimeWorldDescriptor runtimeWorldDescriptor) {
         MinecraftServer server = ServerHelper.getServer();
-        Identifier dimensionIdentifier = RegistryHelper.makeIdentifier(dimensionNode.dimension);
-        Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(dimensionNode.dimension_type);
+        Identifier dimensionIdentifier = RegistryHelper.makeIdentifier(runtimeWorldDescriptor.dimension);
+        Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(runtimeWorldDescriptor.dimension_type);
 
         /* Make the dimension properties. */
         // note: we use the same WorldData from OVERWORLD
-        RuntimeWorldProperties worldProperties = new RuntimeWorldProperties(server.getSaveProperties(), dimensionNode);
+        RuntimeWorldProperties worldProperties = new RuntimeWorldProperties(server.getSaveProperties(), runtimeWorldDescriptor);
 
         /* Make the dimension options. */
         @Nullable DimensionOptions dimensionOptions = makeDimensionOptions(dimensionTypeIdentifier);
@@ -134,9 +133,9 @@ public class WorldService {
                 dimensionOptions,
                 VoidWorldGenerationProgressListener.INSTANCE,
                 false,
-                BiomeAccess.hashSeed(dimensionNode.seed),
+                BiomeAccess.hashSeed(runtimeWorldDescriptor.seed),
                 ImmutableList.of(),
-                dimensionNode.shouldTickTime,
+                runtimeWorldDescriptor.shouldTickTime,
                 null);
         } catch (Exception e) {
             LogUtil.error("Failed to make ServerWorld instance: dimensionId = {}, dimensionTypeId = {}", dimensionIdentifier, dimensionTypeIdentifier, e);
@@ -241,7 +240,7 @@ public class WorldService {
     }
 
     public static void deleteDimensionNode(String dimensionId) {
-        Optional<DimensionNode> first = WorldInitializer.storage.model().dimension_list.stream().filter(o -> o.getDimension().equals(dimensionId)).findFirst();
+        Optional<RuntimeWorldDescriptor> first = WorldInitializer.storage.model().dimension_list.stream().filter(o -> o.getDimension().equals(dimensionId)).findFirst();
         first.ifPresent(dimensionNode -> {
             WorldInitializer.storage.model().dimension_list.remove(dimensionNode);
             WorldInitializer.storage.writeStorage();
@@ -271,7 +270,7 @@ public class WorldService {
 //        player.networkHandler.sendPacket(new WorldBorderInterpolateSizeS2CPacket(worldBorder));
     }
 
-    public static Optional<DimensionNode> getDimensionNode(String dimensionId) {
+    public static Optional<RuntimeWorldDescriptor> getDimensionNode(String dimensionId) {
         return WorldInitializer.storage.model()
             .dimension_list
             .stream()

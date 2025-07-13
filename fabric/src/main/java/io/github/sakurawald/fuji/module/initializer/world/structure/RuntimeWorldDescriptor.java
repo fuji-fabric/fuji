@@ -14,11 +14,13 @@ import net.minecraft.world.GameRules;
     It contains the `meta data` of a `dimension`.
     """)
 @Data
-public class DimensionNode {
+public class RuntimeWorldDescriptor {
+
     @Document(id = 1752170969085L, value = """
         Should we `load` this `dimension` on server startup?
         """)
-    public boolean enable = true;
+    @SerializedName(value = "auto_load_on_server_startup", alternate = "enable")
+    public boolean auto_load_on_server_startup = true;
 
     @Document(id = 1752170986625L, value = """
         The `identifier` of this `dimension`.

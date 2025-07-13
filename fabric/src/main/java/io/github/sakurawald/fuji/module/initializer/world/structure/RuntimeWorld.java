@@ -49,7 +49,7 @@ public class RuntimeWorld extends ServerWorld {
     public long getSeed() {
         // NOTE: Override the getSeed() method to provide the custom seed before the seed is used by super class.
         String dimensionId = RegistryHelper.toString(this.getRegistryKey());
-        Optional<DimensionNode> dimensionNode = WorldService.getDimensionNode(dimensionId);
+        Optional<RuntimeWorldDescriptor> dimensionNode = WorldService.getDimensionNode(dimensionId);
         if (dimensionNode.isPresent()) {
             return dimensionNode.get().seed;
         }
@@ -62,7 +62,7 @@ public class RuntimeWorld extends ServerWorld {
     @Override
     protected void tickTime() {
         this.getRuntimeWorldProperties().ifPresentOrElse(runtimeWorldProperties -> {
-            if (!runtimeWorldProperties.dimensionNode.shouldTickTime) {
+            if (!runtimeWorldProperties.runtimeWorldDescriptor.shouldTickTime) {
                 return;
             }
 
