@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.module.initializer.world.structure.border.BorderStore;
 import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.GameRuleStore;
 import lombok.Data;
 import net.minecraft.world.Difficulty;
@@ -54,7 +55,7 @@ public class RuntimeWorldDescriptor {
     public long timeOfDay = 6000;
 
     public Weather weather = new Weather();
-
+    public BorderStore worldBorder = new BorderStore();
 
     public void setShouldTickTime(boolean shouldTickTime) {
         this.shouldTickTime = shouldTickTime;
