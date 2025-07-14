@@ -410,7 +410,7 @@ public class TextHelper {
             }
 
             /* Return a dummy value for easier debugging. */
-            String dummyLanguageValue = "(No key `%s` in language `%s`)".formatted(languageKey, languageCode);
+            String dummyLanguageValue = "<red>(No key `%s` in language `%s`)</red>".formatted(languageKey, languageCode);
             LogUtil.warn("Failed to get language value: language code = {}, language key = {}, audience = {}", languageCode, languageKey, audience);
             return dummyLanguageValue;
         }
