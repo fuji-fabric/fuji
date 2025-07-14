@@ -58,7 +58,48 @@ import org.jetbrains.annotations.Nullable;
 
     See also: https://minecraft.wiki/w/Dimension_definition
     See also: https://minecraft.wiki/w/Dimension_type
+
+    <green>NOTE: You can just think the `dimension` word is identical to `world`.
     """)
+@ColorBox(id = 1752458381916L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ How it works?
+    In vanilla Minecraft, there is a variable `worlds` in `server`, used to store all `loaded dimensions`.
+
+    The vanilla Minecraft will `load` the 3 `dimensions` on server startup.
+    They are `minecraft:overworld`, `minecraft:the_nether` and `minecraft:the_end`.
+
+    So, what we should do is to `imitate` the actions.
+    We make the `dimension` instance at server startup.
+    And then we put the `dimension` in the `loaded dimensions` list.
+    So it will be recognised by the server.
+
+    NOTE: The dimensions created by fuji is named `runtime dimension`, because they are `created` and `loaded` at runtime.
+
+    ◉ Does it need to store any special data in the `world` folder?
+    No, we didn't touch the `world` folder, or put any special data into it.
+
+    What we need is minimal, we need to define `runtime dimension descriptor` in the module folder.
+    The `runtime dimension descriptor` should provide these information: `dimension id`, `dimension type id`, `seed`.
+    """)
+@ColorBox(id = 1752458991398L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ How the `world` module generate the dimension?
+    Actually, the `world` module didn't do the `world generation` itself.
+
+    A `dimension` is composed by `chunks` (A `16x16 segment` of the `dimension`)
+    The `dimension type` defines the `chunk generator`.
+
+    So, what we do is simple, the `runtime dimension descriptor` needs to specify the `dimension type`.
+    And we will use the existing `chunk generator` defined by that `dimension type`.
+
+    ◉ How the `chunk generator` works?
+    A `chunk generator` need to `fill blocks` in the `given chunk location`.
+    You need to give the `seed` to `the chunk generator`, and it will fill blocks for you.
+
+    If the specified chunk is not `generated`, then the chunk generator will `generated` a new one.
+    If the specified chunk is `generated`, the chunk generator will just use the `existed chunk data` in storage.
+    """)
+
+
 @ColorBox(id = 1752297520453L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     ◉ Advanced World Management and Per-world rules.
     The `world` module provided by fuji is a simple module.
@@ -115,7 +156,6 @@ import org.jetbrains.annotations.Nullable;
     If `clear`, then both `rain` and `thunder` is false.
     If `thunder`, then `rain` is true.
 
-
     The `weather system` will be `tick` if:
     1. The `dimension options` of the `world` has `skylight`.
     2. The `gamerule DO_WEATHER_CYCLE` of the `world` is true.
@@ -137,7 +177,7 @@ import org.jetbrains.annotations.Nullable;
     See https://github.com/DrexHD/WorldGameRules
     """)
 @ColorBox(id = 1752429441664L, color = ColorBox.ColorBlockTypes.TIPS, value = """
-    ◉ Does the `runtime world` support `datapack`?
+    ◉ Does the `runtime dimension` support `datapack`?
     It depends on how the `datapack` interfaces with the `world`.
     Most of datapack should work.
     Anyway, always backup your world data before install a new datapack.
@@ -149,10 +189,10 @@ import org.jetbrains.annotations.Nullable;
     They are `hard coded` dimensions.
     The linkage of `nether portal` and `ender portal` use the `hard coded` dimensions.
 
-    ◉ Can I create `nether portal` in `runtime world`?
-    No, you can't create any `nether portal` in runtime world.
+    ◉ Can I create `nether portal` in `runtime dimension`?
+    No, you can't create any `nether portal` in runtime dimension.
 
-    ◉ Can I create `ender portal` in `runtime world`?
+    ◉ Can I create `ender portal` in `runtime dimension`?
     Yes, but the destination dimension is hard-coded, it is always the `minecraft:the_end`.
 
     The logic of `EnderPortalBlockEntity`:
