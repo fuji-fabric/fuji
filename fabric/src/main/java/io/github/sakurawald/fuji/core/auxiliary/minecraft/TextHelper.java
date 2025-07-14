@@ -331,7 +331,14 @@ public class TextHelper {
             return languageCode.equals(getDefaultLanguageCode());
         }
 
-        public static boolean isDefaultLanguageCodeEnUS() {
+        public static boolean shouldUseBuiltInDocStrings() {
+            if (isUsingEnglishAsTheDefaultLanguage()) return true;
+            if (Configs.MAIN_CONTROL_CONFIG.model().core.document.alwaysUseBuiltInDocStrings) return true;
+
+            return false;
+        }
+
+        private static boolean isUsingEnglishAsTheDefaultLanguage() {
             return getDefaultLanguageCode().equalsIgnoreCase("en_US");
         }
 

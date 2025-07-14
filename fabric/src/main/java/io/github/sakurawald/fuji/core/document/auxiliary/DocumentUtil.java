@@ -29,7 +29,7 @@ public class DocumentUtil {
         }
 
         /* Always provide the latest version for en_US users. */
-        if (TextHelper.Loader.isDefaultLanguageCodeEnUS()) {
+        if (TextHelper.Loader.shouldUseBuiltInDocStrings()) {
             return annotation.value();
         }
 
@@ -43,7 +43,7 @@ public class DocumentUtil {
         }
 
         /* Always provide the latest version for en_US users. */
-        if (TextHelper.Loader.isDefaultLanguageCodeEnUS()) {
+        if (TextHelper.Loader.shouldUseBuiltInDocStrings()) {
             return annotation.value();
         }
 

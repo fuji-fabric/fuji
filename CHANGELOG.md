@@ -8,4 +8,5 @@
   - example: `/world who <player>` to list the dimension of a specified player.
 - [anti_build] fix: when using in `client-side`, the `place block` and `interact_entity` type will send the feedback message twice.
 - [core] fix: make it possible to use `color.sign`, `color.anvil` modules when install the mod in `client side`.
+- [core] feature: add new `always_use_built_in_docstrings` option. (To ensure you always sees `the latest version` of doc strings from the version you are using.)
 
