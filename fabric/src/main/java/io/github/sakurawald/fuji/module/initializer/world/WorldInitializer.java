@@ -41,6 +41,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.RandomSeed;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.border.WorldBorder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -98,6 +99,13 @@ import org.jetbrains.annotations.Nullable;
     If the specified chunk is not `generated`, then the chunk generator will `generated` a new one.
     If the specified chunk is `generated`, the chunk generator will just use the `existed chunk data` in storage.
     """)
+@ColorBox(id = 1752460350802L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ The logic of `/worldborder` command.
+    The `/worldborder` command only sets the `World Border` of `minecraft:overworld`.
+    But there is a listener to broadcast the new `World Border` to `all` dimensions.
+
+    """)
+
 
 
 @ColorBox(id = 1752297520453L, color = ColorBox.ColorBlockTypes.NOTE, value = """
@@ -423,6 +431,17 @@ public class WorldInitializer extends ModuleInitializer {
         TextHelper.sendTextByKey(source, "dimension.properties", dimensionInstance.getLevelProperties());
         TextHelper.sendTextByKey(source, "dimension.chunk_generator", dimensionInstance.getChunkManager().getChunkGenerator());
 
+        WorldBorder worldBorder = dimensionInstance.getWorldBorder();
+        TextHelper.sendTextByKey(source, "dimension.border.size", worldBorder.getSize());
+        TextHelper.sendTextByKey(source, "dimension.border.size.lerp_target", worldBorder.getSizeLerpTarget());
+        TextHelper.sendTextByKey(source, "dimension.border.size.lerp_time", worldBorder.getSizeLerpTime());
+        TextHelper.sendTextByKey(source, "dimension.border.center.x", worldBorder.getCenterX());
+        TextHelper.sendTextByKey(source, "dimension.border.center.z", worldBorder.getCenterZ());
+        TextHelper.sendTextByKey(source, "dimension.border.damage.per_block", worldBorder.getDamagePerBlock());
+        TextHelper.sendTextByKey(source, "dimension.border.safe_zone", worldBorder.getSafeZone());
+        TextHelper.sendTextByKey(source, "dimension.border.warning.blocks", worldBorder.getWarningBlocks());
+        TextHelper.sendTextByKey(source, "dimension.border.warning.time", worldBorder.getWarningTime());
+
         TextHelper.sendTextByKey(source, "dimension.gamerules");
         GameRules gameRules = dimensionInstance.getGameRules();
         gameRules.accept(new GameRules.Visitor() {
@@ -442,6 +461,13 @@ public class WorldInitializer extends ModuleInitializer {
     @Override
     protected void onInitialize() {
         ServerLifecycleEvents.SERVER_STARTED.register(this::loadDimensions);
+
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> WorldService.registerWorldBorderListener());
+    }
+
+    @Override
+    protected void onReload() {
+        WorldService.syncWorldBorders();
     }
 
     @Override
