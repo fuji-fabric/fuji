@@ -14,7 +14,7 @@ import io.github.sakurawald.fuji.module.initializer.works.config.model.WorksConf
 import io.github.sakurawald.fuji.module.initializer.works.config.model.WorksDataModel;
 import io.github.sakurawald.fuji.module.initializer.works.gui.ListWorksGui;
 import io.github.sakurawald.fuji.module.initializer.works.job.WorksOnScheduleDispatcherJob;
-import io.github.sakurawald.fuji.module.initializer.works.structure.WorkTypeAdapter;
+import io.github.sakurawald.fuji.module.initializer.works.config.adapter.WorkTypeAdapter;
 import io.github.sakurawald.fuji.module.initializer.works.structure.work.abst.Work;
 import net.minecraft.server.network.ServerPlayerEntity;
 

@@ -1,9 +1,10 @@
-package io.github.sakurawald.fuji.module.initializer.works.structure;
+package io.github.sakurawald.fuji.module.initializer.works.config.adapter;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import io.github.sakurawald.fuji.module.initializer.works.structure.WorkType;
 import io.github.sakurawald.fuji.module.initializer.works.structure.work.abst.Work;
 import io.github.sakurawald.fuji.module.initializer.works.structure.work.impl.NonProductionWork;
 import io.github.sakurawald.fuji.module.initializer.works.structure.work.impl.ProductionWork;

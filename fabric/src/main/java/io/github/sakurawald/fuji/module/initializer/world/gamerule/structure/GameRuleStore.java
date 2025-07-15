@@ -1,9 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.world.gamerule.structure;
 
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import it.unimi.dsi.fastutil.objects.*;
-import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.GameRules;
 import org.jetbrains.annotations.NotNull;
@@ -36,43 +34,11 @@ public final class GameRuleStore {
         return this.booleanRules.containsKey(key) || this.intRules.containsKey(key);
     }
 
-    @SuppressWarnings("UnnecessaryLocalVariable")
-    public static GameRules makeGameRules() {
-        #if MC_VER <= MC_1_21
-        GameRules gameRules = new GameRules();
-        #elif MC_VER > MC_1_21
-        GameRules gameRules = new GameRules(ServerHelper.getServer().getOverworld().getEnabledFeatures());
-        #endif
-
-        return gameRules;
-    }
-
     public static GameRuleStore makeDefault() {
         GameRuleStore defaultGameRuleStore = new GameRuleStore();
 
-        FeatureSet enabledFeatures = ServerHelper.getServer().getSaveProperties().getEnabledFeatures();
-        GameRules gameRules = makeGameRules();
-
-        gameRules.accept(new GameRules.Visitor() {
-            @SuppressWarnings("unchecked")
-            @Override
-            public <T extends GameRules.Rule<T>> void visit(GameRules.Key<T> key, GameRules.Type<T> type) {
-                String gameRuleName = key.getName();
-                T gameRuleValue = gameRules.get(key);
-
-                if (gameRuleValue.getClass().equals(GameRules.BooleanRule.class)) {
-                    GameRules.Key<GameRules.BooleanRule> typedKey = (GameRules.Key<GameRules.BooleanRule>) key;
-                    boolean typedValue = ((GameRules.BooleanRule) gameRuleValue).get();
-                    defaultGameRuleStore.booleanRules.put(typedKey, typedValue);
-                } else {
-                    GameRules.Key<GameRules.IntRule> typedKey = (GameRules.Key<GameRules.IntRule>) key;
-                    int typedValue = ((GameRules.IntRule) gameRuleValue).get();
-                    defaultGameRuleStore.intRules.put(typedKey, typedValue);
-                }
-
-            }
-        });
-
+        defaultGameRuleStore.booleanRules.put(GameRules.KEEP_INVENTORY, true);
+        defaultGameRuleStore.intRules.put(GameRules.PLAYERS_SLEEPING_PERCENTAGE, 50);
         return defaultGameRuleStore;
     }
 

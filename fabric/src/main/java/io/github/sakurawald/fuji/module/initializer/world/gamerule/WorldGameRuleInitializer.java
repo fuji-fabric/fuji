@@ -5,9 +5,9 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.world.gamerule.config.model.WorldGameRuleConfigModel;
-import io.github.sakurawald.fuji.module.initializer.world.gamerule.structure.BooleanGameRuleMapAdapter;
+import io.github.sakurawald.fuji.module.initializer.world.gamerule.config.adapter.BooleanGameRuleMapAdapter;
 import io.github.sakurawald.fuji.module.initializer.world.gamerule.structure.GameRuleDescriptor;
-import io.github.sakurawald.fuji.module.initializer.world.gamerule.structure.IntegerGameRuleMapAdapter;
+import io.github.sakurawald.fuji.module.initializer.world.gamerule.config.adapter.IntegerGameRuleMapAdapter;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import java.util.Optional;

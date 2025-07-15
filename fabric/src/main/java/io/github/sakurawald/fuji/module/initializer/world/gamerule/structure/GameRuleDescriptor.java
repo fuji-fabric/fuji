@@ -8,7 +8,7 @@ import net.minecraft.world.GameRules;
 public class GameRuleDescriptor {
     public boolean enable = true;
     public final String dimensionId;
-    public GameRuleStore gameRules = new GameRuleStore();
+    public GameRuleStore gameRules = GameRuleStore.makeDefault();
 
     private transient GameRules vanillaGameRules;
 
