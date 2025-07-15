@@ -194,6 +194,11 @@ public class ConfigModel {
 
         public static class World {
             public boolean enable = false;
+
+            public Border border = new Border();
+            public static class Border {
+                public boolean enable = true;
+            }
         }
 
         public static class MOTD {

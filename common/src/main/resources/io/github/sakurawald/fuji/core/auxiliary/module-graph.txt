@@ -128,4 +128,5 @@ warning
 whitelist
 works
 world
+world.border
 world_downloader
