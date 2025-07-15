@@ -10,6 +10,7 @@ import net.minecraft.world.border.WorldBorder;
 @Data
 public class BorderDescriptor {
 
+    public boolean enable = true;
     public final String dimensionId;
     public Border border = new Border();
 

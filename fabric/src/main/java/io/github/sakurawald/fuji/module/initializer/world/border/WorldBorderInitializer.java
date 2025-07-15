@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.border.WorldBorder;
 
 @Document(id = 1752561532728L, value = """
-    This module allows you to customize the `per-dimension world border`.
+    This module allows you to customize the `per-dimension border`.
     """)
 @ColorBox(id = 1752460350802L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     ◉ The logic of `/worldborder` command.
@@ -35,12 +35,13 @@ import net.minecraft.world.border.WorldBorder;
     """)
 public class WorldBorderInitializer extends ModuleInitializer {
 
-    public static BaseConfigurationHandler<WorldBorderConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, WorldBorderConfigModel.class);
+    private static final BaseConfigurationHandler<WorldBorderConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, WorldBorderConfigModel.class);
 
-    public static Optional<BorderDescriptor> getBorderDescriptor(String dimensionId) {
+    public static Optional<BorderDescriptor> getEffectiveBorderDescriptor(String dimensionId) {
         return config.model().borders
             .stream()
-            .filter(it -> it.dimensionId.equals(dimensionId))
+            .filter(it -> it.enable
+                && it.dimensionId.equals(dimensionId))
             .findFirst();
     }
 

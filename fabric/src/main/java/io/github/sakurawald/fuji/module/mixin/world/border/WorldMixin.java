@@ -18,7 +18,7 @@ public class WorldMixin {
         String dimensionId = RegistryHelper.toString(world);
 
         return WorldBorderInitializer
-            .getBorderDescriptor(dimensionId)
+            .getEffectiveBorderDescriptor(dimensionId)
             .map(BorderDescriptor::asVanillaWorldBorder)
             .orElse(original);
     }
