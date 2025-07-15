@@ -1,26 +1,33 @@
 package io.github.sakurawald.fuji.module.initializer.world.border;
 
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.world.border.config.model.WorldBorderConfigModel;
 import io.github.sakurawald.fuji.module.initializer.world.border.structure.BorderDescriptor;
 import java.util.Optional;
+import java.util.function.Function;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.WorldBorderCenterChangedS2CPacket;
+import net.minecraft.network.packet.s2c.play.WorldBorderInterpolateSizeS2CPacket;
 import net.minecraft.network.packet.s2c.play.WorldBorderSizeChangedS2CPacket;
 import net.minecraft.network.packet.s2c.play.WorldBorderWarningBlocksChangedS2CPacket;
 import net.minecraft.network.packet.s2c.play.WorldBorderWarningTimeChangedS2CPacket;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.world.World;
 import net.minecraft.world.border.WorldBorder;
 
 @Document(id = 1752561532728L, value = """
     This module allows you to customize the `per-dimension world border`.
+    """)
+@ColorBox(id = 1752460350802L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ The logic of `/worldborder` command.
+    The `/worldborder` command only sets the `World Border` of `minecraft:overworld`.
+    But the `minecraft:the_nether` and `minecraft:the_end` dimensions will `sync` the `world border` of `minecraft:overworld`.
     """)
 public class WorldBorderInitializer extends ModuleInitializer {
 
@@ -33,21 +40,29 @@ public class WorldBorderInitializer extends ModuleInitializer {
             .findFirst();
     }
 
-    public static void syncWorldBorder() {
-        ServerHelper
-            .getOnlinePlayers()
-            .forEach(WorldBorderInitializer::syncWorldBorder);
+    @Override
+    protected void onReload() {
+        sendPerDimensionWorldBorderPackets();
     }
 
-    public static void syncWorldBorder(ServerPlayerEntity player) {
-        ServerWorld world = PlayerHelper.getServerWorld(player);
-        WorldBorder worldBorder = world.getWorldBorder();
+    private static void sendPerDimensionWorldBorderPackets() {
+        sendPerDimensionWorldBorderPacket(dimension -> new WorldBorderCenterChangedS2CPacket(dimension.getWorldBorder()));
+        sendPerDimensionWorldBorderPacket(dimension -> new WorldBorderSizeChangedS2CPacket(dimension.getWorldBorder()));
+        sendPerDimensionWorldBorderPacket(dimension -> new WorldBorderInterpolateSizeS2CPacket(dimension.getWorldBorder()));
+        sendPerDimensionWorldBorderPacket(dimension -> new WorldBorderWarningBlocksChangedS2CPacket(dimension.getWorldBorder()));
+        sendPerDimensionWorldBorderPacket(dimension -> new WorldBorderWarningTimeChangedS2CPacket(dimension.getWorldBorder()));
+    }
 
-        LogUtil.debug("Sync world border: player = {}, world = {}, size = {}", PlayerHelper.getPlayerName(player), RegistryHelper.toString(world), worldBorder.getSize());
-        player.networkHandler.sendPacket(new WorldBorderCenterChangedS2CPacket(worldBorder));
-        player.networkHandler.sendPacket(new WorldBorderSizeChangedS2CPacket(worldBorder));
-        player.networkHandler.sendPacket(new WorldBorderWarningBlocksChangedS2CPacket(worldBorder));
-        player.networkHandler.sendPacket(new WorldBorderWarningTimeChangedS2CPacket(worldBorder));
-//        player.networkHandler.sendPacket(new WorldBorderInterpolateSizeS2CPacket(worldBorder));
+    public static void sendPerDimensionWorldBorderPacket(Function<ServerWorld, Packet<?>> packetProvider) {
+        // NOTE: I don't know which dimension is changed, so I just simply update the world border for all dimensions.
+        ServerHelper
+            .getWorlds()
+            .forEach(dimension -> {
+                WorldBorder perDimensionWorldBorder = dimension.getWorldBorder();
+                RegistryKey<World> dimensionRegistryKey = dimension.getRegistryKey();
+                Packet<?> packet = packetProvider.apply(dimension);
+
+                ServerHelper.getPlayerManager().sendToDimension(packet, dimensionRegistryKey);
+            });
     }
 }

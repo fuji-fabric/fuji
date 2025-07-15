@@ -17,7 +17,7 @@ public class BorderDescriptor {
     public double damagePerBlock = 0.2;
     public double safeZone = 5.0;
 
-    public transient WorldBorder vanillaWorldBorder;
+    private transient WorldBorder vanillaWorldBorder;
 
     public WorldBorder asVanillaWorldBorder() {
         if (this.vanillaWorldBorder == null) {

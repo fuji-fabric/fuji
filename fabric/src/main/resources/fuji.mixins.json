@@ -82,6 +82,7 @@
     "temp_ban.PlayerManagerMixin",
     "whitelist.UserWhiteListMixin",
     "works.HopperBlockEntityMixin",
+    "world.border.PlayerManagerMixin",
     "world.border.WorldMixin",
     "world.fix_end_gateway_block_entity.EndGatewayBlockEntityMixin",
     "world.keep_inventory_rule.ServerPlayerEntityMixin",

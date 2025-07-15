@@ -102,15 +102,6 @@ import org.jetbrains.annotations.Nullable;
     If the specified chunk is not `generated`, then the chunk generator will `generated` a new one.
     If the specified chunk is `generated`, the chunk generator will just use the `existed chunk data` in storage.
     """)
-@ColorBox(id = 1752460350802L, color = ColorBox.ColorBlockTypes.TIPS, value = """
-    ◉ The logic of `/worldborder` command.
-    The `/worldborder` command only sets the `World Border` of `minecraft:overworld`.
-    But there is a listener to broadcast the new `World Border` to `all` dimensions.
-
-    """)
-
-
-
 @ColorBox(id = 1752297520453L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     ◉ Advanced World Management and Per-world rules.
     The `world` module provided by fuji is a simple module.
