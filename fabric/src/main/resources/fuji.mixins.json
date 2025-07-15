@@ -86,7 +86,7 @@
     "world.border.WorldMixin",
     "world.fix_end_gateway_block_entity.EndGatewayBlockEntityMixin",
     "world.gamerule.ServerPlayerEntityMixin",
-    "world.gamerule.WorldMixin",
+    "world.gamerule.PerDimensionGameRulesMixin",
     "world.persist.DimensionOptionsMixin",
     "world.persist.WorldGenSettingsMixin",
     "world.tick.MinecraftServerMixin",
