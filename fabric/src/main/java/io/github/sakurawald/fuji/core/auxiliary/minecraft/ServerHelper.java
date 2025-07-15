@@ -35,6 +35,13 @@ public class ServerHelper {
             .values();
     }
 
+    public static Optional<ServerWorld> getWorld(String dimensionId) {
+        return getWorlds()
+            .stream()
+            .filter(it -> RegistryHelper.toString(it).equals(dimensionId))
+            .findFirst();
+    }
+
     public static @Nullable CommandDispatcher<ServerCommandSource> getCommandDispatcher() {
         // NOTE: It's null on server startup.
         if (getServer() == null

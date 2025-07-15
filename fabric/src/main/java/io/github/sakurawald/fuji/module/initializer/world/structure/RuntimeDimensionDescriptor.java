@@ -4,18 +4,17 @@ import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
-import io.github.sakurawald.fuji.module.initializer.world.structure.border.BorderStore;
 import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.GameRuleStore;
 import lombok.Data;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
 
 @Document(id = 1752170874671L, value = """
-    A `dimension node` is used to describe a created `extra dimension`.
-    It contains the `meta data` of a `dimension`.
+    A `dimension descriptor` is used to describe a `runtime dimension`.
+    It contains the important info about a `dimension`, like the `dimension id`, `dimension type` and `seed`...
     """)
 @Data
-public class RuntimeWorldDescriptor {
+public class RuntimeDimensionDescriptor {
 
     @Document(id = 1752170969085L, value = """
         Should we `load` this `dimension` on server startup?
@@ -36,7 +35,7 @@ public class RuntimeWorldDescriptor {
     public String dimension_type;
 
     @Document(id = 1752246679197L, value = """
-        The `seed` used for the chunk generator of this dimension.
+        The `seed` used for the `chunk generator` of this dimension.
         """)
     public long seed;
 
@@ -45,7 +44,7 @@ public class RuntimeWorldDescriptor {
     public GameRuleStore gameRules = new GameRuleStore();
 
     @Document(id = 1752246657296L, value = """
-        Should we tick the time of this dimension? (Do the day night cycle?)
+        Should we tick the time of this `dimension`? (Do the day night cycle?)
         """)
     public boolean shouldTickTime;
 
@@ -55,7 +54,13 @@ public class RuntimeWorldDescriptor {
     public long timeOfDay = 6000;
 
     public Weather weather = new Weather();
-    public BorderStore worldBorder = new BorderStore();
+    public static class Weather {
+        public int sunnyTime;
+        public boolean isRaining;
+        public int rainTime;
+        public boolean isThundering;
+        public int thunderTime;
+    }
 
     public void setShouldTickTime(boolean shouldTickTime) {
         this.shouldTickTime = shouldTickTime;
@@ -69,11 +74,4 @@ public class RuntimeWorldDescriptor {
             .anyMatch(it -> RegistryHelper.toString(it).equals(this.dimension));
     }
 
-    public static class Weather {
-        public int sunnyTime;
-        public boolean isRaining;
-        public int rainTime;
-        public boolean isThundering;
-        public int thunderTime;
-    }
 }

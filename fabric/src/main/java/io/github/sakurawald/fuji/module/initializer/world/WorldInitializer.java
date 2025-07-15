@@ -24,7 +24,7 @@ import io.github.sakurawald.fuji.module.initializer.world.config.model.WorldConf
 import io.github.sakurawald.fuji.module.initializer.world.config.model.WorldDataModel;
 import io.github.sakurawald.fuji.module.initializer.world.gui.WorldGui;
 import io.github.sakurawald.fuji.module.initializer.world.service.WorldService;
-import io.github.sakurawald.fuji.module.initializer.world.structure.RuntimeWorldDescriptor;
+import io.github.sakurawald.fuji.module.initializer.world.structure.RuntimeDimensionDescriptor;
 import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.BooleanGameRuleMapAdapter;
 import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.GameRuleStore;
 import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.IntegerGameRuleMapAdapter;
@@ -41,7 +41,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.RandomSeed;
 import net.minecraft.world.GameRules;
@@ -253,7 +252,7 @@ public class WorldInitializer extends ModuleInitializer {
     @CommandNode("list")
     private static int $list(@CommandSource ServerCommandSource source) {
         if (source.isExecutedByPlayer()) {
-            List<RuntimeWorldDescriptor> entities = storage.model().dimension_list;
+            List<RuntimeDimensionDescriptor> entities = storage.model().dimension_list;
             new WorldGui(source.getPlayer(), entities, 0)
                 .open();
         } else {
@@ -281,18 +280,18 @@ public class WorldInitializer extends ModuleInitializer {
         /* Make dimension entry */
         long $seed = seed.orElse(RandomSeed.getSeed());
         Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(dimensionType.getValue());
-        RuntimeWorldDescriptor runtimeWorldDescriptor = new RuntimeWorldDescriptor();
-        runtimeWorldDescriptor.dimension = dimensionIdentifier.toString();
-        runtimeWorldDescriptor.dimension_type = dimensionTypeIdentifier.toString();
-        runtimeWorldDescriptor.seed = $seed;
-        runtimeWorldDescriptor.setShouldTickTime(true);
-        runtimeWorldDescriptor.gameRules = GameRuleStore.makeDefault();
+        RuntimeDimensionDescriptor runtimeDimensionDescriptor = new RuntimeDimensionDescriptor();
+        runtimeDimensionDescriptor.dimension = dimensionIdentifier.toString();
+        runtimeDimensionDescriptor.dimension_type = dimensionTypeIdentifier.toString();
+        runtimeDimensionDescriptor.seed = $seed;
+        runtimeDimensionDescriptor.setShouldTickTime(true);
+        runtimeDimensionDescriptor.gameRules = GameRuleStore.makeDefault();
 
-        storage.model().dimension_list.add(runtimeWorldDescriptor);
+        storage.model().dimension_list.add(runtimeDimensionDescriptor);
         storage.writeStorage();
 
         /* Request to create the dimension. */
-        WorldService.requestToCreateDimension(runtimeWorldDescriptor);
+        WorldService.requestToCreateDimension(runtimeDimensionDescriptor);
         TextHelper.sendBroadcastByKey("world.dimension.created", dimensionIdentifier);
         return CommandHelper.Return.SUCCESS;
     }
@@ -331,23 +330,23 @@ public class WorldInitializer extends ModuleInitializer {
         String dimensionIdentifier = RegistryHelper.toString(dimensionInstance);
         checkBlacklist(source, dimensionIdentifier);
 
-        Optional<RuntimeWorldDescriptor> dimensionEntryOpt = WorldService.getDimensionNode(dimensionIdentifier);
+        Optional<RuntimeDimensionDescriptor> dimensionEntryOpt = WorldService.getDimensionDescriptor(dimensionIdentifier);
         if (dimensionEntryOpt.isEmpty()) {
             TextHelper.sendTextByKey(source, "world.dimension.not_found");
             return CommandHelper.Return.FAIL;
         }
-        RuntimeWorldDescriptor runtimeWorldDescriptor = dimensionEntryOpt.get();
+        RuntimeDimensionDescriptor runtimeDimensionDescriptor = dimensionEntryOpt.get();
 
         /* Delete the dimension instance. */
         WorldService.requestToDeleteDimension(dimensionInstance);
 
         /* Draw the seed. */
         Boolean $useTheSameSeed = useTheSameSeed.orElse(false);
-        runtimeWorldDescriptor.seed = $useTheSameSeed ? runtimeWorldDescriptor.seed : RandomSeed.getSeed();
+        runtimeDimensionDescriptor.seed = $useTheSameSeed ? runtimeDimensionDescriptor.seed : RandomSeed.getSeed();
         storage.writeStorage();
 
         /* Create a new dimension instance. */
-        WorldService.requestToCreateDimension(runtimeWorldDescriptor);
+        WorldService.requestToCreateDimension(runtimeDimensionDescriptor);
 
         TextHelper.sendBroadcastByKey("world.dimension.reset", dimensionIdentifier);
         return CommandHelper.Return.SUCCESS;
@@ -475,13 +474,6 @@ public class WorldInitializer extends ModuleInitializer {
     @Override
     protected void onInitialize() {
         ServerLifecycleEvents.SERVER_STARTED.register(this::loadDimensions);
-
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> WorldService.registerWorldBorderListener());
-    }
-
-    @Override
-    protected void onReload() {
-        WorldService.syncWorldBorders();
     }
 
     @Override
@@ -493,7 +485,7 @@ public class WorldInitializer extends ModuleInitializer {
     private void loadDimensions(@NotNull MinecraftServer server) {
         storage.model().dimension_list
             .stream()
-            .filter(RuntimeWorldDescriptor::isAuto_load_on_server_startup)
+            .filter(RuntimeDimensionDescriptor::isAuto_load_on_server_startup)
             .forEach(it -> {
                 try {
                     WorldService.requestToCreateDimension(it);

@@ -19,37 +19,38 @@ import net.minecraft.world.spawner.Spawner;
 #elif MC_VER > MC_1_20_2
 import net.minecraft.world.spawner.SpecialSpawner;
 #endif
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.Executor;
 
-public class RuntimeWorld extends ServerWorld {
+public class RuntimeDimension extends ServerWorld {
 
     #if MC_VER <= MC_1_20_2
-    public RuntimeWorld(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, WorldGenerationProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List<Spawner> spawners, boolean shouldTickTime, @Nullable RandomSequencesState randomSequencesState) {
+    public RuntimeDimension(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, WorldGenerationProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List<Spawner> spawners, boolean shouldTickTime, @Nullable RandomSequencesState randomSequencesState) {
         super(server, workerExecutor, session, properties, worldKey, dimensionOptions, worldGenerationProgressListener, debugWorld, seed, spawners, shouldTickTime, randomSequencesState);
     }
     #elif MC_VER > MC_1_20_2
-    public RuntimeWorld(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, WorldGenerationProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List<SpecialSpawner> spawners, boolean shouldTickTime, @Nullable RandomSequencesState randomSequencesState) {
+    public RuntimeDimension(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, WorldGenerationProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List<SpecialSpawner> spawners, boolean shouldTickTime, @Nullable RandomSequencesState randomSequencesState) {
         super(server, workerExecutor, session, properties, worldKey, dimensionOptions, worldGenerationProgressListener, debugWorld, seed, spawners, shouldTickTime, randomSequencesState);
     }
     #endif
 
-    private Optional<RuntimeWorldProperties> getRuntimeWorldProperties() {
-        if (this.properties instanceof RuntimeWorldProperties runtimeWorldProperties) {
-            return Optional.of(runtimeWorldProperties);
+    private Optional<RuntimeDimensionProperties> getRuntimeDimensionProperties() {
+        // NOTE: Other mods may warp the this.properties variable.
+        if (this.properties instanceof RuntimeDimensionProperties runtimeDimensionProperties) {
+            return Optional.of(runtimeDimensionProperties);
         }
 
-        // NOTE: Other mods warp the this.properties variable, makes ours assumption failed.
         return Optional.empty();
     }
 
     @Override
     public long getSeed() {
         // NOTE: Override the getSeed() method to provide the custom seed before the seed is used by super class.
-        String dimensionId = RegistryHelper.toString(this.getRegistryKey());
-        Optional<RuntimeWorldDescriptor> dimensionNode = WorldService.getDimensionNode(dimensionId);
+        String dimensionId = getThisDimensionId();
+        Optional<RuntimeDimensionDescriptor> dimensionNode = WorldService.getDimensionDescriptor(dimensionId);
         if (dimensionNode.isPresent()) {
             return dimensionNode.get().seed;
         }
@@ -59,16 +60,22 @@ public class RuntimeWorld extends ServerWorld {
         return fallbackSeed;
     }
 
+    private @NotNull String getThisDimensionId() {
+        String dimensionId = RegistryHelper.toString(this.getRegistryKey());
+        return dimensionId;
+    }
+
     @Override
     protected void tickTime() {
-        this.getRuntimeWorldProperties().ifPresentOrElse(runtimeWorldProperties -> {
-            if (!runtimeWorldProperties.runtimeWorldDescriptor.shouldTickTime) {
+        this.getRuntimeDimensionProperties()
+            .ifPresentOrElse(runtimeDimensionProperties -> {
+            if (!runtimeDimensionProperties.getEffectiveRuntimeDimensionDescriptor().shouldTickTime) {
                 return;
             }
 
             // NOTE: Ignore the step logics for `Time` in `level.dat`, simply mirror it. (Or the scheduled functions will be broken).
-            if (runtimeWorldProperties.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)) {
-                runtimeWorldProperties.setTimeOfDay(runtimeWorldProperties.getTimeOfDay() + 1L);
+            if (runtimeDimensionProperties.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)) {
+                runtimeDimensionProperties.setTimeOfDay(runtimeDimensionProperties.getTimeOfDay() + 1L);
             }
 
         }, super::tickTime);
@@ -76,12 +83,10 @@ public class RuntimeWorld extends ServerWorld {
 
     @Override
     public GameRules getGameRules() {
-        Optional<RuntimeWorldProperties> opt = getRuntimeWorldProperties();
-        return opt
-            .map(RuntimeWorldProperties::getGameRules)
+        return getRuntimeDimensionProperties()
+            .map(RuntimeDimensionProperties::getGameRules)
             .orElseGet(super::getGameRules);
     }
-
 
 }
 
