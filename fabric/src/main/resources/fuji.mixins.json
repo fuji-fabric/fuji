@@ -7,6 +7,7 @@
     "afk.effect.LivingEntityMixin",
     "afk.effect.ServerPlayerEntityMixin",
     "anti_build.BlockItemMixin",
+    "anti_build.EntityMixin",
     "anti_build.ServerPlayerInteractionManagerMixin",
     "back.ServerPlayerEntityMixin",
     "chat.history.SendChatHistoryMixin",
@@ -17,7 +18,9 @@
     "chat.style.ServerPlayNetworkHandlerMixin",
     "chat.style.message_type.RegistryLoaderMixin",
     "chat.trigger.ServerPlayNetworkHandlerMixin",
+    "color.anvil.AnvilScreenHandlerMixin",
     "color.sign.ServerPlayerEntityMixin",
+    "color.sign.SignBlockEntityMixin",
     "command_advice.CommandDispatcherMixin",
     "command_advice.CommandManagerMixin",
     "command_attachment.EntityMixin",
@@ -79,15 +82,13 @@
     "temp_ban.PlayerManagerMixin",
     "whitelist.UserWhiteListMixin",
     "works.HopperBlockEntityMixin",
+    "world.border.WorldMixin",
     "world.fix_end_gateway_block_entity.EndGatewayBlockEntityMixin",
     "world.keep_inventory_rule.ServerPlayerEntityMixin",
     "world.persist.DimensionOptionsMixin",
     "world.persist.WorldGenSettingsMixin",
     "world.tick.MinecraftServerMixin",
-    "world.weather.ServerWorldMixin",
-    "anti_build.EntityMixin",
-    "color.anvil.AnvilScreenHandlerMixin",
-    "color.sign.SignBlockEntityMixin"
+    "world.weather.ServerWorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1
