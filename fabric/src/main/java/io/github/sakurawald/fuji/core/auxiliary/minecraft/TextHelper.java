@@ -829,5 +829,29 @@ public class TextHelper {
             }
         }
     }
+
+    public static class Formatter {
+
+        public static <K, V> MutableText formatMap(Map<K, V> map) {
+            MutableText builder = Text.empty();
+
+            boolean firstElement = true;
+            builder.append(Text.literal("{"));
+            for (Map.Entry<K, V> entry : map.entrySet()) {
+                if (!firstElement) {
+                    builder.append(Text.literal(", "));
+                }
+                firstElement = false;
+
+                Text entryText = TextHelper.getTextByKey(null, "map.entry", entry.getKey(), entry.getValue());
+                builder.append(entryText);
+            }
+            builder.append(Text.literal("}"));
+
+           return builder;
+        }
+
+    }
+
 }
 

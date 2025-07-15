@@ -30,6 +30,7 @@ import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.Gam
 import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.IntegerGameRuleMapAdapter;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -38,6 +39,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.RandomSeed;
 import net.minecraft.world.GameRules;
@@ -424,6 +428,7 @@ public class WorldInitializer extends ModuleInitializer {
     private static int $info(@CommandSource ServerCommandSource source, Dimension dimension) {
         ServerWorld dimensionInstance = dimension.getValue();
 
+        /* Make text for basic info. */
         TextHelper.sendTextByKey(source, "dimension.id", RegistryHelper.toString(dimensionInstance));
         TextHelper.sendTextByKey(source, "dimension.difficulty", dimensionInstance.getDifficulty());
         TextHelper.sendTextByKey(source, "dimension.seed", dimensionInstance.getSeed());
@@ -431,7 +436,9 @@ public class WorldInitializer extends ModuleInitializer {
         TextHelper.sendTextByKey(source, "dimension.properties", dimensionInstance.getLevelProperties());
         TextHelper.sendTextByKey(source, "dimension.chunk_generator", dimensionInstance.getChunkManager().getChunkGenerator());
 
+        /* Make text for dimension border. */
         WorldBorder worldBorder = dimensionInstance.getWorldBorder();
+        TextHelper.sendTextByKey(source, "dimension.border");
         TextHelper.sendTextByKey(source, "dimension.border.size", worldBorder.getSize());
         TextHelper.sendTextByKey(source, "dimension.border.size.lerp_target", worldBorder.getSizeLerpTarget());
         TextHelper.sendTextByKey(source, "dimension.border.size.lerp_time", worldBorder.getSizeLerpTime());
@@ -442,17 +449,24 @@ public class WorldInitializer extends ModuleInitializer {
         TextHelper.sendTextByKey(source, "dimension.border.warning.blocks", worldBorder.getWarningBlocks());
         TextHelper.sendTextByKey(source, "dimension.border.warning.time", worldBorder.getWarningTime());
 
-        TextHelper.sendTextByKey(source, "dimension.gamerules");
+        /* Make text for gamerules. */
+        MutableText gameRulesText = TextHelper.getTextByKey(source, "dimension.gamerules").copy();
+        Map<String, Object> gameRulesMap = new HashMap<>();
         GameRules gameRules = dimensionInstance.getGameRules();
         gameRules.accept(new GameRules.Visitor() {
             @Override
             public <T extends GameRules.Rule<T>> void visit(GameRules.Key<T> key, GameRules.Type<T> type) {
                 String gameRuleName = key.getName();
                 T gameRuleValue = gameRules.get(key);
-
-                TextHelper.sendTextByKey(source,"dimension.gamerules.entry", gameRuleName, gameRuleValue);
+                gameRulesMap.put(gameRuleName, gameRuleValue);
             }
         });
+        MutableText gameRulesHoverText = TextHelper.Formatter.formatMap(gameRulesMap);
+        gameRulesText
+            .fillStyle(Style.EMPTY
+                .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(gameRulesHoverText)));
+        source.sendMessage(gameRulesText);
+        TextHelper.sendTextByKey(source, "prompt.hover.see_it");
 
         return CommandHelper.Return.SUCCESS;
     }
