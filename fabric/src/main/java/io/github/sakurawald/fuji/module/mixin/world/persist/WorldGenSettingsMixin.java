@@ -12,21 +12,11 @@ import net.minecraft.world.level.WorldGenSettings;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.jetbrains.annotations.NotNull;
 
 #if MC_VER <= MC_1_20_4
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 #elif MC_VER > MC_1_20_4
-import com.google.common.collect.Maps;
-import io.github.sakurawald.fuji.module.initializer.world.accessor.ExtendedDimensionOptions;
-import io.github.sakurawald.fuji.module.initializer.world.structure.registry.FilteredRegistry;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.world.dimension.DimensionOptions;
-import net.minecraft.world.dimension.DimensionOptionsRegistryHolder;
-import org.jetbrains.annotations.NotNull;
-import java.util.Map;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 #endif
 
 
@@ -37,7 +27,7 @@ public class WorldGenSettingsMixin {
     // FIXME add functions to filter the fuji dimensions
 
     @ModifyVariable(method = "encode(Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/world/gen/GeneratorOptions;Lnet/minecraft/world/dimension/DimensionOptionsRegistryHolder;)Lcom/mojang/serialization/DataResult;", at = @At("HEAD"), argsOnly = true)
-    private static DimensionOptionsRegistryHolder f(DimensionOptionsRegistryHolder dimensionOptionsRegistryHolder) {
+    private static DimensionOptionsRegistryHolder $wrapWorldGenSettings(DimensionOptionsRegistryHolder dimensionOptionsRegistryHolder) {
         Registry<DimensionOptions> dimensions = dimensionOptionsRegistryHolder.comp_1014();
         FilteredRegistry<DimensionOptions> filteredDimensions = new FilteredRegistry<>(dimensions, ExtendedDimensionOptions.SAVE_PROPERTIES_PREDICATE);
         return new DimensionOptionsRegistryHolder(filteredDimensions);
@@ -45,7 +35,7 @@ public class WorldGenSettingsMixin {
 
     @SuppressWarnings("UnnecessaryLocalVariable")
     @ModifyArg(method = "encode(Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/world/gen/GeneratorOptions;Lnet/minecraft/registry/DynamicRegistryManager;)Lcom/mojang/serialization/DataResult;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/dimension/DimensionOptionsRegistryHolder;<init>(Lnet/minecraft/registry/Registry;)V"), index = 0)
-    private static Registry<DimensionOptions> g(Registry<DimensionOptions> comp_1014) {
+    private static Registry<DimensionOptions> $wrapWorldGenSettings(Registry<DimensionOptions> comp_1014) {
         Registry<DimensionOptions> dimensions = comp_1014;
         FilteredRegistry<DimensionOptions> filteredDimensions = new FilteredRegistry<>(dimensions, ExtendedDimensionOptions.SAVE_PROPERTIES_PREDICATE);
         return filteredDimensions;
@@ -56,7 +46,7 @@ public class WorldGenSettingsMixin {
         , at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/WorldGenSettings;<init>(Lnet/minecraft/world/gen/GeneratorOptions;Lnet/minecraft/world/dimension/DimensionOptionsRegistryHolder;)V"), index = 1)
     private static @NotNull DimensionOptionsRegistryHolder $wrapWorldGenSettings(DimensionOptionsRegistryHolder original) {
         Map<RegistryKey<DimensionOptions>, DimensionOptions> dimensions = original.comp_1014();
-        var saveDimensions = Maps.filterEntries(dimensions, entry -> ExtendedDimensionOptions.SAVE_PROPERTIES_PREDICATE.test(entry.getValue()));
+        var saveDimensions = Maps.filterEntries(dimensions, entry -> ExtendedDimensionOptions.SAVE_DIMENSION_OPTIONS_PREDICATE.test(entry.getValue()));
         return new DimensionOptionsRegistryHolder(saveDimensions);
     }
 
@@ -64,7 +54,7 @@ public class WorldGenSettingsMixin {
     @ModifyArg(method = "encode(Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/world/gen/GeneratorOptions;Lnet/minecraft/registry/DynamicRegistryManager;)Lcom/mojang/serialization/DataResult;"
         , at = @At(value = "INVOKE", target = "Lnet/minecraft/world/dimension/DimensionOptionsRegistryHolder;<init>(Lnet/minecraft/registry/Registry;)V"), index = 0)
     private static Registry<DimensionOptions> $wrapWorldGenSettings(Registry<DimensionOptions> registry) {
-        return new FilteredRegistry<>(registry, ExtendedDimensionOptions.SAVE_PROPERTIES_PREDICATE);
+        return new FilteredRegistry<>(registry, ExtendedDimensionOptions.SAVE_DIMENSION_OPTIONS_PREDICATE);
     }
     #endif
 }

@@ -12,12 +12,12 @@ public class DimensionOptionsMixin implements ExtendedDimensionOptions {
     private boolean fuji$saveProperties = true;
 
     @Override
-    public void fuji$setSaveProperties(boolean value) {
+    public void fuji$setSaveDimensionOptions(boolean value) {
         this.fuji$saveProperties = value;
     }
 
     @Override
-    public boolean fuji$getSaveProperties() {
+    public boolean fuji$getSaveDimensionOptions() {
         return this.fuji$saveProperties;
     }
 }

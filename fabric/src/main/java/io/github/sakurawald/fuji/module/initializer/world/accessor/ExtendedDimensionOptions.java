@@ -1,24 +1,19 @@
 package io.github.sakurawald.fuji.module.initializer.world.accessor;
 
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import net.minecraft.world.dimension.DimensionOptions;
 
 import java.util.function.Predicate;
 
 public interface ExtendedDimensionOptions {
 
-    Predicate<DimensionOptions> SAVE_PROPERTIES_PREDICATE = (it) -> {
-        // the `it` will be null, for `fuji:1` dimension.
-        boolean test = false;
-        if (it != null) {
-            test = ((ExtendedDimensionOptions) (Object) it).fuji$getSaveProperties();
-        }
+    Predicate<DimensionOptions> SAVE_DIMENSION_OPTIONS_PREDICATE = (it) -> {
+        // NOTE: The `DimensionOptions` for `runtime dimensions` will be `null`, because we only mirror existed DimensionOptions, we never register our one.
+        if (it == null) return false;
 
-        LogUtil.debug("SAVE_PROPERTIES_PREDICATE: it = {}, test = {}", it, test);
-        return test;
+        return ((ExtendedDimensionOptions) (Object) it).fuji$getSaveDimensionOptions();
     };
 
-    void fuji$setSaveProperties(boolean value);
+    void fuji$setSaveDimensionOptions(boolean value);
 
-    boolean fuji$getSaveProperties();
+    boolean fuji$getSaveDimensionOptions();
 }
