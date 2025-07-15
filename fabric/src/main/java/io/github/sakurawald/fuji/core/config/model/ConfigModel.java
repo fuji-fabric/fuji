@@ -86,7 +86,7 @@ public class ConfigModel {
                 """)
             public List<String> skip = new ArrayList<>() {
                 {
-                    this.add("modules/head");
+                    this.add("modules/head/head-data");
                 }
             };
         }
