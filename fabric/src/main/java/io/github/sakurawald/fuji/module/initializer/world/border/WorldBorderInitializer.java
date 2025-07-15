@@ -29,6 +29,10 @@ import net.minecraft.world.border.WorldBorder;
     The `/worldborder` command only sets the `World Border` of `minecraft:overworld`.
     But the `minecraft:the_nether` and `minecraft:the_end` dimensions will `sync` the `world border` of `minecraft:overworld`.
     """)
+@ColorBox(id = 1752569349615L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ The semantics of options for `world border`.
+    See: https://minecraft.wiki/w/World_border
+    """)
 public class WorldBorderInitializer extends ModuleInitializer {
 
     public static BaseConfigurationHandler<WorldBorderConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, WorldBorderConfigModel.class);
