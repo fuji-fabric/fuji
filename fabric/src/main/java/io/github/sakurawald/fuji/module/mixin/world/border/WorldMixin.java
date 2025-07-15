@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class WorldMixin {
 
     @ModifyReturnValue(method = "getWorldBorder", at = @At("RETURN"))
-    WorldBorder f(WorldBorder original) {
+    WorldBorder modifyTheReturnValueOfGetWorldBorder(WorldBorder original) {
         World world = (World) (Object) this;
         String dimensionId = RegistryHelper.toString(world);
 

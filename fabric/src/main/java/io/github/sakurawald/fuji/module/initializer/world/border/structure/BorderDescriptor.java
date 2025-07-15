@@ -11,7 +11,9 @@ import net.minecraft.world.border.WorldBorder;
 public class BorderDescriptor {
 
     public final String dimensionId;
-    public final Border border = new Border();
+    public Border border = new Border();
+
+    @Data
     public static class Border {
         public double centerX = 0.0;
         public double centerZ = 0.0;
