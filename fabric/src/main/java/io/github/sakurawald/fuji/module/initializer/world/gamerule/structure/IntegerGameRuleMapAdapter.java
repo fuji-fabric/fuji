@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.initializer.world.structure.gamerule;
+package io.github.sakurawald.fuji.module.initializer.world.gamerule.structure;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

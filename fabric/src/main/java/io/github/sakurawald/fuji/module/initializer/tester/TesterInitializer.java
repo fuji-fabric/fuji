@@ -16,6 +16,7 @@ import io.github.sakurawald.fuji.module.initializer.tester.functions.TestFunctio
 import lombok.SneakyThrows;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 
 @Document(id = 1751980891153L, value = """

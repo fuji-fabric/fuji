@@ -25,11 +25,6 @@ import io.github.sakurawald.fuji.module.initializer.world.config.model.WorldData
 import io.github.sakurawald.fuji.module.initializer.world.gui.WorldGui;
 import io.github.sakurawald.fuji.module.initializer.world.service.WorldService;
 import io.github.sakurawald.fuji.module.initializer.world.structure.RuntimeDimensionDescriptor;
-import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.BooleanGameRuleMapAdapter;
-import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.GameRuleStore;
-import io.github.sakurawald.fuji.module.initializer.world.structure.gamerule.IntegerGameRuleMapAdapter;
-import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
-import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -276,7 +271,6 @@ public class WorldInitializer extends ModuleInitializer {
         runtimeDimensionDescriptor.dimension_type = dimensionTypeIdentifier.toString();
         runtimeDimensionDescriptor.seed = $seed;
         runtimeDimensionDescriptor.setShouldTickTime(true);
-        runtimeDimensionDescriptor.gameRules = GameRuleStore.makeDefault();
 
         storage.model().dimension_list.add(runtimeDimensionDescriptor);
         storage.writeStorage();
@@ -419,6 +413,7 @@ public class WorldInitializer extends ModuleInitializer {
         ServerWorld dimensionInstance = dimension.getValue();
 
         /* Make text for basic info. */
+        TextHelper.sendTextByKey(source, "dimension.class", dimensionInstance.getClass().getName());
         TextHelper.sendTextByKey(source, "dimension.id", RegistryHelper.toString(dimensionInstance));
         TextHelper.sendTextByKey(source, "dimension.difficulty", dimensionInstance.getDifficulty());
         TextHelper.sendTextByKey(source, "dimension.seed", dimensionInstance.getSeed());
@@ -465,12 +460,6 @@ public class WorldInitializer extends ModuleInitializer {
     @Override
     protected void onInitialize() {
         ServerLifecycleEvents.SERVER_STARTED.register(this::loadDimensions);
-    }
-
-    @Override
-    protected void registerGsonTypeAdapter() {
-        BaseConfigurationHandler.registerGsonTypeAdapter(Reference2BooleanMap.class, new BooleanGameRuleMapAdapter());
-        BaseConfigurationHandler.registerGsonTypeAdapter(Reference2IntMap.class, new IntegerGameRuleMapAdapter());
     }
 
     private void loadDimensions(@NotNull MinecraftServer server) {

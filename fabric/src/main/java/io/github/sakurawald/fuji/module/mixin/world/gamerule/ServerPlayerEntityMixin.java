@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.mixin.world.keep_inventory_rule;
+package io.github.sakurawald.fuji.module.mixin.world.gamerule;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;

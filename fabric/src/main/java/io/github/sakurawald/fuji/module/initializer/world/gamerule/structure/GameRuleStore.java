@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.initializer.world.structure.gamerule;
+package io.github.sakurawald.fuji.module.initializer.world.gamerule.structure;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;

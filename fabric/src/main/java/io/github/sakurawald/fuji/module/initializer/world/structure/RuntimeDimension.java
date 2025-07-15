@@ -19,7 +19,6 @@ import net.minecraft.world.spawner.Spawner;
 #elif MC_VER > MC_1_20_2
 import net.minecraft.world.spawner.SpecialSpawner;
 #endif
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -49,7 +48,7 @@ public class RuntimeDimension extends ServerWorld {
     @Override
     public long getSeed() {
         // NOTE: Override the getSeed() method to provide the custom seed before the seed is used by super class.
-        String dimensionId = getThisDimensionId();
+        String dimensionId = RegistryHelper.toString(this.getRegistryKey());
         Optional<RuntimeDimensionDescriptor> dimensionNode = WorldService.getDimensionDescriptor(dimensionId);
         if (dimensionNode.isPresent()) {
             return dimensionNode.get().seed;
@@ -60,16 +59,11 @@ public class RuntimeDimension extends ServerWorld {
         return fallbackSeed;
     }
 
-    private @NotNull String getThisDimensionId() {
-        String dimensionId = RegistryHelper.toString(this.getRegistryKey());
-        return dimensionId;
-    }
-
     @Override
     protected void tickTime() {
         this.getRuntimeDimensionProperties()
             .ifPresentOrElse(runtimeDimensionProperties -> {
-            if (!runtimeDimensionProperties.getEffectiveRuntimeDimensionDescriptor().shouldTickTime) {
+            if (!runtimeDimensionProperties.runtimeDimensionDescriptor.shouldTickTime) {
                 return;
             }
 
@@ -79,13 +73,6 @@ public class RuntimeDimension extends ServerWorld {
             }
 
         }, super::tickTime);
-    }
-
-    @Override
-    public GameRules getGameRules() {
-        return getRuntimeDimensionProperties()
-            .map(RuntimeDimensionProperties::getGameRules)
-            .orElseGet(super::getGameRules);
     }
 
 }

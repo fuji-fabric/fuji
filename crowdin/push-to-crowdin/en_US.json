@@ -111,6 +111,7 @@
   "dimension.border.warning.blocks": "<yellow>- Dimension Border Warning Blocks: `%s`",
   "dimension.border.warning.time": "<yellow>- Dimension Border Warning Time: `%s`",
   "dimension.chunk_generator": "<blue>◉ Chunk Generator: `%s`",
+  "dimension.class": "<blue>◉ Dimension Class: `%s`",
   "dimension.difficulty": "<blue>◉ Difficulty: `%s`",
   "dimension.gamerules": "<blue>◉ Dimension GameRules",
   "dimension.id": "<blue>◉ Dimension Id: `%s`",
@@ -1171,5 +1172,6 @@
   "docstring.1752561532728": "This module allows you to customize the `per-dimension border`.\n",
   "docstring.1752567783661": "Define the `border` for each `dimension`.\n",
   "docstring.1752567811335": "Used to describe the `border` of a `dimension`.\n",
-  "docstring.1752569349615": "◉ The semantics of options for `world border`.\nSee: https://minecraft.wiki/w/World_border\n"
+  "docstring.1752569349615": "◉ The semantics of options for `world border`.\nSee: https://minecraft.wiki/w/World_border\n",
+  "docstring.1752577892546": "This module allows you to customize the `per-dimension gamerule`.\n"
 }
