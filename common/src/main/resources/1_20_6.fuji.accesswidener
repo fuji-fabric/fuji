@@ -12,7 +12,7 @@ accessible field net/minecraft/server/MinecraftServer session Lnet/minecraft/wor
 accessible field net/minecraft/world/GameRules$IntRule value I
 accessible field net/minecraft/world/GameRules RULE_TYPES Ljava/util/Map;
 accessible field net/minecraft/world/GameRules rules Ljava/util/Map;
-
+accessible method net/minecraft/world/border/WorldBorder$Properties <init> (DDDDIIDJD)V
 
 # chat module
 accessible class net/minecraft/registry/RegistryLoader$Loader
