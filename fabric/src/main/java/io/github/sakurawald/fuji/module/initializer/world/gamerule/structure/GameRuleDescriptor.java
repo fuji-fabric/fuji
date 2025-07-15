@@ -8,13 +8,13 @@ import net.minecraft.world.GameRules;
 public class GameRuleDescriptor {
     public boolean enable = true;
     public final String dimensionId;
-    public GameRuleStore gameRules = GameRuleStore.makeDefault();
+    public GameRuleStore gameRules = GameRuleStore.makeDefaultGameRuleStore();
 
     private transient GameRules vanillaGameRules;
 
     public GameRules asVanillaGameRules() {
         if (this.vanillaGameRules == null) {
-            this.vanillaGameRules = new GameRules();
+            this.vanillaGameRules = GameRuleStore.makeGameRules();
             this.gameRules.applyTo(this.vanillaGameRules, ServerHelper.getServer());
         }
 
