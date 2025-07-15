@@ -1,10 +1,9 @@
 package io.github.sakurawald.fuji.module.initializer.world.gamerule.structure;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import it.unimi.dsi.fastutil.objects.*;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.GameRules;
-import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1752254462732L, value = """
     This structure is used to store the `game rules`.
@@ -53,15 +52,15 @@ public final class GameRuleStore {
         return defaultGameRuleStore;
     }
 
-    public void applyTo(GameRules rules, @NotNull MinecraftServer server) {
+    public void applyTo(GameRules rules) {
         Reference2BooleanMaps.fastForEach(this.booleanRules, entry -> {
             GameRules.BooleanRule rule = rules.get(entry.getKey());
-            rule.set(entry.getBooleanValue(), server);
+            rule.set(entry.getBooleanValue(), ServerHelper.getServer());
         });
 
         Reference2IntMaps.fastForEach(this.intRules, entry -> {
             GameRules.IntRule rule = rules.get(entry.getKey());
-            rule.set(entry.getIntValue(), server);
+            rule.set(entry.getIntValue(), ServerHelper.getServer());
         });
     }
 
