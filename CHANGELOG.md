@@ -1,7 +1,6 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
 
-
 - **[world.border] feature: new `world.border` module, to support `per-dimension world border`.**
 - [world] feature: improve the user interface of `/world info` command.
   - feature: now displays the `gamerules` in `hover text`.
