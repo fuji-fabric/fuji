@@ -128,7 +128,7 @@ public class ConfigModel {
             @Document(id = 1751823813518L, value = """
                 Should we print the user guide in the console on server startup?
                 """)
-            public boolean print_user_guide_in_console = false;
+            public boolean print_user_guide_in_console = true;
         }
     }
 
@@ -324,7 +324,7 @@ public class ConfigModel {
         }
 
         public static class Echo {
-            public boolean enable = false;
+            public boolean enable = true;
 
             public SendMessage send_message = new SendMessage();
             public SendBroadcast send_broadcast = new SendBroadcast();

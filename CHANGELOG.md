@@ -1,11 +1,5 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
-**This version contains BREAKING CHANGES if you are using them.**
-
-- [world] refactor: make `per-dimension gamerules` as a standalone `world.gamerule` module.
-  - This simplifies the configs of `world` module.
-  - It allows you to define `per-dimension gamerules` for `any dimension`, even the `vanilla dimensions`.
-  - It allows you to use the `per-dimension gamerules` with other `world management mod`.
-- [command_cooldown] feature: format the display time of `%fuji:command_cooldown_left_time%` placeholder
-- [command_cooldown] feature: new `%fuji:command_cooldown_left_time_date%` placeholder, to provide the next use date.
-
+- feature: improve the guide for new users.
+  - feature: make the `echo` module enabled by default in the default config. (Its commands are required by many other modules)
+  - feature: improve the `print_user_guide_in_console` option on server startup.
