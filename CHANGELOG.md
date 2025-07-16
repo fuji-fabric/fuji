@@ -6,4 +6,6 @@
   - This simplifies the configs of `world` module.
   - It allows you to define `per-dimension gamerules` for `any dimension`, even the `vanilla dimensions`.
   - It allows you to use the `per-dimension gamerules` with other `world management mod`.
+- [command_cooldown] feature: format the display time of `%fuji:command_cooldown_left_time%` placeholder
+- [command_cooldown] feature: new `%fuji:command_cooldown_left_time_date%` placeholder, to provide the next use date.
 
