@@ -1173,5 +1173,6 @@
   "docstring.1752567783661": "Define the `border` for each `dimension`.\n",
   "docstring.1752567811335": "Used to describe the `border` of a `dimension`.\n",
   "docstring.1752569349615": "◉ The semantics of options for `world border`.\nSee: https://minecraft.wiki/w/World_border\n",
-  "docstring.1752577892546": "This module allows you to customize the `per-dimension gamerule`.\n"
+  "docstring.1752577892546": "This module allows you to customize the `per-dimension gamerule`.\n",
+  "docstring.1752625269482": "Returns the `left time` for `specified named cooldown` in date.\n"
 }

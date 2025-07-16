@@ -11,10 +11,14 @@ public class Cooldown<T> {
     final Map<T, Long> timestamp = new HashMap<>();
 
     public long getCooldown(T key, Long cooldown) {
-        long lastUpdateTimeMs = timestamp.computeIfAbsent(key, k -> 0L);
+        long lastUpdateTimeMs = this.getLastUseTime(key);
         long currentTimeMs = System.currentTimeMillis();
         long cooldownMS = cooldown;
         return cooldownMS - (currentTimeMs - lastUpdateTimeMs);
+    }
+
+    public long getLastUseTime(T key) {
+       return timestamp.computeIfAbsent(key, k -> 0L);
     }
 
     public long tryUse(T key, Long cooldown) {
