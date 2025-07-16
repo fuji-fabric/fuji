@@ -1107,8 +1107,8 @@
   "docstring.1751999474601": "To view this slot, you need the defined `specified permission` for this slot.\n",
   "docstring.1751999540893": "The max location entries to save for this player.\n",
   "docstring.1751999560958": "To bypass a specific `anti type` with a specific `id`.\n\nFor example, the permission `fuji.anti_build.place_block.bypass.minecraft:tnt` allows a player to place the TNT block.\n",
-  "docstring.1751999769680": "Returns the `left time` for `specified named cooldown` in mill-seconds.\n",
-  "docstring.1751999791863": "Returns the `left usage times` for `specified named cooldown` in integer.\n",
+  "docstring.1751999769680": "Returns the `left time` for `specified named cooldown` in `formatted duration`.\n\nFor example, if you have a `named cooldown` whose name is `example`.\nYou can use: `%fuji:command_cooldown_left_time example%`\n",
+  "docstring.1751999791863": "Returns the `left usage times` for `specified named cooldown` in integer.\n\nFor example, if you have a `named cooldown` whose name is `example`.\nYou can use: `%fuji:command_cooldown_left_usage example%`\n",
   "docstring.1751999849427": "Returns the total playtime of all players in the server.\n",
   "docstring.1751999873162": "Returns the playtime of the player.\n",
   "docstring.1751999885958": "Returns the total distance traveled by all players in the server.\n",
@@ -1174,5 +1174,5 @@
   "docstring.1752567811335": "Used to describe the `border` of a `dimension`.\n",
   "docstring.1752569349615": "◉ The semantics of options for `world border`.\nSee: https://minecraft.wiki/w/World_border\n",
   "docstring.1752577892546": "This module allows you to customize the `per-dimension gamerule`.\n",
-  "docstring.1752625269482": "Returns the `left time` for `specified named cooldown` in date.\n"
+  "docstring.1752625269482": "Returns the `left time` for `specified named cooldown` in date.\n\nFor example, if you have a `named cooldown` whose name is `example`.\nYou can use: `%fuji:command_cooldown_left_time_date example%`\n"
 }

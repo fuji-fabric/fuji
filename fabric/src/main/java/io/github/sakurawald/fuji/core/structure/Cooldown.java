@@ -10,11 +10,10 @@ public class Cooldown<T> {
 
     final Map<T, Long> timestamp = new HashMap<>();
 
-    public long getCooldown(T key, Long cooldown) {
-        long lastUpdateTimeMs = this.getLastUseTime(key);
-        long currentTimeMs = System.currentTimeMillis();
-        long cooldownMS = cooldown;
-        return cooldownMS - (currentTimeMs - lastUpdateTimeMs);
+    public long getRemainingTime(T key, Long cooldownPeriod) {
+        long lastUseTime = this.getLastUseTime(key);
+        long currentTime = System.currentTimeMillis();
+        return cooldownPeriod - (currentTime - lastUseTime);
     }
 
     public long getLastUseTime(T key) {
@@ -22,12 +21,17 @@ public class Cooldown<T> {
     }
 
     public long tryUse(T key, Long cooldown) {
-        long leftTime = getCooldown(key, cooldown);
-        if (leftTime < 0) {
-            timestamp.put(key, System.currentTimeMillis());
+        long remainingTime = getRemainingTime(key, cooldown);
+
+        if (remainingTime < 0) {
+            onUse(key);
         }
 
-        return leftTime;
+        return remainingTime;
+    }
+
+    private void onUse(T key) {
+        timestamp.put(key, System.currentTimeMillis());
     }
 
 }

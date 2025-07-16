@@ -24,8 +24,8 @@ public class CommandCooldown extends Cooldown<String> {
     final Map<String, Integer> usage = new HashMap<>();
 
     @Override
-    public long getCooldown(String key, Long cooldown) {
-        return super.getCooldown(this.global ? GLOBAL_NAME : key, cooldown);
+    public long getRemainingTime(String key, Long cooldownPeriod) {
+        return super.getRemainingTime(this.global ? GLOBAL_NAME : key, cooldownPeriod);
     }
 
     @Override

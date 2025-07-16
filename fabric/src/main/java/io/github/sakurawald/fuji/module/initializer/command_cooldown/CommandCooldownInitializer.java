@@ -121,10 +121,10 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         String key = player.getGameProfile().getName();
 
         /* test */
-        long leftTime = cooldown.tryUse(key, cooldown.getCooldownMs());
+        long remainingTime = cooldown.tryUse(key, cooldown.getCooldownMs());
         int usage = cooldown.getUsage().getOrDefault(key, 0);
         int leftUsage = cooldown.getMaxUsage() - usage;
-        if (leftTime > 0 || leftUsage <= 0) {
+        if (remainingTime > 0 || leftUsage <= 0) {
             CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), $onFailed.getValue());
             return CommandHelper.Return.FAIL;
         }
@@ -218,6 +218,9 @@ public class CommandCooldownInitializer extends ModuleInitializer {
 
     @DocStringProvider(id = 1751999791863L, value = """
         Returns the `left usage times` for `specified named cooldown` in integer.
+
+        For example, if you have a `named cooldown` whose name is `example`.
+        You can use: `%fuji:command_cooldown_left_usage example%`
         """)
     private static void registerCommandCooldownLeftUsagePlaceholder() {
         PlaceholderDescriptor leftUsageDescriptor = new PlaceholderDescriptor("command_cooldown_left_usage", 1751999791863L);
@@ -233,7 +236,10 @@ public class CommandCooldownInitializer extends ModuleInitializer {
     }
 
     @DocStringProvider(id = 1751999769680L, value = """
-        Returns the `left time` for `specified named cooldown` in mill-seconds.
+        Returns the `left time` for `specified named cooldown` in `formatted duration`.
+
+        For example, if you have a `named cooldown` whose name is `example`.
+        You can use: `%fuji:command_cooldown_left_time example%`
         """)
     private static void registerCommandCooldownLeftTimePlaceholder() {
         PlaceholderDescriptor leftTimeDescriptor = new PlaceholderDescriptor("command_cooldown_left_time", 1751999769680L);
@@ -242,7 +248,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
             if (cooldown == null) return NOT_COOLDOWN_FOUND_ERROR_TEXT;
 
             String key = player.getGameProfile().getName();
-            long leftTime = cooldown.getCooldown(key, cooldown.getCooldownMs());
+            long leftTime = cooldown.getRemainingTime(key, cooldown.getCooldownMs());
             leftTime = Math.max(0, leftTime);
 
             String formattedLeftTime = DurationParser.formatDurationIntoCompact(leftTime);
@@ -252,6 +258,9 @@ public class CommandCooldownInitializer extends ModuleInitializer {
 
     @DocStringProvider(id = 1752625269482L, value = """
         Returns the `left time` for `specified named cooldown` in date.
+
+        For example, if you have a `named cooldown` whose name is `example`.
+        You can use: `%fuji:command_cooldown_left_time_date example%`
         """)
     private static void registerCommandCooldownLeftTimeDatePlaceholder() {
         PlaceholderDescriptor leftTimeDescriptor = new PlaceholderDescriptor("command_cooldown_left_time_date", 1752625269482L);
