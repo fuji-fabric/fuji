@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.fuji.gui;
 
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
 import io.github.sakurawald.fuji.core.document.descriptor.PlaceholderDescriptor;
@@ -36,6 +37,7 @@ public class PlaceholdersInspectionGui extends StringDescriptorInspectionGui{
 
     @Override
     protected Text toNameText(StringDescriptor entity) {
-        return TextHelper.getTextByKey(getPlayer(), "fuji.inspect.placeholders.gui.item.name", entity.getString());
+        String string = Fuji.MOD_ID + ":" + entity.getString();
+        return TextHelper.getTextByKey(getPlayer(), "fuji.inspect.placeholders.gui.item.name", string);
     }
 }
