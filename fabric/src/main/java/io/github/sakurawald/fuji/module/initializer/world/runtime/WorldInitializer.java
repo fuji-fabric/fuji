@@ -20,6 +20,7 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
+import io.github.sakurawald.fuji.module.initializer.world.runtime.command.argument.wrapper.WorldPresetType;
 import io.github.sakurawald.fuji.module.initializer.world.runtime.config.model.WorldConfigModel;
 import io.github.sakurawald.fuji.module.initializer.world.runtime.config.model.WorldDataModel;
 import io.github.sakurawald.fuji.module.initializer.world.runtime.service.WorldService;
@@ -40,6 +41,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.RandomSeed;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.border.WorldBorder;
+import net.minecraft.world.dimension.DimensionTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -267,8 +269,13 @@ public class WorldInitializer extends ModuleInitializer {
     }
 
     @CommandNode("create")
-    private static int $create(@CommandSource ServerCommandSource source, String name,
-                               DimensionType dimensionType, Optional<Long> seed, Optional<ChunkGeneratorType> chunkGeneratorType, Optional<String> chunkGeneratorParameters) {
+    private static int $create(@CommandSource ServerCommandSource source
+        , String name
+        , DimensionType dimensionType
+        , Optional<Long> seed
+        , Optional<ChunkGeneratorType> chunkGeneratorType
+        , Optional<String> chunkGeneratorParameters
+        , Optional<WorldPresetType> worldPresetType) {
 
         /* Make identifier for the new dimension. */
         final String FUJI_DIMENSION_NAMESPACE = "fuji";
@@ -280,13 +287,19 @@ public class WorldInitializer extends ModuleInitializer {
         ChunkGeneratorType $chunkGeneratorType = chunkGeneratorType.orElse(ChunkGeneratorType.NOISE);
         Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(dimensionType.getValue());
         String $chunkGeneratorParameter = chunkGeneratorParameters.orElse("");
+        WorldPresetType $worldPresetType = worldPresetType.orElse(null);
 
         RuntimeDimensionDescriptor runtimeDimensionDescriptor = new RuntimeDimensionDescriptor();
         runtimeDimensionDescriptor.dimension = dimensionIdentifier.toString();
-        runtimeDimensionDescriptor.dimension_type = dimensionTypeIdentifier.toString();
-        runtimeDimensionDescriptor.chunkGeneratorType = $chunkGeneratorType;
-        runtimeDimensionDescriptor.chunkGeneratorParameters = $chunkGeneratorParameter;
         runtimeDimensionDescriptor.seed = $seed;
+        if ($worldPresetType != null) {
+            runtimeDimensionDescriptor.worldPresetType = $worldPresetType;
+            runtimeDimensionDescriptor.dimension_type = DimensionTypes.OVERWORLD_ID.toString();
+        } else {
+            runtimeDimensionDescriptor.dimension_type = dimensionTypeIdentifier.toString();
+            runtimeDimensionDescriptor.chunkGeneratorType = $chunkGeneratorType;
+            runtimeDimensionDescriptor.chunkGeneratorParameters = $chunkGeneratorParameter;
+        }
         runtimeDimensionDescriptor.setShouldTickTime(true);
 
         world.model().dimension_list.add(runtimeDimensionDescriptor);

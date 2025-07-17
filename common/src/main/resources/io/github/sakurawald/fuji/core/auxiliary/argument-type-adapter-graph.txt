@@ -65,3 +65,4 @@ io.github.sakurawald.fuji.module.initializer.economy.command.argument.adapter.Cu
 io.github.sakurawald.fuji.module.initializer.home.command.argument.adapter.HomeNameArgumentTypeAdapter
 io.github.sakurawald.fuji.module.initializer.kit.command.argument.adapter.KitNameArgumentTypeAdapter
 io.github.sakurawald.fuji.module.initializer.world.runtime.command.argument.adapter.ChunkGeneratorTypeArgumentTypeAdapter
+io.github.sakurawald.fuji.module.initializer.world.runtime.command.argument.adapter.WorldPresetTypeArgumentTypeAdapter

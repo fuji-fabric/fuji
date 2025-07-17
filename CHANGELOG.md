@@ -4,6 +4,7 @@
   - feature: create a `overworld flat dimension`: `/world create example minecraft:overworld --chunkGeneratorType FLAT`
   - feature: create a `customized flat dimension`: `/world create example minecraft:overworld --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:bedrock,3*minecraft:stone,116*minecraft:sandstone;minecraft:desert"`
   - feature: create a `void flat dimension`: `/world create example minecraft:overworld --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:air;minecraft:the_void"`
+- [world] feature: now support to use pre-defined `world preset` to create worlds. (The pre-defined world presets: `large biomes`, `amplified`, `single biome surface` and `debug all block states`.)
 - [world] feature: improve the `/world list` command.
   - feature: now sends the `loaded dimensions` in a compat-style using chat.
   - feature: now will display the `un-loaded dimensions` in the config.

@@ -5,8 +5,10 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.world.runtime.command.argument.wrapper.ChunkGeneratorType;
+import io.github.sakurawald.fuji.module.initializer.world.runtime.command.argument.wrapper.WorldPresetType;
 import lombok.Data;
 import net.minecraft.world.Difficulty;
+import org.jetbrains.annotations.Nullable;
 
 @Document(id = 1752170874671L, value = """
     A `dimension descriptor` is used to describe a `runtime dimension`.
@@ -24,14 +26,21 @@ public class RuntimeDimensionDescriptor {
     @Document(id = 1752170986625L, value = """
         The `identifier` of this `dimension`.
         """)
-    public String dimension;
+    public String dimension = null;
+
+    @Document(id = 1752738994765L, value = """
+        The `world preset type` used by this `dimension`.
+
+        If `world preset type` is specified, then `dimension type`, `chunk generator type` and `chunk generator parameters` are ignored.
+        """)
+    @Nullable public WorldPresetType worldPresetType = null;
 
     @Document(id = 1752171006784L, value = """
         The `dimension type` of this `dimension`.
         Note that the `dimension type` defines the `chunk generator` and `dimension features`.
         """)
     @SerializedName(value = "dimension_type", alternate = "dimensionType")
-    public String dimension_type;
+    public String dimension_type = null;
 
     @Document(id = 1752729741419L, value = """
         The `chunk generator` of this `dimension`.

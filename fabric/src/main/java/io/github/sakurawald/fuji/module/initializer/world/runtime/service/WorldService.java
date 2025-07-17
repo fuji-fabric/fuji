@@ -51,6 +51,7 @@ import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.dimension.DimensionTypes;
+import net.minecraft.world.gen.WorldPreset;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.FlatChunkGenerator;
 import net.minecraft.world.gen.chunk.FlatChunkGeneratorConfig;
@@ -219,6 +220,31 @@ public class WorldService {
     }
 
     private static @NotNull DimensionOptions makeDimensionOptions(RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
+        if (runtimeDimensionDescriptor.worldPresetType != null) {
+            return makeDimensionOptionsWithWorldPreset(runtimeDimensionDescriptor);
+        } else {
+            return makeDimensionOptionsWithCustomization(runtimeDimensionDescriptor);
+        }
+    }
+
+    private static @NotNull DimensionOptions makeDimensionOptionsWithWorldPreset(RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
+        Registry<WorldPreset> worldPresetRegistry = RegistryHelper.ofRegistry(RegistryKeys.WORLD_PRESET);
+        assert runtimeDimensionDescriptor.worldPresetType != null;
+        RegistryKey<WorldPreset> worldPresetKey = runtimeDimensionDescriptor.worldPresetType.toWorldPresetKey();
+        WorldPreset worldPreset = worldPresetRegistry.get(worldPresetKey);
+        if (worldPreset == null) {
+            throw new RuntimeException("Failed to make DimensionOptions for dimension %s, the WorldPreset didn't existed in the registry.".formatted(runtimeDimensionDescriptor.dimension));
+        }
+
+        Optional<DimensionOptions> overworldDimensionOptionsOptional = worldPreset.getOverworld();
+        if (overworldDimensionOptionsOptional.isEmpty()) {
+            throw new RuntimeException("Failed to make DimensionOptions for dimension %s, the WorldPreset#getOverworld() returns null.".formatted(runtimeDimensionDescriptor.dimension));
+        }
+
+        return overworldDimensionOptionsOptional.get();
+    }
+
+    private static @NotNull DimensionOptions makeDimensionOptionsWithCustomization(RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         /* Get an existing dimension options from registry. */
         RegistryEntry<DimensionType> dimensionTypeEntry = getDimensionTypeEntry(runtimeDimensionDescriptor);
 
