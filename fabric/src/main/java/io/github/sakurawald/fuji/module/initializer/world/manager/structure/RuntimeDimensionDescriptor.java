@@ -37,7 +37,15 @@ public class RuntimeDimensionDescriptor {
 
     @Document(id = 1752171006784L, value = """
         The `dimension type` of this `dimension`.
-        Note that the `dimension type` defines the `chunk generator` and `dimension features`.
+
+        For `FlatChunkGenerator`:
+        1. The `dimension type` defines the `dimension environment`.
+
+        For `NoiseChunkGenerator`:
+        1. The `dimension type` defines the `dimension environment`.
+        2. The `dimension type` defines the `chunk generator`.
+
+        <green>NOTE: The `dimension environment` specifies things like: `bed explosion?`, `infinite burning?`, `has skylight?`...
         """)
     @SerializedName(value = "dimension_type", alternate = "dimensionType")
     public String dimension_type = null;

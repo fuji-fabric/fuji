@@ -96,11 +96,20 @@ import org.jetbrains.annotations.Nullable;
     1. We use `Dimension Type` to describe the `environment` of a specific `dimension`. (For example, `bed explosion?`, `infinite burning?`...)
     2. We use `Chunk Generator` to describe how the `chunks` are generated. (We will give the specified `seed` argument to it)
 
-    ◉ How the `chunk generator` works?
-    A `chunk generator` need to `fill blocks` in the `given chunk location`.
-    You need to give the `seed` to `the chunk generator`, and it will fill blocks for you.
+    ◉ What is a `chunk generator`?
+    Give a `seed` and `chunk location` to a `chunk generator`.
+    The `chunk generator` will `fill` blocks for you.
 
-    If the specified chunk is not `generated`, then the chunk generator will `generated` a new one.
+    There are 2 types of `chunk generator`:
+    1. `Flat Chunk Generator`: It is used for `superflat` world, it fills blocks `layer` by `layer`.
+    2. `Noise Chunk Generator`: Compared to `Flat Chunk Generator`, it makes some `noise`, so you dimension looks not boring like `superflat dimension`.
+
+    <green>NOTE: The `minecraft:overworld`, `minecraft:the_nether` and `minecraft:the_end` all use `Noise Chunk Generator`, but they have different `Chunk Generator Settings`.
+    <green>There are 3 `NoiseChunkGenerator` instances with different `Chunk Generator Settings`.
+    <green>That's why the `minecraft:overworld`, `minecraft:the_nether` and `minecraft:the_end` look different.
+
+    ◉ The logic of `chunk generator`.
+    If the specified chunk is not `generated`, then the chunk generator will `generate` a new one.
     If the specified chunk is `generated`, the chunk generator will just use the `existed chunk data` in storage.
     """)
 @ColorBox(id = 1752297520453L, color = ColorBox.ColorBlockTypes.NOTE, value = """
