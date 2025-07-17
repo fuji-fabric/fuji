@@ -121,6 +121,22 @@ import org.jetbrains.annotations.Nullable;
     1. https://github.com/DrexHD/WorldManager
     2. https://github.com/DrexHD/WorldGameRules
     """)
+@ColorBox(id = 1752788919780L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ Useful concepts about a `dimension`.
+    - https://minecraft.wiki/w/World_generation
+    - https://minecraft.wiki/w/World_type
+    - https://minecraft.wiki/w/World
+    - https://minecraft.wiki/w/Biome
+    - https://minecraft.wiki/w/Void
+    - https://minecraft.wiki/w/Overworld
+    - https://minecraft.wiki/w/Feature
+    - https://minecraft.wiki/w/Structure
+    - https://minecraft.wiki/w/Terrain_features
+    - https://minecraft.fandom.com/wiki/Java_Edition_level_format
+    - https://minecraft.wiki/w/Chunk_format
+
+    """)
+
 @ColorBox(id = 1751982071236L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Create an extra `the_nether` dimension
     Issue: `/world create my_nether minecraft:the_nether`
@@ -211,7 +227,6 @@ import org.jetbrains.annotations.Nullable;
     1. If the player is now in `minecraft:the_end`, then destination dimension is `minecraft:overworld`.
     2. Else the destination dimension is `minecraft:the_end`.
     """)
-
 @ColorBox(id = 1752733447050L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Create a `flat dimension` with `overworld` dimension type.
     Issue: `/world create my_flat_world minecraft:overworld --chunkGeneratorType FLAT`
@@ -222,8 +237,9 @@ import org.jetbrains.annotations.Nullable;
     ◉ Create a `void dimension`.
     Issue: `/world create 4 minecraft:overworld --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:air;minecraft:the_void"`.
 
-    ◉ See more about flat dimension.
-    See: https://minecraft.fandom.com/wiki/Superflat
+    ◉ Useful resource
+    The definition of `world preset`: https://minecraft.fandom.com/wiki/World_preset
+    The definition of `superflat dimension`: https://minecraft.fandom.com/wiki/Superflat
     """)
 @ColorBox(id = 1752741022214L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Create a `runtime dimension` using pre-defined `world preset`.

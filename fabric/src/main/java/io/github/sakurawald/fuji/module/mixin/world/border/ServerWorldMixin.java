@@ -14,6 +14,7 @@ public class ServerWorldMixin {
 
     @Inject(method = "addPlayer", at = @At("TAIL"))
     void ensureClientSideWorldBorderIsSynced(ServerPlayerEntity player, CallbackInfo ci) {
+        // NOTE: addPlayer() will be called from onDimensionChanged(), onPlayerConnected() and onPlayerRespawned()
         World world = (World) (Object) this;
         WorldBorderInitializer.sendWorldBorderSyncPacketsToPlayer(player, world);
     }

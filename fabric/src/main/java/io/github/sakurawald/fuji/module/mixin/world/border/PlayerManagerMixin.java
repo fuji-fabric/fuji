@@ -6,12 +6,15 @@ import io.github.sakurawald.fuji.module.initializer.world.border.WorldBorderInit
 import io.github.sakurawald.fuji.module.initializer.world.border.structure.BorderDescriptor;
 import io.github.sakurawald.fuji.module.initializer.world.border.structure.PerDimensionWorldBorderListener;
 import net.minecraft.server.PlayerManager;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.border.WorldBorder;
 import net.minecraft.world.border.WorldBorderListener;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerManager.class)
 public class PlayerManagerMixin {
@@ -22,6 +25,11 @@ public class PlayerManagerMixin {
             .getEffectiveBorderDescriptor(RegistryHelper.toString(serverWorld))
             .map(BorderDescriptor::asVanillaWorldBorder)
             .orElse(original);
+    }
+
+    @Inject(method = "sendWorldInfo", at = @At("TAIL"))
+    void ensureClientSideWorldBorderIsSyncedAfterTeleport(ServerPlayerEntity player, ServerWorld serverWorld, CallbackInfo ci) {
+        WorldBorderInitializer.sendWorldBorderSyncPacketsToPlayer(player, serverWorld);
     }
 
     @ModifyArg(method = "setMainWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/border/WorldBorder;addListener(Lnet/minecraft/world/border/WorldBorderListener;)V", ordinal = 0))
