@@ -80,7 +80,12 @@ import org.jetbrains.annotations.Nullable;
     No, we didn't touch the `world` folder, or put any special data into it.
 
     What we need is minimal, we need to define `runtime dimension descriptor` in the module folder.
-    The `runtime dimension descriptor` should provide these information: `dimension id`, `dimension type id`, `seed`.
+    The `runtime dimension descriptor` should provide enough information to define a `Dimension Options`.
+
+    ◉ What is `DimensionOptions`?
+    A `DimensionOptions` = A `Dimension Type` + A `Chunk Generator`.
+    The `dimension type` is used to define the `environment` of a `dimension`. (Like, `bed explosion?` or `infinite burning?`)
+    The `chunk generator` is used to `generate` the `chunks`. (Give the `seed` and `chunk location` to the generator, it will fill blocks for you)
     """)
 @ColorBox(id = 1752458991398L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     ◉ How the `world` module generate the dimension?
