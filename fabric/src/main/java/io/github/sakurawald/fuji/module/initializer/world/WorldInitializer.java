@@ -204,7 +204,7 @@ public class WorldInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<WorldConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, WorldConfigModel.class);
 
-    public static final BaseConfigurationHandler<WorldDataModel> storage = new ObjectConfigurationHandler<>("world.json", WorldDataModel.class)
+    public static final BaseConfigurationHandler<WorldDataModel> world = new ObjectConfigurationHandler<>("world.json", WorldDataModel.class)
         .setAutoSaveEveryMinute();
 
     private static void checkBlacklist(ServerCommandSource source, String identifier) {
@@ -237,7 +237,7 @@ public class WorldInitializer extends ModuleInitializer {
     @CommandNode("list")
     private static int $list(@CommandSource ServerCommandSource source) {
         if (source.isExecutedByPlayer()) {
-            List<RuntimeDimensionDescriptor> entities = storage.model().dimension_list;
+            List<RuntimeDimensionDescriptor> entities = world.model().dimension_list;
             new WorldGui(source.getPlayer(), entities, 0)
                 .open();
         } else {
@@ -272,8 +272,8 @@ public class WorldInitializer extends ModuleInitializer {
         runtimeDimensionDescriptor.seed = $seed;
         runtimeDimensionDescriptor.setShouldTickTime(true);
 
-        storage.model().dimension_list.add(runtimeDimensionDescriptor);
-        storage.writeStorage();
+        world.model().dimension_list.add(runtimeDimensionDescriptor);
+        world.writeStorage();
 
         /* Request to create the dimension. */
         WorldService.requestToCreateDimension(runtimeDimensionDescriptor);
@@ -328,7 +328,7 @@ public class WorldInitializer extends ModuleInitializer {
         /* Draw the seed. */
         Boolean $useTheSameSeed = useTheSameSeed.orElse(false);
         runtimeDimensionDescriptor.seed = $useTheSameSeed ? runtimeDimensionDescriptor.seed : RandomSeed.getSeed();
-        storage.writeStorage();
+        world.writeStorage();
 
         /* Create a new dimension instance. */
         WorldService.requestToCreateDimension(runtimeDimensionDescriptor);
@@ -463,7 +463,7 @@ public class WorldInitializer extends ModuleInitializer {
     }
 
     private void loadDimensions(@NotNull MinecraftServer server) {
-        storage.model().dimension_list
+        world.model().dimension_list
             .stream()
             .filter(RuntimeDimensionDescriptor::isAuto_load_on_server_startup)
             .forEach(it -> {

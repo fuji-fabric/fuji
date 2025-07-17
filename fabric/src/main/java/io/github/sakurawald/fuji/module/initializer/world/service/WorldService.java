@@ -273,10 +273,10 @@ public class WorldService {
     }
 
     public static void deleteDimensionNode(String dimensionId) {
-        Optional<RuntimeDimensionDescriptor> first = WorldInitializer.storage.model().dimension_list.stream().filter(o -> o.getDimension().equals(dimensionId)).findFirst();
+        Optional<RuntimeDimensionDescriptor> first = WorldInitializer.world.model().dimension_list.stream().filter(o -> o.getDimension().equals(dimensionId)).findFirst();
         first.ifPresent(dimensionNode -> {
-            WorldInitializer.storage.model().dimension_list.remove(dimensionNode);
-            WorldInitializer.storage.writeStorage();
+            WorldInitializer.world.model().dimension_list.remove(dimensionNode);
+            WorldInitializer.world.writeStorage();
         });
     }
 
@@ -285,7 +285,7 @@ public class WorldService {
     }
 
     public static Optional<RuntimeDimensionDescriptor> getDimensionDescriptor(String dimensionId) {
-        return WorldInitializer.storage.model()
+        return WorldInitializer.world.model()
             .dimension_list
             .stream()
             .filter(it -> it.dimension.equalsIgnoreCase(dimensionId))
