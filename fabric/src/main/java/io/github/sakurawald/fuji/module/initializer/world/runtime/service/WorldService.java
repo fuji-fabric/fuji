@@ -247,13 +247,13 @@ public class WorldService {
     private static @NotNull DimensionOptions makeDimensionOptionsWithCustomization(RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         /* Get an existing dimension options from registry. */
         RegistryEntry<DimensionType> dimensionTypeEntry = getDimensionTypeEntry(runtimeDimensionDescriptor);
+        ChunkGenerator chunkGenerator = makeChunkGenerator(runtimeDimensionDescriptor);
 
-        // NOTE: Clone a DimensionOptions instance from existing one.
-        ChunkGenerator chunkGenerator = getChunkGenerator(runtimeDimensionDescriptor);
+        // NOTE: Make a new DimensionOptions instance. (One DimensionOptions instance can only be used by a ServerWorld instance)
         return new DimensionOptions(dimensionTypeEntry, chunkGenerator);
     }
 
-    private static @NotNull ChunkGenerator getChunkGenerator(RuntimeDimensionDescriptor dimensionDescriptor) {
+    private static @NotNull ChunkGenerator makeChunkGenerator(RuntimeDimensionDescriptor dimensionDescriptor) {
         if (dimensionDescriptor.chunkGeneratorType == ChunkGeneratorType.NOISE) {
             return makeNoiseChunkGenerator(dimensionDescriptor);
         }
@@ -272,6 +272,8 @@ public class WorldService {
         if (existedDimensionOptions == null) {
             throw new RuntimeException("Failed to make chunk generator, there is no existed DimensionOptions for dimension type %s.".formatted(dimensionTypeIdentifier));
         }
+
+        // NOTE: Copy the existed chunk generator, to ensure the settings of chunk generator is identical.
         return existedDimensionOptions.chunkGenerator();
     }
 
