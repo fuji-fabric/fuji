@@ -15,27 +15,27 @@ public class PerDimensionWorldBorderListener implements WorldBorderListener {
 
     @Override
     public void onSizeChange(WorldBorder worldBorder, double d) {
-        WorldBorderInitializer.sendPerDimensionWorldBorderPacket(dimension -> new WorldBorderSizeChangedS2CPacket(dimension.getWorldBorder()));
+        WorldBorderInitializer.sendPerDimensionPacketToAllDimensions(dimension -> new WorldBorderSizeChangedS2CPacket(dimension.getWorldBorder()));
     }
 
     @Override
     public void onInterpolateSize(WorldBorder worldBorder, double d, double e, long l) {
-        WorldBorderInitializer.sendPerDimensionWorldBorderPacket(dimension -> new WorldBorderInterpolateSizeS2CPacket(dimension.getWorldBorder()));
+        WorldBorderInitializer.sendPerDimensionPacketToAllDimensions(dimension -> new WorldBorderInterpolateSizeS2CPacket(dimension.getWorldBorder()));
     }
 
     @Override
     public void onCenterChanged(WorldBorder worldBorder, double d, double e) {
-        WorldBorderInitializer.sendPerDimensionWorldBorderPacket(dimension -> new WorldBorderCenterChangedS2CPacket(dimension.getWorldBorder()));
+        WorldBorderInitializer.sendPerDimensionPacketToAllDimensions(dimension -> new WorldBorderCenterChangedS2CPacket(dimension.getWorldBorder()));
     }
 
     @Override
     public void onWarningTimeChanged(WorldBorder worldBorder, int i) {
-        WorldBorderInitializer.sendPerDimensionWorldBorderPacket(dimension -> new WorldBorderWarningTimeChangedS2CPacket(dimension.getWorldBorder()));
+        WorldBorderInitializer.sendPerDimensionPacketToAllDimensions(dimension -> new WorldBorderWarningTimeChangedS2CPacket(dimension.getWorldBorder()));
     }
 
     @Override
     public void onWarningBlocksChanged(WorldBorder worldBorder, int i) {
-        WorldBorderInitializer.sendPerDimensionWorldBorderPacket(dimension -> new WorldBorderWarningBlocksChangedS2CPacket(dimension.getWorldBorder()));
+        WorldBorderInitializer.sendPerDimensionPacketToAllDimensions(dimension -> new WorldBorderWarningBlocksChangedS2CPacket(dimension.getWorldBorder()));
     }
 
     @Override

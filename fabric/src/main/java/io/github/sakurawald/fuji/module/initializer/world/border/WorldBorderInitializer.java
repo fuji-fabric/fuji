@@ -17,6 +17,7 @@ import net.minecraft.network.packet.s2c.play.WorldBorderSizeChangedS2CPacket;
 import net.minecraft.network.packet.s2c.play.WorldBorderWarningBlocksChangedS2CPacket;
 import net.minecraft.network.packet.s2c.play.WorldBorderWarningTimeChangedS2CPacket;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.border.WorldBorder;
@@ -47,18 +48,26 @@ public class WorldBorderInitializer extends ModuleInitializer {
 
     @Override
     protected void onReload() {
-        sendPerDimensionWorldBorderPackets();
+        sendWorldBorderSyncPacketsToAllPlayers();
     }
 
-    private static void sendPerDimensionWorldBorderPackets() {
-        sendPerDimensionWorldBorderPacket(dimension -> new WorldBorderCenterChangedS2CPacket(dimension.getWorldBorder()));
-        sendPerDimensionWorldBorderPacket(dimension -> new WorldBorderSizeChangedS2CPacket(dimension.getWorldBorder()));
-        sendPerDimensionWorldBorderPacket(dimension -> new WorldBorderInterpolateSizeS2CPacket(dimension.getWorldBorder()));
-        sendPerDimensionWorldBorderPacket(dimension -> new WorldBorderWarningBlocksChangedS2CPacket(dimension.getWorldBorder()));
-        sendPerDimensionWorldBorderPacket(dimension -> new WorldBorderWarningTimeChangedS2CPacket(dimension.getWorldBorder()));
+    private static void sendWorldBorderSyncPacketsToAllPlayers() {
+        sendPerDimensionPacketToAllDimensions(dimension -> new WorldBorderCenterChangedS2CPacket(dimension.getWorldBorder()));
+        sendPerDimensionPacketToAllDimensions(dimension -> new WorldBorderSizeChangedS2CPacket(dimension.getWorldBorder()));
+        sendPerDimensionPacketToAllDimensions(dimension -> new WorldBorderInterpolateSizeS2CPacket(dimension.getWorldBorder()));
+        sendPerDimensionPacketToAllDimensions(dimension -> new WorldBorderWarningBlocksChangedS2CPacket(dimension.getWorldBorder()));
+        sendPerDimensionPacketToAllDimensions(dimension -> new WorldBorderWarningTimeChangedS2CPacket(dimension.getWorldBorder()));
     }
 
-    public static void sendPerDimensionWorldBorderPacket(Function<ServerWorld, Packet<?>> packetProvider) {
+    public static void sendWorldBorderSyncPacketsToPlayer(ServerPlayerEntity player, World world) {
+        player.networkHandler.sendPacket(new WorldBorderCenterChangedS2CPacket(world.getWorldBorder()));
+        player.networkHandler.sendPacket(new WorldBorderSizeChangedS2CPacket(world.getWorldBorder()));
+        player.networkHandler.sendPacket(new WorldBorderInterpolateSizeS2CPacket(world.getWorldBorder()));
+        player.networkHandler.sendPacket(new WorldBorderWarningBlocksChangedS2CPacket(world.getWorldBorder()));
+        player.networkHandler.sendPacket(new WorldBorderWarningTimeChangedS2CPacket(world.getWorldBorder()));
+    }
+
+    public static void sendPerDimensionPacketToAllDimensions(Function<ServerWorld, Packet<?>> packetProvider) {
         // NOTE: I don't know which dimension is changed, so I just simply update the world border for all dimensions.
         ServerHelper
             .getWorlds()
