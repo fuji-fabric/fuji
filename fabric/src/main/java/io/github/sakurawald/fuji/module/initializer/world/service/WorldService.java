@@ -292,6 +292,13 @@ public class WorldService {
             .findFirst();
     }
 
+    public static List<RuntimeDimensionDescriptor> getUnloadedDimensionDescriptors() {
+        return WorldInitializer.world.model().dimension_list
+            .stream()
+            .filter(it -> !it.isDimensionLoaded())
+            .toList();
+
+    }
 }
 
 

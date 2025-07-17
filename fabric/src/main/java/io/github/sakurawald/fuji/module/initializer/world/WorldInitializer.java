@@ -22,7 +22,6 @@ import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.world.config.model.WorldConfigModel;
 import io.github.sakurawald.fuji.module.initializer.world.config.model.WorldDataModel;
-import io.github.sakurawald.fuji.module.initializer.world.gui.WorldGui;
 import io.github.sakurawald.fuji.module.initializer.world.service.WorldService;
 import io.github.sakurawald.fuji.module.initializer.world.structure.RuntimeDimensionDescriptor;
 import java.util.HashMap;
@@ -236,20 +235,19 @@ public class WorldInitializer extends ModuleInitializer {
 
     @CommandNode("list")
     private static int $list(@CommandSource ServerCommandSource source) {
-        if (source.isExecutedByPlayer()) {
-            List<RuntimeDimensionDescriptor> entities = world.model().dimension_list;
-            new WorldGui(source.getPlayer(), entities, 0)
-                .open();
-        } else {
-            ServerHelper
-                .getWorlds()
-                .forEach(world -> {
-                    String dimensionType = RegistryHelper.getIdAsString(world.getDimensionEntry());
-                    String dimension = String.valueOf(world.getRegistryKey().getValue());
-                    TextHelper.sendTextByKey(source, "world.dimension.list.entry", dimension, dimensionType);
-                });
-        }
+        ServerHelper
+            .getWorlds()
+            .forEach(world -> {
+                String dimensionId = RegistryHelper.toString(world);
+                TextHelper.sendTextByKey(source, "dimension", dimensionId);
+            });
 
+        String unloadedDimensions = WorldService
+            .getUnloadedDimensionDescriptors()
+            .stream()
+            .map(RuntimeDimensionDescriptor::getDimension)
+            .collect(Collectors.joining());
+        TextHelper.sendTextByKey(source, "dimension.unloaded_dimensions", unloadedDimensions);
         return CommandHelper.Return.SUCCESS;
     }
 

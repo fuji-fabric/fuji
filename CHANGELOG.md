@@ -1,5 +1,8 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
+- [world] feature: improve the `/world list` command.
+  - feature: now sends the `loaded dimensions` in a compat-style using chat.
+  - feature: now will display the `un-loaded dimensions` in the config.
 - [world] fix: should not dupe the dimension descriptor entry in config, when trying to create a runtime dimension with dimension type `overworld_caves`.
 - [core] feature: improve the guide for new users.
   - feature: make the `echo` module enabled by default in the default config. (Its commands are required by many other modules)
