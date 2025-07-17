@@ -121,7 +121,7 @@ io.github.sakurawald.fuji.module.initializer.view.ViewInitializer
 io.github.sakurawald.fuji.module.initializer.warning.WarningInitializer
 io.github.sakurawald.fuji.module.initializer.whitelist.WhitelistInitializer
 io.github.sakurawald.fuji.module.initializer.works.WorksInitializer
-io.github.sakurawald.fuji.module.initializer.world.WorldInitializer
 io.github.sakurawald.fuji.module.initializer.world.border.WorldBorderInitializer
 io.github.sakurawald.fuji.module.initializer.world.gamerule.WorldGameRuleInitializer
+io.github.sakurawald.fuji.module.initializer.world.runtime.WorldInitializer
 io.github.sakurawald.fuji.module.initializer.world_downloader.WorldDownloaderInitializer

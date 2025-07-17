@@ -84,13 +84,13 @@
     "works.HopperBlockEntityMixin",
     "world.border.PlayerManagerMixin",
     "world.border.WorldMixin",
-    "world.fix_end_gateway_block_entity.EndGatewayBlockEntityMixin",
+    "world.runtime.fix_end_gateway_block_entity.EndGatewayBlockEntityMixin",
     "world.gamerule.ServerPlayerEntityMixin",
     "world.gamerule.PerDimensionGameRulesMixin",
-    "world.persist.DimensionOptionsMixin",
-    "world.persist.WorldGenSettingsMixin",
-    "world.tick.MinecraftServerMixin",
-    "world.weather.ServerWorldMixin"
+    "world.runtime.persist.DimensionOptionsMixin",
+    "world.runtime.persist.WorldGenSettingsMixin",
+    "world.runtime.tick.MinecraftServerMixin",
+    "world.runtime.weather.ServerWorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1
