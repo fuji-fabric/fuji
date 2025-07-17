@@ -1,5 +1,6 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
+- **[world] feature: now support `flat chunk generator`. (You can create the `superflat dimensions` using it)**
 - [world] feature: improve the `/world list` command.
   - feature: now sends the `loaded dimensions` in a compat-style using chat.
   - feature: now will display the `un-loaded dimensions` in the config.

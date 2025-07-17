@@ -1175,5 +1175,6 @@
   "docstring.1752567811335": "Used to describe the `border` of a `dimension`.\n",
   "docstring.1752569349615": "◉ The semantics of options for `world border`.\nSee: https://minecraft.wiki/w/World_border\n",
   "docstring.1752577892546": "This module allows you to customize the `per-dimension gamerule`.\n",
-  "docstring.1752625269482": "Returns the `left time` for `specified named cooldown` in date.\n\nFor example, if you have a `named cooldown` whose name is `example`.\nYou can use: `%fuji:command_cooldown_left_time_date example%`\n"
+  "docstring.1752625269482": "Returns the `left time` for `specified named cooldown` in date.\n\nFor example, if you have a `named cooldown` whose name is `example`.\nYou can use: `%fuji:command_cooldown_left_time_date example%`\n",
+  "docstring.1752729741419": "The `chunk generator` of this `dimension`.\nNote that in vanilla Minecraft, the `chunk generator` of `minecraft:overworld`, `minecraft:the_nether` and `minecraft:the_end` are all `NoiseChunkGenerator`.\n"
 }

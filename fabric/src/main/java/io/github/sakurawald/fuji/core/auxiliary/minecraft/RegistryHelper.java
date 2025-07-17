@@ -9,8 +9,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.message.MessageType;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
@@ -53,26 +55,40 @@ public class RegistryHelper {
         return registryKey.getValue().toString();
     }
 
-    public static <T> Registry<T> ofRegistry(RegistryKey<? extends Registry<? extends T>> registryKey) {
+    public static DynamicRegistryManager.Immutable getCombinedRegistryManager() {
         return ServerHelper
             .getServer()
             .getCombinedDynamicRegistries()
-            .getCombinedRegistryManager()
+            .getCombinedRegistryManager();
+    }
+
+    public static <T> Registry<T> ofRegistry(RegistryKey<? extends Registry<? extends T>> registryKey) {
+        return getCombinedRegistryManager()
             #if MC_VER <= MC_1_21
                 .get(registryKey);
             #elif MC_VER > MC_1_21
                 .getOrThrow(registryKey);
             #endif
+    }
 
+    public static <T> RegistryEntryLookup<T> ofRegistryWrapper(RegistryKey<? extends Registry<? extends T>> registryKey) {
+        return getCombinedRegistryManager()
+            #if MC_VER <= MC_1_21
+                .getWrapperOrThrow(registryKey);
+            #elif MC_VER > MC_1_21
+                .getOrThrow(registryKey);
+            #endif
     }
 
     public static <T> RegistryKey<T> ofRegistryKey(@NotNull RegistryKey<? extends Registry<T>> keyOfRegistry, Identifier identifier) {
         return RegistryKey.of(keyOfRegistry, identifier);
     }
 
-    public static <T> Optional<RegistryEntry.Reference<T>> ofRegistryEntry(@NotNull RegistryKey<? extends Registry<T>> keyOfRegistry, Identifier identifier) {
+    public static <T> Optional<RegistryEntry<T>> ofRegistryEntry(@NotNull RegistryKey<? extends Registry<T>> keyOfRegistry, Identifier identifier) {
         Registry<T> registry = ofRegistry(keyOfRegistry);
-        return registry.getEntry(identifier);
+        T t = registry.get(identifier);
+        RegistryEntry<T> entry = registry.getEntry(t);
+        return Optional.ofNullable(entry);
     }
 
     public static @Nullable ServerWorld ofServerWorld(@Nullable String identifier) {

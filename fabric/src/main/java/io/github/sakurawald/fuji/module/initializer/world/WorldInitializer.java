@@ -23,6 +23,7 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.world.config.model.WorldConfigModel;
 import io.github.sakurawald.fuji.module.initializer.world.config.model.WorldDataModel;
 import io.github.sakurawald.fuji.module.initializer.world.service.WorldService;
+import io.github.sakurawald.fuji.module.initializer.world.command.argument.wrapper.ChunkGeneratorType;
 import io.github.sakurawald.fuji.module.initializer.world.structure.RuntimeDimensionDescriptor;
 import java.util.HashMap;
 import java.util.List;
@@ -242,18 +243,18 @@ public class WorldInitializer extends ModuleInitializer {
                 TextHelper.sendTextByKey(source, "dimension", dimensionId);
             });
 
-        String unloadedDimensions = WorldService
+        List<String> unloadedDimensions = WorldService
             .getUnloadedDimensionDescriptors()
             .stream()
             .map(RuntimeDimensionDescriptor::getDimension)
-            .collect(Collectors.joining());
+            .toList();
         TextHelper.sendTextByKey(source, "dimension.unloaded_dimensions", unloadedDimensions);
         return CommandHelper.Return.SUCCESS;
     }
 
     @CommandNode("create")
     private static int $create(@CommandSource ServerCommandSource source, String name,
-                               DimensionType dimensionType, Optional<Long> seed, Optional<Boolean> useFlatChunkGenerator) {
+                               DimensionType dimensionType, Optional<Long> seed, Optional<ChunkGeneratorType> chunkGeneratorType) {
 
         /* Make identifier for the new dimension. */
         final String FUJI_DIMENSION_NAMESPACE = "fuji";
@@ -262,11 +263,12 @@ public class WorldInitializer extends ModuleInitializer {
 
         /* Make dimension entry */
         long $seed = seed.orElse(RandomSeed.getSeed());
-        boolean $useFlatChunkGenerator = useFlatChunkGenerator.orElse(false);
+        ChunkGeneratorType $chunkGeneratorType = chunkGeneratorType.orElse(ChunkGeneratorType.NOISE);
         Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(dimensionType.getValue());
         RuntimeDimensionDescriptor runtimeDimensionDescriptor = new RuntimeDimensionDescriptor();
         runtimeDimensionDescriptor.dimension = dimensionIdentifier.toString();
         runtimeDimensionDescriptor.dimension_type = dimensionTypeIdentifier.toString();
+        runtimeDimensionDescriptor.chunkGeneratorType = $chunkGeneratorType;
         runtimeDimensionDescriptor.seed = $seed;
         runtimeDimensionDescriptor.setShouldTickTime(true);
 

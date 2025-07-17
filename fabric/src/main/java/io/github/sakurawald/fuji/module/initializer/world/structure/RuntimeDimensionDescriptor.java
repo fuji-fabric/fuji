@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.module.initializer.world.command.argument.wrapper.ChunkGeneratorType;
 import lombok.Data;
 import net.minecraft.world.Difficulty;
 
@@ -31,6 +32,12 @@ public class RuntimeDimensionDescriptor {
         """)
     @SerializedName(value = "dimension_type", alternate = "dimensionType")
     public String dimension_type;
+
+    @Document(id = 1752729741419L, value = """
+        The `chunk generator` of this `dimension`.
+        Note that in vanilla Minecraft, the `chunk generator` of `minecraft:overworld`, `minecraft:the_nether` and `minecraft:the_end` are all `NoiseChunkGenerator`.
+        """)
+    public ChunkGeneratorType chunkGeneratorType = ChunkGeneratorType.NOISE;
 
     @Document(id = 1752246679197L, value = """
         The `seed` used for the `chunk generator` of this dimension.

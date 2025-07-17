@@ -12,6 +12,7 @@ import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.core.structure.TeleportTicket;
 import io.github.sakurawald.fuji.module.initializer.world.WorldInitializer;
 import io.github.sakurawald.fuji.module.initializer.world.accessor.ExtendedDimensionOptions;
+import io.github.sakurawald.fuji.module.initializer.world.command.argument.wrapper.ChunkGeneratorType;
 import io.github.sakurawald.fuji.module.initializer.world.structure.RuntimeDimensionDescriptor;
 import io.github.sakurawald.fuji.module.initializer.world.structure.RuntimeDimension;
 import io.github.sakurawald.fuji.module.initializer.world.structure.RuntimeDimensionProperties;
@@ -23,11 +24,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import net.minecraft.entity.boss.dragon.EnderDragonFight;
-import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.SimpleRegistry;
 
 #if MC_VER <= MC_1_20_4
@@ -71,14 +71,12 @@ public class WorldService {
         dimensionCreationQueue.removeIf(WorldService::tryCreateDimension);
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void requestToDeleteDimension(@NotNull ServerWorld world) {
         ServerHelper.getServer().submit(() -> {
             dimensionDeletionQueue.add(world);
         });
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void requestToCreateDimension(RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         ServerHelper.getServer().submit(() -> {
             dimensionCreationQueue.add(runtimeDimensionDescriptor);
@@ -118,7 +116,7 @@ public class WorldService {
             RuntimeDimensionProperties worldProperties = new RuntimeDimensionProperties(server.getSaveProperties(), runtimeDimensionDescriptor);
 
             /* Make the dimension options. */
-            @Nullable DimensionOptions dimensionOptions = makeDimensionOptions(dimensionTypeIdentifier);
+            @Nullable DimensionOptions dimensionOptions = makeDimensionOptions(runtimeDimensionDescriptor);
             ((ExtendedDimensionOptions) (Object) dimensionOptions).fuji$setSaveDimensionOptions(false);
 
             /* Make the dimension instance. */
@@ -219,44 +217,51 @@ public class WorldService {
         }
     }
 
-    private static @Nullable DimensionOptions makeDimensionOptions(Identifier dimensionTypeIdentifier) {
+    private static @NotNull DimensionOptions makeDimensionOptions(RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         /* Get an existing dimension options from registry. */
-        RegistryEntry.Reference<DimensionType> dimensionTypeEntry = getDimensionTypeEntry(dimensionTypeIdentifier);
-        if (dimensionTypeEntry == null) return null;
+        RegistryEntry<DimensionType> dimensionTypeEntry = getDimensionTypeEntry(runtimeDimensionDescriptor);
 
         // NOTE: Clone a DimensionOptions instance from existing one.
-        ChunkGenerator chunkGenerator = getChunkGenerator(dimensionTypeIdentifier);
-        if (chunkGenerator == null) return null;
+        ChunkGenerator chunkGenerator = getChunkGenerator(runtimeDimensionDescriptor);
         return new DimensionOptions(dimensionTypeEntry, chunkGenerator);
     }
 
-    private static @Nullable ChunkGenerator getChunkGenerator(Identifier dimensionTypeIdentifier) {
+    private static @NotNull ChunkGenerator getChunkGenerator(RuntimeDimensionDescriptor dimensionDescriptor) {
+        if (dimensionDescriptor.chunkGeneratorType == ChunkGeneratorType.NOISE) {
+            return makeNoiseChunkGenerator(dimensionDescriptor);
+        }
+
+        if (dimensionDescriptor.chunkGeneratorType == ChunkGeneratorType.FLAT) {
+            return makeFlatChunkGenerator(dimensionDescriptor);
+        }
+
+        throw new RuntimeException("Failed to make the chunk generator for dimension %s.".formatted(dimensionDescriptor.dimension));
+    }
+
+    private static @NotNull ChunkGenerator makeNoiseChunkGenerator(RuntimeDimensionDescriptor dimensionDescriptor) {
         Registry<DimensionOptions> dimensionRegistry = RegistryHelper.ofRegistry(RegistryKeys.DIMENSION);
-
-        @Nullable DimensionOptions originalDimensionOptions = dimensionRegistry.get(dimensionTypeIdentifier);
-        if (originalDimensionOptions == null) {
-            return null;
+        Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(dimensionDescriptor.dimension_type);
+        @Nullable DimensionOptions existedDimensionOptions = dimensionRegistry.get(dimensionTypeIdentifier);
+        if (existedDimensionOptions == null) {
+            throw new RuntimeException("Failed to make chunk generator, there is no existed DimensionOptions for dimension type %s.".formatted(dimensionTypeIdentifier));
         }
-
-        ChunkGenerator chunkGenerator = originalDimensionOptions.chunkGenerator();
-        return chunkGenerator;
+        return existedDimensionOptions.chunkGenerator();
     }
 
-    private static RegistryEntry.@Nullable Reference<DimensionType> getDimensionTypeEntry(Identifier dimensionTypeIdentifier) {
-        Optional<RegistryEntry.Reference<DimensionType>> dimensionTypeReference = RegistryHelper.ofRegistryEntry(RegistryKeys.DIMENSION_TYPE, dimensionTypeIdentifier);
-        if (dimensionTypeReference.isEmpty()) {
-            LogUtil.error("Failed to make DimensionOptions: The DimensionTypeEntry {} is null.", dimensionTypeIdentifier);
-            return null;
+    private static @NotNull RegistryEntry<DimensionType> getDimensionTypeEntry(RuntimeDimensionDescriptor dimensionDescriptor) {
+        Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(dimensionDescriptor.dimension_type);
+        Optional<RegistryEntry<DimensionType>> dimensionTypeEntry = RegistryHelper.ofRegistryEntry(RegistryKeys.DIMENSION_TYPE, dimensionTypeIdentifier);
+        if (dimensionTypeEntry.isEmpty()) {
+            throw new RuntimeException("Failed to make DimensionOptions: The DimensionTypeEntry %s is null.".formatted(dimensionTypeIdentifier));
         }
-        return dimensionTypeReference.get();
+        return dimensionTypeEntry.get();
     }
 
-    private static @NotNull FlatChunkGenerator getFlatChunkGenerator(RegistryEntry<DimensionType> dimensionTypeEntry, ChunkGenerator chunkGenerator) {
-        DimensionOptions dimensionOptions = new DimensionOptions(dimensionTypeEntry, chunkGenerator);
-        DynamicRegistryManager.Immutable dynamicRegistryManager = ServerHelper.getServer().getCombinedDynamicRegistries().getCombinedRegistryManager();
-        RegistryWrapper.Impl<Biome> registryEntryLookup = dynamicRegistryManager.getOrThrow(RegistryKeys.BIOME);
-        RegistryWrapper.Impl<StructureSet> registryEntryLookup2 = dynamicRegistryManager.getOrThrow(RegistryKeys.STRUCTURE_SET);
-        RegistryWrapper.Impl<PlacedFeature> registryEntryLookup3 = dynamicRegistryManager.getOrThrow(RegistryKeys.PLACED_FEATURE);
+    private static @NotNull FlatChunkGenerator makeFlatChunkGenerator(RuntimeDimensionDescriptor dimensionDescriptor) {
+        RegistryEntryLookup<Biome> registryEntryLookup = RegistryHelper.ofRegistryWrapper(RegistryKeys.BIOME);
+        RegistryEntryLookup<StructureSet> registryEntryLookup2 = RegistryHelper.ofRegistryWrapper(RegistryKeys.STRUCTURE_SET);
+        RegistryEntryLookup<PlacedFeature> registryEntryLookup3 = RegistryHelper.ofRegistryWrapper(RegistryKeys.PLACED_FEATURE);
+
         FlatChunkGeneratorConfig flatChunkGeneratorConfig = FlatChunkGeneratorConfig.getDefaultConfig(registryEntryLookup, registryEntryLookup2, registryEntryLookup3);
         FlatChunkGenerator flatChunkGenerator = new FlatChunkGenerator(flatChunkGeneratorConfig);
         return flatChunkGenerator;
