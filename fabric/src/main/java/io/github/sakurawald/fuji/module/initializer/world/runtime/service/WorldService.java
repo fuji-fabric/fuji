@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import net.minecraft.block.Block;
 import net.minecraft.entity.boss.dragon.EnderDragonFight;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryEntryLookup;
@@ -258,13 +259,20 @@ public class WorldService {
     }
 
     private static @NotNull FlatChunkGenerator makeFlatChunkGenerator(RuntimeDimensionDescriptor dimensionDescriptor) {
-        RegistryEntryLookup<Biome> registryEntryLookup = RegistryHelper.ofRegistryWrapper(RegistryKeys.BIOME);
-        RegistryEntryLookup<StructureSet> registryEntryLookup2 = RegistryHelper.ofRegistryWrapper(RegistryKeys.STRUCTURE_SET);
-        RegistryEntryLookup<PlacedFeature> registryEntryLookup3 = RegistryHelper.ofRegistryWrapper(RegistryKeys.PLACED_FEATURE);
+        /* Make the default flat chunk generator config. */
+        RegistryEntryLookup<Biome> biomeLookup = RegistryHelper.ofRegistryWrapper(RegistryKeys.BIOME);
+        RegistryEntryLookup<StructureSet> structureSetLookup = RegistryHelper.ofRegistryWrapper(RegistryKeys.STRUCTURE_SET);
+        RegistryEntryLookup<PlacedFeature> placedFeatureLookup = RegistryHelper.ofRegistryWrapper(RegistryKeys.PLACED_FEATURE);
+        FlatChunkGeneratorConfig flatChunkGeneratorConfig = FlatChunkGeneratorConfig.getDefaultConfig(biomeLookup, structureSetLookup, placedFeatureLookup);
 
-        FlatChunkGeneratorConfig flatChunkGeneratorConfig = FlatChunkGeneratorConfig.getDefaultConfig(registryEntryLookup, registryEntryLookup2, registryEntryLookup3);
-        FlatChunkGenerator flatChunkGenerator = new FlatChunkGenerator(flatChunkGeneratorConfig);
-        return flatChunkGenerator;
+        /* Make the parsed flat chunk generator config. */
+        String presetString = dimensionDescriptor.chunkGeneratorParameters;
+        if (presetString != null && !presetString.isBlank()) {
+            RegistryEntryLookup<Block> blockLookup = RegistryHelper.ofRegistryWrapper(RegistryKeys.BLOCK);
+            flatChunkGeneratorConfig = FlatPresetParser.parsePresetString(blockLookup, biomeLookup, structureSetLookup, placedFeatureLookup, presetString, flatChunkGeneratorConfig);
+        }
+
+        return new FlatChunkGenerator(flatChunkGeneratorConfig);
     }
 
     public static boolean existsDimension(Identifier dimensionId) {

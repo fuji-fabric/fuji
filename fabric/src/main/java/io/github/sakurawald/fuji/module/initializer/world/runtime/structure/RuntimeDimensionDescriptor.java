@@ -39,6 +39,13 @@ public class RuntimeDimensionDescriptor {
         """)
     public ChunkGeneratorType chunkGeneratorType = ChunkGeneratorType.NOISE;
 
+    @Document(id = 1752734540525L, value = """
+        The `parameters` used by the `chunk generator`.
+
+        For `flat chunk generator`, you can specify the `preset string` as the `parameters`.
+        """)
+    public String chunkGeneratorParameters = "";
+
     @Document(id = 1752246679197L, value = """
         The `seed` used for the `chunk generator` of this dimension.
         """)

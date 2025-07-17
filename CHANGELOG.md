@@ -1,6 +1,9 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
 - **[world] feature: now support `flat chunk generator`. (You can create the `superflat dimensions` using it)**
+  - feature: create a `overworld flat dimension`: `/world create example minecraft:overworld --chunkGeneratorType FLAT`
+  - feature: create a `customized flat dimension`: `/world create example minecraft:overworld --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:bedrock,3*minecraft:stone,116*minecraft:sandstone;minecraft:desert"`
+  - feature: create a `void flat dimension`: `/world create example minecraft:overworld --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:air;minecraft:the_void"`
 - [world] feature: improve the `/world list` command.
   - feature: now sends the `loaded dimensions` in a compat-style using chat.
   - feature: now will display the `un-loaded dimensions` in the config.

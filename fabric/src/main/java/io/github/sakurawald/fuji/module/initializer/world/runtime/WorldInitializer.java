@@ -196,6 +196,20 @@ import org.jetbrains.annotations.Nullable;
     2. Else the destination dimension is `minecraft:the_end`.
     """)
 
+@ColorBox(id = 1752733447050L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Create a `flat dimension` with `overworld` dimension type.
+    Issue `/world create my_flat_world minecraft:overworld --chunkGeneratorType FLAT`
+
+    ◉ Create a `flat dimension` with `overworld` dimension type and `customized preset`.
+    Issue `/world create 3 minecraft:overworld --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:bedrock,3*minecraft:stone,116*minecraft:sandstone;minecraft:desert"`
+
+    ◉ Create a `void dimension`.
+    Issue `/world create 4 minecraft:overworld --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:air;minecraft:the_void"`.
+
+    ◉ See more about flat dimension.
+    See: https://minecraft.fandom.com/wiki/Superflat
+    """)
+
 
 
 @CommandNode("world")
@@ -254,21 +268,24 @@ public class WorldInitializer extends ModuleInitializer {
 
     @CommandNode("create")
     private static int $create(@CommandSource ServerCommandSource source, String name,
-                               DimensionType dimensionType, Optional<Long> seed, Optional<ChunkGeneratorType> chunkGeneratorType) {
+                               DimensionType dimensionType, Optional<Long> seed, Optional<ChunkGeneratorType> chunkGeneratorType, Optional<String> chunkGeneratorParameters) {
 
         /* Make identifier for the new dimension. */
         final String FUJI_DIMENSION_NAMESPACE = "fuji";
         Identifier dimensionIdentifier = Identifier.of(FUJI_DIMENSION_NAMESPACE, name);
         ensureDimensionIdNotExists(source, dimensionIdentifier);
 
-        /* Make dimension entry */
+        /* Make the runtime dimension descriptor. */
         long $seed = seed.orElse(RandomSeed.getSeed());
         ChunkGeneratorType $chunkGeneratorType = chunkGeneratorType.orElse(ChunkGeneratorType.NOISE);
         Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(dimensionType.getValue());
+        String $chunkGeneratorParameter = chunkGeneratorParameters.orElse("");
+
         RuntimeDimensionDescriptor runtimeDimensionDescriptor = new RuntimeDimensionDescriptor();
         runtimeDimensionDescriptor.dimension = dimensionIdentifier.toString();
         runtimeDimensionDescriptor.dimension_type = dimensionTypeIdentifier.toString();
         runtimeDimensionDescriptor.chunkGeneratorType = $chunkGeneratorType;
+        runtimeDimensionDescriptor.chunkGeneratorParameters = $chunkGeneratorParameter;
         runtimeDimensionDescriptor.seed = $seed;
         runtimeDimensionDescriptor.setShouldTickTime(true);
 

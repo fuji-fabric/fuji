@@ -3,9 +3,6 @@ package io.github.sakurawald.fuji.module.initializer.tester;
 
 import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -16,7 +13,6 @@ import io.github.sakurawald.fuji.module.initializer.tester.functions.TestFunctio
 import lombok.SneakyThrows;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 
 @Document(id = 1751980891153L, value = """
@@ -33,9 +29,7 @@ public class TesterInitializer extends ModuleInitializer {
     @CommandNode("run")
     private static int $run(@CommandSource ServerCommandSource source) {
 
-
         LogUtil.info("Done");
-
         return 0;
     }
 
