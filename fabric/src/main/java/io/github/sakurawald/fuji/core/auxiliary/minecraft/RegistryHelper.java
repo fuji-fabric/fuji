@@ -70,6 +70,11 @@ public class RegistryHelper {
         return RegistryKey.of(keyOfRegistry, identifier);
     }
 
+    public static <T> Optional<RegistryEntry.Reference<T>> ofRegistryEntry(@NotNull RegistryKey<? extends Registry<T>> keyOfRegistry, Identifier identifier) {
+        Registry<T> registry = ofRegistry(keyOfRegistry);
+        return registry.getEntry(identifier);
+    }
+
     public static @Nullable ServerWorld ofServerWorld(@Nullable String identifier) {
         if (identifier == null) return null;
 

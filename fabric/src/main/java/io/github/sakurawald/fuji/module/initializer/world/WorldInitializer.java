@@ -53,7 +53,7 @@ import org.jetbrains.annotations.Nullable;
     In modern Minecraft, a `world` can contain `3 or more dimensions`. (The overworld, the end and the nether)
 
     Each `dimension` has its `dimension type`.
-    The `dimension type` defines the `chunk generator`.
+    We can create extra dimensions using existed `dimension type`.
 
     See also: https://minecraft.wiki/w/Dimension_definition
     See also: https://minecraft.wiki/w/Dimension_type
@@ -84,11 +84,10 @@ import org.jetbrains.annotations.Nullable;
     ◉ How the `world` module generate the dimension?
     Actually, the `world` module didn't do the `world generation` itself.
 
-    A `dimension` is composed by `chunks` (A `16x16 segment` of the `dimension`)
-    The `dimension type` defines the `chunk generator`.
-
-    So, what we do is simple, the `runtime dimension descriptor` needs to specify the `dimension type`.
-    And we will use the existing `chunk generator` defined by that `dimension type`.
+    What we do is simple, the `runtime dimension descriptor` provides enough information to create the `DimensionOptions`.
+    Note that `Dimension Options = Dimension Type + Chunk Generator`:
+    1. We use `Dimension Type` to describe the `environment` of a specific `dimension`. (For example, `bed explosion?`, `infinite burning?`...)
+    2. We use `Chunk Generator` to describe how the `chunks` are generated. (We will give the specified `seed` argument to it)
 
     ◉ How the `chunk generator` works?
     A `chunk generator` need to `fill blocks` in the `given chunk location`.
@@ -256,7 +255,7 @@ public class WorldInitializer extends ModuleInitializer {
 
     @CommandNode("create")
     private static int $create(@CommandSource ServerCommandSource source, String name,
-                               DimensionType dimensionType, Optional<Long> seed) {
+                               DimensionType dimensionType, Optional<Long> seed, Optional<Boolean> useFlatChunkGenerator) {
 
         /* Make identifier for the new dimension. */
         final String FUJI_DIMENSION_NAMESPACE = "fuji";
@@ -265,6 +264,7 @@ public class WorldInitializer extends ModuleInitializer {
 
         /* Make dimension entry */
         long $seed = seed.orElse(RandomSeed.getSeed());
+        boolean $useFlatChunkGenerator = useFlatChunkGenerator.orElse(false);
         Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(dimensionType.getValue());
         RuntimeDimensionDescriptor runtimeDimensionDescriptor = new RuntimeDimensionDescriptor();
         runtimeDimensionDescriptor.dimension = dimensionIdentifier.toString();

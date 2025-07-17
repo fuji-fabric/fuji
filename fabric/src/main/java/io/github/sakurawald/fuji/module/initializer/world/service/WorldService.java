@@ -23,9 +23,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import net.minecraft.entity.boss.dragon.EnderDragonFight;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.SimpleRegistry;
 
 #if MC_VER <= MC_1_20_4
@@ -34,16 +36,24 @@ import com.mojang.serialization.Lifecycle;
 import net.minecraft.registry.entry.RegistryEntryInfo;
 #endif
 
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.structure.StructureSet;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.dimension.DimensionOptions;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.dimension.DimensionTypes;
+import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.world.gen.chunk.FlatChunkGenerator;
+import net.minecraft.world.gen.chunk.FlatChunkGeneratorConfig;
+import net.minecraft.world.gen.feature.PlacedFeature;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -102,23 +112,20 @@ public class WorldService {
         Identifier dimensionIdentifier = RegistryHelper.makeIdentifier(runtimeDimensionDescriptor.dimension);
         Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(runtimeDimensionDescriptor.dimension_type);
 
-        /* Make the dimension properties. */
-        // note: we use the same WorldData from OVERWORLD
-        RuntimeDimensionProperties worldProperties = new RuntimeDimensionProperties(server.getSaveProperties(), runtimeDimensionDescriptor);
-
-        /* Make the dimension options. */
-        @Nullable DimensionOptions dimensionOptions = makeDimensionOptions(dimensionTypeIdentifier);
-        if (dimensionOptions == null) {
-            LogUtil.error("Can't use {} dimension-type as the template to create extra fuji worlds.", dimensionTypeIdentifier);
-            return;
-        }
-        ((ExtendedDimensionOptions) (Object) dimensionOptions).fuji$setSaveDimensionOptions(false);
-
-        /* Make the dimension instance. */
-        RegistryKey<World> worldRegistryKey = RegistryKey.of(RegistryKeys.WORLD, dimensionIdentifier);
-        LogUtil.debug("Make instance of world with registry key of type `World`: {}", worldRegistryKey);
-        ServerWorld dimension;
         try {
+            /* Make the dimension properties. */
+            // note: we use the same WorldData from OVERWORLD
+            RuntimeDimensionProperties worldProperties = new RuntimeDimensionProperties(server.getSaveProperties(), runtimeDimensionDescriptor);
+
+            /* Make the dimension options. */
+            @Nullable DimensionOptions dimensionOptions = makeDimensionOptions(dimensionTypeIdentifier);
+            ((ExtendedDimensionOptions) (Object) dimensionOptions).fuji$setSaveDimensionOptions(false);
+
+            /* Make the dimension instance. */
+            RegistryKey<World> worldRegistryKey = RegistryKey.of(RegistryKeys.WORLD, dimensionIdentifier);
+            LogUtil.debug("Make instance of world with registry key of type `World`: {}", worldRegistryKey);
+            ServerWorld dimension;
+
             dimension = new RuntimeDimension(server,
                 Util.getMainWorkerExecutor(),
                 server.session,
@@ -131,11 +138,6 @@ public class WorldService {
                 ImmutableList.of(),
                 runtimeDimensionDescriptor.shouldTickTime,
                 null);
-        } catch (Exception e) {
-            LogUtil.error("Failed to make ServerWorld instance: dimensionId = {}, dimensionTypeId = {}", dimensionIdentifier, dimensionTypeIdentifier, e);
-            return;
-        }
-
         // start dragon fight if the dimension type is the end.
         if (dimensionTypeIdentifier.equals(DimensionTypes.THE_END_ID)) {
             dimension.setEnderDragonFight(new EnderDragonFight(dimension, dimension.getSeed(), EnderDragonFight.Data.DEFAULT));
@@ -163,6 +165,10 @@ public class WorldService {
 
         /* Start ticking it. */
         dimension.tick(() -> true);
+
+        } catch (Exception e) {
+            LogUtil.error("Failed to make ServerWorld instance: dimensionId = {}, dimensionTypeId = {}", dimensionIdentifier, dimensionTypeIdentifier, e);
+        }
     }
 
     private static void evacuatePlayers(@NotNull ServerWorld dimension) {
@@ -215,22 +221,55 @@ public class WorldService {
 
     private static @Nullable DimensionOptions makeDimensionOptions(Identifier dimensionTypeIdentifier) {
         /* Get an existing dimension options from registry. */
-        Registry<DimensionOptions> registry = RegistryHelper.ofRegistry(RegistryKeys.DIMENSION);
-        @Nullable DimensionOptions originalDimensionOptions = registry.get(dimensionTypeIdentifier);
+        RegistryEntry.Reference<DimensionType> dimensionTypeEntry = getDimensionTypeEntry(dimensionTypeIdentifier);
+        if (dimensionTypeEntry == null) return null;
+
+        // NOTE: Clone a DimensionOptions instance from existing one.
+        ChunkGenerator chunkGenerator = getChunkGenerator(dimensionTypeIdentifier);
+        if (chunkGenerator == null) return null;
+        return new DimensionOptions(dimensionTypeEntry, chunkGenerator);
+    }
+
+    private static @Nullable ChunkGenerator getChunkGenerator(Identifier dimensionTypeIdentifier) {
+        Registry<DimensionOptions> dimensionRegistry = RegistryHelper.ofRegistry(RegistryKeys.DIMENSION);
+
+        @Nullable DimensionOptions originalDimensionOptions = dimensionRegistry.get(dimensionTypeIdentifier);
         if (originalDimensionOptions == null) {
             return null;
         }
 
-        // NOTE: Clone a DimensionOptions instance from existing one.
-        return new DimensionOptions(originalDimensionOptions.dimensionTypeEntry(), originalDimensionOptions.chunkGenerator());
+        ChunkGenerator chunkGenerator = originalDimensionOptions.chunkGenerator();
+        return chunkGenerator;
+    }
+
+    private static RegistryEntry.@Nullable Reference<DimensionType> getDimensionTypeEntry(Identifier dimensionTypeIdentifier) {
+        Optional<RegistryEntry.Reference<DimensionType>> dimensionTypeReference = RegistryHelper.ofRegistryEntry(RegistryKeys.DIMENSION_TYPE, dimensionTypeIdentifier);
+        if (dimensionTypeReference.isEmpty()) {
+            LogUtil.error("Failed to make DimensionOptions: The DimensionTypeEntry {} is null.", dimensionTypeIdentifier);
+            return null;
+        }
+        return dimensionTypeReference.get();
+    }
+
+    private static @NotNull FlatChunkGenerator getFlatChunkGenerator(RegistryEntry<DimensionType> dimensionTypeEntry, ChunkGenerator chunkGenerator) {
+        DimensionOptions dimensionOptions = new DimensionOptions(dimensionTypeEntry, chunkGenerator);
+        DynamicRegistryManager.Immutable dynamicRegistryManager = ServerHelper.getServer().getCombinedDynamicRegistries().getCombinedRegistryManager();
+        RegistryWrapper.Impl<Biome> registryEntryLookup = dynamicRegistryManager.getOrThrow(RegistryKeys.BIOME);
+        RegistryWrapper.Impl<StructureSet> registryEntryLookup2 = dynamicRegistryManager.getOrThrow(RegistryKeys.STRUCTURE_SET);
+        RegistryWrapper.Impl<PlacedFeature> registryEntryLookup3 = dynamicRegistryManager.getOrThrow(RegistryKeys.PLACED_FEATURE);
+        FlatChunkGeneratorConfig flatChunkGeneratorConfig = FlatChunkGeneratorConfig.getDefaultConfig(registryEntryLookup, registryEntryLookup2, registryEntryLookup3);
+        FlatChunkGenerator flatChunkGenerator = new FlatChunkGenerator(flatChunkGeneratorConfig);
+        return flatChunkGenerator;
     }
 
     public static boolean existsDimension(Identifier dimensionId) {
-        // Check the existence of dimensions using the runtime worlds variable.
-        return ServerHelper
+        boolean dimensionExistedInRuntime = ServerHelper
             .getWorlds()
             .stream()
             .anyMatch(it -> RegistryHelper.toString(it).equals(dimensionId.toString()));
+        boolean dimensionExistedInConfig = getDimensionDescriptor(dimensionId.toString()).isPresent();
+
+        return dimensionExistedInRuntime || dimensionExistedInConfig;
     }
 
     public static void deleteDimensionNode(String dimensionId) {
