@@ -24,7 +24,7 @@ public class LuckpermsHelper {
             try {
                 instance = LuckPermsProvider.get();
             } catch (Exception ignored) {
-                LogUtil.warn("Failed to get the `luckperms` API instance.");
+                // NOTE: The `luckperms` API instance only available when the server is started.
                 return null;
             }
             return instance;
