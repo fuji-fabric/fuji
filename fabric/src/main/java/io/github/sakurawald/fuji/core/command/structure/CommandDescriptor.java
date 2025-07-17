@@ -320,7 +320,7 @@ public class CommandDescriptor implements SourceModuleGetter {
                     continue;
                 }
 
-                // throw other exception for upper-level handler
+                // Throw other exceptions for upper-level handler.
                 throw e;
             }
 

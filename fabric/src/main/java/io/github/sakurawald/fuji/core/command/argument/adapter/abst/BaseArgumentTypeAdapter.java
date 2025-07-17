@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.core.command.argument.adapter.abst;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
 import io.github.sakurawald.fuji.core.manager.Managers;
@@ -35,7 +36,7 @@ public abstract class BaseArgumentTypeAdapter {
 
     public static final List<BaseArgumentTypeAdapter> REGISTERED_COMMAND_ARGUMENT_TYPE_ADAPTERS = new ArrayList<>();
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "SequencedCollectionMethodCanBeUsed"})
     public static void registerAdapters() {
         // the `/reload` command will trigger the command registration event.
         TYPE_STRING_2_TYPE_CLASS.clear();
@@ -61,6 +62,7 @@ public abstract class BaseArgumentTypeAdapter {
                     });
 
                 } catch (Exception e) {
+                    LogUtil.error("Failed to register argument type adapter: className = {}", className, e);
                     throw new RuntimeException(e);
                 }
             });

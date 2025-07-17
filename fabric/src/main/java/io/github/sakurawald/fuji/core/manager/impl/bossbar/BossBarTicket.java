@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.core.manager.impl.bossbar;
 
 import io.github.sakurawald.fuji.core.command.argument.wrapper.StepType;
-import lombok.Getter;
+import lombok.Data;
 import lombok.Setter;
 import net.minecraft.entity.boss.ServerBossBar;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-@Getter
+@Data
 public abstract class BossBarTicket {
 
     // the type of ticks should be `float`, instead of `int`.

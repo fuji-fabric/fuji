@@ -60,7 +60,7 @@ public class AttachmentManager extends BaseManager {
             return Arrays
                 .stream(array)
                 .filter(File::isFile).map(File::getName).collect(Collectors.toList());
-        } catch (Exception e) {
+        } catch (Exception ignored) {
             return List.of();
         }
     }
@@ -75,7 +75,7 @@ public class AttachmentManager extends BaseManager {
             return Arrays
                 .stream(array)
                 .filter(File::isDirectory).map(File::getName).collect(Collectors.toList());
-        } catch (Exception e) {
+        } catch (Exception ignored) {
             return List.of();
         }
     }

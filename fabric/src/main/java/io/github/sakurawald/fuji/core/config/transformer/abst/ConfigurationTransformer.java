@@ -30,7 +30,7 @@ public abstract class ConfigurationTransformer {
     public boolean exists(DocumentContext context, String jsonPath) {
         try {
             context.read(jsonPath);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
             return false;
         }
         return true;

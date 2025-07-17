@@ -34,28 +34,25 @@ public abstract class BaseBackupManager extends BaseManager {
 
     protected abstract boolean shouldSkipPath(@NotNull Path dir);
 
+    @SneakyThrows
     protected @NotNull List<File> getInputFiles() {
         List<File> files = new ArrayList<>();
-        try {
-            Files.walkFileTree(Fuji.MOD_CONFIG_PATH, new SimpleFileVisitor<>() {
+        Files.walkFileTree(Fuji.MOD_CONFIG_PATH, new SimpleFileVisitor<>() {
 
-                @Override
-                public @NotNull FileVisitResult preVisitDirectory(@NotNull Path dir, BasicFileAttributes attrs) {
-                    if (BACKUP_STORAGE_PATH.equals(dir)) return FileVisitResult.SKIP_SUBTREE;
-                    if (shouldSkipPath(dir)) return FileVisitResult.SKIP_SUBTREE;
+            @Override
+            public @NotNull FileVisitResult preVisitDirectory(@NotNull Path dir, BasicFileAttributes attrs) {
+                if (BACKUP_STORAGE_PATH.equals(dir)) return FileVisitResult.SKIP_SUBTREE;
+                if (shouldSkipPath(dir)) return FileVisitResult.SKIP_SUBTREE;
 
-                    return FileVisitResult.CONTINUE;
-                }
+                return FileVisitResult.CONTINUE;
+            }
 
-                @Override
-                public @NotNull FileVisitResult visitFile(@NotNull Path file, BasicFileAttributes attrs) {
-                    files.add(file.toFile());
-                    return FileVisitResult.CONTINUE;
-                }
-            });
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+            @Override
+            public @NotNull FileVisitResult visitFile(@NotNull Path file, BasicFileAttributes attrs) {
+                files.add(file.toFile());
+                return FileVisitResult.CONTINUE;
+            }
+        });
 
         return files;
     }

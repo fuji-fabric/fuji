@@ -73,6 +73,7 @@ public class IOUtil {
         return computeRelativePath(FabricLoader.getInstance().getGameDir().toFile(), file);
     }
 
+    @SneakyThrows(IOException.class)
     public static @NotNull List<Path> listLatestFiles(@NotNull Path path) {
         try (Stream<Path> files = Files.list(path)) {
             return files
@@ -83,12 +84,11 @@ public class IOUtil {
                         FileTime t2 = Files.readAttributes(o2, BasicFileAttributes.class).creationTime();
                         return t1.compareTo(t2);
                     } catch (IOException e) {
+                        // NOTE: You can't throw a checked-exception in functional interface.
                         throw new RuntimeException(e);
                     }
                 })
                 .collect(Collectors.toList());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 

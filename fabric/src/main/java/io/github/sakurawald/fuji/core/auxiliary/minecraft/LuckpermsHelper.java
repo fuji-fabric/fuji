@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 
@@ -22,7 +23,8 @@ public class LuckpermsHelper {
         if (instance == null) {
             try {
                 instance = LuckPermsProvider.get();
-            } catch (Exception e) {
+            } catch (Exception ignored) {
+                LogUtil.warn("Failed to get the `luckperms` API instance.");
                 return null;
             }
             return instance;

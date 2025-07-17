@@ -122,6 +122,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
 
     protected abstract T getDefaultModel();
 
+    @SneakyThrows
     @SuppressWarnings("unchecked")
     public void readStorage() {
         try {
@@ -149,6 +150,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
 
         } catch (Exception e) {
             LogUtil.error("Failed to read configuration file {} from storage.", this.path, e);
+            throw e;
         }
 
         /* Register self. */
@@ -159,6 +161,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         // no-op
     }
 
+    @SneakyThrows
     public void writeStorage() {
         try {
             /* Ensure the model is initialized. */
@@ -175,6 +178,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
             Files.writeString(this.path, gson.toJson(this.model));
         } catch (Exception e) {
             LogUtil.error("Failed to write configuration file {} to disk.", this.path, e);
+            throw e;
         }
     }
 
