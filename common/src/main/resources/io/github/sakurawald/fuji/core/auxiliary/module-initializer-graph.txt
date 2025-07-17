@@ -123,5 +123,5 @@ io.github.sakurawald.fuji.module.initializer.whitelist.WhitelistInitializer
 io.github.sakurawald.fuji.module.initializer.works.WorksInitializer
 io.github.sakurawald.fuji.module.initializer.world.border.WorldBorderInitializer
 io.github.sakurawald.fuji.module.initializer.world.gamerule.WorldGameRuleInitializer
-io.github.sakurawald.fuji.module.initializer.world.runtime.WorldInitializer
+io.github.sakurawald.fuji.module.initializer.world.manager.WorldInitializer
 io.github.sakurawald.fuji.module.initializer.world_downloader.WorldDownloaderInitializer
