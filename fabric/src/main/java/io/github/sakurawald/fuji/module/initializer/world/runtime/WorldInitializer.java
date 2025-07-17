@@ -200,17 +200,27 @@ import org.jetbrains.annotations.Nullable;
 
 @ColorBox(id = 1752733447050L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Create a `flat dimension` with `overworld` dimension type.
-    Issue `/world create my_flat_world minecraft:overworld --chunkGeneratorType FLAT`
+    Issue: `/world create my_flat_world minecraft:overworld --chunkGeneratorType FLAT`
 
     ◉ Create a `flat dimension` with `overworld` dimension type and `customized preset`.
-    Issue `/world create 3 minecraft:overworld --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:bedrock,3*minecraft:stone,116*minecraft:sandstone;minecraft:desert"`
+    Issue: `/world create 3 minecraft:overworld --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:bedrock,3*minecraft:stone,116*minecraft:sandstone;minecraft:desert"`
 
     ◉ Create a `void dimension`.
-    Issue `/world create 4 minecraft:overworld --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:air;minecraft:the_void"`.
+    Issue: `/world create 4 minecraft:overworld --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:air;minecraft:the_void"`.
 
     ◉ See more about flat dimension.
     See: https://minecraft.fandom.com/wiki/Superflat
     """)
+@ColorBox(id = 1752741022214L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Create a `runtime dimension` using pre-defined `world preset`.
+    Issue: `/world create example minecraft:overworld --worldPresetType DEBUG_ALL_BLOCK_STATES`
+
+    NOTE: When you are using a pre-defined `world preset`, then the following options will be `ignored`:
+    1. `dimension type id`
+    2. `chunk generator type`
+    3. `chunk generator parameters`.
+    """)
+
 
 
 
