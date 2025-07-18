@@ -130,6 +130,9 @@ public class WorldService {
         for (ServerPlayerEntity player : players) {
             GlobalPos from = GlobalPos.of(player);
             GlobalPos to = new GlobalPos(safeDimension, safeBlockPos.getX() + 0.5, safeBlockPos.getY() + 0.5, safeBlockPos.getZ() + 0.5, 0, 0);
+            if (to.getY() <= 0) {
+                to = to.withY(64);
+            }
             TeleportTicket teleportTicket = TeleportTicket.makeVipTicket(player, from, to);
 
             Managers.getBossBarManager().addTicket(teleportTicket);
