@@ -447,10 +447,7 @@ public class WorldInitializer extends ModuleInitializer {
         }
 
         /* Request to delete. */
-        WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(source, dimensionInstance, true));
-
-        /* Remove the node from storage. */
-        WorldService.deleteRuntimeDimensionDescriptor(dimensionId);
+        WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(source, dimensionInstance, true, true));
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -473,7 +470,7 @@ public class WorldInitializer extends ModuleInitializer {
     private static int $unload(@CommandSource ServerCommandSource source, LoadedRuntimeDimensionDescriptor dimension) {
         RuntimeDimensionDescriptor runtimeDimensionDescriptor = dimension.getValue();
         Optional<ServerWorld> loadedWorld = runtimeDimensionDescriptor.getLoadedWorld();
-        WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(source, loadedWorld.get(), false));
+        WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(source, loadedWorld.get(), false, false));
 
         TextHelper.sendTextByKey(source,"world.dimension.unload", runtimeDimensionDescriptor.dimension);
         return CommandHelper.Return.SUCCESS;
@@ -500,7 +497,7 @@ public class WorldInitializer extends ModuleInitializer {
         RuntimeDimensionDescriptor runtimeDimensionDescriptor = dimensionEntryOpt.get();
 
         /* Delete the dimension instance. */
-        WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(source, dimensionInstance, true));
+        WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(source, dimensionInstance, true, false));
 
         /* Draw the seed. */
         Boolean $useTheSameSeed = useTheSameSeed.orElse(false);

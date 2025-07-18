@@ -152,6 +152,11 @@ public class WorldService {
             deleteDimensionFiles(world);
         }
 
+        if (ticket.deleteRuntimeDimensionDescriptor) {
+            String dimensionId = RegistryHelper.toString(world);
+            WorldService.deleteRuntimeDimensionDescriptor(dimensionId);
+        }
+
         TextHelper.sendTextByKey(ticket.source,"world.dimension.deleted", RegistryHelper.toString(ticket.world));
     }
 

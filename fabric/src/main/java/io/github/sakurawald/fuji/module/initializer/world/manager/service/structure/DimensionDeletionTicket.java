@@ -10,5 +10,6 @@ public class DimensionDeletionTicket {
     public final ServerCommandSource source;
     public final ServerWorld world;
     public final boolean deleteWorldFiles;
+    public final boolean deleteRuntimeDimensionDescriptor;
 
 }

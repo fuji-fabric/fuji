@@ -55,7 +55,7 @@ public class RuntimeDimension extends ServerWorld {
         }
 
         long fallbackSeed = super.getSeed();
-        LogUtil.debug("Failed to set the custom seed for dimension {}, we will use the fallback seed {} instead.", dimensionId, fallbackSeed);
+        LogUtil.warn("Failed to set the custom seed for dimension {}, we will use the fallback seed {} instead.", dimensionId, fallbackSeed);
         return fallbackSeed;
     }
 
