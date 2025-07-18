@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.initializer.world.manager.structure;
+package io.github.sakurawald.fuji.module.initializer.world.manager.structure.util;
 
 import net.minecraft.server.WorldGenerationProgressListener;
 import net.minecraft.util.math.ChunkPos;

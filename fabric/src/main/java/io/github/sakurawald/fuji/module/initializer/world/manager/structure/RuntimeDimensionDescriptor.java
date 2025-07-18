@@ -6,7 +6,9 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.world.manager.command.argument.wrapper.ChunkGeneratorType;
 import io.github.sakurawald.fuji.module.initializer.world.manager.command.argument.wrapper.WorldPresetType;
+import java.util.Optional;
 import lombok.Data;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.Difficulty;
 import org.jetbrains.annotations.Nullable;
 
@@ -98,5 +100,9 @@ public class RuntimeDimensionDescriptor {
 
     public boolean isDebugWorld() {
         return WorldPresetType.DEBUG_ALL_BLOCK_STATES == this.worldPresetType;
+    }
+
+    public Optional<ServerWorld> getLoadedWorld() {
+        return ServerHelper.getWorld(this.dimension);
     }
 }

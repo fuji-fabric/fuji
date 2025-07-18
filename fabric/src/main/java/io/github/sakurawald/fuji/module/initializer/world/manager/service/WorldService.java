@@ -9,6 +9,8 @@ import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.core.structure.Pair;
 import io.github.sakurawald.fuji.core.structure.TeleportTicket;
 import io.github.sakurawald.fuji.module.initializer.world.manager.WorldInitializer;
+import io.github.sakurawald.fuji.module.initializer.world.manager.service.structure.DimensionCreationTicket;
+import io.github.sakurawald.fuji.module.initializer.world.manager.service.structure.DimensionDeletionTicket;
 import io.github.sakurawald.fuji.module.initializer.world.manager.structure.RuntimeDimensionDescriptor;
 import io.github.sakurawald.fuji.module.initializer.world.manager.structure.RuntimeDimensionLoader;
 import io.github.sakurawald.fuji.module.initializer.world.manager.structure.RuntimeDimensionMaker;
@@ -30,33 +32,34 @@ import org.jetbrains.annotations.NotNull;
 
 public class WorldService {
 
-    private static final Set<ServerWorld> dimensionDeletionQueue = new ReferenceOpenHashSet<>();
-    private static final Set<RuntimeDimensionDescriptor> dimensionCreationQueue = new ReferenceOpenHashSet<>();
+    private static final Set<DimensionCreationTicket> dimensionCreationQueue = new ReferenceOpenHashSet<>();
+    private static final Set<DimensionDeletionTicket> dimensionDeletionTicketQueue = new ReferenceOpenHashSet<>();
 
     static {
         ServerTickEvents.START_SERVER_TICK.register(server -> processDimensionCreationAndDeletionQueue());
     }
 
     private static void processDimensionCreationAndDeletionQueue() {
-        dimensionDeletionQueue.removeIf(WorldService::tryUnloadAndDeleteDimension);
+        dimensionDeletionTicketQueue.removeIf(WorldService::tryConsumeDimensionDeletionTicket);
         dimensionCreationQueue.removeIf(WorldService::tryCreateAndLoadDimension);
     }
 
-    public static void requestToUnloadAndDeleteDimension(@NotNull ServerWorld world) {
+    public static void submitDimensionDeletionTicket(@NotNull DimensionDeletionTicket ticket) {
         ServerHelper.getServer().submit(() -> {
-            dimensionDeletionQueue.add(world);
+            dimensionDeletionTicketQueue.add(ticket);
         });
     }
 
-    public static void requestToCreateAndLoadDimension(RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
+    public static void requestToCreateAndLoadDimension(DimensionCreationTicket ticket) {
         ServerHelper.getServer().submit(() -> {
-            dimensionCreationQueue.add(runtimeDimensionDescriptor);
+            dimensionCreationQueue.add(ticket);
         });
     }
 
-    private static boolean tryUnloadAndDeleteDimension(@NotNull ServerWorld world) {
+    private static boolean tryConsumeDimensionDeletionTicket(@NotNull DimensionDeletionTicket ticket) {
+        ServerWorld world = ticket.getWorld();
         if (world.getPlayers().isEmpty()) {
-            unloadAndDeleteDimension(world);
+            consumeDimensionDeletionTicket(ticket);
             return true;
         } else {
             evacuatePlayers(world);
@@ -64,21 +67,23 @@ public class WorldService {
         }
     }
 
-    private static boolean tryCreateAndLoadDimension(@NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
+    private static boolean tryCreateAndLoadDimension(@NotNull DimensionCreationTicket ticket) {
         // NOTE: Wait the target dimension to be deleted first (If there is a deletion ticket for it).
-        if (dimensionDeletionQueue.stream().anyMatch(it -> RegistryHelper.toString(it).equals(runtimeDimensionDescriptor.dimension))) {
+        if (dimensionDeletionTicketQueue.stream().anyMatch(it -> RegistryHelper.toString(it.world).equals(ticket.descriptor.dimension))) {
             return false;
         }
 
-        createAndLoadDimension(runtimeDimensionDescriptor);
+        createAndLoadDimension(ticket);
         // NOTE: Returns true anyway, to prevent the console spam.
         return true;
     }
 
-    private static void createAndLoadDimension(RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
+    private static void createAndLoadDimension(@NotNull DimensionCreationTicket ticket) {
+        RuntimeDimensionDescriptor descriptor = ticket.descriptor;
+
         try {
             /* Make the runtime dimension. */
-            Pair<ServerWorld, DimensionOptions> result = RuntimeDimensionMaker.makeRuntimeDimension(runtimeDimensionDescriptor);
+            Pair<ServerWorld, DimensionOptions> result = RuntimeDimensionMaker.makeRuntimeDimension(descriptor);
             ServerWorld dimension = result.getKey();
             DimensionOptions dimensionOptions = result.getValue();
 
@@ -88,7 +93,7 @@ public class WorldService {
             /* Start ticking it. */
             dimension.tick(() -> true);
         } catch (Exception e) {
-            LogUtil.error("Failed to make RuntimeDimension instance: dimension descriptor = {}", runtimeDimensionDescriptor, e);
+            LogUtil.error("Failed to make RuntimeDimension instance: dimension descriptor = {}", descriptor, e);
         }
     }
 
@@ -106,9 +111,13 @@ public class WorldService {
         }
     }
 
-    private static void unloadAndDeleteDimension(@NotNull ServerWorld world) {
+    private static void consumeDimensionDeletionTicket(@NotNull DimensionDeletionTicket ticket) {
+        ServerWorld world = ticket.getWorld();
         RuntimeDimensionLoader.unloadDimension(world);
-        deleteDimensionFiles(world);
+
+        if (ticket.deleteWorldFiles) {
+            deleteDimensionFiles(world);
+        }
     }
 
     private static void deleteDimensionFiles(@NotNull ServerWorld world) {
@@ -165,12 +174,10 @@ public class WorldService {
             .findFirst();
     }
 
-    public static List<RuntimeDimensionDescriptor> getUnloadedRuntimeDimensionDescriptors() {
-        return WorldInitializer.world.model().dimension_list
-            .stream()
-            .filter(it -> !it.isDimensionLoaded())
-            .toList();
+    public static List<RuntimeDimensionDescriptor> getRuntimeDimensionDescriptors() {
+        return WorldInitializer.world.model().dimension_list;
     }
+
 }
 
 

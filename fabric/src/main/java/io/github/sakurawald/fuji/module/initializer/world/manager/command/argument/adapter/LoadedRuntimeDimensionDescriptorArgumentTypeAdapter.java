@@ -6,7 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
-import io.github.sakurawald.fuji.module.initializer.world.manager.command.argument.wrapper.UnloadedRuntimeDimensionDescriptor;
+import io.github.sakurawald.fuji.module.initializer.world.manager.command.argument.wrapper.LoadedRuntimeDimensionDescriptor;
 import io.github.sakurawald.fuji.module.initializer.world.manager.service.WorldService;
 import io.github.sakurawald.fuji.module.initializer.world.manager.structure.RuntimeDimensionDescriptor;
 import java.util.List;
@@ -15,7 +15,7 @@ import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.util.Identifier;
 
-public class UnloadedRuntimeDimensionDescriptorArgumentTypeAdapter extends BaseArgumentTypeAdapter {
+public class LoadedRuntimeDimensionDescriptorArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected ArgumentType<?> makeArgumentType() {
         return IdentifierArgumentType.identifier();
@@ -26,21 +26,21 @@ public class UnloadedRuntimeDimensionDescriptorArgumentTypeAdapter extends BaseA
         Identifier identifier = IdentifierArgumentType.getIdentifier(context, argument.getArgumentName());
         Optional<RuntimeDimensionDescriptor> runtimeDimensionDescriptor = WorldService.getRuntimeDimensionDescriptor(identifier.toString());
         RuntimeDimensionDescriptor value = runtimeDimensionDescriptor.get();
-        if (!value.isDimensionLoaded()) {
-            return new UnloadedRuntimeDimensionDescriptor(value);
+        if (value.isDimensionLoaded()) {
+            return new LoadedRuntimeDimensionDescriptor(value);
         }
 
-        throw new IllegalArgumentException("The dimension is already loaded.");
+        throw new IllegalArgumentException("The dimension is already un-loaded.");
     }
 
     @Override
     public List<Class<?>> getTypeClasses() {
-        return List.of(UnloadedRuntimeDimensionDescriptor.class);
+        return List.of(LoadedRuntimeDimensionDescriptor.class);
     }
 
     @Override
     public List<String> getTypeStrings() {
-        return List.of("unloaded-runtime-dimension-descriptor");
+        return List.of("loaded-runtime-dimension-descriptor");
     }
 
     @Override
@@ -50,7 +50,7 @@ public class UnloadedRuntimeDimensionDescriptorArgumentTypeAdapter extends BaseA
             .suggests(CommandHelper.Suggestion.iterable(() -> WorldService
                 .getRuntimeDimensionDescriptors()
                 .stream()
-                .filter(it -> !it.isDimensionLoaded())
+                .filter(RuntimeDimensionDescriptor::isDimensionLoaded)
                 .map(RuntimeDimensionDescriptor::getDimension)
                 .toList()));
     }

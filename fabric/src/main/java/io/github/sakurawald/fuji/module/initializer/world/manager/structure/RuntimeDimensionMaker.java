@@ -7,6 +7,7 @@ import io.github.sakurawald.fuji.core.structure.Pair;
 import io.github.sakurawald.fuji.module.initializer.world.manager.accessor.ExtendedDimensionOptions;
 import io.github.sakurawald.fuji.module.initializer.world.manager.command.argument.wrapper.ChunkGeneratorType;
 import io.github.sakurawald.fuji.module.initializer.world.manager.service.FlatPresetParser;
+import io.github.sakurawald.fuji.module.initializer.world.manager.structure.util.VoidWorldGenerationProgressListener;
 import java.util.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.entity.boss.dragon.EnderDragonFight;
