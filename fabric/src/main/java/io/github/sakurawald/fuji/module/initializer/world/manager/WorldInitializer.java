@@ -30,11 +30,15 @@ import io.github.sakurawald.fuji.module.initializer.world.manager.command.argume
 import io.github.sakurawald.fuji.module.initializer.world.manager.service.structure.DimensionCreationTicket;
 import io.github.sakurawald.fuji.module.initializer.world.manager.service.structure.DimensionDeletionTicket;
 import io.github.sakurawald.fuji.module.initializer.world.manager.structure.RuntimeDimensionDescriptor;
+import io.github.sakurawald.fuji.module.initializer.world.manager.structure.RuntimeDimensionImporter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.SneakyThrows;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -45,7 +49,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.RandomSeed;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.border.WorldBorder;
-import net.minecraft.world.dimension.DimensionTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -140,7 +143,6 @@ import org.jetbrains.annotations.Nullable;
     - https://minecraft.wiki/w/Chunk_format
     - https://minecraft.wiki/w/Loot_table
     """)
-
 @ColorBox(id = 1751982071236L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Create an extra `the_nether` dimension
     Issue: `/world create my_nether minecraft:the_nether`
@@ -254,7 +256,47 @@ import org.jetbrains.annotations.Nullable;
     2. `chunk generator type`
     3. `chunk generator parameters`.
     """)
+@ColorBox(id = 1752807649896L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ The definition of `import`, `make`, `load`, `unload`.
+    The `import` means: define a `runtime dimension descriptor` in config file.
+    So that we know how make the `original chunk generator` used by the dimension.
 
+    The `make` means: We use the `runtime dimension descriptor` to create the `dimension` instance.
+    We need to make the `DimensionOptions` from the `runtime dimension descriptor`.
+    A `DimensionOptions` = A `Dimension Type` + A `Chunk Generator`.
+
+    The `load` means: We will put this `dimension` instance into the worlds list of the `server`.
+
+    The `unload` means: We will take this `dimension` instance from the worlds list of the `server`.
+
+    ◉ The definition of `/world create` and `/world delete` command.
+    The `/world create` command does the `import`, `make` and `load`.
+    The `/world delete` command does the `unload` and also `delete the chunk files of that dimension`.
+    """)
+@ColorBox(id = 1752811309081L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ How to `import` a `dimension dir`?
+    The `/world import` is similar to `/world create` command.
+    You need to specify `enough information` to define the `runtime dimension descriptor`.
+    Note that `to import a dimension dir` is `to define the runtime dimension descriptor in the config file`.
+
+    ◉ Import a `sky block dimension`.
+    Let's say you have a `sky block dimension` whose directory name is `sky_block`.
+    You need to put that `directory` in `world/dimensions/fuji/sky_block`.
+
+    And issue: `/world import sky_block minecraft:overworld -seed \\<seed\\> --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:air;minecraft:the_void"`
+    This defines a `runtime dimension descriptor` with `flat chunk generator`, and with `void layers`.
+    The `void layers` means the `flat chunk generator` will fill `minecraft:air` when it is needed to `generate a new chunk`.
+
+    ◉ Import a `overworld dimension`.
+    Issue: `/world import my_overworld minecraft:overworld --seed \\<seed\\>`
+    You need to specify the `dimension type` to define the `environment of your dimension`.
+    And also the `seed` to define the `seed of your dimension`.
+    <red>NOTE: If you specify a `wrong seed`, then the `chunk generator` will generate `in-consistent chunks` compared to your `existed chunks`.
+
+    ◉ Import a `superflat dimension`.
+    Issue: `/world import my_superflat minecraft:overworld --seed \\<seed\\> --chunkGeneratorType FLAT`
+
+    """)
 
 
 
@@ -342,28 +384,42 @@ public class WorldInitializer extends ModuleInitializer {
         Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(dimensionType.getValue());
         String $chunkGeneratorParameter = chunkGeneratorParameters.orElse("");
         WorldPresetType $worldPresetType = worldPresetType.orElse(null);
-
-        RuntimeDimensionDescriptor runtimeDimensionDescriptor = new RuntimeDimensionDescriptor();
-        runtimeDimensionDescriptor.dimension = dimensionIdentifier.toString();
-        runtimeDimensionDescriptor.seed = $seed;
-        if ($worldPresetType != null) {
-            runtimeDimensionDescriptor.worldPresetType = $worldPresetType;
-            runtimeDimensionDescriptor.dimension_type = DimensionTypes.OVERWORLD_ID.toString();
-        } else {
-            runtimeDimensionDescriptor.dimension_type = dimensionTypeIdentifier.toString();
-            runtimeDimensionDescriptor.chunkGeneratorType = $chunkGeneratorType;
-            runtimeDimensionDescriptor.chunkGeneratorParameters = $chunkGeneratorParameter;
-        }
-        runtimeDimensionDescriptor.setShouldTickTime(true);
-
-        world.model().dimension_list.add(runtimeDimensionDescriptor);
-        world.writeStorage();
+        RuntimeDimensionDescriptor runtimeDimensionDescriptor = RuntimeDimensionImporter.importRuntimeDimensionDescriptor(dimensionIdentifier, $worldPresetType, dimensionTypeIdentifier, $chunkGeneratorType, $chunkGeneratorParameter, $seed);
 
         /* Request to create the dimension. */
         DimensionCreationTicket ticket = new DimensionCreationTicket(runtimeDimensionDescriptor);
         WorldService.submitDimensionCreationTicket(ticket);
         TextHelper.sendBroadcastByKey("world.dimension.created", dimensionIdentifier);
         return CommandHelper.Return.SUCCESS;
+    }
+
+    @SneakyThrows
+    @Document(id = 1752809824729L, value = """
+        This command will `import` an external `dimension directory` placed in `world/dimensions/fuji/\\<dimension-name\\>`.
+        You need to provide enough information to define the `runtime dimension descriptor`.
+
+        <green>NOTE: This command is almost identical to `/world create` command.
+        """)
+    @CommandNode("import")
+    private static int $import(@CommandSource ServerCommandSource source
+        , String name
+        , DimensionType dimensionType
+        , Optional<Long> seed
+        , Optional<ChunkGeneratorType> chunkGeneratorType
+        , Optional<String> chunkGeneratorParameters
+        , Optional<WorldPresetType> worldPresetType) {
+
+        /* Verify the dimension dir existed. */
+        Path targetDimensionPath = RuntimeDimensionImporter.getLevelSavePath()
+            .resolve("dimensions")
+            .resolve("fuji")
+            .resolve(name);
+        if (!Files.exists(targetDimensionPath)) {
+            TextHelper.sendTextByKey(source, "world.dimension.import.dimension_dir_not_found", targetDimensionPath.toFile().getCanonicalPath());
+            return CommandHelper.Return.FAIL;
+        }
+
+        return $create(source, name, dimensionType, seed, chunkGeneratorType, chunkGeneratorParameters, worldPresetType);
     }
 
     @Document(id = 1752798163284L, value = """
