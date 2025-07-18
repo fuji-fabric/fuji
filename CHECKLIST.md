@@ -82,6 +82,9 @@ It's good to have a checklist, to avoid forgetting something.
 - Issue `/fuji reload`, to see if `command scheduler` jobs are `re-scheduled`.
 - Run the `/run as console save-all` command.
 - Run `/tp` and `/world tp` between `dimensions`, and see if the `world border` is synced in the `client-side`.
+- In `MC 1.20.1`, create a `overworld` dimension type with `seed=12345`. 
+  - Goto `/tp @s 14665 ~ 345`. (You should get `emerald * 7`, `gold ingot * 3`, `iron ingot * 11`, `tnt * 2`, `heart of the sea * 1`, `cooked cod * 8` and `potion of water breathing * 1`.)
+  - Goto `/tp @s 0 128 0`, you should in `minecraft:ocean`, and there is a `minecraft:dark_forest` in front of you, also there is a `lava source` flowing down.
 
 ## Publish a new version
 

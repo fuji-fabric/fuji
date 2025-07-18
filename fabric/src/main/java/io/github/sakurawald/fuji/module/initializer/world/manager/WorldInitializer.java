@@ -138,6 +138,7 @@ import org.jetbrains.annotations.Nullable;
     - https://minecraft.wiki/w/Terrain_features
     - https://minecraft.fandom.com/wiki/Java_Edition_level_format
     - https://minecraft.wiki/w/Chunk_format
+    - https://minecraft.wiki/w/Loot_table
 
     """)
 
@@ -294,6 +295,9 @@ public class WorldInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document(id = 1752802990626L, value = """
+        List `loaded dimensions` and `unloaded dimensions`.
+        """)
     @CommandNode("list")
     private static int $list(@CommandSource ServerCommandSource source) {
         TextHelper.sendTextByKey(source, "dimension.loaded_dimensions");
@@ -455,7 +459,7 @@ public class WorldInitializer extends ModuleInitializer {
 
 
     @Document(id = 1752248825291L, value = """
-        Saves the config of all extra dimensions into the storage.
+        Saves all the `dimension descriptors` from `memory` into the `storage`.
         """)
     @CommandNode("save-configs")
     @CommandRequirement(level = 4)

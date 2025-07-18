@@ -21,6 +21,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructureSet;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.random.RandomSequencesState;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeAccess;
@@ -62,12 +63,17 @@ public class RuntimeDimensionMaker {
             BiomeAccess.hashSeed(runtimeDimensionDescriptor.seed),
             ImmutableList.of(),
             runtimeDimensionDescriptor.shouldTickTime,
-            null);
+            makeRandomSequenceState(runtimeDimensionDescriptor));
 
         /* Do some post things for this dimension. */
         postRuntimeDimensionMake(dimension, runtimeDimensionDescriptor);
 
         return new Pair<>(dimension, dimensionOptions);
+    }
+
+    private static @Nullable RandomSequencesState makeRandomSequenceState(@NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
+        long seed = runtimeDimensionDescriptor.seed;
+        return new RandomSequencesState(seed);
     }
 
     private static void postRuntimeDimensionMake(ServerWorld dimension, @NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {

@@ -28,7 +28,6 @@ public class TesterInitializer extends ModuleInitializer {
     @SneakyThrows(Exception.class)
     @CommandNode("run")
     private static int $run(@CommandSource ServerCommandSource source) {
-
         LogUtil.info("Done");
         return 0;
     }
