@@ -26,6 +26,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionOptions;
 import org.jetbrains.annotations.NotNull;
@@ -130,11 +131,11 @@ public class WorldService {
         for (ServerPlayerEntity player : players) {
             GlobalPos from = GlobalPos.of(player);
             GlobalPos to = new GlobalPos(safeDimension, safeBlockPos.getX() + 0.5, safeBlockPos.getY() + 0.5, safeBlockPos.getZ() + 0.5, 0, 0);
-            if (to.getY() <= 0) {
-                to = to.withY(64);
-            }
-            TeleportTicket teleportTicket = TeleportTicket.makeVipTicket(player, from, to);
 
+            BlockPos topPosition = safeDimension.getTopPosition(Heightmap.Type.MOTION_BLOCKING, player.getBlockPos());
+            to = to.withY(topPosition.getY());
+
+            TeleportTicket teleportTicket = TeleportTicket.makeVipTicket(player, from, to);
             Managers.getBossBarManager().addTicket(teleportTicket);
         }
     }

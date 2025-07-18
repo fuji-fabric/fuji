@@ -13,9 +13,7 @@ import io.github.sakurawald.fuji.module.initializer.tester.functions.TestFunctio
 import lombok.SneakyThrows;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
 
 @Document(id = 1751980891153L, value = """
     This module is only used for `development`.
@@ -30,9 +28,8 @@ public class TesterInitializer extends ModuleInitializer {
     @SneakyThrows(Exception.class)
     @CommandNode("run")
     private static int $run(@CommandSource ServerCommandSource source) {
-        ServerWorld safeDimension = source.getServer().getOverworld();
-        BlockPos safeBlockPos = safeDimension.getSpawnPos();
-        LogUtil.info("pos = {}", safeBlockPos);
+
+
         LogUtil.info("Done");
         return 0;
     }
