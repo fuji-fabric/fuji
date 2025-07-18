@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.world.manager.service;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.event.impl.ServerTickEvents;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
@@ -118,6 +119,9 @@ public class WorldService {
 
             /* Start ticking it. */
             dimension.tick(() -> true);
+
+            /* Send feedback. */
+            TextHelper.sendTextByKey(ticket.source, "world.dimension.created", ticket.descriptor.dimension);
         } catch (Exception e) {
             LogUtil.error("Failed to make RuntimeDimension instance: dimension descriptor = {}", descriptor, e);
         }
@@ -147,6 +151,8 @@ public class WorldService {
         if (ticket.deleteWorldFiles) {
             deleteDimensionFiles(world);
         }
+
+        TextHelper.sendTextByKey(ticket.source,"world.dimension.deleted", RegistryHelper.toString(ticket.world));
     }
 
     private static void deleteDimensionFiles(@NotNull ServerWorld world) {

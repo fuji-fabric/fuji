@@ -387,9 +387,8 @@ public class WorldInitializer extends ModuleInitializer {
         RuntimeDimensionDescriptor runtimeDimensionDescriptor = RuntimeDimensionImporter.importRuntimeDimensionDescriptor(dimensionIdentifier, $worldPresetType, dimensionTypeIdentifier, $chunkGeneratorType, $chunkGeneratorParameter, $seed);
 
         /* Request to create the dimension. */
-        DimensionCreationTicket ticket = new DimensionCreationTicket(runtimeDimensionDescriptor);
+        DimensionCreationTicket ticket = new DimensionCreationTicket(source, runtimeDimensionDescriptor);
         WorldService.submitDimensionCreationTicket(ticket);
-        TextHelper.sendBroadcastByKey("world.dimension.created", dimensionIdentifier);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -448,12 +447,10 @@ public class WorldInitializer extends ModuleInitializer {
         }
 
         /* Request to delete. */
-        WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(dimensionInstance, true));
+        WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(source, dimensionInstance, true));
 
         /* Remove the node from storage. */
         WorldService.deleteRuntimeDimensionDescriptor(dimensionId);
-
-        TextHelper.sendBroadcastByKey("world.dimension.deleted", dimensionId);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -465,7 +462,7 @@ public class WorldInitializer extends ModuleInitializer {
     @CommandNode("load")
     private static int $load(@CommandSource ServerCommandSource source, UnloadedRuntimeDimensionDescriptor dimension) {
         RuntimeDimensionDescriptor runtimeDimensionDescriptor = dimension.getValue();
-        DimensionCreationTicket ticket = new DimensionCreationTicket(runtimeDimensionDescriptor);
+        DimensionCreationTicket ticket = new DimensionCreationTicket(source, runtimeDimensionDescriptor);
         WorldService.submitDimensionCreationTicket(ticket);
 
         TextHelper.sendTextByKey(source,"world.dimension.load", runtimeDimensionDescriptor.dimension);
@@ -476,7 +473,7 @@ public class WorldInitializer extends ModuleInitializer {
     private static int $unload(@CommandSource ServerCommandSource source, LoadedRuntimeDimensionDescriptor dimension) {
         RuntimeDimensionDescriptor runtimeDimensionDescriptor = dimension.getValue();
         Optional<ServerWorld> loadedWorld = runtimeDimensionDescriptor.getLoadedWorld();
-        WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(loadedWorld.get(), false));
+        WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(source, loadedWorld.get(), false));
 
         TextHelper.sendTextByKey(source,"world.dimension.unload", runtimeDimensionDescriptor.dimension);
         return CommandHelper.Return.SUCCESS;
@@ -503,7 +500,7 @@ public class WorldInitializer extends ModuleInitializer {
         RuntimeDimensionDescriptor runtimeDimensionDescriptor = dimensionEntryOpt.get();
 
         /* Delete the dimension instance. */
-        WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(dimensionInstance, true));
+        WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(source, dimensionInstance, true));
 
         /* Draw the seed. */
         Boolean $useTheSameSeed = useTheSameSeed.orElse(false);
@@ -511,7 +508,7 @@ public class WorldInitializer extends ModuleInitializer {
         world.writeStorage();
 
         /* Create a new dimension instance. */
-        DimensionCreationTicket ticket = new DimensionCreationTicket(runtimeDimensionDescriptor);
+        DimensionCreationTicket ticket = new DimensionCreationTicket(source, runtimeDimensionDescriptor);
         WorldService.submitDimensionCreationTicket(ticket);
 
         TextHelper.sendBroadcastByKey("world.dimension.reset", dimensionIdentifier);
@@ -649,7 +646,7 @@ public class WorldInitializer extends ModuleInitializer {
             .filter(RuntimeDimensionDescriptor::isAuto_load_on_server_startup)
             .forEach(it -> {
                 try {
-                    DimensionCreationTicket ticket = new DimensionCreationTicket(it);
+                    DimensionCreationTicket ticket = new DimensionCreationTicket(server.getCommandSource(), it);
                     WorldService.submitDimensionCreationTicket(ticket);
                     LogUtil.info("Load dimension {} into the server.", it.getDimension());
                 } catch (Exception e) {
