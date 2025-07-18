@@ -56,9 +56,9 @@ public class WorldService {
     private static void saveChunksBeforeUnloadingTheDimension(ServerWorld world) {
         ServerHelper.getServer().execute(() -> {
             world.savingDisabled = false;
-            #if MC_VER <= MC_1_20_6
+            #if MC_VER <= MC_1_21
             world.getChunkManager().removePersistentTickets();
-            #elif MC_VER > MC_1_20_6
+            #elif MC_VER > MC_1_21
             world.getChunkManager().shutdown();
             #endif
 

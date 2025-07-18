@@ -71,7 +71,7 @@ public class RuntimeDimensionMaker {
         return new Pair<>(dimension, dimensionOptions);
     }
 
-    private static @Nullable RandomSequencesState makeRandomSequenceState(@NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
+    private static @NotNull RandomSequencesState makeRandomSequenceState(@NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         long seed = runtimeDimensionDescriptor.seed;
         return new RandomSequencesState(seed);
     }

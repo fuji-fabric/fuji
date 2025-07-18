@@ -407,7 +407,7 @@ public class WorldInitializer extends ModuleInitializer {
         DimensionCreationTicket ticket = new DimensionCreationTicket(runtimeDimensionDescriptor);
         WorldService.submitDimensionCreationTicket(ticket);
 
-        TextHelper.sendTextByKey(source,"world.dimension.loaded", runtimeDimensionDescriptor.dimension);
+        TextHelper.sendTextByKey(source,"world.dimension.load", runtimeDimensionDescriptor.dimension);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -417,7 +417,7 @@ public class WorldInitializer extends ModuleInitializer {
         Optional<ServerWorld> loadedWorld = runtimeDimensionDescriptor.getLoadedWorld();
         WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(loadedWorld.get(), false));
 
-        TextHelper.sendTextByKey(source,"world.dimension.unloaded", runtimeDimensionDescriptor.dimension);
+        TextHelper.sendTextByKey(source,"world.dimension.unload", runtimeDimensionDescriptor.dimension);
         return CommandHelper.Return.SUCCESS;
     }
 
