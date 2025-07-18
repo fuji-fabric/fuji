@@ -300,7 +300,7 @@ public class WorldInitializer extends ModuleInitializer {
             });
 
         List<String> unloadedDimensions = WorldService
-            .getUnloadedDimensionDescriptors()
+            .getUnloadedRuntimeDimensionDescriptors()
             .stream()
             .map(RuntimeDimensionDescriptor::getDimension)
             .toList();
@@ -366,7 +366,7 @@ public class WorldInitializer extends ModuleInitializer {
         WorldService.requestToDeleteDimension(dimensionInstance);
 
         /* Remove the node from storage. */
-        WorldService.deleteDimensionNode(dimensionId);
+        WorldService.deleteRuntimeDimensionDescriptor(dimensionId);
 
         TextHelper.sendBroadcastByKey("world.dimension.deleted", dimensionId);
         return CommandHelper.Return.SUCCESS;
@@ -385,7 +385,7 @@ public class WorldInitializer extends ModuleInitializer {
         String dimensionIdentifier = RegistryHelper.toString(dimensionInstance);
         checkBlacklist(source, dimensionIdentifier);
 
-        Optional<RuntimeDimensionDescriptor> dimensionEntryOpt = WorldService.getDimensionDescriptor(dimensionIdentifier);
+        Optional<RuntimeDimensionDescriptor> dimensionEntryOpt = WorldService.getRuntimeDimensionDescriptor(dimensionIdentifier);
         if (dimensionEntryOpt.isEmpty()) {
             TextHelper.sendTextByKey(source, "world.dimension.not_found");
             return CommandHelper.Return.FAIL;
@@ -414,7 +414,7 @@ public class WorldInitializer extends ModuleInitializer {
     @CommandNode("save-configs")
     @CommandRequirement(level = 4)
     private static int $saveConfigs(@CommandSource ServerCommandSource source) {
-        WorldService.saveRuntimeWorldConfigs();
+        WorldService.saveRuntimeDimensionDescriptors();
         TextHelper.sendTextByKey(source, "operation.success");
         return CommandHelper.Return.SUCCESS;
     }

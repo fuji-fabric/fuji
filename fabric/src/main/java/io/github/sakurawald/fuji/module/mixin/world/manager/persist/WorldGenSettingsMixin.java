@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.module.mixin.world.manager.persist;
 
 import com.google.common.collect.Maps;
 import io.github.sakurawald.fuji.module.initializer.world.manager.accessor.ExtendedDimensionOptions;
-import io.github.sakurawald.fuji.module.initializer.world.manager.structure.registry.FilteredRegistry;
+import io.github.sakurawald.fuji.module.initializer.world.manager.structure.util.FilteredRegistry;
 import java.util.Map;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;

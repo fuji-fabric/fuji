@@ -49,7 +49,7 @@ public class RuntimeDimension extends ServerWorld {
     public long getSeed() {
         // NOTE: Override the getSeed() method to provide the custom seed before the seed is used by super class.
         String dimensionId = RegistryHelper.toString(this.getRegistryKey());
-        Optional<RuntimeDimensionDescriptor> dimensionNode = WorldService.getDimensionDescriptor(dimensionId);
+        Optional<RuntimeDimensionDescriptor> dimensionNode = WorldService.getRuntimeDimensionDescriptor(dimensionId);
         if (dimensionNode.isPresent()) {
             return dimensionNode.get().seed;
         }

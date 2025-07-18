@@ -81,6 +81,7 @@ It's good to have a checklist, to avoid forgetting something.
 - To test `/fuji inspect configurations`, use the config files from `command_menu` module.
 - Issue `/fuji reload`, to see if `command scheduler` jobs are `re-scheduled`.
 - Run the `/run as console save-all` command.
+- Run `/tp` and `/world tp` between `dimensions`, and see if the `world border` is synced in the `client-side`.
 
 ## Publish a new version
 

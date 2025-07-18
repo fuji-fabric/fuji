@@ -24,6 +24,7 @@ import net.minecraft.world.gen.chunk.FlatChunkGeneratorLayer;
 import net.minecraft.world.gen.feature.PlacedFeature;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("SequencedCollectionMethodCanBeUsed")
 public class FlatPresetParser {
 
     private static final RegistryKey<Biome> BIOME_KEY = BiomeKeys.PLAINS;

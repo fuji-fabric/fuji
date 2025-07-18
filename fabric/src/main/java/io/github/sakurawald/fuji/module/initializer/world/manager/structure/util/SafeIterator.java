@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.initializer.world.manager.structure.registry;
+package io.github.sakurawald.fuji.module.initializer.world.manager.structure.util;
 
 import org.jetbrains.annotations.NotNull;
 
