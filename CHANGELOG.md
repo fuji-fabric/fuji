@@ -1,5 +1,6 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
   
+
 - **[world] feature: new command `/world import`, to `import` an external `dimension directory`.**
 - **[world] feature: new command `/world {load/unload}`, to `load` or `unload` a `runtime dimension`.**
 - [world] feature: improve the safe location finder when deleting a dimension.
