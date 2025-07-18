@@ -96,4 +96,7 @@ public class RuntimeDimensionDescriptor {
             .anyMatch(it -> RegistryHelper.toString(it).equals(this.dimension));
     }
 
+    public boolean isDebugWorld() {
+        return WorldPresetType.DEBUG_ALL_BLOCK_STATES == this.worldPresetType;
+    }
 }

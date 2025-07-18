@@ -1,7 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.world.manager.structure;
 
 import com.google.common.collect.ImmutableList;
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.structure.Pair;
@@ -39,45 +38,42 @@ public class RuntimeDimensionMaker {
 
     public static Pair<ServerWorld, DimensionOptions> makeRuntimeDimension(@NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         MinecraftServer server = ServerHelper.getServer();
+
+        /* Make the dimension properties. */
+        // NOTE: Here we just mirror the `SaveProperties` from `minecraft:overworld`.
+        RuntimeDimensionProperties worldProperties = new RuntimeDimensionProperties(server.getSaveProperties(), runtimeDimensionDescriptor);
+
+        /* Make the dimension options. */
+        @Nullable DimensionOptions dimensionOptions = makeDimensionOptions(runtimeDimensionDescriptor);
+        ((ExtendedDimensionOptions) (Object) dimensionOptions).fuji$setSaveDimensionOptions(false);
+
+        /* Make the dimension instance. */
         Identifier dimensionIdentifier = RegistryHelper.makeIdentifier(runtimeDimensionDescriptor.dimension);
-        Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(runtimeDimensionDescriptor.dimension_type);
+        RegistryKey<World> worldRegistryKey = RegistryKey.of(RegistryKeys.WORLD, dimensionIdentifier);
+        ServerWorld dimension = new RuntimeDimension(server,
+            Util.getMainWorkerExecutor(),
+            server.session,
+            worldProperties,
+            worldRegistryKey,
+            dimensionOptions,
+            VoidWorldGenerationProgressListener.INSTANCE,
+            runtimeDimensionDescriptor.isDebugWorld(),
+            BiomeAccess.hashSeed(runtimeDimensionDescriptor.seed),
+            ImmutableList.of(),
+            runtimeDimensionDescriptor.shouldTickTime,
+            null);
 
-        try {
-            /* Make the dimension properties. */
-            // note: we use the same WorldData from OVERWORLD
-            RuntimeDimensionProperties worldProperties = new RuntimeDimensionProperties(server.getSaveProperties(), runtimeDimensionDescriptor);
+        /* Do some post things for this dimension. */
+        postRuntimeDimensionMake(dimension, runtimeDimensionDescriptor);
 
-            /* Make the dimension options. */
-            @Nullable DimensionOptions dimensionOptions = makeDimensionOptions(runtimeDimensionDescriptor);
-            ((ExtendedDimensionOptions) (Object) dimensionOptions).fuji$setSaveDimensionOptions(false);
+        return new Pair<>(dimension, dimensionOptions);
+    }
 
-            /* Make the dimension instance. */
-            RegistryKey<World> worldRegistryKey = RegistryKey.of(RegistryKeys.WORLD, dimensionIdentifier);
-            LogUtil.debug("Make instance of world with registry key of type `World`: {}", worldRegistryKey);
-            ServerWorld dimension;
-            dimension = new RuntimeDimension(server,
-                Util.getMainWorkerExecutor(),
-                server.session,
-                worldProperties,
-                worldRegistryKey,
-                dimensionOptions,
-                VoidWorldGenerationProgressListener.INSTANCE,
-                false,
-                BiomeAccess.hashSeed(runtimeDimensionDescriptor.seed),
-                ImmutableList.of(),
-                runtimeDimensionDescriptor.shouldTickTime,
-                null);
-
-            // start dragon fight if the dimension type is the end.
-            if (dimensionTypeIdentifier.equals(DimensionTypes.THE_END_ID)) {
-                dimension.setEnderDragonFight(new EnderDragonFight(dimension, dimension.getSeed(), EnderDragonFight.Data.DEFAULT));
-            }
-
-            return new Pair<>(dimension, dimensionOptions);
-        } catch (Exception e) {
-            throw e;
+    private static void postRuntimeDimensionMake(ServerWorld dimension, @NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
+        // If the dimension type is THE_END, then start the dragon fight.
+        if (DimensionTypes.THE_END_ID.toString().equals(runtimeDimensionDescriptor.dimension_type)) {
+            dimension.setEnderDragonFight(new EnderDragonFight(dimension, dimension.getSeed(), EnderDragonFight.Data.DEFAULT));
         }
-
     }
 
     private static @NotNull DimensionOptions makeDimensionOptions(RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
