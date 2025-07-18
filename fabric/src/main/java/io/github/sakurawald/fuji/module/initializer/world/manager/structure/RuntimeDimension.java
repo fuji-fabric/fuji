@@ -63,7 +63,7 @@ public class RuntimeDimension extends ServerWorld {
     protected void tickTime() {
         this.getRuntimeDimensionProperties()
             .ifPresentOrElse(runtimeDimensionProperties -> {
-            if (!runtimeDimensionProperties.runtimeDimensionDescriptor.shouldTickTime) {
+            if (!runtimeDimensionProperties.getEffectiveRuntimeDimensionDescriptor().shouldTickTime) {
                 return;
             }
 

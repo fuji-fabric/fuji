@@ -76,6 +76,7 @@ public class RuntimeDimensionMaker {
         return new RandomSequencesState(seed);
     }
 
+    @SuppressWarnings("deprecation")
     private static void postRuntimeDimensionMake(ServerWorld dimension, @NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         // If the dimension type is THE_END, then start the dragon fight.
         if (DimensionTypes.THE_END_ID.toString().equals(runtimeDimensionDescriptor.dimension_type)) {

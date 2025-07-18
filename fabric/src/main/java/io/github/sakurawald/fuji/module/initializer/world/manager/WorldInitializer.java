@@ -139,7 +139,6 @@ import org.jetbrains.annotations.Nullable;
     - https://minecraft.fandom.com/wiki/Java_Edition_level_format
     - https://minecraft.wiki/w/Chunk_format
     - https://minecraft.wiki/w/Loot_table
-
     """)
 
 @ColorBox(id = 1751982071236L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """

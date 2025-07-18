@@ -9,6 +9,7 @@
 - https://colorhunt.co/palettes/popular
 - https://jd.papermc.io/paper/1.21.6/
 - https://github.com/google/gson/blob/main/GsonDesignDocument.md#creating-class-instances-for-deserialization
+- https://minecraft.fandom.com/wiki/Category:Development
 
 # Server-side only.
 - https://vanillatweaks.net/picker/datapacks/
