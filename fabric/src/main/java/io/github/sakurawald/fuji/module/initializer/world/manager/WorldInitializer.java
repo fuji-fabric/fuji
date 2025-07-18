@@ -409,13 +409,19 @@ public class WorldInitializer extends ModuleInitializer {
         , Optional<String> chunkGeneratorParameters
         , Optional<WorldPresetType> worldPresetType) {
 
-        /* Verify the dimension dir existed. */
+        /* Ensure the dimension dir existed. */
         Path targetDimensionPath = RuntimeDimensionImporter.getLevelSavePath()
             .resolve("dimensions")
             .resolve("fuji")
             .resolve(name);
         if (!Files.exists(targetDimensionPath)) {
             TextHelper.sendTextByKey(source, "world.dimension.import.dimension_dir_not_found", targetDimensionPath.toFile().getCanonicalPath());
+            return CommandHelper.Return.FAIL;
+        }
+
+        /* Ensure seed existed. */
+        if (seed.isEmpty()) {
+            TextHelper.sendTextByKey(source, "dimension.seed.empty");
             return CommandHelper.Return.FAIL;
         }
 
