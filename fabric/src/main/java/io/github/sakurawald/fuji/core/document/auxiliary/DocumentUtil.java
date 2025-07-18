@@ -63,14 +63,23 @@ public class DocumentUtil {
 
     public static String compileDocumentString(String documentString) {
         /* Adds the color prefix for each line. */
-        String decoratedDocumentString = Arrays
+        return Arrays
             .stream(documentString.split("\n"))
-            .map(line -> "<#FFA1F5>" + line)
+            .map(DocumentUtil::compileDocumentStringLine)
             .collect(Collectors.joining("\n"));
+    }
 
-        /* Highlight the URL links in document string. */
-        decoratedDocumentString = UrlHighlighter.highlight(decoratedDocumentString);
+    private static @NotNull String compileDocumentStringLine(String line) {
+        if (line.startsWith("◉")) {
+            line = "<bold>" + line;
+        }
 
-        return decoratedDocumentString;
+        line = line.replaceAll("`/(.+?)`", "<gold>/$1</gold>");
+
+        line = line.replaceAll("`(.+?)`", "<grey>$1</grey>");
+
+        line = UrlHighlighter.highlight(line);
+
+        return "<#FFA1F5>" + line;
     }
 }
