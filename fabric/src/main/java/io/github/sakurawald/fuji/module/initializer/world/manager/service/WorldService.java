@@ -41,16 +41,32 @@ public class WorldService {
 
     private static void processDimensionCreationAndDeletionQueue() {
         dimensionDeletionTicketQueue.removeIf(WorldService::tryConsumeDimensionDeletionTicket);
-        dimensionCreationQueue.removeIf(WorldService::tryCreateAndLoadDimension);
+        dimensionCreationQueue.removeIf(WorldService::tryConsumeDimensionCreationTicket);
     }
 
     public static void submitDimensionDeletionTicket(@NotNull DimensionDeletionTicket ticket) {
+        ServerWorld world = ticket.world;
+        saveChunksBeforeUnloadingTheDimension(world);
+
         ServerHelper.getServer().submit(() -> {
             dimensionDeletionTicketQueue.add(ticket);
         });
     }
 
-    public static void requestToCreateAndLoadDimension(DimensionCreationTicket ticket) {
+    private static void saveChunksBeforeUnloadingTheDimension(ServerWorld world) {
+        ServerHelper.getServer().execute(() -> {
+            world.savingDisabled = false;
+            #if MC_VER <= MC_1_20_6
+            world.getChunkManager().removePersistentTickets();
+            #elif MC_VER > MC_1_20_6
+            world.getChunkManager().shutdown();
+            #endif
+
+            world.getChunkManager().tick(() -> true, false);
+        });
+    }
+
+    public static void submitDimensionCreationTicket(DimensionCreationTicket ticket) {
         ServerHelper.getServer().submit(() -> {
             dimensionCreationQueue.add(ticket);
         });
@@ -58,7 +74,8 @@ public class WorldService {
 
     private static boolean tryConsumeDimensionDeletionTicket(@NotNull DimensionDeletionTicket ticket) {
         ServerWorld world = ticket.getWorld();
-        if (world.getPlayers().isEmpty()) {
+
+        if (world.getPlayers().isEmpty() && !shouldDelayShutdown(world)) {
             consumeDimensionDeletionTicket(ticket);
             return true;
         } else {
@@ -67,18 +84,26 @@ public class WorldService {
         }
     }
 
-    private static boolean tryCreateAndLoadDimension(@NotNull DimensionCreationTicket ticket) {
+    private static boolean shouldDelayShutdown(ServerWorld world) {
+        #if MC_VER <= MC_1_20_6
+        return world.getChunkManager().threadedAnvilChunkStorage.shouldDelayShutdown();
+        #elif MC_VER > MC_1_20_6
+        return world.getChunkManager().chunkLoadingManager.shouldDelayShutdown();
+        #endif
+    }
+
+    private static boolean tryConsumeDimensionCreationTicket(@NotNull DimensionCreationTicket ticket) {
         // NOTE: Wait the target dimension to be deleted first (If there is a deletion ticket for it).
         if (dimensionDeletionTicketQueue.stream().anyMatch(it -> RegistryHelper.toString(it.world).equals(ticket.descriptor.dimension))) {
             return false;
         }
 
-        createAndLoadDimension(ticket);
+        consumeDimensionCreationTicket(ticket);
         // NOTE: Returns true anyway, to prevent the console spam.
         return true;
     }
 
-    private static void createAndLoadDimension(@NotNull DimensionCreationTicket ticket) {
+    private static void consumeDimensionCreationTicket(@NotNull DimensionCreationTicket ticket) {
         RuntimeDimensionDescriptor descriptor = ticket.descriptor;
 
         try {

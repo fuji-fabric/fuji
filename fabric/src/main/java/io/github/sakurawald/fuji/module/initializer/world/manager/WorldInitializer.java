@@ -358,7 +358,7 @@ public class WorldInitializer extends ModuleInitializer {
 
         /* Request to create the dimension. */
         DimensionCreationTicket ticket = new DimensionCreationTicket(runtimeDimensionDescriptor);
-        WorldService.requestToCreateAndLoadDimension(ticket);
+        WorldService.submitDimensionCreationTicket(ticket);
         TextHelper.sendBroadcastByKey("world.dimension.created", dimensionIdentifier);
         return CommandHelper.Return.SUCCESS;
     }
@@ -401,7 +401,7 @@ public class WorldInitializer extends ModuleInitializer {
     private static int $load(@CommandSource ServerCommandSource source, UnloadedRuntimeDimensionDescriptor dimension) {
         RuntimeDimensionDescriptor runtimeDimensionDescriptor = dimension.getValue();
         DimensionCreationTicket ticket = new DimensionCreationTicket(runtimeDimensionDescriptor);
-        WorldService.requestToCreateAndLoadDimension(ticket);
+        WorldService.submitDimensionCreationTicket(ticket);
 
         TextHelper.sendTextByKey(source,"world.dimension.loaded", runtimeDimensionDescriptor.dimension);
         return CommandHelper.Return.SUCCESS;
@@ -447,7 +447,7 @@ public class WorldInitializer extends ModuleInitializer {
 
         /* Create a new dimension instance. */
         DimensionCreationTicket ticket = new DimensionCreationTicket(runtimeDimensionDescriptor);
-        WorldService.requestToCreateAndLoadDimension(ticket);
+        WorldService.submitDimensionCreationTicket(ticket);
 
         TextHelper.sendBroadcastByKey("world.dimension.reset", dimensionIdentifier);
         return CommandHelper.Return.SUCCESS;
@@ -585,7 +585,7 @@ public class WorldInitializer extends ModuleInitializer {
             .forEach(it -> {
                 try {
                     DimensionCreationTicket ticket = new DimensionCreationTicket(it);
-                    WorldService.requestToCreateAndLoadDimension(ticket);
+                    WorldService.submitDimensionCreationTicket(ticket);
                     LogUtil.info("Load dimension {} into the server.", it.getDimension());
                 } catch (Exception e) {
                     LogUtil.error("Failed to load dimension `{}`", it, e);

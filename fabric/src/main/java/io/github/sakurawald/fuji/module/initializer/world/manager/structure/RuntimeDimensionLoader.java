@@ -12,10 +12,10 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionOptions;
+import org.jetbrains.annotations.NotNull;
 
 #if MC_VER <= MC_1_20_4
 import com.mojang.serialization.Lifecycle;
-import org.jetbrains.annotations.NotNull;
 #elif MC_VER > MC_1_20_4
 import net.minecraft.registry.entry.RegistryEntryInfo;
 #endif
