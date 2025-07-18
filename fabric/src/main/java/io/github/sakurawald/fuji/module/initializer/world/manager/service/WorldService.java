@@ -38,25 +38,25 @@ public class WorldService {
     }
 
     private static void processDimensionCreationAndDeletionQueue() {
-        dimensionDeletionQueue.removeIf(WorldService::tryDeleteDimension);
-        dimensionCreationQueue.removeIf(WorldService::tryCreateDimension);
+        dimensionDeletionQueue.removeIf(WorldService::tryUnloadAndDeleteDimension);
+        dimensionCreationQueue.removeIf(WorldService::tryCreateAndLoadDimension);
     }
 
-    public static void requestToDeleteDimension(@NotNull ServerWorld world) {
+    public static void requestToUnloadAndDeleteDimension(@NotNull ServerWorld world) {
         ServerHelper.getServer().submit(() -> {
             dimensionDeletionQueue.add(world);
         });
     }
 
-    public static void requestToCreateDimension(RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
+    public static void requestToCreateAndLoadDimension(RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         ServerHelper.getServer().submit(() -> {
             dimensionCreationQueue.add(runtimeDimensionDescriptor);
         });
     }
 
-    private static boolean tryDeleteDimension(@NotNull ServerWorld world) {
+    private static boolean tryUnloadAndDeleteDimension(@NotNull ServerWorld world) {
         if (world.getPlayers().isEmpty()) {
-            deleteDimension(world);
+            unloadAndDeleteDimension(world);
             return true;
         } else {
             evacuatePlayers(world);
@@ -64,19 +64,18 @@ public class WorldService {
         }
     }
 
-    private static boolean tryCreateDimension(@NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
+    private static boolean tryCreateAndLoadDimension(@NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         // NOTE: Wait the target dimension to be deleted first (If there is a deletion ticket for it).
         if (dimensionDeletionQueue.stream().anyMatch(it -> RegistryHelper.toString(it).equals(runtimeDimensionDescriptor.dimension))) {
             return false;
         }
 
-        createDimension(runtimeDimensionDescriptor);
-
+        createAndLoadDimension(runtimeDimensionDescriptor);
         // NOTE: Returns true anyway, to prevent the console spam.
         return true;
     }
 
-    private static void createDimension(RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
+    private static void createAndLoadDimension(RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         try {
             /* Make the runtime dimension. */
             Pair<ServerWorld, DimensionOptions> result = RuntimeDimensionMaker.makeRuntimeDimension(runtimeDimensionDescriptor);
@@ -107,7 +106,7 @@ public class WorldService {
         }
     }
 
-    private static void deleteDimension(@NotNull ServerWorld world) {
+    private static void unloadAndDeleteDimension(@NotNull ServerWorld world) {
         RuntimeDimensionLoader.unloadDimension(world);
         deleteDimensionFiles(world);
     }
@@ -171,7 +170,6 @@ public class WorldService {
             .stream()
             .filter(it -> !it.isDimensionLoaded())
             .toList();
-
     }
 }
 

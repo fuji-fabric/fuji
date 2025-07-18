@@ -20,6 +20,7 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
+import io.github.sakurawald.fuji.module.initializer.world.manager.command.argument.wrapper.UnloadedRuntimeDimensionDescriptor;
 import io.github.sakurawald.fuji.module.initializer.world.manager.command.argument.wrapper.WorldPresetType;
 import io.github.sakurawald.fuji.module.initializer.world.manager.config.model.WorldConfigModel;
 import io.github.sakurawald.fuji.module.initializer.world.manager.config.model.WorldDataModel;
@@ -271,7 +272,7 @@ public class WorldInitializer extends ModuleInitializer {
         }
     }
 
-    private static void ensureDimensionIdNotExists(ServerCommandSource source, Identifier identifier) {
+    private static void ensureDimensionNotExists(ServerCommandSource source, Identifier identifier) {
         if (WorldService.existsDimension(identifier)) {
             TextHelper.sendTextByKey(source, "world.dimension.exist");
             throw new AbortCommandExecutionException();
@@ -308,6 +309,12 @@ public class WorldInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document(id = 1752798248863L, value = """
+        This command does the following things:
+        1. `Add` a `dimension descriptor` into the `config` file.
+        2. Use that `dimension descriptor` to `make` the `runtime dimension`.
+        3. `Load` the runtime dimension into the `server`.
+        """)
     @CommandNode("create")
     private static int $create(@CommandSource ServerCommandSource source
         , String name
@@ -318,9 +325,8 @@ public class WorldInitializer extends ModuleInitializer {
         , Optional<WorldPresetType> worldPresetType) {
 
         /* Make identifier for the new dimension. */
-        final String FUJI_DIMENSION_NAMESPACE = "fuji";
-        Identifier dimensionIdentifier = Identifier.of(FUJI_DIMENSION_NAMESPACE, name);
-        ensureDimensionIdNotExists(source, dimensionIdentifier);
+        Identifier dimensionIdentifier = RegistryHelper.makeIdentifier("fuji:%s".formatted(name));
+        ensureDimensionNotExists(source, dimensionIdentifier);
 
         /* Make the runtime dimension descriptor. */
         long $seed = seed.orElse(RandomSeed.getSeed());
@@ -346,10 +352,18 @@ public class WorldInitializer extends ModuleInitializer {
         world.writeStorage();
 
         /* Request to create the dimension. */
-        WorldService.requestToCreateDimension(runtimeDimensionDescriptor);
+        WorldService.requestToCreateAndLoadDimension(runtimeDimensionDescriptor);
         TextHelper.sendBroadcastByKey("world.dimension.created", dimensionIdentifier);
         return CommandHelper.Return.SUCCESS;
     }
+
+    @Document(id = 1752798163284L, value = """
+        This command does the following things:
+        1. `Unload` the `loaded runtime dimension` in the server.
+        2. `Delete` the chunk files of the dimension.
+
+        <red>NOTE: This command will not delete the `dimension descriptor` in config file.
+        """)
 
     @CommandNode("delete")
     private static int $delete(@CommandSource ServerCommandSource source, Dimension dimension, Optional<Boolean> confirm) {
@@ -363,12 +377,24 @@ public class WorldInitializer extends ModuleInitializer {
         }
 
         /* Request to delete. */
-        WorldService.requestToDeleteDimension(dimensionInstance);
+        WorldService.requestToUnloadAndDeleteDimension(dimensionInstance);
 
         /* Remove the node from storage. */
         WorldService.deleteRuntimeDimensionDescriptor(dimensionId);
 
         TextHelper.sendBroadcastByKey("world.dimension.deleted", dimensionId);
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document(id = 1752798473110L, value = """
+        This command does the following things:
+        1. `Make` the `runtime dimension` instance based on the `runtime dimension descriptor`.
+        2. `Load` the made `runtime dimension` into the `server`.
+        """)
+    @CommandNode("load")
+    private static int $load(@CommandSource ServerCommandSource source, UnloadedRuntimeDimensionDescriptor dimension) {
+        RuntimeDimensionDescriptor runtimeDimensionDescriptor = dimension.getValue();
+        WorldService.requestToCreateAndLoadDimension(runtimeDimensionDescriptor);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -393,7 +419,7 @@ public class WorldInitializer extends ModuleInitializer {
         RuntimeDimensionDescriptor runtimeDimensionDescriptor = dimensionEntryOpt.get();
 
         /* Delete the dimension instance. */
-        WorldService.requestToDeleteDimension(dimensionInstance);
+        WorldService.requestToUnloadAndDeleteDimension(dimensionInstance);
 
         /* Draw the seed. */
         Boolean $useTheSameSeed = useTheSameSeed.orElse(false);
@@ -401,7 +427,7 @@ public class WorldInitializer extends ModuleInitializer {
         world.writeStorage();
 
         /* Create a new dimension instance. */
-        WorldService.requestToCreateDimension(runtimeDimensionDescriptor);
+        WorldService.requestToCreateAndLoadDimension(runtimeDimensionDescriptor);
 
         TextHelper.sendBroadcastByKey("world.dimension.reset", dimensionIdentifier);
         return CommandHelper.Return.SUCCESS;
@@ -529,16 +555,16 @@ public class WorldInitializer extends ModuleInitializer {
 
     @Override
     protected void onInitialize() {
-        ServerLifecycleEvents.SERVER_STARTED.register(this::loadDimensions);
+        ServerLifecycleEvents.SERVER_STARTED.register(this::loadRuntimeDimensions);
     }
 
-    private void loadDimensions(@NotNull MinecraftServer server) {
+    private void loadRuntimeDimensions(@NotNull MinecraftServer server) {
         world.model().dimension_list
             .stream()
             .filter(RuntimeDimensionDescriptor::isAuto_load_on_server_startup)
             .forEach(it -> {
                 try {
-                    WorldService.requestToCreateDimension(it);
+                    WorldService.requestToCreateAndLoadDimension(it);
                     LogUtil.info("Load dimension {} into the server.", it.getDimension());
                 } catch (Exception e) {
                     LogUtil.error("Failed to load dimension `{}`", it, e);
