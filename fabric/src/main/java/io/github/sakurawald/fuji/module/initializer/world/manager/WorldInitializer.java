@@ -20,12 +20,15 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
+import io.github.sakurawald.fuji.module.initializer.world.manager.command.argument.wrapper.LoadedRuntimeDimensionDescriptor;
 import io.github.sakurawald.fuji.module.initializer.world.manager.command.argument.wrapper.UnloadedRuntimeDimensionDescriptor;
 import io.github.sakurawald.fuji.module.initializer.world.manager.command.argument.wrapper.WorldPresetType;
 import io.github.sakurawald.fuji.module.initializer.world.manager.config.model.WorldConfigModel;
 import io.github.sakurawald.fuji.module.initializer.world.manager.config.model.WorldDataModel;
 import io.github.sakurawald.fuji.module.initializer.world.manager.service.WorldService;
 import io.github.sakurawald.fuji.module.initializer.world.manager.command.argument.wrapper.ChunkGeneratorType;
+import io.github.sakurawald.fuji.module.initializer.world.manager.service.structure.DimensionCreationTicket;
+import io.github.sakurawald.fuji.module.initializer.world.manager.service.structure.DimensionDeletionTicket;
 import io.github.sakurawald.fuji.module.initializer.world.manager.structure.RuntimeDimensionDescriptor;
 import java.util.HashMap;
 import java.util.List;
@@ -293,6 +296,7 @@ public class WorldInitializer extends ModuleInitializer {
 
     @CommandNode("list")
     private static int $list(@CommandSource ServerCommandSource source) {
+        TextHelper.sendTextByKey(source, "dimension.loaded_dimensions");
         ServerHelper
             .getWorlds()
             .forEach(world -> {
@@ -301,8 +305,9 @@ public class WorldInitializer extends ModuleInitializer {
             });
 
         List<String> unloadedDimensions = WorldService
-            .getUnloadedRuntimeDimensionDescriptors()
+            .getRuntimeDimensionDescriptors()
             .stream()
+            .filter(it -> !it.isDimensionLoaded())
             .map(RuntimeDimensionDescriptor::getDimension)
             .toList();
         TextHelper.sendTextByKey(source, "dimension.unloaded_dimensions", unloadedDimensions);
@@ -352,7 +357,8 @@ public class WorldInitializer extends ModuleInitializer {
         world.writeStorage();
 
         /* Request to create the dimension. */
-        WorldService.requestToCreateAndLoadDimension(runtimeDimensionDescriptor);
+        DimensionCreationTicket ticket = new DimensionCreationTicket(runtimeDimensionDescriptor);
+        WorldService.requestToCreateAndLoadDimension(ticket);
         TextHelper.sendBroadcastByKey("world.dimension.created", dimensionIdentifier);
         return CommandHelper.Return.SUCCESS;
     }
@@ -377,7 +383,7 @@ public class WorldInitializer extends ModuleInitializer {
         }
 
         /* Request to delete. */
-        WorldService.requestToUnloadAndDeleteDimension(dimensionInstance);
+        WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(dimensionInstance, true));
 
         /* Remove the node from storage. */
         WorldService.deleteRuntimeDimensionDescriptor(dimensionId);
@@ -394,7 +400,20 @@ public class WorldInitializer extends ModuleInitializer {
     @CommandNode("load")
     private static int $load(@CommandSource ServerCommandSource source, UnloadedRuntimeDimensionDescriptor dimension) {
         RuntimeDimensionDescriptor runtimeDimensionDescriptor = dimension.getValue();
-        WorldService.requestToCreateAndLoadDimension(runtimeDimensionDescriptor);
+        DimensionCreationTicket ticket = new DimensionCreationTicket(runtimeDimensionDescriptor);
+        WorldService.requestToCreateAndLoadDimension(ticket);
+
+        TextHelper.sendTextByKey(source,"world.dimension.loaded", runtimeDimensionDescriptor.dimension);
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @CommandNode("unload")
+    private static int $unload(@CommandSource ServerCommandSource source, LoadedRuntimeDimensionDescriptor dimension) {
+        RuntimeDimensionDescriptor runtimeDimensionDescriptor = dimension.getValue();
+        Optional<ServerWorld> loadedWorld = runtimeDimensionDescriptor.getLoadedWorld();
+        WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(loadedWorld.get(), false));
+
+        TextHelper.sendTextByKey(source,"world.dimension.unloaded", runtimeDimensionDescriptor.dimension);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -419,7 +438,7 @@ public class WorldInitializer extends ModuleInitializer {
         RuntimeDimensionDescriptor runtimeDimensionDescriptor = dimensionEntryOpt.get();
 
         /* Delete the dimension instance. */
-        WorldService.requestToUnloadAndDeleteDimension(dimensionInstance);
+        WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(dimensionInstance, true));
 
         /* Draw the seed. */
         Boolean $useTheSameSeed = useTheSameSeed.orElse(false);
@@ -427,7 +446,8 @@ public class WorldInitializer extends ModuleInitializer {
         world.writeStorage();
 
         /* Create a new dimension instance. */
-        WorldService.requestToCreateAndLoadDimension(runtimeDimensionDescriptor);
+        DimensionCreationTicket ticket = new DimensionCreationTicket(runtimeDimensionDescriptor);
+        WorldService.requestToCreateAndLoadDimension(ticket);
 
         TextHelper.sendBroadcastByKey("world.dimension.reset", dimensionIdentifier);
         return CommandHelper.Return.SUCCESS;
@@ -564,7 +584,8 @@ public class WorldInitializer extends ModuleInitializer {
             .filter(RuntimeDimensionDescriptor::isAuto_load_on_server_startup)
             .forEach(it -> {
                 try {
-                    WorldService.requestToCreateAndLoadDimension(it);
+                    DimensionCreationTicket ticket = new DimensionCreationTicket(it);
+                    WorldService.requestToCreateAndLoadDimension(ticket);
                     LogUtil.info("Load dimension {} into the server.", it.getDimension());
                 } catch (Exception e) {
                     LogUtil.error("Failed to load dimension `{}`", it, e);
