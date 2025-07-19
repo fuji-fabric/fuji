@@ -43,36 +43,37 @@ import java.util.Optional;
     Its typical use is to define a `named cooldown`, and `associate` it with `arbitrary command instance`.
     For example, you have to use `/command-cooldown create` to `create` a `named cooldown`.
     Then, you have to use `/command-cooldown test` to `test` a `named cooldown` <green>manually</green>.
-    You have to specify the `failed case commands` and `success case commands` when `test` a `named cooldown`.
-    If the `conditions` defined by the `named cooldown` is satisfied, then it is a `success case`, else it is a `failed case`.
+    You have to specify the `failure case commands` and `success case commands` when `test` a `named cooldown`.
+    If the `conditions` defined by the `named cooldown` is satisfied, then it is a `success case`, else it is a `failure case`.
     For `success case`, we will execute `the success case command`.
-    For `failed case`, we will execute `the failed case command`.
+    For `failure case`, we will execute `the failure case command`.
 
     <green>NOTE: If you only want to define a simple `cooling duration` for a specified command, just use `unnamed cooldown`.
     """)
 @ColorBox(id = 1751902885278L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Create a `named cooldown`. (With 3 seconds `cooldown duration`.)
-    Issue: `/command-cooldown create example 3000`
+    Issue: `/command-cooldown create kitfood 3000`
 
     ◉ Test a `named cooldown`.
-    Issue: `/command-cooldown test example \\\\<player\\\\> --onFailed "say false %fuji:command_cooldown_left_time example%/%fuji:command_cooldown_left_usage example%" say true`
+    Issue: `/command-cooldown test kitfood \\<player\\> --onFailed "say false" say true`
+    <green>TIP: You can insert `%fuji:command_cooldown_left_time kitfood%` placeholder to display the remaining duration.
 
     ◉ Reset a `named cooldown` for a player.
-    Issue: `/command-cooldown reset example \\\\<player\\\\>`
+    Issue: `/command-cooldown reset kitfood \\<player\\>`
 
     ◉ Create a `named cooldown`. (With 15 seconds `cooldown duration`, and `limit of number of use` is 3)
-    Issue: `/command-cooldown create example 15000 --maxUses 3`
+    Issue: `/command-cooldown create kitfood 15000 --maxUses 3`
 
     ◉ Create a global `named cooldown`.
     By default, a `named cooldown` applies `per-player`.
     A `global` named cooldown applies `per-server`.
-    Issue: `/command-cooldown create example 3000 --global true`
+    Issue: `/command-cooldown create kitfood 3000 --global true`
     """)
 @ColorBox(id = 1751903262817L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Make a `non-persistent named cooldown`.
     By default, a `named cooldown` will be `persisted` on the `storage`.
     However, you can create a `non-persist named cooldown`.
-    Issue: `/command-cooldown create example 999999999999 --persistent false`
+    Issue: `/command-cooldown create kitfood 999999999999 --persistent false`
     This cooldown says that, it can be used only once after each server re-start.
     """)
 
@@ -130,7 +131,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document(id = 1751826379596L, value = "Test a named-cooldown, and execute success commands or failed commands.")
+    @Document(id = 1751826379596L, value = "Test a named-cooldown, and execute `success case command` or `failure case command`.")
     @CommandNode("test")
     private static int $test(@CommandSource ServerCommandSource source
         , @Document(id = 1751826381620L, value = "The name of a named-cooldown.") CommandCooldownName name

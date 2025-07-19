@@ -29,7 +29,7 @@ public class CommandCooldown extends Cooldown<String> {
     }
 
     @Override
-    public long tryUse(String key, Long cooldown) {
-        return super.tryUse(this.global ? GLOBAL_NAME : key, cooldown);
+    public long tryUse(String key, Long cooldownPeriod) {
+        return super.tryUse(this.global ? GLOBAL_NAME : key, cooldownPeriod);
     }
 }

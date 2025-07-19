@@ -20,8 +20,8 @@ public class Cooldown<T> {
        return timestamp.computeIfAbsent(key, k -> 0L);
     }
 
-    public long tryUse(T key, Long cooldown) {
-        long remainingTime = getRemainingTime(key, cooldown);
+    public long tryUse(T key, Long cooldownPeriod) {
+        long remainingTime = getRemainingTime(key, cooldownPeriod);
 
         if (remainingTime < 0) {
             onUse(key);
