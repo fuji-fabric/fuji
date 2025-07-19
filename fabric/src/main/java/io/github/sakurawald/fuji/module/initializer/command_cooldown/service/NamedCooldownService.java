@@ -8,6 +8,7 @@ import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.CommandCooldownInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.command.argument.wrapper.CommandCooldownName;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCommandCooldown;
+import java.util.List;
 import java.util.Map;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -24,23 +25,28 @@ public class NamedCooldownService {
     }
 
     public static void createNamedCooldown(String name, long cooldownDuration, int $maxUses, Boolean $persistent, Boolean $global) {
-        NamedCommandCooldown namedCommandCooldown = new NamedCommandCooldown(name, cooldownDuration, $maxUses, $persistent, $global);
+        NamedCommandCooldown namedCommandCooldown = NamedCommandCooldown.makeNamedCooldown(name, cooldownDuration, $maxUses, $persistent, $global);
         getNamedCooldownList().put(name, namedCommandCooldown);
         CommandCooldownInitializer.config.writeStorage();
     }
 
-    public static int testNamedCooldown(ServerPlayerEntity player, GreedyStringList onSuccess, NamedCommandCooldown cooldown, String key, StringList $onFailed) {
-        long remainingTime = cooldown.tryUse(key, cooldown.getCooldownDuration());
-        int usage = cooldown.getUses().getOrDefault(key, 0);
-        int leftUsage = cooldown.getMaxUses() - usage;
-        if (remainingTime > 0 || leftUsage <= 0) {
-            CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), $onFailed.getValue());
+    public static int testNamedCooldown(NamedCommandCooldown cooldown, ServerPlayerEntity player, List<String> onSuccessCommands, List<String> onFailureCommands) {
+        String key = NamedCommandCooldown.toKey(player);
+
+        /* If failed. */
+        long remainingDuration = cooldown.tryUse(key, cooldown.getCooldownDuration());
+        int uses = cooldown.getUses().computeIfAbsent(key, k -> 0);
+        int availableUses = cooldown.getMaxUses() - uses;
+        if (remainingDuration > 0 || availableUses <= 0) {
+            CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), onFailureCommands);
             return CommandHelper.Return.FAIL;
         }
 
+        /* If succeeded. */
         cooldown.getUses().compute(key, (k, v) -> v == null ? 1 : v + 1);
         CommandCooldownInitializer.config.writeStorage();
-        CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), onSuccess.getValue());
+
+        CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), onSuccessCommands);
         return CommandHelper.Return.SUCCESS;
     }
 

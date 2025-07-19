@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.module.initializer.command_cooldown;
 
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -18,6 +17,7 @@ import io.github.sakurawald.fuji.module.initializer.command_cooldown.command.arg
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.config.model.CommandCooldownConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.service.NamedCooldownService;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCommandCooldown;
+import java.util.List;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -54,7 +54,7 @@ import java.util.Optional;
     ◉ Create a `named cooldown`. (With 3 seconds `cooldown duration`.)
     Issue: `/command-cooldown create kitfood 3000`
 
-    ◉ Test a `named cooldown`.
+    ◉ Test a `named cooldown` with `arbitrary command instance`.
     Issue: `/command-cooldown test kitfood \\<player\\> say Used successfully once`.
     This command will `test` the specified `named cooldown`:
     1. If the result is `the success case`, then it will execute `/say Used successfully once`.
@@ -67,6 +67,11 @@ import java.util.Optional;
 
     <green>TIP: You can insert `%fuji:command_cooldown_left_time kitfood%` placeholder to display the remaining duration.
     <green>TIP: To specify `more than 1 command` in the `the success command` or `the failure command` place, you can use `chain` module.
+
+    ◉ Test a `named cooldown` with `pre-defined command instance`.
+    You can `pre-define` the `success case commands` and `failure case commands` in the config file.
+    And use `/command-cooldown try-use kitfood \\<player\\>` to `test` it.
+    This method is much more brief.
 
     ◉ Reset a `named cooldown` for a player.
     Issue: `/command-cooldown reset kitfood \\<player\\>`
@@ -141,7 +146,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document(id = 1751826379596L, value = "Test a named-cooldown, and execute `success case command` or `failure case command`.")
+    @Document(id = 1751826379596L, value = "Test a named-cooldown with `arbitrary command instance`, and execute `success case command` or `failure case command`.")
     @CommandNode("test")
     private static int $test(@CommandSource ServerCommandSource source
         , @Document(id = 1751826381620L, value = "The name of a named-cooldown.") CommandCooldownName name
@@ -153,9 +158,24 @@ public class CommandCooldownInitializer extends ModuleInitializer {
 
         NamedCommandCooldown cooldown = NamedCooldownService.getNamedCooldownList().get(name.getValue());
         StringList $onFailed = onFailed.orElse(new StringList(Collections.emptyList()));
-        String key = PlayerHelper.getPlayerName(player);
 
-        return NamedCooldownService.testNamedCooldown(player, onSuccess, cooldown, key, $onFailed);
+        List<String> onSuccessCommands = onSuccess.getValue();
+        List<String> onFailureCommands = $onFailed.getValue();
+        return NamedCooldownService.testNamedCooldown(cooldown, player, onSuccessCommands, onFailureCommands);
+    }
+
+    @Document(id = 1752917170907L, value = "Test a named-cooldown with `pre-defined command instance`, and execute `success case command` or `failure case command`.")
+    @CommandNode("try-use")
+    private static int $tryUse(@CommandSource ServerCommandSource source, CommandCooldownName name, ServerPlayerEntity player
+    ) {
+        ensureNamedCooldownExist(source, name);
+
+        NamedCommandCooldown cooldown = NamedCooldownService.getNamedCooldownList().get(name.getValue());
+        String key = NamedCommandCooldown.toKey(player);
+
+        List<String> onSuccessCommands = cooldown.getTryUse().getOnSuccessCommands();
+        List<String> onFailureCommands = cooldown.getTryUse().getOnFailureCommands();
+        return NamedCooldownService.testNamedCooldown(cooldown, player, onSuccessCommands, onFailureCommands);
     }
 
     @Document(id = 1751826420385L, value = "Reset `the last use time` of a named-cooldown for a player.")
@@ -164,7 +184,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         , CommandCooldownName name
         , ServerPlayerEntity player) {
         ensureNamedCooldownExist(source, name);
-        String key = PlayerHelper.getPlayerName(player);
+        String key = NamedCommandCooldown.toKey(player);
 
         NamedCooldownService.resetNamedCooldownDuration(name, key);
 
