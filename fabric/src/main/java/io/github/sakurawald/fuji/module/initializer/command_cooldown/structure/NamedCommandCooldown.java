@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.command_cooldown.structure;
 
 import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.structure.Cooldown;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,9 @@ public class NamedCommandCooldown extends Cooldown<String> {
     boolean persistent;
     boolean global;
 
+    @Document(id = 1752918450038L, value = """
+        Defines the `success case commands` and `failure case commands` for `/command-cooldown try-use` command.
+        """)
     TryUse tryUse = new TryUse();
 
     public static NamedCommandCooldown makeNamedCooldown(@Nullable String name, long cooldownDuration, int maxUses, boolean persistent, boolean global) {
@@ -49,11 +53,17 @@ public class NamedCommandCooldown extends Cooldown<String> {
 
     @Data
     public static class TryUse {
+        @Document(id = 1752918599016L, value = """
+            The commands to be executed if the `try-use` result of this named-cooldown is `success`.
+            """)
         List<String> onSuccessCommands = new ArrayList<>() {
             {
                 this.add("send-message %player:name% <green>Used once successfully.");
             }
         };
+        @Document(id = 1752918620775L, value = """
+            The commands to be executed if the `try-use` result of this named-cooldown is `failure`.
+            """)
         List<String> onFailureCommands = new ArrayList<>() {
             {
                 this.add("send-message %player:name% <red>Failed to use. %fuji:command_cooldown_left_time kitfood% and %fuji:command_cooldown_left_usage kitfood%");
