@@ -119,6 +119,7 @@
   "dimension.options": "<blue>◉ Dimension Options: `%s`",
   "dimension.properties": "<blue>◉ Dimension Properties: `%s`",
   "dimension.seed": "<blue>◉ Seed: `%s`",
+  "dimension.seed.empty": "<red>Dimension seed can't be empty.",
   "dimension.unloaded_dimensions": "<yellow>Un-loaded Dimensions: `%s`.",
   "display.click.prompt": "<#D2E0FB>Apasă pentru a vedea această afișare",
   "display.ender_chest.broadcast": "<#FFA1F5>Player %player:name% just share an ender display: <#D2E0FB>[display]",
