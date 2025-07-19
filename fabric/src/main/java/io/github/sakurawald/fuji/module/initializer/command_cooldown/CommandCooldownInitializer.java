@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_cooldown;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -10,8 +11,6 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyStringList;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.StringList;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
-import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
-import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -21,7 +20,6 @@ import io.github.sakurawald.fuji.module.initializer.command_cooldown.service.Nam
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.CommandCooldown;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -31,10 +29,26 @@ import java.util.Optional;
     """)
 @ColorBox(id = 1751902763633L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     ◉ There are 2 types of `cooldown`.
-    1. `Unnamed Cooldown`: You can use it to define a `cooldown duration` for a specified command. (It is `tested` and managed automatically)
-    2. `Named Cooldown`: You have to use commands to create a `named cooldown`, and use commands to `test` it.
+    1. `Unnamed Cooldown`
+    You can use it to define a `cooldown duration` for a specified command. (It is `tested` and managed automatically)
+    A `unnamed cooldown` will not be `persisted` on the server shutdown.
+    Its typical use is to define a `cooling duration` for a specified command.
+    And a `unnamed cooldown` will be `tested` <green>automatically</green> when a player executes a command.
+    For example: define a `3 seconds` cooling duration for `/back` command.
+    To define a `unnamed cooldown`, you need to modify the config file, and issue `/fuji reload` command to apply it.
 
-    <green>NOTE: If you only want to define a simple `cooling time` for a specified command, just use `unnamed cooldown`.
+    2. `Named Cooldown`
+    You have to use commands to create a `named cooldown`, and use commands to `test` it.
+    A `named cooldown` will be `persisted` on the server shutdown.
+    Its typical use is to define a `named cooldown`, and `associate` it with `arbitrary command instance`.
+    For example, you have to use `/command-cooldown create` to `create` a `named cooldown`.
+    Then, you have to use `/command-cooldown test` to `test` a `named cooldown` <green>manually</green>.
+    You have to specify the `failed case commands` and `success case commands` when `test` a `named cooldown`.
+    If the `conditions` defined by the `named cooldown` is satisfied, then it is a `success case`, else it is a `failed case`.
+    For `success case`, we will execute `the success case command`.
+    For `failed case`, we will execute `the failed case command`.
+
+    <green>NOTE: If you only want to define a simple `cooling duration` for a specified command, just use `unnamed cooldown`.
     """)
 @ColorBox(id = 1751902885278L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Create a `named cooldown`. (With 3 seconds `cooldown duration`.)
@@ -47,7 +61,7 @@ import java.util.Optional;
     Issue: `/command-cooldown reset example \\\\<player\\\\>`
 
     ◉ Create a `named cooldown`. (With 15 seconds `cooldown duration`, and `limit of number of use` is 3)
-    Issue: `/command-cooldown create example 15000 --maxUsage 3`
+    Issue: `/command-cooldown create example 15000 --maxUses 3`
 
     ◉ Create a global `named cooldown`.
     By default, a `named cooldown` applies `per-player`.
@@ -79,52 +93,20 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         }
     };
 
-    @Document(id = 1751826379596L, value = "Test a named-cooldown, and execute success commands or failed commands.")
-    @CommandNode("test")
-    private static int $test(@CommandSource ServerCommandSource source
-        , @Document(id = 1751826381620L, value = "The name of a named-cooldown.") CommandCooldownName name
-        , @Document(id = 1751826385172L, value = "The target player.") ServerPlayerEntity player
-        , @Document(id = 1751826387810L, value = "The commands to execute if the test is failed.") Optional<StringList> onFailed
-        , @Document(id = 1751826394378L, value = "The commands to execute if the test is success.") GreedyStringList onSuccess
-    ) {
-        ensureNamedCooldownExist(source, name);
-
-        CommandCooldown cooldown = NamedCooldownService.getNamedCooldownList().get(name.getValue());
-        StringList $onFailed = onFailed.orElse(new StringList(Collections.emptyList()));
-        String key = player.getGameProfile().getName();
-
-        /* test */
-        long remainingTime = cooldown.tryUse(key, cooldown.getCooldownMs());
-        int usage = cooldown.getUsage().getOrDefault(key, 0);
-        int leftUsage = cooldown.getMaxUsage() - usage;
-        if (remainingTime > 0 || leftUsage <= 0) {
-            CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), $onFailed.getValue());
-            return CommandHelper.Return.FAIL;
-        }
-
-        cooldown.getUsage().compute(key, (k, v) -> v == null ? 1 : v + 1);
-        config.writeStorage();
-        CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), onSuccess.getValue());
-        return CommandHelper.Return.SUCCESS;
-    }
-
     @Document(id = 1751826400837L, value = "Create a named-cooldown.")
     @CommandNode("create")
     private static int $create(@CommandSource ServerCommandSource source
         , @Document(id = 1751826403270L, value = "The name of the named-cooldown to be created.") String name
-        , @Document(id = 1751826405378L, value = "How long is the cooling time ms of this named-cooldown.") long cooldownMs
-        , @Document(id = 1751826407322L, value = "Max usage times of this named-cooldown. (per-player/global)") Optional<Integer> maxUsage
+        , @Document(id = 1751826405378L, value = "How long is the cooling time ms of this named-cooldown.") long cooldownDuration
+        , @Document(id = 1751826407322L, value = "The max number of uses for this named-cooldown.") Optional<Integer> maxUses
         , @Document(id = 1751826409664L, value = "Should we persist this named-cooldown on server shutdown.") Optional<Boolean> persistent
-        , @Document(id = 1751826414070L, value = "Is this named-cooldown global or per-player.") Optional<Boolean> global) {
+        , @Document(id = 1751826414070L, value = "Is this named-cooldown global (`per-server`) or `per-player`.") Optional<Boolean> global) {
         ensureNamedCooldownNotExist(source, name);
-
-        int $maxUsage = maxUsage.orElse(Integer.MAX_VALUE);
+        int $maxUses = maxUses.orElse(Integer.MAX_VALUE);
         Boolean $persistent = persistent.orElse(true);
         Boolean $global = global.orElse(false);
 
-        CommandCooldown commandCooldown = new CommandCooldown(name, cooldownMs, $maxUsage, $persistent, $global);
-        NamedCooldownService.getNamedCooldownList().put(name, commandCooldown);
-        config.writeStorage();
+        NamedCooldownService.createNamedCooldown(name, cooldownDuration, $maxUses, $persistent, $global);
 
         TextHelper.sendTextByKey(source, "command_cooldown.created", name);
         return CommandHelper.Return.SUCCESS;
@@ -135,9 +117,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
     private static int $delete(@CommandSource ServerCommandSource source, CommandCooldownName name) {
         ensureNamedCooldownExist(source, name);
 
-        String key = name.getValue();
-        NamedCooldownService.getNamedCooldownList().remove(key);
-        config.writeStorage();
+        NamedCooldownService.deleteNamedCooldown(name);
 
         TextHelper.sendTextByKey(source, "command_cooldown.deleted", name.getValue());
         return CommandHelper.Return.SUCCESS;
@@ -146,22 +126,36 @@ public class CommandCooldownInitializer extends ModuleInitializer {
     @Document(id = 1751826418447L, value = "List all named-cooldown.")
     @CommandNode("list")
     private static int $list(@CommandSource ServerCommandSource source) {
-        NamedCooldownService.getNamedCooldownList().keySet().forEach(it -> source.sendMessage(Text.literal(it)));
+        TextHelper.sendTextByKey(source, "command_cooldown.list", NamedCooldownService.getNamedCooldownList().keySet());
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document(id = 1751826420385L, value = "Reset the timestamp of a named-cooldown for a player. (The usage times will not be reset)")
+    @Document(id = 1751826379596L, value = "Test a named-cooldown, and execute success commands or failed commands.")
+    @CommandNode("test")
+    private static int $test(@CommandSource ServerCommandSource source
+        , @Document(id = 1751826381620L, value = "The name of a named-cooldown.") CommandCooldownName name
+        , @Document(id = 1751826385172L, value = "The target player.") ServerPlayerEntity player
+        , @Document(id = 1751826387810L, value = "The commands to execute if the test failed.") Optional<StringList> onFailed
+        , @Document(id = 1751826394378L, value = "The commands to execute if the test succeeds.") GreedyStringList onSuccess
+    ) {
+        ensureNamedCooldownExist(source, name);
+
+        CommandCooldown cooldown = NamedCooldownService.getNamedCooldownList().get(name.getValue());
+        StringList $onFailed = onFailed.orElse(new StringList(Collections.emptyList()));
+        String key = PlayerHelper.getPlayerName(player);
+
+        return NamedCooldownService.testNamedCooldown(player, onSuccess, cooldown, key, $onFailed);
+    }
+
+    @Document(id = 1751826420385L, value = "Reset `the last use time` of a named-cooldown for a player.")
     @CommandNode("reset")
     private static int $reset(@CommandSource ServerCommandSource source
         , CommandCooldownName name
         , ServerPlayerEntity player) {
         ensureNamedCooldownExist(source, name);
+        String key = PlayerHelper.getPlayerName(player);
 
-        CommandCooldown commandCooldown = NamedCooldownService.getNamedCooldownList().get(name.getValue());
-        config.writeStorage();
-
-        String key = player.getGameProfile().getName();
-        commandCooldown.getTimestamp().put(key, 0L);
+        NamedCooldownService.resetNamedCooldownDuration(name, key);
 
         TextHelper.sendTextByKey(source, "command_cooldown.reset", key, name.getValue());
         return CommandHelper.Return.SUCCESS;

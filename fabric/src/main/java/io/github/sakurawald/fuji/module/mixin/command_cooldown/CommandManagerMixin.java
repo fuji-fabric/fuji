@@ -21,8 +21,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = CommandManager.class, priority = 1000 - 750)
 public class CommandManagerMixin {
 
-    // NOTE: The `/run as player` submits the command directly into CommandDispatcher.
-    // NOTE: For Command cooldown, we inject on CommandManager, so that other internal command execution will bypass the command cooldown.
+    // NOTE: The `/run as player <player> back` submits the command directly into CommandDispatcher.
+    // NOTE: For command cooldown module, we inject on CommandManager, so that other internal command execution will bypass the command cooldown facility.
     // NOTE: It's okay to use ci.cancel() for a CallbackInfoReturnable type.
 
     #if MC_VER <= MC_1_20_2
@@ -39,11 +39,11 @@ public class CommandManagerMixin {
         if (player == null) return;
 
         /* Compute the cooldown for specified command. */
-        long cooldownMs = UnnamedCooldownService.computeRemainingUnnamedCooldownDuration(player, string);
-        if (cooldownMs > 0) {
-            long leftTimeSecond = cooldownMs / 1000;
-            TextHelper.sendTextByKey(player, "command_cooldown.cooldown", leftTimeSecond);
-
+        long remainingDuration = UnnamedCooldownService.computeRemainingUnnamedCooldownDuration(player, string);
+        if (remainingDuration > 0) {
+            // NOTE: For unnamed cooldown type, the `second unit` is sufficient for use.
+            long remainingDurationInSecond = remainingDuration / 1000;
+            TextHelper.sendTextByKey(player, "command_cooldown.cooldown", remainingDurationInSecond);
             ci.cancel();
         }
     }
