@@ -103,16 +103,15 @@ public class GenerateDocStringTest {
             throw new RuntimeException("Default language file is empty.");
         }
 
+        /* Remove un-used doc strings. */
+        defaultLanguageJson
+            .keySet()
+            .removeIf(key -> key.startsWith(DocString.DOC_STRING_KEY_PREFIX));
+
         /* Append the doc string into the default language json. */
         for (DocString docString : docStringList) {
             String jsonKey = DocString.DOC_STRING_KEY_PREFIX + docString.getId();
             String jsonValue = docString.getValue();
-
-            // We will never remove the existed doc string key.
-            if (defaultLanguageJson.has(jsonKey)) {
-                defaultLanguageJson.remove(jsonKey);
-            }
-
             defaultLanguageJson.addProperty(jsonKey, jsonValue);
         }
         LogUtil.info("Write {} doc strings into the default language file.", docStringList.size());
