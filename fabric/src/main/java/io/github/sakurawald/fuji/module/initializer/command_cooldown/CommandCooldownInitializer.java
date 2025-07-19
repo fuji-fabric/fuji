@@ -55,8 +55,18 @@ import java.util.Optional;
     Issue: `/command-cooldown create kitfood 3000`
 
     ◉ Test a `named cooldown`.
+    Issue: `/command-cooldown test kitfood \\<player\\> say Used successfully once`.
+    This command will `test` the specified `named cooldown`:
+    1. If the result is `the success case`, then it will execute `/say Used successfully once`.
+    2. If the result is `the failure case`, then it will do nothing.
+
     Issue: `/command-cooldown test kitfood \\<player\\> --onFailed "say false" say true`
+    This command will `test` the specified `named cooldown`:
+    1. If the result is `the success case`, then it will execute `/say true`.
+    2. If the result is `the failure case`, then it will execute `/say false`.
+
     <green>TIP: You can insert `%fuji:command_cooldown_left_time kitfood%` placeholder to display the remaining duration.
+    <green>TIP: To specify `more than 1 command` in the `the success command` or `the failure command` place, you can use `chain` module.
 
     ◉ Reset a `named cooldown` for a player.
     Issue: `/command-cooldown reset kitfood \\<player\\>`

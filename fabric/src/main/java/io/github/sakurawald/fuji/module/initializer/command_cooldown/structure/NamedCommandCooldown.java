@@ -15,7 +15,7 @@ import java.util.Map;
 @ToString(callSuper = true)
 public class NamedCommandCooldown extends Cooldown<String> {
 
-    private static final String GLOBAL_NAME = "GLOBAL";
+    private static final String GLOBAL_DUMMY_NAME = "GLOBAL";
 
     final @Nullable String name;
 
@@ -33,11 +33,11 @@ public class NamedCommandCooldown extends Cooldown<String> {
 
     @Override
     public long getRemainingTime(String key, Long cooldownPeriod) {
-        return super.getRemainingTime(this.global ? GLOBAL_NAME : key, cooldownPeriod);
+        return super.getRemainingTime(this.global ? GLOBAL_DUMMY_NAME : key, cooldownPeriod);
     }
 
     @Override
     public long tryUse(String key, Long cooldownPeriod) {
-        return super.tryUse(this.global ? GLOBAL_NAME : key, cooldownPeriod);
+        return super.tryUse(this.global ? GLOBAL_DUMMY_NAME : key, cooldownPeriod);
     }
 }
