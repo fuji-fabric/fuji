@@ -28,9 +28,9 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.List;
 import java.util.Map;
 
-#if MC_VER < MC_1_20_5
+#if MC_VER <= MC_1_20_4
 import com.mojang.datafixers.util.Pair;
-#elif MC_VER >= MC_1_20_5 && MC_VER <= MC_1_21
+#elif MC_VER > MC_1_20_4 && MC_VER <= MC_1_21
 import org.spongepowered.asm.mixin.injection.Coerce;
 import com.llamalad7.mixinextras.sugar.Local;
 import org.jetbrains.annotations.NotNull;

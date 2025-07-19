@@ -767,9 +767,9 @@ public class TextHelper {
     public static Text fromJson(String tagString) {
         #if MC_VER <= MC_1_20_2
             return Text.Serializer.fromJson(tagString);
-        #elif MC_VER > MC_1_20_2 && MC_VER < MC_1_20_5
+        #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_20_4
             return Text.Serialization.fromJson(tagString);
-        #elif MC_VER >= MC_1_20_5
+        #elif MC_VER > MC_1_20_4
             throw new UnsupportedOperationException();
         #endif
     }
@@ -777,9 +777,9 @@ public class TextHelper {
     public static String toJson(Text text) {
         #if MC_VER <= MC_1_20_2
             return Text.Serializer.toJson(text);
-        #elif MC_VER > MC_1_20_2 && MC_VER < MC_1_20_5
+        #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_20_4
             return Text.Serialization.toJsonString(text);
-        #elif MC_VER >= MC_1_20_5
+        #elif MC_VER > MC_1_20_4
             throw new UnsupportedOperationException();
         #endif
     }

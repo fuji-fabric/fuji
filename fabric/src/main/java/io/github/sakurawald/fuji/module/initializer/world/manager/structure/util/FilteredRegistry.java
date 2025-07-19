@@ -92,7 +92,7 @@ public class FilteredRegistry<T> extends SimpleRegistry<T> {
         return this.source.get(id);
     }
 
-    #if MC_VER < MC_1_20_5
+    #if MC_VER <= MC_1_20_4
     @Override
     public Lifecycle getEntryLifecycle(T entry) {
         return this.source.getEntryLifecycle(entry);
