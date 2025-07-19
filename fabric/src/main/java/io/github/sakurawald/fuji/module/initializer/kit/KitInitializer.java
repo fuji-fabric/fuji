@@ -16,21 +16,18 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 @Document(id = 1751824812720L, value = """
-    Make a set of `items` as a kit, and give the kit to players.
+    Make a set of `item stacks` as a `kit`, and give the kit to players.
     """)
 @ColorBox(id = 1751977591928L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Create a kit.
-    Issue: `/kit editor` to create a new kit.
+    Issue: `/kit editor` to create a new `kit`.
 
     ◉ Give a kit to a player.
-    Issue: `/kit give \\<player\\> \\<kit-name\\>` to give a kit to a player.
-    <red>NOTE: This is a admin-level command.
-    You need to use `command_bundle` module to create a `user-level` command, for players to `claim a kit`.
-    """)
-@ColorBox(id = 1751977687678L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    Issue: `/kit give \\<player\\> \\<kit-name\\>` to give a `kit` to a player.
+
     ◉ Create a user-level command, for players to `claim a kit`.
-    The `/kit give` command is a `admin-level` command, you should not allow players to use it directly.
-    You need to use `command_bundle` module to create a new `user-level` command, and wrap the `/kit give` command.
+    <red>The `/kit give` command is a `admin-level` command, you should NOT allow players to use it directly.
+    <green>TIP: You need to use `command_bundle` module to create a new `user-level` command, for players to `claim a kit`.
     """)
 @ColorBox(id = 1751977756034L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Associate a cooldown to a kit.
@@ -50,6 +47,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     ◉ Give the new-bie player a kit.
     You can use `command_event` module, to give a kit to the new-bie player.
     """)
+
 
 
 @CommandNode("kit")
