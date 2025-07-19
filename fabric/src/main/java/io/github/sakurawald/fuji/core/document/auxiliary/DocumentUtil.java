@@ -80,6 +80,13 @@ public class DocumentUtil {
 
         line = line.replaceAll("%(.+?)%", "<aqua>%$1%</aqua>");
 
+        line = line.replaceAll("@a", "<pink>@a</pink>");
+        line = line.replaceAll("@e", "<pink>@e</pink>");
+        line = line.replaceAll("@n", "<pink>@n</pink>");
+        line = line.replaceAll("@p", "<pink>@p</pink>");
+        line = line.replaceAll("@r", "<pink>@r</pink>");
+        line = line.replaceAll("@s", "<pink>@s</pink>");
+
         line = line.replaceAll("\\\\<(.+?)\\\\>", "<yellow>\\\\<$1\\\\></yellow>");
 
         line = UrlHighlighter.highlight(line);

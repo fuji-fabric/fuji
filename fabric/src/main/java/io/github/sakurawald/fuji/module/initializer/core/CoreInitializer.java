@@ -18,7 +18,6 @@ import java.util.List;
     Modify the `config/fuji/config.json` file to `enable` a module.
     After that, `re-start` the server, to apply the `module enable status`.
     """)
-
 @ColorBox(id = 1751870440489L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     ◉ Does fuji support the `hot reload`?
 
@@ -32,8 +31,11 @@ import java.util.List;
     2. If any other mods conflicts with `a module`, you can just `disable that module`.
     3. You only enable the `interested modules`, and there is no performance paying for `disabled module`.
     """)
-
-
+@ColorBox(id = 1752891903903L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ Adjust the `lore` text font size.
+    If the `lore` text is too large in your UI.
+    You can configure it in `Esc` - `Options` - `Video Settings` - `GUI Scale`
+    """)
 public class CoreInitializer extends ModuleInitializer {
 
     @Override
