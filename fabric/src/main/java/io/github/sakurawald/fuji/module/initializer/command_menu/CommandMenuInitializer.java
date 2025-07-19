@@ -22,13 +22,31 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @Document(id = 1751824895470L, value = """
     This module allows you to define `menu` GUI, to execute commands.
     """)
+@ColorBox(id = 1752900650332L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ The definition of `menu` and `slot`.
+    A `menu` is a virtual `container GUI`.
+    The `virtual GUI` is composed of `slots`.
+    A `slot` is used to hold an `item stack`.
+    The `minimal size` of the GUI is `1 x 6 = 6 slots`
+    The `maximal size` of the GUI is `9 x 6 = 54 slots`
+
+    <green>In short, you can define a `menu` to hold `slots`.
+    <green>And bind `commands` to the `slots`.
+    """)
 @ColorBox(id = 1751870445592L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     The `/command-menu open` command is an `admin-level` command.
     You need to use `command_bundle` module, to creat a `user-level` command.
     """)
 @ColorBox(id = 1751968513281L, color = ColorBox.ColorBlockTypes.TIPS, value = """
-    If you want to create a `nested menu`, you need to disable the `close menu on click` option.
-    And handle the `menu close` using the `/command-menu close \\<player\\>` command.
+    ◉ Create a `nested` menus.
+    If you want to create a `nested menu`:
+    Click a `slot` in `menu A`, it will opens the `menu B`.
+    Then you need to disable the `close_menu_on_clicked` option for `menu A`.
+    To prevent the `menu B` being `opened` and `closed instantly`.
+
+    ◉ Handle the `menu closing` manually.
+    You can use `/run as fake-op %player:name% command-menu close %player:name%` command.
+    To `close` the `opened GUI` for a `player`.
     """)
 
 
