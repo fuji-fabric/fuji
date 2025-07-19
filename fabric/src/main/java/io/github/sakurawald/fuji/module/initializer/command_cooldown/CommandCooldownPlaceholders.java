@@ -7,7 +7,7 @@ import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.descriptor.PlaceholderDescriptor;
 import io.github.sakurawald.fuji.core.service.duration_parser.DurationParser;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.service.NamedCooldownService;
-import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.CommandCooldown;
+import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCommandCooldown;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
@@ -24,12 +24,12 @@ public class CommandCooldownPlaceholders {
     static void registerCommandCooldownLeftUsagePlaceholder() {
         PlaceholderDescriptor leftUsageDescriptor = new PlaceholderDescriptor("command_cooldown_left_usage", 1751999791863L);
         PlaceholderHelper.registerPlayerPlaceholder(leftUsageDescriptor, (player, args) -> {
-            CommandCooldown cooldown = NamedCooldownService.getNamedCooldownList().get(args);
+            NamedCommandCooldown cooldown = NamedCooldownService.getNamedCooldownList().get(args);
             if (cooldown == null) return NOT_COOLDOWN_FOUND_ERROR_TEXT;
 
             String key = PlayerHelper.getPlayerName(player);
-            int uses = cooldown.getUsage().computeIfAbsent(key, k -> 0);
-            int availableUses = cooldown.getMaxUsage() - uses;
+            int uses = cooldown.getUses().computeIfAbsent(key, k -> 0);
+            int availableUses = cooldown.getMaxUses() - uses;
             return Text.literal(String.valueOf(availableUses));
         });
     }
@@ -43,11 +43,11 @@ public class CommandCooldownPlaceholders {
     static void registerCommandCooldownLeftTimePlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("command_cooldown_left_time", 1751999769680L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player, args) -> {
-            CommandCooldown cooldown = NamedCooldownService.getNamedCooldownList().get(args);
+            NamedCommandCooldown cooldown = NamedCooldownService.getNamedCooldownList().get(args);
             if (cooldown == null) return NOT_COOLDOWN_FOUND_ERROR_TEXT;
 
             String key = PlayerHelper.getPlayerName(player);
-            long remainingDuration = cooldown.getRemainingTime(key, cooldown.getCooldownMs());
+            long remainingDuration = cooldown.getRemainingTime(key, cooldown.getCooldownDuration());
             remainingDuration = Math.max(0, remainingDuration);
             String formattedRemainingDuration = DurationParser.formatDurationIntoCompact(remainingDuration);
             return Text.literal(formattedRemainingDuration);
@@ -63,11 +63,11 @@ public class CommandCooldownPlaceholders {
     static void registerCommandCooldownLeftTimeDatePlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("command_cooldown_left_time_date", 1752625269482L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player, args) -> {
-            CommandCooldown cooldown = NamedCooldownService.getNamedCooldownList().get(args);
+            NamedCommandCooldown cooldown = NamedCooldownService.getNamedCooldownList().get(args);
             if (cooldown == null) return NOT_COOLDOWN_FOUND_ERROR_TEXT;
 
             String key = PlayerHelper.getPlayerName(player);
-            long nextAvailableDate = cooldown.getLastUseTime(key) + cooldown.getCooldownMs();
+            long nextAvailableDate = cooldown.getLastUseTime(key) + cooldown.getCooldownDuration();
             String formattedLeftTime = ChronosUtil.toDefaultDateFormat(nextAvailableDate);
             return Text.literal(formattedLeftTime);
         });

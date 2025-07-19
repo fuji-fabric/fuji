@@ -17,7 +17,7 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.command.argument.wrapper.CommandCooldownName;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.config.model.CommandCooldownConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.service.NamedCooldownService;
-import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.CommandCooldown;
+import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCommandCooldown;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -141,7 +141,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
     ) {
         ensureNamedCooldownExist(source, name);
 
-        CommandCooldown cooldown = NamedCooldownService.getNamedCooldownList().get(name.getValue());
+        NamedCommandCooldown cooldown = NamedCooldownService.getNamedCooldownList().get(name.getValue());
         StringList $onFailed = onFailed.orElse(new StringList(Collections.emptyList()));
         String key = PlayerHelper.getPlayerName(player);
 
