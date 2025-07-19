@@ -2,11 +2,10 @@ package io.github.sakurawald.fuji.module.mixin.command_cooldown;
 
 import com.mojang.brigadier.ParseResults;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
-import io.github.sakurawald.fuji.module.initializer.command_cooldown.CommandCooldownInitializer;
+import io.github.sakurawald.fuji.module.initializer.command_cooldown.service.UnnamedCooldownService;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -40,7 +39,7 @@ public class CommandManagerMixin {
         if (player == null) return;
 
         /* Compute the cooldown for specified command. */
-        long cooldownMs = CommandCooldownInitializer.computeCooldown(player, string);
+        long cooldownMs = UnnamedCooldownService.computeRemainingUnnamedCooldownDuration(player, string);
         if (cooldownMs > 0) {
             long leftTimeSecond = cooldownMs / 1000;
             TextHelper.sendTextByKey(player, "command_cooldown.cooldown", leftTimeSecond);

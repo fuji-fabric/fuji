@@ -6,7 +6,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.descriptor.PlaceholderDescriptor;
 import io.github.sakurawald.fuji.core.service.duration_parser.DurationParser;
-import io.github.sakurawald.fuji.module.initializer.command_cooldown.service.CommandCooldownService;
+import io.github.sakurawald.fuji.module.initializer.command_cooldown.service.NamedCooldownService;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.CommandCooldown;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -24,7 +24,7 @@ public class CommandCooldownPlaceholders {
     static void registerCommandCooldownLeftUsagePlaceholder() {
         PlaceholderDescriptor leftUsageDescriptor = new PlaceholderDescriptor("command_cooldown_left_usage", 1751999791863L);
         PlaceholderHelper.registerPlayerPlaceholder(leftUsageDescriptor, (player, args) -> {
-            CommandCooldown cooldown = CommandCooldownService.getNamedCooldownList().get(args);
+            CommandCooldown cooldown = NamedCooldownService.getNamedCooldownList().get(args);
             if (cooldown == null) return NOT_COOLDOWN_FOUND_ERROR_TEXT;
 
             String key = PlayerHelper.getPlayerName(player);
@@ -43,7 +43,7 @@ public class CommandCooldownPlaceholders {
     static void registerCommandCooldownLeftTimePlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("command_cooldown_left_time", 1751999769680L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player, args) -> {
-            CommandCooldown cooldown = CommandCooldownService.getNamedCooldownList().get(args);
+            CommandCooldown cooldown = NamedCooldownService.getNamedCooldownList().get(args);
             if (cooldown == null) return NOT_COOLDOWN_FOUND_ERROR_TEXT;
 
             String key = PlayerHelper.getPlayerName(player);
@@ -63,7 +63,7 @@ public class CommandCooldownPlaceholders {
     static void registerCommandCooldownLeftTimeDatePlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("command_cooldown_left_time_date", 1752625269482L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player, args) -> {
-            CommandCooldown cooldown = CommandCooldownService.getNamedCooldownList().get(args);
+            CommandCooldown cooldown = NamedCooldownService.getNamedCooldownList().get(args);
             if (cooldown == null) return NOT_COOLDOWN_FOUND_ERROR_TEXT;
 
             String key = PlayerHelper.getPlayerName(player);
