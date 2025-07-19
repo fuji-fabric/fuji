@@ -21,10 +21,10 @@ It's good to have a checklist, to avoid forgetting something.
 
 - Summon a fake player using `/player 1 spawn` and throw exp bottle to it.
     - Test the luckperms integration with fake-player user.
-- Issue the command `/tppos --z 64 --x 32 --y 128`.
+- Issue the command `/tppos --z 64 --x 32 --y 128`
     - Test the context passing after command redirection.
 - Issue the command `/send-title @s --mainTitle "<rainbow>Hello" --subTitle "<blue>World" --fadeInTicks 60 --stayTicks 60 --fadeOutTicks 60`
-- See if a pickaxe gets the max power level in `/enchantment`.
+- See if a pickaxe gets the max power level in `/enchantment`
     - Test the lambda for power of providers.
 - See an inventory display contains a shulker box.
     - Test the deep-level gui.
