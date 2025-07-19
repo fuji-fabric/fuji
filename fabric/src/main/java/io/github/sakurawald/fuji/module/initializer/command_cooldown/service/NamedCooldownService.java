@@ -1,8 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_cooldown.service;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyStringList;
-import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.StringList;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.CommandCooldownInitializer;
