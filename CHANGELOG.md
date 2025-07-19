@@ -1,5 +1,6 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
   
+
 - [command_cooldown] improvements for `command_cooldown` module:
   - docs: provide more doc strings and examples to describe how to use this module.
   - feature: new `/command-cooldown try-use` command. (Now you can define a `default command instance` in the config file, and `test` it with `/command-cooldown try-use` command. It provides a simple way to define a named-cooldown.)
