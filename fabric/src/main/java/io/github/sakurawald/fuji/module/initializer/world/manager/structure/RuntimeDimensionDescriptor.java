@@ -55,6 +55,9 @@ public class RuntimeDimensionDescriptor {
     @Document(id = 1752729741419L, value = """
         The `chunk generator` of this `dimension`.
         Note that in vanilla Minecraft, the `chunk generator` of `minecraft:overworld`, `minecraft:the_nether` and `minecraft:the_end` are all `NoiseChunkGenerator`.
+
+        <green>For a non-vanilla chunk generator provided by mods, you can just specify this value to `NOISE`.
+        <green>If this value is specified to `NOISE`, then we will just use whatever the chunk generator that mod is using.
         """)
     public ChunkGeneratorType chunkGeneratorType = ChunkGeneratorType.NOISE;
 

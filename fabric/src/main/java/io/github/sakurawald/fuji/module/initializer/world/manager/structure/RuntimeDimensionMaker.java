@@ -47,6 +47,8 @@ public class RuntimeDimensionMaker {
 
         /* Make the dimension options. */
         @Nullable DimensionOptions dimensionOptions = makeDimensionOptions(runtimeDimensionDescriptor);
+
+        /* Mark the dimension options, to ignore it while world saving. */
         ((ExtendedDimensionOptions) (Object) dimensionOptions).fuji$setSaveDimensionOptions(false);
 
         /* Make the dimension instance. */
@@ -68,6 +70,7 @@ public class RuntimeDimensionMaker {
         /* Do some post things for this dimension. */
         postRuntimeDimensionMake(dimension, runtimeDimensionDescriptor);
 
+        /* Return the dimension instance with the dimension options. */
         return new Pair<>(dimension, dimensionOptions);
     }
 
@@ -111,7 +114,7 @@ public class RuntimeDimensionMaker {
 
     private static @NotNull DimensionOptions makeDimensionOptionsWithCustomization(RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         /* Get an existing dimension options from registry. */
-        RegistryEntry<DimensionType> dimensionTypeEntry = getDimensionTypeEntry(runtimeDimensionDescriptor);
+        RegistryEntry<DimensionType> dimensionTypeEntry = makeDimensionTypeEntry(runtimeDimensionDescriptor);
         ChunkGenerator chunkGenerator = makeChunkGenerator(runtimeDimensionDescriptor);
 
         // NOTE: Make a new DimensionOptions instance. (One DimensionOptions instance can only be used by a ServerWorld instance)
@@ -139,16 +142,22 @@ public class RuntimeDimensionMaker {
         }
 
         // NOTE: Copy the existed chunk generator, to ensure the settings of chunk generator is identical.
+        // NOTE: For vanilla Minecraft dimensions, they both use `NoiseChunkGenerator`. However, for mods that adds custom chunk generators, this method will return whatever the chunk generator the mod is using.
         return existedDimensionOptions.chunkGenerator();
     }
 
-    private static @NotNull RegistryEntry<DimensionType> getDimensionTypeEntry(RuntimeDimensionDescriptor dimensionDescriptor) {
+    private static @NotNull RegistryEntry<DimensionType> makeDimensionTypeEntry(RuntimeDimensionDescriptor dimensionDescriptor) {
         Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(dimensionDescriptor.dimension_type);
-        Optional<RegistryEntry<DimensionType>> dimensionTypeEntry = RegistryHelper.ofRegistryEntry(RegistryKeys.DIMENSION_TYPE, dimensionTypeIdentifier);
-        if (dimensionTypeEntry.isEmpty()) {
-            throw new RuntimeException("Failed to make DimensionOptions: The DimensionTypeEntry %s is null.".formatted(dimensionTypeIdentifier));
+        Optional<RegistryEntry<DimensionType>> dimensionTypeEntryOptional = RegistryHelper.ofRegistryEntry(RegistryKeys.DIMENSION_TYPE, dimensionTypeIdentifier);
+        if (dimensionTypeEntryOptional.isEmpty()) {
+            throw new RuntimeException("Failed to make RegistryEntry<DimensionType> for dimension %s: The Optional<RegistryEntry<DimensionType>> null.".formatted(dimensionTypeIdentifier));
         }
-        return dimensionTypeEntry.get();
+
+        RegistryEntry<DimensionType> dimensionTypeRegistryEntry = dimensionTypeEntryOptional.get();
+        if (dimensionTypeRegistryEntry.comp_349() == null) {
+            throw new RuntimeException("Failed to make RegistryEntry<DimensionType> for dimension %s: The value of RegistryEntry<DimensionType>.comp_349() is null.".formatted(dimensionTypeIdentifier));
+        }
+        return dimensionTypeRegistryEntry;
     }
 
     private static @NotNull FlatChunkGenerator makeFlatChunkGenerator(RuntimeDimensionDescriptor dimensionDescriptor) {
