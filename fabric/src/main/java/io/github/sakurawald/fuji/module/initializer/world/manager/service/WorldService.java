@@ -218,6 +218,20 @@ public class WorldService {
         return WorldInitializer.world.model().dimension_list;
     }
 
+    public static void loadRuntimeDimensions() {
+        WorldInitializer.world.model().dimension_list
+            .stream()
+            .filter(RuntimeDimensionDescriptor::isAuto_load_on_server_startup)
+            .forEach(it -> {
+                try {
+                    DimensionCreationTicket ticket = new DimensionCreationTicket(ServerHelper.getServer().getCommandSource(), it);
+                    submitDimensionCreationTicket(ticket);
+                    LogUtil.info("Load dimension {} into the server.", it.getDimension());
+                } catch (Exception e) {
+                    LogUtil.error("Failed to load dimension `{}`", it, e);
+                }
+            });
+    }
 }
 
 

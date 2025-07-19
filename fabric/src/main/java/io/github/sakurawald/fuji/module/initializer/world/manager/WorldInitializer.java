@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.module.initializer.world.manager;
 
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
@@ -39,7 +38,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -309,7 +307,7 @@ public class WorldInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<WorldDataModel> world = new ObjectConfigurationHandler<>("world.json", WorldDataModel.class)
         .setAutoSaveEveryMinute();
 
-    private static void checkBlacklist(ServerCommandSource source, String identifier) {
+    private static void ensureOperationsOnTargetDimensionIsNotBlacklisted(ServerCommandSource source, String identifier) {
         /* Should not operate on blacklisted dimensions. */
         if (config.model().blacklist.dimension_list.contains(identifier)) {
             TextHelper.sendTextByKey(source, "world.dimension.blacklist", identifier);
@@ -434,12 +432,11 @@ public class WorldInitializer extends ModuleInitializer {
 
         <red>NOTE: This command will not delete the `dimension descriptor` in config file.
         """)
-
     @CommandNode("delete")
     private static int $delete(@CommandSource ServerCommandSource source, Dimension dimension, Optional<Boolean> confirm) {
         ServerWorld dimensionInstance = dimension.getValue();
         String dimensionId = RegistryHelper.toString(dimensionInstance);
-        checkBlacklist(source, dimensionId);
+        ensureOperationsOnTargetDimensionIsNotBlacklisted(source, dimensionId);
 
         /* Check the command confirm. */
         if (!CommandHelper.Pattern.isCommandConfirmed(source, confirm)) {
@@ -487,7 +484,7 @@ public class WorldInitializer extends ModuleInitializer {
         /* Get the original dimension node. */
         ServerWorld dimensionInstance = dimension.getValue();
         String dimensionIdentifier = RegistryHelper.toString(dimensionInstance);
-        checkBlacklist(source, dimensionIdentifier);
+        ensureOperationsOnTargetDimensionIsNotBlacklisted(source, dimensionIdentifier);
 
         Optional<RuntimeDimensionDescriptor> dimensionEntryOpt = WorldService.getRuntimeDimensionDescriptor(dimensionIdentifier);
         if (dimensionEntryOpt.isEmpty()) {
@@ -634,21 +631,7 @@ public class WorldInitializer extends ModuleInitializer {
 
     @Override
     protected void onInitialize() {
-        ServerLifecycleEvents.SERVER_STARTED.register(this::loadRuntimeDimensions);
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> WorldService.loadRuntimeDimensions());
     }
 
-    private void loadRuntimeDimensions(@NotNull MinecraftServer server) {
-        world.model().dimension_list
-            .stream()
-            .filter(RuntimeDimensionDescriptor::isAuto_load_on_server_startup)
-            .forEach(it -> {
-                try {
-                    DimensionCreationTicket ticket = new DimensionCreationTicket(server.getCommandSource(), it);
-                    WorldService.submitDimensionCreationTicket(ticket);
-                    LogUtil.info("Load dimension {} into the server.", it.getDimension());
-                } catch (Exception e) {
-                    LogUtil.error("Failed to load dimension `{}`", it, e);
-                }
-            });
-    }
 }
