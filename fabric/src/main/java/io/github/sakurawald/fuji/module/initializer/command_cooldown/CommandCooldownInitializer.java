@@ -1,11 +1,8 @@
 package io.github.sakurawald.fuji.module.initializer.command_cooldown;
 
-import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
-import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlaceholderHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
@@ -18,16 +15,14 @@ import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
-import io.github.sakurawald.fuji.core.service.duration_parser.DurationParser;
 import io.github.sakurawald.fuji.core.structure.Cooldown;
-import io.github.sakurawald.fuji.core.document.descriptor.PlaceholderDescriptor;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.command.argument.wrapper.CommandCooldownName;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.config.model.CommandCooldownConfigModel;
+import io.github.sakurawald.fuji.module.initializer.command_cooldown.service.CommandCooldownService;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.CommandCooldown;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,42 +32,41 @@ import java.util.Map;
 import java.util.Optional;
 
 @Document(id = 1751826375815L, value = """
-    This module allows you to define a `cooldown` for specified commands.
+    This module allows you to define a `cooldown` for a specified `command`.
     """)
-
 @ColorBox(id = 1751902763633L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     ◉ There are 2 types of `cooldown`.
-    1. `Unnamed Cooldown`: You can use it to define a cooldown time for a specified command. (The cooldown is tested and managed automatically)
-    2. `Named Cooldown`: You have to use commands to create `named cooldown`, and use commands to `test it`.
+    1. `Unnamed Cooldown`: You can use it to define a `cooldown duration` for a specified command. (It is `tested` and managed automatically)
+    2. `Named Cooldown`: You have to use commands to create a `named cooldown`, and use commands to `test` it.
 
-    NOTE: If you only want to define a `cooldown` for some commands, just use `unnamed cooldown`.
+    <green>NOTE: If you only want to define a simple `cooling time` for a specified command, just use `unnamed cooldown`.
     """)
 @ColorBox(id = 1751902885278L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    ◉ Create a named cooldown. (With 3 seconds cooldown)
+    ◉ Create a `named cooldown`. (With 3 seconds `cooldown duration`.)
     Issue: `/command-cooldown create example 3000`
-    """)
-@ColorBox(id = 1751903050083L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    ◉ Test a named cooldown.
-    Issue: `/command-cooldown test example \\<player\\> --onFailed "say false %fuji:command_cooldown_left_time example%/%fuji:command_cooldown_left_usage example%" say true`
-    """)
-@ColorBox(id = 1751903086020L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    ◉ Reset a named cooldown for a player.
-    Issue: `/command-cooldown reset example \\<player\\>`
-    """)
-@ColorBox(id = 1751903125621L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    ◉ Create a named cooldown. (With 15 seconds cooldown, and 3 max usage times)
+
+    ◉ Test a `named cooldown`.
+    Issue: `/command-cooldown test example \\\\<player\\\\> --onFailed "say false %fuji:command_cooldown_left_time example%/%fuji:command_cooldown_left_usage example%" say true`
+
+    ◉ Reset a `named cooldown` for a player.
+    Issue: `/command-cooldown reset example \\\\<player\\\\>`
+
+    ◉ Create a `named cooldown`. (With 15 seconds `cooldown duration`, and `limit of number of use` is 3)
     Issue: `/command-cooldown create example 15000 --maxUsage 3`
-    """)
-@ColorBox(id = 1751903203558L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    ◉ Create a named cooldown. (Global, all players shares the same cooldown instance)
+
+    ◉ Create a global `named cooldown`.
+    By default, a `named cooldown` applies `per-player`.
+    A `global` named cooldown applies `per-server`.
     Issue: `/command-cooldown create example 3000 --global true`
     """)
 @ColorBox(id = 1751903262817L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Make a `non-persistent named cooldown`.
     By default, a `named cooldown` will be `persisted` on the `storage`.
     However, you can create a `non-persist named cooldown`.
     Issue: `/command-cooldown create example 999999999999 --persistent false`
     This cooldown says that, it can be used only once after each server re-start.
     """)
+
 
 
 @CommandNode("command-cooldown")
@@ -89,8 +83,6 @@ public class CommandCooldownInitializer extends ModuleInitializer {
                 .forEach(it -> it.getTimestamp().clear());
         }
     };
-
-    private static final MutableText NOT_COOLDOWN_FOUND_ERROR_TEXT = Text.literal("NOT_COOLDOWN_FOUND_ERROR");
 
     private static final Map<String, Cooldown<String>> player2cooldown = new HashMap<>();
 
@@ -114,9 +106,9 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         , @Document(id = 1751826387810L, value = "The commands to execute if the test is failed.") Optional<StringList> onFailed
         , @Document(id = 1751826394378L, value = "The commands to execute if the test is success.") GreedyStringList onSuccess
     ) {
-        ensureExist(source, name);
+        ensureNamedCooldownExist(source, name);
 
-        CommandCooldown cooldown = config.model().namedCooldown.list.get(name.getValue());
+        CommandCooldown cooldown = CommandCooldownService.getNamedCooldownList().get(name.getValue());
         StringList $onFailed = onFailed.orElse(new StringList(Collections.emptyList()));
         String key = player.getGameProfile().getName();
 
@@ -143,14 +135,14 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         , @Document(id = 1751826407322L, value = "Max usage times of this named-cooldown. (per-player/global)") Optional<Integer> maxUsage
         , @Document(id = 1751826409664L, value = "Should we persist this named-cooldown on server shutdown.") Optional<Boolean> persistent
         , @Document(id = 1751826414070L, value = "Is this named-cooldown global or per-player.") Optional<Boolean> global) {
-        ensureNotExist(source, name);
+        ensureNamedCooldownNotExist(source, name);
 
         int $maxUsage = maxUsage.orElse(Integer.MAX_VALUE);
         Boolean $persistent = persistent.orElse(true);
         Boolean $global = global.orElse(false);
 
         CommandCooldown commandCooldown = new CommandCooldown(name, cooldownMs, $maxUsage, $persistent, $global);
-        config.model().namedCooldown.list.put(name, commandCooldown);
+        CommandCooldownService.getNamedCooldownList().put(name, commandCooldown);
         config.writeStorage();
 
         TextHelper.sendTextByKey(source, "command_cooldown.created", name);
@@ -160,10 +152,10 @@ public class CommandCooldownInitializer extends ModuleInitializer {
     @Document(id = 1751826416666L, value = "Delete a named-cooldown.")
     @CommandNode("delete")
     private static int $delete(@CommandSource ServerCommandSource source, CommandCooldownName name) {
-        ensureExist(source, name);
+        ensureNamedCooldownExist(source, name);
 
         String key = name.getValue();
-        config.model().namedCooldown.list.remove(key);
+        CommandCooldownService.getNamedCooldownList().remove(key);
         config.writeStorage();
 
         TextHelper.sendTextByKey(source, "command_cooldown.deleted", name.getValue());
@@ -173,7 +165,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
     @Document(id = 1751826418447L, value = "List all named-cooldown.")
     @CommandNode("list")
     private static int $list(@CommandSource ServerCommandSource source) {
-        config.model().namedCooldown.list.keySet().forEach(it -> source.sendMessage(Text.literal(it)));
+        CommandCooldownService.getNamedCooldownList().keySet().forEach(it -> source.sendMessage(Text.literal(it)));
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -182,9 +174,9 @@ public class CommandCooldownInitializer extends ModuleInitializer {
     private static int $reset(@CommandSource ServerCommandSource source
         , CommandCooldownName name
         , ServerPlayerEntity player) {
-        ensureExist(source, name);
+        ensureNamedCooldownExist(source, name);
 
-        CommandCooldown commandCooldown = config.model().namedCooldown.list.get(name.getValue());
+        CommandCooldown commandCooldown = CommandCooldownService.getNamedCooldownList().get(name.getValue());
         config.writeStorage();
 
         String key = player.getGameProfile().getName();
@@ -194,85 +186,25 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    private static void ensureExist(ServerCommandSource source, CommandCooldownName name) {
-        if (!config.model().namedCooldown.list.containsKey(name.getValue())) {
+    private static void ensureNamedCooldownExist(ServerCommandSource source, CommandCooldownName name) {
+        if (!CommandCooldownService.getNamedCooldownList().containsKey(name.getValue())) {
             TextHelper.sendTextByKey(source, "command_cooldown.not_found", name.getValue());
             throw new AbortCommandExecutionException();
         }
     }
 
-    private static void ensureNotExist(ServerCommandSource source, String name) {
-        if (config.model().namedCooldown.list.containsKey(name)) {
+    private static void ensureNamedCooldownNotExist(ServerCommandSource source, String name) {
+        if (CommandCooldownService.getNamedCooldownList().containsKey(name)) {
             TextHelper.sendTextByKey(source, "command_cooldown.already_exists", name);
             throw new AbortCommandExecutionException();
         }
     }
 
-
     @Override
     protected void registerPlaceholder() {
-        registerCommandCooldownLeftTimePlaceholder();
-        registerCommandCooldownLeftTimeDatePlaceholder();
-        registerCommandCooldownLeftUsagePlaceholder();
+        CommandCooldownPlaceholders.registerCommandCooldownLeftTimePlaceholder();
+        CommandCooldownPlaceholders.registerCommandCooldownLeftTimeDatePlaceholder();
+        CommandCooldownPlaceholders.registerCommandCooldownLeftUsagePlaceholder();
     }
 
-    @DocStringProvider(id = 1751999791863L, value = """
-        Returns the `left usage times` for `specified named cooldown` in integer.
-
-        For example, if you have a `named cooldown` whose name is `example`.
-        You can use: `%fuji:command_cooldown_left_usage example%`
-        """)
-    private static void registerCommandCooldownLeftUsagePlaceholder() {
-        PlaceholderDescriptor leftUsageDescriptor = new PlaceholderDescriptor("command_cooldown_left_usage", 1751999791863L);
-        PlaceholderHelper.registerPlayerPlaceholder(leftUsageDescriptor, (player, args) -> {
-            CommandCooldown cooldown = config.model().namedCooldown.list.get(args);
-            if (cooldown == null) return NOT_COOLDOWN_FOUND_ERROR_TEXT;
-
-            String key = player.getGameProfile().getName();
-            int usage = cooldown.getUsage().getOrDefault(key, 0);
-            int leftUsage = cooldown.getMaxUsage() - usage;
-            return Text.literal(String.valueOf(leftUsage));
-        });
-    }
-
-    @DocStringProvider(id = 1751999769680L, value = """
-        Returns the `left time` for `specified named cooldown` in `formatted duration`.
-
-        For example, if you have a `named cooldown` whose name is `example`.
-        You can use: `%fuji:command_cooldown_left_time example%`
-        """)
-    private static void registerCommandCooldownLeftTimePlaceholder() {
-        PlaceholderDescriptor leftTimeDescriptor = new PlaceholderDescriptor("command_cooldown_left_time", 1751999769680L);
-        PlaceholderHelper.registerPlayerPlaceholder(leftTimeDescriptor, (player, args) -> {
-            CommandCooldown cooldown = config.model().namedCooldown.list.get(args);
-            if (cooldown == null) return NOT_COOLDOWN_FOUND_ERROR_TEXT;
-
-            String key = player.getGameProfile().getName();
-            long leftTime = cooldown.getRemainingTime(key, cooldown.getCooldownMs());
-            leftTime = Math.max(0, leftTime);
-
-            String formattedLeftTime = DurationParser.formatDurationIntoCompact(leftTime);
-            return Text.literal(formattedLeftTime);
-        });
-    }
-
-    @DocStringProvider(id = 1752625269482L, value = """
-        Returns the `left time` for `specified named cooldown` in date.
-
-        For example, if you have a `named cooldown` whose name is `example`.
-        You can use: `%fuji:command_cooldown_left_time_date example%`
-        """)
-    private static void registerCommandCooldownLeftTimeDatePlaceholder() {
-        PlaceholderDescriptor leftTimeDescriptor = new PlaceholderDescriptor("command_cooldown_left_time_date", 1752625269482L);
-        PlaceholderHelper.registerPlayerPlaceholder(leftTimeDescriptor, (player, args) -> {
-            CommandCooldown cooldown = config.model().namedCooldown.list.get(args);
-            if (cooldown == null) return NOT_COOLDOWN_FOUND_ERROR_TEXT;
-
-            String key = player.getGameProfile().getName();
-            long nextUseTime = cooldown.getLastUseTime(key) + cooldown.getCooldownMs();
-
-            String formattedLeftTime = ChronosUtil.toDefaultDateFormat(nextUseTime);
-            return Text.literal(formattedLeftTime);
-        });
-    }
 }
