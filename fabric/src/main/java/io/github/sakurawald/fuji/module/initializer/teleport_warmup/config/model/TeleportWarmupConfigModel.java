@@ -12,7 +12,7 @@ public class TeleportWarmupConfigModel {
     @Document(id = 1751826785758L, value = """
         The `warmup seconds` for `all` teleports.
         """)
-    public int warmup_second = 3;
+    public double warmup_second = 3;
 
     public Interruptible interruptible = new Interruptible(true, 1, true, true);
 

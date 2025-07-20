@@ -1,22 +1,24 @@
 package io.github.sakurawald.fuji.module.initializer.teleport_warmup;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
+import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
-import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
-import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
+import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarTicket;
 import io.github.sakurawald.fuji.core.structure.TeleportTicket;
-import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
-import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.teleport_warmup.config.model.TeleportWarmupConfigModel;
-import net.minecraft.server.network.ServerPlayerEntity;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Optional;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826791752L, value = """
     Adds a warmup cooldown before player teleportation.
@@ -47,18 +49,43 @@ public class TeleportWarmupInitializer extends ModuleInitializer {
     @DocStringProvider(id = 1752000334206L, value = """
         Specify the teleport warmup time in seconds for this player.
         """)
-    public static final MetaDescriptor<Integer> TELEPORT_WARMUP_TIME_META = new MetaDescriptor<>("fuji.teleport_warmup.warmup", Integer::valueOf, 1752000334206L);
+    public static final MetaDescriptor<Double> TELEPORT_WARMUP_TIME_META = new MetaDescriptor<>("fuji.teleport_warmup.warmup", Double::valueOf, 1752000334206L);
 
     public static final BaseConfigurationHandler<TeleportWarmupConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, TeleportWarmupConfigModel.class);
 
-    public static @Nullable TeleportTicket getTeleportTicket(@NotNull ServerPlayerEntity player) {
-        Optional<BossBarTicket> optValue = Managers.getBossBarManager().getTickets()
+    public static Optional<BossBarTicket> getExistingTeleportTicket(@NotNull ServerPlayerEntity player) {
+        return Managers.getBossBarManager()
+            .getTickets()
             .stream()
-            .filter(it ->
-                it instanceof TeleportTicket teleportTicket
+            .filter(it -> it instanceof TeleportTicket teleportTicket
                     && teleportTicket.getPlayer().equals(player))
             .findFirst();
+    }
 
-        return (TeleportTicket) optValue.orElse(null);
+    public static boolean shouldApplyTeleportWarmup(ServerWorld destinationDimension, ServerPlayerEntity player) {
+        /* Skip the teleport warmup if target dimension is not in the list of effective dimensions */
+        if (!config.model().dimension.effective_dimensions.contains(RegistryHelper.toString(destinationDimension))) {
+            return false;
+        }
+
+        /* Skip the teleport warmup if the player is a fake-player. */
+        // NOTE: For carpet mod, if you use `/player Alice spawn` to spawn a fake-player. It will initially be spawned in minecraft:overworld.
+        // And then it will be teleported to the target dimension.
+        if (!PlayerHelper.isRealPlayer(player)) {
+            return false;
+        }
+
+        /* Skip the teleport warmup if the player has the bypass permission. */
+        if (LuckpermsHelper.hasPermission(player.getUuid(), TELEPORT_WARMUP_BYPASS_PERMISSION)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static double getWarmupSeconds(ServerPlayerEntity player) {
+        Optional<Double> warmupSecondsSpecifiedByMeta = LuckpermsHelper.getMeta(player.getUuid(), TELEPORT_WARMUP_TIME_META);
+        return warmupSecondsSpecifiedByMeta
+            .orElse(config.model().warmup_second);
     }
 }
