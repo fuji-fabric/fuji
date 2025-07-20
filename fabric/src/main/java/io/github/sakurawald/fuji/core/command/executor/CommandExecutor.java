@@ -29,7 +29,7 @@ public class CommandExecutor {
 
         /* Expand the command. */
         command = context.expandCommand(command);
-        LogUtil.debug("Executing command: command = `{}`, context = {}", command, context);
+        LogUtil.debug("Execute the command: command = `{}`, context = {}", command, context);
 
         try {
             return Objects

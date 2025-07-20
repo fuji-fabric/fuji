@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.core.command.structure;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,17 +10,16 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
-/*
 
-Cases:
-1. A command is initialized by player alice, and executed as player bob.
-2. A command is initialized by player alice, and executed as the console.
-3. A command is initialized by the console, and executed as the console. (command scheduler)
-4. A command is initialized by a player, and executed as the player. (interactive sign)
-
- */
 @Data
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@ForDeveloper("""
+    Cases:
+    1. A command is initialized by player Alice, and executed as player Bob.
+    2. A command is initialized by player Alice, and executed as the console. (/run as console)
+    3. A command is initialized by the console, and executed as the console. (command scheduler)
+    4. A command is initialized by a player, and executed as the player. (interactive sign)
+    """)
 public class ExtendedCommandSource {
 
     @NotNull ServerCommandSource initiatingSource;
@@ -30,36 +30,24 @@ public class ExtendedCommandSource {
         return new ExtendedCommandSource(initiatingSource, initiatingSource, true);
     }
 
-    public static ExtendedCommandSource asConsole(@NotNull ServerCommandSource initiatingSource, boolean parsePlaceholder) {
-        return new ExtendedCommandSource(initiatingSource, ServerHelper.getServer().getCommandSource(), parsePlaceholder);
-    }
-
-    public static ExtendedCommandSource asPlayer(@NotNull ServerCommandSource initiatingSource, ServerPlayerEntity executingPlayer, boolean parsePlaceholder) {
-        return new ExtendedCommandSource(initiatingSource, executingPlayer.getCommandSource(), parsePlaceholder);
-    }
-
-    public static ExtendedCommandSource asFakeOp(@NotNull ServerCommandSource initiatingSource, ServerPlayerEntity executingPlayer, boolean parsePlaceholder) {
-        return new ExtendedCommandSource(initiatingSource, executingPlayer.getCommandSource().withLevel(4), parsePlaceholder);
-    }
-
     public static ExtendedCommandSource asConsole(@NotNull ServerCommandSource initiatingSource) {
-        return asConsole(initiatingSource, true);
+        return new ExtendedCommandSource(initiatingSource, ServerHelper.getServer().getCommandSource(), true);
     }
 
     public static ExtendedCommandSource asPlayer(@NotNull ServerCommandSource initiatingSource, ServerPlayerEntity executingPlayer) {
-        return asPlayer(initiatingSource, executingPlayer, true);
+        return new ExtendedCommandSource(initiatingSource, executingPlayer.getCommandSource(), true);
     }
 
     public static ExtendedCommandSource asFakeOp(@NotNull ServerCommandSource initiatingSource, ServerPlayerEntity executingPlayer) {
-        return asFakeOp(initiatingSource, executingPlayer, true);
+        return new ExtendedCommandSource(initiatingSource, executingPlayer.getCommandSource().withLevel(4), true);
     }
 
     public boolean sameSource() {
         return executingSource.getName().equals(initiatingSource.getName());
     }
 
-    private ServerCommandSource getPlaceholderParsingSource() {
-        // use the deepest source as the source for placeholder parsing.
+    private ServerCommandSource getCommandSourceForPlaceholderParsing() {
+        // NOTE: Use the deepest command source to parse placeholders.
         if (executingSource.isExecutedByPlayer()) {
             return executingSource;
         }
@@ -68,10 +56,10 @@ public class ExtendedCommandSource {
     }
 
     public String expandCommand(String string) {
-        // escape the placeholder parsing.
+        /* Parse placeholders. */
         if (!this.parsePlaceholder) return string;
 
-        ServerPlayerEntity contextualPlayer = getPlaceholderParsingSource().getPlayer();
+        ServerPlayerEntity contextualPlayer = getCommandSourceForPlaceholderParsing().getPlayer();
         if (contextualPlayer != null) {
             string = TextHelper.Parsers.parsePlaceholderString(contextualPlayer, string);
         } else {

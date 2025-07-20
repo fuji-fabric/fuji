@@ -10,6 +10,7 @@
 - https://jd.papermc.io/paper/1.21.6/
 - https://github.com/google/gson/blob/main/GsonDesignDocument.md#creating-class-instances-for-deserialization
 - https://minecraft.fandom.com/wiki/Category:Development
+- https://minecraft.fandom.com/wiki/Player.dat_format
 
 # Server-side only.
 - https://vanillatweaks.net/picker/datapacks/
