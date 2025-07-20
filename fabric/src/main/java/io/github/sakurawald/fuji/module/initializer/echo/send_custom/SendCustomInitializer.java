@@ -31,6 +31,11 @@ import java.util.Optional;
     To define `custom text` and auto-page them.
     And then send it `as message` or `as book` to a specified player.
     """)
+@ColorBox(id = 1753055756228L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Download an example custom text.
+    You can download the `example-custom-text.txt` file.
+    It is in https://github.com/sakurawald/fuji/blob/dev/.github/files/example-custom-text.txt
+    """)
 @ColorBox(id = 1751976733551L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Send a custom text as a book.
     Issue: `/send-custom as-book Alice guide --author "alice" --title "<rb>The Guide" --giveBook true --openBook true`

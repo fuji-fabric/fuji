@@ -1210,5 +1210,6 @@
   "docstring.1753000916378": "Having this permission means obtaining a `title` with the specified `id`.\n",
   "docstring.1753001051805": "Open the `title` GUI.\n",
   "docstring.1753006644552": "Returns the `display name` of `the active title` for the player.\n",
-  "docstring.1753008337658": "◉ Give the `fisher` title to player Alice.\nIssue: `/lp user Alice permission set fuji.title.obtain.fisher true`\n\n◉ Give the `fisher` title to player Alice, but it expires in 7 days.\nIssue: `/lp user Alice permission settemp fuji.title.obtain.fisher true 7d`\n\n◉ To display the `active title`.\nInsert the `%fuji:active_title%` in any place that supports placeholders. (Like a chat mod that supports the placeholders).\n"
+  "docstring.1753008337658": "◉ Give the `fisher` title to player Alice.\nIssue: `/lp user Alice permission set fuji.title.obtain.fisher true`\n\n◉ Give the `fisher` title to player Alice, but it expires in 7 days.\nIssue: `/lp user Alice permission settemp fuji.title.obtain.fisher true 7d`\n\n◉ To display the `active title`.\nInsert the `%fuji:active_title%` in any place that supports placeholders. (Like a chat mod that supports the placeholders).\n",
+  "docstring.1753055756228": "◉ Download an example custom text.\nYou can download the `example-custom-text.txt` file.\nIt is in https://github.com/sakurawald/fuji/blob/dev/.github/files/example-custom-text.txt\n"
 }
