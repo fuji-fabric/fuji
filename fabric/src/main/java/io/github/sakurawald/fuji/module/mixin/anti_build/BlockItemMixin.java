@@ -21,7 +21,7 @@ public class BlockItemMixin {
     void handlePlaceBlock(@NotNull ItemPlacementContext itemPlacementContext, BlockState blockState, @NotNull CallbackInfoReturnable<Boolean> cir) {
         PlayerEntity player = itemPlacementContext.getPlayer();
         // NOTE: The canPlace() function will be called twice, one in client-side, one in server-side. (One ClientPlayerEntity and one ServerPlayerEntity)
-        if (!PlayerHelper.isServerPlayer(player)) {
+        if (player != null && !PlayerHelper.isServerPlayer(player)) {
             return;
         }
 

@@ -10,7 +10,10 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.anti_build.config.model.AntiBuildConfigModel;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
+import net.luckperms.api.util.Tristate;
 import net.minecraft.entity.player.PlayerEntity;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Optional;
@@ -27,30 +30,26 @@ import java.util.function.Supplier;
     4. Interact with a specified block.
     5. Interact with a specified entity.
     """)
-
 @ColorBox(id = 1751896813134L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     Read the document to see the definition of `identifier` in Minecraft.
     """)
-
 @ColorBox(id = 1751896904529L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     Use the `command suggestion` from `luckperms` mod to see the supported types by this module.
     """)
-
 @ColorBox(id = 1751897087633L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ To ban the placement of TNT block:
-    Just add the `minecraft:tnt` into the `place_block` list.
-    """)
+    Just add the `minecraft:tnt` into the `place_block` list in config file.
 
-@ColorBox(id = 1751897135695L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    ◉ To ban the placement of TNT block, but allow a specific player to use it.
-    Grant a `bypass permission` for that player: `/lp user \\<player\\> permission set fuji.anti_build.place_block.bypass.minecraft:tnt`.
-    """)
+    ◉ To ban the placement of TNT block, but allow player Alice to use it.
+    Grant a `bypass permission` for that player: `/lp user Alice permission set fuji.anti_build.place_block.bypass.minecraft:tnt`.
 
-@ColorBox(id = 1751897263346L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    ◉ Dis-allow to place any blocks.
+    ◉ To assign a override permission for a player explicitly.
+    Issue: `/lp user Alice permission set fuji.anti_build.break_block.override.minecraft:grass_block false`
+    This will `dis-allow` the player Alice to `break a minecraft:grass_block block`.
+
+    ◉ Dis-allow to place `any` blocks.
     Use `*` as the wildcard character, put it into the `place_block` list.
     """)
-
 public class AntiBuildInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<AntiBuildConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, AntiBuildConfigModel.class);
 
@@ -61,31 +60,60 @@ public class AntiBuildInitializer extends ModuleInitializer {
         """)
     private static final PermissionDescriptor ANTI_BUILD_BYPASS_PERMISSION = new PermissionDescriptor("fuji.anti_build.<anti-type>.bypass.<id>", 1751999560958L);
 
-    public static <T> void checkAntiBuild(PlayerEntity player, String antiType, Set<String> ids, String id, CallbackInfoReturnable<T> cir, T cancelWithValue, Supplier<Boolean> shouldSendFeedback) {
-        if (shouldWeCancelTheAction(player, antiType, ids, id)) {
-            /* Send the cation cancelled message to the player. */
-            if (shouldSendFeedback.get()) {
-                // NOTE: You may see the double message if you install the mod in client-side.
-                TextHelper.sendTextByKey(player, "anti_build.disallow");
-            }
+    @DocStringProvider(id = 1752994843864L, value = """
+        To `override` a specific `anti type` with a specific `id`.
 
-            /* Cancel the call with specified value. */
-            cir.setReturnValue(cancelWithValue);
+        If the permission value is `true`, then it means `allow` this action.
+        If the permission value is `false`, then it means `dis-allow` this action.
+        If the permission value is `undefined`, then it means this action is `ignored`.
+        """)
+    private static final PermissionDescriptor ANTI_BUILD_OVERRIDE_PERMISSION = new PermissionDescriptor("fuji.anti_build.<anti-type>.override.<id>", 1752994843864L);
+
+    public static <T> void checkAntiBuild(@Nullable PlayerEntity player, @NotNull String antiType, @NotNull Set<String> ids, @NotNull String id, @NotNull CallbackInfoReturnable<T> cir, @NotNull T cancelWithValue, @NotNull Supplier<Boolean> shouldSendFeedback) {
+        // NOTE: This method will NOT be called for a dispenser block.
+        if (isThisActionAllowed(player, antiType, ids, id)) {
+            return;
         }
+
+        /* Send the cation cancelled message to the player. */
+        if (shouldSendFeedback.get() && player != null) {
+            // NOTE: The `dispenser block` can also place blocks in the world.
+            // NOTE: You may see the double message if you install the mod in client-side.
+            TextHelper.sendTextByKey(player, "anti_build.disallow");
+        }
+
+        /* Cancel the call with specified value. */
+        cir.setReturnValue(cancelWithValue);
     }
 
-    private static boolean shouldWeCancelTheAction(PlayerEntity player, String antiType, Set<String> ids, String id) {
-        if (isAllowedByPermission(player, antiType, id)) return false;
+    private static boolean isThisActionAllowed(@Nullable PlayerEntity player, @NotNull String antiType, @NotNull Set<String> ids, @NotNull String id) {
+        /* Check the override permission for the player. */
+        Tristate overridePermission = getOverridePermission(player, antiType, id);
+        if (overridePermission != Tristate.UNDEFINED) {
+            return overridePermission.asBoolean();
+        }
 
-        return isDisallowedByConfigurationFile(ids, id);
+        /* Check the bypass permission for the player. */
+        if (isAllowedByBypassPermission(player, antiType, id)) {
+            return true;
+        }
+
+        /* Check the config file for the player. */
+        return isAllowedByConfigurationFile(ids, id);
     }
 
-    private static boolean isDisallowedByConfigurationFile(Set<String> ids, String id) {
-        return ids.contains(id)
-            || ids.contains("*");
+    private static boolean isAllowedByConfigurationFile(@NotNull Set<String> ids, @NotNull String id) {
+        return !ids.contains(id)
+            && !ids.contains("*");
     }
 
-    private static boolean isAllowedByPermission(PlayerEntity player, String antiType, String id) {
+    private static Tristate getOverridePermission(@Nullable PlayerEntity player, @NotNull String antiType, @NotNull String id) {
+        return Optional.ofNullable(player)
+            .map(p -> LuckpermsHelper.getPermission(player.getUuid(), ANTI_BUILD_OVERRIDE_PERMISSION, antiType, id))
+            .orElse(Tristate.UNDEFINED);
+    }
+
+    private static boolean isAllowedByBypassPermission(@Nullable PlayerEntity player, @NotNull String antiType, @NotNull String id) {
         return Optional.ofNullable(player)
             .map(p -> LuckpermsHelper.hasPermission(player.getUuid(), ANTI_BUILD_BYPASS_PERMISSION, antiType, id))
             .orElse(false);
