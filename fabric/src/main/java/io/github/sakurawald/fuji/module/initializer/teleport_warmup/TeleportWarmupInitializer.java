@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
     But we didn't even know who creates this teleport request.
     So we have to treat `all` teleportation the same.
 
-    ◉ What's the point of teleport warmup.
+    ◉ What's the purpose of teleport warmup.
     The main purpose is to prevent the `abuse` of `teleport commands` in vanilla Minecraft.
     Like, use teleport commands to escape death.
     """)

@@ -121,6 +121,7 @@ tab
 teleport_warmup
 temp_ban
 tester
+title
 top_chunks
 tpa
 view

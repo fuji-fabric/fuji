@@ -169,6 +169,11 @@ public class GuiHelper {
             .setName(TextHelper.getTextByKey(player, "help"));
     }
 
+    public static GuiElementBuilder makeInfoButton(ServerPlayerEntity player) {
+        return makeLetterIButton(player)
+            .setName(TextHelper.getTextByKey(player, "info"));
+    }
+
     public static GuiElementBuilder makeLuckyBlockSkull() {
         return makeSkullButton(Icon.LUCKY_BLOCK_ICON);
     }
@@ -183,6 +188,10 @@ public class GuiHelper {
 
     public static GuiElementBuilder makeLetterAButton(ServerPlayerEntity player) {
         return makeSkullButton(Icon.LETTER_A_ICON);
+    }
+
+    public static GuiElementBuilder makeLetterIButton(ServerPlayerEntity player) {
+        return makeSkullButton(Icon.LETTER_I_ICON);
     }
 
     public static void fetchHeads(LayeredGui gui, Runnable drawCallback) {
@@ -242,6 +251,7 @@ public class GuiHelper {
         public static final String PLUS_ICON = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDdhMGZjNmRjZjczOWMxMWZlY2U0M2NkZDE4NGRlYTc5MWNmNzU3YmY3YmQ5MTUzNmZkYmM5NmZhNDdhY2ZiIn19fQ==";
         public static final String HEART_ICON = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMDlhNTJjYjUwOTkyZDgzYzU1OTlmZDZlNDFhNmNlOTljZjdmMWU2MjAzNjExOTYzZGMyYzJmZGEwYjU1NTgzIn19fQ==";
         public static final String LETTER_A_ICON = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDJjZDVhMWI1Mjg4Y2FhYTIxYTZhY2Q0Yzk4Y2VhZmQ0YzE1ODhjOGIyMDI2Yzg4YjcwZDNjMTU0ZDM5YmFiIn19fQ==";
+        public static final String LETTER_I_ICON = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTc2OWUyYzEzNGVlNWZjNmRhZWZlNDEyZTRhZjNkNTdkZjlkYmIzY2FhY2Q4ZTM2ZTU5OTk3OWVjMWFjNCJ9fX0=";
         public static final String QUESTION_MARK_ICON = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmMyNzEwNTI3MTllZjY0MDc5ZWU4YzE0OTg5NTEyMzhhNzRkYWM0YzI3Yjk1NjQwZGI2ZmJkZGMyZDZiNWI2ZSJ9fX0=";
 
     }

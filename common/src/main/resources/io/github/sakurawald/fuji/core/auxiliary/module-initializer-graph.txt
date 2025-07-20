@@ -115,6 +115,7 @@ io.github.sakurawald.fuji.module.initializer.tab.TabListInitializer
 io.github.sakurawald.fuji.module.initializer.teleport_warmup.TeleportWarmupInitializer
 io.github.sakurawald.fuji.module.initializer.temp_ban.TempBanInitializer
 io.github.sakurawald.fuji.module.initializer.tester.TesterInitializer
+io.github.sakurawald.fuji.module.initializer.title.TitleInitializer
 io.github.sakurawald.fuji.module.initializer.top_chunks.TopChunksInitializer
 io.github.sakurawald.fuji.module.initializer.tpa.TpaInitializer
 io.github.sakurawald.fuji.module.initializer.view.ViewInitializer

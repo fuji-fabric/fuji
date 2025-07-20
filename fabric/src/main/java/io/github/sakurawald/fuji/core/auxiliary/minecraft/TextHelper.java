@@ -519,6 +519,17 @@ public class TextHelper {
                 return val;
             };
         }
+
+        public static @NotNull MutableText condenseTextList(List<Text> textList) {
+            MutableText condensedText = Text.empty();
+            for (int i = 0; i < textList.size(); i++) {
+                condensedText.append(textList.get(i));
+                if (i != textList.size() - 1) {
+                    condensedText.append(TEXT_NEWLINE);
+                }
+            }
+            return condensedText;
+        }
     }
 
     @ForDeveloper("This is the core method to map String into Text.")
@@ -607,6 +618,15 @@ public class TextHelper {
 
     public static @NotNull List<Text> getTextListByValue(@Nullable Object audience, String value) {
         return getTextList(audience, false, value);
+    }
+
+    public static @NotNull List<Text> getTextListByValue(@Nullable Object audience, List<String> lines) {
+        List<Text> textList = new ArrayList<>();
+        lines.forEach(line -> {
+            Text lineText = TextHelper.getTextByValue(audience, line);
+            textList.add(lineText);
+        });
+        return textList;
     }
 
     @ForDeveloper("Use this function to send a text to an audience.")
