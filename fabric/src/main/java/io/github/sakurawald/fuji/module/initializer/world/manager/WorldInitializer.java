@@ -289,7 +289,7 @@ import org.jetbrains.annotations.Nullable;
     Issue: `/world import my_overworld minecraft:overworld --seed \\<seed\\>`
     You need to specify the `dimension type` to define the `environment of your dimension`.
     And also the `seed` to define the `seed of your dimension`.
-    <red>NOTE: If you specify a `wrong seed`, then the `chunk generator` will generate `in-consistent chunks` compared to your `existed chunks`.
+    <red>NOTE: If you specify a `wrong seed`, then the `chunk generator` will generate `in-consistent new chunks` compared to your `existing chunks`.
 
     ◉ Import a `superflat dimension`.
     Issue: `/world import my_superflat minecraft:overworld --seed \\<seed\\> --chunkGeneratorType FLAT`

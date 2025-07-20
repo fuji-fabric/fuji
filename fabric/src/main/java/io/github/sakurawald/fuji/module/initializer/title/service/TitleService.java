@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 public class TitleService {
 
     @DocStringProvider(id = 1753000916378L, value = """
-        Having this permission means obtains a `title` with specified `id`.
+        Having this permission means obtaining a `title` with the specified `id`.
         """)
     private static final PermissionDescriptor TITLE_OBTAINED_PERMISSION_DESCRIPTOR = new PermissionDescriptor("fuji.title.obtain.<title-id>", 1753000916378L);
 

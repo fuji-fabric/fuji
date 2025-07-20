@@ -16,7 +16,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     """)
 @ColorBox(id = 1751976088392L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Send a title to a player.
-    Issue: `/send-title \\<player\\> --mainTitle "\\<rainbow\\>Hello" --subTitle "\\<blue\\>World" --fadeInTicks 60 --stayTicks 60 --fadeOutTicks 60`
+    Issue: `/send-title Alice --mainTitle "\\<rainbow\\>Hello" --subTitle "\\<blue\\>World" --fadeInTicks 60 --stayTicks 60 --fadeOutTicks 60`
 
     ◉ Send a title to online players.
     Issue: `/foreach send-title %player:name% --mainTitle "\\<rainbow\\>Hello %player:name%"`

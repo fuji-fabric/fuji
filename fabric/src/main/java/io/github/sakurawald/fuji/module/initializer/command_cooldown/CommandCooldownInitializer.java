@@ -55,12 +55,12 @@ import java.util.Optional;
     Issue: `/command-cooldown create kitfood 3000`
 
     ◉ Test a `named cooldown` with `arbitrary command instance`.
-    Issue: `/command-cooldown test kitfood \\<player\\> say Used successfully once`.
+    Issue: `/command-cooldown test kitfood Alice say Used successfully once`.
     This command will `test` the specified `named cooldown`:
     1. If the result is `the success case`, then it will execute `/say Used successfully once`.
     2. If the result is `the failure case`, then it will do nothing.
 
-    Issue: `/command-cooldown test kitfood \\<player\\> --onFailed "say false" say true`
+    Issue: `/command-cooldown test kitfood Alice --onFailed "say false" say true`
     This command will `test` the specified `named cooldown`:
     1. If the result is `the success case`, then it will execute `/say true`.
     2. If the result is `the failure case`, then it will execute `/say false`.
@@ -70,11 +70,11 @@ import java.util.Optional;
 
     ◉ Test a `named cooldown` with `pre-defined command instance`.
     You can `pre-define` the `success case commands` and `failure case commands` in the config file.
-    And use `/command-cooldown try-use kitfood \\<player\\>` to `test` it.
+    And use `/command-cooldown try-use kitfood Alice` to `test` it.
     This method is much more brief.
 
     ◉ Reset a `named cooldown` for a player.
-    Issue: `/command-cooldown reset kitfood \\<player\\>`
+    Issue: `/command-cooldown reset kitfood Alice`
 
     ◉ Create a `named cooldown`. (With 15 seconds `cooldown duration`, and `limit of number of use` is 3)
     Issue: `/command-cooldown create kitfood 15000 --maxUses 3`

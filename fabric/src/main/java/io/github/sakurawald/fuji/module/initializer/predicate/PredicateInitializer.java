@@ -34,7 +34,7 @@ import java.util.Optional;
     """)
 @ColorBox(id = 1751978789271L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Test a condition, and then run a command if success.
-    Issue: `/run as player \\<player\\> chain has-perm? %player:name% 4 chain say value is true`
+    Issue: `/run as player Alice chain has-perm? %player:name% 4 chain say value is true`
     """)
 
 

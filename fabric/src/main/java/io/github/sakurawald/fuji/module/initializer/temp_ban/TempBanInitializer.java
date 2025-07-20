@@ -32,7 +32,7 @@ import java.util.List;
     """)
 @ColorBox(id = 1751980845082L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ All in one example
-    Issue: `/temp-ban player \\<player\\> 1s2m3h4d5w6M7y bad boy`
+    Issue: `/temp-ban player Alice 1s2m3h4d5w6M7y bad boy`
     """)
 
 

@@ -23,7 +23,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     Issue: `/kit editor` to create a new `kit`.
 
     ◉ Give a kit to a player.
-    Issue: `/kit give \\<player\\> \\<kit-name\\>` to give a `kit` to a player.
+    Issue: `/kit give Alice \\<kit-name\\>` to give a `kit` to a player.
 
     ◉ Create a user-level command, for players to `claim a kit`.
     <red>The `/kit give` command is a `admin-level` command, you should NOT allow players to use it directly.
@@ -37,7 +37,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     Issue: `/command-cooldown create example-kit-cooldown 60000`
 
     To test the cooldown, and give the kit if the cooldown is satisfied.
-    Issue: `/command-cooldown test example-kit-cooldown \\<player\\> --onFailed "send-message %player:name% wait a moment" kit give %player:name% example-kit|send-message %player:name% kit received.`
+    Issue: `/command-cooldown test example-kit-cooldown Alice --onFailed "send-message %player:name% wait a moment" kit give %player:name% example-kit|send-message %player:name% kit received.`
     """)
 @ColorBox(id = 1751977848415L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Claim a specific kit automatically for online players.

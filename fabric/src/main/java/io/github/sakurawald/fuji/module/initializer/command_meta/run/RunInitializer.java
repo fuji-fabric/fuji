@@ -50,10 +50,10 @@ import net.minecraft.server.network.ServerPlayerEntity;
     """)
 @ColorBox(id = 1751968631536L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Execute a command as a specified player.
-    Issue: `/run as player \\<player\\> back`
+    Issue: `/run as player Alice back`
 
     ◉ Execute a command as a fake-op.
-    Issue: `/run as fake-op \\<player\\> give %player:name% minecraft:apple 1`
+    Issue: `/run as fake-op Alice give %player:name% minecraft:apple 1`
 
     ◉ Give random amount of diamonds to online players.
     Issue: `/run as console give @a minecraft:diamond %fuji:random 8 32%`

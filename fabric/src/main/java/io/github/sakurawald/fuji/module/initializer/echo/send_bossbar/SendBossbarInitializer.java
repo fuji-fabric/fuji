@@ -29,10 +29,10 @@ import java.util.Optional;
     """)
 @ColorBox(id = 1751976574472L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ A simple example.
-    Issue: `/send-bossbar \\<player\\> Hello World`
+    Issue: `/send-bossbar Alice Hello World`
 
     ◉ All in one example.
-    Issue: `/send-bossbar \\<player\\> --stepType BACKWARD --totalMs 5000 --color PURPLE --style NOTCHED_6 --notifyMeOnComplete true --commandList "say the player %player:name% is healed|heal others %player:name%" \\<rb\\>Healing is coming [elapsed_time]/[total_time]/[left_time]`
+    Issue: `/send-bossbar Alice --stepType BACKWARD --totalMs 5000 --color PURPLE --style NOTCHED_6 --notifyMeOnComplete true --commandList "say the player %player:name% is healed|heal others %player:name%" \\<rb\\>Healing is coming [elapsed_time]/[total_time]/[left_time]`
     """)
 public class SendBossbarInitializer extends ModuleInitializer {
 

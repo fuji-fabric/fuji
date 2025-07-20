@@ -16,7 +16,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     """)
 @ColorBox(id = 1751976017118L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Say hello to a player
-    Issue: `/send-message \\<player\\> \\<blue\\>Hello %player:name%`
+    Issue: `/send-message Alice \\<blue\\>Hello %player:name%`
     """)
 public class SendMessageInitializer extends ModuleInitializer {
 

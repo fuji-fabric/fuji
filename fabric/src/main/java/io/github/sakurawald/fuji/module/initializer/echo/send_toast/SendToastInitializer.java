@@ -54,7 +54,7 @@ import java.util.Set;
     """)
 @ColorBox(id = 1751976364671L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Send a toast to a player.
-    Issue: `/send-toast \\<player\\> --icon minecraft:golden_carrot \\<rb\\>eat this carrot`
+    Issue: `/send-toast Alice --icon minecraft:golden_carrot \\<rb\\>eat this carrot`
     """)
 public class SendToastInitializer extends ModuleInitializer {
 

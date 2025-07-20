@@ -60,7 +60,7 @@ import java.util.regex.Pattern;
     Issue: `/chain bad command here chain say 2`
 
     ◉ Use chain command with predicate command
-    Issue: `/run as player \\<player\\> chain test-level-perm %player:name% 4 chain say value is true`
+    Issue: `/run as player Alice chain test-level-perm %player:name% 4 chain say value is true`
     """)
 public class ChainInitializer extends ModuleInitializer {
     private static final Pattern CHAIN_COMMAND_PARSER = Pattern.compile("(.+?)\\s+(chain .+)");

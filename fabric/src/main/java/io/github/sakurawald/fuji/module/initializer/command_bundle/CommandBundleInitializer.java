@@ -137,9 +137,9 @@ import java.util.stream.Stream;
     - `/entitynbt` -> `/data get entity`
     - `/gm`, `/gms` and `/gmc` -> `/gamemode`
     - `/findbiome` -> `/locate biome`
-    - `/flyspeed` -> `/attribute \\<player\\> minecraft:generic.flying_speed`
-    - `/walkspeed` -> `/attribute \\<player\\> minecraft:movement_speed`
-    - `/maxhealth` -> `/attribute \\<player\\> minecraft:generic.max_health`
+    - `/flyspeed` -> `/attribute Alice minecraft:generic.flying_speed`
+    - `/walkspeed` -> `/attribute Alice minecraft:movement_speed`
+    - `/maxhealth` -> `/attribute Alice minecraft:generic.max_health`
     - `/groundclean` -> `/kill @e[type=...]`
     - `/spawnmob` -> `/summon`
     - `/shoot` -> `/summon` with motion

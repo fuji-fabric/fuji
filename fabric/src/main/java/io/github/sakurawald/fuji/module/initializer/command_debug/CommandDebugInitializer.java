@@ -21,7 +21,7 @@ import java.util.Objects;
 
 @ColorBox(id = 1751903540774L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Execute the specified command as console, and report the info.
-    Issue `/command-debug has-exp? \\<player\\> 100`
+    Issue `/command-debug has-exp? Alice 100`
     """)
 
 public class CommandDebugInitializer extends ModuleInitializer {
