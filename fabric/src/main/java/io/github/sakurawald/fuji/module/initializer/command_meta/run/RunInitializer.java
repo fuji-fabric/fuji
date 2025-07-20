@@ -17,6 +17,11 @@ import net.minecraft.server.network.ServerPlayerEntity;
     Provides `/run` command, to run a command with context.
     """)
 @ColorBox(id = 1752982945496L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ What is the difference between `/run` and `/execute` command?
+    1. The main purpose of `/run` command is to `modify the command context` while executing a `command` instance.
+    2. The `/run` command will parse `placeholders` like `%player:name%`. (However, you can still use vanilla target selector, but NOT recommended)
+    3. The `/run as {player/fake-op/console}` allows you to switch the `role` of the `command source` easily.
+
     ◉ A `command` is executed with a `command context`.
     In internal Minecraft, when you submit a `command` to the `command executor`. You need to provide a `command context`.
     A `command context` contains important information like:
