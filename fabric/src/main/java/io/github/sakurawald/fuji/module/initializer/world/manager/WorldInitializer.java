@@ -198,16 +198,6 @@ import org.jetbrains.annotations.Nullable;
     ◉ Set the weather per-dimension.
     You can modify the weather directly in config file, and issue `/fuji reload` to apply it.
     """)
-@ColorBox(id = 1752292508145L, color = ColorBox.ColorBlockTypes.TIPS, value = """
-    ◉ The logic of `/gamerule` command.
-    The `/gamerule` command `only` operates on `minecraft:overworld` dimension.
-
-    To see the `true info` of `a specified dimension`, you should use `/world info` command.
-
-    ◉ Set the `per-dimension gamerules` using commands.
-    You can install the `WorldGameRules` mod to provide such commands.
-    See https://github.com/DrexHD/WorldGameRules
-    """)
 @ColorBox(id = 1752429441664L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     ◉ Does the `runtime dimension` support `datapack`?
     It depends on how the `datapack` interfaces with the `world`.

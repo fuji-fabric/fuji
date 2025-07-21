@@ -25,6 +25,20 @@ import net.minecraft.world.border.WorldBorder;
 @Document(id = 1752561532728L, value = """
     This module allows you to customize the `per-dimension border`.
     """)
+@ColorBox(id = 1753064857726L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ How it works?
+    In internal Minecraft, each `dimension` has a function named `getWorldBorder()`.
+    It returns the `world border` of this `dimension`.
+
+    The vanilla Minecraft only returns the `world border` of `minecraft:overworld`.
+    Fuji modify the `getWorldBorder()` function, to let it return the `per-dimension border`.
+
+    ◉ How can I configure the `per-dimension border`?
+    You can modify the config file directly, and issue `/fuji reload` to apply changes.
+
+    ◉ Can I use this module in vanilla dimensions?
+    Yes, you can.
+    """)
 @ColorBox(id = 1752460350802L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     ◉ The logic of `/worldborder` command.
     The `/worldborder` command only sets the `World Border` of `minecraft:overworld`.
