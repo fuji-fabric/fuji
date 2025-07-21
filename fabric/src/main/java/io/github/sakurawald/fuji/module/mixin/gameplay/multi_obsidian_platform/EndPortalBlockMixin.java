@@ -38,10 +38,9 @@ public class EndPortalBlockMixin {
 
     @Redirect(method = "createTeleportTarget", at = @At(value = "FIELD", target = "Lnet/minecraft/server/world/ServerWorld;END_SPAWN_POS:Lnet/minecraft/util/math/BlockPos;"))
     BlockPos modifyTheEndSpawnPosConstant(@Local(argsOnly = true) @NotNull Entity entity) {
-        /* This method will NOT be called when an entity (including player, item and other entities) jump into overworld's ender-portal-frame */
-        if (getEntityCurrentLevel(entity).getRegistryKey() != World.OVERWORLD) {
-            // modify: world:overworld -> minecraft:the_end (default obsidian platform)
-            // feature: https://bugs.mojang.com/browse/MC-252361
+        // NOTE: This method will be called when an ENTITY (including PLAYER, ITEM and other types of entities) pass through an END_PORTAL_BLOCK. (Unless the block is already in minecraft:the_end)
+        if (getEntityCurrentDimension(entity).getRegistryKey() != World.OVERWORLD) {
+            // NOTE: If you jump into the EnderPortal in fuji:overworld, then you will be spawned in the minecraft:the_end at (100, 50, 0)
             return ServerWorld.END_SPAWN_POS;
         }
         return getTransformedEndSpawnPoint(entity);

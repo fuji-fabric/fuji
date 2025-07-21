@@ -18,23 +18,15 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class EntityMixin {
 
     @Unique
-    BlockPos getTransformedEndSpawnPoint() {
-        Entity entity = (Entity) (Object) this;
-        return MultiObsidianPlatformInitializer.transform(entity.getBlockPos());
-    }
-
-    @Unique
-    World getEntityCurrentLevel() {
+    World getEntityCurrentDimension() {
         Entity entity = (Entity) (Object) this;
         return entity.getWorld();
     }
 
-    @ModifyExpressionValue(method = "getTeleportTarget", at = @At(value = "FIELD", target = "Lnet/minecraft/server/world/ServerWorld;END_SPAWN_POS:Lnet/minecraft/util/math/BlockPos;"), require = 1)
-    BlockPos $findDimensionEntryPoint(BlockPos original) {
-        // modify: resource_world:overworld -> minecraft:the_end (default obsidian platform)
-        // feature: https://bugs.mojang.com/browse/MC-252361
-        if (getEntityCurrentLevel().getRegistryKey() != World.OVERWORLD) return ServerWorld.END_SPAWN_POS;
-        return getTransformedEndSpawnPoint();
+    @Unique
+    BlockPos getTransformedEndSpawnPoint() {
+        Entity entity = (Entity) (Object) this;
+        return MultiObsidianPlatformInitializer.getTransformedEndSpawnPosition(entity.getBlockPos());
     }
 
     @Unique
@@ -46,17 +38,23 @@ public abstract class EntityMixin {
         BlockPos.iterate(i - 2, j, k - 2, i + 2, j, k + 2).forEach(blockPos -> serverLevel.setBlockState(blockPos, Blocks.OBSIDIAN.getDefaultState()));
     }
 
-    /*
-    1. In vanilla Minecraft, when player entity and non-player entity jump into the Ender Portal Frame, the obsidian platform will be re-created.
-    2. For ServerPlayerEntity, the obsidian platform location is the player's teleport location.
-    3. For Entity, the obsidian platform location is the fixed location END_SPAWN_POS.
+    @ModifyExpressionValue(method = "getTeleportTarget", at = @At(value = "FIELD", target = "Lnet/minecraft/server/world/ServerWorld;END_SPAWN_POS:Lnet/minecraft/util/math/BlockPos;"), require = 1)
+    BlockPos onAnyEntityPassThroughAnEndPortal(BlockPos original) {
+        // NOTE: When pass through a portal in fuji:overworld, you will be spawned in minecraft:the_end at (100, 50, 0)
+        if (getEntityCurrentDimension().getRegistryKey() != World.OVERWORLD) {
+            return ServerWorld.END_SPAWN_POS;
+        }
 
-    This method will NOT be called when a PLAYER jump into overworld's ender-portal-frame */
+        return getTransformedEndSpawnPoint();
+    }
+
     @WrapOperation(method = "moveToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;createEndSpawnPlatform(Lnet/minecraft/server/world/ServerWorld;)V"), require = 0)
-    // NOTE: require = 0, due to mixin fails in forge platform.
-    private void makeObsidianPlatformWhenNonPlayerEntityPassThroughThePortal(ServerWorld toLevel, Operation<Void> original) {
-        // modify: resource_world:overworld -> minecraft:the_end (default obsidian platform)
-        if (getEntityCurrentLevel().getRegistryKey() != World.OVERWORLD) {
+    // NOTE: require = 0, due to mixin failure in forge platform.
+    private void onNonPlayerEntityPassThroughAnEndPortal(ServerWorld toLevel, Operation<Void> original) {
+        // NOTE: This method only modifies the Entity#moveToWorld method, that's because for non-player-entity, the obsidian platform position is computed by END_SPAWN_POS field.
+        // However, for ServerPlayerEntity, the ServerPlayerEntity#moveToWorld method will compute the obsidian platform position.
+
+        if (getEntityCurrentDimension().getRegistryKey() != World.OVERWORLD) {
             ServerWorld.createEndSpawnPlatform(toLevel);
             return;
         }

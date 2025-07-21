@@ -6,6 +6,7 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.gameplay.multi_obsidian_platform.config.model.MultiObsidianPlatformConfigModel;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,7 +22,10 @@ import java.util.Map;
     """)
 @ColorBox(id = 1751976988699L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     ◉ All the obsidian platforms are vanilla-respect.
-    That's to say, all the extra obsidian platforms have the `identical` behaviour as the vanilla one, which locates in (100, 50, 0).
+    That's to say, all the additional `obsidian platforms` have the `identical` behaviour as the vanilla one, which locates in (100, 50, 0).
+
+    ◉ A well-known feature if you create the `Ender Portal` in the nether.
+    See https://bugs.mojang.com/browse/MC-252361
     """)
 public class MultiObsidianPlatformInitializer extends ModuleInitializer {
 
@@ -29,18 +33,18 @@ public class MultiObsidianPlatformInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<MultiObsidianPlatformConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, MultiObsidianPlatformConfigModel.class);
 
-    /* this method is used to fix Entity#position() async */
+    @ForDeveloper("This method is used to fix Entity#position() drift.")
     private static BlockPos findNearbyEndPortalBlock(@NotNull BlockPos bp) {
         ServerWorld overworld = ServerHelper.getServer().getOverworld();
 
-        // should we find nearby END_PORTAL block ?
+        /* Should we find nearby END_PORTAL block ? */
         if (overworld.getBlockState(bp) == Blocks.END_PORTAL.getDefaultState()) return bp;
 
-        // let's find nearby END_PORTAL block
-        int radius = 3;
-        for (int y = -radius; y < radius; y++) {
-            for (int x = -radius; x < radius; x++) {
-                for (int z = -radius; z < radius; z++) {
+        /* Let's find nearby END_PORTAL block */
+        int searchRadius = 3;
+        for (int y = -searchRadius; y < searchRadius; y++) {
+            for (int x = -searchRadius; x < searchRadius; x++) {
+                for (int z = -searchRadius; z < searchRadius; z++) {
                     BlockPos test = bp.add(x, y, z);
                     if (overworld.getBlockState(test) == Blocks.END_PORTAL.getDefaultState()) return test;
                 }
@@ -79,24 +83,24 @@ public class MultiObsidianPlatformInitializer extends ModuleInitializer {
         return bp;
     }
 
-    public static BlockPos transform(BlockPos bp) {
-        if (TRANSFORM_CACHE.containsKey(bp)) {
-            return TRANSFORM_CACHE.get(bp);
+    public static BlockPos getTransformedEndSpawnPosition(BlockPos enderPortalFrameBlockPos) {
+        if (TRANSFORM_CACHE.containsKey(enderPortalFrameBlockPos)) {
+            return TRANSFORM_CACHE.get(enderPortalFrameBlockPos);
         }
-        // fix: for sand-dupe, the blockpos (x, ?, z) of sand may differ +1 or -1
-        bp = findNearbyEndPortalBlock(bp);
-        bp = findCenterEndPortalBlock(bp);
+        // NOTE: For sand-dupe, the blockpos (x, ?, z) of sand may differ +1 or -1
+        enderPortalFrameBlockPos = findNearbyEndPortalBlock(enderPortalFrameBlockPos);
+        enderPortalFrameBlockPos = findCenterEndPortalBlock(enderPortalFrameBlockPos);
         double factor = config.model().factor;
-        int x = (int) (bp.getX() / factor);
+        int x = (int) (enderPortalFrameBlockPos.getX() / factor);
         int y = 50;
-        int z = (int) (bp.getZ() / factor);
+        int z = (int) (enderPortalFrameBlockPos.getZ() / factor);
         int x_offset = x % 16;
         int z_offset = z % 16;
         x -= x_offset;
         z -= z_offset;
         x += 100;
-        TRANSFORM_CACHE.put(bp, new BlockPos(x, y, z));
-        return TRANSFORM_CACHE.get(bp);
+        TRANSFORM_CACHE.put(enderPortalFrameBlockPos, new BlockPos(x, y, z));
+        return TRANSFORM_CACHE.get(enderPortalFrameBlockPos);
     }
 
     @Override

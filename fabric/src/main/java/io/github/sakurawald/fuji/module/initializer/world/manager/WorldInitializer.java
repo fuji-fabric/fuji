@@ -266,6 +266,7 @@ import org.jetbrains.annotations.Nullable;
     The `/world import` is similar to `/world create` command.
     You need to specify `enough information` to define the `runtime dimension descriptor`.
     Note that `to import a dimension dir` is `to define the runtime dimension descriptor in the config file`.
+    <red>NOTE: If you specify a `wrong seed`, then the `chunk generator` will generate `in-consistent new chunks` compared to your `existing chunks`.
 
     ◉ Import a `sky block dimension`.
     Let's say you have a `sky block dimension` whose directory name is `sky_block`.
@@ -279,7 +280,6 @@ import org.jetbrains.annotations.Nullable;
     Issue: `/world import my_overworld minecraft:overworld --seed \\<seed\\>`
     You need to specify the `dimension type` to define the `environment of your dimension`.
     And also the `seed` to define the `seed of your dimension`.
-    <red>NOTE: If you specify a `wrong seed`, then the `chunk generator` will generate `in-consistent new chunks` compared to your `existing chunks`.
 
     ◉ Import a `superflat dimension`.
     Issue: `/world import my_superflat minecraft:overworld --seed \\<seed\\> --chunkGeneratorType FLAT`
