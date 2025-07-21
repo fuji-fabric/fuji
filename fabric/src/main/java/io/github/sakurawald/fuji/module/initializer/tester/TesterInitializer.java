@@ -33,15 +33,17 @@ public class TesterInitializer extends ModuleInitializer {
     @CommandNode("run")
     private static int $run(@CommandSource ServerCommandSource source) {
 
+        LogUtil.info("Done");
+        return 0;
+    }
+
+    private static void extracted(ServerCommandSource source) {
         ServerPlayerEntity player = source.getPlayer();
         ItemStack mainHandStack = player.getMainHandStack();
         NbtCompound nbt = ItemStackHelper.Nbt.getNbt(mainHandStack);
 
         Text prettyPrintedText = NbtHelper.toPrettyPrintedText(nbt);
         source.sendMessage(prettyPrintedText);
-
-        LogUtil.info("Done");
-        return 0;
     }
 
 

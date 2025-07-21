@@ -1,9 +1,9 @@
 package io.github.sakurawald.fuji.module.initializer.world.manager.structure;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.FabricApiUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
-import io.github.sakurawald.fuji.core.event.impl.ServerWorldEvents;
 import io.github.sakurawald.fuji.core.extension.SimpleRegistryExtension;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -53,16 +53,24 @@ public class RuntimeDimensionLoader {
 
         MinecraftServer server = ServerHelper.getServer();
         server.worlds.put(dimension.getRegistryKey(), dimension);
-        ServerWorldEvents.LOAD.invoker().fire(server, dimension);
+
+        try {
+            FabricApiUtil.fireOnWorldLoadEvent(server, dimension);
+        } catch (Exception e) {
+            LogUtil.error("Failed to fire onWorldLoad event in fabric-api mod.", e);
+        }
     }
 
     public static void unloadDimension(@NotNull ServerWorld world) {
-        // FIXME: Use the vanilla function to handle dimension shutdown.
         MinecraftServer server = world.getServer();
         RegistryKey<World> dimensionKey = world.getRegistryKey();
         if (server.worlds.remove(dimensionKey, world)) {
             /* Fire an unload event */
-            ServerWorldEvents.UNLOAD.invoker().fire(server, world);
+            try {
+                FabricApiUtil.fireOnWorldUnloadEvent(server,world);
+            } catch (Exception e) {
+                LogUtil.error("Failed to fire onWorldUnload event in fabric-api mod.", e);
+            }
 
             /* Remove the entry from registry. */
             SimpleRegistry<DimensionOptions> dimensionsRegistry = (SimpleRegistry<DimensionOptions>) RegistryHelper.ofRegistry(RegistryKeys.DIMENSION);
