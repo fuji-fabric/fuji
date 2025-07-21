@@ -7,7 +7,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
 import io.github.sakurawald.fuji.core.service.type_formatter.TypeFormatter;
-import io.github.sakurawald.fuji.module.initializer.top_chunks.TopChunksInitializer;
+import io.github.sakurawald.fuji.module.initializer.top_chunks.service.TopChunksService;
 import io.github.sakurawald.fuji.module.initializer.top_chunks.structure.ChunkScore;
 import net.minecraft.item.Items;
 import net.minecraft.server.command.ServerCommandSource;
@@ -23,7 +23,7 @@ public class TopChunksGui extends PagedGui<ChunkScore> {
 
     public TopChunksGui(ServerPlayerEntity player, @NotNull List<ChunkScore> entities, int pageIndex) {
         super(null, player, TextHelper.getTextByKey(player, "top_chunks.list.gui.title"),
-            TopChunksInitializer.trimChunkScoreList(entities), pageIndex);
+            TopChunksService.trimChunkScoreList(entities), pageIndex);
     }
 
     @Override

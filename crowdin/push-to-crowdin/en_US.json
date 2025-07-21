@@ -762,7 +762,7 @@
   "docstring.1751826529360": "Should we hide the `location` of `chunk`.\n",
   "docstring.1751826531304": "Define the `type` to `score` map.\n\nThe `type` is `translatable key`.\n",
   "docstring.1751826535209": "Analyze all loaded chunks of the server, and find the most lagged chunks.\n",
-  "docstring.1751826537195": "List all chunks ordered by lag score.",
+  "docstring.1751826537195": "List all chunks ordered by lag score, and send in `message`.",
   "docstring.1751826540953": "This module provides `/tpa` and `/tpahere` commands.",
   "docstring.1751826543066": "This is the timeout.",
   "docstring.1751826545831": "Provides `/fuji` command.\nTo reload the configs of fuji.\nTo inspect states of fuji.\nTo discover things of fuji.\n",
@@ -1211,5 +1211,7 @@
   "docstring.1753001051805": "Open the `title` GUI.\n",
   "docstring.1753006644552": "Returns the `display name` of `the active title` for the player.\n",
   "docstring.1753008337658": "◉ Give the `fisher` title to player Alice.\nIssue: `/lp user Alice permission set fuji.title.obtain.fisher true`\n\n◉ Give the `fisher` title to player Alice, but it expires in 7 days.\nIssue: `/lp user Alice permission settemp fuji.title.obtain.fisher true 7d`\n\n◉ To display the `active title`.\nInsert the `%fuji:active_title%` in any place that supports placeholders. (Like a chat mod that supports the placeholders).\n",
-  "docstring.1753055756228": "◉ Download an example custom text.\nYou can download the `example-custom-text.txt` file.\nIt is in https://github.com/sakurawald/fuji/blob/dev/.github/files/example-custom-text.txt\n"
+  "docstring.1753055756228": "◉ Download the example custom text.\nYou can download the `example-custom-text.txt` file.\nIt is in https://github.com/sakurawald/fuji/blob/dev/.github/files/example-custom-text.txt\n",
+  "docstring.1753056643919": "List all chunks ordered by lag score, and send in `GUI`.",
+  "docstring.1753056668984": "An alias command to `/chunks message`."
 }

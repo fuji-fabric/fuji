@@ -32,7 +32,7 @@ import java.util.Optional;
     And then send it `as message` or `as book` to a specified player.
     """)
 @ColorBox(id = 1753055756228L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    ◉ Download an example custom text.
+    ◉ Download the example custom text.
     You can download the `example-custom-text.txt` file.
     It is in https://github.com/sakurawald/fuji/blob/dev/.github/files/example-custom-text.txt
     """)
