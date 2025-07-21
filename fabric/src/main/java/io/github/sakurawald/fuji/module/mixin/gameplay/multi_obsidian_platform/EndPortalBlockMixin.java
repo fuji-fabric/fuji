@@ -28,7 +28,7 @@ public class EndPortalBlockMixin {
 
     @Unique
     BlockPos getTransformedEndSpawnPoint(@NotNull Entity entity) {
-        return MultiObsidianPlatformInitializer.transform(entity.getBlockPos());
+        return MultiObsidianPlatformInitializer.getTransformedEndSpawnPosition(entity.getBlockPos());
     }
 
     @Unique
