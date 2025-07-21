@@ -5,16 +5,23 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
-import io.github.sakurawald.fuji.core.structure.GlobalPos;
-import io.github.sakurawald.fuji.core.service.type_formatter.TypeFormatter;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
+import io.github.sakurawald.fuji.core.manager.Managers;
+import io.github.sakurawald.fuji.core.service.type_formatter.TypeFormatter;
+import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.top_chunks.TopChunksInitializer;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import lombok.Data;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.ClickEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -23,11 +30,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.Heightmap;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import org.jetbrains.annotations.Nullable;
 
 @Data
 public class ChunkScore implements Comparable<ChunkScore> {
@@ -53,7 +56,10 @@ public class ChunkScore implements Comparable<ChunkScore> {
         this.chunkPos = chunkPos;
     }
 
-    public static boolean canClickToTeleportToThisChunk(ServerPlayerEntity player) {
+    public static boolean canClickToTeleportToThisChunk(@Nullable ServerPlayerEntity player) {
+        if (player == null) {
+            return false;
+        }
         return player.hasPermissionLevel(4) || LuckpermsHelper.hasPermission(player.getUuid(), CLICK_TO_TELEPORT_TO_CHUNK_LOCATION_PERMISSION);
     }
 
@@ -93,7 +99,7 @@ public class ChunkScore implements Comparable<ChunkScore> {
         return Integer.compare(that.score, this.score);
     }
 
-    public @NotNull Text asText(@NotNull ServerCommandSource source) {
+    public @NotNull Text toText(@NotNull ServerCommandSource source) {
         /* Make hover text. */
         MutableText hoverText = Text.empty()
             .formatted(Formatting.GOLD)
@@ -107,13 +113,24 @@ public class ChunkScore implements Comparable<ChunkScore> {
             .append(TextHelper.TEXT_NEWLINE)
             .append(TypeFormatter.formatTypes(source, this.type2amount));
 
+        /* Make chunk score text style. */
+        Style chunkScoreTextStyle = Style
+            .EMPTY
+            .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(hoverText))
+            .withFormatting(this.players.isEmpty() ? Formatting.GRAY : Formatting.DARK_GREEN);
+        if (ChunkScore.canClickToTeleportToThisChunk(source.getPlayer())) {
+            hoverText.append(TextHelper.TEXT_NEWLINE);
+            hoverText.append(TextHelper.getTextByKey(source, "prompt.click.teleport"));
+
+            ClickEvent clickEvent = Managers.getCallbackManager().makeCallbackEvent(this::teleportToThisChunk, 5, TimeUnit.MINUTES);
+            chunkScoreTextStyle = chunkScoreTextStyle.withClickEvent(clickEvent);
+        }
+
         /* Make chunk score text. */
-        return Text.empty()
+        MutableText chunkScoreText = Text.empty()
             .append(Text.literal(this.toString()))
-            .fillStyle(Style.EMPTY
-                .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(hoverText))
-                .withFormatting(this.players.isEmpty() ? Formatting.GRAY : Formatting.DARK_GREEN)
-            );
+            .fillStyle(chunkScoreTextStyle);
+        return chunkScoreText;
     }
 
     public Text computeChunkLocationText(@NotNull ServerCommandSource source) {

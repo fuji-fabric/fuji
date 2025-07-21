@@ -57,7 +57,7 @@ public class TopChunksInitializer extends ModuleInitializer {
             for (int i = 0; i < config1.top.columns; i++) {
                 if (PQ.isEmpty()) break outer;
                 reportText
-                    .append(PQ.poll().asText(source))
+                    .append(PQ.poll().toText(source))
                     .append(TextHelper.TEXT_SPACE);
             }
             reportText.append(TextHelper.TEXT_NEWLINE);
