@@ -32,7 +32,7 @@ public class EndPortalBlockMixin {
     }
 
     @Unique
-    World getEntityCurrentLevel(@NotNull Entity entity) {
+    World getEntityCurrentDimension(@NotNull Entity entity) {
         return entity.getWorld();
     }
 
