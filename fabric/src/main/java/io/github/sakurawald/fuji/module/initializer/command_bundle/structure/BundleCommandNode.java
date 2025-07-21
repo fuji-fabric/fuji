@@ -6,10 +6,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class BundleCommandNode {
+
+    @Document(id = 1753076962665L, value = """
+        The `document` for this `bundle command`. This field can be `null`.
+        """)
+    String document;
 
     @Document(id = 1751826346275L, value = """
         The requirement to use this `bundle command`.

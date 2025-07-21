@@ -3,19 +3,17 @@ package tests.dsl;
 import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
 import io.github.sakurawald.fuji.module.initializer.command_bundle.structure.BundleCommandDescriptor;
 import io.github.sakurawald.fuji.module.initializer.command_bundle.structure.BundleCommandNode;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 
 public class BundleCommandModuleDSLTest {
 
     @Test
     void test1() {
-        BundleCommandDescriptor descriptor = BundleCommandDescriptor.make(new BundleCommandNode(null, "my-command <int int-arg-name> [str str-arg-name]", null));
+        BundleCommandDescriptor descriptor = BundleCommandDescriptor.make(new BundleCommandNode(null, null, "my-command <int int-arg-name> [str str-arg-name]", null));
         System.out.println(descriptor);
         List<Argument> args = descriptor.arguments;
 
@@ -38,7 +36,7 @@ public class BundleCommandModuleDSLTest {
 
     @Test
     void test2() {
-        BundleCommandDescriptor descriptor = BundleCommandDescriptor.make(new BundleCommandNode(null, "my-command <int int-arg-name> first-literal [str str-arg-name] second-literal", null));
+        BundleCommandDescriptor descriptor = BundleCommandDescriptor.make(new BundleCommandNode(null, null, "my-command <int int-arg-name> first-literal [str str-arg-name] second-literal", null));
         System.out.println(descriptor);
 
         List<Argument> args = descriptor.arguments;
@@ -71,7 +69,7 @@ public class BundleCommandModuleDSLTest {
 
     @Test
     void test3() {
-        BundleCommandDescriptor descriptor = BundleCommandDescriptor.make(new BundleCommandNode(null, "my-command <int int-arg-name> [str str-arg-name hello world] first-literal", null));
+        BundleCommandDescriptor descriptor = BundleCommandDescriptor.make(new BundleCommandNode(null, null, "my-command <int int-arg-name> [str str-arg-name hello world] first-literal", null));
         System.out.println(descriptor);
 
         List<Argument> args = descriptor.arguments;

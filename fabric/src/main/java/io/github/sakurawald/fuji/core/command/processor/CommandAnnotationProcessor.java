@@ -213,7 +213,7 @@ public class CommandAnnotationProcessor {
         }
 
         return new CommandDescriptor(method, argumentList)
-            .withDocument(method.getAnnotation(Document.class));
+            .setDocument(method.getAnnotation(Document.class));
     }
 
 }

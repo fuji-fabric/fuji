@@ -50,10 +50,15 @@ public class CommandDescriptor implements SourceModuleGetter {
 
     public @Nullable String document;
 
-    public CommandDescriptor withDocument(@Nullable Document document) {
+    public CommandDescriptor setDocument(@Nullable Document document) {
+        if (document == null) return this;
+        return this.setDocument(document.value());
+    }
+
+    public CommandDescriptor setDocument(@Nullable String document) {
         if (document == null) return this;
 
-        this.document = document.value();
+        this.document = document;
         return this;
     }
 

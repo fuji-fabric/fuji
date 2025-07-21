@@ -51,10 +51,11 @@ public class BundleCommandDescriptor extends CommandDescriptor {
     @Getter
     final Map<String, String> optionalArgumentName2DefaultValue;
 
-    private BundleCommandDescriptor(Method method, List<Argument> arguments, BundleCommandNode entry, Map<String, String> optionalArgumentName2DefaultValue) {
+    private BundleCommandDescriptor(Method method, List<Argument> arguments, BundleCommandNode entry, Map<String, String> optionalArgumentName2DefaultValue, String document) {
         super(method, arguments);
         this.entry = entry;
         this.optionalArgumentName2DefaultValue = optionalArgumentName2DefaultValue;
+        this.setDocument(document);
     }
 
     @SneakyThrows
@@ -154,7 +155,8 @@ public class BundleCommandDescriptor extends CommandDescriptor {
             argumentIndex++;
         }
 
-        return new BundleCommandDescriptor(getFunctionClosure(), arguments, entry, defaultValueForOptionalArguments);
+        String document = entry.getDocument();
+        return new BundleCommandDescriptor(getFunctionClosure(), arguments, entry, defaultValueForOptionalArguments, document);
     }
 
     private static boolean matchLiteralArgument(Matcher matcher) {
