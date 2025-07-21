@@ -25,7 +25,7 @@ public class CommandEventConfigModel {
             public boolean enable = true;
             public List<String> command_list = new ArrayList<>() {
                 {
-                    this.add("send-message %player:name% you just die.");
+                    this.add("send-actionbar %player:name% <pink>You just died.");
                 }
             };
         }
@@ -34,8 +34,7 @@ public class CommandEventConfigModel {
             public boolean enable = true;
             public List<String> command_list = new ArrayList<>() {
                 {
-                    this.add("send-message %player:name% you just break a block.");
-                    this.add("say dry run -> experience add %player:name% %fuji:random 2 8%");
+                    this.add("send-actionbar %player:name% <pink>You just broke a block.");
                 }
             };
         }
@@ -44,7 +43,7 @@ public class CommandEventConfigModel {
             public boolean enable = true;
             public List<String> command_list = new ArrayList<>() {
                 {
-                    this.add("send-message %player:name% you just place a block.");
+                    this.add("send-actionbar %player:name% <pink>You just placed a block.");
                 }
             };
         }
@@ -53,7 +52,7 @@ public class CommandEventConfigModel {
             public boolean enable = true;
             public List<String> command_list = new ArrayList<>() {
                 {
-                    this.add("give %player:name% minecraft:apple 8");
+                    this.add("give %player:name% minecraft:apple 1");
                 }
             };
         }
@@ -62,7 +61,7 @@ public class CommandEventConfigModel {
             public boolean enable = true;
             public List<String> command_list = new ArrayList<>() {
                 {
-                    this.add("send-message %player:name% You are in %world:id% now!");
+                    this.add("send-actionbar %player:name% <pink>You are in %world:id% dimension now!");
                 }
             };
         }
@@ -71,7 +70,7 @@ public class CommandEventConfigModel {
             public boolean enable = true;
             public List<String> command_list = new ArrayList<>() {
                 {
-                    this.add("send-broadcast <rainbow>welcome new player %player:name% to join us!");
+                    this.add("send-broadcast <yellow>Welcome new player %player:name% to join us!");
                 }
             };
         }
@@ -80,7 +79,7 @@ public class CommandEventConfigModel {
             public boolean enable = true;
             public List<String> command_list = new ArrayList<>() {
                 {
-                    this.add("send-message %player:name% welcome to the server.");
+                    this.add("send-title %player:name% --mainTitle \"<yellow>Welcome to the server.\"");
                 }
             };
         }
@@ -89,7 +88,7 @@ public class CommandEventConfigModel {
             public boolean enable = true;
             public List<String> command_list = new ArrayList<>() {
                 {
-                    this.add("send-broadcast %player:name% left the server.");
+                    this.add("send-broadcast <dark_grey>%player:name% left the server.");
                 }
             };
         }
