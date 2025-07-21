@@ -102,9 +102,9 @@ public class Argument {
         // the type is only null if this is a literal argument.
         assert this.getType() != null;
         if (isOptional) {
-            return "[%s %s]".formatted(this.argumentName, this.getType().getSimpleName());
+            return "[%s %s]".formatted(this.getType().getSimpleName(), this.argumentName);
         } else {
-            return "<%s %s>".formatted(this.argumentName, this.getType().getSimpleName());
+            return "<%s %s>".formatted(this.getType().getSimpleName(), this.argumentName);
         }
     }
 
