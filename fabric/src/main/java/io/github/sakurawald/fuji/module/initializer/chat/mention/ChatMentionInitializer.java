@@ -47,7 +47,7 @@ public class ChatMentionInitializer extends ModuleInitializer {
 
         /* Submit the mention player job. */
         if (!mentionedPlayers.isEmpty()) {
-            LogUtil.debug("Submit new mention job: mentionedPlayers = {}", mentionedPlayers.stream().map(PlayerHelper::getPlayerName));
+            LogUtil.debug("Submit new mention job: mentionedPlayers = {}", mentionedPlayers.stream().map(PlayerHelper::getPlayerName).toList());
             PlaySoundJob.scheduleJob(config.model().mention_player, mentionedPlayers);
         }
 

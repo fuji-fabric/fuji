@@ -7,6 +7,7 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.job.abst.FixedIntervalJob;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import java.util.Objects;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -65,6 +66,7 @@ public class PlaySoundJob extends FixedIntervalJob {
 
     }
 
+    @Data
     public static class PlaySoundJobSetup {
         @Document(id = 1751823822772L, value = "The `sound` identifier.")
         public @NotNull String sound = "entity.experience_orb.pickup";
