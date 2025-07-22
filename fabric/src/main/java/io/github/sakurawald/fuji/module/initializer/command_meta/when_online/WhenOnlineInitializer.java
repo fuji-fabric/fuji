@@ -19,6 +19,7 @@ import io.github.sakurawald.fuji.module.initializer.command_meta.when_online.con
 import io.github.sakurawald.fuji.module.initializer.command_meta.when_online.gui.ListWhenOnlineTicketsGui;
 import io.github.sakurawald.fuji.module.initializer.command_meta.when_online.structure.WhenOnlineTicket;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -86,10 +87,12 @@ public class WhenOnlineInitializer extends ModuleInitializer {
                 ticket.executedTimestamp = System.currentTimeMillis();
 
                 /* Execute the specified command. */
-                ServerPlayerEntity onlinePlayer = ServerHelper.getOnlinePlayerByName(ticket.targetPlayer);
-                ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(onlinePlayer.getCommandSource());
-                String commandString = ticket.command;
-                CommandExecutor.execute(extendedCommandSource, commandString);
+                Optional<ServerPlayerEntity> onlinePlayer = ServerHelper.getOnlinePlayerByName(ticket.targetPlayer);
+                onlinePlayer.ifPresentOrElse($onlinePlayer -> {
+                    ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole($onlinePlayer.getCommandSource());
+                    String commandString = ticket.command;
+                    CommandExecutor.execute(extendedCommandSource, commandString);
+                }, () -> LogUtil.warn("Failed to execute the when-online ticket, the online player is null.", ticket));
             });
 
         /* Save the result. */

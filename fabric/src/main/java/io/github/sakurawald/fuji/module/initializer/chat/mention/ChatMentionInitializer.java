@@ -11,6 +11,7 @@ import io.github.sakurawald.fuji.core.job.impl.PlaySoundJob;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.chat.mention.config.model.ChatMentionConfigModel;
+import java.util.Optional;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -43,6 +44,8 @@ public class ChatMentionInitializer extends ModuleInitializer {
             // Mention the longest name first.
             .sorted(Comparator.comparingInt(String::length).reversed())
             .map(ServerHelper::getOnlinePlayerByName)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
             .toList();
 
         /* Submit the mention player job. */
