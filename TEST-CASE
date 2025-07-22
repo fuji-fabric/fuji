@@ -1,0 +1,4 @@
+[Test-Case]
+Steps: Summon a fake player using `/player 1 spawn` and throw exp bottle to it.
+Purpose: Test the compatibility between `luckperms` and `carpet`'s fake player.
+

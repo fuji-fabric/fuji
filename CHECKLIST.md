@@ -19,8 +19,6 @@ It's good to have a checklist, to avoid forgetting something.
 
 ## Some interesting tests
 
-- Summon a fake player using `/player 1 spawn` and throw exp bottle to it.
-    - Test the luckperms integration with fake-player user.
 - Issue the command `/tppos --z 64 --x 32 --y 128`
     - Test the context passing after command redirection.
 - Issue the command `/send-title @s --mainTitle "<rainbow>Hello" --subTitle "<blue>World" --fadeInTicks 60 --stayTicks 60 --fadeOutTicks 60`

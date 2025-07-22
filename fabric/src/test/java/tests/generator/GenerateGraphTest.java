@@ -84,10 +84,17 @@ public class GenerateGraphTest {
             List<AnnotationInfo> annotationList = TestUtil.findTargetAnnotationInstancesAnywhere(scanResult, TestCase.class, true);
             annotationList
                 .stream()
-                .flatMap(annotationInfo -> {
+                .map(annotationInfo -> {
                     AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
-                    String[] value = (String[]) parameterValues.get("value").getValue();
-                    return Arrays.stream(value);
+                    String steps = (String) parameterValues.get("steps").getValue();
+                    String purpose = (String) parameterValues.get("purpose").getValue();
+
+                    String string = """
+                        [Test-Case]
+                        Steps: %s
+                        Purpose: %s
+                        """.formatted(steps, purpose);
+                    return string;
                 })
                 .sorted()
                 .forEach(writer::println);

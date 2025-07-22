@@ -4,6 +4,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -41,6 +42,7 @@ public class MultiplierInitializer extends ModuleInitializer{
         """)
     public static final MetaDescriptor<Float> MULTIPLIER_META = new MetaDescriptor<>("fuji.multiplier.<multiplier-type>.<id>", Float::valueOf, 1752000356004L);
 
+    @TestCase(steps = "Summon a fake player using `/player 1 spawn` and throw exp bottle to it.", purpose = "Test the compatibility between `luckperms` and `carpet`'s fake player.")
     public static float transform(@NotNull ServerPlayerEntity player, String type, String key, float f) {
         Optional<Float> meta = LuckpermsHelper.getMeta(player.getUuid(), MULTIPLIER_META, type, key);
         return meta.map(factor -> f * factor).orElse(f);
