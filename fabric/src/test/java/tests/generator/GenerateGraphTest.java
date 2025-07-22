@@ -11,6 +11,7 @@ import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.model.ConfigModel;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import lombok.SneakyThrows;
@@ -30,6 +31,7 @@ public class GenerateGraphTest {
     public static final Path COMPILE_TIME_RESOURCE_PATH = TestUtil.PROJECT_ROOT_PATH.resolve("common/src/main/resources/");
     public static final Path COMPILE_TIME_GRAPH_PATH = COMPILE_TIME_RESOURCE_PATH.resolve(ReflectionUtil.class.getPackageName().replace(".", "/"));
     public static final Path COMPILE_TIME_CITE_FILE_PATH = TestUtil.PROJECT_ROOT_PATH.resolve("CITE");
+    public static final Path COMPILE_TIME_TEST_CASE_FILE_PATH = TestUtil.PROJECT_ROOT_PATH.resolve("TEST-CASE");
 
     @Test
     @SneakyThrows(IOException.class)
@@ -50,10 +52,12 @@ public class GenerateGraphTest {
 
             /* Generate CITE file. */
             generateCiteFile(scanResult);
+
+            /* Generate TEST-CASE file. */
+            generateTestCaseFile(scanResult);
         }
     }
 
-    @SuppressWarnings("UnnecessaryLocalVariable")
     @SneakyThrows
     private static void generateCiteFile(ScanResult scanResult) {
         try (PrintWriter writer = new PrintWriter(
@@ -61,6 +65,24 @@ public class GenerateGraphTest {
 
             List<AnnotationInfo> citeAnnotationList = TestUtil.findTargetAnnotationInstancesAnywhere(scanResult, Cite.class, false);
             citeAnnotationList
+                .stream()
+                .flatMap(annotationInfo -> {
+                    AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
+                    String[] value = (String[]) parameterValues.get("value").getValue();
+                    return Arrays.stream(value);
+                })
+                .sorted()
+                .forEach(writer::println);
+        }
+    }
+
+    @SneakyThrows
+    private static void generateTestCaseFile(ScanResult scanResult) {
+        try (PrintWriter writer = new PrintWriter(
+            COMPILE_TIME_TEST_CASE_FILE_PATH.toFile())) {
+
+            List<AnnotationInfo> annotationList = TestUtil.findTargetAnnotationInstancesAnywhere(scanResult, TestCase.class, true);
+            annotationList
                 .stream()
                 .flatMap(annotationInfo -> {
                     AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
