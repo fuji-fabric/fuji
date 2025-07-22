@@ -39,7 +39,7 @@ public class SendTitleInitializer extends ModuleInitializer {
         , Optional<Integer> fadeOutTicks
     ) {
 
-        String $mainTitle = mainTitle.orElse("main title");
+        String $mainTitle = mainTitle.orElse("");
         String $subTitle = subTitle.orElse("");
         int $fadeInTicks = fadeInTicks.orElse(10);
         int $stayTicks = stayTicks.orElse(70);
