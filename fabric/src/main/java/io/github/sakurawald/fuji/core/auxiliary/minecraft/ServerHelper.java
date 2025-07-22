@@ -75,12 +75,11 @@ public class ServerHelper {
             .orElse(null);
     }
 
-    public static @Nullable ServerPlayerEntity getOnlinePlayerByNameIgnoreCase(String name) {
+    public static Optional<ServerPlayerEntity> getOnlinePlayerByNameIgnoreCase(String name) {
         return getOnlinePlayers()
             .stream()
             .filter(it -> PlayerHelper.getPlayerName(it).equalsIgnoreCase(name))
-            .findFirst()
-            .orElse(null);
+            .findFirst();
     }
 
     public static Optional<ServerPlayerEntity> getOnlinePlayerByUuid(UUID uuid) {

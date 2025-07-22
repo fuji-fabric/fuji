@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
@@ -193,6 +194,7 @@ public class CommandHelper {
             });
         }
 
+        @SuppressWarnings("BooleanMethodIsAlwaysInverted")
         public static boolean isCommandConfirmed(ServerCommandSource source, Optional<Boolean> confirm) {
             boolean confirmed = confirm.orElse(false);
             if (!confirmed) {
@@ -214,6 +216,10 @@ public class CommandHelper {
     public static <S> boolean isExecutedOnServerSide(CommandContextBuilder<S> context) {
         // NOTE: in client-side, the S is not guarantee to be ServerCommandSource. (Can be ClientCommandSource)
         return context.getSource() instanceof ServerCommandSource;
+    }
+
+    public static boolean isExecutedByConsole(CommandContext<ServerCommandSource> commandContext) {
+        return commandContext.getSource().getPlayer() == null;
     }
 
     public static String getCommandNodeType(CommandNode<ServerCommandSource> node) {

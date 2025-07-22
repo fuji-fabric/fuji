@@ -16,21 +16,16 @@ import java.util.function.Function;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class FakePlayerManagerService {
 
     public static final Map<String, List<String>> player2fakePlayers = new HashMap<>();
     public static final Map<String, Long> player2expiration = new HashMap<>();
 
-    private static <T> T withMyFakePlayers(@Nullable ServerPlayerEntity player, Function<List<String>, T> function) {
-        String playerName = getOwnerPlayerName(player);
+    private static <T> T withMyFakePlayers(@NotNull ServerPlayerEntity player, Function<List<String>, T> function) {
+        String playerName = PlayerHelper.getPlayerName(player);
         List<String> fakePlayers = player2fakePlayers.computeIfAbsent(playerName, k -> new ArrayList<>());
         return function.apply(fakePlayers);
-    }
-
-    private static String getOwnerPlayerName(@Nullable ServerPlayerEntity player) {
-        return player == null ? "CONSOLE" : PlayerHelper.getPlayerName(player);
     }
 
     public static void addMyFakePlayer(@NotNull ServerPlayerEntity player, @NotNull String fakePlayerName) {
@@ -45,21 +40,23 @@ public class FakePlayerManagerService {
                 .anyMatch(it -> it.equalsIgnoreCase(fakePlayerName)));
     }
 
-    public static void renewMyFakePlayers(@Nullable ServerPlayerEntity player) {
+    public static void renewMyFakePlayers(@NotNull ServerPlayerEntity player) {
         int renewDuration = FakePlayerManagerInitializer.config.model().renew_duration_ms;
         long newExpirationTime = System.currentTimeMillis() + renewDuration;
-        String playerName = getOwnerPlayerName(player);
+        String playerName = PlayerHelper.getPlayerName(player);
         player2expiration.put(playerName, newExpirationTime);
 
-        if (player != null) {
-            TextHelper.sendTextByKey(player, "fake_player_manager.renew.success", ChronosUtil.toDefaultDateFormat(newExpirationTime));
-        }
+        TextHelper.sendTextByKey(player, "fake_player_manager.renew.success", ChronosUtil.toDefaultDateFormat(newExpirationTime));
     }
 
-    public static boolean canSpawnNewFakePlayer(@NotNull ServerPlayerEntity player) {
+    public static boolean canSpawnMoreFakePlayers(@NotNull ServerPlayerEntity player) {
         int capsLimit = getFakePlayerCapsLimit();
-        int currentQuantity = withMyFakePlayers(player, List::size);
-        return currentQuantity < capsLimit;
+        int currentCount = getSpawnedFakePlayerCount(player);
+        return currentCount < capsLimit;
+    }
+
+    private static Integer getSpawnedFakePlayerCount(@NotNull ServerPlayerEntity player) {
+        return withMyFakePlayers(player, List::size);
     }
 
     public static int getFakePlayerCapsLimit() {
@@ -93,7 +90,8 @@ public class FakePlayerManagerService {
     }
 
     public static @NotNull String getTransformedFakePlayerName(@NotNull String fakePlayerName) {
-        return FakePlayerManagerInitializer.config.model().transform_name
+        return FakePlayerManagerInitializer.config.model().
+            transform_name
             .replace("%name%", fakePlayerName)
             .replace("%s", fakePlayerName);
     }

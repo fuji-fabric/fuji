@@ -26,7 +26,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     2. For each `fake-player`, the `player` who `spawned` it is its `owner player`.
     3. For each `fake-player`, it can only be `interacted` (right-click) with by its `owner player`.
     4. For each `fake-player`, it can only be `manipulated` (The `/player` command) by its `owner player`.
-    5. The `console`, the `ops` or the `owner player` are considered authorized.
+    5. The `console`, `the ops` or `the owner player` are considered authorized.
 
     ◉ This module allows you to define the naming-format for `fake-player`.
     You can define a `prefix` and `suffix` for fake player names.
@@ -36,6 +36,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     1. You can define the `spawn caps limit` at different time.
     2. You can specify the `max living duration` for each fake player. (By default, it is `12h`.)
     3. A player can use `/player renew` command to `renew` the `expiration time` for all of its fake players.
+    4. The `console` can bypass the `spawn caps limit`.
     """)
 public class FakePlayerManagerInitializer extends ModuleInitializer {
 

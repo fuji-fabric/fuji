@@ -36,25 +36,31 @@ public abstract class PlayerCommandMixin {
     }
 
     @Inject(method = "spawn", at = @At("HEAD"), remap = false, cancellable = true)
-    private static void $spawn_head(@NotNull CommandContext<ServerCommandSource> context, @NotNull CallbackInfoReturnable<Integer> cir) {
-        ServerPlayerEntity player = context.getSource().getPlayer();
-        if (player == null) return;
+    private static void checkFakePlayerCapsOnSpawnCommand(@NotNull CommandContext<ServerCommandSource> context, @NotNull CallbackInfoReturnable<Integer> cir) {
+        if (CommandHelper.isExecutedByConsole(context)) {
+            return;
+        }
 
-        if (!FakePlayerManagerService.canSpawnNewFakePlayer(player)) {
+        ServerPlayerEntity player = context.getSource().getPlayer();
+        if (!FakePlayerManagerService.canSpawnMoreFakePlayers(player)) {
             TextHelper.sendTextByKey(player, "fake_player_manager.spawn.limit_exceed");
             cir.setReturnValue(CommandHelper.Return.FAIL);
         }
     }
 
     @Inject(method = "spawn", at = @At("TAIL"), remap = false)
-    private static void $spawn_tail(@NotNull CommandContext<ServerCommandSource> context, CallbackInfoReturnable<Integer> cir) {
-        /* transform fake-player name */
-        String playerArg = StringArgumentType.getString(context, "player");
-        playerArg = FakePlayerManagerService.getTransformedFakePlayerName(playerArg);
+    private static void trackSpawnedFakePlayerOnSpawnCommand(@NotNull CommandContext<ServerCommandSource> context, CallbackInfoReturnable<Integer> cir) {
+        if (CommandHelper.isExecutedByConsole(context)) {
+            return;
+        }
 
-        /* track it */
+        /* Transform the fake player name to get the proper fake player name. */
         ServerPlayerEntity player = context.getSource().getPlayer();
-        FakePlayerManagerService.addMyFakePlayer(player, playerArg);
+        String fakePlayerName = StringArgumentType.getString(context, "player");
+        fakePlayerName = FakePlayerManagerService.getTransformedFakePlayerName(fakePlayerName);
+
+        /* Track it. */
+        FakePlayerManagerService.addMyFakePlayer(player, fakePlayerName);
         FakePlayerManagerService.renewMyFakePlayers(player);
     }
 
