@@ -1,6 +1,7 @@
 package tests.generator;
 
 import auxiliary.TestUtil;
+import auxiliary.structure.ExtendedAnnotationInfo;
 import com.google.gson.JsonObject;
 import io.github.classgraph.AnnotationParameterValueList;
 import io.github.classgraph.ScanResult;
@@ -81,6 +82,7 @@ public class GenerateDocStringTest {
     private List<DocString> makeDocStringFromDocStringProviderAnnotation(ScanResult scanResult) {
         return TestUtil.findTargetAnnotationInstancesAnywhere(scanResult, DocStringProvider.class, true)
             .stream()
+            .map(ExtendedAnnotationInfo::getAnnotationInfo)
             .map(annotationInfo -> {
                 AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
                 long id = (long) parameterValues.getValue("id");
@@ -121,6 +123,7 @@ public class GenerateDocStringTest {
     private static @NotNull List<DocString> makeDocStringFromDocumentAnnotation(ScanResult scanResult) {
         return TestUtil.findTargetAnnotationInstancesAnywhere(scanResult, Document.class, false)
             .stream()
+            .map(ExtendedAnnotationInfo::getAnnotationInfo)
             .map(annotationInfo -> {
                 AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
                 long id = (long) parameterValues.getValue("id");
@@ -133,6 +136,7 @@ public class GenerateDocStringTest {
     private @NotNull List<DocString> makeDocStringFromColorBoxAnnotation(ScanResult scanResult) {
         return TestUtil.findTargetAnnotationInstancesAnywhere(scanResult, ColorBox.class, true)
             .stream()
+            .map(ExtendedAnnotationInfo::getAnnotationInfo)
             .map(annotationInfo -> {
                 AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
                 long id = (long) parameterValues.getValue("id");

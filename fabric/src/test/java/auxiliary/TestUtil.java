@@ -1,6 +1,6 @@
 package auxiliary;
 
-import io.github.classgraph.AnnotationInfo;
+import auxiliary.structure.ExtendedAnnotationInfo;
 import io.github.classgraph.AnnotationInfoList;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
@@ -42,27 +42,30 @@ public class TestUtil {
     }
 
     @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
-    public static List<AnnotationInfo> findTargetAnnotationInstancesAnywhere(ScanResult scanResult, Class<? extends Annotation> targetAnnotation, boolean isRepeatableAnnotation) {
-        List<AnnotationInfo> targetAnnotationInstanceAnywhere = new ArrayList<>();
+    public static List<ExtendedAnnotationInfo> findTargetAnnotationInstancesAnywhere(ScanResult scanResult, Class<? extends Annotation> targetAnnotation, boolean isRepeatableAnnotation) {
+        List<ExtendedAnnotationInfo> targetAnnotationInstanceAnywhere = new ArrayList<>();
 
         /* Collect target annotation instances on class. */
-        List<AnnotationInfo> targetAnnotationOnClass =
+        List<ExtendedAnnotationInfo> targetAnnotationOnClass =
             scanResult
                 .getClassesWithAnnotation(targetAnnotation)
                 .stream()
                 .flatMap(classInfo -> {
                     if (isRepeatableAnnotation) {
                         AnnotationInfoList annotationInfoRepeatable = classInfo.getAnnotationInfoRepeatable(targetAnnotation);
-                        return annotationInfoRepeatable.stream();
+                        return annotationInfoRepeatable
+                            .stream()
+                            .map(it -> new ExtendedAnnotationInfo(it, classInfo));
                     } else {
-                        return Stream.of(classInfo.getAnnotationInfo(targetAnnotation));
+                        ExtendedAnnotationInfo singularElement = new ExtendedAnnotationInfo(classInfo.getAnnotationInfo(targetAnnotation), classInfo);
+                        return Stream.of(singularElement);
                     }
                 })
                 .toList();
         targetAnnotationInstanceAnywhere.addAll(targetAnnotationOnClass);
 
         /* Collect target annotation instances on field. */
-        List<AnnotationInfo> targetAnnotationOnField =
+        List<ExtendedAnnotationInfo> targetAnnotationOnField =
             scanResult
                 .getClassesWithFieldAnnotation(targetAnnotation)
                 .stream()
@@ -72,17 +75,21 @@ public class TestUtil {
                         .stream()
                         .filter(fieldInfo -> fieldInfo.hasAnnotation(targetAnnotation)))
                 .flatMap(fieldInfo -> {
+                    ClassInfo classInfo = fieldInfo.getClassInfo();
                     if (isRepeatableAnnotation) {
-                        return fieldInfo.getAnnotationInfoRepeatable(targetAnnotation).stream();
+                        return fieldInfo.getAnnotationInfoRepeatable(targetAnnotation)
+                            .stream()
+                            .map(it -> new ExtendedAnnotationInfo(it, classInfo));
                     } else {
-                        return Stream.of(fieldInfo.getAnnotationInfo(targetAnnotation));
+                        ExtendedAnnotationInfo singularElement = new ExtendedAnnotationInfo(fieldInfo.getAnnotationInfo(targetAnnotation), classInfo);
+                        return Stream.of(singularElement);
                     }
                 })
                 .toList();
         targetAnnotationInstanceAnywhere.addAll(targetAnnotationOnField);
 
         /* Collect target annotation instances on method. */
-        List<AnnotationInfo> targetAnnotationOnMethod = scanResult
+        List<ExtendedAnnotationInfo> targetAnnotationOnMethod = scanResult
             .getClassesWithMethodAnnotation(targetAnnotation)
             .stream()
             .map(ClassInfo::getMethodInfo)
@@ -91,17 +98,21 @@ public class TestUtil {
                     .stream()
                     .filter(methodInfo -> methodInfo.hasAnnotation(targetAnnotation)))
             .flatMap(methodInfo -> {
+                ClassInfo classInfo = methodInfo.getClassInfo();
                 if (isRepeatableAnnotation) {
-                    return methodInfo.getAnnotationInfoRepeatable(targetAnnotation).stream();
+                    return methodInfo.getAnnotationInfoRepeatable(targetAnnotation)
+                        .stream()
+                        .map(it -> new ExtendedAnnotationInfo(it, classInfo));
                 } else {
-                    return Stream.of(methodInfo.getAnnotationInfo(targetAnnotation));
+                    ExtendedAnnotationInfo singularElement = new ExtendedAnnotationInfo(methodInfo.getAnnotationInfo(targetAnnotation), classInfo);
+                    return Stream.of(singularElement);
                 }
             })
             .toList();
         targetAnnotationInstanceAnywhere.addAll(targetAnnotationOnMethod);
 
         /* Collect target annotation instances on method parameters. */
-        List<AnnotationInfo> targetAnnotationOnMethodParameters = scanResult
+        List<ExtendedAnnotationInfo> targetAnnotationOnMethodParameters = scanResult
             .getClassesWithMethodParameterAnnotation(targetAnnotation)
             .stream()
             .map(ClassInfo::getMethodInfo)
@@ -115,10 +126,14 @@ public class TestUtil {
             })
             .filter(methodParameterInfo -> methodParameterInfo.hasAnnotation(targetAnnotation))
             .flatMap(methodParameterInfo -> {
+                ClassInfo classInfo = methodParameterInfo.getMethodInfo().getClassInfo();
                 if (isRepeatableAnnotation) {
-                    return methodParameterInfo.getAnnotationInfoRepeatable(targetAnnotation).stream();
+                    return methodParameterInfo.getAnnotationInfoRepeatable(targetAnnotation)
+                        .stream()
+                        .map(it -> new ExtendedAnnotationInfo(it, classInfo));
                 } else {
-                    return Stream.of(methodParameterInfo.getAnnotationInfo(targetAnnotation));
+                    ExtendedAnnotationInfo singularElement = new ExtendedAnnotationInfo(methodParameterInfo.getAnnotationInfo(targetAnnotation), classInfo);
+                    return Stream.of(singularElement);
                 }
             })
             .toList();

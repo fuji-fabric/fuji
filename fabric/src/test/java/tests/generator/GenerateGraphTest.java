@@ -1,9 +1,11 @@
 package tests.generator;
 
 import auxiliary.TestUtil;
+import auxiliary.structure.ExtendedAnnotationInfo;
 import com.google.gson.JsonObject;
 import io.github.classgraph.AnnotationInfo;
 import io.github.classgraph.AnnotationParameterValueList;
+import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -62,9 +64,10 @@ public class GenerateGraphTest {
         try (PrintWriter writer = new PrintWriter(
             COMPILE_TIME_CITE_FILE_PATH.toFile())) {
 
-            List<AnnotationInfo> citeAnnotationList = TestUtil.findTargetAnnotationInstancesAnywhere(scanResult, Cite.class, false);
+            List<ExtendedAnnotationInfo> citeAnnotationList = TestUtil.findTargetAnnotationInstancesAnywhere(scanResult, Cite.class, false);
             citeAnnotationList
                 .stream()
+                .map(ExtendedAnnotationInfo::getAnnotationInfo)
                 .flatMap(annotationInfo -> {
                     AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
                     String[] value = (String[]) parameterValues.get("value").getValue();
@@ -80,19 +83,24 @@ public class GenerateGraphTest {
         try (PrintWriter writer = new PrintWriter(
             COMPILE_TIME_TEST_CASE_FILE_PATH.toFile())) {
 
-            List<AnnotationInfo> annotationList = TestUtil.findTargetAnnotationInstancesAnywhere(scanResult, TestCase.class, true);
+            List<ExtendedAnnotationInfo> annotationList = TestUtil.findTargetAnnotationInstancesAnywhere(scanResult, TestCase.class, true);
             annotationList
                 .stream()
-                .map(annotationInfo -> {
+                .map(extendedAnnotationInfo -> {
+                    AnnotationInfo annotationInfo = extendedAnnotationInfo.getAnnotationInfo();
+                    ClassInfo declaringClassInfo = extendedAnnotationInfo.getDeclaringClass();
+                    String module = ModuleManager.computeJoinedModulePath(declaringClassInfo.getName());
+
                     AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
                     String steps = (String) parameterValues.get("steps").getValue();
                     String[] purposes = (String[]) parameterValues.get("purposes").getValue();
 
                     StringBuilder sb = new StringBuilder();
                     sb.append("""
-                        [Test-Case]
+                        [Test Case]
+                        - Module: %s
                         - Steps: **%s**
-                        """.formatted(steps));
+                        """.formatted(module, steps));
                     Arrays.stream(purposes)
                         .forEach(purpose -> {
                             sb.append("- Purpose: %s".formatted(purpose));
