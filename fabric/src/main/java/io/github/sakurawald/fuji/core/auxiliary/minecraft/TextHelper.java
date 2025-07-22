@@ -35,8 +35,10 @@ import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextContent;
+import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -852,23 +854,34 @@ public class TextHelper {
 
     public static class Formatter {
 
-        public static <K, V> MutableText formatMap(Map<K, V> map) {
+        public static <K, V> MutableText formatMapMultiLine(Map<K, V> map) {
+            return formatMap(map, "", "", "\n");
+        }
+
+        public static <K, V> MutableText formatMapInLine(Map<K, V> map) {
+            return formatMap(map, "{", "}", ", ");
+        }
+
+        private static <K, V> @NotNull MutableText formatMap(Map<K, V> map, String prefixString, String suffixString, String splitterString) {
             MutableText builder = Text.empty();
 
             boolean firstElement = true;
-            builder.append(Text.literal("{"));
+            builder.append(Text.literal(prefixString));
             for (Map.Entry<K, V> entry : map.entrySet()) {
                 if (!firstElement) {
-                    builder.append(Text.literal(", "));
+                    MutableText splitterText = Text
+                        .literal(splitterString)
+                        .fillStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
+                    builder.append(splitterText);
                 }
                 firstElement = false;
 
                 Text entryText = TextHelper.getTextByKey(null, "map.entry", entry.getKey(), entry.getValue());
                 builder.append(entryText);
             }
-            builder.append(Text.literal("}"));
+            builder.append(Text.literal(suffixString));
 
-           return builder;
+            return builder;
         }
 
     }

@@ -133,6 +133,7 @@ public class PlayerHelper {
         return player.getClass() == ServerPlayerEntity.class;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isServerPlayer(PlayerEntity player) {
         return player instanceof ServerPlayerEntity;
     }

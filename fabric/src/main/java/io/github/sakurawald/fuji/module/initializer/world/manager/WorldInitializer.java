@@ -608,7 +608,7 @@ public class WorldInitializer extends ModuleInitializer {
                 gameRulesMap.put(gameRuleName, gameRuleValue);
             }
         });
-        MutableText gameRulesHoverText = TextHelper.Formatter.formatMap(gameRulesMap);
+        MutableText gameRulesHoverText = TextHelper.Formatter.formatMapInLine(gameRulesMap);
         gameRulesText
             .fillStyle(Style.EMPTY
                 .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(gameRulesHoverText)));

@@ -36,6 +36,6 @@ public class FakePlayerManagerConfigModel {
 
         You can use this option to define the `prefix` and `suffix` of `fake player name`.
         """)
-    public String transform_name = "_fake_%name%";
+    public String transform_name = "_fake_%s";
 
 }

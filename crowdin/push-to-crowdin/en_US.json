@@ -162,7 +162,7 @@
   "fake_player_manager.manipulate.forbidden": "<red>You can't manipulate this player",
   "fake_player_manager.renew.success": "<green>Your fake-player has been renewed until %s",
   "fake_player_manager.spawn.limit_exceed": "<red>You have reach current fake-player limit",
-  "fake_player_manager.who.header": "--- Fake Players ---\n",
+  "fake_player_manager.who.header": "--- Fake Players ---",
   "feed": "<gold>Fed.",
   "fly.off": "<gold>Fly mode: off",
   "fly.on": "<gold>Fly mode: on",
@@ -928,8 +928,8 @@
   "docstring.1751827014561": "1. Provides the `/info entity` command.\n2. Adds `block entity` query for `/info block` command.\n",
   "docstring.1751827017263": "This `job` is used to check the `fake-player limits` for each player.\n",
   "docstring.1751827019419": "This module provides `fake player management` for `carpet` mod.\n",
-  "docstring.1751827022331": "Renew the expiration time of all fake-players spawned by you.",
-  "docstring.1751827025708": "List all fake-players and its owner.",
+  "docstring.1751827022331": "Renew the expiration time of `all` fake-player you have `spawned`.",
+  "docstring.1751827025708": "List all fake-player and its owner player.",
   "docstring.1751827028093": "Define `warning rules`, to execute `punishment commands`.\n\nWhen a new `warning` is `added` to a player, we will process the `warning rules`.\nAnd then pick up `one warning rule` to execute its commands.\nWe will pick the `highest` number of warnings satisfied first.\n\n",
   "docstring.1751827030101": "If the `number of warnings` of the `player` >= `the defined value`, then execute the commands.",
   "docstring.1751827033037": "This module provides the `information management` for `staffs`.\nA shared `warning GUI` to `track` the behaviours of players, between `staffs`.\nYou can `create` a `warning` for a `player`.\nAll `staffs` can `view` the `warnings` of a `player`.\n\nYou can use `warnings` to `track` the behaviours of a `player`.\n",
@@ -1216,5 +1216,6 @@
   "docstring.1753056668984": "An alias command to `/chunks message`.",
   "docstring.1753064698840": "◉ How it works?\nIn internal Minecraft, each `dimension` has a function named `getGameRules()`.\nIt returns the `gamerules` of this `dimension`.\n\nThe vanilla Minecraft only returns the `gamerules` of `minecraft:overworld`.\nFuji modify the `getGameRules()` function, to let it return the `per-dimension gamerules`.\n\n◉ How can I configure the `per-dimension gamerules`?\nYou can modify the config file directly, and issue `/fuji reload` to apply changes.\n\n◉ Can I use this module in vanilla dimensions?\nYes, you can.\n",
   "docstring.1753064857726": "◉ How it works?\nIn internal Minecraft, each `dimension` has a function named `getWorldBorder()`.\nIt returns the `world border` of this `dimension`.\n\nThe vanilla Minecraft only returns the `world border` of `minecraft:overworld`.\nFuji modify the `getWorldBorder()` function, to let it return the `per-dimension border`.\n\n◉ How can I configure the `per-dimension border`?\nYou can modify the config file directly, and issue `/fuji reload` to apply changes.\n\n◉ Can I use this module in vanilla dimensions?\nYes, you can.\n",
-  "docstring.1753076962665": "The `document` for this `bundle command`. This field can be `null`.\n"
+  "docstring.1753076962665": "The `document` for this `bundle command`. This field can be `null`.\n",
+  "docstring.1753153100239": "◉ This module introduces the `authority` for each `fake-player`.\n1. Disables the `/player shadow` command.\n2. For each `fake-player`, the `player` who `spawned` it is its `owner player`.\n3. For each `fake-player`, it can only be `interacted` (right-click) with by its `owner player`.\n4. For each `fake-player`, it can only be `manipulated` (The `/player` command) by its `owner player`.\n5. The `console`, the `ops` or the `owner player` are considered authorized.\n\n◉ This module allows you to define the naming-format for `fake-player`.\nYou can define a `prefix` and `suffix` for fake player names.\nThe `fake player name` argument value will be transformed when you use `/player <playerName> spawn` command.\n\n◉ This module introduce the `spawn caps limit` and `expiration time` for each fake player.\n1. You can define the `spawn caps limit` at different time.\n2. You can specify the max living duration for each fake player. (By default, it is `12h`.)\n3. A player can use `/player renew` command to `renew` the `expiration time` for all of its fake players.\n"
 }
