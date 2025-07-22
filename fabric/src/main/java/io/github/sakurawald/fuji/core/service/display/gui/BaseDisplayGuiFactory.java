@@ -8,9 +8,11 @@ import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -47,10 +49,11 @@ public abstract class BaseDisplayGuiFactory {
             && bi.getBlock() instanceof ShulkerBoxBlock;
     }
 
+    @TestCase(steps = "Create an inventory display that contains a shulker box.", purposes = "See if we can go inside the shulker box.")
     public record SlotClickForDeeperDisplayCallback(SimpleGui parentGui,
                                                        ServerPlayerEntity viewingPlayer) implements GuiElementInterface.ClickCallback {
         @Override
-        public void click(int i, ClickType clickType, net.minecraft.screen.slot.SlotActionType clickType1, @NotNull SlotGuiInterface slotGuiInterface) {
+        public void click(int i, ClickType clickType, SlotActionType clickType1, @NotNull SlotGuiInterface slotGuiInterface) {
             GuiElementInterface slot = slotGuiInterface.getSlot(i);
             if (slot == null) {
                 LogUtil.error("A slot in display gui is null.");

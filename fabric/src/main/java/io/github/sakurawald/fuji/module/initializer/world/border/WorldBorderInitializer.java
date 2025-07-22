@@ -5,6 +5,7 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.world.border.config.model.WorldBorderConfigModel;
 import io.github.sakurawald.fuji.module.initializer.world.border.structure.BorderDescriptor;
@@ -48,6 +49,7 @@ import net.minecraft.world.border.WorldBorder;
     ◉ The semantics of options for `world border`.
     See: https://minecraft.wiki/w/World_border
     """)
+@TestCase(steps = "Issue `/tp` and `/world tp` between dimensions.", purposes = "The per-dimension border should be synced on the client-side.")
 public class WorldBorderInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<WorldBorderConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, WorldBorderConfigModel.class);

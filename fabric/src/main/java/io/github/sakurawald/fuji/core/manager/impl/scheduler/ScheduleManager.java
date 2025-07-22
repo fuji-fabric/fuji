@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.core.manager.impl.scheduler;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.Configs;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.job.abst.BaseJob;
 import io.github.sakurawald.fuji.core.manager.Managers;
@@ -28,6 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@TestCase(steps = "Issue `/stop` in the production environment.", purposes = "The program should be terminated.")
 @SuppressWarnings("LombokGetterMayBeUsed")
 public class ScheduleManager extends BaseManager {
 

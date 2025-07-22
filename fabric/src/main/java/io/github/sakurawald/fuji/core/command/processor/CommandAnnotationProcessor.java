@@ -12,6 +12,7 @@ import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
 import io.github.sakurawald.fuji.core.command.structure.CommandDescriptor;
 import io.github.sakurawald.fuji.core.command.structure.CommandRequirementDescriptor;
 import io.github.sakurawald.fuji.core.command.structure.RetargetCommandDescriptor;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.impl.CommandEvents;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import net.minecraft.command.CommandRegistryAccess;
@@ -34,6 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
     "https://github.com/Revxrsal/Lamp"
     , "https://github.com/henkelmax/admiral"
 })
+@TestCase(steps = "List the command tree of a normal user.", purposes = "The command permissions should be handled properly.")
 public class CommandAnnotationProcessor {
 
     private static final String REQUIRED_ARGUMENT_PLACEHOLDER = "$";

@@ -5,6 +5,7 @@ import com.mojang.authlib.GameProfile;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.module.initializer.afk.AfkInitializer;
 import io.github.sakurawald.fuji.module.initializer.afk.accessor.AfkStateAccessor;
 import io.github.sakurawald.fuji.module.initializer.afk.config.model.AfkConfigModel;
@@ -51,6 +52,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Af
     }
     #endif
 
+    @TestCase(steps = "Issue `/afk` and see the player list.", purposes = "The display name of an afk player should be modified.")
     @ModifyReturnValue(method = "getPlayerListName", at = @At("RETURN"))
     public Text handlePlayerListName(Text original) {
         if (AfkInitializer.isAfk(player)) {
@@ -99,6 +101,8 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Af
         return this.inputCounter;
     }
 
+
+    @TestCase(steps = "Try to move a player in afk state.", purposes = "The `moveable` option should work.")
     // NOTE: Here we override the original move() function, we use @Override since we can't inject into a super method.
     @Override
     public void move(MovementType movementType, Vec3d vec3d) {

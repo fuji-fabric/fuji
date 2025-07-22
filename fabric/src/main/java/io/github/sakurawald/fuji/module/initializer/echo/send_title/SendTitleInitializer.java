@@ -7,6 +7,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -25,6 +26,7 @@ import java.util.Optional;
     ◉ Send a title to online players.
     Issue: `/foreach send-title %player:name% --mainTitle "\\<rainbow\\>Hello %player:name%"`
     """)
+@TestCase(steps = "Issue the command `/send-title @s --mainTitle \"<rainbow>Hello\" --subTitle \"<blue>World\" --fadeInTicks 60 --stayTicks 60 --fadeOutTicks 60`", purposes = "Consecutive optional argument should work.")
 public class SendTitleInitializer extends ModuleInitializer {
 
     @CommandNode("send-title")

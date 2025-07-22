@@ -8,6 +8,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlayerName;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.view.gui.EnderChestRedirectScreenFactory;
 import io.github.sakurawald.fuji.module.initializer.view.gui.InventoryRedirectScreenFactory;
@@ -23,6 +24,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 @CommandNode("view")
 @CommandRequirement(level = 4)
+@TestCase(steps = "Issue the `/view {inv/ender}` command on a fake-player.", purposes = "You should be able to modify the slots on the fly.")
 public class ViewInitializer extends ModuleInitializer {
 
     private static void checkSelfView(ServerPlayerEntity source, OfflinePlayerName target) {

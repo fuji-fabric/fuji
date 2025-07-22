@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 #if MC_VER <= MC_1_20_1
@@ -29,6 +30,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
+@TestCase(steps = "Consider special states of a player.", purposes = {
+    "A player may be a fake-player from `carpet` mod."
+    , "Once a player die, the old ServerPlayerEntity is invalid."
+    , "A player may `disconnect` from the server."
+    , "A player may in `spectator` game-mode."
+    , "If a player is during the transferring of end portal, he is in no dimensions."
+})
 public class PlayerHelper {
 
     private static final String DIMENSION_NBT_KEY = "Dimension";

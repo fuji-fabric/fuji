@@ -5,18 +5,15 @@ import com.google.gson.JsonObject;
 import io.github.classgraph.AnnotationInfo;
 import io.github.classgraph.AnnotationParameterValueList;
 import io.github.classgraph.ScanResult;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.model.ConfigModel;
+import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
-import lombok.SneakyThrows;
-import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -25,13 +22,15 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import lombok.SneakyThrows;
+import org.junit.jupiter.api.Test;
 
 public class GenerateGraphTest {
 
     public static final Path COMPILE_TIME_RESOURCE_PATH = TestUtil.PROJECT_ROOT_PATH.resolve("common/src/main/resources/");
     public static final Path COMPILE_TIME_GRAPH_PATH = COMPILE_TIME_RESOURCE_PATH.resolve(ReflectionUtil.class.getPackageName().replace(".", "/"));
     public static final Path COMPILE_TIME_CITE_FILE_PATH = TestUtil.PROJECT_ROOT_PATH.resolve("CITE");
-    public static final Path COMPILE_TIME_TEST_CASE_FILE_PATH = TestUtil.PROJECT_ROOT_PATH.resolve("TEST-CASE");
+    public static final Path COMPILE_TIME_TEST_CASE_FILE_PATH = TestUtil.PROJECT_ROOT_PATH.resolve("TEST-CASE.md");
 
     @Test
     @SneakyThrows(IOException.class)
@@ -87,14 +86,19 @@ public class GenerateGraphTest {
                 .map(annotationInfo -> {
                     AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
                     String steps = (String) parameterValues.get("steps").getValue();
-                    String purpose = (String) parameterValues.get("purpose").getValue();
+                    String[] purposes = (String[]) parameterValues.get("purposes").getValue();
 
-                    String string = """
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("""
                         [Test-Case]
-                        Steps: %s
-                        Purpose: %s
-                        """.formatted(steps, purpose);
-                    return string;
+                        - Steps: **%s**
+                        """.formatted(steps));
+                    Arrays.stream(purposes)
+                        .forEach(purpose -> {
+                            sb.append("- Purpose: %s".formatted(purpose));
+                            sb.append("\n");
+                        });
+                    return sb;
                 })
                 .sorted()
                 .forEach(writer::println);

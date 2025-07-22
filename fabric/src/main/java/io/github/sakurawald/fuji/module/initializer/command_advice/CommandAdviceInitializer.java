@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_advice.model.CommandAdviceConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_advice.structure.CommandAdviceEntry;
@@ -41,6 +42,7 @@ import java.util.stream.Collectors;
 @ColorBox(id = 1751900258020L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     This module provides `similar` functions to `command_bundle` module.
     """)
+@TestCase(steps = "Issue `/say hi` command.", purposes = "The command should be cancelled with the `/send-broadcast` command.")
 public class CommandAdviceInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<CommandAdviceConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandAdviceConfigModel.class);

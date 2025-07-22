@@ -8,6 +8,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -46,6 +47,10 @@ import java.util.concurrent.ConcurrentHashMap;
     ◉ Scale the size of text into double.
     Set the `x`, `y`, and `z` in `scale` to `2.0`.
     """)
+@TestCase(steps = "Pass through a nether portal.", purposes = {
+    "The nametag entity should be discarded in the old dimension."
+    , "A new nametag entity should be created in the new dimension."
+})
 public class NametagInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<NametagConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, NametagConfigModel.class);

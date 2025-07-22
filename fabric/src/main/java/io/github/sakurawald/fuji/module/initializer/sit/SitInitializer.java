@@ -11,6 +11,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.sit.config.model.SitConfigModel;
@@ -37,6 +38,7 @@ import java.util.Set;
 @Document(id = 1751826999379L, value = """
     Provides a facility to sit on blocks.
     """)
+@TestCase(steps = "Issue `/sit` command while stepping on the `bed block`.", purposes = "The raycast height should be proper.")
 public class SitInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<SitConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, SitConfigModel.class);

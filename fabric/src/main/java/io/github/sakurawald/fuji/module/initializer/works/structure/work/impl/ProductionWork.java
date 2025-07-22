@@ -7,6 +7,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.gui.impl.gui.ConfirmSignGui;
 import io.github.sakurawald.fuji.core.gui.impl.gui.InputSignGui;
 import io.github.sakurawald.fuji.core.job.interfaces.Schedulable;
@@ -37,8 +38,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+@TestCase(steps = "Create a new production work and start the sample.", purposes = {
+    "See if the chunk iterator works."
+    , "See if the hopper mixin works."
+})
 @NoArgsConstructor
-
 public class ProductionWork extends Work implements Schedulable {
 
     public @NotNull Sample sample = new Sample();

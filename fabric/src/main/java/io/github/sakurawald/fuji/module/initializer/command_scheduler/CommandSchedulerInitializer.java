@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_scheduler.command.argument.wrapper.JobName;
@@ -38,7 +39,7 @@ import java.util.List;
 
     Issue `/fuji inspect jobs` to see the `fire dates` of defined `jobs`.
     """)
-
+@TestCase(steps = "Issue `/fuji reload` command.", purposes = "The jobs from command_scheduler module should be re-scheduled.")
 
 
 @CommandNode("command-scheduler")

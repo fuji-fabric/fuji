@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.head.config.model.HeadConfigModel;
 import io.github.sakurawald.fuji.module.initializer.head.gui.HeadGui;
@@ -20,6 +21,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @Document(id = 1751826596329L, value = """
     This module allows player to buy decorative heads from a head shop.
     """)
+@TestCase(steps = "Buy a new head in `/head`.", purposes = "See if the structure of skin is changed by Mojang.")
+
 @CommandNode("head")
 public class HeadInitializer extends ModuleInitializer {
 

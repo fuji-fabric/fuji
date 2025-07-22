@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import lombok.Getter;
 import lombok.Setter;
 import net.fabricmc.api.EnvType;
@@ -23,6 +24,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@TestCase(steps = "Consider the possible runtime environments.", purposes = {
+    "The fabric server-side environment."
+    , "The fabric client-side environment."
+    , "The neo-forge server-side environment. (With `sinytra-connector` mod)"
+    , "The neo-forge client-side environment. (With `sinytra-connector` mod)"
+    , "The hybrid server (forge+bukkit) with `sinytra-connector` mod"
+    , "The GraalVM native image. (Which invalidates the reflection)"
+})
 public class ServerHelper {
 
     @Getter

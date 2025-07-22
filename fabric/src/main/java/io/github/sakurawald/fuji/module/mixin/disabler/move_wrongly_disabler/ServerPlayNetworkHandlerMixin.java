@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.mixin.disabler.move_wrongly_disabler;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -30,6 +31,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
         return true;
     }
 
+    @TestCase(steps = "Sit in a `boat` and try to move it.", purposes = "The `vehicle moved wrongly` should be disabled.")
     #if MC_VER < MC_1_21_6
     @ModifyConstant(method = "onVehicleMove", constant = @Constant(doubleValue = 0.0625, ordinal = 1))
     #elif MC_VER >= MC_1_21_6

@@ -5,5 +5,5 @@ import java.lang.annotation.Repeatable;
 @Repeatable(value = TestCases.class)
 public @interface TestCase {
     String steps();
-    String purpose();
+    String[] purposes();
 }
