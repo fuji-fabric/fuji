@@ -53,15 +53,16 @@ public class GenerateGraphTest {
         }
     }
 
+    @SuppressWarnings("UnnecessaryLocalVariable")
     @SneakyThrows
     private static void generateCiteFile(ScanResult scanResult) {
         try (PrintWriter writer = new PrintWriter(
             COMPILE_TIME_CITE_FILE_PATH.toFile())) {
-            scanResult
-                .getClassesWithAnnotation(Cite.class)
+
+            List<AnnotationInfo> citeAnnotationList = TestUtil.findTargetAnnotationInstancesAnywhere(scanResult, Cite.class, false);
+            citeAnnotationList
                 .stream()
-                .flatMap(classInfo -> {
-                    AnnotationInfo annotationInfo = classInfo.getAnnotationInfo(Cite.class);
+                .flatMap(annotationInfo -> {
                     AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
                     String[] value = (String[]) parameterValues.get("value").getValue();
                     return Arrays.stream(value);
