@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.placeholder;
 import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
 import io.github.sakurawald.fuji.Fuji;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
@@ -27,11 +28,14 @@ import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.module.initializer.placeholder.gui.PlaceholderGui;
 import io.github.sakurawald.fuji.module.initializer.placeholder.job.UpdateSumUpPlaceholderJob;
 import io.github.sakurawald.fuji.module.initializer.placeholder.structure.SumUpPlaceholder;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.biome.Biome;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.SimpleDateFormat;
@@ -189,39 +193,60 @@ public class PlaceholderInitializer extends ModuleInitializer {
         });
     }
 
+    @SuppressWarnings("EnhancedSwitchMigration")
     @DocStringProvider(id = 1752000048133L, value = """
         Returns the `location` of the player.
         """)
     public static void registerPosPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("pos", 1752000048133L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> {
-            int x = player.getBlockX();
-            int y = player.getBlockY();
-            int z = player.getBlockZ();
-            String dim_name = player.getWorld().getRegistryKey().getValue().toString();
-            String dim_display_name = TextHelper.Translator.getLanguageValueByKey(player, dim_name);
-            String hoverString = TextHelper.Translator.getLanguageValueByKey(player, "chat.current_pos");
-            switch (dim_name) {
+            /* Make the position text. */
+            int blockX = player.getBlockX();
+            int blockY = player.getBlockY();
+            int blockZ = player.getBlockZ();
+            String dimensionName = RegistryHelper.toString(player.getWorld());
+            String dimensionDisplayName = TextHelper.Translator.getLanguageValueByKey(player, dimensionName);
+            RegistryEntry<Biome> biome = player.getWorld().getBiome(player.getBlockPos());
+            String biomeName = biome.getKey().map(RegistryHelper::toString).orElse("Unknown");
+            Text positionText = TextHelper.getTextByKey(player, "placeholder.position", dimensionDisplayName, blockX, blockY, blockZ, biomeName);
+
+            /* Attach the position of current dimension. */
+            String currentPosition = "(%d, %d, %d)".formatted(blockX, blockY, blockZ);
+            MutableText hoverText = Text.empty();
+            hoverText.append(TextHelper.getTextByKey(player, "placeholder.current_position", currentPosition));
+
+            /* Attach the position of linked dimension. */
+            String linkedDimensionDisplayName = null;
+            String linkedDimensionPosition = null;
+            switch (dimensionName) {
                 case "minecraft:overworld":
-                    hoverString += "\n" + TextHelper.Translator.getLanguageValueByKey(player, "minecraft:the_nether")
-                        + ": %d %s %d".formatted(x / 8, y, z / 8);
+                    linkedDimensionDisplayName = TextHelper.Translator.getLanguageValueByKey(player, "minecraft:the_nether");
+                    linkedDimensionPosition = "(%d, %d, %d)".formatted(blockX / 8, blockY, blockZ / 8);
                     break;
                 case "minecraft:the_nether":
-                    hoverString += "\n" + TextHelper.Translator.getLanguageValueByKey(player, "minecraft:overworld")
-                        + ": %d %s %d".formatted(x * 8, y, z * 8);
+                    linkedDimensionDisplayName = TextHelper.Translator.getLanguageValueByKey(player, "minecraft:overworld");
+                    linkedDimensionPosition = "(%d, %d, %d)".formatted(blockX * 8, blockY, blockZ * 8);
                     break;
             }
+            if (linkedDimensionPosition != null) {
+                hoverText.append(TextHelper.TEXT_NEWLINE);
+                hoverText.append(TextHelper.getTextByKey(player, "placeholder.coordinate_scale", linkedDimensionDisplayName, linkedDimensionPosition));
+            }
 
-            String clickCommand = TextHelper.Translator.getLanguageValueByKey(player, "chat.xaero_waypoint_add.command");
+            /* Attach the click event to add a xaero waypoint. */
+            // For example: `/xaero-waypoint:{WayPointName}:{SingleCharacter}:{x}:{y}:{z}:11:false:0:Internal-{overworld/the_nether/the_end}-waypoints`
+            String waypointName = TextHelper.Translator.getLanguageValueByKey(player, "placeholder.position.waypoint.name");
+            String waypointSingularCharacterName = String.valueOf(waypointName.charAt(0));
+            String nameOfDimension = RegistryHelper.makeIdentifier(RegistryHelper.toString(player.getWorld())).getPath();
+            String xaeroCommand = "xaero-waypoint:%s:%s:%d:%d:%d:11:false:0:Internal-%s-waypoints".formatted(waypointName, waypointSingularCharacterName, blockX, blockY, blockZ, nameOfDimension);
+            hoverText.append(TextHelper.TEXT_NEWLINE);
+            hoverText.append(TextHelper.getTextByKey(player, "placeholder.prompt.xaero_waypoint_add"));
 
-            return TextHelper.getTextByKey(player, "placeholder.pos", x, y, z, dim_display_name)
+            return positionText
                 .copy()
                 .fillStyle(Style.EMPTY
-                    .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(Text.literal(hoverString + "\n")
-                            .append(TextHelper.getTextByKey(player, "chat.xaero_waypoint_add"))
-                    ))
-                    .withClickEvent(TextHelper.Events.ClickEvent.makeRunCommandAction(clickCommand))
-                );
+                    .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(hoverText))
+                    .withClickEvent(TextHelper.Events.ClickEvent.makeSuggestCommandAction(xaeroCommand)));
         });
     }
 
@@ -265,7 +290,6 @@ public class PlaceholderInitializer extends ModuleInitializer {
 
         registerPosPlaceholder();
 
-        /* events */
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             SumUpPlaceholder.ofServer();
             UpdateSumUpPlaceholderJob updateSumUpPlaceholderJob = new UpdateSumUpPlaceholderJob();

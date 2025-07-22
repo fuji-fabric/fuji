@@ -34,6 +34,7 @@ import net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket;
 import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.ClickEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -822,6 +823,14 @@ public class TextHelper {
     public static class Events {
 
         public static class ClickEvent {
+
+            public static net.minecraft.text.ClickEvent makeSuggestCommandAction(String command) {
+                #if MC_VER <= MC_1_21_4
+                return new net.minecraft.text.ClickEvent(net.minecraft.text.ClickEvent.Action.SUGGEST_COMMAND, command);
+                #elif MC_VER >= MC_1_21_5
+                return new net.minecraft.text.ClickEvent.SuggestCommand(command);
+                #endif
+            }
 
             public static net.minecraft.text.ClickEvent makeRunCommandAction(String command) {
                 #if MC_VER <= MC_1_21_4
