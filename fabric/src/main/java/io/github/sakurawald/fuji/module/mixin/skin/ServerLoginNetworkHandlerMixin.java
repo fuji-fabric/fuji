@@ -55,21 +55,17 @@ public abstract class ServerLoginNetworkHandlerMixin {
 
     #if MC_VER <= MC_1_20_1
     @Inject(method = "acceptPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/ClientConnection;send(Lnet/minecraft/network/packet/Packet;)V", ordinal = 0))
-    public void applyTheFetchedSkin(CallbackInfo ci) {
+    void applyTheFetchedSkin(CallbackInfo ci)
+    #elif MC_VER > MC_1_20_1
+    @Inject(method = "sendSuccessPacket", at = @At("HEAD"))
+    void applyTheFetchedSkin(@NotNull GameProfile gameProfile, CallbackInfo ci)
+    #endif
+    {
         /* apply the skin if fetched skin is not empty */
         if (pendingSkins != null) {
             Optional<Property> x = Optional.of(SkinService.getRandomDefaultSkin());
-            SkinService.applySkin(profile, pendingSkins.getNow(x).get());
+            SkinService.modifyGameProfile(profile, pendingSkins.getNow(x).get());
         }
     }
-    #elif MC_VER > MC_1_20_1
-    @Inject(method = "sendSuccessPacket", at = @At("HEAD"))
-    public void applyTheFetchedSkin(@NotNull GameProfile gameProfile, CallbackInfo ci) {
-        /* apply the skin if fetched skin is not empty */
-        if (pendingSkins != null) {
-            SkinRestorer.applySkin(gameProfile, pendingSkins.getNow(SkinRestorer.getSkinStorage().getDefaultSkin()));
-        }
-    }
-    #endif
 
 }
