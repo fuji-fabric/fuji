@@ -146,6 +146,13 @@ import java.util.stream.Stream;
     - `/shoot` -> `/summon` with motion
     - `/smite` and `/thunder` -> `/summon minecraft:lighting_bolt`
     """)
+@ColorBox(id = 1753243426623L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Define a `/tpw` command to teleport players to a specified dimension.
+    Pattern: `tpw resource-world`
+    Bundle:
+    1. `run as fake-op %player:name% tppos --centerX 0 --centerZ 0 --maxRange 128 --dimension fuji:overworld`
+    """)
+
 
 
 @CommandNode("command-bundle")
