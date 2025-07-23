@@ -28,13 +28,13 @@ public class SkinStorage {
         return skinStoragePath.resolve(playerUUID + ".json");
     }
 
-    public Optional<Property> getSkinCache(UUID playerUUID) {
+    public Property getSkinCache(UUID playerUUID) {
         if (!skinCache.containsKey(playerUUID)) {
             Optional<Property> skinProperty = this.readSkinPreference(playerUUID);
             this.setSkinCache(playerUUID, skinProperty);
         }
 
-        return Optional.ofNullable(skinCache.get(playerUUID));
+        return skinCache.get(playerUUID);
     }
 
     public void setSkinCache(UUID playerUUID, Optional<Property> skinProperty) {

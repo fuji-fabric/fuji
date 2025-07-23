@@ -3,9 +3,7 @@ package io.github.sakurawald.fuji.module.mixin.skin;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
-import io.github.sakurawald.fuji.module.initializer.skin.provider.MojangSkinProvider;
 import io.github.sakurawald.fuji.module.initializer.skin.service.SkinService;
-import java.util.Optional;
 import net.minecraft.server.network.ServerLoginNetworkHandler;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,31 +22,23 @@ public abstract class ServerLoginNetworkHandlerMixin {
     private GameProfile profile;
 
     @Unique
-    private CompletableFuture<Optional<Property>> pendingSkins;
+    CompletableFuture<Property> skinFuture;
 
     #if MC_VER <= MC_1_20_1
     @Inject(method = "acceptPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;checkCanJoin(Ljava/net/SocketAddress;Lcom/mojang/authlib/GameProfile;)Lnet/minecraft/text/Text;"), cancellable = true)
     #elif MC_VER > MC_1_20_1
     @Inject(method = "tickVerify", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;checkCanJoin(Ljava/net/SocketAddress;Lcom/mojang/authlib/GameProfile;)Lnet/minecraft/text/Text;"), cancellable = true)
     #endif
-    public void waitForSkin(@NotNull CallbackInfo ci) {
-        if (pendingSkins == null) {
-            pendingSkins = CompletableFuture.supplyAsync(() -> {
-                // the first time the player join, his skin is DEFAULT_SKIN (see #applyRestoredSkinHook)
-                // then we try to get skin from mojang-server. if this failed, then set his skin to DEFAULT_SKIN
-                // note: a fake-player will not trigger waitForSkin()
-                LogUtil.info("Fetch skin for {}", profile.getName());
+    public void postponeTheLoginUntilTheSkinFetchingIsComplete(@NotNull CallbackInfo ci) {
+        // NOTE: A fake-player will not trigger this mixin function.
 
-                if (SkinService.isUsingDefaultSkin(profile)) {
-                    SkinService.getSkinStorage().setSkinCache(profile.getId(), MojangSkinProvider.fetchSkin(profile.getName()));
-                }
-
-                return SkinService.getSkinStorage().getSkinCache(profile.getId());
-            });
+        /* Initialize the skin future. */
+        if (this.skinFuture == null) {
+            this.skinFuture = CompletableFuture.supplyAsync(() -> SkinService.getSkinPropertyOnPlayerLogin(profile));
         }
 
-        // cancel the player's login until we finish fetching his skin
-        if (!pendingSkins.isDone()) {
+        /* Postpone player login until the skin fetching is complete. */
+        if (!this.skinFuture.isDone()) {
             ci.cancel();
         }
     }
@@ -61,11 +51,14 @@ public abstract class ServerLoginNetworkHandlerMixin {
     void applyTheFetchedSkin(@NotNull GameProfile gameProfile, CallbackInfo ci)
     #endif
     {
-        /* apply the skin if fetched skin is not empty */
-        if (pendingSkins != null) {
-            Optional<Property> x = Optional.of(SkinService.getRandomDefaultSkin());
-            SkinService.modifyGameProfile(profile, pendingSkins.getNow(x).get());
+        if (this.skinFuture == null) {
+            LogUtil.warn("Failed to modify the skin property for player {}. (It seems like the tickVerify() method is modified by other mods.)", gameProfile.getName());
+            return;
         }
+
+        /* apply the skin if fetched skin is not empty */
+        Property valueIfAbsent = SkinService.getRandomDefaultSkin();
+        SkinService.modifyGameProfile(profile, skinFuture.getNow(valueIfAbsent));
     }
 
 }

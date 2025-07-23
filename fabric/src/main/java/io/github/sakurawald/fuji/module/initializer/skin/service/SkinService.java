@@ -12,6 +12,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.module.initializer.skin.SkinInitializer;
+import io.github.sakurawald.fuji.module.initializer.skin.provider.MojangSkinProvider;
 import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinDescriptor;
 import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinStorage;
 import it.unimi.dsi.fastutil.Pair;
@@ -38,12 +39,16 @@ import net.minecraft.network.packet.s2c.play.PlayerRespawnS2CPacket;
 import net.minecraft.network.packet.s2c.play.UpdateSelectedSlotS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.biome.source.BiomeAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+#if MC_VER <= MC_1_20_1
+import net.minecraft.world.biome.source.BiomeAccess;
+#endif
+
 #if MC_VER > MC_1_21
 import net.minecraft.entity.player.PlayerPosition;
+import java.util.Set;
 #endif
 
 public class SkinService {
@@ -229,5 +234,17 @@ public class SkinService {
                 observer.networkHandler.sendPacket(new EntityPassengersSetS2CPacket(observer));
             }
         }
+    }
+
+    public static Property getSkinPropertyOnPlayerLogin(GameProfile profile) {
+        // NOTE: The first time a player joined, we will set its skin to default skin.
+        // Then we try to get skin from mojang-server. If this failed, then set his skin to DEFAULT_SKIN
+        LogUtil.info("Fetch the skin for player {}", profile.getName());
+
+        if (isUsingDefaultSkin(profile)) {
+            getSkinStorage().setSkinCache(profile.getId(), MojangSkinProvider.fetchSkin(profile.getName()));
+        }
+
+        return getSkinStorage().getSkinCache(profile.getId());
     }
 }
