@@ -6,8 +6,8 @@ import com.mojang.authlib.properties.Property;
 import io.github.sakurawald.fuji.core.auxiliary.IOUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinVariant;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
@@ -15,22 +15,24 @@ public class MineSkinSkinProvider {
 
     private static final String API_ENDPOINT = "https://api.mineskin.org/generate/url";
 
-    public static @Nullable Property fetchSkin(String url, @NotNull SkinVariant variant) {
+    public static Optional<Property> fetchSkin(@NotNull String skinImageURL, @NotNull SkinVariant skinVariant) {
         try {
             String param = "{\"variant\":\"%s\",\"name\":\"%s\",\"visibility\":%d,\"url\":\"%s\"}"
-                .formatted(variant.toString(), "none", 0, url);
-            String json = IOUtil.requestPost(API_ENDPOINT, param);
+                .formatted(skinVariant.toString(), "none", 0, skinImageURL);
+            String responseJson = IOUtil.requestPost(API_ENDPOINT, param);
 
-            JsonObject texture = JsonParser.parseString(json)
+            JsonObject textureJsonObject = JsonParser
+                .parseString(responseJson)
                 .getAsJsonObject()
                 .getAsJsonObject("data")
                 .getAsJsonObject("texture");
-
-            return new Property("textures", texture.get("value").getAsString(), texture.get("signature").getAsString());
+            String value = textureJsonObject.get("value").getAsString();
+            String signature = textureJsonObject.get("signature").getAsString();
+            return Optional.of(new Property("textures", value, signature));
         } catch (IOException e) {
-            LogUtil.debug("Failed to fetch skin from mine-skin server: url = {}", url);
+            LogUtil.debug("Failed to fetch skin from mine-skin server: url = {}", skinImageURL);
         }
 
-        return null;
+        return Optional.empty();
     }
 }

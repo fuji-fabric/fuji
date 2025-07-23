@@ -75,7 +75,7 @@ public class SkinInitializer extends ModuleInitializer {
     @CommandNode("set web classic")
     private static int $setWebClassic(@CommandSource @CommandTarget ServerPlayerEntity player, String url) {
         ServerCommandSource commandSource = player.getCommandSource();
-        SkinService.applySkin(commandSource, () -> MineSkinSkinProvider.fetchSkin(url, SkinVariant.CLASSIC));
+        SkinService.applySkin(commandSource, () -> MineSkinSkinProvider.fetchSkin(url, SkinVariant.CLASSIC).orElse(null));
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -83,7 +83,7 @@ public class SkinInitializer extends ModuleInitializer {
     @CommandNode("set web slim")
     private static int $setWebSlim(@CommandSource @CommandTarget ServerPlayerEntity player, String url) {
         ServerCommandSource commandSource = player.getCommandSource();
-        SkinService.applySkin(commandSource, () -> MineSkinSkinProvider.fetchSkin(url, SkinVariant.SLIM));
+        SkinService.applySkin(commandSource, () -> MineSkinSkinProvider.fetchSkin(url, SkinVariant.SLIM).orElse(null));
         return CommandHelper.Return.SUCCESS;
     }
 
