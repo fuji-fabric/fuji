@@ -2,6 +2,8 @@ package io.github.sakurawald.fuji.module.initializer.skin;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -19,6 +21,7 @@ import io.github.sakurawald.fuji.module.initializer.skin.provider.MineSkinSkinPr
 import io.github.sakurawald.fuji.module.initializer.skin.service.SkinService;
 import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinVariant;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 @Document(id = 1751826807167L, value = """
     Customize the skins of players.
@@ -45,67 +48,42 @@ public class SkinInitializer extends ModuleInitializer {
 
     @Document(id = 1751826809279L, value = "Set skin to a random default skin.")
     @CommandNode("use-default-skins")
-    private static int $useDefault(@CommandSource CommandContext<ServerCommandSource> ctx) {
-        SkinService.applySkin(ctx.getSource(), () -> SkinService.getDefaultSkin());
-        return CommandHelper.Return.SUCCESS;
-    }
-
-    @Document(id = 1751826811767L, value = "Set skin to a random default skin.")
-    @CommandNode("use-default-skins")
-    @CommandRequirement(level = 4)
-    private static int $useDefaultOthers(@CommandSource CommandContext<ServerCommandSource> ctx, GameProfileCollection target) {
-        SkinService.applySkin(ctx.getSource(), target.getValue(), true, () -> SkinService.getDefaultSkin());
+    private static int $useDefault(@CommandSource @CommandTarget ServerPlayerEntity player) {
+        ServerCommandSource commandSource = player.getCommandSource();
+        SkinService.applySkin(commandSource, SkinService::getDefaultSkin);
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1751826814466L, value = "Set skin to an online skin of the same name.")
     @CommandNode("use-online-skin")
-    private static int $useOnlineSkin(@CommandSource CommandContext<ServerCommandSource> ctx) {
-        SkinService.applySkin(ctx.getSource(), () -> MojangProfileFetcher.fetchOnlineSkin(ctx.getSource().getName()));
+    private static int $useOnlineSkin(@CommandSource @CommandTarget ServerPlayerEntity player) {
+        ServerCommandSource commandSource = player.getCommandSource();
+        String onlinePlayerName = PlayerHelper.getPlayerName(player);
+        SkinService.applySkin(commandSource, () -> MojangProfileFetcher.fetchOnlineSkin(onlinePlayerName));
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document(id = 1753250702541L, value = "Set skin to an online skin of the specified name.")
     @CommandNode("set mojang")
-    private static int $setMojang(@CommandSource CommandContext<ServerCommandSource> ctx, Word skinName) {
-        SkinService.applySkin(ctx.getSource(), () -> MojangProfileFetcher.fetchOnlineSkin(skinName.getValue()));
+    private static int $setMojang(@CommandSource @CommandTarget ServerPlayerEntity player, Word skinName) {
+        ServerCommandSource commandSource = player.getCommandSource();
+        SkinService.applySkin(commandSource, () -> MojangProfileFetcher.fetchOnlineSkin(skinName.getValue()));
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document(id = 1751826816766L, value = "Set skin to an online skin of a specified name.")
-    @CommandNode("set mojang")
-    @CommandRequirement(level = 4)
-    private static int $setMojangTarget(@CommandSource CommandContext<ServerCommandSource> ctx, Word skinName, GameProfileCollection target) {
-        SkinService.applySkin(ctx.getSource(), target.getValue(), true, () -> MojangProfileFetcher.fetchOnlineSkin(skinName.getValue()));
-        return CommandHelper.Return.SUCCESS;
-    }
-
-    @Document(id = 1751826819277L, value = "Set skin to a custom url in steve model.")
+    @Document(id = 1751826819277L, value = "Set skin to a custom url in Steve model.")
     @CommandNode("set web classic")
-    private static int $setWebClassic(@CommandSource CommandContext<ServerCommandSource> ctx, String url) {
-        SkinService.applySkin(ctx.getSource(), () -> MineSkinSkinProvider.fetchSkin(url, SkinVariant.CLASSIC));
+    private static int $setWebClassic(@CommandSource @CommandTarget ServerPlayerEntity player, String url) {
+        ServerCommandSource commandSource = player.getCommandSource();
+        SkinService.applySkin(commandSource, () -> MineSkinSkinProvider.fetchSkin(url, SkinVariant.CLASSIC));
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document(id = 1751826822477L, value = "Set skin to a custom url in steve model.")
-    @CommandNode("set web classic")
-    @CommandRequirement(level = 4)
-    private static int $setWebClassicOthers(@CommandSource CommandContext<ServerCommandSource> ctx, String url, GameProfileCollection target) {
-        SkinService.applySkin(ctx.getSource(), target.getValue(), true, () -> MineSkinSkinProvider.fetchSkin(StringArgumentType.getString(ctx, "url"), SkinVariant.CLASSIC));
-        return CommandHelper.Return.SUCCESS;
-    }
-
-    @Document(id = 1751826827369L, value = "Set skin to a custom url in alex model.")
+    @Document(id = 1751826827369L, value = "Set skin to a custom url in Alex model.")
     @CommandNode("set web slim")
-    private static int $setWebSlim(@CommandSource CommandContext<ServerCommandSource> ctx, String url) {
-        SkinService.applySkin(ctx.getSource(), () -> MineSkinSkinProvider.fetchSkin(url, SkinVariant.SLIM));
-        return CommandHelper.Return.SUCCESS;
-    }
-
-    @Document(id = 1751826829102L, value = "Set skin to a custom url in alex model.")
-    @CommandNode("set web slim")
-    @CommandRequirement(level = 4)
-    private static int $setWebSlimOthers(@CommandSource CommandContext<ServerCommandSource> ctx, String url, GameProfileCollection target) {
-        SkinService.applySkin(ctx.getSource(), target.getValue(), true, () -> MineSkinSkinProvider.fetchSkin(StringArgumentType.getString(ctx, "url"), SkinVariant.SLIM));
+    private static int $setWebSlim(@CommandSource @CommandTarget ServerPlayerEntity player, String url) {
+        ServerCommandSource commandSource = player.getCommandSource();
+        SkinService.applySkin(commandSource, () -> MineSkinSkinProvider.fetchSkin(url, SkinVariant.SLIM));
         return CommandHelper.Return.SUCCESS;
     }
 
