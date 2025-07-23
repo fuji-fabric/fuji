@@ -59,6 +59,7 @@ public class CommandBundleConfigModel {
             this.add(new BundleCommandNode("This command modifies your movement_speed attribute.", new CommandRequirementDescriptor(4, null), "move-speed reset", List.of("run as player %player:name% attribute %player:name% minecraft:generic.movement_speed base set 0.10000000149011612")));
             this.add(new BundleCommandNode("This command will introduce yourself to others.", new CommandRequirementDescriptor(4, null), "introduce-me", List.of("run as fake-op %player:name% me i am %player:name%")));
             this.add(new BundleCommandNode("This command will roll a random dice.", new CommandRequirementDescriptor(4, null), "dice", List.of("say %player:name% just roll out %fuji:random 1 6% points.")));
+            this.add(new BundleCommandNode("This command will give `all` recipes to the player.", new CommandRequirementDescriptor(4, null), "obtain-all-recipes", List.of("run as fake-op %player:name% recipe give %player:name% *")));
 
         }
     };
