@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import it.unimi.dsi.fastutil.Pair;
+import java.util.Optional;
 import lombok.Getter;
 import net.minecraft.entity.effect.StatusEffectInstance;
 #if MC_VER > MC_1_21
@@ -59,15 +60,15 @@ public class SkinRestorer {
             }
 
             for (GameProfile profile : targets) {
-                SkinRestorer.getSkinStorage().setSkin(profile.getId(), skin);
+                SkinRestorer.getSkinStorage().setSkinCache(profile.getId(), Optional.of(skin));
                 acceptedProfiles.add(profile);
             }
 
             return Pair.of(skin, acceptedProfiles);
         }).<Pair<Collection<ServerPlayerEntity>, Collection<GameProfile>>>thenApplyAsync(pair -> {
 
-            Property skin = pair.left();
-            if (skin == null)
+            Optional<Property> skin = Optional.ofNullable(pair.left());
+            if (skin.isEmpty())
                 return Pair.of(Collections.emptySet(), Collections.emptySet());
 
             Collection<GameProfile> acceptedProfiles = pair.right();
@@ -84,7 +85,7 @@ public class SkinRestorer {
                     continue;
 
                 /* apply the skin */
-                applySkin(player.getGameProfile(), skin);
+                applySkin(player.getGameProfile(), skin.get());
 
                 /* broadcast the change */
                 for (ServerPlayerEntity observer : EntityHelper.getServerWorld(player).getPlayers()) {
@@ -147,14 +148,18 @@ public class SkinRestorer {
         }, server).orTimeout(10, TimeUnit.SECONDS).exceptionally(e -> Pair.of(Collections.emptySet(), Collections.emptySet()));
     }
 
-    public static void applySkin(@NotNull GameProfile gameProfile, Property skin) {
+    public static void applySkin(@NotNull GameProfile gameProfile, @NotNull Property skin) {
         gameProfile.getProperties().removeAll("textures");
         gameProfile.getProperties().put("textures", skin);
     }
 
     private static boolean arePropertiesEquals(@NotNull JsonObject x, @NotNull GameProfile y) {
-        Property py = y.getProperties().get("textures").stream().findFirst().orElse(null);
-        if (py == null)
+        Optional<Property> py = y.getProperties()
+            .get("textures")
+            .stream()
+            .findFirst();
+
+        if (py.isEmpty())
             return false;
 
         try {

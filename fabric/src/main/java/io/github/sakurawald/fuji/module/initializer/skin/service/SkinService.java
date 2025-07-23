@@ -11,6 +11,7 @@ import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinDescripto
 import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinRestorer;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.function.Supplier;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -51,18 +52,24 @@ public class SkinService {
         return applySkin(src, Collections.singleton(src.getPlayer().getGameProfile()), false, skinSupplier);
     }
 
-    public static Property getDefaultSkin() {
-        return RandomUtil.drawList(SkinInitializer.config.model().getDefaultSkinList()).getSkinProperty();
+    public static @NotNull Property getDefaultSkin() {
+        return RandomUtil
+            .drawList(SkinInitializer.config.model().getDefaultSkinList())
+            .getSkinProperty();
     }
 
     public static boolean isDefaultSkin(GameProfile gameProfile) {
-        Property textures = gameProfile.getProperties().get("textures").stream().findFirst().orElse(null);
-        if (textures == null) return false;
+        Optional<Property> textures = gameProfile
+            .getProperties()
+            .get("textures")
+            .stream()
+            .findFirst();
+        if (textures.isEmpty()) return false;
 
         return SkinInitializer.config.model()
             .getDefaultSkinList()
             .stream()
             .map(SkinDescriptor::getSkinProperty)
-            .anyMatch(it -> PlayerHelper.getPropertyValue(it).equals(PlayerHelper.getPropertyValue(textures)));
+            .anyMatch(it -> PlayerHelper.getPropertyValue(Optional.ofNullable(it)).equals(PlayerHelper.getPropertyValue(textures)));
     }
 }

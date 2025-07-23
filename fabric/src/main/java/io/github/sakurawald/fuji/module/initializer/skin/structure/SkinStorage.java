@@ -6,10 +6,9 @@ import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.module.initializer.skin.SkinInitializer;
 import io.github.sakurawald.fuji.module.initializer.skin.service.SkinService;
+import java.util.Optional;
 import org.apache.commons.io.FileUtils;
-import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -23,53 +22,57 @@ public class SkinStorage {
 
     private final Path skinStoragePath = ReflectionUtil.computeModuleConfigPath(SkinInitializer.class).resolve("skin-data");
 
-    private final Map<UUID, Property> uuid2skin = new HashMap<>();
+    private final Map<UUID, Optional<Property>> skinCache = new HashMap<>();
 
     private Path computeFilePath(UUID playerUUID) {
         return skinStoragePath.resolve(playerUUID + ".json");
     }
 
-    public Property getSkin(UUID playerUUID) {
-        if (!uuid2skin.containsKey(playerUUID)) {
-            Property skin = this.readSkin(playerUUID);
-            setSkin(playerUUID, skin);
+    public Optional<Property> getSkinCache(UUID playerUUID) {
+        if (!skinCache.containsKey(playerUUID)) {
+            Optional<Property> skin = this.readSkinPreference(playerUUID);
+            this.setSkinCache(playerUUID, skin);
         }
 
-        return uuid2skin.get(playerUUID);
+        return skinCache.get(playerUUID);
     }
 
-    public void setSkin(UUID uuid, @Nullable Property skinProperty) {
-        // if a player has no skin, use default skin.
-        if (skinProperty == null) {
-            skinProperty = SkinService.getDefaultSkin();
+    public void setSkinCache(UUID playerUUID, Optional<Property> skinProperty) {
+        // NOTE: If a player has not set any skin, then use the defined default skins for it.
+        if (skinProperty.isEmpty()) {
+            skinProperty = Optional.of(SkinService.getDefaultSkin());
         }
 
-        uuid2skin.put(uuid, skinProperty);
+        skinCache.put(playerUUID, skinProperty);
     }
 
-    public void writeSkin(UUID uuid) {
-        if (uuid2skin.containsKey(uuid)) {
-            Property skin = uuid2skin.get(uuid);
+    public void writeSkinPreference(UUID playerUUID) {
+        if (skinCache.containsKey(playerUUID)) {
+            Optional<Property> skinProperty = skinCache.get(playerUUID);
             try {
-                File file = computeFilePath(uuid).toFile();
-                FileUtils.writeStringToFile(file, BaseConfigurationHandler.getGson().toJson(skin), StandardCharsets.UTF_8);
+                Path playerDataPath = computeFilePath(playerUUID);
+                String string = BaseConfigurationHandler.getGson().toJson(skinProperty.get());
+                FileUtils.writeStringToFile(playerDataPath.toFile(), string, StandardCharsets.UTF_8);
             } catch (IOException e) {
-                LogUtil.error("Save skin failed: " + e.getMessage());
+                LogUtil.error("Failed to save skin preference for UUID {}.", playerUUID, e);
             }
         }
     }
 
-    private @Nullable Property readSkin(UUID uuid) {
-        Path playerData = this.computeFilePath(uuid);
-        if (Files.notExists(playerData)) return null;
+    private Optional<Property> readSkinPreference(UUID playerUUID) {
+        Path playerDataPath = this.computeFilePath(playerUUID);
+        if (Files.notExists(playerDataPath)){
+            return Optional.empty();
+        }
 
         try {
-            String string = Files.readString(playerData);
-            return BaseConfigurationHandler.getGson().fromJson(string, Property.class);
+            String string = Files.readString(playerDataPath);
+            Property skinProperties = BaseConfigurationHandler.getGson().fromJson(string, Property.class);
+            return Optional.ofNullable(skinProperties);
         } catch (IOException e) {
-            LogUtil.error("Failed to load the skin for UUID {}.", uuid, e);
+            LogUtil.error("Failed to load the skin for UUID {}.", playerUUID, e);
         }
-        return null;
+        return Optional.empty();
     }
 
 }

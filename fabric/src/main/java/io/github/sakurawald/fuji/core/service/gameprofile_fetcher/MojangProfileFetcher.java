@@ -6,6 +6,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.github.sakurawald.fuji.core.auxiliary.IOUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import java.util.Optional;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class MojangProfileFetcher {
         return UUID.fromString(UUID_CONVERTER_PATTERN.matcher(rawUUID).replaceFirst("$1-$2-$3-$4-$5"));
     }
 
-    public static @Nullable Property fetchOnlineSkin(String playerName) {
+    public static Optional<Property> fetchOnlineSkin(String playerName) {
         try {
             UUID uuid = fetchOnlineUUID(playerName);
             String json = IOUtil.requestGet(SESSION_SERVER + uuid + "?unsigned=false");
@@ -45,10 +46,10 @@ public class MojangProfileFetcher {
                 .getAsJsonArray("properties")
                 .get(0).getAsJsonObject();
 
-            return new Property("textures", texture.get("value").getAsString(), texture.get("signature").getAsString());
+            return Optional.of(new Property("textures", texture.get("value").getAsString(), texture.get("signature").getAsString()));
         } catch (Exception e) {
             LogUtil.debug("Failed to fetch online skin from mojang server for {}", playerName);
         }
-        return null;
+        return Optional.empty();
     }
 }

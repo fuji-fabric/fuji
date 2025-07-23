@@ -6,6 +6,7 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
 import io.github.sakurawald.fuji.module.initializer.skin.service.SkinService;
 import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinRestorer;
+import java.util.Optional;
 import net.minecraft.server.network.ServerLoginNetworkHandler;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,7 +25,7 @@ public abstract class ServerLoginNetworkHandlerMixin {
     private GameProfile profile;
 
     @Unique
-    private CompletableFuture<Property> pendingSkins;
+    private CompletableFuture<Optional<Property>> pendingSkins;
 
     #if MC_VER <= MC_1_20_1
     @Inject(method = "acceptPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;checkCanJoin(Ljava/net/SocketAddress;Lcom/mojang/authlib/GameProfile;)Lnet/minecraft/text/Text;"), cancellable = true)
@@ -40,10 +41,10 @@ public abstract class ServerLoginNetworkHandlerMixin {
                 LogUtil.info("Fetch skin for {}", profile.getName());
 
                 if (SkinService.isDefaultSkin(profile)) {
-                    SkinRestorer.getSkinStorage().setSkin(profile.getId(), MojangProfileFetcher.fetchOnlineSkin(profile.getName()));
+                    SkinRestorer.getSkinStorage().setSkinCache(profile.getId(), MojangProfileFetcher.fetchOnlineSkin(profile.getName()));
                 }
 
-                return SkinRestorer.getSkinStorage().getSkin(profile.getId());
+                return SkinRestorer.getSkinStorage().getSkinCache(profile.getId());
             });
         }
 
@@ -58,7 +59,8 @@ public abstract class ServerLoginNetworkHandlerMixin {
     public void applyTheFetchedSkin(CallbackInfo ci) {
         /* apply the skin if fetched skin is not empty */
         if (pendingSkins != null) {
-            SkinRestorer.applySkin(profile, pendingSkins.getNow(SkinService.getDefaultSkin()));
+            Optional<Property> x = Optional.of(SkinService.getDefaultSkin());
+            SkinRestorer.applySkin(profile, pendingSkins.getNow(x).get());
         }
     }
     #elif MC_VER > MC_1_20_1

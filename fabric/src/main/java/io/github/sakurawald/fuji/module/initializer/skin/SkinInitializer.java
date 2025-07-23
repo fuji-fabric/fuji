@@ -59,7 +59,7 @@ public class SkinInitializer extends ModuleInitializer {
     private static int $useOnlineSkin(@CommandSource @CommandTarget ServerPlayerEntity player) {
         ServerCommandSource commandSource = player.getCommandSource();
         String onlinePlayerName = PlayerHelper.getPlayerName(player);
-        SkinService.applySkin(commandSource, () -> MojangProfileFetcher.fetchOnlineSkin(onlinePlayerName));
+        SkinService.applySkin(commandSource, () -> MojangProfileFetcher.fetchOnlineSkin(onlinePlayerName).orElse(null));
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -67,7 +67,7 @@ public class SkinInitializer extends ModuleInitializer {
     @CommandNode("set mojang")
     private static int $setMojang(@CommandSource @CommandTarget ServerPlayerEntity player, Word skinName) {
         ServerCommandSource commandSource = player.getCommandSource();
-        SkinService.applySkin(commandSource, () -> MojangProfileFetcher.fetchOnlineSkin(skinName.getValue()));
+        SkinService.applySkin(commandSource, () -> MojangProfileFetcher.fetchOnlineSkin(skinName.getValue()).orElse(null));
         return CommandHelper.Return.SUCCESS;
     }
 
