@@ -370,8 +370,6 @@
   "shell.failed.not_in_allowed_list": "<red>You are not in the allowed player name list.",
   "shell.failed.rtfm": "<red>Refuse to execute shell command: please read the official wiki.",
   "sit.fail": "[send-action-bar]<red>You can't sit there !",
-  "skin.action.affected_player": "<blue>Apply live skin changes for %s",
-  "skin.action.affected_profile": "<blue>Skin has been saved for %s",
   "skin.action.failed": "<blue>Failed to set skin",
   "skin.action.ok": "<blue>Skin changed",
   "symbol.arrow.right": "<bold><orange>-></bold>",

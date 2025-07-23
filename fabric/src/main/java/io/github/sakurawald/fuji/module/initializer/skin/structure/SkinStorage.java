@@ -40,7 +40,7 @@ public class SkinStorage {
     public void setSkinCache(UUID playerUUID, Optional<Property> skinProperty) {
         // NOTE: If a player has not set any skin, then use the defined default skins for it.
         Property $skinProperty = skinProperty
-            .orElse(SkinService.getDefaultSkin());
+            .orElse(SkinService.getRandomDefaultSkin());
         skinCache.put(playerUUID, $skinProperty);
     }
 

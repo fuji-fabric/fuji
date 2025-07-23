@@ -8,6 +8,7 @@ import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.module.initializer.skin.SkinInitializer;
@@ -54,62 +55,56 @@ public class SkinService {
     @Getter
     private static final SkinStorage skinStorage = new SkinStorage();
 
-    public static int applySkin(@NotNull ServerCommandSource src, @NotNull Collection<GameProfile> targets, boolean setByOperator, @NotNull Supplier<Property> skinSupplier) {
-        setSkinAsync(src.getServer(), targets, skinSupplier).thenAccept(pair -> {
+    public static int applySkin(@NotNull ServerPlayerEntity player, @NotNull Collection<GameProfile> targets, @NotNull Supplier<Property> skinSupplier) {
+        setSkinAsync(ServerHelper.getServer(), targets, skinSupplier)
+            .thenAccept(pair -> {
             Collection<ServerPlayerEntity> players = pair.left();
             Collection<GameProfile> profiles = pair.right();
 
             if (profiles.isEmpty()) {
-                TextHelper.sendTextByKey(src, "skin.action.failed");
+                TextHelper.sendTextByKey(player, "skin.action.failed");
                 return;
             }
 
-            /* feedback */
-            if (setByOperator) {
-                TextHelper.sendTextByKey(src, "skin.action.affected_profile", String.join(", ", profiles.stream().map(GameProfile::getName).toList()));
-
-                if (!players.isEmpty()) {
-                    TextHelper.sendTextByKey(src, "skin.action.affected_player", String.join(", ", players.stream().map(p -> p.getGameProfile().getName()).toList()));
-                }
-            } else {
-                TextHelper.sendTextByKey(src, "skin.action.ok");
-            }
-
+            TextHelper.sendTextByKey(player, "skin.action.ok");
         });
 
         return targets.size();
     }
 
-    public static int applySkin(@NotNull ServerCommandSource src, @NotNull Supplier<Property> skinSupplier) {
-        if (src.getPlayer() == null) return CommandHelper.Return.FAIL;
-
-        return applySkin(src, Collections.singleton(src.getPlayer().getGameProfile()), false, skinSupplier);
-    }
-
-    public static @NotNull Property getDefaultSkin() {
-        return RandomUtil
-            .drawList(SkinInitializer.config.model().getDefaultSkinList())
-            .getSkinProperty();
-    }
-
-    public static boolean isDefaultSkin(GameProfile gameProfile) {
-        Optional<Property> textures = gameProfile
-            .getProperties()
-            .get("textures")
-            .stream()
-            .findFirst();
-        if (textures.isEmpty()) return false;
-
-        return SkinInitializer.config.model()
-            .getDefaultSkinList()
-            .stream()
-            .map(SkinDescriptor::getSkinProperty)
-            .anyMatch(it -> PlayerHelper.getPropertyValue(Optional.ofNullable(it)).equals(PlayerHelper.getPropertyValue(textures)));
+    public static int applySkin(@NotNull ServerPlayerEntity player, @NotNull Supplier<Property> skinSupplier) {
+        Set<GameProfile> targets = Collections.singleton(player.getGameProfile());
+        return applySkin(player, targets, skinSupplier);
     }
 
     public static void applySkin(@NotNull GameProfile gameProfile, @NotNull Property skin) {
         gameProfile.getProperties().removeAll("textures");
         gameProfile.getProperties().put("textures", skin);
+    }
+
+    public static @NotNull Property getRandomDefaultSkin() {
+        return RandomUtil
+            .drawList(SkinInitializer.config.model().getDefaultSkinList())
+            .getSkinProperty();
+    }
+
+    public static boolean isUsingDefaultSkin(GameProfile gameProfile) {
+        Optional<Property> skinProperty = gameProfile
+            .getProperties()
+            .get("textures")
+            .stream()
+            .findFirst();
+        return skinProperty
+            .filter($skinProperty -> SkinInitializer.config.model()
+                .getDefaultSkinList()
+                .stream()
+                .map(SkinDescriptor::getSkinProperty)
+                .anyMatch(defaultSkinProperty -> {
+                    String A = PlayerHelper.getPropertyValue(defaultSkinProperty);
+                    String B = PlayerHelper.getPropertyValue($skinProperty);
+                    return A.equals(B);
+                }))
+            .isPresent();
     }
 
     public static boolean arePropertiesEquals(@NotNull JsonObject x, @NotNull GameProfile y) {
@@ -122,7 +117,8 @@ public class SkinService {
             return false;
 
         try {
-            JsonObject jy = BaseConfigurationHandler.getGson().fromJson(new String(Base64.getDecoder().decode(PlayerHelper.getPropertyValue(py)), StandardCharsets.UTF_8), JsonObject.class);
+            String json = new String(Base64.getDecoder().decode(PlayerHelper.getPropertyValue(py.get())), StandardCharsets.UTF_8);
+            JsonObject jy = BaseConfigurationHandler.getGson().fromJson(json, JsonObject.class);
             jy.remove("timestamp");
             return x.equals(jy);
         } catch (Exception ex) {
@@ -157,7 +153,8 @@ public class SkinService {
             Collection<GameProfile> acceptedProfiles = pair.right();
             Set<ServerPlayerEntity> acceptedPlayers = new HashSet<>();
 
-            JsonObject newSkinJson = BaseConfigurationHandler.getGson().fromJson(new String(Base64.getDecoder().decode(PlayerHelper.getPropertyValue(skin)), StandardCharsets.UTF_8), JsonObject.class);
+            byte[] decode = Base64.getDecoder().decode(PlayerHelper.getPropertyValue(skin.get()));
+            JsonObject newSkinJson = BaseConfigurationHandler.getGson().fromJson(new String(decode, StandardCharsets.UTF_8), JsonObject.class);
             newSkinJson.remove("timestamp");
 
             for (GameProfile profile : acceptedProfiles) {

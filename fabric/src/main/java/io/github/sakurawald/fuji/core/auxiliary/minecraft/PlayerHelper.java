@@ -124,11 +124,11 @@ public class PlayerHelper {
         #endif
     }
 
-    public static String getPropertyValue(Optional<Property> property) {
+    public static String getPropertyValue(@NotNull Property property) {
         #if MC_VER <= MC_1_20_1
-        return property.get().getValue();
+        return property.getValue();
         #elif MC_VER > MC_1_20_1
-        return property.get().value();
+        return property.value();
         #endif
     }
 

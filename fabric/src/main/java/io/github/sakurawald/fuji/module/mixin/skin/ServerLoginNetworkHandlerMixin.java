@@ -39,7 +39,7 @@ public abstract class ServerLoginNetworkHandlerMixin {
                 // note: a fake-player will not trigger waitForSkin()
                 LogUtil.info("Fetch skin for {}", profile.getName());
 
-                if (SkinService.isDefaultSkin(profile)) {
+                if (SkinService.isUsingDefaultSkin(profile)) {
                     SkinService.getSkinStorage().setSkinCache(profile.getId(), MojangSkinProvider.fetchSkin(profile.getName()));
                 }
 
@@ -58,7 +58,7 @@ public abstract class ServerLoginNetworkHandlerMixin {
     public void applyTheFetchedSkin(CallbackInfo ci) {
         /* apply the skin if fetched skin is not empty */
         if (pendingSkins != null) {
-            Optional<Property> x = Optional.of(SkinService.getDefaultSkin());
+            Optional<Property> x = Optional.of(SkinService.getRandomDefaultSkin());
             SkinService.applySkin(profile, pendingSkins.getNow(x).get());
         }
     }
