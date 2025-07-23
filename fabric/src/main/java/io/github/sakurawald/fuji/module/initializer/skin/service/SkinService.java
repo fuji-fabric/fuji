@@ -40,7 +40,6 @@ import net.minecraft.network.packet.s2c.play.PlayerRemoveS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerRespawnS2CPacket;
 import net.minecraft.network.packet.s2c.play.UpdateSelectedSlotS2CPacket;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.biome.source.BiomeAccess;
 import org.jetbrains.annotations.NotNull;
@@ -55,8 +54,8 @@ public class SkinService {
     @Getter
     private static final SkinStorage skinStorage = new SkinStorage();
 
-    public static int applySkin(@NotNull ServerPlayerEntity player, @NotNull Collection<GameProfile> targets, @NotNull Supplier<Property> skinSupplier) {
-        setSkinAsync(ServerHelper.getServer(), targets, skinSupplier)
+    public static int applySkin(@NotNull ServerPlayerEntity player, @NotNull Supplier<Property> skinSupplier) {
+        setSkinAsync(player.getGameProfile(), skinSupplier)
             .thenAccept(pair -> {
             Collection<ServerPlayerEntity> players = pair.left();
             Collection<GameProfile> profiles = pair.right();
@@ -69,12 +68,7 @@ public class SkinService {
             TextHelper.sendTextByKey(player, "skin.action.ok");
         });
 
-        return targets.size();
-    }
-
-    public static int applySkin(@NotNull ServerPlayerEntity player, @NotNull Supplier<Property> skinSupplier) {
-        Set<GameProfile> targets = Collections.singleton(player.getGameProfile());
-        return applySkin(player, targets, skinSupplier);
+        return CommandHelper.Return.SUCCESS;
     }
 
     public static void applySkin(@NotNull GameProfile gameProfile, @NotNull Property skin) {
@@ -127,21 +121,21 @@ public class SkinService {
         }
     }
 
-    public static CompletableFuture<Pair<Collection<ServerPlayerEntity>, Collection<GameProfile>>> setSkinAsync(@NotNull MinecraftServer server, @NotNull Collection<GameProfile> targets, @NotNull Supplier<Property> skinSupplier) {
+    public static CompletableFuture<Pair<Collection<ServerPlayerEntity>, Collection<GameProfile>>> setSkinAsync(@NotNull GameProfile target, @NotNull Supplier<Property> skinSupplier) {
+        MinecraftServer server = ServerHelper.getServer();
+
         return CompletableFuture.<Pair<Property, Collection<GameProfile>>>supplyAsync(() -> {
             Set<GameProfile> acceptedProfiles = new HashSet<>();
             Property skin = skinSupplier.get();
 
             LogUtil.debug("skinSupplier.get() -> skin = {}", skin);
             if (skin == null) {
-                LogUtil.debug("Can not get the skin for {}", targets.stream().findFirst().orElseThrow().getName());
+                LogUtil.debug("Can not get the skin for {}", target.getName());
                 return Pair.of(null, Collections.emptySet());
             }
 
-            for (GameProfile profile : targets) {
-                skinStorage.setSkinCache(profile.getId(), Optional.of(skin));
-                acceptedProfiles.add(profile);
-            }
+            skinStorage.setSkinCache(target.getId(), Optional.of(skin));
+            acceptedProfiles.add(target);
 
             return Pair.of(skin, acceptedProfiles);
         }).<Pair<Collection<ServerPlayerEntity>, Collection<GameProfile>>>thenApplyAsync(pair -> {
