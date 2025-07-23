@@ -50,6 +50,12 @@ import java.util.function.Supplier;
     ◉ Dis-allow to place `any` blocks.
     Use `*` as the wildcard character, put it into the `place_block` list.
     """)
+@ColorBox(id = 1753246687639L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Ban the `placement` of `mushroom` in `minecraft:the_end` dimension.
+    Issue:
+    1. `/lp group default permission set fuji.anti_build.place_block.override.minecraft:red_mushroom false world=the_end`
+    2. `/lp group default permission set fuji.anti_build.place_block.override.minecraft:brown_mushroom false world=the_end`
+    """)
 public class AntiBuildInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<AntiBuildConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, AntiBuildConfigModel.class);
 
