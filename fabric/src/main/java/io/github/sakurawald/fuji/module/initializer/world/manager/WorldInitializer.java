@@ -232,6 +232,9 @@ import org.jetbrains.annotations.Nullable;
     ◉ Create a `void dimension`.
     Issue: `/world create 4 minecraft:overworld --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:air;minecraft:the_void"`.
 
+    ◉ Generate the `parameters` using a `generator`.
+    See: https://minecraft.tools/en/flat.php
+
     ◉ Useful resource
     The definition of `world preset`: https://minecraft.fandom.com/wiki/World_preset
     The definition of `superflat dimension`: https://minecraft.fandom.com/wiki/Superflat
@@ -284,7 +287,6 @@ import org.jetbrains.annotations.Nullable;
 
     ◉ Import a `superflat dimension`.
     Issue: `/world import my_superflat minecraft:overworld --seed \\<seed\\> --chunkGeneratorType FLAT`
-
     """)
 @ColorBox(id = 1753243335351L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Use `command_bundle` module to create a `/tpw` command.
