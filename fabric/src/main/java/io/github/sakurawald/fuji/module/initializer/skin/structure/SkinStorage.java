@@ -1,13 +1,11 @@
 package io.github.sakurawald.fuji.module.initializer.skin.structure;
 
-import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
-import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.module.initializer.skin.SkinInitializer;
+import io.github.sakurawald.fuji.module.initializer.skin.service.SkinService;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,40 +21,30 @@ import java.util.UUID;
 
 public class SkinStorage {
 
-    private final Path rootPath = ReflectionUtil.computeModuleConfigPath(SkinInitializer.class).resolve("skin-data");
+    private final Path skinStoragePath = ReflectionUtil.computeModuleConfigPath(SkinInitializer.class).resolve("skin-data");
 
     private final Map<UUID, Property> uuid2skin = new HashMap<>();
 
-    private Path computeFilePath(UUID uuid) {
-        return rootPath.resolve(uuid + ".json");
+    private Path computeFilePath(UUID playerUUID) {
+        return skinStoragePath.resolve(playerUUID + ".json");
     }
 
-    public Property getDefaultSkin() {
-        return RandomUtil.drawList(SkinInitializer.config.model().default_skins);
-    }
-
-    public boolean isDefaultSkin(GameProfile gameProfile) {
-        Property textures = gameProfile.getProperties().get("textures").stream().findFirst().orElse(null);
-        if (textures == null) return false;
-
-        return SkinInitializer.config.model().default_skins.stream().anyMatch(it -> PlayerHelper.getPropertyValue(it).equals(PlayerHelper.getPropertyValue(textures)));
-    }
-
-    public Property getSkin(UUID uuid) {
-        if (!uuid2skin.containsKey(uuid)) {
-            Property skin = this.readSkin(uuid);
-            setSkin(uuid, skin);
+    public Property getSkin(UUID playerUUID) {
+        if (!uuid2skin.containsKey(playerUUID)) {
+            Property skin = this.readSkin(playerUUID);
+            setSkin(playerUUID, skin);
         }
 
-        return uuid2skin.get(uuid);
+        return uuid2skin.get(playerUUID);
     }
 
-    public void setSkin(UUID uuid, @Nullable Property skin) {
+    public void setSkin(UUID uuid, @Nullable Property skinProperty) {
         // if a player has no skin, use default skin.
-        if (skin == null)
-            skin = this.getDefaultSkin();
+        if (skinProperty == null) {
+            skinProperty = SkinService.getDefaultSkin();
+        }
 
-        uuid2skin.put(uuid, skin);
+        uuid2skin.put(uuid, skinProperty);
     }
 
     public void writeSkin(UUID uuid) {
@@ -79,7 +67,7 @@ public class SkinStorage {
             String string = Files.readString(playerData);
             return BaseConfigurationHandler.getGson().fromJson(string, Property.class);
         } catch (IOException e) {
-            LogUtil.error("Load skin failed: " + e.getMessage());
+            LogUtil.error("Failed to load the skin for UUID {}.", uuid, e);
         }
         return null;
     }
