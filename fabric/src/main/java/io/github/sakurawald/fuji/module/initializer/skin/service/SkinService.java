@@ -10,6 +10,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.command.argument.adapter.impl.TeamArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.module.initializer.skin.SkinInitializer;
 import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinDescriptor;
@@ -56,11 +57,8 @@ public class SkinService {
 
     public static int applySkin(@NotNull ServerPlayerEntity player, @NotNull Supplier<Property> skinSupplier) {
         setSkinAsync(player.getGameProfile(), skinSupplier)
-            .thenAccept(pair -> {
-            Collection<ServerPlayerEntity> players = pair.left();
-            Collection<GameProfile> profiles = pair.right();
-
-            if (profiles.isEmpty()) {
+            .thenAccept(success -> {
+            if (!success) {
                 TextHelper.sendTextByKey(player, "skin.action.failed");
                 return;
             }
@@ -121,45 +119,45 @@ public class SkinService {
         }
     }
 
-    public static CompletableFuture<Pair<Collection<ServerPlayerEntity>, Collection<GameProfile>>> setSkinAsync(@NotNull GameProfile target, @NotNull Supplier<Property> skinSupplier) {
+    @SuppressWarnings("RedundantTypeArguments")
+    public static CompletableFuture<Boolean> setSkinAsync(@NotNull GameProfile target, @NotNull Supplier<Property> skinSupplier) {
         MinecraftServer server = ServerHelper.getServer();
 
-        return CompletableFuture.<Pair<Property, Collection<GameProfile>>>supplyAsync(() -> {
-            Set<GameProfile> acceptedProfiles = new HashSet<>();
-            Property skin = skinSupplier.get();
+        return CompletableFuture
+            .<Pair<Property, GameProfile>>supplyAsync(() -> {
 
-            LogUtil.debug("skinSupplier.get() -> skin = {}", skin);
-            if (skin == null) {
-                LogUtil.debug("Can not get the skin for {}", target.getName());
-                return Pair.of(null, Collections.emptySet());
+            Property skinProperty = skinSupplier.get();
+            LogUtil.debug("Resolved skin property from skin supplier: target = {}, skin = {}", target.getName(), skinProperty);
+
+            if (skinProperty == null) {
+                return Pair.of(null, null);
             }
 
-            skinStorage.setSkinCache(target.getId(), Optional.of(skin));
-            acceptedProfiles.add(target);
+            skinStorage.setSkinCache(target.getId(), Optional.of(skinProperty));
 
-            return Pair.of(skin, acceptedProfiles);
-        }).<Pair<Collection<ServerPlayerEntity>, Collection<GameProfile>>>thenApplyAsync(pair -> {
+            return Pair.of(skinProperty, target);
+        }).<Boolean>thenApplyAsync(pair -> {
 
-            Optional<Property> skin = Optional.ofNullable(pair.left());
-            if (skin.isEmpty())
-                return Pair.of(Collections.emptySet(), Collections.emptySet());
+            Optional<Property> skinProperty = Optional.ofNullable(pair.left());
+            if (skinProperty.isEmpty()) {
+                return Boolean.FALSE;
+            }
 
-            Collection<GameProfile> acceptedProfiles = pair.right();
-            Set<ServerPlayerEntity> acceptedPlayers = new HashSet<>();
+            GameProfile gameProfile = pair.right();
 
-            byte[] decode = Base64.getDecoder().decode(PlayerHelper.getPropertyValue(skin.get()));
+            byte[] decode = Base64.getDecoder().decode(PlayerHelper.getPropertyValue(skinProperty.get()));
             JsonObject newSkinJson = BaseConfigurationHandler.getGson().fromJson(new String(decode, StandardCharsets.UTF_8), JsonObject.class);
             newSkinJson.remove("timestamp");
 
-            for (GameProfile profile : acceptedProfiles) {
-                ServerPlayerEntity player = server.getPlayerManager().getPlayer(profile.getId());
+                ServerPlayerEntity player = server.getPlayerManager().getPlayer(gameProfile.getId());
 
                 /* skip identical skin */
-                if (player == null || arePropertiesEquals(newSkinJson, player.getGameProfile()))
-                    continue;
+                if (player == null || arePropertiesEquals(newSkinJson, player.getGameProfile())) {
+                    return Boolean.FALSE;
+                }
 
                 /* apply the skin */
-                applySkin(player.getGameProfile(), skin.get());
+                applySkin(player.getGameProfile(), skinProperty.get());
 
                 /* broadcast the change */
                 for (ServerPlayerEntity observer : EntityHelper.getServerWorld(player).getPlayers()) {
@@ -215,10 +213,10 @@ public class SkinService {
                         observer.networkHandler.sendPacket(new EntityPassengersSetS2CPacket(observer));
                     }
                 }
-                acceptedPlayers.add(player);
-            }
 
-            return Pair.of(acceptedPlayers, acceptedProfiles);
-        }, server).orTimeout(10, TimeUnit.SECONDS).exceptionally(e -> Pair.of(Collections.emptySet(), Collections.emptySet()));
+            return Boolean.TRUE;
+        }, server)
+            .orTimeout(10, TimeUnit.SECONDS)
+            .exceptionally(e -> Boolean.FALSE);
     }
 }
