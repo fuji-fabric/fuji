@@ -1,23 +1,19 @@
 package io.github.sakurawald.fuji.module.initializer.skin;
 
-import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
-import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
-import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GameProfileCollection;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.Word;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
-import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.skin.config.model.SkinConfigModel;
 import io.github.sakurawald.fuji.module.initializer.skin.provider.MineSkinSkinProvider;
+import io.github.sakurawald.fuji.module.initializer.skin.provider.MojangSkinProvider;
 import io.github.sakurawald.fuji.module.initializer.skin.service.SkinService;
 import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinVariant;
 import net.minecraft.server.command.ServerCommandSource;
@@ -59,7 +55,7 @@ public class SkinInitializer extends ModuleInitializer {
     private static int $useOnlineSkin(@CommandSource @CommandTarget ServerPlayerEntity player) {
         ServerCommandSource commandSource = player.getCommandSource();
         String onlinePlayerName = PlayerHelper.getPlayerName(player);
-        SkinService.applySkin(commandSource, () -> MojangProfileFetcher.fetchOnlineSkin(onlinePlayerName).orElse(null));
+        SkinService.applySkin(commandSource, () -> MojangSkinProvider.fetchSkin(onlinePlayerName).orElse(null));
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -67,7 +63,7 @@ public class SkinInitializer extends ModuleInitializer {
     @CommandNode("set mojang")
     private static int $setMojang(@CommandSource @CommandTarget ServerPlayerEntity player, Word skinName) {
         ServerCommandSource commandSource = player.getCommandSource();
-        SkinService.applySkin(commandSource, () -> MojangProfileFetcher.fetchOnlineSkin(skinName.getValue()).orElse(null));
+        SkinService.applySkin(commandSource, () -> MojangSkinProvider.fetchSkin(skinName.getValue()).orElse(null));
         return CommandHelper.Return.SUCCESS;
     }
 

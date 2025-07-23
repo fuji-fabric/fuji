@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.module.mixin.skin;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
-import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
+import io.github.sakurawald.fuji.module.initializer.skin.provider.MojangSkinProvider;
 import io.github.sakurawald.fuji.module.initializer.skin.service.SkinService;
 import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinRestorer;
 import java.util.Optional;
@@ -41,7 +41,7 @@ public abstract class ServerLoginNetworkHandlerMixin {
                 LogUtil.info("Fetch skin for {}", profile.getName());
 
                 if (SkinService.isDefaultSkin(profile)) {
-                    SkinRestorer.getSkinStorage().setSkinCache(profile.getId(), MojangProfileFetcher.fetchOnlineSkin(profile.getName()));
+                    SkinRestorer.getSkinStorage().setSkinCache(profile.getId(), MojangSkinProvider.fetchSkin(profile.getName()));
                 }
 
                 return SkinRestorer.getSkinStorage().getSkinCache(profile.getId());
