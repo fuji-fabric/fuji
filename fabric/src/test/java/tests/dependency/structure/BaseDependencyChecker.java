@@ -46,6 +46,10 @@ public abstract class BaseDependencyChecker {
         Files.walkFileTree(dir, new SimpleFileVisitor<>() {
             @Override
             public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
+                if (path.toString().contains("lombok.config")) {
+                    return FileVisitResult.CONTINUE;
+                }
+
                 DependencyNode node = makeDependencyNode(path);
                 /* Should we ignore this dependency node? */
                 if (node == DependencyNode.IGNORE_THIS_DEPENDENCY_NODE) {
