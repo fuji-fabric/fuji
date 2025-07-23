@@ -22,7 +22,7 @@ public class SkinStorage {
 
     private final Path skinStoragePath = ReflectionUtil.computeModuleConfigPath(SkinInitializer.class).resolve("skin-data");
 
-    private final Map<UUID, Optional<Property>> skinCache = new HashMap<>();
+    private final Map<UUID, Property> skinCache = new HashMap<>();
 
     private Path computeFilePath(UUID playerUUID) {
         return skinStoragePath.resolve(playerUUID + ".json");
@@ -30,28 +30,26 @@ public class SkinStorage {
 
     public Optional<Property> getSkinCache(UUID playerUUID) {
         if (!skinCache.containsKey(playerUUID)) {
-            Optional<Property> skin = this.readSkinPreference(playerUUID);
-            this.setSkinCache(playerUUID, skin);
+            Optional<Property> skinProperty = this.readSkinPreference(playerUUID);
+            this.setSkinCache(playerUUID, skinProperty);
         }
 
-        return skinCache.get(playerUUID);
+        return Optional.ofNullable(skinCache.get(playerUUID));
     }
 
     public void setSkinCache(UUID playerUUID, Optional<Property> skinProperty) {
         // NOTE: If a player has not set any skin, then use the defined default skins for it.
-        if (skinProperty.isEmpty()) {
-            skinProperty = Optional.of(SkinService.getDefaultSkin());
-        }
-
-        skinCache.put(playerUUID, skinProperty);
+        Property $skinProperty = skinProperty
+            .orElse(SkinService.getDefaultSkin());
+        skinCache.put(playerUUID, $skinProperty);
     }
 
     public void writeSkinPreference(UUID playerUUID) {
         if (skinCache.containsKey(playerUUID)) {
-            Optional<Property> skinProperty = skinCache.get(playerUUID);
+            Property skinProperty = skinCache.get(playerUUID);
             try {
                 Path playerDataPath = computeFilePath(playerUUID);
-                String string = BaseConfigurationHandler.getGson().toJson(skinProperty.get());
+                String string = BaseConfigurationHandler.getGson().toJson(skinProperty);
                 FileUtils.writeStringToFile(playerDataPath.toFile(), string, StandardCharsets.UTF_8);
             } catch (IOException e) {
                 LogUtil.error("Failed to save skin preference for UUID {}.", playerUUID, e);
