@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.skin;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
+import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -36,7 +37,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     Issue: `/skin use-online-skin`
     """)
 
-
+@Cite("https://github.com/Suiranoil/SkinRestorer")
 @CommandNode("skin")
 public class SkinInitializer extends ModuleInitializer {
 

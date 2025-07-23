@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.module.mixin.skin;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
-import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinRestorer;
+import io.github.sakurawald.fuji.module.initializer.skin.service.SkinService;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +15,7 @@ public abstract class PlayerListMixin {
 
     @Inject(method = "remove", at = @At("TAIL"))
     private void writeSkinPreferenceOnRemovePlayer(@NotNull ServerPlayerEntity player, CallbackInfo ci) {
-        SkinRestorer.getSkinStorage().writeSkinPreference(player.getUuid());
+        SkinService.getSkinStorage().writeSkinPreference(player.getUuid());
     }
 
     @Inject(method = "disconnectAllPlayers", at = @At("HEAD"))
@@ -23,6 +23,6 @@ public abstract class PlayerListMixin {
         // NOTE: The `remove()` method will not be called for fake-player when stopping the server.
         ServerHelper
             .getOnlinePlayers()
-            .forEach(player -> SkinRestorer.getSkinStorage().writeSkinPreference(player.getUuid()));
+            .forEach(player -> SkinService.getSkinStorage().writeSkinPreference(player.getUuid()));
     }
 }
