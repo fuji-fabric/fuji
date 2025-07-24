@@ -16,6 +16,7 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.skin.command.argument.wrapper.DefaultSkinName;
 import io.github.sakurawald.fuji.module.initializer.skin.config.model.SkinConfigModel;
+import io.github.sakurawald.fuji.module.initializer.skin.config.model.SkinDataModel;
 import io.github.sakurawald.fuji.module.initializer.skin.gui.SkinGui;
 import io.github.sakurawald.fuji.module.initializer.skin.provider.MineSkinSkinProvider;
 import io.github.sakurawald.fuji.module.initializer.skin.provider.MojangSkinProvider;
@@ -57,6 +58,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 public class SkinInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<SkinConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, SkinConfigModel.class);
+    public static final BaseConfigurationHandler<SkinDataModel> data = new ObjectConfigurationHandler<>("skin-data.json", SkinDataModel.class);
 
     @Document(id = 1751826809279L, value = "Set skin to a random default skin.")
     @CommandNode("use-random-default-skins")
@@ -79,7 +81,6 @@ public class SkinInitializer extends ModuleInitializer {
                 return CommandHelper.Return.FAIL;
             });
     }
-
 
     @Document(id = 1753336550266L, value = """
         Open the `skin` GUI.

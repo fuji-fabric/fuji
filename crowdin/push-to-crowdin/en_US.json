@@ -375,7 +375,7 @@
   "skin.change_skin.success": "<yellow>Skin changed",
   "skin.default_skin.unknown": "<red>Unknown default skin name `%s`.",
   "skin.gui.entity.name": "<dark_green>%s",
-  "skin.gui.title": "<yellow>Skins",
+  "skin.gui.title": "<yellow>Skin",
   "symbol.arrow.right": "<bold><orange>-></bold>",
   "teleport_warmup.another_teleportation_in_progress": "[send-action-bar]<red>You have another teleportation in progress",
   "teleport_warmup.bossbar.name": "<aqua>Teleport",
