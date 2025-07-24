@@ -15,7 +15,7 @@
   - fix: updated player skins were only visible after others re-join the server. 
   - fix: the player list should display the player name, after the using of `/skin` command.
   - fix: should restore the previous `vehicle` and `passengers` of the player, after using the `/skin` command.
-  - fix: the minor drift after using the `/skin` command. (It's a minor visual glitch.)
+  - fix: the 1 block drifting after using the `/skin` command. (It's a minor visual glitch.)
   - feature: optimize the default language file for this module. (With intuitive styling.)
 - [economy] feature: improvements for this module.
   - feature: now will display the `balance`, `accounts` and `providers` with defined colorful styling.

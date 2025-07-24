@@ -13,6 +13,7 @@ import net.minecraft.network.packet.s2c.play.EntityPassengersSetS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityStatusEffectS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityTrackerUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.ExperienceBarUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerPositionLookS2CPacket;
@@ -55,13 +56,16 @@ public class SkinSyncer {
 
         /* Send re-spawn packet to the player, to simulate the dimension change behaviour. */
         #if MC_VER <= MC_1_20_1
-        player.networkHandler.sendPacket(new PlayerRespawnS2CPacket(player.getWorld().getDimensionKey(), player.getWorld().getRegistryKey(), BiomeAccess.hashSeed(player.getServerWorld().getSeed()), player.interactionManager.getGameMode(), player.interactionManager.getPreviousGameMode(), player.getWorld().isDebugWorld(), player.getServerWorld().isFlat(), (byte) 2, player.getLastDeathPos(), player.getPortalCooldown()));
+        player.networkHandler.sendPacket(new PlayerRespawnS2CPacket(player.getWorld().getDimensionKey(), player.getWorld().getRegistryKey(), BiomeAccess.hashSeed(player.getServerWorld().getSeed()), player.interactionManager.getGameMode(), player.interactionManager.getPreviousGameMode(), player.getWorld().isDebugWorld(), player.getServerWorld().isFlat(), (byte) 3, player.getLastDeathPos(), player.getPortalCooldown()));
         #elif MC_VER > MC_1_20_1
-        player.networkHandler.sendPacket(new PlayerRespawnS2CPacket(player.createCommonPlayerSpawnInfo(EntityHelper.getServerWorld(player)), (byte) 2));
+        player.networkHandler.sendPacket(new PlayerRespawnS2CPacket(player.createCommonPlayerSpawnInfo(EntityHelper.getServerWorld(player)), (byte) 3));
         #endif
 
         /* Update the position and rotation. (Does not harm) */
         player.networkHandler.requestTeleport(player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
+
+        /* Restore the velocity of the target player. */
+        player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
 
         /* Restore the previous difficulty. */
         player.networkHandler.sendPacket(new DifficultyS2CPacket(EntityHelper.getServerWorld(player).getDifficulty(), EntityHelper.getServerWorld(player).getLevelProperties().isDifficultyLocked()));
@@ -105,21 +109,17 @@ public class SkinSyncer {
     private static void sendPacketsToObservingPlayers(@NotNull ServerPlayerEntity player, @NotNull ServerPlayerEntity observer) {
         /* Re-create the target player. */
         observer.networkHandler.sendPacket(new EntitiesDestroyS2CPacket(player.getId()));
-        observer.networkHandler.sendPacket(new EntitySpawnS2CPacket(player, 0));
+        observer.networkHandler.sendPacket(new EntitySpawnS2CPacket(player.getId(), player.getUuid(), player.getX(), player.getY(), player.getZ(), player.getPitch(), player.getYaw(), player.getType(), 0, player.getVelocity(), player.getHeadYaw()));
 
         /* Update the position of the target player. (Does not harm) */
         #if MC_VER <= MC_1_21
         observer.networkHandler.sendPacket(new EntityPositionS2CPacket(player));
-//        observer.networkHandler.sendPacket(new PlayerPositionLookS2CPacket(player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch(), Set.of(), ));
-
-
         #elif MC_VER > MC_1_21
-//        observer.networkHandler.sendPacket(EntityPositionS2CPacket.create(player.getId(), PlayerPosition.fromEntity(player), Set.of(), player.isOnGround()));
         observer.networkHandler.sendPacket(EntityPositionSyncS2CPacket.create(player));
         #endif
 
-        /* Update the tracked data of target player. (Does not harm) */
-        observer.networkHandler.sendPacket(new EntityTrackerUpdateS2CPacket(player.getId(), player.getDataTracker().getChangedEntries()));
+        /* Restore the velocity of the target player. */
+        observer.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
 
         /* Restore the passengers on the target player. */
         Entity vehicle = player.getVehicle();
@@ -127,6 +127,9 @@ public class SkinSyncer {
             observer.networkHandler.sendPacket(new EntityPassengersSetS2CPacket(vehicle));
         }
         observer.networkHandler.sendPacket(new EntityPassengersSetS2CPacket(player));
+
+        /* Restore the tracked data of target player. (Does not harm) */
+        observer.networkHandler.sendPacket(new EntityTrackerUpdateS2CPacket(player.getId(), player.getDataTracker().getChangedEntries()));
     }
 
     private static void sendPacketsToOnlinePlayers(@NotNull ServerPlayerEntity player, @NotNull ServerPlayerEntity observer) {
