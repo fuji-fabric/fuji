@@ -1,4 +1,5 @@
 # Useful Development Cheat-sheet.
+- https://minecraft.wiki/w/Java_Edition_protocol
 - https://fabricmc.net/develop/
 - https://wiki.fabricmc.net/tutorial:mixin_examples
 - https://wiki.fabricmc.net/tutorial:mixin_tips

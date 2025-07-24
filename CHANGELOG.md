@@ -12,6 +12,7 @@
   - feature: new command `/skin use-default-skin <skinName>`, to use a `specified default skin` from `default skin list` defined in the config file.
   - docs: add more document for this module.
   - fix: if the new skin is identical to the old skin, should not send the failure message. (The `failure message` in this case will mis-lead the user.)
+  - fix: the player list should display the player name, after the player use the `/skin` command to change the skin.k
   - feature: optimize the default language file for this module. (With intuitive styling.)
 - [economy] feature: improvements for this module.
   - feature: now will display the `balance`, `accounts` and `providers` with defined colorful styling.

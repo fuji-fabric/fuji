@@ -38,8 +38,10 @@ import net.minecraft.server.network.ServerPlayerEntity;
     2. A player can use `/skin` command to `change the skin` in-game.
     """)
 @ColorBox(id = 1751979120689L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    ◉ Set a skin from mojang
-    Issue: `/skin use-mojang-skin dream`
+    ◉ Use the `Mojang skin`.
+    Issue: `/skin use-my-mojang-skin` to use your own skin.
+    Issue: `/skin use-mojang-skin Alice` to use another player's skin.
+    <red>NOTE: This requires fetching the skin from the Mojang server, which may be time-consuming.
 
     ◉ Set a skin from custom URL
     Issue: `/skin use-url-skin alex https://s.namemc.com/i/2af8c11db5fe6061.png`
@@ -49,10 +51,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
     ◉ Use a `random` skin from the `default skin list` defined in the config file.
     Issue: `/skin use-random-default-skins`
-
-    ◉ Use the `Mojang online skin`.
-    Issue: `/skin use-online-skin`
-    <red>NOTE: This requires fetching the skin from the Mojang server, which may be time-consuming.
     """)
 @Cite("https://github.com/Suiranoil/SkinRestorer")
 @CommandNode("skin")
