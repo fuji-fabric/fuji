@@ -1219,7 +1219,7 @@
   "docstring.1753249413432": "The `properties` of this `skin`.\n",
   "docstring.1753249433410": "A name used to describe how this skin looks like.\n",
   "docstring.1753250702541": "Set skin to an online skin of the specified name.",
-  "docstring.1753268443704": "Specify a `preferred skin` in the `default skin list`, so it will be the `default skin`.\nIf you specify a `invalid skin name` or this option is `null`, then we will pick a `random` skin from the `default skin list`.\n",
-  "docstring.1753269459208": "If this option is `true`, then for a player who didn't have a `skin` preference, we will apply `default skin` for him.\nIf this option is `false`, then we will apply the `Mojang online skin` for him.\n",
+  "docstring.1753268443704": "Specify a `preferred skin` in the `default skin list`, so it will be the `default skin`.\nIf you specify a `invalid skin name` or this option is `null`, then a `random` skin will be picked from the `default skin list`.\n",
+  "docstring.1753269459208": "If this option is `true`, then for a player who doesn't have existing `skin` data, the `default skin` will be applied.\nIf this option is `false`, then the `Mojang online skin` will be applied instead.\n",
   "docstring.1753325192275": "◉ How it works?\nThis module provides the `skin` management:\n1. This module will `modify the skin` when the the player `login the server`.\n1.a. If there is existing `skin data` for this `player`, then we use that data.\n1.b. If there is no existing `skin data` for this `player`.\n1.b.i. If the `apply_default_skin_if_no_data` option is `true`, then we use `default skin` defined in the config file.\n1.b.ii. If the `apply_default_skin_if_no_data` option is `false`, then we fetch the skin from `Mojang online server`.\n\n2. A player can use `/skin` command to `change the skin` in-game.\n"
 }

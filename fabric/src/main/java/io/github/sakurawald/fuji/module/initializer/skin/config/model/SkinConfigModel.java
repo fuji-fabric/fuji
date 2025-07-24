@@ -17,14 +17,14 @@ public class SkinConfigModel {
     public static class DefaultSkin {
 
         @Document(id = 1753269459208L, value = """
-            If this option is `true`, then for a player who didn't have a `skin` preference, we will apply `default skin` for him.
-            If this option is `false`, then we will apply the `Mojang online skin` for him.
+            If this option is `true`, then for a player who doesn't have existing `skin` data, the `default skin` will be applied.
+            If this option is `false`, then the `Mojang online skin` will be applied instead.
             """)
         boolean applyDefaultSkinIfNoData = true;
 
         @Document(id = 1753268443704L, value = """
             Specify a `preferred skin` in the `default skin list`, so it will be the `default skin`.
-            If you specify a `invalid skin name` or this option is `null`, then we will pick a `random` skin from the `default skin list`.
+            If you specify a `invalid skin name` or this option is `null`, then a `random` skin will be picked from the `default skin list`.
             """)
         String preferredSkinName = "reimu-hakurei";
 

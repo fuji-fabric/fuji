@@ -12,7 +12,6 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.module.initializer.skin.SkinInitializer;
-import io.github.sakurawald.fuji.module.initializer.skin.provider.MojangSkinProvider;
 import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinDescriptor;
 import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinStorage;
 import it.unimi.dsi.fastutil.Pair;
@@ -21,11 +20,9 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
-import lombok.Getter;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.network.packet.s2c.play.DifficultyS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntitiesDestroyS2CPacket;
@@ -57,7 +54,7 @@ public class SkinService {
 
     public static @NotNull Property getEffectiveSkinProperty(GameProfile gameProfile) {
         return SkinStorage
-            .readSkinPreference(gameProfile);
+            .readSkinData(gameProfile);
     }
 
     public static int changeSkin(@NotNull ServerPlayerEntity player, @NotNull Supplier<Property> skinSupplier) {
@@ -145,8 +142,8 @@ public class SkinService {
                 throw new IllegalStateException("Failed to resolve skin property from skin supplier.");
             }
 
-            /* Update the skin preference. */
-            SkinStorage.writeSkinPreference(target.getId(), skinProperty);
+            /* Update the skin data. */
+            SkinStorage.writeSkinData(target.getId(), skinProperty);
 
             return Pair.of(target, skinProperty);
             }).<Boolean>thenApplyAsync(pair -> {
