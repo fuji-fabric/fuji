@@ -16,6 +16,7 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.skin.command.argument.wrapper.DefaultSkinName;
 import io.github.sakurawald.fuji.module.initializer.skin.config.model.SkinConfigModel;
+import io.github.sakurawald.fuji.module.initializer.skin.gui.SkinGui;
 import io.github.sakurawald.fuji.module.initializer.skin.provider.MineSkinSkinProvider;
 import io.github.sakurawald.fuji.module.initializer.skin.provider.MojangSkinProvider;
 import io.github.sakurawald.fuji.module.initializer.skin.service.SkinService;
@@ -79,6 +80,26 @@ public class SkinInitializer extends ModuleInitializer {
                 TextHelper.sendTextByKey(player, "skin.default_skin.unknown", $defaultSkinName);
                 return CommandHelper.Return.FAIL;
             });
+    }
+
+
+    @Document(id = 1753336550266L, value = """
+        Open the `skin` GUI.
+        """)
+    @CommandNode("gui")
+    private static int $gui(@CommandSource ServerPlayerEntity player) {
+        SkinGui
+            .makeInstance(player)
+            .open();
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document(id = 1753337059662L, value = """
+        Alias to `/skin gui` command.
+        """)
+    @CommandNode()
+    private static int $skin(@CommandSource ServerPlayerEntity player) {
+        return $gui(player);
     }
 
     @Document(id = 1751826814466L, value = "Set skin to an online skin of the same name.")
