@@ -230,7 +230,8 @@ import org.jetbrains.annotations.Nullable;
     Issue: `/world create 3 minecraft:overworld --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:bedrock,3*minecraft:stone,116*minecraft:sandstone;minecraft:desert"`
 
     ◉ Create a `void dimension`.
-    Issue: `/world create 4 minecraft:overworld --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:air;minecraft:the_void"`.
+    Issue: `/world create 4 minecraft:overworld --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:air;minecraft:the_void"`
+    <green>NOTE: The `secret` is, a `void dimension` is just a `flat dimension` with customized `minecraft:air layers` with the `minecraft:the_void` biome.
 
     ◉ Generate the `parameters` using a `generator`.
     See: https://minecraft.tools/en/flat.php

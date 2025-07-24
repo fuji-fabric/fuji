@@ -36,6 +36,27 @@ import java.util.List;
     If the `lore` text is too large in your UI.
     You can configure it in `Esc` - `Options` - `Video Settings` - `GUI Scale`
     """)
+@ColorBox(id = 1753331128791L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ Use a `modern` text editor.
+    The most of `config files` are written in `json language`, and contains lots of lines.
+    A `modern` text editor can `highlight` the structure of the file, and check the `syntax errors` for you.
+    So that you can `read` and `edit` the config files easier.
+
+    Here are recommended text editors:
+    1. Visual Studio Code: https://code.visualstudio.com/
+    2. Vim: https://neovim.io/
+    3. Emacs: https://www.gnu.org/software/emacs/
+    """)
+@ColorBox(id = 1753331405512L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ Setup a `test server` in your `local machine`.
+    You may have a `remote machine` (Typically named `production server`) that is `running` and `hosting` your `Minecraft network`.
+    However, it's strongly recommended to setup a `test server` in your `local machine`.
+    The `test server` should be a `mirror` of that `production server`.
+    It should contains the `mods` files and the `config files`.
+
+    You can modify and test new things in your `test server`.
+    After everything is configured and working properly, you just upload the `mods` and `config files` into your `remote machine`.
+    """)
 public class CoreInitializer extends ModuleInitializer {
 
     @Override

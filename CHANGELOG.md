@@ -6,6 +6,7 @@
   - docs: add more document for this module.
   - fix: if the new skin is identical to the old skin, should not send the failure message. (The `failure message` in this case will mis-lead the user.)
 - [core] docs: improvements for document.
+  - docs: new `tips` and `examples` for modules.
   - docs: now will `highlight` the `Alex` and `Steve` literal in `document string`.
   - docs: now will `highlight` the `conditional statement`. (For example, `1.`, `1.a` and `1.a.i`...)
   - docs: now will `underline` the `URL` in document string.
