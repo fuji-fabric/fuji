@@ -1218,5 +1218,7 @@
   "docstring.1753246687639": "◉ Ban the `placement` of `mushroom` in `minecraft:the_end` dimension.\nIssue:\n1. `/lp group default permission set fuji.anti_build.place_block.override.minecraft:red_mushroom false world=the_end`\n2. `/lp group default permission set fuji.anti_build.place_block.override.minecraft:brown_mushroom false world=the_end`\n",
   "docstring.1753249413432": "The `properties` of this `skin`.\n",
   "docstring.1753249433410": "A name used to describe how this skin looks like.\n",
-  "docstring.1753250702541": "Set skin to an online skin of the specified name."
+  "docstring.1753250702541": "Set skin to an online skin of the specified name.",
+  "docstring.1753268443704": "Specify a `preferred skin` in the `default skin list`, so it will be the `default skin`.\nIf you specify a `invalid skin name` or this option is `null`, then we will pick a `random` skin from the `default skin list`.\n",
+  "docstring.1753269459208": "If this option is `true`, then for a player who didn't have a `skin` preference, we will apply `default skin` for him.\nIf this option is `false`, then we will apply the `Mojang online skin` for him.\n"
 }

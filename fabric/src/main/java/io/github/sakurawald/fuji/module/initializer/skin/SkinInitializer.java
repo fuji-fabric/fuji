@@ -17,7 +17,6 @@ import io.github.sakurawald.fuji.module.initializer.skin.provider.MineSkinSkinPr
 import io.github.sakurawald.fuji.module.initializer.skin.provider.MojangSkinProvider;
 import io.github.sakurawald.fuji.module.initializer.skin.service.SkinService;
 import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinVariant;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 @Document(id = 1751826807167L, value = """
@@ -46,7 +45,7 @@ public class SkinInitializer extends ModuleInitializer {
     @Document(id = 1751826809279L, value = "Set skin to a random default skin.")
     @CommandNode("use-default-skins")
     private static int $useDefault(@CommandSource @CommandTarget ServerPlayerEntity player) {
-        SkinService.applySkin(player, SkinService::getRandomDefaultSkin);
+        SkinService.changeSkin(player, SkinService::getDefaultSkin);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -54,28 +53,28 @@ public class SkinInitializer extends ModuleInitializer {
     @CommandNode("use-online-skin")
     private static int $useOnlineSkin(@CommandSource @CommandTarget ServerPlayerEntity player) {
         String onlinePlayerName = PlayerHelper.getPlayerName(player);
-        SkinService.applySkin(player, () -> MojangSkinProvider.fetchSkin(onlinePlayerName).orElse(null));
+        SkinService.changeSkin(player, () -> MojangSkinProvider.fetchSkin(onlinePlayerName).orElse(null));
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1753250702541L, value = "Set skin to an online skin of the specified name.")
     @CommandNode("set mojang")
     private static int $setMojang(@CommandSource @CommandTarget ServerPlayerEntity player, Word skinName) {
-        SkinService.applySkin(player, () -> MojangSkinProvider.fetchSkin(skinName.getValue()).orElse(null));
+        SkinService.changeSkin(player, () -> MojangSkinProvider.fetchSkin(skinName.getValue()).orElse(null));
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1751826819277L, value = "Set skin to a custom url in Steve model.")
     @CommandNode("set web classic")
     private static int $setWebClassic(@CommandSource @CommandTarget ServerPlayerEntity player, String url) {
-        SkinService.applySkin(player, () -> MineSkinSkinProvider.fetchSkin(url, SkinVariant.CLASSIC).orElse(null));
+        SkinService.changeSkin(player, () -> MineSkinSkinProvider.fetchSkin(url, SkinVariant.CLASSIC).orElse(null));
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1751826827369L, value = "Set skin to a custom url in Alex model.")
     @CommandNode("set web slim")
     private static int $setWebSlim(@CommandSource @CommandTarget ServerPlayerEntity player, String url) {
-        SkinService.applySkin(player, () -> MineSkinSkinProvider.fetchSkin(url, SkinVariant.SLIM).orElse(null));
+        SkinService.changeSkin(player, () -> MineSkinSkinProvider.fetchSkin(url, SkinVariant.SLIM).orElse(null));
         return CommandHelper.Return.SUCCESS;
     }
 

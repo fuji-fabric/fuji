@@ -19,7 +19,9 @@ import it.unimi.dsi.fastutil.Pair;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -53,12 +55,13 @@ import java.util.Set;
 
 public class SkinService {
 
+    public static @NotNull Property getEffectiveSkinProperty(GameProfile gameProfile) {
+        return SkinStorage
+            .readSkinPreference(gameProfile);
+    }
 
-    @Getter
-    private static final SkinStorage skinStorage = new SkinStorage();
-
-    public static int applySkin(@NotNull ServerPlayerEntity player, @NotNull Supplier<Property> skinSupplier) {
-        setSkinAsync(player.getGameProfile(), skinSupplier)
+    public static int changeSkin(@NotNull ServerPlayerEntity player, @NotNull Supplier<Property> skinSupplier) {
+        changeSkinAsync(player.getGameProfile(), skinSupplier)
             .thenAccept(success -> {
 
             if (!success) {
@@ -77,32 +80,28 @@ public class SkinService {
         gameProfile.getProperties().put("textures", skin);
     }
 
-    public static @NotNull Property getRandomDefaultSkin() {
+    private static @NotNull List<SkinDescriptor> getDefaultSkinList() {
+        return SkinInitializer.config.model().getDefaultSkin().getDefaultSkinList();
+    }
+
+    public static @NotNull Property getDefaultSkin() {
+        /* Get the preferred default skin. */
+        String preferredDefaultSkinNameForNewPlayers = SkinInitializer.config.model().getDefaultSkin().getPreferredSkinName();
+        Optional<SkinDescriptor> preferredDefaultSkin = getDefaultSkinList()
+            .stream()
+            .filter(it -> it.getSkinName().contains(preferredDefaultSkinNameForNewPlayers))
+            .findFirst();
+        if (preferredDefaultSkin.isPresent()) {
+            return preferredDefaultSkin.get().getSkinProperty();
+        }
+
+        /* Get a random default skin. */
         return RandomUtil
-            .drawList(SkinInitializer.config.model().getDefaultSkinList())
+            .drawList(getDefaultSkinList())
             .getSkinProperty();
     }
 
-    public static boolean isUsingDefaultSkin(GameProfile gameProfile) {
-        Optional<Property> skinProperty = gameProfile
-            .getProperties()
-            .get("textures")
-            .stream()
-            .findFirst();
-        return skinProperty
-            .filter($skinProperty -> SkinInitializer.config.model()
-                .getDefaultSkinList()
-                .stream()
-                .map(SkinDescriptor::getSkinProperty)
-                .anyMatch(defaultSkinProperty -> {
-                    String A = PlayerHelper.getPropertyValue(defaultSkinProperty);
-                    String B = PlayerHelper.getPropertyValue($skinProperty);
-                    return A.equals(B);
-                }))
-            .isPresent();
-    }
-
-    public static boolean isSkinPropertyEqual(@NotNull Property x, @NotNull GameProfile y) {
+    private static boolean isSkinPropertyEqual(@NotNull Property x, @NotNull GameProfile y) {
         try {
             /* Make the x json object. */
             JsonObject xJsonObject = makeComparableJsonObjectFromSkinProperty(x);
@@ -133,7 +132,7 @@ public class SkinService {
     }
 
     @SuppressWarnings("RedundantTypeArguments")
-    public static CompletableFuture<Boolean> setSkinAsync(@NotNull GameProfile target, @NotNull Supplier<Property> skinSupplier) {
+    private static @NotNull CompletableFuture<Boolean> changeSkinAsync(@NotNull GameProfile target, @NotNull Supplier<Property> skinSupplier) {
         MinecraftServer server = ServerHelper.getServer();
 
         return CompletableFuture
@@ -145,7 +144,8 @@ public class SkinService {
                 throw new IllegalStateException("Failed to resolve skin property from skin supplier.");
             }
 
-            skinStorage.setSkinCache(target.getId(), Optional.of(skinProperty));
+            /* Update the skin preference. */
+            SkinStorage.writeSkinPreference(target.getId(), skinProperty);
 
             return Pair.of(target, skinProperty);
             }).<Boolean>thenApplyAsync(pair -> {
@@ -236,15 +236,4 @@ public class SkinService {
         }
     }
 
-    public static Property getSkinPropertyOnPlayerLogin(GameProfile profile) {
-        // NOTE: The first time a player joined, we will set its skin to default skin.
-        // Then we try to get skin from mojang-server. If this failed, then set his skin to DEFAULT_SKIN
-        LogUtil.info("Fetch the skin for player {}", profile.getName());
-
-        if (isUsingDefaultSkin(profile)) {
-            getSkinStorage().setSkinCache(profile.getId(), MojangSkinProvider.fetchSkin(profile.getName()));
-        }
-
-        return getSkinStorage().getSkinCache(profile.getId());
-    }
 }

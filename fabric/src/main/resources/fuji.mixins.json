@@ -73,7 +73,6 @@
     "placeholder.ServerPlayerEntityMixin",
     "pvp.ServerPlayerEntityMixin",
     "sit.InteractModifierMixin",
-    "skin.PlayerListMixin",
     "skin.ServerLoginNetworkHandlerMixin",
     "system_message.ServerPlayerEntityMixin",
     "system_message.TextMixin",

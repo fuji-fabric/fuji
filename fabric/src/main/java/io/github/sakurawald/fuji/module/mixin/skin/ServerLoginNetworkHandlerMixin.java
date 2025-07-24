@@ -34,7 +34,7 @@ public abstract class ServerLoginNetworkHandlerMixin {
 
         /* Initialize the skin future. */
         if (this.skinFuture == null) {
-            this.skinFuture = CompletableFuture.supplyAsync(() -> SkinService.getSkinPropertyOnPlayerLogin(profile));
+            this.skinFuture = CompletableFuture.supplyAsync(() -> SkinService.getEffectiveSkinProperty(profile));
         }
 
         /* Postpone player login until the skin fetching is complete. */
@@ -52,12 +52,12 @@ public abstract class ServerLoginNetworkHandlerMixin {
     #endif
     {
         if (this.skinFuture == null) {
-            LogUtil.warn("Failed to modify the skin property for player {}. (It seems like the tickVerify() method is modified by other mods.)", gameProfile.getName());
+            LogUtil.warn("Failed to modify the skin property for player {}. (It seems like the tickVerify() method is modified by other mods.)", profile.getName());
             return;
         }
 
         /* apply the skin if fetched skin is not empty */
-        Property valueIfAbsent = SkinService.getRandomDefaultSkin();
+        Property valueIfAbsent = SkinService.getDefaultSkin();
         SkinService.modifyGameProfile(profile, skinFuture.getNow(valueIfAbsent));
     }
 
