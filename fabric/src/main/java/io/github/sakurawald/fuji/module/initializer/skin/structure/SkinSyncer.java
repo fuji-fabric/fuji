@@ -6,8 +6,8 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import java.util.Collections;
 import net.minecraft.entity.Entity;
-import net.minecraft.network.packet.s2c.play.DifficultyS2CPacket;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.network.packet.s2c.play.DifficultyS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityPassengersSetS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityStatusEffectS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityTrackerUpdateS2CPacket;
@@ -15,8 +15,6 @@ import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.ExperienceBarUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerRemoveS2CPacket;
-import net.minecraft.network.packet.s2c.play.UpdateSelectedSlotS2CPacket;
-import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import org.jetbrains.annotations.NotNull;
@@ -71,7 +69,13 @@ public class SkinSyncer {
         player.sendAbilitiesUpdate();
 
         /* Restore the previous status effects. */
-        ServerHelper.getPlayerManager().sendStatusEffects(player);
+        for (StatusEffectInstance effect : player.getStatusEffects()) {
+        #if MC_VER <= MC_1_20_4
+        player.networkHandler.sendPacket(new EntityStatusEffectS2CPacket(player.getId(), effect));
+        #elif MC_VER > MC_1_20_4
+        player.networkHandler.sendPacket(new EntityStatusEffectS2CPacket(player.getId(), effect, false));
+        #endif
+        }
 
         /* Restore the previous experience. */
         player.networkHandler.sendPacket(new ExperienceBarUpdateS2CPacket(player.experienceProgress, player.totalExperience, player.experienceLevel));
@@ -91,7 +95,7 @@ public class SkinSyncer {
     }
 
     private static void sendPacketsToObservingPlayers(@NotNull ServerPlayerEntity player, @NotNull ServerPlayerEntity observer) {
-        /* PATCH: In MC 1.20.1, other players must re-join or re-teleport to see the target player. */
+        /* Re-bind the observer.networkHandler to the player entity. */
         ServerWorld playerServerWorld = PlayerHelper.getServerWorld(player);
         var trackedPlayer = ServerHelper.getChunkStorage(playerServerWorld).entityTrackers.get(player.getId());
         if (trackedPlayer != null) {

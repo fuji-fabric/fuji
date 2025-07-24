@@ -13,7 +13,7 @@
   - docs: add more document for this module.
   - fix: the client should not get stuck in the dimension changing screen for a long time. (Now it is very fast to change the skin.)
   - fix: if the new skin is identical to the old skin, should not send the failure message. (The `failure message` in this case will mis-lead the user.)
-  - fix: updated player skins were only visible after others re-join the server. 
+  - (MC 1.20.1) fix: updated player skins were only visible after others re-join the server. 
   - fix: should display the player name in the player list, after the using of `/skin` command.
   - fix: should restore the previous `vehicle` and `passengers` of the player, after using the `/skin` command.
   - fix: the 1 block drifting after using the `/skin` command. (It's a minor visual glitch.)
