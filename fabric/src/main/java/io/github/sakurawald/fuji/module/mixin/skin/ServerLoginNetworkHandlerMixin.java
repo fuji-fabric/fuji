@@ -34,7 +34,7 @@ public abstract class ServerLoginNetworkHandlerMixin {
 
         /* Initialize the skin future. */
         if (this.skinFuture == null) {
-            this.skinFuture = CompletableFuture.supplyAsync(() -> SkinService.getEffectiveSkinProperty(profile));
+            this.skinFuture = CompletableFuture.supplyAsync(() -> SkinService.getEffectiveSkin(profile));
         }
 
         /* Postpone player login until the skin fetching is complete. */
@@ -57,7 +57,7 @@ public abstract class ServerLoginNetworkHandlerMixin {
         }
 
         /* apply the skin if fetched skin is not empty */
-        Property valueIfAbsent = SkinService.getDefaultSkin();
+        Property valueIfAbsent = SkinService.getPreferredDefaultSkin();
         SkinService.modifyGameProfile(profile, skinFuture.getNow(valueIfAbsent));
     }
 

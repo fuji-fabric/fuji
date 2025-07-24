@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class SkinService {
 
-    public static @NotNull Property getEffectiveSkinProperty(GameProfile gameProfile) {
+    public static @NotNull Property getEffectiveSkin(GameProfile gameProfile) {
         return SkinStorage.withSkinData(gameProfile, SkinDataNode::getSkinProperty);
     }
 
@@ -67,7 +67,7 @@ public class SkinService {
             .findFirst();
     }
 
-    public static @NotNull Property getDefaultSkin() {
+    public static @NotNull Property getPreferredDefaultSkin() {
         /* Get the preferred default skin. */
         String preferredDefaultSkinNameForNewPlayers = SkinInitializer.config.model().getDefaultSkin().getPreferredSkinName();
         Optional<SkinDescriptor> preferredDefaultSkin = getDefaultSkinList()

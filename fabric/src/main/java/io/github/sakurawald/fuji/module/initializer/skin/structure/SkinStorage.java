@@ -4,13 +4,9 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
-import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.module.initializer.skin.SkinInitializer;
 import io.github.sakurawald.fuji.module.initializer.skin.provider.MojangSkinProvider;
 import io.github.sakurawald.fuji.module.initializer.skin.service.SkinService;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +24,7 @@ public class SkinStorage {
 
         if (SkinInitializer.config.model().getDefaultSkin().isApplyDefaultSkinIfNoData()) {
             LogUtil.info("Create the new skin data for player {}. (Skin = specified default skin)", playerName);
-            return new SkinDataNode(playerName, SkinService.getDefaultSkin());
+            return new SkinDataNode(playerName, SkinService.getPreferredDefaultSkin());
         } else {
             Optional<Property> mojangSkinProperty = MojangSkinProvider.fetchSkin(playerName);
             return mojangSkinProperty
@@ -38,7 +34,7 @@ public class SkinStorage {
                 })
                 .orElseGet(() -> {
                     LogUtil.info("Create the new skin data for player {}. (Skin = Failed to fetch Mojang online skin, fallback to the default skin.)", playerName);
-                    return new SkinDataNode(playerName, SkinService.getDefaultSkin());
+                    return new SkinDataNode(playerName, SkinService.getPreferredDefaultSkin());
                 });
         }
     }
