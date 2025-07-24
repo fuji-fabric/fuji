@@ -1,92 +1,131 @@
 package io.github.sakurawald.fuji.module.initializer.skin.structure;
 
-#if MC_VER <= MC_1_20_1
-import net.minecraft.world.biome.source.BiomeAccess;
-#endif
-
-#if MC_VER > MC_1_21
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import java.util.Collections;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerPosition;
 import java.util.Set;
+import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.s2c.play.DifficultyS2CPacket;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.network.packet.s2c.play.EntityPositionS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntitiesDestroyS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityPassengersSetS2CPacket;
-import net.minecraft.network.packet.s2c.play.EntityPositionS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityStatusEffectS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityTrackerUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.ExperienceBarUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
+import net.minecraft.network.packet.s2c.play.PlayerPositionLookS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerRemoveS2CPacket;
-import net.minecraft.network.packet.s2c.play.PlayerRespawnS2CPacket;
 import net.minecraft.network.packet.s2c.play.UpdateSelectedSlotS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.apache.logging.log4j.core.tools.picocli.CommandLine;
 import org.jetbrains.annotations.NotNull;
+import net.minecraft.network.packet.s2c.play.PlayerRespawnS2CPacket;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
+
+#if MC_VER <= MC_1_20_1
+import net.minecraft.world.biome.source.BiomeAccess;
+#endif
+
+#if MC_VER > MC_1_21
+import java.util.Set;
+import java.util.Collections;
+import net.minecraft.entity.player.PlayerPosition;
+import net.minecraft.network.packet.s2c.play.EntityPositionSyncS2CPacket;
 #endif
 
 public class SkinSyncer {
 
     public static void broadcastGameProfileChange(@NotNull ServerPlayerEntity player) {
-        EntityHelper
-            .getServerWorld(player)
-            .getPlayers()
+        ServerHelper.getOnlinePlayers()
             .forEach(observer -> {
                 sendPacketsToOnlinePlayers(player, observer);
 
-                if (player != observer && observer.canSee(player)) {
+                if (player == observer) {
+                    sendPacketsToSelfPlayer(player);
+                } else {
                     sendPacketsToObservingPlayers(player, observer);
-                } else if (player == observer) {
-                    sendPacketsToSelfPlayer(player, observer);
                 }
             });
     }
 
-    private static void sendPacketsToSelfPlayer(@NotNull ServerPlayerEntity player, @NotNull ServerPlayerEntity observer) {
+    private static void sendPacketsToSelfPlayer(@NotNull ServerPlayerEntity player) {
+        // NOTE: This function is used to simulate the PlayerManager#respawnPlayer
+
+        /* Send re-spawn packet to the player, to simulate the dimension change behaviour. */
         #if MC_VER <= MC_1_20_1
-        observer.networkHandler.sendPacket(new PlayerRespawnS2CPacket(player.getWorld().getDimensionKey(), player.getWorld().getRegistryKey(), BiomeAccess.hashSeed(player.getServerWorld().getSeed()), player.interactionManager.getGameMode(), player.interactionManager.getPreviousGameMode(), player.getWorld().isDebugWorld(), player.getServerWorld().isFlat(), (byte) 2, player.getLastDeathPos(), player.getPortalCooldown()));
+        player.networkHandler.sendPacket(new PlayerRespawnS2CPacket(player.getWorld().getDimensionKey(), player.getWorld().getRegistryKey(), BiomeAccess.hashSeed(player.getServerWorld().getSeed()), player.interactionManager.getGameMode(), player.interactionManager.getPreviousGameMode(), player.getWorld().isDebugWorld(), player.getServerWorld().isFlat(), (byte) 2, player.getLastDeathPos(), player.getPortalCooldown()));
         #elif MC_VER > MC_1_20_1
-        observer.networkHandler.sendPacket(new PlayerRespawnS2CPacket(player.createCommonPlayerSpawnInfo(EntityHelper.getServerWorld(player)), (byte) 2));
+        player.networkHandler.sendPacket(new PlayerRespawnS2CPacket(player.createCommonPlayerSpawnInfo(EntityHelper.getServerWorld(player)), (byte) 2));
         #endif
 
-        observer.networkHandler.requestTeleport(observer.getX(), observer.getY(), observer.getZ(), observer.getYaw(), observer.getPitch());
+        /* Update the position and rotation. (Does not harm) */
+        player.networkHandler.requestTeleport(player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
 
-        observer.networkHandler.sendPacket(new DifficultyS2CPacket(EntityHelper.getServerWorld(observer).getDifficulty(), EntityHelper.getServerWorld(player).getLevelProperties().isDifficultyLocked()));
+        /* Restore the previous difficulty. */
+        player.networkHandler.sendPacket(new DifficultyS2CPacket(EntityHelper.getServerWorld(player).getDifficulty(), EntityHelper.getServerWorld(player).getLevelProperties().isDifficultyLocked()));
 
+        /* Restore the previous selected slot. */
         #if MC_VER < MC_1_21_5
-        observer.networkHandler.sendPacket(new UpdateSelectedSlotS2CPacket(observer.getInventory().selectedSlot));
+        player.networkHandler.sendPacket(new UpdateSelectedSlotS2CPacket(player.getInventory().selectedSlot));
         #elif MC_VER >= MC_1_21_5
-        observer.networkHandler.sendPacket(new UpdateSelectedSlotS2CPacket(observer.getInventory().getSelectedSlot()));
+        player.networkHandler.sendPacket(new UpdateSelectedSlotS2CPacket(player.getInventory().getSelectedSlot()));
         #endif
 
+        /* Restore the previous inventory slots. */
+        player.playerScreenHandler.updateToClient();
 
-        observer.sendAbilitiesUpdate();
-        observer.playerScreenHandler.updateToClient();
-        for (StatusEffectInstance instance : observer.getStatusEffects()) {
+        /* Restore the previous abilities. */
+        player.sendAbilitiesUpdate();
+
+        /* Restore the previous status effects. */
+        for (StatusEffectInstance effect : player.getStatusEffects()) {
         #if MC_VER <= MC_1_20_4
-        observer.networkHandler.sendPacket(new EntityStatusEffectS2CPacket(observer.getId(), instance));
+        player.networkHandler.sendPacket(new EntityStatusEffectS2CPacket(player.getId(), effect));
         #elif MC_VER > MC_1_20_4
-        observer.networkHandler.sendPacket(new EntityStatusEffectS2CPacket(observer.getId(), instance, false));
+        player.networkHandler.sendPacket(new EntityStatusEffectS2CPacket(player.getId(), effect, false));
         #endif
         }
 
-        observer.networkHandler.sendPacket(new EntityTrackerUpdateS2CPacket(player.getId(), player.getDataTracker().getChangedEntries()));
-        observer.networkHandler.sendPacket(new ExperienceBarUpdateS2CPacket(player.experienceProgress, player.totalExperience, player.experienceLevel));
-        observer.networkHandler.sendPacket(new EntityPassengersSetS2CPacket(observer));
+        /* Restore the previous experience. */
+        player.networkHandler.sendPacket(new ExperienceBarUpdateS2CPacket(player.experienceProgress, player.totalExperience, player.experienceLevel));
+
+        /* Restore the previous vehicle and passengers of the player. */
+        Entity vehicle = player.getVehicle();
+        if (vehicle != null) {
+            player.networkHandler.sendPacket(new EntityPassengersSetS2CPacket(vehicle));
+        }
+        player.networkHandler.sendPacket(new EntityPassengersSetS2CPacket(player));
+
+        /* Update the entity tracker. (Does not harm) */
+        player.networkHandler.sendPacket(new EntityTrackerUpdateS2CPacket(player.getId(), player.getDataTracker().getChangedEntries()));
     }
 
     private static void sendPacketsToObservingPlayers(@NotNull ServerPlayerEntity player, @NotNull ServerPlayerEntity observer) {
+        /* Re-create the target player. */
         observer.networkHandler.sendPacket(new EntitiesDestroyS2CPacket(player.getId()));
-        observer.networkHandler.sendPacket(new EntitySpawnS2CPacket(player, 0, player.getBlockPos()));
+        observer.networkHandler.sendPacket(new EntitySpawnS2CPacket(player, 0));
 
+        /* Update the position of the target player. (Does not harm) */
         #if MC_VER <= MC_1_21
         observer.networkHandler.sendPacket(new EntityPositionS2CPacket(player));
+//        observer.networkHandler.sendPacket(new PlayerPositionLookS2CPacket(player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch(), Set.of(), ));
+
+
         #elif MC_VER > MC_1_21
-        observer.networkHandler.sendPacket(EntityPositionS2CPacket.create(player.getId(), PlayerPosition.fromEntity(player), Set.of(), player.isOnGround()));
+//        observer.networkHandler.sendPacket(EntityPositionS2CPacket.create(player.getId(), PlayerPosition.fromEntity(player), Set.of(), player.isOnGround()));
+        observer.networkHandler.sendPacket(EntityPositionSyncS2CPacket.create(player));
         #endif
 
+        /* Update the tracked data of target player. (Does not harm) */
         observer.networkHandler.sendPacket(new EntityTrackerUpdateS2CPacket(player.getId(), player.getDataTracker().getChangedEntries()));
+
+        /* Restore the passengers on the target player. */
+        Entity vehicle = player.getVehicle();
+        if (vehicle != null) {
+            observer.networkHandler.sendPacket(new EntityPassengersSetS2CPacket(vehicle));
+        }
         observer.networkHandler.sendPacket(new EntityPassengersSetS2CPacket(player));
     }
 
