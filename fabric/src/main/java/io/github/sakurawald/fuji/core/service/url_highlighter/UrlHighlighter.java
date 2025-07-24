@@ -1,15 +1,14 @@
 package io.github.sakurawald.fuji.core.service.url_highlighter;
 
-
 import java.util.regex.Pattern;
 
 public class UrlHighlighter {
-    private static final Pattern CLICKABLE_URL_REPLACER_PATTERN = Pattern.compile("(https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})");
+    private static final Pattern CLICKABLE_URL_REPLACER_PATTERN = Pattern.compile("(https?:\\/\\/(?:www\\.)?[a-zA-Z0-9\\-._~%]+(?:\\.[a-zA-Z]{2,})(?:[\\/?#][^\\s\"`]*)?)");
 
     public static String highlight(String string) {
         string = CLICKABLE_URL_REPLACER_PATTERN
             .matcher(string)
-            .replaceAll("<click:open_url:'$1'><aqua><i>$1</i></aqua></click>");
+            .replaceAll("<click:open_url:'$1'><aqua><i><underline>$1<underline></i></aqua></click>");
         return string;
     }
 }

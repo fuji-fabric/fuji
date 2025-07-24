@@ -74,8 +74,9 @@ public class DocumentUtil {
             line = "<bold>" + line;
         }
 
-        line = line.replaceAll("`/(.+?)`", "<gold>/$1</gold>");
+        line = UrlHighlighter.highlight(line);
 
+        line = line.replaceAll("`/(.+?)`", "<gold>/$1</gold>");
         line = line.replaceAll("`(.+?)`", "<grey>$1</grey>");
 
         line = line.replaceAll("%(.+?)%", "<aqua>%$1%</aqua>");
@@ -101,8 +102,6 @@ public class DocumentUtil {
         line = line.replaceAll("^(\\d\\.[a-z]\\.\\w+?\\. )", "<#87CEEB>$1</#87CEEB>");
 
         line = line.replaceAll("\\\\<(.+?)\\\\>", "<yellow>\\\\<$1\\\\></yellow>");
-
-        line = UrlHighlighter.highlight(line);
 
         return "<#FFA1F5>" + line;
     }
