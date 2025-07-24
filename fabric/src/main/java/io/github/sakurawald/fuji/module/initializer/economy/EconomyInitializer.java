@@ -99,8 +99,14 @@ public class EconomyInitializer extends ModuleInitializer {
     }
 
     private static void printEconomyAccountInfo(ServerCommandSource source, EconomyAccount account) {
-        TextHelper.sendTextByKey(source, "economy.account.name", TextHelper.Operators.visitString(account.name()));
-        TextHelper.sendTextByKey(source, "economy.account.formatted_balance", TextHelper.Operators.visitString(account.formattedBalance()));
+        Text accountNameText = TextHelper.getTextByKey(source, "economy.account.name.display");
+        accountNameText = TextHelper.Operators.replaceTextWithMarker(accountNameText,"name", account::name);
+
+        Text balanceText = TextHelper.getTextByKey(source, "economy.account.balance.display");
+        balanceText = TextHelper.Operators.replaceTextWithMarker(balanceText, "balance", account::formattedBalance);
+
+        source.sendMessage(accountNameText);
+        source.sendMessage(balanceText);
         source.sendMessage(TextHelper.TEXT_EMPTY);
     }
 
