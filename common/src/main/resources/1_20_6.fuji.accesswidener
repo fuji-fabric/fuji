@@ -68,3 +68,7 @@ accessible field net/minecraft/entity/player/PlayerInventory combinedInventory L
 
 # common economy api
 accessible field net/minecraft/server/network/ServerPlayerEntity server Lnet/minecraft/server/MinecraftServer;
+
+# skin
+accessible field net/minecraft/server/world/ThreadedAnvilChunkStorage entityTrackers Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+accessible class net/minecraft/server/world/ThreadedAnvilChunkStorage$EntityTracker

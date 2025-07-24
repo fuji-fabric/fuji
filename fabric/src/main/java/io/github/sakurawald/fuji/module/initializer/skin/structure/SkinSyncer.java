@@ -1,39 +1,28 @@
 package io.github.sakurawald.fuji.module.initializer.skin.structure;
 
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import java.util.Collections;
-import java.util.Set;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.s2c.play.DifficultyS2CPacket;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.network.packet.s2c.play.EntityPositionS2CPacket;
-import net.minecraft.network.packet.s2c.play.EntitiesDestroyS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityPassengersSetS2CPacket;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityStatusEffectS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityTrackerUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.ExperienceBarUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
-import net.minecraft.network.packet.s2c.play.PlayerPositionLookS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerRemoveS2CPacket;
 import net.minecraft.network.packet.s2c.play.UpdateSelectedSlotS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
-import org.apache.logging.log4j.core.tools.picocli.CommandLine;
+import net.minecraft.server.world.ServerWorld;
 import org.jetbrains.annotations.NotNull;
 import net.minecraft.network.packet.s2c.play.PlayerRespawnS2CPacket;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 
 #if MC_VER <= MC_1_20_1
 import net.minecraft.world.biome.source.BiomeAccess;
-#endif
-
-#if MC_VER > MC_1_21
-import java.util.Set;
-import java.util.Collections;
-import net.minecraft.entity.player.PlayerPosition;
-import net.minecraft.network.packet.s2c.play.EntityPositionSyncS2CPacket;
 #endif
 
 public class SkinSyncer {
@@ -53,6 +42,10 @@ public class SkinSyncer {
 
     private static void sendPacketsToSelfPlayer(@NotNull ServerPlayerEntity player) {
         // NOTE: This function is used to simulate the PlayerManager#respawnPlayer
+        if (player.isRemoved()) {
+            LogUtil.debug("Skip the sending packets to the self player, because it's already removed. (player = {})", PlayerHelper.getPlayerName(player));
+            return;
+        }
 
         /* Send re-spawn packet to the player, to simulate the dimension change behaviour. */
         #if MC_VER <= MC_1_20_1
@@ -107,29 +100,13 @@ public class SkinSyncer {
     }
 
     private static void sendPacketsToObservingPlayers(@NotNull ServerPlayerEntity player, @NotNull ServerPlayerEntity observer) {
-        /* Re-create the target player. */
-        observer.networkHandler.sendPacket(new EntitiesDestroyS2CPacket(player.getId()));
-        observer.networkHandler.sendPacket(new EntitySpawnS2CPacket(player.getId(), player.getUuid(), player.getX(), player.getY(), player.getZ(), player.getPitch(), player.getYaw(), player.getType(), 0, player.getVelocity(), player.getHeadYaw()));
-
-        /* Update the position of the target player. (Does not harm) */
-        #if MC_VER <= MC_1_21
-        observer.networkHandler.sendPacket(new EntityPositionS2CPacket(player));
-        #elif MC_VER > MC_1_21
-        observer.networkHandler.sendPacket(EntityPositionSyncS2CPacket.create(player));
-        #endif
-
-        /* Restore the velocity of the target player. */
-        observer.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
-
-        /* Restore the passengers on the target player. */
-        Entity vehicle = player.getVehicle();
-        if (vehicle != null) {
-            observer.networkHandler.sendPacket(new EntityPassengersSetS2CPacket(vehicle));
+        /* PATCH: In MC 1.20.1, other players must re-join or re-teleport to see the target player. */
+        ServerWorld playerServerWorld = PlayerHelper.getServerWorld(player);
+        var trackedPlayer = ServerHelper.getChunkStorage(playerServerWorld).entityTrackers.get(player.getId());
+        if (trackedPlayer != null) {
+            trackedPlayer.stopTracking(observer);
+            trackedPlayer.updateTrackedStatus(observer);
         }
-        observer.networkHandler.sendPacket(new EntityPassengersSetS2CPacket(player));
-
-        /* Restore the tracked data of target player. (Does not harm) */
-        observer.networkHandler.sendPacket(new EntityTrackerUpdateS2CPacket(player.getId(), player.getDataTracker().getChangedEntries()));
     }
 
     private static void sendPacketsToOnlinePlayers(@NotNull ServerPlayerEntity player, @NotNull ServerPlayerEntity observer) {

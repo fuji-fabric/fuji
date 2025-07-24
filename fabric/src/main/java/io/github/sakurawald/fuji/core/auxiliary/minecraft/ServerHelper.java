@@ -14,6 +14,13 @@ import net.minecraft.server.PlayerManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ChunkHolder;
+
+#if  MC_VER <= MC_1_20_6
+import net.minecraft.server.world.ThreadedAnvilChunkStorage;
+#elif MC_VER > MC_1_20_6
+import net.minecraft.server.world.ServerChunkLoadingManager;
+#endif
+
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.UserCache;
 import org.jetbrains.annotations.NotNull;
@@ -128,14 +135,24 @@ public class ServerHelper {
             });
     }
 
+
+    public static
+    #if  MC_VER <= MC_1_20_6
+    ThreadedAnvilChunkStorage
+    #elif MC_VER > MC_1_20_6
+    ServerChunkLoadingManager
+    #endif
+    getChunkStorage(ServerWorld world) {
+        #if MC_VER <= MC_1_20_6
+        return world.getChunkManager().threadedAnvilChunkStorage;
+        #elif MC_VER > MC_1_20_6
+        return world.getChunkManager().chunkLoadingManager;
+        #endif
+    }
+
     @SuppressWarnings("UnnecessaryLocalVariable")
     public static Iterable<ChunkHolder> getChunks(ServerWorld world) {
-        #if MC_VER <= MC_1_20_6
-        Iterable<ChunkHolder> chunkHolders = world.getChunkManager().threadedAnvilChunkStorage.entryIterator();
-        #elif MC_VER > MC_1_20_6
-        Iterable<ChunkHolder> chunkHolders = world.getChunkManager().chunkLoadingManager.entryIterator();
-        #endif
-
+        Iterable<ChunkHolder> chunkHolders = getChunkStorage(world).entryIterator();
         return chunkHolders;
     }
 

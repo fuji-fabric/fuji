@@ -13,7 +13,7 @@
   - docs: add more document for this module.
   - fix: if the new skin is identical to the old skin, should not send the failure message. (The `failure message` in this case will mis-lead the user.)
   - fix: updated player skins were only visible after others re-join the server. 
-  - fix: the player list should display the player name, after the using of `/skin` command.
+  - fix: should display the player name in the player list, after the using of `/skin` command.
   - fix: should restore the previous `vehicle` and `passengers` of the player, after using the `/skin` command.
   - fix: the 1 block drifting after using the `/skin` command. (It's a minor visual glitch.)
   - feature: optimize the default language file for this module. (With intuitive styling.)
