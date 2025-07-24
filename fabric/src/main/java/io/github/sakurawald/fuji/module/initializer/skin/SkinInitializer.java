@@ -103,8 +103,8 @@ public class SkinInitializer extends ModuleInitializer {
     }
 
     @Document(id = 1751826814466L, value = "Set skin to an online skin of the same name.")
-    @CommandNode("use-online-skin")
-    private static int $useOnlineSkin(@CommandSource @CommandTarget ServerPlayerEntity player) {
+    @CommandNode("use-my-mojang-skin")
+    private static int $useMyMojangSkin(@CommandSource @CommandTarget ServerPlayerEntity player) {
         String onlinePlayerName = PlayerHelper.getPlayerName(player);
         SkinService.changeSkin(player, () -> MojangSkinProvider.fetchSkin(onlinePlayerName).orElse(null));
         return CommandHelper.Return.SUCCESS;
