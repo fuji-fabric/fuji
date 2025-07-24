@@ -80,6 +80,9 @@ public class DocumentUtil {
 
         line = line.replaceAll("%(.+?)%", "<aqua>%$1%</aqua>");
 
+        line = line.replaceAll("Alex", "<dark_green>Alex</dark_green>");
+        line = line.replaceAll("Steve", "<dark_green>Steve</dark_green>");
+
         line = line.replaceAll("Alice", "<dark_green>Alice</dark_green>");
         line = line.replaceAll("Bob", "<dark_green>Bob</dark_green>");
         line = line.replaceAll("Carol", "<dark_green>Carol</dark_green>");
