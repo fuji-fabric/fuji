@@ -47,6 +47,8 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
         List<Argument> transformedArgs = transformWithOthersArguments(commandDescriptor.arguments);
 
         RetargetCommandDescriptor retargetCommandDescriptor = new RetargetCommandDescriptor(commandDescriptor.method, transformedArgs, index);
+        retargetCommandDescriptor.setDocument(commandDescriptor.document);
+
         return Optional.of(retargetCommandDescriptor);
     }
 

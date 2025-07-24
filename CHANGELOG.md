@@ -18,6 +18,7 @@
   - feature: now allow to customize the `icon` of `fuji economy provider`, instead of hard-coded `minecraft:cherry_sapling` icon.
 - [core] docs: improvements for `document string compiler`.
   - docs: new `tips` and `examples` for modules.
+  - docs: now the `Retarget Command Descriptor` will copy the document string from its target `Command Descriptor`.
   - docs: now will `highlight` the `Alex` and `Steve` literal in `document string`.
   - docs: now will `highlight` the `conditional statement`. (For example, `1.`, `1.a` and `1.a.i`...)
   - docs: now will `underline` the `URL` in document string.
