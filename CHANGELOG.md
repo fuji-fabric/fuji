@@ -11,6 +11,7 @@
   - feature: new command `/skin use-random-default-skins`, to use a `random skin` from `default skin list` defined in the config file.
   - feature: new command `/skin use-default-skin <skinName>`, to use a `specified default skin` from `default skin list` defined in the config file.
   - docs: add more document for this module.
+  - fix: the client should not get stuck in the dimension changing screen for a long time. (Now it is very fast to change the skin.)
   - fix: if the new skin is identical to the old skin, should not send the failure message. (The `failure message` in this case will mis-lead the user.)
   - fix: updated player skins were only visible after others re-join the server. 
   - fix: should display the player name in the player list, after the using of `/skin` command.
