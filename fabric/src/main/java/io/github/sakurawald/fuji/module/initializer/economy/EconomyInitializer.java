@@ -71,13 +71,20 @@ public class EconomyInitializer extends ModuleInitializer {
 
             TextHelper.sendTextByKey(source, "line.separator");
             TextHelper.sendTextByKey(source, "economy.provider.id", provider.id());
-            TextHelper.sendTextByKey(source, "economy.provider.name", TextHelper.Operators.visitString(provider.name()));
-            TextHelper.sendTextByKey(source, "economy.provider.icon", provider.icon().getItem());
 
+            Text providerNameText = TextHelper.getTextByKey(source, "economy.provider.name.display");
+            providerNameText = TextHelper.Operators.replaceTextWithMarker(providerNameText, "name", provider::name);
+            source.sendMessage(providerNameText);
+
+            TextHelper.sendTextByKey(source, "economy.provider.icon", provider.icon().getItem());
             Collection<EconomyCurrency> currencies = provider.getCurrencies(server);
             currencies.forEach(currency -> {
                 TextHelper.sendTextByKey(source, "economy.currency.id", currency.id());
-                TextHelper.sendTextByKey(source, "economy.currency.name", TextHelper.Operators.visitString(currency.name()));
+
+                Text currencyNameText = TextHelper.getTextByKey(source, "economy.currency.name.display");
+                currencyNameText = TextHelper.Operators.replaceTextWithMarker(currencyNameText, "name", currency::name);
+                source.sendMessage(currencyNameText);
+
                 TextHelper.sendTextByKey(source, "economy.currency.icon", currency.icon().getItem());
                 source.sendMessage(TextHelper.TEXT_EMPTY);
             });

@@ -34,7 +34,6 @@ import net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket;
 import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.ClickEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -67,6 +66,8 @@ public class TextHelper {
     public static final Text TEXT_NEWLINE = Text.of("\n");
     public static final Text TEXT_SPACE = Text.of(" ");
     public static final Text TEXT_EMPTY = Text.literal("");
+    public static final String PRIMARY_COLOR_STRING = "<#FFA1F5>";
+    public static final int PRIMARY_COLOR_INT = 16753141;
 
     static {
         Loader.writeDefaultLanguageFilesIfAbsent();

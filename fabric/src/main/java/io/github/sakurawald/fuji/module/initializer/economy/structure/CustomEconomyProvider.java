@@ -8,6 +8,7 @@ import eu.pb4.common.economy.api.EconomyProvider;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.module.initializer.economy.EconomyInitializer;
 import java.util.ArrayList;
@@ -53,7 +54,8 @@ public class CustomEconomyProvider implements EconomyProvider {
 
     @Override
     public Text name() {
-        return Text.literal("FUJI_ECONOMY_PROVIDER");
+        return Text.literal("FUJI_ECONOMY_PROVIDER")
+            .withColor(TextHelper.PRIMARY_COLOR_INT);
     }
 
     @Override
