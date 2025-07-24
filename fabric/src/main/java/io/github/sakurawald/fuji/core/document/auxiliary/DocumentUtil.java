@@ -96,6 +96,10 @@ public class DocumentUtil {
         line = line.replaceAll("@r ", "<pink>@r </pink>");
         line = line.replaceAll("@s ", "<pink>@s </pink>");
 
+        line = line.replaceAll("^(\\d\\. )", "<#87CEEB>$1</#87CEEB>");
+        line = line.replaceAll("^(\\d\\.[a-z]\\. )", "<#87CEEB>$1</#87CEEB>");
+        line = line.replaceAll("^(\\d\\.[a-z]\\.\\w+?\\. )", "<#87CEEB>$1</#87CEEB>");
+
         line = line.replaceAll("\\\\<(.+?)\\\\>", "<yellow>\\\\<$1\\\\></yellow>");
 
         line = UrlHighlighter.highlight(line);

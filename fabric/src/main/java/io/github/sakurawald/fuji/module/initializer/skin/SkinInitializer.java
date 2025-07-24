@@ -20,7 +20,18 @@ import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinVariant;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 @Document(id = 1751826807167L, value = """
-    Customize the skins of players.
+    This module provides the `skin` management for players.
+    """)
+@ColorBox(id = 1753325192275L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ How it works?
+    This module provides the `skin` management:
+    1. This module will `modify the skin` when the the player `login the server`.
+    1.a. If there is existing `skin data` for this `player`, then we use that data.
+    1.b. If there is no existing `skin data` for this `player`.
+    1.b.i. If the `apply_default_skin_if_no_data` option is `true`, then we use `default skin` defined in the config file.
+    1.b.ii. If the `apply_default_skin_if_no_data` option is `false`, then we fetch the skin from `Mojang online server`.
+
+    2. A player can use `/skin` command to `change the skin` in-game.
     """)
 @ColorBox(id = 1751979120689L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Set a skin from mojang
@@ -35,7 +46,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
     ◉ Use the online skin of your player name.
     Issue: `/skin use-online-skin`
     """)
-
 @Cite("https://github.com/Suiranoil/SkinRestorer")
 @CommandNode("skin")
 public class SkinInitializer extends ModuleInitializer {

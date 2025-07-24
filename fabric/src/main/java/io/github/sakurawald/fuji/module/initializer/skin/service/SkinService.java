@@ -76,6 +76,7 @@ public class SkinService {
     }
 
     public static void modifyGameProfile(@NotNull GameProfile gameProfile, @NotNull Property skin) {
+        LogUtil.debug("Modify the skin property for player {}. (skin = {})", gameProfile.getName(), skin);
         gameProfile.getProperties().removeAll("textures");
         gameProfile.getProperties().put("textures", skin);
     }
