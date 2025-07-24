@@ -7,6 +7,8 @@ import java.util.List;
 
 public class EconomyConfigModel {
 
+    public String provider_icon = "minecraft:cherry_sapling";
+
     @Document(id = 1751826966542L, value = "Define your `custom economy currency` types.")
     public List<CustomEconomyCurrencyDescriptor> currencies = new ArrayList<>() {
         {

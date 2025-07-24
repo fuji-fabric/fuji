@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -60,7 +59,7 @@ public class CustomEconomyProvider implements EconomyProvider {
 
     @Override
     public ItemStack icon() {
-        return Items.CHERRY_SAPLING.getDefaultStack();
+        return RegistryHelper.ofItem(EconomyInitializer.config.model().provider_icon).getDefaultStack();
     }
 
     private static void registerDefinedFujiCurrencies() {

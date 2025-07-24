@@ -5,6 +5,9 @@
   - feature: now will only log the console when creating new skin data for a player. (It reduces the `console-spam` when a player join the server.)
   - docs: add more document for this module.
   - fix: if the new skin is identical to the old skin, should not send the failure message. (The `failure message` in this case will mis-lead the user.)
+- [economy] feature: improvements for this module.
+  - feature: now will display the `balance`, `accounts` and `providers` with defined colorful styling.
+  - feature: now allow to customize the `icon` of `fuji economy provider`, instead of hard-coded `minecraft:cherry_sapling` icon.
 - [core] docs: improvements for document.
   - docs: new `tips` and `examples` for modules.
   - docs: now will `highlight` the `Alex` and `Steve` literal in `document string`.
