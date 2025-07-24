@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.skin;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
 import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
@@ -12,6 +13,7 @@ import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.Word;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
+import io.github.sakurawald.fuji.module.initializer.skin.command.argument.wrapper.DefaultSkinName;
 import io.github.sakurawald.fuji.module.initializer.skin.config.model.SkinConfigModel;
 import io.github.sakurawald.fuji.module.initializer.skin.provider.MineSkinSkinProvider;
 import io.github.sakurawald.fuji.module.initializer.skin.provider.MojangSkinProvider;
@@ -40,11 +42,15 @@ import net.minecraft.server.network.ServerPlayerEntity;
     ◉ Set a skin from custom URL
     Issue: `/skin set web slim "https://s.namemc.com/i/bd53d152d0cd91d0.png"`
 
-    ◉ Use the default skins defined by the server
-    Issue: `/skin use-default-skins`
+    ◉ Use a `specified skin name` from the `default skin list` defined in the config file.
+    Issue: `/skin use-default-skins reimu-hakurei`
 
-    ◉ Use the online skin of your player name.
+    ◉ Use a `random` skin from the `default skin list` defined in the config file.
+    Issue: `/skin use-random-default-skins`
+
+    ◉ Use the `Mojang online skin`.
     Issue: `/skin use-online-skin`
+    <red>NOTE: This requires fetching the skin from the Mojang server, which may be time-consuming.
     """)
 @Cite("https://github.com/Suiranoil/SkinRestorer")
 @CommandNode("skin")
@@ -53,10 +59,25 @@ public class SkinInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<SkinConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, SkinConfigModel.class);
 
     @Document(id = 1751826809279L, value = "Set skin to a random default skin.")
-    @CommandNode("use-default-skins")
-    private static int $useDefault(@CommandSource @CommandTarget ServerPlayerEntity player) {
-        SkinService.changeSkin(player, SkinService::getDefaultSkin);
+    @CommandNode("use-random-default-skins")
+    private static int $useRandomDefaultSkins(@CommandSource @CommandTarget ServerPlayerEntity player) {
+        SkinService.changeSkin(player, SkinService::getRandomDefaultSkin);
         return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document(id = 1753333877248L, value = "Use the `default skin` with specified `skin name`.")
+    @CommandNode("use-default-skins")
+    private static int $useDefault(@CommandSource @CommandTarget ServerPlayerEntity player, DefaultSkinName defaultSkinName) {
+        String $defaultSkinName = defaultSkinName.getValue();
+        return SkinService.findSkinDescriptor($defaultSkinName)
+            .map(skinDescriptor -> {
+                SkinService.changeSkin(player, skinDescriptor::getSkinProperty);
+                return CommandHelper.Return.SUCCESS;
+            })
+            .orElseGet(() -> {
+                TextHelper.sendTextByKey(player, "skin.default_skin.unknown", $defaultSkinName);
+                return CommandHelper.Return.FAIL;
+            });
     }
 
     @Document(id = 1751826814466L, value = "Set skin to an online skin of the same name.")

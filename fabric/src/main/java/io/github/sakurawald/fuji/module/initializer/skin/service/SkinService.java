@@ -62,11 +62,11 @@ public class SkinService {
             .thenAccept(success -> {
 
             if (!success) {
-                TextHelper.sendTextByKey(player, "skin.action.failed");
+                TextHelper.sendTextByKey(player, "skin.change_skin.failed");
                 return;
             }
 
-            TextHelper.sendTextByKey(player, "skin.action.ok");
+            TextHelper.sendTextByKey(player, "skin.change_skin.success");
         });
 
         return CommandHelper.Return.SUCCESS;
@@ -78,8 +78,15 @@ public class SkinService {
         gameProfile.getProperties().put("textures", skin);
     }
 
-    private static @NotNull List<SkinDescriptor> getDefaultSkinList() {
+    public static @NotNull List<SkinDescriptor> getDefaultSkinList() {
         return SkinInitializer.config.model().getDefaultSkin().getDefaultSkinList();
+    }
+
+    public static Optional<SkinDescriptor> findSkinDescriptor(String skinName) {
+        return getDefaultSkinList()
+            .stream()
+            .filter(it -> it.getSkinName().equals(skinName))
+            .findFirst();
     }
 
     public static @NotNull Property getDefaultSkin() {
@@ -94,6 +101,10 @@ public class SkinService {
         }
 
         /* Get a random default skin. */
+        return getRandomDefaultSkin();
+    }
+
+    public static Property getRandomDefaultSkin() {
         return RandomUtil
             .drawList(getDefaultSkinList())
             .getSkinProperty();
