@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -54,7 +55,8 @@ public class CustomEconomyProvider implements EconomyProvider {
     @Override
     public Text name() {
         return Text.literal("FUJI_ECONOMY_PROVIDER")
-            .withColor(TextHelper.PRIMARY_COLOR_INT);
+            .fillStyle(Style.EMPTY
+                .withColor(TextHelper.PRIMARY_COLOR_INT));
     }
 
     @Override
