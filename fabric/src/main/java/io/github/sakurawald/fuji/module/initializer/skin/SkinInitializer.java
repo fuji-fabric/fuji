@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.skin;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
@@ -37,13 +38,13 @@ import net.minecraft.server.network.ServerPlayerEntity;
     """)
 @ColorBox(id = 1751979120689L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Set a skin from mojang
-    Issue: `/skin set mojang dream`
+    Issue: `/skin use-mojang-skin dream`
 
     ◉ Set a skin from custom URL
-    Issue: `/skin set web slim "https://s.namemc.com/i/bd53d152d0cd91d0.png"`
+    Issue: `/skin use-url-skin alex https://s.namemc.com/i/2af8c11db5fe6061.png`
 
     ◉ Use a `specified skin name` from the `default skin list` defined in the config file.
-    Issue: `/skin use-default-skins reimu-hakurei`
+    Issue: `/skin use-default-skin reimu-hakurei`
 
     ◉ Use a `random` skin from the `default skin list` defined in the config file.
     Issue: `/skin use-random-default-skins`
@@ -66,8 +67,8 @@ public class SkinInitializer extends ModuleInitializer {
     }
 
     @Document(id = 1753333877248L, value = "Use the `default skin` with specified `skin name`.")
-    @CommandNode("use-default-skins")
-    private static int $useDefault(@CommandSource @CommandTarget ServerPlayerEntity player, DefaultSkinName defaultSkinName) {
+    @CommandNode("use-default-skin")
+    private static int $useDefaultSkin(@CommandSource @CommandTarget ServerPlayerEntity player, DefaultSkinName defaultSkinName) {
         String $defaultSkinName = defaultSkinName.getValue();
         return SkinService.findSkinDescriptor($defaultSkinName)
             .map(skinDescriptor -> {
@@ -89,23 +90,25 @@ public class SkinInitializer extends ModuleInitializer {
     }
 
     @Document(id = 1753250702541L, value = "Set skin to an online skin of the specified name.")
-    @CommandNode("set mojang")
-    private static int $setMojang(@CommandSource @CommandTarget ServerPlayerEntity player, Word skinName) {
+    @CommandNode("use-mojang-skin")
+    private static int $useMojangSkin(@CommandSource @CommandTarget ServerPlayerEntity player, Word skinName) {
         SkinService.changeSkin(player, () -> MojangSkinProvider.fetchSkin(skinName.getValue()).orElse(null));
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1751826819277L, value = "Set skin to a custom url in Steve model.")
-    @CommandNode("set web classic")
-    private static int $setWebClassic(@CommandSource @CommandTarget ServerPlayerEntity player, String url) {
-        SkinService.changeSkin(player, () -> MineSkinSkinProvider.fetchSkin(url, SkinVariant.CLASSIC).orElse(null));
+    @CommandNode("use-url-skin steve")
+    private static int $useUrlSkinSteveModel(@CommandSource @CommandTarget ServerPlayerEntity player, GreedyString url) {
+        String $url = url.getValue();
+        SkinService.changeSkin(player, () -> MineSkinSkinProvider.fetchSkin($url, SkinVariant.CLASSIC).orElse(null));
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1751826827369L, value = "Set skin to a custom url in Alex model.")
-    @CommandNode("set web slim")
-    private static int $setWebSlim(@CommandSource @CommandTarget ServerPlayerEntity player, String url) {
-        SkinService.changeSkin(player, () -> MineSkinSkinProvider.fetchSkin(url, SkinVariant.SLIM).orElse(null));
+    @CommandNode("use-url-skin alex")
+    private static int $useUrlSkinAlexModel(@CommandSource @CommandTarget ServerPlayerEntity player, GreedyString url) {
+        String $url = url.getValue();
+        SkinService.changeSkin(player, () -> MineSkinSkinProvider.fetchSkin($url, SkinVariant.SLIM).orElse(null));
         return CommandHelper.Return.SUCCESS;
     }
 
