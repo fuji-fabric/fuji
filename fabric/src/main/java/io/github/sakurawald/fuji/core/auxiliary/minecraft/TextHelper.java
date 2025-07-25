@@ -175,7 +175,8 @@ public class TextHelper {
                 .replace("<", "\\<")
                 .replace(">", "\\>")
                 .replace("*","\\*")
-                .replace("%", "\\%");
+                .replace("%", "\\%")
+                .replace("§", "&");
         }
 
         public static Text parseString(NodeParser parser, String input) {

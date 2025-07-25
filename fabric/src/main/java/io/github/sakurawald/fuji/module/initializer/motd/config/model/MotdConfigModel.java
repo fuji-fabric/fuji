@@ -10,6 +10,17 @@ import lombok.Data;
 @Data
 public class MotdConfigModel {
 
+    @Document(id = 1751826857082L, value = """
+        Defined `motd` entry.
+        """)
+    List<MotdEntry> entries = new ArrayList<>() {
+        {
+            this.add(new MotdEntry("<gradient:#FFA1F5:#BFBDFB:#6ECBFF>Pure Survival %server:version% / Up %server:uptime% ❤ Discord Group XXX</gradient><newline><gradient:#99CCFF:#BBDFFF>%fuji:server_playtime%🔥 %fuji:server_mined%⛏ %fuji:server_placed%🔳 %fuji:server_killed%🗡 %fuji:server_moved%\uD83C\uDF0D", null));
+
+            this.add(new MotdEntry("Please put your icon in `config/fuji/modules/motd/icon/` dir.", "icon-1.png"));
+        }
+    };
+
     @Document(id = 1753454689220L, value = """
         This section is used to customize the `players info` in the server metadata.
         """)
@@ -38,7 +49,7 @@ public class MotdConfigModel {
         }
 
         @Document(id = 1753456710740L, value = """
-            Customize the `text` when you `hover` on the `players info` area.
+            Customize the `hover text` when you `hover` on the `players info` area.
             """)
         HoverText hoverText = new HoverText();
         @Data
@@ -53,16 +64,18 @@ public class MotdConfigModel {
                 }
             };
         }
+
     }
 
-    @Document(id = 1751826857082L, value = """
-        Defined `motd` entry.
-        """)
-   List<MotdEntry> entries = new ArrayList<>() {
-        {
-            this.add(new MotdEntry("<gradient:#FFA1F5:#BFBDFB:#6ECBFF>Pure Survival %server:version% / Up %server:uptime% ❤ Discord Group XXX</gradient><newline><gradient:#99CCFF:#BBDFFF>%fuji:server_playtime%🔥 %fuji:server_mined%⛏ %fuji:server_placed%🔳 %fuji:server_killed%🗡 %fuji:server_moved%\uD83C\uDF0D", null));
+    @Document(id = 1753457245222L, value = """
+            Customize the `version text`.
 
-            this.add(new MotdEntry("Please put your icon in `config/fuji/modules/motd/icon/` dir.", "icon-1.png"));
-        }
-    };
+            <red>NOTE: Once you enable this feature, the `ping result` will not be displayed on the client.
+            """)
+    VersionText versionText = new VersionText();
+    @Data
+    public static class VersionText {
+        boolean enable = false;
+        String text = "§bJoin to play now.";
+    }
 }

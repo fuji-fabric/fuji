@@ -89,18 +89,18 @@ public class MotdInitializer extends ModuleInitializer {
         return RandomUtil.drawList(config.model().getEntries());
     }
 
-    public static @NotNull ServerMetadata.Players getEffectivePlayersInfo(ServerMetadata.Players original) {
-        var playersInfo = config.model().getPlayersInfo();
+    public static @NotNull ServerMetadata.Players getEffectivePlayersInfo(@NotNull ServerMetadata.Players original) {
+        var configSection = config.model().getPlayersInfo();
 
-        int deltaMax = RandomUtil.getRandomInRange(playersInfo.getMaxPlayers().getDeltaMin(), playersInfo.getMaxPlayers().getDeltaMax());
+        int deltaMax = RandomUtil.getRandomInRange(configSection.getMaxPlayers().getDeltaMin(), configSection.getMaxPlayers().getDeltaMax());
         int max = original.max() + deltaMax;
 
-        int deltaOnline = RandomUtil.getRandomInRange(playersInfo.getOnlinePlayers().getDeltaMin(), playersInfo.getOnlinePlayers().getDeltaMax());
+        int deltaOnline = RandomUtil.getRandomInRange(configSection.getOnlinePlayers().getDeltaMin(), configSection.getOnlinePlayers().getDeltaMax());
         int online = original.online() + deltaOnline;
 
         List<GameProfile> sample;
-        if (playersInfo.getHoverText().isEnable()) {
-            sample = playersInfo
+        if (configSection.getHoverText().isEnable()) {
+            sample = configSection
                     .getHoverText()
                     .getLines()
                     .stream()
@@ -112,6 +112,20 @@ public class MotdInitializer extends ModuleInitializer {
         }
 
         return new ServerMetadata.Players(max, online, sample);
+    }
+
+    public static @NotNull ServerMetadata.Version getEffectiveVersion(ServerMetadata.Version original) {
+        var configSection = config.model().getVersionText();
+
+        if (configSection.isEnable()) {
+            String text = configSection.getText();
+            String gameVersion = TextHelper.Parsers.parsePlaceholderString(null, text);
+            int protocolVersion = -42;
+            return new ServerMetadata.Version(gameVersion, protocolVersion);
+        } else {
+            return original;
+        }
+
     }
 
 }

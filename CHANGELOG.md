@@ -4,6 +4,7 @@
   - You can use the editor in https://fuji-command-menu-editor-k4k4.vercel.app/
 - [motd] feature: improvements to `motd` module.
   - feature: now allow to customize the `players info` area. (You can customize the `max players`, `online players` and `hover text`.)
+  - feature: now allow to customize the `version` area. (You can customize the `display text` before the `ping result`.)
   - feature: optimize the `default config file` for this module. (Now it provide the fancy gradient colors in the default example)
 - [tab] feature: optimize the `defualt config file` for this module. (Now it provide a better color schema in the default example)
 - [fuji] feature: now allows the `console` to execute `/fuji {reload/about/debug}` commands.

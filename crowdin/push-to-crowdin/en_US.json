@@ -1237,5 +1237,6 @@
   "docstring.1753454689220": "This section is used to customize the `players info` in the server metadata.\n",
   "docstring.1753456677368": "Increase `the number of max players` by a `random number`.\n",
   "docstring.1753456694624": "Increase `the number of online players` by a `random number`.\n",
-  "docstring.1753456710740": "Customize the `text` when you `hover` on the `players info` area.\n"
+  "docstring.1753456710740": "Customize the `hover text` when you `hover` on the `players info` area.\n",
+  "docstring.1753457245222": "Customize the `version text`.\n\n<red>NOTE: Once you enable this feature, the `ping result` will not be displayed on the client.\n"
 }

@@ -55,8 +55,8 @@ public abstract class ServerQueryNetworkHandlerMixin {
         MotdEntry motdEntry = MotdInitializer.getEffectiveMotdEntry();
         Text text = TextHelper.getTextByValue(null, (motdEntry.getText()));
         Optional<ServerMetadata.Favicon> icon = MotdInitializer.getEffectiveMotdIcon(motdEntry.getIcon());
-        Optional<ServerMetadata.Version> version = original.comp_1275();
         Optional<ServerMetadata.Players> players = original.comp_1274().map(MotdInitializer::getEffectivePlayersInfo);
+        Optional<ServerMetadata.Version> version = original.comp_1275().map(MotdInitializer::getEffectiveVersion);
 
         return new ServerMetadata(text, players, version, icon, original.secureChatEnforced());
     }
