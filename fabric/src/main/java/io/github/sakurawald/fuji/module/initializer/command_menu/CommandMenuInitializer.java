@@ -50,7 +50,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     """)
 @ColorBox(id = 1753435167488L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     ◉ Use the `menu editor` online to design a menu easily.
-    Thanks to <dark_green>Hitnam7382</dark_green>, we have an `online editor` for `command_menu` module.
+    Thanks to <dark_green>Hitnam</dark_green>, we have an `online editor` for `command_menu` module.
     The tool is hosted in: https://fuji-command-menu-editor-k4k4.vercel.app/
     """)
 
