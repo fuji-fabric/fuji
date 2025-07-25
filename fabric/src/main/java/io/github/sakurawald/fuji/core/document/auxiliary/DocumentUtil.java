@@ -79,7 +79,7 @@ public class DocumentUtil {
         line = line.replaceAll("`/(.+?)`", "<gold>/$1</gold>");
         line = line.replaceAll("`(.+?)`", "<grey>$1</grey>");
 
-        line = line.replaceAll("%(.+?)%", "<aqua>%$1%</aqua>");
+        line = line.replaceAll("%(.+?:.+?)%", "<aqua>%$1%</aqua>");
 
         line = line.replaceAll("Alex", "<dark_green>Alex</dark_green>");
         line = line.replaceAll("Steve", "<dark_green>Steve</dark_green>");

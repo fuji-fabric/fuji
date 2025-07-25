@@ -25,7 +25,8 @@ import java.util.Map;
     4. Player advancement message.
     5. Player command feedback. (The command feedback for a specified command)
     6. Server close message.
-    7. ... (There are many translatable texts in server-side)
+    7. Player banned screen message.
+    8. ... (There are many translatable texts in server-side)
     """)
 @ColorBox(id = 1751979387990L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     ◉ What is a `translatable text`.
@@ -80,7 +81,16 @@ import java.util.Map;
     Key: `multiplayer.player.left`
     Value: `null`
 
-    <red>NOTE: If you leave the `value` to `null`, then it means let's `cancel` the sending of this translatable text.
+    <green>NOTE: If you leave the `value` to `null`, then it means let's `cancel` the sending of this translatable text.
+    """)
+@ColorBox(id = 1753460512853L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Customize the `text` in a `screen`.
+    Yes, you can customize the `text` in a `screen`, like the `ban screen`.
+    Key: `multiplayer.disconnect.banned`
+    Value: `\\<red\\>You are banned from this server`
+
+    Key: `multiplayer.disconnect.banned.reason`
+    Value: `\\<red\\>You are banned from this server\\<newline\\>\\<yellow\\>Reason: %s`
     """)
 public class SystemMessageInitializer extends ModuleInitializer {
 
