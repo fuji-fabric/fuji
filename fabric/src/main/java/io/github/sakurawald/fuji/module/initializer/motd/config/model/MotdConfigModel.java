@@ -29,7 +29,7 @@ public class MotdConfigModel {
     @Data
     public static class PlayersInfo {
         @Document(id = 1753456677368L, value = """
-            Increase `the number of max players` by a `random number`.
+            Increase `the number of max players` by a `random delta number`.
             """)
         MaxPlayers maxPlayers = new MaxPlayers();
         @Data
@@ -39,7 +39,7 @@ public class MotdConfigModel {
         }
 
         @Document(id = 1753456694624L, value = """
-            Increase `the number of online players` by a `random number`.
+            Increase `the number of online players` by a `random delta number`.
             """)
         OnlinePlayers onlinePlayers = new OnlinePlayers();
         @Data

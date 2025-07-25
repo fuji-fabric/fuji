@@ -38,8 +38,14 @@ import java.util.stream.Stream;
     The module will pick up a random image as the icon of the server.
     To respond the server status request.
     """)
-@ColorBox(id = 1751978273696L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751978273696L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ Use an `editor` to help you design the MOTD.
     Online MOTD editor: https://colorize.fun/en/minecraft
+    """)
+@ColorBox(id = 1753458678347L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ Customize the MOTD using `Formating Codes`.
+    The `Formating Codes` is a vanilla Minecraft feature.
+    See: https://minecraft.fandom.com/wiki/Formatting_codes
     """)
 public class MotdInitializer extends ModuleInitializer {
 
