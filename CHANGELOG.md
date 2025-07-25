@@ -4,3 +4,6 @@
   - You can use the editor in https://fuji-command-menu-editor-k4k4.vercel.app/**
 - [motd] feature: optimize the `default config file` for this module. (Now it provide the fancy gradient colors in the default example)
 - [tab] feature: optimize the `defualt config file` for this module. (Now it provide a better color schema in the default example)
+- [core] feature: improvements to `language` system.
+  - feature: increase the number of supported languages from `30` to all `128` languages. (even if the language is not built-in, users can now still use it.)
+  - fix: when `language` module is enabled, and a player joins with an `unsupported language` the first time, the console should not be spammed with exceptions.

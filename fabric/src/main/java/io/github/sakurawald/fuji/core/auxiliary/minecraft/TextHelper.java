@@ -21,6 +21,7 @@ import eu.pb4.placeholders.api.parsers.tag.TextTag;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.config.Configs;
+import io.github.sakurawald.fuji.core.config.handler.impl.LanguageConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ResourceConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
@@ -219,10 +220,14 @@ public class TextHelper {
         private static final JsonObject UNSUPPORTED_LANGUAGE_MARKER = new JsonObject();
 
         private static void writeDefaultLanguageFilesIfAbsent() {
-            for (String languageFileName : ReflectionUtil.getCompileTimeGraph(ReflectionUtil.LANGUAGE_GRAPH_FILE_NAME)) {
-                new ResourceConfigurationHandler(LANGUAGE_FILE_PATH + languageFileName)
+            for (String languageFileName : getLanguageFileNameGraph()) {
+                new LanguageConfigurationHandler(LANGUAGE_FILE_PATH + languageFileName)
                     .readStorage();
             }
+        }
+
+        private static @NotNull List<String> getLanguageFileNameGraph() {
+            return ReflectionUtil.getCompileTimeGraph(ReflectionUtil.LANGUAGE_GRAPH_FILE_NAME);
         }
 
         @ForDeveloper("""
@@ -248,22 +253,31 @@ public class TextHelper {
             }
 
             try {
-                String languageFileName = languageCode + ".json";
-                ResourceConfigurationHandler languageFileHandler = new ResourceConfigurationHandler(LANGUAGE_FILE_PATH + languageFileName) {
-                    @Override
-                    public void beforeWriteStorage() {
-                        this.model = makeSortedLanguageJsonObject((JsonObject) this.model);
-                    }
-                };
-                languageFileHandler.readStorage();
-
+                ResourceConfigurationHandler languageFileHandler = makeResourceConfigurationHandler(languageCode);
                 LANGUAGE_CODE_2_LANGUAGE_JSON.put(languageCode, languageFileHandler.model().getAsJsonObject());
                 LogUtil.info("Language {} loaded.", languageCode);
             } catch (Exception e) {
-                // NOTE: When `language` module is enabled, and a player joined with an un-supported language the first time, the error will be printed on the console.
                 LANGUAGE_CODE_2_LANGUAGE_JSON.put(languageCode, UNSUPPORTED_LANGUAGE_MARKER);
                 LogUtil.error("Failed to load language `{}` from storage.", languageCode, e);
             }
+
+        }
+
+        private static @NotNull ResourceConfigurationHandler makeResourceConfigurationHandler(String languageCode) {
+            String languageFileName = getLanguageFileName(languageCode);
+            String languageFilePath = LANGUAGE_FILE_PATH + languageFileName;
+            LanguageConfigurationHandler languageFileHandler = new LanguageConfigurationHandler(languageFilePath) {
+                @Override
+                public void beforeWriteStorage() {
+                    this.model = makeSortedLanguageJsonObject((JsonObject) this.model);
+                }
+            };
+            languageFileHandler.readStorage();
+            return languageFileHandler;
+        }
+
+        private static @NotNull String getLanguageFileName(String languageCode) {
+            return languageCode + ".json";
         }
 
         private static String unifyLanguageCode(String input) {

@@ -5,7 +5,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.config.exception.FailedToLoadResourceException;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -18,10 +20,12 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Path;
 
+@ForDeveloper("""
+    For resource configuration handler, the type of model is JsonElement, which equals to the type of data tree.
+    """)
+public abstract class ResourceConfigurationHandler extends BaseConfigurationHandler<JsonElement> {
 
-public class ResourceConfigurationHandler extends BaseConfigurationHandler<JsonElement> {
-
-    final String resourcePath;
+    protected final String resourcePath;
 
     private ResourceConfigurationHandler(Path path, String resourcePath) {
         super(path);
@@ -33,10 +37,10 @@ public class ResourceConfigurationHandler extends BaseConfigurationHandler<JsonE
     }
 
     @SneakyThrows(IOException.class)
-    private static @Nullable JsonElement readJsonTreeFromResource(@NotNull String resourcePath) {
+    protected static @Nullable JsonElement readJsonTreeFromResource(@NotNull String resourcePath) {
         InputStream inputStream = Fuji.class.getResourceAsStream(resourcePath);
         if (inputStream == null) {
-            throw new IllegalArgumentException("Resource not found: " + resourcePath);
+            throw new FailedToLoadResourceException("Failed to load resource from virtual jar stream: " + resourcePath);
         }
         @Cleanup Reader reader = new BufferedReader(new InputStreamReader(inputStream));
         return JsonParser.parseReader(reader);
@@ -48,27 +52,20 @@ public class ResourceConfigurationHandler extends BaseConfigurationHandler<JsonE
             .stream()
             .filter(key -> !dataTree.has(key))
             .forEach(key -> {
-                LogUtil.debug("Add missing language key `{}` for file `{}`", key, this.path);
+                LogUtil.debug("Add missing configuration key `{}` to file `{}`", key, this.path);
                 JsonElement value = schemaTree.get(key);
                 dataTree.add(key, value);
             });
     }
 
     @Override
-    protected JsonElement getDefaultModel() {
-        // NOTE: For resource configuration handler, the type of model is JsonElement, which equals to the type of data tree.
-        return readJsonTreeFromResource(this.resourcePath);
-    }
-
-    @Override
     public void readStorage() {
         super.readStorage();
 
-        /* Add missing language keys. */
+        /* Add missing configuration keys. */
         if (this.model != null) {
             mergeTree(this.model.getAsJsonObject(), this.getDefaultModel().getAsJsonObject());
             this.writeStorage();
         }
     }
-
 }
