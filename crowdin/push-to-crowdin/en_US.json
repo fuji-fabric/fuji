@@ -1232,5 +1232,6 @@
   "docstring.1753331899534": "◉ Ensure the players are allowed to use `/command-callback` command.\nThe `/command-callback` command is a fuji command, used for `click event`.\nIn vanilla Minecraft, if a player has `no permission` to use that command, the client will says `Unknown Command` error.\n",
   "docstring.1753333877248": "Use the `default skin` with specified `skin name`.",
   "docstring.1753336550266": "Open the `skin` GUI.\n",
-  "docstring.1753337059662": "Alias to `/skin gui` command.\n"
+  "docstring.1753337059662": "Alias to `/skin gui` command.\n",
+  "docstring.1753435167488": "◉ Use the `menu editor` online to design a menu easily.\nThanks to <dark_green>Hitnam7382</dark_green>, we have an `online editor` for `command_menu` module.\nThe tool is hosted in: https://fuji-command-menu-editor-k4k4.vercel.app/\n"
 }

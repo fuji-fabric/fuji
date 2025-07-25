@@ -63,6 +63,12 @@
         "role": "contributor",
         "homepage": "https://github.com/pinarruiz"
       }
+    },
+    {
+      "name": "Hitnam7382",
+      "contact": {
+        "role": "developer of the command_menu online editor"
+      }
     }
   ],
   "environment": "*",

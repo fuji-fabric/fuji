@@ -48,6 +48,12 @@ import net.minecraft.server.network.ServerPlayerEntity;
     You can use `/run as fake-op %player:name% command-menu close %player:name%` command.
     To `close` the `opened GUI` for a `player`.
     """)
+@ColorBox(id = 1753435167488L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ Use the `menu editor` online to design a menu easily.
+    Thanks to <dark_green>Hitnam7382</dark_green>, we have an `online editor` for `command_menu` module.
+    The tool is hosted in: https://fuji-command-menu-editor-k4k4.vercel.app/
+    """)
+
 
 
 @CommandNode("command-menu")
