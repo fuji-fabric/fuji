@@ -4,7 +4,6 @@ import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
@@ -40,6 +39,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         GuiElementBuilder aboutButton = new GuiElementBuilder()
             .setItem(Items.NETHER_STAR)
             .setName(TextHelper.getTextByKey(player, "about"))
+            .setLore(List.of(TextHelper.getTextByKey(player, "prompt.click.see_inside")))
             .setCallback(() -> AboutGui.make(gui.getBackendGui(), player).open());
         entities.add(aboutButton.build());
 
@@ -47,6 +47,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         GuiElementBuilder userGuideButton = new GuiElementBuilder()
             .setItem(Items.BOOK)
             .setName(TextHelper.getTextByKey(player, "user_guide"))
+            .setLore(List.of(TextHelper.getTextByKey(player, "prompt.click.see_it.any")))
             .glow()
             .setCallback(() -> {
                 gui.closeWithoutOpenParentGui();
@@ -58,6 +59,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         GuiElementBuilder languagesButton = new GuiElementBuilder()
             .setItem(Items.CARTOGRAPHY_TABLE)
             .setName(TextHelper.getTextByKey(player, "language"))
+            .setLore(List.of(TextHelper.getTextByKey(player, "prompt.click.see_inside")))
             .setCallback(() -> {
                 LanguagesInspectionGui
                     .inspectAll(gui.getBackendGui(), player)
@@ -69,6 +71,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         GuiElementBuilder reloadButton = new GuiElementBuilder()
             .setItem(Items.TARGET)
             .setName(TextHelper.getTextByKey(player, "reload.gui.name"))
+            .setLore(List.of(TextHelper.getTextByKey(player, "prompt.click.apply_it")))
             .setCallback(() -> {
                 gui.closeWithoutOpenParentGui();
                 FujiInitializer.$reload(player);
@@ -80,6 +83,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         GuiElementBuilder debugButton = new GuiElementBuilder()
             .setItem(debugConfig.log_debug_messages ? Items.GREEN_BANNER : Items.RED_BANNER)
             .setName(TextHelper.getTextByKey(player, "debug"))
+            .setLore(List.of(TextHelper.getTextByKey(player, "prompt.click.apply_it")))
             .setCallback(() -> {
                 gui.closeWithoutOpenParentGui();
                 FujiInitializer.$debug(player);
