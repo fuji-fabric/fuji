@@ -20,4 +20,12 @@ public class RandomUtil {
         return UUID.randomUUID().toString();
     }
 
+    @SuppressWarnings("DataFlowIssue")
+    public static int getRandomInRange(int min, int max) {
+        if (min > max) {
+            LogUtil.error("The min value {} must be less than or equal to max value {}. (Returns the minimal value as the random number)", min, max);
+            return Math.min(min, max);
+        }
+        return random.nextInt(min, max + 1);
+    }
 }

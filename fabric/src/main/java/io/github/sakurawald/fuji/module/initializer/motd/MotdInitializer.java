@@ -1,6 +1,8 @@
 package io.github.sakurawald.fuji.module.initializer.motd;
 
 import com.google.common.base.Preconditions;
+import com.mojang.authlib.GameProfile;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
@@ -11,6 +13,7 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.motd.config.model.MotdConfigModel;
 import io.github.sakurawald.fuji.module.initializer.motd.structure.MotdEntry;
+import java.util.UUID;
 import lombok.Cleanup;
 import net.minecraft.server.ServerMetadata;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +47,7 @@ public class MotdInitializer extends ModuleInitializer {
 
     private static final Path ICON_FOLDER = ReflectionUtil.computeModuleConfigPath(MotdInitializer.class).resolve("icon");
 
-    public static @NotNull Optional<ServerMetadata.Favicon> getMotdIcon(@Nullable String preferIcon) {
+    public static Optional<ServerMetadata.Favicon> getEffectiveMotdIcon(@Nullable String preferIcon) {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
             /* Mkdir the icon dir. */
@@ -82,8 +85,33 @@ public class MotdInitializer extends ModuleInitializer {
         return Optional.of(new ServerMetadata.Favicon(byteArrayOutputStream.toByteArray()));
     }
 
-    public static @NotNull MotdEntry getMotdEntry() {
-        return RandomUtil.drawList(config.model().entries);
+    public static @NotNull MotdEntry getEffectiveMotdEntry() {
+        return RandomUtil.drawList(config.model().getEntries());
+    }
+
+    public static @NotNull ServerMetadata.Players getEffectivePlayersInfo(ServerMetadata.Players original) {
+        var playersInfo = config.model().getPlayersInfo();
+
+        int deltaMax = RandomUtil.getRandomInRange(playersInfo.getMaxPlayers().getDeltaMin(), playersInfo.getMaxPlayers().getDeltaMax());
+        int max = original.max() + deltaMax;
+
+        int deltaOnline = RandomUtil.getRandomInRange(playersInfo.getOnlinePlayers().getDeltaMin(), playersInfo.getOnlinePlayers().getDeltaMax());
+        int online = original.online() + deltaOnline;
+
+        List<GameProfile> sample;
+        if (playersInfo.getHoverText().isEnable()) {
+            sample = playersInfo
+                    .getHoverText()
+                    .getLines()
+                    .stream()
+                    .map(line -> TextHelper.Parsers.parsePlaceholderString(null, line))
+                    .map(line -> new GameProfile(UUID.randomUUID(), line))
+                    .toList();
+        } else {
+            sample = original.sample();
+        }
+
+        return new ServerMetadata.Players(max, online, sample);
     }
 
 }

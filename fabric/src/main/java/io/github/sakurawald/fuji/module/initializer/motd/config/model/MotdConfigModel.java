@@ -5,13 +5,60 @@ import io.github.sakurawald.fuji.module.initializer.motd.structure.MotdEntry;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Data;
 
+@Data
 public class MotdConfigModel {
+
+    @Document(id = 1753454689220L, value = """
+        This section is used to customize the `players info` in the server metadata.
+        """)
+    PlayersInfo playersInfo = new PlayersInfo();
+
+    @Data
+    public static class PlayersInfo {
+        @Document(id = 1753456677368L, value = """
+            Increase `the number of max players` by a `random number`.
+            """)
+        MaxPlayers maxPlayers = new MaxPlayers();
+        @Data
+        public static class MaxPlayers {
+            int deltaMin = 0;
+            int deltaMax = 0;
+        }
+
+        @Document(id = 1753456694624L, value = """
+            Increase `the number of online players` by a `random number`.
+            """)
+        OnlinePlayers onlinePlayers = new OnlinePlayers();
+        @Data
+        public static class OnlinePlayers {
+            int deltaMin = 0;
+            int deltaMax = 0;
+        }
+
+        @Document(id = 1753456710740L, value = """
+            Customize the `text` when you `hover` on the `players info` area.
+            """)
+        HoverText hoverText = new HoverText();
+        @Data
+        public static class HoverText {
+            boolean enable = true;
+
+            List<String> lines = new ArrayList<>() {
+                {
+                    this.add("§aWelcome to the server!");
+                    this.add("§aServer version: %server:version%");
+                    this.add("§b§o§lJoin to play now.");
+                }
+            };
+        }
+    }
 
     @Document(id = 1751826857082L, value = """
         Defined `motd` entry.
         """)
-    public List<MotdEntry> entries = new ArrayList<>() {
+   List<MotdEntry> entries = new ArrayList<>() {
         {
             this.add(new MotdEntry("<gradient:#FFA1F5:#BFBDFB:#6ECBFF>Pure Survival %server:version% / Up %server:uptime% ❤ Discord Group XXX</gradient><newline><gradient:#99CCFF:#BBDFFF>%fuji:server_playtime%🔥 %fuji:server_mined%⛏ %fuji:server_placed%🔳 %fuji:server_killed%🗡 %fuji:server_moved%\uD83C\uDF0D", null));
 
