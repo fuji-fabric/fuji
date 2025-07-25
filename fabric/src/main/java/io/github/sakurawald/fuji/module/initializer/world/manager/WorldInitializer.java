@@ -431,9 +431,8 @@ public class WorldInitializer extends ModuleInitializer {
     @Document(id = 1752798163284L, value = """
         This command does the following things:
         1. `Unload` the `loaded runtime dimension` in the server.
-        2. `Delete` the chunk files of the dimension.
-
-        <red>NOTE: This command will not delete the `dimension descriptor` in config file.
+        2. <red><b>Delete the chunk files of the dimension.
+        3. <red><b>Delete the `runtime dimension descriptor` in config file.
         """)
     @CommandNode("delete")
     private static int $delete(@CommandSource ServerCommandSource source, Dimension dimension, Optional<Boolean> confirm) {
