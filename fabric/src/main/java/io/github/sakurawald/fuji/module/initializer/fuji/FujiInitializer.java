@@ -21,6 +21,7 @@ import io.github.sakurawald.fuji.module.initializer.fuji.gui.PermissionsAndMetas
 import io.github.sakurawald.fuji.module.initializer.fuji.gui.PlaceholdersInspectionGui;
 import io.github.sakurawald.fuji.module.initializer.fuji.gui.RegistriesInspectionGui;
 import io.github.sakurawald.fuji.module.initializer.fuji.gui.ServerCommandsInspectionGui;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 
@@ -41,7 +42,7 @@ public class FujiInitializer extends ModuleInitializer {
         NOTE: You have to `re-start` the server, after you enable/disable a module.
         """)
     @CommandNode("reload")
-    public static int $reload(@CommandSource ServerPlayerEntity source) {
+    public static int $reload(@CommandSource ServerCommandSource source) {
         // Reload main-control file.
         Configs.MAIN_CONTROL_CONFIG.readStorage();
 
@@ -60,9 +61,9 @@ public class FujiInitializer extends ModuleInitializer {
 
     @Document(id = 1751826551723L, value = "Print the user guide of fuji.")
     @CommandNode("user-guide")
-    public static int $userGuide(@CommandSource ServerPlayerEntity player) {
+    public static int $userGuide(@CommandSource ServerCommandSource source) {
         CoreInitializer.printUserGuide();
-        TextHelper.sendTextByKey(player, "fuji.user_guide");
+        TextHelper.sendTextByKey(source, "fuji.user_guide");
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -77,7 +78,7 @@ public class FujiInitializer extends ModuleInitializer {
 
     @Document(id = 1751826556095L, value = "Toggle the debug mode of fuji.")
     @CommandNode("debug")
-    public static int $debug(@CommandSource ServerPlayerEntity source) {
+    public static int $debug(@CommandSource ServerCommandSource source) {
         var config = Configs.MAIN_CONTROL_CONFIG.model().core.debug;
         config.log_debug_messages = !config.log_debug_messages;
 

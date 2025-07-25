@@ -4,6 +4,7 @@
   - You can use the editor in https://fuji-command-menu-editor-k4k4.vercel.app/
 - [motd] feature: optimize the `default config file` for this module. (Now it provide the fancy gradient colors in the default example)
 - [tab] feature: optimize the `defualt config file` for this module. (Now it provide a better color schema in the default example)
+- [fuji] feature: now allows the `console` to execute `/fuji {reload/about/debug}` commands.
 - [core] feature: improvements to `language` system.
   - feature: increase the number of supported languages from `30` to all `128` languages. (even if the language is not built-in, users can now still use it.)
   - **feature: the `language files` now will be reloaded by `/fuji reload` command, regardless of whether the `language` module is enabled or not.**

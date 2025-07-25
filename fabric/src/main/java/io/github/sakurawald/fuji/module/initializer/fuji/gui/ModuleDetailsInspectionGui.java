@@ -51,7 +51,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
             .glow()
             .setCallback(() -> {
                 gui.closeWithoutOpenParentGui();
-                FujiInitializer.$userGuide(player);
+                FujiInitializer.$userGuide(player.getCommandSource());
             });
         entities.add( userGuideButton.build());
 
@@ -74,7 +74,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
             .setLore(List.of(TextHelper.getTextByKey(player, "prompt.click.apply_it")))
             .setCallback(() -> {
                 gui.closeWithoutOpenParentGui();
-                FujiInitializer.$reload(player);
+                FujiInitializer.$reload(player.getCommandSource());
             });
         entities.add(reloadButton.build());
 
@@ -86,7 +86,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
             .setLore(List.of(TextHelper.getTextByKey(player, "prompt.click.apply_it")))
             .setCallback(() -> {
                 gui.closeWithoutOpenParentGui();
-                FujiInitializer.$debug(player);
+                FujiInitializer.$debug(player.getCommandSource());
             });
         entities.add(debugButton.build());
 
