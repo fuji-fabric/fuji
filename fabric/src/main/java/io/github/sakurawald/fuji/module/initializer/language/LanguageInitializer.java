@@ -22,9 +22,4 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
     """)
 public class LanguageInitializer extends ModuleInitializer {
 
-    @Override
-    protected void onReload() {
-        TextHelper.Loader.clearLoadedLanguageJsons();
-    }
-
 }

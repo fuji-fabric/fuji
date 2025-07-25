@@ -45,6 +45,9 @@ public class FujiInitializer extends ModuleInitializer {
         // Reload main-control file.
         Configs.MAIN_CONTROL_CONFIG.readStorage();
 
+        // Reload the language files.
+        TextHelper.Loader.clearLoadedLanguageJsons();
+
         // Reload modules.
         Managers.getModuleManager().reloadModuleInitializers();
 
