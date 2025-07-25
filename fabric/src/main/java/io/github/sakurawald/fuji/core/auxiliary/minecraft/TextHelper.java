@@ -27,6 +27,7 @@ import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 
 import io.github.sakurawald.fuji.core.document.structure.DocString;
+import io.github.sakurawald.fuji.core.structure.Pair;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.entity.player.PlayerEntity;
@@ -658,17 +659,9 @@ public class TextHelper {
             return;
         }
 
-        Sender.TextLocation textLocation = Sender.TextLocation.MESSAGE;
-        if (languageValue.startsWith(Sender.SEND_ACTION_BAR_MARKER)) {
-            languageValue = languageValue.substring(Sender.SEND_ACTION_BAR_MARKER.length());
-            textLocation = Sender.TextLocation.ACTION_BAR;
-        } else if (languageValue.startsWith(Sender.SEND_MAIN_TITLE_MARKER)) {
-            languageValue = languageValue.substring(Sender.SEND_MAIN_TITLE_MARKER.length());
-            textLocation = Sender.TextLocation.MAIN_TITLE;
-        } else if (languageValue.startsWith(Sender.SEND_SUB_TITLE_MARKER)) {
-            languageValue = languageValue.substring(Sender.SEND_SUB_TITLE_MARKER.length());
-            textLocation = Sender.TextLocation.SUB_TITLE;
-        }
+        Pair<String, Sender.TextLocation> languageInstructionResult = Sender.parseLanguageInstruction(languageValue);
+        languageValue = languageInstructionResult.getKey();
+        Sender.TextLocation textLocation = languageInstructionResult.getValue();
 
         /* Parse the language value into text using parsers. */
         Text text = getTextByValue(audience, languageValue, args);
@@ -680,15 +673,7 @@ public class TextHelper {
         }
 
         try {
-            if (textLocation == Sender.TextLocation.ACTION_BAR) {
-                Sender.sendActionBarToAudience(audience, text);
-            } else if (textLocation == Sender.TextLocation.MAIN_TITLE) {
-                Sender.sendTitleToAudience(audience, text, true);
-            } else if (textLocation == Sender.TextLocation.SUB_TITLE) {
-                Sender.sendTitleToAudience(audience, text, false);
-            } else {
-                Sender.sendMessageToAudience(audience, text);
-            }
+            Sender.sendTextToAudience(audience, text, textLocation);
         } catch (Exception e) {
             Object audienceType = (audience == null ? null : audience.getClass().getName());
 
@@ -774,6 +759,33 @@ public class TextHelper {
             player.networkHandler.sendPacket(new TitleFadeS2CPacket(fadeInTicks, stayTicks, fadeOutTicks));
             player.networkHandler.sendPacket(new TitleS2CPacket(mainTitle));
             player.networkHandler.sendPacket(new SubtitleS2CPacket(subTitle));
+        }
+
+        private static void sendTextToAudience(@NotNull Object audience, @NotNull Text text, @Nullable Sender.TextLocation textLocation) {
+            if (TextLocation.ACTION_BAR == textLocation) {
+                sendActionBarToAudience(audience, text);
+            } else if (TextLocation.MAIN_TITLE == textLocation) {
+                sendTitleToAudience(audience, text, true);
+            } else if (TextLocation.SUB_TITLE == textLocation) {
+                sendTitleToAudience(audience, text, false);
+            } else {
+                sendMessageToAudience(audience, text);
+            }
+        }
+
+        private static Pair<String, TextLocation> parseLanguageInstruction(@NotNull String string) {
+            TextLocation textLocation = TextLocation.MESSAGE;
+            if (string.startsWith(SEND_ACTION_BAR_MARKER)) {
+                string = string.substring(SEND_ACTION_BAR_MARKER.length());
+                textLocation = TextLocation.ACTION_BAR;
+            } else if (string.startsWith(SEND_MAIN_TITLE_MARKER)) {
+                string = string.substring(SEND_MAIN_TITLE_MARKER.length());
+                textLocation = TextLocation.MAIN_TITLE;
+            } else if (string.startsWith(SEND_SUB_TITLE_MARKER)) {
+                string = string.substring(SEND_SUB_TITLE_MARKER.length());
+                textLocation = TextLocation.SUB_TITLE;
+            }
+            return new Pair<>(string, textLocation);
         }
 
         public enum TextLocation {
