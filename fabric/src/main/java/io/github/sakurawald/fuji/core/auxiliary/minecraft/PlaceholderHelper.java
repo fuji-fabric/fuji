@@ -5,6 +5,7 @@ import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.document.descriptor.PlaceholderDescriptor;
+import java.util.List;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -12,12 +13,22 @@ import net.minecraft.util.Identifier;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import org.jetbrains.annotations.Nullable;
 
 public class PlaceholderHelper {
 
     public static final Text INVALID_ARGS_ERROR_TEXT = Text.literal("[INVALID-ARGS-ERROR]");
     private static final Text NO_PLAYER_ERROR_TEXT = Text.literal("[NO-PLAYER-ERROR]");
     private static final Text NO_SERVER_ERROR_TEXT = Text.literal("[NO-SERVER-ERROR]");
+
+    public static List<String> splitArguments(@Nullable String args) {
+        if (args == null) {
+            return List.of();
+        }
+        args = args.trim();
+        String[] split = args.split("\\s+");
+        return List.of(split);
+    }
 
     @SuppressWarnings("resource")
     public static void registerServerPlaceholder(PlaceholderDescriptor descriptor, BiFunction<MinecraftServer, String, Text> function) {

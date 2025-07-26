@@ -1,0 +1,13 @@
+package io.github.sakurawald.fuji.module.initializer.leaderboard.config.model;
+
+import io.github.sakurawald.fuji.module.initializer.leaderboard.structure.LeaderBoardData;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.Data;
+
+@Data
+public class LeaderBoardDataModel {
+
+    List<LeaderBoardData> leaderboardData = new ArrayList<>();
+
+}

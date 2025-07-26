@@ -106,6 +106,7 @@ head
 home
 kit
 language
+leaderboard
 motd
 multiplier
 nametag

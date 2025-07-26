@@ -180,6 +180,7 @@ public class ConfigModel {
         public Warning warning = new Warning();
         public Economy economy = new Economy();
         public Title title = new Title();
+        public LeaderBoard leaderboard = new LeaderBoard();
         public Head head = new Head();
         public Profiler profiler = new Profiler();
         public Tester tester = new Tester();
@@ -827,6 +828,10 @@ public class ConfigModel {
         }
 
         public static class Title {
+            public boolean enable = false;
+        }
+
+        public static class LeaderBoard {
             public boolean enable = false;
         }
 

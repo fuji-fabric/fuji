@@ -100,6 +100,7 @@ io.github.sakurawald.fuji.module.initializer.head.HeadInitializer
 io.github.sakurawald.fuji.module.initializer.home.HomeInitializer
 io.github.sakurawald.fuji.module.initializer.kit.KitInitializer
 io.github.sakurawald.fuji.module.initializer.language.LanguageInitializer
+io.github.sakurawald.fuji.module.initializer.leaderboard.LeaderBoardInitializer
 io.github.sakurawald.fuji.module.initializer.motd.MotdInitializer
 io.github.sakurawald.fuji.module.initializer.multiplier.MultiplierInitializer
 io.github.sakurawald.fuji.module.initializer.nametag.NametagInitializer
