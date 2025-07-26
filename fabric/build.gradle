@@ -4,7 +4,7 @@ plugins {
     id "idea"
 
     // Fabric Loom
-    id "fabric-loom" version "1.7.+"
+    id "fabric-loom" version "1.11-SNAPSHOT"
 }
 
 /* Define the jar repositories. */
