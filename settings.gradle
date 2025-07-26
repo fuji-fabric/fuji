@@ -1,6 +1,9 @@
 /* Define the repositories for the project. */
 pluginManagement {
 	repositories {
+		gradlePluginPortal()
+		google()
+
 		maven {
 			name = 'Fabric'
 			url = 'https://maven.fabricmc.net/'
@@ -12,7 +15,6 @@ pluginManagement {
 
 		/* The fallback repos. */
 		mavenCentral()
-		gradlePluginPortal()
 
 	}
 }
