@@ -125,10 +125,11 @@ public class LeaderBoardInitializer extends ModuleInitializer {
         } else {
             leaderBoardSnapshots.sort(Comparator.comparing(LeaderBoardSnapshot::getEffectiveScore));
         }
-        PagedMessageText pagedMessageText = PagedMessageText.makePagedMessageText(player, leaderBoardSnapshots, $pageSize, (entity, pageBuilder) -> {
+        PagedMessageText pagedMessageText = PagedMessageText.makePagedMessageText(player, leaderBoardSnapshots, $pageSize, (entity, index, pageBuilder) -> {
+            int numbering = index + 1;
             String playerName = entity.getOwnerCache().getPlayerName();
             int score = entity.getEffectiveScore();
-            Text entryText = TextHelper.getTextByKey(player, "leaderboard.list.entry", playerName, score);
+            Text entryText = TextHelper.getTextByKey(player, "leaderboard.list.entry", numbering, playerName, score);
             pageBuilder.append(entryText);
             pageBuilder.append(TextHelper.TEXT_NEWLINE);
         });

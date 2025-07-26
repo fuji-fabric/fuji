@@ -139,6 +139,7 @@
   "economy.account.balance.display": "<blue> ◉ Account Balance: [balance]",
   "economy.account.name.display": "<blue> ◉ Account ID: [name]",
   "economy.balance": "<blue>Balance: `%s`",
+  "economy.balance.top.entry": "<orange>%d. <dark_green>%s<grey>: <yellow>%s",
   "economy.balance.top.gui.title": "<blue>Balance Top: <yellow>%s",
   "economy.currency.icon": "<dark_green>⚪ Currency Icon: `%s`",
   "economy.currency.id": "<dark_green>⚪ Currency ID: `%s`",
@@ -246,7 +247,7 @@
   "language.is_supported": "<yellow>Is Supported: `%s`",
   "language.name": "<yellow>%s",
   "language.number_of_users": "<blue>Used by players: `%d`",
-  "leaderboard.list.entry": "<yellow>%s - %s",
+  "leaderboard.list.entry": "<orange>%d. <yellow>%s - %s",
   "leaderboard.list.header": "<dark_green>----- Leaderboard: %s <yellow>(%s)</yellow> -----",
   "leaderboard.not_found": "<red>Leaderboard `%s` not fuond.",
   "leaderboard.update.all": "<green>Updated all leaderboards for online players.",
@@ -904,7 +905,7 @@
   "docstring.1751826920505": "List all `accounts` owned by the `player`.\n",
   "docstring.1751826922680": "Get the `player`'s `account` for `currency ID`.\n",
   "docstring.1751826925194": "Query your economy `accounts`.\n",
-  "docstring.1751826927389": "List the top players of specified currency.\n",
+  "docstring.1751826927389": "List the top players of specified currency using GUI.\n",
   "docstring.1751826931165": "Give `amount` to the player's `account` for `specified currency`.",
   "docstring.1751826933066": "Take `amount` from the player's `account` for `specified currency`.",
   "docstring.1751826934778": "Pay specified `amount` of `currency` to another player's account.",
@@ -1272,5 +1273,6 @@
   "docstring.1753496184086": "The `default page size` for `/leaderboard lowest` and `/leaderboard highest` commands.\n",
   "docstring.1753496925314": "List the highest N players for specified leaderboard.",
   "docstring.1753497840128": "◉ List the specified `leaderboard` with `lowest first` order.\nIssue: `/leaderboard lowest death-board ALL_TIME`\n\n◉ List the specified `leaderboard` with `highest first` order.\nIssue: `/leaderboard highest zombie-kill-board ALL_TIME`\n\n◉ List the specified `leaderboard` with `highest first` order and `daily` time window.\nIssue: `/leaderboard highest zombie-kill-board DAILY`\n",
-  "docstring.1753498010821": "◉ You can use a `placeholder` to fetch data from `statistics`.\nFor example:\n1. `%player:statistic_raw minecraft:deaths%`\n2. `%player:statistic_raw minecraft:killed minecraft:zombie%`\n\nSee more `statistics` in: https://minecraft.wiki/w/Statistics\n\n◉ You can use a `placeholder` to fetch data from `objective`.\nFor example: `%player:objective [objective]%`\n"
+  "docstring.1753498010821": "◉ You can use a `placeholder` to fetch data from `statistics`.\nFor example:\n1. `%player:statistic_raw minecraft:deaths%`\n2. `%player:statistic_raw minecraft:killed minecraft:zombie%`\n\nSee more `statistics` in: https://minecraft.wiki/w/Statistics\n\n◉ You can use a `placeholder` to fetch data from `objective`.\nFor example: `%player:objective [objective]%`\n",
+  "docstring.1753498885843": "List the top players of specified currency using message.\n"
 }

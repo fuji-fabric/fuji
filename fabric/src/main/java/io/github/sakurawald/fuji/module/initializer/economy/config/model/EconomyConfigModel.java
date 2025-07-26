@@ -4,10 +4,19 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.economy.config.structure.CustomEconomyCurrencyDescriptor;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class EconomyConfigModel {
 
-    public String provider_icon = "minecraft:cherry_sapling";
+    String providerIcon = "minecraft:cherry_sapling";
+
+    int balanceTopPageSize = 10;
+
 
     @Document(id = 1751826966542L, value = "Define your `custom economy currency` types.")
     public List<CustomEconomyCurrencyDescriptor> currencies = new ArrayList<>() {

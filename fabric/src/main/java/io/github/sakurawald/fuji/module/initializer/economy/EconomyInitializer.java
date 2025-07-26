@@ -15,6 +15,7 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.service.paged_text.PagedMessageText;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.economy.command.argument.wrapper.CurrencyId;
 import io.github.sakurawald.fuji.module.initializer.economy.config.model.EconomyConfigModel;
@@ -22,7 +23,9 @@ import io.github.sakurawald.fuji.module.initializer.economy.config.model.Economy
 import io.github.sakurawald.fuji.module.initializer.economy.gui.BalanceTopGui;
 import io.github.sakurawald.fuji.module.initializer.economy.service.EconomyService;
 import io.github.sakurawald.fuji.module.initializer.economy.structure.CustomEconomyProvider;
+import io.github.sakurawald.fuji.module.initializer.economy.structure.GameProfileAndEconomyAccount;
 import java.util.Collection;
+import java.util.List;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -141,12 +144,29 @@ public class EconomyInitializer extends ModuleInitializer {
     }
 
     @Document(id = 1751826927389L, value = """
-        List the top players of specified currency.
+        List the top players of specified currency using GUI.
+        """)
+    @CommandNode("economy balance-top gui")
+    private static int $balanceTopGui(@CommandSource ServerPlayerEntity player, CurrencyId currencyId) {
+        BalanceTopGui.make(player, currencyId.getValue())
+            .open();
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document(id = 1753498885843L, value = """
+        List the top players of specified currency using message.
         """)
     @CommandNode("economy balance-top")
     private static int $balanceTop(@CommandSource ServerPlayerEntity player, CurrencyId currencyId) {
-        BalanceTopGui.make(player, currencyId.getValue())
-            .open();
+        List<GameProfileAndEconomyAccount> entities = EconomyService.makeBalanceTopEntities(currencyId.getValue());
+        PagedMessageText pagedMessageText = PagedMessageText.makePagedMessageText(player, entities, EconomyService.getBalanceTopPageSize(), (entity, index, pageBuilder) -> {
+            int numbering = index + 1;
+            String playerName = entity.getGameProfile().getName();
+            String balanceString = TextHelper.Operators.visitString(entity.economyAccount.formattedBalance());
+            pageBuilder.append(TextHelper.getTextByKey(player, "economy.balance.top.entry", numbering, playerName, balanceString));
+            pageBuilder.append(TextHelper.TEXT_NEWLINE);
+        });
+        pagedMessageText.sendPage(player, 0);
         return CommandHelper.Return.SUCCESS;
     }
 

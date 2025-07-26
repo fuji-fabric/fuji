@@ -2,7 +2,6 @@ package io.github.sakurawald.fuji.core.service.paged_text;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.manager.Managers;
-import java.util.function.BiConsumer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 
@@ -11,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.text.Text;
+import org.apache.logging.log4j.util.TriConsumer;
 import org.jetbrains.annotations.NotNull;
 
 public class PagedMessageText extends PagedText {
@@ -27,7 +27,7 @@ public class PagedMessageText extends PagedText {
         generateClickCallbacks(player);
     }
 
-    public static @NotNull <T> PagedMessageText makePagedMessageText(ServerPlayerEntity player, List<T> entities, int pageSize, BiConsumer<T, MutableText> entityConsumer) {
+    public static @NotNull <T> PagedMessageText makePagedMessageText(ServerPlayerEntity player, List<T> entities, int pageSize, TriConsumer<T, Integer, MutableText> entityConsumer) {
         List<Text> pages = new ArrayList<>();
         MutableText pageBuilder = Text.empty();
         for (int i = 0; i < entities.size(); i++) {
@@ -37,7 +37,7 @@ public class PagedMessageText extends PagedText {
             }
 
             T entity = entities.get(i);
-            entityConsumer.accept(entity, pageBuilder);
+            entityConsumer.accept(entity, i, pageBuilder);
 
             if (i == entities.size() - 1) {
                 pages.add(pageBuilder);

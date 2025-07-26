@@ -1,17 +1,14 @@
 package io.github.sakurawald.fuji.module.initializer.economy.gui;
 
-import eu.pb4.common.economy.api.EconomyAccount;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
 import io.github.sakurawald.fuji.module.initializer.economy.service.EconomyService;
 import io.github.sakurawald.fuji.module.initializer.economy.structure.GameProfileAndEconomyAccount;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -34,17 +31,7 @@ public class BalanceTopGui extends PagedGui<GameProfileAndEconomyAccount> {
     }
 
     public static BalanceTopGui make(ServerPlayerEntity player, Identifier currencyId) {
-        List<GameProfileAndEconomyAccount> entities = ServerHelper
-            .getOfflineGameProfiles()
-            .stream()
-            .map(gameProfile -> {
-                EconomyAccount economyAccount = EconomyService.getUserAccount(gameProfile, currencyId);
-                return new GameProfileAndEconomyAccount(gameProfile, economyAccount);
-            })
-            .sorted(Comparator.comparing(GameProfileAndEconomyAccount::getEconomyBalance)
-                .reversed())
-            .toList();
-
+        List<GameProfileAndEconomyAccount> entities = EconomyService.makeBalanceTopEntities(currencyId);
         return new BalanceTopGui(null, player, currencyId, entities, 0);
     }
 

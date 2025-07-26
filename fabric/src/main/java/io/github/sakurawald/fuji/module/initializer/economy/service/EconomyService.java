@@ -14,7 +14,10 @@ import io.github.sakurawald.fuji.module.initializer.economy.config.structure.Cus
 import io.github.sakurawald.fuji.module.initializer.economy.config.structure.CustomEconomyCurrencyNode;
 import io.github.sakurawald.fuji.module.initializer.economy.structure.CustomEconomyCurrency;
 import io.github.sakurawald.fuji.module.initializer.economy.structure.CustomEconomyProvider;
+import io.github.sakurawald.fuji.module.initializer.economy.structure.GameProfileAndEconomyAccount;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -141,5 +144,22 @@ public class EconomyService {
         } else {
             TextHelper.sendTextByKey(source, "operation.fail");
         }
+    }
+
+    public static int getBalanceTopPageSize() {
+        return EconomyInitializer.config.model().getBalanceTopPageSize();
+    }
+
+    public static @NotNull List<GameProfileAndEconomyAccount> makeBalanceTopEntities(Identifier currencyId) {
+        return ServerHelper
+            .getOfflineGameProfiles()
+            .stream()
+            .map(gameProfile -> {
+                EconomyAccount economyAccount = getUserAccount(gameProfile, currencyId);
+                return new GameProfileAndEconomyAccount(gameProfile, economyAccount);
+            })
+            .sorted(Comparator.comparing(GameProfileAndEconomyAccount::getEconomyBalance)
+                .reversed())
+            .toList();
     }
 }
