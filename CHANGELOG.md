@@ -2,16 +2,16 @@
   
 - **[command_menu] feature: now we have an `online menu editor`, which greatly helps you design a menu. (Thanks to @Hitnam)**
   - You can use the editor in https://fuji-command-menu-editor-k4k4.vercel.app/
-- [leaderboard] new module named `leaderboard`, which allows you to define a `leaderboard`.
+- **[leaderboard] new module named `leaderboard`, which allows you to define a `leaderboard`.**
   - feature: you can define a `leaderboard` from a `placeholder`, `statistics` or `objective`.
   - feature: the `time window` of a `leaderboard` can be `hourly`, `daily`, `weekly`, `monthly`, `yearly` and `all_time`.
   - feature: you can display the `lowest N` and `highest N` data using `commands` or `placeholders`.
   - feature: you can use `/leaderboard {lowest/highest}` to list the `paged top N players` for a `specified leaderboard`.
-- [motd] feature: improvements to `motd` module.
+- **[motd] feature: improvements to `motd` module.**
   - feature: now allow to customize the `players info` area. (You can customize the `max players`, `online players` and `hover text`.)
   - feature: now allow to customize the `version` area. (You can customize the `display text` before the `ping result`.)
   - feature: optimize the `default config file` for this module. (Now it provide the fancy gradient colors in the default example)
-- [economy] feature: improvements to `economy` module.
+- **[economy] feature: improvements to `economy` module.**
   - feature: new command `/economy balance-top gui`.
   - feature: now the `/economy balance-top` will display the `balance top` using `paged message`. (Issue `/economy balance-top fuji:gold` to see it!)
 - [tab] feature: optimize the `defualt config file` for this module. (Now it provide a better color schema in the default example)

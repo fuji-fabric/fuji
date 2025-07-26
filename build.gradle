@@ -153,6 +153,8 @@ allprojects { p ->
         // The central repo.
         mavenCentral()
 
+        maven { url = "https://maven.fabricmc.net" }
+
         maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
 
         // For manifold preprocessor.
