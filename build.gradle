@@ -4,7 +4,7 @@ plugins {
     id "idea"
 
     // Used to get info from git.
-    id "com.palantir.git-version" version "4.0.0"
+    id "com.palantir.git-version" version "3.4.0"
 
     // Used to check coding style.
     id 'checkstyle'
