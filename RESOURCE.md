@@ -13,6 +13,8 @@
 - https://minecraft.fandom.com/wiki/Category:Development
 - https://minecraft.fandom.com/wiki/Player.dat_format
 - https://minecraft.fandom.com/wiki/Formatting_codes
+- https://learn.microsoft.com/en-us/minecraft/creator/reference/content/molangreference/?view=minecraft-bedrock-stable
+- https://github.com/Patbox/PredicateAPI/blob/1.21.2/BUILTIN.md
 
 # Server-side only.
 - https://vanillatweaks.net/picker/datapacks/

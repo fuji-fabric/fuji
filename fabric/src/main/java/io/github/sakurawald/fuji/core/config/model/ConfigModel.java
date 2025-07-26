@@ -587,6 +587,8 @@ public class ConfigModel {
             public ForEach for_each = new ForEach();
             public OneOf one_of = new OneOf();
             public Chain chain = new Chain();
+            public If $if = new If();
+            public Nop nop = new Nop();
             public Delay delay = new Delay();
             public Json json = new Json();
             public Attachment attachment = new Attachment();
@@ -602,7 +604,7 @@ public class ConfigModel {
             }
 
             public static class OneOf {
-                public boolean enable = true;
+                public boolean enable = false;
             }
 
             public static class Chain {
@@ -626,6 +628,14 @@ public class ConfigModel {
             }
 
             public static class WhenOnline {
+                public boolean enable = false;
+            }
+
+            public static class If {
+                public boolean enable = false;
+            }
+
+            public static class Nop {
                 public boolean enable = false;
             }
         }

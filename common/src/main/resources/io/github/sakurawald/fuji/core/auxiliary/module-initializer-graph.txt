@@ -22,11 +22,13 @@ io.github.sakurawald.fuji.module.initializer.command_debug.CommandDebugInitializ
 io.github.sakurawald.fuji.module.initializer.command_event.CommandEventInitializer
 io.github.sakurawald.fuji.module.initializer.command_interactive.CommandInteractiveInitializer
 io.github.sakurawald.fuji.module.initializer.command_menu.CommandMenuInitializer
+io.github.sakurawald.fuji.module.initializer.command_meta.$if.IfInitializer
 io.github.sakurawald.fuji.module.initializer.command_meta.attachment.AttachmentInitializer
 io.github.sakurawald.fuji.module.initializer.command_meta.chain.ChainInitializer
 io.github.sakurawald.fuji.module.initializer.command_meta.delay.DelayInitializer
 io.github.sakurawald.fuji.module.initializer.command_meta.for_each.ForEachInitializer
 io.github.sakurawald.fuji.module.initializer.command_meta.json.JsonInitializer
+io.github.sakurawald.fuji.module.initializer.command_meta.nop.NopInitializer
 io.github.sakurawald.fuji.module.initializer.command_meta.one_of.OneOfInitializer
 io.github.sakurawald.fuji.module.initializer.command_meta.run.RunInitializer
 io.github.sakurawald.fuji.module.initializer.command_meta.shell.ShellInitializer

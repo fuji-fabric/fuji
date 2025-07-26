@@ -97,6 +97,11 @@ public class DocumentUtil {
         line = line.replaceAll("@r ", "<pink>@r </pink>");
         line = line.replaceAll("@s ", "<pink>@s </pink>");
 
+        line = line.replaceAll("If ", "<blue>If </blue>");
+        line = line.replaceAll("if ", "<blue>if </blue>");
+        line = line.replaceAll("then ", "<blue>then </blue>");
+        line = line.replaceAll("else ", "<blue>else </blue>");
+
         line = line.replaceAll("^(\\d\\. )", "<#87CEEB>$1</#87CEEB>");
         line = line.replaceAll("^(\\d\\.[a-z]\\. )", "<#87CEEB>$1</#87CEEB>");
         line = line.replaceAll("^(\\d\\.[a-z]\\.\\w+?\\. )", "<#87CEEB>$1</#87CEEB>");
