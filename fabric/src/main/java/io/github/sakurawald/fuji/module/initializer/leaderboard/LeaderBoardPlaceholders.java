@@ -43,7 +43,7 @@ public class LeaderBoardPlaceholders {
         The `time window` can be `hourly`, `daily`, `weekly`, `monthly`, `yearly` and `all_time`.
 
         For example:
-        The `%fuji:lowest_n_score death-board 1% all_time` returns the `the least number of death score` from the leaderboard with the id `death-board`.
+        The `%fuji:lowest_n_score death-board 1 all_time%` returns the `the least number of death score` from the leaderboard with the id `death-board`.
         """)
     public static void registerLowestNScorePlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("lowest_n_score", 1753471573263L);
@@ -89,7 +89,7 @@ public class LeaderBoardPlaceholders {
         The `time window` can be `hourly`, `daily`, `weekly`, `monthly`, `yearly` and `all_time`.
 
         For example:
-        The `%fuji:highest_n_score zombie-kill-board 1% all_time` returns `the highest zombie kill score` from the leaderboard with the id `zombie-kill-board`.
+        The `%fuji:highest_n_score zombie-kill-board 1 all_time%` returns `the highest zombie kill score` from the leaderboard with the id `zombie-kill-board`.
         """)
     public static void registerHighestNScorePlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("highest_n_score", 1753476193458L);

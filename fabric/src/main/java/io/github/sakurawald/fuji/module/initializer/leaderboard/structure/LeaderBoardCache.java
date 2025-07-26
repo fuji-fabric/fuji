@@ -56,6 +56,9 @@ public class LeaderBoardCache {
             snapshot.setBeginningOfCurrentTimeWindow(beginningOfCurrentTimeWindow);
             snapshot.setPreviousScore(0);
         } else if (beginningOfCurrentTimeWindow != snapshot.getBeginningOfCurrentTimeWindow()) {
+            /* Update the beginning of time window variable with new one. */
+            snapshot.setBeginningOfCurrentTimeWindow(beginningOfCurrentTimeWindow);
+
             /* Copy the current score to previous score, if the beginning of current time window is changed. */
             snapshot.setPreviousScore(snapshot.getCurrentScore());
         }

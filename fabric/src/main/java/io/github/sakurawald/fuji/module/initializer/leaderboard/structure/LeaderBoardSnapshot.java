@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.leaderboard.structure;
 
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -13,8 +14,19 @@ import org.jetbrains.annotations.Nullable;
 @NoArgsConstructor
 public class LeaderBoardSnapshot {
 
-    @NotNull LeaderBoardTimeWindow timeWindow;
+    @Document(id = 1753493148676L, value = """
+        The `time window` of this `snapshot`.
+        """)
+    LeaderBoardTimeWindow timeWindow;
+
+    @Document(id = 1753493186554L, value = """
+        The `beginning time` of the `time window`.
+        If `this value` differs from `the latest value`, then:
+        1. This value will be updated with `the latest value`.
+        2. The current score will be copied to the previous score.
+        """)
     @Nullable Long beginningOfCurrentTimeWindow;
+
     @Nullable Integer previousScore;
     @Nullable Integer currentScore;
 
