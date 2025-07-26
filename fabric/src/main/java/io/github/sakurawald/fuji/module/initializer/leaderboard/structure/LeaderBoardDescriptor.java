@@ -15,6 +15,8 @@ public class LeaderBoardDescriptor {
         """)
     String leaderboardId;
 
+    String displayName;
+
     @Document(id = 1753466735721L, value = """
         This option is a `string` which will be evaluated to a `numeric value`.
         The `string` value is typically a `placeholder`.

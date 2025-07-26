@@ -6,6 +6,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,7 +31,7 @@ public class LeaderBoardSnapshot {
     @Nullable Integer previousScore;
     @Nullable Integer currentScore;
 
-    transient LeaderBoardCache ownerCache;
+    @ToString.Exclude transient LeaderBoardCache ownerCache;
 
     public static LeaderBoardSnapshot of(@NotNull LeaderBoardTimeWindow timeWindowType) {
         LeaderBoardSnapshot leaderBoardSnapshot = new LeaderBoardSnapshot();
@@ -49,12 +50,12 @@ public class LeaderBoardSnapshot {
         return list;
     }
 
-    public boolean hasDistance() {
+    public boolean hasEffectiveScore() {
         return this.getPreviousScore() != null
             && this.getCurrentScore() != null;
     }
 
-    public int getDistance() {
+    public int getEffectiveScore() {
         return Math.abs(this.currentScore - this.previousScore);
     }
 }

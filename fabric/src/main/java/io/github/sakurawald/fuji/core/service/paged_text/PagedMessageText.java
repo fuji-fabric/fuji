@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.core.service.paged_text;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.manager.Managers;
+import java.util.function.BiConsumer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 
@@ -9,15 +10,44 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import net.minecraft.text.Text;
+import org.jetbrains.annotations.NotNull;
 
 public class PagedMessageText extends PagedText {
 
     public PagedMessageText(ServerPlayerEntity player, String string) {
-        /* split pages */
         String[] split = string.split(NEW_PAGE_DELIMITER);
         this.pages = new ArrayList<>();
-        Arrays.stream(split).forEach(it -> pages.add(TextHelper.getTextByValue(player, it)));
+        Arrays.stream(split).forEach(it -> this.pages.add(TextHelper.getTextByValue(player, it)));
+        generateClickCallbacks(player);
+    }
 
+    public PagedMessageText(ServerPlayerEntity player, List<Text> pages) {
+        this.pages = pages;
+        generateClickCallbacks(player);
+    }
+
+    public static @NotNull <T> PagedMessageText makePagedMessageText(ServerPlayerEntity player, List<T> entities, int pageSize, BiConsumer<T, MutableText> entityConsumer) {
+        List<Text> pages = new ArrayList<>();
+        MutableText pageBuilder = Text.empty();
+        for (int i = 0; i < entities.size(); i++) {
+            if ((i % pageSize == 0 && i != 0)) {
+                pages.add(pageBuilder);
+                pageBuilder = Text.empty();
+            }
+
+            T entity = entities.get(i);
+            entityConsumer.accept(entity, pageBuilder);
+
+            if (i == entities.size() - 1) {
+                pages.add(pageBuilder);
+            }
+        }
+
+        return new PagedMessageText(player, pages);
+    }
+
+    private void generateClickCallbacks(ServerPlayerEntity player) {
         /* generate page callbacks */
         List<String> pageCallbacks = new ArrayList<>();
         for (int i = 0; i < getPages().size(); i++) {

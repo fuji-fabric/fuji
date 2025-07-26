@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.leaderboard;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -10,12 +11,23 @@ import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.impl.PlayerEvents;
 import io.github.sakurawald.fuji.core.manager.Managers;
+import io.github.sakurawald.fuji.core.service.paged_text.PagedMessageText;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.leaderboard.config.model.LeaderBoardConfigModel;
 import io.github.sakurawald.fuji.module.initializer.leaderboard.config.model.LeaderBoardDataModel;
 import io.github.sakurawald.fuji.module.initializer.leaderboard.job.UpdateLeaderboardsJob;
 import io.github.sakurawald.fuji.module.initializer.leaderboard.service.LeaderBoardService;
+import io.github.sakurawald.fuji.module.initializer.leaderboard.structure.LeaderBoardDescriptor;
+import io.github.sakurawald.fuji.module.initializer.leaderboard.structure.LeaderBoardSnapshot;
+import io.github.sakurawald.fuji.module.initializer.leaderboard.structure.LeaderBoardTimeWindow;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
+import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1753466282781L, value = """
     This module allows you to define a `leaderboard`.
@@ -61,7 +73,44 @@ public class LeaderBoardInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     private static int $updateAll(@CommandSource ServerCommandSource source) {
         LeaderBoardService.updateLeaderBoards();
+        TextHelper.sendTextByKey(source, "leaderboard.update.all");
         return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document(id = 1753493701376L, value = "List the lowest N players for specified leaderboard.")
+    @CommandNode("leaderboard lowest")
+    private static int $lowest(@CommandSource ServerPlayerEntity player, @NotNull LeaderBoardDescriptor leaderboard, @NotNull LeaderBoardTimeWindow timeWindow, Optional<Integer> pageSize) {
+        printLeaderBoardAsPagedMessage(player, leaderboard, timeWindow, pageSize, false);
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document(id = 1753496925314L, value = "List the highest N players for specified leaderboard.")
+    @CommandNode("leaderboard highest")
+    private static int $highest(@CommandSource ServerPlayerEntity player, @NotNull LeaderBoardDescriptor leaderboard, @NotNull LeaderBoardTimeWindow timeWindow, Optional<Integer> pageSize) {
+        printLeaderBoardAsPagedMessage(player, leaderboard, timeWindow, pageSize, true);
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    private static void printLeaderBoardAsPagedMessage(ServerPlayerEntity player, @NotNull LeaderBoardDescriptor leaderboard, @NotNull LeaderBoardTimeWindow timeWindow, Optional<Integer> pageSize, boolean reversed) {
+        Integer $pageSize = pageSize
+            .filter(i -> i != 0)
+            .orElseGet(LeaderBoardService::getDefaultPageSize);
+
+        TextHelper.sendTextByKey(player, "leaderboard.list.header", leaderboard.getDisplayName(), timeWindow.toLanguageValue(player));
+        List<LeaderBoardSnapshot> leaderBoardSnapshots = new ArrayList<>(LeaderBoardService.getLeaderBoardSnapshots(leaderboard, timeWindow));
+        if (reversed) {
+            leaderBoardSnapshots.sort(Comparator.comparing(LeaderBoardSnapshot::getEffectiveScore).reversed());
+        } else {
+            leaderBoardSnapshots.sort(Comparator.comparing(LeaderBoardSnapshot::getEffectiveScore));
+        }
+        PagedMessageText pagedMessageText = PagedMessageText.makePagedMessageText(player, leaderBoardSnapshots, $pageSize, (entity, pageBuilder) -> {
+            String playerName = entity.getOwnerCache().getPlayerName();
+            int score = entity.getEffectiveScore();
+            Text entryText = TextHelper.getTextByKey(player, "leaderboard.list.entry", playerName, score);
+            pageBuilder.append(entryText);
+            pageBuilder.append(TextHelper.TEXT_NEWLINE);
+        });
+        pagedMessageText.sendPage(player, 0);
     }
 
     @Override

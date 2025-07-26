@@ -54,7 +54,7 @@ public class LeaderBoardPlaceholders {
             }
             return LeaderBoardService
                 .getLowestN(result.getLeaderBoardDescriptor(), result.getRankN(), result.getTimeWindow())
-                .map(it -> Text.of(String.valueOf(it.getDistance())))
+                .map(it -> Text.of(String.valueOf(it.getEffectiveScore())))
                 .orElseGet(LeaderBoardService::getNoScoreText);
         });
     }
@@ -100,7 +100,7 @@ public class LeaderBoardPlaceholders {
             }
             return LeaderBoardService
                 .getHighestN(result.getLeaderBoardDescriptor(), result.getRankN(), result.getTimeWindow())
-                .map(it -> Text.of(String.valueOf(it.getDistance())))
+                .map(it -> Text.of(String.valueOf(it.getEffectiveScore())))
                 .orElseGet(LeaderBoardService::getNoScoreText);
         });
     }

@@ -38,7 +38,11 @@ public class LeaderBoardService {
             .findFirst();
     }
 
-    private static List<LeaderBoardSnapshot> getLeaderBoardSnapshots(@NotNull LeaderBoardDescriptor descriptor, @NotNull LeaderBoardTimeWindow timeWindow) {
+    public static int getDefaultPageSize() {
+        return LeaderBoardInitializer.config.model().getPageSize();
+    }
+
+    public static List<LeaderBoardSnapshot> getLeaderBoardSnapshots(@NotNull LeaderBoardDescriptor descriptor, @NotNull LeaderBoardTimeWindow timeWindow) {
         return withLeaderBoardData(descriptor, leaderBoardData -> leaderBoardData
             .getCaches()
             .stream()
@@ -47,7 +51,7 @@ public class LeaderBoardService {
                 snapshot.setOwnerCache(it);
                 return snapshot;
             })
-            .filter(LeaderBoardSnapshot::hasDistance)
+            .filter(LeaderBoardSnapshot::hasEffectiveScore)
             .toList());
     }
 
@@ -57,7 +61,8 @@ public class LeaderBoardService {
             return Optional.empty();
         }
 
-        copyOfSnapshots.sort(Comparator.comparing(LeaderBoardSnapshot::getDistance));
+        copyOfSnapshots.sort(Comparator.comparing(LeaderBoardSnapshot::getEffectiveScore));
+
         LeaderBoardSnapshot snapshot;
         if (reversed) {
             snapshot = copyOfSnapshots.get(copyOfSnapshots.size() - rankN);

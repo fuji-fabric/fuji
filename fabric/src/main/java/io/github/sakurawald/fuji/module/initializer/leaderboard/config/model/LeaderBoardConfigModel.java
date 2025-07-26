@@ -25,13 +25,18 @@ public class LeaderBoardConfigModel {
         """)
     DayOfWeek beginningOfTheWeek = DayOfWeek.SUNDAY;
 
+    @Document(id = 1753496184086L, value = """
+        The `default page size` for `/leaderboard lowest` and `/leaderboard highest` commands.
+        """)
+    int pageSize = 10;
+
     @Document(id = 1753491782458L, value = """
         A `leaderboard descriptor` is used to define a `leaderboard`.
         """)
     List<LeaderBoardDescriptor> leaderboardDescriptors = new ArrayList<>() {
         {
-            this.add(new LeaderBoardDescriptor("death-board", "%player:statistic_raw minecraft:deaths%"));
-            this.add(new LeaderBoardDescriptor("zombie-kill-board", "%player:statistic_raw minecraft:killed minecraft:zombie%"));
+            this.add(new LeaderBoardDescriptor("death-board", "<dark_red>Death Board</dark_red>","%player:statistic_raw minecraft:deaths%"));
+            this.add(new LeaderBoardDescriptor("zombie-kill-board", "<blue>Zombie Kills</blue>","%player:statistic_raw minecraft:killed minecraft:zombie%"));
         }
     };
 
