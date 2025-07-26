@@ -83,6 +83,11 @@ import org.jetbrains.annotations.NotNull;
 
     ◉ List the specified `leaderboard` with `highest first` order and `daily` time window.
     Issue: `/leaderboard highest zombie-kill-board DAILY`
+
+    ◉ Award the top player.
+    Issue:
+    1. `/run as console send-broadcast <green>The greatest zombie killer this week is %fuji:highest_n_name zombie-kill-board 1 weekly%`
+    2. `/run as console give %fuji:highest_n_name zombie-kill-board 1 weekly% minecraft:diamond 1`
     """)
 public class LeaderBoardInitializer extends ModuleInitializer {
 
