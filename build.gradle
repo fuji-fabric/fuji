@@ -153,7 +153,8 @@ allprojects { p ->
         // The central repo.
         mavenCentral()
 
-        maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
+        google()
+//        maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
 
         // For manifold preprocessor.
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
