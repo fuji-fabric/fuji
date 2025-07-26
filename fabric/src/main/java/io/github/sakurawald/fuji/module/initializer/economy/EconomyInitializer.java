@@ -137,6 +137,7 @@ public class EconomyInitializer extends ModuleInitializer {
         Query your economy `accounts`.
         """)
     @CommandNode("economy balance")
+    @CommandRequirement(level = 4)
     private static int $balance(@CommandSource ServerPlayerEntity player) {
         OfflineGameProfile offlineGameProfile = new OfflineGameProfile(player.getGameProfile());
         $accounts(player.getCommandSource(), offlineGameProfile);
@@ -147,6 +148,7 @@ public class EconomyInitializer extends ModuleInitializer {
         List the top players of specified currency using GUI.
         """)
     @CommandNode("economy balance-top gui")
+    @CommandRequirement(level = 4)
     private static int $balanceTopGui(@CommandSource ServerPlayerEntity player, CurrencyId currencyId) {
         BalanceTopGui.make(player, currencyId.getValue())
             .open();
@@ -157,6 +159,7 @@ public class EconomyInitializer extends ModuleInitializer {
         List the top players of specified currency using message.
         """)
     @CommandNode("economy balance-top")
+    @CommandRequirement(level = 4)
     private static int $balanceTop(@CommandSource ServerPlayerEntity player, CurrencyId currencyId) {
         List<GameProfileAndEconomyAccount> entities = EconomyService.makeBalanceTopEntities(currencyId.getValue());
         PagedMessageText pagedMessageText = PagedMessageText.makePagedMessageText(player, entities, EconomyService.getBalanceTopPageSize(), (entity, index, pageBuilder) -> {
@@ -198,6 +201,7 @@ public class EconomyInitializer extends ModuleInitializer {
 
     @Document(id = 1751826934778L, value = "Pay specified `amount` of `currency` to another player's account.")
     @CommandNode("economy pay")
+    @CommandRequirement(level = 4)
     private static int $pay(@CommandSource ServerPlayerEntity source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
         EconomyService.transferCurrency(source, player, currencyId.getValue(), amount);
         return CommandHelper.Return.SUCCESS;

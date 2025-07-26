@@ -106,6 +106,7 @@ public class LeaderBoardInitializer extends ModuleInitializer {
 
     @Document(id = 1753493701376L, value = "List the lowest N players for specified leaderboard.")
     @CommandNode("leaderboard lowest")
+    @CommandRequirement(level = 4)
     private static int $lowest(@CommandSource ServerPlayerEntity player, @NotNull LeaderBoardDescriptor leaderboard, @NotNull LeaderBoardTimeWindow timeWindow, Optional<Integer> pageSize) {
         printLeaderBoardAsPagedMessage(player, leaderboard, timeWindow, pageSize, false);
         return CommandHelper.Return.SUCCESS;
@@ -113,6 +114,7 @@ public class LeaderBoardInitializer extends ModuleInitializer {
 
     @Document(id = 1753496925314L, value = "List the highest N players for specified leaderboard.")
     @CommandNode("leaderboard highest")
+    @CommandRequirement(level = 4)
     private static int $highest(@CommandSource ServerPlayerEntity player, @NotNull LeaderBoardDescriptor leaderboard, @NotNull LeaderBoardTimeWindow timeWindow, Optional<Integer> pageSize) {
         printLeaderBoardAsPagedMessage(player, leaderboard, timeWindow, pageSize, true);
         return CommandHelper.Return.SUCCESS;
