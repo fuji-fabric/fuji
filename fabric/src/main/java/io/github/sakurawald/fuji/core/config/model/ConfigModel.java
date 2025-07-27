@@ -587,7 +587,8 @@ public class ConfigModel {
             public ForEach for_each = new ForEach();
             public OneOf one_of = new OneOf();
             public Chain chain = new Chain();
-            public If $if = new If();
+            @SerializedName(value = "if")
+            public If IF = new If();
             public Nop nop = new Nop();
             public Delay delay = new Delay();
             public Json json = new Json();

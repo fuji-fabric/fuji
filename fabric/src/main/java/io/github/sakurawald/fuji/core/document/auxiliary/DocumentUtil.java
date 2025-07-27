@@ -101,6 +101,9 @@ public class DocumentUtil {
         line = line.replaceAll("if ", "<blue>if </blue>");
         line = line.replaceAll("then ", "<blue>then </blue>");
         line = line.replaceAll("else ", "<blue>else </blue>");
+        line = line.replaceAll("IF", "<blue>IF</blue>");
+        line = line.replaceAll("THEN", "<blue>THEN</blue>");
+        line = line.replaceAll("ELSE", "<blue>ELSE</blue>");
 
         line = line.replaceAll("^(\\d\\. )", "<#87CEEB>$1</#87CEEB>");
         line = line.replaceAll("^(\\d\\.[a-z]\\. )", "<#87CEEB>$1</#87CEEB>");
