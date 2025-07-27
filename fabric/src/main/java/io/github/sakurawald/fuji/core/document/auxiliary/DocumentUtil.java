@@ -90,12 +90,12 @@ public class DocumentUtil {
         line = line.replaceAll("Dave", "<dark_green>Dave</dark_green>");
         line = line.replaceAll("Eve", "<dark_green>Eve</dark_green>");
 
-        line = line.replaceAll("@a ", "<pink>@a </pink>");
-        line = line.replaceAll("@e ", "<pink>@e </pink>");
-        line = line.replaceAll("@n ", "<pink>@n </pink>");
-        line = line.replaceAll("@p ", "<pink>@p </pink>");
-        line = line.replaceAll("@r ", "<pink>@r </pink>");
-        line = line.replaceAll("@s ", "<pink>@s </pink>");
+        line = line.replaceAll("@a", "<#FF0000>@a</#FF0000>");
+        line = line.replaceAll("@e", "<#FF0000>@e</#FF0000>");
+        line = line.replaceAll("@n", "<#FF0000>@n</#FF0000>");
+        line = line.replaceAll("@p", "<#FF0000>@p</#FF0000>");
+        line = line.replaceAll("@r", "<#FF0000>@r</#FF0000>");
+        line = line.replaceAll("@s", "<#FF0000>@s</#FF0000>");
 
         line = line.replaceAll("If ", "<blue>If </blue>");
         line = line.replaceAll("if ", "<blue>if </blue>");

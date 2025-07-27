@@ -61,6 +61,37 @@ import net.minecraft.server.network.ServerPlayerEntity;
     ◉ Give online players random amount of diamonds.
     Issue: `/run as console foreach give %fuji:escape player:name% minecraft:diamond %fuji:escape fuji:random 8 32 1%`
     """)
+@ColorBox(id = 1753585969328L, color = ColorBox.ColorBlockTypes.WARNING, value = """
+    ◉ Be careful with the vanilla Minecraft `target selector`.
+    The vanilla Minecraft `target selectors` are: `@a`, `@e`, `@n`, `@p`, `@r` and `@s`.
+    They are used to select the value for `Player` argument type and `Entity` argument type:
+    1. The `@a` in `/give @a minecraft:apple` will `select` all online players. (Player Argument)
+    2. The `@e` in `/kill @e` will `select` all entities. (Entity Argument)
+    Remember, the `target selector` can only be used to select specific `argument types`, like the `Player` and `Entity`.
+
+    However, the `%player:name%` is a `placeholder` which will always be replaced with `the contextual player`.
+    If you want to specify the name of `the contextual player`, you should use a `placeholder`, because it always works.
+    For example:
+    1. `/run as console say I am @s` will say `I am @s`
+    2. `/run as console say I am %player:name%` will say `I am Steve` (Assume that your account is named `Steve`)
+
+    NOTE: The `@s` does work if you use `/execute as @a run say I am @s` (If you actually know what you are doing.)
+
+    Anyway, if you are trying to mix the usage of `target selector` and `placeholders`, you must be careful with the `semantics`.
+
+    ◉ The semantics of `@p` and `%player:name%`.
+    All fuji commands that execute a command, will try to parse the `placeholders`.
+    So, you can insert placeholders like `%player:name%` in `/run as console say I am %player:name%` command.
+
+    The `@p` is just a `target selector`, you can use it with the `/execute` command.
+    However, you should not use `/run as console give @p minecraft:apple`.
+    The `@p` will select `the nearest player` as the value of `Player Argument`.
+    Then here comes the question: `Which player is considered as the nearest player to the console?`
+    The answer is: The `console` is considered as a dummy player in the spawnpoint of `minecraft:overworld`.
+    So if you use `@p` with `/run as console` command, then there will be `in-consistent`.
+    The player referred to by the `@p` will be in-consistent.
+    It depends on which player is the closest player to the spawnpoint of `minecraft:overworld` at that time.
+    """)
 
 
 

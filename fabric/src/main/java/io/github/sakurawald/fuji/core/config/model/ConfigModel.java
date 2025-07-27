@@ -65,7 +65,7 @@ public class ConfigModel {
         public static class DocumentSection {
             @Document(id = 1752484948715L, value = """
                 When `enable` this option, we will always use the `built-in doc strings`, which is written in `English`.
-                This option is used to ensure you always sees the `latest version` of `doc strings` from your `current using version`.
+                This option is used to ensure you always see the `latest version` of `doc strings` from your `current using version`.
 
                 When `disable` this option, we will ues the `doc strings` from the `language files`.
                 """)
