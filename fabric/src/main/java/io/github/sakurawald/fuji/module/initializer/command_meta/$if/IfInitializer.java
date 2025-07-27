@@ -56,6 +56,11 @@ import net.minecraft.server.command.ServerCommandSource;
     The /nop command `performs no action` and always `returns success`.
     You can use it as a `dummy command` in the `else-command` place, to effectively ignore it.
     Issue: `/if is-op? %player:name% then say It is op. else nop`
+
+    ◉ Leverage the power of `/execute if` and `/execute unless` commands.
+    Issue: `/if execute if entity @s[x=0,y=64,z=0,distance=..128] then say You are near the origin. else say You are far from the origin.`
+
+    ◉ Combine 2 condition commands, and only execute the `then-command` when they are all `true`.
     """)
 public class IfInitializer extends ModuleInitializer {
 
@@ -94,7 +99,7 @@ public class IfInitializer extends ModuleInitializer {
 
             LogUtil.debug("Execute an `/if` command: condition-command = {}, then-command = {}, else-command = {}", conditionCommand, thenCommand, elseCommand);
             int conditionValue = CommandExecutor.execute(ExtendedCommandSource.fromSource(source), conditionCommand);
-            if (conditionValue >= 0) {
+            if (conditionValue > 0) {
                 CommandExecutor.execute(ExtendedCommandSource.fromSource(source), thenCommand);
             } else {
                 CommandExecutor.execute(ExtendedCommandSource.fromSource(source), elseCommand);
