@@ -61,6 +61,10 @@ import java.util.regex.Pattern;
 
     ◉ Use chain command with predicate command
     Issue: `/run as player Alice chain test-level-perm %player:name% 4 chain say value is true`
+
+    ◉ Leverage the `/execute if` command.
+    Issue: `/chain execute if block ~ ~-1 ~ minecraft:diamond_block if entity @s[nbt={Inventory:[{id:"minecraft:diamond"}]}] chain say You are standing on diamond block and have diamond.`
+    <green>NOTE: This use-case is similar to `command_meta.if` module.
     """)
 public class ChainInitializer extends ModuleInitializer {
     private static final Pattern CHAIN_COMMAND_PARSER = Pattern.compile("(.+?)\\s+(chain .+)");
