@@ -1,9 +1,9 @@
 package io.github.sakurawald.fuji.module.initializer.command_debug;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
@@ -18,12 +18,10 @@ import java.util.Objects;
 @Document(id = 1751827007525L, value = """
     This module provides debug tools for executing commands.
     """)
-
 @ColorBox(id = 1751903540774L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    ◉ Execute the specified command as console, and report the info.
+    ◉ Execute a specified command, and sees the debug info.
     Issue `/command-debug has-exp? Alice 100`
     """)
-
 public class CommandDebugInitializer extends ModuleInitializer {
 
     @CommandNode("command-debug")
@@ -35,17 +33,9 @@ public class CommandDebugInitializer extends ModuleInitializer {
             .requireNonNull(ServerHelper.getCommandDispatcher())
             .execute(commandString, source);
 
-        LogUtil.info("""
-            [Command Debug]
-            Command String = {}
-            Command Source = {}
-            Command Return = {}
-            """
-            , commandString
-            , source.getName()
-            , returnValue
-        );
-
+        TextHelper.sendTextByKey(source, "command.string", commandString);
+        TextHelper.sendTextByKey(source, "command.source", source.getName());
+        TextHelper.sendTextByKey(source, "command.return", returnValue);
         return CommandHelper.Return.SUCCESS;
     }
 }
