@@ -2,9 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.tester;
 
 
 import com.mojang.brigadier.context.CommandContext;
-import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -12,12 +10,7 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.tester.functions.TestFunctions;
 
-import java.time.DayOfWeek;
-import java.time.ZonedDateTime;
 import lombok.SneakyThrows;
-import net.minecraft.loot.condition.LootCondition;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -35,10 +28,6 @@ public class TesterInitializer extends ModuleInitializer {
     @SneakyThrows(Exception.class)
     @CommandNode("run")
     private static int $run(@CommandSource ServerCommandSource source) {
-        Registry<LootCondition> lootConditions = RegistryHelper.ofRegistry(RegistryKeys.PREDICATE);
-        lootConditions.forEach(it -> {
-           LogUtil.info("{}", it.getType());
-        });
 
         LogUtil.info("Done");
         return 0;
