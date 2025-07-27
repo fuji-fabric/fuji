@@ -122,7 +122,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         player2lastSteppingBlockUUID.put(playerName, uuid);
 
         /* Trigger it. */
-        ServerHelper.getServer().executeSync(() -> tryTriggerAttachmentModel(uuid, player, List.of(InteractType.STEP_ON)));
+        ServerHelper.executeSync(() -> tryTriggerAttachmentModel(uuid, player, List.of(InteractType.STEP_ON)));
     }
 
     public static void testSteppingBlockForPlayers() {

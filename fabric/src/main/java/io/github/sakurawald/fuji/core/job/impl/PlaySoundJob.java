@@ -57,7 +57,7 @@ public class PlaySoundJob extends FixedIntervalJob {
             .filter(Objects::nonNull)
             .forEach(player -> {
                 // NOTE: The playSound should be called in main thread.
-                ServerHelper.getServer().executeSync(() -> {
+                ServerHelper.executeSync(() -> {
                     SoundEvent soundEvent = SoundEvent.of(RegistryHelper.makeIdentifier(setup.sound));
                     SoundCategory soundCategory = SoundCategory.BLOCKS;
                     PlayerHelper.playSound(player, soundEvent, soundCategory, setup.volume, setup.pitch);

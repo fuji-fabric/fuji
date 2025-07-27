@@ -83,6 +83,10 @@ public class ServerHelper {
             .toList();
     }
 
+    public static void executeSync(Runnable runnable) {
+        getServer().executeSync(runnable);
+    }
+
     public static Optional<ServerPlayerEntity> getOnlinePlayerByName(String name) {
         return getOnlinePlayers()
             .stream()

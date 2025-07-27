@@ -50,13 +50,11 @@ public class WorldService {
         ServerWorld world = ticket.world;
         saveChunksBeforeUnloadingTheDimension(world);
 
-        ServerHelper.getServer().submit(() -> {
-            dimensionDeletionTicketQueue.add(ticket);
-        });
+        ServerHelper.executeSync(() -> dimensionDeletionTicketQueue.add(ticket));
     }
 
     private static void saveChunksBeforeUnloadingTheDimension(ServerWorld world) {
-        ServerHelper.getServer().execute(() -> {
+        ServerHelper.executeSync(() -> {
             world.savingDisabled = false;
             #if MC_VER <= MC_1_21_4
             world.getChunkManager().removePersistentTickets();
@@ -69,9 +67,7 @@ public class WorldService {
     }
 
     public static void submitDimensionCreationTicket(DimensionCreationTicket ticket) {
-        ServerHelper.getServer().submit(() -> {
-            dimensionCreationQueue.add(ticket);
-        });
+        ServerHelper.executeSync(() -> dimensionCreationQueue.add(ticket));
     }
 
     private static boolean tryConsumeDimensionDeletionTicket(@NotNull DimensionDeletionTicket ticket) {
