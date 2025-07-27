@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.cleaner.job;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.job.abst.CronJob;
 import io.github.sakurawald.fuji.module.initializer.cleaner.CleanerInitializer;
@@ -16,6 +17,6 @@ public class CleanerJob extends CronJob {
 
     @Override
     public void execute(JobExecutionContext context) {
-        CleanerInitializer.$clean();
+        ServerHelper.executeSync(CleanerInitializer::$clean);
     }
 }
