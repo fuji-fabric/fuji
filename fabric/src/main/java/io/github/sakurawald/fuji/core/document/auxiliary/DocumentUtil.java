@@ -97,10 +97,11 @@ public class DocumentUtil {
         line = line.replaceAll("@r", "<#FF0000>@r</#FF0000>");
         line = line.replaceAll("@s", "<#FF0000>@s</#FF0000>");
 
-        line = line.replaceAll("If ", "<blue>If </blue>");
-        line = line.replaceAll("if ", "<blue>if </blue>");
-        line = line.replaceAll("then ", "<blue>then </blue>");
-        line = line.replaceAll("else ", "<blue>else </blue>");
+        line = line.replaceAll("If ", "<#B13BFF>If </#B13BFF>");
+        line = line.replaceAll("if ", "<#B13BFF>if </#B13BFF>");
+        line = line.replaceAll("then ", "<#B13BFF>then </#B13BFF>");
+        line = line.replaceAll("else ", "<#B13BFF>else </#B13BFF>");
+
         line = line.replaceAll("IF", "<blue>IF</blue>");
         line = line.replaceAll("THEN", "<blue>THEN</blue>");
         line = line.replaceAll("ELSE", "<blue>ELSE</blue>");

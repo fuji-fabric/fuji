@@ -46,6 +46,27 @@ import net.minecraft.server.command.ServerCommandSource;
     The `nested IF` is not supported.
     Once there is an `ambiguity` found in the `/IF` command, the entire execution of the `/IF` command will be aborted.
     """)
+@ColorBox(id = 1753596414690L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ The difference between `/IF` command and `/execute if` command.
+    The `/execute if` command is a powerful command:
+    1. You can use `recursive if`.
+    For example: `/execute if \\<first-condition\\> if \\<second-condition\\>`
+    2. You can use lots of `built-in Minecraft predicates`.
+    For example: `/execute if {block|biome|loaded|dimension|score|blocks|entity|predicate|function|items|data}`
+    3. You can `simulate` the `else-clause` by combining of `/execute if` and `/execute unless` commands.
+
+    ◉ What is the `purpose` of `/IF` command?
+    1. It allows you to use `any command` as the `condition`, based on the `return value` of that command.
+    2. It prevents the `side-effect` from the `condition-clause` and `then-command`. (Without the `/tag` or `/scoreboard`)
+    3. It provides a simple and in-line way to express the `IF ... THEN ... ELSE ...` logic.
+    4. It supports the `placeholders`.
+    5. Still, You can leverage the `/execute if` command as the `condition-command` of `/IF` command.
+    """)
+@ColorBox(id = 1753594904128L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ Useful resource about the `/execute` and `/return`.
+    1. https://minecraft.fandom.com/wiki/Commands/execute
+    2. https://minecraft.wiki/w/Commands/return
+    """)
 @ColorBox(id = 1753521193815L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Check whether a player is an `operator`.
     Issue: `/IF is-op? %player:name% THEN say It is op. ELSE say It is not op.`
@@ -54,17 +75,20 @@ import net.minecraft.server.command.ServerCommandSource;
     Issue: `/IF has-currency? %player:name% fuji:gold 100 THEN say Sufficient balance. ELSE say Insufficient balance.`
 
     ◉ Use a shorten version of `/IF ... THEN ...` command.
-    The /nop command `performs no action` and always `returns success`.
+    The `/nop` command `performs no action` and always `returns success`.
     You can use it as a `dummy command` in the `else-command` place, to effectively ignore it.
     Issue: `/IF is-op? %player:name% THEN say It is op. ELSE nop`
+
+    ◉ Specify `multiple commands` in one place, by using the `/chain` command.
+    Issue: `/IF is-op? %player:name% THEN chain say It is op. chain say Hello op! ELSE nop`
 
     ◉ Leverage the power of `/execute if`. (And the `/execute unless` command)
     Issue: `/IF execute if block ~ ~-1 ~ minecraft:diamond_block THEN say You are standing on diamond block. ELSE say You are not standing on diamond block.`
 
-    ◉ Combine 2 condition commands, and only execute the `then-command` when they are all `true`.
+    ◉ Combine 2 conditions using `chained if`, and only execute the `then-command` when they are all `true`.
     Issue: `/IF execute if block ~ ~-1 ~ minecraft:diamond_block if entity @s[nbt={Inventory:[{id:"minecraft:diamond"}]}] THEN say All true. ELSE say Not all true.`
     The `then-command` will only be executed if the `condition-command` is `true`:
-    1. The player is standing on a `minecraft:diamond_block`.
+    1. The player is standing on a `minecraft:diamond_block` block.
     2. The player has a `minecraft:diamond` item in its inventory.
     """)
 @ColorBox(id = 1753592396075L, color = ColorBox.ColorBlockTypes.NOTE, value = """

@@ -24,11 +24,11 @@ command_event
 command_interactive
 command_menu
 command_meta
+command_meta.IF
 command_meta.attachment
 command_meta.chain
 command_meta.delay
 command_meta.for_each
-command_meta.if
 command_meta.json
 command_meta.nop
 command_meta.one_of
