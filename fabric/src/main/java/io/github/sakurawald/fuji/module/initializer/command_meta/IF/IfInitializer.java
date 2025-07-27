@@ -63,9 +63,12 @@ import net.minecraft.server.command.ServerCommandSource;
     5. Still, You can leverage the `/execute if` command as the `condition-command` of `/IF` command.
     """)
 @ColorBox(id = 1753594904128L, color = ColorBox.ColorBlockTypes.TIPS, value = """
-    ◉ Useful resource about the `/execute` and `/return`.
+    ◉ Useful commands.
     1. https://minecraft.fandom.com/wiki/Commands/execute
     2. https://minecraft.wiki/w/Commands/return
+    3. https://minecraft.fandom.com/wiki/Commands/scoreboard
+    4. https://minecraft.fandom.com/wiki/Commands/tag
+    5. https://minecraft.fandom.com/wiki/Commands/data
     """)
 @ColorBox(id = 1753521193815L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Check whether a player is an `operator`.
