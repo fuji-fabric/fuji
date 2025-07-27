@@ -6,3 +6,4 @@
 - [command_debug] feature: now will send the debug info to the command source, instead of the console.
 - [command_meta.chain] fix: should not continue to execute the chained commands if the previous command is only `partial success`. (This affects the commands like `/execute if ... if ... if ...` combination.)
 - [cleaner] fix: should not call the clean function in async task, which may crash the server.
+- [docs] fix: should display the `*` character in `document string`.

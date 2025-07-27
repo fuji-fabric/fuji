@@ -74,6 +74,8 @@ public class DocumentUtil {
             line = "<bold>" + line;
         }
 
+        line = line.replace("*", "\\*");
+
         line = UrlHighlighter.highlight(line);
 
         line = line.replaceAll("`/(.+?)`", "<gold>/$1</gold>");
