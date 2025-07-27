@@ -96,6 +96,13 @@ import net.minecraft.server.command.ServerCommandSource;
     1. When `none condition` is `true`, it throws a `Test failed` exception.
     2. When `one of the specified conditions` is `true`, it will returns `0` to mean `partial success`.
     3. When `all of the specified conditions` are `true`, it will returns `1` to mean `success`.
+
+    ◉ Use `/command-debug` command to see the `return value` of a command.
+    The `return value` is not displayed explicitly in-game.
+    However, you can use `/command-debug` command to see `the return value` of a specified command.
+    Issue:
+    1. `/command-debug execute if block ~ ~-1 ~ minecraft:diamond_block`
+    2. `/command-debug execute if block ~ ~-1 ~ minecraft:diamond_block if entity @s[nbt={Inventory:[{id:"minecraft:diamond"}]}]`
     """)
 public class IfInitializer extends ModuleInitializer {
 
