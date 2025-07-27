@@ -92,17 +92,22 @@ import net.minecraft.server.command.ServerCommandSource;
     2. The player has a `minecraft:diamond` item in its inventory.
     """)
 @ColorBox(id = 1753592396075L, color = ColorBox.ColorBlockTypes.NOTE, value = """
-    ◉ The behaviour of `/execute if` command.
-    1. When `none condition` is `true`, it throws a `Test failed` exception.
-    2. When `one of the specified conditions` is `true`, it will returns `0` to mean `partial success`.
-    3. When `all of the specified conditions` are `true`, it will returns `1` to mean `success`.
-
     ◉ Use `/command-debug` command to see the `return value` of a command.
     The `return value` is not displayed explicitly in-game.
     However, you can use `/command-debug` command to see `the return value` of a specified command.
     Issue:
     1. `/command-debug execute if block ~ ~-1 ~ minecraft:diamond_block`
     2. `/command-debug execute if block ~ ~-1 ~ minecraft:diamond_block if entity @s[nbt={Inventory:[{id:"minecraft:diamond"}]}]`
+
+    ◉ The behaviour of `/execute if` command.
+    1. When `none condition` is `true`, it throws a `Test failed` exception.
+    2. When `one of the specified conditions` is `true`, it will returns `0` to mean `partial success`.
+    3. When `all of the specified conditions` are `true`, it will returns `a positive integer` to mean `success`.
+    NOTE: This `positive integer` equals to `the number of successful branch` if the `/execute if` command is `forked`.
+
+    For example, if you have `3` players online, but only `2` of them are standing on a `minecraft:diamond_block` block.
+    Issue: `/command-debug execute at @a if block ~ ~-1 ~ minecraft:diamond_block`
+    You will get the integer `2` as the `return value` of that `/execute ...` command instance.
     """)
 public class IfInitializer extends ModuleInitializer {
 
