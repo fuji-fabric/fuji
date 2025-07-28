@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -28,34 +29,34 @@ import org.jetbrains.annotations.NotNull;
 
 public class EconomyService {
 
-    public static Collection<EconomyCurrency> getServerCurrencies() {
+    public static @NotNull Collection<EconomyCurrency> getServerCurrencies() {
         MinecraftServer server = ServerHelper.getServer();
         return CommonEconomy.getCurrencies(server);
     }
 
-    public static Collection<Identifier> getServerCurrencyIds() {
+    public static @NotNull Collection<Identifier> getServerCurrencyIds() {
         return getServerCurrencies()
             .stream()
             .map(EconomyCurrency::id)
             .toList();
     }
 
-    public static boolean isCurrencyInstalledOnThisServer(Identifier currencyId) {
+    public static boolean isCurrencyInstalledOnThisServer(@NotNull Identifier currencyId) {
         return getServerCurrencyIds()
             .stream()
             .anyMatch(it -> it.equals(currencyId));
     }
 
-    public static Collection<EconomyProvider> getProviders() {
+    public static @NotNull Collection<EconomyProvider> getProviders() {
         return CommonEconomy.providers();
     }
 
-    public static @NotNull Collection<EconomyAccount> getUserAccounts(GameProfile gameProfile) {
+    public static @NotNull Collection<EconomyAccount> getUserAccounts(@NotNull GameProfile gameProfile) {
         MinecraftServer server = ServerHelper.getServer();
         return CommonEconomy.getAccounts(server, gameProfile);
     }
 
-    public static @NotNull Optional<EconomyAccount> getUserAccount(GameProfile gameProfile, Identifier currencyId) {
+    public static @NotNull Optional<EconomyAccount> getUserAccount(@NotNull GameProfile gameProfile, @NotNull Identifier currencyId) {
         return getUserAccounts(gameProfile)
                 .stream()
                 .filter(account -> {
@@ -65,52 +66,53 @@ public class EconomyService {
                 .findFirst();
     }
 
-    public static CustomEconomyCurrencyNode getCustomCurrencyNode(Identifier currencyId) {
-        Optional<CustomEconomyCurrencyNode> currencyNoteOpt = EconomyInitializer.data.model()
+    private static @NotNull <T> T withCustomEconomyCurrencyNode(@NotNull Identifier currencyId, @NotNull Function<CustomEconomyCurrencyNode, T> function) {
+        Optional<CustomEconomyCurrencyNode> customEconomyCurrencyNode = EconomyInitializer.data.model()
             .currencies
             .stream()
             .filter(currency -> currency.currencyId.equals(currencyId.toString()))
             .findFirst();
 
-        /* Make a new currency node. */
-        if (currencyNoteOpt.isEmpty()) {
+        CustomEconomyCurrencyNode $customEconomyCurrencyNode = customEconomyCurrencyNode.orElseGet(() -> {
             if (isCurrencyInstalledOnThisServer(currencyId)) {
-                CustomEconomyCurrencyNode customEconomyCurrencyNode = CustomEconomyCurrencyNode.make(currencyId.toString());
-                EconomyInitializer.data.model().currencies.add(customEconomyCurrencyNode);
+                CustomEconomyCurrencyNode newValue = CustomEconomyCurrencyNode.make(currencyId.toString());
+                EconomyInitializer.data.model().currencies.add(newValue);
                 EconomyInitializer.data.writeStorage();
-                return customEconomyCurrencyNode;
+                return newValue;
             }
 
-            throw new IllegalArgumentException("There is no currency ID %s in data file.".formatted(currencyId));
-        }
+            throw new IllegalArgumentException("The currency %s didn't installed in the server.".formatted(currencyId));
+        });
 
-        return currencyNoteOpt.get();
+        return function.apply($customEconomyCurrencyNode);
     }
 
-    public static CustomEconomyAccountNode getCustomAccountNode(GameProfile gameProfile, Identifier currencyId) {
-        /* Find the account of the game profile for the currency. */
-        CustomEconomyCurrencyNode currencyNode = getCustomCurrencyNode(currencyId);
-        Optional<CustomEconomyAccountNode> accountNodeOpt = currencyNode
-            .accounts
-            .stream()
-            .filter(it -> it.ownerName.equals(gameProfile.getName()))
-            .findFirst();
+    @SuppressWarnings("UnnecessaryLocalVariable")
+    public static @NotNull CustomEconomyAccountNode getCustomAccountNode(@NotNull GameProfile gameProfile, @NotNull Identifier currencyId) {
+        return withCustomEconomyCurrencyNode(currencyId, customEconomyCurrencyNode -> {
+            /* Find the account of the game profile for the currency. */
+            Optional<CustomEconomyAccountNode> customEconomyAccountNode = customEconomyCurrencyNode
+                .accounts
+                .stream()
+                .filter(it -> it.ownerName.equals(gameProfile.getName()))
+                .findFirst();
 
-        /* Make a new account node. */
-        if (accountNodeOpt.isEmpty()) {
-            CustomEconomyCurrency customEconomyCurrency = CustomEconomyProvider.getCustomEconomyCurrency(currencyId);
-            long defaultBalance = (long) (customEconomyCurrency.currencyDescriptor.defaultFaceBalance * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
+            /* Make a new account node. */
+            CustomEconomyAccountNode $customEconomyAccountNode = customEconomyAccountNode.orElseGet(() -> {
+                CustomEconomyCurrency customEconomyCurrency = CustomEconomyProvider.getCustomEconomyCurrency(currencyId);
+                long defaultBalance = (long) (customEconomyCurrency.currencyDescriptor.defaultFaceBalance * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
 
-            CustomEconomyAccountNode customEconomyAccountNode = CustomEconomyAccountNode.make(gameProfile, defaultBalance);
-            currencyNode.accounts.add(customEconomyAccountNode);
-            EconomyInitializer.data.writeStorage();
-            return customEconomyAccountNode;
-        }
+                CustomEconomyAccountNode newValue = CustomEconomyAccountNode.make(gameProfile, defaultBalance);
+                customEconomyCurrencyNode.accounts.add(newValue);
+                EconomyInitializer.data.writeStorage();
+                return newValue;
+            });
 
-        return accountNodeOpt.get();
+            return $customEconomyAccountNode;
+        });
     }
 
-    public static void transferCurrency(ServerPlayerEntity source, OfflineGameProfile player, Identifier currencyId, double amount) {
+    public static void transferCurrency(@NotNull ServerPlayerEntity source, @NotNull OfflineGameProfile player, @NotNull Identifier currencyId, double amount) {
         long deltaValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
         deltaValue = Math.max(0, deltaValue);
 
@@ -144,7 +146,7 @@ public class EconomyService {
         return EconomyInitializer.config.model().getBalanceTopPageSize();
     }
 
-    public static @NotNull List<GameProfileAndEconomyAccount> makeBalanceTopEntities(ServerPlayerEntity player, Identifier currencyId) {
+    public static @NotNull List<GameProfileAndEconomyAccount> makeBalanceTopEntities(@NotNull ServerPlayerEntity player, @NotNull Identifier currencyId) {
         return ServerHelper
             .getOfflineGameProfiles()
             .stream()
@@ -157,7 +159,7 @@ public class EconomyService {
             .toList();
     }
 
-    public static EconomyAccount tryGetEconomyAccount(@NotNull ServerCommandSource source, @NotNull GameProfile gameProfile, @NotNull Identifier currencyId) {
+    public static @NotNull EconomyAccount tryGetEconomyAccount(@NotNull ServerCommandSource source, @NotNull GameProfile gameProfile, @NotNull Identifier currencyId) {
         Optional<EconomyAccount> economyAccount = getUserAccount(gameProfile, currencyId);
         if (economyAccount.isEmpty()) {
             TextHelper.sendTextByKey(source, "economy.account.not_found", gameProfile.getName(), currencyId);
