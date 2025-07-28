@@ -1312,5 +1312,6 @@
   "docstring.1753686048373": "List all defined `jails`.",
   "docstring.1753686063844": "Put the `player` into a specified `jail`.",
   "docstring.1753690598413": "Remove a player from the jail it is currently in.\n",
-  "docstring.1753692574518": "Find the `jail` the player is in."
+  "docstring.1753692574518": "Find the `jail` the player is in.",
+  "docstring.1753694703368": "This job is used to update all enabled `jail records`.\n"
 }
