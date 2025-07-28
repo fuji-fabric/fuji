@@ -108,8 +108,9 @@ public class ServerHelper {
             .findFirst();
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isPlayerOnline(String playerName) {
-        return getOnlinePlayerByName(playerName) != null;
+        return getOnlinePlayerByName(playerName).isPresent();
     }
 
     public static void sendPacketToAll(Packet<?> packet) {

@@ -64,6 +64,9 @@ accessible class net/minecraft/server/network/ServerPlayNetworkHandler$Interacti
 # head module
 accessible field net/minecraft/entity/player/PlayerInventory combinedInventory Ljava/util/List;
 
+#player
+accessible method net/minecraft/server/PlayerManager savePlayerData (Lnet/minecraft/server/network/ServerPlayerEntity;)V
+
 # common economy api
 accessible field net/minecraft/server/network/ServerPlayerEntity server Lnet/minecraft/server/MinecraftServer;
 

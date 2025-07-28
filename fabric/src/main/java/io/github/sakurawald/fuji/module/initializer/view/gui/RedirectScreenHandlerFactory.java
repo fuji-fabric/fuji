@@ -81,6 +81,12 @@ public abstract class RedirectScreenHandlerFactory {
             public boolean canUse(PlayerEntity playerEntity) {
                 return isRedirectValid();
             }
+
+            @Override
+            public void onClosed(PlayerEntity playerEntity) {
+                super.onClosed(playerEntity);
+                ServerHelper.getPlayerManager().savePlayerData(getTargetPlayer());
+            }
         };
     }
 
