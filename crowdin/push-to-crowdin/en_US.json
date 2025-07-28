@@ -236,6 +236,7 @@
   "input.syntax.error": "[send-action-bar]<red>Input Syntax Error",
   "item.empty.not_allow": "<red>Item can't be empty",
   "jail.list": "<yellow>Jails: `%s`",
+  "jail.not_found": "<red>Jail `%s` not found.",
   "job.fire_dates": "<blue>Fire Dates: ",
   "job.fire_dates.entry": "<blue>◉ <grey>%s",
   "job.job_group": "<blue>Job Group: `%s`",
@@ -1296,5 +1297,7 @@
   "docstring.1753684834618": "A `jail descriptor` is used to define a `jail`.",
   "docstring.1753684930648": "Tae `jail duration` to use if you didn't specify a `jail duration`.",
   "docstring.1753685321191": "The player name who created this `jail record`.",
-  "docstring.1753685346716": "The `jailed player name`."
+  "docstring.1753685346716": "The `jailed player name`.",
+  "docstring.1753686048373": "List all defined `jails`.",
+  "docstring.1753686063844": "Put the `player` into a specified `jail`."
 }
