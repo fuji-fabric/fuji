@@ -48,17 +48,34 @@ public class JailService {
         return apply;
     }
 
-    public static boolean isInJail(@NotNull JailDescriptor jail, String playerName) {
-        return withJailDataNode(jail, jailDataNode -> jailDataNode
-            .getRecords()
-            .stream()
-            .anyMatch(it -> it.getPlayerName().equals(playerName)));
-    }
-
-    public static Optional<JailDescriptor> getCurrentJailDescriptor(String playerName) {
+    public static List<JailRecord> getJailRecords() {
         return getJailDescriptors()
             .stream()
-            .filter(jail -> isInJail(jail, playerName))
+            .flatMap(it -> getJailRecords(it).stream())
+            .toList();
+    }
+
+    public static List<JailRecord> getJailRecords(@NotNull JailDescriptor jailDescriptor) {
+        return withJailDataNode(jailDescriptor, jailDataNode -> {
+            List<JailRecord> jailRecords = jailDataNode.getRecords();
+            jailRecords.forEach(jailRecord -> jailRecord.setOwnerJailDescriptor(jailDescriptor));
+            return jailRecords;
+        });
+    }
+
+    public static @NotNull List<String> getJailedPlayerNames() {
+        return getJailRecords()
+            .stream()
+            .filter(JailRecord::isEnable)
+            .map(JailRecord::getPlayerName)
+            .toList();
+    }
+
+    public static Optional<JailRecord> getCurrentJailRecord(String playerName) {
+        return getJailDescriptors()
+            .stream()
+            .flatMap(jailDescriptor -> getJailRecords(jailDescriptor).stream())
+            .filter(jailRecord -> jailRecord.getPlayerName().equals(playerName))
             .findFirst();
     }
 
@@ -69,6 +86,10 @@ public class JailService {
             jailDataNode.getRecords().add(jailRecord);
             return null;
         });
+    }
+
+    public static void invalidateJailRecord(JailRecord jailRecord, String playerName) {
+        jailRecord.setEnable(false);
     }
 
 }

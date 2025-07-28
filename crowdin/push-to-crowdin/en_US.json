@@ -238,6 +238,9 @@
   "jail.already_in_jail": "<red>The player `%s` is already in jail `%s`.",
   "jail.list": "<yellow>Jails: `%s`",
   "jail.not_found": "<red>Jail `%s` not found.",
+  "jail.not_in_jail": "<red>The player `%s` was not in any jail.",
+  "jail.pardon": "<green>The player `%s` is pardoned from the jail `%s`.",
+  "jail.put": "<green>You have put the player `%s` into the jail `%s`.",
   "job.fire_dates": "<blue>Fire Dates: ",
   "job.fire_dates.entry": "<blue>◉ <grey>%s",
   "job.job_group": "<blue>Job Group: `%s`",
@@ -1300,5 +1303,6 @@
   "docstring.1753685321191": "The player name who created this `jail record`.",
   "docstring.1753685346716": "The `jailed player name`.",
   "docstring.1753686048373": "List all defined `jails`.",
-  "docstring.1753686063844": "Put the `player` into a specified `jail`."
+  "docstring.1753686063844": "Put the `player` into a specified `jail`.",
+  "docstring.1753690598413": "Remove a player from the jail it is currently in.\n"
 }

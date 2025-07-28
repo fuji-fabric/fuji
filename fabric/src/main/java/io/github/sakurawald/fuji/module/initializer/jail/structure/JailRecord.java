@@ -4,11 +4,14 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class JailRecord {
+
+    boolean enable;
 
     @Document(id = 1753685321191L, value = "The player name who created this `jail record`.")
     String creatorName;
@@ -20,8 +23,11 @@ public class JailRecord {
     int remainingJailSeconds;
     String reason;
 
+    @ToString.Exclude transient JailDescriptor ownerJailDescriptor;
+
     public static JailRecord make(String creatorName, String playerName, int jailSeconds, String reason) {
         JailRecord jailRecord = new JailRecord();
+        jailRecord.setEnable(true);
         jailRecord.setCreatorName(creatorName);
         jailRecord.setCreatedTimestamp(System.currentTimeMillis());
         jailRecord.setPlayerName(playerName);

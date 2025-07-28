@@ -11,6 +11,7 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
+import io.github.sakurawald.fuji.module.initializer.jail.command.argument.wrapper.JailedPlayerName;
 import io.github.sakurawald.fuji.module.initializer.jail.config.model.JailConfigModel;
 import io.github.sakurawald.fuji.module.initializer.jail.config.model.JailDataModel;
 import io.github.sakurawald.fuji.module.initializer.jail.service.JailService;
@@ -46,15 +47,36 @@ public class JailInitializer extends ModuleInitializer {
         String $duration = duration.orElseGet(jail::getDefaultJailedDuration);
 
         return JailService
-            .getCurrentJailDescriptor(playerName)
-            .map(it -> {
+            .getCurrentJailRecord(playerName)
+            .map(currentJailRecord -> {
                 TextHelper.sendTextByKey(source, "jail.already_in_jail", playerName, jail.getId());
                 return CommandHelper.Return.FAIL;
             })
             .orElseGet(() -> {
                 JailService.createJailRecord(creatorName, playerName, jail, $reason, $duration);
-                TextHelper.sendTextByKey(source, "operation.success");
+                TextHelper.sendTextByKey(source, "jail.put", playerName, jail.getId());
                 return CommandHelper.Return.SUCCESS;
+            });
+    }
+
+    @Document(id = 1753690598413L, value = """
+        Remove a player from the jail it is currently in.
+        """)
+    @CommandNode("jail pardon")
+    @CommandRequirement(level = 4)
+    private static int $pardon(@CommandSource ServerCommandSource source, JailedPlayerName playerName) {
+        String $playerName = playerName.getValue();
+
+        return JailService
+            .getCurrentJailRecord($playerName)
+            .map(currentJailRecord -> {
+                JailService.invalidateJailRecord(currentJailRecord, $playerName);
+                TextHelper.sendTextByKey(source, "jail.pardon", $playerName, currentJailRecord.getOwnerJailDescriptor().getId());
+                return CommandHelper.Return.SUCCESS;
+            })
+            .orElseGet(() -> {
+                TextHelper.sendTextByKey(source, "jail.not_in_jail", $playerName);
+                return CommandHelper.Return.FAIL;
             });
     }
 
