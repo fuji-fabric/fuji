@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.jail.structure;
 
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.service.date_parser.DateParser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,6 +37,14 @@ public class JailRecord {
         jailRecord.setReason(reason);
 
         return jailRecord;
+    }
+
+    public String getSpecifiedJailDuration() {
+        return DateParser.formatAccumulatedSeconds(this.getSpecifiedJailSeconds());
+    }
+
+    public String getRemainingJailDuration() {
+        return DateParser.formatAccumulatedSeconds(this.getRemainingJailSeconds());
     }
 
 }

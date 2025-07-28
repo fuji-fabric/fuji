@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.jail;
 
+import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
@@ -72,6 +73,30 @@ public class JailInitializer extends ModuleInitializer {
             .map(currentJailRecord -> {
                 JailService.invalidateJailRecord(currentJailRecord, $playerName);
                 TextHelper.sendTextByKey(source, "jail.pardon", $playerName, currentJailRecord.getOwnerJailDescriptor().getId());
+                return CommandHelper.Return.SUCCESS;
+            })
+            .orElseGet(() -> {
+                TextHelper.sendTextByKey(source, "jail.not_in_jail", $playerName);
+                return CommandHelper.Return.FAIL;
+            });
+    }
+
+    @Document(id = 1753692574518L, value = "Find the `jail` the player is in.")
+    @CommandNode("jail which-jail")
+    @CommandRequirement(level = 4)
+    private static int $whichJail(@CommandSource ServerCommandSource source, JailedPlayerName playerName) {
+        String $playerName = playerName.getValue();
+        return JailService
+            .getCurrentJailRecord($playerName)
+            .map(jailRecord -> {
+                JailDescriptor ownerJailDescriptor = jailRecord.getOwnerJailDescriptor();
+                TextHelper.sendTextByKey(source, "jail.record.player_name", $playerName);
+                TextHelper.sendTextByKey(source,"jail.record.creator_name", jailRecord.getCreatorName());
+                TextHelper.sendTextByKey(source,"jail.record.created_time", ChronosUtil.toDefaultDateFormat(jailRecord.getCreatedTimestamp()));
+                TextHelper.sendTextByKey(source, "jail.record.jail_id", ownerJailDescriptor.getId());
+                TextHelper.sendTextByKey(source,"jail.record.specified_jail_duration", jailRecord.getSpecifiedJailDuration());
+                TextHelper.sendTextByKey(source, "jail.record.remaining_jail_duration", jailRecord.getRemainingJailDuration());
+                TextHelper.sendTextByKey(source, "jail.record.reason", TextHelper.Parsers.escapeTags(jailRecord.getReason()));
                 return CommandHelper.Return.SUCCESS;
             })
             .orElseGet(() -> {

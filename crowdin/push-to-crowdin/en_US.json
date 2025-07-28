@@ -241,6 +241,13 @@
   "jail.not_in_jail": "<red>The player `%s` was not in any jail.",
   "jail.pardon": "<green>The player `%s` is pardoned from the jail `%s`.",
   "jail.put": "<green>You have put the player `%s` into the jail `%s`.",
+  "jail.record.created_time": "<orange>Created Time: `%s`",
+  "jail.record.creator_name": "<orange>Creator Name: `%s`",
+  "jail.record.jail_id": "<orange>Jail ID: `%s`",
+  "jail.record.player_name": "<orange>Player Name: `%s`",
+  "jail.record.reason": "<orange>Reason: `%s`",
+  "jail.record.remaining_jail_duration": "<orange>Remaining Jail Duration: `%s`",
+  "jail.record.specified_jail_duration": "<orange>Specified Jail Duration: `%s`",
   "job.fire_dates": "<blue>Fire Dates: ",
   "job.fire_dates.entry": "<blue>◉ <grey>%s",
   "job.job_group": "<blue>Job Group: `%s`",
@@ -1304,5 +1311,6 @@
   "docstring.1753685346716": "The `jailed player name`.",
   "docstring.1753686048373": "List all defined `jails`.",
   "docstring.1753686063844": "Put the `player` into a specified `jail`.",
-  "docstring.1753690598413": "Remove a player from the jail it is currently in.\n"
+  "docstring.1753690598413": "Remove a player from the jail it is currently in.\n",
+  "docstring.1753692574518": "Find the `jail` the player is in."
 }

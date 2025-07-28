@@ -62,4 +62,41 @@ public class DateParser {
         }
         return accumulateSeconds;
     }
+
+    public static String formatAccumulatedSeconds(int totalSeconds) {
+        if (totalSeconds < 0) throw new IllegalArgumentException("Seconds must be non-negative");
+
+        StringBuilder result = new StringBuilder();
+
+        int years = totalSeconds / YEAR_TO_SECOND;
+        totalSeconds %= YEAR_TO_SECOND;
+        if (years > 0) result.append(years).append("y");
+
+        int months = totalSeconds / MONTH_TO_SECOND;
+        totalSeconds %= MONTH_TO_SECOND;
+        if (months > 0) result.append(months).append("M");
+
+        int weeks = totalSeconds / WEEK_TO_SECOND;
+        totalSeconds %= WEEK_TO_SECOND;
+        if (weeks > 0) result.append(weeks).append("w");
+
+        int days = totalSeconds / DAY_TO_SECOND;
+        totalSeconds %= DAY_TO_SECOND;
+        if (days > 0) result.append(days).append("d");
+
+        int hours = totalSeconds / HOUR_TO_SECOND;
+        totalSeconds %= HOUR_TO_SECOND;
+        if (hours > 0) result.append(hours).append("h");
+
+        int minutes = totalSeconds / MINUTE_TO_SECOND;
+        totalSeconds %= MINUTE_TO_SECOND;
+        if (minutes > 0) result.append(minutes).append("m");
+
+        int seconds = totalSeconds; // remaining
+        if (seconds > 0 || result.isEmpty()) {
+            result.append(seconds).append("s");
+        }
+
+        return result.toString();
+    }
 }
