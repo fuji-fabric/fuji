@@ -18,6 +18,13 @@ public class EconomyPlaceholders {
 
         The syntax is `%fuji:balance \\<currency-id\\>%`
         For example, the `%fuji:balance fuji:gold%` will return the `balance` of the `fuji:gold` currency.
+
+        ◉ Escape the placeholder properly.
+        1. `/send-message %player:name% Your balance is %fuji:balance fuji:gold%`
+        2. `/run as console send-message %player:name% Your balance is %fuji:balance fuji:gold%`
+
+        To prevent the placeholder being parsed by the `/run` command.
+        You need to insert a `backslash` character in case `2.` before the placeholder.
         """)
     public static void registerBalancePlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("balance", 1753668968954L);
