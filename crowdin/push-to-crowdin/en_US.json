@@ -235,6 +235,7 @@
   "input.limit.error": "[send-action-bar]<red>Input limit exceed",
   "input.syntax.error": "[send-action-bar]<red>Input Syntax Error",
   "item.empty.not_allow": "<red>Item can't be empty",
+  "jail.already_in_jail": "<red>The player `%s` is already in jail `%s`.",
   "jail.list": "<yellow>Jails: `%s`",
   "jail.not_found": "<red>Jail `%s` not found.",
   "job.fire_dates": "<blue>Fire Dates: ",

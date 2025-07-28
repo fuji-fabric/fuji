@@ -4,6 +4,7 @@ import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Date;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
@@ -55,5 +56,9 @@ public class ChronosUtil {
 
     public static long toTimestamp(@NotNull ZonedDateTime zonedDateTime) {
         return zonedDateTime.toInstant().toEpochMilli();
+    }
+
+    public static long toTimestamp(@NotNull Date date) {
+        return date.toInstant().toEpochMilli();
     }
 }

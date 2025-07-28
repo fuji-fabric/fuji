@@ -20,6 +20,15 @@ public class DateParser {
 
     public static Date parseDate(String period) {
         /* Compute the sum of seconds. */
+        int accumulateSeconds = parseAccumulatedSeconds(period);
+
+        /* Add delta seconds to now. */
+        Calendar nowCalendar = Calendar.getInstance();
+        nowCalendar.add(Calendar.SECOND, accumulateSeconds);
+        return nowCalendar.getTime();
+    }
+
+    public static int parseAccumulatedSeconds(String period) {
         Matcher matcher = DATE_PARSER_DSL.matcher(period);
         int accumulateSeconds = 0;
         while (matcher.find()) {
@@ -51,10 +60,6 @@ public class DateParser {
                     throw new IllegalArgumentException("Unknown time unit: " + unit);
             }
         }
-
-        /* Add delta seconds to now. */
-        Calendar nowCalendar = Calendar.getInstance();
-        nowCalendar.add(Calendar.SECOND, accumulateSeconds);
-        return nowCalendar.getTime();
+        return accumulateSeconds;
     }
 }
