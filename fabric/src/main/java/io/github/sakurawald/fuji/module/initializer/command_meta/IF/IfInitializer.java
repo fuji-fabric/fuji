@@ -12,6 +12,7 @@ import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -119,6 +120,10 @@ import net.minecraft.server.command.ServerCommandSource;
     """)
 public class IfInitializer extends ModuleInitializer {
 
+    @TestCase(steps = "Issue `/IF execute if block ~ ~-1 ~ minecraft:diamond_block THEN say You are standing on diamond block. ELSE say You are not standing on diamond block.` command.", purposes = {
+        "You should not see the red `Test failed` in the feedback."
+    })
+    private static final String CONDITIONAL_FAIL_EXCEPTION_PREFIX_STRING = "Test failed";
     private static final Pattern IF_COMMAND_PARSER = Pattern.compile("(.+)\\s+THEN\\s+(.+)\\s+ELSE\\s+(.+)");
     private static final String THEN_LITERAL = "THEN";
     private static final String ELSE_LITERAL = "ELSE";
@@ -153,11 +158,11 @@ public class IfInitializer extends ModuleInitializer {
             checkAmbiguity(source, conditionCommand, thenCommand, elseCommand);
 
             LogUtil.debug("Execute an `/IF` command: condition-command = {}, then-command = {}, else-command = {}", conditionCommand, thenCommand, elseCommand);
-            int conditionValue = CommandExecutor.execute(ExtendedCommandSource.fromSource(source), conditionCommand);
+            int conditionValue = CommandExecutor.execute(ExtendedCommandSource.fromSource(source), conditionCommand, IfInitializer::handleIfCommandException);
             if (conditionValue > 0) {
-                CommandExecutor.execute(ExtendedCommandSource.fromSource(source), thenCommand);
+                CommandExecutor.execute(ExtendedCommandSource.fromSource(source), thenCommand, IfInitializer::handleIfCommandException);
             } else {
-                CommandExecutor.execute(ExtendedCommandSource.fromSource(source), elseCommand);
+                CommandExecutor.execute(ExtendedCommandSource.fromSource(source), elseCommand, IfInitializer::handleIfCommandException);
             }
 
         } else {
@@ -166,6 +171,18 @@ public class IfInitializer extends ModuleInitializer {
         }
 
         return CommandHelper.Return.SUCCESS;
+    }
+
+    private static void handleIfCommandException(ExtendedCommandSource context, String commandString, Exception exception) {
+        /* Swallow the conditional test failed exception, to prevent feedback-spam. */
+        String message = exception.getMessage();
+        if (message.startsWith(CONDITIONAL_FAIL_EXCEPTION_PREFIX_STRING)) {
+            LogUtil.debug("Swallow the exception with message: {}", message);
+            return;
+        }
+
+        /* Fallback to original exception handler. */
+        CommandExecutor.handleCommandException(context, commandString, exception);
     }
 
 }

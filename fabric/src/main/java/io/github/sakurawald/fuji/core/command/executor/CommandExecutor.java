@@ -7,6 +7,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
+import org.apache.logging.log4j.util.TriConsumer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -18,6 +19,10 @@ public class CommandExecutor {
         commands.forEach(command -> execute(context, command));
     }
 
+    public static int execute(@NotNull ExtendedCommandSource context, @NotNull String command) {
+        return execute(context, command, CommandExecutor::handleCommandException);
+    }
+
     @ForDeveloper("""
         Cases:
         1. /run as console bad command
@@ -25,7 +30,7 @@ public class CommandExecutor {
         3. /run as console run as player <player> run as console bad command
         4. /run as console run as player %player:name% run as fake-op %player:name% say I am %player:name%
         """)
-    public static int execute(@NotNull ExtendedCommandSource context, @NotNull String command) {
+    public static int execute(@NotNull ExtendedCommandSource context, @NotNull String command, TriConsumer<ExtendedCommandSource, String, Exception> exceptionHandler) {
 
         /* Expand the command. */
         command = context.expandCommand(command);
@@ -36,26 +41,28 @@ public class CommandExecutor {
                 // NOTE: Use CommandDispatcher to run commands. Since Mojang will do chat message validation for online-mode server, if you are using CommandManager.
                 .requireNonNull(ServerHelper.getCommandDispatcher())
                 .execute(command, context.getExecutingSource());
-        } catch (CommandSyntaxException e) {
-            /* Escape tags when reporting an exception. (e.g. "/run as console aa <yellow> bb")*/
-            command = TextHelper.Parsers.escapeTags(command);
+        } catch (CommandSyntaxException commandSyntaxException) {
+            exceptionHandler.accept(context, command, commandSyntaxException);
+            return CommandHelper.Return.FAIL;
+        }
+    }
 
-            // NOTE: Log the console first. (Make the debug easier)
-            if (!context.getExecutingSource().isExecutedByPlayer()) {
-                LogUtil.warn("Failed to execute command: command = {}, context = {}", command, context);
-            }
+    public static void handleCommandException(@NotNull ExtendedCommandSource context, String command, Exception exception) {
+        /* Escape tags when reporting an exception. (e.g. "/run as console aa <yellow> bb")*/
+        command = TextHelper.Parsers.escapeTags(command);
 
-            /* Echo to the executing source. */
-            TextHelper.sendTextByKey(context.getExecutingSource(), "command.execute.echo.executing_source", command, e.getMessage());
-
-            /* Echo to the initiating source. */
-            if (!context.sameSource()) {
-                // NOTE: If the executing command source is a dummy server player, then its network handler is null.
-                TextHelper.sendTextByKey(context.getInitiatingSource(), "command.execute.echo.initiating_source", command, context.getExecutingSource().getName(), e.getMessage());
-            }
-
+        // NOTE: Log the console first. (Make the debug easier)
+        if (!context.getExecutingSource().isExecutedByPlayer()) {
+            LogUtil.warn("Failed to execute command: command = {}, context = {}", command, context);
         }
 
-        return CommandHelper.Return.FAIL;
+        /* Echo to the executing source. */
+        TextHelper.sendTextByKey(context.getExecutingSource(), "command.execute.echo.executing_source", command, exception.getMessage());
+
+        /* Echo to the initiating source. */
+        if (!context.sameSource()) {
+            // NOTE: If the executing command source is a dummy server player, then its network handler is null.
+            TextHelper.sendTextByKey(context.getInitiatingSource(), "command.execute.echo.initiating_source", command, context.getExecutingSource().getName(), exception.getMessage());
+        }
     }
 }

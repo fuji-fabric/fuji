@@ -49,6 +49,11 @@
 - Purpose: The packet should not break the client-side signature validation.
 
 [Test Case]
+- Module: command_meta.IF
+- Steps: **Issue `/IF execute if block ~ ~-1 ~ minecraft:diamond_block THEN say You are standing on diamond block. ELSE say You are not standing on diamond block.` command.**
+- Purpose: You should not see the red `Test failed` in the feedback.
+
+[Test Case]
 - Module: command_rewrite
 - Steps: **Issue `/home` command.**
 - Purpose: It should be rewrite to `/home tp default` command.
