@@ -4,3 +4,4 @@
   - feature: new `%fuji:balance <currency-id>` placeholder, to display the `balance` of a specified `currency` for the player.
   - feature: improve the `error feedback` when failed to get specified `economy account`. 
   - feature: introduce the `--confirm` optional argument for `/economy clear` command.
+  - docs: add tips and examples for this module.

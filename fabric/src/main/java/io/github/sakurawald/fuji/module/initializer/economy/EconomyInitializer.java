@@ -40,17 +40,36 @@ import net.minecraft.util.Identifier;
     One `player` can have many `accounts`.
     One `account` holds one type of `currency`.
     """)
-
 @ColorBox(id = 1751870587446L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ Make the `Admin Shops` and `Player Shops`.
     You can use this module with `Universal Shops` mod.
+    This mod provides the `Admin Shops` and `Player Shops`.
+    It brings the similar gameplay into `fabric` like `QuickShop` plugin in `bukkit`.
     """)
-
-@ColorBox(id = 1751870591800L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870591800L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Create a `/balance` command for players to use.
     You can use `command_bundle` module.
     To create a `/balance` command, to wrap the `/economy account %player:name% fuji:gold` command.
+    So the players can query the balance conveniently.
+
+    ◉ Query the `balance` of all `currencies` for self.
+    Issue: `/economy balance`
+
+    ◉ Query the `balance` of all `currencies` for a target player.
+    Issue: `/economy accounts Steve`
+
+    ◉ Query the `balance` of the specified `currency` for a target player.
+    Issue: `/economy account Steve fuji:gold`
+
+    ◉ `Give`, `take`, `set` or `clear` the `balance` of specified `currency` for a player.
+    1. `/economy give Steve fuji:gold 100`
+    2. `/economy take Steve fuji:gold 100`
+    3. `/economy set Steve fuji:gold 100`
+    4. `/economy clear Steve fuji:gold --confirm true`
+
+    ◉ Transfer the specified `balance` of specified `currency` from self to another player.
+    Issue: `/economy pay Bob fuji:gold 100`
     """)
-
-
 public class EconomyInitializer extends ModuleInitializer {
 
     public static BaseConfigurationHandler<EconomyConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, EconomyConfigModel.class);
