@@ -106,6 +106,7 @@ gameplay.carpet.fake_player_manager
 gameplay.multi_obsidian_platform
 head
 home
+jail
 kit
 language
 leaderboard

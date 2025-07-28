@@ -181,6 +181,7 @@ public class ConfigModel {
         public Economy economy = new Economy();
         public Title title = new Title();
         public LeaderBoard leaderboard = new LeaderBoard();
+        public Jail jail = new Jail();
         public Head head = new Head();
         public Profiler profiler = new Profiler();
         public Tester tester = new Tester();
@@ -843,6 +844,10 @@ public class ConfigModel {
         }
 
         public static class LeaderBoard {
+            public boolean enable = false;
+        }
+
+        public static class Jail {
             public boolean enable = false;
         }
 
