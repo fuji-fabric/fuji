@@ -27,12 +27,13 @@ public class CustomEconomyCurrencyDescriptor {
     @Document(id = 1751826981029L, value = "The `formatted text` of this currency.")
     public String formatValueText = "<yellow>$%.2f";
 
-    public static CustomEconomyCurrencyDescriptor make(@NotNull String currencyId, @NotNull String currencyName, @NotNull String currencyIconItem, double defaultFaceBalance) {
+    public static CustomEconomyCurrencyDescriptor make(@NotNull String currencyId, @NotNull String currencyName, @NotNull String currencyIconItem, double defaultFaceBalance, String formatValueText) {
         CustomEconomyCurrencyDescriptor descriptor = new CustomEconomyCurrencyDescriptor();
         descriptor.currencyId = currencyId;
         descriptor.currencyName = currencyName;
         descriptor.currencyIconItem = currencyIconItem;
         descriptor.defaultFaceBalance = defaultFaceBalance;
+        descriptor.formatValueText = formatValueText;
         return descriptor;
     }
 

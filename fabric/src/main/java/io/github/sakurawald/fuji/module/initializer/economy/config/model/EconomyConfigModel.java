@@ -21,8 +21,8 @@ public class EconomyConfigModel {
     @Document(id = 1751826966542L, value = "Define your `custom economy currency` types.")
     public List<CustomEconomyCurrencyDescriptor> currencies = new ArrayList<>() {
         {
-            this.add(CustomEconomyCurrencyDescriptor.make("fuji:gold","<gold>Fuji Gold" , "minecraft:gold_ingot", 100.0));
-            this.add(CustomEconomyCurrencyDescriptor.make("fuji:diamond","<aqua>Fuji Diamond" , "minecraft:diamond", 0.0));
+            this.add(CustomEconomyCurrencyDescriptor.make("fuji:gold","<gold>Fuji Gold" , "minecraft:gold_ingot", 100.0, "<yellow>$%.2f"));
+            this.add(CustomEconomyCurrencyDescriptor.make("fuji:diamond","<aqua>Fuji Diamond" , "minecraft:diamond", 0.0,  "<aqua>$%.2f"));
         }
     };
 
