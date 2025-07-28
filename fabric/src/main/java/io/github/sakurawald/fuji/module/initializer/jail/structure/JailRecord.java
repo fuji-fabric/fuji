@@ -14,12 +14,13 @@ public class JailRecord {
 
     boolean enable;
 
+    @Document(id = 1753685346716L, value = "The `jailed player name`.")
+    String playerName;
+
     @Document(id = 1753685321191L, value = "The player name who created this `jail record`.")
     String creatorName;
     long createdTimestamp;
 
-    @Document(id = 1753685346716L, value = "The `jailed player name`.")
-    String playerName;
     int specifiedJailSeconds;
     int remainingJailSeconds;
     String reason;

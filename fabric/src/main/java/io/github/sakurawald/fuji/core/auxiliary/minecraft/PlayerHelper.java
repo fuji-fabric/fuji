@@ -12,7 +12,6 @@ import net.minecraft.network.packet.c2s.common.SyncedClientOptions;
 import net.minecraft.server.MinecraftServer;
 #if MC_VER <= MC_1_20_1
 #elif MC_VER > MC_1_20_1
-import net.minecraft.server.network.ServerPlayNetworkHandler;
 #endif
 
 import net.minecraft.server.command.ServerCommandSource;
@@ -69,7 +68,13 @@ public class PlayerHelper {
     }
     #endif
 
-    public static ServerPlayerEntity loadOfflinePlayer(String playerName) {
+    public static ServerPlayerEntity loadServerPlayerEntity(String playerName) {
+        /* Check if the target player is online. */
+        Optional<ServerPlayerEntity> onlinePlayerByName = ServerHelper.getOnlinePlayerByName(playerName);
+        if (onlinePlayerByName.isPresent()) {
+            return onlinePlayerByName.get();
+        }
+
         /* Load game profile. */
         Optional<GameProfile> gameProfile = getGameProfileByName(playerName);
         if (gameProfile.isEmpty()) {

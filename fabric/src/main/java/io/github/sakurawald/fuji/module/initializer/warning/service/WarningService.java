@@ -113,7 +113,7 @@ public class WarningService {
 
             // NOTE: Load the dummy offline server player entity, to provide the placeholder parsing context. (Use `/when-online` to execute commands on real server player entity.)
             ServerCommandSource offlineServerCommandSource = PlayerHelper
-                .loadOfflinePlayer(targetPlayerName)
+                .loadServerPlayerEntity(targetPlayerName)
                 .getCommandSource();
             ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(offlineServerCommandSource);
 

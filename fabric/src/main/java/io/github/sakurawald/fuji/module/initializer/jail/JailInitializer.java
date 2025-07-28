@@ -31,7 +31,8 @@ public class JailInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<JailConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, JailConfigModel.class);
 
-    public static final BaseConfigurationHandler<JailDataModel> data = new ObjectConfigurationHandler<>("jail-data.json", JailDataModel.class);
+    public static final BaseConfigurationHandler<JailDataModel> data = new ObjectConfigurationHandler<>("jail-data.json", JailDataModel.class)
+        .setAutoSaveEveryMinute();
 
     @Document(id = 1753686048373L, value = "List all defined `jails`.")
     @CommandNode("jail list")
@@ -74,7 +75,7 @@ public class JailInitializer extends ModuleInitializer {
         return JailService
             .getCurrentJailRecord($playerName)
             .map(currentJailRecord -> {
-                JailService.invalidateJailRecord(currentJailRecord, $playerName);
+                JailService.pardonJailRecord(currentJailRecord, $playerName);
                 TextHelper.sendTextByKey(source, "jail.pardon", $playerName, currentJailRecord.getOwnerJailDescriptor().getId());
                 return CommandHelper.Return.SUCCESS;
             })
