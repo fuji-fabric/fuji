@@ -41,7 +41,6 @@ public class OneOfInitializer extends ModuleInitializer {
             .trim();
 
         LogUtil.debug("For {}, we pick the command {} to execute.", commands, luckyCommand);
-
         CommandExecutor.execute(ExtendedCommandSource.fromSource(source), luckyCommand);
         return CommandHelper.Return.SUCCESS;
     }

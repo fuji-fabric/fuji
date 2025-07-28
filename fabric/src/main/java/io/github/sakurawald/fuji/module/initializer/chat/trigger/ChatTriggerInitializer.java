@@ -71,7 +71,7 @@ public class ChatTriggerInitializer extends ModuleInitializer {
 
                 /* Execute commands. */
                 LogUtil.debug("Execute commands {} for {}", commands, it);
-                commands.forEach(cmd -> CommandExecutor.execute(ExtendedCommandSource.asConsole(source), cmd));
+                CommandExecutor.execute(ExtendedCommandSource.asConsole(source), commands);
             });
 
         return chatString;
