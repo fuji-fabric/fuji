@@ -60,7 +60,7 @@ import java.util.stream.Stream;
     3. `Optional Argument`: It's syntax is `[arg-type arg-name default-value]`. It is similar to `required argument`, but you can provide a `default value` if this argument is not specified by the `command source`.
 
     You can `reference` the value of `Required Argument` or `Optional Argument` in the `bundle` component.
-    For example, you can write down `$age` to reference a `variable` named `age`.
+    For example, you can write down `$age` to refer to a `variable` named `age` defined in the `pattern` component.
 
     ◉ What is the `type system` used by the syntax of `pattern`?
     Fuji will register an `argument type adapter` for a specific `argument type`.

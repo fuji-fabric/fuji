@@ -53,7 +53,7 @@ import net.minecraft.server.command.ServerCommandSource;
     For example: `/execute if \\<first-condition\\> if \\<second-condition\\>`
     2. You can use lots of `built-in Minecraft predicates`.
     For example: `/execute if {block|biome|loaded|dimension|score|blocks|entity|predicate|function|items|data}`
-    3. You can `simulate` the `else-clause` by combining of `/execute if` and `/execute unless` commands.
+    3. You can `simulate` the `else-clause` by combining the `/execute if` and `/execute unless` commands.
 
     ◉ What is the `purpose` of `/IF` command?
     1. It allows you to use `any command` as the `condition`, based on the `return value` of that command.
@@ -69,6 +69,11 @@ import net.minecraft.server.command.ServerCommandSource;
     3. https://minecraft.fandom.com/wiki/Commands/scoreboard
     4. https://minecraft.fandom.com/wiki/Commands/tag
     5. https://minecraft.fandom.com/wiki/Commands/data
+    """)
+@ColorBox(id = 1753668342721L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ Write the `IF ... THEN ... ELSE ...` logic conveniently.
+    You can use `command_bundle` module to create a `template command` to help you write `conditional logic`.
+    For example, you can create a new command `/try-give-item <item> <required-balance>`.
     """)
 @ColorBox(id = 1753521193815L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Check whether a player is an `operator`.
