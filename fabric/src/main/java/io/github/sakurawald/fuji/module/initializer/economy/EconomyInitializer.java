@@ -26,6 +26,7 @@ import io.github.sakurawald.fuji.module.initializer.economy.structure.CustomEcon
 import io.github.sakurawald.fuji.module.initializer.economy.structure.GameProfileAndEconomyAccount;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -238,9 +239,11 @@ public class EconomyInitializer extends ModuleInitializer {
     @Document(id = 1751826942040L, value = "Clear the `amount` of the player's `account` for `specified currency`.")
     @CommandNode("economy clear")
     @CommandRequirement(level = 4)
-    private static int $clear(@CommandSource ServerCommandSource source, OfflineGameProfile player, CurrencyId currencyId) {
-        $set(source, player, currencyId, 0);
-        return CommandHelper.Return.SUCCESS;
+    private static int $clear(@CommandSource ServerCommandSource source, OfflineGameProfile player, CurrencyId currencyId, Optional<Boolean> confirm) {
+        return CommandHelper.Pattern.withCommandConfirmed(source, confirm, () -> {
+            $set(source, player, currencyId, 0);
+            return CommandHelper.Return.SUCCESS;
+        });
     }
 
     @Override

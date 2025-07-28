@@ -194,14 +194,16 @@ public class CommandHelper {
             });
         }
 
-        @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-        public static boolean isCommandConfirmed(ServerCommandSource source, Optional<Boolean> confirm) {
+        @SuppressWarnings({"BooleanMethodIsAlwaysInverted", "UnnecessaryLocalVariable"})
+        public static int withCommandConfirmed(ServerCommandSource source, Optional<Boolean> confirm, Supplier<Integer> supplier) {
             boolean confirmed = confirm.orElse(false);
             if (!confirmed) {
                 TextHelper.sendTextByKey(source, "operation.confirm.failed");
+                return Return.FAIL;
             }
 
-            return confirmed;
+            int commandReturnValue = supplier.get();
+            return commandReturnValue;
         }
     }
 

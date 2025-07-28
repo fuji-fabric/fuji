@@ -440,14 +440,11 @@ public class WorldInitializer extends ModuleInitializer {
         String dimensionId = RegistryHelper.toString(dimensionInstance);
         ensureOperationsOnTargetDimensionIsNotBlacklisted(source, dimensionId);
 
-        /* Check the command confirm. */
-        if (!CommandHelper.Pattern.isCommandConfirmed(source, confirm)) {
-            return CommandHelper.Return.FAIL;
-        }
-
-        /* Request to delete. */
-        WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(source, dimensionInstance, true, true));
-        return CommandHelper.Return.SUCCESS;
+        return CommandHelper.Pattern.withCommandConfirmed(source, confirm, () -> {
+            /* Request to delete. */
+            WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(source, dimensionInstance, true, true));
+            return CommandHelper.Return.SUCCESS;
+        });
     }
 
     @Document(id = 1752798473110L, value = """
@@ -478,37 +475,34 @@ public class WorldInitializer extends ModuleInitializer {
     @Document(id = 1751826611302L, value = "Delete and create the specified world.")
     @CommandNode("reset")
     private static int $reset(@CommandSource ServerCommandSource source, Dimension dimension, Optional<Boolean> useTheSameSeed, Optional<Boolean> confirm) {
-        /* Check the command confirm. */
-        if (!CommandHelper.Pattern.isCommandConfirmed(source, confirm)) {
-            return CommandHelper.Return.FAIL;
-        }
+        return CommandHelper.Pattern.withCommandConfirmed(source, confirm, () -> {
+            /* Get the original dimension node. */
+            ServerWorld dimensionInstance = dimension.getValue();
+            String dimensionIdentifier = RegistryHelper.toString(dimensionInstance);
+            ensureOperationsOnTargetDimensionIsNotBlacklisted(source, dimensionIdentifier);
 
-        /* Get the original dimension node. */
-        ServerWorld dimensionInstance = dimension.getValue();
-        String dimensionIdentifier = RegistryHelper.toString(dimensionInstance);
-        ensureOperationsOnTargetDimensionIsNotBlacklisted(source, dimensionIdentifier);
+            Optional<RuntimeDimensionDescriptor> dimensionEntryOpt = WorldService.getRuntimeDimensionDescriptor(dimensionIdentifier);
+            if (dimensionEntryOpt.isEmpty()) {
+                TextHelper.sendTextByKey(source, "world.dimension.not_found");
+                return CommandHelper.Return.FAIL;
+            }
+            RuntimeDimensionDescriptor runtimeDimensionDescriptor = dimensionEntryOpt.get();
 
-        Optional<RuntimeDimensionDescriptor> dimensionEntryOpt = WorldService.getRuntimeDimensionDescriptor(dimensionIdentifier);
-        if (dimensionEntryOpt.isEmpty()) {
-            TextHelper.sendTextByKey(source, "world.dimension.not_found");
-            return CommandHelper.Return.FAIL;
-        }
-        RuntimeDimensionDescriptor runtimeDimensionDescriptor = dimensionEntryOpt.get();
+            /* Delete the dimension instance. */
+            WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(source, dimensionInstance, true, false));
 
-        /* Delete the dimension instance. */
-        WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(source, dimensionInstance, true, false));
+            /* Draw the seed. */
+            Boolean $useTheSameSeed = useTheSameSeed.orElse(false);
+            runtimeDimensionDescriptor.seed = $useTheSameSeed ? runtimeDimensionDescriptor.seed : RandomSeed.getSeed();
+            world.writeStorage();
 
-        /* Draw the seed. */
-        Boolean $useTheSameSeed = useTheSameSeed.orElse(false);
-        runtimeDimensionDescriptor.seed = $useTheSameSeed ? runtimeDimensionDescriptor.seed : RandomSeed.getSeed();
-        world.writeStorage();
+            /* Create a new dimension instance. */
+            DimensionCreationTicket ticket = new DimensionCreationTicket(source, runtimeDimensionDescriptor);
+            WorldService.submitDimensionCreationTicket(ticket);
 
-        /* Create a new dimension instance. */
-        DimensionCreationTicket ticket = new DimensionCreationTicket(source, runtimeDimensionDescriptor);
-        WorldService.submitDimensionCreationTicket(ticket);
-
-        TextHelper.sendBroadcastByKey("world.dimension.reset", dimensionIdentifier);
-        return CommandHelper.Return.SUCCESS;
+            TextHelper.sendBroadcastByKey("world.dimension.reset", dimensionIdentifier);
+            return CommandHelper.Return.SUCCESS;
+        });
     }
 
 
