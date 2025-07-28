@@ -11,10 +11,13 @@ import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlaye
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.jail.command.argument.wrapper.JailedPlayerName;
 import io.github.sakurawald.fuji.module.initializer.jail.config.model.JailConfigModel;
 import io.github.sakurawald.fuji.module.initializer.jail.config.model.JailDataModel;
+import io.github.sakurawald.fuji.module.initializer.jail.job.UpdateJailRecordsJob;
 import io.github.sakurawald.fuji.module.initializer.jail.service.JailService;
 import io.github.sakurawald.fuji.module.initializer.jail.structure.JailDescriptor;
 import java.util.Optional;
@@ -105,4 +108,11 @@ public class JailInitializer extends ModuleInitializer {
             });
     }
 
+    @Override
+    protected void onInitialize() {
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            UpdateJailRecordsJob updateJailRecordsJob = new UpdateJailRecordsJob();
+            Managers.getScheduleManager().scheduleJob(updateJailRecordsJob);
+        });
+    }
 }

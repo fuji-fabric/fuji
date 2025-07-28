@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.jail.service;
 
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.service.date_parser.DateParser;
 import io.github.sakurawald.fuji.module.initializer.jail.JailInitializer;
 import io.github.sakurawald.fuji.module.initializer.jail.structure.JailDataNode;
@@ -31,15 +32,14 @@ public class JailService {
     }
 
     private static <T> T withJailDataNode(@NotNull JailDescriptor jail, Function<JailDataNode, T> function) {
-        Optional<JailDataNode> jailDataNode = JailInitializer.data.model()
-            .getJailDataNodes()
+        Optional<JailDataNode> jailDataNode = getJailDataNodes()
             .stream()
             .filter(it -> it.getJailId().equals(jail.getId()))
             .findFirst();
 
         JailDataNode $jailDataNode = jailDataNode.orElseGet(() -> {
             JailDataNode newValue = JailDataNode.makeDefault(jail);
-            JailInitializer.data.model().getJailDataNodes().add(newValue);
+            getJailDataNodes().add(newValue);
             return newValue;
         });
 
@@ -48,10 +48,21 @@ public class JailService {
         return apply;
     }
 
+    private static synchronized List<JailDataNode> getJailDataNodes() {
+        return JailInitializer.data.model().getJailDataNodes();
+    }
+
     public static List<JailRecord> getJailRecords() {
         return getJailDescriptors()
             .stream()
             .flatMap(it -> getJailRecords(it).stream())
+            .toList();
+    }
+
+    public static List<JailRecord> getEnabledRecords() {
+        return getJailRecords()
+            .stream()
+            .filter(JailRecord::isEnable)
             .toList();
     }
 
@@ -64,9 +75,8 @@ public class JailService {
     }
 
     public static @NotNull List<String> getJailedPlayerNames() {
-        return getJailRecords()
+        return getEnabledRecords()
             .stream()
-            .filter(JailRecord::isEnable)
             .map(JailRecord::getPlayerName)
             .toList();
     }
@@ -90,6 +100,17 @@ public class JailService {
 
     public static void invalidateJailRecord(JailRecord jailRecord, String playerName) {
         jailRecord.setEnable(false);
+    }
+
+    public static void updateJailRecords(int passedTimeInMillSeconds) {
+        getEnabledRecords()
+            .forEach(jailRecord -> {
+                int newValue = jailRecord.getRemainingJailSeconds() - (passedTimeInMillSeconds / 1000);
+                newValue = Math.max(newValue, 0);
+                jailRecord.setRemainingJailSeconds(newValue);
+            });
+
+
     }
 
 }

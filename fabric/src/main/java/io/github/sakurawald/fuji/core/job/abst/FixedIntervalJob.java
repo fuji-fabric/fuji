@@ -9,8 +9,9 @@ import org.quartz.TriggerBuilder;
 @NoArgsConstructor
 public abstract class FixedIntervalJob extends BaseJob {
 
-    int intervalInMillSeconds;
-    int repeatCount;
+    public static final int REPEAT_INDEFINITELY = -1;
+    private int intervalInMillSeconds;
+    private int repeatCount;
 
     public FixedIntervalJob(String jobGroup, String jobName, JobDataMap jobDataMap, int intervalInMillSeconds, int repeatCount) {
         super(jobGroup, jobName, jobDataMap, false);
@@ -20,13 +21,22 @@ public abstract class FixedIntervalJob extends BaseJob {
 
     @Override
     public Trigger makeTrigger() {
-        return TriggerBuilder
+        TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder
             .newTrigger()
-            .withIdentity(jobName, jobGroup)
-            .withSchedule(SimpleScheduleBuilder
-                .simpleSchedule()
-                .withIntervalInMilliseconds(intervalInMillSeconds)
-                .withRepeatCount(repeatCount - 1))
+            .withIdentity(jobName, jobGroup);
+
+        SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder
+            .simpleSchedule()
+            .withIntervalInMilliseconds(this.intervalInMillSeconds);
+
+        if (this.repeatCount == REPEAT_INDEFINITELY) {
+            scheduleBuilder.repeatForever();
+        } else {
+            scheduleBuilder.withRepeatCount(repeatCount - 1);
+        }
+
+        return triggerBuilder
+            .withSchedule(scheduleBuilder)
             .build();
     }
 
