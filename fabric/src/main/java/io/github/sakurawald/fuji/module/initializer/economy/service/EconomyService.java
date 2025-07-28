@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflineGameProfile;
+import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
 import io.github.sakurawald.fuji.module.initializer.economy.EconomyInitializer;
 import io.github.sakurawald.fuji.module.initializer.economy.config.structure.CustomEconomyAccountNode;
 import io.github.sakurawald.fuji.module.initializer.economy.config.structure.CustomEconomyCurrencyNode;
@@ -20,6 +21,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -53,22 +55,14 @@ public class EconomyService {
         return CommonEconomy.getAccounts(server, gameProfile);
     }
 
-    public static @NotNull EconomyAccount getUserAccount(GameProfile gameProfile, Identifier currencyId) {
-        Optional<EconomyAccount> accountForThatCurrencyId =
-            getUserAccounts(gameProfile)
+    public static @NotNull Optional<EconomyAccount> getUserAccount(GameProfile gameProfile, Identifier currencyId) {
+        return getUserAccounts(gameProfile)
                 .stream()
                 .filter(account -> {
                     Identifier id = account.currency().id();
                     return id.equals(currencyId);
                 })
                 .findFirst();
-
-        if (accountForThatCurrencyId.isEmpty()) {
-            throw new IllegalArgumentException("Player %s didn't have the account for currency ID %s."
-                .formatted(gameProfile.getName(), currencyId));
-        }
-
-        return accountForThatCurrencyId.get();
     }
 
     public static CustomEconomyCurrencyNode getCustomCurrencyNode(Identifier currencyId) {
@@ -120,8 +114,8 @@ public class EconomyService {
         long deltaValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
         deltaValue = Math.max(0, deltaValue);
 
-        EconomyAccount fromAccount = getUserAccount(source.getGameProfile(), currencyId);
-        EconomyAccount toAccount = getUserAccount(player.getValue(), currencyId);
+        EconomyAccount fromAccount = tryGetEconomyAccount(source.getCommandSource(), source.getGameProfile(), currencyId);
+        EconomyAccount toAccount = tryGetEconomyAccount(source.getCommandSource(), player.getValue(), currencyId);
 
         long fromAccountPreviousBalance = fromAccount.balance();
         long toAccountPreviousBalance = toAccount.balance();
@@ -150,16 +144,26 @@ public class EconomyService {
         return EconomyInitializer.config.model().getBalanceTopPageSize();
     }
 
-    public static @NotNull List<GameProfileAndEconomyAccount> makeBalanceTopEntities(Identifier currencyId) {
+    public static @NotNull List<GameProfileAndEconomyAccount> makeBalanceTopEntities(ServerPlayerEntity player, Identifier currencyId) {
         return ServerHelper
             .getOfflineGameProfiles()
             .stream()
             .map(gameProfile -> {
-                EconomyAccount economyAccount = getUserAccount(gameProfile, currencyId);
+                EconomyAccount economyAccount = tryGetEconomyAccount(player.getCommandSource(), gameProfile, currencyId);
                 return new GameProfileAndEconomyAccount(gameProfile, economyAccount);
             })
             .sorted(Comparator.comparing(GameProfileAndEconomyAccount::getEconomyBalance)
                 .reversed())
             .toList();
+    }
+
+    public static EconomyAccount tryGetEconomyAccount(@NotNull ServerCommandSource source, @NotNull GameProfile gameProfile, @NotNull Identifier currencyId) {
+        Optional<EconomyAccount> economyAccount = getUserAccount(gameProfile, currencyId);
+        if (economyAccount.isEmpty()) {
+            TextHelper.sendTextByKey(source, "economy.account.not_found", gameProfile.getName(), currencyId);
+            throw new AbortCommandExecutionException();
+        }
+
+        return economyAccount.get();
     }
 }

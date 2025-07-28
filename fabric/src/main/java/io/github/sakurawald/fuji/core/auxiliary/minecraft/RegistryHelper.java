@@ -124,6 +124,14 @@ public class RegistryHelper {
         #endif
     }
 
+    public static Optional<Identifier> tryMakeIdentifier(String identifier) {
+        try {
+            return Optional.of(makeIdentifier(identifier));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
     public static <T> String getIdAsString(RegistryEntry<T> entry) {
         return entry
             .getKey()

@@ -127,7 +127,7 @@ public class EconomyInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     private static int $account(@CommandSource ServerCommandSource source, OfflineGameProfile player, CurrencyId currencyId) {
         Identifier $currencyId = currencyId.getValue();
-        EconomyAccount economyAccount = EconomyService.getUserAccount(player.getValue(), $currencyId);
+        EconomyAccount economyAccount = EconomyService.tryGetEconomyAccount(source, player.getValue(), $currencyId);
         printEconomyAccountInfo(source, economyAccount);
 
         return CommandHelper.Return.SUCCESS;
@@ -161,7 +161,7 @@ public class EconomyInitializer extends ModuleInitializer {
     @CommandNode("economy balance-top")
     @CommandRequirement(level = 4)
     private static int $balanceTop(@CommandSource ServerPlayerEntity player, CurrencyId currencyId) {
-        List<GameProfileAndEconomyAccount> entities = EconomyService.makeBalanceTopEntities(currencyId.getValue());
+        List<GameProfileAndEconomyAccount> entities = EconomyService.makeBalanceTopEntities(player, currencyId.getValue());
         PagedMessageText pagedMessageText = PagedMessageText.makePagedMessageText(player, entities, EconomyService.getBalanceTopPageSize(), (entity, index, pageBuilder) -> {
             int numbering = index + 1;
             String playerName = entity.getGameProfile().getName();
@@ -178,7 +178,7 @@ public class EconomyInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     private static int $give(@CommandSource ServerCommandSource source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
         Identifier $currencyId = currencyId.getValue();
-        EconomyAccount economyAccount = EconomyService.getUserAccount(player.getValue(), $currencyId);
+        EconomyAccount economyAccount = EconomyService.tryGetEconomyAccount(source, player.getValue(), $currencyId);
         long deltaValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
         EconomyTransaction economyTransaction = economyAccount.increaseBalance(deltaValue);
 
@@ -191,7 +191,7 @@ public class EconomyInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     private static int $take(@CommandSource ServerCommandSource source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
         Identifier $currencyId = currencyId.getValue();
-        EconomyAccount economyAccount = EconomyService.getUserAccount(player.getValue(), $currencyId);
+        EconomyAccount economyAccount = EconomyService.tryGetEconomyAccount(source, player.getValue(), $currencyId);
         long deltaValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
         EconomyTransaction economyTransaction = economyAccount.decreaseBalance(deltaValue);
 
@@ -213,7 +213,7 @@ public class EconomyInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     private static int $hasCurrency(@CommandSource ServerCommandSource source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
         Identifier $currencyId = currencyId.getValue();
-        EconomyAccount economyAccount = EconomyService.getUserAccount(player.getValue(), $currencyId);
+        EconomyAccount economyAccount = EconomyService.tryGetEconomyAccount(source, player.getValue(), $currencyId);
         long finalValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
 
         boolean value = economyAccount.balance() >= finalValue;
@@ -226,7 +226,7 @@ public class EconomyInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     private static int $set(@CommandSource ServerCommandSource source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
         Identifier $currencyId = currencyId.getValue();
-        EconomyAccount economyAccount = EconomyService.getUserAccount(player.getValue(), $currencyId);
+        EconomyAccount economyAccount = EconomyService.tryGetEconomyAccount(source, player.getValue(), $currencyId);
 
         long finalValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
         economyAccount.setBalance(finalValue);
@@ -241,5 +241,10 @@ public class EconomyInitializer extends ModuleInitializer {
     private static int $clear(@CommandSource ServerCommandSource source, OfflineGameProfile player, CurrencyId currencyId) {
         $set(source, player, currencyId, 0);
         return CommandHelper.Return.SUCCESS;
+    }
+
+    @Override
+    protected void registerPlaceholder() {
+        EconomyPlaceholders.registerBalancePlaceholder();
     }
 }

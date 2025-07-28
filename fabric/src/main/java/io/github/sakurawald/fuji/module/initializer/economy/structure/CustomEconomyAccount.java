@@ -11,6 +11,7 @@ import io.github.sakurawald.fuji.module.initializer.economy.EconomyInitializer;
 import io.github.sakurawald.fuji.module.initializer.economy.service.EconomyService;
 import io.github.sakurawald.fuji.module.initializer.economy.config.structure.CustomEconomyAccountNode;
 import io.github.sakurawald.fuji.module.initializer.economy.config.structure.CustomEconomyCurrencyDescriptor;
+import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -82,7 +83,6 @@ public class CustomEconomyAccount implements EconomyAccount {
         boolean isSuccessful;
         Text feedbackText;
         Identifier currencyId = this.currencyDescriptor.toIdentifier();
-        EconomyAccount economyAccount = EconomyService.getUserAccount(this.gameProfile, currencyId);
 
         if (finalBalance < 0
             || (transactionAmount > 0 && previousBalance > Long.MAX_VALUE - transactionAmount)
@@ -96,7 +96,7 @@ public class CustomEconomyAccount implements EconomyAccount {
         }
 
         /* Make the transaction result. */
-        return new CustomEconomyTransaction(economyAccount, isSuccessful, feedbackText, previousBalance, transactionAmount, finalBalance);
+        return new CustomEconomyTransaction(this, isSuccessful, feedbackText, previousBalance, transactionAmount, finalBalance);
     }
 
     @Override

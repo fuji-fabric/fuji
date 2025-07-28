@@ -31,7 +31,7 @@ public class BalanceTopGui extends PagedGui<GameProfileAndEconomyAccount> {
     }
 
     public static BalanceTopGui make(ServerPlayerEntity player, Identifier currencyId) {
-        List<GameProfileAndEconomyAccount> entities = EconomyService.makeBalanceTopEntities(currencyId);
+        List<GameProfileAndEconomyAccount> entities = EconomyService.makeBalanceTopEntities(player, currencyId);
         return new BalanceTopGui(null, player, currencyId, entities, 0);
     }
 
