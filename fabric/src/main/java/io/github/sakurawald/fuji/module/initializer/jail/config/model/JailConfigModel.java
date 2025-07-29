@@ -11,6 +11,8 @@ public class JailConfigModel {
 
     String noJailStatusText = "<grey>[None]";
 
+    String jailedPlayerTabListText = "<dark_red>[Prisoner] %player:name%</dark_red>";
+
     @Document(id = 1753684834618L, value = "A `jail descriptor` is used to define a `jail`.")
     List<JailDescriptor> jailDescriptors = new ArrayList<>() {
         {

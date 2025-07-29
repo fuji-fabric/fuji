@@ -107,6 +107,9 @@ public class JailService {
 
         // NOTE: Execute the commands later, to ensure the `active jail record` can be retried by the placeholders.
         executeOnJailedCommands(jail, playerName);
+
+        // Update display names.
+        ServerHelper.updateDisplayName();
     }
 
     private static void executeOnUnjailedCommands(JailDescriptor jail, String playerName) {
@@ -119,6 +122,9 @@ public class JailService {
         executeOnUnjailedCommands(jailRecord.getOwnerJailDescriptor(), jailRecord.getPrisonerName());
 
         jailRecord.setEnable(false);
+
+        // Update display names.
+        ServerHelper.updateDisplayName();
     }
 
     public static void disableActiveJailRecord(String playerName) {
