@@ -15,10 +15,10 @@ import org.jetbrains.annotations.NotNull;
 public class JailDescriptor {
 
     String id;
-    String displayName = "<dark_red>Jail</dark_red>";
+    String displayName = "<blue>The Great Jail</blue>";
 
     @Document(id = 1753684930648L, value = "Tae `jail duration` to use if you didn't specify a `jail duration`.")
-    String defaultJailedDuration = "30m";
+    String defaultJailedDuration = "15m";
     boolean countRemainingJailSecondsWhenPrisonersOffline = false;
 
     GlobalPos globalPosition = new GlobalPos("minecraft:overworld", 0, 64, 0, 0, 0);
@@ -28,14 +28,14 @@ public class JailDescriptor {
     public static class Events {
         List<String> onJailedEvent = new ArrayList<>() {
             {
-                this.add("send-broadcast <dark_red>The player %player:displayname% has been jailed in %fuji:jail_displayname%. <yellow>(Duration: %fuji:jail_specified_duration%, Reason: %fuji:jail_reason%)");
+                this.add("send-broadcast <dark_red><b>The player %player:displayname% has been jailed.<newline>◉ Duration: %fuji:jail_specified_duration%<newline>◉ Reason: %fuji:jail_reason%");
                 this.add("lp user %player:name% permission set group.jailed");
                 this.add("when-online %player:name% send-message %player:name% <dark_red>You have been jailed.");
             }
         };
         List<String> onUnjailedEvent = new ArrayList<>() {
             {
-                this.add("send-broadcast <green>The player %player:displayname% has been un-jailed from %fuji:jail_displayname%.");
+                this.add("send-broadcast <green><b>The player %player:displayname% has been un-jailed.");
                 this.add("lp user %player:name% permission unset group.jailed");
                 this.add("when-online %player:name% send-message %player:name% <green>You have been un-jailed.");
             }
