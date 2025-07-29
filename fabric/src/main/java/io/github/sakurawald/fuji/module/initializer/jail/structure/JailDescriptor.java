@@ -30,14 +30,14 @@ public class JailDescriptor {
             {
                 this.add("send-broadcast <dark_red><b>The player %player:displayname% has been jailed.<newline>◉ Duration: %fuji:jail_specified_duration%<newline>◉ Reason: %fuji:jail_reason%");
                 this.add("lp user %player:name% permission set group.jailed");
-                this.add("when-online %player:name% send-message %player:name% <dark_red>You have been jailed.");
+                this.add("when-online %player:name% send-title %player:name% --mainTitle \"<dark_red>You have been jailed.\"");
             }
         };
         List<String> onUnjailedEvent = new ArrayList<>() {
             {
                 this.add("send-broadcast <green><b>The player %player:displayname% has been un-jailed.");
                 this.add("lp user %player:name% permission unset group.jailed");
-                this.add("when-online %player:name% send-message %player:name% <green>You have been un-jailed.");
+                this.add("when-online %player:name% send-title %player:name% --mainTitle \"<green>You have been un-jailed.\"");
             }
         };
     }
