@@ -28,6 +28,12 @@ import net.minecraft.server.command.ServerCommandSource;
     This module allows you to define a `jail`.
     It can be used to `punish` a player with bad behaviour, without `banning` it.
     """)
+@ColorBox(id = 1753757093710L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ How it works?
+    1. You can define a `jail` by configuring the `jail descriptors` in the config file.
+    2. For each `jail`,
+
+    """)
 @ColorBox(id = 1753750852480L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     ◉ Understand the `execution time` of a `command`.
     Some commands require the `target player` online to work.
@@ -83,8 +89,13 @@ public class JailInitializer extends ModuleInitializer {
                 return CommandHelper.Return.FAIL;
             })
             .orElseGet(() -> {
-                JailService.createJailRecord(creatorName, playerName, jail, $reason, $duration);
-                TextHelper.sendTextByKey(source, "jail.put", playerName, jail.getId());
+                try {
+                    JailService.createJailRecord(creatorName, playerName, jail, $reason, $duration);
+                    TextHelper.sendTextByKey(source, "jail.put", playerName, jail.getId());
+                } catch (Exception e) {
+                    TextHelper.sendTextByKey(source, "jail.put.failed", playerName);
+                    JailService.disableActiveJailRecord(playerName);
+                }
                 return CommandHelper.Return.SUCCESS;
             });
     }

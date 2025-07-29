@@ -241,6 +241,7 @@
   "jail.not_in_jail": "<red>The player `%s` was not in any jail.",
   "jail.pardon": "<green>The player `%s` is pardoned from the jail `%s`.",
   "jail.put": "<green>You have put the player `%s` into the jail `%s`.",
+  "jail.put.failed": "<red>Failed to put the player `%s` into the jail.",
   "jail.record.created_time": "<orange>Created Time: `%s`",
   "jail.record.creator_name": "<orange>Creator Name: `%s`",
   "jail.record.jail_id": "<orange>Jail ID: `%s`",

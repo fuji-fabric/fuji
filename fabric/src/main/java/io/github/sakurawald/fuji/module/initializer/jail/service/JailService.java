@@ -121,6 +121,11 @@ public class JailService {
         jailRecord.setEnable(false);
     }
 
+    public static void disableActiveJailRecord(String playerName) {
+        getCurrentJailRecord(playerName)
+            .ifPresent(jailRecord -> jailRecord.setEnable(false));
+    }
+
     private static void executeOnJailedCommands(JailDescriptor jail, String playerName) {
         ServerPlayerEntity offlinePlayerEntity = PlayerHelper.loadServerPlayerEntity(playerName);
         CommandExecutor.execute(ExtendedCommandSource.asConsole(offlinePlayerEntity.getCommandSource()), jail.getEvents().getOnJailedEvent());
@@ -138,8 +143,11 @@ public class JailService {
         enabledJailRecords
             .forEach(jailRecord -> ServerHelper.executeSync(() -> {
                 String playerName = jailRecord.getPlayerName();
-                ServerPlayerEntity offlinePlayerEntity = PlayerHelper.loadServerPlayerEntity(playerName);
-                CommandExecutor.execute(ExtendedCommandSource.asConsole(offlinePlayerEntity.getCommandSource()), jail.getPatrol().getPatrolCommands());
+                ServerHelper.getOnlinePlayerByName(playerName)
+                    .ifPresent(onlinePlayer -> {
+                        List<String> patrolCommands = jail.getPatrol().getPatrolCommands();
+                        CommandExecutor.execute(ExtendedCommandSource.asConsole(onlinePlayer.getCommandSource()), patrolCommands);
+                    });
             }));
     }
 

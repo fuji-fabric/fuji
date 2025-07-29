@@ -92,7 +92,7 @@ public class PlayerHelper {
         applyPlayerData(player, playerDataOpt.orElse(null));
         #elif MC_VER >= MC_1_21_6
         Optional<ReadView> playerDataOpt = ServerHelper.getPlayerManager().loadPlayerData(player, ErrorReporter.Impl.EMPTY);
-        applyPlayerData(player,playerDataOpt.get());
+        applyPlayerData(player, playerDataOpt.get());
         #endif
 
         return player;
