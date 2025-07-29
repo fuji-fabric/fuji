@@ -97,6 +97,17 @@ public class JailService {
             .findFirst();
     }
 
+    public static void createJailDescriptor(@NotNull String jailId) {
+        JailDescriptor newValue = JailDescriptor.make(jailId);
+        JailInitializer.config.model().getJailDescriptors().add(newValue);
+        JailInitializer.config.writeStorage();
+    }
+
+    public static void deleteJailDescriptor(@NotNull JailDescriptor jailDescriptor) {
+        JailInitializer.config.model().getJailDescriptors().remove(jailDescriptor);
+        JailInitializer.config.writeStorage();
+    }
+
     public static void createJailRecord(String creatorName, String playerName, JailDescriptor jail, String reason, String $duration) {
         withJailDataNode(jail, jailDataNode -> {
             int specifiedJailSeconds = DateParser.parseAccumulatedSeconds($duration);

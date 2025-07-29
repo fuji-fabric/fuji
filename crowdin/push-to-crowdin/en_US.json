@@ -235,7 +235,10 @@
   "input.limit.error": "[send-action-bar]<red>Input limit exceed",
   "input.syntax.error": "[send-action-bar]<red>Input Syntax Error",
   "item.empty.not_allow": "<red>Item can't be empty",
+  "jail.already_exists": "<red>The jail `%s` already exists.",
   "jail.already_in_jail": "<red>The player `%s` is already in jail `%s`.",
+  "jail.create.success": "<green>Create jail `%s` done.",
+  "jail.delete.success": "<green>The jail `%s` has been deleted.",
   "jail.list": "<yellow>Jails: `%s`",
   "jail.not_found": "<red>Jail `%s` not found.",
   "jail.not_in_jail": "<red>The player `%s` was not in any jail.",
@@ -1331,5 +1334,7 @@
   "docstring.1753759649983": "Returns the `position z` of the active `jail record`.\n",
   "docstring.1753759662834": "Returns the `position yaw` of the active `jail record`.\n",
   "docstring.1753759691598": "Returns the `position pitch` of the active `jail record`.\n",
-  "docstring.1753771412507": "A predicate command to check if the target player is jailed."
+  "docstring.1753771412507": "A predicate command to check if the target player is jailed.",
+  "docstring.1753772112918": "Create a new `jail` descriptor.",
+  "docstring.1753772960860": "Delete an existing `jail` descriptor"
 }

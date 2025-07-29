@@ -157,6 +157,42 @@ public class JailInitializer extends ModuleInitializer {
         return CommandHelper.Return.returnBoolean(source, JailService.getCurrentJailRecord(playerName).isPresent());
     }
 
+    @Document(id = 1753772112918L, value = "Create a new `jail` descriptor.")
+    @CommandNode("jail create")
+    @CommandRequirement(level = 4)
+    private static int $create(@CommandSource ServerCommandSource source, String jailId) {
+        return JailService.findJailDescriptor(jailId)
+            .map(it -> {
+                TextHelper.sendTextByKey(source,"jail.already_exists", jailId);
+                return CommandHelper.Return.FAIL;
+            })
+            .orElseGet(() -> {
+                JailService.createJailDescriptor(jailId);
+                TextHelper.sendTextByKey(source, "jail.create.success", jailId);
+                return CommandHelper.Return.SUCCESS;
+            });
+    }
+
+    @SuppressWarnings("CodeBlock2Expr")
+    @Document(id = 1753772960860L, value = "Delete an existing `jail` descriptor")
+    @CommandNode("jail delete")
+    @CommandRequirement(level = 4)
+    private static int $deleteJail(@CommandSource ServerCommandSource source, String jailId, Optional<Boolean> confirm) {
+        return CommandHelper.Pattern.withCommandConfirmed(source, confirm, () -> {
+            return JailService.findJailDescriptor(jailId)
+                .map(it -> {
+                    JailService.deleteJailDescriptor(it);
+                    TextHelper.sendTextByKey(source, "jail.delete.success", jailId);
+                    return CommandHelper.Return.SUCCESS;
+                })
+                .orElseGet(() -> {
+                    TextHelper.sendTextByKey(source, "jail.not_found", jailId);
+                    return CommandHelper.Return.FAIL;
+                });
+        });
+    }
+
+
     @Override
     protected void onInitialize() {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
