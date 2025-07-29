@@ -9,6 +9,8 @@ import lombok.Data;
 @Data
 public class JailConfigModel {
 
+    String noJailStatusText = "<grey>[None]";
+
     @Document(id = 1753684834618L, value = "A `jail descriptor` is used to define a `jail`.")
     List<JailDescriptor> jailDescriptors = new ArrayList<>() {
         {

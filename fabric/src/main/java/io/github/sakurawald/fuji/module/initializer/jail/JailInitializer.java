@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.module.initializer.jail;
 
-import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
@@ -18,6 +17,7 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.jail.command.argument.wrapper.JailedPlayerName;
 import io.github.sakurawald.fuji.module.initializer.jail.config.model.JailConfigModel;
 import io.github.sakurawald.fuji.module.initializer.jail.config.model.JailDataModel;
+import io.github.sakurawald.fuji.module.initializer.jail.job.PatrolJailJob;
 import io.github.sakurawald.fuji.module.initializer.jail.job.UpdateJailRecordsJob;
 import io.github.sakurawald.fuji.module.initializer.jail.service.JailService;
 import io.github.sakurawald.fuji.module.initializer.jail.structure.JailDescriptor;
@@ -122,7 +122,7 @@ public class JailInitializer extends ModuleInitializer {
                 TextHelper.sendTextByKey(source, "line.separator");
                 TextHelper.sendTextByKey(source, "jail.record.player_name", $playerName);
                 TextHelper.sendTextByKey(source,"jail.record.creator_name", jailRecord.getCreatorName());
-                TextHelper.sendTextByKey(source,"jail.record.created_time", ChronosUtil.toDefaultDateFormat(jailRecord.getCreatedTimestamp()));
+                TextHelper.sendTextByKey(source,"jail.record.created_time", jailRecord.getFormattedCreatedTimestamp());
                 TextHelper.sendTextByKey(source, "jail.record.jail_id", ownerJailDescriptor.getId());
                 TextHelper.sendTextByKey(source,"jail.record.specified_jail_duration", jailRecord.getSpecifiedJailDuration());
                 TextHelper.sendTextByKey(source, "jail.record.remaining_jail_duration", jailRecord.getRemainingJailDuration());
@@ -141,5 +141,24 @@ public class JailInitializer extends ModuleInitializer {
             UpdateJailRecordsJob updateJailRecordsJob = new UpdateJailRecordsJob();
             Managers.getScheduleManager().scheduleJob(updateJailRecordsJob);
         });
+
+        PatrolJailJob.reloadPatrolJobs();
+    }
+
+    @Override
+    protected void onReload() {
+        PatrolJailJob.reloadPatrolJobs();
+    }
+
+    @Override
+    protected void registerPlaceholder() {
+        JailPlaceholders.registerCurrentJailId();
+        JailPlaceholders.registerCurrentJailDisplayName();
+        JailPlaceholders.registerCurrentJailCreatorName();
+        JailPlaceholders.registerCurrentJailCreatedDate();
+        JailPlaceholders.registerCurrentJailSpecifiedJailDuration();
+        JailPlaceholders.registerCurrentJailRemainingJailDuration();
+        JailPlaceholders.registerCurrentJailReason();
+
     }
 }

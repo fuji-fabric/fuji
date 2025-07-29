@@ -1,6 +1,9 @@
 package io.github.sakurawald.fuji.module.initializer.jail.service;
 
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.service.date_parser.DateParser;
@@ -12,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 public class JailService {
@@ -61,18 +65,22 @@ public class JailService {
     }
 
     public static List<JailRecord> getEnabledRecords() {
-        return getJailRecords()
-            .stream()
-            .filter(JailRecord::isEnable)
-            .toList();
+        return filterEnabledJailRecords(getJailRecords());
     }
 
-    public static List<JailRecord> getJailRecords(@NotNull JailDescriptor jailDescriptor) {
+    private static List<JailRecord> getJailRecords(@NotNull JailDescriptor jailDescriptor) {
         return withJailDataNode(jailDescriptor, jailDataNode -> {
             List<JailRecord> jailRecords = jailDataNode.getRecords();
             jailRecords.forEach(jailRecord -> jailRecord.setOwnerJailDescriptor(jailDescriptor));
             return jailRecords;
         });
+    }
+
+    private static List<JailRecord> filterEnabledJailRecords(@NotNull List<JailRecord> jailRecords) {
+        return jailRecords
+            .stream()
+            .filter(JailRecord::isEnable)
+            .toList();
     }
 
     public static @NotNull List<String> getJailedPlayerNames() {
@@ -117,6 +125,23 @@ public class JailService {
     public static void updateJailRecords(int passedTimeInMillSeconds) {
         getEnabledRecords()
             .forEach(jailRecord -> jailRecord.onUpdateRecord(passedTimeInMillSeconds));
+    }
+
+    public static void executePatrolCommands(JailDescriptor jail) {
+        LogUtil.debug("Execute patrol commands for jail {}", jail.getId());
+
+        List<JailRecord> enabledJailRecords = filterEnabledJailRecords(getJailRecords(jail));
+        enabledJailRecords
+            .forEach(jailRecord -> ServerHelper.executeSync(() -> {
+                String playerName = jailRecord.getPlayerName();
+                ServerPlayerEntity offlinePlayerEntity = PlayerHelper.loadServerPlayerEntity(playerName);
+                CommandExecutor.execute(ExtendedCommandSource.asConsole(offlinePlayerEntity.getCommandSource()), jail.getPatrol().getPatrolCommands());
+            }));
+    }
+
+    public static Text getNoJailStatusText() {
+        String value = JailInitializer.config.model().getNoJailStatusText();
+        return TextHelper.getTextByValue(null, value);
     }
 
 }

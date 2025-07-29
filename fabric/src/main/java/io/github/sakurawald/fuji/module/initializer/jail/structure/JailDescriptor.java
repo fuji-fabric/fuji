@@ -41,7 +41,7 @@ public class JailDescriptor {
     Patrol patrol = new Patrol();
     @Data
     public static class Patrol {
-        int patrolIntervalTicks = 20 * 10;
+        int patrolIntervalMillSeconds = 3 * 1000;
         List<String> patrolCommands = new ArrayList<>();
     }
 

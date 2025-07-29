@@ -18,8 +18,8 @@ public abstract class BaseJob implements Job {
 
     protected String jobGroup;
     protected String jobName;
-    protected JobDetail jobDetail;
-    protected TriggerKey triggerKey;
+    private JobDetail jobDetail;
+    private TriggerKey triggerKey;
     protected boolean rescheduleAble;
 
     public BaseJob(@Nullable String jobGroup, @Nullable String jobName, @Nullable JobDataMap jobDataMap, boolean rescheduleAble) {
