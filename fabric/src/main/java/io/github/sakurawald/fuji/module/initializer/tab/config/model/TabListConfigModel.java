@@ -18,7 +18,7 @@ public class TabListConfigModel {
     public static class Style {
         public List<String> header = new ArrayList<>() {
             {
-                this.add("<rainbow><strikethrough>                              </rainbow><newline><#FFA1F5><b>Server Name</#FFA1F5><newline><grey><b>Online players: %server:online%</grey>");
+                this.add("<rainbow><strikethrough>                              </strikethrough></rainbow><newline><#FFA1F5><b>Server Name</b><newline><grey><b>Online players: %server:online%</b></grey>");
             }
         };
         public List<String> body = new ArrayList<>() {
@@ -28,7 +28,7 @@ public class TabListConfigModel {
         };
         public List<String> footer = new ArrayList<>() {
             {
-                this.add("<grey><b>TPS: %server:tps_colored% MSPT: %server:mspt_colored% PING: %player:ping_colored%</grey><newline><grey><b>Memory: %server:used_ram%/%server:max_ram% MB</grey><newline><#FFA1F5><b>%fuji:rotate Welcome to the server. %</#FFA1F5><newline><rainbow><strikethrough>                              </rainbow>");
+                this.add("<grey><b>TPS: %server:tps_colored% MSPT: %server:mspt_colored% PING: %player:ping_colored%</b></grey><newline><grey><b>Memory: %server:used_ram%/%server:max_ram% MB</b></grey><newline><#FFA1F5><b>%fuji:rotate Welcome to the server. %<newline><rainbow><strikethrough>                              </strikethrough></rainbow>");
             }
 
         };
