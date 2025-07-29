@@ -96,22 +96,22 @@ public class JailService {
             jailDataNode.getRecords().add(jailRecord);
             return null;
         });
-        executeOnUnJailedCommands(jail, playerName);
+        executeOnJailedCommands(jail, playerName);
     }
 
-    private static void executeOnUnJailedCommands(JailDescriptor jail, String playerName) {
+    private static void executeOnUnjailedCommands(JailDescriptor jail, String playerName) {
         ServerPlayerEntity offlinePlayerEntity = PlayerHelper.loadServerPlayerEntity(playerName);
-        CommandExecutor.execute(ExtendedCommandSource.asConsole(offlinePlayerEntity.getCommandSource()), jail.getEvents().getOnJailedEvent());
+        CommandExecutor.execute(ExtendedCommandSource.asConsole(offlinePlayerEntity.getCommandSource()), jail.getEvents().getOnUnjailedEvent());
     }
 
-    public static void pardonJailRecord(JailRecord jailRecord, String playerName) {
+    public static void pardonJailRecord(JailRecord jailRecord) {
         jailRecord.setEnable(false);
-        executeOnJailedCommands(jailRecord.getOwnerJailDescriptor(), playerName);
+        executeOnUnjailedCommands(jailRecord.getOwnerJailDescriptor(), jailRecord.getPlayerName());
     }
 
     private static void executeOnJailedCommands(JailDescriptor jail, String playerName) {
         ServerPlayerEntity offlinePlayerEntity = PlayerHelper.loadServerPlayerEntity(playerName);
-        CommandExecutor.execute(ExtendedCommandSource.asConsole(offlinePlayerEntity.getCommandSource()), jail.getEvents().getOnUnjaildEvent());
+        CommandExecutor.execute(ExtendedCommandSource.asConsole(offlinePlayerEntity.getCommandSource()), jail.getEvents().getOnJailedEvent());
     }
 
     public static void updateJailRecords(int passedTimeInMillSeconds) {

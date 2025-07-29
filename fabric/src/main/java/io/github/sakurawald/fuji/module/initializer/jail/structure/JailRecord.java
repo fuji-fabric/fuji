@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.jail.structure;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.service.date_parser.DateParser;
+import io.github.sakurawald.fuji.module.initializer.jail.service.JailService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -61,9 +62,14 @@ public class JailRecord {
     }
 
     private void countRemainingJailSeconds(int passedTimeInMillSeconds) {
-        int newValue = this.getRemainingJailSeconds() - (passedTimeInMillSeconds / 1000);
+        int previousValue = this.getRemainingJailSeconds();
+        int newValue = previousValue - (passedTimeInMillSeconds / 1000);
         newValue = Math.max(newValue, 0);
         this.setRemainingJailSeconds(newValue);
+
+        if (newValue == 0 && previousValue != 0) {
+            JailService.pardonJailRecord(this);
+        }
     }
 
 }

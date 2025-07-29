@@ -10,6 +10,7 @@ import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlayerName;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.manager.Managers;
@@ -26,6 +27,30 @@ import net.minecraft.server.command.ServerCommandSource;
 @Document(id = 1753681022357L, value = """
     This module allows you to define a `jail`.
     It can be used to `punish` a player with bad behaviour, without `banning` it.
+    """)
+@ColorBox(id = 1753750852480L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ Understand the `execution time` of a `command`.
+    Some commands require the `target player` online to work.
+    For example, the `/send-message %player:name% You are jailed.` didn't work if the target player is `off-line`.
+    In this case, you can use the `command_meta.when_online` module, to submit and schedule a command.
+    Issue: `/when-online %player:name% send-message %player:name% You are jailed.`
+
+    ◉ Create a `luckperms group` for `jailed players`.
+    You can create a `luckperms group` for `jailed players`.
+    And assign the `positive permissions` and `negative permissions` to `jailed players`.
+    Use the `permissions` to control the behaviours of `jailed players`.
+
+    ◉ Limit the actions of `jailed players`.
+    You can integrate with the `anti_build` module.
+    To assign `negative permissions` to `jailed user group`, to limit the actions of them.
+    Issue:
+    1. `/lp group jailed permission set fuji.anti_build.break_block.override.* false`
+    2. `/lp group jailed permission set fuji.anti_build.place_block.override.* false`
+    3. `/lp group jailed permission set fuji.anti_build.interact_item.override.* false`
+    4. `/lp group jailed permission set fuji.anti_build.interact_entity.override.* false`
+    5. `/lp group jailed permission set fuji.anti_build.interact_block.override.* false`
+    <green>NOTE: You need to enable the `wildcard permission` feature in `luckperms` mod config.
+
     """)
 public class JailInitializer extends ModuleInitializer {
 
@@ -75,7 +100,7 @@ public class JailInitializer extends ModuleInitializer {
         return JailService
             .getCurrentJailRecord($playerName)
             .map(currentJailRecord -> {
-                JailService.pardonJailRecord(currentJailRecord, $playerName);
+                JailService.pardonJailRecord(currentJailRecord);
                 TextHelper.sendTextByKey(source, "jail.pardon", $playerName, currentJailRecord.getOwnerJailDescriptor().getId());
                 return CommandHelper.Return.SUCCESS;
             })
