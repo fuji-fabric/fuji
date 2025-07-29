@@ -582,6 +582,9 @@ public class TextHelper {
         PlaceholderContext placeholderContext = Parsers.makePlaceholderContext(audience);
         ParserContext parserContext = ParserContext.of(PlaceholderContext.KEY, placeholderContext);
 
+        // Fix the parser input.
+        languageValue = Fixer.fixParserInput(languageValue);
+
         // Call text parser to parse the string.
         return parser.parseText(TextNode.of(languageValue), parserContext);
     }

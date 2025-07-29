@@ -8,7 +8,7 @@ public class UrlHighlighter {
     public static String highlight(String string) {
         string = CLICKABLE_URL_REPLACER_PATTERN
             .matcher(string)
-            .replaceAll("<click:open_url:'$1'><aqua><i><underline>$1<underline></i></aqua></click>");
+            .replaceAll("<click:open_url:'$1'><aqua><i><underline>$1<underline></></></>");
         return string;
     }
 }
