@@ -40,6 +40,10 @@ public class JailService {
             .findFirst();
     }
 
+    private static synchronized List<JailDataNode> getJailDataNodes() {
+        return JailInitializer.data.model().getJailDataNodes();
+    }
+
     private static <T> T withJailDataNode(@NotNull JailDescriptor jail, Function<JailDataNode, T> function) {
         Optional<JailDataNode> jailDataNode = getJailDataNodes()
             .stream()
@@ -53,10 +57,6 @@ public class JailService {
         });
 
         return function.apply($jailDataNode);
-    }
-
-    private static synchronized List<JailDataNode> getJailDataNodes() {
-        return JailInitializer.data.model().getJailDataNodes();
     }
 
     public static List<JailRecord> getJailRecords() {
@@ -92,7 +92,7 @@ public class JailService {
             .toList();
     }
 
-    public static Optional<JailRecord> getCurrentJailRecord(String playerName) {
+    public static Optional<JailRecord> getActiveJailRecord(String playerName) {
         return getEnabledRecords()
             .stream()
             .filter(jailRecord -> jailRecord.getPrisonerName().equals(playerName))
@@ -146,8 +146,8 @@ public class JailService {
         ServerHelper.updateDisplayName();
     }
 
-    public static void disableActiveJailRecord(String playerName) {
-        getCurrentJailRecord(playerName)
+    public static void deactivateJailRecord(String playerName) {
+        getActiveJailRecord(playerName)
             .ifPresent(jailRecord -> jailRecord.setEnable(false));
     }
 

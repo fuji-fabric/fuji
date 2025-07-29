@@ -124,8 +124,8 @@ public class JailInitializer extends ModuleInitializer {
         String $duration = duration.orElseGet(jail::getDefaultJailedDuration);
 
         return JailService
-            .getCurrentJailRecord(playerName)
-            .map(currentJailRecord -> {
+            .getActiveJailRecord(playerName)
+            .map(activeJailRecord -> {
                 TextHelper.sendTextByKey(source, "jail.already_in_jail", playerName, jail.getId());
                 return CommandHelper.Return.FAIL;
             })
@@ -135,7 +135,7 @@ public class JailInitializer extends ModuleInitializer {
                     TextHelper.sendTextByKey(source, "jail.put", playerName, jail.getId());
                 } catch (Exception e) {
                     TextHelper.sendTextByKey(source, "jail.put.failed", playerName);
-                    JailService.disableActiveJailRecord(playerName);
+                    JailService.deactivateJailRecord(playerName);
                 }
                 return CommandHelper.Return.SUCCESS;
             });
@@ -150,10 +150,10 @@ public class JailInitializer extends ModuleInitializer {
         String $playerName = playerName.getValue();
 
         return JailService
-            .getCurrentJailRecord($playerName)
-            .map(currentJailRecord -> {
-                JailService.pardonJailRecord(currentJailRecord);
-                TextHelper.sendTextByKey(source, "jail.pardon", $playerName, currentJailRecord.getOwnerJailDescriptor().getId());
+            .getActiveJailRecord($playerName)
+            .map(activeJailRecord -> {
+                JailService.pardonJailRecord(activeJailRecord);
+                TextHelper.sendTextByKey(source, "jail.pardon", $playerName, activeJailRecord.getOwnerJailDescriptor().getId());
                 return CommandHelper.Return.SUCCESS;
             })
             .orElseGet(() -> {
@@ -168,7 +168,7 @@ public class JailInitializer extends ModuleInitializer {
     private static int $whichJail(@CommandSource ServerCommandSource source, JailedPlayerName playerName) {
         String $playerName = playerName.getValue();
         return JailService
-            .getCurrentJailRecord($playerName)
+            .getActiveJailRecord($playerName)
             .map(jailRecord -> {
                 JailDescriptor ownerJailDescriptor = jailRecord.getOwnerJailDescriptor();
                 TextHelper.sendTextByKey(source, "line.separator");
@@ -191,7 +191,7 @@ public class JailInitializer extends ModuleInitializer {
     @CommandNode("is-jailed?")
     @CommandRequirement(level = 4)
     private static int $isJailed(@CommandSource ServerCommandSource source, String playerName) {
-        return CommandHelper.Return.returnBoolean(source, JailService.getCurrentJailRecord(playerName).isPresent());
+        return CommandHelper.Return.returnBoolean(source, JailService.getActiveJailRecord(playerName).isPresent());
     }
 
     @Document(id = 1753772112918L, value = "Create a new `jail` descriptor.")
@@ -257,19 +257,19 @@ public class JailInitializer extends ModuleInitializer {
 
     @Override
     protected void registerPlaceholder() {
-        JailPlaceholders.registerCurrentJailId();
-        JailPlaceholders.registerCurrentJailDisplayName();
-        JailPlaceholders.registerCurrentJailCreatorName();
-        JailPlaceholders.registerCurrentJailCreatedDate();
-        JailPlaceholders.registerCurrentJailSpecifiedJailDuration();
-        JailPlaceholders.registerCurrentJailRemainingJailDuration();
-        JailPlaceholders.registerCurrentJailReason();
+        JailPlaceholders.registerJailIdPlaceholder();
+        JailPlaceholders.registerJailDisplayNamePlaceholder();
+        JailPlaceholders.registerJailCreatorNamePlaceholder();
+        JailPlaceholders.registerJailCreatedDatePlaceholder();
+        JailPlaceholders.registerJailSpecifiedJailDurationPlaceholder();
+        JailPlaceholders.registerJailRemainingJailDurationPlaceholder();
+        JailPlaceholders.registerJailReasonPlaceholder();
 
-        JailPlaceholders.registerCurrentJailDimension();
-        JailPlaceholders.registerCurrentJailX();
-        JailPlaceholders.registerCurrentJailY();
-        JailPlaceholders.registerCurrentJailZ();
-        JailPlaceholders.registerCurrentJailYaw();
-        JailPlaceholders.registerCurrentJailPitch();
+        JailPlaceholders.registerJailDimensionPlaceholder();
+        JailPlaceholders.registerJailXPlaceholder();
+        JailPlaceholders.registerJailYPlaceholder();
+        JailPlaceholders.registerJailZPlaceholder();
+        JailPlaceholders.registerJailYawPlaceholder();
+        JailPlaceholders.registerJailPitchPlaceholder();
     }
 }

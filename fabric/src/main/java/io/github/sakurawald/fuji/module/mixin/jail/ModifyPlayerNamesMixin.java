@@ -17,7 +17,7 @@ public class ModifyPlayerNamesMixin {
     Text modifyPlayerListName(Text original) {
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
         String playerName = PlayerHelper.getPlayerName(player);
-        return JailService.getCurrentJailRecord(playerName)
+        return JailService.getActiveJailRecord(playerName)
             .map(it -> TextHelper.getTextByValue(player, JailInitializer.config.model().getJailedPlayerTabListText()))
             .orElse(original);
     }
