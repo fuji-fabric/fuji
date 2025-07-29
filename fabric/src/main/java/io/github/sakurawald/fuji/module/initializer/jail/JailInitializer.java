@@ -167,28 +167,20 @@ public class JailInitializer extends ModuleInitializer {
                 return CommandHelper.Return.FAIL;
             })
             .orElseGet(() -> {
-                JailService.createJailDescriptor(jailId);
+                JailService.createJailDescriptor(jailId, source);
                 TextHelper.sendTextByKey(source, "jail.create.success", jailId);
                 return CommandHelper.Return.SUCCESS;
             });
     }
 
-    @SuppressWarnings("CodeBlock2Expr")
     @Document(id = 1753772960860L, value = "Delete an existing `jail` descriptor")
     @CommandNode("jail delete")
     @CommandRequirement(level = 4)
-    private static int $deleteJail(@CommandSource ServerCommandSource source, String jailId, Optional<Boolean> confirm) {
+    private static int $deleteJail(@CommandSource ServerCommandSource source, JailDescriptor jail, Optional<Boolean> confirm) {
         return CommandHelper.Pattern.withCommandConfirmed(source, confirm, () -> {
-            return JailService.findJailDescriptor(jailId)
-                .map(it -> {
-                    JailService.deleteJailDescriptor(it);
-                    TextHelper.sendTextByKey(source, "jail.delete.success", jailId);
-                    return CommandHelper.Return.SUCCESS;
-                })
-                .orElseGet(() -> {
-                    TextHelper.sendTextByKey(source, "jail.not_found", jailId);
-                    return CommandHelper.Return.FAIL;
-                });
+            JailService.deleteJailDescriptor(jail);
+            TextHelper.sendTextByKey(source, "jail.delete.success", jail.getId());
+            return CommandHelper.Return.SUCCESS;
         });
     }
 

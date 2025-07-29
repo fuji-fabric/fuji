@@ -7,6 +7,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.service.date_parser.DateParser;
+import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.jail.JailInitializer;
 import io.github.sakurawald.fuji.module.initializer.jail.structure.JailDataNode;
 import io.github.sakurawald.fuji.module.initializer.jail.structure.JailDescriptor;
@@ -14,6 +15,7 @@ import io.github.sakurawald.fuji.module.initializer.jail.structure.JailRecord;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -97,8 +99,9 @@ public class JailService {
             .findFirst();
     }
 
-    public static void createJailDescriptor(@NotNull String jailId) {
-        JailDescriptor newValue = JailDescriptor.make(jailId);
+    public static void createJailDescriptor(@NotNull String jailId, @NotNull ServerCommandSource source) {
+        GlobalPos globalPos = GlobalPos.of(source);
+        JailDescriptor newValue = JailDescriptor.make(jailId, globalPos);
         JailInitializer.config.model().getJailDescriptors().add(newValue);
         JailInitializer.config.writeStorage();
     }

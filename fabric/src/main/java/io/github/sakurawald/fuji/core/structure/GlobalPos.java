@@ -4,7 +4,9 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import lombok.Data;
 import lombok.With;
+import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.s2c.play.PositionFlag;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
@@ -36,7 +38,16 @@ public class GlobalPos {
     }
 
     public static @NotNull GlobalPos of(@NotNull ServerPlayerEntity player) {
-        return new GlobalPos(player.getWorld().getRegistryKey().getValue().toString(), player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
+        return new GlobalPos(RegistryHelper.toString(player.getWorld()), player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
+    }
+
+    public static @NotNull GlobalPos of(@NotNull ServerCommandSource source) {
+        Entity entity = source.getEntity();
+        if (entity != null) {
+            return new GlobalPos(RegistryHelper.toString(entity.getWorld()), entity.getX(), entity.getY(), entity.getZ(), entity.getYaw(), entity.getPitch());
+        }
+
+        return new GlobalPos(RegistryHelper.toString(source.getWorld()), source.getPosition().getX(), source.getPosition().getY(), source.getPosition().getZ(), source.getRotation().x, source.getRotation().y);
     }
 
     public boolean sameLevel(@NotNull World level) {

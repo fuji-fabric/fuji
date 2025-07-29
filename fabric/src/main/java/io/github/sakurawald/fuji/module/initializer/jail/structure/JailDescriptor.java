@@ -7,6 +7,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -53,9 +54,10 @@ public class JailDescriptor {
         };
     }
 
-    public static JailDescriptor make(String id) {
+    public static JailDescriptor make(@NotNull String id, @NotNull GlobalPos globalPosition) {
         JailDescriptor jailDescriptor = new JailDescriptor();
         jailDescriptor.setId(id);
+        jailDescriptor.setGlobalPosition(globalPosition);
         return jailDescriptor;
     }
 
