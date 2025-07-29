@@ -111,6 +111,11 @@ public class JailService {
         JailInitializer.config.writeStorage();
     }
 
+    public static void setJailPosition(@NotNull JailDescriptor jailDescriptor, @NotNull GlobalPos globalPos) {
+        jailDescriptor.setGlobalPosition(globalPos);
+        JailInitializer.config.writeStorage();
+    }
+
     public static void createJailRecord(String creatorName, String playerName, JailDescriptor jail, String reason, String $duration) {
         withJailDataNode(jail, jailDataNode -> {
             int specifiedJailSeconds = DateParser.parseAccumulatedSeconds($duration);

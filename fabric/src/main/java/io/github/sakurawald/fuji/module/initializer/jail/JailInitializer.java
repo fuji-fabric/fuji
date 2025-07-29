@@ -5,6 +5,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
+import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlayerName;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
@@ -13,6 +14,7 @@ import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.manager.Managers;
+import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.jail.command.argument.wrapper.JailedPlayerName;
 import io.github.sakurawald.fuji.module.initializer.jail.config.model.JailConfigModel;
@@ -23,6 +25,7 @@ import io.github.sakurawald.fuji.module.initializer.jail.service.JailService;
 import io.github.sakurawald.fuji.module.initializer.jail.structure.JailDescriptor;
 import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 @Document(id = 1753681022357L, value = """
     This module allows you to define a `jail`.
@@ -184,6 +187,24 @@ public class JailInitializer extends ModuleInitializer {
         });
     }
 
+    @Document(id = 1753774327312L, value = "Teleport to the `position` of an existing `jail`.")
+    @CommandNode("jail tp")
+    @CommandRequirement(level = 4)
+    private static int $tp(@CommandSource @CommandTarget ServerPlayerEntity player, JailDescriptor jail) {
+        jail.getGlobalPosition().teleport(player);
+        TextHelper.sendTextByKey(player, "jail.tp", jail.getId());
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document(id = 1753774502626L, value = "Set the `position` of the specified `jail` to your current position.")
+    @CommandNode("jail set-position")
+    @CommandRequirement(level = 4)
+    private static int $setPosition(@CommandSource ServerPlayerEntity player, JailDescriptor jail) {
+        GlobalPos newValue = GlobalPos.of(player);
+        JailService.setJailPosition(jail, newValue);
+        TextHelper.sendTextByKey(player,"jail.set_position", jail.getId());
+        return CommandHelper.Return.SUCCESS;
+    }
 
     @Override
     protected void onInitialize() {

@@ -252,6 +252,8 @@
   "jail.record.reason": "<orange>Reason: `%s`",
   "jail.record.remaining_jail_duration": "<orange>Remaining Jail Duration: `%s`",
   "jail.record.specified_jail_duration": "<orange>Specified Jail Duration: `%s`",
+  "jail.set_position": "<green>The position of jail `%s` has been set to your current position.",
+  "jail.tp": "<green>You have been teleported to the jail `%s`.",
   "job.fire_dates": "<blue>Fire Dates: ",
   "job.fire_dates.entry": "<blue>◉ <grey>%s",
   "job.job_group": "<blue>Job Group: `%s`",
@@ -1336,5 +1338,7 @@
   "docstring.1753759691598": "Returns the `position pitch` of the active `jail record`.\n",
   "docstring.1753771412507": "A predicate command to check if the target player is jailed.",
   "docstring.1753772112918": "Create a new `jail` descriptor.",
-  "docstring.1753772960860": "Delete an existing `jail` descriptor"
+  "docstring.1753772960860": "Delete an existing `jail` descriptor",
+  "docstring.1753774327312": "Teleport to the `position` of an existing `jail`.",
+  "docstring.1753774502626": "Set the `position` of the specified `jail` to your current position."
 }
