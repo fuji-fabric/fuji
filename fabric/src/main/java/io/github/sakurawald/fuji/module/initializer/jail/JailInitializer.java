@@ -33,6 +33,10 @@ import net.minecraft.server.command.ServerCommandSource;
     1. You can define a `jail` by configuring the `jail descriptors` in the config file.
     2. For each `jail`,
 
+    ◉ The difference between `banned players` and `jailed players`.
+    1. For a `banned players`: They can't `join` the server.
+    2. For a `jailed players`: They can `join` the server.
+
     """)
 @ColorBox(id = 1753750852480L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     ◉ Understand the `execution time` of a `command`.
