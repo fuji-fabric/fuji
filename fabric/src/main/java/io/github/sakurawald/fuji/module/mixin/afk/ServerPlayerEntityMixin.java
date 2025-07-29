@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.module.mixin.afk;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.authlib.GameProfile;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
@@ -13,7 +12,6 @@ import net.minecraft.entity.MovementType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
 #if MC_VER < MC_1_21_6
 import net.minecraft.util.math.BlockPos;
 #endif
@@ -27,8 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-// To override tab list name in `tab list module`
-@Mixin(value = ServerPlayerEntity.class, priority = 1000 - 250)
+@Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin extends PlayerEntity implements AfkStateAccessor {
 
     @Unique
@@ -51,16 +48,6 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Af
         super(world, gameProfile);
     }
     #endif
-
-    @TestCase(steps = "Issue `/afk` and see the player list.", purposes = "The display name of an afk player should be modified.")
-    @ModifyReturnValue(method = "getPlayerListName", at = @At("RETURN"))
-    public Text handlePlayerListName(Text original) {
-        if (AfkInitializer.isAfk(player)) {
-            return AfkInitializer.getAfkText(player);
-        }
-
-        return original;
-    }
 
     @Inject(method = "updateLastActionTime", at = @At("TAIL"))
     public void $updateLastActionTime(CallbackInfo ci) {

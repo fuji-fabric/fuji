@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(value = ServerPlayerEntity.class)
-public abstract class ServerPlayerEntityMixin {
+public abstract class ModifyPlayerNamesMixin {
 
     @Unique
     private final ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
