@@ -86,14 +86,14 @@ public class JailService {
     public static @NotNull List<String> getJailedPlayerNames() {
         return getEnabledRecords()
             .stream()
-            .map(JailRecord::getPlayerName)
+            .map(JailRecord::getPrisonerName)
             .toList();
     }
 
     public static Optional<JailRecord> getCurrentJailRecord(String playerName) {
         return getEnabledRecords()
             .stream()
-            .filter(jailRecord -> jailRecord.getPlayerName().equals(playerName))
+            .filter(jailRecord -> jailRecord.getPrisonerName().equals(playerName))
             .findFirst();
     }
 
@@ -116,7 +116,7 @@ public class JailService {
 
     public static void pardonJailRecord(JailRecord jailRecord) {
         // NOTE: Execute the commands first, to ensure the `active jail record` can be retried by the placeholders.
-        executeOnUnjailedCommands(jailRecord.getOwnerJailDescriptor(), jailRecord.getPlayerName());
+        executeOnUnjailedCommands(jailRecord.getOwnerJailDescriptor(), jailRecord.getPrisonerName());
 
         jailRecord.setEnable(false);
     }
@@ -142,7 +142,7 @@ public class JailService {
         List<JailRecord> enabledJailRecords = filterEnabledJailRecords(getJailRecords(jail));
         enabledJailRecords
             .forEach(jailRecord -> ServerHelper.executeSync(() -> {
-                String playerName = jailRecord.getPlayerName();
+                String playerName = jailRecord.getPrisonerName();
                 ServerHelper.getOnlinePlayerByName(playerName)
                     .ifPresent(onlinePlayer -> {
                         List<String> patrolCommands = jail.getPatrol().getPatrolCommands();

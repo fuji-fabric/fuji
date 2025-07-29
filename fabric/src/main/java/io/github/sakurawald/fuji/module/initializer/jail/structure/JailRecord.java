@@ -18,7 +18,7 @@ public class JailRecord {
     boolean enable;
 
     @Document(id = 1753685346716L, value = "The `jailed player name`.")
-    String playerName;
+    String prisonerName;
 
     @Document(id = 1753685321191L, value = "The player name who created this `jail record`.")
     String creatorName;
@@ -36,7 +36,7 @@ public class JailRecord {
         jailRecord.setEnable(true);
         jailRecord.setCreatorName(creatorName);
         jailRecord.setCreatedTimestamp(System.currentTimeMillis());
-        jailRecord.setPlayerName(playerName);
+        jailRecord.setPrisonerName(playerName);
         jailRecord.setSpecifiedJailSeconds(jailSeconds);
         jailRecord.setRemainingJailSeconds(jailSeconds);
         jailRecord.setReason(reason);
@@ -60,7 +60,7 @@ public class JailRecord {
         if (this.getOwnerJailDescriptor().isCountRemainingJailSecondsWhenPrisonersOffline()) {
             countRemainingJailSeconds(passedTimeInMillSeconds);
         } else {
-            if (ServerHelper.isPlayerOnline(this.playerName)) {
+            if (ServerHelper.isPlayerOnline(this.prisonerName)) {
                 countRemainingJailSeconds(passedTimeInMillSeconds);
             }
         }
