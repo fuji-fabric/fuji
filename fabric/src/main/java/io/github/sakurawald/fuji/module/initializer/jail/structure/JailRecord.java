@@ -73,7 +73,7 @@ public class JailRecord {
         this.setRemainingJailSeconds(newValue);
 
         if (newValue == 0 && previousValue != 0) {
-            JailService.pardonJailRecord(this);
+            JailService.deactivateJailRecord(this);
         }
     }
 

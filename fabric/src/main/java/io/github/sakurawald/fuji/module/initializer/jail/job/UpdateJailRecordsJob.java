@@ -7,7 +7,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 @Document(id = 1753694703368L, value = """
-    This job is used to update all active `jail records`.
+    This job is used to update all active `jail records` across all `jails`.
     """)
 public class UpdateJailRecordsJob extends FixedIntervalJob {
 

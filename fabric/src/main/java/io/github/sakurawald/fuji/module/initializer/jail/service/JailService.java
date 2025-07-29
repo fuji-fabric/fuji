@@ -136,7 +136,7 @@ public class JailService {
         CommandExecutor.execute(ExtendedCommandSource.asConsole(offlinePlayerEntity.getCommandSource()), jail.getEvents().getOnUnjailedEvent());
     }
 
-    public static void pardonJailRecord(JailRecord jailRecord) {
+    public static void deactivateJailRecord(JailRecord jailRecord) {
         // NOTE: Execute the commands first, to ensure the `active jail record` can be retried by the placeholders.
         executeOnUnjailedCommands(jailRecord.getOwnerJailDescriptor(), jailRecord.getPrisonerName());
 
@@ -146,7 +146,7 @@ public class JailService {
         ServerHelper.updateDisplayName();
     }
 
-    public static void deactivateJailRecord(String playerName) {
+    public static void deactivateJailRecordWithoutEvents(String playerName) {
         getActiveJailRecord(playerName)
             .ifPresent(jailRecord -> jailRecord.setEnable(false));
     }

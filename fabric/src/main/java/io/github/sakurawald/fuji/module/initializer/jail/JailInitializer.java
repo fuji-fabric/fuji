@@ -135,25 +135,23 @@ public class JailInitializer extends ModuleInitializer {
                     TextHelper.sendTextByKey(source, "jail.put", playerName, jail.getId());
                 } catch (Exception e) {
                     TextHelper.sendTextByKey(source, "jail.put.failed", playerName);
-                    JailService.deactivateJailRecord(playerName);
+                    JailService.deactivateJailRecordWithoutEvents(playerName);
                 }
                 return CommandHelper.Return.SUCCESS;
             });
     }
 
-    @Document(id = 1753690598413L, value = """
-        Remove a player from the jail it is currently in.
-        """)
-    @CommandNode("jail pardon")
+    @Document(id = 1753690598413L, value = "Remove a player from the jail it is currently in.")
+    @CommandNode("jail un-put")
     @CommandRequirement(level = 4)
-    private static int $pardon(@CommandSource ServerCommandSource source, JailedPlayerName playerName) {
+    private static int $unPut(@CommandSource ServerCommandSource source, JailedPlayerName playerName) {
         String $playerName = playerName.getValue();
 
         return JailService
             .getActiveJailRecord($playerName)
             .map(activeJailRecord -> {
-                JailService.pardonJailRecord(activeJailRecord);
-                TextHelper.sendTextByKey(source, "jail.pardon", $playerName, activeJailRecord.getOwnerJailDescriptor().getId());
+                JailService.deactivateJailRecord(activeJailRecord);
+                TextHelper.sendTextByKey(source, "jail.unput", $playerName, activeJailRecord.getOwnerJailDescriptor().getId());
                 return CommandHelper.Return.SUCCESS;
             })
             .orElseGet(() -> {
