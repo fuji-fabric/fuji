@@ -40,7 +40,7 @@ public class JailService {
             .findFirst();
     }
 
-    private static synchronized List<JailDataNode> getJailDataNodes() {
+    private static List<JailDataNode> getJailDataNodes() {
         return JailInitializer.data.model().getJailDataNodes();
     }
 
