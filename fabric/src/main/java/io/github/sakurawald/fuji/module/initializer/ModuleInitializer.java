@@ -20,7 +20,7 @@ public class ModuleInitializer {
         this.registerGsonTypeAdapter();
         this.loadConfigurationFiles();
         this.onInitialize();
-        this.registerPlaceholder();
+        this.registerPlaceholders();
     }
 
     public final void doReload() {
@@ -28,7 +28,7 @@ public class ModuleInitializer {
         this.onReload();
     }
 
-    protected void registerPlaceholder() {
+    protected void registerPlaceholders() {
         // no-op
     }
 

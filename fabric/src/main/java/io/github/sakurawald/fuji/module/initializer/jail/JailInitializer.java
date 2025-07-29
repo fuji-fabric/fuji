@@ -281,7 +281,7 @@ public class JailInitializer extends ModuleInitializer {
     }
 
     @Override
-    protected void registerPlaceholder() {
+    protected void registerPlaceholders() {
         JailPlaceholders.registerJailIdPlaceholder();
         JailPlaceholders.registerJailDisplayNamePlaceholder();
         JailPlaceholders.registerJailCreatorNamePlaceholder();

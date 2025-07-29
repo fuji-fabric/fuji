@@ -96,7 +96,7 @@ public class ChatDisplayInitializer extends ModuleInitializer {
     }
 
     @Override
-    protected void registerPlaceholder() {
+    protected void registerPlaceholders() {
         registerDisplayItemPlaceholder();
         registerDisplayInvPlaceholder();
         registerDisplayEnderPlaceholder();

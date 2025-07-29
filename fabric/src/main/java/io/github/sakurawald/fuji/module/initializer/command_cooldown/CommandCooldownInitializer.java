@@ -207,7 +207,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
     }
 
     @Override
-    protected void registerPlaceholder() {
+    protected void registerPlaceholders() {
         CommandCooldownPlaceholders.registerCommandCooldownLeftTimePlaceholder();
         CommandCooldownPlaceholders.registerCommandCooldownLeftTimeDatePlaceholder();
         CommandCooldownPlaceholders.registerCommandCooldownLeftUsagePlaceholder();

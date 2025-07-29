@@ -144,7 +144,7 @@ public class LeaderBoardInitializer extends ModuleInitializer {
     }
 
     @Override
-    protected void registerPlaceholder() {
+    protected void registerPlaceholders() {
         LeaderBoardPlaceholders.registerLowestNPlayerNamePlaceholder();
         LeaderBoardPlaceholders.registerHighestNPlayerNamePlaceholder();
 

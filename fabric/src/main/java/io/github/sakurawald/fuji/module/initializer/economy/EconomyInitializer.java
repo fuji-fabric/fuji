@@ -266,7 +266,7 @@ public class EconomyInitializer extends ModuleInitializer {
     }
 
     @Override
-    protected void registerPlaceholder() {
+    protected void registerPlaceholders() {
         EconomyPlaceholders.registerBalancePlaceholder();
     }
 }

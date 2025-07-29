@@ -46,7 +46,7 @@ public class TitleInitializer extends ModuleInitializer {
     }
 
     @Override
-    protected void registerPlaceholder() {
+    protected void registerPlaceholders() {
         TitleService.registerActiveTitlePlaceholder();
     }
 }
