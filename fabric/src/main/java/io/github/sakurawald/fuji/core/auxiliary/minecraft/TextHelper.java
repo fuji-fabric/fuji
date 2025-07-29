@@ -256,13 +256,25 @@ public class TextHelper {
 
             try {
                 ResourceConfigurationHandler languageFileHandler = makeResourceConfigurationHandler(languageCode);
-                LANGUAGE_CODE_2_LANGUAGE_JSON.put(languageCode, languageFileHandler.model().getAsJsonObject());
+                JsonObject languageJsonObject = languageFileHandler.model().getAsJsonObject();
+                fixParserInput(languageJsonObject);
+                LANGUAGE_CODE_2_LANGUAGE_JSON.put(languageCode, languageJsonObject);
                 LogUtil.info("Language {} loaded.", languageCode);
             } catch (Exception e) {
                 LANGUAGE_CODE_2_LANGUAGE_JSON.put(languageCode, UNSUPPORTED_LANGUAGE_MARKER);
                 LogUtil.error("Failed to load language `{}` from storage.", languageCode, e);
             }
 
+        }
+
+        private static void fixParserInput(JsonObject jsonObject) {
+            jsonObject
+                .keySet()
+                .forEach(key -> {
+                    String originalValue = jsonObject.get(key).getAsString();
+                    String newValue = Fixer.fixParserInput(originalValue);
+                    jsonObject.addProperty(key, newValue);
+                });
         }
 
         private static @NotNull ResourceConfigurationHandler makeResourceConfigurationHandler(String languageCode) {
@@ -919,6 +931,14 @@ public class TextHelper {
             builder.append(Text.literal(suffixString));
 
             return builder;
+        }
+
+    }
+
+    public static class Fixer {
+
+        public static String fixParserInput(String input) {
+            return input.replaceAll("</#.+?>", "</>");
         }
 
     }

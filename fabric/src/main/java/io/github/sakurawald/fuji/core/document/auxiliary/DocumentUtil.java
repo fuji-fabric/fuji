@@ -113,6 +113,7 @@ public class DocumentUtil {
 
         line = line.replaceAll("\\\\<(.+?)\\\\>", "<yellow>\\\\<$1\\\\></yellow>");
 
+        line = TextHelper.Fixer.fixParserInput(line);
         return "<#FFA1F5>" + line;
     }
 }
