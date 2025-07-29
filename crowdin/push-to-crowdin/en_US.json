@@ -1330,5 +1330,6 @@
   "docstring.1753759629341": "Returns the `position y` of the active `jail record`.\n",
   "docstring.1753759649983": "Returns the `position z` of the active `jail record`.\n",
   "docstring.1753759662834": "Returns the `position yaw` of the active `jail record`.\n",
-  "docstring.1753759691598": "Returns the `position pitch` of the active `jail record`.\n"
+  "docstring.1753759691598": "Returns the `position pitch` of the active `jail record`.\n",
+  "docstring.1753771412507": "A predicate command to check if the target player is jailed."
 }

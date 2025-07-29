@@ -150,6 +150,13 @@ public class JailInitializer extends ModuleInitializer {
             });
     }
 
+    @Document(id = 1753771412507L, value = "A predicate command to check if the target player is jailed.")
+    @CommandNode("is-jailed?")
+    @CommandRequirement(level = 4)
+    private static int $isJailed(@CommandSource ServerCommandSource source, String playerName) {
+        return CommandHelper.Return.returnBoolean(source, JailService.getCurrentJailRecord(playerName).isPresent());
+    }
+
     @Override
     protected void onInitialize() {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
