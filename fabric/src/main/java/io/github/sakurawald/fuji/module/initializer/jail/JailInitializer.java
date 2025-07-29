@@ -33,20 +33,31 @@ import net.minecraft.server.network.ServerPlayerEntity;
     """)
 @ColorBox(id = 1753757093710L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     ◉ How it works?
-    1. You can define a `jail` by configuring the `jail descriptors` in the config file.
-    2. For each `jail`,
+    1. Each `jail descriptor` is used to define a `jail` instance.
+    1.a. You can `create` a descriptor using the `/jail create` command.
+    1.b. You can `delete` a descriptor using the `/jail delete` command.
+    1.c. You can `list` all created descriptors using the `/jail list` command.
+    2. Each `jail` can hold `more than 1 player`.
+    2.a. Each `jailed player` is recorded with a `jail record`.
+    2.b. A `player` can only be put in one `jail` at a time.
+    3. Each `jail` has a `position` property.
+    3.a. It's `initialized` to your current position when you run the `/jail create` command.
+    3.b. You can set a new position for it using `/jail set-position` command.
+    3.c. You can teleport to the position using `/jail tp` command.
+    4. You can `put` a `player` into a `jail`, or `un-put` it.
+    4.a. To `put`, use `/jail put` command.
+    4.b. To `un-put`, use `/jail un-put` command.
+    4.c. To query the info, use `/jail which-jail` command.
 
     ◉ The difference between `banned players` and `jailed players`.
     1. For a `banned players`: They can't `join` the server.
     2. For a `jailed players`: They can `join` the server.
 
+    <green> NOTE: A `jail` is only used to hold information.
+    <green> You need to write `punishment commands` in `onJailedEvent` and `onUnjailedEvent`.
+    <green> You can also write `patrol commands` to check and restrict the actions of the jailed players.
     """)
 @ColorBox(id = 1753774841738L, color = ColorBox.ColorBlockTypes.NOTE, value = """
-    ◉ The `position` of a `jail`.
-    Each `jail` has a global `position`:
-    1. It's `initialized` to your current position when you run the `/jail create` command.
-    2. You can set a new position for it using `/jail set-position` command.
-
     ◉ The `placeholders` to the `position` of a `jail`.
     1. `%fuji:jail_dimension%`
     2. `%fuji:jail_x%`
@@ -55,14 +66,14 @@ import net.minecraft.server.network.ServerPlayerEntity;
     5. `%fuji:jail_yaw%`
     6. `%fuji:jail_pitch%`
 
-    ◉ Restrict the movement of jailed players within a specified area.
+    ◉ Restrict the `movement` of `jailed players` within a specified area.
     With the help of `position placeholders`, you can write `patrol commands` to restrict movements.
     You can define commands to restrict the movement of jailed players within a specified area.
     1. `/execute as %player:name% at @s unless dimension %fuji:jail_dimension% run execute in %fuji:jail_dimension% run tp @s %fuji:jail_x% %fuji:jail_y% %fuji:jail_z%`
     2. `/execute as %player:name% if entity @s[x=%fuji:jail_x%,y=%fuji:jail_y%,z=%fuji:jail_z%,distance=8..] run tp @s %fuji:jail_x% %fuji:jail_y% %fuji:jail_z%`
 
-    <green>NOTE: If you have enable the `teleport_warmup` module, remember to assign a `warmup bypass` permission for `jailed` user group.
-    So that `jailed players` can be `instantly` teleported back to the `position of the jail`.
+    <green>NOTE: If you have enabled the `teleport_warmup` module, remember to assign the `warmup bypass` permission for the `jailed` user group.
+    <green>So that `jailed players` can be `instantly` teleported back to the `position of the jail`.
     1. `/lp group jailed permission set fuji.teleport_warmup.bypass`
     """)
 @ColorBox(id = 1753750852480L, color = ColorBox.ColorBlockTypes.TIPS, value = """
@@ -77,7 +88,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     And assign the `positive permissions` and `negative permissions` to `jailed players`.
     Use the `permissions` to control the behaviours of `jailed players`.
 
-    ◉ Limit the actions of `jailed players`.
+    ◉ Restrict the actions of `jailed players`.
     You can integrate with the `anti_build` module.
     To assign `negative permissions` to `jailed user group`, to limit the actions of them.
     Issue:
