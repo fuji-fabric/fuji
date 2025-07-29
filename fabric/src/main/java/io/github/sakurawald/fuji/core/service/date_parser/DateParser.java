@@ -60,6 +60,12 @@ public class DateParser {
                     throw new IllegalArgumentException("Unknown time unit: " + unit);
             }
         }
+
+        /* Return a small enough value, to prevent the `0s` result. */
+        if (accumulateSeconds == 0) {
+            accumulateSeconds = 3;
+        }
+
         return accumulateSeconds;
     }
 
