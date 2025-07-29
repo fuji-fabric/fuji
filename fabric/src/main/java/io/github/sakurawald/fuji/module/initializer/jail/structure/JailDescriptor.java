@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.jail.structure;
 
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,8 @@ public class JailDescriptor {
     @Document(id = 1753684930648L, value = "Tae `jail duration` to use if you didn't specify a `jail duration`.")
     String defaultJailedDuration = "30m";
     boolean countRemainingJailSecondsWhenPrisonersOffline = false;
+
+    GlobalPos globalPosition = new GlobalPos("minecraft:overworld", 0, 64, 0, 0, 0);
 
     Events events = new Events();
     @Data
@@ -42,7 +45,12 @@ public class JailDescriptor {
     @Data
     public static class Patrol {
         int patrolIntervalMillSeconds = 3 * 1000;
-        List<String> patrolCommands = new ArrayList<>();
+        List<String> patrolCommands = new ArrayList<>() {
+            {
+                this.add("execute as %player:name% at @s unless dimension %fuji:jail_dimension% run execute in %fuji:jail_dimension% run tp @s %fuji:jail_x% %fuji:jail_y% %fuji:jail_z%");
+                this.add("execute as %player:name% if entity @s[x=%fuji:jail_x%,y=%fuji:jail_y%,z=%fuji:jail_z%,distance=8..] run tp @s %fuji:jail_x% %fuji:jail_y% %fuji:jail_z%");
+            }
+        };
     }
 
     public static JailDescriptor make(String id) {

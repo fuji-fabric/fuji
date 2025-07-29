@@ -175,5 +175,11 @@ public class JailInitializer extends ModuleInitializer {
         JailPlaceholders.registerCurrentJailRemainingJailDuration();
         JailPlaceholders.registerCurrentJailReason();
 
+        JailPlaceholders.registerCurrentJailDimension();
+        JailPlaceholders.registerCurrentJailX();
+        JailPlaceholders.registerCurrentJailY();
+        JailPlaceholders.registerCurrentJailZ();
+        JailPlaceholders.registerCurrentJailYaw();
+        JailPlaceholders.registerCurrentJailPitch();
     }
 }

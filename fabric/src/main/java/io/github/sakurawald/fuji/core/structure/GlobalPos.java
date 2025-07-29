@@ -22,7 +22,7 @@ public class GlobalPos {
     final float yaw;
     final float pitch;
 
-    private GlobalPos(String level, double x, double y, double z, float yaw, float pitch) {
+    public GlobalPos(String level, double x, double y, double z, float yaw, float pitch) {
         this.level = level;
         this.x = x;
         this.y = y;

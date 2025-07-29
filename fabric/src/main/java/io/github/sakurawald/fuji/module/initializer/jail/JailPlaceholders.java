@@ -84,11 +84,70 @@ public class JailPlaceholders {
         });
     }
 
+    @DocStringProvider(id = 1753759462210L, value = """
+        Returns the `dimension` of the active `jail record`.
+        """)
+    public static void registerCurrentJailDimension() {
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("jail_dimension", 1753759462210L);
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> {
+            return getJailRecordText(player, it -> Text.of(it.getOwnerJailDescriptor().getGlobalPosition().getLevel()));
+        });
+    }
+
+    @DocStringProvider(id = 1753759553388L, value = """
+        Returns the `position x` of the active `jail record`.
+        """)
+    public static void registerCurrentJailX() {
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("jail_x", 1753759553388L);
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> {
+            return getJailRecordText(player, it -> Text.of(String.valueOf(it.getOwnerJailDescriptor().getGlobalPosition().getX())));
+        });
+    }
+
+    @DocStringProvider(id = 1753759629341L, value = """
+        Returns the `position y` of the active `jail record`.
+        """)
+    public static void registerCurrentJailY() {
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("jail_y", 1753759629341L);
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> {
+            return getJailRecordText(player, it -> Text.of(String.valueOf(it.getOwnerJailDescriptor().getGlobalPosition().getY())));
+        });
+    }
+    @DocStringProvider(id = 1753759649983L, value = """
+        Returns the `position z` of the active `jail record`.
+        """)
+    public static void registerCurrentJailZ() {
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("jail_z", 1753759649983L);
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> {
+            return getJailRecordText(player, it -> Text.of(String.valueOf(it.getOwnerJailDescriptor().getGlobalPosition().getZ())));
+        });
+    }
+    @DocStringProvider(id = 1753759662834L, value = """
+        Returns the `position yaw` of the active `jail record`.
+        """)
+    public static void registerCurrentJailYaw() {
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("jail_yaw", 1753759662834L);
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> {
+            return getJailRecordText(player, it -> Text.of(String.valueOf(it.getOwnerJailDescriptor().getGlobalPosition().getYaw())));
+        });
+    }
+    @DocStringProvider(id = 1753759691598L, value = """
+        Returns the `position pitch` of the active `jail record`.
+        """)
+    public static void registerCurrentJailPitch() {
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("jail_pitch", 1753759691598L);
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> {
+            return getJailRecordText(player, it -> Text.of(String.valueOf(it.getOwnerJailDescriptor().getGlobalPosition().getPitch())));
+        });
+    }
+
+
     private static Text getJailRecordText(ServerPlayerEntity player, Function<JailRecord, Text> jailRecordMapper) {
         String playerName= PlayerHelper.getPlayerName(player);
         return JailService.getCurrentJailRecord(playerName)
             .map(jailRecordMapper)
             .orElseGet(JailService::getNoJailStatusText);
     }
+
 
 }
