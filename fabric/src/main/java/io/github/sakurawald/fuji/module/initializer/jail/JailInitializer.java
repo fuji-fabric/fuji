@@ -75,6 +75,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
     <green>NOTE: If you have enabled the `teleport_warmup` module, remember to assign the `warmup bypass` permission for the `jailed` user group.
     <green>So that `jailed players` can be `instantly` teleported back to the `position of the jail`.
     1. `/lp group jailed permission set fuji.teleport_warmup.bypass`
+
+    <green>NOTE: To disable the `vanilla Minecraft command feedbacks`, you can issue:
+    1. `/gamerule sendCommandFeedback false`
     """)
 @ColorBox(id = 1753750852480L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     ◉ Understand the `execution time` of a `command`.
