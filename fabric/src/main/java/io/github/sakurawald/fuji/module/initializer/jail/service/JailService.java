@@ -104,6 +104,8 @@ public class JailService {
             jailDataNode.getRecords().add(jailRecord);
             return null;
         });
+
+        // NOTE: Execute the commands later, to ensure the `active jail record` can be retried by the placeholders.
         executeOnJailedCommands(jail, playerName);
     }
 
@@ -113,8 +115,10 @@ public class JailService {
     }
 
     public static void pardonJailRecord(JailRecord jailRecord) {
-        jailRecord.setEnable(false);
+        // NOTE: Execute the commands first, to ensure the `active jail record` can be retried by the placeholders.
         executeOnUnjailedCommands(jailRecord.getOwnerJailDescriptor(), jailRecord.getPlayerName());
+
+        jailRecord.setEnable(false);
     }
 
     private static void executeOnJailedCommands(JailDescriptor jail, String playerName) {

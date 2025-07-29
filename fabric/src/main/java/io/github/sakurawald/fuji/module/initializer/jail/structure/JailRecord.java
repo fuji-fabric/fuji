@@ -57,7 +57,7 @@ public class JailRecord {
     }
 
     public void onUpdateRecord(int passedTimeInMillSeconds) {
-        if (this.getOwnerJailDescriptor().isCountRemainingJailSecondsWhenOffline()) {
+        if (this.getOwnerJailDescriptor().isCountRemainingJailSecondsWhenPrisonersOffline()) {
             countRemainingJailSeconds(passedTimeInMillSeconds);
         } else {
             if (ServerHelper.isPlayerOnline(this.playerName)) {

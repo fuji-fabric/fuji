@@ -1322,5 +1322,6 @@
   "docstring.1753756370321": "Returns the `remaining jail duration` of the `jail record` the player is currently active.\n",
   "docstring.1753756478336": "Returns the `specified jail duration` of the `jail record` the player is currently active.\n",
   "docstring.1753756541250": "Returns the `reason` of the active `jail record`.\n",
-  "docstring.1753756611853": "Returns the `created date` of the active `jail record`.\n"
+  "docstring.1753756611853": "Returns the `created date` of the active `jail record`.\n",
+  "docstring.1753757093710": "◉ How it works?\n1. You can define a `jail` by configuring the `jail descriptors` in the config file.\n2. For each `jail`,\n\n"
 }
