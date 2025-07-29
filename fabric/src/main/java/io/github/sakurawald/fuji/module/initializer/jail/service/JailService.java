@@ -116,11 +116,7 @@ public class JailService {
 
     public static void updateJailRecords(int passedTimeInMillSeconds) {
         getEnabledRecords()
-            .forEach(jailRecord -> {
-                int newValue = jailRecord.getRemainingJailSeconds() - (passedTimeInMillSeconds / 1000);
-                newValue = Math.max(newValue, 0);
-                jailRecord.setRemainingJailSeconds(newValue);
-            });
+            .forEach(jailRecord -> jailRecord.onUpdateRecord(passedTimeInMillSeconds));
     }
 
 }

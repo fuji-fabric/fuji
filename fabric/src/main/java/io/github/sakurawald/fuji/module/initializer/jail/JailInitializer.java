@@ -94,6 +94,7 @@ public class JailInitializer extends ModuleInitializer {
             .getCurrentJailRecord($playerName)
             .map(jailRecord -> {
                 JailDescriptor ownerJailDescriptor = jailRecord.getOwnerJailDescriptor();
+                TextHelper.sendTextByKey(source, "line.separator");
                 TextHelper.sendTextByKey(source, "jail.record.player_name", $playerName);
                 TextHelper.sendTextByKey(source,"jail.record.creator_name", jailRecord.getCreatorName());
                 TextHelper.sendTextByKey(source,"jail.record.created_time", ChronosUtil.toDefaultDateFormat(jailRecord.getCreatedTimestamp()));

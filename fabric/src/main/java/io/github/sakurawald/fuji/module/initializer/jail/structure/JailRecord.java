@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.jail.structure;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.service.date_parser.DateParser;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ public class JailRecord {
 
     int specifiedJailSeconds;
     int remainingJailSeconds;
+
     String reason;
 
     @ToString.Exclude transient JailDescriptor ownerJailDescriptor;
@@ -46,6 +48,22 @@ public class JailRecord {
 
     public String getRemainingJailDuration() {
         return DateParser.formatAccumulatedSeconds(this.getRemainingJailSeconds());
+    }
+
+    public void onUpdateRecord(int passedTimeInMillSeconds) {
+        if (this.getOwnerJailDescriptor().isCountRemainingJailSecondsWhenOffline()) {
+            countRemainingJailSeconds(passedTimeInMillSeconds);
+        } else {
+            if (ServerHelper.isPlayerOnline(this.playerName)) {
+                countRemainingJailSeconds(passedTimeInMillSeconds);
+            }
+        }
+    }
+
+    private void countRemainingJailSeconds(int passedTimeInMillSeconds) {
+        int newValue = this.getRemainingJailSeconds() - (passedTimeInMillSeconds / 1000);
+        newValue = Math.max(newValue, 0);
+        this.setRemainingJailSeconds(newValue);
     }
 
 }
