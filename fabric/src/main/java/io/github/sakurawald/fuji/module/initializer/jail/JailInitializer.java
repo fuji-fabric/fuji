@@ -41,6 +41,30 @@ import net.minecraft.server.network.ServerPlayerEntity;
     2. For a `jailed players`: They can `join` the server.
 
     """)
+@ColorBox(id = 1753774841738L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ The `position` of a `jail`.
+    Each `jail` has a global `position`:
+    1. It's `initialized` to your current position when you run the `/jail create` command.
+    2. You can set a new position for it using `/jail set-position` command.
+
+    ◉ The `placeholders` to the `position` of a `jail`.
+    1. `%fuji:jail_dimension%`
+    2. `%fuji:jail_x%`
+    3. `%fuji:jail_y%`
+    4. `%fuji:jail_z%`
+    5. `%fuji:jail_yaw%`
+    6. `%fuji:jail_pitch%`
+
+    ◉ Restrict the movement of jailed players within a specified area.
+    With the help of `position placeholders`, you can write `patrol commands` to restrict movements.
+    You can define commands to restrict the movement of jailed players within a specified area.
+    1. `/execute as %player:name% at @s unless dimension %fuji:jail_dimension% run execute in %fuji:jail_dimension% run tp @s %fuji:jail_x% %fuji:jail_y% %fuji:jail_z%`
+    2. `/execute as %player:name% if entity @s[x=%fuji:jail_x%,y=%fuji:jail_y%,z=%fuji:jail_z%,distance=8..] run tp @s %fuji:jail_x% %fuji:jail_y% %fuji:jail_z%`
+
+    <green>NOTE: If you have enable the `teleport_warmup` module, remember to assign a `warmup bypass` permission for `jailed` user group.
+    So that `jailed players` can be `instantly` teleported back to the `position of the jail`.
+    1. `/lp group jailed permission set fuji.teleport_warmup.bypass`
+    """)
 @ColorBox(id = 1753750852480L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     ◉ Understand the `execution time` of a `command`.
     Some commands require the `target player` online to work.
@@ -63,7 +87,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
     4. `/lp group jailed permission set fuji.anti_build.interact_entity.override.* false`
     5. `/lp group jailed permission set fuji.anti_build.interact_block.override.* false`
     <green>NOTE: You need to enable the `wildcard permission` feature in `luckperms` mod config.
-
     """)
 public class JailInitializer extends ModuleInitializer {
 
