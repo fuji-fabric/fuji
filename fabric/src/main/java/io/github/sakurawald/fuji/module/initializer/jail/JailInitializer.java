@@ -47,7 +47,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     4. You can `put` a `player` into a `jail`, or `un-put` it.
     4.a. To `put`, use `/jail put` command.
     4.b. To `un-put`, use `/jail un-put` command.
-    4.c. To query the info, use `/jail which-jail` command.
+    4.c. To query the info, use `/jail where` command.
 
     ◉ The difference between `banned players` and `jailed players`.
     1. For a `banned players`: They can't `join` the server.
@@ -99,6 +99,30 @@ import net.minecraft.server.network.ServerPlayerEntity;
     5. `/lp group jailed permission set fuji.anti_build.interact_block.override.* false`
     <green>NOTE: You need to enable the `wildcard permission` feature in `luckperms` mod config.
     """)
+@ColorBox(id = 1753780761908L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Create a `jail` in your current position.
+    Issue: `/jail create \\<jail-id\\>`
+
+    ◉ Set the position of a jail to your current position.
+    Issue: `/jail set-position \\<jail-id\\>`
+
+    ◉ Teleport to the position of a jail.
+    Issue: `/jail tp \\<jail-id\\>`
+
+    ◉ List all created jails.
+    Issue: `/jail list`
+
+    ◉ Put a player into a jail.
+    Issue:
+    1. `/jail put Steve \\<jail-id\\> Steal items.`
+    2. `/jail put Steve \\<jail-id\\> --duration 1s2m3h4d5w6M7y Steal items.`
+
+    ◉ Un-put a player from the jail.
+    Issue: `/jail unput Steve`
+
+    ◉ Query which jail a player is in.
+    Issue: `/jail where Steve`
+    """)
 public class JailInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<JailConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, JailConfigModel.class);
@@ -117,25 +141,25 @@ public class JailInitializer extends ModuleInitializer {
     @Document(id = 1753686063844L, value = "Put the `player` into a specified `jail`.")
     @CommandNode("jail put")
     @CommandRequirement(level = 4)
-    private static int $put(@CommandSource ServerCommandSource source, OfflinePlayerName player, JailDescriptor jail, Optional<String> duration, GreedyString reason) {
+    private static int $put(@CommandSource ServerCommandSource source, OfflinePlayerName playerName, JailDescriptor jail, Optional<String> duration, GreedyString reason) {
         String creatorName = source.getName();
-        String playerName = player.getValue();
+        String $playerName = playerName.getValue();
         String $reason = reason.getValue();
         String $duration = duration.orElseGet(jail::getDefaultJailedDuration);
 
         return JailService
-            .getActiveJailRecord(playerName)
+            .getActiveJailRecord($playerName)
             .map(activeJailRecord -> {
-                TextHelper.sendTextByKey(source, "jail.already_in_jail", playerName, jail.getId());
+                TextHelper.sendTextByKey(source, "jail.already_in_jail", $playerName, jail.getId());
                 return CommandHelper.Return.FAIL;
             })
             .orElseGet(() -> {
                 try {
-                    JailService.createJailRecord(creatorName, playerName, jail, $reason, $duration);
-                    TextHelper.sendTextByKey(source, "jail.put", playerName, jail.getId());
+                    JailService.createJailRecord(creatorName, $playerName, jail, $reason, $duration);
+                    TextHelper.sendTextByKey(source, "jail.put", $playerName, jail.getId());
                 } catch (Exception e) {
-                    TextHelper.sendTextByKey(source, "jail.put.failed", playerName);
-                    JailService.deactivateJailRecordWithoutEvents(playerName);
+                    TextHelper.sendTextByKey(source, "jail.put.failed", $playerName);
+                    JailService.deactivateJailRecordWithoutEvents($playerName);
                 }
                 return CommandHelper.Return.SUCCESS;
             });
@@ -161,9 +185,9 @@ public class JailInitializer extends ModuleInitializer {
     }
 
     @Document(id = 1753692574518L, value = "Find the `jail` the player is in.")
-    @CommandNode("jail which-jail")
+    @CommandNode("jail where")
     @CommandRequirement(level = 4)
-    private static int $whichJail(@CommandSource ServerCommandSource source, JailedPlayerName playerName) {
+    private static int $where(@CommandSource ServerCommandSource source, JailedPlayerName playerName) {
         String $playerName = playerName.getValue();
         return JailService
             .getActiveJailRecord($playerName)

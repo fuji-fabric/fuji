@@ -90,7 +90,6 @@ public class DocumentUtil {
         line = line.replaceAll("Bob", "<dark_green>Bob</dark_green>");
         line = line.replaceAll("Carol", "<dark_green>Carol</dark_green>");
         line = line.replaceAll("Dave", "<dark_green>Dave</dark_green>");
-        line = line.replaceAll("Eve", "<dark_green>Eve</dark_green>");
 
         line = line.replaceAll("@a", "<#FF0000>@a</#FF0000>");
         line = line.replaceAll("@e", "<#FF0000>@e</#FF0000>");
