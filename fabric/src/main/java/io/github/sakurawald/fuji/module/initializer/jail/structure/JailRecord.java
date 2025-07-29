@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.jail.structure;
 
+import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.service.date_parser.DateParser;
@@ -49,6 +50,10 @@ public class JailRecord {
 
     public String getRemainingJailDuration() {
         return DateParser.formatAccumulatedSeconds(this.getRemainingJailSeconds());
+    }
+
+    public String getFormattedCreatedTimestamp() {
+        return ChronosUtil.toDefaultDateFormat(this.getCreatedTimestamp());
     }
 
     public void onUpdateRecord(int passedTimeInMillSeconds) {
