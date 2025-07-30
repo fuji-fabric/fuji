@@ -115,7 +115,7 @@ public class GenerateGraphTest {
 
     @SneakyThrows
     private static void generateArgumentTypeAdapterGraphFile(ScanResult scanResult) {
-        File argumentAdapterGraphFile = COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME).toFile();
+        File argumentAdapterGraphFile = COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.CompileTimeGraph.ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME).toFile();
         try (PrintWriter writer = new PrintWriter(argumentAdapterGraphFile)) {
             scanResult
                 .getSubclasses(BaseArgumentTypeAdapter.class)
@@ -128,7 +128,7 @@ public class GenerateGraphTest {
 
     @SneakyThrows
     private static void generateModuleInitializerGraphFile(ScanResult scanResult) {
-        File moduleInitializerGraphFile = COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.MODULE_INITIALIZER_GRAPH_FILE_NAME).toFile();
+        File moduleInitializerGraphFile = COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.CompileTimeGraph.MODULE_INITIALIZER_GRAPH_FILE_NAME).toFile();
         try (PrintWriter writer = new PrintWriter(moduleInitializerGraphFile)) {
             scanResult
                 .getSubclasses(ModuleInitializer.class)
@@ -163,7 +163,7 @@ public class GenerateGraphTest {
         searchDefinedModules(modules, "", result);
         result.sort(String::compareTo);
 
-        Path moduleGraphFile = COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.MODULE_GRAPH_FILE_NAME);
+        Path moduleGraphFile = COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.CompileTimeGraph.MODULE_GRAPH_FILE_NAME);
         Files.createDirectories(moduleGraphFile.getParent());
         try (PrintWriter writer = new PrintWriter(moduleGraphFile.toFile())) {
             result.forEach(writer::println);

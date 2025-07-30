@@ -36,12 +36,12 @@ public abstract class BaseArgumentTypeAdapter {
 
     public static final List<BaseArgumentTypeAdapter> REGISTERED_COMMAND_ARGUMENT_TYPE_ADAPTERS = new ArrayList<>();
 
-    @SuppressWarnings({"unchecked", "SequencedCollectionMethodCanBeUsed"})
+    @SuppressWarnings({"unchecked"})
     public static void registerAdapters() {
         // the `/reload` command will trigger the command registration event.
         TYPE_STRING_2_TYPE_CLASS.clear();
 
-        ReflectionUtil.getCompileTimeGraph(ReflectionUtil.ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME)
+        ReflectionUtil.CompileTimeGraph.getCompileTimeGraph(ReflectionUtil.CompileTimeGraph.ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME)
             .stream()
             .filter(className -> Managers.getModuleManager().shouldWeLoadThis(className))
             .forEach(className -> {

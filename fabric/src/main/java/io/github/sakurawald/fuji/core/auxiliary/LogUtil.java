@@ -24,7 +24,7 @@ public class LogUtil {
     }
 
     private static String attachSourceModulePrefix(String message) {
-        String prefix = "[%s] ".formatted(ReflectionUtil.findSourceModuleInCurrentStackTrace());
+        String prefix = "[%s] ".formatted(ReflectionUtil.Stacktrace.findSourceModuleInCurrentStackTrace());
         return prefix + message;
     }
 

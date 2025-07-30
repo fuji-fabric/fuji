@@ -39,7 +39,7 @@ public abstract class StringDescriptor implements SourceModuleGetter {
         this.docStringId = docStringId;
 
         /* Set the source module. */
-        this.fromModule = ReflectionUtil.findSourceModuleInCurrentStackTrace();
+        this.fromModule = ReflectionUtil.Stacktrace.findSourceModuleInCurrentStackTrace();
 
         /* Compile the string pattern. */
         this.compilePattern();

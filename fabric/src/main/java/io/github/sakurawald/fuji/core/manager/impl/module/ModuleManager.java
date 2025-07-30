@@ -27,7 +27,7 @@ public class ModuleManager extends BaseManager {
     public static final String ENABLE_SUPPLIER_KEY = "enable";
     public static final String CORE_MODULE_PATH = "core";
 
-    private static final Set<String> MODULE_PATHS = new HashSet<>(ReflectionUtil.getCompileTimeGraph(ReflectionUtil.MODULE_GRAPH_FILE_NAME));
+    private static final Set<String> MODULE_PATHS = new HashSet<>(ReflectionUtil.CompileTimeGraph.getCompileTimeGraph(ReflectionUtil.CompileTimeGraph.MODULE_GRAPH_FILE_NAME));
 
     public static final Map<List<String>, Boolean> MODULE_ENABLE_STATUS = new HashMap<>();
     private static final Map<String, String> CLASS_NAME_2_MODULE_PATH_STRING = new HashMap<>();
@@ -118,7 +118,7 @@ public class ModuleManager extends BaseManager {
 
     @SuppressWarnings("unchecked")
     private void invokeModuleInitializers() {
-        ReflectionUtil.getCompileTimeGraph(ReflectionUtil.MODULE_INITIALIZER_GRAPH_FILE_NAME)
+        ReflectionUtil.CompileTimeGraph.getCompileTimeGraph(ReflectionUtil.CompileTimeGraph.MODULE_INITIALIZER_GRAPH_FILE_NAME)
             .forEach(className -> {
                 try {
                     /* Track the module initializer class. */

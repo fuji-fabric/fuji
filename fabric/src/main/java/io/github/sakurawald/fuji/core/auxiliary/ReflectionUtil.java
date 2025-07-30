@@ -20,29 +20,32 @@ import java.util.List;
 
 public class ReflectionUtil {
 
-    /* Compile-time generated graphs. */
-    public static final String MODULE_INITIALIZER_GRAPH_FILE_NAME = "module-initializer-graph.txt";
-    public static final String ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME = "argument-type-adapter-graph.txt";
-    public static final String LANGUAGE_GRAPH_FILE_NAME = "language-graph.txt";
-    public static final String MODULE_GRAPH_FILE_NAME = "module-graph.txt";
+    public static class CompileTimeGraph {
 
-    @SneakyThrows(IOException.class)
-    public static List<String> getCompileTimeGraph(String graphName) {
-        /* Retrieve the resource file from virtual jar file. */
-        InputStream virtualInputStream = ReflectionUtil.class.getResourceAsStream(graphName);
-        if (virtualInputStream == null) {
-            LogUtil.warn("Failed to load the graph {} from virtual jar file. (Is the jar file damaged?)", graphName);
-            throw new RuntimeException("Failed to load the graph " + graphName);
-        }
+        /* Compile-time generated graphs. */
+        public static final String MODULE_INITIALIZER_GRAPH_FILE_NAME = "module-initializer-graph.txt";
+        public static final String ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME = "argument-type-adapter-graph.txt";
+        public static final String LANGUAGE_GRAPH_FILE_NAME = "language-graph.txt";
+        public static final String MODULE_GRAPH_FILE_NAME = "module-graph.txt";
 
-        /* Read the bits from the virtual input stream. */
-        @Cleanup BufferedReader reader = new BufferedReader(new InputStreamReader(virtualInputStream));
-        List<String> lines = new ArrayList<>();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            lines.add(line);
+        @SneakyThrows(IOException.class)
+        public static List<String> getCompileTimeGraph(String graphName) {
+            /* Retrieve the resource file from virtual jar file. */
+            InputStream virtualInputStream = ReflectionUtil.class.getResourceAsStream(graphName);
+            if (virtualInputStream == null) {
+                LogUtil.error("Failed to load the graph {} from virtual jar file. Is the jar file damaged?", graphName);
+                throw new RuntimeException("Failed to load the graph " + graphName);
+            }
+
+            /* Read the bits from the virtual input stream. */
+            @Cleanup BufferedReader reader = new BufferedReader(new InputStreamReader(virtualInputStream));
+            List<String> lines = new ArrayList<>();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+            return lines;
         }
-        return lines;
     }
 
     public static List<Method> getMethodsWithAnnotation(Class<?> clazz, Class<? extends Annotation> annotation) {
@@ -92,34 +95,38 @@ public class ReflectionUtil {
         return simpleClassName;
     }
 
-    public static String findSourceModuleInCurrentStackTrace() {
-        return findSourceModule(getCurrentStackTraceAsModuleName());
-    }
+    public static class Stacktrace {
 
-    private static String findSourceModule(List<String> splitModulePathList) {
-        /* The most recent module in the stack trace is considered as the source module. */
-        // NOTE: The function defined in mixin class will be injected into the target class. We have no clue to find the source module, for the calls to that function.
-        String result = "unknown";
-        for (String splitModulePath : splitModulePathList) {
-            result = splitModulePath;
-            if (!result.equals(ModuleManager.CORE_MODULE_PATH)) return result;
+        public static String findSourceModuleInCurrentStackTrace() {
+            return findSourceModuleAsJoinedModulePath(getCurrentStackTraceAsModuleName());
         }
 
-        return result;
-    }
+        private static String findSourceModuleAsJoinedModulePath(List<String> joinedModulePathList) {
+            /* The most recent module in the stack trace is considered as the source module. */
+            // NOTE: The function defined in mixin class will be injected into the target class. We have no clue to find the source module, for the calls to that function.
+            String result = "unknown";
+            for (String splitModulePath : joinedModulePathList) {
+                result = splitModulePath;
+                if (!result.equals(ModuleManager.CORE_MODULE_PATH)) {
+                    return result;
+                }
+            }
 
-    private static List<String> getCurrentStackTraceAsClassNames() {
-        return Arrays
-            .stream(Thread.currentThread()
-            .getStackTrace())
-            .map(StackTraceElement::getClassName)
-            .toList();
-    }
+            return result;
+        }
 
-    private static List<String> getCurrentStackTraceAsModuleName() {
-        return getCurrentStackTraceAsClassNames()
-            .stream()
-            .map(ModuleManager::computeJoinedModulePath)
-            .toList();
+        private static List<String> getCurrentStackTraceAsClassNames() {
+            return Arrays
+                .stream(Thread.currentThread().getStackTrace())
+                .map(StackTraceElement::getClassName)
+                .toList();
+        }
+
+        private static List<String> getCurrentStackTraceAsModuleName() {
+            return getCurrentStackTraceAsClassNames()
+                .stream()
+                .map(ModuleManager::computeJoinedModulePath)
+                .toList();
+        }
     }
 }
