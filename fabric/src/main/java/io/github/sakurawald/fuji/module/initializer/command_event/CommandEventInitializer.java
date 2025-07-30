@@ -23,14 +23,18 @@ import net.minecraft.stat.Stats;
     The `contextual player` in that `event` will be used as the `placeholder context`, to parse the `placeholders` in the `command string`.
     """)
 @ColorBox(id = 1751904417278L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    Use the player first join event, to welcome the new-bie player.
+    ◉ Send messages on player join.
+    You can use `/send-custom` or `/send-message` to send messages when a player joins.
+
+    ◉ Execute commands to welcome a new player.
+    You can use the player first join event.
     For example:
     1. `send-broadcast \\<light_purple\\>Welcome new player %player:name% to join us!`
     2. `kit give %player:name% \\<kit-name\\>`
-    3. `run as fake-op %player:name% rtp"`
-    4. `delay 10 spawnpoint %player:name%"`
+    3. `send-custom as-message %player:name% new-player-guide`
+    4. `run as fake-op %player:name% rtp"`
+    5. `delay 10 spawnpoint %player:name%"`
     """)
-
 public class CommandEventInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<CommandEventConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandEventConfigModel.class);
