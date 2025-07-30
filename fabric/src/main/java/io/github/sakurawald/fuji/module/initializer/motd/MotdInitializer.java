@@ -98,10 +98,10 @@ public class MotdInitializer extends ModuleInitializer {
     public static @NotNull ServerMetadata.Players getEffectivePlayersInfo(@NotNull ServerMetadata.Players original) {
         var configSection = config.model().getPlayersInfo();
 
-        int deltaMax = RandomUtil.getRandomInRange(configSection.getMaxPlayers().getDeltaMin(), configSection.getMaxPlayers().getDeltaMax());
+        int deltaMax = RandomUtil.getRandomNumber(configSection.getMaxPlayers().getDeltaMin(), configSection.getMaxPlayers().getDeltaMax());
         int max = original.max() + deltaMax;
 
-        int deltaOnline = RandomUtil.getRandomInRange(configSection.getOnlinePlayers().getDeltaMin(), configSection.getOnlinePlayers().getDeltaMax());
+        int deltaOnline = RandomUtil.getRandomNumber(configSection.getOnlinePlayers().getDeltaMin(), configSection.getOnlinePlayers().getDeltaMax());
         int online = original.online() + deltaOnline;
 
         List<GameProfile> sample;
