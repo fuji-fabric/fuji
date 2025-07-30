@@ -163,6 +163,7 @@ subprojects { p ->
             // Conflict with the manifold pre-processor, hard to manage.
             disable("UnusedVariable")
             disable("UnusedMethod")
+            disable("DoNotCallSuggester")
 
             disable("DoubleBraceInitialization")
         }
