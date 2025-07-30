@@ -1,7 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.leaderboard.structure;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,12 +12,12 @@ public class LeaderBoardData {
 
     String leaderboardId;
 
-    List<LeaderBoardCache> caches = new ArrayList<>();
+    CopyOnWriteArrayList<LeaderBoardCache> caches = new CopyOnWriteArrayList<>();
 
-    public static LeaderBoardData of(String leaderboardId) {
+    public static LeaderBoardData make(String leaderboardId) {
         LeaderBoardData leaderBoardData = new LeaderBoardData();
         leaderBoardData.setLeaderboardId(leaderboardId);
-        leaderBoardData.setCaches(new ArrayList<>());
+        leaderBoardData.setCaches(new CopyOnWriteArrayList<>());
         return leaderBoardData;
     }
 }

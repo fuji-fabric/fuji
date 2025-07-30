@@ -133,7 +133,7 @@ public class LeaderBoardService {
             .filter(it -> it.getLeaderboardId().equals(descriptor.getLeaderboardId()))
             .findFirst()
             .orElseGet(() -> {
-                LeaderBoardData newValue = LeaderBoardData.of(descriptor.getLeaderboardId());
+                LeaderBoardData newValue = LeaderBoardData.make(descriptor.getLeaderboardId());
                 LeaderBoardInitializer.data.model().getLeaderboardData().add(newValue);
                 return newValue;
             });
