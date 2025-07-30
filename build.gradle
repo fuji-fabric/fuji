@@ -160,6 +160,10 @@ subprojects { p ->
             // For readability, the exception is handled by the helper function.
             disable("FutureReturnValueIgnored")
 
+            // Conflict with the manifold pre-processor, hard to manage.
+            disable("UnusedVariable")
+            disable("UnusedMethod")
+
             disable("DoubleBraceInitialization")
         }
 
