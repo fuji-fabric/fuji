@@ -11,6 +11,9 @@ plugins {
 
     // Used for pre-processor.
     id "systems.manifold.manifold-gradle-plugin" version "0.0.2-alpha"
+
+    // Google error prone
+    id "net.ltgt.errorprone" version "4.3.0"
 }
 
 /* Configure the checkstyle gradle plugin. */
@@ -20,7 +23,6 @@ checkstyle {
 }
 
 /* Configure Pre-Processor. */
-
 def writeBuildGradlePredefine(List<String> targetMcVersions, int activeMcVersionIndex) {
     // Build the list of preprocessors to use
     StringBuilder sb = new StringBuilder();
@@ -65,6 +67,9 @@ subprojects { p ->
         manifoldVersion = rootProject.manifold_version
     }
 
+    /* Configure error prone gradle plugin. */
+    apply plugin: "net.ltgt.errorprone"
+
     /* Configure dependencies. */
     dependencies {
         /* For pre-processor: manifold */
@@ -84,6 +89,10 @@ subprojects { p ->
 
         /* For code reflection: Classgraph */
         testImplementation "io.github.classgraph:classgraph:${project.classgraph_version}"
+
+        /* For error prone gradle plugin. */
+        errorprone("com.google.errorprone:error_prone_core:${project.errorprone_version}")
+        compileOnly("com.google.errorprone:error_prone_annotations:${project.errorprone_annotations_version}")
     }
 
     /* Replace properties for each mc version. */
@@ -134,6 +143,27 @@ subprojects { p ->
 
     }
 
+    /* Configure Java compiler. */
+    tasks.withType(JavaCompile).configureEach {
+        options.release = rootProject.java_version as Integer
+        options.encoding = "UTF-8"
+
+        options.errorprone {
+            disable("ImmutableEnumChecker")
+            disable("StringSplitter")
+            disable("StatementSwitchToExpressionSwitch")
+            disable("UnusedMethod")
+            disable("DoubleBraceInitialization")
+        }
+
+        configure(options) {
+            // include the 'parameter name' in compiled .class file, for command annotation processor reflection
+            options.compilerArgs << '-parameters'
+            // yeah, the code of fuji is more dynamic.
+            options.compilerArgs << '-Xlint:-unchecked'
+        }
+    }
+
     /* Copy LICENSE file into jar file. */
     jar {
         outputs.upToDateWhen { false }
@@ -164,19 +194,6 @@ allprojects { p ->
 
         // VanillaGradle and Mixins in common module.
         maven { url "https://repo.spongepowered.org/maven/" }
-    }
-
-    /* Configure Java compiler. */
-    tasks.withType(JavaCompile) {
-        options.release = rootProject.java_version as Integer
-        options.encoding = "UTF-8"
-
-        configure(options) {
-            // include the 'parameter name' in compiled .class file, for command annotation processor reflection
-            options.compilerArgs << '-parameters'
-            // yeah, the code of fuji is more dynamic.
-            options.compilerArgs << '-Xlint:-unchecked'
-        }
     }
 
     /* Define the archive name. */
