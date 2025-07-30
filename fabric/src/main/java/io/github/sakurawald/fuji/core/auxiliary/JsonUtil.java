@@ -37,7 +37,8 @@ public class JsonUtil {
 
     public static boolean existsNode(@NotNull JsonObject root, @NotNull String path) {
         /* Split the path into keys. */
-        String[] nodes = path.split("\\.");
+        String[] nodes = path.split("\\.", -1);
+        if (nodes.length == 0) return false;
 
         /* Walk the path along the keys. (Exclude the last key) */
         for (int i = 0; i < nodes.length - 1; i++) {

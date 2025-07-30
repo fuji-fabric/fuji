@@ -149,9 +149,9 @@ subprojects { p ->
         options.encoding = "UTF-8"
 
         /* Configure error-prone gradle plugin. */
-        options.errorprone.excludedPaths = ".+/module/mixin/.+"
+        options.errorprone.excludedPaths = ".*/module/mixin/.*"
         options.errorprone {
-            // I would like to include the Items constants in the enum class.
+            // I would like to include the Minecraft Items constants in the enum class.
             disable("ImmutableEnumChecker")
 
             // For readability, and Java version compatibility.
@@ -159,10 +159,6 @@ subprojects { p ->
 
             // For readability, the exception is handled by the helper function.
             disable("FutureReturnValueIgnored")
-
-            disable("StringSplitter")
-
-            disable("JavaTimeDefaultTimeZone")
 
             disable("DoubleBraceInitialization")
         }

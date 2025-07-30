@@ -398,14 +398,13 @@ public class PlaceholderInitializer extends ModuleInitializer {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("random", 1752000183895L);
         PlaceholderHelper.registerServerPlaceholder(descriptor, (server, args) -> {
             if (args == null) return PlaceholderHelper.INVALID_ARGS_ERROR_TEXT;
-
-            String[] split = args.split(" ");
-            if (split.length != 2) return PlaceholderHelper.INVALID_ARGS_ERROR_TEXT;
+            List<String> split = PlaceholderHelper.splitArguments(args);
+            if (split.size() != 2) return PlaceholderHelper.INVALID_ARGS_ERROR_TEXT;
 
             int i;
             try {
-                int minInclusive = Integer.parseInt(split[0]);
-                int maxExclusive = Integer.parseInt(split[1]);
+                int minInclusive = Integer.parseInt(split.get(0));
+                int maxExclusive = Integer.parseInt(split.get(1));
                 i = RandomUtil.getRandomNumberExclusive(minInclusive, maxExclusive);
             } catch (Exception e) {
                 return PlaceholderHelper.INVALID_ARGS_ERROR_TEXT;

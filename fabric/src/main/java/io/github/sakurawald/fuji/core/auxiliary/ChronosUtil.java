@@ -3,6 +3,8 @@ package io.github.sakurawald.fuji.core.auxiliary;
 import io.github.sakurawald.fuji.core.config.Configs;
 import java.time.DayOfWeek;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,6 +16,22 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ChronosUtil {
+
+    public static @NotNull ZoneId getPreferredZoneId() {
+        return ZoneId.of("UTC");
+    }
+
+    public static @NotNull ZonedDateTime getZonedDateTime() {
+        return ZonedDateTime.now(getPreferredZoneId());
+    }
+
+    public static @NotNull LocalDate getLocalDate() {
+        return LocalDate.now(getPreferredZoneId());
+    }
+
+    public static @NotNull LocalTime getLocalTime() {
+        return LocalTime.now(getPreferredZoneId());
+    }
 
     public static @NotNull Long getCurrentTimestamp() {
         return System.currentTimeMillis();

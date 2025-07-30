@@ -35,7 +35,7 @@ public class LeaderBoardCache {
     }
 
     public void updateSnapshots(long updateTime, int newScore) {
-        ZonedDateTime now = ZonedDateTime.now();
+        ZonedDateTime now = ChronosUtil.getZonedDateTime();
         updateSnapshot(newScore, LeaderBoardTimeWindow.HOURLY, ChronosUtil.toTimestamp(ChronosUtil.Boundary.getBeginningOfCurrentHour(now)));
         updateSnapshot(newScore, LeaderBoardTimeWindow.DAILY, ChronosUtil.toTimestamp(ChronosUtil.Boundary.getBeginningOfTheDay(now)));
         updateSnapshot(newScore, LeaderBoardTimeWindow.WEEKLY, ChronosUtil.toTimestamp(ChronosUtil.Boundary.getBeginningOfCurrentWeek(now, LeaderBoardService.getBeginningOfTheWeek())));

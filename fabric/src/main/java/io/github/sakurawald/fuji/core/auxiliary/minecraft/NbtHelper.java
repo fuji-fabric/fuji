@@ -24,9 +24,16 @@ public class NbtHelper {
 
     public static class Walker {
 
+        private static void ensureKeysIsNotEmpty(@NotNull String nbtPath, String[] keys) {
+            if (keys.length == 0) {
+                throw new IllegalArgumentException("Failed to split the nbtPath %s".formatted(nbtPath));
+            }
+        }
+
         private static <T extends NbtElement> void setPath(@NotNull NbtCompound root, @NotNull String nbtPath, T value) {
             /* Split the nodes into keys. */
-            String[] keys = nbtPath.split("\\.");
+            String[] keys = nbtPath.split("\\.", -1);
+            ensureKeysIsNotEmpty(nbtPath, keys);
 
             /* Walk down the path until the last key. */
             for (int i = 0; i < keys.length - 1; i++) {
@@ -50,7 +57,8 @@ public class NbtHelper {
 
         private static @Nullable NbtElement readPath(@NotNull NbtCompound root, @NotNull String nbtPath) {
             /* Split the path into keys. */
-            String[] nodes = nbtPath.split("\\.");
+            String[] nodes = nbtPath.split("\\.", -1);
+            ensureKeysIsNotEmpty(nbtPath, nodes);
 
             /* Walk down the path until the last key. */
             for (int i = 0; i < nodes.length - 1; i++) {

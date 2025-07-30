@@ -60,8 +60,8 @@ public class FakePlayerManagerService {
     }
 
     public static int getFakePlayerCapsLimit() {
-        int currentDays = LocalDate.now().getDayOfWeek().getValue();
-        LocalTime currentTime = LocalTime.now();
+        int currentDays = ChronosUtil.getLocalDate().getDayOfWeek().getValue();
+        LocalTime currentTime = ChronosUtil.getLocalTime();
         int currentMinutes = currentTime.getHour() * 60 + currentTime.getMinute();
 
         Optional<List<Integer>> first = FakePlayerManagerInitializer.config.model()

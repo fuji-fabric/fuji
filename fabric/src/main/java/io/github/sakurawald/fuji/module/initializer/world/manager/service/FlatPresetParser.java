@@ -62,7 +62,7 @@ public class FlatPresetParser {
         return new FlatChunkGeneratorLayer(l, optional.get().comp_349());
     }
 
-    @SuppressWarnings("MixedMutabilityReturnType")
+    @SuppressWarnings({"MixedMutabilityReturnType", "StringSplitter"})
     private static List<FlatChunkGeneratorLayer> parsePresetLayersString(RegistryEntryLookup<Block> registryEntryLookup, String string) {
         ArrayList<FlatChunkGeneratorLayer> list = Lists.newArrayList();
         String[] strings = string.split(",");
