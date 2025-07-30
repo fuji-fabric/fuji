@@ -12,6 +12,7 @@ import io.github.sakurawald.fuji.core.structure.Downloader;
 import io.github.sakurawald.fuji.module.initializer.head.HeadInitializer;
 import io.github.sakurawald.fuji.module.initializer.head.structure.Category;
 import io.github.sakurawald.fuji.module.initializer.head.structure.Head;
+import java.nio.charset.StandardCharsets;
 import lombok.Cleanup;
 import lombok.Getter;
 
@@ -69,7 +70,7 @@ public class HeadProvider {
             LogUtil.debug("Load head category: {}", category.name);
 
             Path path = computePath(category);
-            @Cleanup InputStreamReader reader = new InputStreamReader(Files.newInputStream(path));
+            @Cleanup InputStreamReader reader = new InputStreamReader(Files.newInputStream(path), StandardCharsets.UTF_8);
             JsonArray headJsonArray = JsonParser.parseReader(reader).getAsJsonArray();
             for (JsonElement headJsonElement : headJsonArray) {
                 try {

@@ -29,8 +29,8 @@ public class TpaRequest {
     }
 
     public boolean isSimilarTo(@NotNull TpaRequest that) {
-        return this.sender.equals(that.sender) && this.receiver.equals(that.receiver)
-            || this.sender.equals(that.receiver) && this.receiver.equals(that.sender);
+        return (this.sender.equals(that.sender) && this.receiver.equals(that.receiver))
+            || (this.sender.equals(that.receiver) && this.receiver.equals(that.sender));
     }
 
     public ServerPlayerEntity getTeleportWho() {

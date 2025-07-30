@@ -85,10 +85,8 @@ public class AfkInitializer extends ModuleInitializer {
     }
 
     public static void countAction(ServerPlayerEntity player) {
-        if (player instanceof ServerPlayerEntity) {
-            AfkStateAccessor ex = (AfkStateAccessor) player;
-            ex.fuji$incrInputCounter();
-        }
+        AfkStateAccessor ex = (AfkStateAccessor) player;
+        ex.fuji$incrInputCounter();
     }
 
     public static Text getAfkText(ServerPlayerEntity player) {

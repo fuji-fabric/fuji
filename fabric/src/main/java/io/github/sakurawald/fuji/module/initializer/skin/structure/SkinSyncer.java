@@ -31,7 +31,7 @@ public class SkinSyncer {
             .forEach(observer -> {
                 sendPacketsToOnlinePlayers(player, observer);
 
-                if (player == observer) {
+                if (observer.equals(player)) {
                     sendPacketsToSelfPlayer(player);
                 } else {
                     sendPacketsToObservingPlayers(player, observer);

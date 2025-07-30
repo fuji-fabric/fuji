@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.leaderboard;
 
+import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlaceholderHelper;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.descriptor.PlaceholderDescriptor;
@@ -140,7 +141,7 @@ public class LeaderBoardPlaceholders {
         String timeWindowString = stringArgs.get(2);
         LeaderBoardTimeWindow timeWindow;
         try {
-            timeWindow = LeaderBoardTimeWindow.valueOf(timeWindowString.toUpperCase());
+            timeWindow = LeaderBoardTimeWindow.valueOf(StringUtil.toUpperCase(timeWindowString));
         } catch (IllegalArgumentException e) {
             return new LeaderBoardArgumentsParseResult(Text.literal("[INVALID-TIME-WINDOW]"), null, null, null);
         }

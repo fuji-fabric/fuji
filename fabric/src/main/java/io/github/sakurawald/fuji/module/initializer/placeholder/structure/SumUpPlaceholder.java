@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import java.nio.charset.StandardCharsets;
 import lombok.Getter;
 import lombok.ToString;
 import net.minecraft.util.WorldSavePath;
@@ -49,7 +50,7 @@ public class SumUpPlaceholder {
             File file = getStatPath().resolve(uuid + ".json").toFile();
             if (!file.exists()) return ret;
 
-            JsonElement jsonElement = JsonParser.parseReader(new FileReader(file));
+            JsonElement jsonElement = JsonParser.parseReader(new FileReader(file, StandardCharsets.UTF_8));
             if (!jsonElement.isJsonObject()) {
                 // return a dummy placeholder, if the related statistics file is not write into the storage, for a new player.
                 return new SumUpPlaceholder();

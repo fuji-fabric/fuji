@@ -22,3 +22,4 @@
 
 # Reading things
 - https://projectarc.co.uk/sw-engineering/i18n-is-hard-in-so-many-ways
+- https://errorprone.info/bugpatterns

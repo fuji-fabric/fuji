@@ -22,7 +22,7 @@ public final class RuntimeDimensionProperties extends UnmodifiableLevelPropertie
         Optional<RuntimeDimensionDescriptor> newValueOpt = WorldService.getRuntimeDimensionDescriptor(this.runtimeDimensionDescriptor.dimension);
         if (newValueOpt.isPresent()) {
             RuntimeDimensionDescriptor newValue = newValueOpt.get();
-            if (this.runtimeDimensionDescriptor != newValue) {
+            if (!this.runtimeDimensionDescriptor.equals(newValue)) {
                 tryFixRuntimeDimensionDescriptor(newValue);
                 this.runtimeDimensionDescriptor = newValue;
                 LogUtil.info("Apply latest version of runtime dimension descriptor: {}", newValue.dimension);

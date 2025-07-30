@@ -23,7 +23,7 @@ public class PlayerHeadGui extends AnvilInputGui {
     private long apiDebounceTimeMs = 0;
 
     public PlayerHeadGui(@NotNull HeadGui parentGui) {
-        super(parentGui.player, false);
+        super(parentGui.getPlayer(), false);
         this.parentGui = parentGui;
         this.setTitle(TextHelper.getTextByKey(player, "head.category.player"));
         this.setSlot(1, GuiHelper.makeBarrierButton());

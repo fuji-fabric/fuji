@@ -116,7 +116,7 @@ public class WarpInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @CommandNode()
+    @CommandNode
     private static int $root(@CommandSource ServerCommandSource source) {
         return $list(source);
     }

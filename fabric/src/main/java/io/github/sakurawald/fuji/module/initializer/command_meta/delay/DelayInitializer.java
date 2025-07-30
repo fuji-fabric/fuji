@@ -48,7 +48,7 @@ public class DelayInitializer extends ModuleInitializer {
         String $rest = rest.getValue();
 
         long scheduleTimeMs = (long) (1000 * time);
-        DELAY_COMMAND_EXECUTOR
+        var unused = DELAY_COMMAND_EXECUTOR
             .schedule(() -> ServerHelper.executeSync(() -> CommandExecutor.execute(ExtendedCommandSource.asConsole(source), $rest))
                 , scheduleTimeMs
                 , TimeUnit.MILLISECONDS);

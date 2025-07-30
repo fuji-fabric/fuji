@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.module.initializer.world_downloader.WorldDownloaderInitializer;
+import java.nio.charset.StandardCharsets;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
@@ -67,7 +68,7 @@ public class FileDownloadHandler implements HttpHandler {
                 String response = "File not found.";
                 exchange.sendResponseHeaders(404, response.length());
                 OutputStream os = exchange.getResponseBody();
-                os.write(response.getBytes());
+                os.write(response.getBytes(StandardCharsets.UTF_8));
             }
         }
         LogUtil.info("Delete file: {} (success: {})", file.getAbsolutePath(), file.delete());

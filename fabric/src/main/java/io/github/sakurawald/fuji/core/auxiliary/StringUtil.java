@@ -35,4 +35,9 @@ public class StringUtil {
     public static @NotNull String toUpperCase(@NotNull String string) {
         return string.toUpperCase(Locale.ENGLISH);
     }
+
+    public static boolean containsIgnoreCase(@NotNull String string, @NotNull String keyword) {
+        return toLowerCase(string)
+            .contains(toLowerCase(keyword));
+    }
 }

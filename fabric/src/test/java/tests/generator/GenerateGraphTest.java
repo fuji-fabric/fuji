@@ -19,6 +19,7 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -61,8 +62,7 @@ public class GenerateGraphTest {
 
     @SneakyThrows
     private static void generateCiteFile(ScanResult scanResult) {
-        try (PrintWriter writer = new PrintWriter(
-            COMPILE_TIME_CITE_FILE_PATH.toFile())) {
+        try (PrintWriter writer = new PrintWriter(COMPILE_TIME_CITE_FILE_PATH.toFile(), StandardCharsets.UTF_8)) {
 
             List<ExtendedAnnotationInfo> citeAnnotationList = TestUtil.findTargetAnnotationInstancesAnywhere(scanResult, Cite.class, false);
             citeAnnotationList
@@ -80,8 +80,7 @@ public class GenerateGraphTest {
 
     @SneakyThrows
     private static void generateTestCaseFile(ScanResult scanResult) {
-        try (PrintWriter writer = new PrintWriter(
-            COMPILE_TIME_TEST_CASE_FILE_PATH.toFile())) {
+        try (PrintWriter writer = new PrintWriter(COMPILE_TIME_TEST_CASE_FILE_PATH.toFile(), StandardCharsets.UTF_8)) {
 
             List<ExtendedAnnotationInfo> annotationList = TestUtil.findTargetAnnotationInstancesAnywhere(scanResult, TestCase.class, true);
             annotationList
@@ -116,7 +115,7 @@ public class GenerateGraphTest {
     @SneakyThrows
     private static void generateArgumentTypeAdapterGraphFile(ScanResult scanResult) {
         File argumentAdapterGraphFile = COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.CompileTimeGraph.ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME).toFile();
-        try (PrintWriter writer = new PrintWriter(argumentAdapterGraphFile)) {
+        try (PrintWriter writer = new PrintWriter(argumentAdapterGraphFile, StandardCharsets.UTF_8)) {
             scanResult
                 .getSubclasses(BaseArgumentTypeAdapter.class)
                 .getNames()
@@ -129,7 +128,7 @@ public class GenerateGraphTest {
     @SneakyThrows
     private static void generateModuleInitializerGraphFile(ScanResult scanResult) {
         File moduleInitializerGraphFile = COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.CompileTimeGraph.MODULE_INITIALIZER_GRAPH_FILE_NAME).toFile();
-        try (PrintWriter writer = new PrintWriter(moduleInitializerGraphFile)) {
+        try (PrintWriter writer = new PrintWriter(moduleInitializerGraphFile, StandardCharsets.UTF_8)) {
             scanResult
                 .getSubclasses(ModuleInitializer.class)
                 .getNames()
@@ -165,7 +164,7 @@ public class GenerateGraphTest {
 
         Path moduleGraphFile = COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.CompileTimeGraph.MODULE_GRAPH_FILE_NAME);
         Files.createDirectories(moduleGraphFile.getParent());
-        try (PrintWriter writer = new PrintWriter(moduleGraphFile.toFile())) {
+        try (PrintWriter writer = new PrintWriter(moduleGraphFile.toFile(), StandardCharsets.UTF_8)) {
             result.forEach(writer::println);
         }
     }

@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.chat.style;
 import eu.pb4.placeholders.api.parsers.NodeParser;
 
 import io.github.sakurawald.fuji.Fuji;
+import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
@@ -89,7 +90,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
     private static final BaseConfigurationHandler<ChatStyleConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatStyleConfigModel.class);
 
     // To avoid the message type already registered in the client-side, and the client-side message type will influence the client-side decorator.
-    public static final RegistryKey<MessageType> MESSAGE_TYPE_KEY = RegistryKey.of(RegistryKeys.MESSAGE_TYPE, Identifier.of(Fuji.MOD_ID, "chat_" + FabricLoader.getInstance().getEnvironmentType().toString().toLowerCase()));
+    public static final RegistryKey<MessageType> MESSAGE_TYPE_KEY = RegistryKey.of(RegistryKeys.MESSAGE_TYPE, Identifier.of(Fuji.MOD_ID, "chat_" + StringUtil.toLowerCase(FabricLoader.getInstance().getEnvironmentType().toString())));
 
     public static final MessageType MESSAGE_TYPE_VALUE = new MessageType(
         Decoration.ofChat("%s%s"),

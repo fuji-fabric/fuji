@@ -30,7 +30,7 @@ public class NearInitializer extends ModuleInitializer {
         int sd = $distance * $distance;
         List<String> result = ServerHelper.getOnlinePlayers()
             .stream()
-            .filter(p -> p != player && distance(player, p) <= sd)
+            .filter(p -> !p.equals(player) && distance(player, p) <= sd)
             .map(p -> p.getGameProfile().getName())
             .toList();
 

@@ -4,6 +4,7 @@ import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
@@ -45,8 +46,8 @@ public class CategoryHeadsGui extends PagedGui<Head> {
 
     @Override
     protected boolean filterEntity(Head entity, String keywords) {
-        return entity.name.toLowerCase().contains(keywords.toLowerCase())
-                || entity.getTagsOrEmpty().toLowerCase().contains(keywords.toLowerCase());
+        return StringUtil.containsIgnoreCase(entity.name, keywords)
+            || StringUtil.containsIgnoreCase(entity.getTagsOrEmpty(), keywords);
     }
 
     private void handleEntityClick(@NotNull Head head, @NotNull ClickType type) {

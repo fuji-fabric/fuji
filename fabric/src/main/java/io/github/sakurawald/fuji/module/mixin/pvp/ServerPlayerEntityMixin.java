@@ -32,7 +32,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
     @Inject(method = "shouldDamagePlayer", at = @At("HEAD"), cancellable = true)
     public void shouldBeDamagedByAnotherPlayer(@NotNull PlayerEntity playerEntity, @NotNull CallbackInfoReturnable<Boolean> cir) {
         /* Don't flint a TNT to kill yourself. */
-        if (this == playerEntity) return;
+        if (playerEntity.equals(this)) return;
 
         /* Okay, the damage source player should enable pvp first. */
         ServerPlayerEntity damageSourcePlayer = (ServerPlayerEntity) playerEntity;

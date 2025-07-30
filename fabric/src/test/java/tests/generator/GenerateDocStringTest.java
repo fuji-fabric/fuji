@@ -17,6 +17,7 @@ import io.github.sakurawald.fuji.core.document.structure.DocString;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class GenerateDocStringTest {
     public void generateLanguageGraphFile() {
         /* Generate language-graph.txt file. */
         File languageGraphFile = GenerateGraphTest.COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.CompileTimeGraph.LANGUAGE_GRAPH_FILE_NAME).toFile();
-        try (PrintWriter writer = new PrintWriter(languageGraphFile)) {
+        try (PrintWriter writer = new PrintWriter(languageGraphFile, StandardCharsets.UTF_8)) {
             File languageFilesPath = GenerateDocStringTest.COMPILE_TIME_PULL_FROM_CROWDIN_LANGUAGE_PATH.toFile();
             Arrays
                 .stream(Objects.requireNonNull(languageFilesPath.listFiles()))

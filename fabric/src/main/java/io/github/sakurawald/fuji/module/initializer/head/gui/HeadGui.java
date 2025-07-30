@@ -18,11 +18,8 @@ import java.util.List;
 
 public class HeadGui extends SimpleGui {
 
-    protected final ServerPlayerEntity player;
-
     public HeadGui(ServerPlayerEntity player) {
         super(ScreenHandlerType.GENERIC_9X2, player, false);
-        this.player = player;
         this.setTitle(TextHelper.getTextByKey(player, "head.title"));
 
         /* Place categories buttons. */

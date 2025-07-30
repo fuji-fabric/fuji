@@ -96,7 +96,7 @@ public class SkinInitializer extends ModuleInitializer {
     @Document(id = 1753337059662L, value = """
         Alias to `/skin gui` command.
         """)
-    @CommandNode()
+    @CommandNode
     private static int $skin(@CommandSource ServerPlayerEntity player) {
         return $gui(player);
     }

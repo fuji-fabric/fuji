@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.deathlog.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
 import io.github.sakurawald.fuji.module.initializer.deathlog.structure.DeathNode;
@@ -49,9 +50,9 @@ public class DeathNodeListGui extends PagedGui<DeathNode> {
         // NOTE: Make it possible to search a specific item in death node.
         return entity.dimension.contains(keyword)
             || entity.time.contains(keyword)
-            || entity.reason.toLowerCase().contains(keyword.toLowerCase())
-            || entity.main.toString().toLowerCase().contains(keyword.toLowerCase())
-            || entity.armor.toString().toLowerCase().contains(keyword.toLowerCase())
-            || entity.offhand.toString().toLowerCase().contains(keyword.toLowerCase());
+            || StringUtil.containsIgnoreCase(entity.reason, keyword)
+            || StringUtil.containsIgnoreCase(entity.main.toString(), keyword)
+            || StringUtil.containsIgnoreCase(entity.armor.toString(), keyword)
+            || StringUtil.containsIgnoreCase(entity.offhand.toString(), keyword);
     }
 }

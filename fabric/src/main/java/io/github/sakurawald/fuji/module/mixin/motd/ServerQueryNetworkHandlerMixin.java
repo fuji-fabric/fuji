@@ -53,7 +53,7 @@ public abstract class ServerQueryNetworkHandlerMixin {
     @ModifyArg(method = "onRequest", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/s2c/query/QueryResponseS2CPacket;<init>(Lnet/minecraft/server/ServerMetadata;)V"))
     public @NotNull ServerMetadata handleQueryRequest(ServerMetadata original) {
         MotdEntry motdEntry = MotdInitializer.getEffectiveMotdEntry();
-        Text text = TextHelper.getTextByValue(null, (motdEntry.getText()));
+        Text text = TextHelper.getTextByValue(null, motdEntry.getText());
         Optional<ServerMetadata.Favicon> icon = MotdInitializer.getEffectiveMotdIcon(motdEntry.getIcon());
         Optional<ServerMetadata.Players> players = original.comp_1274().map(MotdInitializer::getEffectivePlayersInfo);
         Optional<ServerMetadata.Version> version = original.comp_1275().map(MotdInitializer::getEffectiveVersion);

@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.head.gui;
 
+import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.InputSignGui;
 import io.github.sakurawald.fuji.module.initializer.head.privoder.HeadProvider;
@@ -15,7 +16,7 @@ public class SearchHeadsInputGui extends InputSignGui {
     private final @NotNull HeadGui parentGui;
 
     public SearchHeadsInputGui(@NotNull HeadGui parentGui) {
-        super(parentGui.player, null);
+        super(parentGui.getPlayer(), null);
         this.parentGui = parentGui;
     }
 
@@ -32,8 +33,8 @@ public class SearchHeadsInputGui extends InputSignGui {
         /* Filter the entities by keywords. */
         List<Head> entities = HeadProvider.getLoadedHeads().values()
             .stream()
-            .filter(head -> head.name.toLowerCase().contains(keywords.toLowerCase())
-                || head.getTagsOrEmpty().toLowerCase().contains(keywords.toLowerCase()))
+            .filter(head -> StringUtil.containsIgnoreCase(head.name, keywords)
+            || StringUtil.containsIgnoreCase(head.getTagsOrEmpty(), keywords))
             .collect(Collectors.toList());
 
         Text title = TextHelper.getTextByKey(player, "gui.search.title", keywords);

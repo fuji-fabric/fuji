@@ -64,7 +64,7 @@ public class ProductionWork extends Work implements Schedulable {
 
         sortedStream.forEach(entry -> {
             String key = entry.getKey();
-            double rate = entry.getValue() * ((double) (3600 * 1000) / ((Math.min(this.sample.sampleEndTimeMS, currentTimeMS)) - this.sample.sampleStartTimeMS));
+            double rate = entry.getValue() * ((double) (3600 * 1000) / (Math.min(this.sample.sampleEndTimeMS, currentTimeMS) - this.sample.sampleStartTimeMS));
 
             Text text = TextHelper.getTextByKey(player, "works.production_work.prop.sample_counter.entry", entry.getValue(), rate);
             text = TextHelper.Operators.replaceTextWithMarker(text, "item", ()->Text.translatable(key));
@@ -174,7 +174,7 @@ public class ProductionWork extends Work implements Schedulable {
     }
 
     @SuppressWarnings("unused")
-    private @NotNull String formatBlockPosList(@NotNull ArrayList<BlockPos> blockPosList) {
+    private @NotNull String formatBlockPosList(@NotNull List<BlockPos> blockPosList) {
         StringBuilder sb = new StringBuilder();
         for (BlockPos blockPos : blockPosList) {
             sb.append("(").append(blockPos.getX()).append(",").append(blockPos.getY()).append(",").append(blockPos.getZ()).append(")").append(" ");

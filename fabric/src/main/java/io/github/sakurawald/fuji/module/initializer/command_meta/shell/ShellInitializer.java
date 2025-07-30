@@ -16,6 +16,7 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_meta.shell.config.ShellConfigModel;
+import java.nio.charset.StandardCharsets;
 import lombok.Cleanup;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
@@ -92,7 +93,7 @@ public class ShellInitializer extends ModuleInitializer {
                 String[] commandTokens = commandString.split("\\s");
                 Process process = Runtime.getRuntime().exec(commandTokens, null, null);
                 InputStream inputStream = process.getInputStream();
-                @Cleanup BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                @Cleanup BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
                 StringBuilder output = new StringBuilder();
                 String line;
                 while ((line = reader.readLine()) != null) {
