@@ -17,7 +17,7 @@ public class LogUtil {
         return LogManager.getLogger(name);
     }
 
-    private static final boolean isConsoleSupportAnsiColor = isConsoleSupportAnsiColor();
+    private static final boolean IS_CONSOLE_SUPPORTS_ANSI_COLOR = isConsoleSupportAnsiColor();
 
     private static boolean isConsoleSupportAnsiColor() {
         return FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER;
@@ -40,9 +40,9 @@ public class LogUtil {
 
         /* Process the debug config. */
         if (debugConfig.log_debug_messages) {
-            String prefix = isConsoleSupportAnsiColor ? "\u001B[37m" : ""; // Escape for the ansi color code.
-            String format = prefix + message;
-            MOD_LOGGER.info(format, args);
+            String ansiColorPrefix = IS_CONSOLE_SUPPORTS_ANSI_COLOR ? "\u001B[37m" : ""; // Escape for the ansi color code.
+            message = ansiColorPrefix + message;
+            MOD_LOGGER.info(message, args);
         } else {
             MOD_LOGGER.debug(message, args);
         }
