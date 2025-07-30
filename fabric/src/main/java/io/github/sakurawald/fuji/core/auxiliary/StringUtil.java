@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 
 public class StringUtil {
 
-    public static String replaceGroupsPlaceholders(Matcher matcher, String string) {
+    public static String substituteGroupPlaceholders(@NotNull Matcher matcher, @NotNull String string) {
         for (int i = 0; i <= matcher.groupCount(); i++) {
             string = string.replace("$" + i, matcher.group(i));
         }
