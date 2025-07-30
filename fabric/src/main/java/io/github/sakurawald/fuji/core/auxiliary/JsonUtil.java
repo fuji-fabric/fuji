@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,12 +23,12 @@ public class JsonUtil {
         if (a.isJsonArray() && b.isJsonArray()) return true;
         if (a.isJsonNull() && b.isJsonNull()) return true;
         if (a.isJsonPrimitive() && b.isJsonPrimitive()) {
-            JsonPrimitive ap = a.getAsJsonPrimitive();
-            JsonPrimitive bp = b.getAsJsonPrimitive();
+            JsonPrimitive pa = a.getAsJsonPrimitive();
+            JsonPrimitive pb = b.getAsJsonPrimitive();
 
-            if (ap.isString() && bp.isString()) return true;
-            if (ap.isBoolean() && bp.isBoolean()) return true;
-            if (ap.isNumber() && bp.isNumber()) return true;
+            if (pa.isString() && pb.isString()) return true;
+            if (pa.isBoolean() && pb.isBoolean()) return true;
+            if (pa.isNumber() && pb.isNumber()) return true;
         }
 
         return false;
@@ -51,9 +52,9 @@ public class JsonUtil {
         return root.has(theLastKey);
     }
 
+    @ForDeveloper("The JsonObject.isEmpty() is not exist in old version gson, so the sinytra-connector will fail to load the mod.")
     @SuppressWarnings("SizeReplaceableByIsEmpty")
     public static boolean isEmpty(JsonObject obj) {
-        // NOTE: The JsonObject.isEmpty() is not exist in old version gson, so the sinytra-connector will fail to load the mod.
         return obj.size() == 0;
     }
 
