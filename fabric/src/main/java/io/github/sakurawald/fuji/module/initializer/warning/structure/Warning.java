@@ -28,7 +28,7 @@ public class Warning {
     public List<Text> asLore(Object audience) {
         return List.of(
             TextHelper.getTextByKey(audience, "entity.created_by_player", creatorName)
-            , TextHelper.getTextByKey(audience, "entity.created_timestamp", ChronosUtil.toDefaultDateFormat(createdTimestamp))
+            , TextHelper.getTextByKey(audience, "entity.created_timestamp", ChronosUtil.formatDate(createdTimestamp))
             , TextHelper.getTextByKey(audience, "entity.description", description)
         );
     }

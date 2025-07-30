@@ -36,11 +36,11 @@ public class LeaderBoardCache {
 
     public void updateSnapshots(long updateTime, int newScore) {
         ZonedDateTime now = ZonedDateTime.now();
-        updateSnapshot(newScore, LeaderBoardTimeWindow.HOURLY, ChronosUtil.toTimestamp(ChronosUtil.getBeginningOfCurrentHour(now)));
-        updateSnapshot(newScore, LeaderBoardTimeWindow.DAILY, ChronosUtil.toTimestamp(ChronosUtil.getBeginningOfTheDay(now)));
-        updateSnapshot(newScore, LeaderBoardTimeWindow.WEEKLY, ChronosUtil.toTimestamp(ChronosUtil.getBeginningOfCurrentWeek(now, LeaderBoardService.getBeginningOfTheWeek())));
-        updateSnapshot(newScore, LeaderBoardTimeWindow.MONTHLY, ChronosUtil.toTimestamp(ChronosUtil.getBeginningOfCurrentMonth(now)));
-        updateSnapshot(newScore, LeaderBoardTimeWindow.YEARLY, ChronosUtil.toTimestamp(ChronosUtil.getBeginningOfCurrentYear(now)));
+        updateSnapshot(newScore, LeaderBoardTimeWindow.HOURLY, ChronosUtil.toTimestamp(ChronosUtil.Boundary.getBeginningOfCurrentHour(now)));
+        updateSnapshot(newScore, LeaderBoardTimeWindow.DAILY, ChronosUtil.toTimestamp(ChronosUtil.Boundary.getBeginningOfTheDay(now)));
+        updateSnapshot(newScore, LeaderBoardTimeWindow.WEEKLY, ChronosUtil.toTimestamp(ChronosUtil.Boundary.getBeginningOfCurrentWeek(now, LeaderBoardService.getBeginningOfTheWeek())));
+        updateSnapshot(newScore, LeaderBoardTimeWindow.MONTHLY, ChronosUtil.toTimestamp(ChronosUtil.Boundary.getBeginningOfCurrentMonth(now)));
+        updateSnapshot(newScore, LeaderBoardTimeWindow.YEARLY, ChronosUtil.toTimestamp(ChronosUtil.Boundary.getBeginningOfCurrentYear(now)));
         updateSnapshot(newScore, LeaderBoardTimeWindow.ALL_TIME, 0L);
     }
 

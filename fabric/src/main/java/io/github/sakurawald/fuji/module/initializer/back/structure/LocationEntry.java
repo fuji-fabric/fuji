@@ -17,7 +17,7 @@ public class LocationEntry implements Comparable<LocationEntry> {
 
     public static LocationEntry makeLocationEntry(@NotNull ServerPlayerEntity player) {
         GlobalPos location = GlobalPos.of(player);
-        Long saved_timestamp = ChronosUtil.getCurrentTimeMillis();
+        Long saved_timestamp = ChronosUtil.getCurrentTimestamp();
         return new LocationEntry(location, saved_timestamp);
     }
 

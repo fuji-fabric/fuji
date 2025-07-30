@@ -92,7 +92,7 @@ public abstract class Work implements ObjectTypeStringGetter {
         if (this.introduction != null) {
             ret.add(TextHelper.getTextByKey(player, "works.work.prop.introduction", this.introduction));
         }
-        ret.add(TextHelper.getTextByKey(player, "works.work.prop.time", ChronosUtil.toDefaultDateFormat(this.createTimeMS)));
+        ret.add(TextHelper.getTextByKey(player, "works.work.prop.time", ChronosUtil.formatDate(this.createTimeMS)));
         ret.add(TextHelper.getTextByKey(player, "works.work.prop.dimension", this.level));
         ret.add(TextHelper.getTextByKey(player, "works.work.prop.coordinate", this.x, this.y, this.z));
         return ret;

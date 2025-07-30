@@ -46,7 +46,7 @@ public class FakePlayerManagerService {
         String playerName = PlayerHelper.getPlayerName(player);
         player2expiration.put(playerName, newExpirationTime);
 
-        TextHelper.sendTextByKey(player, "fake_player_manager.renew.success", ChronosUtil.toDefaultDateFormat(newExpirationTime));
+        TextHelper.sendTextByKey(player, "fake_player_manager.renew.success", ChronosUtil.formatDate(newExpirationTime));
     }
 
     public static boolean canSpawnMoreFakePlayers(@NotNull ServerPlayerEntity player) {
