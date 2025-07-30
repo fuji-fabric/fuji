@@ -946,6 +946,7 @@ public class TextHelper {
     public static class Fixer {
 
         public static String fixParserInput(String input) {
+            // NOTE: Older Text Placeholder API can't parse the closing tag for custom color style tag. (e.g. `</#FF0000>`)
             return input.replaceAll("</#.+?>", "</>");
         }
 

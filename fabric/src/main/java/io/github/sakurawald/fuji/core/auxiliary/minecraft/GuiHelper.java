@@ -100,6 +100,7 @@ public class GuiHelper {
     }
 
     public static GuiElementBuilder hideTooltip(GuiElementBuilder builder) {
+        // NOTE: MC <= 1.20.4, the hideFlags() will not hide the item name.
         // NOTE: In higher MC version, hides the tooltip will also hide the lore.
 
         #if MC_VER <= MC_1_20_4
