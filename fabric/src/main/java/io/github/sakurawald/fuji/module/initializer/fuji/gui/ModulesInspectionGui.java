@@ -4,6 +4,7 @@ package io.github.sakurawald.fuji.module.initializer.fuji.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
@@ -98,7 +99,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
         }
 
         Boolean moduleEnableStatus = entity.getValue();
-        return moduleEnableStatus ? Items.GREEN_STAINED_GLASS : Items.RED_STAINED_GLASS;
+        return GuiHelper.Material.fromBooleanValue(moduleEnableStatus);
     }
 
     @SuppressWarnings("SameParameterValue")

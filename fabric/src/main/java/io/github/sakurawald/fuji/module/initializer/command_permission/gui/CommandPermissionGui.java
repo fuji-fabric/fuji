@@ -8,7 +8,6 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
 import io.github.sakurawald.fuji.module.initializer.command_permission.CommandPermissionInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_permission.structure.CommandNodePermissionWrapper;
-import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +34,7 @@ public class CommandPermissionGui extends PagedGui<CommandNodePermissionWrapper>
         boolean commandNodeWrapped = CommandPermissionInitializer.isCommandNodeWrapped(entity.getNode());
 
         return new GuiElementBuilder()
-            .setItem(commandNodeWrapped ? Items.GREEN_STAINED_GLASS : Items.RED_STAINED_GLASS)
+            .setItem(GuiHelper.Material.fromBooleanValue(commandNodeWrapped))
             .setName(Text.literal(entity.getPath()))
             .setCallback((index, clickType, actionType) -> {
                 String commandPathString = entity.getPath();

@@ -3,11 +3,10 @@ package io.github.sakurawald.fuji.module.initializer.command_scheduler.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
 import io.github.sakurawald.fuji.module.initializer.command_scheduler.structure.Job;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -30,16 +29,12 @@ public class JobGui extends PagedGui<Job> {
     protected GuiElementInterface toGuiElement(Job entity) {
         return new GuiElementBuilder()
             .setName(Text.literal(entity.getName()))
-            .setItem(this.computeItem(entity))
+            .setItem(GuiHelper.Material.fromBooleanValue(entity.isEnable()))
             .setLore(List.of(
                 TextHelper.getTextByKey(getPlayer(), "job.props.enabled", entity.isEnable())
                 , TextHelper.getTextByKey(getPlayer(), "job.props.left_times", entity.getLeftTimes())
             ))
             .build();
-    }
-
-    private Item computeItem(Job entity) {
-        return entity.isEnable() ? Items.GREEN_STAINED_GLASS : Items.RED_STAINED_GLASS;
     }
 
 }

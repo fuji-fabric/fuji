@@ -4,6 +4,7 @@ import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.ConfirmSignGui;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
@@ -13,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import net.minecraft.item.Item;
-import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -56,7 +56,7 @@ public class ListWhenOnlineTicketsGui extends PagedGui<WhenOnlineTicket> {
 
         lore.add(TextHelper.getTextByKey(getPlayer(), "prompt.click.delete.right_click"));
 
-        Item item = entity.isExecuted() ? Items.GREEN_STAINED_GLASS : Items.RED_STAINED_GLASS;
+        Item item = GuiHelper.Material.fromBooleanValue(entity.isExecuted());
         builder
             .setItem(item)
             .setName(TextHelper.getTextByKey(getPlayer(),"command_meta.when_online.gui.name"))
