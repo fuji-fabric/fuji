@@ -252,7 +252,7 @@ public class CommandDescriptor implements SourceModuleGetter {
 
         // NOTE: Only send the stack trace if the command source is admin.
         if (PlayerHelper.isAdmin(source)) {
-            String stacktrace = String.join("\n", ReflectionUtil.getStackTraceAsList(throwable));
+            String stacktrace = String.join("\n", ReflectionUtil.extractStackTraceElements(throwable));
             style
                 .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(Text.of("Click to copy the stacktrace.")))
                 .withClickEvent(TextHelper.Events.ClickEvent.makeCopyToClipboardAction(stacktrace));

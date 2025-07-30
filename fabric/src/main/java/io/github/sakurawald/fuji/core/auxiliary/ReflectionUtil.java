@@ -79,7 +79,7 @@ public class ReflectionUtil {
             || type == Void.class;
     }
 
-    public static List<String> getStackTraceAsList(Throwable throwable) {
+    public static List<String> extractStackTraceElements(Throwable throwable) {
         return Arrays
             .stream(throwable.getStackTrace())
             .map(StackTraceElement::toString)
