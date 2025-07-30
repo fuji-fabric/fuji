@@ -116,12 +116,14 @@ public class WarningInitializer extends ModuleInitializer {
     @Document(id = 1751827043371L, value = "Clear the warnings of a player.")
     @CommandNode("warning clear")
     @CommandRequirement(level = 4)
-    private static int $clearWarning(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer) {
-        String targetPlayerName = targetPlayer.getValue();
-        int originalSize = WarningService.clearWarnings(targetPlayerName);
+    private static int $clearWarning(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer, Optional<Boolean> confirm) {
+        return CommandHelper.Pattern.withCommandConfirmed(source, confirm, () -> {
+            String targetPlayerName = targetPlayer.getValue();
+            int originalSize = WarningService.clearWarnings(targetPlayerName);
 
-        TextHelper.sendTextByKey(source, "warning.clear", originalSize, targetPlayerName);
-        return CommandHelper.Return.SUCCESS;
+            TextHelper.sendTextByKey(source, "warning.clear", originalSize, targetPlayerName);
+            return CommandHelper.Return.SUCCESS;
+        });
     }
 
     @Document(id = 1751827045167L, value = "Clear all warnings for all players.")
