@@ -171,8 +171,6 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         ensureNamedCooldownExist(source, name);
 
         NamedCommandCooldown cooldown = NamedCooldownService.getNamedCooldownList().get(name.getValue());
-        String key = NamedCommandCooldown.toKey(player);
-
         List<String> onSuccessCommands = cooldown.getTryUse().getOnSuccessCommands();
         List<String> onFailureCommands = cooldown.getTryUse().getOnFailureCommands();
         return NamedCooldownService.testNamedCooldown(cooldown, player, onSuccessCommands, onFailureCommands);

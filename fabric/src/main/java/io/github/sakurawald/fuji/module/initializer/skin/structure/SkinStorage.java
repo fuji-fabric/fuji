@@ -3,11 +3,9 @@ package io.github.sakurawald.fuji.module.initializer.skin.structure;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
-import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.module.initializer.skin.SkinInitializer;
 import io.github.sakurawald.fuji.module.initializer.skin.provider.MojangSkinProvider;
 import io.github.sakurawald.fuji.module.initializer.skin.service.SkinService;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -15,8 +13,6 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class SkinStorage {
-
-    private static final Path skinStoragePath = ReflectionUtil.computeModuleConfigPath(SkinInitializer.class).resolve("skin-data");
 
     private static SkinDataNode getDefaultSkinDataNode(@NotNull GameProfile gameProfile) {
         String playerName = gameProfile.getName();
@@ -58,13 +54,6 @@ public class SkinStorage {
 
     private static List<SkinDataNode> getSkinDataNodeList() {
         return SkinInitializer.data.model().getNodes();
-    }
-
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    private static boolean hasSkinData(@NotNull GameProfile profile) {
-        return SkinInitializer.data.model().getNodes()
-            .stream()
-            .anyMatch(it -> it.getPlayerName().equals(profile.getName()));
     }
 
 }

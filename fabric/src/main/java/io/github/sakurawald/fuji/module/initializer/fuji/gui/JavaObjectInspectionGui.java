@@ -53,12 +53,12 @@ public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
             .setName(entity.computeNameText(getPlayer()))
             .setItem(entity.computeItem())
             .setLore(entity.computeLore(getPlayer()))
-            .setCallback(() -> onClickToGoInside(getPlayer(), entity));
+            .setCallback(() -> onClickToGoInside(entity));
 
         return guiElementBuilder.build();
     }
 
-    private void onClickToGoInside(ServerPlayerEntity player, InspectingObject entity) {
+    private void onClickToGoInside(InspectingObject entity) {
         /* Define variables. */
         Object objectToInspect = entity.getObjectValue();
 

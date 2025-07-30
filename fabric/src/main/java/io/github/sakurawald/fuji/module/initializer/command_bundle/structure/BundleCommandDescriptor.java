@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_bundle.structure;
 
+import com.google.errorprone.annotations.Keep;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.ParsedArgument;
@@ -69,6 +70,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
         return functionClosure;
     }
 
+    @Keep
     private static int executeBundleCommandClosure(
         @NotNull CommandContext<ServerCommandSource> ctx
         , @NotNull BundleCommandDescriptor descriptor
@@ -122,7 +124,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
         CommandRequirementDescriptor requirement = entry.getRequirement();
 
         Matcher matcher = BUNDLE_COMMAND_DSL.matcher(pattern);
-        int argumentIndex = 0;
+//        int argumentIndex = 0;
         while (matcher.find()) {
 
             if (matchLiteralArgument(matcher)) {
@@ -152,7 +154,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
 
             }
 
-            argumentIndex++;
+//            argumentIndex++;
         }
 
         String document = entry.getDocument();

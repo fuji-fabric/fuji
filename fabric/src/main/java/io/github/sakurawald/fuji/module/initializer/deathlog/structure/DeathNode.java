@@ -116,7 +116,6 @@ public class DeathNode {
 
     private static void writeInventoryNode(@NotNull NbtCompound parent, @NotNull ServerPlayerEntity player) {
         NbtCompound inventoryTag = new NbtCompound();
-        PlayerInventory inventory = player.getInventory();
 
         inventoryTag.put(ARMOR_KEY, ItemStackHelper.Nbt.writeSlotsNode(new NbtList(), InventoryHelper.getArmorStacks(player)));
         inventoryTag.put(OFFHAND_KEY, ItemStackHelper.Nbt.writeSlotsNode(new NbtList(), InventoryHelper.getOffhandStack(player)));

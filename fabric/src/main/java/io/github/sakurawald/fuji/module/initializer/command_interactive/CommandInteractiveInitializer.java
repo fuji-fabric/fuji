@@ -60,7 +60,7 @@ public class CommandInteractiveInitializer extends ModuleInitializer {
     }
 
     @SuppressWarnings("UnnecessaryLocalVariable")
-    private static CommandExecutionC2SPacket makeCommandExecutionPacket(ServerPlayerEntity player, String commandString) {
+    private static CommandExecutionC2SPacket makeCommandExecutionPacket(String commandString) {
         #if MC_VER <= MC_1_20_4
         var ack = new LastSeenMessageList.Acknowledgment(0, new BitSet());
         CommandExecutionC2SPacket packet = new CommandExecutionC2SPacket(commandString, Instant.now(), 0L, ArgumentSignatureDataMap.EMPTY, ack);
@@ -72,7 +72,7 @@ public class CommandInteractiveInitializer extends ModuleInitializer {
 
     public static void mimicCommandExecutionPacket(ServerPlayerEntity player, String commandString) {
         /* Make command execution packet. */
-        CommandExecutionC2SPacket packet = makeCommandExecutionPacket(player, commandString);
+        CommandExecutionC2SPacket packet = makeCommandExecutionPacket(commandString);
 
         /* Trust the packet. */
         addTrustedPacket(packet);

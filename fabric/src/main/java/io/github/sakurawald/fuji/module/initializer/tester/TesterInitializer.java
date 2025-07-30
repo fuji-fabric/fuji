@@ -30,8 +30,6 @@ public class TesterInitializer extends ModuleInitializer {
     private static int $run(@CommandSource ServerCommandSource source) {
 
 
-
-
         LogUtil.info("Done");
         return 0;
     }

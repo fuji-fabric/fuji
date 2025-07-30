@@ -48,7 +48,6 @@ public class ServerCommandsInspectionGui extends PagedGui<ServerCommandNodeWrapp
         List<Text> lore = new ArrayList<>();
 
         /* Guess what package the command node is. */
-        CommandNode<ServerCommandSource> commandNode = entity.getNode();
         lore.add(TextHelper.getTextByKey(getPlayer(), "from_package", entity.fromPackage));
 
         String commandPath = entity.getPath();

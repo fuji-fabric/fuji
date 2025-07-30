@@ -40,7 +40,7 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
             .setItem(Items.SLIME_BALL)
             .setName(TextHelper.getTextByKey(viewingPlayer, "deathlog.restore.item.name"))
             .setLore(deathNode.getLore(viewingPlayer))
-            .setCallback(() -> handleRestoreButton(displayGui, viewingPlayer))
+            .setCallback(() -> handleRestoreButton(viewingPlayer))
             .build();
         displayGui.setSlot(LINE_SIZE + 8, restoreButton);
 
@@ -68,7 +68,7 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
         }
     }
 
-    private void handleRestoreButton(SimpleGui displayGui, ServerPlayerEntity viewingPlayer) {
+    private void handleRestoreButton(ServerPlayerEntity viewingPlayer) {
             /* Ensure the restore target player's inventory is empty. */
             if (!viewingPlayer.getInventory().isEmpty()) {
                 TextHelper.sendTextByKey(viewingPlayer, "deathlog.restore.target_player.inventory_not_empty", PlayerHelper.getPlayerName(viewingPlayer));

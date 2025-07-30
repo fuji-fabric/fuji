@@ -88,7 +88,8 @@ public class WorldBorderInitializer extends ModuleInitializer {
         ServerHelper
             .getWorlds()
             .forEach(dimension -> {
-                WorldBorder perDimensionWorldBorder = dimension.getWorldBorder();
+                @SuppressWarnings("unused")
+                WorldBorder callGetterMethodToUpdateEffectiveDescriptor = dimension.getWorldBorder();
                 RegistryKey<World> dimensionRegistryKey = dimension.getRegistryKey();
                 Packet<?> packet = packetProvider.apply(dimension);
 

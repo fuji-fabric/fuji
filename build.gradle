@@ -148,18 +148,23 @@ subprojects { p ->
         options.release = rootProject.java_version as Integer
         options.encoding = "UTF-8"
 
+        /* Configure error-prone gradle plugin. */
+        options.errorprone.excludedPaths = ".+/module/mixin/.+"
         options.errorprone {
+            // I would like to include the Items constants in the enum class.
             disable("ImmutableEnumChecker")
-            disable("StringSplitter")
+
+            // For readability, and Java version compatibility.
             disable("StatementSwitchToExpressionSwitch")
-            disable("UnusedMethod")
-            disable("JavaTimeDefaultTimeZone")
+
+            // For readability, the exception is handled by the helper function.
             disable("FutureReturnValueIgnored")
 
-            disable("MissingOverride")
+            disable("StringSplitter")
+
+            disable("JavaTimeDefaultTimeZone")
 
             disable("DoubleBraceInitialization")
-            disable("UnusedVariable")
         }
 
         configure(options) {
@@ -167,6 +172,8 @@ subprojects { p ->
             options.compilerArgs << '-parameters'
             // yeah, the code of fuji is more dynamic.
             options.compilerArgs << '-Xlint:-unchecked'
+            // Fail the compiling if there is any warning.
+            options.compilerArgs << "-Werror"
         }
     }
 

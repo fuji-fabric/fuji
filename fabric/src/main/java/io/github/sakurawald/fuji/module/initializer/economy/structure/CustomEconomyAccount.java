@@ -82,7 +82,6 @@ public class CustomEconomyAccount implements EconomyAccount {
         /* Check bounds. */
         boolean isSuccessful;
         Text feedbackText;
-        Identifier currencyId = this.currencyDescriptor.toIdentifier();
 
         if (finalBalance < 0
             || (transactionAmount > 0 && previousBalance > Long.MAX_VALUE - transactionAmount)

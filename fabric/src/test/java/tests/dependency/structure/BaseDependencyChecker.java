@@ -52,7 +52,7 @@ public abstract class BaseDependencyChecker {
 
                 DependencyNode node = makeDependencyNode(path);
                 /* Should we ignore this dependency node? */
-                if (node == DependencyNode.IGNORE_THIS_DEPENDENCY_NODE) {
+                if (DependencyNode.IGNORE_THIS_DEPENDENCY_NODE.equals(node)) {
                     return FileVisitResult.CONTINUE;
                 }
 

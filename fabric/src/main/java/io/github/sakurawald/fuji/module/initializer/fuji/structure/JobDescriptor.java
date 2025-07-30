@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.quartz.Job;
 import org.quartz.JobDetail;
-import org.quartz.JobKey;
 import org.quartz.Trigger;
 
 import java.util.List;
@@ -20,7 +19,6 @@ public class JobDescriptor implements SourceModuleGetter {
     @Override
     public String getSourceModule() {
         JobDetail jobDetail = this.jobDetail;
-        JobKey jobKey = jobDetail.getKey();
         Class<? extends Job> jobClass = jobDetail.getJobClass();
         return ModuleManager.computeJoinedModulePath(jobClass.getName());
     }

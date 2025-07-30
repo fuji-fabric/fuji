@@ -290,7 +290,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         return CommandHelper.Pattern.itemInHandCommand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
             String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
 
-            doDetachAttachment(player, uuid);
+            doDetachAttachment(uuid);
             return CommandHelper.Return.SUCCESS;
         });
     }
@@ -300,7 +300,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     private static int $detachEntityAll(@CommandSource ServerPlayerEntity player, Entity entity) {
         String uuid = entity.getUuidAsString();
 
-        doDetachAttachment(player, uuid);
+        doDetachAttachment(uuid);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -309,12 +309,12 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     private static int $detachBlockAll(@CommandSource ServerPlayerEntity player, BlockPos blockPos) {
         String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
 
-        doDetachAttachment(player, uuid);
+        doDetachAttachment(uuid);
         return CommandHelper.Return.SUCCESS;
     }
 
     @SneakyThrows
-    private static void doDetachAttachment(ServerPlayerEntity player, String uuid) {
+    private static void doDetachAttachment(String uuid) {
         Managers.getAttachmentManager().unsetAttachment(COMMAND_ATTACHMENT_SUBJECT_NAME, uuid);
     }
 

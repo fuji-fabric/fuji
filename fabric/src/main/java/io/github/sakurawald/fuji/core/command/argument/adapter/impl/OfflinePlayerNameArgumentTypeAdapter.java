@@ -4,6 +4,7 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
@@ -21,10 +22,8 @@ public class OfflinePlayerNameArgumentTypeAdapter extends BaseArgumentTypeAdapte
 
     @Override
     public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
-        return super.makeRequiredArgumentBuilder(argumentName).suggests((context, builder) -> {
-            ServerHelper.getOfflinePlayerNames().forEach(builder::suggest);
-            return builder.buildFuture();
-        });
+        return super.makeRequiredArgumentBuilder(argumentName)
+            .suggests(CommandHelper.Suggestion.iterable(ServerHelper::getOfflinePlayerNames));
     }
 
     @Override
