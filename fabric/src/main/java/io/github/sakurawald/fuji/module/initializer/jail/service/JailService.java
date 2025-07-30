@@ -70,7 +70,7 @@ public class JailService {
         return filterEnabledJailRecords(getJailRecords());
     }
 
-    private static List<JailRecord> getJailRecords(@NotNull JailDescriptor jailDescriptor) {
+    public static List<JailRecord> getJailRecords(@NotNull JailDescriptor jailDescriptor) {
         return withJailDataNode(jailDescriptor, jailDataNode -> {
             List<JailRecord> jailRecords = jailDataNode.getRecords();
             jailRecords.forEach(jailRecord -> jailRecord.setOwnerJailDescriptor(jailDescriptor));

@@ -19,6 +19,7 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.jail.command.argument.wrapper.JailedPlayerName;
 import io.github.sakurawald.fuji.module.initializer.jail.config.model.JailConfigModel;
 import io.github.sakurawald.fuji.module.initializer.jail.config.model.JailDataModel;
+import io.github.sakurawald.fuji.module.initializer.jail.gui.JailListGui;
 import io.github.sakurawald.fuji.module.initializer.jail.job.PatrolJailJob;
 import io.github.sakurawald.fuji.module.initializer.jail.job.UpdateJailRecordsJob;
 import io.github.sakurawald.fuji.module.initializer.jail.service.JailService;
@@ -264,6 +265,17 @@ public class JailInitializer extends ModuleInitializer {
         TextHelper.sendTextByKey(player,"jail.set_position", jail.getId());
         return CommandHelper.Return.SUCCESS;
     }
+
+    @Document(id = 1753864337061L, value = "Open the jail GUI.")
+    @CommandNode("jail gui")
+    @CommandRequirement(level = 4)
+    private static int $gui(@CommandSource ServerPlayerEntity player) {
+        JailListGui
+            .make(player)
+            .open();
+        return CommandHelper.Return.SUCCESS;
+    }
+
 
     @Override
     protected void onInitialize() {

@@ -256,4 +256,10 @@ public class GuiHelper {
 
     }
 
+    public static class Material {
+        public static Item fromBooleanValue(boolean value) {
+            return value ? Items.GREEN_STAINED_GLASS : Items.RED_STAINED_GLASS;
+        }
+    }
+
 }
