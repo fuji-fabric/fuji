@@ -195,6 +195,7 @@ public class ProfilerGui extends SimpleGui {
                 /* Add the file stores. */
                 fileStores.add(fileStore);
             } catch (Exception ignore) {
+                // Okay, no permission for that file.
             }
         }
 
@@ -205,7 +206,9 @@ public class ProfilerGui extends SimpleGui {
                     long aUsed = a.getTotalSpace() - a.getUsableSpace();
                     long bUsed = b.getTotalSpace() - b.getUsableSpace();
                     return Long.compare(bUsed, aUsed);
-                } catch (Exception ignore) {}
+                } catch (Exception ignore) {
+                    // Okay, no permission for that file.
+                }
 
                 return 0;
             })
@@ -231,7 +234,9 @@ public class ProfilerGui extends SimpleGui {
                     ));
 
                 elements.add(builder.build());
-            } catch (Exception ignore) {}
+            } catch (Exception ignore) {
+                // Okay, no permission for that file.
+            }
         }
 
         return elements;

@@ -114,10 +114,6 @@ public class FilteredRegistry<T> extends SimpleRegistry<T> {
         Set<Map.Entry<RegistryKey<T>, T>> set = new HashSet<>();
         for (Map.Entry<RegistryKey<T>, T> e : this.source.getEntrySet()) {
             try {
-                /*
-                 NOTE: The call to e.getValue() may throw exception
-                 java.lang.IllegalStateException: Trying to access unbound value 'ResourceKey[minecraft:dimension / fuji:1]' from registry net.minecraft.registry.SimpleRegistry$1@5b2b172d
-                 */
                 T value = e.getValue();
                 if (value == null) {
                     continue;
@@ -127,7 +123,12 @@ public class FilteredRegistry<T> extends SimpleRegistry<T> {
                     set.add(e);
                 }
 
-            } catch (Exception ignore) {}
+            } catch (Exception ignore) {
+                /*
+                 NOTE: The call to e.getValue() may throw exception
+                 java.lang.IllegalStateException: Trying to access unbound value 'ResourceKey[minecraft:dimension / fuji:1]' from registry net.minecraft.registry.SimpleRegistry$1@5b2b172d
+                 */
+            }
 
         }
         return set;

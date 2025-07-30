@@ -153,6 +153,8 @@ subprojects { p ->
             disable("StringSplitter")
             disable("StatementSwitchToExpressionSwitch")
             disable("UnusedMethod")
+            disable("JavaTimeDefaultTimeZone")
+            disable("FutureReturnValueIgnored")
 
             disable("MissingOverride")
 

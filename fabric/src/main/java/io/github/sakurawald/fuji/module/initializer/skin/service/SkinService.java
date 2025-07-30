@@ -39,13 +39,13 @@ public class SkinService {
         changeSkinAsync(player.getGameProfile(), skinSupplier)
             .thenAccept(success -> {
 
-            if (!success) {
-                TextHelper.sendTextByKey(player, "skin.change_skin.failed");
-                return;
-            }
+                if (!success) {
+                    TextHelper.sendTextByKey(player, "skin.change_skin.failed");
+                    return;
+                }
 
-            TextHelper.sendTextByKey(player, "skin.change_skin.success");
-        });
+                TextHelper.sendTextByKey(player, "skin.change_skin.success");
+            });
 
         return CommandHelper.Return.SUCCESS;
     }

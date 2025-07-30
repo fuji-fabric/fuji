@@ -66,7 +66,9 @@ public class WorldDownloaderInitializer extends ModuleInitializer {
     public static void safelyRemoveContext(String path) {
         try {
             httpServer.removeContext(path);
-        } catch (IllegalArgumentException ignored) {}
+        } catch (IllegalArgumentException ignored) {
+            // Just continue.
+        }
     }
 
     @Document(id = 1751826617256L, value = "Download the region file around you.")

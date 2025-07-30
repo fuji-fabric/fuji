@@ -137,18 +137,18 @@ public class SitInitializer extends ModuleInitializer {
                 return false;
             }
 
-            public BlockPos getChairBlockPos() {
+            private BlockPos getChairBlockPos() {
                 return targetBlockPos;
             }
 
-            public boolean isChairBlockBroken() {
+            private boolean isChairBlockBroken() {
                 /* Kill the chair entity, if the binding block is broken. */
                 return EntityHelper.getServerWorld(this)
                         .getBlockState(getChairBlockPos())
                         .isAir();
             }
 
-            public Vec3d getDismountPosition() {
+            private Vec3d getDismountPosition() {
                 return getChairBlockPos()
                     .toCenterPos()
                     .add(dismountOffset);

@@ -569,7 +569,7 @@
   "docstring.1751823954950": "The `pattern` used to replace the `matched target string`.\n",
   "docstring.1751823961060": "This `job` is used to clean up the `TTL Map` data structure, and remove `expired entries`.\n",
   "docstring.1751823967217": "Provides `/json` command.\nA powerful and unified tool to edit json file.\n",
-  "docstring.1751823973159": "Provides `/foreach` command.\nIf a command is only targets on single player, you can use `/foreach` to apply it for each online player.\n",
+  "docstring.1751823973159": "Provides `/foreach` command.\nIf a command only targets a single player, you can use `/foreach` to apply it to each online player.\n",
   "docstring.1751823980406": "Execute a command targeted on single-player for each player online.",
   "docstring.1751823988812": "Provides `/run` command, to run a command with context.\n",
   "docstring.1751823993461": "Execute a command as console.",

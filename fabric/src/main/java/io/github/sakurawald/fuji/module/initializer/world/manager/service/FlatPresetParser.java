@@ -62,6 +62,7 @@ public class FlatPresetParser {
         return new FlatChunkGeneratorLayer(l, optional.get().comp_349());
     }
 
+    @SuppressWarnings("MixedMutabilityReturnType")
     private static List<FlatChunkGeneratorLayer> parsePresetLayersString(RegistryEntryLookup<Block> registryEntryLookup, String string) {
         ArrayList<FlatChunkGeneratorLayer> list = Lists.newArrayList();
         String[] strings = string.split(",");
@@ -83,6 +84,7 @@ public class FlatPresetParser {
         return list;
     }
 
+    @SuppressWarnings("AssignmentExpression")
     public static FlatChunkGeneratorConfig parsePresetString(RegistryEntryLookup<Block> registryEntryLookup, RegistryEntryLookup<Biome> registryEntryLookup2, RegistryEntryLookup<StructureSet> registryEntryLookup3, RegistryEntryLookup<PlacedFeature> registryEntryLookup4, String string, FlatChunkGeneratorConfig flatChunkGeneratorConfig) {
         RegistryEntry.Reference<Biome> reference;
         Iterator<String> iterator = Splitter.on(';').split(string).iterator();
