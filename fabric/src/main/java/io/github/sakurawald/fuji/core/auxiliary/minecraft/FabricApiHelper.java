@@ -2,7 +2,6 @@ package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import net.fabricmc.loader.api.FabricLoader;
@@ -10,7 +9,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import org.jetbrains.annotations.NotNull;
 
-public class FabricApiUtil {
+public class FabricApiHelper {
 
     private static final String FABRIC_API_EVENT_INVOKER_METHOD_NAME = "invoker";
     private static final String SERVER_WORLD_EVENTS_CLASS_NAME = "net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents";
@@ -22,13 +21,13 @@ public class FabricApiUtil {
     public static void fireOnWorldLoadEvent(@NotNull MinecraftServer server, @NotNull ServerWorld serverWorld) throws Exception {
         List<Class<?>> eventParameters = List.of(MinecraftServer.class, ServerWorld.class);
         List<Object> eventArguments = List.of(server, serverWorld);
-        FabricApiUtil.fireEvent(FabricApiUtil.SERVER_WORLD_EVENTS_CLASS_NAME, "LOAD", "onWorldLoad", eventParameters, eventArguments);
+        FabricApiHelper.fireEvent(FabricApiHelper.SERVER_WORLD_EVENTS_CLASS_NAME, "LOAD", "onWorldLoad", eventParameters, eventArguments);
     }
 
     public static void fireOnWorldUnloadEvent(@NotNull MinecraftServer server, @NotNull ServerWorld serverWorld) throws Exception {
         List<Class<?>> eventParameters = List.of(MinecraftServer.class, ServerWorld.class);
         List<Object> eventArguments = List.of(server, serverWorld);
-        FabricApiUtil.fireEvent(FabricApiUtil.SERVER_WORLD_EVENTS_CLASS_NAME, "UNLOAD", "onWorldUnload", eventParameters, eventArguments);
+        FabricApiHelper.fireEvent(FabricApiHelper.SERVER_WORLD_EVENTS_CLASS_NAME, "UNLOAD", "onWorldUnload", eventParameters, eventArguments);
     }
 
     @SuppressWarnings("SameParameterValue")

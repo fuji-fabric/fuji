@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.world.manager.structure;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.FabricApiUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.FabricApiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.extension.SimpleRegistryExtension;
@@ -55,7 +55,7 @@ public class RuntimeDimensionLoader {
         server.worlds.put(dimension.getRegistryKey(), dimension);
 
         try {
-            FabricApiUtil.fireOnWorldLoadEvent(server, dimension);
+            FabricApiHelper.fireOnWorldLoadEvent(server, dimension);
         } catch (Exception e) {
             LogUtil.error("Failed to fire onWorldLoad event in fabric-api mod.", e);
         }
@@ -67,7 +67,7 @@ public class RuntimeDimensionLoader {
         if (server.worlds.remove(dimensionKey, world)) {
             /* Fire an unload event */
             try {
-                FabricApiUtil.fireOnWorldUnloadEvent(server,world);
+                FabricApiHelper.fireOnWorldUnloadEvent(server,world);
             } catch (Exception e) {
                 LogUtil.error("Failed to fire onWorldUnload event in fabric-api mod.", e);
             }
