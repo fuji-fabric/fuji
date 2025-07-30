@@ -27,6 +27,9 @@ public class CommandAdviceConfigModel {
 
             this.add(new CommandAdviceEntry("say (.+)", false, CommandAdviceType.CANCEL_WITH_SUCCESS, List.of(
                 "send-broadcast <rb>[My Server]</rb> $1")));
+
+            this.add(new CommandAdviceEntry("(?:msg|tell) (\\S+?) (.+)", true, CommandAdviceType.CANCEL_WITH_SUCCESS, List.of(
+                "send-message %player:name% <green>[PM] You -> $1: $2", "send-message $1 <green>[PM] %player:name% -> you: $2")));
         }
     };
 }
