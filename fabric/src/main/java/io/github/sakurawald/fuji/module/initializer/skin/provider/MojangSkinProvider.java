@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.skin.provider;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.properties.Property;
-import io.github.sakurawald.fuji.core.auxiliary.IOUtil;
+import io.github.sakurawald.fuji.core.auxiliary.HttpUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
 import java.util.Optional;
@@ -16,7 +16,7 @@ public class MojangSkinProvider {
     public static Optional<Property> fetchSkin(String playerName) {
         try {
             UUID onlinePlayerUUID = MojangProfileFetcher.fetchOnlineUUID(playerName);
-            String responseJsonString = IOUtil.requestGet(MOJANG_SESSION_SERVER + onlinePlayerUUID + "?unsigned=false");
+            String responseJsonString = HttpUtil.sendGetRequest(MOJANG_SESSION_SERVER + onlinePlayerUUID + "?unsigned=false");
             JsonObject textureJsonObject = JsonParser
                 .parseString(responseJsonString)
                 .getAsJsonObject()

@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.core.service.gameprofile_fetcher;
 
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
-import io.github.sakurawald.fuji.core.auxiliary.IOUtil;
+import io.github.sakurawald.fuji.core.auxiliary.HttpUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,7 +23,7 @@ public class MojangProfileFetcher {
     public static @Nullable UUID fetchOnlineUUID(String playerName) {
         String rawUUID;
         try {
-            rawUUID = JsonParser.parseString(IOUtil.requestGet(API_SERVER + playerName)).getAsJsonObject().get("id").getAsString();
+            rawUUID = JsonParser.parseString(HttpUtil.sendGetRequest(API_SERVER + playerName)).getAsJsonObject().get("id").getAsString();
         } catch (IOException e) {
             LogUtil.debug("Failed to fetch online uuid from mojang server for {}", playerName);
             return null;

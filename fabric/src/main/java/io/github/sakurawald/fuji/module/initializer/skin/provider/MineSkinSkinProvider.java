@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.skin.provider;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.properties.Property;
-import io.github.sakurawald.fuji.core.auxiliary.IOUtil;
+import io.github.sakurawald.fuji.core.auxiliary.HttpUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinVariant;
 import java.util.Optional;
@@ -19,7 +19,7 @@ public class MineSkinSkinProvider {
         try {
             String param = "{\"variant\":\"%s\",\"name\":\"%s\",\"visibility\":%d,\"url\":\"%s\"}"
                 .formatted(skinVariant.toString(), "none", 0, skinImageURL);
-            String responseJson = IOUtil.requestPost(API_ENDPOINT, param);
+            String responseJson = HttpUtil.sendPostRequest(API_ENDPOINT, param);
 
             JsonObject textureJsonObject = JsonParser
                 .parseString(responseJson)

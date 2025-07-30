@@ -62,6 +62,6 @@ public abstract class BaseBackupManager extends BaseManager {
     }
 
     public void createBackup() {
-        IOUtil.compressFiles(Fuji.MOD_CONFIG_PATH.toFile(), this.getInputFiles(), this.getOutputFile());
+        IOUtil.Compressor.compressFiles(Fuji.MOD_CONFIG_PATH.toFile(), this.getInputFiles(), this.getOutputFile());
     }
 }

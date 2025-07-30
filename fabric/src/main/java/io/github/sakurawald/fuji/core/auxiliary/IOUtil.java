@@ -2,16 +2,12 @@ package io.github.sakurawald.fuji.core.auxiliary;
 
 import lombok.SneakyThrows;
 import net.fabricmc.loader.api.FabricLoader;
-import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,39 +21,6 @@ import java.util.zip.ZipOutputStream;
 
 public class IOUtil {
 
-    public static final String THE_MOST_POPULAR_BROWSER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36";
-
-    @SneakyThrows(IOException.class)
-    public static void compressFiles(@NotNull File base, @NotNull List<File> input, @NotNull File output) {
-        final int BUFFER_SIZE = 4096;
-
-        try (FileOutputStream fos = new FileOutputStream(output);
-             ZipOutputStream zos = new ZipOutputStream(fos)) {
-
-            for (File file : input) {
-                if (!file.isFile()) continue;
-
-                try (FileInputStream fis = new FileInputStream(file)) {
-                    ZipEntry zipEntry = new ZipEntry(computeArchiveEntryName(base, file));
-                    zos.putNextEntry(zipEntry);
-
-                    byte[] buffer = new byte[BUFFER_SIZE];
-                    int length;
-
-                    while ((length = fis.read(buffer)) > 0) {
-                        zos.write(buffer, 0, length);
-                    }
-
-                    zos.closeEntry();
-                }
-            }
-        }
-    }
-
-    private static @NotNull String computeArchiveEntryName(@NotNull File base, @NotNull File file) {
-        return computeRelativePath(base, file);
-    }
-
     @SneakyThrows(IOException.class)
     public static String computeRelativePath(@NotNull File base, @NotNull File file) {
         String baseStr = base.getCanonicalPath();
@@ -70,7 +33,8 @@ public class IOUtil {
     }
 
     public static String computeRelativePathBasedOnGameDir(@NotNull File file) {
-        return computeRelativePath(FabricLoader.getInstance().getGameDir().toFile(), file);
+        File base = FabricLoader.getInstance().getGameDir().toFile();
+        return computeRelativePath(base, file);
     }
 
     @SneakyThrows(IOException.class)
@@ -92,36 +56,37 @@ public class IOUtil {
         }
     }
 
-    private static String requestPost(@NotNull URI uri, @NotNull String param) throws IOException {
-        LogUtil.debug("Send a post request: uri = {}, param = {}", uri, param);
+    public static class Compressor {
 
-        HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/json");
-        connection.setRequestProperty("Accept", "application/json");
-        connection.setRequestProperty("User-Agent", THE_MOST_POPULAR_BROWSER_AGENT);
-        connection.setDoOutput(true);
-        connection.setDoInput(true);
+        @SneakyThrows(IOException.class)
+        public static void compressFiles(@NotNull File base, @NotNull List<File> input, @NotNull File output) {
+            final int BUFFER_SIZE = 4096;
 
-        IOUtils.write(param.getBytes(StandardCharsets.UTF_8), connection.getOutputStream());
-        return IOUtils.toString(connection.getInputStream(), StandardCharsets.UTF_8);
-    }
+            try (FileOutputStream fos = new FileOutputStream(output);
+                 ZipOutputStream zos = new ZipOutputStream(fos)) {
 
-    private static String requestGet(@NotNull URI uri) throws IOException {
-        LogUtil.debug("Send a get request: uri = {}", uri);
+                for (File file : input) {
+                    if (!file.isFile()) continue;
 
-        HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
-        connection.setRequestMethod("GET");
-        connection.setDoOutput(true);
+                    try (FileInputStream fis = new FileInputStream(file)) {
+                        ZipEntry zipEntry = new ZipEntry(computeArchiveEntryName(base, file));
+                        zos.putNextEntry(zipEntry);
 
-        return IOUtils.toString(connection.getInputStream(), StandardCharsets.UTF_8);
-    }
+                        byte[] buffer = new byte[BUFFER_SIZE];
+                        int length;
 
-    public static String requestGet(@NotNull String uri) throws IOException {
-        return requestGet(URI.create(uri));
-    }
+                        while ((length = fis.read(buffer)) > 0) {
+                            zos.write(buffer, 0, length);
+                        }
 
-    public static String requestPost(@NotNull String uri, @NotNull String param) throws IOException {
-        return requestPost(URI.create(uri), param);
+                        zos.closeEntry();
+                    }
+                }
+            }
+        }
+
+        private static @NotNull String computeArchiveEntryName(@NotNull File base, @NotNull File file) {
+            return computeRelativePath(base, file);
+        }
     }
 }
