@@ -105,7 +105,7 @@ public class BackInitializer extends ModuleInitializer {
                         , location.getX()
                         , location.getY()
                         , location.getZ()
-                        , ChronosUtil.formatDate(it.getSavedTimestamp()));
+                        , ChronosUtil.Formatter.formatDate(it.getSavedTimestamp()));
                 });
 
             return CommandHelper.Return.SUCCESS;

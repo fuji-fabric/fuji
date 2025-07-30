@@ -53,7 +53,7 @@ public class JailRecord {
     }
 
     public String getFormattedCreatedTimestamp() {
-        return ChronosUtil.formatDate(this.getCreatedTimestamp());
+        return ChronosUtil.Formatter.formatDate(this.getCreatedTimestamp());
     }
 
     public void onUpdateRecord(int passedTimeInMillSeconds) {

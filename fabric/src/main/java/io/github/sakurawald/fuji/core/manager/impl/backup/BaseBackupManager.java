@@ -57,7 +57,7 @@ public abstract class BaseBackupManager extends BaseManager {
     }
 
     protected @NotNull File getOutputFile() {
-        String fileName = ChronosUtil.getFormattedCurrentDate() + ".zip";
+        String fileName = ChronosUtil.Formatter.getFormattedCurrentDate() + ".zip";
         return this.BACKUP_STORAGE_PATH.resolve(fileName).toFile();
     }
 

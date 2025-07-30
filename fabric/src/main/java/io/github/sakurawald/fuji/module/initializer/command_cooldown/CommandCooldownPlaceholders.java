@@ -68,7 +68,7 @@ public class CommandCooldownPlaceholders {
 
             String key = NamedCommandCooldown.toKey(player);
             long nextAvailableDate = cooldown.getLastUseTime(key) + cooldown.getCooldownDuration();
-            String formattedLeftTime = ChronosUtil.formatDate(nextAvailableDate);
+            String formattedLeftTime = ChronosUtil.Formatter.formatDate(nextAvailableDate);
             return Text.literal(formattedLeftTime);
         });
     }

@@ -60,6 +60,10 @@ public class ConfigModel {
             public String logger_level = "WARN";
         }
 
+        public Formatter formatter = new Formatter();
+        public static class Formatter {
+            public String date_formatter = "yyyy-MM-dd HH:mm:ss";
+        }
 
         public DocumentSection document = new DocumentSection();
         public static class DocumentSection {

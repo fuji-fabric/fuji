@@ -48,11 +48,11 @@ public class ListWhenOnlineTicketsGui extends PagedGui<WhenOnlineTicket> {
         GuiElementBuilder builder = new GuiElementBuilder();
 
         List<Text> lore = new ArrayList<>();
-        lore.add(TextHelper.getTextByKey(getPlayer(), "entity.created_timestamp", ChronosUtil.formatDate(entity.createdTimestamp)));
+        lore.add(TextHelper.getTextByKey(getPlayer(), "entity.created_timestamp", ChronosUtil.Formatter.formatDate(entity.createdTimestamp)));
         lore.add(TextHelper.getTextByKey(getPlayer(), "entity.creator_name", entity.creatorName));
         lore.add(TextHelper.getTextByKey(getPlayer(), "player.target_player.name", entity.getTargetPlayer()));
         lore.add(TextHelper.getTextByKey(getPlayer(), "command", TextHelper.Parsers.escapeTags(entity.command)));
-        lore.add(TextHelper.getTextByKey(getPlayer(), "entity.executed_timestamp", ChronosUtil.formatDate(entity.executedTimestamp)));
+        lore.add(TextHelper.getTextByKey(getPlayer(), "entity.executed_timestamp", ChronosUtil.Formatter.formatDate(entity.executedTimestamp)));
 
         lore.add(TextHelper.getTextByKey(getPlayer(), "prompt.click.delete.right_click"));
 

@@ -305,11 +305,11 @@ public class PlaceholderInitializer extends ModuleInitializer {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("date", 1752000061565L);
         PlaceholderHelper.registerServerPlaceholder(descriptor, (server, arg) -> {
             if (arg == null || arg.isEmpty()) {
-                return Text.literal(ChronosUtil.getFormattedCurrentDate());
+                return Text.literal(ChronosUtil.Formatter.getFormattedCurrentDate());
             }
 
             try {
-                String currentDate = ChronosUtil.getFormattedCurrentDate(new SimpleDateFormat(arg));
+                String currentDate = ChronosUtil.Formatter.getFormattedCurrentDate(new SimpleDateFormat(arg));
                 return Text.literal(currentDate);
             } catch (Exception e) {
                 return Text.of("Invalid date formatter: " + arg);
