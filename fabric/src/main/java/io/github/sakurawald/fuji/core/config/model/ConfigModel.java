@@ -38,7 +38,7 @@ public class ConfigModel {
         @Document(id = 1751823748647L, value = """
             The language related options.
             """)
-        public Language language = new Language();
+        public Core.Language language = new Core.Language();
 
         @Document(id = 1751823755527L, value = """
             The permission related options.
@@ -140,7 +140,7 @@ public class ConfigModel {
     public static class Modules {
         @SerializedName(value = "fuji", alternate = "config")
         public Fuji fuji = new Fuji();
-        public Language language = new Language();
+        public Modules.Language language = new Modules.Language();
         public Chat chat = new Chat();
         public Placeholder placeholder = new Placeholder();
         public Predicate predicate = new Predicate();
@@ -495,7 +495,7 @@ public class ConfigModel {
             public boolean enable = false;
 
             public Sign sign = new Sign();
-            public Anvil anvil = new Anvil();
+            public Color.Anvil anvil = new Color.Anvil();
 
             public static class Sign {
                 public boolean enable = true;
@@ -513,7 +513,7 @@ public class ConfigModel {
             public Enchantment enchantment = new Enchantment();
             public GrindStone grindstone = new GrindStone();
             public StoneCutter stonecutter = new StoneCutter();
-            public Anvil anvil = new Anvil();
+            public Functional.Anvil anvil = new Functional.Anvil();
             public Cartography cartography = new Cartography();
             public EnderChest enderchest = new EnderChest();
             public Smithing smithing = new Smithing();
@@ -537,7 +537,6 @@ public class ConfigModel {
             }
 
             public static class Anvil {
-
                 public boolean enable = false;
             }
 

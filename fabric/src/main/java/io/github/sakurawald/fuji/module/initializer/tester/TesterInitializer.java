@@ -29,6 +29,8 @@ public class TesterInitializer extends ModuleInitializer {
     @CommandNode("run")
     private static int $run(@CommandSource ServerCommandSource source) {
 
+
+
         LogUtil.info("Done");
         return 0;
     }

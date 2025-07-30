@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.structure.GlobalBlockPos;
+import java.nio.charset.StandardCharsets;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
@@ -19,7 +20,7 @@ public class UuidHelper {
 
     public static @NotNull String convertStringToUUID(@NotNull String string) {
         // NOTE: Convert to UUID, to ensure the string is valid filesystem path.
-        byte[] bytes = string.getBytes();
+        byte[] bytes = string.getBytes(StandardCharsets.UTF_8);
         return UUID.nameUUIDFromBytes(bytes).toString();
     }
 

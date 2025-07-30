@@ -99,17 +99,13 @@ public abstract class BossBarTicket {
         // no-op
     }
 
-    /***
-     * @return abort this ticket
-     */
     protected boolean preProgressChange() {
+        // Returns abort this ticket?
         return true;
     }
 
-    /***
-     * @return abort this ticket
-     */
     protected boolean postProgressChange() {
+        // Returns abort this ticket?
         return true;
     }
 

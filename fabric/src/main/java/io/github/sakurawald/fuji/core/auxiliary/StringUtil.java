@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.core.auxiliary;
 
+import java.util.Locale;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
@@ -25,5 +26,13 @@ public class StringUtil {
         } else {
             return String.format("%.2fG", (double) bytes / (1024 * 1024 * 1024));
         }
+    }
+
+    public static @NotNull String toLowerCase(@NotNull String string) {
+        return string.toLowerCase(Locale.ENGLISH);
+    }
+
+    public static @NotNull String toUpperCase(@NotNull String string) {
+        return string.toUpperCase(Locale.ENGLISH);
     }
 }

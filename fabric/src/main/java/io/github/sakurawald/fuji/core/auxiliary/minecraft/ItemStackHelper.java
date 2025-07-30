@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import net.minecraft.item.ItemStack;
@@ -116,17 +117,15 @@ public class ItemStackHelper {
     }
 
     private static boolean filterItemMaterial(@NotNull ItemStack itemStack, String keyword) {
-        return RegistryHelper.toString(itemStack.getItem())
-            .toLowerCase()
-            .contains(keyword.toLowerCase());
+        return StringUtil.toLowerCase(RegistryHelper.toString(itemStack.getItem()))
+            .contains(StringUtil.toLowerCase(keyword));
     }
 
     @SuppressWarnings("RedundantIfStatement")
     private static boolean filterItemName(ItemStack itemStack, String keyword) {
         String itemName = TextHelper.Operators.visitString(itemStack.getName());
-        if (itemName
-            .toLowerCase()
-            .contains(keyword.toLowerCase())) return true;
+        if (StringUtil.toLowerCase(itemName)
+            .contains(StringUtil.toLowerCase(keyword))) return true;
         return false;
     }
 
@@ -134,9 +133,8 @@ public class ItemStackHelper {
     private static boolean filterItemLore(ItemStack itemStack, String keyword) {
         boolean matched = getLore(itemStack)
             .stream()
-            .anyMatch(text -> TextHelper.Operators.visitString(text)
-                .toLowerCase()
-                .contains(keyword.toLowerCase()));
+            .anyMatch(text -> StringUtil.toLowerCase(TextHelper.Operators.visitString(text))
+                .contains(StringUtil.toLowerCase(keyword)));
         if (matched) return true;
 
         return false;

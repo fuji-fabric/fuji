@@ -128,7 +128,7 @@ public class ServerHelper {
         getPlayerManager()
             .getPlayerList()
             .stream()
-            .filter(it -> it != player)
+            .filter(it -> !it.equals(player))
             .forEach(p -> sendPacket(packet, player));
     }
 

@@ -8,6 +8,7 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.exception.FailedToLoadResourceException;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
+import java.nio.charset.StandardCharsets;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +43,7 @@ public abstract class ResourceConfigurationHandler extends BaseConfigurationHand
         if (inputStream == null) {
             throw new FailedToLoadResourceException("Failed to load resource from virtual jar stream: " + resourcePath);
         }
-        @Cleanup Reader reader = new BufferedReader(new InputStreamReader(inputStream));
+        @Cleanup Reader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
         return JsonParser.parseReader(reader);
     }
 

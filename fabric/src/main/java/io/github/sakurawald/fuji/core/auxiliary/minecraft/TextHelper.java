@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
+import com.google.errorprone.annotations.Keep;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
@@ -20,6 +21,7 @@ import eu.pb4.placeholders.api.parsers.tag.TextTag;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
+import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.config.handler.impl.LanguageConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ResourceConfigurationHandler;
@@ -77,6 +79,7 @@ public class TextHelper {
 
     @ForDeveloper("The functions used to interact with the Text Parser.")
     public static class Parsers {
+        @Keep
         private static final int THIS_STATIC_VARIABLE_IS_USED_TO_ENSURE_THE_EXTENDED_TAGS_ARE_REGISTERED_BEFORE_CREATING_THE_DEFAULT_PARSER = registerExtendedTags();
         public static final NodeParser POWERFUL_PARSER = makePowerfulParser();
         public static final NodeParser STYLE_ONLY_PARSER = makeStyleOnlyParser();
@@ -294,14 +297,15 @@ public class TextHelper {
             return languageCode + ".json";
         }
 
+        @SuppressWarnings("StringSplitter")
         private static String unifyLanguageCode(String input) {
             if (input == null || !input.contains("_")) {
                 return input;
             }
 
             String[] components = input.split("_");
-            String language = components[0].toLowerCase();
-            String region = components[1].toUpperCase();
+            String language = StringUtil.toLowerCase(components[0]);
+            String region = StringUtil.toUpperCase(components[1]);
             return language + "_" + region;
         }
 
@@ -405,7 +409,7 @@ public class TextHelper {
         }
 
         public static boolean isUnSupportedLanguageJsonObject(JsonObject languageJson) {
-            return languageJson == UNSUPPORTED_LANGUAGE_MARKER;
+            return UNSUPPORTED_LANGUAGE_MARKER.equals(languageJson);
         }
     }
 
@@ -589,6 +593,7 @@ public class TextHelper {
         return parser.parseText(TextNode.of(languageValue), parserContext);
     }
 
+    @SuppressWarnings("AnnotateFormatMethod")
     private static @NotNull String formatStringArgs(@NotNull String string, Object... args) {
         // NOTE: This brings the in-consistent between Text Placeholder API. (e.g. `%player:name%` and `%%player:name%%`.)
         // NOTE: When `Java Standard Formatter` is used, you have to write `%%` to mean the `%` for `Text Placeholder API`.

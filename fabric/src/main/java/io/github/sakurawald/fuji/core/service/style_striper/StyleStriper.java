@@ -61,15 +61,13 @@ public class StyleStriper {
     }
 
     @DocStringProvider(id = 1751999453562L, value = """
+        The permission used for `style tags striper`.
+        A player requires the `corresponding permission` to use that `style tag` in `a specific style type`.
         """)
     private static PermissionDescriptor getOrCreatePermissionDescriptorForStyleType(String styleType) {
         return CREATED_STYLE_TYPES.computeIfAbsent(styleType, (it) -> {
             String pattern = "fuji.style.%s.<style-tag>";
             pattern = pattern.formatted(styleType);
-            String document = """
-                The permission used for `style tags striper`.
-                A player requires the `corresponding permission` to use that `style tag` in `%s` style type.
-                """.formatted(styleType);
             return new PermissionDescriptor(pattern, 1751999453562L);
         });
     }

@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
@@ -60,7 +61,7 @@ public class JsonUtil {
 
     @SneakyThrows(IOException.class)
     public static JsonElement readJsonElement(Path path) {
-        @Cleanup Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path.toFile())));
+        @Cleanup Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path.toFile()), StandardCharsets.UTF_8));
         return JsonParser.parseReader(reader);
     }
 }

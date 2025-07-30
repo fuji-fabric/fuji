@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.core.auxiliary;
 
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
+import java.nio.charset.StandardCharsets;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +39,7 @@ public class ReflectionUtil {
             }
 
             /* Read the bits from the virtual input stream. */
-            @Cleanup BufferedReader reader = new BufferedReader(new InputStreamReader(virtualInputStream));
+            @Cleanup BufferedReader reader = new BufferedReader(new InputStreamReader(virtualInputStream, StandardCharsets.UTF_8));
             List<String> lines = new ArrayList<>();
             String line;
             while ((line = reader.readLine()) != null) {

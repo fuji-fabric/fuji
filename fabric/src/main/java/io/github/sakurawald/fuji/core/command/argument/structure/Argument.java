@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.core.command.argument.structure;
 
+import com.google.errorprone.annotations.Keep;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
@@ -21,6 +22,8 @@ import java.lang.reflect.Parameter;
  */
 @Getter
 public class Argument {
+
+    @Keep
     private static final int THE_METHOD_PARAMETER_INDEX_FOR_LITERAL_ARGUMENT = -1;
 
     final @Nullable Class<?> type;

@@ -2,13 +2,15 @@ package io.github.sakurawald.fuji.core.auxiliary;
 
 import io.github.sakurawald.fuji.core.config.Configs;
 import java.time.DayOfWeek;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 import org.jetbrains.annotations.NotNull;
 
-import java.text.SimpleDateFormat;
 import org.jetbrains.annotations.Nullable;
 
 public class ChronosUtil {
@@ -27,17 +29,17 @@ public class ChronosUtil {
 
     public static class Formatter {
         private static final String FALLBACK_DATE_FORMATTER_PATTERN = "yyyy-MM-dd HH:mm:ss";
-        private static final SimpleDateFormat FALLBACK_DATE_FORMATTER = new SimpleDateFormat(FALLBACK_DATE_FORMATTER_PATTERN);
+        private static final DateTimeFormatter FALLBACK_DATE_FORMATTER = DateTimeFormatter.ofPattern(FALLBACK_DATE_FORMATTER_PATTERN);
         private static String effectiveDateFormatterPattern = null;
-        private static SimpleDateFormat effectiveDateFormatter = null;
+        private static DateTimeFormatter effectiveDateFormatter = null;
 
-        public static SimpleDateFormat getEffectiveDateFormatter() {
+        public static DateTimeFormatter getEffectiveDateFormatter() {
             /* Cache for effective formatter variable. */
             String specifiedDateFormatterPattern = Configs.MAIN_CONTROL_CONFIG.model().core.formatter.date_formatter;
             if (effectiveDateFormatterPattern == null
                 || (!effectiveDateFormatterPattern.equals(specifiedDateFormatterPattern) && !effectiveDateFormatterPattern.equals(FALLBACK_DATE_FORMATTER_PATTERN))) {
                 try {
-                    effectiveDateFormatter = new SimpleDateFormat(specifiedDateFormatterPattern);
+                    effectiveDateFormatter = DateTimeFormatter.ofPattern(specifiedDateFormatterPattern);
                     effectiveDateFormatterPattern = specifiedDateFormatterPattern;
                 } catch (Exception e) {
                     LogUtil.error("""
@@ -55,12 +57,12 @@ public class ChronosUtil {
         }
 
         public static @NotNull String getFormattedCurrentDate() {
-            SimpleDateFormat formatter = getEffectiveDateFormatter();
+            DateTimeFormatter formatter = getEffectiveDateFormatter();
             return getFormattedCurrentDate(formatter);
         }
 
-        public static @NotNull String getFormattedCurrentDate(SimpleDateFormat formatter) {
-            return formatter.format(System.currentTimeMillis());
+        public static @NotNull String getFormattedCurrentDate(DateTimeFormatter formatter) {
+            return formatDate(System.currentTimeMillis());
         }
 
         public static @NotNull String formatDate(@Nullable Long timeMillis) {
@@ -68,8 +70,11 @@ public class ChronosUtil {
                 return "NONE";
             }
 
-            SimpleDateFormat formatter = getEffectiveDateFormatter();
-            return formatter.format(timeMillis);
+            ZonedDateTime zonedDateTime = Instant.ofEpochMilli(timeMillis)
+                .atZone(ZoneId.systemDefault());
+
+            DateTimeFormatter formatter = getEffectiveDateFormatter();
+            return zonedDateTime.format(formatter);
         }
     }
 

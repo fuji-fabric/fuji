@@ -26,6 +26,7 @@ public enum HeightFindingStrategy implements HeightFinder {
         this.heightFinder = heightFinder;
     }
 
+    @SuppressWarnings("OperatorPrecedence")
     private static int computeMaxY(@NotNull Chunk chunk) {
         final int maxY = WorldHelper.getTopY(chunk);
         ChunkSection[] sections = chunk.getSectionArray();

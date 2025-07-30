@@ -21,6 +21,7 @@ import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
+import java.nio.charset.StandardCharsets;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -137,7 +138,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
                 writeStorage();
             } else {
                 // Merge data tree with schema tree: the gson.fromJson() will use default model as the schema tree, to generate missing default kv-pairs in data tree.
-                @Cleanup Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.path.toFile())));
+                @Cleanup Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.path.toFile()), StandardCharsets.UTF_8));
                 T defaultModel = getDefaultModel();
                 this.model = (T) gson.fromJson(reader, defaultModel.getClass());
 

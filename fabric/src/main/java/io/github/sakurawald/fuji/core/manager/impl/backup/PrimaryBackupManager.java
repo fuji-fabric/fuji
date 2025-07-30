@@ -18,6 +18,7 @@ public class PrimaryBackupManager extends BaseBackupManager {
         super(Fuji.MOD_CONFIG_PATH.resolve("backup"));
     }
 
+    @Override
     protected boolean shouldSkipPath(@NotNull Path dir) {
         return Configs.MAIN_CONTROL_CONFIG.model().core.backup.skip
             .stream()

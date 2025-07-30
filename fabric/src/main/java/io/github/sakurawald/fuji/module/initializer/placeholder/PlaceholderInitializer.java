@@ -28,6 +28,7 @@ import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.module.initializer.placeholder.gui.PlaceholderGui;
 import io.github.sakurawald.fuji.module.initializer.placeholder.job.UpdateSumUpPlaceholderJob;
 import io.github.sakurawald.fuji.module.initializer.placeholder.structure.SumUpPlaceholder;
+import java.time.format.DateTimeFormatter;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -38,7 +39,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 import org.apache.commons.lang3.StringUtils;
 
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -309,7 +309,8 @@ public class PlaceholderInitializer extends ModuleInitializer {
             }
 
             try {
-                String currentDate = ChronosUtil.Formatter.getFormattedCurrentDate(new SimpleDateFormat(arg));
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern(arg);
+                String currentDate = ChronosUtil.Formatter.getFormattedCurrentDate(formatter);
                 return Text.literal(currentDate);
             } catch (Exception e) {
                 return Text.of("Invalid date formatter: " + arg);

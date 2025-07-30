@@ -54,7 +54,7 @@ public abstract class CrudPagedGui<T> extends PagedGui<T> {
         GuiElementBuilder builder = this.toGuiElementBuilder(entity);
 
         /* Set click callback. */
-        builder.setCallback(dispatchClickType(getBackendGui(), entity));
+        builder.setCallback(dispatchClickType(entity));
 
         return builder.build();
     }
@@ -74,10 +74,8 @@ public abstract class CrudPagedGui<T> extends PagedGui<T> {
     protected abstract boolean canDeleteEntity(T entity);
 
     @SuppressWarnings("UnnecessaryReturnStatement")
-    private GuiElementInterface.@NotNull ItemClickCallback dispatchClickType(@NotNull SimpleGui backendGui, T entity) {
+    private GuiElementInterface.ItemClickCallback dispatchClickType(T entity) {
         return (index, clickType, actionType) -> {
-            GuiElementInterface element = backendGui.getSlot(index);
-
             /* Dispatch click type. */
             if (clickType == ClickType.MOUSE_LEFT) {
                 onLeftClickEntity(entity);

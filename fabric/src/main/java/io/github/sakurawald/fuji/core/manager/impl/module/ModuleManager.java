@@ -46,9 +46,6 @@ public class ModuleManager extends BaseManager {
         return result;
     }
 
-    /**
-     * @return the module path for given class name, if the class is not inside a module, then a special module path List.of("core") will be returned.
-     */
     public static @NotNull List<String> computeSplitModulePath(@NotNull String className) {
         if (MODULE_PATHS.isEmpty()) {
             LogUtil.warn("This is the first time we generating the module graph file, we just ");

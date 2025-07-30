@@ -20,6 +20,7 @@ public class BossBarManager extends BaseManager {
     private final List<BossBarTicket> tickets = new CopyOnWriteArrayList<>();
     private final List<BossBarTicket> addedTickets = new CopyOnWriteArrayList<>();
 
+    @Override
     public void onInitialize() {
         ServerTickEvents.START_SERVER_TICK.register(this::onServerTick);
 
