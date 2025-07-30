@@ -48,8 +48,8 @@ public class JailInfoGui extends PagedGui<JailRecord> {
             .setName(TextHelper.getTextByKey(player, "player.name", entity.getPrisonerName()))
             .setLore(List.of(
                 TextHelper.getTextByKey(player, "jail.record.enable", entity.isEnable())
-                , TextHelper.getTextByKey(player, "jail.record.creator_name", entity.getCreatorName())
                 , TextHelper.getTextByKey(player, "jail.record.prisoner_name", entity.getPrisonerName())
+                , TextHelper.getTextByKey(player, "jail.record.creator_name", entity.getCreatorName())
                 , TextHelper.getTextByKey(player, "jail.record.created_time", entity.getFormattedCreatedTimestamp())
                 , TextHelper.getTextByKey(player, "jail.record.jail_id", this.jailDescriptor.getId())
                 , TextHelper.getTextByKey(player, "jail.record.specified_jail_duration", entity.getSpecifiedJailDuration())
