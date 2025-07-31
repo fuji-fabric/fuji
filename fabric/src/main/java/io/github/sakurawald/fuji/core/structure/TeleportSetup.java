@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.core.structure;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import lombok.Data;
 import net.minecraft.server.world.ServerWorld;
 
@@ -53,7 +53,7 @@ public class TeleportSetup {
     final int maxTryTimes;
 
     public ServerWorld toDimension() {
-        return RegistryHelper.getServerWorld(this.dimension);
+        return ServerHelper.getWorldOrThrow(this.dimension);
     }
 
 }

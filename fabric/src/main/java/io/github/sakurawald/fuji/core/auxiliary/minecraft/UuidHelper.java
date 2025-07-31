@@ -32,7 +32,7 @@ public class UuidHelper {
     }
 
     public static String getAttachedUuid(@NotNull GlobalBlockPos globalBlockPos) {
-        ServerWorld dimension = globalBlockPos.toDimension();
+        ServerWorld dimension = ServerHelper.getWorldOrThrow(globalBlockPos.getDimension());
         BlockPos blockPos = globalBlockPos.toBlockPos();
         return getAttachedUuid(dimension, blockPos);
     }

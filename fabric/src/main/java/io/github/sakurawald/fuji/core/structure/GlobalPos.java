@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.core.structure;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import java.util.Optional;
 import lombok.Data;
 import lombok.With;
 import net.minecraft.entity.Entity;
@@ -65,18 +66,15 @@ public class GlobalPos {
 
     public void teleport(@NotNull ServerPlayerEntity player, Set<PositionFlag> flags) {
         /* Get the dimension instance from server. */
-        ServerWorld dimension = RegistryHelper.getServerWorld(this.level);
-        if (dimension == null) {
-            TextHelper.sendTextByKey(player, "world.dimension.not_found", this.level);
-            return;
-        }
-
-        /* Make position flags. */
-        #if MC_VER <= MC_1_21
-            player.teleport(dimension, this.x, this.y, this.z, flags, this.yaw, this.pitch);
-        #elif MC_VER > MC_1_21
-            player.teleport(dimension, this.x, this.y, this.z, flags, this.yaw, this.pitch, true);
-        #endif
+        Optional<ServerWorld> dimension = RegistryHelper.getServerWorld(this.level);
+        dimension.ifPresentOrElse($dimension -> {
+            /* Make position flags. */
+            #if MC_VER <= MC_1_21
+            player.teleport($dimension, this.x, this.y, this.z, flags, this.yaw, this.pitch);
+            #elif MC_VER > MC_1_21
+            player.teleport($dimension, this.x, this.y, this.z, flags, this.yaw, this.pitch, true);
+            #endif
+        }, () -> TextHelper.sendTextByKey(player, "world.dimension.not_found", this.level));
     }
 
     public void teleport(@NotNull ServerPlayerEntity player) {

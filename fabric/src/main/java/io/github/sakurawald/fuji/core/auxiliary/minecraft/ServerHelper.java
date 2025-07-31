@@ -58,6 +58,12 @@ public class ServerHelper {
             .findFirst();
     }
 
+    public static @NotNull ServerWorld getWorldOrThrow(String dimensionId) {
+        return RegistryHelper
+            .getServerWorld(dimensionId)
+            .orElseThrow(() -> new IllegalStateException("Dimension %s not found.".formatted(dimensionId)));
+    }
+
     public static @Nullable CommandDispatcher<ServerCommandSource> getCommandDispatcher() {
         // NOTE: It's null on server startup.
         if (getServer() == null

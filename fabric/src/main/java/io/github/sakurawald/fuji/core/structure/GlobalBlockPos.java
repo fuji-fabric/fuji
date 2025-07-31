@@ -3,7 +3,6 @@ package io.github.sakurawald.fuji.core.structure;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -21,10 +20,6 @@ public class GlobalBlockPos {
         this.x = blockPos.getX();
         this.y = blockPos.getY();
         this.z = blockPos.getZ();
-    }
-
-    public ServerWorld toDimension() {
-        return RegistryHelper.getServerWorld(this.dimension);
     }
 
     public @NotNull BlockPos toBlockPos() {

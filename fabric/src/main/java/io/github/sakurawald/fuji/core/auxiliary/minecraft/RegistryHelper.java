@@ -62,7 +62,7 @@ public class RegistryHelper {
             .getCombinedRegistryManager();
     }
 
-    public static <T> Registry<T> getRegistry(RegistryKey<? extends Registry<? extends T>> registryKey) {
+    public static <T> Registry<T> getRegistry(@NotNull RegistryKey<? extends Registry<? extends T>> registryKey) {
         return getCombinedRegistryManager()
             #if MC_VER <= MC_1_21
                 .get(registryKey);
@@ -71,7 +71,7 @@ public class RegistryHelper {
             #endif
     }
 
-    public static <T> RegistryEntryLookup<T> getRegistryWrapper(RegistryKey<? extends Registry<? extends T>> registryKey) {
+    public static <T> RegistryEntryLookup<T> getRegistryWrapper(@NotNull RegistryKey<? extends Registry<? extends T>> registryKey) {
         return getCombinedRegistryManager()
             #if MC_VER <= MC_1_21
                 .getWrapperOrThrow(registryKey);
@@ -80,24 +80,24 @@ public class RegistryHelper {
             #endif
     }
 
-    public static <T> RegistryKey<T> getRegistryKey(@NotNull RegistryKey<? extends Registry<T>> keyOfRegistry, Identifier identifier) {
-        return RegistryKey.of(keyOfRegistry, identifier);
+    public static <T> RegistryKey<T> ofRegistryKey(@NotNull RegistryKey<? extends Registry<T>> registryKeyOfRegistry, @NotNull Identifier identifier) {
+        return RegistryKey.of(registryKeyOfRegistry, identifier);
     }
 
     public static <T> Optional<RegistryEntry<T>> getRegistryEntry(@NotNull RegistryKey<? extends Registry<T>> keyOfRegistry, Identifier identifier) {
         Registry<T> registry = getRegistry(keyOfRegistry);
-        T t = registry.get(identifier);
-        RegistryEntry<T> entry = registry.getEntry(t);
+        T object = registry.get(identifier);
+        RegistryEntry<T> entry = registry.getEntry(object);
         return Optional.ofNullable(entry);
     }
 
-    public static @Nullable ServerWorld getServerWorld(@Nullable String identifier) {
-        if (identifier == null) return null;
+    public static Optional<ServerWorld> getServerWorld(@Nullable String identifier) {
+        if (identifier == null) return Optional.empty();
 
-        RegistryKey<World> key = getRegistryKey(RegistryKeys.WORLD, RegistryHelper.makeIdentifier(identifier));
-        return ServerHelper
+        RegistryKey<World> key = ofRegistryKey(RegistryKeys.WORLD, RegistryHelper.makeIdentifier(identifier));
+        return Optional.ofNullable(ServerHelper
             .getServer()
-            .getWorld(key);
+            .getWorld(key));
     }
 
     public static @NotNull Item getItem(@NotNull String identifier) {

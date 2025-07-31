@@ -35,13 +35,14 @@ public class RandomTeleporter {
             LogUtil.info("Request rtp: {}", player.getGameProfile().getName());
             Stopwatch timer = Stopwatch.createStarted();
 
-            ServerWorld world = RegistryHelper.getServerWorld(setup.getDimension());
-            if (world == null) {
+            Optional<ServerWorld> world = RegistryHelper.getServerWorld(setup.getDimension());
+            if (world.isEmpty()) {
                 LogUtil.debug("Abort rtp for {} (target dimension not found in server)", player);
                 TextHelper.sendTextByKey(player, "world.dimension.not_found");
                 return;
             }
 
+            ServerWorld $world = world.get();
             Optional<BlockPos> result;
 
             int triedTimes = 0;
@@ -57,7 +58,7 @@ public class RandomTeleporter {
             }
 
             // teleport the player
-            GlobalPos globalPos = new GlobalPos(world, result.get().getX() + 0.5, result.get().getY(), result.get().getZ() + 0.5, 0, 0);
+            GlobalPos globalPos = new GlobalPos($world, result.get().getX() + 0.5, result.get().getY(), result.get().getZ() + 0.5, 0, 0);
             ServerHelper.executeSync(() -> {
                 // run the teleport action in main-thread
                 globalPos.teleport(player);
@@ -70,7 +71,7 @@ public class RandomTeleporter {
 
             // cost
             var cost = timer.stop();
-            LogUtil.info("Response rtp: {} has been teleported to ({} {} {} {}) (cost = {})", player.getGameProfile().getName(), world.getRegistryKey().getValue(), result.get().getX(), result.get().getY(), result.get().getZ(), cost);
+            LogUtil.info("Response rtp: {} has been teleported to ({} {} {} {}) (cost = {})", player.getGameProfile().getName(), $world.getRegistryKey().getValue(), result.get().getX(), result.get().getY(), result.get().getZ(), cost);
         });
     }
 

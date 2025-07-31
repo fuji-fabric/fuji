@@ -107,10 +107,10 @@ public class PlayerHelper {
     }
 
     public static void setServerWorld(@NotNull ServerPlayerEntity player, @Nullable String dimensionId) {
-        ServerWorld world = RegistryHelper.getServerWorld(dimensionId);
-        if (world != null) {
-            player.setServerWorld(world);
-        }
+        Optional<ServerWorld> world = RegistryHelper.getServerWorld(dimensionId);
+        world.ifPresent($world -> {
+            player.setServerWorld($world);
+        });
     }
 
     public static void playSound(ServerPlayerEntity player, SoundEvent soundEvent, SoundCategory soundCategory, float volume, float pitch) {
