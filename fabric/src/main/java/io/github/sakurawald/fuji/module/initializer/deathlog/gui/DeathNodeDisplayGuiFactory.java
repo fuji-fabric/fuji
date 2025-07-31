@@ -29,7 +29,7 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
         SimpleGui displayGui = super.build(viewingPlayer);
 
         /* Place the back button. */
-        GuiElement backButton = GuiHelper.makeBackButton(viewingPlayer)
+        GuiElement backButton = GuiHelper.Button.makeBackButton(viewingPlayer)
             .setCallback(() -> {
                 displayGui.close();
             }).build();

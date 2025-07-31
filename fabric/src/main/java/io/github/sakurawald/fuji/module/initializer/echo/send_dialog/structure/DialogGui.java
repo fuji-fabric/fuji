@@ -63,7 +63,7 @@ public class DialogGui extends SimpleGui {
             .setCallback(() -> onYesButtonClicked(player, yesButtonCommand))
         );
 
-        GuiHelper.fillEmptySlots(this, GuiHelper.makeSlotPlaceholderButton());
+        GuiHelper.Filler.fillEmptySlots(this, GuiHelper.Button.makeSlotPlaceholderButton());
     }
 
     private void onNoButtonClicked(ServerPlayerEntity player, String noButtonCommand) {

@@ -93,7 +93,7 @@ public class AboutGui extends PagedGui<Person> {
 
     @Override
     protected GuiElementInterface toGuiElement(Person entity) {
-        return GuiHelper.makeLuckyBlockSkull()
+        return GuiHelper.Button.makeLuckyBlockButton()
             .setName(TextHelper.getTextByKey(getPlayer(), "contact.name", entity.getName()))
             .setLore(makeTextListFromContact(entity.getContact()))
             .setCallback(makeCallback(entity))

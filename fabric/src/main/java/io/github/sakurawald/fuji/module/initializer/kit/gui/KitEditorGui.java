@@ -32,9 +32,9 @@ public class KitEditorGui extends PagedGui<Kit> {
         super(null, player, TextHelper.getTextByKey(player, "kit.gui.editor.title"), entities, pageIndex);
 
         /* Make footer. */
-        getFooter().setSlot(1, GuiHelper.makeHelpButton(player)
+        getFooter().setSlot(1, GuiHelper.Button.makeHelpButton(player)
             .setLore(TextHelper.getTextListByKey(player, "kit.gui.editor.help.lore")));
-        getFooter().setSlot(4, GuiHelper.makeAddButton(player).setCallback(() -> new InputSignGui(player, TextHelper.getTextByKey(player, "prompt.input.name")) {
+        getFooter().setSlot(4, GuiHelper.Button.makeAddButton(player).setCallback(() -> new InputSignGui(player, TextHelper.getTextByKey(player, "prompt.input.name")) {
 
             @Override
             public void onClose() {
@@ -68,7 +68,7 @@ public class KitEditorGui extends PagedGui<Kit> {
 
         /* Place the forbidden zone placeholder items. */
         for (int i = 41; i <= 44; i++) {
-            simpleInventory.setStack(i, GuiHelper.makeBarrierButton().getItemStack());
+            simpleInventory.setStack(i, GuiHelper.Button.makeInvalidSlotPlaceholderButton().getItemStack());
         }
 
         /* Make a generic container GUI for kit editing. */

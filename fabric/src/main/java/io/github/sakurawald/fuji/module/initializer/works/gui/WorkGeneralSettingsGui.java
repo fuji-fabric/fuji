@@ -30,7 +30,7 @@ public class WorkGeneralSettingsGui extends SimpleGui {
         placeSetEntityIntroductionButton(player, work);
         placeSetEntityDeleteButton(player, work);
 
-        this.setSlot(8, GuiHelper.makePreviousPageButton(player)
+        this.setSlot(8, GuiHelper.Button.makePreviousPageButton(player)
             .setCallback(parentGui::open)
         );
     }

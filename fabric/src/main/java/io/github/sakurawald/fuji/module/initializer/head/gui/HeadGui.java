@@ -36,7 +36,7 @@ public class HeadGui extends SimpleGui {
             .setCallback(() -> new PlayerHeadGui(this).open()));
 
         /* Place search button. */
-        this.setSlot(this.getSize() - 1, GuiHelper
+        this.setSlot(this.getSize() - 1, GuiHelper.Button
             .makeSearchButton(player)
             .setCallback(() -> new SearchHeadsInputGui(this).open()));
 

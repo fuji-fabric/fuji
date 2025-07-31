@@ -158,7 +158,7 @@ public class ProductionWork extends Work implements Schedulable {
                 }.open()
             )
         );
-        gui.setSlot(8, GuiHelper.makeBackButton(player).setCallback(parentGui::open)
+        gui.setSlot(8, GuiHelper.Button.makeBackButton(player).setCallback(parentGui::open)
         );
 
         gui.open();

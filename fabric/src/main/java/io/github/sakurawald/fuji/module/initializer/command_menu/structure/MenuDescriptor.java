@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.command_menu.structure;
 
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
@@ -46,15 +47,9 @@ public class MenuDescriptor {
         Defined `slots` for this GUI.
         """)
     public List<SlotDescriptor> slots;
-    private ScreenHandlerType<?> getScreenHandlerType() {
-        if (this.lines == 1) return ScreenHandlerType.GENERIC_9X1;
-        if (this.lines == 2) return ScreenHandlerType.GENERIC_9X2;
-        if (this.lines == 3) return ScreenHandlerType.GENERIC_9X3;
-        if (this.lines == 4) return ScreenHandlerType.GENERIC_9X4;
-        if (this.lines == 5) return ScreenHandlerType.GENERIC_9X5;
-        if (this.lines == 6) return ScreenHandlerType.GENERIC_9X6;
 
-        return ScreenHandlerType.GENERIC_9X6;
+    private ScreenHandlerType<?> getScreenHandlerType() {
+        return GuiHelper.getGenericContainerType(this.lines);
     }
 
     public SimpleGui build(ServerPlayerEntity viewingPlayer) {

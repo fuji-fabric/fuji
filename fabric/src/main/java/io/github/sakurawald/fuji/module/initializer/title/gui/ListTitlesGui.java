@@ -24,19 +24,19 @@ public class ListTitlesGui extends PagedGui<TitleDescriptor> {
 
         drawInfoButton();
 
-        getFooter().setSlot(4, GuiHelper
+        getFooter().setSlot(4, GuiHelper.Button
             .makeHelpButton(player)
             .setLore(TextHelper.getTextListByKey(player, "title.list.help.lore")));
 
         if (isViewingAllTitles(entities)) {
-            getFooter().setSlot(5, GuiHelper
-                .makeLetterAButton(player)
+            getFooter().setSlot(5, GuiHelper.Button
+                .makeLetterAButton()
                 .setName(TextHelper.getTextByKey(player, "entity.list.mine"))
                 .setCallback(() -> makeInstance(player, TitleService.getObtainedTitles(player)).open())
             );
         } else {
-            getFooter().setSlot(5, GuiHelper
-                .makeHeartButton(player)
+            getFooter().setSlot(5, GuiHelper.Button
+                .makeHeartButton()
                 .setName(TextHelper.getTextByKey(player, "entity.list.all"))
                 .setCallback(() -> makeInstance(player, TitleService.getAllTitles()).open())
             );
@@ -50,7 +50,7 @@ public class ListTitlesGui extends PagedGui<TitleDescriptor> {
             .getActiveTitle(player)
             .map(TitleDescriptor::getDisplayName);
 
-        getFooter().setSlot(3, GuiHelper
+        getFooter().setSlot(3, GuiHelper.Button
             .makeInfoButton(player)
             .setLore(List.of(
                 TextHelper.getTextByKey(player, "title.title.active", activeTitle.orElse(TitleService.getNoTitleActiveText()))

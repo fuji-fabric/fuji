@@ -77,11 +77,11 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
 
         /* Place UI items.  */
         for (int i = 0; i < 9; i++) {
-            gui.setSlot(i, GuiHelper.makeSlotPlaceholderButton().getItemStack());
+            gui.setSlot(i, GuiHelper.Button.makeSlotPlaceholderButton().getItemStack());
         }
         gui.setSlot(4, shulkerBoxStack);
         if (this.parentGui != null) {
-            gui.setSlot(LINE_SIZE - 1, GuiHelper.makeBackButton(viewingPlayer).setCallback(parentGui::open));
+            gui.setSlot(LINE_SIZE - 1, GuiHelper.Button.makeBackButton(viewingPlayer).setCallback(parentGui::open));
         }
 
         /* Place container items. */

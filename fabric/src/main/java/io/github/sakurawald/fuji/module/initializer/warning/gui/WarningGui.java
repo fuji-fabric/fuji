@@ -32,7 +32,7 @@ public class WarningGui extends PagedGui<String> {
 
     @Override
     protected GuiElementInterface toGuiElement(String entity) {
-        GuiElementBuilder builder = GuiHelper.makeLuckyBlockSkull();
+        GuiElementBuilder builder = GuiHelper.Button.makeLuckyBlockButton();
         builder
             .setName(Text.literal(entity))
             .setCallback(() -> ListPlayerWarningsGui.make(getBackendGui(), getPlayer(), entity).open());

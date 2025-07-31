@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.module.initializer.fuji.gui;
 
-import com.mojang.brigadier.tree.CommandNode;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
@@ -10,7 +9,6 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
 import io.github.sakurawald.fuji.module.initializer.fuji.structure.ServerCommandNodeWrapper;
 import net.minecraft.item.Items;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +23,7 @@ public class ServerCommandsInspectionGui extends PagedGui<ServerCommandNodeWrapp
     public ServerCommandsInspectionGui(ServerPlayerEntity player, @NotNull List<ServerCommandNodeWrapper> entities, int pageIndex) {
         super(null, player, TextHelper.getTextByKey(player, "fuji.inspect.server_commands.gui.title"), entities, pageIndex);
 
-        getFooter().setSlot(4, GuiHelper.makeHelpButton(player)
+        getFooter().setSlot(4, GuiHelper.Button.makeHelpButton(player)
             .setLore(TextHelper.getTextListByKey(player, "fuji.inspect.server_commands.gui.help.lore")));
     }
 

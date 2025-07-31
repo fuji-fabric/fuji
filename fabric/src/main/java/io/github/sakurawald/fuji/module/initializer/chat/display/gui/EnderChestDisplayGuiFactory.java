@@ -30,7 +30,7 @@ public class EnderChestDisplayGuiFactory extends BaseDisplayGuiFactory {
 
         /* Place UI items. */
         for (int i = 0; i < 9; i++) {
-            gui.setSlot(i, GuiHelper.makeSlotPlaceholderButton().getItemStack());
+            gui.setSlot(i, GuiHelper.Button.makeSlotPlaceholderButton().getItemStack());
         }
         gui.setSlot(4, Items.ENDER_CHEST.getDefaultStack());
 

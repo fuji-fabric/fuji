@@ -91,10 +91,10 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         entities.add(debugButton.build());
 
         /* Fill the first line. */
-        entities.add(GuiHelper.makeSlotPlaceholderButton());
-        entities.add(GuiHelper.makeSlotPlaceholderButton());
-        entities.add(GuiHelper.makeSlotPlaceholderButton());
-        entities.add(GuiHelper.makeSlotPlaceholderButton());
+        entities.add(GuiHelper.Button.makeSlotPlaceholderButton());
+        entities.add(GuiHelper.Button.makeSlotPlaceholderButton());
+        entities.add(GuiHelper.Button.makeSlotPlaceholderButton());
+        entities.add(GuiHelper.Button.makeSlotPlaceholderButton());
     }
 
     @Override
@@ -146,7 +146,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
             .setLore(TextHelper.getTextListByKey(player, "module.status.disabled.gui.lore"));
 
         /* Place it on empty slots. */
-        GuiHelper.fillEmptySlots(gui, builder);
+        GuiHelper.Filler.fillEmptySlots(gui, builder);
    }
 
     private static void attachColorBoxes(ServerPlayerEntity player, List<GuiElementInterface> entities, String modulePathString) {
