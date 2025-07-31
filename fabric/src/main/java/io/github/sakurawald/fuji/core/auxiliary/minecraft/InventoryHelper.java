@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import com.google.common.collect.ImmutableList;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SimpleInventory;
@@ -8,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class InventoryHelper {
 
@@ -17,9 +19,8 @@ public class InventoryHelper {
             , EquipmentSlot.LEGS
             , EquipmentSlot.FEET);
 
-    public static DefaultedList<ItemStack> getMainStacks(PlayerEntity player) {
-        // Main Stacks (1*9 slots + 3*9 slots)
-
+    @ForDeveloper("Main Stacks (1*9 slots + 3*9 slots)")
+    public static DefaultedList<ItemStack> getMainStacks(@NotNull PlayerEntity player) {
         #if MC_VER <= MC_1_21_4
         return player.getInventory().main;
         #elif MC_VER >= MC_1_21_5
@@ -27,18 +28,16 @@ public class InventoryHelper {
         #endif
     }
 
-    public static DefaultedList<ItemStack> getOffhandStack(PlayerEntity player) {
-        // Offhand (1 slot) = EquipmentSlot.OFFHAND
-
+    @ForDeveloper("Offhand (1 slot) = EquipmentSlot.OFFHAND")
+    public static DefaultedList<ItemStack> getOffhandStack(@NotNull PlayerEntity player) {
         DefaultedList<ItemStack> itemStacks = DefaultedList.ofSize(1, ItemStack.EMPTY);
         EquipmentSlot offhand = EquipmentSlot.OFFHAND;
         itemStacks.set(0, player.getEquippedStack(offhand));
         return itemStacks;
     }
 
-    public static DefaultedList<ItemStack> getArmorStacks(PlayerEntity player) {
-        // Armor (4 slots) = EquipmentSlot.HEAD + EquipmentSlot.CHEST + EquipmentSlot.LEGS + EquipmentSlot.FEET
-
+    @ForDeveloper("Armor (4 slots) = EquipmentSlot.HEAD + EquipmentSlot.CHEST + EquipmentSlot.LEGS + EquipmentSlot.FEET")
+    public static DefaultedList<ItemStack> getArmorStacks(@NotNull PlayerEntity player) {
         DefaultedList<ItemStack> itemStacks = DefaultedList.ofSize(PLAYER_ARMOR_SLOTS.size(), ItemStack.EMPTY);
 
         for (int i = 0; i < PLAYER_ARMOR_SLOTS.size(); i++) {
@@ -49,7 +48,7 @@ public class InventoryHelper {
         return itemStacks;
     }
 
-    public static void setArmorStacks(PlayerEntity player, List<ItemStack> stacks) {
+    public static void setArmorStacks(@NotNull PlayerEntity player, @NotNull List<ItemStack> stacks) {
         for (int i = 0; i < stacks.size(); i++) {
             #if MC_VER < MC_1_21_5
             // NOTE: The armor slot index is reversed. (4 slots)
@@ -60,26 +59,29 @@ public class InventoryHelper {
         }
     }
 
-    public static void setOffhandStacks(PlayerEntity player, List<ItemStack> stacks) {
+    @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
+    public static void setOffhandStacks(@NotNull PlayerEntity player, @NotNull List<ItemStack> stacks) {
         // It looks like the size of stacks is 0 or 1.
         if (stacks.isEmpty()) return;
 
+        ItemStack stack = stacks.get(0);
+
         #if MC_VER < MC_1_21_5
-        player.getInventory().offHand.set(0, stacks.get(0));
+        player.getInventory().offHand.set(0, stack);
         #elif MC_VER >= MC_1_21_5
-        player.equipment.put(EquipmentSlot.OFFHAND, stacks.getFirst());
+        player.equipment.put(EquipmentSlot.OFFHAND, stack);
         #endif
 
     }
 
-    public static List<DefaultedList<ItemStack>> getCombinedInventory(PlayerEntity player) {
+    public static List<DefaultedList<ItemStack>> getCombinedInventory(@NotNull PlayerEntity player) {
         return ImmutableList.of(
             InventoryHelper.getMainStacks(player)
             , InventoryHelper.getArmorStacks(player)
             , InventoryHelper.getOffhandStack(player));
     }
 
-    public static DefaultedList<ItemStack> getHeldStacks(SimpleInventory inventory) {
+    public static DefaultedList<ItemStack> getHeldStacks(@NotNull SimpleInventory inventory) {
         #if MC_VER <= MC_1_20_2
         return inventory.stacks;
         #elif MC_VER > MC_1_20_2
