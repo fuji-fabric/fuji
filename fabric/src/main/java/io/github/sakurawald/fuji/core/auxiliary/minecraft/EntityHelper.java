@@ -48,7 +48,7 @@ public class EntityHelper {
         #endif
     }
 
-    public static boolean isPlayer(Entity entity) {
+    public static boolean isPlayerEntity(Entity entity) {
         return entity instanceof PlayerEntity;
     }
 

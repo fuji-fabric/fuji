@@ -155,7 +155,7 @@ public class RegistryHelper {
 
         #if MC_VER <= MC_1_20_4
         MessageType messageTypeObj = parameters.type();
-        messageTypeString = RegistryHelper.findRegistryKeyByRegistryValueInTheSpecifiedRegistry(RegistryKeys.MESSAGE_TYPE, messageTypeObj);
+        messageTypeString = RegistryHelper.findRegistryKeyByRegistryValueInTheSpecifiedRegistry(net.minecraft.registry.RegistryKeys.MESSAGE_TYPE, messageTypeObj);
         #elif MC_VER > MC_1_20_4
             messageTypeString = parameters.type().getIdAsString();
         #endif
