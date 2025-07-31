@@ -15,6 +15,7 @@ import io.github.sakurawald.fuji.module.initializer.jail.structure.JailRecord;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -181,4 +182,10 @@ public class JailService {
         return TextHelper.getTextByValue(null, value);
     }
 
+    public static @NotNull Text modifyDisplayName(@NotNull Text original, @NotNull PlayerEntity player) {
+        String playerName = PlayerHelper.getPlayerName(player);
+        return getActiveJailRecord(playerName)
+            .map(it -> TextHelper.getTextByValue(player, JailInitializer.config.model().getJailedPlayerTabListText()))
+            .orElse(original);
+    }
 }

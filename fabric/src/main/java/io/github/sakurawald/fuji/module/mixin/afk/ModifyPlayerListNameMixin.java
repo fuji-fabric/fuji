@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 // NOTE: To override tab list name in `tab list module`
 @Mixin(value = ServerPlayerEntity.class, priority = 1000 + 250)
-public class ModifyPlayerNamesMixin {
+public class ModifyPlayerListNameMixin {
 
     @Unique
     private final ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
