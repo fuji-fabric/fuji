@@ -92,6 +92,11 @@ import org.jetbrains.annotations.Nullable;
     A `DimensionOptions` = A `Dimension Type` + A `Chunk Generator`.
     The `dimension type` is used to define the `environment` of a `dimension`. (Like, `bed explosion?` or `infinite burning?`)
     The `chunk generator` is used to `generate` the `chunks`. (Give the `seed` and `chunk location` to the generator, it will fill blocks for you)
+
+    See also:
+    1. https://minecraft.wiki/w/Dimension_type
+    2. https://minecraft.wiki/w/Dimension_definition
+    3. https://minecraft.wiki/w/Noise_settings
     """)
 @ColorBox(id = 1752458991398L, color = ColorBox.ColorBlockTypes.NOTE, value = """
     ◉ How the `world` module generate the dimension?
