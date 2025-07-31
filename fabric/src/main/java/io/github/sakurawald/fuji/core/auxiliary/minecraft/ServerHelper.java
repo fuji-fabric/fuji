@@ -9,6 +9,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -23,6 +25,7 @@ import net.minecraft.server.world.ServerChunkLoadingManager;
 
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.UserCache;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,8 +62,7 @@ public class ServerHelper {
     }
 
     public static @NotNull ServerWorld getWorldOrThrow(String dimensionId) {
-        return RegistryHelper
-            .getServerWorld(dimensionId)
+        return getServerWorld(dimensionId)
             .orElseThrow(() -> new IllegalStateException("Dimension %s not found.".formatted(dimensionId)));
     }
 
@@ -208,5 +210,13 @@ public class ServerHelper {
 
     public static boolean isServerSide() {
         return FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER;
+    }
+
+    public static Optional<ServerWorld> getServerWorld(@Nullable String identifier) {
+        if (identifier == null) return Optional.empty();
+
+        RegistryKey<World> key = RegistryHelper.ofRegistryKey(RegistryKeys.WORLD, RegistryHelper.makeIdentifier(identifier));
+        return Optional.ofNullable(getServer()
+            .getWorld(key));
     }
 }

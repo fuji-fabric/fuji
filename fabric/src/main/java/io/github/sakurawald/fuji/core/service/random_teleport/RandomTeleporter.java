@@ -4,7 +4,6 @@ import com.google.common.base.Stopwatch;
 import io.github.sakurawald.fuji.core.auxiliary.AsyncUtil;
 import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
@@ -35,7 +34,7 @@ public class RandomTeleporter {
             LogUtil.info("Request rtp: {}", player.getGameProfile().getName());
             Stopwatch timer = Stopwatch.createStarted();
 
-            Optional<ServerWorld> world = RegistryHelper.getServerWorld(setup.getDimension());
+            Optional<ServerWorld> world = ServerHelper.getServerWorld(setup.getDimension());
             if (world.isEmpty()) {
                 LogUtil.debug("Abort rtp for {} (target dimension not found in server)", player);
                 TextHelper.sendTextByKey(player, "world.dimension.not_found");

@@ -14,10 +14,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -89,15 +87,6 @@ public class RegistryHelper {
         T object = registry.get(identifier);
         RegistryEntry<T> entry = registry.getEntry(object);
         return Optional.ofNullable(entry);
-    }
-
-    public static Optional<ServerWorld> getServerWorld(@Nullable String identifier) {
-        if (identifier == null) return Optional.empty();
-
-        RegistryKey<World> key = ofRegistryKey(RegistryKeys.WORLD, RegistryHelper.makeIdentifier(identifier));
-        return Optional.ofNullable(ServerHelper
-            .getServer()
-            .getWorld(key));
     }
 
     public static @NotNull Item getItem(@NotNull String identifier) {

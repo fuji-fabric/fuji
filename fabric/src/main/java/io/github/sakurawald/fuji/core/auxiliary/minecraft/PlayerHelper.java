@@ -107,7 +107,7 @@ public class PlayerHelper {
     }
 
     public static void setServerWorld(@NotNull ServerPlayerEntity player, @Nullable String dimensionId) {
-        Optional<ServerWorld> world = RegistryHelper.getServerWorld(dimensionId);
+        Optional<ServerWorld> world = ServerHelper.getServerWorld(dimensionId);
         world.ifPresent($world -> {
             player.setServerWorld($world);
         });
