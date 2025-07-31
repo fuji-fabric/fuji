@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.view.gui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.GenericContainerScreenHandler;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -23,7 +24,7 @@ public class EnderChestRedirectScreenFactory extends RedirectScreenHandlerFactor
     }
 
     @Override
-    protected boolean canClick(int i) {
+    protected boolean canClick(ScreenHandler screenHandler, int i) {
         return true;
     }
 }

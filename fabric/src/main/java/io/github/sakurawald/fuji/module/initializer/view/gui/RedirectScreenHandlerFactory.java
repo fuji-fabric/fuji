@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.GenericContainerScreenHandler;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.screen.slot.SlotActionType;
@@ -55,7 +56,7 @@ public abstract class RedirectScreenHandlerFactory {
 
     protected abstract ScreenHandlerType<GenericContainerScreenHandler> getTargetInventorySize();
 
-    protected abstract boolean canClick(int i);
+    protected abstract boolean canClick(ScreenHandler screenHandler, int i);
 
     private void savePlayerData() {
         ServerHelper.getServer().saveHandler.savePlayerData(targetPlayer);
@@ -68,7 +69,7 @@ public abstract class RedirectScreenHandlerFactory {
 
             @Override
             public void onSlotClick(int i, int j, SlotActionType slotActionType, PlayerEntity playerEntity) {
-                if (!canClick(i)) return;
+                if (!canClick(this, i)) return;
 
                 // save player data in time, in keep sync if player gets online.
                 if (!onlineEditMode) {

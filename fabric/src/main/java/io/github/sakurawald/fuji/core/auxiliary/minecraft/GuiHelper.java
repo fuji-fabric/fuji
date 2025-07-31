@@ -14,7 +14,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.GenericContainerScreenHandler;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -101,22 +103,28 @@ public class GuiHelper {
 
     public static class Validator {
 
-        private static final Item INVALID_SLOT_PLACEHOLDER_ITEM = Items.BARRIER;
+        private static final Item BANNED_SLOT_PLACEHOLDER_ITEM = Items.BARRIER;
 
         public static boolean isValidSlotIndex(@NotNull SlotGuiInterface gui, int slotIndex) {
             return slotIndex >= 0 && slotIndex < gui.getSize();
         }
 
-        public static boolean isInvalidSlotInsidePlayerInventory(int index) {
-            return index == 41 || index == 42 || index == 43 || index == 44;
+        public static boolean isBannedSlotIndex(@NotNull ScreenHandler screenHandler, int index) {
+            // NOTE: The index may be -1 or -999 for off-screen action.
+            if (index < 0 || index >= screenHandler.slots.size()) return false;
+
+            /* If the index is inside the screen, try to get the slot itemstack. */
+            Slot slot = screenHandler.getSlot(index);
+            ItemStack stack = slot.getStack();
+            return isBannedSlotPlaceholder(stack);
         }
 
-        public static boolean isInvalidSlotPlaceholder(ItemStack stack) {
-            return stack.getItem().equals(INVALID_SLOT_PLACEHOLDER_ITEM);
+        public static boolean isBannedSlotPlaceholder(ItemStack stack) {
+            return stack.getItem().equals(BANNED_SLOT_PLACEHOLDER_ITEM);
         }
 
-        public static GuiElementInterface makeInvalidSlotPlaceholderButton() {
-            return hideTooltip(new GuiElementBuilder().setItem(INVALID_SLOT_PLACEHOLDER_ITEM))
+        public static GuiElementInterface makeBannedSlotPlaceholder() {
+            return hideTooltip(new GuiElementBuilder().setItem(BANNED_SLOT_PLACEHOLDER_ITEM))
                 .build();
         }
     }

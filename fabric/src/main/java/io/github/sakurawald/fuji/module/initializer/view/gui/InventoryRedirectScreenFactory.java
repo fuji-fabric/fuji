@@ -8,6 +8,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Items;
 import net.minecraft.screen.GenericContainerScreenHandler;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -30,7 +31,7 @@ public class InventoryRedirectScreenFactory extends RedirectScreenHandlerFactory
     }
 
     @Override
-    public boolean canClick(int i) {
-        return !GuiHelper.Validator.isInvalidSlotInsidePlayerInventory(i);
+    public boolean canClick(ScreenHandler screenHandler, int i) {
+        return !GuiHelper.Validator.isBannedSlotIndex(screenHandler, i);
     }
 }

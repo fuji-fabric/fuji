@@ -68,7 +68,7 @@ public class KitEditorGui extends PagedGui<Kit> {
 
         /* Place the forbidden zone placeholder items. */
         for (int i = 41; i <= 44; i++) {
-            simpleInventory.setStack(i, GuiHelper.Validator.makeInvalidSlotPlaceholderButton().getItemStack());
+            simpleInventory.setStack(i, GuiHelper.Validator.makeBannedSlotPlaceholder().getItemStack());
         }
 
         /* Make a generic container GUI for kit editing. */
@@ -77,7 +77,7 @@ public class KitEditorGui extends PagedGui<Kit> {
                 @Override
                 public void onSlotClick(int i, int j, SlotActionType slotActionType, PlayerEntity playerEntity) {
                     // NOTE: skip BARRIER item stack click.
-                    if (GuiHelper.Validator.isInvalidSlotInsidePlayerInventory(i)) return;
+                    if (GuiHelper.Validator.isBannedSlotIndex(this, i)) return;
                     super.onSlotClick(i, j, slotActionType, playerEntity);
                 }
 

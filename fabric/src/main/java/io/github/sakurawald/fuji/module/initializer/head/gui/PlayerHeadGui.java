@@ -26,13 +26,13 @@ public class PlayerHeadGui extends AnvilInputGui {
         super(parentGui.getPlayer(), false);
         this.parentGui = parentGui;
         this.setTitle(TextHelper.getTextByKey(player, "head.category.player"));
-        this.setSlot(1, GuiHelper.Validator.makeInvalidSlotPlaceholderButton());
+        this.setSlot(1, GuiHelper.Validator.makeBannedSlotPlaceholder());
         this.resetResultSlot();
     }
 
     @Override
     public void setDefaultInputValue(String input) {
-        this.setSlot(0, GuiHelper.Validator.makeInvalidSlotPlaceholderButton());
+        this.setSlot(0, GuiHelper.Validator.makeBannedSlotPlaceholder());
         super.setDefaultInputValue("");
     }
 
@@ -48,7 +48,7 @@ public class PlayerHeadGui extends AnvilInputGui {
     }
 
     private void resetResultSlot() {
-        this.setSlot(2, GuiHelper.Validator.makeInvalidSlotPlaceholderButton());
+        this.setSlot(2, GuiHelper.Validator.makeBannedSlotPlaceholder());
     }
 
     @Override
