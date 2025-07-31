@@ -37,7 +37,7 @@ public class RuntimeDimensionLoader {
     }
 
     public static void loadRuntimeDimension(ServerWorld dimension, DimensionOptions dimensionOptions) {
-        SimpleRegistry<DimensionOptions> dimensionOptionsRegistry = (SimpleRegistry<DimensionOptions>) RegistryHelper.ofRegistry(RegistryKeys.DIMENSION);
+        SimpleRegistry<DimensionOptions> dimensionOptionsRegistry = (SimpleRegistry<DimensionOptions>) RegistryHelper.getRegistry(RegistryKeys.DIMENSION);
         boolean original = ((SimpleRegistryExtension<?>) dimensionOptionsRegistry).fuji$isFrozen();
         ((SimpleRegistryExtension<?>) dimensionOptionsRegistry).fuji$setFrozen(false);
 
@@ -73,7 +73,7 @@ public class RuntimeDimensionLoader {
             }
 
             /* Remove the entry from registry. */
-            SimpleRegistry<DimensionOptions> dimensionsRegistry = (SimpleRegistry<DimensionOptions>) RegistryHelper.ofRegistry(RegistryKeys.DIMENSION);
+            SimpleRegistry<DimensionOptions> dimensionsRegistry = (SimpleRegistry<DimensionOptions>) RegistryHelper.getRegistry(RegistryKeys.DIMENSION);
             SimpleRegistryExtension.remove(dimensionsRegistry, dimensionKey.getValue());
         }
     }

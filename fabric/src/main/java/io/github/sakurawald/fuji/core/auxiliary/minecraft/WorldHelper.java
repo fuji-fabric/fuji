@@ -1,11 +1,7 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
-import io.github.sakurawald.fuji.core.service.random_teleport.RandomTeleporter;
-import io.github.sakurawald.fuji.core.structure.TeleportSetup;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -13,21 +9,6 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.DimensionTypes;
 
 public class WorldHelper {
-
-    public static void teleportToSafePositionNearOrigin(ServerWorld world, ServerPlayerEntity player) {
-        RandomTeleporter.request(player,
-            new TeleportSetup(
-                RegistryHelper.toString(world)
-                ,0
-                , 0
-                , false
-                , 0
-                , 256
-                ,0
-                , 128
-                ,32
-        ), null);
-    }
 
     public static int getTopY(Chunk chunk) {
         #if MC_VER <= MC_1_21

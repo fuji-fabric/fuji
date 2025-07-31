@@ -58,6 +58,6 @@ public enum EconomyType {
     }
 
     private static @NotNull Item getCostItem() {
-        return RegistryHelper.ofItem(HeadInitializer.head.model().cost_item_type);
+        return RegistryHelper.getItem(HeadInitializer.head.model().cost_item_type);
     }
 }

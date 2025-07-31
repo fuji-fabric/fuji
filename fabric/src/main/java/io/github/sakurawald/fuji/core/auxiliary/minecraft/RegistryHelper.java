@@ -35,7 +35,7 @@ public class RegistryHelper {
         return toString(itemStack.getItem());
     }
 
-    public static @NotNull String toString(Block block) {
+    public static @NotNull String toString(@NotNull Block block) {
         return Registries.BLOCK.getId(block).toString();
     }
 
@@ -48,7 +48,7 @@ public class RegistryHelper {
     }
 
     public static @NotNull String toString(@NotNull World world) {
-        return world.getRegistryKey().getValue().toString();
+        return toString(world.getRegistryKey());
     }
 
     public static @NotNull String toString(@NotNull RegistryKey<?> registryKey) {
@@ -62,7 +62,7 @@ public class RegistryHelper {
             .getCombinedRegistryManager();
     }
 
-    public static <T> Registry<T> ofRegistry(RegistryKey<? extends Registry<? extends T>> registryKey) {
+    public static <T> Registry<T> getRegistry(RegistryKey<? extends Registry<? extends T>> registryKey) {
         return getCombinedRegistryManager()
             #if MC_VER <= MC_1_21
                 .get(registryKey);
@@ -71,7 +71,7 @@ public class RegistryHelper {
             #endif
     }
 
-    public static <T> RegistryEntryLookup<T> ofRegistryWrapper(RegistryKey<? extends Registry<? extends T>> registryKey) {
+    public static <T> RegistryEntryLookup<T> getRegistryWrapper(RegistryKey<? extends Registry<? extends T>> registryKey) {
         return getCombinedRegistryManager()
             #if MC_VER <= MC_1_21
                 .getWrapperOrThrow(registryKey);
@@ -80,27 +80,27 @@ public class RegistryHelper {
             #endif
     }
 
-    public static <T> RegistryKey<T> ofRegistryKey(@NotNull RegistryKey<? extends Registry<T>> keyOfRegistry, Identifier identifier) {
+    public static <T> RegistryKey<T> getRegistryKey(@NotNull RegistryKey<? extends Registry<T>> keyOfRegistry, Identifier identifier) {
         return RegistryKey.of(keyOfRegistry, identifier);
     }
 
-    public static <T> Optional<RegistryEntry<T>> ofRegistryEntry(@NotNull RegistryKey<? extends Registry<T>> keyOfRegistry, Identifier identifier) {
-        Registry<T> registry = ofRegistry(keyOfRegistry);
+    public static <T> Optional<RegistryEntry<T>> getRegistryEntry(@NotNull RegistryKey<? extends Registry<T>> keyOfRegistry, Identifier identifier) {
+        Registry<T> registry = getRegistry(keyOfRegistry);
         T t = registry.get(identifier);
         RegistryEntry<T> entry = registry.getEntry(t);
         return Optional.ofNullable(entry);
     }
 
-    public static @Nullable ServerWorld ofServerWorld(@Nullable String identifier) {
+    public static @Nullable ServerWorld getServerWorld(@Nullable String identifier) {
         if (identifier == null) return null;
 
-        RegistryKey<World> key = ofRegistryKey(RegistryKeys.WORLD, RegistryHelper.makeIdentifier(identifier));
+        RegistryKey<World> key = getRegistryKey(RegistryKeys.WORLD, RegistryHelper.makeIdentifier(identifier));
         return ServerHelper
             .getServer()
             .getWorld(key);
     }
 
-    public static @NotNull Item ofItem(@NotNull String identifier) {
+    public static @NotNull Item getItem(@NotNull String identifier) {
         // NOTE: For un-existed identifier, it will always return minecraft:air as the dummy item.
         Item item = Registries.ITEM.get(Identifier.tryParse(identifier));
         if (Items.AIR.equals(item)) {
@@ -145,7 +145,7 @@ public class RegistryHelper {
         };
 
         RegistryHelper
-            .ofRegistry(registrySpecifier)
+            .getRegistry(registrySpecifier)
             .streamEntries()
             .forEach(candidate -> {
                 Optional<RegistryKey<T>> candidateKey = candidate.getKey();

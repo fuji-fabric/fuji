@@ -112,7 +112,7 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
                 .findFirst();
             if (first.isPresent()) {
                 List<IdentifierDescriptor> ids = RegistryHelper
-                    .ofRegistry(first.get().comp_985())
+                    .getRegistry(first.get().comp_985())
                     .getIds()
                     .stream()
                     .sorted()

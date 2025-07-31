@@ -75,7 +75,7 @@ public abstract class Work implements ObjectTypeStringGetter {
             return this.getDefaultEntityIcon();
         }
 
-        return RegistryHelper.ofItem(this.icon);
+        return RegistryHelper.getItem(this.icon);
     }
 
     public abstract void openSpecializedSettingsGui(ServerPlayerEntity player, SimpleGui parentGui);

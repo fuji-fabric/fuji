@@ -24,7 +24,7 @@ public class GlobalBlockPos {
     }
 
     public ServerWorld toDimension() {
-        return RegistryHelper.ofServerWorld(this.dimension);
+        return RegistryHelper.getServerWorld(this.dimension);
     }
 
     public @NotNull BlockPos toBlockPos() {

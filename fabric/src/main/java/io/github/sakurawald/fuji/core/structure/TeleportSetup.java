@@ -53,7 +53,7 @@ public class TeleportSetup {
     final int maxTryTimes;
 
     public ServerWorld toDimension() {
-        return RegistryHelper.ofServerWorld(this.dimension);
+        return RegistryHelper.getServerWorld(this.dimension);
     }
 
 }

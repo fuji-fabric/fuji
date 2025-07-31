@@ -32,7 +32,7 @@ public class CustomEconomyCurrency implements EconomyCurrency {
 
     @Override
     public ItemStack icon() {
-        return RegistryHelper.ofItem(this.currencyDescriptor.currencyIconItem).getDefaultStack();
+        return RegistryHelper.getItem(this.currencyDescriptor.currencyIconItem).getDefaultStack();
     }
 
     @Override

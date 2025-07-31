@@ -65,7 +65,7 @@ public class GlobalPos {
 
     public void teleport(@NotNull ServerPlayerEntity player, Set<PositionFlag> flags) {
         /* Get the dimension instance from server. */
-        ServerWorld dimension = RegistryHelper.ofServerWorld(this.level);
+        ServerWorld dimension = RegistryHelper.getServerWorld(this.level);
         if (dimension == null) {
             TextHelper.sendTextByKey(player, "world.dimension.not_found", this.level);
             return;

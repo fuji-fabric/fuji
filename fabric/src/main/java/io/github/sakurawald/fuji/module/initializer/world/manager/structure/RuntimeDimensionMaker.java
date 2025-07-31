@@ -97,7 +97,7 @@ public class RuntimeDimensionMaker {
     }
 
     private static @NotNull DimensionOptions makeDimensionOptionsWithWorldPreset(RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
-        Registry<WorldPreset> worldPresetRegistry = RegistryHelper.ofRegistry(RegistryKeys.WORLD_PRESET);
+        Registry<WorldPreset> worldPresetRegistry = RegistryHelper.getRegistry(RegistryKeys.WORLD_PRESET);
         assert runtimeDimensionDescriptor.worldPresetType != null;
         RegistryKey<WorldPreset> worldPresetKey = runtimeDimensionDescriptor.worldPresetType.toWorldPresetKey();
         WorldPreset worldPreset = worldPresetRegistry.get(worldPresetKey);
@@ -135,7 +135,7 @@ public class RuntimeDimensionMaker {
     }
 
     private static @NotNull ChunkGenerator makeNoiseChunkGenerator(RuntimeDimensionDescriptor dimensionDescriptor) {
-        Registry<DimensionOptions> dimensionRegistry = RegistryHelper.ofRegistry(RegistryKeys.DIMENSION);
+        Registry<DimensionOptions> dimensionRegistry = RegistryHelper.getRegistry(RegistryKeys.DIMENSION);
         Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(dimensionDescriptor.dimension_type);
         @Nullable DimensionOptions existedDimensionOptions = dimensionRegistry.get(dimensionTypeIdentifier);
         if (existedDimensionOptions == null) {
@@ -150,7 +150,7 @@ public class RuntimeDimensionMaker {
 
     private static @NotNull RegistryEntry<DimensionType> makeDimensionTypeEntry(RuntimeDimensionDescriptor dimensionDescriptor) {
         Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(dimensionDescriptor.dimension_type);
-        Optional<RegistryEntry<DimensionType>> dimensionTypeEntryOptional = RegistryHelper.ofRegistryEntry(RegistryKeys.DIMENSION_TYPE, dimensionTypeIdentifier);
+        Optional<RegistryEntry<DimensionType>> dimensionTypeEntryOptional = RegistryHelper.getRegistryEntry(RegistryKeys.DIMENSION_TYPE, dimensionTypeIdentifier);
         if (dimensionTypeEntryOptional.isEmpty()) {
             throw new RuntimeException("Failed to make RegistryEntry<DimensionType> for dimension %s: The Optional<RegistryEntry<DimensionType>> null.".formatted(dimensionTypeIdentifier));
         }
@@ -164,15 +164,15 @@ public class RuntimeDimensionMaker {
 
     private static @NotNull FlatChunkGenerator makeFlatChunkGenerator(RuntimeDimensionDescriptor dimensionDescriptor) {
         /* Make the default flat chunk generator config. */
-        RegistryEntryLookup<Biome> biomeLookup = RegistryHelper.ofRegistryWrapper(RegistryKeys.BIOME);
-        RegistryEntryLookup<StructureSet> structureSetLookup = RegistryHelper.ofRegistryWrapper(RegistryKeys.STRUCTURE_SET);
-        RegistryEntryLookup<PlacedFeature> placedFeatureLookup = RegistryHelper.ofRegistryWrapper(RegistryKeys.PLACED_FEATURE);
+        RegistryEntryLookup<Biome> biomeLookup = RegistryHelper.getRegistryWrapper(RegistryKeys.BIOME);
+        RegistryEntryLookup<StructureSet> structureSetLookup = RegistryHelper.getRegistryWrapper(RegistryKeys.STRUCTURE_SET);
+        RegistryEntryLookup<PlacedFeature> placedFeatureLookup = RegistryHelper.getRegistryWrapper(RegistryKeys.PLACED_FEATURE);
         FlatChunkGeneratorConfig flatChunkGeneratorConfig = FlatChunkGeneratorConfig.getDefaultConfig(biomeLookup, structureSetLookup, placedFeatureLookup);
 
         /* Make the parsed flat chunk generator config. */
         String presetString = dimensionDescriptor.chunkGeneratorParameters;
         if (presetString != null && !presetString.isBlank()) {
-            RegistryEntryLookup<Block> blockLookup = RegistryHelper.ofRegistryWrapper(RegistryKeys.BLOCK);
+            RegistryEntryLookup<Block> blockLookup = RegistryHelper.getRegistryWrapper(RegistryKeys.BLOCK);
             flatChunkGeneratorConfig = FlatPresetParser.parsePresetString(blockLookup, biomeLookup, structureSetLookup, placedFeatureLookup, presetString, flatChunkGeneratorConfig);
         }
 

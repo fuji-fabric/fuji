@@ -35,7 +35,7 @@ public class RandomTeleporter {
             LogUtil.info("Request rtp: {}", player.getGameProfile().getName());
             Stopwatch timer = Stopwatch.createStarted();
 
-            ServerWorld world = RegistryHelper.ofServerWorld(setup.getDimension());
+            ServerWorld world = RegistryHelper.getServerWorld(setup.getDimension());
             if (world == null) {
                 LogUtil.debug("Abort rtp for {} (target dimension not found in server)", player);
                 TextHelper.sendTextByKey(player, "world.dimension.not_found");

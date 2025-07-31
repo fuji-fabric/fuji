@@ -166,7 +166,7 @@ public class CommandHelper {
         public static <T> @NotNull SuggestionProvider<ServerCommandSource> identifiers(RegistryKey<? extends Registry<T>> registryKey) {
             return iterable(() ->
                 RegistryHelper
-                    .ofRegistry(registryKey)
+                    .getRegistry(registryKey)
                     .getIds());
         }
     }

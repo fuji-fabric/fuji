@@ -16,7 +16,7 @@ public class TitleDescriptor {
     List<String> lore;
 
     public Item toItem() {
-        return RegistryHelper.ofItem(this.item);
+        return RegistryHelper.getItem(this.item);
     }
 
 }

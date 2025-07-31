@@ -31,7 +31,7 @@ public class WarpGui extends PagedGui<WarpNode> {
     protected GuiElementInterface toGuiElement(WarpNode entity) {
         return new GuiElementBuilder()
             .setName(TextHelper.getTextByValue(getPlayer(), entity.getName()))
-            .setItem(RegistryHelper.ofItem(entity.getItem()))
+            .setItem(RegistryHelper.getItem(entity.getItem()))
             .setLore(new ArrayList<>() {
                 {
                     entity.getLore().forEach(it -> this.add(TextHelper.getTextByValue(getPlayer(), it)));

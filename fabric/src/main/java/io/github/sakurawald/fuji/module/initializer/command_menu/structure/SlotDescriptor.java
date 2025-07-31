@@ -154,7 +154,7 @@ public class SlotDescriptor {
     public GuiElementInterface buildGuiElement(ServerPlayerEntity viewingPlayer, MenuDescriptor menuDescriptor) {
         GuiElementBuilder slotElementBuilder = new GuiElementBuilder();
 
-        slotElementBuilder.setItem(RegistryHelper.ofItem(this.item));
+        slotElementBuilder.setItem(RegistryHelper.getItem(this.item));
         slotElementBuilder.setCount(this.count);
 
         if (this.hideTooltip) {

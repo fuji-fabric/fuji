@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 
