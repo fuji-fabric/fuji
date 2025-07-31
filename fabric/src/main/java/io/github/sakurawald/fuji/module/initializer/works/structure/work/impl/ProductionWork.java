@@ -5,6 +5,7 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.LogicHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
@@ -233,12 +234,10 @@ public class ProductionWork extends Work implements Schedulable {
         this.sample.sampleY = player.getY();
         this.sample.sampleZ = player.getZ();
         this.sample.sampleCounter = new HashMap<>();
-        if (this.resolveHoppers(player) == 0) {
-            TextHelper.sendTextByKey(player, "operation.cancelled");
-            return;
-        }
 
-        TextHelper.sendBroadcastByKey("works.production_work.sample.start", name, this.creator);
+        LogicHelper.withCancelCheck(player, this.resolveHoppers(player) == 0, () -> {
+            TextHelper.sendBroadcastByKey("works.production_work.sample.start", name, this.creator);
+        });
     }
 
     private void endSample() {

@@ -4,6 +4,7 @@ import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.LogicHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.InputSignGui;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
@@ -39,13 +40,10 @@ public class KitEditorGui extends PagedGui<Kit> {
             public void onClose() {
                 /* Get input kit name. */
                 String name = getLine(0).getString().trim();
-                if (name.isEmpty()) {
-                    TextHelper.sendTextByKey(player, "operation.cancelled");
-                    return;
-                }
 
-                /* Open kit editing gui. */
-                openKitEditingGui(getPlayer(), KitService.readKit(name));
+                LogicHelper.withCancelCheck(player, name.isEmpty(), () -> {
+                    openKitEditingGui(getPlayer(), KitService.readKit(name));
+                });
             }
         }.open()));
     }

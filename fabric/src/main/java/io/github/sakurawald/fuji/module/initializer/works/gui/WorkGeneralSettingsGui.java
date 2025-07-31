@@ -94,7 +94,7 @@ public class WorkGeneralSettingsGui extends SimpleGui {
                 @Override
                 public void onClose() {
                     String newIntroduction = this.joinStrings();
-                    LogicHelper.tryOrCancel(player, newIntroduction.isBlank(), () -> {
+                    LogicHelper.withCancelCheck(player, newIntroduction.isBlank(), () -> {
                         work.introduction = newIntroduction;
                         TextHelper.sendTextByKey(player, "works.work.set.done", work.introduction);
                     });

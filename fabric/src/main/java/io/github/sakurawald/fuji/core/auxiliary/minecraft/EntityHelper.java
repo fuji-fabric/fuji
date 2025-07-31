@@ -9,9 +9,9 @@ public class EntityHelper {
 
     public static void killEntity(Entity entity) {
         #if MC_VER <= MC_1_21
-            entity.kill();
+        entity.kill();
         #elif MC_VER > MC_1_21
-            entity.kill((ServerWorld) entity.getWorld());
+        entity.kill((ServerWorld) entity.getWorld());
         #endif
     }
 
@@ -25,26 +25,26 @@ public class EntityHelper {
 
     public static boolean isBlockAttachedEntity(Entity entity) {
         #if MC_VER <= MC_1_20_6
-            return entity instanceof net.minecraft.entity.decoration.LeashKnotEntity;
+        return entity instanceof net.minecraft.entity.decoration.LeashKnotEntity;
         #elif MC_VER > MC_1_20_6
-            return entity instanceof net.minecraft.entity.decoration.BlockAttachedEntity;
+        return entity instanceof net.minecraft.entity.decoration.BlockAttachedEntity;
         #endif
     }
 
     public static boolean isLeashed(Entity entity) {
         #if MC_VER <= MC_1_20_6
-            return (entity instanceof net.minecraft.entity.mob.MobEntity mobEntity) && mobEntity.isLeashed();
+        return (entity instanceof net.minecraft.entity.mob.MobEntity mobEntity) && mobEntity.isLeashed();
         #elif MC_VER > MC_1_20_6
-            return (entity instanceof net.minecraft.entity.Leashable leashable) && leashable.isLeashed();
+        return (entity instanceof net.minecraft.entity.Leashable leashable) && leashable.isLeashed();
         #endif
     }
 
     public static boolean isVehicleEntity(Entity entity) {
         #if MC_VER <= MC_1_20_2
-            return (entity instanceof net.minecraft.entity.vehicle.BoatEntity)
-                || (entity instanceof net.minecraft.entity.vehicle.AbstractMinecartEntity);
+        return (entity instanceof net.minecraft.entity.vehicle.BoatEntity)
+        || (entity instanceof net.minecraft.entity.vehicle.AbstractMinecartEntity);
         #elif MC_VER > MC_1_20_2
-            return entity instanceof net.minecraft.entity.vehicle.VehicleEntity;
+        return entity instanceof net.minecraft.entity.vehicle.VehicleEntity;
         #endif
     }
 
