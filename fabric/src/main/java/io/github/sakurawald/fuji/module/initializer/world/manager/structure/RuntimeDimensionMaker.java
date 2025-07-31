@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.world.manager.structure;
 
 import com.google.common.collect.ImmutableList;
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.structure.Pair;
@@ -138,7 +139,8 @@ public class RuntimeDimensionMaker {
         Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(dimensionDescriptor.dimension_type);
         @Nullable DimensionOptions existedDimensionOptions = dimensionRegistry.get(dimensionTypeIdentifier);
         if (existedDimensionOptions == null) {
-            throw new RuntimeException("Failed to make chunk generator, there is no existed DimensionOptions for dimension type %s.".formatted(dimensionTypeIdentifier));
+            LogUtil.warn("Failed to make chunk generator, there is no existed DimensionOptions for dimension type {}. Falling back to the `FlatChunkGenerator`.", dimensionTypeIdentifier);
+            return makeFlatChunkGenerator(dimensionDescriptor);
         }
 
         // NOTE: Copy the existed chunk generator, to ensure the settings of chunk generator is identical.
