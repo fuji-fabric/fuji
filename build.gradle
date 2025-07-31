@@ -168,8 +168,11 @@ subprojects { p ->
             disable("UnusedMethod")
             disable("DoNotCallSuggester")
 
+            // Use the double brace initialization.
+            // 1. For readability, the syntax is much simple and clear. A call to custom collection factory method to make a mutable collection is complex.
+            // 2. The non-static inner class does capture the reference of enclosing outer class, but it's expected, the lifespans of outer class and its inner class fields are the same in this use-case. (Remember not to leak the reference of the inner class)
+            // Note that for non-static inner class, the Gson will calls the field initializer for that inner class N times during the serialization. (Where N = the depth of that field)
             disable("DoubleBraceInitialization")
-
         }
 
         configure(options) {
