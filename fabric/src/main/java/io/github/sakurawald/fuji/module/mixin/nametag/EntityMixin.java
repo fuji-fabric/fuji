@@ -17,7 +17,7 @@ public class EntityMixin {
     boolean allowTeleportWithPassengers(boolean original) {
         // NOTE: In newer Minecraft versions the Entity#canUsePortals method will not check the hasPassenger() flag.
         Entity entity = (Entity) (Object) this;
-        if (EntityHelper.isPlayer(entity)) {
+        if (EntityHelper.isPlayerEntity(entity)) {
             return false;
         }
 
