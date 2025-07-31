@@ -119,6 +119,10 @@ public class GuiHelper {
             return isBannedSlotPlaceholder(stack);
         }
 
+        public static ItemStack makeBannedSlotPlaceholderItemStack() {
+            return makeBannedSlotPlaceholder().getItemStack();
+        }
+
         public static boolean isBannedSlotPlaceholder(ItemStack stack) {
             return stack.getItem().equals(BANNED_SLOT_PLACEHOLDER_ITEM);
         }
