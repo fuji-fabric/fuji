@@ -62,7 +62,7 @@ public abstract class RedirectScreenHandlerFactory {
     }
 
     private GenericContainerScreenHandler makeGenericContainerScreenHandler(int syncId, PlayerInventory sourceInventory, PlayerEntity source) {
-        int rows = GuiHelper.getRows(getTargetInventorySize());
+        int rows = GuiHelper.Handler.getGenericContainerRows(getTargetInventorySize());
 
         return new GenericContainerScreenHandler(getTargetInventorySize(), syncId, sourceInventory, makeTargetInventoryRedirectScreen(), rows) {
 

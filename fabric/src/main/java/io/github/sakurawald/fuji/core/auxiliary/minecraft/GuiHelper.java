@@ -10,70 +10,115 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 public class GuiHelper {
 
-    private static final Item INVALID_SLOT_PLACEHOLDER_ITEM = Items.BARRIER;
+    public static class Handler {
 
-    public static boolean isInvalidSlotInsidePlayerInventory(int index) {
-        return index == 41 || index == 42 || index == 43 || index == 44;
-    }
+        public static ScreenHandlerType<GenericContainerScreenHandler> getGenericContainerType(int rows) {
+            if (rows == 1) return ScreenHandlerType.GENERIC_9X1;
+            if (rows == 2) return ScreenHandlerType.GENERIC_9X2;
+            if (rows == 3) return ScreenHandlerType.GENERIC_9X3;
+            if (rows == 4) return ScreenHandlerType.GENERIC_9X4;
+            if (rows == 5) return ScreenHandlerType.GENERIC_9X5;
+            if (rows == 6) return ScreenHandlerType.GENERIC_9X6;
 
-    public static boolean isInvalidSlotPlaceholder(ItemStack stack) {
-        return stack.getItem().equals(INVALID_SLOT_PLACEHOLDER_ITEM);
-    }
-
-    public static ScreenHandlerType<GenericContainerScreenHandler> getGenericContainerType(int rows) {
-        if (rows == 1) return ScreenHandlerType.GENERIC_9X1;
-        if (rows == 2) return ScreenHandlerType.GENERIC_9X2;
-        if (rows == 3) return ScreenHandlerType.GENERIC_9X3;
-        if (rows == 4) return ScreenHandlerType.GENERIC_9X4;
-        if (rows == 5) return ScreenHandlerType.GENERIC_9X5;
-        if (rows == 6) return ScreenHandlerType.GENERIC_9X6;
-
-        LogUtil.warn("The rows {} should be in the range [1, 6]. Falling back to GENERIC_9X6.", rows);
-        return ScreenHandlerType.GENERIC_9X6;
-    }
-
-    public static int getRows(ScreenHandlerType<GenericContainerScreenHandler> screenHandlerType) {
-        if (screenHandlerType == ScreenHandlerType.GENERIC_9X1) return 1;
-        if (screenHandlerType == ScreenHandlerType.GENERIC_9X2) return 2;
-        if (screenHandlerType == ScreenHandlerType.GENERIC_9X3) return 3;
-        if (screenHandlerType == ScreenHandlerType.GENERIC_9X4) return 4;
-        if (screenHandlerType == ScreenHandlerType.GENERIC_9X5) return 5;
-        if (screenHandlerType == ScreenHandlerType.GENERIC_9X6) return 6;
-
-        throw new IllegalArgumentException("Unknown screen handler type: " + screenHandlerType);
-    }
-
-    public static GuiElementBuilder fromSlot(GuiElementInterface slot) {
-        GuiElementBuilder builder = new GuiElementBuilder();
-        ItemStack itemStack = slot.getItemStack();
-
-        /* Copy data from slot into builder. */
-        builder.setItem(itemStack.getItem());
-        builder.setName(itemStack.getName());
-        List<Text> lore = ItemStackHelper.getLore(itemStack);
-        if (!lore.isEmpty()) {
-            builder.setLore(lore);
+            LogUtil.warn("The rows {} should be in the range [1, 6]. Falling back to GENERIC_9X6.", rows);
+            return ScreenHandlerType.GENERIC_9X6;
         }
-        builder.setCallback(slot.getGuiCallback());
 
-        return builder;
+        public static int getGenericContainerRows(ScreenHandlerType<GenericContainerScreenHandler> screenHandlerType) {
+            if (screenHandlerType == ScreenHandlerType.GENERIC_9X1) return 1;
+            if (screenHandlerType == ScreenHandlerType.GENERIC_9X2) return 2;
+            if (screenHandlerType == ScreenHandlerType.GENERIC_9X3) return 3;
+            if (screenHandlerType == ScreenHandlerType.GENERIC_9X4) return 4;
+            if (screenHandlerType == ScreenHandlerType.GENERIC_9X5) return 5;
+            if (screenHandlerType == ScreenHandlerType.GENERIC_9X6) return 6;
+
+            throw new IllegalArgumentException("Unknown screen handler type: " + screenHandlerType);
+        }
     }
 
-    public static boolean isValidSlotIndex(SlotGuiInterface gui, int slotIndex) {
-        return slotIndex >= 0 && slotIndex < gui.getSize();
+    public static class PlayerHead {
+
+        private static GuiElementBuilder fromSlot(@NotNull GuiElementInterface slot) {
+            GuiElementBuilder builder = new GuiElementBuilder();
+            ItemStack itemStack = slot.getItemStack();
+
+            /* Copy data from slot into builder. */
+            builder.setItem(itemStack.getItem());
+            builder.setName(itemStack.getName());
+            List<Text> lore = ItemStackHelper.getLore(itemStack);
+            if (!lore.isEmpty()) {
+                builder.setLore(lore);
+            }
+            builder.setCallback(slot.getGuiCallback());
+
+            return builder;
+        }
+
+        public static void fetchPlayerHeadTextures(@NotNull LayeredGui gui, @NotNull Runnable drawCallback) {
+            final int guiSize = gui.getSize();
+            for (int i = 0; i < guiSize; i++) {
+                GuiElementInterface previousSlot = gui.getSlot(i);
+                if (previousSlot == null) return;
+
+                /* Run async method to fetch game profile. */
+                int finalI = i;
+                AsyncUtil.runAsyncAndSwallowExceptions(() -> {
+                    ItemStack itemStack = previousSlot.getItemStack();
+
+                    // Fetch the game profile from mojang server.
+                    String onlinePlayerName = itemStack.getName().getString().trim();
+                    GameProfile gameProfile = MojangProfileFetcher.makeOnlineGameProfile(onlinePlayerName);
+
+                    // Apply the game profile.
+                    GuiElementBuilder builder = fromSlot(previousSlot);
+                    builder.setSkullOwner(gameProfile, ServerHelper.getServer());
+                    for (int j = 0; j < guiSize; j++) {
+                        GuiElementInterface currentSlot = gui.getSlot(j);
+                        if (currentSlot == null) continue;
+                        if (currentSlot.getItemStack() == previousSlot.getItemStack()) {
+                            gui.setSlot(finalI, builder);
+                            break;
+                        }
+                    }
+
+                    // Call draw to re-draw it.
+                    drawCallback.run();
+                });
+            }
+        }
+    }
+
+    public static class Validator {
+
+        private static final Item INVALID_SLOT_PLACEHOLDER_ITEM = Items.BARRIER;
+
+        public static boolean isValidSlotIndex(@NotNull SlotGuiInterface gui, int slotIndex) {
+            return slotIndex >= 0 && slotIndex < gui.getSize();
+        }
+
+        public static boolean isInvalidSlotInsidePlayerInventory(int index) {
+            return index == 41 || index == 42 || index == 43 || index == 44;
+        }
+
+        public static boolean isInvalidSlotPlaceholder(ItemStack stack) {
+            return stack.getItem().equals(INVALID_SLOT_PLACEHOLDER_ITEM);
+        }
+
+        public static GuiElementInterface makeInvalidSlotPlaceholderButton() {
+            return hideTooltip(new GuiElementBuilder().setItem(INVALID_SLOT_PLACEHOLDER_ITEM))
+                .build();
+        }
     }
 
     public static GuiElementBuilder hideTooltip(GuiElementBuilder builder) {
@@ -89,55 +134,7 @@ public class GuiHelper {
         return builder;
     }
 
-    public static GuiElementBuilder setPlayerHeadTexture(GuiElementBuilder builder, String playerName) {
-        builder.setItem(Items.PLAYER_HEAD);
-
-        Optional<GameProfile> gameProfileByName = PlayerHelper.getGameProfileByName(playerName);
-        MinecraftServer server = ServerHelper.getServer();
-
-        gameProfileByName.ifPresent(gameProfile -> builder.setSkullOwner(gameProfile, server));
-        return builder;
-    }
-
-    public static void fetchHeads(LayeredGui gui, Runnable drawCallback) {
-        final int guiSize = gui.getSize();
-        for (int i = 0; i < guiSize; i++) {
-            GuiElementInterface previousSlot = gui.getSlot(i);
-            if (previousSlot == null) return;
-
-            /* Run async method to fetch game profile. */
-            int finalI = i;
-            AsyncUtil.runAsyncAndSwallowExceptions(() -> {
-                ItemStack itemStack = previousSlot.getItemStack();
-
-                // Fetch the game profile from mojang server.
-                String onlinePlayerName = itemStack.getName().getString().trim();
-                GameProfile gameProfile = MojangProfileFetcher.makeOnlineGameProfile(onlinePlayerName);
-
-                // Apply the game profile.
-                GuiElementBuilder builder = fromSlot(previousSlot);
-                builder.setSkullOwner(gameProfile, ServerHelper.getServer());
-                for (int j = 0; j < guiSize; j++) {
-                    GuiElementInterface currentSlot = gui.getSlot(j);
-                    if (currentSlot == null) continue;
-                    if (currentSlot.getItemStack() == previousSlot.getItemStack()) {
-                        gui.setSlot(finalI, builder);
-                        break;
-                    }
-                }
-
-                // Call draw to re-draw it.
-                drawCallback.run();
-            });
-        }
-    }
-
     public static class Button {
-
-        public static GuiElementInterface makeInvalidSlotPlaceholderButton() {
-            return hideTooltip(new GuiElementBuilder().setItem(INVALID_SLOT_PLACEHOLDER_ITEM))
-                .build();
-        }
 
         public static GuiElementInterface makeSlotPlaceholderButton() {
             return hideTooltip(new GuiElementBuilder().setItem(Items.GRAY_STAINED_GLASS_PANE))

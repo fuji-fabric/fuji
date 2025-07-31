@@ -31,6 +31,6 @@ public class InventoryRedirectScreenFactory extends RedirectScreenHandlerFactory
 
     @Override
     public boolean canClick(int i) {
-        return !GuiHelper.isInvalidSlotInsidePlayerInventory(i);
+        return !GuiHelper.Validator.isInvalidSlotInsidePlayerInventory(i);
     }
 }

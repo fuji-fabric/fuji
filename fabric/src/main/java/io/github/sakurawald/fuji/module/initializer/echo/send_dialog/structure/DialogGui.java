@@ -29,7 +29,7 @@ public class DialogGui extends SimpleGui {
 
     private DialogGui(ServerPlayerEntity player, Text title, int rows, int yesButtonSlotIndex, Item yesButtonItem, Text yesButtonName, String yesButtonCommand
     , int noButtonSlotIndex, Item noButtonItem, Text noButtonName, String noButtonCommand, boolean canCloseUsingNoButton) {
-        super(GuiHelper.getGenericContainerType(rows), player, false);
+        super(GuiHelper.Handler.getGenericContainerType(rows), player, false);
         /* Remember the variables. */
         this.title = title;
         this.rows = rows;
@@ -48,7 +48,7 @@ public class DialogGui extends SimpleGui {
         /* Use the variables. */
         this.setTitle(title);
 
-        if (GuiHelper.isValidSlotIndex(this, this.noButtonSlotIndex)) {
+        if (GuiHelper.Validator.isValidSlotIndex(this, this.noButtonSlotIndex)) {
             setSlot(this.noButtonSlotIndex, new GuiElementBuilder()
                 .setItem(noButtonItem)
                 .setName(noButtonName)

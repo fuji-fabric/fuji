@@ -49,7 +49,7 @@ public class MenuDescriptor {
     public List<SlotDescriptor> slots;
 
     private ScreenHandlerType<?> getScreenHandlerType() {
-        return GuiHelper.getGenericContainerType(this.lines);
+        return GuiHelper.Handler.getGenericContainerType(this.lines);
     }
 
     public SimpleGui build(ServerPlayerEntity viewingPlayer) {

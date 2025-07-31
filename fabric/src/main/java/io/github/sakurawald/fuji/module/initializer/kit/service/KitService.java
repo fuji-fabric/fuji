@@ -97,7 +97,7 @@ public class KitService {
         for (int i = 0; i < kit.getStackList().size(); i++) {
             ItemStack template = kit.getStackList().get(i);
 
-            if (template.isEmpty() || GuiHelper.isInvalidSlotPlaceholder(template)) {
+            if (template.isEmpty() || GuiHelper.Validator.isInvalidSlotPlaceholder(template)) {
                 continue;
             }
 
