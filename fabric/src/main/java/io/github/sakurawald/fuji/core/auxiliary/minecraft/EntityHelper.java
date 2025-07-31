@@ -48,6 +48,7 @@ public class EntityHelper {
         #endif
     }
 
+    @SuppressWarnings("unused")
     public static boolean isPlayerEntity(Entity entity) {
         return entity instanceof PlayerEntity;
     }
