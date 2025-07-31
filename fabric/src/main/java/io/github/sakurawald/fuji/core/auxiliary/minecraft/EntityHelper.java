@@ -1,23 +1,9 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import net.minecraft.entity.Entity;
-#if MC_VER <= MC_1_20_6
-import net.minecraft.entity.decoration.LeashKnotEntity;
-import net.minecraft.entity.mob.MobEntity;
-#elif MC_VER > MC_1_20_6
-import net.minecraft.entity.Leashable;
-import net.minecraft.entity.decoration.BlockAttachedEntity;
-#endif
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
-
-#if MC_VER <= MC_1_20_2
-import net.minecraft.entity.vehicle.AbstractMinecartEntity;
-import net.minecraft.entity.vehicle.BoatEntity;
-#elif MC_VER > MC_1_20_2
-import net.minecraft.entity.vehicle.VehicleEntity;
-#endif
 
 public class EntityHelper {
 
@@ -39,26 +25,26 @@ public class EntityHelper {
 
     public static boolean isBlockAttachedEntity(Entity entity) {
         #if MC_VER <= MC_1_20_6
-            return entity instanceof LeashKnotEntity;
+            return entity instanceof net.minecraft.entity.decoration.LeashKnotEntity;
         #elif MC_VER > MC_1_20_6
-            return entity instanceof BlockAttachedEntity;
+            return entity instanceof net.minecraft.entity.decoration.BlockAttachedEntity;
         #endif
     }
 
     public static boolean isLeashed(Entity entity) {
         #if MC_VER <= MC_1_20_6
-            return (entity instanceof MobEntity mobEntity) && mobEntity.isLeashed();
+            return (entity instanceof net.minecraft.entity.mob.MobEntity mobEntity) && mobEntity.isLeashed();
         #elif MC_VER > MC_1_20_6
-            return (entity instanceof Leashable leashable) && leashable.isLeashed();
+            return (entity instanceof net.minecraft.entity.Leashable leashable) && leashable.isLeashed();
         #endif
     }
 
     public static boolean isVehicleEntity(Entity entity) {
         #if MC_VER <= MC_1_20_2
-            return (entity instanceof BoatEntity)
-                || (entity instanceof AbstractMinecartEntity);
+            return (entity instanceof net.minecraft.entity.vehicle.BoatEntity)
+                || (entity instanceof net.minecraft.entity.vehicle.AbstractMinecartEntity);
         #elif MC_VER > MC_1_20_2
-            return entity instanceof VehicleEntity;
+            return entity instanceof net.minecraft.entity.vehicle.VehicleEntity;
         #endif
     }
 
