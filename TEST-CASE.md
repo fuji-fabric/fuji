@@ -100,6 +100,13 @@
 
 [Test Case]
 - Module: core
+- Steps: **Issue `/fuji`, and see the `document of afk module`, the `details of run module` and the `details of skin` module.**
+- Purpose: The text parser should parse the text properly from the earliest version to the latest version.
+- Purpose: The URL highlighter should work properly.
+- Purpose: Ensure the `</>` doesn't break the style of texts.
+
+[Test Case]
+- Module: core
 - Steps: **Issue `/stop` in the production environment.**
 - Purpose: The program should be terminated.
 

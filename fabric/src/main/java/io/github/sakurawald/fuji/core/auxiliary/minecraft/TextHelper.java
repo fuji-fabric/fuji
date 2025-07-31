@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
-import com.google.errorprone.annotations.Keep;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
@@ -26,6 +25,7 @@ import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.config.handler.impl.LanguageConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ResourceConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 
 import io.github.sakurawald.fuji.core.document.structure.DocString;
@@ -79,7 +79,7 @@ public class TextHelper {
 
     @ForDeveloper("The functions used to interact with the Text Parser.")
     public static class Parsers {
-        @Keep
+        @SuppressWarnings("unused")
         private static final int THIS_STATIC_VARIABLE_IS_USED_TO_ENSURE_THE_EXTENDED_TAGS_ARE_REGISTERED_BEFORE_CREATING_THE_DEFAULT_PARSER = registerExtendedTags();
         public static final NodeParser POWERFUL_PARSER = makePowerfulParser();
         public static final NodeParser STYLE_ONLY_PARSER = makeStyleOnlyParser();
@@ -945,9 +945,18 @@ public class TextHelper {
 
     public static class Fixer {
 
+        @TestCase(steps = "Issue `/fuji`, and see the `document of afk module`, the `details of run module` and the `details of skin` module.", purposes = {
+            "The text parser should parse the text properly from the earliest version to the latest version."
+            , "The URL highlighter should work properly."
+            , "Ensure the `</>` doesn't break the style of texts."
+        })
         public static String fixParserInput(String input) {
             // NOTE: Older Text Placeholder API can't parse the closing tag for custom color style tag. (e.g. `</#FF0000>`)
+            #if MC_VER < MC_1_20_4
             return input.replaceAll("</#.+?>", "</>");
+            #elif MC_VER >= MC_1_20_4
+            return input;
+            #endif
         }
 
     }
