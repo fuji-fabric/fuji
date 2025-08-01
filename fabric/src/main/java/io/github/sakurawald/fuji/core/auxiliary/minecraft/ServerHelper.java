@@ -27,9 +27,9 @@ public class ServerHelper {
     }
 
     @ForDeveloper("""
-    If a method is called both in client-side and server-side. Then it will be called twice if the mod is installed in the client-side.
-    One for the client, one for the client integrated server.
-    """)
+        If a method is called both in client-side and server-side. Then it will be called twice if the mod is installed in the client-side.
+        One for the client, one for the client integrated server.
+        """)
     public static boolean isClientSideIntegratedServer() {
         return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
     }

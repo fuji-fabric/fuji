@@ -8,15 +8,6 @@ import java.util.UUID;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 
-#if MC_VER <= MC_1_20_1
-#elif MC_VER > MC_1_20_1
-import net.minecraft.network.packet.c2s.common.SyncedClientOptions;
-#endif
-
-#if MC_VER <= MC_1_20_1
-#elif MC_VER > MC_1_20_1
-#endif
-
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
@@ -52,7 +43,7 @@ public class PlayerHelper {
         #if MC_VER <= MC_1_20_1
         return new ServerPlayerEntity(server, server.getOverworld(), gameProfile);
         #elif MC_VER > MC_1_20_1
-        SyncedClientOptions syncedClientOptions = SyncedClientOptions.createDefault();
+        net.minecraft.network.packet.c2s.common.SyncedClientOptions syncedClientOptions = SyncedClientOptions.createDefault();
         return new ServerPlayerEntity(server, server.getOverworld(), gameProfile, syncedClientOptions);
         #endif
     }
@@ -94,10 +85,10 @@ public class PlayerHelper {
         NbtCompound playerDataOpt = getPlayerManager().loadPlayerData(player);
         applyPlayerData(player, playerDataOpt);
         #elif MC_VER > MC_1_20_4 && MC_VER < MC_1_21_6
-        Optional<NbtCompound> playerDataOpt = ServerHelper.getPlayerManager().loadPlayerData(player);
+        Optional<NbtCompound> playerDataOpt = getPlayerManager().loadPlayerData(player);
         applyPlayerData(player, playerDataOpt.orElse(null));
         #elif MC_VER >= MC_1_21_6
-        Optional<ReadView> playerDataOpt = ServerHelper.getPlayerManager().loadPlayerData(player, ErrorReporter.Impl.EMPTY);
+        Optional<ReadView> playerDataOpt = getPlayerManager().loadPlayerData(player, ErrorReporter.Impl.EMPTY);
         applyPlayerData(player, playerDataOpt.get());
         #endif
 
