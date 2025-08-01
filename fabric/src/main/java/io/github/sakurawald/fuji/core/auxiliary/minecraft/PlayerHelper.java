@@ -134,9 +134,11 @@ public class PlayerHelper {
             @NotNull ServerPlayerEntity player, @Nullable net.minecraft.storage.ReadView playerData
             #endif
         ) {
-            #if MC_VER < MC_1_21_6
+            /* Do nothing if player data is null. */
             if (playerData == null) return;
+
             /* Restore previous dimension. */
+            #if MC_VER < MC_1_21_6
             if (playerData.contains(DIMENSION_NBT_KEY)) {
                 String dimensionId = NbtHelper.Primitives.getString(playerData, DIMENSION_NBT_KEY);
                 setServerWorld(player, dimensionId);
@@ -153,7 +155,7 @@ public class PlayerHelper {
             world.ifPresent(player::setServerWorld);
         }
 
-        public static ServerPlayerEntity loadServerPlayerEntity(@NotNull String playerName) {
+        public static ServerPlayerEntity loadDummyPlayer(@NotNull String playerName) {
             /* Check if the target player is online. */
             Optional<ServerPlayerEntity> player = Lookup.getOnlinePlayerByName(playerName);
             if (player.isPresent()) {
@@ -173,11 +175,11 @@ public class PlayerHelper {
             NbtCompound playerData = getPlayerManager().loadPlayerData($player);
             applyPlayerData($player, playerData);
             #elif MC_VER > MC_1_20_4 && MC_VER < MC_1_21_6
-            Optional<NbtCompound> playerDataOpt = getPlayerManager().loadPlayerData($player);
-            applyPlayerData($player, playerDataOpt.orElse(null));
+            Optional<NbtCompound> playerData = getPlayerManager().loadPlayerData($player);
+            applyPlayerData($player, playerData.orElse(null));
             #elif MC_VER >= MC_1_21_6
-            Optional<net.minecraft.storage.ReadView> playerDataOpt = getPlayerManager().loadPlayerData($player, net.minecraft.util.ErrorReporter.Impl.EMPTY);
-            applyPlayerData($player, playerDataOpt.get());
+            Optional<net.minecraft.storage.ReadView> playerData = getPlayerManager().loadPlayerData($player, net.minecraft.util.ErrorReporter.Impl.EMPTY);
+            applyPlayerData($player, playerData.orElse(null));
             #endif
 
             return $player;
