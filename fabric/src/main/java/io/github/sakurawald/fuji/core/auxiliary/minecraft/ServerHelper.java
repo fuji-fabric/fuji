@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
-import com.mojang.brigadier.CommandDispatcher;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import lombok.Getter;
@@ -8,7 +7,6 @@ import lombok.Setter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ChunkHolder;
 
 #if  MC_VER <= MC_1_20_6
@@ -18,7 +16,6 @@ import net.minecraft.server.world.ServerChunkLoadingManager;
 #endif
 
 import net.minecraft.server.world.ServerWorld;
-import org.jetbrains.annotations.Nullable;
 
 @TestCase(steps = "Consider the possible runtime environments.", purposes = {
     "The fabric server-side environment."
@@ -33,16 +30,6 @@ public class ServerHelper {
     @Getter
     @Setter
     private static MinecraftServer server;
-
-    public static @Nullable CommandDispatcher<ServerCommandSource> getCommandDispatcher() {
-        // NOTE: It's null during the server startup.
-        if (getServer() == null
-            || getServer().getCommandManager() == null) {
-            return null;
-        }
-
-        return getServer().getCommandManager().getDispatcher();
-    }
 
     public static void executeSync(Runnable runnable) {
         getServer().executeSync(runnable);

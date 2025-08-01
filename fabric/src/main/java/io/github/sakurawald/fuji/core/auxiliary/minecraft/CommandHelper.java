@@ -32,6 +32,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import org.jetbrains.annotations.Nullable;
 
 public class CommandHelper {
 
@@ -39,7 +40,7 @@ public class CommandHelper {
     public static final int COMMAND_EXCEPTION_COLOR = 16736000;
 
     public static @NotNull String findCommandNodePath(@NotNull CommandNode<ServerCommandSource> node) {
-        CommandDispatcher<ServerCommandSource> dispatcher = ServerHelper.getCommandDispatcher();
+        CommandDispatcher<ServerCommandSource> dispatcher = getCommandDispatcher();
         assert dispatcher != null;
 
         // Find the first encountered path in root tree, ignore other paths if there are `forks` or `redirects`.
@@ -70,7 +71,7 @@ public class CommandHelper {
 
     public static List<CommandNode<ServerCommandSource>> getCommandNodes() {
         List<CommandNode<ServerCommandSource>> result = new ArrayList<>();
-        CommandDispatcher<ServerCommandSource> commandDispatcher = ServerHelper.getCommandDispatcher();
+        CommandDispatcher<ServerCommandSource> commandDispatcher = getCommandDispatcher();
         assert commandDispatcher != null;
         RootCommandNode<ServerCommandSource> root = commandDispatcher.getRoot();
         collectCommandNodes(result, root);
@@ -108,8 +109,7 @@ public class CommandHelper {
     public static boolean canUseThisCommand(ServerPlayerEntity player, String commandString) {
         /* Parse the command string into command nodes. */
         ServerCommandSource commandSource = player.getCommandSource();
-        ParseResults<ServerCommandSource> parseResults = ServerHelper
-            .getCommandDispatcher()
+        ParseResults<ServerCommandSource> parseResults = getCommandDispatcher()
             .parse(commandString, commandSource);
         CommandContextBuilder<ServerCommandSource> context = parseResults.getContext();
 
@@ -127,6 +127,16 @@ public class CommandHelper {
             .stream()
             .map(ParsedCommandNode::getNode)
             .allMatch(it -> it.canUse(commandSource));
+    }
+
+    public static @Nullable CommandDispatcher<ServerCommandSource> getCommandDispatcher() {
+        // NOTE: It's null during the server startup.
+        if (ServerHelper.getServer() == null
+            || ServerHelper.getServer().getCommandManager() == null) {
+            return null;
+        }
+
+        return ServerHelper.getServer().getCommandManager().getDispatcher();
     }
 
     @SuppressWarnings("unused")

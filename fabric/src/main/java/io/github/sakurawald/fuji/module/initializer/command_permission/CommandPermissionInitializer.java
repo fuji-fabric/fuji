@@ -12,7 +12,6 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
@@ -192,7 +191,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
     public static int $describe(@CommandSource ServerCommandSource source, GreedyString command) {
         /* Parse the command string to get the command context. */
         String $command = command.getValue();
-        ParseResults<ServerCommandSource> parseResults = ServerHelper
+        ParseResults<ServerCommandSource> parseResults = CommandHelper
             .getCommandDispatcher()
             // NOTE: The `parse result` depends on the `command source`.
             .parse($command, source);

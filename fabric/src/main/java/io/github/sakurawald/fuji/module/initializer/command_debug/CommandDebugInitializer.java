@@ -5,7 +5,6 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -30,7 +29,7 @@ public class CommandDebugInitializer extends ModuleInitializer {
         String commandString = command.getValue();
 
         int returnValue = Objects
-            .requireNonNull(ServerHelper.getCommandDispatcher())
+            .requireNonNull(CommandHelper.getCommandDispatcher())
             .execute(commandString, source);
 
         TextHelper.sendTextByKey(source, "command.string", commandString);

@@ -3,10 +3,10 @@ package io.github.sakurawald.fuji.module.initializer.command_alias;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.CommandNode;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
@@ -49,7 +49,7 @@ public class CommandAliasInitializer extends ModuleInitializer {
     @Override
     protected void onInitialize() {
         ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
-            CommandDispatcher<ServerCommandSource> dispatcher = ServerHelper.getCommandDispatcher();
+            CommandDispatcher<ServerCommandSource> dispatcher = CommandHelper.getCommandDispatcher();
             config.model().alias.forEach(it -> {
                 assert dispatcher != null;
                 processCommandAliasEntry(dispatcher, it);

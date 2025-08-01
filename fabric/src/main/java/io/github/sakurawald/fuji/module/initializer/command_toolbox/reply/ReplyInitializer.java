@@ -4,7 +4,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -37,7 +36,7 @@ public class ReplyInitializer extends ModuleInitializer {
         String target = player2replyTargetPlayer.get(player.getGameProfile().getName());
 
         try {
-            Objects.requireNonNull(ServerHelper.getCommandDispatcher())
+            Objects.requireNonNull(CommandHelper.getCommandDispatcher())
                 .execute("msg %s %s".formatted(target, message.getValue()), player.getCommandSource());
         } catch (CommandSyntaxException e) {
             TextHelper.sendTextByKey(player, "reply.no_target");

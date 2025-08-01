@@ -5,7 +5,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.CommandNode;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.module.initializer.command_permission.CommandPermissionInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_permission.structure.WrappedPredicate;
 import net.minecraft.server.command.ServerCommandSource;
@@ -35,7 +34,7 @@ public class CommandNodeMixin {
     private Predicate<?> wrapRequirementPredicateForThisCommandNode(Predicate<?> original) {
 
         /* Only try to wrap the requirement predicate of command node until the command dispatcher is initialized. */
-        @Nullable CommandDispatcher<ServerCommandSource> dispatcher = ServerHelper.getCommandDispatcher();
+        @Nullable CommandDispatcher<ServerCommandSource> dispatcher = CommandHelper.getCommandDispatcher();
         if (dispatcher == null) {
             LogUtil.debug("The CommandNode#getRequirement is triggered too early, fuji will just ignore this call.");
             return original;
