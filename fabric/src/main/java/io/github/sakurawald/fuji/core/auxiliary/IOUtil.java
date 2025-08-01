@@ -37,6 +37,11 @@ public class IOUtil {
         return computeRelativePath(base, file);
     }
 
+    public static String makeValidWindowsFileName(@NotNull String fileName) {
+        String invalidChars = "[<>:\"/\\|?*]";
+        return fileName.replaceAll(invalidChars, "_");
+    }
+
     @SneakyThrows(IOException.class)
     public static @NotNull List<Path> listLatestFiles(@NotNull Path path) {
         try (Stream<Path> files = Files.list(path)) {
