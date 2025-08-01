@@ -64,7 +64,7 @@ public class TeleportWarmupInitializer extends ModuleInitializer {
 
     public static boolean shouldApplyTeleportWarmup(ServerWorld destinationDimension, ServerPlayerEntity player) {
         /* Skip the teleport warmup if target dimension is not in the list of effective dimensions */
-        if (!config.model().dimension.effective_dimensions.contains(RegistryHelper.toString(destinationDimension))) {
+        if (!config.model().dimension.effective_dimensions.contains(RegistryHelper.toIdString(destinationDimension))) {
             return false;
         }
 

@@ -76,7 +76,7 @@ public class ProfilerGui extends SimpleGui {
             List<Text> lore = new ArrayList<>();
 
             /* Dimension name. */
-            lore.add(TextHelper.getTextByKey(getPlayer(), "profiler.dimension.name", RegistryHelper.toString(world)));
+            lore.add(TextHelper.getTextByKey(getPlayer(), "profiler.dimension.name", RegistryHelper.toIdString(world)));
 
             /* Block entities. */
             int blockEntityCount = 0;
@@ -101,7 +101,7 @@ public class ProfilerGui extends SimpleGui {
             }
 
             GuiElement element = new GuiElementBuilder()
-                .setItem(WorldHelper.toGuiItem(RegistryHelper.toString(world)))
+                .setItem(WorldHelper.toGuiItem(RegistryHelper.toIdString(world)))
                 .setName(TextHelper.getTextByKey(getPlayer(), "profiler.dimension"))
                 .setLore(lore)
                 .build();

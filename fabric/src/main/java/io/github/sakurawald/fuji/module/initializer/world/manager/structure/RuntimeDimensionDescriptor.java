@@ -98,7 +98,7 @@ public class RuntimeDimensionDescriptor {
         return ServerHelper
             .getWorlds()
             .stream()
-            .anyMatch(it -> RegistryHelper.toString(it).equals(this.dimension));
+            .anyMatch(it -> RegistryHelper.toIdString(it).equals(this.dimension));
     }
 
     public boolean isDebugWorld() {

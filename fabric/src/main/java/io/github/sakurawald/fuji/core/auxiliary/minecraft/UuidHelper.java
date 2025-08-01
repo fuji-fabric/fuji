@@ -44,7 +44,7 @@ public class UuidHelper {
     }
 
     public static @NotNull String toString(@NotNull World world, @NotNull BlockPos blockPos) {
-        String dimensionString = RegistryHelper.toString(world);
+        String dimensionString = RegistryHelper.toIdString(world);
         String blockPosString = blockPos.getX() + "#" + blockPos.getY() + "#" + blockPos.getZ();
         return dimensionString + "#" + blockPosString;
     }

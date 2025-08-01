@@ -120,7 +120,7 @@ public class ItemStackHelper {
     }
 
     private static boolean filterItemMaterial(@NotNull ItemStack itemStack, String keyword) {
-        return StringUtil.toLowerCase(RegistryHelper.toString(itemStack.getItem()))
+        return StringUtil.toLowerCase(RegistryHelper.toIdString(itemStack.getItem()))
             .contains(StringUtil.toLowerCase(keyword));
     }
 

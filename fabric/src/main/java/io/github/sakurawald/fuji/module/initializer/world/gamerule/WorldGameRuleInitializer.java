@@ -56,7 +56,7 @@ public class WorldGameRuleInitializer extends ModuleInitializer {
     }
 
     public static GameRules getEffectiveGameRules(World world, GameRules original) {
-        String dimensionId = RegistryHelper.toString(world);
+        String dimensionId = RegistryHelper.toIdString(world);
         Optional<GameRuleDescriptor> effectiveGameRuleDescriptor = WorldGameRuleInitializer
             .getEffectiveGameRuleDescriptor(dimensionId);
         return effectiveGameRuleDescriptor

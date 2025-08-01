@@ -329,7 +329,7 @@ public class WorldInitializer extends ModuleInitializer {
 
         GlobalPos
             .of(player)
-            .withLevel(RegistryHelper.toString(targetDimension))
+            .withLevel(RegistryHelper.toIdString(targetDimension))
             .teleport(player);
         return CommandHelper.Return.SUCCESS;
     }
@@ -343,7 +343,7 @@ public class WorldInitializer extends ModuleInitializer {
         ServerHelper
             .getWorlds()
             .forEach(world -> {
-                String dimensionId = RegistryHelper.toString(world);
+                String dimensionId = RegistryHelper.toIdString(world);
                 TextHelper.sendTextByKey(source, "dimension", dimensionId);
             });
 
@@ -472,7 +472,7 @@ public class WorldInitializer extends ModuleInitializer {
         return CommandHelper.Pattern.withCommandConfirmed(source, confirm, () -> {
             /* Get the original dimension node. */
             ServerWorld dimensionInstance = dimension.getValue();
-            String dimensionIdentifier = RegistryHelper.toString(dimensionInstance);
+            String dimensionIdentifier = RegistryHelper.toIdString(dimensionInstance);
             Optional<RuntimeDimensionDescriptor> runtimeDimensionDescriptor = WorldService.getRuntimeDimensionDescriptor(dimensionIdentifier);
             if (runtimeDimensionDescriptor.isEmpty()) {
                 TextHelper.sendTextByKey(source, "world.dimension.not_found");
@@ -536,7 +536,7 @@ public class WorldInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     private static int $who(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {
         String playerName = PlayerHelper.getPlayerName(player);
-        String locationDimensionId = RegistryHelper.toString(player.getWorld());
+        String locationDimensionId = RegistryHelper.toIdString(player.getWorld());
         TextHelper.sendTextByKey(source, "world.who.player", playerName, locationDimensionId);
         return CommandHelper.Return.SUCCESS;
     }
@@ -546,7 +546,7 @@ public class WorldInitializer extends ModuleInitializer {
             .getWorlds()
             .stream()
             .collect(Collectors.toMap(
-                RegistryHelper::toString
+                RegistryHelper::toIdString
                 , world -> world.getPlayers().stream().map(PlayerHelper::getPlayerName).toList()));
 
         groupedPlayers
@@ -554,7 +554,7 @@ public class WorldInitializer extends ModuleInitializer {
             .stream()
             .filter(entry -> {
                 if (specifiedDimension == null) return true;
-                String filterDimension = RegistryHelper.toString(specifiedDimension.getValue());
+                String filterDimension = RegistryHelper.toIdString(specifiedDimension.getValue());
                 return entry.getKey().equals(filterDimension);
             })
             .forEach(entry -> {
@@ -574,7 +574,7 @@ public class WorldInitializer extends ModuleInitializer {
 
         /* Make text for basic info. */
         TextHelper.sendTextByKey(source, "dimension.class", dimensionInstance.getClass().getName());
-        TextHelper.sendTextByKey(source, "dimension.id", RegistryHelper.toString(dimensionInstance));
+        TextHelper.sendTextByKey(source, "dimension.id", RegistryHelper.toIdString(dimensionInstance));
         TextHelper.sendTextByKey(source, "dimension.difficulty", dimensionInstance.getDifficulty());
         TextHelper.sendTextByKey(source, "dimension.seed", dimensionInstance.getSeed());
         TextHelper.sendTextByKey(source, "dimension.options", dimensionInstance.getDimension());

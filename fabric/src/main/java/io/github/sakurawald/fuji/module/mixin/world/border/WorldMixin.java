@@ -15,7 +15,7 @@ public class WorldMixin {
     @ModifyReturnValue(method = "getWorldBorder", at = @At("RETURN"))
     WorldBorder modifyTheReturnValueOfGetWorldBorder(WorldBorder original) {
         World world = (World) (Object) this;
-        String dimensionId = RegistryHelper.toString(world);
+        String dimensionId = RegistryHelper.toIdString(world);
 
         return WorldBorderInitializer
             .getEffectiveBorderDescriptor(dimensionId)
