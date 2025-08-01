@@ -37,7 +37,7 @@ public class NicknameInitializer extends ModuleInitializer {
 
         data.model().format.player2format.put(name, value);
         data.writeStorage();
-        PlayerHelper.updateDisplayNames();
+        PlayerHelper.updateDisplayName(player);
 
         TextHelper.sendTextByKey(player, "nickname.set");
         return CommandHelper.Return.SUCCESS;
@@ -50,7 +50,7 @@ public class NicknameInitializer extends ModuleInitializer {
 
         data.model().format.player2format.remove(name);
         data.writeStorage();
-        PlayerHelper.updateDisplayNames();
+        PlayerHelper.updateDisplayName(player);
 
         TextHelper.sendTextByKey(player, "nickname.unset");
         return CommandHelper.Return.SUCCESS;

@@ -25,14 +25,14 @@ public class OfflineGameProfileArgumentTypeAdapter extends BaseArgumentTypeAdapt
 
     @Override
     public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
-        return super.makeRequiredArgumentBuilder(argumentName).suggests(CommandHelper.Suggestion.iterable(PlayerHelper::getOfflinePlayerNames));
+        return super.makeRequiredArgumentBuilder(argumentName).suggests(CommandHelper.Suggestion.iterable(PlayerHelper.Cache::getOfflinePlayerNames));
     }
 
     @Override
     public Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
         String offlinePlayerName = StringArgumentType.getString(context, argument.getArgumentName());
 
-        Optional<GameProfile> offlineGameProfile = PlayerHelper.getOfflineGameProfileByName(offlinePlayerName);
+        Optional<GameProfile> offlineGameProfile = PlayerHelper.Cache.getOfflineGameProfileByName(offlinePlayerName);
         return offlineGameProfile
             .map(OfflineGameProfile::new)
             .orElseThrow(() -> {

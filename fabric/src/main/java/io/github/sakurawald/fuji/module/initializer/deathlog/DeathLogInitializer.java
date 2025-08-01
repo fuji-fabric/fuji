@@ -36,7 +36,7 @@ public class DeathLogInitializer extends ModuleInitializer {
     @CommandNode("deathlog")
     @CommandRequirement(level = 4)
     private static int $gui(@CommandSource ServerPlayerEntity player) {
-        List<String> offlinePlayerNames = PlayerHelper.getOfflinePlayerNames();
+        List<String> offlinePlayerNames = PlayerHelper.Cache.getOfflinePlayerNames();
         new DeathDataListGui(player, offlinePlayerNames, 0)
             .open();
         return CommandHelper.Return.SUCCESS;

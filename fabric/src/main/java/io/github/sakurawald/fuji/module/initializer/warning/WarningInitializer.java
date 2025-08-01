@@ -75,7 +75,7 @@ public class WarningInitializer extends ModuleInitializer {
     @CommandNode("warning gui")
     @CommandRequirement(level = 4)
     private static int $warningGui(@CommandSource ServerPlayerEntity player) {
-        List<String> offlinePlayerNames = PlayerHelper.getOfflinePlayerNames();
+        List<String> offlinePlayerNames = PlayerHelper.Cache.getOfflinePlayerNames();
         new WarningGui(null, player, offlinePlayerNames, 0)
             .open();
         return CommandHelper.Return.SUCCESS;

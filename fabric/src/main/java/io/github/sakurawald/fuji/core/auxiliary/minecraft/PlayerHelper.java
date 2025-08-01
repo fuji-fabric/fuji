@@ -63,7 +63,7 @@ public class PlayerHelper {
             }
 
             /* Load game profile. */
-            Optional<GameProfile> gameProfile = getOfflineGameProfileByName(playerName);
+            Optional<GameProfile> gameProfile = Cache.getOfflineGameProfileByName(playerName);
             if (gameProfile.isEmpty()) {
                 throw new IllegalArgumentException("Can't find player %s in usercache.json".formatted(playerName));
             }
@@ -100,8 +100,7 @@ public class PlayerHelper {
         }
     }
 
-
-    public static void playSound(ServerPlayerEntity player, SoundEvent soundEvent, SoundCategory soundCategory, float volume, float pitch) {
+    public static void playSound(@NotNull ServerPlayerEntity player, @NotNull SoundEvent soundEvent, @NotNull SoundCategory soundCategory, float volume, float pitch) {
         #if MC_VER <= MC_1_20_4
         player.playSound(soundEvent, soundCategory, volume, pitch);
         #elif MC_VER > MC_1_20_4
@@ -109,7 +108,7 @@ public class PlayerHelper {
         #endif
     }
 
-    public static int getPing(ServerPlayerEntity player) {
+    public static int getPing(@NotNull ServerPlayerEntity player) {
         #if MC_VER <= MC_1_20_1
         return player.pingMilliseconds;
         #elif MC_VER > MC_1_20_1
@@ -125,12 +124,12 @@ public class PlayerHelper {
         #endif
     }
 
-    public static String getPlayerName(PlayerEntity player) {
+    public static String getPlayerName(@NotNull PlayerEntity player) {
         return player.getGameProfile().getName();
     }
 
+    @ForDeveloper("The carpet mod sub-classing the ServerPlayerEntity.")
     public static boolean isRealPlayer(@NotNull ServerPlayerEntity player) {
-        // NOTE: The carpet mod subclassing the ServerPlayerEntity.
         return player.getClass() == ServerPlayerEntity.class;
     }
 
@@ -144,18 +143,18 @@ public class PlayerHelper {
         return player instanceof ServerPlayerEntity;
     }
 
-    public static boolean isOperator(PlayerEntity player) {
+    public static boolean isOperator(@NotNull PlayerEntity player) {
         return ServerHelper
             .getServer()
             .getPlayerManager()
             .isOperator(player.getGameProfile());
     }
 
-    public static boolean isAdmin(ServerCommandSource source) {
+    public static boolean isAdmin(@NotNull ServerCommandSource source) {
         return source.hasPermissionLevel(4);
     }
 
-    public static ServerWorld getServerWorld(ServerPlayerEntity player) {
+    public static @NotNull ServerWorld getServerWorld(@NotNull ServerPlayerEntity player) {
         #if MC_VER <= MC_1_21_5
         return (ServerWorld) player.getWorld();
         #elif MC_VER > MC_1_21_5
@@ -178,65 +177,70 @@ public class PlayerHelper {
             .toList();
     }
 
-    public static Optional<ServerPlayerEntity> getOnlinePlayerByName(String name) {
+    public static Optional<ServerPlayerEntity> getOnlinePlayerByName(@NotNull String playerName) {
         return getOnlinePlayers()
             .stream()
-            .filter(it -> getPlayerName(it).equals(name))
+            .filter(it -> getPlayerName(it).equals(playerName))
             .findFirst();
     }
 
-    public static Optional<ServerPlayerEntity> getOnlinePlayerByNameIgnoreCase(String name) {
+    public static Optional<ServerPlayerEntity> getOnlinePlayerByNameIgnoreCase(@NotNull String playerName) {
         return getOnlinePlayers()
             .stream()
-            .filter(it -> getPlayerName(it).equalsIgnoreCase(name))
+            .filter(it -> getPlayerName(it).equalsIgnoreCase(playerName))
             .findFirst();
     }
 
-    public static Optional<ServerPlayerEntity> getOnlinePlayerByUuid(UUID uuid) {
+    public static Optional<ServerPlayerEntity> getOnlinePlayerByUuid(@NotNull UUID playerUUID) {
         return getOnlinePlayers()
             .stream()
-            .filter(player -> player.getUuid().equals(uuid))
+            .filter(player -> player.getUuid().equals(playerUUID))
             .findFirst();
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public static boolean isPlayerOnline(String playerName) {
+    public static boolean isPlayerOnline(@NotNull String playerName) {
         return getOnlinePlayerByName(playerName)
             .isPresent();
     }
 
+    public static void updateDisplayName(@NotNull ServerPlayerEntity player) {
+        PlayerListS2CPacket packet = new PlayerListS2CPacket(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME, player);
+        PacketHelper.sendPacketToAll(packet);
+    }
+
     public static void updateDisplayNames() {
         getOnlinePlayers()
-            .forEach(player -> {
-                PlayerListS2CPacket packet = new PlayerListS2CPacket(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME, player);
-                PacketHelper.sendPacketToAll(packet);
-            });
+            .forEach(PlayerHelper::updateDisplayName);
     }
 
-    public static List<GameProfile> getOfflineGameProfiles() {
-        /* Get the user cache. */
-        UserCache userCache = ServerHelper.getServer().getUserCache();
-        if (userCache == null) return List.of();
+    public static class Cache {
 
-        /* Make the list from user cache. */
-        return userCache.byName.values()
-            .stream()
-            .map(UserCache.Entry::getProfile)
-            .toList();
-    }
+        public static List<GameProfile> getOfflineGameProfiles() {
+            /* Get the user cache. */
+            UserCache userCache = ServerHelper.getServer().getUserCache();
+            if (userCache == null) return List.of();
 
-    public static @NotNull List<String> getOfflinePlayerNames() {
-        return getOfflineGameProfiles()
-            .stream()
-            .map(GameProfile::getName)
-            .toList();
-    }
+            /* Make the list from user cache. */
+            return userCache.byName.values()
+                .stream()
+                .map(UserCache.Entry::getProfile)
+                .toList();
+        }
 
-    public static Optional<GameProfile> getOfflineGameProfileByName(@NotNull String playerName) {
-        return getOfflineGameProfiles()
-            .stream()
-            .filter(it -> it.getName().equals(playerName))
-            .findFirst();
+        public static @NotNull List<String> getOfflinePlayerNames() {
+            return getOfflineGameProfiles()
+                .stream()
+                .map(GameProfile::getName)
+                .toList();
+        }
+
+        public static Optional<GameProfile> getOfflineGameProfileByName(@NotNull String playerName) {
+            return getOfflineGameProfiles()
+                .stream()
+                .filter(it -> it.getName().equals(playerName))
+                .findFirst();
+        }
     }
 
 }

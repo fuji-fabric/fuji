@@ -148,7 +148,7 @@ public class EconomyService {
     }
 
     public static @NotNull List<GameProfileAndEconomyAccount> makeBalanceTopEntities(@NotNull ServerPlayerEntity player, @NotNull Identifier currencyId) {
-        return PlayerHelper
+        return PlayerHelper.Cache
             .getOfflineGameProfiles()
             .stream()
             .map(gameProfile -> {
