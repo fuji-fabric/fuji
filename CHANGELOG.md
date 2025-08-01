@@ -1,8 +1,3 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
-- [jail] feature: `jailed players` now have their `display names` modified.
-- [command_toolbox.nickname] feature: improve the compatibility with other mods.
-- [world] refactor: remove the `blacklist` option to reduce confusion, as its functionality is covered by the `--confirm`.
-- [placeholder] feature: now the `%fuji:player_{prefix|suffix}%` placeholder returns a dummy `empty string` if the specified player has no `prefix` or `suffix`. (Makes it easier to use)
-- [core] feature: improve the `error text` for invalid placeholder arguments.
-- [core] feature: enhance the validation for `offline player name` and `offline game profile` argument types to reject `unknown player`.
+- [core] fix: the default `date formatter` cause the `invalid backup file name` in `Windows` platform. (#431)
