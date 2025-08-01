@@ -2,7 +2,9 @@ package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
-
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -11,24 +13,21 @@ import net.luckperms.api.util.Tristate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-
 public class LuckpermsHelper {
 
     private static LuckPerms instance;
-    private static @Nullable LuckPerms getAPI() {
+
+    private static Optional<LuckPerms> getAPI() {
         if (instance == null) {
             try {
                 instance = LuckPermsProvider.get();
             } catch (Exception ignored) {
                 // NOTE: The `luckperms` API instance only available when the server is started.
-                return null;
+                return Optional.empty();
             }
-            return instance;
+            return Optional.of(instance);
         }
-        return instance;
+        return Optional.of(instance);
     }
 
     /*
@@ -49,28 +48,26 @@ public class LuckpermsHelper {
         return userFuture.join();
     }
 
-    public static @NotNull Tristate getPermission(@NotNull UUID uuid, @Nullable PermissionDescriptor permission, Object... arguments) {
-        // NOTE: The convention is, own a `positive permission` is a `good` thing.
+    public static @NotNull Tristate getPermission(@NotNull UUID uuid, @Nullable PermissionDescriptor permissionDescriptor, Object... arguments) {
+        /* If luckperms mod is NOT installed, then there is no `string permission`. */
+        Optional<LuckPerms> api = getAPI();
+        return api
+            .map($api -> {
+                /* For a `null permission` or `empty permission`, it's im-possible to have it. */
+                if (permissionDescriptor == null) return null;
+                String permissionString = permissionDescriptor.withArguments(arguments);
+                if (permissionString == null || permissionString.isEmpty()) {
+                    return null;
+                }
 
-        /* If luckperms mod is not installed, then there is no `string permission`. */
-        LuckPerms api = getAPI();
-        if (api == null) {
-            return Tristate.UNDEFINED;
-        }
-
-        /* For a `null permission`, it's im-possible to have it. */
-        if (permission == null) return Tristate.UNDEFINED;
-        String permissionString = permission.withArguments(arguments);
-        if (permissionString == null || permissionString.isEmpty()) {
-            return Tristate.UNDEFINED;
-        }
-
-        /* Test the permission for the user. */
-        User user = loadUser(api, uuid);
-        return user
-            .getCachedData()
-            .getPermissionData()
-            .checkPermission(permissionString);
+                /* Test the permission for the user. */
+                User user = loadUser($api, uuid);
+                return user
+                    .getCachedData()
+                    .getPermissionData()
+                    .checkPermission(permissionString);
+            })
+            .orElse(Tristate.UNDEFINED);
     }
 
     public static boolean hasPermission(@NotNull UUID uuid, @Nullable PermissionDescriptor permissionDescriptor, Object... arguments) {
@@ -79,33 +76,33 @@ public class LuckpermsHelper {
     }
 
     public static <T> @NotNull Optional<T> getMeta(@NotNull UUID uuid, @Nullable MetaDescriptor<T> metaDescriptor, Object... arguments) {
-        /* If luckperms is not installed, then there is no meta. */
-        LuckPerms api = getAPI();
-        if (api == null) {
-            return Optional.empty();
-        }
+        /* If luckperms is not installed, then there is no `meta`. */
+        Optional<LuckPerms> api = getAPI();
+        return api
+            .map($api -> {
+                /* For a `null meta` or `empty meta`, it's im-possible to have it. */
+                if (metaDescriptor == null) return null;
+                String metaString = metaDescriptor.withArguments(arguments);
+                if (metaString == null || metaString.isEmpty()) {
+                    return null;
+                }
 
-        /* For a `null meta`, it's im-possible to have it. */
-        if (metaDescriptor == null) return Optional.empty();
-        String metaString = metaDescriptor.withArguments(arguments);
-        if (metaString == null || metaString.isEmpty()) {
-            return Optional.empty();
-        }
-
-        /* Retrieve the meta for the user. */
-        User user = loadUser(api, uuid);
-        return user.getCachedData()
-            .getMetaData()
-            .getMetaValue(metaString, metaDescriptor.valueTransformer);
+                /* Retrieve the meta for the user. */
+                User user = loadUser($api, uuid);
+                Optional<? extends T> metaValue = user.getCachedData()
+                    .getMetaData()
+                    .getMetaValue(metaString, metaDescriptor.valueTransformer);
+                return metaValue.orElse(null);
+            });
     }
 
     public static @Nullable String getPrefix(UUID uuid) {
-        LuckPerms api = getAPI();
-        if (api == null) {
+        Optional<LuckPerms> api = getAPI();
+        if (api.isEmpty()) {
             return null;
         }
 
-        User user = loadUser(api, uuid);
+        User user = loadUser(api.orElse(null), uuid);
         return user
             .getCachedData()
             .getMetaData()
@@ -114,12 +111,12 @@ public class LuckpermsHelper {
     }
 
     public static @Nullable String getSuffix(UUID uuid) {
-        LuckPerms api = getAPI();
-        if (api == null) {
+        Optional<LuckPerms> api = getAPI();
+        if (api.isEmpty()) {
             return null;
         }
 
-        User user = loadUser(api, uuid);
+        User user = loadUser(api.orElse(null), uuid);
         return user
             .getCachedData()
             .getMetaData()
