@@ -39,7 +39,7 @@ public class IOUtil {
 
     public static String makeValidWindowsFileName(@NotNull String fileName) {
         String invalidChars = "[<>:\"/\\|?*]";
-        return fileName.replaceAll(invalidChars, "_");
+        return fileName.replaceAll(invalidChars, "-");
     }
 
     @SneakyThrows(IOException.class)
