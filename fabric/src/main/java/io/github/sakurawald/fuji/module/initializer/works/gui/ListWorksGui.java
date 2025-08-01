@@ -102,7 +102,7 @@ public class ListWorksGui extends CrudPagedGui<Work> {
 
     @Override
     protected void onLeftClickEntity(Work entity) {
-        RegistryKey<World> worldKey = RegistryKey.of(RegistryKeys.WORLD, RegistryHelper.makeIdentifier(entity.level));
+        RegistryKey<World> worldKey = RegistryKey.of(RegistryKeys.WORLD, RegistryHelper.makeIdentifierOrThrow(entity.level));
         ServerPlayerEntity player = getPlayer();
         ServerWorld dimension = ServerHelper.getServer().getWorld(worldKey);
 

@@ -11,7 +11,6 @@ import io.github.sakurawald.fuji.module.initializer.economy.EconomyInitializer;
 import io.github.sakurawald.fuji.module.initializer.economy.service.EconomyService;
 import io.github.sakurawald.fuji.module.initializer.economy.config.structure.CustomEconomyAccountNode;
 import io.github.sakurawald.fuji.module.initializer.economy.config.structure.CustomEconomyCurrencyDescriptor;
-import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -46,7 +45,7 @@ public class CustomEconomyAccount implements EconomyAccount {
     @Override
     public Identifier id() {
         // NOTE: Make the `account ID` identical to `currency ID`, for simplicity.
-        return RegistryHelper.makeIdentifier(this.currencyDescriptor.currencyId);
+        return RegistryHelper.makeIdentifierOrThrow(this.currencyDescriptor.currencyId);
     }
 
     @Override

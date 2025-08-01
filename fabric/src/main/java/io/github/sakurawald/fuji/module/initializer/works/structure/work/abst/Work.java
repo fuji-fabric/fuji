@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.works.structure.work.abst;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -75,7 +76,7 @@ public abstract class Work implements ObjectTypeStringGetter {
             return this.getDefaultEntityIcon();
         }
 
-        return RegistryHelper.getItem(this.icon);
+        return ItemStackHelper.getItem(this.icon);
     }
 
     public abstract void openSpecializedSettingsGui(ServerPlayerEntity player, SimpleGui parentGui);

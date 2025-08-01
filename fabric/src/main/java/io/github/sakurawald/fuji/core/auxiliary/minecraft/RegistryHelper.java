@@ -1,29 +1,32 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import io.github.sakurawald.fuji.Fuji;
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.network.message.MessageType;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
 public class RegistryHelper {
+
+    public static @NotNull String toString(@NotNull Identifier identifier) {
+        return identifier.toString();
+    }
 
     public static @NotNull String toString(@NotNull Item item) {
         return Registries.ITEM.getId(item).toString();
@@ -53,6 +56,29 @@ public class RegistryHelper {
         return registryKey.getValue().toString();
     }
 
+    public static <T> @NotNull String toString(@NotNull RegistryEntry<T> registryEntry) {
+        return registryEntry
+            .getKey()
+            .map(RegistryHelper::toString)
+            .orElse("[unregistered]");
+    }
+
+    @ForDeveloper("In older MC versions, there is no a registry for MessageType.")
+    public static String toString(@NotNull MessageType.Parameters parameters) {
+        String messageTypeIdString;
+
+        #if MC_VER <= MC_1_20_4
+        MessageType messageTypeObj = parameters.type();
+        messageTypeIdString = RegistryHelper.findRegistryKey(RegistryKeys.MESSAGE_TYPE, messageTypeObj)
+            .map(RegistryHelper::toString)
+            .orElseThrow(() -> new IllegalStateException("Failed to find the RegistryKey for MessageType %s".formatted(messageTypeObj)));
+        #elif MC_VER > MC_1_20_4
+        messageTypeIdString = parameters.type().getIdAsString();
+        #endif
+
+        return messageTypeIdString;
+    }
+
     public static DynamicRegistryManager.Immutable getCombinedRegistryManager() {
         return ServerHelper
             .getServer()
@@ -60,6 +86,11 @@ public class RegistryHelper {
             .getCombinedRegistryManager();
     }
 
+    public static RegistryWrapper.WrapperLookup getDefaultWrapperLookup() {
+        return getCombinedRegistryManager();
+    }
+
+    @ForDeveloper("The Registry is one of the implementations of RegistryEntryLookup.")
     public static <T> Registry<T> getRegistry(@NotNull RegistryKey<? extends Registry<? extends T>> registryKey) {
         return getCombinedRegistryManager()
             #if MC_VER <= MC_1_21
@@ -69,7 +100,8 @@ public class RegistryHelper {
             #endif
     }
 
-    public static <T> RegistryEntryLookup<T> getRegistryWrapper(@NotNull RegistryKey<? extends Registry<? extends T>> registryKey) {
+    @ForDeveloper("The RegistryEntryLookup is the interface for all types of registries.")
+    public static <T> RegistryEntryLookup<T> getRegistryEntryLookup(@NotNull RegistryKey<? extends Registry<? extends T>> registryKey) {
         return getCombinedRegistryManager()
             #if MC_VER <= MC_1_21
                 .getWrapperOrThrow(registryKey);
@@ -78,94 +110,54 @@ public class RegistryHelper {
             #endif
     }
 
-    public static <T> RegistryKey<T> ofRegistryKey(@NotNull RegistryKey<? extends Registry<T>> registryKeyOfRegistry, @NotNull Identifier identifier) {
-        return RegistryKey.of(registryKeyOfRegistry, identifier);
+    public static <T> RegistryKey<T> ofRegistryKey(@NotNull RegistryKey<? extends Registry<T>> registrySpecifier, @NotNull Identifier identifier) {
+        return RegistryKey.of(registrySpecifier, identifier);
     }
 
-    public static <T> Optional<RegistryEntry<T>> getRegistryEntry(@NotNull RegistryKey<? extends Registry<T>> keyOfRegistry, Identifier identifier) {
-        Registry<T> registry = getRegistry(keyOfRegistry);
+    public static <T> Optional<RegistryEntry<T>> getRegistryEntry(@NotNull RegistryKey<? extends Registry<T>> registrySpecifier, @NotNull Identifier identifier) {
+        Registry<T> registry = getRegistry(registrySpecifier);
         T object = registry.get(identifier);
         RegistryEntry<T> entry = registry.getEntry(object);
         return Optional.ofNullable(entry);
     }
 
-    public static @NotNull Item getItem(@NotNull String identifier) {
-        // NOTE: For un-existed identifier, it will always return minecraft:air as the dummy item.
-        Item item = Registries.ITEM.get(Identifier.tryParse(identifier));
-        if (Items.AIR.equals(item)) {
-            LogUtil.warn("Failed to find the item {} in registry, we will return BARRIER instead.", identifier);
-            return Items.BARRIER;
-        }
-        return item;
-    }
-
-    public static RegistryWrapper.WrapperLookup getDefaultWrapperLookup() {
-        return ServerHelper
-            .getServer()
-            .getRegistryManager();
-    }
-
-    public static Identifier makeIdentifier(String identifier) {
+    public static Identifier makeIdentifierOrThrow(String identifier) {
         #if MC_VER <= MC_1_20_6
-            return new Identifier(identifier);
+        return new Identifier(identifier);
         #elif MC_VER > MC_1_20_6
-            return Identifier.of(identifier);
+        return Identifier.of(identifier);
         #endif
     }
 
-    public static Optional<Identifier> tryMakeIdentifier(String identifier) {
+    public static Optional<Identifier> makeIdentifier(String identifier) {
         try {
-            return Optional.of(makeIdentifier(identifier));
+            return Optional.of(makeIdentifierOrThrow(identifier));
         } catch (Exception e) {
             return Optional.empty();
         }
     }
 
-    public static <T> String getIdAsString(RegistryEntry<T> entry) {
-        return entry
-            .getKey()
-            .map((registryKey) -> registryKey.getValue().toString())
-            .orElse("[unregistered]");
-    }
-
-    public static <T> @Nullable String findRegistryKeyByRegistryValueInTheSpecifiedRegistry(RegistryKey<? extends Registry<? extends T>> registrySpecifier, Object theRegistryValue) {
-        var ref = new Object() {
-            String result;
-        };
-
-        RegistryHelper
+    public static <T> Optional<RegistryKey<T>> findRegistryKey(@NotNull RegistryKey<? extends Registry<? extends T>> registrySpecifier, @NotNull T registryValue) {
+        return RegistryHelper
             .getRegistry(registrySpecifier)
             .streamEntries()
-            .forEach(candidate -> {
-                Optional<RegistryKey<T>> candidateKey = candidate.getKey();
-                // If the candidate didn't have a key, then we have nothing to return.
-                if (candidateKey.isPresent()) {
-                    if (theRegistryValue.equals(candidate.value)) {
-                        ref.result = candidateKey.get().getValue().toString();
-                    }
+            .filter(registryEntry -> registryValue.equals(registryEntry.value))
+            .findFirst()
+            .flatMap(registryEntry -> {
+                Optional<RegistryKey<T>> key;
+                try {
+                    key = registryEntry.getKey();
+                } catch (Exception exceptionIfRegistryEntryHasNoRegistryKey) {
+                    // NOTE: If the candidate didn't have a key, then we have nothing to return.
+                    key = Optional.empty();
                 }
+                return key;
             });
-
-        // Return the identifier.
-        return ref.result;
     }
 
-    public static String getMessageTypeAsString(MessageType.Parameters parameters) {
-        String messageTypeString;
-
-        #if MC_VER <= MC_1_20_4
-        MessageType messageTypeObj = parameters.type();
-        messageTypeString = RegistryHelper.findRegistryKeyByRegistryValueInTheSpecifiedRegistry(net.minecraft.registry.RegistryKeys.MESSAGE_TYPE, messageTypeObj);
-        #elif MC_VER > MC_1_20_4
-            messageTypeString = parameters.type().getIdAsString();
-        #endif
-
-        return messageTypeString;
-    }
-
-    public static void ensureIdentifierNamespaceIfFuji(Identifier identifier) {
+    public static void ensureIdentifierNamespaceIsFuji(@NotNull Identifier identifier) {
         if (!identifier.getNamespace().equals(Fuji.MOD_ID)) {
-            throw new IllegalArgumentException("The namespace of identifier must be \"fuji\": " + identifier);
+            throw new IllegalArgumentException("The namespace of the identifier must be \"fuji\": " + identifier);
         }
     }
 

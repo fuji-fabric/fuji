@@ -237,7 +237,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
             // For example: `/xaero-waypoint:{WayPointName}:{SingleCharacter}:{x}:{y}:{z}:11:false:0:Internal-{overworld/the_nether/the_end}-waypoints`
             String waypointName = TextHelper.Translator.getLanguageValueByKey(player, "placeholder.position.waypoint.name");
             String waypointSingularCharacterName = String.valueOf(waypointName.charAt(0));
-            String nameOfDimension = RegistryHelper.makeIdentifier(RegistryHelper.toString(player.getWorld())).getPath();
+            String nameOfDimension = RegistryHelper.makeIdentifierOrThrow(RegistryHelper.toString(player.getWorld())).getPath();
             String xaeroCommand = "xaero-waypoint:%s:%s:%d:%d:%d:11:false:0:Internal-%s-waypoints".formatted(waypointName, waypointSingularCharacterName, blockX, blockY, blockZ, nameOfDimension);
             hoverText.append(TextHelper.TEXT_NEWLINE);
             hoverText.append(TextHelper.getTextByKey(player, "placeholder.prompt.xaero_waypoint_add"));

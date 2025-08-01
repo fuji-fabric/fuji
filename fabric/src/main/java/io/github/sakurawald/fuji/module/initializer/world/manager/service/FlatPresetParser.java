@@ -50,7 +50,7 @@ public class FlatPresetParser {
         int k = Math.min(i + j, DimensionType.MAX_HEIGHT);
         int l = k - i;
         try {
-            optional = registryEntryLookup.getOptional(RegistryKey.of(RegistryKeys.BLOCK, RegistryHelper.makeIdentifier(string2)));
+            optional = registryEntryLookup.getOptional(RegistryKey.of(RegistryKeys.BLOCK, RegistryHelper.makeIdentifierOrThrow(string2)));
         } catch (Exception exception) {
             LogUtil.error("Error while parsing flat world string", exception);
             return null;

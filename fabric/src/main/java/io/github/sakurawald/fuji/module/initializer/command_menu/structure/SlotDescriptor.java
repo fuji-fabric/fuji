@@ -4,11 +4,11 @@ import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SlotGuiInterface;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
@@ -154,7 +154,7 @@ public class SlotDescriptor {
     public GuiElementInterface buildGuiElement(ServerPlayerEntity viewingPlayer, MenuDescriptor menuDescriptor) {
         GuiElementBuilder slotElementBuilder = new GuiElementBuilder();
 
-        slotElementBuilder.setItem(RegistryHelper.getItem(this.item));
+        slotElementBuilder.setItem(ItemStackHelper.getItem(this.item));
         slotElementBuilder.setCount(this.count);
 
         if (this.hideTooltip) {

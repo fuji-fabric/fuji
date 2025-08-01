@@ -53,7 +53,7 @@ public class RuntimeDimensionMaker {
         ((ExtendedDimensionOptions) (Object) dimensionOptions).fuji$setSaveDimensionOptions(false);
 
         /* Make the dimension instance. */
-        Identifier dimensionIdentifier = RegistryHelper.makeIdentifier(runtimeDimensionDescriptor.dimension);
+        Identifier dimensionIdentifier = RegistryHelper.makeIdentifierOrThrow(runtimeDimensionDescriptor.dimension);
         RegistryKey<World> worldRegistryKey = RegistryKey.of(RegistryKeys.WORLD, dimensionIdentifier);
         ServerWorld dimension = new RuntimeDimension(server,
             Util.getMainWorkerExecutor(),
@@ -136,7 +136,7 @@ public class RuntimeDimensionMaker {
 
     private static @NotNull ChunkGenerator makeNoiseChunkGenerator(RuntimeDimensionDescriptor dimensionDescriptor) {
         Registry<DimensionOptions> dimensionRegistry = RegistryHelper.getRegistry(RegistryKeys.DIMENSION);
-        Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(dimensionDescriptor.dimension_type);
+        Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifierOrThrow(dimensionDescriptor.dimension_type);
         @Nullable DimensionOptions existedDimensionOptions = dimensionRegistry.get(dimensionTypeIdentifier);
         if (existedDimensionOptions == null) {
             LogUtil.warn("Failed to make chunk generator, there is no existed DimensionOptions for dimension type {}. Falling back to the `FlatChunkGenerator`.", dimensionTypeIdentifier);
@@ -149,7 +149,7 @@ public class RuntimeDimensionMaker {
     }
 
     private static @NotNull RegistryEntry<DimensionType> makeDimensionTypeEntry(RuntimeDimensionDescriptor dimensionDescriptor) {
-        Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(dimensionDescriptor.dimension_type);
+        Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifierOrThrow(dimensionDescriptor.dimension_type);
         Optional<RegistryEntry<DimensionType>> dimensionTypeEntryOptional = RegistryHelper.getRegistryEntry(RegistryKeys.DIMENSION_TYPE, dimensionTypeIdentifier);
         if (dimensionTypeEntryOptional.isEmpty()) {
             throw new RuntimeException("Failed to make RegistryEntry<DimensionType> for dimension %s: The Optional<RegistryEntry<DimensionType>> null.".formatted(dimensionTypeIdentifier));
@@ -164,15 +164,15 @@ public class RuntimeDimensionMaker {
 
     private static @NotNull FlatChunkGenerator makeFlatChunkGenerator(RuntimeDimensionDescriptor dimensionDescriptor) {
         /* Make the default flat chunk generator config. */
-        RegistryEntryLookup<Biome> biomeLookup = RegistryHelper.getRegistryWrapper(RegistryKeys.BIOME);
-        RegistryEntryLookup<StructureSet> structureSetLookup = RegistryHelper.getRegistryWrapper(RegistryKeys.STRUCTURE_SET);
-        RegistryEntryLookup<PlacedFeature> placedFeatureLookup = RegistryHelper.getRegistryWrapper(RegistryKeys.PLACED_FEATURE);
+        RegistryEntryLookup<Biome> biomeLookup = RegistryHelper.getRegistryEntryLookup(RegistryKeys.BIOME);
+        RegistryEntryLookup<StructureSet> structureSetLookup = RegistryHelper.getRegistryEntryLookup(RegistryKeys.STRUCTURE_SET);
+        RegistryEntryLookup<PlacedFeature> placedFeatureLookup = RegistryHelper.getRegistryEntryLookup(RegistryKeys.PLACED_FEATURE);
         FlatChunkGeneratorConfig flatChunkGeneratorConfig = FlatChunkGeneratorConfig.getDefaultConfig(biomeLookup, structureSetLookup, placedFeatureLookup);
 
         /* Make the parsed flat chunk generator config. */
         String presetString = dimensionDescriptor.chunkGeneratorParameters;
         if (presetString != null && !presetString.isBlank()) {
-            RegistryEntryLookup<Block> blockLookup = RegistryHelper.getRegistryWrapper(RegistryKeys.BLOCK);
+            RegistryEntryLookup<Block> blockLookup = RegistryHelper.getRegistryEntryLookup(RegistryKeys.BLOCK);
             flatChunkGeneratorConfig = FlatPresetParser.parsePresetString(blockLookup, biomeLookup, structureSetLookup, placedFeatureLookup, presetString, flatChunkGeneratorConfig);
         }
 

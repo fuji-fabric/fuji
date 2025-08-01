@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
 import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.WarpInitializer;
@@ -31,7 +31,7 @@ public class WarpGui extends PagedGui<WarpNode> {
     protected GuiElementInterface toGuiElement(WarpNode entity) {
         return new GuiElementBuilder()
             .setName(TextHelper.getTextByValue(getPlayer(), entity.getName()))
-            .setItem(RegistryHelper.getItem(entity.getItem()))
+            .setItem(ItemStackHelper.getItem(entity.getItem()))
             .setLore(new ArrayList<>() {
                 {
                     entity.getLore().forEach(it -> this.add(TextHelper.getTextByValue(getPlayer(), it)));

@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.title.structure;
 
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +16,7 @@ public class TitleDescriptor {
     List<String> lore;
 
     public Item toItem() {
-        return RegistryHelper.getItem(this.item);
+        return ItemStackHelper.getItem(this.item);
     }
 
 }

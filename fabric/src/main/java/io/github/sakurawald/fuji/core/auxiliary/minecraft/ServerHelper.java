@@ -215,7 +215,7 @@ public class ServerHelper {
     public static Optional<ServerWorld> getServerWorld(@Nullable String identifier) {
         if (identifier == null) return Optional.empty();
 
-        RegistryKey<World> key = RegistryHelper.ofRegistryKey(RegistryKeys.WORLD, RegistryHelper.makeIdentifier(identifier));
+        RegistryKey<World> key = RegistryHelper.ofRegistryKey(RegistryKeys.WORLD, RegistryHelper.makeIdentifierOrThrow(identifier));
         return Optional.ofNullable(getServer()
             .getWorld(key));
     }

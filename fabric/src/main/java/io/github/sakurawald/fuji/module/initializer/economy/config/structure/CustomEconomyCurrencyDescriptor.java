@@ -38,6 +38,6 @@ public class CustomEconomyCurrencyDescriptor {
     }
 
     public Identifier toIdentifier() {
-        return RegistryHelper.makeIdentifier(this.currencyId);
+        return RegistryHelper.makeIdentifierOrThrow(this.currencyId);
     }
 }

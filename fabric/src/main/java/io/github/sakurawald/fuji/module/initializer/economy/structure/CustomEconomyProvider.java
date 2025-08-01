@@ -7,6 +7,7 @@ import eu.pb4.common.economy.api.EconomyCurrency;
 import eu.pb4.common.economy.api.EconomyProvider;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
@@ -61,13 +62,13 @@ public class CustomEconomyProvider implements EconomyProvider {
 
     @Override
     public ItemStack icon() {
-        return RegistryHelper.getItem(EconomyInitializer.config.model().getProviderIcon()).getDefaultStack();
+        return ItemStackHelper.getItem(EconomyInitializer.config.model().getProviderIcon()).getDefaultStack();
     }
 
     private static void registerDefinedFujiCurrencies() {
         EconomyInitializer.config.model().currencies.forEach(descriptor -> {
-            Identifier currencyId = RegistryHelper.makeIdentifier(descriptor.currencyId);
-            RegistryHelper.ensureIdentifierNamespaceIfFuji(currencyId);
+            Identifier currencyId = RegistryHelper.makeIdentifierOrThrow(descriptor.currencyId);
+            RegistryHelper.ensureIdentifierNamespaceIsFuji(currencyId);
 
             CustomEconomyCurrency customEconomyCurrency = new CustomEconomyCurrency(descriptor);
             LogUtil.debug("Register custom economy currency: currencyId = {}, currencyDescriptor = {}", currencyId, customEconomyCurrency);

@@ -30,7 +30,7 @@ public class EconomyPlaceholders {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("balance", 1753668968954L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player, args) -> {
             GameProfile gameProfile = player.getGameProfile();
-            Optional<Identifier> currencyId = RegistryHelper.tryMakeIdentifier(args);
+            Optional<Identifier> currencyId = RegistryHelper.makeIdentifier(args);
             return currencyId
                 .map($currencyId -> {
                     Optional<EconomyAccount> economyAccount = EconomyService.getUserAccount(gameProfile, $currencyId);

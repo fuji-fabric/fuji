@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.economy.structure;
 
 import eu.pb4.common.economy.api.EconomyCurrency;
 import eu.pb4.common.economy.api.EconomyProvider;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.module.initializer.economy.config.structure.CustomEconomyCurrencyDescriptor;
@@ -27,12 +28,12 @@ public class CustomEconomyCurrency implements EconomyCurrency {
 
     @Override
     public Identifier id() {
-        return RegistryHelper.makeIdentifier(currencyDescriptor.currencyId);
+        return RegistryHelper.makeIdentifierOrThrow(currencyDescriptor.currencyId);
     }
 
     @Override
     public ItemStack icon() {
-        return RegistryHelper.getItem(this.currencyDescriptor.currencyIconItem).getDefaultStack();
+        return ItemStackHelper.getItem(this.currencyDescriptor.currencyIconItem).getDefaultStack();
     }
 
     @Override

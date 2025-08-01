@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.head.structure;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.InventoryHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.module.initializer.head.HeadInitializer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -58,6 +58,6 @@ public enum EconomyType {
     }
 
     private static @NotNull Item getCostItem() {
-        return RegistryHelper.getItem(HeadInitializer.head.model().cost_item_type);
+        return ItemStackHelper.getItem(HeadInitializer.head.model().cost_item_type);
     }
 }

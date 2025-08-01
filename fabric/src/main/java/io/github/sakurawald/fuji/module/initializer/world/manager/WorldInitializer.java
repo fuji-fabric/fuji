@@ -373,13 +373,13 @@ public class WorldInitializer extends ModuleInitializer {
         , Optional<WorldPresetType> worldPresetType) {
 
         /* Make identifier for the new dimension. */
-        Identifier dimensionIdentifier = RegistryHelper.makeIdentifier("fuji:%s".formatted(name));
+        Identifier dimensionIdentifier = RegistryHelper.makeIdentifierOrThrow("fuji:%s".formatted(name));
         ensureDimensionNotExists(source, dimensionIdentifier);
 
         /* Make the runtime dimension descriptor. */
         long $seed = seed.orElse(RandomSeed.getSeed());
         ChunkGeneratorType $chunkGeneratorType = chunkGeneratorType.orElse(ChunkGeneratorType.NOISE);
-        Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifier(dimensionType.getValue());
+        Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifierOrThrow(dimensionType.getValue());
         String $chunkGeneratorParameter = chunkGeneratorParameters.orElse("");
         WorldPresetType $worldPresetType = worldPresetType.orElse(null);
         RuntimeDimensionDescriptor runtimeDimensionDescriptor = RuntimeDimensionImporter.importRuntimeDimensionDescriptor(dimensionIdentifier, $worldPresetType, dimensionTypeIdentifier, $chunkGeneratorType, $chunkGeneratorParameter, $seed);

@@ -4,17 +4,20 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import net.minecraft.nbt.NbtList;
@@ -138,6 +141,16 @@ public class ItemStackHelper {
         if (matched) return true;
 
         return false;
+    }
+
+    public static @NotNull Item getItem(@NotNull String identifier) {
+        // NOTE: For un-known identifier, it will always return minecraft:air as the dummy item.
+        Item item = Registries.ITEM.get(Identifier.tryParse(identifier));
+        if (Items.AIR.equals(item)) {
+            LogUtil.warn("Failed to find the item {} in registry, we will return BARRIER instead.", identifier);
+            return Items.BARRIER;
+        }
+        return item;
     }
 
     public static class Nbt {
