@@ -315,14 +315,6 @@ public class WorldInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<WorldDataModel> world = new ObjectConfigurationHandler<>("world.json", WorldDataModel.class)
         .setAutoSaveEveryMinute();
 
-    private static void ensureOperationsOnTargetDimensionIsNotBlacklisted(ServerCommandSource source, String identifier) {
-        /* Should not operate on blacklisted dimensions. */
-        if (config.model().blacklist.dimension_list.contains(identifier)) {
-            TextHelper.sendTextByKey(source, "world.dimension.blacklist", identifier);
-            throw new AbortCommandExecutionException();
-        }
-    }
-
     private static void ensureDimensionNotExists(ServerCommandSource source, Identifier identifier) {
         if (WorldService.existsDimension(identifier)) {
             TextHelper.sendTextByKey(source, "world.dimension.exist");
@@ -441,12 +433,9 @@ public class WorldInitializer extends ModuleInitializer {
         """)
     @CommandNode("delete")
     private static int $delete(@CommandSource ServerCommandSource source, Dimension dimension, Optional<Boolean> confirm) {
-        ServerWorld dimensionInstance = dimension.getValue();
-        String dimensionId = RegistryHelper.toString(dimensionInstance);
-        ensureOperationsOnTargetDimensionIsNotBlacklisted(source, dimensionId);
-
         return CommandHelper.Pattern.withCommandConfirmed(source, confirm, () -> {
             /* Request to delete. */
+            ServerWorld dimensionInstance = dimension.getValue();
             WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(source, dimensionInstance, true, true));
             return CommandHelper.Return.SUCCESS;
         });
@@ -484,25 +473,23 @@ public class WorldInitializer extends ModuleInitializer {
             /* Get the original dimension node. */
             ServerWorld dimensionInstance = dimension.getValue();
             String dimensionIdentifier = RegistryHelper.toString(dimensionInstance);
-            ensureOperationsOnTargetDimensionIsNotBlacklisted(source, dimensionIdentifier);
-
-            Optional<RuntimeDimensionDescriptor> dimensionEntryOpt = WorldService.getRuntimeDimensionDescriptor(dimensionIdentifier);
-            if (dimensionEntryOpt.isEmpty()) {
+            Optional<RuntimeDimensionDescriptor> runtimeDimensionDescriptor = WorldService.getRuntimeDimensionDescriptor(dimensionIdentifier);
+            if (runtimeDimensionDescriptor.isEmpty()) {
                 TextHelper.sendTextByKey(source, "world.dimension.not_found");
                 return CommandHelper.Return.FAIL;
             }
-            RuntimeDimensionDescriptor runtimeDimensionDescriptor = dimensionEntryOpt.get();
+            RuntimeDimensionDescriptor $runtimeDimensionDescriptor = runtimeDimensionDescriptor.get();
 
             /* Delete the dimension instance. */
             WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(source, dimensionInstance, true, false));
 
             /* Draw the seed. */
             Boolean $useTheSameSeed = useTheSameSeed.orElse(false);
-            runtimeDimensionDescriptor.seed = $useTheSameSeed ? runtimeDimensionDescriptor.seed : RandomSeed.getSeed();
+            $runtimeDimensionDescriptor.seed = $useTheSameSeed ? $runtimeDimensionDescriptor.seed : RandomSeed.getSeed();
             world.writeStorage();
 
             /* Create a new dimension instance. */
-            DimensionCreationTicket ticket = new DimensionCreationTicket(source, runtimeDimensionDescriptor);
+            DimensionCreationTicket ticket = new DimensionCreationTicket(source, $runtimeDimensionDescriptor);
             WorldService.submitDimensionCreationTicket(ticket);
 
             TextHelper.sendBroadcastByKey("world.dimension.reset", dimensionIdentifier);
