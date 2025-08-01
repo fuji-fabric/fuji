@@ -43,7 +43,7 @@ public class PlayerHelper {
         #if MC_VER <= MC_1_20_1
         return new ServerPlayerEntity(server, server.getOverworld(), gameProfile);
         #elif MC_VER > MC_1_20_1
-        net.minecraft.network.packet.c2s.common.SyncedClientOptions syncedClientOptions = SyncedClientOptions.createDefault();
+        SyncedClientOptions syncedClientOptions = net.minecraft.network.packet.c2s.common.SyncedClientOptions.createDefault();
         return new ServerPlayerEntity(server, server.getOverworld(), gameProfile, syncedClientOptions);
         #endif
     }
