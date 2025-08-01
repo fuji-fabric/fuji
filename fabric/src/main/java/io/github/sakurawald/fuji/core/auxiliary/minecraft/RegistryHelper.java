@@ -121,7 +121,7 @@ public class RegistryHelper {
         return Optional.ofNullable(entry);
     }
 
-    public static Identifier makeIdentifierOrThrow(String identifier) {
+    public static @NotNull Identifier makeIdentifierOrThrow(@NotNull String identifier) {
         #if MC_VER <= MC_1_20_6
         return new Identifier(identifier);
         #elif MC_VER > MC_1_20_6
@@ -129,7 +129,7 @@ public class RegistryHelper {
         #endif
     }
 
-    public static Optional<Identifier> makeIdentifier(String identifier) {
+    public static Optional<Identifier> makeIdentifier(@NotNull String identifier) {
         try {
             return Optional.of(makeIdentifierOrThrow(identifier));
         } catch (Exception e) {

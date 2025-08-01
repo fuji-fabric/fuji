@@ -326,7 +326,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
     private void registerEscapePlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("escape", 1752000074625L);
         PlaceholderHelper.registerServerPlaceholder(descriptor, (server, args) -> {
-            if (args == null) return PlaceholderHelper.INVALID_ARGS_ERROR_TEXT;
+            if (args == null) return PlaceholderHelper.makeInvalidArgsErrorText();
 
             Matcher matcher = ESCAPE_PARSER.matcher(args);
             if (matcher.find()) {
@@ -397,9 +397,9 @@ public class PlaceholderInitializer extends ModuleInitializer {
     private void registerRandomPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("random", 1752000183895L);
         PlaceholderHelper.registerServerPlaceholder(descriptor, (server, args) -> {
-            if (args == null) return PlaceholderHelper.INVALID_ARGS_ERROR_TEXT;
+            if (args == null) return PlaceholderHelper.makeInvalidArgsErrorText();
             List<String> split = PlaceholderHelper.splitArguments(args);
-            if (split.size() != 2) return PlaceholderHelper.INVALID_ARGS_ERROR_TEXT;
+            if (split.size() != 2) return PlaceholderHelper.makeInvalidArgsErrorText();
 
             int i;
             try {
@@ -407,7 +407,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
                 int maxExclusive = Integer.parseInt(split.get(1));
                 i = RandomUtil.getRandomNumberExclusive(minInclusive, maxExclusive);
             } catch (Exception e) {
-                return PlaceholderHelper.INVALID_ARGS_ERROR_TEXT;
+                return PlaceholderHelper.makeInvalidArgsErrorText();
             }
 
             return Text.literal(String.valueOf(i));

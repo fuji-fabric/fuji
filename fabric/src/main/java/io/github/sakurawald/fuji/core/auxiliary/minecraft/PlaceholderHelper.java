@@ -4,6 +4,7 @@ import eu.pb4.placeholders.api.PlaceholderHandler;
 import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
 import io.github.sakurawald.fuji.Fuji;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.descriptor.PlaceholderDescriptor;
 import java.util.List;
 import net.minecraft.server.MinecraftServer;
@@ -13,15 +14,17 @@ import net.minecraft.util.Identifier;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PlaceholderHelper {
 
-    public static final Text INVALID_ARGS_ERROR_TEXT = Text.literal("[INVALID-ARGS-ERROR]");
-    private static final Text NO_PLAYER_ERROR_TEXT = Text.literal("[NO-PLAYER-ERROR]");
-    private static final Text NO_SERVER_ERROR_TEXT = Text.literal("[NO-SERVER-ERROR]");
+    private static final String INVALID_ARGS_ERROR_REASON = "INVALID-ARGS-ERROR";
+    private static final String NO_PLAYER_ERROR_REASON = "NO-PLAYER-ERROR";
+    private static final String NO_SERVER_ERROR_REASON = "NO-SERVER-ERROR";
 
-    public static List<String> splitArguments(@Nullable String args) {
+    @ForDeveloper("The args may be null if the user didn't specify it.")
+    public static @NotNull List<String> splitArguments(@Nullable String args) {
         if (args == null) {
             return List.of();
         }
@@ -30,14 +33,18 @@ public class PlaceholderHelper {
         return List.of(split);
     }
 
+    public static Text makeInvalidArgsErrorText() {
+        return PlaceholderResult.invalid(INVALID_ARGS_ERROR_REASON).text();
+    }
+
     @SuppressWarnings("resource")
-    public static void registerServerPlaceholder(PlaceholderDescriptor descriptor, BiFunction<MinecraftServer, String, Text> function) {
-        PlaceholderHandler placeholderHandler = (ctx, arg) -> {
-            // NOTE: The `arg` should be verified by the placeholder itself.
+    public static void registerServerPlaceholder(@NotNull PlaceholderDescriptor descriptor, @NotNull BiFunction<MinecraftServer, String, Text> function) {
+        PlaceholderHandler placeholderHandler = (ctx, args) -> {
+            // NOTE: The `args` should be verified by the placeholder itself.
             if (ctx.server() == null) {
-                return PlaceholderResult.value(PlaceholderHelper.NO_SERVER_ERROR_TEXT);
+                return PlaceholderResult.invalid(PlaceholderHelper.NO_SERVER_ERROR_REASON);
             }
-            Text resultText = function.apply(ctx.server(), arg);
+            Text resultText = function.apply(ctx.server(), args);
             return PlaceholderResult.value(resultText);
         };
 
@@ -45,12 +52,12 @@ public class PlaceholderHelper {
         Placeholders.register(Identifier.of(Fuji.MOD_ID, placeholderName), placeholderHandler);
     }
 
-    public static void registerPlayerPlaceholder(PlaceholderDescriptor descriptor, BiFunction<ServerPlayerEntity, String, Text> function) {
-        PlaceholderHandler placeholderHandler = (ctx, arg) -> {
+    public static void registerPlayerPlaceholder(@NotNull PlaceholderDescriptor descriptor, @NotNull BiFunction<ServerPlayerEntity, String, Text> function) {
+        PlaceholderHandler placeholderHandler = (ctx, args) -> {
             if (ctx.player() == null) {
-                return PlaceholderResult.value(NO_PLAYER_ERROR_TEXT);
+                return PlaceholderResult.invalid(NO_PLAYER_ERROR_REASON);
             }
-            Text resultText = function.apply(ctx.player(), arg);
+            Text resultText = function.apply(ctx.player(), args);
             return PlaceholderResult.value(resultText);
         };
 
@@ -58,11 +65,12 @@ public class PlaceholderHelper {
         Placeholders.register(Identifier.of(Fuji.MOD_ID, placeholderName), placeholderHandler);
     }
 
-    public static void registerServerPlaceholder(PlaceholderDescriptor descriptor, Function<MinecraftServer, Text> function) {
+    public static void registerServerPlaceholder(@NotNull PlaceholderDescriptor descriptor, @NotNull Function<MinecraftServer, Text> function) {
         registerServerPlaceholder(descriptor, (server, args) -> function.apply(server));
     }
 
-    public static void registerPlayerPlaceholder(PlaceholderDescriptor descriptor, Function<ServerPlayerEntity, Text> function) {
+    public static void registerPlayerPlaceholder(@NotNull PlaceholderDescriptor descriptor, @NotNull Function<ServerPlayerEntity, Text> function) {
         registerPlayerPlaceholder(descriptor, (player, args) -> function.apply(player));
     }
+
 }
