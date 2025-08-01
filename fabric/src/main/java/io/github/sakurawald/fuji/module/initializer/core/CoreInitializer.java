@@ -57,6 +57,28 @@ import java.util.List;
     You can modify and test new things in your `test server`.
     After everything is configured and working properly, you just upload the `mods` and `config files` into your `remote machine`.
     """)
+@ColorBox(id = 1754014854649L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Open `this` GUI
+    Issue: `/fuji`
+
+    ◉ List all `fuji commands`
+    Issue: `/fuji inspect fuji-commands`
+
+    ◉ List all `fuji permissions` and `fuji metas`
+    Issue: `/fuji inspect permissions-and-metas`
+
+    ◉ List all `fuji placeholders`
+    Issue: `/fuji inspect placeholders`
+
+    ◉ List all `fuji configurations`
+    Issue: `/fuji inspect configurations`
+
+    ◉ List all `fuji jobs`
+    Issue: `/fuji inspect jobs`
+
+    ◉ List all `fuji argument types`
+    Issue: `/fuji inspect argument-types`
+    """)
 public class CoreInitializer extends ModuleInitializer {
 
     @Override
