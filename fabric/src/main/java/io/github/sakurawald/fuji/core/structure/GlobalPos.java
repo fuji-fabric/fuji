@@ -36,24 +36,24 @@ public class GlobalPos {
     }
 
     public GlobalPos(@NotNull World level, double x, double y, double z, float yaw, float pitch) {
-        this(RegistryHelper.toIdString(level), x, y, z, yaw, pitch);
+        this(RegistryHelper.getIdAsString(level), x, y, z, yaw, pitch);
     }
 
     public static @NotNull GlobalPos of(@NotNull ServerPlayerEntity player) {
-        return new GlobalPos(RegistryHelper.toIdString(player.getWorld()), player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
+        return new GlobalPos(RegistryHelper.getIdAsString(player.getWorld()), player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
     }
 
     public static @NotNull GlobalPos of(@NotNull ServerCommandSource source) {
         Entity entity = source.getEntity();
         if (entity != null) {
-            return new GlobalPos(RegistryHelper.toIdString(entity.getWorld()), entity.getX(), entity.getY(), entity.getZ(), entity.getYaw(), entity.getPitch());
+            return new GlobalPos(RegistryHelper.getIdAsString(entity.getWorld()), entity.getX(), entity.getY(), entity.getZ(), entity.getYaw(), entity.getPitch());
         }
 
-        return new GlobalPos(RegistryHelper.toIdString(source.getWorld()), source.getPosition().getX(), source.getPosition().getY(), source.getPosition().getZ(), source.getRotation().x, source.getRotation().y);
+        return new GlobalPos(RegistryHelper.getIdAsString(source.getWorld()), source.getPosition().getX(), source.getPosition().getY(), source.getPosition().getZ(), source.getRotation().x, source.getRotation().y);
     }
 
     public boolean sameLevel(@NotNull World level) {
-        return this.level.equals(RegistryHelper.toIdString(level));
+        return this.level.equals(RegistryHelper.getIdAsString(level));
     }
 
     @SuppressWarnings("unused")

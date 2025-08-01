@@ -57,7 +57,7 @@ public class ServerHelper {
     public static Optional<ServerWorld> getWorld(String dimensionId) {
         return getWorlds()
             .stream()
-            .filter(it -> RegistryHelper.toIdString(it).equals(dimensionId))
+            .filter(it -> RegistryHelper.getIdAsString(it).equals(dimensionId))
             .findFirst();
     }
 

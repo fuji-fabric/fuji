@@ -204,10 +204,10 @@ public class PlaceholderInitializer extends ModuleInitializer {
             int blockX = player.getBlockX();
             int blockY = player.getBlockY();
             int blockZ = player.getBlockZ();
-            String dimensionName = RegistryHelper.toIdString(player.getWorld());
+            String dimensionName = RegistryHelper.getIdAsString(player.getWorld());
             String dimensionDisplayName = TextHelper.Translator.getLanguageValueByKey(player, dimensionName);
             RegistryEntry<Biome> biome = player.getWorld().getBiome(player.getBlockPos());
-            String biomeName = biome.getKey().map(RegistryHelper::toIdString).orElse("Unknown");
+            String biomeName = biome.getKey().map(RegistryHelper::getIdAsString).orElse("Unknown");
             Text positionText = TextHelper.getTextByKey(player, "placeholder.position", dimensionDisplayName, blockX, blockY, blockZ, biomeName);
 
             /* Attach the position of current dimension. */
@@ -237,7 +237,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
             // For example: `/xaero-waypoint:{WayPointName}:{SingleCharacter}:{x}:{y}:{z}:11:false:0:Internal-{overworld/the_nether/the_end}-waypoints`
             String waypointName = TextHelper.Translator.getLanguageValueByKey(player, "placeholder.position.waypoint.name");
             String waypointSingularCharacterName = String.valueOf(waypointName.charAt(0));
-            String nameOfDimension = RegistryHelper.makeIdentifierOrThrow(RegistryHelper.toIdString(player.getWorld())).getPath();
+            String nameOfDimension = RegistryHelper.makeIdentifierOrThrow(RegistryHelper.getIdAsString(player.getWorld())).getPath();
             String xaeroCommand = "xaero-waypoint:%s:%s:%d:%d:%d:11:false:0:Internal-%s-waypoints".formatted(waypointName, waypointSingularCharacterName, blockX, blockY, blockZ, nameOfDimension);
             hoverText.append(TextHelper.TEXT_NEWLINE);
             hoverText.append(TextHelper.getTextByKey(player, "placeholder.prompt.xaero_waypoint_add"));

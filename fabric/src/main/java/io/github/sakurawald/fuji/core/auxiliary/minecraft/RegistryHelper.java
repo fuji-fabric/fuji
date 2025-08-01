@@ -24,53 +24,53 @@ import java.util.Optional;
 
 public class RegistryHelper {
 
-    public static @NotNull String toIdString(@NotNull Identifier identifier) {
+    public static @NotNull String getIdAsString(@NotNull Identifier identifier) {
         return identifier.toString();
     }
 
-    public static @NotNull String toIdString(@NotNull Item item) {
+    public static @NotNull String getIdAsString(@NotNull Item item) {
         return Registries.ITEM.getId(item).toString();
     }
 
-    public static @NotNull String toIdString(@NotNull ItemStack itemStack) {
-        return toIdString(itemStack.getItem());
+    public static @NotNull String getIdAsString(@NotNull ItemStack itemStack) {
+        return getIdAsString(itemStack.getItem());
     }
 
-    public static @NotNull String toIdString(@NotNull Block block) {
+    public static @NotNull String getIdAsString(@NotNull Block block) {
         return Registries.BLOCK.getId(block).toString();
     }
 
-    public static @NotNull String toIdString(@NotNull BlockState blockState) {
-        return toIdString(blockState.getBlock());
+    public static @NotNull String getIdAsString(@NotNull BlockState blockState) {
+        return getIdAsString(blockState.getBlock());
     }
 
-    public static @NotNull String toIdString(@NotNull Entity entity) {
+    public static @NotNull String getIdAsString(@NotNull Entity entity) {
         return Registries.ENTITY_TYPE.getId(entity.getType()).toString();
     }
 
-    public static @NotNull String toIdString(@NotNull World world) {
-        return toIdString(world.getRegistryKey());
+    public static @NotNull String getIdAsString(@NotNull World world) {
+        return getIdAsString(world.getRegistryKey());
     }
 
-    public static @NotNull String toIdString(@NotNull RegistryKey<?> registryKey) {
+    public static @NotNull String getIdAsString(@NotNull RegistryKey<?> registryKey) {
         return registryKey.getValue().toString();
     }
 
-    public static <T> @NotNull String toIdString(@NotNull RegistryEntry<T> registryEntry) {
+    public static <T> @NotNull String getIdAsString(@NotNull RegistryEntry<T> registryEntry) {
         return registryEntry
             .getKey()
-            .map(RegistryHelper::toIdString)
+            .map(RegistryHelper::getIdAsString)
             .orElse("[unregistered]");
     }
 
     @ForDeveloper("In older MC versions, there is no a registry for MessageType.")
-    public static String toIdString(@NotNull MessageType.Parameters parameters) {
+    public static String getIdAsString(@NotNull MessageType.Parameters parameters) {
         String messageTypeIdString;
 
         #if MC_VER <= MC_1_20_4
         MessageType messageTypeObj = parameters.type();
         messageTypeIdString = RegistryHelper.findRegistryKey(RegistryKeys.MESSAGE_TYPE, messageTypeObj)
-            .map(RegistryHelper::toIdString)
+            .map(RegistryHelper::getIdAsString)
             .orElseThrow(() -> new IllegalStateException("Failed to find the RegistryKey for MessageType %s".formatted(messageTypeObj)));
         #elif MC_VER > MC_1_20_4
         messageTypeIdString = parameters.type().getIdAsString();

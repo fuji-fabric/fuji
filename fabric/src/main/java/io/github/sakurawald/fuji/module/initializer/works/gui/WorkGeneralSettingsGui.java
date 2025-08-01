@@ -64,7 +64,7 @@ public class WorkGeneralSettingsGui extends SimpleGui {
                 }
 
                 /* Primary. */
-                work.icon = RegistryHelper.toIdString(mainHandItem);
+                work.icon = RegistryHelper.getIdAsString(mainHandItem);
                 TextHelper.sendTextByKey(player, "works.work.set.done", work.icon);
                 close();
             })

@@ -36,7 +36,7 @@ public class CommandMenuMenusModel {
                     /* slot 2 */
                     SlotDescriptor slot2 = new SlotDescriptor();
                     slot2.index = 1;
-                    slot2.item = RegistryHelper.toIdString(Items.APPLE);
+                    slot2.item = RegistryHelper.getIdAsString(Items.APPLE);
                     slot2.lore = new ArrayList<>();
                     slot2.glow = true;
                     slot2.displayName = "<green>Click to to open another menu.";
@@ -61,7 +61,7 @@ public class CommandMenuMenusModel {
                     slot1.setCount(2);
                     slot1.setLore(new ArrayList<>());
                     slot1.setDisplayName("This is another menu.");
-                    slot1.setItem(RegistryHelper.toIdString(Items.GOLDEN_APPLE));
+                    slot1.setItem(RegistryHelper.getIdAsString(Items.GOLDEN_APPLE));
                     this.add(slot1);
 
                     /* slot 2 */
@@ -71,7 +71,7 @@ public class CommandMenuMenusModel {
                     slot2.setLore(new ArrayList<>());
                     slot2.setDisplayName("Click me to refresh: %server:uptime%");
                     slot2.commands.on_left_click_commands = List.of("command-menu open %player:name% another-menu");
-                    slot2.setItem(RegistryHelper.toIdString(Items.CLOCK));
+                    slot2.setItem(RegistryHelper.getIdAsString(Items.CLOCK));
                     this.add(slot2);
                 }
             });

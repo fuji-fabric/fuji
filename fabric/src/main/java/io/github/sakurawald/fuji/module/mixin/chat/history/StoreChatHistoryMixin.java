@@ -39,7 +39,7 @@ public abstract class StoreChatHistoryMixin {
             DUPLICATED_SENT_TEXT_FILTER.add(uniqueKey);
 
             /* Filter the message by message type. */
-            String messageTypeString = RegistryHelper.toIdString(parameters);
+            String messageTypeString = RegistryHelper.getIdAsString(parameters);
             if (!ChatHistoryInitializer.isMessageTypeFiltered(messageTypeString)) {
                 return;
             }

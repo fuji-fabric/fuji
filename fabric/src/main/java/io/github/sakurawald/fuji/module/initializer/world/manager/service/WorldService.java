@@ -92,7 +92,7 @@ public class WorldService {
 
     private static boolean tryConsumeDimensionCreationTicket(@NotNull DimensionCreationTicket ticket) {
         // NOTE: Wait the target dimension to be deleted first (If there is a deletion ticket for it).
-        if (dimensionDeletionTicketQueue.stream().anyMatch(it -> RegistryHelper.toIdString(it.world).equals(ticket.descriptor.dimension))) {
+        if (dimensionDeletionTicketQueue.stream().anyMatch(it -> RegistryHelper.getIdAsString(it.world).equals(ticket.descriptor.dimension))) {
             return false;
         }
 
@@ -149,11 +149,11 @@ public class WorldService {
         }
 
         if (ticket.deleteRuntimeDimensionDescriptor) {
-            String dimensionId = RegistryHelper.toIdString(world);
+            String dimensionId = RegistryHelper.getIdAsString(world);
             WorldService.deleteRuntimeDimensionDescriptor(dimensionId);
         }
 
-        TextHelper.sendTextByKey(ticket.source,"world.dimension.deleted", RegistryHelper.toIdString(ticket.world));
+        TextHelper.sendTextByKey(ticket.source,"world.dimension.deleted", RegistryHelper.getIdAsString(ticket.world));
     }
 
     private static void deleteDimensionFiles(@NotNull ServerWorld world) {
@@ -184,7 +184,7 @@ public class WorldService {
         boolean dimensionExistedInRuntime = ServerHelper
             .getWorlds()
             .stream()
-            .anyMatch(it -> RegistryHelper.toIdString(it).equals(dimensionId.toString()));
+            .anyMatch(it -> RegistryHelper.getIdAsString(it).equals(dimensionId.toString()));
         boolean dimensionExistedInConfig = getRuntimeDimensionDescriptor(dimensionId.toString()).isPresent();
 
         return dimensionExistedInRuntime || dimensionExistedInConfig;

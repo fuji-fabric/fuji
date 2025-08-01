@@ -25,7 +25,7 @@ public class BlockItemMixin {
             return;
         }
 
-        String id = RegistryHelper.toIdString(itemPlacementContext.getStack());
+        String id = RegistryHelper.getIdAsString(itemPlacementContext.getStack());
         Hand hand = itemPlacementContext.getHand();
 
         AntiBuildInitializer.checkAntiBuild(player, "place_block", AntiBuildInitializer.config.model().anti.place_block.id, id, cir, false, () -> hand == Hand.MAIN_HAND);

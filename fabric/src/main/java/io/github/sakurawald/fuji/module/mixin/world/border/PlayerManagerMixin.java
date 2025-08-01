@@ -22,7 +22,7 @@ public class PlayerManagerMixin {
     @ModifyArg(method = "sendWorldInfo", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/s2c/play/WorldBorderInitializeS2CPacket;<init>(Lnet/minecraft/world/border/WorldBorder;)V", ordinal = 0))
     WorldBorder modifyWorldBorderInitializePacket(WorldBorder original, @Local(argsOnly = true) ServerWorld serverWorld) {
         return WorldBorderInitializer
-            .getEffectiveBorderDescriptor(RegistryHelper.toIdString(serverWorld))
+            .getEffectiveBorderDescriptor(RegistryHelper.getIdAsString(serverWorld))
             .map(BorderDescriptor::asVanillaWorldBorder)
             .orElse(original);
     }

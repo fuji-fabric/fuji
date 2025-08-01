@@ -23,7 +23,7 @@ public abstract class EntityMixin {
             return;
         }
         Entity entity = (Entity) (Object) this;
-        String id = RegistryHelper.toIdString(entity);
+        String id = RegistryHelper.getIdAsString(entity);
 
         AntiBuildInitializer.checkAntiBuild(player, "interact_entity", AntiBuildInitializer.config.model().anti.interact_entity.id, id, cir, ActionResult.FAIL, () -> hand == Hand.MAIN_HAND);
     }

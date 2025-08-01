@@ -29,7 +29,7 @@ public class ServerWorldMixin {
         ServerWorld thiz = (ServerWorld) (Object) this;
         players = new CopyOnWriteArrayList<>() {
             {
-                LogUtil.debug("Patch CopyOnWriteArrayList for `players` field in ServerWorld {}", RegistryHelper.toIdString(thiz));
+                LogUtil.debug("Patch CopyOnWriteArrayList for `players` field in ServerWorld {}", RegistryHelper.getIdAsString(thiz));
             }
         };
     }

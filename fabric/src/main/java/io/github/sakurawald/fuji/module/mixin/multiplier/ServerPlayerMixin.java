@@ -21,7 +21,7 @@ public abstract class ServerPlayerMixin {
     @ModifyVariable(method = "damage", at = @At(value = "HEAD"), argsOnly = true)
     public float transformDamage(float damage, @Local(argsOnly = true) @NotNull DamageSource damageSource) {
         damage = MultiplierInitializer.transform(player, "damage", "all", damage);
-        damage = MultiplierInitializer.transform(player, "damage", RegistryHelper.toIdString(damageSource.getTypeRegistryEntry()), damage);
+        damage = MultiplierInitializer.transform(player, "damage", RegistryHelper.getIdAsString(damageSource.getTypeRegistryEntry()), damage);
         return damage;
     }
 

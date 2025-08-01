@@ -36,7 +36,7 @@ public class TopChunksGui extends PagedGui<ChunkScore> {
         ServerCommandSource commandSource = getPlayer().getCommandSource();
 
         List<Text> lore = new ArrayList<>();
-        lore.add(TextHelper.getTextByKey(getPlayer(), "top_chunks.prop.dimension", RegistryHelper.toIdString(entity.getDimension())));
+        lore.add(TextHelper.getTextByKey(getPlayer(), "top_chunks.prop.dimension", RegistryHelper.getIdAsString(entity.getDimension())));
         lore.add(entity.computeChunkLocationText(commandSource));
         lore.add(TextHelper.getTextByKey(getPlayer(), "top_chunks.prop.players", entity.getPlayers()));
         lore.add(TypeFormatter.formatTypes(commandSource, entity.getType2amount()));

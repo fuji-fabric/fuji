@@ -60,7 +60,7 @@ public abstract class Work implements ObjectTypeStringGetter {
         this.creator = PlayerHelper.getPlayerName(player);
         this.name = name;
         this.introduction = null;
-        this.level = RegistryHelper.toIdString(player.getWorld());
+        this.level = RegistryHelper.getIdAsString(player.getWorld());
         this.x = player.getPos().x;
         this.y = player.getPos().y;
         this.z = player.getPos().z;

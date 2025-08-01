@@ -22,7 +22,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
     @Inject(method = "sendChatMessage", at = @At(value = "HEAD"))
     public void spy(SignedMessage signedMessage, MessageType.Parameters parameters, CallbackInfo ci) {
         /* Extract the message type string. */
-        String messageTypeString = RegistryHelper.toIdString(parameters);
+        String messageTypeString = RegistryHelper.getIdAsString(parameters);
 
         /* Process it. */
         ChatSpyInitializer.processChatSpy(messageTypeString, getPlayer(), signedMessage, parameters);
