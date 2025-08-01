@@ -133,7 +133,7 @@ public class JailService {
     }
 
     private static void executeOnUnjailedCommands(JailDescriptor jail, String playerName) {
-        ServerPlayerEntity offlinePlayerEntity = PlayerHelper.loadServerPlayerEntity(playerName);
+        ServerPlayerEntity offlinePlayerEntity = PlayerHelper.Maker.loadServerPlayerEntity(playerName);
         CommandExecutor.execute(ExtendedCommandSource.asConsole(offlinePlayerEntity.getCommandSource()), jail.getEvents().getOnUnjailedEvent());
     }
 
@@ -153,7 +153,7 @@ public class JailService {
     }
 
     private static void executeOnJailedCommands(JailDescriptor jail, String playerName) {
-        ServerPlayerEntity offlinePlayerEntity = PlayerHelper.loadServerPlayerEntity(playerName);
+        ServerPlayerEntity offlinePlayerEntity = PlayerHelper.Maker.loadServerPlayerEntity(playerName);
         CommandExecutor.execute(ExtendedCommandSource.asConsole(offlinePlayerEntity.getCommandSource()), jail.getEvents().getOnJailedEvent());
     }
 

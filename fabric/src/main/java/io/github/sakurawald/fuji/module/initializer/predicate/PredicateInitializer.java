@@ -64,7 +64,7 @@ public class PredicateInitializer extends ModuleInitializer {
 
     @CommandNode("is-op?")
     private static int $isOp(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {
-        boolean value = PlayerHelper.getPlayerManager().isOperator(player.getGameProfile());
+        boolean value = PlayerHelper.isOperator(player);
         return CommandHelper.Return.returnBoolean(source, value);
     }
 

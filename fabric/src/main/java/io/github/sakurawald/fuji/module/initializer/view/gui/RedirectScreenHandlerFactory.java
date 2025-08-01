@@ -40,7 +40,7 @@ public abstract class RedirectScreenHandlerFactory {
             onlineEditMode = true;
             targetPlayer = player;
         } else {
-            targetPlayer = PlayerHelper.loadServerPlayerEntity(targetPlayerName);
+            targetPlayer = PlayerHelper.Maker.loadServerPlayerEntity(targetPlayerName);
         }
     }
 
