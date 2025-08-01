@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.world.manager.structure;
 
 import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.world.manager.command.argument.wrapper.ChunkGeneratorType;
 import io.github.sakurawald.fuji.module.initializer.world.manager.command.argument.wrapper.WorldPresetType;
@@ -95,7 +95,7 @@ public class RuntimeDimensionDescriptor {
     }
 
     public boolean isDimensionLoaded() {
-        return ServerHelper
+        return WorldHelper
             .getWorlds()
             .stream()
             .anyMatch(it -> RegistryHelper.getIdAsString(it).equals(this.dimension));
@@ -106,6 +106,6 @@ public class RuntimeDimensionDescriptor {
     }
 
     public Optional<ServerWorld> getLoadedWorld() {
-        return ServerHelper.getWorld(this.dimension);
+        return WorldHelper.getWorld(this.dimension);
     }
 }

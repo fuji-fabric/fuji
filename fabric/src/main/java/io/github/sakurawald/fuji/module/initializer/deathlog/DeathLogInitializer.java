@@ -1,9 +1,9 @@
 package io.github.sakurawald.fuji.module.initializer.deathlog;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -36,7 +36,7 @@ public class DeathLogInitializer extends ModuleInitializer {
     @CommandNode("deathlog")
     @CommandRequirement(level = 4)
     private static int $gui(@CommandSource ServerPlayerEntity player) {
-        List<String> offlinePlayerNames = ServerHelper.getOfflinePlayerNames();
+        List<String> offlinePlayerNames = PlayerHelper.getOfflinePlayerNames();
         new DeathDataListGui(player, offlinePlayerNames, 0)
             .open();
         return CommandHelper.Return.SUCCESS;

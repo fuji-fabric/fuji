@@ -820,7 +820,7 @@ public class TextHelper {
         LogUtil.info(Operators.visitString(text));
 
         /* Send the text using the player's client side language. */
-        for (ServerPlayerEntity player : ServerHelper.getOnlinePlayers()) {
+        for (ServerPlayerEntity player : PlayerHelper.getOnlinePlayers()) {
             TextHelper.sendTextByKey(player, key, args);
         }
     }
@@ -830,7 +830,7 @@ public class TextHelper {
         LogUtil.info(Operators.visitString(text));
 
         /* Send the text, using the given text. */
-        for (ServerPlayerEntity player : ServerHelper.getOnlinePlayers()) {
+        for (ServerPlayerEntity player : PlayerHelper.getOnlinePlayers()) {
             player.sendMessage(text);
         }
     }

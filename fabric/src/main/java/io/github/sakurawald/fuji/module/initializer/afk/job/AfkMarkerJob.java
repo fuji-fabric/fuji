@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.afk.job;
 
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.job.abst.CronJob;
 import io.github.sakurawald.fuji.module.initializer.afk.AfkInitializer;
@@ -19,7 +19,7 @@ public class AfkMarkerJob extends CronJob {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        ServerHelper.getOnlinePlayers()
+        PlayerHelper.getOnlinePlayers()
             .stream()
             .filter(it -> !it.isRemoved())
             .forEach(it -> {

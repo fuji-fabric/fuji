@@ -1,12 +1,16 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
+import java.util.Collection;
+import java.util.Optional;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.DimensionTypes;
+import org.jetbrains.annotations.NotNull;
 
 public class WorldHelper {
 
@@ -44,5 +48,23 @@ public class WorldHelper {
         }
 
         return Items.ENDER_PEARL;
+    }
+
+    public static Collection<ServerWorld> getWorlds() {
+        return ServerHelper.getServer()
+            .worlds
+            .values();
+    }
+
+    public static Optional<ServerWorld> getWorld(@NotNull String dimensionId) {
+        return getWorlds()
+            .stream()
+            .filter(it -> RegistryHelper.getIdAsString(it).equals(dimensionId))
+            .findFirst();
+    }
+
+    public static @NotNull ServerWorld getWorldOrThrow(@NotNull String dimensionId) {
+        return getWorld(dimensionId)
+            .orElseThrow(() -> new IllegalStateException("Dimension %s not found.".formatted(dimensionId)));
     }
 }

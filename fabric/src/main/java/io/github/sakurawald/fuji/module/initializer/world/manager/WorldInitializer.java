@@ -3,8 +3,8 @@ package io.github.sakurawald.fuji.module.initializer.world.manager;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -340,7 +340,7 @@ public class WorldInitializer extends ModuleInitializer {
     @CommandNode("list")
     private static int $list(@CommandSource ServerCommandSource source) {
         TextHelper.sendTextByKey(source, "dimension.loaded_dimensions");
-        ServerHelper
+        WorldHelper
             .getWorlds()
             .forEach(world -> {
                 String dimensionId = RegistryHelper.getIdAsString(world);
@@ -542,7 +542,7 @@ public class WorldInitializer extends ModuleInitializer {
     }
 
     private static void printGroupedPlayersByDimension(ServerCommandSource source, @Nullable Dimension specifiedDimension) {
-        Map<@NotNull String, List<String>> groupedPlayers = ServerHelper
+        Map<@NotNull String, List<String>> groupedPlayers = WorldHelper
             .getWorlds()
             .stream()
             .collect(Collectors.toMap(

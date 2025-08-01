@@ -4,6 +4,7 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.event.impl.ServerTickEvents;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
@@ -181,7 +182,7 @@ public class WorldService {
     }
 
     public static boolean existsDimension(Identifier dimensionId) {
-        boolean dimensionExistedInRuntime = ServerHelper
+        boolean dimensionExistedInRuntime = WorldHelper
             .getWorlds()
             .stream()
             .anyMatch(it -> RegistryHelper.getIdAsString(it).equals(dimensionId.toString()));

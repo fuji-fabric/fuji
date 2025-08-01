@@ -3,7 +3,6 @@ package io.github.sakurawald.fuji.module.initializer.warning.service;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
@@ -77,7 +76,7 @@ public class WarningService {
         if (playerWarnings.warnings.isEmpty()) return;
 
         /* Send notify to online staffs. */
-        ServerHelper
+        PlayerHelper
             .getOnlinePlayers()
             .stream()
             .filter(it -> LuckpermsHelper.hasPermission(it.getUuid(), WarningInitializer.NOTIFY_WARNINGS_PERMISSION))

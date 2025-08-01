@@ -1,8 +1,8 @@
 package io.github.sakurawald.fuji.module.initializer.command_toolbox.realname;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -21,7 +21,7 @@ public class RealnameInitializer extends ModuleInitializer {
     private static int $realname(@CommandSource ServerCommandSource source) {
         MutableText builder = Text.empty();
 
-        for (ServerPlayerEntity player : ServerHelper.getOnlinePlayers()) {
+        for (ServerPlayerEntity player : PlayerHelper.getOnlinePlayers()) {
             Text displayName = player.getDisplayName();
             if (displayName == null) continue;
 

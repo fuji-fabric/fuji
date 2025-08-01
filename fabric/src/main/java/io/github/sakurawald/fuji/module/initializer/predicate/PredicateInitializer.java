@@ -1,11 +1,11 @@
 package io.github.sakurawald.fuji.module.initializer.predicate;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -58,13 +58,13 @@ public class PredicateInitializer extends ModuleInitializer {
     @CommandNode("has-players?")
     private static int $hasPlayers(@CommandSource ServerCommandSource source, Optional<Integer> n) {
         int $n = n.orElse(0);
-        boolean value = ServerHelper.getOnlinePlayers().size() >= $n;
+        boolean value = PlayerHelper.getOnlinePlayers().size() >= $n;
         return CommandHelper.Return.returnBoolean(source, value);
     }
 
     @CommandNode("is-op?")
     private static int $isOp(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {
-        boolean value = ServerHelper.getPlayerManager().isOperator(player.getGameProfile());
+        boolean value = PlayerHelper.getPlayerManager().isOperator(player.getGameProfile());
         return CommandHelper.Return.returnBoolean(source, value);
     }
 

@@ -1,9 +1,8 @@
 package io.github.sakurawald.fuji.core.auxiliary;
 
 import io.github.sakurawald.fuji.Fuji;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.config.Configs;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,7 +19,7 @@ public class LogUtil {
     private static final boolean IS_CONSOLE_SUPPORTS_ANSI_COLOR = isConsoleSupportAnsiColor();
 
     private static boolean isConsoleSupportAnsiColor() {
-        return FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER;
+        return ServerHelper.isServerSideDedicatedServer();
     }
 
     private static String attachSourceModulePrefix(String message) {

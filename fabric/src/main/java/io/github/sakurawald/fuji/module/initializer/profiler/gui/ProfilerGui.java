@@ -72,7 +72,7 @@ public class ProfilerGui extends SimpleGui {
     private List<GuiElementInterface> makeDimensionElements() {
         List<GuiElementInterface> elements = new ArrayList<>();
 
-        for (ServerWorld world : ServerHelper.getWorlds()) {
+        for (ServerWorld world : WorldHelper.getWorlds()) {
             List<Text> lore = new ArrayList<>();
 
             /* Dimension name. */

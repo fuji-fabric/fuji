@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.world.border;
 
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
@@ -85,7 +86,7 @@ public class WorldBorderInitializer extends ModuleInitializer {
 
     public static void sendPerDimensionPacketToAllDimensions(Function<ServerWorld, Packet<?>> packetProvider) {
         // NOTE: I don't know which dimension is changed, so I just simply update the world border for all dimensions.
-        ServerHelper
+        WorldHelper
             .getWorlds()
             .forEach(dimension -> {
                 @SuppressWarnings("unused")
@@ -93,7 +94,7 @@ public class WorldBorderInitializer extends ModuleInitializer {
                 RegistryKey<World> dimensionRegistryKey = dimension.getRegistryKey();
                 Packet<?> packet = packetProvider.apply(dimension);
 
-                ServerHelper.getPlayerManager().sendToDimension(packet, dimensionRegistryKey);
+                PlayerHelper.getPlayerManager().sendToDimension(packet, dimensionRegistryKey);
             });
     }
 }

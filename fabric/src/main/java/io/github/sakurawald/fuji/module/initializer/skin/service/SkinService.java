@@ -146,7 +146,7 @@ public class SkinService {
 
             /* Check whether the new skin is identical to the old one. */
                 GameProfile gameProfile = pair.left();
-            @Nullable ServerPlayerEntity player = ServerHelper
+            @Nullable ServerPlayerEntity player = PlayerHelper
                 .getOnlinePlayerByUuid(gameProfile.getId())
                 .orElse(null);
             if (player == null) {

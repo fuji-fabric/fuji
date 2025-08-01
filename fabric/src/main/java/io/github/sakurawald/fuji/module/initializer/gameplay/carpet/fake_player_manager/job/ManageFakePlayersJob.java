@@ -2,7 +2,6 @@ package io.github.sakurawald.fuji.module.initializer.gameplay.carpet.fake_player
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.job.abst.CronJob;
@@ -53,7 +52,7 @@ public class ManageFakePlayersJob extends CronJob {
                     .stream()
                     .filter(fakePlayerName -> {
                         /* If a fake player is offline, then remove it from the tracked names. */
-                        Optional<ServerPlayerEntity> fakePlayer = ServerHelper.getOnlinePlayerByNameIgnoreCase(fakePlayerName);
+                        Optional<ServerPlayerEntity> fakePlayer = PlayerHelper.getOnlinePlayerByNameIgnoreCase(fakePlayerName);
                         if (fakePlayer.isEmpty()) {
                             return false;
                         }
@@ -62,7 +61,7 @@ public class ManageFakePlayersJob extends CronJob {
                         /* If the expiration time of the owner player is exceeded, then kill all of its fake players. */
                         if (currentTimeMs >= expirationTimeOfTheOwnerPlayer) {
                             /* Auto-renew the fake players if the owner player is online. */
-                            Optional<ServerPlayerEntity> ownerPlayer = ServerHelper.getOnlinePlayerByNameIgnoreCase(ownerPlayerName);
+                            Optional<ServerPlayerEntity> ownerPlayer = PlayerHelper.getOnlinePlayerByNameIgnoreCase(ownerPlayerName);
                             if (ownerPlayer.isPresent()) {
                                 FakePlayerManagerService.renewMyFakePlayers(ownerPlayer.get());
                                 return true;
@@ -97,7 +96,7 @@ public class ManageFakePlayersJob extends CronJob {
         FakePlayerManagerService.player2fakePlayers
             .values()
             .forEach(value -> value.removeIf(fakePlayerName -> {
-                Optional<ServerPlayerEntity> fakePlayer = ServerHelper.getOnlinePlayerByNameIgnoreCase(fakePlayerName);
+                Optional<ServerPlayerEntity> fakePlayer = PlayerHelper.getOnlinePlayerByNameIgnoreCase(fakePlayerName);
                 return fakePlayer.isEmpty() || fakePlayer.get().isRemoved();
             }));
     }

@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.command_meta.when_online;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -70,7 +70,7 @@ public class WhenOnlineInitializer extends ModuleInitializer {
 
     private static void processWhenOnlineTickets() {
         /* Get the online players. */
-        List<String> onlinePlayerNames = ServerHelper.getOnlinePlayerNames();
+        List<String> onlinePlayerNames = PlayerHelper.getOnlinePlayerNames();
 
         /* Find un-executed tickets, and match it with online players. */
         data.model().tickets
@@ -87,7 +87,7 @@ public class WhenOnlineInitializer extends ModuleInitializer {
                 ticket.executedTimestamp = System.currentTimeMillis();
 
                 /* Execute the specified command. */
-                Optional<ServerPlayerEntity> onlinePlayer = ServerHelper.getOnlinePlayerByName(ticket.targetPlayer);
+                Optional<ServerPlayerEntity> onlinePlayer = PlayerHelper.getOnlinePlayerByName(ticket.targetPlayer);
                 onlinePlayer.ifPresentOrElse($onlinePlayer -> {
                     ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole($onlinePlayer.getCommandSource());
                     String commandString = ticket.command;

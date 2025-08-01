@@ -129,7 +129,7 @@ public class JailService {
         executeOnJailedCommands(jail, playerName);
 
         // Update display names.
-        ServerHelper.updateDisplayName();
+        PlayerHelper.updateDisplayNames();
     }
 
     private static void executeOnUnjailedCommands(JailDescriptor jail, String playerName) {
@@ -144,7 +144,7 @@ public class JailService {
         jailRecord.setEnable(false);
 
         // Update display names.
-        ServerHelper.updateDisplayName();
+        PlayerHelper.updateDisplayNames();
     }
 
     public static void deactivateJailRecordWithoutEvents(String playerName) {
@@ -169,7 +169,7 @@ public class JailService {
         enabledJailRecords
             .forEach(jailRecord -> ServerHelper.executeSync(() -> {
                 String playerName = jailRecord.getPrisonerName();
-                ServerHelper.getOnlinePlayerByName(playerName)
+                PlayerHelper.getOnlinePlayerByName(playerName)
                     .ifPresent(onlinePlayer -> {
                         List<String> patrolCommands = jail.getPatrol().getPatrolCommands();
                         CommandExecutor.execute(ExtendedCommandSource.asConsole(onlinePlayer.getCommandSource()), patrolCommands);

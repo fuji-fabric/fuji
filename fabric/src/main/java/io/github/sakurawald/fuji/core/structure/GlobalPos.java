@@ -1,8 +1,8 @@
 package io.github.sakurawald.fuji.core.structure;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import java.util.Optional;
 import lombok.Data;
 import lombok.With;
@@ -67,7 +67,7 @@ public class GlobalPos {
 
     public void teleport(@NotNull ServerPlayerEntity player, Set<PositionFlag> flags) {
         /* Get the dimension instance from server. */
-        Optional<ServerWorld> dimension = ServerHelper.getServerWorld(this.level);
+        Optional<ServerWorld> dimension = WorldHelper.getWorld(this.level);
         dimension.ifPresentOrElse($dimension -> {
             /* Make position flags. */
             #if MC_VER <= MC_1_21

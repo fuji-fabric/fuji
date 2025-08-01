@@ -5,6 +5,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -126,7 +127,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     }
 
     public static void testSteppingBlockForPlayers() {
-        ServerHelper.getOnlinePlayers().forEach(CommandAttachmentInitializer::testSteppingBlockForPlayer);
+        PlayerHelper.getOnlinePlayers().forEach(CommandAttachmentInitializer::testSteppingBlockForPlayer);
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")

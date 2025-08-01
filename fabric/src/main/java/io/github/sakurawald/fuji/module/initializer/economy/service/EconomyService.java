@@ -6,6 +6,7 @@ import eu.pb4.common.economy.api.EconomyAccount;
 import eu.pb4.common.economy.api.EconomyCurrency;
 import eu.pb4.common.economy.api.EconomyProvider;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflineGameProfile;
@@ -147,7 +148,7 @@ public class EconomyService {
     }
 
     public static @NotNull List<GameProfileAndEconomyAccount> makeBalanceTopEntities(@NotNull ServerPlayerEntity player, @NotNull Identifier currencyId) {
-        return ServerHelper
+        return PlayerHelper
             .getOfflineGameProfiles()
             .stream()
             .map(gameProfile -> {

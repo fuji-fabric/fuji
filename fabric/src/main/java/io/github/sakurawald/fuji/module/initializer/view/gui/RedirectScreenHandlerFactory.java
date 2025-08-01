@@ -49,7 +49,7 @@ public abstract class RedirectScreenHandlerFactory {
         if (onlineEditMode) {
             return !targetPlayer.isRemoved();
         }
-        return !ServerHelper.isPlayerOnline(targetPlayerName);
+        return !PlayerHelper.isPlayerOnline(targetPlayerName);
     }
 
     protected abstract Inventory makeTargetInventoryRedirectScreen();
@@ -86,7 +86,7 @@ public abstract class RedirectScreenHandlerFactory {
             @Override
             public void onClosed(PlayerEntity playerEntity) {
                 super.onClosed(playerEntity);
-                ServerHelper.getPlayerManager().savePlayerData(getTargetPlayer());
+                PlayerHelper.getPlayerManager().savePlayerData(getTargetPlayer());
             }
         };
     }

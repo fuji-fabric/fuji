@@ -1,9 +1,9 @@
 package io.github.sakurawald.fuji.module.initializer.command_toolbox.near;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
@@ -28,7 +28,7 @@ public class NearInitializer extends ModuleInitializer {
         int $distance = distance.orElse(128);
 
         int sd = $distance * $distance;
-        List<String> result = ServerHelper.getOnlinePlayers()
+        List<String> result = PlayerHelper.getOnlinePlayers()
             .stream()
             .filter(p -> !p.equals(player) && distance(player, p) <= sd)
             .map(p -> p.getGameProfile().getName())

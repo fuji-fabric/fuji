@@ -1,10 +1,11 @@
 package io.github.sakurawald.fuji.module.initializer.nametag;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PacketHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
@@ -62,7 +63,7 @@ public class NametagInitializer extends ModuleInitializer {
         DisplayEntity.TextDisplayEntity nametag = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY, EntityHelper.getServerWorld(player)) {
 
             private void discardNametag() {
-                ServerHelper.sendPacketToAll(new EntitiesDestroyS2CPacket(this.getId()));
+                PacketHelper.sendPacketToAll(new EntitiesDestroyS2CPacket(this.getId()));
                 this.remove(RemovalReason.DISCARDED);
             }
 
@@ -129,11 +130,11 @@ public class NametagInitializer extends ModuleInitializer {
         /* Spawn entity packet */
         BlockPos blockPos = computeNametagSpawnBlockPos(player);
         EntitySpawnS2CPacket entitySpawnS2CPacket = new EntitySpawnS2CPacket(textDisplayEntity, 0, blockPos);
-        ServerHelper.sendPacketToAll(entitySpawnS2CPacket);
+        PacketHelper.sendPacketToAll(entitySpawnS2CPacket);
 
         /* Ride entity packet */
         EntityPassengersSetS2CPacket entityPassengersSetS2CPacket = new EntityPassengersSetS2CPacket(player);
-        ServerHelper.sendPacketToAll(entityPassengersSetS2CPacket);
+        PacketHelper.sendPacketToAll(entityPassengersSetS2CPacket);
     }
 
     private static byte setTextDisplayFlags(int base, int flag, boolean value) {
@@ -180,7 +181,7 @@ public class NametagInitializer extends ModuleInitializer {
             var dirty = nametag.getDataTracker().getDirtyEntries();
             if (dirty != null) {
                 int entityId = nametag.getId();
-                ServerHelper.sendPacketToAll(new EntityTrackerUpdateS2CPacket(entityId, dirty));
+                PacketHelper.sendPacketToAll(new EntityTrackerUpdateS2CPacket(entityId, dirty));
             }
         }
     }
@@ -204,7 +205,7 @@ public class NametagInitializer extends ModuleInitializer {
         player2nametag.entrySet().removeIf(entry -> entry.getKey().isRemoved() || entry.getValue().isRemoved());
 
         // Update
-        ServerHelper.getOnlinePlayers().forEach(player -> {
+        PlayerHelper.getOnlinePlayers().forEach(player -> {
             // Should we create the nametag for this player?
             if (getNametagDiscardReason(player) != null) return;
 

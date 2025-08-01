@@ -4,8 +4,9 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
@@ -99,7 +100,7 @@ public class CleanerInitializer extends ModuleInitializer {
     public static int $clean() {
         /* Clean entities in the server. */
         Map<String, Integer> cleanedEntities = new HashMap<>();
-        for (ServerWorld world : ServerHelper.getWorlds()) {
+        for (ServerWorld world : WorldHelper.getWorlds()) {
             for (Entity entity : world.iterateEntities()) {
                 if (shouldIgnoreEntity(entity)) continue;
 
@@ -138,7 +139,7 @@ public class CleanerInitializer extends ModuleInitializer {
                 .formatted(Formatting.GOLD)
                 .append(TypeFormatter.formatTypes(null, counter));
 
-        for (ServerPlayerEntity player : ServerHelper.getOnlinePlayers()) {
+        for (ServerPlayerEntity player : PlayerHelper.getOnlinePlayers()) {
             int numberOfCleanedEntities = counter.values().stream().mapToInt(Integer::intValue).sum();
             MutableText reportText = Text.empty()
                 .append(TextHelper.getTextByKey(player, "cleaner.broadcast", numberOfCleanedEntities))

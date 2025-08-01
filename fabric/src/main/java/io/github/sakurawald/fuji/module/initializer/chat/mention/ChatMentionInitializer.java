@@ -43,7 +43,7 @@ public class ChatMentionInitializer extends ModuleInitializer {
             .filter(chatString::contains)
             // Mention the longest name first.
             .sorted(Comparator.comparingInt(String::length).reversed())
-            .map(ServerHelper::getOnlinePlayerByName)
+            .map(PlayerHelper::getOnlinePlayerByName)
             .filter(Optional::isPresent)
             .map(Optional::get)
             .toList();

@@ -5,7 +5,7 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.Dimension;
@@ -30,7 +30,7 @@ public class DimensionArgumentTypeAdapter extends BaseArgumentTypeAdapter {
              */
         return super.makeRequiredArgumentBuilder(argumentName).suggests(
             (ctx, builder) -> {
-                ServerHelper.getWorlds().forEach(it -> builder.suggest(RegistryHelper.getIdAsString(it)));
+                WorldHelper.getWorlds().forEach(it -> builder.suggest(RegistryHelper.getIdAsString(it)));
                 return builder.buildFuture();
             }
         );

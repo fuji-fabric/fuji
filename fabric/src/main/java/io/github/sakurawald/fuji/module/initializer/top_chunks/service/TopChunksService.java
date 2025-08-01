@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.top_chunks.service;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.module.initializer.top_chunks.TopChunksInitializer;
 import io.github.sakurawald.fuji.module.initializer.top_chunks.structure.ChunkScore;
 import java.util.HashMap;
@@ -33,7 +34,7 @@ public class TopChunksService {
         PriorityQueue<ChunkScore> PQ = new PriorityQueue<>();
 
         /* Enumerate worlds. */
-        for (ServerWorld world : ServerHelper.getWorlds()) {
+        for (ServerWorld world : WorldHelper.getWorlds()) {
             Map<ChunkPos, ChunkScore> topChunkReport = new HashMap<>();
 
             /* Enumerate entities in this world. */

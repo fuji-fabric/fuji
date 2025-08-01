@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.jail.structure;
 
 import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.service.date_parser.DateParser;
 import io.github.sakurawald.fuji.module.initializer.jail.service.JailService;
@@ -60,7 +60,7 @@ public class JailRecord {
         if (this.getOwnerJailDescriptor().isCountRemainingJailSecondsWhenPrisonersOffline()) {
             countRemainingJailSeconds(passedTimeInMillSeconds);
         } else {
-            if (ServerHelper.isPlayerOnline(this.prisonerName)) {
+            if (PlayerHelper.isPlayerOnline(this.prisonerName)) {
                 countRemainingJailSeconds(passedTimeInMillSeconds);
             }
         }

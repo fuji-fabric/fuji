@@ -3,7 +3,6 @@ package io.github.sakurawald.fuji.module.initializer.leaderboard.service;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.module.initializer.leaderboard.LeaderBoardInitializer;
 import io.github.sakurawald.fuji.module.initializer.leaderboard.structure.LeaderBoardCache;
@@ -82,7 +81,7 @@ public class LeaderBoardService {
     }
 
     public static void updateLeaderBoards() {
-        ServerHelper
+        PlayerHelper
             .getOnlinePlayers()
             .forEach(LeaderBoardService::updateLeaderBoard);
     }

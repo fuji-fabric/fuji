@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.placeholder;
 import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
 import io.github.sakurawald.fuji.Fuji;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
@@ -12,7 +13,6 @@ import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlaceholderHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
@@ -383,7 +383,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
     private void registerRandomPlayerPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("random_player", 1752000163280L);
         PlaceholderHelper.registerServerPlaceholder(descriptor, (server, args) -> {
-            List<ServerPlayerEntity> playerList = ServerHelper.getOnlinePlayers();
+            List<ServerPlayerEntity> playerList = PlayerHelper.getOnlinePlayers();
             ServerPlayerEntity serverPlayerEntity = RandomUtil.drawList(playerList);
             return Text.literal(serverPlayerEntity.getGameProfile().getName());
         });

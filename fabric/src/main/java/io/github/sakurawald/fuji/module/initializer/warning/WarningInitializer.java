@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.warning;
 
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
@@ -75,7 +75,7 @@ public class WarningInitializer extends ModuleInitializer {
     @CommandNode("warning gui")
     @CommandRequirement(level = 4)
     private static int $warningGui(@CommandSource ServerPlayerEntity player) {
-        List<String> offlinePlayerNames = ServerHelper.getOfflinePlayerNames();
+        List<String> offlinePlayerNames = PlayerHelper.getOfflinePlayerNames();
         new WarningGui(null, player, offlinePlayerNames, 0)
             .open();
         return CommandHelper.Return.SUCCESS;

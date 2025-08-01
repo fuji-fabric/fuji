@@ -1,8 +1,8 @@
 package io.github.sakurawald.fuji.module.initializer.command_toolbox.nickname;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -37,7 +37,7 @@ public class NicknameInitializer extends ModuleInitializer {
 
         data.model().format.player2format.put(name, value);
         data.writeStorage();
-        ServerHelper.updateDisplayName();
+        PlayerHelper.updateDisplayNames();
 
         TextHelper.sendTextByKey(player, "nickname.set");
         return CommandHelper.Return.SUCCESS;
@@ -50,7 +50,7 @@ public class NicknameInitializer extends ModuleInitializer {
 
         data.model().format.player2format.remove(name);
         data.writeStorage();
-        ServerHelper.updateDisplayName();
+        PlayerHelper.updateDisplayNames();
 
         TextHelper.sendTextByKey(player, "nickname.unset");
         return CommandHelper.Return.SUCCESS;

@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.module.mixin.afk;
 
 import com.mojang.authlib.GameProfile;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PacketHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
@@ -60,7 +60,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Af
         this.afk = flag;
 
         // Update tab list name.
-        ServerHelper.sendPacketToAll(new PlayerListS2CPacket(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME, (ServerPlayerEntity) (Object) this));
+        PacketHelper.sendPacketToAll(new PlayerListS2CPacket(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME, (ServerPlayerEntity) (Object) this));
 
         // Trigger afk events.
         AfkConfigModel.AfkEvent afkEvent = AfkInitializer.config.model().afk_event;

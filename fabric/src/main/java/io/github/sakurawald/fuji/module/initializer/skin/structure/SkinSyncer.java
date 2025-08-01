@@ -27,7 +27,7 @@ import net.minecraft.world.biome.source.BiomeAccess;
 public class SkinSyncer {
 
     public static void broadcastGameProfileChange(@NotNull ServerPlayerEntity player) {
-        ServerHelper.getOnlinePlayers()
+        PlayerHelper.getOnlinePlayers()
             .forEach(observer -> {
                 sendPacketsToOnlinePlayers(player, observer);
 
@@ -63,7 +63,7 @@ public class SkinSyncer {
         player.networkHandler.sendPacket(new DifficultyS2CPacket(EntityHelper.getServerWorld(player).getDifficulty(), EntityHelper.getServerWorld(player).getLevelProperties().isDifficultyLocked()));
 
         /* Restore the previous inventory slots + selected slot. */
-        ServerHelper.getPlayerManager().sendPlayerStatus(player);
+        PlayerHelper.getPlayerManager().sendPlayerStatus(player);
 
         /* Restore the previous abilities. */
         player.sendAbilitiesUpdate();
@@ -88,7 +88,7 @@ public class SkinSyncer {
         player.networkHandler.sendPacket(new EntityPassengersSetS2CPacket(player));
 
         /* Send the dimension info to the client to prevent it from getting stuck on the dimension loading screen. */
-        ServerHelper.getPlayerManager().sendWorldInfo(player, PlayerHelper.getServerWorld(player));
+        PlayerHelper.getPlayerManager().sendWorldInfo(player, PlayerHelper.getServerWorld(player));
 
         /* Update the entity tracker. (Does not harm) */
         player.networkHandler.sendPacket(new EntityTrackerUpdateS2CPacket(player.getId(), player.getDataTracker().getChangedEntries()));

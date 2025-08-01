@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.tab.job;
 
 import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.job.abst.CronJob;
@@ -24,7 +24,7 @@ public class RenderHeaderAndFooterJob extends CronJob {
     private static void updateTabList() {
         String headerFormat = RandomUtil.drawList(TabListInitializer.config.model().style.header);
         String footerFormat = RandomUtil.drawList(TabListInitializer.config.model().style.footer);
-        for (ServerPlayerEntity player : ServerHelper.getOnlinePlayers()) {
+        for (ServerPlayerEntity player : PlayerHelper.getOnlinePlayers()) {
             @NotNull Text header = TextHelper.getTextByValue(player, headerFormat);
             @NotNull Text footer = TextHelper.getTextByValue(player, footerFormat);
             player.networkHandler.sendPacket(new PlayerListHeaderS2CPacket(header, footer));

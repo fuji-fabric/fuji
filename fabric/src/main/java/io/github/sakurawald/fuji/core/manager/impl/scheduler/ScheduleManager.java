@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.core.manager.impl.scheduler;
 
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
@@ -9,8 +10,6 @@ import io.github.sakurawald.fuji.core.job.abst.BaseJob;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import lombok.Getter;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.jetbrains.annotations.NotNull;
@@ -154,7 +153,7 @@ public class ScheduleManager extends BaseManager {
             scheduler.shutdown(false);
 
             // NOTE: Make a new scheduler at once, after shutdown the old one. To prevent NPE in client-side environment.
-            if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            if (ServerHelper.isClientSideIntegratedServer()) {
                 resetScheduler();
             }
 

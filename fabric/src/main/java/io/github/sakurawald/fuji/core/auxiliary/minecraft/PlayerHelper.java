@@ -3,17 +3,23 @@ package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
+import java.util.List;
+import java.util.UUID;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+
 #if MC_VER <= MC_1_20_1
 #elif MC_VER > MC_1_20_1
 import net.minecraft.network.packet.c2s.common.SyncedClientOptions;
 #endif
-import net.minecraft.server.MinecraftServer;
+
 #if MC_VER <= MC_1_20_1
 #elif MC_VER > MC_1_20_1
 #endif
 
+import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.PlayerManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -70,7 +76,7 @@ public class PlayerHelper {
 
     public static ServerPlayerEntity loadServerPlayerEntity(String playerName) {
         /* Check if the target player is online. */
-        Optional<ServerPlayerEntity> onlinePlayerByName = ServerHelper.getOnlinePlayerByName(playerName);
+        Optional<ServerPlayerEntity> onlinePlayerByName = getOnlinePlayerByName(playerName);
         if (onlinePlayerByName.isPresent()) {
             return onlinePlayerByName.get();
         }
@@ -85,7 +91,7 @@ public class PlayerHelper {
         ServerPlayerEntity player = makePlayer(gameProfile.get());
 
         #if MC_VER <= MC_1_20_4
-        NbtCompound playerDataOpt = ServerHelper.getPlayerManager().loadPlayerData(player);
+        NbtCompound playerDataOpt = getPlayerManager().loadPlayerData(player);
         applyPlayerData(player, playerDataOpt);
         #elif MC_VER > MC_1_20_4 && MC_VER < MC_1_21_6
         Optional<NbtCompound> playerDataOpt = ServerHelper.getPlayerManager().loadPlayerData(player);
@@ -107,7 +113,7 @@ public class PlayerHelper {
     }
 
     public static void setServerWorld(@NotNull ServerPlayerEntity player, @Nullable String dimensionId) {
-        Optional<ServerWorld> world = ServerHelper.getServerWorld(dimensionId);
+        Optional<ServerWorld> world = WorldHelper.getWorld(dimensionId);
         world.ifPresent($world -> {
             player.setServerWorld($world);
         });
@@ -168,5 +174,88 @@ public class PlayerHelper {
         #elif MC_VER > MC_1_21_5
         return player.getWorld();
         #endif
+    }
+
+    public static PlayerManager getPlayerManager() {
+        return ServerHelper.getServer().getPlayerManager();
+    }
+
+    public static List<ServerPlayerEntity> getOnlinePlayers() {
+        return getPlayerManager().getPlayerList();
+    }
+
+    public static List<String> getOnlinePlayerNames() {
+        return getOnlinePlayers()
+            .stream()
+            .map(PlayerHelper::getPlayerName)
+            .toList();
+    }
+
+    public static Optional<ServerPlayerEntity> getOnlinePlayerByName(String name) {
+        return getOnlinePlayers()
+            .stream()
+            .filter(it -> getPlayerName(it).equals(name))
+            .findFirst();
+    }
+
+    public static Optional<ServerPlayerEntity> getOnlinePlayerByNameIgnoreCase(String name) {
+        return getOnlinePlayers()
+            .stream()
+            .filter(it -> getPlayerName(it).equalsIgnoreCase(name))
+            .findFirst();
+    }
+
+    public static Optional<ServerPlayerEntity> getOnlinePlayerByUuid(UUID uuid) {
+        return getOnlinePlayers()
+            .stream()
+            .filter(player -> player.getUuid().equals(uuid))
+            .findFirst();
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public static boolean isPlayerOnline(String playerName) {
+        return getOnlinePlayerByName(playerName).isPresent();
+    }
+
+    public static void updateDisplayNames() {
+        getOnlinePlayers()
+            .forEach(player -> {
+                PlayerListS2CPacket packet = new PlayerListS2CPacket(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME, player);
+                PacketHelper.sendPacketToAll(packet);
+            });
+    }
+
+    public static List<GameProfile> getOfflineGameProfiles() {
+        UserCache userCache = ServerHelper.getServer().getUserCache();
+        if (userCache == null) return List.of();
+
+        return userCache.byName.values()
+            .stream()
+            .map(UserCache.Entry::getProfile)
+            .toList();
+    }
+
+    public static Optional<GameProfile> getOfflineGameProfileByName(String playerName) {
+        UserCache userCache = ServerHelper.getServer().getUserCache();
+        if (userCache == null) return Optional.empty();
+
+        UserCache.Entry entry = userCache.byName.get(playerName);
+        if (entry == null || entry.getProfile() == null) {
+            return Optional.empty();
+        }
+        return Optional.of(entry.getProfile());
+    }
+
+    public static @NotNull List<String> getOfflinePlayerNames() {
+        /* Get the user cache. */
+        UserCache userCache = ServerHelper.getServer().getUserCache();
+        if (userCache == null) return List.of();
+
+        /* Make the list from user cache. */
+        return userCache.byName
+            .values()
+            .stream()
+            .map(it -> it.getProfile().getName())
+            .toList();
     }
 }
