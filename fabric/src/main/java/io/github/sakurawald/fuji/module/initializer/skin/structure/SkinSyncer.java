@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.skin.structure;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import java.util.Collections;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -97,7 +97,7 @@ public class SkinSyncer {
     private static void sendPacketsToObservingPlayers(@NotNull ServerPlayerEntity player, @NotNull ServerPlayerEntity observer) {
         /* Re-bind the observer.networkHandler to the player entity. */
         ServerWorld playerServerWorld = PlayerHelper.getServerWorld(player);
-        var trackedPlayer = ServerHelper.getChunkStorage(playerServerWorld).entityTrackers.get(player.getId());
+        var trackedPlayer = WorldHelper.getChunkStorage(playerServerWorld).entityTrackers.get(player.getId());
         if (trackedPlayer != null) {
             trackedPlayer.stopTracking(observer);
             trackedPlayer.updateTrackedStatus(observer);

@@ -7,15 +7,6 @@ import lombok.Setter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ChunkHolder;
-
-#if  MC_VER <= MC_1_20_6
-import net.minecraft.server.world.ThreadedAnvilChunkStorage;
-#elif MC_VER > MC_1_20_6
-import net.minecraft.server.world.ServerChunkLoadingManager;
-#endif
-
-import net.minecraft.server.world.ServerWorld;
 
 @TestCase(steps = "Consider the possible runtime environments.", purposes = {
     "The fabric server-side environment."
@@ -33,26 +24,6 @@ public class ServerHelper {
 
     public static void executeSync(Runnable runnable) {
         getServer().executeSync(runnable);
-    }
-
-    public static
-    #if  MC_VER <= MC_1_20_6
-    ThreadedAnvilChunkStorage
-    #elif MC_VER > MC_1_20_6
-    ServerChunkLoadingManager
-    #endif
-    getChunkStorage(ServerWorld world) {
-        #if MC_VER <= MC_1_20_6
-        return world.getChunkManager().threadedAnvilChunkStorage;
-        #elif MC_VER > MC_1_20_6
-        return world.getChunkManager().chunkLoadingManager;
-        #endif
-    }
-
-    @SuppressWarnings("UnnecessaryLocalVariable")
-    public static Iterable<ChunkHolder> getChunks(ServerWorld world) {
-        Iterable<ChunkHolder> chunkHolders = getChunkStorage(world).entryIterator();
-        return chunkHolders;
     }
 
     @ForDeveloper("""

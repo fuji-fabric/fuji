@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Optional;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.server.world.ChunkHolder;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -66,5 +67,25 @@ public class WorldHelper {
     public static @NotNull ServerWorld getWorldOrThrow(@NotNull String dimensionId) {
         return getWorld(dimensionId)
             .orElseThrow(() -> new IllegalStateException("Dimension %s not found.".formatted(dimensionId)));
+    }
+
+    public static
+    #if  MC_VER <= MC_1_20_6
+    net.minecraft.server.world.ThreadedAnvilChunkStorage
+    #elif MC_VER > MC_1_20_6
+    net.minecraft.server.world.ServerChunkLoadingManager
+    #endif
+    getChunkStorage(ServerWorld world) {
+        #if MC_VER <= MC_1_20_6
+        return world.getChunkManager().threadedAnvilChunkStorage;
+        #elif MC_VER > MC_1_20_6
+        return world.getChunkManager().chunkLoadingManager;
+        #endif
+    }
+
+    @SuppressWarnings("UnnecessaryLocalVariable")
+    public static Iterable<ChunkHolder> getChunks(ServerWorld world) {
+        Iterable<ChunkHolder> chunkHolders = getChunkStorage(world).entryIterator();
+        return chunkHolders;
     }
 }

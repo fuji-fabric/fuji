@@ -6,7 +6,6 @@ import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.module.initializer.profiler.ProfilerInitializer;
@@ -80,7 +79,7 @@ public class ProfilerGui extends SimpleGui {
 
             /* Block entities. */
             int blockEntityCount = 0;
-            for (ChunkHolder chunk : ServerHelper.getChunks(world)) {
+            for (ChunkHolder chunk : WorldHelper.getChunks(world)) {
                 WorldChunk worldChunk = chunk.getWorldChunk();
                 if (worldChunk == null) continue;
                 blockEntityCount += worldChunk.getBlockEntities().size();

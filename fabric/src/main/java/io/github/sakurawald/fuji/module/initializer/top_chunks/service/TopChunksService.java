@@ -1,7 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.top_chunks.service;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.module.initializer.top_chunks.TopChunksInitializer;
@@ -45,7 +44,7 @@ public class TopChunksService {
             }
 
             /* Enumerate block entities in this world */
-            for (ChunkHolder chunkHolder : ServerHelper.getChunks(world)) {
+            for (ChunkHolder chunkHolder : WorldHelper.getChunks(world)) {
                 WorldChunk worldChunk = chunkHolder.getWorldChunk();
 
                 /* Check if the chunk is LOADED. */

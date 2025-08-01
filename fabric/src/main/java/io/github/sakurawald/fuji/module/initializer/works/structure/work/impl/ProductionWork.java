@@ -6,8 +6,8 @@ import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LogicHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.gui.impl.gui.ConfirmSignGui;
 import io.github.sakurawald.fuji.core.gui.impl.gui.InputSignGui;
@@ -192,7 +192,7 @@ public class ProductionWork extends Work implements Schedulable {
         int minecartHopperCount = 0;
         ServerWorld world = EntityHelper.getServerWorld(player);
 
-        for (ChunkHolder chunkHolder : ServerHelper.getChunks(world)) {
+        for (ChunkHolder chunkHolder : WorldHelper.getChunks(world)) {
             WorldChunk worldChunk = chunkHolder.getWorldChunk();
             if (worldChunk == null) continue;
             /* count for block entities */
