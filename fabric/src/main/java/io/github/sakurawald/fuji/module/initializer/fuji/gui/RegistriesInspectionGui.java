@@ -108,7 +108,8 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
             /* try to get the registry from dynamic registries */
             Optional<RegistryLoader.Entry<?>> first = RegistryLoader.DYNAMIC_REGISTRIES
                 .stream()
-                .filter(it -> it.comp_985().getValue().equals(entity.getIdentifier()))
+                .filter(it -> RegistryHelper.toString(it.comp_985())
+                    .equals(entity.getIdentifier().toString()))
                 .findFirst();
             if (first.isPresent()) {
                 List<IdentifierDescriptor> ids = RegistryHelper
