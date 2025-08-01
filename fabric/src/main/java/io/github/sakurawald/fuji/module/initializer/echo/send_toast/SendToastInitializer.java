@@ -72,7 +72,7 @@ public class SendToastInitializer extends ModuleInitializer {
                 #if MC_VER <= MC_1_20_2
                     RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)
                 #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_21_4
-                    Optional.of(RegistryHelper.makeIdentifier(DUMMY_RESOURCE_IMAGE_IDENTIFIER))
+                    Optional.of(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER))
                 #elif MC_VER >= MC_1_21_5
                     Optional.of(new AssetInfo(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
                 #endif
