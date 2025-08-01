@@ -5,12 +5,16 @@ import java.util.concurrent.CompletableFuture;
 public class AsyncUtil {
 
     public static void runAsyncAndSwallowExceptions(Runnable runnable) {
-        var unused = CompletableFuture
-            .runAsync(runnable);
+        CompletableFuture
+            .runAsync(runnable)
+            .exceptionally(exception -> {
+                LogUtil.debug("Failed to run an async task: {}", exception);
+                return null;
+            });
     }
 
     public static void runAsyncAndHandleExceptions(Runnable runnable) {
-        var unused = CompletableFuture
+        CompletableFuture
             .runAsync(runnable)
             .exceptionally(exception -> {
                 LogUtil.error("Failed to run an async task.", exception);
