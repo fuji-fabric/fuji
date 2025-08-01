@@ -100,7 +100,7 @@ public class TpposInitializer extends ModuleInitializer {
         , "The saved dimension of the offline player should not be reset to minecraft:overworld"
     })
     private static int $tppos(@CommandSource ServerPlayerEntity source, OfflinePlayerName player) {
-        ServerPlayerEntity dummy = PlayerHelper.Maker.loadDummyPlayer(player.getValue());
+        ServerPlayerEntity dummy = PlayerHelper.Loader.loadDummyPlayer(player.getValue());
         new GlobalPos(EntityHelper.getServerWorld(dummy), dummy.getX(), dummy.getY(), dummy.getZ(), dummy.getYaw(), dummy.getPitch())
             .teleport(source);
         return CommandHelper.Return.SUCCESS;

@@ -40,7 +40,7 @@ public abstract class RedirectScreenHandlerFactory {
             onlineEditMode = true;
             targetPlayer = player;
         } else {
-            targetPlayer = PlayerHelper.Maker.loadDummyPlayer(targetPlayerName);
+            targetPlayer = PlayerHelper.Loader.loadDummyPlayer(targetPlayerName);
         }
     }
 

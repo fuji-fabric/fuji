@@ -112,7 +112,7 @@ public class PlayerHelper {
             .forEach(PlayerHelper::updateDisplayName);
     }
 
-    public static class Maker {
+    public static class Loader {
 
         private static final String DIMENSION_NBT_KEY = "Dimension";
 

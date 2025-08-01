@@ -111,7 +111,7 @@ public class WarningService {
             LogUtil.info("Execute the warning rule for player {}: warning rule = {}", targetPlayerName, warningRule);
 
             // NOTE: Load the dummy offline server player entity, to provide the placeholder parsing context. (Use `/when-online` to execute commands on real server player entity.)
-            ServerCommandSource offlineServerCommandSource = PlayerHelper.Maker
+            ServerCommandSource offlineServerCommandSource = PlayerHelper.Loader
                 .loadDummyPlayer(targetPlayerName)
                 .getCommandSource();
             ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(offlineServerCommandSource);
