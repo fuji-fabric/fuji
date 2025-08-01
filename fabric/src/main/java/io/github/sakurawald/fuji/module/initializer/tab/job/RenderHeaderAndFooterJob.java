@@ -24,7 +24,7 @@ public class RenderHeaderAndFooterJob extends CronJob {
     private static void updateTabList() {
         String headerFormat = RandomUtil.drawList(TabListInitializer.config.model().style.header);
         String footerFormat = RandomUtil.drawList(TabListInitializer.config.model().style.footer);
-        for (ServerPlayerEntity player : PlayerHelper.getOnlinePlayers()) {
+        for (ServerPlayerEntity player : PlayerHelper.Lookup.getOnlinePlayers()) {
             @NotNull Text header = TextHelper.getTextByValue(player, headerFormat);
             @NotNull Text footer = TextHelper.getTextByValue(player, footerFormat);
             player.networkHandler.sendPacket(new PlayerListHeaderS2CPacket(header, footer));

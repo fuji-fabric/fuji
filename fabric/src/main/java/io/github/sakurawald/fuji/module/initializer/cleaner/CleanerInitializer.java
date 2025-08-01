@@ -139,7 +139,7 @@ public class CleanerInitializer extends ModuleInitializer {
                 .formatted(Formatting.GOLD)
                 .append(TypeFormatter.formatTypes(null, counter));
 
-        for (ServerPlayerEntity player : PlayerHelper.getOnlinePlayers()) {
+        for (ServerPlayerEntity player : PlayerHelper.Lookup.getOnlinePlayers()) {
             int numberOfCleanedEntities = counter.values().stream().mapToInt(Integer::intValue).sum();
             MutableText reportText = Text.empty()
                 .append(TextHelper.getTextByKey(player, "cleaner.broadcast", numberOfCleanedEntities))

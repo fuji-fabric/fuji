@@ -64,7 +64,7 @@ public class CommandHelper {
 
     public static void updateCommandTree() {
         CommandManager commandManager = ServerHelper.getServer().getCommandManager();
-        PlayerHelper
+        PlayerHelper.Lookup
             .getOnlinePlayers()
             .forEach(commandManager::sendCommandTree);
     }

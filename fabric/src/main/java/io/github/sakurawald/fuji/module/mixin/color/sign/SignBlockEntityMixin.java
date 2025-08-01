@@ -60,7 +60,7 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
 
             /* Stripe style tags. */
             if (ColorSignInitializer.config.model().requires_corresponding_permission_to_use_style_tag) {
-                Optional<ServerPlayerEntity> playerOpt = PlayerHelper.getOnlinePlayerByUuid(getEditor());
+                Optional<ServerPlayerEntity> playerOpt = PlayerHelper.Lookup.getOnlinePlayerByUuid(getEditor());
                 if (playerOpt.isPresent()) {
                     ServerPlayerEntity player = playerOpt.get();
                     string = ColorSignInitializer.stripeStyleTags(player, string);

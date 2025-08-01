@@ -95,7 +95,7 @@ public class ChatSpyInitializer extends ModuleInitializer {
         }
 
         /* Send the notification. */
-        PlayerHelper.getOnlinePlayers()
+        PlayerHelper.Lookup.getOnlinePlayers()
             .stream()
             .filter(it -> withOptions(it).enabled)
             .forEach(it -> it.sendMessage(notificationText));

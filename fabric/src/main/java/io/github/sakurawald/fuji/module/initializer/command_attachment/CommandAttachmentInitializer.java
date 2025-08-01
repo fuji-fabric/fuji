@@ -127,7 +127,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     }
 
     public static void testSteppingBlockForPlayers() {
-        PlayerHelper.getOnlinePlayers().forEach(CommandAttachmentInitializer::testSteppingBlockForPlayer);
+        PlayerHelper.Lookup.getOnlinePlayers().forEach(CommandAttachmentInitializer::testSteppingBlockForPlayer);
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")

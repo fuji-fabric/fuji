@@ -19,7 +19,7 @@ public class AfkMarkerJob extends CronJob {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        PlayerHelper.getOnlinePlayers()
+        PlayerHelper.Lookup.getOnlinePlayers()
             .stream()
             .filter(it -> !it.isRemoved())
             .forEach(it -> {

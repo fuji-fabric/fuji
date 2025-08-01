@@ -28,7 +28,7 @@ public class ForEachInitializer extends ModuleInitializer {
     private static int $foreach(GreedyString rest) {
         String $rest = rest.getValue();
 
-        for (ServerPlayerEntity player : PlayerHelper.getOnlinePlayers()) {
+        for (ServerPlayerEntity player : PlayerHelper.Lookup.getOnlinePlayers()) {
             CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), $rest);
         }
         return CommandHelper.Return.SUCCESS;

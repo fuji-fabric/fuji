@@ -27,7 +27,7 @@ import net.minecraft.world.biome.source.BiomeAccess;
 public class SkinSyncer {
 
     public static void broadcastGameProfileChange(@NotNull ServerPlayerEntity player) {
-        PlayerHelper.getOnlinePlayers()
+        PlayerHelper.Lookup.getOnlinePlayers()
             .forEach(observer -> {
                 sendPacketsToOnlinePlayers(player, observer);
 

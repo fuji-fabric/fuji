@@ -76,7 +76,7 @@ public class WarningService {
         if (playerWarnings.warnings.isEmpty()) return;
 
         /* Send notify to online staffs. */
-        PlayerHelper
+        PlayerHelper.Lookup
             .getOnlinePlayers()
             .stream()
             .filter(it -> LuckpermsHelper.hasPermission(it.getUuid(), WarningInitializer.NOTIFY_WARNINGS_PERMISSION))

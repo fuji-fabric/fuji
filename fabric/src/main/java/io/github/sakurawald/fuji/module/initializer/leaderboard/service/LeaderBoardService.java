@@ -81,7 +81,7 @@ public class LeaderBoardService {
     }
 
     public static void updateLeaderBoards() {
-        PlayerHelper
+        PlayerHelper.Lookup
             .getOnlinePlayers()
             .forEach(LeaderBoardService::updateLeaderBoard);
     }

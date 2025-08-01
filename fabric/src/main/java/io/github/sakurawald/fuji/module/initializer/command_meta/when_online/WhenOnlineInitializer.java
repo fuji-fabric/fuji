@@ -70,7 +70,7 @@ public class WhenOnlineInitializer extends ModuleInitializer {
 
     private static void processWhenOnlineTickets() {
         /* Get the online players. */
-        List<String> onlinePlayerNames = PlayerHelper.getOnlinePlayerNames();
+        List<String> onlinePlayerNames = PlayerHelper.Lookup.getOnlinePlayerNames();
 
         /* Find un-executed tickets, and match it with online players. */
         data.model().tickets
@@ -87,7 +87,7 @@ public class WhenOnlineInitializer extends ModuleInitializer {
                 ticket.executedTimestamp = System.currentTimeMillis();
 
                 /* Execute the specified command. */
-                Optional<ServerPlayerEntity> onlinePlayer = PlayerHelper.getOnlinePlayerByName(ticket.targetPlayer);
+                Optional<ServerPlayerEntity> onlinePlayer = PlayerHelper.Lookup.getOnlinePlayerByName(ticket.targetPlayer);
                 onlinePlayer.ifPresentOrElse($onlinePlayer -> {
                     ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole($onlinePlayer.getCommandSource());
                     String commandString = ticket.command;

@@ -169,7 +169,7 @@ public class JailService {
         enabledJailRecords
             .forEach(jailRecord -> ServerHelper.executeSync(() -> {
                 String playerName = jailRecord.getPrisonerName();
-                PlayerHelper.getOnlinePlayerByName(playerName)
+                PlayerHelper.Lookup.getOnlinePlayerByName(playerName)
                     .ifPresent(onlinePlayer -> {
                         List<String> patrolCommands = jail.getPatrol().getPatrolCommands();
                         CommandExecutor.execute(ExtendedCommandSource.asConsole(onlinePlayer.getCommandSource()), patrolCommands);

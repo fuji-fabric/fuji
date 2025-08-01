@@ -30,6 +30,10 @@ import org.jetbrains.annotations.Nullable;
 })
 public class PlayerHelper {
 
+    public static String getPlayerName(@NotNull PlayerEntity player) {
+        return player.getGameProfile().getName();
+    }
+
     public static class Maker {
 
         private static final String DIMENSION_NBT_KEY = "Dimension";
@@ -57,7 +61,7 @@ public class PlayerHelper {
 
         public static ServerPlayerEntity loadServerPlayerEntity(String playerName) {
             /* Check if the target player is online. */
-            Optional<ServerPlayerEntity> onlinePlayerByName = getOnlinePlayerByName(playerName);
+            Optional<ServerPlayerEntity> onlinePlayerByName = Lookup.getOnlinePlayerByName(playerName);
             if (onlinePlayerByName.isPresent()) {
                 return onlinePlayerByName.get();
             }
@@ -92,7 +96,7 @@ public class PlayerHelper {
         }
         #endif
 
-        public static void setServerWorld(@NotNull ServerPlayerEntity player, @Nullable String dimensionId) {
+        private static void setServerWorld(@NotNull ServerPlayerEntity player, @Nullable String dimensionId) {
             Optional<ServerWorld> world = WorldHelper.getWorld(dimensionId);
             world.ifPresent($world -> {
                 player.setServerWorld($world);
@@ -122,10 +126,6 @@ public class PlayerHelper {
         #elif MC_VER > MC_1_20_1
         return property.value();
         #endif
-    }
-
-    public static String getPlayerName(@NotNull PlayerEntity player) {
-        return player.getGameProfile().getName();
     }
 
     @ForDeveloper("The carpet mod sub-classing the ServerPlayerEntity.")
@@ -166,41 +166,9 @@ public class PlayerHelper {
         return ServerHelper.getServer().getPlayerManager();
     }
 
-    public static List<ServerPlayerEntity> getOnlinePlayers() {
-        return getPlayerManager().getPlayerList();
-    }
-
-    public static List<String> getOnlinePlayerNames() {
-        return getOnlinePlayers()
-            .stream()
-            .map(PlayerHelper::getPlayerName)
-            .toList();
-    }
-
-    public static Optional<ServerPlayerEntity> getOnlinePlayerByName(@NotNull String playerName) {
-        return getOnlinePlayers()
-            .stream()
-            .filter(it -> getPlayerName(it).equals(playerName))
-            .findFirst();
-    }
-
-    public static Optional<ServerPlayerEntity> getOnlinePlayerByNameIgnoreCase(@NotNull String playerName) {
-        return getOnlinePlayers()
-            .stream()
-            .filter(it -> getPlayerName(it).equalsIgnoreCase(playerName))
-            .findFirst();
-    }
-
-    public static Optional<ServerPlayerEntity> getOnlinePlayerByUuid(@NotNull UUID playerUUID) {
-        return getOnlinePlayers()
-            .stream()
-            .filter(player -> player.getUuid().equals(playerUUID))
-            .findFirst();
-    }
-
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isPlayerOnline(@NotNull String playerName) {
-        return getOnlinePlayerByName(playerName)
+        return Lookup.getOnlinePlayerByName(playerName)
             .isPresent();
     }
 
@@ -210,8 +178,43 @@ public class PlayerHelper {
     }
 
     public static void updateDisplayNames() {
-        getOnlinePlayers()
+        Lookup.getOnlinePlayers()
             .forEach(PlayerHelper::updateDisplayName);
+    }
+
+    public static class Lookup {
+
+        public static List<ServerPlayerEntity> getOnlinePlayers() {
+            return getPlayerManager().getPlayerList();
+        }
+
+        public static List<String> getOnlinePlayerNames() {
+            return getOnlinePlayers()
+                .stream()
+                .map(PlayerHelper::getPlayerName)
+                .toList();
+        }
+
+        public static Optional<ServerPlayerEntity> getOnlinePlayerByName(@NotNull String playerName) {
+            return getOnlinePlayers()
+                .stream()
+                .filter(it -> getPlayerName(it).equals(playerName))
+                .findFirst();
+        }
+
+        public static Optional<ServerPlayerEntity> getOnlinePlayerByNameIgnoreCase(@NotNull String playerName) {
+            return getOnlinePlayers()
+                .stream()
+                .filter(it -> getPlayerName(it).equalsIgnoreCase(playerName))
+                .findFirst();
+        }
+
+        public static Optional<ServerPlayerEntity> getOnlinePlayerByUuid(@NotNull UUID playerUUID) {
+            return getOnlinePlayers()
+                .stream()
+                .filter(player -> player.getUuid().equals(playerUUID))
+                .findFirst();
+        }
     }
 
     public static class Cache {
