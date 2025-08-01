@@ -30,14 +30,6 @@ import org.jetbrains.annotations.Nullable;
 })
 public class PlayerHelper {
 
-    public static Optional<GameProfile> getGameProfileByName(String playerName) {
-        // NOTE: Get the game profile used by this server.
-        UserCache userCache = ServerHelper.getServer().getUserCache();
-        if (userCache == null) return Optional.empty();
-
-        return userCache.findByName(playerName);
-    }
-
     public static class Maker {
 
         private static final String DIMENSION_NBT_KEY = "Dimension";
@@ -71,7 +63,7 @@ public class PlayerHelper {
             }
 
             /* Load game profile. */
-            Optional<GameProfile> gameProfile = getGameProfileByName(playerName);
+            Optional<GameProfile> gameProfile = getOfflineGameProfileByName(playerName);
             if (gameProfile.isEmpty()) {
                 throw new IllegalArgumentException("Can't find player %s in usercache.json".formatted(playerName));
             }
@@ -222,36 +214,29 @@ public class PlayerHelper {
     }
 
     public static List<GameProfile> getOfflineGameProfiles() {
+        /* Get the user cache. */
         UserCache userCache = ServerHelper.getServer().getUserCache();
         if (userCache == null) return List.of();
 
+        /* Make the list from user cache. */
         return userCache.byName.values()
             .stream()
             .map(UserCache.Entry::getProfile)
             .toList();
     }
 
-    public static Optional<GameProfile> getOfflineGameProfileByName(String playerName) {
-        UserCache userCache = ServerHelper.getServer().getUserCache();
-        if (userCache == null) return Optional.empty();
-
-        UserCache.Entry entry = userCache.byName.get(playerName);
-        if (entry == null || entry.getProfile() == null) {
-            return Optional.empty();
-        }
-        return Optional.of(entry.getProfile());
-    }
-
     public static @NotNull List<String> getOfflinePlayerNames() {
-        /* Get the user cache. */
-        UserCache userCache = ServerHelper.getServer().getUserCache();
-        if (userCache == null) return List.of();
-
-        /* Make the list from user cache. */
-        return userCache.byName
-            .values()
+        return getOfflineGameProfiles()
             .stream()
-            .map(it -> it.getProfile().getName())
+            .map(GameProfile::getName)
             .toList();
     }
+
+    public static Optional<GameProfile> getOfflineGameProfileByName(@NotNull String playerName) {
+        return getOfflineGameProfiles()
+            .stream()
+            .filter(it -> it.getName().equals(playerName))
+            .findFirst();
+    }
+
 }

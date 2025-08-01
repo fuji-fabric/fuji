@@ -32,15 +32,13 @@ public class OfflineGameProfileArgumentTypeAdapter extends BaseArgumentTypeAdapt
     public Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
         String offlinePlayerName = StringArgumentType.getString(context, argument.getArgumentName());
 
-        Optional<GameProfile> offlineGameProfileByName = PlayerHelper.getGameProfileByName(offlinePlayerName);
-
-        // Verify the game profile exists.
-        if (offlineGameProfileByName.isEmpty()) {
-            TextHelper.sendTextByKey(context.getSource(), "player.unknown_player");
-            throw new AbortCommandExecutionException();
-        }
-
-        return new OfflineGameProfile(offlineGameProfileByName.get());
+        Optional<GameProfile> offlineGameProfile = PlayerHelper.getOfflineGameProfileByName(offlinePlayerName);
+        return offlineGameProfile
+            .map(OfflineGameProfile::new)
+            .orElseThrow(() -> {
+                TextHelper.sendTextByKey(context.getSource(), "player.unknown_player");
+                return new AbortCommandExecutionException();
+            });
     }
 
     @Override

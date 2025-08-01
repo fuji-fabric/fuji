@@ -6,9 +6,11 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlayerName;
+import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
@@ -28,7 +30,15 @@ public class OfflinePlayerNameArgumentTypeAdapter extends BaseArgumentTypeAdapte
 
     @Override
     public Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
-        return new OfflinePlayerName(StringArgumentType.getString(context, argument.getArgumentName()));
+        String offlinePlayerName = StringArgumentType.getString(context, argument.getArgumentName());
+
+        return PlayerHelper
+            .getOfflineGameProfileByName(offlinePlayerName)
+            .map($gameProfile -> new OfflinePlayerName($gameProfile.getName()))
+            .orElseThrow(() -> {
+                TextHelper.sendTextByKey(context.getSource(), "player.unknown_player");
+                return new AbortCommandExecutionException();
+            });
     }
 
     @Override
