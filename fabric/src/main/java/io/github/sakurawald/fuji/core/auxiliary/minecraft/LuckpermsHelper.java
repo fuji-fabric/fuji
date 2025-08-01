@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import java.util.Optional;
@@ -30,12 +31,12 @@ public class LuckpermsHelper {
         return Optional.of(instance);
     }
 
-    /*
-     * 1. If you loadUser() for a fake-player spawned by carpet-fabric, then the User data will be loaded into the memory by luckperms.
-     * 2. Luckperms will assign the group 'default' for the fake-player, but will never save the User data back to storage.
-     * 3. If you issue `/lp user fake_player permission info`, luckperms will say there is no User data for this player.
-     */
-    private static User loadUser(@NotNull LuckPerms api, UUID uuid) {
+    @ForDeveloper("""
+        1. If you apply loadUser() for a fake-player spawned by carpet-fabric, then the User data will be loaded into the memory by luckperms.
+        2. Luckperms will assign the group 'default' for the fake-player, but will never save the User data back to storage.
+        3. If you issue `/lp user fake_player permission info`, luckperms will say there is no User data for this player.
+        """)
+    private static User loadUser(@NotNull LuckPerms api, @NotNull UUID uuid) {
         UserManager userManager = api.getUserManager();
 
         /* Load the user from luckperms cache. */
@@ -96,32 +97,30 @@ public class LuckpermsHelper {
             });
     }
 
-    public static @Nullable String getPrefix(UUID uuid) {
+    public static @NotNull String getPrefix(UUID uuid) {
         Optional<LuckPerms> api = getAPI();
-        if (api.isEmpty()) {
-            return null;
-        }
-
-        User user = loadUser(api.orElse(null), uuid);
-        return user
-            .getCachedData()
-            .getMetaData()
-            .getPrefix();
-
+        return api
+            .map($api -> {
+                User user = loadUser($api, uuid);
+                return user
+                    .getCachedData()
+                    .getMetaData()
+                    .getPrefix();
+            })
+            .orElse("");
     }
 
-    public static @Nullable String getSuffix(UUID uuid) {
+    public static @NotNull String getSuffix(UUID uuid) {
         Optional<LuckPerms> api = getAPI();
-        if (api.isEmpty()) {
-            return null;
-        }
-
-        User user = loadUser(api.orElse(null), uuid);
-        return user
-            .getCachedData()
-            .getMetaData()
-            .getSuffix();
-
+        return api
+            .map($api -> {
+                User user = loadUser($api, uuid);
+                return user
+                    .getCachedData()
+                    .getMetaData()
+                    .getSuffix();
+            })
+            .orElse("");
     }
 
 }
