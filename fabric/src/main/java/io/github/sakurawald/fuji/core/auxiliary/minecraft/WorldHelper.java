@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.DimensionTypes;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class WorldHelper {
 
@@ -57,7 +58,7 @@ public class WorldHelper {
             .values();
     }
 
-    public static Optional<ServerWorld> getWorld(@NotNull String dimensionId) {
+    public static Optional<ServerWorld> getWorld(@Nullable String dimensionId) {
         return getWorlds()
             .stream()
             .filter(it -> RegistryHelper.getIdAsString(it).equals(dimensionId))

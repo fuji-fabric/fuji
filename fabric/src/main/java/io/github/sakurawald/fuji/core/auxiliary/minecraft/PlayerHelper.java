@@ -34,76 +34,6 @@ public class PlayerHelper {
         return player.getGameProfile().getName();
     }
 
-    public static class Maker {
-
-        private static final String DIMENSION_NBT_KEY = "Dimension";
-
-        private static ServerPlayerEntity makePlayer(@NotNull GameProfile gameProfile) {
-            MinecraftServer server = ServerHelper.getServer();
-
-            #if MC_VER <= MC_1_20_1
-            return new ServerPlayerEntity(server, server.getOverworld(), gameProfile);
-            #elif MC_VER > MC_1_20_1
-            var syncedClientOptions = net.minecraft.network.packet.c2s.common.SyncedClientOptions.createDefault();
-            return new ServerPlayerEntity(server, server.getOverworld(), gameProfile, syncedClientOptions);
-            #endif
-        }
-
-        private static void applyPlayerData(@NotNull ServerPlayerEntity player, @Nullable NbtCompound playerData) {
-            if (playerData == null) return;
-
-            /* Apply saved dimension. */
-            if (playerData.contains(DIMENSION_NBT_KEY)) {
-                String dimensionId = NbtHelper.Primitives.getString(playerData, DIMENSION_NBT_KEY);
-                setServerWorld(player, dimensionId);
-            }
-        }
-
-        public static ServerPlayerEntity loadServerPlayerEntity(String playerName) {
-            /* Check if the target player is online. */
-            Optional<ServerPlayerEntity> onlinePlayerByName = Lookup.getOnlinePlayerByName(playerName);
-            if (onlinePlayerByName.isPresent()) {
-                return onlinePlayerByName.get();
-            }
-
-            /* Load game profile. */
-            Optional<GameProfile> gameProfile = Cache.getOfflineGameProfileByName(playerName);
-            if (gameProfile.isEmpty()) {
-                throw new IllegalArgumentException("Can't find player %s in usercache.json".formatted(playerName));
-            }
-
-            /* Make the player instance. */
-            ServerPlayerEntity player = makePlayer(gameProfile.get());
-
-            #if MC_VER <= MC_1_20_4
-            NbtCompound playerDataOpt = getPlayerManager().loadPlayerData(player);
-            applyPlayerData(player, playerDataOpt);
-            #elif MC_VER > MC_1_20_4 && MC_VER < MC_1_21_6
-            Optional<NbtCompound> playerDataOpt = getPlayerManager().loadPlayerData(player);
-            applyPlayerData(player, playerDataOpt.orElse(null));
-            #elif MC_VER >= MC_1_21_6
-            Optional<net.minecraft.storage.ReadView> playerDataOpt = getPlayerManager().loadPlayerData(player, net.minecraft.util.ErrorReporter.Impl.EMPTY);
-            applyPlayerData(player, playerDataOpt.get());
-            #endif
-
-            return player;
-        }
-
-        #if MC_VER >= MC_1_21_6
-        private static void applyPlayerData(ServerPlayerEntity player, @Nullable net.minecraft.storage.ReadView playerData) {
-             playerData.getOptionalString(DIMENSION_NBT_KEY)
-                .ifPresent(dimensionId -> setServerWorld(player, dimensionId));
-        }
-        #endif
-
-        private static void setServerWorld(@NotNull ServerPlayerEntity player, @Nullable String dimensionId) {
-            Optional<ServerWorld> world = WorldHelper.getWorld(dimensionId);
-            world.ifPresent($world -> {
-                player.setServerWorld($world);
-            });
-        }
-    }
-
     public static void playSound(@NotNull ServerPlayerEntity player, @NotNull SoundEvent soundEvent, @NotNull SoundCategory soundCategory, float volume, float pitch) {
         #if MC_VER <= MC_1_20_4
         player.playSound(soundEvent, soundCategory, volume, pitch);
@@ -180,6 +110,79 @@ public class PlayerHelper {
     public static void updateDisplayNames() {
         Lookup.getOnlinePlayers()
             .forEach(PlayerHelper::updateDisplayName);
+    }
+
+    public static class Maker {
+
+        private static final String DIMENSION_NBT_KEY = "Dimension";
+
+        private static ServerPlayerEntity makePlayer(@NotNull GameProfile gameProfile) {
+            MinecraftServer server = ServerHelper.getServer();
+
+            #if MC_VER <= MC_1_20_1
+            return new ServerPlayerEntity(server, server.getOverworld(), gameProfile);
+            #elif MC_VER > MC_1_20_1
+            var syncedClientOptions = net.minecraft.network.packet.c2s.common.SyncedClientOptions.createDefault();
+            return new ServerPlayerEntity(server, server.getOverworld(), gameProfile, syncedClientOptions);
+            #endif
+        }
+
+        private static void applyPlayerData(
+            #if MC_VER < MC_1_21_6
+            @NotNull ServerPlayerEntity player, @Nullable NbtCompound playerData
+            #elif MC_VER >= MC_1_21_6
+            @NotNull ServerPlayerEntity player, @Nullable net.minecraft.storage.ReadView playerData
+            #endif
+        ) {
+            #if MC_VER < MC_1_21_6
+            if (playerData == null) return;
+            /* Restore previous dimension. */
+            if (playerData.contains(DIMENSION_NBT_KEY)) {
+                String dimensionId = NbtHelper.Primitives.getString(playerData, DIMENSION_NBT_KEY);
+                setServerWorld(player, dimensionId);
+            }
+            #elif MC_VER >= MC_1_21_6
+             playerData
+                .getOptionalString(DIMENSION_NBT_KEY)
+                .ifPresent(dimensionId -> setServerWorld(player, dimensionId));
+            #endif
+        }
+
+        private static void setServerWorld(@NotNull ServerPlayerEntity player, @Nullable String dimensionId) {
+            Optional<ServerWorld> world = WorldHelper.getWorld(dimensionId);
+            world.ifPresent(player::setServerWorld);
+        }
+
+        public static ServerPlayerEntity loadServerPlayerEntity(@NotNull String playerName) {
+            /* Check if the target player is online. */
+            Optional<ServerPlayerEntity> player = Lookup.getOnlinePlayerByName(playerName);
+            if (player.isPresent()) {
+                return player.get();
+            }
+
+            /* Load game profile. */
+            Optional<GameProfile> gameProfile = Cache.getOfflineGameProfileByName(playerName);
+            if (gameProfile.isEmpty()) {
+                throw new IllegalArgumentException("Can't find player %s in usercache.json file".formatted(playerName));
+            }
+
+            /* Make the player instance. */
+            ServerPlayerEntity $player = makePlayer(gameProfile.get());
+
+            #if MC_VER <= MC_1_20_4
+            NbtCompound playerData = getPlayerManager().loadPlayerData($player);
+            applyPlayerData($player, playerData);
+            #elif MC_VER > MC_1_20_4 && MC_VER < MC_1_21_6
+            Optional<NbtCompound> playerDataOpt = getPlayerManager().loadPlayerData($player);
+            applyPlayerData($player, playerDataOpt.orElse(null));
+            #elif MC_VER >= MC_1_21_6
+            Optional<net.minecraft.storage.ReadView> playerDataOpt = getPlayerManager().loadPlayerData($player, net.minecraft.util.ErrorReporter.Impl.EMPTY);
+            applyPlayerData($player, playerDataOpt.get());
+            #endif
+
+            return $player;
+        }
+
     }
 
     public static class Lookup {
