@@ -509,7 +509,6 @@
   "works.work.set.target.introduction": "<#FFA1F5>Nastavit úvod",
   "works.work.set.target.name": "<#FFA1F5>Název sady",
   "works.work.set.target.position": "<#FFA1F5>Nastavit pozici",
-  "world.dimension.blacklist": "<red>Rozměr %s je na černé listině.",
   "world.dimension.created": "<gold>Vytvořit rozměr %s dokončeno",
   "world.dimension.deleted": "<gold>Odstranění dimenze %s dokončeno",
   "world.dimension.dimension_type": "<blue>Dimension Type -> %s",
@@ -1346,5 +1345,6 @@
   "docstring.1753774502626": "Set the `position` of the specified `jail` to your current position.",
   "docstring.1753774841738": "◉ The `placeholders` to the `position` of a `jail`.\n1. `%fuji:jail_dimension%`\n2. `%fuji:jail_x%`\n3. `%fuji:jail_y%`\n4. `%fuji:jail_z%`\n5. `%fuji:jail_yaw%`\n6. `%fuji:jail_pitch%`\n\n◉ Restrict the `movement` of `jailed players` within a specified area.\nWith the help of `position placeholders`, you can write `patrol commands` to restrict movements.\nYou can define commands to restrict the movement of jailed players within a specified area.\n1. `/execute as %player:name% at @s unless dimension %fuji:jail_dimension% run execute in %fuji:jail_dimension% run tp @s %fuji:jail_x% %fuji:jail_y% %fuji:jail_z%`\n2. `/execute as %player:name% if entity @s[x=%fuji:jail_x%,y=%fuji:jail_y%,z=%fuji:jail_z%,distance=8..] run tp @s %fuji:jail_x% %fuji:jail_y% %fuji:jail_z%`\n\n<green>NOTE: If you have enabled the `teleport_warmup` module, remember to assign the `warmup bypass` permission for the `jailed` user group.\n<green>So that `jailed players` can be `instantly` teleported back to the `position of the jail`.\n1. `/lp group jailed permission set fuji.teleport_warmup.bypass`\n\n<green>NOTE: To disable the `vanilla Minecraft command feedbacks`, you can issue:\n1. `/gamerule sendCommandFeedback false`\n",
   "docstring.1753780761908": "◉ Create a `jail` in your current position.\nIssue: `/jail create \\<jail-id\\>`\n\n◉ Set the position of a jail to your current position.\nIssue: `/jail set-position \\<jail-id\\>`\n\n◉ Teleport to the position of a jail.\nIssue: `/jail tp \\<jail-id\\>`\n\n◉ List all created jails.\nIssue: `/jail list`\n\n◉ Put a player into a jail.\nIssue:\n1. `/jail put Steve \\<jail-id\\> Steal items.`\n2. `/jail put Steve \\<jail-id\\> --duration 1s2m3h4d5w6M7y Steal items.`\n\n◉ Un-put a player from the jail.\nIssue: `/jail unput Steve`\n\n◉ Query which jail a player is in.\nIssue: `/jail where Steve`\n",
-  "docstring.1753864337061": "Open the jail GUI."
+  "docstring.1753864337061": "Open the jail GUI.",
+  "docstring.1754014854649": "◉ Open `this` GUI\nIssue: `/fuji`\n\n◉ List all `fuji commands`\nIssue: `/fuji inspect fuji-commands`\n\n◉ List all `fuji permissions` and `fuji metas`\nIssue: `/fuji inspect permissions-and-metas`\n\n◉ List all `fuji placeholders`\nIssue: `/fuji inspect placeholders`\n\n◉ List all `fuji configurations`\nIssue: `/fuji inspect configurations`\n\n◉ List all `fuji jobs`\nIssue: `/fuji inspect jobs`\n\n◉ List all `fuji argument types`\nIssue: `/fuji inspect argument-types`\n"
 }
