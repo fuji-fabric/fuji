@@ -62,17 +62,17 @@ public class DeathNode {
         DeathNode deathNode = new DeathNode();
 
         /* Read remark tag. */
-        NbtCompound remarkTag = NbtHelper.Primitives.getCompound(nbt, REMARK_KEY);
+        NbtCompound remarkTag = NbtHelper.Primitives.getCompound(nbt, REMARK_KEY).get();
 
-        deathNode.time = NbtHelper.Primitives.getString(remarkTag, TIME_KEY);
-        deathNode.dimension = NbtHelper.Primitives.getString(remarkTag, DIMENSION_KEY);
-        deathNode.x = NbtHelper.Primitives.getDouble(remarkTag, X_KEY);
-        deathNode.y = NbtHelper.Primitives.getDouble(remarkTag, Y_KEY);
-        deathNode.z = NbtHelper.Primitives.getDouble(remarkTag, Z_KEY);
-        deathNode.reason = NbtHelper.Primitives.getString(remarkTag, REASON_KEY);
+        deathNode.time = NbtHelper.Primitives.getString(remarkTag, TIME_KEY).get();
+        deathNode.dimension = NbtHelper.Primitives.getString(remarkTag, DIMENSION_KEY).get();
+        deathNode.x = NbtHelper.Primitives.getDouble(remarkTag, X_KEY).get();
+        deathNode.y = NbtHelper.Primitives.getDouble(remarkTag, Y_KEY).get();
+        deathNode.z = NbtHelper.Primitives.getDouble(remarkTag, Z_KEY).get();
+        deathNode.reason = NbtHelper.Primitives.getString(remarkTag, REASON_KEY).get();
 
         /* Read inventory tag. */
-        NbtCompound inventoryNode = NbtHelper.Primitives.getCompound(nbt, INVENTORY_KEY);
+        NbtCompound inventoryNode = NbtHelper.Primitives.getCompound(nbt, INVENTORY_KEY).get();
 
         // restore main stacks (1*9 slots + 3*9 slots)
         deathNode.main = ItemStackHelper.Nbt.readSlotsNode((NbtList) inventoryNode.get(ITEM_KEY));
@@ -81,9 +81,9 @@ public class DeathNode {
 
         deathNode.offhand = ItemStackHelper.Nbt.readSlotsNode((NbtList) inventoryNode.get(OFFHAND_KEY));
 
-        deathNode.score = NbtHelper.Primitives.getInt(inventoryNode, SCORE_KEY);
-        deathNode.expLevel = NbtHelper.Primitives.getInt(inventoryNode, XP_LEVEL_KEY);
-        deathNode.expProgress = NbtHelper.Primitives.getFloat(inventoryNode, XP_PROGRESS_KEY);
+        deathNode.score = NbtHelper.Primitives.getInt(inventoryNode, SCORE_KEY).get();
+        deathNode.expLevel = NbtHelper.Primitives.getInt(inventoryNode, XP_LEVEL_KEY).get();
+        deathNode.expProgress = NbtHelper.Primitives.getFloat(inventoryNode, XP_PROGRESS_KEY).get();
 
         return deathNode;
     }

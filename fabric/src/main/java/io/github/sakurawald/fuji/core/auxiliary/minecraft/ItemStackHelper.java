@@ -191,7 +191,8 @@ public class ItemStackHelper {
             /* Map the NBT to ItemStack. */
             List<ItemStack> ret = new ArrayList<>();
             for (int i = 0; i < node.size(); i++) {
-                ret.add(fromNbtOrEmpty(RegistryHelper.getDefaultWrapperLookup(), NbtHelper.Primitives.getCompound(node, i)));
+                NbtCompound nbtCompound = NbtHelper.Primitives.getCompound(node, i).get();
+                ret.add(fromNbtOrEmpty(RegistryHelper.getDefaultWrapperLookup(), nbtCompound));
             }
             return ret;
         }

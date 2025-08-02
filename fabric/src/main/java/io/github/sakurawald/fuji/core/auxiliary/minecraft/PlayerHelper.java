@@ -140,7 +140,7 @@ public class PlayerHelper {
             /* Restore previous dimension. */
             #if MC_VER < MC_1_21_6
             if (playerData.contains(DIMENSION_NBT_KEY)) {
-                String dimensionId = NbtHelper.Primitives.getString(playerData, DIMENSION_NBT_KEY);
+                String dimensionId = NbtHelper.Primitives.getString(playerData, DIMENSION_NBT_KEY).get();
                 setServerWorld(player, dimensionId);
             }
             #elif MC_VER >= MC_1_21_6

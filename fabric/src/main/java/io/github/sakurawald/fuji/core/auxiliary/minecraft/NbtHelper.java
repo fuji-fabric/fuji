@@ -2,23 +2,18 @@ package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import lombok.SneakyThrows;
-#if MC_VER <= MC_1_20_4
-#elif MC_VER > MC_1_20_4
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
-#endif
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.nio.file.Files;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class NbtHelper {
 
@@ -46,7 +41,7 @@ public class NbtHelper {
                 }
 
                 // Walk along it.
-                root = Primitives.getCompound(root, node);
+                root = Primitives.getCompound(root, node).get();
             }
 
             /* Set the value. */
@@ -72,7 +67,7 @@ public class NbtHelper {
                 }
 
                 // Walk along it.
-                root = Primitives.getCompound(root, node);
+                root = Primitives.getCompound(root, node).get();
             }
 
             /* Get the value. */
@@ -148,51 +143,51 @@ public class NbtHelper {
 
     public static class Primitives {
 
-        public static @Nullable String getString(NbtCompound root, String key) {
+        public static Optional<String> getString(@NotNull NbtCompound root, @NotNull String key) {
             #if MC_VER <= MC_1_21_4
+            return Optional.ofNullable(root.getString(key));
+            #elif MC_VER >= MC_1_21_5
             return root.getString(key);
-            #elif MC_VER >= MC_1_21_5
-            return root.getString(key).orElse(null);
             #endif
         }
 
-        public static @Nullable NbtCompound getCompound(NbtCompound root, String key) {
+        public static Optional<NbtCompound> getCompound(@NotNull NbtCompound root, @NotNull String key) {
             #if MC_VER <= MC_1_21_4
+            return Optional.ofNullable(root.getCompound(key));
+            #elif MC_VER >= MC_1_21_5
             return root.getCompound(key);
-            #elif MC_VER >= MC_1_21_5
-            return root.getCompound(key).get();
             #endif
         }
 
-        public static @Nullable NbtCompound getCompound(NbtList list, int index) {
+        public static Optional<NbtCompound> getCompound(@NotNull NbtList list, int index) {
             #if MC_VER <= MC_1_21_4
+            return Optional.ofNullable(list.getCompound(index));
+            #elif MC_VER >= MC_1_21_5
             return list.getCompound(index);
-            #elif MC_VER >= MC_1_21_5
-            return list.getCompound(index).get();
             #endif
         }
 
-        public static int getInt(NbtCompound root, String key) {
+        public static Optional<Integer> getInt(@NotNull NbtCompound root, @NotNull String key) {
             #if MC_VER <= MC_1_21_4
+            return Optional.of(root.getInt(key));
+            #elif MC_VER >= MC_1_21_5
             return root.getInt(key);
-            #elif MC_VER >= MC_1_21_5
-            return root.getInt(key).get();
             #endif
         }
 
-        public static float getFloat(NbtCompound root, String key) {
+        public static Optional<Float> getFloat(@NotNull NbtCompound root, @NotNull String key) {
             #if MC_VER <= MC_1_21_4
+            return Optional.of(root.getFloat(key));
+            #elif MC_VER >= MC_1_21_5
             return root.getFloat(key);
-            #elif MC_VER >= MC_1_21_5
-            return root.getFloat(key).get();
             #endif
         }
 
-        public static double getDouble(NbtCompound root, String key) {
+        public static Optional<Double> getDouble(@NotNull NbtCompound root, @NotNull String key) {
             #if MC_VER <= MC_1_21_4
-            return root.getDouble(key);
+            return Optional.of(root.getDouble(key));
             #elif MC_VER >= MC_1_21_5
-            return root.getDouble(key).get();
+            return root.getDouble(key);
             #endif
         }
     }

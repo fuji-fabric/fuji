@@ -28,7 +28,7 @@ public class UuidHelper {
         if (root == null) return null;
         if (!root.contains(FUJI_UUID_NBT_KEY)) return null;
 
-        return NbtHelper.Primitives.getString(root, FUJI_UUID_NBT_KEY);
+        return NbtHelper.Primitives.getString(root, FUJI_UUID_NBT_KEY).get();
     }
 
     public static String getAttachedUuid(@NotNull GlobalBlockPos globalBlockPos) {
