@@ -58,7 +58,7 @@ public class GuiHelper {
             /* Copy data from slot into builder. */
             builder.setItem(itemStack.getItem());
             builder.setName(itemStack.getName());
-            List<Text> lore = ItemStackHelper.getLore(itemStack);
+            List<Text> lore = ItemStackHelper.Lore.getLore(itemStack);
             if (!lore.isEmpty()) {
                 builder.setLore(lore);
             }

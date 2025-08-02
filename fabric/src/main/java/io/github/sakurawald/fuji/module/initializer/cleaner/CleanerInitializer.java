@@ -75,7 +75,7 @@ public class CleanerInitializer extends ModuleInitializer {
             if (entity.hasCustomName()) return true;
             if (entity instanceof ItemEntity ie) {
                 ItemStack stack = ie.getStack();
-                if (ItemStackHelper.hasCustomName(stack)) {
+                if (ItemStackHelper.CustomName.hasCustomName(stack)) {
                     return true;
                 }
             }

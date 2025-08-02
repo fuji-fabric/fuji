@@ -69,7 +69,7 @@ public class KitService {
     public static void createKit(@NotNull Kit kit) {
         NbtHelper.Storage.withNbtFile(getKitPath(kit.getName()), root -> {
             NbtList nbtList = new NbtList();
-            ItemStackHelper.Nbt.writeSlotsNode(nbtList, kit.getStackList());
+            ItemStackHelper.Codec.writeSlotsNode(nbtList, kit.getStackList());
             LogUtil.debug("createKit: nbtList = {}", nbtList);
             root.put(INVENTORY_KEY, nbtList);
         });
@@ -85,7 +85,7 @@ public class KitService {
 
             /* Read slots from inventory tag. */
             NbtList nbtList = (NbtList) root.get(INVENTORY_KEY);
-            return ItemStackHelper.Nbt.readSlotsNode(nbtList);
+            return ItemStackHelper.Codec.readSlotsNode(nbtList);
         });
 
         return new Kit(kitName, kitStacks);

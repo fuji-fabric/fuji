@@ -76,11 +76,11 @@ public class DeathNode {
         NbtCompound inventoryNode = NbtHelper.Primitives.getCompound(nbt, INVENTORY_KEY).get();
 
         // restore main stacks (1*9 slots + 3*9 slots)
-        deathNode.main = ItemStackHelper.Nbt.readSlotsNode((NbtList) inventoryNode.get(ITEM_KEY));
+        deathNode.main = ItemStackHelper.Codec.readSlotsNode((NbtList) inventoryNode.get(ITEM_KEY));
 
-        deathNode.armor = ItemStackHelper.Nbt.readSlotsNode((NbtList) inventoryNode.get(ARMOR_KEY));
+        deathNode.armor = ItemStackHelper.Codec.readSlotsNode((NbtList) inventoryNode.get(ARMOR_KEY));
 
-        deathNode.offhand = ItemStackHelper.Nbt.readSlotsNode((NbtList) inventoryNode.get(OFFHAND_KEY));
+        deathNode.offhand = ItemStackHelper.Codec.readSlotsNode((NbtList) inventoryNode.get(OFFHAND_KEY));
 
         deathNode.score = NbtHelper.Primitives.getInt(inventoryNode, SCORE_KEY).get();
         deathNode.expLevel = NbtHelper.Primitives.getInt(inventoryNode, XP_LEVEL_KEY).get();
@@ -118,9 +118,9 @@ public class DeathNode {
     private static void writeInventoryNode(@NotNull NbtCompound parent, @NotNull ServerPlayerEntity player) {
         NbtCompound inventoryTag = new NbtCompound();
 
-        inventoryTag.put(ARMOR_KEY, ItemStackHelper.Nbt.writeSlotsNode(new NbtList(), InventoryHelper.getArmorStacks(player)));
-        inventoryTag.put(OFFHAND_KEY, ItemStackHelper.Nbt.writeSlotsNode(new NbtList(), InventoryHelper.getOffhandStack(player)));
-        inventoryTag.put(ITEM_KEY, ItemStackHelper.Nbt.writeSlotsNode(new NbtList(), InventoryHelper.getMainStacks(player)));
+        inventoryTag.put(ARMOR_KEY, ItemStackHelper.Codec.writeSlotsNode(new NbtList(), InventoryHelper.getArmorStacks(player)));
+        inventoryTag.put(OFFHAND_KEY, ItemStackHelper.Codec.writeSlotsNode(new NbtList(), InventoryHelper.getOffhandStack(player)));
+        inventoryTag.put(ITEM_KEY, ItemStackHelper.Codec.writeSlotsNode(new NbtList(), InventoryHelper.getMainStacks(player)));
 
         inventoryTag.putInt(SCORE_KEY, player.getScore());
         inventoryTag.putInt(XP_LEVEL_KEY, player.experienceLevel);

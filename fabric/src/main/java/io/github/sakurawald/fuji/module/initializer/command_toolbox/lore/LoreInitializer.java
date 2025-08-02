@@ -29,7 +29,7 @@ public class LoreInitializer extends ModuleInitializer {
     @CommandNode("unset")
     private static int $unset(@CommandSource ServerCommandSource source) {
         return CommandHelper.Pattern.itemInHandCommand(source, (player, stack) -> {
-            ItemStackHelper.setLore(stack, List.of());
+            ItemStackHelper.Lore.setLore(stack, List.of());
             return CommandHelper.Return.SUCCESS;
         });
     }
@@ -39,7 +39,7 @@ public class LoreInitializer extends ModuleInitializer {
     private static int $set(@CommandSource ServerCommandSource source, GreedyString lore) {
         return CommandHelper.Pattern.itemInHandCommand(source, (player, stack) -> {
             List<Text> texts = TextHelper.getTextListByValue(player, lore.getValue());
-            ItemStackHelper.setLore(stack, texts);
+            ItemStackHelper.Lore.setLore(stack, texts);
             return CommandHelper.Return.SUCCESS;
         });
     }

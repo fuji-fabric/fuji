@@ -77,7 +77,7 @@ public enum Category {
     }
 
     public @NotNull ItemStack toItemStack(ServerPlayerEntity player) {
-        ItemStackHelper.setCustomName(icon, this.getText(player));
+        ItemStackHelper.CustomName.setCustomName(icon, this.getText(player));
         return icon;
     }
 

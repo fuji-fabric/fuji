@@ -48,7 +48,7 @@ public class CompassInitializer extends ModuleInitializer {
     private static void setTrackedTarget(ItemStack itemStack, @Nullable ServerWorld world, @Nullable BlockPos blockPos) {
 
         #if MC_VER <= MC_1_20_4
-        ItemStackHelper.Nbt.withCustomDataNbt(itemStack, tag -> {
+        ItemStackHelper.CustomData.withCustomDataNbt(itemStack, tag -> {
             if (world == null) {
                 tag.remove("LodestoneTracked");
                 tag.remove("LodestoneDimension");

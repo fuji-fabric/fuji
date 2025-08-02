@@ -135,6 +135,7 @@ public abstract class PagedGui<T> extends LayeredGui {
         return false;
     }
 
+    @SuppressWarnings("RedundantIfStatement")
     private boolean combinedFilterEntity(T entity, String keyword) {
         /* Filter using the displaying GUI item stack. (What you see is what you get) */
         // NOTE: We have to make the GUI element for each entity. It's expensive, but saves time.
@@ -144,7 +145,7 @@ public abstract class PagedGui<T> extends LayeredGui {
         }
 
         ItemStack itemStack = element.getItemStack();
-        if (ItemStackHelper.filterItemStack(itemStack, keyword)) {
+        if (ItemStackHelper.Filter.filterItemStack(itemStack, keyword)) {
             return true;
         }
 
