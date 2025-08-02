@@ -144,7 +144,7 @@ public class GenerateGraphTest {
             .keySet()
             .stream()
             .filter(key -> parent.get(key).isJsonObject())
-            .forEach(key -> searchDefinedModules(parent.getAsJsonObject(key), CommandHelper.trimPathString(level + "." + key), result));
+            .forEach(key -> searchDefinedModules(parent.getAsJsonObject(key), CommandHelper.trimCommandPathString(level + "." + key), result));
 
         /* Go up. */
         if (parent.has(ModuleManager.ENABLE_SUPPLIER_KEY)) {

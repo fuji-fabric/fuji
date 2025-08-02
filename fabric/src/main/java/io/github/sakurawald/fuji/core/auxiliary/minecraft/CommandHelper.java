@@ -10,7 +10,15 @@ import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
+import io.github.sakurawald.fuji.core.command.suggestion.CommandSuggestionOptimizer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registry;
@@ -18,26 +26,13 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-
-#if MC_VER > MC_1_21
-import net.minecraft.server.world.ServerWorld;
-#endif
-
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import org.jetbrains.annotations.Nullable;
 
 public class CommandHelper {
 
-    public static final String UUID_ARGUMENT_NAME = "uuid";
-    public static final int COMMAND_EXCEPTION_COLOR = 16736000;
+    public static final int COMMAND_EXCEPTION_COLOR_INT = 16736000;
 
     public static @NotNull String findCommandNodePath(@NotNull CommandNode<ServerCommandSource> node) {
         CommandDispatcher<ServerCommandSource> dispatcher = getCommandDispatcher();
@@ -50,7 +45,7 @@ public class CommandHelper {
         return String.join(".", array);
     }
 
-    public static String trimPathString(String path) {
+    public static String trimCommandPathString(String path) {
         return StringUtils.strip(path, ".");
     }
 
@@ -104,7 +99,7 @@ public class CommandHelper {
         for (ParsedCommandNode<ServerCommandSource> node : nodes) {
             String currentNodeName = node.getNode().getName();
             walkingPath = walkingPath + "." + currentNodeName;
-            walkingPath = trimPathString(walkingPath);
+            walkingPath = trimCommandPathString(walkingPath);
             prefixes.add(walkingPath);
         }
         return prefixes;
@@ -143,9 +138,9 @@ public class CommandHelper {
         return ServerHelper.getServer().getCommandManager().getDispatcher();
     }
 
-    @SuppressWarnings("unused")
     public static class Return {
         public static final int FAIL = -1;
+        @SuppressWarnings("unused")
         public static final int PASS = 0;
         public static final int SUCCESS = 1;
 
@@ -159,29 +154,23 @@ public class CommandHelper {
     }
 
     public static class Suggestion {
-        public static <T> @NotNull SuggestionProvider<ServerCommandSource> enums(Supplier<T[]> enumSupplier) {
+        public static <T> @NotNull SuggestionProvider<ServerCommandSource> iterable(@NotNull Supplier<Iterable<T>> iterableSupplier) {
             return (context, builder) -> {
-                for (T value : enumSupplier.get()) {
-                    builder.suggest(value.toString());
-                }
+                Iterable<T> iterable = iterableSupplier.get();
+                CommandSuggestionOptimizer
+                    .optimize(iterable, builder.getRemaining())
+                    .forEach(builder::suggest);
+
                 return builder.buildFuture();
             };
         }
 
-        public static <T> @NotNull SuggestionProvider<ServerCommandSource> iterable(Supplier<Iterable<T>> iterableSupplier) {
-            return (context, builder) -> {
-                for (T value : iterableSupplier.get()) {
-                    builder.suggest(value.toString());
-                }
-                return builder.buildFuture();
-            };
+        public static <T> @NotNull SuggestionProvider<ServerCommandSource> enums(@NotNull Supplier<T[]> enumValuesSupplier) {
+            return iterable(() -> Arrays.asList(enumValuesSupplier.get()));
         }
 
-        public static <T> @NotNull SuggestionProvider<ServerCommandSource> identifiers(RegistryKey<? extends Registry<T>> registryKey) {
-            return iterable(() ->
-                RegistryHelper
-                    .getRegistry(registryKey)
-                    .getIds());
+        public static <T> @NotNull SuggestionProvider<ServerCommandSource> identifiers(@NotNull RegistryKey<? extends Registry<T>> registryKey) {
+            return iterable(() -> RegistryHelper.getRegistry(registryKey).getIds());
         }
     }
 
@@ -223,9 +212,9 @@ public class CommandHelper {
 
     public static ServerCommandSource getCommandSource(Entity entity) {
         #if MC_VER <= MC_1_21
-            return entity.getCommandSource();
+        return entity.getCommandSource();
         #elif MC_VER > MC_1_21
-            return entity.getCommandSource((ServerWorld) entity.getWorld());
+        return entity.getCommandSource((net.minecraft.server.world.ServerWorld) entity.getWorld());
         #endif
     }
 

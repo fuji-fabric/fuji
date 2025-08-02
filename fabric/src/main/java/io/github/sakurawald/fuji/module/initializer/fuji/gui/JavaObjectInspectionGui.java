@@ -110,7 +110,7 @@ public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
 
         /* Compute the new walking path. */
         String newWalkingPath = this.walkingPath + "." + objectName;
-        newWalkingPath = CommandHelper.trimPathString(newWalkingPath);
+        newWalkingPath = CommandHelper.trimCommandPathString(newWalkingPath);
 
         /* Make the deeper GUI and open it. */
         new JavaObjectInspectionGui(getBackendGui(), objectToInspect, getPlayer(), newEntities, 0, this.fileRelativePath, newWalkingPath)

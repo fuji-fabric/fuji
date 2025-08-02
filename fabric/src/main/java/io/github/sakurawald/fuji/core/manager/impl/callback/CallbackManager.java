@@ -21,6 +21,7 @@ import static net.minecraft.server.command.CommandManager.literal;
 
 public class CallbackManager extends BaseManager {
     private static final String COMMAND_CALLBACK_LITERAL = "command-callback";
+    private static final String COMMAND_CALLBACK_UUID_ARGUMENT_NAME = "uuid";
 
     private final TTLMap<String, Consumer<ServerPlayerEntity>> uuid2consumer = new TTLMap<>();
 
@@ -32,13 +33,13 @@ public class CallbackManager extends BaseManager {
     private void registerUserCommand() {
         CommandEvents.REGISTRATION.register((dispatcher, registryAccess, environment) -> dispatcher.register(
             literal(COMMAND_CALLBACK_LITERAL)
-                .then(argument(CommandHelper.UUID_ARGUMENT_NAME, StringArgumentType.greedyString())
+                .then(argument(COMMAND_CALLBACK_UUID_ARGUMENT_NAME, StringArgumentType.greedyString())
                     .executes(this::$executeCallbackCommand))));
     }
 
     private int $executeCallbackCommand(CommandContext<ServerCommandSource> ctx) {
         return CommandHelper.Pattern.playerOnlyCommand(ctx.getSource(), player -> {
-            String uuid = StringArgumentType.getString(ctx, CommandHelper.UUID_ARGUMENT_NAME);
+            String uuid = StringArgumentType.getString(ctx, COMMAND_CALLBACK_UUID_ARGUMENT_NAME);
             this.executeCallbackCommand(uuid, player);
             return CommandHelper.Return.SUCCESS;
         });

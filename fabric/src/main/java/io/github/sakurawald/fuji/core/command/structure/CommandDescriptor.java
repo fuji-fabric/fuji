@@ -248,7 +248,7 @@ public class CommandDescriptor implements SourceModuleGetter {
 
         /* report to command source */
         Style style = Style.EMPTY
-            .withColor(CommandHelper.COMMAND_EXCEPTION_COLOR);
+            .withColor(CommandHelper.COMMAND_EXCEPTION_COLOR_INT);
 
         // NOTE: Only send the stack trace if the command source is admin.
         if (PlayerHelper.isAdmin(source)) {

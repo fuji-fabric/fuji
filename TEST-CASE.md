@@ -112,6 +112,11 @@
 
 [Test Case]
 - Module: core
+- Steps: **Issue `/when-online ...` and `/json put ...` commands.**
+- Purpose: The command suggestion optimizer should work fine.
+
+[Test Case]
+- Module: core
 - Steps: **List the command tree of a normal user.**
 - Purpose: The command permissions should be handled properly.
 

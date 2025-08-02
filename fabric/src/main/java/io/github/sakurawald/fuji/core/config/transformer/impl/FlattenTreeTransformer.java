@@ -35,7 +35,7 @@ public class FlattenTreeTransformer extends ConfigurationTransformer {
         parent.keySet().stream()
             .filter(key -> parent.get(key).isJsonObject() && parent.getAsJsonObject(key).has(subtreeIdentifier))
             .forEach(key -> {
-                String nextLevel = CommandHelper.trimPathString(level + "." + key);
+                String nextLevel = CommandHelper.trimCommandPathString(level + "." + key);
                 flatten(parent.getAsJsonObject(key), nextLevel);
             });
 
