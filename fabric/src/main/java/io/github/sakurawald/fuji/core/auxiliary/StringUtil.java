@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.core.auxiliary;
 
 import java.util.Locale;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
@@ -13,6 +14,10 @@ public class StringUtil {
         }
 
         return string;
+    }
+
+    public static @NotNull String trimPathString(@NotNull String path) {
+        return StringUtils.strip(path, ".");
     }
 
     public static @NotNull String formatBytes(long bytes) {

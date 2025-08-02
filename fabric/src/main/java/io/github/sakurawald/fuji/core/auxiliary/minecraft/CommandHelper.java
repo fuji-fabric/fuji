@@ -34,7 +34,6 @@ public class CommandHelper {
 
     public static final int COMMAND_EXCEPTION_COLOR_INT = 16736000;
 
-
     public static @NotNull String findCommandNodePath(@NotNull CommandNode<ServerCommandSource> node) {
         CommandDispatcher<ServerCommandSource> dispatcher = getCommandDispatcher();
         assert dispatcher != null;
@@ -46,7 +45,7 @@ public class CommandHelper {
         return String.join(".", array);
     }
 
-    public static String trimCommandPathString(String path) {
+    private static String trimCommandPathString(String path) {
         return StringUtils.strip(path, ".");
     }
 
@@ -175,6 +174,31 @@ public class CommandHelper {
         }
     }
 
+    public static ServerCommandSource getCommandSource(Entity entity) {
+        #if MC_VER <= MC_1_21
+        return entity.getCommandSource();
+        #elif MC_VER > MC_1_21
+        return entity.getCommandSource((net.minecraft.server.world.ServerWorld) entity.getWorld());
+        #endif
+    }
+
+    public static <S> boolean isExecutedOnServerSide(CommandContextBuilder<S> context) {
+        // NOTE: in client-side, the S is not guarantee to be ServerCommandSource. (Can be ClientCommandSource)
+        return context.getSource() instanceof ServerCommandSource;
+    }
+
+    public static boolean isExecutedByConsole(CommandContext<ServerCommandSource> commandContext) {
+        return commandContext.getSource().getPlayer() == null;
+    }
+
+    public static String getCommandNodeType(CommandNode<ServerCommandSource> node) {
+        if (node instanceof LiteralCommandNode<ServerCommandSource>) return "LiteralCommandNode";
+        if (node instanceof ArgumentCommandNode<?, ?>) return "ArgumentCommandNode";
+        if (node instanceof RootCommandNode<ServerCommandSource>) return "RootCommandNode";
+
+        return "Unknown";
+    }
+
     public static class Pattern {
 
         public static int withContextPlayer(@NotNull ServerCommandSource source, @NotNull Function<ServerPlayerEntity, Integer> function) {
@@ -210,30 +234,4 @@ public class CommandHelper {
             return commandReturnValue;
         }
     }
-
-    public static ServerCommandSource getCommandSource(Entity entity) {
-        #if MC_VER <= MC_1_21
-        return entity.getCommandSource();
-        #elif MC_VER > MC_1_21
-        return entity.getCommandSource((net.minecraft.server.world.ServerWorld) entity.getWorld());
-        #endif
-    }
-
-    public static <S> boolean isExecutedOnServerSide(CommandContextBuilder<S> context) {
-        // NOTE: in client-side, the S is not guarantee to be ServerCommandSource. (Can be ClientCommandSource)
-        return context.getSource() instanceof ServerCommandSource;
-    }
-
-    public static boolean isExecutedByConsole(CommandContext<ServerCommandSource> commandContext) {
-        return commandContext.getSource().getPlayer() == null;
-    }
-
-    public static String getCommandNodeType(CommandNode<ServerCommandSource> node) {
-        if (node instanceof LiteralCommandNode<ServerCommandSource>) return "LiteralCommandNode";
-        if (node instanceof ArgumentCommandNode<?, ?>) return "ArgumentCommandNode";
-        if (node instanceof RootCommandNode<ServerCommandSource>) return "RootCommandNode";
-
-        return "Unknown";
-    }
-
 }

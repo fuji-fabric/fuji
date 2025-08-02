@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.fuji.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
@@ -110,7 +110,7 @@ public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
 
         /* Compute the new walking path. */
         String newWalkingPath = this.walkingPath + "." + objectName;
-        newWalkingPath = CommandHelper.trimCommandPathString(newWalkingPath);
+        newWalkingPath = StringUtil.trimPathString(newWalkingPath);
 
         /* Make the deeper GUI and open it. */
         new JavaObjectInspectionGui(getBackendGui(), objectToInspect, getPlayer(), newEntities, 0, this.fileRelativePath, newWalkingPath)

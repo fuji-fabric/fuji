@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.core.config.transformer.impl;
 import com.google.gson.JsonObject;
 import com.jayway.jsonpath.DocumentContext;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.transformer.abst.ConfigurationTransformer;
 import lombok.SneakyThrows;
@@ -35,7 +35,7 @@ public class FlattenTreeTransformer extends ConfigurationTransformer {
         parent.keySet().stream()
             .filter(key -> parent.get(key).isJsonObject() && parent.getAsJsonObject(key).has(subtreeIdentifier))
             .forEach(key -> {
-                String nextLevel = CommandHelper.trimCommandPathString(level + "." + key);
+                String nextLevel = StringUtil.trimPathString(level + "." + key);
                 flatten(parent.getAsJsonObject(key), nextLevel);
             });
 

@@ -8,7 +8,7 @@ import io.github.classgraph.AnnotationParameterValueList;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.model.ConfigModel;
@@ -144,7 +144,7 @@ public class GenerateGraphTest {
             .keySet()
             .stream()
             .filter(key -> parent.get(key).isJsonObject())
-            .forEach(key -> searchDefinedModules(parent.getAsJsonObject(key), CommandHelper.trimCommandPathString(level + "." + key), result));
+            .forEach(key -> searchDefinedModules(parent.getAsJsonObject(key), StringUtil.trimPathString(level + "." + key), result));
 
         /* Go up. */
         if (parent.has(ModuleManager.ENABLE_SUPPLIER_KEY)) {
