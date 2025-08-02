@@ -168,7 +168,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
     @CommandNode("gui")
     @Document(id = 1751826777672L, value = "Open the command permission gui.")
     public static int $gui(@CommandSource ServerPlayerEntity player) {
-        List<CommandNodePermissionWrapper> entities = CommandHelper.getCommandNodes().stream()
+        List<CommandNodePermissionWrapper> entities = CommandHelper.Node.getAllCommandNodes().stream()
             .map(CommandNodePermissionWrapper::new)
             .sorted(Comparator.comparing(CommandNodePermissionWrapper::getPath))
             .toList();
@@ -242,12 +242,12 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         });
 
         /* Describe the command path. */
-        String commandPath = CommandHelper.joinCommandNodePath(context.getNodes());
+        String commandPath = CommandHelper.Node.joinCommandNodePath(context.getNodes());
         TextHelper.sendTextByKey(source,"command_permission.describe.command_path", commandPath);
 
         /* Describe the command permissions. */
         TextHelper.sendTextByKey(source,"command_permission.describe.command_permissions");
-        List<String> commandPathPrefixes = CommandHelper.getPrefixesOfCommandPath(nodes);
+        List<String> commandPathPrefixes = CommandHelper.Node.getPrefixesOfCommandPath(nodes);
         commandPathPrefixes.forEach(path -> {
             String requiredPermission = COMMAND_PERMISSION_UNIFIED_PERMISSION.withArguments(path);
             TextHelper.sendTextByKey(source,"command_permission.describe.command_permission", requiredPermission);
@@ -332,8 +332,8 @@ public class CommandPermissionInitializer extends ModuleInitializer {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private static void ensureCommandNodeRequirementIsWrapped() {
         // Enumerate all registered commands, to ensure the getRequirement() is triggered. (For luckperms permission cache)
-        CommandHelper
-            .getCommandNodes()
+        CommandHelper.Node
+            .getAllCommandNodes()
             .forEach(com.mojang.brigadier.tree.CommandNode::getRequirement);
     }
 

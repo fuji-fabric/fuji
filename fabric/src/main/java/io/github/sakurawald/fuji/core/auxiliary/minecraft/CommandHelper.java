@@ -34,27 +34,67 @@ public class CommandHelper {
 
     public static final int COMMAND_EXCEPTION_COLOR_INT = 16736000;
 
-    public static @NotNull String findCommandNodePath(@NotNull CommandNode<ServerCommandSource> node) {
-        CommandDispatcher<ServerCommandSource> dispatcher = getCommandDispatcher();
-        assert dispatcher != null;
+    public static class Node {
 
-        // Find the first encountered path in root tree, ignore other paths if there are `forks` or `redirects`.
-        String[] array = dispatcher
-            .getPath(node)
-            .toArray(new String[]{});
-        return String.join(".", array);
-    }
+        public static @NotNull String findCommandNodePath(@NotNull CommandNode<ServerCommandSource> node) {
+            CommandDispatcher<ServerCommandSource> dispatcher = getCommandDispatcher();
+            assert dispatcher != null;
 
-    private static String trimCommandPathString(String path) {
-        return StringUtils.strip(path, ".");
-    }
+            /* Find the first encountered path in root tree, ignore other paths if there are `forks` or `redirects`. */
+            String[] array = dispatcher
+                .getPath(node)
+                .toArray(new String[]{});
+            return String.join(".", array);
+        }
 
-    public static @NotNull String joinCommandNodePath(List<ParsedCommandNode<ServerCommandSource>> nodes) {
-        // Compute the `command node path` from the only one possible path.
-        return nodes
-            .stream()
-            .map(it -> it.getNode().getName())
-            .collect(Collectors.joining("."));
+        private static @NotNull String trimCommandPathString(@NotNull String path) {
+            return StringUtils.strip(path, ".");
+        }
+
+        public static @NotNull String joinCommandNodePath(@NotNull List<ParsedCommandNode<ServerCommandSource>> nodes) {
+            // Compute the `command node path` from the only one possible path.
+            return nodes
+                .stream()
+                .map(it -> it.getNode().getName())
+                .collect(Collectors.joining("."));
+        }
+
+        public static List<CommandNode<ServerCommandSource>> getAllCommandNodes() {
+            List<CommandNode<ServerCommandSource>> result = new ArrayList<>();
+            CommandDispatcher<ServerCommandSource> commandDispatcher = getCommandDispatcher();
+            assert commandDispatcher != null;
+            RootCommandNode<ServerCommandSource> root = commandDispatcher.getRoot();
+            collectCommandNodes(result, root);
+            return result;
+        }
+
+        private static void collectCommandNodes(@NotNull List<CommandNode<ServerCommandSource>> collector, @NotNull CommandNode<ServerCommandSource> parent) {
+            /* Walk down and collect. */
+            parent
+                .getChildren()
+                .forEach(it -> collectCommandNodes(collector, it));
+
+            if (isRootCommandNode(parent)) {
+                collector.add(parent);
+            }
+        }
+
+        private static boolean isRootCommandNode(@NotNull CommandNode<ServerCommandSource> node) {
+            return !node.getName().isEmpty();
+        }
+
+        public static @NotNull List<String> getPrefixesOfCommandPath(@NotNull List<ParsedCommandNode<ServerCommandSource>> nodes) {
+            List<String> prefixes = new ArrayList<>();
+
+            String walkingPath = "";
+            for (ParsedCommandNode<ServerCommandSource> node : nodes) {
+                String currentNodeName = node.getNode().getName();
+                walkingPath = walkingPath + "." + currentNodeName;
+                walkingPath = trimCommandPathString(walkingPath);
+                prefixes.add(walkingPath);
+            }
+            return prefixes;
+        }
     }
 
     public static ServerCommandSource getConsoleCommandSource() {
@@ -66,43 +106,6 @@ public class CommandHelper {
         PlayerHelper.Lookup
             .getOnlinePlayers()
             .forEach(commandManager::sendCommandTree);
-    }
-
-    public static List<CommandNode<ServerCommandSource>> getCommandNodes() {
-        List<CommandNode<ServerCommandSource>> result = new ArrayList<>();
-        CommandDispatcher<ServerCommandSource> commandDispatcher = getCommandDispatcher();
-        assert commandDispatcher != null;
-        RootCommandNode<ServerCommandSource> root = commandDispatcher.getRoot();
-        collectCommandNodes(result, root);
-        return result;
-    }
-
-    private static void collectCommandNodes(List<CommandNode<ServerCommandSource>> collector, CommandNode<ServerCommandSource> parent) {
-        /* Walk down and collect. */
-        parent
-            .getChildren()
-            .forEach(it -> collectCommandNodes(collector, it));
-
-        if (isRootCommandNode(parent)) {
-            collector.add(parent);
-        }
-    }
-
-    private static boolean isRootCommandNode(CommandNode<ServerCommandSource> node) {
-        return !node.getName().isEmpty();
-    }
-
-    public static @NotNull List<String> getPrefixesOfCommandPath(List<ParsedCommandNode<ServerCommandSource>> nodes) {
-        List<String> prefixes = new ArrayList<>();
-
-        String walkingPath = "";
-        for (ParsedCommandNode<ServerCommandSource> node : nodes) {
-            String currentNodeName = node.getNode().getName();
-            walkingPath = walkingPath + "." + currentNodeName;
-            walkingPath = trimCommandPathString(walkingPath);
-            prefixes.add(walkingPath);
-        }
-        return prefixes;
     }
 
     public static boolean canUseThisCommand(ServerPlayerEntity player, String commandString) {

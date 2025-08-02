@@ -28,7 +28,7 @@ public class ServerCommandsInspectionGui extends PagedGui<ServerCommandNodeWrapp
     }
 
     public static ServerCommandsInspectionGui inspectAll(ServerPlayerEntity player) {
-        List<ServerCommandNodeWrapper> entities = CommandHelper.getCommandNodes()
+        List<ServerCommandNodeWrapper> entities = CommandHelper.Node.getAllCommandNodes()
             .stream()
             .map(ServerCommandNodeWrapper::new)
             .sorted(Comparator.comparing(ServerCommandNodeWrapper::getPath))

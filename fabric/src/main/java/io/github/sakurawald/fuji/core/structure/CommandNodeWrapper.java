@@ -13,7 +13,7 @@ public class CommandNodeWrapper {
 
     public CommandNodeWrapper(CommandNode<ServerCommandSource> node) {
         this.node = node;
-        this.path = CommandHelper.findCommandNodePath(node);
+        this.path = CommandHelper.Node.findCommandNodePath(node);
     }
 
 }
