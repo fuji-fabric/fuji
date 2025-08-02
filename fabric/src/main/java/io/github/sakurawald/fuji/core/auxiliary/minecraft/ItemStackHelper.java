@@ -253,15 +253,18 @@ public class ItemStackHelper {
 
         }
 
-        public static Optional<ItemStack> fromNbt(NbtElement nbtElement) {
+        public static Optional<ItemStack> fromNbt(@NotNull NbtElement nbtElement) {
+            #if MC_VER <= MC_1_20_4
             return ItemStack.CODEC
-                #if MC_VER <= MC_1_20_4
                 .decode(NbtOps.INSTANCE, nbtElement)
-                #elif MC_VER > MC_1_20_4
-                .decode(RegistryHelper.getDefaultWrapperLookup().getOps(NbtOps.INSTANCE), nbtElement)
-                #endif
                 .map(Pair::getFirst)
                 .resultOrPartial(string -> LogUtil.debug("Failed to decode item: '{}'", string));
+            #elif MC_VER > MC_1_20_4
+            return ItemStack.CODEC
+                .decode(RegistryHelper.getDefaultWrapperLookup().getOps(NbtOps.INSTANCE), nbtElement)
+                .map(Pair::getFirst)
+                .resultOrPartial(string -> LogUtil.debug("Failed to decode item: '{}'", string));
+            #endif
         }
     }
 }

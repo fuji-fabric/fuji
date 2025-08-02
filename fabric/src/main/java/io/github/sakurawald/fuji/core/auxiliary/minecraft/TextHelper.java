@@ -4,12 +4,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.serialization.JsonOps;
 import eu.pb4.placeholders.api.ParserContext;
 import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.node.LiteralNode;
 import eu.pb4.placeholders.api.node.TextNode;
 import eu.pb4.placeholders.api.parsers.NodeParser;
 
+import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
@@ -827,26 +829,6 @@ public class TextHelper {
         }
     }
 
-    public static Text fromJson(String tagString) {
-        #if MC_VER <= MC_1_20_2
-            return Text.Serializer.fromJson(tagString);
-        #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_20_4
-            return Text.Serialization.fromJson(tagString);
-        #elif MC_VER > MC_1_20_4
-            throw new UnsupportedOperationException();
-        #endif
-    }
-
-    public static String toJson(Text text) {
-        #if MC_VER <= MC_1_20_2
-            return Text.Serializer.toJson(text);
-        #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_20_4
-            return Text.Serialization.toJsonString(text);
-        #elif MC_VER > MC_1_20_4
-            throw new UnsupportedOperationException();
-        #endif
-    }
-
     public static Text getDocumentText(Object audience, String docString) {
         docString = DocumentUtil.compileDocumentString(docString);
         return getText(Parsers.STYLE_ONLY_PARSER, audience, false, docString);
@@ -951,6 +933,35 @@ public class TextHelper {
             #endif
         }
 
+    }
+
+    public static class Codec {
+
+        public static String toJson(@NotNull Text text) {
+            #if MC_VER <= MC_1_20_2
+            return Text.Serializer.toJson(text);
+            #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_20_4
+            return Text.Serialization.toJsonString(text);
+            #elif MC_VER > MC_1_20_4
+            return net.minecraft.text.TextCodecs.CODEC
+                .encodeStart(JsonOps.INSTANCE, text)
+                .getOrThrow()
+                .toString();
+            #endif
+        }
+
+        public static Text fromJson(@NotNull String textJson) {
+            #if MC_VER <= MC_1_20_2
+            return Text.Serializer.fromJson(tagString);
+            #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_20_4
+            return Text.Serialization.fromJson(tagString);
+            #elif MC_VER > MC_1_20_4
+            return net.minecraft.text.TextCodecs.CODEC
+                .decode(JsonOps.INSTANCE,JsonUtil.readJsonString(textJson))
+                .getOrThrow()
+                .getFirst();
+            #endif
+        }
     }
 
 }

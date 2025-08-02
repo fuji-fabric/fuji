@@ -65,4 +65,8 @@ public class JsonUtil {
         @Cleanup Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path.toFile()), StandardCharsets.UTF_8));
         return JsonParser.parseReader(reader);
     }
+
+    public static JsonElement readJsonString(String jsonString) {
+        return JsonParser.parseString(jsonString);
+    }
 }
