@@ -9,14 +9,6 @@ import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.node.LiteralNode;
 import eu.pb4.placeholders.api.node.TextNode;
 import eu.pb4.placeholders.api.parsers.NodeParser;
-#if MC_VER <= MC_1_20_2
-import eu.pb4.placeholders.api.parsers.TextParserV1;
-import eu.pb4.placeholders.api.parsers.MarkdownLiteParserV1;
-import eu.pb4.placeholders.api.Placeholders;
-#elif MC_VER > MC_1_20_2
-import eu.pb4.placeholders.api.parsers.tag.TagRegistry;
-import eu.pb4.placeholders.api.parsers.tag.TextTag;
-#endif
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
@@ -89,7 +81,7 @@ public class TextHelper {
         private static NodeParser makeMiniMessageOnlyParser() {
             #if MC_VER <= MC_1_20_2
             List<NodeParser> parsers = new ArrayList<>();
-            parsers.add(TextParserV1.createDefault());
+            parsers.add(eu.pb4.placeholders.api.parsers.TextParserV1.createDefault());
             return NodeParser.merge(parsers);
             #elif MC_VER > MC_1_20_2
             return NodeParser.builder()
@@ -103,8 +95,8 @@ public class TextHelper {
         private static NodeParser makeStyleOnlyParser() {
             #if MC_VER <= MC_1_20_2
             List<NodeParser> parsers = new ArrayList<>();
-            parsers.add(TextParserV1.createDefault());
-            parsers.add(MarkdownLiteParserV1.ALL);
+            parsers.add(eu.pb4.placeholders.api.parsers.TextParserV1.createDefault());
+            parsers.add(eu.pb4.placeholders.api.parsers.MarkdownLiteParserV1.ALL);
             return NodeParser.merge(parsers);
             #elif MC_VER > MC_1_20_2
             return NodeParser.builder()
@@ -118,9 +110,9 @@ public class TextHelper {
         private static NodeParser makePowerfulParser() {
             #if MC_VER <= MC_1_20_2
             List<NodeParser> parsers = new ArrayList<>();
-            parsers.add(TextParserV1.createDefault());
-            parsers.add(Placeholders.DEFAULT_PLACEHOLDER_PARSER);
-            parsers.add(MarkdownLiteParserV1.ALL);
+            parsers.add(eu.pb4.placeholders.api.parsers.TextParserV1.createDefault());
+            parsers.add(eu.pb4.placeholders.api.Placeholders.DEFAULT_PLACEHOLDER_PARSER);
+            parsers.add(eu.pb4.placeholders.api.parsers.MarkdownLiteParserV1.ALL);
             return NodeParser.merge(parsers);
             #elif MC_VER > MC_1_20_2
             return NodeParser.builder()
@@ -137,7 +129,7 @@ public class TextHelper {
 
             #if MC_VER <= MC_1_20_2
             List<NodeParser> parsers = new ArrayList<>();
-            parsers.add(Placeholders.DEFAULT_PLACEHOLDER_PARSER);
+            parsers.add(eu.pb4.placeholders.api.Placeholders.DEFAULT_PLACEHOLDER_PARSER);
             return NodeParser.merge(parsers);
             #elif MC_VER > MC_1_20_2
             return NodeParser
@@ -148,19 +140,19 @@ public class TextHelper {
 
         private static int registerExtendedTags() {
             #if MC_VER <= MC_1_20_2
-            TextParserV1.registerDefault(
-                TextParserV1.TextTag.of(
+            eu.pb4.placeholders.api.parsers.TextParserV1.registerDefault(
+                eu.pb4.placeholders.api.parsers.TextParserV1.TextTag.of(
                     "newline",
                     List.of("newline"),
                     "formatting",
                     true,
-                    (tag, data, input, handlers, endAt) -> new TextParserV1.TagNodeValue(new LiteralNode("\n"), 0)
+                    (tag, data, input, handlers, endAt) -> new eu.pb4.placeholders.api.parsers.TextParserV1.TagNodeValue(new LiteralNode("\n"), 0)
                 )
             );
 
             #elif MC_VER > MC_1_20_2
-            TagRegistry.registerDefault(
-                TextTag.self(
+            eu.pb4.placeholders.api.parsers.tag.TagRegistry.registerDefault(
+                eu.pb4.placeholders.api.parsers.tag.TextTag.self(
                     "newline",
                     "formatting",
                     true,
