@@ -37,7 +37,7 @@ public abstract class PlayerCommandMixin {
 
     @Inject(method = "spawn", at = @At("HEAD"), remap = false, cancellable = true)
     private static void checkFakePlayerCapsOnSpawnCommand(@NotNull CommandContext<ServerCommandSource> context, @NotNull CallbackInfoReturnable<Integer> cir) {
-        if (CommandHelper.isExecutedByConsole(context)) {
+        if (CommandHelper.Source.isExecutedByConsole(context)) {
             return;
         }
 
@@ -50,7 +50,7 @@ public abstract class PlayerCommandMixin {
 
     @Inject(method = "spawn", at = @At("TAIL"), remap = false)
     private static void trackSpawnedFakePlayerOnSpawnCommand(@NotNull CommandContext<ServerCommandSource> context, CallbackInfoReturnable<Integer> cir) {
-        if (CommandHelper.isExecutedByConsole(context)) {
+        if (CommandHelper.Source.isExecutedByConsole(context)) {
             return;
         }
 

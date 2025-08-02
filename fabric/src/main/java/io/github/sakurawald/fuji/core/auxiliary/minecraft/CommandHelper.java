@@ -95,10 +95,15 @@ public class CommandHelper {
             }
             return prefixes;
         }
-    }
 
-    public static ServerCommandSource getConsoleCommandSource() {
-        return ServerHelper.getServer().getCommandSource();
+        @SuppressWarnings("IfCanBeSwitch")
+        public static String getCommandNodeType(@NotNull CommandNode<ServerCommandSource> node) {
+            if (node instanceof LiteralCommandNode<ServerCommandSource>) return "LiteralCommandNode";
+            if (node instanceof ArgumentCommandNode<?, ?>) return "ArgumentCommandNode";
+            if (node instanceof RootCommandNode<ServerCommandSource>) return "RootCommandNode";
+
+            return "Unknown";
+        }
     }
 
     public static void updateCommandTree() {
@@ -141,6 +146,30 @@ public class CommandHelper {
         return ServerHelper.getServer().getCommandManager().getDispatcher();
     }
 
+    public static class Source {
+
+        public static ServerCommandSource getConsoleCommandSource() {
+            return ServerHelper.getServer().getCommandSource();
+        }
+
+        public static ServerCommandSource getCommandSource(@NotNull Entity entity) {
+            #if MC_VER <= MC_1_21
+            return entity.getCommandSource();
+            #elif MC_VER > MC_1_21
+            return entity.getCommandSource((net.minecraft.server.world.ServerWorld) entity.getWorld());
+            #endif
+        }
+
+        public static <S> boolean isExecutedOnServerSide(@NotNull CommandContextBuilder<S> context) {
+            // NOTE: in client-side, the S is not guarantee to be ServerCommandSource. (Can be ClientCommandSource)
+            return context.getSource() instanceof ServerCommandSource;
+        }
+
+        public static boolean isExecutedByConsole(@NotNull CommandContext<ServerCommandSource> commandContext) {
+            return commandContext.getSource().getPlayer() == null;
+        }
+    }
+
     public static class Return {
         public static final int FAIL = -1;
         @SuppressWarnings("unused")
@@ -175,31 +204,6 @@ public class CommandHelper {
         public static <T> @NotNull SuggestionProvider<ServerCommandSource> identifiers(@NotNull RegistryKey<? extends Registry<T>> registryKey) {
             return iterable(() -> RegistryHelper.getRegistry(registryKey).getIds());
         }
-    }
-
-    public static ServerCommandSource getCommandSource(Entity entity) {
-        #if MC_VER <= MC_1_21
-        return entity.getCommandSource();
-        #elif MC_VER > MC_1_21
-        return entity.getCommandSource((net.minecraft.server.world.ServerWorld) entity.getWorld());
-        #endif
-    }
-
-    public static <S> boolean isExecutedOnServerSide(CommandContextBuilder<S> context) {
-        // NOTE: in client-side, the S is not guarantee to be ServerCommandSource. (Can be ClientCommandSource)
-        return context.getSource() instanceof ServerCommandSource;
-    }
-
-    public static boolean isExecutedByConsole(CommandContext<ServerCommandSource> commandContext) {
-        return commandContext.getSource().getPlayer() == null;
-    }
-
-    public static String getCommandNodeType(CommandNode<ServerCommandSource> node) {
-        if (node instanceof LiteralCommandNode<ServerCommandSource>) return "LiteralCommandNode";
-        if (node instanceof ArgumentCommandNode<?, ?>) return "ArgumentCommandNode";
-        if (node instanceof RootCommandNode<ServerCommandSource>) return "RootCommandNode";
-
-        return "Unknown";
     }
 
     public static class Pattern {

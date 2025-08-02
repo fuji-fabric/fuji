@@ -16,7 +16,7 @@ public class CommandDispatcherMixin {
     @SuppressWarnings("unchecked")
     @Inject(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At("HEAD"))
     public void onExecuteInCommandDispatcher(ParseResults<?> parse, CallbackInfoReturnable<Integer> cir) {
-        if (CommandHelper.isExecutedOnServerSide(parse.getContext())) {
+        if (CommandHelper.Source.isExecutedOnServerSide(parse.getContext())) {
             CommandSpyInitializer.processCommandSpy((ParseResults<ServerCommandSource>) parse);
         }
     }

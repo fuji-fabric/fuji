@@ -179,7 +179,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
             /* Switch for execute-as-type. */
             ExecuteAsType executeAsType = e.getExecuteAsType();
-            ServerCommandSource source = CommandHelper.getCommandSource(player);
+            ServerCommandSource source = CommandHelper.Source.getCommandSource(player);
             switch (executeAsType) {
                 case CONSOLE -> CommandExecutor.execute(ExtendedCommandSource.asConsole(source), e.getCommand());
                 case PLAYER ->

@@ -20,7 +20,7 @@ public class CommandDispatcherMixin {
     @Inject(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/context/ContextChain;executeAll(Ljava/lang/Object;Lcom/mojang/brigadier/ResultConsumer;)I"), cancellable = true)
     #endif
     public void beforeExecuteInCommandDispatcher(ParseResults<ServerCommandSource> parseResults, CallbackInfoReturnable<Integer> cir) {
-        if (CommandHelper.isExecutedOnServerSide(parseResults.getContext())) {
+        if (CommandHelper.Source.isExecutedOnServerSide(parseResults.getContext())) {
             CommandAdviceInitializer.processCommandAdvice(this, parseResults.getContext().getSource(), parseResults.getReader().getString(), CommandAdviceType.BEFORE_EXECUTING, cir);
         }
     }
@@ -31,7 +31,7 @@ public class CommandDispatcherMixin {
     @Inject(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/context/ContextChain;executeAll(Ljava/lang/Object;Lcom/mojang/brigadier/ResultConsumer;)I", shift = At.Shift.AFTER), cancellable = true)
     #endif
     public void afterExecuteInCommandDispatcher(ParseResults<ServerCommandSource> parseResults, CallbackInfoReturnable<Integer> cir) {
-        if (CommandHelper.isExecutedOnServerSide(parseResults.getContext())) {
+        if (CommandHelper.Source.isExecutedOnServerSide(parseResults.getContext())) {
             CommandAdviceInitializer.processCommandAdvice(this, parseResults.getContext().getSource(), parseResults.getReader().getString(), CommandAdviceType.AFTER_EXECUTING, cir);
         }
     }

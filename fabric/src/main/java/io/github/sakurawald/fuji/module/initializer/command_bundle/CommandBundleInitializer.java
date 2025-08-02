@@ -231,18 +231,18 @@ public class CommandBundleInitializer extends ModuleInitializer {
     protected void onInitialize() {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             // register in server started.
-            $registerAllBundleCommands(CommandHelper.getConsoleCommandSource());
+            $registerAllBundleCommands(CommandHelper.Source.getConsoleCommandSource());
 
             // to register bundle-commands automatically after `/reload` command.
-            CommandEvents.REGISTRATION.register((a, b, c) -> $registerAllBundleCommands(CommandHelper.getConsoleCommandSource()));
+            CommandEvents.REGISTRATION.register((a, b, c) -> $registerAllBundleCommands(CommandHelper.Source.getConsoleCommandSource()));
         });
     }
 
     @TestCase(steps = "Issue `/reload`, `/fuji reload`, `/fuji inspect fuji-commands` and `/command-bundle list`", purposes = "The bundle commands should be able to register and un-register on the fly.")
     @Override
     protected void onReload() {
-        $unregisterAllBundleCommands(CommandHelper.getConsoleCommandSource());
-        $registerAllBundleCommands(CommandHelper.getConsoleCommandSource());
+        $unregisterAllBundleCommands(CommandHelper.Source.getConsoleCommandSource());
+        $registerAllBundleCommands(CommandHelper.Source.getConsoleCommandSource());
     }
 
 }

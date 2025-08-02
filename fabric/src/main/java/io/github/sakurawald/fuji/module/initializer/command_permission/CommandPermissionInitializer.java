@@ -236,7 +236,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         nodes.forEach(it -> {
             var node = it.getNode();
             String nodeName = node.getName();
-            String nodeType = CommandHelper.getCommandNodeType(node);
+            String nodeType = CommandHelper.Node.getCommandNodeType(node);
             boolean nodeWrapped = isCommandNodeWrapped(node);
             TextHelper.sendTextByKey(source, "command_permission.describe.command_node.node", nodeName, nodeType, nodeWrapped);
         });
