@@ -11,6 +11,7 @@ import io.github.sakurawald.fuji.module.initializer.deathlog.structure.DeathNode
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.SneakyThrows;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
@@ -46,26 +47,29 @@ public class DeathDataListGui extends PagedGui<String> {
         builder
             .setItem(Items.SKELETON_SKULL)
             .setName(Text.literal(entity))
-            .setCallback(() -> {
-                NbtHelper.Storage.withNbtFile(DeathLogInitializer.getDeathDataPath(entity), root -> {
-                    /* Check if it has death nodes. */
-                    if (!hasDeathData(getPlayer(), root, entity)) {
-                        close();
-                        return;
-                    }
-
-                    /* Read death node list. */
-                    NbtList deathNodeList = NbtHelper.Walker.withNbtElement(root, DeathNode.DEATHS_KEY, new NbtList());
-                    List<DeathNode> entries = deathNodeList.stream()
-                        .map(it -> DeathNode.fromNbt((NbtCompound) it))
-                        .collect(Collectors.toList());
-                    Collections.reverse(entries);
-                    new DeathNodeListGui(getBackendGui(), getPlayer(), entity, entries, 0)
-                        .open();
-                });
-            });
+            .setCallback(() -> openDeathNodeListGui(entity));
 
         return builder.build();
+    }
+
+    @SneakyThrows
+    private void openDeathNodeListGui(String entity) {
+        NbtHelper.Storage.withNbtFile(DeathLogInitializer.getDeathDataPath(entity), root -> {
+            /* Check if it has death nodes. */
+            if (!hasDeathData(getPlayer(), root, entity)) {
+                close();
+                return;
+            }
+
+            /* Read death node list. */
+            NbtList deathNodeList = NbtHelper.Walker.withNbtElement(root, DeathNode.DEATHS_KEY, new NbtList());
+            List<DeathNode> entries = deathNodeList.stream()
+                .map(it -> DeathNode.fromNbt((NbtCompound) it))
+                .collect(Collectors.toList());
+            Collections.reverse(entries);
+            new DeathNodeListGui(getBackendGui(), getPlayer(), entity, entries, 0)
+                .open();
+        });
     }
 
 }

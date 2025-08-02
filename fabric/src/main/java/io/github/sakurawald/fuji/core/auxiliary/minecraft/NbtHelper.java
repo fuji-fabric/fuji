@@ -2,12 +2,13 @@ package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import lombok.SneakyThrows;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtIo;
@@ -89,10 +90,13 @@ public class NbtHelper {
         }
     }
 
+    @ForDeveloper("""
+        You should declare the throws IOException for low-level read/write operations.
+        The high level layers should handle these exceptions, or just @SneakyThrow to bypass them.
+        """)
     public static class Storage {
 
-        @SneakyThrows
-        private static void writeNbtFile(@NotNull NbtCompound nbt, @NotNull Path filePath) {
+        private static void writeNbtFile(@NotNull NbtCompound nbt, @NotNull Path filePath) throws IOException {
             #if MC_VER <= MC_1_20_2
             NbtIo.write(nbt, filePath.toFile());
             #elif MC_VER > MC_1_20_2
@@ -100,8 +104,7 @@ public class NbtHelper {
             #endif
         }
 
-        @SneakyThrows
-        private static NbtCompound readNbtFile(Path filePath) {
+        private static @Nullable NbtCompound readNbtFile(@NotNull Path filePath) throws IOException {
             #if MC_VER <= MC_1_20_2
             return NbtIo.read(filePath.toFile());
             #elif MC_VER > MC_1_20_2
@@ -109,33 +112,32 @@ public class NbtHelper {
             #endif
         }
 
-        public static <T> T withNbtFileAndGetReturnValue(@NotNull Path filePath, @NotNull Function<NbtCompound, T> function) {
-            /* Ensure file exists. */
+        public static <T> T withNbtFile(@NotNull Path filePath, @NotNull Function<NbtCompound, T> function) throws IOException {
+            /* Write a default file if no file exists. */
             if (Files.notExists(filePath)) {
                 writeNbtFile(new NbtCompound(), filePath);
             }
 
             /* Read the file. */
-            NbtCompound readNbt = readNbtFile(filePath);
-            if (readNbt == null) {
+            NbtCompound nbt = readNbtFile(filePath);
+            if (nbt == null) {
                 LogUtil.error("Failed to read the nbt file in {}", filePath);
                 throw new AbortCommandExecutionException();
             }
 
             /* Call the consumer. */
-            T value = function.apply(readNbt);
+            T value = function.apply(nbt);
 
             /* Always write the data back, whether it's a destructive operation or not. */
-            writeNbtFile(readNbt, filePath);
+            writeNbtFile(nbt, filePath);
 
             /* Transfer the return value from closure function to surrounding env. */
             return value;
         }
 
-        public static void withNbtFile(@NotNull Path filePath, @NotNull Consumer<NbtCompound> function) {
-            withNbtFileAndGetReturnValue(filePath, (root) -> {
+        public static void withNbtFile(@NotNull Path filePath, @NotNull Consumer<NbtCompound> function) throws IOException {
+            withNbtFile(filePath, (root) -> {
                 function.accept(root);
-                // Discard the return value.
                 return null;
             });
         }

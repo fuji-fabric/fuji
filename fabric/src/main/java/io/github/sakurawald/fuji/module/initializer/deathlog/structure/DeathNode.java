@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.module.initializer.deathlog.DeathLogInitializer;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
@@ -88,6 +89,7 @@ public class DeathNode {
         return deathNode;
     }
 
+    @SneakyThrows
     public static void createDeathNode(@NotNull ServerPlayerEntity player) {
         if (player.getInventory().isEmpty()) return;
 

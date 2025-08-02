@@ -144,7 +144,7 @@ public class PlayerHelper {
                 setServerWorld(player, dimensionId);
             }
             #elif MC_VER >= MC_1_21_6
-             playerData
+            playerData
                 .getOptionalString(DIMENSION_NBT_KEY)
                 .ifPresent(dimensionId -> setServerWorld(player, dimensionId));
             #endif
