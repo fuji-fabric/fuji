@@ -86,7 +86,7 @@ public class ItemStackHelper {
         #if MC_VER <= MC_1_20_4
         return stack.getSubNbt("SkullOwner");
         #elif MC_VER > MC_1_20_4 && MC_VER < MC_1_21_5
-        NbtCompound nbt = ItemStackHelper.Nbt.getNbt(stack);
+        NbtCompound nbt = ItemStackHelper.Nbt.getCustomDataNbt(stack);
         if (nbt == null) return null;
         return nbt.getCompound("SkullOwner");
         #elif MC_VER >= MC_1_21_5
@@ -96,7 +96,7 @@ public class ItemStackHelper {
         #endif
     }
 
-    public static boolean canCombine(ItemStack a, ItemStack b) {
+    public static boolean canCombine(@NotNull ItemStack a, @NotNull ItemStack b) {
         if (!a.isOf(b.getItem())) {
             return false;
         }
