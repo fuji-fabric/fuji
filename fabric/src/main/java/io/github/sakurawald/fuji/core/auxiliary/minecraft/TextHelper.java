@@ -935,6 +935,9 @@ public class TextHelper {
 
     }
 
+    @ForDeveloper("""
+    The text component format: https://minecraft.wiki/w/Text_component_format#History
+    """)
     public static class Codec {
 
         public static String toJson(@NotNull Text text) {
@@ -952,9 +955,9 @@ public class TextHelper {
 
         public static Text fromJson(@NotNull String textJson) {
             #if MC_VER <= MC_1_20_2
-            return Text.Serializer.fromJson(tagString);
+            return Text.Serializer.fromJson(textJson);
             #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_20_4
-            return Text.Serialization.fromJson(tagString);
+            return Text.Serialization.fromJson(textJson);
             #elif MC_VER > MC_1_20_4
             return net.minecraft.text.TextCodecs.CODEC
                 .decode(JsonOps.INSTANCE,JsonUtil.readJsonString(textJson))
