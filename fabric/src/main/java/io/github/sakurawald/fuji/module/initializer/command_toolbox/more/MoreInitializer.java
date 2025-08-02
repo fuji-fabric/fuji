@@ -15,7 +15,7 @@ public class MoreInitializer extends ModuleInitializer {
     @CommandNode("more")
     @CommandRequirement(level = 4)
     private static int $more(@CommandSource ServerCommandSource source) {
-        return CommandHelper.Pattern.itemInHandCommand(source, (player, itemStack) -> {
+        return CommandHelper.Pattern.withItemInMainHand(source, (player, itemStack) -> {
             itemStack.setCount(itemStack.getMaxCount());
             return CommandHelper.Return.SUCCESS;
         });

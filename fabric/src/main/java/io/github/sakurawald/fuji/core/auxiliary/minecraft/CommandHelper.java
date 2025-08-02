@@ -34,6 +34,7 @@ public class CommandHelper {
 
     public static final int COMMAND_EXCEPTION_COLOR_INT = 16736000;
 
+
     public static @NotNull String findCommandNodePath(@NotNull CommandNode<ServerCommandSource> node) {
         CommandDispatcher<ServerCommandSource> dispatcher = getCommandDispatcher();
         assert dispatcher != null;
@@ -176,7 +177,7 @@ public class CommandHelper {
 
     public static class Pattern {
 
-        public static int playerOnlyCommand(@NotNull ServerCommandSource source, @NotNull Function<ServerPlayerEntity, Integer> function) {
+        public static int withContextPlayer(@NotNull ServerCommandSource source, @NotNull Function<ServerPlayerEntity, Integer> function) {
             ServerPlayerEntity player = source.getPlayer();
             if (player == null) {
                 TextHelper.sendTextByKey(source, "command.player_only");
@@ -186,8 +187,8 @@ public class CommandHelper {
             return function.apply(player);
         }
 
-        public static int itemInHandCommand(@NotNull ServerCommandSource source, @NotNull BiFunction<ServerPlayerEntity, ItemStack, Integer> consumer) {
-            return playerOnlyCommand(source, player -> {
+        public static int withItemInMainHand(@NotNull ServerCommandSource source, @NotNull BiFunction<ServerPlayerEntity, ItemStack, Integer> consumer) {
+            return withContextPlayer(source, player -> {
                 ItemStack mainHandStack = player.getMainHandStack();
                 if (mainHandStack.isEmpty()) {
                     TextHelper.sendTextByKey(player, "item.empty.not_allow");

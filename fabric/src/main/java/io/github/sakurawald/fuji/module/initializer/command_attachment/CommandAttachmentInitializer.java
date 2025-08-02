@@ -213,7 +213,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         , @Document(id = 1751826444225L, value = "Should we destroy the item if the use times exceed.") Optional<Boolean> destroyItem
         , @Document(id = 1751826447371L, value = "The command.") GreedyString command
     ) {
-        return CommandHelper.Pattern.itemInHandCommand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
+        return CommandHelper.Pattern.withItemInMainHand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
             String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
             CommandAttachmentModel model = getAttachmentModel(uuid);
 
@@ -288,7 +288,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @Document(id = 1751826477036L, value = "Detach all attached commands in the item.")
     @CommandNode("detach-item-all")
     private static int $detachItemAll(@CommandSource ServerPlayerEntity player) {
-        return CommandHelper.Pattern.itemInHandCommand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
+        return CommandHelper.Pattern.withItemInMainHand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
             String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
 
             doDetachAttachment(uuid);
@@ -322,7 +322,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @Document(id = 1751826486559L, value = "Query all attached commands in the item.")
     @CommandNode("query-item")
     private static int $queryItem(@CommandSource ServerPlayerEntity player) {
-        return CommandHelper.Pattern.itemInHandCommand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
+        return CommandHelper.Pattern.withItemInMainHand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
             String uuid = UuidHelper.getAttachedUuid(ItemStackHelper.CustomData.getCustomDataNbt(mainHandStack));
 
             doQueryAttachment(player, uuid);

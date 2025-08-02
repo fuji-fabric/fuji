@@ -38,7 +38,7 @@ public class CallbackManager extends BaseManager {
     }
 
     private int $executeCallbackCommand(CommandContext<ServerCommandSource> ctx) {
-        return CommandHelper.Pattern.playerOnlyCommand(ctx.getSource(), player -> {
+        return CommandHelper.Pattern.withContextPlayer(ctx.getSource(), player -> {
             String uuid = StringArgumentType.getString(ctx, COMMAND_CALLBACK_UUID_ARGUMENT_NAME);
             this.executeCallbackCommand(uuid, player);
             return CommandHelper.Return.SUCCESS;
