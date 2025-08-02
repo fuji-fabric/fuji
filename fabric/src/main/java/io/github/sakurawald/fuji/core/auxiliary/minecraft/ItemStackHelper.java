@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
+import com.mojang.datafixers.util.Pair;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
@@ -224,13 +225,18 @@ public class ItemStackHelper {
             /* Map the NBT to ItemStack. */
             List<ItemStack> ret = new ArrayList<>();
             for (int i = 0; i < node.size(); i++) {
-                NbtCompound nbtCompound = NbtHelper.Primitives.getCompound(node, i).get();
+                NbtCompound nbtCompound = NbtHelper.Primitives
+                    .getCompound(node, i)
+                    .orElseGet(() -> {
+                        LogUtil.warn("Failed to read an item stack from slots node: nbtList = {}", node);
+                        return new NbtCompound();
+                    });
                 ret.add(fromNbtOrEmpty(nbtCompound));
             }
             return ret;
         }
 
-        public static NbtElement toNbt(@NotNull ItemStack stack, NbtElement nbtElement) {
+        public static NbtElement toNbt(@NotNull ItemStack stack, @NotNull NbtElement nbtElement) {
             if (stack.isEmpty()) {
                 throw new IllegalStateException("Cannot encode empty ItemStack");
             }
@@ -250,10 +256,11 @@ public class ItemStackHelper {
         public static Optional<ItemStack> fromNbt(NbtElement nbtElement) {
             return ItemStack.CODEC
                 #if MC_VER <= MC_1_20_4
-                .parse(NbtOps.INSTANCE, nbtElement)
+                .decode(NbtOps.INSTANCE, nbtElement)
                 #elif MC_VER > MC_1_20_4
-                .parse(RegistryHelper.getDefaultWrapperLookup().getOps(NbtOps.INSTANCE), nbtElement)
+                .decode(RegistryHelper.getDefaultWrapperLookup().getOps(NbtOps.INSTANCE), nbtElement)
                 #endif
+                .map(Pair::getFirst)
                 .resultOrPartial(string -> LogUtil.debug("Failed to decode item: '{}'", string));
         }
     }
