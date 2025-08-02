@@ -94,7 +94,7 @@ public class DeathNode {
         if (player.getInventory().isEmpty()) return;
 
         NbtHelper.Storage.withNbtFile(DeathLogInitializer.getDeathDataPath(PlayerHelper.getPlayerName(player)), root -> {
-            NbtList deathNodeList = NbtHelper.Walker.withNbtElement(root, DEATHS_KEY, new NbtList());
+            NbtList deathNodeList = NbtHelper.Walker.getOrCreateNbtElement(root, DEATHS_KEY, new NbtList());
             deathNodeList.add(makeDeathNodeNbt(player));
         });
     }

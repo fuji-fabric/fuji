@@ -62,7 +62,7 @@ public class DeathDataListGui extends PagedGui<String> {
             }
 
             /* Read death node list. */
-            NbtList deathNodeList = NbtHelper.Walker.withNbtElement(root, DeathNode.DEATHS_KEY, new NbtList());
+            NbtList deathNodeList = NbtHelper.Walker.getOrCreateNbtElement(root, DeathNode.DEATHS_KEY, new NbtList());
             List<DeathNode> entries = deathNodeList.stream()
                 .map(it -> DeathNode.fromNbt((NbtCompound) it))
                 .collect(Collectors.toList());

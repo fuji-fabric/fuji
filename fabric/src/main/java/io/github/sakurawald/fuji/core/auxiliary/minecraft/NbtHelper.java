@@ -94,7 +94,7 @@ public class NbtHelper {
         }
 
         @SuppressWarnings("unchecked")
-        public static <T extends NbtElement> T withNbtElement(@NotNull NbtCompound root, @NotNull String nbtPath, T defaultValue) {
+        public static <T extends NbtElement> T getOrCreateNbtElement(@NotNull NbtCompound root, @NotNull String nbtPath, @NotNull T defaultValue) {
             NbtElement nbtElement = readNbtPath(root, nbtPath);
             if (nbtElement == null) {
                 setNbtPath(root, nbtPath, defaultValue);
