@@ -12,7 +12,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;
 
 import java.util.List;
@@ -158,28 +157,28 @@ public class ItemStackHelper {
 
     public static class Nbt {
 
-        public static NbtElement toNbtAllowEmpty(ItemStack stack, RegistryWrapper.WrapperLookup wrapperLookup) {
+        public static NbtElement toNbtAllowEmpty(@NotNull ItemStack stack) {
             /* Return empty NBT if item stack is empty. */
             if (stack.isEmpty()) {
                 return new NbtCompound();
             }
 
-            return Nbt.toNbt(stack, wrapperLookup, new NbtCompound());
+            return Nbt.toNbt(stack, new NbtCompound());
         }
 
-        public static ItemStack fromNbtOrEmpty(RegistryWrapper.WrapperLookup wrapperLookup, @Nullable NbtCompound nbtCompound) {
+        public static ItemStack fromNbtOrEmpty(@Nullable NbtCompound nbtCompound) {
             /* Return empty item stack if NBT is empty. */
             if (nbtCompound == null || nbtCompound.isEmpty()) {
                 return ItemStack.EMPTY;
             }
 
-            return fromNbt(wrapperLookup, nbtCompound)
+            return fromNbt(nbtCompound)
                     .orElse(ItemStack.EMPTY);
         }
 
         public static NbtList writeSlotsNode(@NotNull NbtList node, @NotNull List<ItemStack> stackList) {
             stackList.forEach(itemStack -> {
-                NbtElement nbtAllowEmpty = toNbtAllowEmpty(itemStack, RegistryHelper.getDefaultWrapperLookup());
+                NbtElement nbtAllowEmpty = toNbtAllowEmpty(itemStack);
                 node.add(nbtAllowEmpty);
             });
             return node;
@@ -195,19 +194,19 @@ public class ItemStackHelper {
             List<ItemStack> ret = new ArrayList<>();
             for (int i = 0; i < node.size(); i++) {
                 NbtCompound nbtCompound = NbtHelper.Primitives.getCompound(node, i).get();
-                ret.add(fromNbtOrEmpty(RegistryHelper.getDefaultWrapperLookup(), nbtCompound));
+                ret.add(fromNbtOrEmpty(nbtCompound));
             }
             return ret;
         }
 
-        public static void withNbt(ItemStack stack, Consumer<NbtCompound> nbtConsumer) {
-            NbtCompound targetNbt = getCustomDataNbt(stack);
-            if (targetNbt == null) {
-                targetNbt = new NbtCompound();
+        public static void withCustomDataNbt(@NotNull ItemStack stack, @NotNull Consumer<NbtCompound> nbtConsumer) {
+            NbtCompound customDataNbt = getCustomDataNbt(stack);
+            if (customDataNbt == null) {
+                customDataNbt = new NbtCompound();
             }
 
-            nbtConsumer.accept(targetNbt);
-            setCustomDataNbt(stack, targetNbt);
+            nbtConsumer.accept(customDataNbt);
+            setCustomDataNbt(stack, customDataNbt);
         }
 
         @ForDeveloper("""
@@ -232,7 +231,7 @@ public class ItemStackHelper {
             #endif
         }
 
-        public static NbtElement toNbt(ItemStack stack, RegistryWrapper.WrapperLookup wrapperLookup, NbtElement nbtElement) {
+        public static NbtElement toNbt(@NotNull ItemStack stack, NbtElement nbtElement) {
             if (stack.isEmpty()) {
                 throw new IllegalStateException("Cannot encode empty ItemStack");
             }
@@ -243,27 +242,18 @@ public class ItemStackHelper {
                 .getOrThrow(true, string -> LogUtil.debug("Failed to encode item: {}", string));
             #elif MC_VER > MC_1_20_4
             return ItemStack.CODEC
-                .encode(stack, wrapperLookup.getOps(NbtOps.INSTANCE), nbtElement)
+                .encode(stack, RegistryHelper.getDefaultWrapperLookup().getOps(NbtOps.INSTANCE), nbtElement)
                 .getOrThrow();
             #endif
 
         }
 
-        public static @NotNull ItemStack fromNbtOrBarrier(NbtElement nbtElement) {
-            Optional<ItemStack> itemStack = fromNbt(RegistryHelper.getDefaultWrapperLookup(), nbtElement);
-            return itemStack.orElseGet(Items.BARRIER::getDefaultStack);
-        }
-
         public static Optional<ItemStack> fromNbt(NbtElement nbtElement) {
-            return fromNbt(RegistryHelper.getDefaultWrapperLookup(), nbtElement);
-        }
-
-        public static Optional<ItemStack> fromNbt(RegistryWrapper.WrapperLookup wrapperLookup, NbtElement nbtElement) {
             return ItemStack.CODEC
                 #if MC_VER <= MC_1_20_4
                 .parse(NbtOps.INSTANCE, nbtElement)
                 #elif MC_VER > MC_1_20_4
-                .parse(wrapperLookup.getOps(NbtOps.INSTANCE), nbtElement)
+                .parse(RegistryHelper.getDefaultWrapperLookup().getOps(NbtOps.INSTANCE), nbtElement)
                 #endif
                 .resultOrPartial(string -> LogUtil.debug("Failed to decode item: '{}'", string));
         }
