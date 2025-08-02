@@ -57,7 +57,9 @@ public class CommandEventInitializer extends ModuleInitializer {
 
         var onPlayerFirstJoinedConfig = CommandEventInitializer.config.model().event.on_player_first_joined;
         if (onPlayerFirstJoinedConfig.enable) {
-            if (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.LEAVE_GAME)) < 1) {
+            // NOTE: If you use `Stats.LEAVE_GAME == 1` as the stat value, then it will not get saved when the server is stopped by `/stop`.
+            int stat = player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.TOTAL_WORLD_TIME));
+            if (stat == 0) {
                 CommandEventInitializer.executeCommandOnEvent(player, onPlayerFirstJoinedConfig.command_list);
             }
         }

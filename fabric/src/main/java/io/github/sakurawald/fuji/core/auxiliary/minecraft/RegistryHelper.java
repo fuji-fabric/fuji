@@ -63,7 +63,7 @@ public class RegistryHelper {
             .orElse("[unregistered]");
     }
 
-    @ForDeveloper("In older MC versions, there is no a registry for MessageType.")
+    @ForDeveloper("In older MC versions, the MessageType will not carry the registry bits.")
     public static String getIdAsString(@NotNull MessageType.Parameters parameters) {
         String messageTypeIdString;
 
