@@ -68,8 +68,12 @@ public class ItemStackHelper {
                 .map(tag -> TextHelper.Codec.fromJson(tag.asString()))
                 .collect(java.util.stream.Collectors.toList());
             #elif MC_VER > MC_1_20_4
-                return stack.get(DataComponentTypes.LORE)
-                    .comp_2400();
+                var loreComponent = stack.get(DataComponentTypes.LORE);
+                if (loreComponent == null) {
+                    return List.of();
+                }
+
+                return loreComponent.comp_2400();
             #endif
         }
 
@@ -154,6 +158,7 @@ public class ItemStackHelper {
 
     public static class CustomData {
 
+        @SuppressWarnings("unused")
         public static void withCustomDataNbt(@NotNull ItemStack stack, @NotNull Consumer<NbtCompound> nbtConsumer) {
             NbtCompound customDataNbt = getCustomDataNbt(stack);
             if (customDataNbt == null) {
