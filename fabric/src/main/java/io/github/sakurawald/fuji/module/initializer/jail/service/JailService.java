@@ -163,14 +163,13 @@ public class JailService {
     }
 
     public static void executePatrolCommands(JailDescriptor jail) {
-        LogUtil.debug("Execute patrol commands for jail {}", jail.getId());
-
         List<JailRecord> enabledJailRecords = filterEnabledJailRecords(getJailRecords(jail));
         enabledJailRecords
             .forEach(jailRecord -> ServerHelper.executeSync(() -> {
                 String playerName = jailRecord.getPrisonerName();
                 PlayerHelper.Lookup.getOnlinePlayerByName(playerName)
                     .ifPresent(onlinePlayer -> {
+                        LogUtil.debug("Execute patrol commands: jail = {}, jailedPlayer = {}", jail.getId(), playerName);
                         List<String> patrolCommands = jail.getPatrol().getPatrolCommands();
                         CommandExecutor.execute(ExtendedCommandSource.asConsole(onlinePlayer.getCommandSource()), patrolCommands);
                     });

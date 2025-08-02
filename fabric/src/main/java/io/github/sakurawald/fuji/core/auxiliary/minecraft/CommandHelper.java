@@ -62,6 +62,10 @@ public class CommandHelper {
             .collect(Collectors.joining("."));
     }
 
+    public static ServerCommandSource getConsoleCommandSource() {
+        return ServerHelper.getServer().getCommandSource();
+    }
+
     public static void updateCommandTree() {
         CommandManager commandManager = ServerHelper.getServer().getCommandManager();
         PlayerHelper.Lookup
