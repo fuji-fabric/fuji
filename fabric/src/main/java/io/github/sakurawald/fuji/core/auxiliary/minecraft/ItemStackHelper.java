@@ -65,7 +65,7 @@ public class ItemStackHelper {
                 .getOrCreateSubNbt(DISPLAY_NBT_KEY)
                 .getList(LORE_NBT_KEY, NbtElement.STRING_TYPE)
                 .stream()
-                .map(tag -> TextHelper.fromJson(tag.asString()))
+                .map(tag -> TextHelper.Codec.fromJson(tag.asString()))
                 .collect(java.util.stream.Collectors.toList());
             #elif MC_VER > MC_1_20_4
                 return stack.get(DataComponentTypes.LORE)
@@ -78,7 +78,7 @@ public class ItemStackHelper {
             NbtCompound displayTag = stack.getOrCreateSubNbt(DISPLAY_NBT_KEY);
             NbtList loreItemsTag = new NbtList();
             for (Text text : texts) {
-                loreItemsTag.add(net.minecraft.nbt.NbtString.of(TextHelper.toJson(text)));
+                loreItemsTag.add(net.minecraft.nbt.NbtString.of(TextHelper.Codec.toJson(text)));
             }
             displayTag.put(LORE_NBT_KEY, loreItemsTag);
             #elif MC_VER > MC_1_20_4

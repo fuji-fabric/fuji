@@ -10,7 +10,6 @@ import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.node.LiteralNode;
 import eu.pb4.placeholders.api.node.TextNode;
 import eu.pb4.placeholders.api.parsers.NodeParser;
-
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
@@ -21,11 +20,20 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ResourceConfigurationH
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
-
 import io.github.sakurawald.fuji.core.document.structure.DocString;
 import io.github.sakurawald.fuji.core.structure.Pair;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.SubtitleS2CPacket;
 import net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket;
@@ -39,17 +47,6 @@ import net.minecraft.text.TextContent;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Supplier;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @ForDeveloper("""
     The design of language system.
@@ -102,10 +99,10 @@ public class TextHelper {
             return NodeParser.merge(parsers);
             #elif MC_VER > MC_1_20_2
             return NodeParser.builder()
-            .quickText()
-            .simplifiedTextFormat()
-            .markdown()
-            .build();
+                .quickText()
+                .simplifiedTextFormat()
+                .markdown()
+                .build();
             #endif
         }
 
@@ -118,11 +115,11 @@ public class TextHelper {
             return NodeParser.merge(parsers);
             #elif MC_VER > MC_1_20_2
             return NodeParser.builder()
-            .quickText()
-            .simplifiedTextFormat()
-            .globalPlaceholders()
-            .markdown()
-            .build();
+                .quickText()
+                .simplifiedTextFormat()
+                .globalPlaceholders()
+                .markdown()
+                .build();
             #endif
         }
 
@@ -171,7 +168,7 @@ public class TextHelper {
             return string
                 .replace("<", "\\<")
                 .replace(">", "\\>")
-                .replace("*","\\*")
+                .replace("*", "\\*")
                 .replace("%", "\\%")
                 .replace("§", "&");
         }
@@ -693,12 +690,12 @@ public class TextHelper {
             Object audienceType = (audience == null ? null : audience.getClass().getName());
 
             LogUtil.error("""
-            Failed to send a text to the audience {}.
-            ◉ Audience Type: {}
-            ◉ Language Key: {}
-            ◉ Args: {}
-            ◉ Language Value: {}
-            """, audience, audienceType, languageKey, args, languageValue, e);
+                Failed to send a text to the audience {}.
+                ◉ Audience Type: {}
+                ◉ Language Key: {}
+                ◉ Args: {}
+                ◉ Language Value: {}
+                """, audience, audienceType, languageKey, args, languageValue, e);
         }
     }
 
@@ -936,10 +933,12 @@ public class TextHelper {
     }
 
     @ForDeveloper("""
-    The text component format: https://minecraft.wiki/w/Text_component_format#History
-    """)
+        The text component format: https://minecraft.wiki/w/Text_component_format#History
+        """)
+    @SuppressWarnings("unused")
     public static class Codec {
 
+        @SuppressWarnings("unused")
         public static String toJson(@NotNull Text text) {
             #if MC_VER <= MC_1_20_2
             return Text.Serializer.toJson(text);
@@ -953,6 +952,7 @@ public class TextHelper {
             #endif
         }
 
+        @SuppressWarnings("unused")
         public static Text fromJson(@NotNull String textJson) {
             #if MC_VER <= MC_1_20_2
             return Text.Serializer.fromJson(textJson);
@@ -960,7 +960,7 @@ public class TextHelper {
             return Text.Serialization.fromJson(textJson);
             #elif MC_VER > MC_1_20_4
             return net.minecraft.text.TextCodecs.CODEC
-                .decode(JsonOps.INSTANCE,JsonUtil.readJsonString(textJson))
+                .decode(JsonOps.INSTANCE, JsonUtil.readJsonString(textJson))
                 .getOrThrow()
                 .getFirst();
             #endif
