@@ -313,7 +313,7 @@ public class WorldInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<WorldConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, WorldConfigModel.class);
 
     public static final BaseConfigurationHandler<WorldDataModel> world = new ObjectConfigurationHandler<>("world.json", WorldDataModel.class)
-        .setAutoSaveEveryMinute();
+        .enableAutoSaveFeature();
 
     private static void ensureDimensionNotExists(ServerCommandSource source, Identifier identifier) {
         if (WorldService.existsDimension(identifier)) {

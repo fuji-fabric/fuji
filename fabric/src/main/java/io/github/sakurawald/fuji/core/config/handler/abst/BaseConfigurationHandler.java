@@ -206,8 +206,8 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         });
     }
 
-    public BaseConfigurationHandler<T> setAutoSaveEveryMinute() {
-        this.scheduleWriteStorageJob(ScheduleManager.CRON_EVERY_MINUTE);
+    public BaseConfigurationHandler<T> enableAutoSaveFeature() {
+        this.scheduleWriteStorageJob(ScheduleManager.CRON_EVERY_TEN_SECONDS);
         return this;
     }
 

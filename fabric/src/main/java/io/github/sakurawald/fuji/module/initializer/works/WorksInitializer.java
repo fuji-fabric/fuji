@@ -40,7 +40,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 public class WorksInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<WorksDataModel> works = new ObjectConfigurationHandler<>("works.json", WorksDataModel.class)
-        .setAutoSaveEveryMinute();
+        .enableAutoSaveFeature();
 
     public static final BaseConfigurationHandler<WorksConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, WorksConfigModel.class);
 

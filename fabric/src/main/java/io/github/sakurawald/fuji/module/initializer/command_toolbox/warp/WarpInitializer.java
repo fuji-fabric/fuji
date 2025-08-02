@@ -48,7 +48,7 @@ import java.util.function.Function;
 public class WarpInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<WarpDataModel> data = new ObjectConfigurationHandler<>("warp.json", WarpDataModel.class)
-        .setAutoSaveEveryMinute();
+        .enableAutoSaveFeature();
 
     private static void ensureWarpExists(ServerPlayerEntity player, WarpName warpName) {
         String name = warpName.getValue();

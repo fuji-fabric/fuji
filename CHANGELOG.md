@@ -1,4 +1,3 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
-- **[core] feature: improve the `command suggestion` for all fuji argument types.**
-- [command_bundle] feature: improve the `command feedback` for `/command-bundle {register/unregister}` command.
+- [core] feature: auto-save feature for data files has been updated to save `every 10 seconds` instead of `every minute`.

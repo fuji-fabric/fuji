@@ -40,7 +40,7 @@ public class BackInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<BackConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, BackConfigModel.class);
 
     private static final BaseConfigurationHandler<BackLocationHistoryModel> savedPositionConfig = new ObjectConfigurationHandler<>("location-history.json", BackLocationHistoryModel.class)
-        .setAutoSaveEveryMinute();
+        .enableAutoSaveFeature();
 
     @DocStringProvider(id = 1751999540893L, value = """
         The max location entries to save for this player.
