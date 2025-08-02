@@ -26,9 +26,18 @@ public class NbtHelper {
             }
         }
 
-        private static <T extends NbtElement> void setPath(@NotNull NbtCompound root, @NotNull String nbtPath, T value) {
+        private static String @NotNull [] splitNbtPath(@NotNull String nbtPath) {
+            return nbtPath.split("\\.", -1);
+        }
+
+
+        private static @NotNull IllegalStateException makeNbtElementTypeMismatchException(@NotNull String nbtPath) {
+            return new IllegalStateException("The field in nbt path %s is not type of NbtCompound.".formatted(nbtPath));
+        }
+
+        private static <T extends NbtElement> void setNbtPath(@NotNull NbtCompound root, @NotNull String nbtPath, @NotNull T newValue) {
             /* Split the nodes into keys. */
-            String[] keys = nbtPath.split("\\.", -1);
+            String[] keys = splitNbtPath(nbtPath);
             ensureKeysIsNotEmpty(nbtPath, keys);
 
             /* Walk down the path until the last key. */
@@ -36,53 +45,59 @@ public class NbtHelper {
                 String node = keys[i];
 
                 // Build the parent node on the fly.
-                assert root != null;
                 if (!root.contains(node)) {
                     root.put(node, new NbtCompound());
                 }
 
                 // Walk along it.
-                root = Primitives.getCompound(root, node).get();
+                root = Primitives
+                    .getCompound(root, node)
+                    .orElseThrow(() -> {
+                        LogUtil.error("Failed to set the value for specified nbt path: nbtPath = {}, newValue = {}", nbtPath, newValue);
+                        return makeNbtElementTypeMismatchException(nbtPath);
+                    });
             }
 
             /* Set the value. */
             String theLastKey = keys[keys.length - 1];
-            assert root != null;
-            root.put(theLastKey, value);
+            root.put(theLastKey, newValue);
         }
 
-        private static @Nullable NbtElement readPath(@NotNull NbtCompound root, @NotNull String nbtPath) {
+        private static @Nullable NbtElement readNbtPath(@NotNull NbtCompound root, @NotNull String nbtPath) {
             /* Split the path into keys. */
-            String[] nodes = nbtPath.split("\\.", -1);
-            ensureKeysIsNotEmpty(nbtPath, nodes);
+            String[] keys = splitNbtPath(nbtPath);
+            ensureKeysIsNotEmpty(nbtPath, keys);
 
             /* Walk down the path until the last key. */
-            for (int i = 0; i < nodes.length - 1; i++) {
-                String node = nodes[i];
+            for (int i = 0; i < keys.length - 1; i++) {
+                String node = keys[i];
 
                 // Check the key.
-                assert root != null;
                 if (!root.contains(node)) {
-                    LogUtil.error("Failed to read specified path {} in nbt {}. (Path not exists)", nbtPath, root);
-                    throw new RuntimeException("Failed to read specified path in NBT.");
+                    LogUtil.error("Failed to read the value of specified nbt path: root = {}, nbtPath = {} (There is no `{}` key)", root, nbtPath, node);
+                    throw new IllegalStateException();
                 }
 
                 // Walk along it.
-                root = Primitives.getCompound(root, node).get();
+                root = Primitives
+                    .getCompound(root, node)
+                    .orElseThrow(() -> {
+                        LogUtil.error("Failed to read the value of specified nbt path: nbtPath = {}", nbtPath);
+                        return makeNbtElementTypeMismatchException(nbtPath);
+                    });
             }
 
             /* Get the value. */
-            String theLastKey = nodes[nodes.length - 1];
-            assert root != null;
+            String theLastKey = keys[keys.length - 1];
             @Nullable NbtElement nbtElement = root.get(theLastKey);
             return nbtElement;
         }
 
         @SuppressWarnings("unchecked")
         public static <T extends NbtElement> T withNbtElement(@NotNull NbtCompound root, @NotNull String nbtPath, T defaultValue) {
-            NbtElement nbtElement = readPath(root, nbtPath);
+            NbtElement nbtElement = readNbtPath(root, nbtPath);
             if (nbtElement == null) {
-                setPath(root, nbtPath, defaultValue);
+                setNbtPath(root, nbtPath, defaultValue);
                 return defaultValue;
             }
 
