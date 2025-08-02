@@ -113,29 +113,6 @@ public class CommandHelper {
             .forEach(commandManager::sendCommandTree);
     }
 
-    public static boolean canUseThisCommand(ServerPlayerEntity player, String commandString) {
-        /* Parse the command string into command nodes. */
-        ServerCommandSource commandSource = player.getCommandSource();
-        ParseResults<ServerCommandSource> parseResults = getCommandDispatcher()
-            .parse(commandString, commandSource);
-        CommandContextBuilder<ServerCommandSource> context = parseResults.getContext();
-
-        /* If any exceptions, refuse to use that command. */
-        if (!parseResults.getExceptions().isEmpty()) {
-            return false;
-        }
-
-        /* If the nodes from parsed result is empty, refuse to use that command. */
-        List<ParsedCommandNode<ServerCommandSource>> nodes = context.getNodes();
-        if (nodes.isEmpty()) return false;
-
-        /* Check the requirement from root to leaf. */
-        return nodes
-            .stream()
-            .map(ParsedCommandNode::getNode)
-            .allMatch(it -> it.canUse(commandSource));
-    }
-
     public static @Nullable CommandDispatcher<ServerCommandSource> getCommandDispatcher() {
         // NOTE: It's null during the server startup.
         if (ServerHelper.getServer() == null
@@ -144,6 +121,33 @@ public class CommandHelper {
         }
 
         return ServerHelper.getServer().getCommandManager().getDispatcher();
+    }
+
+    public static class Requirement {
+
+
+        public static boolean canUseThisCommand(ServerPlayerEntity player, String commandString) {
+            /* Parse the command string into command nodes. */
+            ServerCommandSource commandSource = player.getCommandSource();
+            ParseResults<ServerCommandSource> parseResults = getCommandDispatcher()
+                .parse(commandString, commandSource);
+            CommandContextBuilder<ServerCommandSource> context = parseResults.getContext();
+
+            /* If any exceptions, refuse to use that command. */
+            if (!parseResults.getExceptions().isEmpty()) {
+                return false;
+            }
+
+            /* If the nodes from parsed result is empty, refuse to use that command. */
+            List<ParsedCommandNode<ServerCommandSource>> nodes = context.getNodes();
+            if (nodes.isEmpty()) return false;
+
+            /* Check the requirement from root to leaf. */
+            return nodes
+                .stream()
+                .map(ParsedCommandNode::getNode)
+                .allMatch(it -> it.canUse(commandSource));
+        }
     }
 
     public static class Source {

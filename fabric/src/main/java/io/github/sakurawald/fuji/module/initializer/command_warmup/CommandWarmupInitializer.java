@@ -67,7 +67,7 @@ public class CommandWarmupInitializer extends ModuleInitializer {
             /* If a warmup entry matches the command string, then we cancel the usage of the command. */
             if (commandString.matches(entry.getCommand().getRegex())) {
                 /* Should not send the warmup warning or cancel it, if the player can't even use that command. */
-                if (!CommandHelper.canUseThisCommand(player, commandString)) {
+                if (!CommandHelper.Requirement.canUseThisCommand(player, commandString)) {
                     break;
                 }
 
