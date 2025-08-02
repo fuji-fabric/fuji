@@ -323,7 +323,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @CommandNode("query-item")
     private static int $queryItem(@CommandSource ServerPlayerEntity player) {
         return CommandHelper.Pattern.itemInHandCommand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
-            String uuid = UuidHelper.getAttachedUuid(ItemStackHelper.Nbt.getNbt(mainHandStack));
+            String uuid = UuidHelper.getAttachedUuid(ItemStackHelper.Nbt.getCustomDataNbt(mainHandStack));
 
             doQueryAttachment(player, uuid);
             return CommandHelper.Return.SUCCESS;

@@ -33,7 +33,7 @@ public class ServerPlayerInteractionManagerMixin {
 
     @Inject(method = "interactItem", at = @At("HEAD"))
     void onPlayerRightClick(ServerPlayerEntity serverPlayerEntity, World world, @NotNull ItemStack itemStack, Hand hand, @NotNull CallbackInfoReturnable<ActionResult> cir) {
-        String uuid = UuidHelper.getAttachedUuid(ItemStackHelper.Nbt.getNbt(itemStack));
+        String uuid = UuidHelper.getAttachedUuid(ItemStackHelper.Nbt.getCustomDataNbt(itemStack));
 
         CommandAttachmentInitializer.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.RIGHT, InteractType.BOTH));
     }

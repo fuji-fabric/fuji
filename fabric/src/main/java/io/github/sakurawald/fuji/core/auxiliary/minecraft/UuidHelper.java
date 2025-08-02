@@ -50,12 +50,12 @@ public class UuidHelper {
     }
 
     public static @NotNull String getOrSetAttachedUuid(@NotNull ItemStack itemStack) {
-        NbtCompound nbt = ItemStackHelper.Nbt.getNbt(itemStack);
+        NbtCompound nbt = ItemStackHelper.Nbt.getCustomDataNbt(itemStack);
 
         /* Set the attached UUID first if absent. */
         if (getAttachedUuid(nbt) == null) {
             nbt = attachRandomUuidToNbtCompoundIfAbsent(nbt);
-            ItemStackHelper.Nbt.setNbt(itemStack, nbt);
+            ItemStackHelper.Nbt.setCustomDataNbt(itemStack, nbt);
         }
 
         /* Get the attached UUID. */

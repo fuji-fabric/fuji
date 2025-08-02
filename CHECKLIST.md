@@ -5,6 +5,7 @@ It's good to have a checklist, to avoid forgetting something.
 ## Bump version
 
 - Read the change log of Minecraft version.
+  - https://fabricmc.net/blog/
 - Update the version of fabric loader.
 - Update the version of mappings.
 - Update the version of dependent mods.

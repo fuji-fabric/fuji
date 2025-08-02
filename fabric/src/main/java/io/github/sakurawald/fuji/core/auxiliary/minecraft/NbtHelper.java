@@ -111,11 +111,11 @@ public class NbtHelper {
         """)
     public static class Storage {
 
-        private static void writeNbtFile(@NotNull NbtCompound nbt, @NotNull Path filePath) throws IOException {
+        private static void writeNbtFile(@NotNull NbtCompound root, @NotNull Path filePath) throws IOException {
             #if MC_VER <= MC_1_20_2
-            NbtIo.write(nbt, filePath.toFile());
+            NbtIo.write(root, filePath.toFile());
             #elif MC_VER > MC_1_20_2
-            NbtIo.write(nbt, filePath);
+            NbtIo.write(root, filePath);
             #endif
         }
 

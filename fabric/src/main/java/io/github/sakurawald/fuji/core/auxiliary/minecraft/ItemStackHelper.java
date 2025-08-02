@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import net.minecraft.item.Item;
@@ -33,7 +34,9 @@ import net.minecraft.component.type.LoreComponent;
 
 public class ItemStackHelper {
 
+    @SuppressWarnings("unused")
     private static final String LORE_NBT_KEY = "Lore";
+    @SuppressWarnings("unused")
     private static final String DISPLAY_NBT_KEY = "display";
 
     public static void setCustomName(ItemStack stack, Text customName) {
@@ -88,7 +91,7 @@ public class ItemStackHelper {
         if (nbt == null) return null;
         return nbt.getCompound("SkullOwner");
         #elif MC_VER >= MC_1_21_5
-        NbtCompound nbt = ItemStackHelper.Nbt.getNbt(stack);
+        NbtCompound nbt = ItemStackHelper.Nbt.getCustomDataNbt(stack);
         if (nbt == null) return null;
         return nbt.getCompound("SkullOwner").get();
         #endif
@@ -101,7 +104,7 @@ public class ItemStackHelper {
         if (a.isEmpty() && b.isEmpty()) {
             return true;
         }
-        return Objects.equals(Nbt.getNbt(a), Nbt.getNbt(b));
+        return Objects.equals(Nbt.getCustomDataNbt(a), Nbt.getCustomDataNbt(b));
     }
 
     public static boolean filterItemStack(@Nullable ItemStack itemStack, String keyword) {
@@ -198,16 +201,21 @@ public class ItemStackHelper {
         }
 
         public static void withNbt(ItemStack stack, Consumer<NbtCompound> nbtConsumer) {
-            NbtCompound targetNbt = getNbt(stack);
+            NbtCompound targetNbt = getCustomDataNbt(stack);
             if (targetNbt == null) {
                 targetNbt = new NbtCompound();
             }
 
             nbtConsumer.accept(targetNbt);
-            setNbt(stack, targetNbt);
+            setCustomDataNbt(stack, targetNbt);
         }
 
-        public static @Nullable NbtCompound getNbt(@NotNull ItemStack stack) {
+        @ForDeveloper("""
+            Before MC 1.20.5, the user-defined NBT is saved in path `tag` tree.
+            After that, it is saved in `components.minecraft:custom_data` tree.
+            For a NbtCompound, the data schema migration will be done automatically.
+            """)
+        public static @Nullable NbtCompound getCustomDataNbt(@NotNull ItemStack stack) {
             #if MC_VER <= MC_1_20_4
             return stack.getNbt();
             #elif MC_VER > MC_1_20_4
@@ -216,7 +224,7 @@ public class ItemStackHelper {
             #endif
         }
 
-        public static void setNbt(@NotNull ItemStack stack, @NotNull NbtCompound newNbt) {
+        public static void setCustomDataNbt(@NotNull ItemStack stack, @NotNull NbtCompound newNbt) {
             #if MC_VER <= MC_1_20_4
             stack.setNbt(newNbt);
             #elif MC_VER > MC_1_20_4
