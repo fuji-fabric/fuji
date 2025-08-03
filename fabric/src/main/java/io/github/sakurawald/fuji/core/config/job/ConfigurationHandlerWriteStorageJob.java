@@ -17,7 +17,6 @@ import java.util.function.Supplier;
     NOTE: <red>If you modify the `file` in `disk`, then you need to issue `/fuji reload` as soon as possible.</red>
     NOTE: <red>The `disk` will be `overridden` when `fire` this job.</red>
     """)
-
 @NoArgsConstructor
 public class ConfigurationHandlerWriteStorageJob extends CronJob {
 

@@ -5,7 +5,7 @@ import com.jayway.jsonpath.DocumentContext;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
-import io.github.sakurawald.fuji.core.config.transformer.abst.ConfigurationTransformer;
+import io.github.sakurawald.fuji.core.config.transformer.abst.JsonConfigurationTransformer;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
@@ -13,7 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Function;
 
-public class FlattenTreeTransformer extends ConfigurationTransformer {
+public class FlattenTreeTransformer extends JsonConfigurationTransformer {
 
     private final String subtreeIdentifier;
     private final String jsonPath;
@@ -50,7 +50,7 @@ public class FlattenTreeTransformer extends ConfigurationTransformer {
         // if the tree is not empty, migrate it to a standalone file
         Path currentTreeOutPath = level2outPath.apply(level);
         if (!JsonUtil.isEmpty(parent) && Files.notExists(currentTreeOutPath)) {
-            logConsole("flatten tree `{}` into the file `{}`", level, currentTreeOutPath);
+            logOperation("flatten tree `{}` into the file `{}`", level, currentTreeOutPath);
             Files.createDirectories(currentTreeOutPath.getParent());
             String json = BaseConfigurationHandler.getGson().toJson(parent);
             Files.writeString(currentTreeOutPath, json);
@@ -79,14 +79,14 @@ public class FlattenTreeTransformer extends ConfigurationTransformer {
 
     @Override
     public void apply() {
-        DocumentContext context = this.makeDocumentContext();
+        DocumentContext context = this.getJsonDocumentContext();
 
-        JsonObject root = (JsonObject) read(context, this.jsonPath);
+        JsonObject root = (JsonObject) getJsonPath(context, this.jsonPath);
         this.flatten(root, this.topLevel);
 
         if (overrideTheOriginalFileWithSkeletonTree) {
-            JsonObject skeletonTree = (JsonObject) read(context, this.jsonPath);
-            set(context, this.jsonPath, makeSkeletonTree(skeletonTree));
+            JsonObject skeletonTree = (JsonObject) getJsonPath(context, this.jsonPath);
+            setJsonPath(context, this.jsonPath, makeSkeletonTree(skeletonTree));
             writeStorage(context);
         }
     }
