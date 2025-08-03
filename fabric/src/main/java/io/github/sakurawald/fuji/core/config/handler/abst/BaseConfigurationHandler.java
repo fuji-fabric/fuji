@@ -22,6 +22,7 @@ import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
 import java.nio.charset.StandardCharsets;
+import java.util.function.Supplier;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -116,9 +117,13 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public BaseConfigurationHandler<T> installTransformer(ConfigurationTransformer transformer) {
+    public BaseConfigurationHandler<T> installTransformer(@NotNull ConfigurationTransformer transformer) {
         this.installedTransformers.add(transformer);
         return this;
+    }
+
+    public BaseConfigurationHandler<T> installTransformer(@NotNull Supplier<ConfigurationTransformer> transformerSupplier) {
+        return installTransformer(transformerSupplier.get());
     }
 
     protected abstract T getDefaultModel();

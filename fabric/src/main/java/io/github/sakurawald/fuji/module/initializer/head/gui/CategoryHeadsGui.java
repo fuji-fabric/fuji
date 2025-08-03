@@ -34,7 +34,7 @@ public class CategoryHeadsGui extends PagedGui<Head> {
     protected GuiElementInterface toGuiElement(Head entity) {
         /* Add the price text to the head stack. */
         var builder = GuiElementBuilder.from(entity.toItemStack());
-        if (HeadInitializer.head.model().economy_type != EconomyType.FREE) {
+        if (HeadInitializer.config.model().economy_type != EconomyType.FREE) {
             builder.addLoreLine(Text.empty());
             builder.addLoreLine(TextHelper.getTextByKey(getPlayer(), "head.price").copy().append(EconomyType.getCostText()));
         }
@@ -71,7 +71,7 @@ public class CategoryHeadsGui extends PagedGui<Head> {
             if (type.isLeft) { // Single click -> buy one.
                 EconomyType.tryPurchaseHeads(player, 1, () -> cursorStack.increment(1));
             } else if (type.isRight) { // Right click -> only allow to return of goods when it's free.
-                if (HeadInitializer.head.model().economy_type == EconomyType.FREE) {
+                if (HeadInitializer.config.model().economy_type == EconomyType.FREE) {
                     cursorStack.decrement(1);
                 }
             } else if (type.isMiddle) { // Double click -> buy to max count.

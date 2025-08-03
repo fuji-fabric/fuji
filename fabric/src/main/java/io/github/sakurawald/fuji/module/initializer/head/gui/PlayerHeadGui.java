@@ -65,7 +65,7 @@ public class PlayerHeadGui extends AnvilInputGui {
                     .setSkullOwner(gameProfile, EntityHelper.getMinecraftServer(player));
 
                 /* Make head stack. */
-                if (HeadInitializer.head.model().economy_type != EconomyType.FREE) {
+                if (HeadInitializer.config.model().economy_type != EconomyType.FREE) {
                     builder.addLoreLine(Text.empty());
                     builder.addLoreLine(TextHelper.getTextByKey(player, "head.price").copy().append(EconomyType.getCostText()));
                 }
