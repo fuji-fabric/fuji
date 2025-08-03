@@ -100,7 +100,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<CommandCooldownConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandCooldownConfigModel.class) {
         @Override
-        public void beforeWriteStorage() {
+        protected void beforeWriteStorage() {
             this.model().namedCooldown.list.values()
                 .stream()
                 .filter(it -> !it.isPersistent())

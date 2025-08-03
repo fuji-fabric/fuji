@@ -157,7 +157,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         REGISTERED_CONFIGURATION_HANDLERS.add(this);
     }
 
-    public void beforeWriteStorage() {
+    protected void beforeWriteStorage() {
         // no-op
     }
 

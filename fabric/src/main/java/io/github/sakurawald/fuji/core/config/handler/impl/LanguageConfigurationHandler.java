@@ -14,27 +14,27 @@ import org.jetbrains.annotations.NotNull;
 
 public class LanguageConfigurationHandler extends ResourceConfigurationHandler {
 
-    public static final String LANGUAGE_DIRECTORY_NAME = "languages";
-    public static final String LANGUAGE_FILE_CLASS_PATH_PREFIX = "/" + LANGUAGE_DIRECTORY_NAME + "/";
-    public static final String FALLBACK_LANGUAGE_FILE_CLASS_PATH = LANGUAGE_FILE_CLASS_PATH_PREFIX + toLanguageFileName("en_US");
+    private static final String LANGUAGE_DIRECTORY_NAME = "languages";
+    private static final String LANGUAGE_FILE_CLASS_PATH_PREFIX = "/" + LANGUAGE_DIRECTORY_NAME + "/";
+    private static final String FALLBACK_LANGUAGE_FILE_CLASS_PATH = LANGUAGE_FILE_CLASS_PATH_PREFIX + toLanguageFileName("en_US");
 
     public LanguageConfigurationHandler(@NotNull String languageCode) {
         super(getLanguageFilePath(languageCode), getLanguageFileClassPath(languageCode));
         this.installTransformer(new MoveFileTransformer(Fuji.MOD_CONFIG_PATH.resolve("lang"), Fuji.MOD_CONFIG_PATH.resolve("languages")));
     }
 
-    public static @NotNull Path getLanguageFilePath(@NotNull String languageCode) {
+    private static @NotNull Path getLanguageFilePath(@NotNull String languageCode) {
         String languageFileName = toLanguageFileName(languageCode);
         return Fuji.MOD_CONFIG_PATH
             .resolve(LANGUAGE_DIRECTORY_NAME)
             .resolve(languageFileName);
     }
 
-    public static @NotNull String getLanguageFileClassPath(@NotNull String languageCode) {
+    private static @NotNull String getLanguageFileClassPath(@NotNull String languageCode) {
         return LANGUAGE_FILE_CLASS_PATH_PREFIX + toLanguageFileName(languageCode);
     }
 
-    public static @NotNull String toLanguageFileName(@NotNull String languageCode) {
+    private static @NotNull String toLanguageFileName(@NotNull String languageCode) {
         return languageCode + ".json";
     }
 
@@ -43,7 +43,7 @@ public class LanguageConfigurationHandler extends ResourceConfigurationHandler {
     }
 
     @Override
-    public void beforeWriteStorage() {
+    protected void beforeWriteStorage() {
         this.model = makeSortedLanguageJsonObject((JsonObject) this.model);
     }
 
