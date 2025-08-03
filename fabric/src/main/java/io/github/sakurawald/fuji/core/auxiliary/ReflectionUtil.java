@@ -24,15 +24,19 @@ public class ReflectionUtil {
     public static class CompileTimeGraph {
 
         /* Compile-time generated graphs. */
+        public static final  String GRAPH_DIRECTORY_NAME = "graph";
+        private static final String GRAPH_CLASSPATH_PREFIX = "/" + GRAPH_DIRECTORY_NAME + "/";
         public static final String MODULE_INITIALIZER_GRAPH_FILE_NAME = "module-initializer-graph.txt";
         public static final String ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME = "argument-type-adapter-graph.txt";
         public static final String LANGUAGE_GRAPH_FILE_NAME = "language-graph.txt";
         public static final String MODULE_GRAPH_FILE_NAME = "module-graph.txt";
 
         @SneakyThrows(IOException.class)
-        public static List<String> getCompileTimeGraph(String graphName) {
+        public static List<String> getCompileTimeGraph(@NotNull String graphName) {
             /* Retrieve the resource file from virtual jar file. */
-            InputStream virtualInputStream = ReflectionUtil.class.getResourceAsStream(graphName);
+            String graphPath = GRAPH_CLASSPATH_PREFIX + graphName;
+
+            InputStream virtualInputStream = ReflectionUtil.class.getResourceAsStream(graphPath);
             if (virtualInputStream == null) {
                 LogUtil.error("Failed to load the graph {} from virtual jar file. Is the jar file damaged?", graphName);
                 throw new RuntimeException("Failed to load the graph " + graphName);
