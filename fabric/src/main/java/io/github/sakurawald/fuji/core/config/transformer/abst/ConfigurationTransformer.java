@@ -12,7 +12,12 @@ import org.jetbrains.annotations.NotNull;
 
     You can install multiple transformer instances on a specific `configuration handler`.
     Each transformer will be called before the call to the config model getter function.
-    All the transformers should work transparently.
+
+    The rules to write a new configuration transformer:
+    1. A transformer should work transparently, the bits should be transformed before the consumer sees it.
+    2. You need to implement the apply() method properly:
+    2.a. It should do necessary checks, including the source existence check and destination existence check.
+    2.b. It should do nothing if there is no transformation needed, without the console-spam.
     """)
 @SuppressWarnings("LombokGetterMayBeUsed")
 public abstract class ConfigurationTransformer {

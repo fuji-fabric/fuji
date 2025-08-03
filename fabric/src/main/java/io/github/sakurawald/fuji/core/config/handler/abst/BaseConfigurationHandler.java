@@ -74,7 +74,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     protected T model;
 
     /* Transformers applied in this file. */
-    private final List<ConfigurationTransformer> transformers = new ArrayList<>();
+    private final List<ConfigurationTransformer> installedTransformers = new ArrayList<>();
 
     public BaseConfigurationHandler(@NotNull Path path) {
         this.path = path;
@@ -116,8 +116,8 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
             .create();
     }
 
-    public BaseConfigurationHandler<T> addTransformer(ConfigurationTransformer transformer) {
-        this.transformers.add(transformer);
+    public BaseConfigurationHandler<T> installTransformer(ConfigurationTransformer transformer) {
+        this.installedTransformers.add(transformer);
         return this;
     }
 
@@ -128,7 +128,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     public void readStorage() {
         try {
             /* Apply transformers before read the storage. */
-            this.transformers.forEach(it -> {
+            this.installedTransformers.forEach(it -> {
                 it.configure(this.path);
                 it.apply();
             });
