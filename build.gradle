@@ -235,8 +235,6 @@ allprojects { p ->
         dependsOn('copyPullFromCrowdinResources', 'copyPushToCrowdinResources')
     }
 
-    var languageDirectoryName = "languages"
-
     tasks.register('copyPullFromCrowdinResources', Copy) {
         println("Copy pull-from-crowdin language files from source to destination.")
 

@@ -105,7 +105,7 @@ tasks.runServer.dependsOn(deleteWorldLockFile)
 tasks.register('deleteLanguageFiles') {
     outputs.upToDateWhen { false }
 
-    def file = project.rootProject.file("run/server/config/fuji/lang/")
+    def file = project.rootProject.file("run/server/config/fuji/${languageDirectoryName}/")
     println("Delete runtime language files: " + file)
     delete(file)
 }

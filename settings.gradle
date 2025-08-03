@@ -19,6 +19,9 @@ pluginManagement {
 	}
 }
 
+/* Define shared variables. */
+gradle.ext.languageDirectoryName = "languages"
+
 /* Loads the version_properties file for the currently selected Minecraft version. */
 def loadProperties() {
 	def defaultMcVersion = "1.20.1"
