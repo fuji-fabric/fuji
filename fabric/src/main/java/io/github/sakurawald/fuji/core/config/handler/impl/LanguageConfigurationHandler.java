@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.exception.FailedToLoadResourceException;
+import io.github.sakurawald.fuji.core.config.transformer.impl.MoveFileTransformer;
 import io.github.sakurawald.fuji.core.document.structure.DocString;
 import java.nio.file.Path;
 import java.util.Map;
@@ -19,6 +20,7 @@ public class LanguageConfigurationHandler extends ResourceConfigurationHandler {
 
     public LanguageConfigurationHandler(@NotNull String languageCode) {
         super(getLanguageFilePath(languageCode), getLanguageFileClassPath(languageCode));
+        this.installTransformer(new MoveFileTransformer(Fuji.MOD_CONFIG_PATH.resolve("lang"), Fuji.MOD_CONFIG_PATH.resolve("languages")));
     }
 
     public static @NotNull Path getLanguageFilePath(@NotNull String languageCode) {

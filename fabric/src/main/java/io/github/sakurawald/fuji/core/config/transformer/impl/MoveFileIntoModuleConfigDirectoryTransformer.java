@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.core.config.transformer.impl;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
+import java.nio.file.Path;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
     """)
 public class MoveFileIntoModuleConfigDirectoryTransformer extends MoveFileTransformer {
 
-    public MoveFileIntoModuleConfigDirectoryTransformer(@NotNull Class<?> moduleSpecifier) {
-        super(ReflectionUtil.computeModuleConfigPath(moduleSpecifier));
+    public MoveFileIntoModuleConfigDirectoryTransformer(@NotNull Path sourceFile, @NotNull Class<?> moduleSpecifier) {
+        super(sourceFile, ReflectionUtil.computeModuleConfigPath(moduleSpecifier));
     }
 }
