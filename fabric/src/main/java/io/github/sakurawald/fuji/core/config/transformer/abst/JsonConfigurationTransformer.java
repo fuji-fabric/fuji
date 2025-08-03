@@ -42,7 +42,7 @@ public abstract class JsonConfigurationTransformer extends ConfigurationTransfor
     }
 
     @SneakyThrows(IOException.class)
-    public void writeStorage(@NotNull DocumentContext context) {
+    public void writeJsonDocumentContextToOriginalFile(@NotNull DocumentContext context) {
         this.logOperation("Write storage.");
         String transformedJson = BaseConfigurationHandler.getGson().toJson(context.json());
         Files.writeString(this.targetFilePath, transformedJson);

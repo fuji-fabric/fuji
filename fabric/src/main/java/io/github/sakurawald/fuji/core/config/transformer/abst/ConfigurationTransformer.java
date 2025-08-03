@@ -31,6 +31,6 @@ public abstract class ConfigurationTransformer {
         finalArgs[0] = this.targetFilePath;
         System.arraycopy(args, 0, finalArgs, 1, args.length);
 
-        LogUtil.warn("Apply the transformer installed on the file `{}`\n => " + message, finalArgs);
+        LogUtil.warn("Apply the transformer installed on the file `{}`\n => Message: " + message, finalArgs);
     }
 }

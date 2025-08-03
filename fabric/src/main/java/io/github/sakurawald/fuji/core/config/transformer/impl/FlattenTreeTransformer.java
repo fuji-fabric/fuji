@@ -6,88 +6,103 @@ import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.transformer.abst.JsonConfigurationTransformer;
-import lombok.SneakyThrows;
-
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Function;
+import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
+@ForDeveloper("""
+    This transformer is used to flatten a tree represented in single file into multiple files.
+    """)
 public class FlattenTreeTransformer extends JsonConfigurationTransformer {
 
+    private final String rootTreePath;
     private final String subtreeIdentifier;
-    private final String jsonPath;
-    private final String topLevel;
-    private final Function<String, Path> level2outPath;
+    private final String walkingPath;
+    private final Function<String, Path> outputFilePathMapper;
 
     private boolean overrideTheOriginalFileWithSkeletonTree;
 
-    public FlattenTreeTransformer(String jsonPath, String subtreeIdentifier, String topLevel, Function<String, Path> level2outPath) {
+    public FlattenTreeTransformer(@NotNull String rootTreePath, @NotNull String subtreeIdentifier, @NotNull String walkingPath, @NotNull Function<String, Path> outputFilePathMapper) {
+        this.rootTreePath = rootTreePath;
         this.subtreeIdentifier = subtreeIdentifier;
-        this.jsonPath = jsonPath;
-        this.topLevel = topLevel;
-        this.level2outPath = level2outPath;
+        this.walkingPath = walkingPath;
+        this.outputFilePathMapper = outputFilePathMapper;
     }
 
     @SneakyThrows(IOException.class)
-    private void flatten(JsonObject parent, String level) {
-        /* find and walk submodule */
-        parent.keySet().stream()
-            .filter(key -> parent.get(key).isJsonObject() && parent.getAsJsonObject(key).has(subtreeIdentifier))
+    private void flatten(@NotNull JsonObject parentTree, @NotNull String walkingPath) {
+        /* Filter all subtree using the subtree identifier. */
+        parentTree.keySet()
+            .stream()
+            .filter(key -> parentTree.get(key).isJsonObject() && parentTree.getAsJsonObject(key).has(subtreeIdentifier))
             .forEach(key -> {
-                String nextLevel = StringUtil.trimPathString(level + "." + key);
-                flatten(parent.getAsJsonObject(key), nextLevel);
+                String newWalkingPath = StringUtil.trimPathString(walkingPath + "." + key);
+                flatten(parentTree.getAsJsonObject(key), newWalkingPath);
             });
 
-        /* create top-level file to store the tree */
-        parent.remove(subtreeIdentifier);
+        /* Remove the subtree from the original json tree. */
+        parentTree.remove(subtreeIdentifier);
 
-        // remove empty subtree
-        parent.keySet().stream().toList().stream()
-            .filter(key -> parent.get(key).isJsonObject() && JsonUtil.isEmpty(parent.getAsJsonObject(key)))
-            .forEach(parent::remove);
+        /* Remove the empty-tree from the original json tree. */
+        parentTree.keySet()
+            .stream()
+            .toList()
+            .stream()
+            .filter(key -> parentTree.get(key).isJsonObject() && JsonUtil.isEmpty(parentTree.getAsJsonObject(key)))
+            .forEach(parentTree::remove);
 
-        // if the tree is not empty, migrate it to a standalone file
-        Path currentTreeOutPath = level2outPath.apply(level);
-        if (!JsonUtil.isEmpty(parent) && Files.notExists(currentTreeOutPath)) {
-            logOperation("flatten tree `{}` into the file `{}`", level, currentTreeOutPath);
+        /* If the specified subtree is not empty, migrate it into a standalone file. */
+        Path currentTreeOutPath = outputFilePathMapper.apply(walkingPath);
+        if (!JsonUtil.isEmpty(parentTree) && Files.notExists(currentTreeOutPath)) {
+            logOperation("Flatten the tree `{}` into the file `{}`", walkingPath, currentTreeOutPath);
             Files.createDirectories(currentTreeOutPath.getParent());
-            String json = BaseConfigurationHandler.getGson().toJson(parent);
+            String json = BaseConfigurationHandler.getGson().toJson(parentTree);
             Files.writeString(currentTreeOutPath, json);
-
             this.overrideTheOriginalFileWithSkeletonTree = true;
         }
 
-        /* remove all keys on leave */
-        parent.keySet().stream().toList()
-            .forEach(parent::remove);
+        /* Remove all keys on leave. */
+        parentTree.keySet()
+            .stream()
+            .toList()
+            .forEach(parentTree::remove);
     }
 
-    private JsonObject makeSkeletonTree(JsonObject parent) {
-        parent.keySet().stream().toList().stream()
+    private JsonObject makeSkeletonTree(@NotNull JsonObject rootTree) {
+        rootTree.keySet().stream().toList()
+            .stream()
             .filter(key -> !key.equals(subtreeIdentifier))
             .forEach(key -> {
-                if (parent.get(key).isJsonObject()) {
-                    makeSkeletonTree(parent.getAsJsonObject(key));
+                if (rootTree.get(key).isJsonObject()) {
+                    /* Go deeper. */
+                    JsonObject subTree = rootTree.getAsJsonObject(key);
+                    makeSkeletonTree(subTree);
 
-                    // remove the subtree if empty. (the subtree will not be empty, if it is a sub-module
-                    if (JsonUtil.isEmpty(parent.getAsJsonObject(key))) parent.remove(key);
-                } else parent.remove(key);
+                    /* Remove the empty subtree. */
+                    if (JsonUtil.isEmpty(subTree)) {
+                        rootTree.remove(key);
+                    }
+                } else {
+                    rootTree.remove(key);
+                }
             });
-        return parent;
+        return rootTree;
     }
 
     @Override
     public void apply() {
         DocumentContext context = this.getJsonDocumentContext();
-
-        JsonObject root = (JsonObject) getJsonPath(context, this.jsonPath);
-        this.flatten(root, this.topLevel);
+        JsonObject rootTree = (JsonObject) getJsonPath(context, this.rootTreePath);
+        this.flatten(rootTree, this.walkingPath);
 
         if (overrideTheOriginalFileWithSkeletonTree) {
-            JsonObject skeletonTree = (JsonObject) getJsonPath(context, this.jsonPath);
-            setJsonPath(context, this.jsonPath, makeSkeletonTree(skeletonTree));
-            writeStorage(context);
+            JsonObject skeletonTree = (JsonObject) getJsonPath(context, this.rootTreePath);
+            setJsonPath(context, this.rootTreePath, makeSkeletonTree(skeletonTree));
+            writeJsonDocumentContextToOriginalFile(context);
         }
     }
 

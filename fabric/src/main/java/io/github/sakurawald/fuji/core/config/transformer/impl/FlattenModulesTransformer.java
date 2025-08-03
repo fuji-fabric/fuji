@@ -9,7 +9,7 @@ import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 
 import java.nio.file.Files;
 
-
+@Deprecated
 public class FlattenModulesTransformer extends JsonConfigurationTransformer {
 
     @Override
@@ -24,7 +24,8 @@ public class FlattenModulesTransformer extends JsonConfigurationTransformer {
             FlattenTreeTransformer flattenTreeTransformer = new FlattenTreeTransformer(
                 modulesPath + "." + topLevelModule
                 , ModuleManager.ENABLE_SUPPLIER_KEY
-                , topLevelModule, (level) -> ReflectionUtil.computeModuleConfigPath(level).resolve(BaseConfigurationHandler.CONFIG_JSON));
+                , topLevelModule
+                , (walkingPath) -> ReflectionUtil.computeModuleConfigPath(walkingPath).resolve(BaseConfigurationHandler.CONFIG_JSON));
 
             flattenTreeTransformer.configure(this.getTargetFilePath());
             flattenTreeTransformer.apply();
