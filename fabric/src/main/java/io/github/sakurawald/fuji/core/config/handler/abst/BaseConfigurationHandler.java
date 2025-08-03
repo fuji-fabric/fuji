@@ -115,6 +115,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
             .create();
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public BaseConfigurationHandler<T> installTransformer(ConfigurationTransformer transformer) {
         this.installedTransformers.add(transformer);
         return this;

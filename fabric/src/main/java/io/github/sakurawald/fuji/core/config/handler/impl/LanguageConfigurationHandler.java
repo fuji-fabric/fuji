@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.exception.FailedToLoadResourceException;
+import io.github.sakurawald.fuji.core.config.structure.StringOccurenceMap;
 import io.github.sakurawald.fuji.core.config.transformer.impl.MoveFileTransformer;
 import io.github.sakurawald.fuji.core.document.structure.DocString;
 import java.nio.file.Path;
@@ -39,7 +40,7 @@ public class LanguageConfigurationHandler extends ResourceConfigurationHandler {
     }
 
     public static @NotNull String toLanguageCode(@NotNull String languageFileName) {
-        return languageFileName.replace(".json","");
+        return languageFileName.replace(".json", "");
     }
 
     @Override
@@ -86,6 +87,43 @@ public class LanguageConfigurationHandler extends ResourceConfigurationHandler {
             LogUtil.debug("Failed to make the default configuration model from `{}` resource path. (Fallback to the `{}`)", this.resourceClassPath, FALLBACK_LANGUAGE_FILE_CLASS_PATH);
             return readJsonTreeFromResource(FALLBACK_LANGUAGE_FILE_CLASS_PATH);
         }
+    }
+
+    @Override
+    protected void validateModel(@NotNull JsonObject dataTree, @NotNull JsonObject schemaTree) {
+        super.validateModel(dataTree, schemaTree);
+        validateArgumentArity(dataTree, schemaTree);
+    }
+
+    private void validateJavaFormatterArgumentArity(JsonObject dataTree, @NotNull String languageKey, @NotNull String dataValue, @NotNull String schemaValue) {
+        StringOccurenceMap schemaMap = StringOccurenceMap.JavaFormatterLanguage.makeOccurenceMap(schemaValue);
+        StringOccurenceMap dataMap = StringOccurenceMap.JavaFormatterLanguage.makeOccurenceMap(dataValue);
+
+        if (!schemaMap.equals(dataMap)) {
+            LogUtil.warn("""
+
+                [Malformed Language Value Detected]
+                The number of arguments for Java String Formatter does not match between [actual language value] and [expected language value].
+                Override the [actual language value] to match it now.
+
+                ◉ Language File: {}
+                ◉ Language Key: {}
+                ◉ Actual Language Value: {}
+                ◉ Expected Language Value: {}
+                """, this.getPath(), languageKey, dataValue, schemaValue);
+            dataTree.addProperty(languageKey, schemaValue);
+        }
+    }
+
+    private void validateArgumentArity(JsonObject dataTree, @NotNull JsonObject schemaTree) {
+        schemaTree
+            .keySet()
+            .forEach(key -> {
+                String schemaValue = schemaTree.get(key).getAsString();
+                String dataValue = dataTree.get(key).getAsString();
+                validateJavaFormatterArgumentArity(dataTree, key, dataValue, schemaValue);
+            });
+
     }
 
 }

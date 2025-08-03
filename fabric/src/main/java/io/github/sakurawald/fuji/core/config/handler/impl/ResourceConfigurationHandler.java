@@ -43,7 +43,7 @@ public abstract class ResourceConfigurationHandler extends BaseConfigurationHand
         return JsonParser.parseReader(reader);
     }
 
-    private void mergeTree(@NotNull JsonObject dataTree, @NotNull JsonObject schemaTree) {
+    private void mergeTrees(@NotNull JsonObject dataTree, @NotNull JsonObject schemaTree) {
         schemaTree
             .keySet()
             .stream()
@@ -55,13 +55,16 @@ public abstract class ResourceConfigurationHandler extends BaseConfigurationHand
             });
     }
 
+    protected void validateModel(@NotNull JsonObject dataTree, @NotNull JsonObject schemaTree) {
+        mergeTrees(dataTree, schemaTree);
+    }
+
     @Override
     public void readStorage() {
         super.readStorage();
 
-        /* Add missing configuration keys. */
         if (this.model != null) {
-            mergeTree(this.model.getAsJsonObject(), this.getDefaultModel().getAsJsonObject());
+            validateModel(this.model.getAsJsonObject(), this.getDefaultModel().getAsJsonObject());
             this.writeStorage();
         }
     }
