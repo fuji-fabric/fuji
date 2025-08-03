@@ -21,7 +21,7 @@ public class StringOccurenceMap {
 
 
     public static class JavaFormatterLanguage {
-        private static final Pattern javaFormatterLanguage = Pattern.compile("(%[bcdfsn%])");
+        private static final Pattern javaFormatterLanguage = Pattern.compile("(%[%bcdfsn])");
         public static @NotNull StringOccurenceMap makeOccurenceMap(@NotNull String inputString) {
             StringOccurenceMap result = new StringOccurenceMap();
             Matcher matcher = javaFormatterLanguage.matcher(inputString);
