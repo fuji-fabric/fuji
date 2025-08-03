@@ -8,8 +8,8 @@ import io.github.classgraph.ScanResult;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.handler.impl.LanguageConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
@@ -114,7 +114,7 @@ public class GenerateDocStringTest {
         LogUtil.info("Write {} doc strings into the default language file.", docStringList.size());
 
         /* Sort the json. */
-        defaultLanguageJson = TextHelper.Loader.makeSortedLanguageJsonObject(defaultLanguageJson);
+        defaultLanguageJson = LanguageConfigurationHandler.makeSortedLanguageJsonObject(defaultLanguageJson);
 
         /* Override the default language file. */
         String jsonString = BaseConfigurationHandler.getGson().toJson(defaultLanguageJson);

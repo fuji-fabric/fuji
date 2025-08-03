@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.context.CommandContext;
@@ -20,7 +19,6 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ResourceConfigurationH
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
-import io.github.sakurawald.fuji.core.document.structure.DocString;
 import io.github.sakurawald.fuji.core.structure.Pair;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
@@ -210,15 +207,14 @@ public class TextHelper {
 
     @ForDeveloper("The functions used to load language file from storage into memory, and resolve the suitable language json for given audience.")
     public static class Loader {
-        private static final String LANGUAGE_FILE_PATH = "lang/";
         public static final Map<String, String> PLAYER_2_LANGUAGE_CODE = new ConcurrentHashMap<>();
         public static final Map<String, JsonObject> LANGUAGE_CODE_2_LANGUAGE_JSON = new ConcurrentHashMap<>();
         private static final JsonObject UNSUPPORTED_LANGUAGE_MARKER = new JsonObject();
 
         private static void writeDefaultLanguageFilesIfAbsent() {
             for (String languageFileName : getLanguageFileNameGraph()) {
-                new LanguageConfigurationHandler(LANGUAGE_FILE_PATH + languageFileName)
-                    .readStorage();
+                String languageCode = LanguageConfigurationHandler.toLanguageCode(languageFileName);
+                loadResourceConfigurationHandler(languageCode);
             }
         }
 
@@ -249,8 +245,8 @@ public class TextHelper {
             }
 
             try {
-                ResourceConfigurationHandler languageFileHandler = makeResourceConfigurationHandler(languageCode);
-                JsonObject languageJsonObject = languageFileHandler.model().getAsJsonObject();
+                ResourceConfigurationHandler languageConfigurationHandler = loadResourceConfigurationHandler(languageCode);
+                JsonObject languageJsonObject = languageConfigurationHandler.model().getAsJsonObject();
                 fixParserInput(languageJsonObject);
                 LANGUAGE_CODE_2_LANGUAGE_JSON.put(languageCode, languageJsonObject);
                 LogUtil.info("Language {} loaded.", languageCode);
@@ -271,21 +267,10 @@ public class TextHelper {
                 });
         }
 
-        private static @NotNull ResourceConfigurationHandler makeResourceConfigurationHandler(String languageCode) {
-            String languageFileName = getLanguageFileName(languageCode);
-            String languageFilePath = LANGUAGE_FILE_PATH + languageFileName;
-            LanguageConfigurationHandler languageFileHandler = new LanguageConfigurationHandler(languageFilePath) {
-                @Override
-                public void beforeWriteStorage() {
-                    this.model = makeSortedLanguageJsonObject((JsonObject) this.model);
-                }
-            };
+        private static @NotNull ResourceConfigurationHandler loadResourceConfigurationHandler(@NotNull String languageCode) {
+            LanguageConfigurationHandler languageFileHandler = new LanguageConfigurationHandler(languageCode);
             languageFileHandler.readStorage();
             return languageFileHandler;
-        }
-
-        private static @NotNull String getLanguageFileName(String languageCode) {
-            return languageCode + ".json";
         }
 
         @SuppressWarnings("StringSplitter")
@@ -367,36 +352,6 @@ public class TextHelper {
 
         private static boolean isUsingEnglishAsTheDefaultLanguage() {
             return getDefaultLanguageCode().equalsIgnoreCase("en_US");
-        }
-
-        public static JsonObject makeSortedLanguageJsonObject(@NotNull JsonObject original) {
-            Map<String, JsonElement> sortedMap = new TreeMap<>((a, b) -> {
-                boolean aIsDocString = a.startsWith(DocString.DOC_STRING_KEY_PREFIX);
-                boolean bIsDocString = b.startsWith(DocString.DOC_STRING_KEY_PREFIX);
-
-                if (aIsDocString && !bIsDocString) return +1;
-                if (!aIsDocString && bIsDocString) return -1;
-
-                //noinspection ConstantValue
-                if (aIsDocString && bIsDocString) {
-                    long aId = DocString.parseDocStringId(a);
-                    long bId = DocString.parseDocStringId(b);
-                    return Long.compare(aId, bId);
-                }
-
-                return a.compareTo(b);
-            });
-
-            for (Map.Entry<String, JsonElement> entry : original.entrySet()) {
-                sortedMap.put(entry.getKey(), entry.getValue());
-            }
-
-            JsonObject sortedJson = new JsonObject();
-            for (Map.Entry<String, JsonElement> entry : sortedMap.entrySet()) {
-                sortedJson.add(entry.getKey(), entry.getValue());
-            }
-
-            return sortedJson;
         }
 
         public static boolean isUnSupportedLanguageJsonObject(JsonObject languageJson) {

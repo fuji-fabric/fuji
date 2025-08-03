@@ -26,28 +26,24 @@ import java.nio.file.Path;
     """)
 public abstract class ResourceConfigurationHandler extends BaseConfigurationHandler<JsonElement> {
 
-    protected final String resourcePath;
+    protected final String resourceClassPath;
 
-    private ResourceConfigurationHandler(Path path, String resourcePath) {
+    protected ResourceConfigurationHandler(@NotNull Path path, @NotNull String resourceClassPath) {
         super(path);
-        this.resourcePath = resourcePath;
-    }
-
-    public ResourceConfigurationHandler(@NotNull String resourcePath) {
-        this(Fuji.MOD_CONFIG_PATH.resolve(resourcePath), resourcePath);
+        this.resourceClassPath = resourceClassPath;
     }
 
     @SneakyThrows(IOException.class)
-    protected static @Nullable JsonElement readJsonTreeFromResource(@NotNull String resourcePath) {
-        InputStream inputStream = Fuji.class.getResourceAsStream(resourcePath);
+    protected static @Nullable JsonElement readJsonTreeFromResource(@NotNull String resourceClassPath) {
+        InputStream inputStream = Fuji.class.getResourceAsStream(resourceClassPath);
         if (inputStream == null) {
-            throw new FailedToLoadResourceException("Failed to load resource from virtual jar stream: " + resourcePath);
+            throw new FailedToLoadResourceException("Failed to load specified resource file from class path: %s".formatted(resourceClassPath));
         }
         @Cleanup Reader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
         return JsonParser.parseReader(reader);
     }
 
-    private void mergeTree(JsonObject dataTree, JsonObject schemaTree) {
+    private void mergeTree(@NotNull JsonObject dataTree, @NotNull JsonObject schemaTree) {
         schemaTree
             .keySet()
             .stream()

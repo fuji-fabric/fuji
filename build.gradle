@@ -235,13 +235,15 @@ allprojects { p ->
         dependsOn('copyPullFromCrowdinResources', 'copyPushToCrowdinResources')
     }
 
+    var languageDirectoryName = "languages"
+
     tasks.register('copyPullFromCrowdinResources', Copy) {
         println("Copy pull-from-crowdin language files from source to destination.")
 
         def sourceDir = project(":crowdin").file("pull-from-crowdin/")
         println("The source dir: " + sourceDir)
 
-        def destinationDir = file("${layout.buildDirectory.get()}/resources/main/lang/")
+        def destinationDir = file("${layout.buildDirectory.get()}/resources/main/${languageDirectoryName}/")
         println("The destination dir: " + destinationDir)
 
         from(sourceDir)
@@ -256,7 +258,7 @@ allprojects { p ->
         def sourceDir = project(":crowdin").file("push-to-crowdin/")
         println("The source dir: " + sourceDir)
 
-        def destinationDir = file("${layout.buildDirectory.get()}/resources/main/lang/")
+        def destinationDir = file("${layout.buildDirectory.get()}/resources/main/${languageDirectoryName}/")
         println("The destination dir: " + destinationDir)
 
         from(sourceDir)

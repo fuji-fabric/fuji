@@ -1,26 +1,88 @@
 package io.github.sakurawald.fuji.core.config.handler.impl;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.exception.FailedToLoadResourceException;
+import io.github.sakurawald.fuji.core.document.structure.DocString;
+import java.nio.file.Path;
+import java.util.Map;
+import java.util.TreeMap;
 import org.jetbrains.annotations.NotNull;
 
 public class LanguageConfigurationHandler extends ResourceConfigurationHandler {
 
-    public static final String FALLBACK_LANGUAGE_CONFIGURATION_DEFAULT_MODEL_RESOURCE_PATH = "lang/en_US.json";
+    public static final String LANGUAGE_DIRECTORY_NAME = "languages";
+    public static final String LANGUAGE_FILE_CLASS_PATH_PREFIX = "/" + LANGUAGE_DIRECTORY_NAME + "/";
+    public static final String FALLBACK_LANGUAGE_FILE_CLASS_PATH = LANGUAGE_FILE_CLASS_PATH_PREFIX + toLanguageFileName("en_US");
 
-    public LanguageConfigurationHandler(@NotNull String resourcePath) {
-        super(resourcePath);
+    public LanguageConfigurationHandler(@NotNull String languageCode) {
+        super(getLanguageFilePath(languageCode), getLanguageFileClassPath(languageCode));
+    }
+
+    public static @NotNull Path getLanguageFilePath(@NotNull String languageCode) {
+        String languageFileName = toLanguageFileName(languageCode);
+        return Fuji.MOD_CONFIG_PATH
+            .resolve(LANGUAGE_DIRECTORY_NAME)
+            .resolve(languageFileName);
+    }
+
+    public static @NotNull String getLanguageFileClassPath(@NotNull String languageCode) {
+        return LANGUAGE_FILE_CLASS_PATH_PREFIX + toLanguageFileName(languageCode);
+    }
+
+    public static @NotNull String toLanguageFileName(@NotNull String languageCode) {
+        return languageCode + ".json";
+    }
+
+    public static @NotNull String toLanguageCode(@NotNull String languageFileName) {
+        return languageFileName.replace(".json","");
+    }
+
+    @Override
+    public void beforeWriteStorage() {
+        this.model = makeSortedLanguageJsonObject((JsonObject) this.model);
+    }
+
+    public static @NotNull JsonObject makeSortedLanguageJsonObject(@NotNull JsonObject original) {
+        Map<String, JsonElement> sortedMap = new TreeMap<>((a, b) -> {
+            boolean aIsDocString = a.startsWith(DocString.DOC_STRING_KEY_PREFIX);
+            boolean bIsDocString = b.startsWith(DocString.DOC_STRING_KEY_PREFIX);
+
+            if (aIsDocString && !bIsDocString) return +1;
+            if (!aIsDocString && bIsDocString) return -1;
+
+            //noinspection ConstantValue
+            if (aIsDocString && bIsDocString) {
+                long aId = DocString.parseDocStringId(a);
+                long bId = DocString.parseDocStringId(b);
+                return Long.compare(aId, bId);
+            }
+
+            return a.compareTo(b);
+        });
+
+        for (Map.Entry<String, JsonElement> entry : original.entrySet()) {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+
+        JsonObject sortedJson = new JsonObject();
+        for (Map.Entry<String, JsonElement> entry : sortedMap.entrySet()) {
+            sortedJson.add(entry.getKey(), entry.getValue());
+        }
+
+        return sortedJson;
     }
 
     @Override
     protected JsonElement getDefaultModel() {
         // NOTE: When `language` module is enabled, a player joined with an un-supported language `aa_BB` the first time, a file `lang/aa_BB.json` will be created.
         try {
-            return readJsonTreeFromResource(this.resourcePath);
+            return readJsonTreeFromResource(this.resourceClassPath);
         } catch (FailedToLoadResourceException e) {
-            LogUtil.debug("Failed to make the default configuration model from `{}` resource path. (Fallback to the `{}`)", this.resourcePath, FALLBACK_LANGUAGE_CONFIGURATION_DEFAULT_MODEL_RESOURCE_PATH);
-            return readJsonTreeFromResource(FALLBACK_LANGUAGE_CONFIGURATION_DEFAULT_MODEL_RESOURCE_PATH);
+            LogUtil.debug("Failed to make the default configuration model from `{}` resource path. (Fallback to the `{}`)", this.resourceClassPath, FALLBACK_LANGUAGE_FILE_CLASS_PATH);
+            return readJsonTreeFromResource(FALLBACK_LANGUAGE_FILE_CLASS_PATH);
         }
     }
 

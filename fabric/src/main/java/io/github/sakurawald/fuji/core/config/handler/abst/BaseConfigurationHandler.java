@@ -73,7 +73,6 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     protected final @NotNull Path path;
     protected T model;
 
-    /* Transformers applied in this file. */
     private final List<ConfigurationTransformer> installedTransformers = new ArrayList<>();
 
     public BaseConfigurationHandler(@NotNull Path path) {
