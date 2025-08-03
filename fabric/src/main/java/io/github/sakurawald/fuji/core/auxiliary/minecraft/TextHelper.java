@@ -422,8 +422,8 @@ public class TextHelper {
             return text.getString();
         }
 
-        public static MutableText replaceTextWithMarker(@NotNull Text text, @NotNull String textName, @NotNull Supplier<Text> replacementSupplier) {
-            return replaceTextWithRegex(text, "\\[%s\\]".formatted(textName), replacementSupplier);
+        public static MutableText replaceTextWithNamedArgument(@NotNull Text text, @NotNull String namedArgumentName, @NotNull Supplier<Text> replacementSupplier) {
+            return replaceTextWithRegex(text, "\\$\\{%s}".formatted(namedArgumentName), replacementSupplier);
         }
 
         public static MutableText replaceTextWithRegex(@NotNull Text text, @NotNull String regex, @NotNull Supplier<Text> nonMemorizedReplacementSupplier) {

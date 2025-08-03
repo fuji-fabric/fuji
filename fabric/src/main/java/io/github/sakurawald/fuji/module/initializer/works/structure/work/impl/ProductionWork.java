@@ -68,7 +68,7 @@ public class ProductionWork extends Work implements Schedulable {
             double rate = entry.getValue() * ((double) (3600 * 1000) / (Math.min(this.sample.sampleEndTimeMS, currentTimeMS) - this.sample.sampleStartTimeMS));
 
             Text text = TextHelper.getTextByKey(player, "works.production_work.prop.sample_counter.entry", entry.getValue(), rate);
-            text = TextHelper.Operators.replaceTextWithMarker(text, "item", ()->Text.translatable(key));
+            text = TextHelper.Operators.replaceTextWithNamedArgument(text, "item", () -> Text.translatable(key));
             ret.add(text);
         });
 

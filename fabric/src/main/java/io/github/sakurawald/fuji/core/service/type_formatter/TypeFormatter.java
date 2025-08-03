@@ -14,7 +14,7 @@ public class TypeFormatter {
         MutableText ret = Text.empty();
         type2amount.forEach((k, v) -> {
             Text text = TextHelper.getTextByKey(source, "types.entry", v);
-            text = TextHelper.Operators.replaceTextWithMarker(text, "type", () -> Text.translatable(k));
+            text = TextHelper.Operators.replaceTextWithNamedArgument(text, "type", () -> Text.translatable(k));
             ret.append(text);
         });
         return ret;
