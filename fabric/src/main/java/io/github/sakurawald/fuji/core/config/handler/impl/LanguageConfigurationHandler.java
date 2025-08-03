@@ -11,6 +11,7 @@ import io.github.sakurawald.fuji.core.document.structure.DocString;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Function;
 import org.jetbrains.annotations.NotNull;
 
 public class LanguageConfigurationHandler extends ResourceConfigurationHandler {
@@ -92,39 +93,38 @@ public class LanguageConfigurationHandler extends ResourceConfigurationHandler {
     @Override
     protected void validateModel(@NotNull JsonObject dataTree, @NotNull JsonObject schemaTree) {
         super.validateModel(dataTree, schemaTree);
-        validateArgumentArity(dataTree, schemaTree);
+        validateArguments(dataTree, schemaTree);
     }
 
-    private void validateJavaFormatterArgumentArity(JsonObject dataTree, @NotNull String languageKey, @NotNull String dataValue, @NotNull String schemaValue) {
-        StringOccurenceMap schemaMap = StringOccurenceMap.JavaFormatterLanguage.makeOccurenceMap(schemaValue);
-        StringOccurenceMap dataMap = StringOccurenceMap.JavaFormatterLanguage.makeOccurenceMap(dataValue);
+    private void validateArguments(@NotNull JsonObject dataTree, @NotNull JsonObject schemaTree) {
+        schemaTree
+            .keySet()
+            .forEach(key -> {
+                checkMalformedLanguageValue("Java String Formatter", StringOccurenceMap.JavaFormatterLanguage::makeOccurenceMap, key, dataTree, schemaTree);
+                checkMalformedLanguageValue("Named Arguments", StringOccurenceMap.NamedArgumentsLanguage::makeOccurenceMap, key, dataTree, schemaTree);
+            });
+    }
+
+    private void checkMalformedLanguageValue(@NotNull String checkName, @NotNull Function<String, StringOccurenceMap> mapper, @NotNull String languageKey, @NotNull JsonObject dataTree, @NotNull JsonObject schemaTree) {
+        String schemaValue = schemaTree.get(languageKey).getAsString();
+        String dataValue = dataTree.get(languageKey).getAsString();
+        StringOccurenceMap schemaMap = mapper.apply(schemaValue);
+        StringOccurenceMap dataMap = mapper.apply(dataValue);
 
         if (!schemaMap.equals(dataMap)) {
             LogUtil.warn("""
 
                 [Malformed Language Value Detected]
-                The number of arguments for Java String Formatter does not match between [actual language value] and [expected language value].
+                The number of arguments for [{}] does not match between [actual language value] and [expected language value].
                 Override the [actual language value] to match it now.
 
                 ◉ Language File: {}
                 ◉ Language Key: {}
                 ◉ Actual Language Value: {}
                 ◉ Expected Language Value: {}
-                """, this.getPath(), languageKey, dataValue, schemaValue);
+                """, checkName, this.getPath(), languageKey, dataValue, schemaValue);
             dataTree.addProperty(languageKey, schemaValue);
         }
     }
-
-    private void validateArgumentArity(JsonObject dataTree, @NotNull JsonObject schemaTree) {
-        schemaTree
-            .keySet()
-            .forEach(key -> {
-                String schemaValue = schemaTree.get(key).getAsString();
-                String dataValue = dataTree.get(key).getAsString();
-                validateJavaFormatterArgumentArity(dataTree, key, dataValue, schemaValue);
-            });
-
-    }
-
 }
 

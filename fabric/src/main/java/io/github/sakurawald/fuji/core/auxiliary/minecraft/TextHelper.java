@@ -422,18 +422,18 @@ public class TextHelper {
             return text.getString();
         }
 
-        public static MutableText replaceTextWithMarker(Text text, String marker, Supplier<Text> replacementSupplier) {
-            return replaceTextWithRegex(text, "\\[%s\\]".formatted(marker), replacementSupplier);
+        public static MutableText replaceTextWithMarker(@NotNull Text text, @NotNull String textName, @NotNull Supplier<Text> replacementSupplier) {
+            return replaceTextWithRegex(text, "\\[%s\\]".formatted(textName), replacementSupplier);
         }
 
-        public static MutableText replaceTextWithRegex(Text text, String regex, Supplier<Text> nonMemorizedReplacementSupplier) {
+        public static MutableText replaceTextWithRegex(@NotNull Text text, @NotNull String regex, @NotNull Supplier<Text> nonMemorizedReplacementSupplier) {
             // memorize the supplier
             nonMemorizedReplacementSupplier = makeMemoizeSupplier(nonMemorizedReplacementSupplier);
 
             return replaceText(text, Pattern.compile(regex), nonMemorizedReplacementSupplier);
         }
 
-        private static MutableText replaceText(Text text, Pattern pattern, Supplier<Text> replacementSupplier) {
+        private static MutableText replaceText(@NotNull Text text, @NotNull Pattern pattern, @NotNull Supplier<Text> replacementSupplier) {
             MutableText replacedText;
 
             /* process the atom */
