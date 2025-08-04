@@ -103,6 +103,16 @@ import net.minecraft.server.network.ServerPlayerEntity;
     5. `/lp group jailed permission set fuji.anti_build.interact_block.override.* false`
     <green>NOTE: You need to enable the `wildcard permission` feature in `luckperms` mod config.
     """)
+@ColorBox(id = 1754329012853L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ Restrict `jailed players` to using only allowed commands.
+    You can integrate with `command_permission` module.
+    Issue:
+    1. `/lp group jailed permission set fuji.permission.* false`
+    Dis-allow to use `all commands`.
+
+    2. `/lp group jailed permission set fuji.permission.back true`
+    Allow to use the `/back` command.
+    """)
 @ColorBox(id = 1753780761908L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Create a `jail` in your current position.
     Issue: `/jail create \\<jail-id\\>`
