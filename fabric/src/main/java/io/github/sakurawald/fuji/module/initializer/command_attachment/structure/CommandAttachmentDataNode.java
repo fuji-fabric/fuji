@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 public class CommandAttachmentDataNode {
 
     String id;
-    CommandAttachmentModel entries;
+    CommandAttachmentModel entries = new CommandAttachmentModel();
 
 }

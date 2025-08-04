@@ -27,6 +27,7 @@ import io.github.sakurawald.fuji.module.initializer.command_attachment.structure
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.EntityCommandAttachmentNode;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.ItemStackCommandAttachmentNode;
 import net.minecraft.entity.Entity;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 
@@ -202,25 +203,22 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     private static int $queryItem(@CommandSource ServerPlayerEntity player) {
         return CommandHelper.Pattern.withItemInMainHand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
             String uuid = UuidHelper.getAttachedUuid(ItemStackHelper.CustomData.getCustomDataNbt(mainHandStack));
-            CommandAttachmentService.queryAttachment(player, uuid);
-            return CommandHelper.Return.SUCCESS;
+            return CommandAttachmentService.queryAttachment(player.getCommandSource(), uuid);
         });
     }
 
     @Document(id = 1751826488228L, value = "Query all attached commands in the entity.")
     @CommandNode("query-entity")
-    private static int $queryEntity(@CommandSource ServerPlayerEntity player, Entity entity) {
+    private static int $queryEntity(@CommandSource ServerCommandSource source, Entity entity) {
         String uuid = entity.getUuidAsString();
-        CommandAttachmentService.queryAttachment(player, uuid);
-        return CommandHelper.Return.SUCCESS;
+        return CommandAttachmentService.queryAttachment(source, uuid);
     }
 
     @Document(id = 1751826492923L, value = "Query all attached commands in the block.")
     @CommandNode("query-block")
-    private static int $queryBlock(@CommandSource ServerPlayerEntity player, BlockPos blockPos) {
-        String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
-        CommandAttachmentService.queryAttachment(player, uuid);
-        return CommandHelper.Return.SUCCESS;
+    private static int $queryBlock(@CommandSource ServerCommandSource source, BlockPos blockPos) {
+        String uuid = UuidHelper.getAttachedUuid(source.getWorld(), blockPos);
+        return CommandAttachmentService.queryAttachment(source, uuid);
     }
 
     @Override
