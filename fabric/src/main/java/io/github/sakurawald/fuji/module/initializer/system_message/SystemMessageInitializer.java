@@ -97,7 +97,7 @@ public class SystemMessageInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<SystemMessageConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, SystemMessageConfigModel.class);
 
     public static @Nullable MutableText modifyTranslatableText(String translatableKey, Object... args) {
-        Map<String, String> key2value = config.model().key2value;
+        Map<String, String> key2value = config.model().rules;
         if (key2value.containsKey(translatableKey)) {
             /* Prevent hijack too early. */
             if (ServerHelper.getServer() == null) {

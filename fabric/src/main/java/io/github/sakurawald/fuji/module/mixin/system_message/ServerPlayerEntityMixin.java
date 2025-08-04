@@ -25,7 +25,7 @@ public abstract class ServerPlayerEntityMixin {
         if (text.getContent() instanceof TranslatableTextContent translatableTextContent) {
             String translatableKey = translatableTextContent.getKey();
 
-            Map<String, String> key2value = SystemMessageInitializer.config.model().key2value;
+            Map<String, String> key2value = SystemMessageInitializer.config.model().rules;
             // NOTE: If the value is specified to null, then it means we should cancel the sending of it.
             if (key2value.containsKey(translatableKey) && key2value.get(translatableKey) == null) {
                 ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;

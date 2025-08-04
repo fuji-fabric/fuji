@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.gameplay.carpet.fake_player_manager.config.model;
 
+import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,8 @@ public class FakePlayerManagerConfigModel {
         Rules are matched from up to down.
         The first matched rule will be used.
         """)
-    public List<List<Integer>> caps_limit_rule = new ArrayList<>() {
+    @SerializedName(value = "caps_limit_rules", alternate = "caps_limit_rule")
+    public List<List<Integer>> caps_limit_rules = new ArrayList<>() {
         {
             this.add(List.of(1, 0, 2));
         }

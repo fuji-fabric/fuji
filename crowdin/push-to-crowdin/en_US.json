@@ -893,7 +893,7 @@
   "docstring.1751826861498": "The `icon` used for this `motd` entry.\n\nThe `icon` must be 64x64 png image.\n",
   "docstring.1751826866342": "Customize the MOTD of the server.\n",
   "docstring.1751826870516": "Should we send a warning message for no movement?\n",
-  "docstring.1751826873894": "Defined `warmup` entry.\n",
+  "docstring.1751826873894": "Defined `warmup` rules.\n",
   "docstring.1751826877229": "The `target command` and `warmup time in ms`.\n",
   "docstring.1751826879068": "The `regex` expression used to match the `target command`.\n",
   "docstring.1751826881411": "The `warmup time` in ms.\n",

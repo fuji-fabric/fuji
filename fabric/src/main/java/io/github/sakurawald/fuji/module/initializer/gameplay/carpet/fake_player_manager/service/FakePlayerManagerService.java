@@ -64,7 +64,7 @@ public class FakePlayerManagerService {
         int currentMinutes = currentTime.getHour() * 60 + currentTime.getMinute();
 
         Optional<List<Integer>> first = FakePlayerManagerInitializer.config.model()
-            .caps_limit_rule
+            .caps_limit_rules
             .stream()
             .filter(it -> currentDays >= it.get(0) && currentMinutes >= it.get(1))
             .findFirst();

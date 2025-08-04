@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.system_message.config.model;
 
+import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 
 import java.util.HashMap;
@@ -15,7 +16,8 @@ public class SystemMessageConfigModel {
         If the `value` is `null`, then it means `cancel` the sending of this message.
 
         """)
-    public Map<String, String> key2value = new HashMap<>() {
+    @SerializedName(value = "rules", alternate = "key2value")
+    public Map<String, String> rules = new HashMap<>() {
         {
             this.put("commands.seed.success", "<rainbow>Seeeeeeeeeeed: %s");
         }
