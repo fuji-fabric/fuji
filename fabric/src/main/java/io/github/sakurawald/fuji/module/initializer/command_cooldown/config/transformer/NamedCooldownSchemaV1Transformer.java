@@ -7,12 +7,18 @@ import com.jayway.jsonpath.DocumentContext;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.config.transformer.abst.JsonConfigurationTransformer;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.CommandCooldownInitializer;
+import java.nio.file.Files;
 
 public class NamedCooldownSchemaV1Transformer extends JsonConfigurationTransformer {
 
     @SuppressWarnings({"UnnecessaryLocalVariable", "SizeReplaceableByIsEmpty"})
     @Override
     public void apply() {
+        /* Skip the transformation if this is the first time use. */
+        if (!Files.exists(getTargetFilePath())) {
+            return;
+        }
+
         /* Check requisition. */
         DocumentContext context = getJsonDocumentContext();
         JsonArray jsonArray = context.read("$.named_cooldown.list.*.timestamp");
