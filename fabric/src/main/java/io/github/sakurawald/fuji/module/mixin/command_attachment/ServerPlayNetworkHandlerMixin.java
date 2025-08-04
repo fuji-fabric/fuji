@@ -2,8 +2,8 @@ package io.github.sakurawald.fuji.module.mixin.command_attachment;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.UuidHelper;
-import io.github.sakurawald.fuji.module.initializer.command_attachment.CommandAttachmentInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
+import io.github.sakurawald.fuji.module.initializer.command_attachment.service.CommandAttachmentService;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
@@ -28,7 +28,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
             String uuid = UuidHelper.getAttachedUuid(ItemStackHelper.CustomData.getCustomDataNbt(mainHandStack));
             ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
 
-            CommandAttachmentInitializer.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.LEFT, InteractType.BOTH));
+            CommandAttachmentService.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.LEFT, InteractType.BOTH));
         }
 
     }

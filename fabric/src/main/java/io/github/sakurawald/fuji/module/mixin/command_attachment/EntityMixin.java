@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.module.mixin.command_attachment;
 
-import io.github.sakurawald.fuji.module.initializer.command_attachment.CommandAttachmentInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
+import io.github.sakurawald.fuji.module.initializer.command_attachment.service.CommandAttachmentService;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
@@ -25,7 +25,7 @@ public abstract class EntityMixin {
         if (hand == Hand.MAIN_HAND) {
             String uuid = entity.getUuidAsString();
 
-            CommandAttachmentInitializer.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.RIGHT, InteractType.BOTH));
+            CommandAttachmentService.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.RIGHT, InteractType.BOTH));
         }
     }
 }
