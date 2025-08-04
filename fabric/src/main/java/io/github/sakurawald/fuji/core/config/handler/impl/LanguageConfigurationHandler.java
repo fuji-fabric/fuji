@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.config.exception.FailedToLoadResourceException;
 import io.github.sakurawald.fuji.core.config.structure.StringOccurenceMap;
 import io.github.sakurawald.fuji.core.config.transformer.impl.MoveFileTransformer;
@@ -97,15 +98,19 @@ public class LanguageConfigurationHandler extends ResourceConfigurationHandler {
     }
 
     private void validateArguments(@NotNull JsonObject dataTree, @NotNull JsonObject schemaTree) {
+        if (!Configs.MAIN_CONTROL_CONFIG.model().core.language.validate_arguments) {
+            return;
+        }
+
         schemaTree
             .keySet()
             .forEach(key -> {
-                checkMalformedLanguageValue("Java String Formatter", StringOccurenceMap.JavaFormatterLanguage::makeOccurenceMap, key, dataTree, schemaTree);
-                checkMalformedLanguageValue("Named Arguments", StringOccurenceMap.NamedArgumentsLanguage::makeOccurenceMap, key, dataTree, schemaTree);
+                validateArgumentCount("Java String Formatter", StringOccurenceMap.JavaFormatterLanguage::makeOccurenceMap, key, dataTree, schemaTree);
+                validateArgumentCount("Named Arguments", StringOccurenceMap.NamedArgumentsLanguage::makeOccurenceMap, key, dataTree, schemaTree);
             });
     }
 
-    private void checkMalformedLanguageValue(@NotNull String checkName, @NotNull Function<String, StringOccurenceMap> mapper, @NotNull String languageKey, @NotNull JsonObject dataTree, @NotNull JsonObject schemaTree) {
+    private void validateArgumentCount(@NotNull String checkName, @NotNull Function<String, StringOccurenceMap> mapper, @NotNull String languageKey, @NotNull JsonObject dataTree, @NotNull JsonObject schemaTree) {
         String schemaValue = schemaTree.get(languageKey).getAsString();
         String dataValue = dataTree.get(languageKey).getAsString();
         StringOccurenceMap schemaMap = mapper.apply(schemaValue);
@@ -114,7 +119,7 @@ public class LanguageConfigurationHandler extends ResourceConfigurationHandler {
         if (!schemaMap.equals(dataMap)) {
             LogUtil.warn("""
 
-                [Malformed Language Value Detected]
+                [Arguments Validation Failed]
                 The number of arguments for [{}] does not match between [actual language value] and [expected language value].
                 Override the [actual language value] to match it now.
 

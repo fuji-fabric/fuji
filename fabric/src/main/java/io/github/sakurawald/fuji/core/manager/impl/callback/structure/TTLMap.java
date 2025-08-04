@@ -58,6 +58,10 @@ public class TTLMap<K, V> {
 
     @Document(id = 1751823961060L, value = """
         This `job` is used to clean up the `TTL Map` data structure, and remove `expired entries`.
+        The `TTL Map` is used in `/command-callback` command, to store the `callback entry`.
+
+        <green>NOTE: The `/command-callback` command is typically used for `click event` in text.
+        <green>A player requires the permission to use `/command-callback` command, or the client will get the `Unknown Command Error`.
         """)
     @NoArgsConstructor
     public static class CleanTTLMapJob extends CronJob {

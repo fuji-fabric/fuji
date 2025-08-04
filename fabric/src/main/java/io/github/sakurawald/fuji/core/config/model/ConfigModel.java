@@ -15,17 +15,6 @@ public class ConfigModel {
         The `module` config only affects that specific module.
         """)
     public Core core = new Core();
-
-    @Document(id = 1751823688579L, value = """
-        Fuji is designed to be fully-modular.
-        All modules is `disabled` by default.
-        You can modify the `enable` field to enable a module <red>after a server re-start</red>.
-        <b>Remember to `restart` the server to apply the modification.
-
-        Issue `/fuji inspect modules` to see the module status.
-        """)
-    public Modules modules = new Modules();
-
     public static class Core {
         @Document(id = 1751823723851L, value = "Debug related options.")
         public Debug debug = new Debug();
@@ -101,6 +90,11 @@ public class ConfigModel {
                 The language files are located in `config/fuji/lang` dir.
                 """)
             public String default_language = "en_US";
+
+            @Document(id = 1754322053339L, value = """
+                Should we validate the `arguments` when loading a `language file`?
+                """)
+            public boolean validate_arguments = true;
         }
 
         public static class Permission {
@@ -135,6 +129,17 @@ public class ConfigModel {
             public boolean print_user_guide_in_console = true;
         }
     }
+
+
+    @Document(id = 1751823688579L, value = """
+        Fuji is designed to be fully-modular.
+        All modules is `disabled` by default.
+        You can modify the `enable` field to enable a module <red>after a server re-start</red>.
+        <b>Remember to `restart` the server to apply the modification.
+
+        Issue `/fuji inspect modules` to see the module status.
+        """)
+    public Modules modules = new Modules();
 
     @SuppressWarnings("unused")
     public static class Modules {
