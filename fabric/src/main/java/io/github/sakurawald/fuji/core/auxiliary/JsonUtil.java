@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
@@ -68,5 +70,11 @@ public class JsonUtil {
 
     public static JsonElement readJsonString(String jsonString) {
         return JsonParser.parseString(jsonString);
+    }
+
+    @SneakyThrows
+    public static void writeJsonObject(@NotNull JsonObject jsonObject, @NotNull Path outputFilePath){
+        String json = BaseConfigurationHandler.getGson().toJson(jsonObject);
+        Files.writeString(outputFilePath, json);
     }
 }

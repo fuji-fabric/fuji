@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.jayway.jsonpath.DocumentContext;
+import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.config.transformer.abst.JsonConfigurationTransformer;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.CommandCooldownInitializer;
 
@@ -49,6 +50,6 @@ public class NamedCooldownSchemaV1Transformer extends JsonConfigurationTransform
             });
 
         /* Write it. */
-        writeJsonObject(outputRoot, CommandCooldownInitializer.namedCooldownData.getPath());
+        JsonUtil.writeJsonObject(outputRoot, CommandCooldownInitializer.namedCooldownData.getPath());
     }
 }
