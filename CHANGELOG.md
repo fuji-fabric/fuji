@@ -7,3 +7,4 @@
   - refactor: use a clearer syntax for `named arguments` in `language value`. (Changed from `[[argument-name]]` to `${argument-name}`)
 - [core] feature: enhance the `data migrator`, to provide better cross-version data schema migration.
 - [core] feature: auto-save feature for data files has been updated to save `every 10 seconds` instead of `every minute`.
+- [core] feature: now will display the `true source module` for `Config Auto Save Job`. They are now grouped under their own modules, instead of the `core` module. (Makes the `/fuji inspect jobs` inspector clearer.)

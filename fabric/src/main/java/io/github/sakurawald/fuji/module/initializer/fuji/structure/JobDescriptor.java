@@ -19,6 +19,14 @@ public class JobDescriptor implements SourceModuleGetter {
     @Override
     public String getSourceModule() {
         JobDetail jobDetail = this.jobDetail;
+
+        /* Try to find the source module from the data map. */
+        Object specifiedSourceModule = jobDetail.getJobDataMap().get(SPECIFIED_SOURCE_MODULE_KEY);
+        if (specifiedSourceModule != null) {
+            return specifiedSourceModule.toString();
+        }
+
+        /* No source module is specified, try to compute it from the job class. */
         Class<? extends Job> jobClass = jobDetail.getJobClass();
         return ModuleManager.computeJoinedModulePath(jobClass.getName());
     }

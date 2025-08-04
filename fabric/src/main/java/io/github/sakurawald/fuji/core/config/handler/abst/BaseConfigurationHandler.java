@@ -13,6 +13,7 @@ import com.jayway.jsonpath.spi.json.JsonProvider;
 import com.jayway.jsonpath.spi.mapper.GsonMappingProvider;
 import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.config.job.ConfigurationHandlerWriteStorageJob;
 import io.github.sakurawald.fuji.core.config.transformer.abst.ConfigurationTransformer;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
@@ -199,7 +200,12 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         String jobName = this.path.toFile().getCanonicalPath();
         ConfigurationHandlerWriteStorageJob writeStorageJob = new ConfigurationHandlerWriteStorageJob(jobName, new JobDataMap() {
             {
+                // Specify the configuration handler instance.
                 this.put(BaseConfigurationHandler.class.getName(), BaseConfigurationHandler.this);
+
+                // Specify the source module.
+                String sourceModuleInCurrentStackTrace = ReflectionUtil.Stacktrace.findSourceModuleInCurrentStackTrace();
+                this.put(SourceModuleGetter.SPECIFIED_SOURCE_MODULE_KEY, sourceModuleInCurrentStackTrace);
             }
         }, () -> cron);
         Managers.getScheduleManager().scheduleJob(writeStorageJob);
