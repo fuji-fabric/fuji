@@ -1,5 +1,7 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
+**The existing data will be migrated to new data schema automatically.**
+
 - **[core] Refactor: Improvements to the `language` system**
   - **Feature:** Language files are now **validated** during loading.
   - **Feature:** Added `language.validate_arguments` option to enable or disable argument validation.
