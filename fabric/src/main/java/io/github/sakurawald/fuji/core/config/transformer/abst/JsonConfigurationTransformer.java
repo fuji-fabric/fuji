@@ -43,7 +43,6 @@ public abstract class JsonConfigurationTransformer extends ConfigurationTransfor
         context.set(jsonPath, newValue);
     }
 
-    @SneakyThrows(IOException.class)
     public void writeJsonDocumentContextToOriginalFile(@NotNull DocumentContext context) {
         this.logOperation("Write storage.");
         writeJsonObject(context.json(), this.targetFilePath);
