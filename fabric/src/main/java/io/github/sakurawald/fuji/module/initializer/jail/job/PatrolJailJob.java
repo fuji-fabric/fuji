@@ -41,7 +41,7 @@ public class PatrolJailJob extends FixedIntervalJob {
 
     public static void reloadPatrolJobs() {
         /* Un-schedule jobs. */
-        LogUtil.info("Un-schedule patrol jobs.");
+        LogUtil.debug("Un-schedule patrol jobs.");
         Managers.getScheduleManager().deleteJobs(PatrolJailJob.class);
 
         JailService
@@ -49,7 +49,7 @@ public class PatrolJailJob extends FixedIntervalJob {
             .forEach(jailDescriptor -> {
                 String jailId = jailDescriptor.getId();
                 int patrolIntervalMillSeconds = jailDescriptor.getPatrol().getPatrolIntervalMillSeconds();
-                LogUtil.info("Schedule patrol job: jailId = {}, intervalMillSeconds = {}", jailId, patrolIntervalMillSeconds);
+                LogUtil.debug("Schedule patrol job: jailId = {}, intervalMillSeconds = {}", jailId, patrolIntervalMillSeconds);
                 scheduleJob(jailDescriptor);
             });
     }

@@ -1,5 +1,6 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
+- [jail] feature: reduce the `console-spam` for scheduled jobs.
 - [core] refactor: improvements to the `language` system.
   - feature: now will `validate` the `language files` when loading them.
   - feature: add `argument arity validator`, to check if the `argument number` for each `language value` is matched, and try to fix it if mismatched.
