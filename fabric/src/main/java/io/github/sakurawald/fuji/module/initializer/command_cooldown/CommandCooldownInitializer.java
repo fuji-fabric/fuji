@@ -1,7 +1,5 @@
 package io.github.sakurawald.fuji.module.initializer.command_cooldown;
 
-import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
-import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
@@ -11,18 +9,20 @@ import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.StringList;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.config.model.CommandCooldownConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.config.model.NamedCooldownDataModel;
+import io.github.sakurawald.fuji.module.initializer.command_cooldown.config.transformer.NamedCooldownSchemaV1Transformer;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.service.NamedCooldownService;
-import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCooldownDescriptor;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCooldownDataNode;
+import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCooldownDescriptor;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-
-import java.util.Collections;
-import java.util.Optional;
 
 @Document(id = 1751826375815L, value = """
     This module allows you to define a `cooldown` for a specified `command`.
@@ -93,12 +93,12 @@ import java.util.Optional;
     """)
 
 
-
 @CommandNode("command-cooldown")
 @CommandRequirement(level = 4)
 public class CommandCooldownInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<CommandCooldownConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandCooldownConfigModel.class);
+    public static final BaseConfigurationHandler<CommandCooldownConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandCooldownConfigModel.class)
+        .installTransformer(new NamedCooldownSchemaV1Transformer());
 
     public static final BaseConfigurationHandler<NamedCooldownDataModel> namedCooldownData = new ObjectConfigurationHandler<>("named-cooldown-data.json", NamedCooldownDataModel.class) {
         @Override
@@ -109,7 +109,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
                 .forEach(it -> it.getCooldown().getTimestamp().clear());
         }
     }
-    .enableAutoSaveFeature();
+        .enableAutoSaveFeature();
 
     @Document(id = 1751826400837L, value = "Create a named-cooldown.")
     @CommandNode("create")

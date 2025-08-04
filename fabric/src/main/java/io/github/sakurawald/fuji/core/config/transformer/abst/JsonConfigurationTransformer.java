@@ -1,7 +1,9 @@
 package io.github.sakurawald.fuji.core.config.transformer.abst;
 
+import com.google.gson.JsonObject;
 import com.jayway.jsonpath.DocumentContext;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import java.nio.file.Path;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
@@ -44,7 +46,12 @@ public abstract class JsonConfigurationTransformer extends ConfigurationTransfor
     @SneakyThrows(IOException.class)
     public void writeJsonDocumentContextToOriginalFile(@NotNull DocumentContext context) {
         this.logOperation("Write storage.");
-        String transformedJson = BaseConfigurationHandler.getGson().toJson(context.json());
-        Files.writeString(this.targetFilePath, transformedJson);
+        writeJsonObject(context.json(), this.targetFilePath);
+    }
+
+    @SneakyThrows
+    public void writeJsonObject(@NotNull JsonObject jsonObject, @NotNull Path outputFilePath){
+        String json = BaseConfigurationHandler.getGson().toJson(jsonObject);
+        Files.writeString(outputFilePath, json);
     }
 }

@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 @ForDeveloper("""
     This transformer is used to flatten a tree represented in single file into multiple files.
     """)
+@Deprecated
 public class FlattenTreeTransformer extends JsonConfigurationTransformer {
 
     private final String rootTreePath;
