@@ -12,8 +12,8 @@ public class CommandRewriteConfigModel {
     @Document(id = 1751826280914L, value = """
         Defined `rewrite` entries.
         """)
-    @SerializedName(value = "rewrite", alternate = "regex")
-    public List<RegexRewriteNode> rewrite = new ArrayList<>() {
+    @SerializedName(value = "rules", alternate = {"regex", "rewrite"})
+    public List<RegexRewriteNode> rules = new ArrayList<>() {
         {
             this.add(new RegexRewriteNode("home", "home tp default"));
         }

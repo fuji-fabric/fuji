@@ -30,7 +30,7 @@ public class CommandRewriteInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<CommandRewriteConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandRewriteConfigModel.class);
 
     public static String rewriteCommand(@NotNull String oldString) {
-        for (RegexRewriteNode entry : CommandRewriteInitializer.config.model().rewrite) {
+        for (RegexRewriteNode entry : CommandRewriteInitializer.config.model().rules) {
             if (entry.getRegex() == null || entry.getReplacement() == null) {
                 LogUtil.warn("There is an invalid `null` entry in `command_rewrite.regex`, you should remove it: {}", entry);
                 continue;
