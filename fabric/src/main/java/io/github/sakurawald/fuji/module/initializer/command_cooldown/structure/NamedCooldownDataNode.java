@@ -23,7 +23,7 @@ public class NamedCooldownDataNode {
     @ToString.Exclude
     transient NamedCooldownDescriptor descriptor;
 
-    public static String toKey(ServerPlayerEntity player) {
+    public static String toKey(@NotNull ServerPlayerEntity player) {
         return PlayerHelper.getPlayerName(player);
     }
 

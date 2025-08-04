@@ -8,12 +8,23 @@ import io.github.sakurawald.fuji.core.service.duration_parser.DurationParser;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.service.NamedCooldownService;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCooldownDescriptor;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCooldownDataNode;
+import java.util.function.Function;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class CommandCooldownPlaceholders {
 
-    private static Text getUnknownNamedCooldownText(String cooldownName) {
+    private static Text makeUnknownNamedCooldownText(String cooldownName) {
         return Text.literal("[Unknown named-cooldown: %s]".formatted(cooldownName));
+    }
+
+    private static Text mapNamedCooldownDataNodeIntoText(@Nullable String args, @NotNull Function<NamedCooldownDataNode, Text> mapper) {
+        NamedCooldownDescriptor cooldownDescriptor = NamedCooldownService.getNamedCooldownDescriptors().get(args);
+        if (cooldownDescriptor == null) {
+            return makeUnknownNamedCooldownText(args);
+        }
+        return NamedCooldownService.withNamedCooldownDataNode(cooldownDescriptor, mapper);
     }
 
     @DocStringProvider(id = 1751999791863L, value = """
@@ -24,18 +35,12 @@ public class CommandCooldownPlaceholders {
         """)
     static void registerCommandCooldownLeftUsagePlaceholder() {
         PlaceholderDescriptor placeholderDescriptor = new PlaceholderDescriptor("command_cooldown_left_usage", 1751999791863L);
-        PlaceholderHelper.registerPlayerPlaceholder(placeholderDescriptor, (player, args) -> {
-            NamedCooldownDescriptor cooldownDescriptor = NamedCooldownService.getNamedCooldownDescriptors().get(args);
-            if (cooldownDescriptor == null) return getUnknownNamedCooldownText(args);
-
+        PlaceholderHelper.registerPlayerPlaceholder(placeholderDescriptor, (player, args) -> mapNamedCooldownDataNodeIntoText(args, dataNode -> {
             String key = NamedCooldownDataNode.toKey(player);
-
-            return NamedCooldownService.withNamedCooldownDataNode(cooldownDescriptor, dataNode -> {
-                int uses = dataNode.getUses().computeIfAbsent(key, k -> 0);
-                int availableUses = cooldownDescriptor.getMaxUses() - uses;
-                return Text.literal(String.valueOf(availableUses));
-            });
-        });
+            int uses = dataNode.getUses().computeIfAbsent(key, k -> 0);
+            int availableUses = dataNode.getDescriptor().getMaxUses() - uses;
+            return Text.literal(String.valueOf(availableUses));
+        }));
     }
 
     @DocStringProvider(id = 1751999769680L, value = """
@@ -46,18 +51,13 @@ public class CommandCooldownPlaceholders {
         """)
     static void registerCommandCooldownLeftTimePlaceholder() {
         PlaceholderDescriptor placeholderDescriptor = new PlaceholderDescriptor("command_cooldown_left_time", 1751999769680L);
-        PlaceholderHelper.registerPlayerPlaceholder(placeholderDescriptor, (player, args) -> {
-            NamedCooldownDescriptor cooldownDescriptor = NamedCooldownService.getNamedCooldownDescriptors().get(args);
-            if (cooldownDescriptor == null) return getUnknownNamedCooldownText(args);
-
-            return NamedCooldownService.withNamedCooldownDataNode(cooldownDescriptor,dataNode -> {
-                String key = NamedCooldownDataNode.toKey(player);
-                long remainingDuration = dataNode.getRemainingTime(key, cooldownDescriptor.getCooldownDuration());
-                remainingDuration = Math.max(0, remainingDuration);
-                String formattedRemainingDuration = DurationParser.formatDurationIntoCompact(remainingDuration);
-                return Text.literal(formattedRemainingDuration);
-            });
-        });
+        PlaceholderHelper.registerPlayerPlaceholder(placeholderDescriptor, (player, args) -> mapNamedCooldownDataNodeIntoText(args, dataNode -> {
+            String key = NamedCooldownDataNode.toKey(player);
+            long remainingDuration = dataNode.getRemainingTime(key, dataNode.getDescriptor().getCooldownDuration());
+            remainingDuration = Math.max(0, remainingDuration);
+            String formattedRemainingDuration = DurationParser.formatDurationIntoCompact(remainingDuration);
+            return Text.literal(formattedRemainingDuration);
+        }));
     }
 
     @DocStringProvider(id = 1752625269482L, value = """
@@ -68,16 +68,11 @@ public class CommandCooldownPlaceholders {
         """)
     static void registerCommandCooldownLeftTimeDatePlaceholder() {
         PlaceholderDescriptor placeholderDescriptor = new PlaceholderDescriptor("command_cooldown_left_time_date", 1752625269482L);
-        PlaceholderHelper.registerPlayerPlaceholder(placeholderDescriptor, (player, args) -> {
-            NamedCooldownDescriptor cooldownDescriptor = NamedCooldownService.getNamedCooldownDescriptors().get(args);
-            if (cooldownDescriptor == null) return getUnknownNamedCooldownText(args);
-
-            return NamedCooldownService.withNamedCooldownDataNode(cooldownDescriptor, dataNode -> {
-                String key = NamedCooldownDataNode.toKey(player);
-                long nextAvailableDate = dataNode.getCooldown().getLastUseTime(key) + cooldownDescriptor.getCooldownDuration();
-                String formattedLeftTime = ChronosUtil.Formatter.formatDate(nextAvailableDate);
-                return Text.literal(formattedLeftTime);
-            });
-        });
+        PlaceholderHelper.registerPlayerPlaceholder(placeholderDescriptor, (player, args) -> mapNamedCooldownDataNodeIntoText(args, dataNode -> {
+            String key = NamedCooldownDataNode.toKey(player);
+            long nextAvailableDate = dataNode.getCooldown().getLastUseTime(key) + dataNode.getDescriptor().getCooldownDuration();
+            String formattedLeftTime = ChronosUtil.Formatter.formatDate(nextAvailableDate);
+            return Text.literal(formattedLeftTime);
+        }));
     }
 }
