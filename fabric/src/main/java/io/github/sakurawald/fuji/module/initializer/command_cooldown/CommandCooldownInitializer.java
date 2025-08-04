@@ -15,8 +15,10 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.command.argument.wrapper.CommandCooldownName;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.config.model.CommandCooldownConfigModel;
+import io.github.sakurawald.fuji.module.initializer.command_cooldown.config.model.NamedCooldownDataModel;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.service.NamedCooldownService;
-import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCommandCooldown;
+import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCommandCooldownDescriptor;
+import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCooldownDataNode;
 import java.util.List;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -98,16 +100,18 @@ import java.util.Optional;
 @CommandRequirement(level = 4)
 public class CommandCooldownInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<CommandCooldownConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandCooldownConfigModel.class) {
+    public static final BaseConfigurationHandler<CommandCooldownConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandCooldownConfigModel.class);
+
+    public static final BaseConfigurationHandler<NamedCooldownDataModel> namedCooldownData = new ObjectConfigurationHandler<>("named-cooldown-data.json", NamedCooldownDataModel.class) {
         @Override
         protected void beforeWriteStorage() {
-            this.model().namedCooldown.list.values()
+            this.model.getNodes()
                 .stream()
-                .filter(it -> !it.isPersistent())
-                // Reset the timestamp for non-persistent cooldown before writing storage.
-                .forEach(it -> it.getTimestamp().clear());
+                .filter(it -> !it.getDescriptor().isPersistent())
+                .forEach(it -> it.getCooldown().getTimestamp().clear());
         }
-    };
+    }
+    .enableAutoSaveFeature();
 
     @Document(id = 1751826400837L, value = "Create a named-cooldown.")
     @CommandNode("create")
@@ -132,8 +136,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
     @CommandNode("delete")
     private static int $delete(@CommandSource ServerCommandSource source, CommandCooldownName name) {
         ensureNamedCooldownExist(source, name);
-
-        NamedCooldownService.deleteNamedCooldown(name);
+        NamedCooldownService.deleteNamedCooldownDescriptor(name);
 
         TextHelper.sendTextByKey(source, "command_cooldown.deleted", name.getValue());
         return CommandHelper.Return.SUCCESS;
@@ -142,7 +145,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
     @Document(id = 1751826418447L, value = "List all named-cooldown.")
     @CommandNode("list")
     private static int $list(@CommandSource ServerCommandSource source) {
-        TextHelper.sendTextByKey(source, "command_cooldown.list", NamedCooldownService.getNamedCooldownList().keySet());
+        TextHelper.sendTextByKey(source, "command_cooldown.list", NamedCooldownService.getNamedCooldownDescriptors().keySet());
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -156,7 +159,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
     ) {
         ensureNamedCooldownExist(source, name);
 
-        NamedCommandCooldown cooldown = NamedCooldownService.getNamedCooldownList().get(name.getValue());
+        NamedCommandCooldownDescriptor cooldown = NamedCooldownService.getNamedCooldownDescriptors().get(name.getValue());
         StringList $onFailed = onFailed.orElse(new StringList(Collections.emptyList()));
 
         List<String> onSuccessCommands = onSuccess.getValue();
@@ -170,7 +173,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
     ) {
         ensureNamedCooldownExist(source, name);
 
-        NamedCommandCooldown cooldown = NamedCooldownService.getNamedCooldownList().get(name.getValue());
+        NamedCommandCooldownDescriptor cooldown = NamedCooldownService.getNamedCooldownDescriptors().get(name.getValue());
         List<String> onSuccessCommands = cooldown.getTryUse().getOnSuccessCommands();
         List<String> onFailureCommands = cooldown.getTryUse().getOnFailureCommands();
         return NamedCooldownService.testNamedCooldown(cooldown, player, onSuccessCommands, onFailureCommands);
@@ -182,7 +185,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         , CommandCooldownName name
         , ServerPlayerEntity player) {
         ensureNamedCooldownExist(source, name);
-        String key = NamedCommandCooldown.toKey(player);
+        String key = NamedCooldownDataNode.toKey(player);
 
         NamedCooldownService.resetNamedCooldownDuration(name, key);
 
@@ -191,14 +194,14 @@ public class CommandCooldownInitializer extends ModuleInitializer {
     }
 
     private static void ensureNamedCooldownExist(ServerCommandSource source, CommandCooldownName name) {
-        if (!NamedCooldownService.getNamedCooldownList().containsKey(name.getValue())) {
+        if (!NamedCooldownService.getNamedCooldownDescriptors().containsKey(name.getValue())) {
             TextHelper.sendTextByKey(source, "command_cooldown.not_found", name.getValue());
             throw new AbortCommandExecutionException();
         }
     }
 
     private static void ensureNamedCooldownNotExist(ServerCommandSource source, String name) {
-        if (NamedCooldownService.getNamedCooldownList().containsKey(name)) {
+        if (NamedCooldownService.getNamedCooldownDescriptors().containsKey(name)) {
             TextHelper.sendTextByKey(source, "command_cooldown.already_exists", name);
             throw new AbortCommandExecutionException();
         }
