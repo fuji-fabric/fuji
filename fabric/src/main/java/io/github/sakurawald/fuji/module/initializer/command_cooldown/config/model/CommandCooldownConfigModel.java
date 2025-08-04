@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.command_cooldown.config.mod
 
 import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
-import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCommandCooldownDescriptor;
+import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCooldownDescriptor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +32,6 @@ public class CommandCooldownConfigModel {
         """)
     public NamedCooldown namedCooldown = new NamedCooldown();
     public static class NamedCooldown {
-        public Map<String, NamedCommandCooldownDescriptor> list = new HashMap<>();
+        public Map<String, NamedCooldownDescriptor> list = new HashMap<>();
     }
 }

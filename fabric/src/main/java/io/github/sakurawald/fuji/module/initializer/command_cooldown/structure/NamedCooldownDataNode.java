@@ -21,7 +21,7 @@ public class NamedCooldownDataNode {
     Map<String, Integer> uses = new HashMap<>();
 
     @ToString.Exclude
-    transient NamedCommandCooldownDescriptor descriptor;
+    transient NamedCooldownDescriptor descriptor;
 
     public static String toKey(ServerPlayerEntity player) {
         return PlayerHelper.getPlayerName(player);

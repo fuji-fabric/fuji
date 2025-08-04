@@ -52,7 +52,7 @@ io.github.sakurawald.fuji.core.command.argument.adapter.impl.Vec3ArgumentTypeAda
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.WordArgumentTypeAdapter
 io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.adapter.ExecuteAsTypeArgumentTypeAdapter
 io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.adapter.InteractTypeArgumentTypeAdapter
-io.github.sakurawald.fuji.module.initializer.command_cooldown.command.argument.adapter.CommandCooldownArgumentTypeAdapter
+io.github.sakurawald.fuji.module.initializer.command_cooldown.command.argument.adapter.NamedCooldownDescriptorArgumentTypeAdapter
 io.github.sakurawald.fuji.module.initializer.command_menu.command.argument.adapter.MenuNameArgumentTypeAdapter
 io.github.sakurawald.fuji.module.initializer.command_meta.attachment.command.argument.adapter.SubjectIdArgumentTypeAdapter
 io.github.sakurawald.fuji.module.initializer.command_meta.attachment.command.argument.adapter.SubjectNameArgumentTypeAdapter

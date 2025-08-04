@@ -4,8 +4,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.CommandCooldownInitializer;
-import io.github.sakurawald.fuji.module.initializer.command_cooldown.command.argument.wrapper.CommandCooldownName;
-import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCommandCooldownDescriptor;
+import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCooldownDescriptor;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCooldownDataNode;
 import java.util.List;
 import java.util.Map;
@@ -16,23 +15,31 @@ import org.jetbrains.annotations.NotNull;
 
 public class NamedCooldownService {
 
-    public static Map<String, NamedCommandCooldownDescriptor> getNamedCooldownDescriptors() {
+    public static Map<String, NamedCooldownDescriptor> getNamedCooldownDescriptors() {
         return CommandCooldownInitializer.config.model().namedCooldown.list;
     }
 
-    public static void createNamedCooldown(@NotNull String name, long cooldownDuration, int maxUses, boolean persistent, boolean global) {
-        NamedCommandCooldownDescriptor namedCooldownDescriptor = NamedCommandCooldownDescriptor.make(name, cooldownDuration, maxUses, persistent, global);
+    public static Optional<NamedCooldownDescriptor> findNamedCooldownDescriptor(@NotNull String id) {
+        return getNamedCooldownDescriptors()
+            .entrySet()
+            .stream()
+            .filter(it -> it.getKey().equals(id))
+            .findFirst()
+            .map(Map.Entry::getValue);
+    }
+
+    public static void createNamedCooldownDescriptor(@NotNull String name, long cooldownDuration, int maxUses, boolean persistent, boolean global) {
+        NamedCooldownDescriptor namedCooldownDescriptor = NamedCooldownDescriptor.make(name, cooldownDuration, maxUses, persistent, global);
         getNamedCooldownDescriptors().put(name, namedCooldownDescriptor);
         CommandCooldownInitializer.config.writeStorage();
     }
 
-    public static void deleteNamedCooldownDescriptor(@NotNull CommandCooldownName name) {
-        String $name = name.getValue();
-        getNamedCooldownDescriptors().remove($name);
+    public static void deleteNamedCooldownDescriptor(@NotNull NamedCooldownDescriptor descriptor) {
+        getNamedCooldownDescriptors().remove(descriptor.getName());
         CommandCooldownInitializer.config.writeStorage();
     }
 
-    public static <T> T withNamedCooldownDataNode(@NotNull NamedCommandCooldownDescriptor namedCooldownDescriptor, @NotNull Function<NamedCooldownDataNode, T> function) {
+    public static <T> T withNamedCooldownDataNode(@NotNull NamedCooldownDescriptor namedCooldownDescriptor, @NotNull Function<NamedCooldownDataNode, T> function) {
         Optional<NamedCooldownDataNode> first = getNamedCooldownNodes()
             .stream()
             .filter(it -> it.getId().equals(namedCooldownDescriptor.getName()))
@@ -54,7 +61,7 @@ public class NamedCooldownService {
             .getNodes();
     }
 
-    public static int testNamedCooldown(@NotNull NamedCommandCooldownDescriptor descriptor, @NotNull ServerPlayerEntity player, @NotNull List<String> onSuccessCommands, @NotNull List<String> onFailureCommands) {
+    public static int testNamedCooldown(@NotNull NamedCooldownDescriptor descriptor, @NotNull ServerPlayerEntity player, @NotNull List<String> onSuccessCommands, @NotNull List<String> onFailureCommands) {
         String key = NamedCooldownDataNode.toKey(player);
 
         return withNamedCooldownDataNode(descriptor, dataNode -> {
@@ -76,9 +83,7 @@ public class NamedCooldownService {
         });
     }
 
-    public static void resetNamedCooldownDuration(@NotNull CommandCooldownName name, @NotNull String key) {
-        NamedCommandCooldownDescriptor descriptor = getNamedCooldownDescriptors().get(name.getValue());
-
+    public static void resetNamedCooldownDuration(@NotNull NamedCooldownDescriptor descriptor, @NotNull String key) {
         withNamedCooldownDataNode(descriptor, dataNode -> {
             dataNode.getCooldown().getTimestamp().put(key, 0L);
             return null;

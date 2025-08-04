@@ -9,15 +9,13 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyStringList;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.StringList;
-import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
-import io.github.sakurawald.fuji.module.initializer.command_cooldown.command.argument.wrapper.CommandCooldownName;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.config.model.CommandCooldownConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.config.model.NamedCooldownDataModel;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.service.NamedCooldownService;
-import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCommandCooldownDescriptor;
+import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCooldownDescriptor;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCooldownDataNode;
 import java.util.List;
 import net.minecraft.server.command.ServerCommandSource;
@@ -107,7 +105,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         protected void beforeWriteStorage() {
             this.model.getNodes()
                 .stream()
-                .filter(it -> !it.getDescriptor().isPersistent())
+                .filter(it -> it.getDescriptor() != null && !it.getDescriptor().isPersistent())
                 .forEach(it -> it.getCooldown().getTimestamp().clear());
         }
     }
@@ -115,30 +113,29 @@ public class CommandCooldownInitializer extends ModuleInitializer {
 
     @Document(id = 1751826400837L, value = "Create a named-cooldown.")
     @CommandNode("create")
-    private static int $create(@CommandSource ServerCommandSource source
-        , @Document(id = 1751826403270L, value = "The name of the named-cooldown to be created.") String name
-        , @Document(id = 1751826405378L, value = "How long is the cooling time ms of this named-cooldown.") long cooldownDuration
-        , @Document(id = 1751826407322L, value = "The max number of uses for this named-cooldown.") Optional<Integer> maxUses
-        , @Document(id = 1751826409664L, value = "Should we persist this named-cooldown on server shutdown.") Optional<Boolean> persistent
-        , @Document(id = 1751826414070L, value = "Is this named-cooldown global (`per-server`) or `per-player`.") Optional<Boolean> global) {
-        ensureNamedCooldownNotExist(source, name);
-        int $maxUses = maxUses.orElse(Integer.MAX_VALUE);
-        Boolean $persistent = persistent.orElse(true);
-        Boolean $global = global.orElse(false);
+    private static int $create(@CommandSource ServerCommandSource source, String name, long cooldownDuration, Optional<Integer> maxUses, Optional<Boolean> persistent, Optional<Boolean> global) {
+        return NamedCooldownService
+            .findNamedCooldownDescriptor(name)
+            .map(it -> {
+                TextHelper.sendTextByKey(source, "command_cooldown.already_exists", name);
+                return CommandHelper.Return.FAIL;
+            })
+            .orElseGet(() -> {
+                int $maxUses = maxUses.orElse(Integer.MAX_VALUE);
+                Boolean $persistent = persistent.orElse(true);
+                Boolean $global = global.orElse(false);
 
-        NamedCooldownService.createNamedCooldown(name, cooldownDuration, $maxUses, $persistent, $global);
-
-        TextHelper.sendTextByKey(source, "command_cooldown.created", name);
-        return CommandHelper.Return.SUCCESS;
+                NamedCooldownService.createNamedCooldownDescriptor(name, cooldownDuration, $maxUses, $persistent, $global);
+                TextHelper.sendTextByKey(source, "command_cooldown.created", name);
+                return CommandHelper.Return.SUCCESS;
+            });
     }
 
     @Document(id = 1751826416666L, value = "Delete a named-cooldown.")
     @CommandNode("delete")
-    private static int $delete(@CommandSource ServerCommandSource source, CommandCooldownName name) {
-        ensureNamedCooldownExist(source, name);
-        NamedCooldownService.deleteNamedCooldownDescriptor(name);
-
-        TextHelper.sendTextByKey(source, "command_cooldown.deleted", name.getValue());
+    private static int $delete(@CommandSource ServerCommandSource source, NamedCooldownDescriptor namedCooldown) {
+        NamedCooldownService.deleteNamedCooldownDescriptor(namedCooldown);
+        TextHelper.sendTextByKey(source, "command_cooldown.deleted", namedCooldown.getName());
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -152,59 +149,37 @@ public class CommandCooldownInitializer extends ModuleInitializer {
     @Document(id = 1751826379596L, value = "Test a named-cooldown with `arbitrary command instance`, and execute `success case command` or `failure case command`.")
     @CommandNode("test")
     private static int $test(@CommandSource ServerCommandSource source
-        , @Document(id = 1751826381620L, value = "The name of a named-cooldown.") CommandCooldownName name
-        , @Document(id = 1751826385172L, value = "The target player.") ServerPlayerEntity player
-        , @Document(id = 1751826387810L, value = "The commands to execute if the test failed.") Optional<StringList> onFailed
-        , @Document(id = 1751826394378L, value = "The commands to execute if the test succeeds.") GreedyStringList onSuccess
+        , NamedCooldownDescriptor namedCooldown
+        , ServerPlayerEntity player
+        , Optional<StringList> onFailed
+        , GreedyStringList onSuccess
     ) {
-        ensureNamedCooldownExist(source, name);
-
-        NamedCommandCooldownDescriptor cooldown = NamedCooldownService.getNamedCooldownDescriptors().get(name.getValue());
         StringList $onFailed = onFailed.orElse(new StringList(Collections.emptyList()));
 
         List<String> onSuccessCommands = onSuccess.getValue();
         List<String> onFailureCommands = $onFailed.getValue();
-        return NamedCooldownService.testNamedCooldown(cooldown, player, onSuccessCommands, onFailureCommands);
+        return NamedCooldownService.testNamedCooldown(namedCooldown, player, onSuccessCommands, onFailureCommands);
     }
 
     @Document(id = 1752917170907L, value = "Test a named-cooldown with `pre-defined command instance`, and execute `success case command` or `failure case command`.")
     @CommandNode("try-use")
-    private static int $tryUse(@CommandSource ServerCommandSource source, CommandCooldownName name, ServerPlayerEntity player
+    private static int $tryUse(@CommandSource ServerCommandSource source, NamedCooldownDescriptor namedCooldown, ServerPlayerEntity player
     ) {
-        ensureNamedCooldownExist(source, name);
-
-        NamedCommandCooldownDescriptor cooldown = NamedCooldownService.getNamedCooldownDescriptors().get(name.getValue());
-        List<String> onSuccessCommands = cooldown.getTryUse().getOnSuccessCommands();
-        List<String> onFailureCommands = cooldown.getTryUse().getOnFailureCommands();
-        return NamedCooldownService.testNamedCooldown(cooldown, player, onSuccessCommands, onFailureCommands);
+        List<String> onSuccessCommands = namedCooldown.getTryUse().getOnSuccessCommands();
+        List<String> onFailureCommands = namedCooldown.getTryUse().getOnFailureCommands();
+        return NamedCooldownService.testNamedCooldown(namedCooldown, player, onSuccessCommands, onFailureCommands);
     }
 
     @Document(id = 1751826420385L, value = "Reset `the last use time` of a named-cooldown for a player.")
     @CommandNode("reset")
     private static int $reset(@CommandSource ServerCommandSource source
-        , CommandCooldownName name
+        , NamedCooldownDescriptor namedCooldown
         , ServerPlayerEntity player) {
-        ensureNamedCooldownExist(source, name);
         String key = NamedCooldownDataNode.toKey(player);
 
-        NamedCooldownService.resetNamedCooldownDuration(name, key);
-
-        TextHelper.sendTextByKey(source, "command_cooldown.reset", key, name.getValue());
+        NamedCooldownService.resetNamedCooldownDuration(namedCooldown, key);
+        TextHelper.sendTextByKey(source, "command_cooldown.reset", key, namedCooldown.getName());
         return CommandHelper.Return.SUCCESS;
-    }
-
-    private static void ensureNamedCooldownExist(ServerCommandSource source, CommandCooldownName name) {
-        if (!NamedCooldownService.getNamedCooldownDescriptors().containsKey(name.getValue())) {
-            TextHelper.sendTextByKey(source, "command_cooldown.not_found", name.getValue());
-            throw new AbortCommandExecutionException();
-        }
-    }
-
-    private static void ensureNamedCooldownNotExist(ServerCommandSource source, String name) {
-        if (NamedCooldownService.getNamedCooldownDescriptors().containsKey(name)) {
-            TextHelper.sendTextByKey(source, "command_cooldown.already_exists", name);
-            throw new AbortCommandExecutionException();
-        }
     }
 
     @Override

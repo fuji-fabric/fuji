@@ -6,7 +6,7 @@ import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.descriptor.PlaceholderDescriptor;
 import io.github.sakurawald.fuji.core.service.duration_parser.DurationParser;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.service.NamedCooldownService;
-import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCommandCooldownDescriptor;
+import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCooldownDescriptor;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCooldownDataNode;
 import net.minecraft.text.Text;
 
@@ -23,9 +23,9 @@ public class CommandCooldownPlaceholders {
         You can use: `%fuji:command_cooldown_left_usage kitfood%`
         """)
     static void registerCommandCooldownLeftUsagePlaceholder() {
-        PlaceholderDescriptor leftUsageDescriptor = new PlaceholderDescriptor("command_cooldown_left_usage", 1751999791863L);
-        PlaceholderHelper.registerPlayerPlaceholder(leftUsageDescriptor, (player, args) -> {
-            NamedCommandCooldownDescriptor cooldownDescriptor = NamedCooldownService.getNamedCooldownDescriptors().get(args);
+        PlaceholderDescriptor placeholderDescriptor = new PlaceholderDescriptor("command_cooldown_left_usage", 1751999791863L);
+        PlaceholderHelper.registerPlayerPlaceholder(placeholderDescriptor, (player, args) -> {
+            NamedCooldownDescriptor cooldownDescriptor = NamedCooldownService.getNamedCooldownDescriptors().get(args);
             if (cooldownDescriptor == null) return getUnknownNamedCooldownText(args);
 
             String key = NamedCooldownDataNode.toKey(player);
@@ -45,9 +45,9 @@ public class CommandCooldownPlaceholders {
         You can use: `%fuji:command_cooldown_left_time kitfood%`
         """)
     static void registerCommandCooldownLeftTimePlaceholder() {
-        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("command_cooldown_left_time", 1751999769680L);
-        PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player, args) -> {
-            NamedCommandCooldownDescriptor cooldownDescriptor = NamedCooldownService.getNamedCooldownDescriptors().get(args);
+        PlaceholderDescriptor placeholderDescriptor = new PlaceholderDescriptor("command_cooldown_left_time", 1751999769680L);
+        PlaceholderHelper.registerPlayerPlaceholder(placeholderDescriptor, (player, args) -> {
+            NamedCooldownDescriptor cooldownDescriptor = NamedCooldownService.getNamedCooldownDescriptors().get(args);
             if (cooldownDescriptor == null) return getUnknownNamedCooldownText(args);
 
             return NamedCooldownService.withNamedCooldownDataNode(cooldownDescriptor,dataNode -> {
@@ -67,9 +67,9 @@ public class CommandCooldownPlaceholders {
         You can use: `%fuji:command_cooldown_left_time_date kitfood%`
         """)
     static void registerCommandCooldownLeftTimeDatePlaceholder() {
-        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("command_cooldown_left_time_date", 1752625269482L);
-        PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player, args) -> {
-            NamedCommandCooldownDescriptor cooldownDescriptor = NamedCooldownService.getNamedCooldownDescriptors().get(args);
+        PlaceholderDescriptor placeholderDescriptor = new PlaceholderDescriptor("command_cooldown_left_time_date", 1752625269482L);
+        PlaceholderHelper.registerPlayerPlaceholder(placeholderDescriptor, (player, args) -> {
+            NamedCooldownDescriptor cooldownDescriptor = NamedCooldownService.getNamedCooldownDescriptors().get(args);
             if (cooldownDescriptor == null) return getUnknownNamedCooldownText(args);
 
             return NamedCooldownService.withNamedCooldownDataNode(cooldownDescriptor, dataNode -> {

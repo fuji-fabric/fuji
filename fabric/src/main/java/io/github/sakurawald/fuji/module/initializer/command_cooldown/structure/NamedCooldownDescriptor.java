@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 @Data
 // NOTE: You need to provide a no args constructor for gson, or the field initializer will not be called.
 @NoArgsConstructor
-public class NamedCommandCooldownDescriptor {
+public class NamedCooldownDescriptor {
 
     @Nullable String name;
 
@@ -49,14 +49,14 @@ public class NamedCommandCooldownDescriptor {
         };
     }
 
-    public static NamedCommandCooldownDescriptor make(@Nullable String name, long cooldownDuration, int maxUses, boolean persistent, boolean global) {
-        NamedCommandCooldownDescriptor namedCommandCooldownDescriptor = new NamedCommandCooldownDescriptor();
-        namedCommandCooldownDescriptor.name = name;
-        namedCommandCooldownDescriptor.cooldownDuration = cooldownDuration;
-        namedCommandCooldownDescriptor.maxUses = maxUses;
-        namedCommandCooldownDescriptor.persistent = persistent;
-        namedCommandCooldownDescriptor.global = global;
-        return namedCommandCooldownDescriptor;
+    public static NamedCooldownDescriptor make(@Nullable String name, long cooldownDuration, int maxUses, boolean persistent, boolean global) {
+        NamedCooldownDescriptor namedCooldownDescriptor = new NamedCooldownDescriptor();
+        namedCooldownDescriptor.name = name;
+        namedCooldownDescriptor.cooldownDuration = cooldownDuration;
+        namedCooldownDescriptor.maxUses = maxUses;
+        namedCooldownDescriptor.persistent = persistent;
+        namedCooldownDescriptor.global = global;
+        return namedCooldownDescriptor;
     }
 
 }
