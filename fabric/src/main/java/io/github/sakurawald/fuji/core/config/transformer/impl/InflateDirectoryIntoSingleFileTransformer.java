@@ -7,24 +7,21 @@ import io.github.sakurawald.fuji.core.config.transformer.abst.ConfigurationTrans
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
 @AllArgsConstructor
-public class InflateDirectoryIntoSingleFileTransformer extends ConfigurationTransformer {
-
-    final Path inputDirectoryPath;
-    final Path outputFilePath;
-    final Function<JsonObject, JsonArray> outputArrayProvider;
-    final BiFunction<String, JsonObject, JsonObject> mapper;
+public abstract class InflateDirectoryIntoSingleFileTransformer extends ConfigurationTransformer {
 
     @SneakyThrows
     @Override
     public void apply() {
+        var inputDirectoryPath = inputDirectoryPath();
+        var outputFilePath = outputFilePath();
+
         /* Check if the input directory path exists. */
         if (!Files.exists(inputDirectoryPath)) {
             return;
@@ -35,7 +32,7 @@ public class InflateDirectoryIntoSingleFileTransformer extends ConfigurationTran
 
         /* Make the output array to hold the inflated data. */
         JsonObject outputJson = new JsonObject();
-        JsonArray outputArray = outputArrayProvider.apply(outputJson);
+        JsonArray outputArray = arrayMaker(outputJson);
 
         /* Apply the mapper for each input file. */
         inputFiles
@@ -44,7 +41,7 @@ public class InflateDirectoryIntoSingleFileTransformer extends ConfigurationTran
                 /* Append the mapped JsonObject. */
                 String fileName = inputFilePath.getFileName().toString();
                 JsonObject inputFileJson = JsonUtil.readJsonElement(inputFilePath).getAsJsonObject();
-                JsonObject outputFileJson = mapper.apply(fileName, inputFileJson);
+                JsonObject outputFileJson = mapper(fileName, inputFileJson);
                 outputArray.add(outputFileJson);
 
                 /* Delete the input file for that input JsonObject. */
@@ -68,4 +65,15 @@ public class InflateDirectoryIntoSingleFileTransformer extends ConfigurationTran
         }
     }
 
+    @NotNull
+    protected abstract Path inputDirectoryPath();
+
+    @NotNull
+    protected abstract Path outputFilePath();
+
+    @NotNull
+    protected abstract JsonArray arrayMaker(@NotNull JsonObject root);
+
+    @NotNull
+    protected abstract JsonObject mapper(@NotNull String fileName, @NotNull JsonObject inputJson);
 }

@@ -20,6 +20,7 @@ import io.github.sakurawald.fuji.module.initializer.command_attachment.command.a
 import io.github.sakurawald.fuji.module.initializer.command_attachment.config.adapter.CommandAttachmentNodeAdapter;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.config.model.CommandAttachmentDataModel;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.config.model.CommandAttachmentModel;
+import io.github.sakurawald.fuji.module.initializer.command_attachment.config.transformer.CommandAttachmentV1SchemaTransformer;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.job.TestSteppingOnBlockJob;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.service.CommandAttachmentService;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.BlockCommandAttachmentEntry;
@@ -90,7 +91,8 @@ import java.util.Optional;
 public class CommandAttachmentInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<CommandAttachmentDataModel> data = new ObjectConfigurationHandler<>("command-attachment-data.json", CommandAttachmentDataModel.class)
-        .enableAutoSaveFeature();
+        .enableAutoSaveFeature()
+        .installTransformer(new CommandAttachmentV1SchemaTransformer());
 
     @Document(id = 1751826433455L, value = "Attach one command to an item.")
     @CommandNode("attach-item-one")
