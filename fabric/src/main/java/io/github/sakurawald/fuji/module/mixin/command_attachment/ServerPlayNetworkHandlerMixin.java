@@ -28,7 +28,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
             String uuid = UuidHelper.getAttachedUuid(ItemStackHelper.CustomData.getCustomDataNbt(mainHandStack));
             ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
 
-            CommandAttachmentService.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.LEFT, InteractType.BOTH));
+            CommandAttachmentService.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.LEFT, InteractType.BOTH), () -> {});
         }
 
     }

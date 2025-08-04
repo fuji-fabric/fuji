@@ -39,7 +39,7 @@ public class TestSteppingOnBlockJob extends CronJob {
         player2lastSteppingBlockUUID.put(playerName, uuid);
 
         /* Trigger it. */
-        ServerHelper.executeSync(() -> CommandAttachmentService.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.STEP_ON)));
+        ServerHelper.executeSync(() -> CommandAttachmentService.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.STEP_ON), () -> {}));
     }
 
     public static void testSteppingBlockForPlayers() {

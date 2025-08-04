@@ -49,10 +49,6 @@ public class CommandAttachmentService {
             .getNodes();
     }
 
-    public static void tryTriggerAttachmentModel(@Nullable String uuid, @NotNull PlayerEntity player, @NotNull List<InteractType> receivedInteractTypes) {
-        tryTriggerAttachmentModel(uuid,player,receivedInteractTypes, () -> {});
-    }
-
     public static void tryTriggerAttachmentModel(@Nullable String uuid, @NotNull PlayerEntity player, @NotNull List<InteractType> receivedInteractTypes, @NotNull Runnable postTriggered) {
         findAttachmentDataNode(uuid)
             .ifPresent(it -> triggerAttachmentModel(it.getEntries(), uuid, player, receivedInteractTypes, postTriggered));
