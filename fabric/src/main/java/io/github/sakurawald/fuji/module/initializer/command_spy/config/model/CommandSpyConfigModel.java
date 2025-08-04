@@ -8,6 +8,8 @@ import java.util.List;
 
 public class CommandSpyConfigModel {
 
+    public boolean spy_on_console = false;
+
     @Document(id = 1751826793929L, value = """
         Ignore and never spy on these commands.
         """)
@@ -37,6 +39,4 @@ public class CommandSpyConfigModel {
             }
         };
     }
-
-    public boolean spy_on_console = false;
 }

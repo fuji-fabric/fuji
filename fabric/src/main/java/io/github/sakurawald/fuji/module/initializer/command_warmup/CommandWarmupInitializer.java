@@ -57,7 +57,7 @@ public class CommandWarmupInitializer extends ModuleInitializer {
 
         /* Iterate the node entries. */
         var config = CommandWarmupInitializer.config.model();
-        for (CommandWarmupNode entry : config.entries) {
+        for (CommandWarmupNode entry : config.rules) {
 
             /* Test if we should bypass this warmup entry. */
             if (Tag.hasAnyTagPermission(player,"command_warmup.bypass", entry.getTag().getTags())) {

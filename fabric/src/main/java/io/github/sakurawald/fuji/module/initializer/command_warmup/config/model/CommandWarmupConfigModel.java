@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_warmup.config.model;
 
+import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.structure.Interruptible;
 import io.github.sakurawald.fuji.module.initializer.command_warmup.structure.CommandWarmupNode;
@@ -15,9 +16,10 @@ public class CommandWarmupConfigModel {
     public boolean warn_for_move = true;
 
     @Document(id = 1751826873894L, value = """
-        Defined `warmup` entry.
+        Defined `warmup` rules.
         """)
-    public List<CommandWarmupNode> entries = new ArrayList<>() {
+    @SerializedName(value = "rules", alternate = "entries")
+    public List<CommandWarmupNode> rules = new ArrayList<>() {
         {
             this.add(CommandWarmupNode.make(new CommandWarmupNode.Command("back", 3 * 1000), new Interruptible(true, 3, true, true)));
             this.add(CommandWarmupNode.make(new CommandWarmupNode.Command("heal", 1000), new Interruptible(true, 3, true, true)));
