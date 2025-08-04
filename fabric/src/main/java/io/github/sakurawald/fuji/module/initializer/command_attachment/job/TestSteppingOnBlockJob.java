@@ -5,8 +5,9 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.UuidHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
-import io.github.sakurawald.fuji.core.job.abst.CronJob;
-import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
+import io.github.sakurawald.fuji.core.job.abst.FixedIntervalJob;
+import io.github.sakurawald.fuji.core.manager.Managers;
+import io.github.sakurawald.fuji.module.initializer.command_attachment.CommandAttachmentInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.service.CommandAttachmentService;
 import java.util.HashMap;
@@ -20,15 +21,30 @@ import org.quartz.JobExecutionContext;
 @Document(id = 1751826425009L, value = """
     This `job` is used to test if the player is stepping on a `block` with `attached commands`.
     """)
-public class TestSteppingOnBlockJob extends CronJob {
+public class TestSteppingOnBlockJob extends FixedIntervalJob {
 
     private static final Map<String, String> player2lastSteppingBlockUUID = new HashMap<>();
 
     public TestSteppingOnBlockJob() {
-        super(() -> ScheduleManager.CRON_EVERY_SECOND);
+        super(null, null, null, intervalSupplier(), REPEAT_INDEFINITELY);
+        super.rescheduleAble = false;
     }
 
-    public static void testSteppingBlockForPlayer(@NotNull ServerPlayerEntity player) {
+    private static void scheduleJob() {
+        TestSteppingOnBlockJob job = new TestSteppingOnBlockJob();
+        Managers.getScheduleManager().scheduleJob(job);
+    }
+
+    public static void reloadJob() {
+        Managers.getScheduleManager().deleteJobs(TestSteppingOnBlockJob.class);
+        scheduleJob();
+    }
+
+    private static int intervalSupplier() {
+        return CommandAttachmentInitializer.config.model().getTestSteppingOnBlockIntervalInMillSeconds();
+    }
+
+    private static void testSteppingBlockForPlayer(@NotNull ServerPlayerEntity player) {
         String playerName = PlayerHelper.getPlayerName(player);
         String lastSteppingBlockUUID = player2lastSteppingBlockUUID.get(playerName);
         ServerWorld serverWorld = EntityHelper.getServerWorld(player);
@@ -44,8 +60,10 @@ public class TestSteppingOnBlockJob extends CronJob {
         ServerHelper.executeSync(() -> CommandAttachmentService.tryTriggerAttachmentModel(currentSteppingBlockUUID, player, List.of(InteractType.STEP_ON), () -> {}));
     }
 
-    public static void testSteppingBlockForPlayers() {
-        PlayerHelper.Lookup.getOnlinePlayers().forEach(TestSteppingOnBlockJob::testSteppingBlockForPlayer);
+    private static void testSteppingBlockForPlayers() {
+        PlayerHelper.Lookup
+            .getOnlinePlayers()
+            .forEach(TestSteppingOnBlockJob::testSteppingBlockForPlayer);
     }
 
     @Override

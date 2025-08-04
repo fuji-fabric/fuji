@@ -27,7 +27,7 @@ public class PatrolJailJob extends FixedIntervalJob {
         super.rescheduleAble = false;
     }
 
-    public static void scheduleJob(@NotNull JailDescriptor jailDescriptor) {
+    private static void scheduleJob(@NotNull JailDescriptor jailDescriptor) {
         /* Make the job. */
         PatrolJailJob job = new PatrolJailJob(new JobDataMap() {
             {

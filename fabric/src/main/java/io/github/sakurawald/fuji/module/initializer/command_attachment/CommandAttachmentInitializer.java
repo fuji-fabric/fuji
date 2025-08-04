@@ -23,6 +23,7 @@ import io.github.sakurawald.fuji.module.initializer.command_attachment.config.mo
 import io.github.sakurawald.fuji.module.initializer.command_attachment.config.transformer.CommandAttachmentV1SchemaTransformer;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.job.TestSteppingOnBlockJob;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.service.CommandAttachmentService;
+import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.CommandAttachmentConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.BlockCommandAttachmentEntry;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.BaseCommandAttachmentEntry;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.EntityCommandAttachmentEntry;
@@ -89,6 +90,8 @@ import java.util.Optional;
 @CommandNode("command-attachment")
 @CommandRequirement(level = 4)
 public class CommandAttachmentInitializer extends ModuleInitializer {
+
+    public static final BaseConfigurationHandler<CommandAttachmentConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandAttachmentConfigModel.class);
 
     public static final BaseConfigurationHandler<CommandAttachmentDataModel> data = new ObjectConfigurationHandler<>("command-attachment-data.json", CommandAttachmentDataModel.class)
         .enableAutoSaveFeature()
@@ -227,15 +230,16 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @Override
     protected void onInitialize() {
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            TestSteppingOnBlockJob testSteppingOnBlockJob = new TestSteppingOnBlockJob();
-            Managers.getScheduleManager().scheduleJob(testSteppingOnBlockJob);
-        });
+        TestSteppingOnBlockJob.reloadJob();
+    }
+
+    @Override
+    protected void onReload() {
+        TestSteppingOnBlockJob.reloadJob();
     }
 
     @Override
     protected void registerGsonTypeAdapter() {
         BaseConfigurationHandler.registerGsonTypeAdapter(BaseCommandAttachmentEntry.class, new CommandAttachmentNodeAdapter());
     }
-
 }
