@@ -5,8 +5,6 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
-import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
-import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.CommandAttachmentInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.ExecuteAsType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
@@ -14,11 +12,9 @@ import io.github.sakurawald.fuji.module.initializer.command_attachment.config.mo
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.CommandAttachmentDataNode;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.CommandAttachmentNode;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.ItemStackCommandAttachmentNode;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import lombok.SneakyThrows;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -27,8 +23,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class CommandAttachmentService {
-
-    private static final String COMMAND_ATTACHMENT_SUBJECT_NAME = "command-attachment";
 
     public static <T> T withAttachmentDataNode(@NotNull String uuid, @NotNull Function<CommandAttachmentDataNode, T> function) {
         Optional<CommandAttachmentDataNode> first = findAttachmentDataNode(uuid);
@@ -55,25 +49,6 @@ public class CommandAttachmentService {
             .getNodes();
     }
 
-    public static CommandAttachmentModel getAttachmentModel(@NotNull String uuid) {
-        CommandAttachmentModel model;
-        try {
-            String attachment = Managers.getAttachmentManager().getAttachment(COMMAND_ATTACHMENT_SUBJECT_NAME, uuid);
-            model = BaseConfigurationHandler.getGson().fromJson(attachment, CommandAttachmentModel.class);
-        } catch (IOException e) {
-            model = new CommandAttachmentModel();
-            setAttachmentModel(uuid, model);
-        }
-
-        return model;
-    }
-
-    @SneakyThrows(IOException.class)
-    public static void setAttachmentModel(String uuid, CommandAttachmentModel model) {
-        String json = BaseConfigurationHandler.getGson().toJson(model);
-        Managers.getAttachmentManager().setAttachment(COMMAND_ATTACHMENT_SUBJECT_NAME, uuid, json);
-    }
-
     public static void tryTriggerAttachmentModel(@Nullable String uuid, @NotNull PlayerEntity player, @NotNull List<InteractType> receivedInteractTypes) {
         tryTriggerAttachmentModel(uuid,player,receivedInteractTypes, () -> {});
     }
@@ -96,7 +71,8 @@ public class CommandAttachmentService {
             ExecuteAsType executeAsType = e.getExecuteAsType();
             ServerCommandSource source = CommandHelper.Source.getCommandSource(player);
             switch (executeAsType) {
-                case CONSOLE -> CommandExecutor.execute(ExtendedCommandSource.asConsole(source), e.getCommand());
+                case CONSOLE ->
+                    CommandExecutor.execute(ExtendedCommandSource.asConsole(source), e.getCommand());
                 case PLAYER ->
                     CommandExecutor.execute(ExtendedCommandSource.asPlayer(source, (ServerPlayerEntity) player), e.getCommand());
                 case FAKE_OP ->
@@ -114,9 +90,6 @@ public class CommandAttachmentService {
                 }
             }
         }
-
-        /* Save the attachment model immediately. */
-        setAttachmentModel(uuid, model);
     }
 
     public static void detachAttachment(@NotNull String uuid) {

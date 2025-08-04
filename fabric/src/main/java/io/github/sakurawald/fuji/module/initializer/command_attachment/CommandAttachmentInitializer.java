@@ -89,7 +89,8 @@ import java.util.Optional;
 @CommandRequirement(level = 4)
 public class CommandAttachmentInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<CommandAttachmentDataModel> data = new ObjectConfigurationHandler<>("command-attachment-data.json", CommandAttachmentDataModel.class);
+    public static final BaseConfigurationHandler<CommandAttachmentDataModel> data = new ObjectConfigurationHandler<>("command-attachment-data.json", CommandAttachmentDataModel.class)
+        .enableAutoSaveFeature();
 
     @Document(id = 1751826433455L, value = "Attach one command to an item.")
     @CommandNode("attach-item-one")
@@ -102,20 +103,21 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     ) {
         return CommandHelper.Pattern.withItemInMainHand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
             String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
-            CommandAttachmentModel model = CommandAttachmentService.getAttachmentModel(uuid);
+            return CommandAttachmentService.withAttachmentDataNode(uuid, it -> {
+                CommandAttachmentModel model = it.getEntries();
 
-            // new entry
-            String $command = command.getValue();
-            InteractType $interactType = interactType.orElse(InteractType.BOTH);
-            ExecuteAsType $executeAsType = executeAsType.orElse(ExecuteAsType.FAKE_OP);
-            Integer $maxUseTimes = maxUseTimes.orElse(Integer.MAX_VALUE);
-            Boolean $destroyItem = destroyItem.orElse(true);
+                /* Make new entry. */
+                String $command = command.getValue();
+                InteractType $interactType = interactType.orElse(InteractType.BOTH);
+                ExecuteAsType $executeAsType = executeAsType.orElse(ExecuteAsType.FAKE_OP);
+                Integer $maxUseTimes = maxUseTimes.orElse(Integer.MAX_VALUE);
+                Boolean $destroyItem = destroyItem.orElse(true);
+                ItemStackCommandAttachmentNode newEntry = new ItemStackCommandAttachmentNode($command, $interactType, $executeAsType, $maxUseTimes, 0, $destroyItem);
 
-            model.getEntries().add(new ItemStackCommandAttachmentNode($command, $interactType, $executeAsType, $maxUseTimes, 0, $destroyItem));
-
-            // save model
-            CommandAttachmentService.setAttachmentModel(uuid, model);
-            return CommandHelper.Return.SUCCESS;
+                /* Add the entry. */
+                model.getEntries().add(newEntry);
+                return CommandHelper.Return.SUCCESS;
+            });
         });
     }
 
@@ -128,21 +130,21 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         , Optional<ExecuteAsType> executeAsType
         , GreedyString command
     ) {
-        // get entity id
         String uuid = entity.getUuidAsString();
-        CommandAttachmentModel model = CommandAttachmentService.getAttachmentModel(uuid);
+        return CommandAttachmentService.withAttachmentDataNode(uuid, it -> {
+            CommandAttachmentModel model = it.getEntries();
 
-        // new entry
-        String $command = command.getValue();
-        InteractType $interactType = interactType.orElse(InteractType.BOTH);
-        ExecuteAsType $executeAsType = executeAsType.orElse(ExecuteAsType.FAKE_OP);
-        Integer $maxUseTimes = maxUseTimes.orElse(Integer.MAX_VALUE);
+            /* Make new entry. */
+            String $command = command.getValue();
+            InteractType $interactType = interactType.orElse(InteractType.BOTH);
+            ExecuteAsType $executeAsType = executeAsType.orElse(ExecuteAsType.FAKE_OP);
+            Integer $maxUseTimes = maxUseTimes.orElse(Integer.MAX_VALUE);
+            EntityCommandAttachmentNode newEntry = new EntityCommandAttachmentNode($command, $interactType, $executeAsType, $maxUseTimes, 0);
 
-        model.getEntries().add(new EntityCommandAttachmentNode($command, $interactType, $executeAsType, $maxUseTimes, 0));
-
-        // save model
-        CommandAttachmentService.setAttachmentModel(uuid, model);
-        return CommandHelper.Return.SUCCESS;
+            /* Add the entry. */
+            model.getEntries().add(newEntry);
+            return CommandHelper.Return.SUCCESS;
+        });
     }
 
     @Document(id = 1751826465183L, value = "Attach one command to specified block.")
@@ -154,22 +156,22 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         , Optional<ExecuteAsType> executeAsType
         , GreedyString command
     ) {
-        // get entity id
         String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
-        CommandAttachmentModel model = CommandAttachmentService.getAttachmentModel(uuid);
+        return CommandAttachmentService.withAttachmentDataNode(uuid, it -> {
+            CommandAttachmentModel model = it.getEntries();
 
-        // new entry
-        String $command = command.getValue();
-        InteractType $interactType = interactType.orElse(InteractType.BOTH);
-        ExecuteAsType $executeAsType = executeAsType.orElse(ExecuteAsType.FAKE_OP);
-        Integer $maxUseTimes = maxUseTimes.orElse(Integer.MAX_VALUE);
+            /* Make the new entry. */
+            String $command = command.getValue();
+            InteractType $interactType = interactType.orElse(InteractType.BOTH);
+            ExecuteAsType $executeAsType = executeAsType.orElse(ExecuteAsType.FAKE_OP);
+            Integer $maxUseTimes = maxUseTimes.orElse(Integer.MAX_VALUE);
+            String createdIn = UuidHelper.toString(player.getWorld(), blockPos);
+            BlockCommandAttachmentNode newEntry = new BlockCommandAttachmentNode(createdIn, $command, $interactType, $executeAsType, $maxUseTimes, 0);
 
-        String createdIn = UuidHelper.toString(player.getWorld(), blockPos);
-        model.getEntries().add(new BlockCommandAttachmentNode(createdIn, $command, $interactType, $executeAsType, $maxUseTimes, 0));
-
-        // save model
-        CommandAttachmentService.setAttachmentModel(uuid, model);
-        return CommandHelper.Return.SUCCESS;
+            // Add the entry.
+            model.getEntries().add(newEntry);
+            return CommandHelper.Return.SUCCESS;
+        });
     }
 
     @Document(id = 1751826477036L, value = "Detach all attached commands in the item.")
