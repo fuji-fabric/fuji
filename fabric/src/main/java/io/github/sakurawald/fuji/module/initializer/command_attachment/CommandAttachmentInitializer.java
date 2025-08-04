@@ -22,10 +22,10 @@ import io.github.sakurawald.fuji.module.initializer.command_attachment.config.mo
 import io.github.sakurawald.fuji.module.initializer.command_attachment.config.model.CommandAttachmentModel;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.job.TestSteppingOnBlockJob;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.service.CommandAttachmentService;
-import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.BlockCommandAttachmentNode;
-import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.CommandAttachmentNode;
-import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.EntityCommandAttachmentNode;
-import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.ItemStackCommandAttachmentNode;
+import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.BlockCommandAttachmentEntry;
+import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.BaseCommandAttachmentEntry;
+import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.EntityCommandAttachmentEntry;
+import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.ItemStackCommandAttachmentEntry;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -104,7 +104,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         return CommandHelper.Pattern.withItemInMainHand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
             String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
             return CommandAttachmentService.withAttachmentDataNode(uuid, it -> {
-                CommandAttachmentModel model = it.getEntries();
+                CommandAttachmentModel model = it.getModel();
 
                 /* Make new entry. */
                 String $command = command.getValue();
@@ -112,7 +112,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
                 ExecuteAsType $executeAsType = executeAsType.orElse(ExecuteAsType.FAKE_OP);
                 Integer $maxUseTimes = maxUseTimes.orElse(Integer.MAX_VALUE);
                 Boolean $destroyItem = destroyItem.orElse(true);
-                ItemStackCommandAttachmentNode newEntry = new ItemStackCommandAttachmentNode($command, $interactType, $executeAsType, $maxUseTimes, 0, $destroyItem);
+                ItemStackCommandAttachmentEntry newEntry = new ItemStackCommandAttachmentEntry($command, $interactType, $executeAsType, $maxUseTimes, 0, $destroyItem);
 
                 /* Add the entry. */
                 model.getEntries().add(newEntry);
@@ -132,14 +132,14 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     ) {
         String uuid = entity.getUuidAsString();
         return CommandAttachmentService.withAttachmentDataNode(uuid, it -> {
-            CommandAttachmentModel model = it.getEntries();
+            CommandAttachmentModel model = it.getModel();
 
             /* Make new entry. */
             String $command = command.getValue();
             InteractType $interactType = interactType.orElse(InteractType.BOTH);
             ExecuteAsType $executeAsType = executeAsType.orElse(ExecuteAsType.FAKE_OP);
             Integer $maxUseTimes = maxUseTimes.orElse(Integer.MAX_VALUE);
-            EntityCommandAttachmentNode newEntry = new EntityCommandAttachmentNode($command, $interactType, $executeAsType, $maxUseTimes, 0);
+            EntityCommandAttachmentEntry newEntry = new EntityCommandAttachmentEntry($command, $interactType, $executeAsType, $maxUseTimes, 0);
 
             /* Add the entry. */
             model.getEntries().add(newEntry);
@@ -158,7 +158,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     ) {
         String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
         return CommandAttachmentService.withAttachmentDataNode(uuid, it -> {
-            CommandAttachmentModel model = it.getEntries();
+            CommandAttachmentModel model = it.getModel();
 
             /* Make the new entry. */
             String $command = command.getValue();
@@ -166,7 +166,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
             ExecuteAsType $executeAsType = executeAsType.orElse(ExecuteAsType.FAKE_OP);
             Integer $maxUseTimes = maxUseTimes.orElse(Integer.MAX_VALUE);
             String createdIn = UuidHelper.toString(player.getWorld(), blockPos);
-            BlockCommandAttachmentNode newEntry = new BlockCommandAttachmentNode(createdIn, $command, $interactType, $executeAsType, $maxUseTimes, 0);
+            BlockCommandAttachmentEntry newEntry = new BlockCommandAttachmentEntry(createdIn, $command, $interactType, $executeAsType, $maxUseTimes, 0);
 
             // Add the entry.
             model.getEntries().add(newEntry);
@@ -179,7 +179,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     private static int $detachItemAll(@CommandSource ServerPlayerEntity player) {
         return CommandHelper.Pattern.withItemInMainHand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
             String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
-            CommandAttachmentService.detachAttachment(uuid);
+            CommandAttachmentService.removeAttachmentModel(uuid);
             return CommandHelper.Return.SUCCESS;
         });
     }
@@ -188,7 +188,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @CommandNode("detach-entity-all")
     private static int $detachEntityAll(@CommandSource ServerPlayerEntity player, Entity entity) {
         String uuid = entity.getUuidAsString();
-        CommandAttachmentService.detachAttachment(uuid);
+        CommandAttachmentService.removeAttachmentModel(uuid);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -196,7 +196,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @CommandNode("detach-block-all")
     private static int $detachBlockAll(@CommandSource ServerPlayerEntity player, BlockPos blockPos) {
         String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
-        CommandAttachmentService.detachAttachment(uuid);
+        CommandAttachmentService.removeAttachmentModel(uuid);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -205,7 +205,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     private static int $queryItem(@CommandSource ServerPlayerEntity player) {
         return CommandHelper.Pattern.withItemInMainHand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
             String uuid = UuidHelper.getAttachedUuid(ItemStackHelper.CustomData.getCustomDataNbt(mainHandStack));
-            return CommandAttachmentService.queryAttachment(player.getCommandSource(), uuid);
+            return CommandAttachmentService.queryAttachmentModel(player.getCommandSource(), uuid);
         });
     }
 
@@ -213,14 +213,14 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @CommandNode("query-entity")
     private static int $queryEntity(@CommandSource ServerCommandSource source, Entity entity) {
         String uuid = entity.getUuidAsString();
-        return CommandAttachmentService.queryAttachment(source, uuid);
+        return CommandAttachmentService.queryAttachmentModel(source, uuid);
     }
 
     @Document(id = 1751826492923L, value = "Query all attached commands in the block.")
     @CommandNode("query-block")
     private static int $queryBlock(@CommandSource ServerCommandSource source, BlockPos blockPos) {
         String uuid = UuidHelper.getAttachedUuid(source.getWorld(), blockPos);
-        return CommandAttachmentService.queryAttachment(source, uuid);
+        return CommandAttachmentService.queryAttachmentModel(source, uuid);
     }
 
     @Override
@@ -233,7 +233,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @Override
     protected void registerGsonTypeAdapter() {
-        BaseConfigurationHandler.registerGsonTypeAdapter(CommandAttachmentNode.class, new CommandAttachmentNodeAdapter());
+        BaseConfigurationHandler.registerGsonTypeAdapter(BaseCommandAttachmentEntry.class, new CommandAttachmentNodeAdapter());
     }
 
 }

@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import org.jetbrains.annotations.NotNull;
 import org.quartz.JobExecutionContext;
 
@@ -28,18 +29,19 @@ public class TestSteppingOnBlockJob extends CronJob {
     }
 
     public static void testSteppingBlockForPlayer(@NotNull ServerPlayerEntity player) {
-        String playerName = player.getGameProfile().getName();
-        String originalUuid = player2lastSteppingBlockUUID.get(playerName);
-        String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), player.getSteppingPos());
+        String playerName = PlayerHelper.getPlayerName(player);
+        String lastSteppingBlockUUID = player2lastSteppingBlockUUID.get(playerName);
+        ServerWorld serverWorld = EntityHelper.getServerWorld(player);
+        String currentSteppingBlockUUID = UuidHelper.getAttachedUuid(serverWorld, player.getSteppingPos());
 
         /* Ignore the trigger if last stepping block is the same. */
-        if (uuid.equals(originalUuid)) return;
+        if (currentSteppingBlockUUID.equals(lastSteppingBlockUUID)) return;
 
         /* Update last stepping block, and execute attached commands. */
-        player2lastSteppingBlockUUID.put(playerName, uuid);
+        player2lastSteppingBlockUUID.put(playerName, currentSteppingBlockUUID);
 
         /* Trigger it. */
-        ServerHelper.executeSync(() -> CommandAttachmentService.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.STEP_ON), () -> {}));
+        ServerHelper.executeSync(() -> CommandAttachmentService.tryTriggerAttachmentModel(currentSteppingBlockUUID, player, List.of(InteractType.STEP_ON), () -> {}));
     }
 
     public static void testSteppingBlockForPlayers() {

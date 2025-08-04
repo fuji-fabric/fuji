@@ -10,8 +10,8 @@ import io.github.sakurawald.fuji.module.initializer.command_attachment.command.a
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.config.model.CommandAttachmentModel;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.CommandAttachmentDataNode;
-import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.CommandAttachmentNode;
-import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.ItemStackCommandAttachmentNode;
+import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.BaseCommandAttachmentEntry;
+import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.ItemStackCommandAttachmentEntry;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -51,12 +51,12 @@ public class CommandAttachmentService {
 
     public static void tryTriggerAttachmentModel(@Nullable String uuid, @NotNull PlayerEntity player, @NotNull List<InteractType> receivedInteractTypes, @NotNull Runnable postTriggered) {
         findAttachmentDataNode(uuid)
-            .ifPresent(it -> triggerAttachmentModel(it.getEntries(), uuid, player, receivedInteractTypes, postTriggered));
+            .ifPresent(it -> triggerAttachmentModel(it.getModel(), uuid, player, receivedInteractTypes, postTriggered));
     }
 
     private static void triggerAttachmentModel(@NotNull CommandAttachmentModel model, String uuid, @NotNull PlayerEntity player, @NotNull List<InteractType> receivedInteractTypes, @NotNull Runnable postTriggered) {
         /* Process attachment nodes. */
-        for (CommandAttachmentNode e : model.getEntries()) {
+        for (BaseCommandAttachmentEntry e : model.getEntries()) {
             /* Filter for interaction type. */
             if (!receivedInteractTypes.contains(e.getInteractType())) continue;
 
@@ -80,7 +80,7 @@ public class CommandAttachmentService {
 
             /* Handler for destroy-item. */
             e.setUseTimes(e.getUseTimes() + 1);
-            if (e instanceof ItemStackCommandAttachmentNode ie) {
+            if (e instanceof ItemStackCommandAttachmentEntry ie) {
                 if (ie.isDestroyItem() && e.getUseTimes() >= e.getMaxUseTimes()) {
                     player.getMainHandStack().decrement(1);
                 }
@@ -88,12 +88,12 @@ public class CommandAttachmentService {
         }
     }
 
-    public static void detachAttachment(@NotNull String uuid) {
+    public static void removeAttachmentModel(@NotNull String uuid) {
         getCommandAttachmentDataNodes()
             .removeIf(it -> it.getId().equals(uuid));
     }
 
-    public static int queryAttachment(@NotNull ServerCommandSource source, @Nullable String uuid) {
+    public static int queryAttachmentModel(@NotNull ServerCommandSource source, @Nullable String uuid) {
         return findAttachmentDataNode(uuid)
             .map(it -> {
                 String attachmentDataNodeString = it.toString();
