@@ -10,11 +10,13 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
+import io.github.sakurawald.fuji.module.initializer.rank.command.argument.wrapper.NextAvailableRankNode;
 import io.github.sakurawald.fuji.module.initializer.rank.config.model.RankConfigModel;
 import io.github.sakurawald.fuji.module.initializer.rank.config.model.RankDataModel;
 import io.github.sakurawald.fuji.module.initializer.rank.service.RankService;
 import io.github.sakurawald.fuji.module.initializer.rank.structure.RankNode;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -41,7 +43,13 @@ public class RankInitializer extends ModuleInitializer {
     private static int $info(@CommandSource ServerCommandSource source, RankNode rankNode) {
         TextHelper.sendTextByKey(source, "rank.rank_node.id", rankNode.getId());
         TextHelper.sendTextByKey(source, "rank.rank_node.display_name", rankNode.getDisplayName());
-        TextHelper.sendTextByKey(source, "rank.rank_node.next_nodes", rankNode.getNextRankNodes());
+
+        List<String> nextRankNodes = rankNode.getNextRankNodes();
+        if (nextRankNodes.isEmpty()) {
+            TextHelper.sendTextByKey(source, "rank.rank_node.next_nodes", TextHelper.Operators.visitString(RankService.getNoRankStatusText()));
+        } else {
+            TextHelper.sendTextByKey(source, "rank.rank_node.next_nodes", nextRankNodes);
+        }
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -61,6 +69,7 @@ public class RankInitializer extends ModuleInitializer {
 
     @Document(id = 1754415572673L, value = "Query the rank progress of the specified player.")
     @CommandNode("rank progress")
+    @CommandRequirement(level = 4)
     private static int $rankProgress(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
         return RankService
             .getCurrentRankNode(target)
@@ -72,6 +81,13 @@ public class RankInitializer extends ModuleInitializer {
             });
     }
 
+    @Document(id = 1754420858807L, value = "Query the rank progress.")
+    @CommandNode("rank progress")
+    private static int $rankProgress(@CommandSource ServerPlayerEntity player) {
+        return $rankProgress(player.getCommandSource(), player);
+    }
+
+
     @Document(id = 1754417962937L, value = "Set the rank for specified player.")
     @CommandNode("rank set")
     @CommandRequirement(level = 4)
@@ -81,4 +97,23 @@ public class RankInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document(id = 1754418507342L, value = "Rank up to the next available rank node.")
+    @CommandNode("rank up")
+    private static int $rankUp(@CommandSource ServerPlayerEntity player, NextAvailableRankNode nextRank) {
+        RankNode $nextRank = nextRank.getValue();
+        RankService.setCurrentRankNode(player, $nextRank);
+        TextHelper.sendTextByKey(player, "rank.up", $nextRank.getDisplayName());
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document(id = 1754421296792L, value = "Set the specified player's rank to none.")
+    @CommandNode("rank remove")
+    @CommandRequirement(level = 4)
+    private static int $removeRank(@CommandSource ServerCommandSource source, ServerPlayerEntity player, Optional<Boolean> confirm) {
+        return CommandHelper.Pattern.withCommandConfirmed(source, confirm, () -> {
+            RankService.setCurrentRankNode(player, null);
+            TextHelper.sendTextByKey(source, "rank.remove", PlayerHelper.getPlayerName(player));
+            return CommandHelper.Return.SUCCESS;
+        });
+    }
 }

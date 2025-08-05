@@ -10,6 +10,7 @@ import io.github.sakurawald.fuji.module.initializer.rank.structure.RankDataNode;
 import io.github.sakurawald.fuji.module.initializer.rank.structure.RankNode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -70,9 +71,10 @@ public class RankService {
         return result;
     }
 
-    public static void setCurrentRankNode(@NotNull ServerPlayerEntity player, @NotNull RankNode rankNode) {
+    public static void setCurrentRankNode(@NotNull ServerPlayerEntity player, @Nullable RankNode rankNode) {
         withRankDataNode(player, true, rankDataNode -> {
-            rankDataNode.setCurrentRankNodeId(rankNode.getId());
+            String newValue = rankNode == null ? null : rankNode.getId();
+            rankDataNode.setCurrentRankNodeId(newValue);
             return null;
         });
     }
@@ -101,4 +103,24 @@ public class RankService {
         return TextHelper.getTextByValue(null, RankInitializer.config.model().getNoRankStatusText());
     }
 
+    public static List<RankNode> getNextAvailableRankNodes(@NotNull ServerPlayerEntity player) {
+        return getCurrentRankNode(player)
+            .map(RankService::getNextRankNodes)
+            .orElseGet(() -> getAvailableStartingRankNodes(player));
+    }
+
+    private static @NotNull List<RankNode> getNextRankNodes(@NotNull RankNode it) {
+        return it.getNextRankNodes()
+            .stream()
+            .map(id -> findRankNode(id).orElse(null))
+            .filter(Objects::nonNull)
+            .toList();
+    }
+
+    public static @NotNull List<String> getNextAvailableRankNodeIds(@NotNull ServerPlayerEntity player) {
+        return getNextAvailableRankNodes(player)
+            .stream()
+            .map(RankNode::getId)
+            .toList();
+    }
 }

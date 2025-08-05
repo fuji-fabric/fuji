@@ -6,6 +6,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -190,15 +193,18 @@ public class CommandHelper {
     }
 
     public static class Suggestion {
-        public static <T> @NotNull SuggestionProvider<ServerCommandSource> iterable(@NotNull Supplier<Iterable<T>> iterableSupplier) {
-            return (context, builder) -> {
-                Iterable<T> iterable = iterableSupplier.get();
-                CommandSuggestionOptimizer
-                    .optimize(iterable, builder.getRemaining())
-                    .forEach(builder::suggest);
 
-                return builder.buildFuture();
-            };
+        public static <T> CompletableFuture<Suggestions> makeSuggestionsCompletableFuture(@NotNull Supplier<Iterable<T>> iterableSupplier, @NotNull SuggestionsBuilder builder) {
+            Iterable<T> iterable = iterableSupplier.get();
+            CommandSuggestionOptimizer
+                .optimize(iterable, builder.getRemaining())
+                .forEach(builder::suggest);
+
+            return builder.buildFuture();
+        }
+
+        public static <T> @NotNull SuggestionProvider<ServerCommandSource> iterable(@NotNull Supplier<Iterable<T>> iterableSupplier) {
+            return (context, builder) -> makeSuggestionsCompletableFuture(iterableSupplier, builder);
         }
 
         public static <T> @NotNull SuggestionProvider<ServerCommandSource> enums(@NotNull Supplier<T[]> enumValuesSupplier) {
