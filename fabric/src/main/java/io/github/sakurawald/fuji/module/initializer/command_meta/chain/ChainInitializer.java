@@ -82,7 +82,7 @@ public class ChainInitializer extends ModuleInitializer {
 
             int value = CommandExecutor.execute(ExtendedCommandSource.fromSource(source), first);
             // Break chain, if command `fail`.
-            if (value > 0) {
+            if (CommandHelper.Return.isSuccess(value)) {
                 CommandExecutor.execute(ExtendedCommandSource.fromSource(source), second);
             }
         } else {

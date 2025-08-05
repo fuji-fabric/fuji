@@ -190,6 +190,10 @@ public class CommandHelper {
         public static int returnBoolean(ServerCommandSource source, boolean value) {
             return fromBoolean(value);
         }
+
+        public static boolean isSuccess(int commandReturnValue) {
+            return commandReturnValue > 0;
+        }
     }
 
     public static class Suggestion {

@@ -159,7 +159,7 @@ public class IfInitializer extends ModuleInitializer {
 
             LogUtil.debug("Execute an `/IF` command: condition-command = {}, then-command = {}, else-command = {}", conditionCommand, thenCommand, elseCommand);
             int conditionValue = CommandExecutor.execute(ExtendedCommandSource.fromSource(source), conditionCommand, IfInitializer::handleIfCommandException);
-            if (conditionValue > 0) {
+            if (CommandHelper.Return.isSuccess(conditionValue)) {
                 CommandExecutor.execute(ExtendedCommandSource.fromSource(source), thenCommand, IfInitializer::handleIfCommandException);
             } else {
                 CommandExecutor.execute(ExtendedCommandSource.fromSource(source), elseCommand, IfInitializer::handleIfCommandException);
