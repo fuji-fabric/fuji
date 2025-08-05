@@ -395,10 +395,12 @@
   "pvp.status.on": "<dark_aqua>PvP for you is now <red>on</red>",
   "rank.list.all_rank_nodes": "<green>All defined rank nodes: `%s`",
   "rank.list.starting_rank_nodes": "<green>The available starting rank nodes for player `%s` are `%s`",
+  "rank.progress.no_rank": "<red>Player %s currently have no rank.",
   "rank.rank_node.display_name": "<yellow>- Display Name: %s",
   "rank.rank_node.id": "<yellow>◉ Rank Node Id: `%s`",
-  "rank.rank_node.next_nodes": "<yellow>- Next Nodes: `%s`",
+  "rank.rank_node.next_nodes": "<yellow>- Next Ranks: `%s`",
   "rank.rank_node.not_found": "<red>The rank node `%s` not found.",
+  "rank.set": "<green>Player %s's rank has been set to `%s`",
   "registry.list.gui.title": "<blue>Registry",
   "registry.type.is_dynamic": "<yellow>Is dynamic: %s",
   "reject.button": "<red>[❌]</red>",
@@ -1346,5 +1348,7 @@
   "docstring.1754412528895": "List all defined `rank nodes`.",
   "docstring.1754412670219": "Query the info of the specified `rank node`.",
   "docstring.1754414038512": "The `starting rank node` is allowed to be selected for this `player`, if they have no rank yet.\nYou can assign multiple `starting rank nodes` to be selected.\n",
-  "docstring.1754414840437": "List all available `starting rank nodes` for the specified player."
+  "docstring.1754414840437": "List all available `starting rank nodes` for the specified player.",
+  "docstring.1754415572673": "Query the rank progress of the specified player.",
+  "docstring.1754417962937": "Set the rank for specified player."
 }

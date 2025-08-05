@@ -12,6 +12,8 @@ public class RankConfigModel {
 
     String startingRankNodeId = "newbie";
 
+    String noRankStatusText = "<grey>[No Rank]";
+
     List<RankNode> graph = new ArrayList<>() {
         {
             /* Define the orphan nodes. */

@@ -59,5 +59,26 @@ public class RankInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document(id = 1754415572673L, value = "Query the rank progress of the specified player.")
+    @CommandNode("rank progress")
+    private static int $rankProgress(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
+        return RankService
+            .getCurrentRankNode(target)
+            .map(currentRankNode -> $info(target.getCommandSource(), currentRankNode))
+            .orElseGet(() -> {
+                String playerName = PlayerHelper.getPlayerName(target);
+                TextHelper.sendTextByKey(source, "rank.progress.no_rank", playerName);
+                return CommandHelper.Return.FAIL;
+            });
+    }
+
+    @Document(id = 1754417962937L, value = "Set the rank for specified player.")
+    @CommandNode("rank set")
+    @CommandRequirement(level = 4)
+    private static int $setRank(@CommandSource ServerCommandSource source, ServerPlayerEntity target, RankNode rankNode) {
+        RankService.setCurrentRankNode(target, rankNode);
+        TextHelper.sendTextByKey(source, "rank.set", PlayerHelper.getPlayerName(target), rankNode.getId());
+        return CommandHelper.Return.SUCCESS;
+    }
 
 }
