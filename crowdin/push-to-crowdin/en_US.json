@@ -393,8 +393,12 @@
   "pvp.on.already": "<dark_aqua>You already have PvP on!",
   "pvp.status.off": "<dark_aqua>PvP for you is now <green>off</green>",
   "pvp.status.on": "<dark_aqua>PvP for you is now <red>on</red>",
+  "rank.down": "<yellow>You have been ranked down to %s.",
   "rank.list.all_rank_nodes": "<green>All defined rank nodes: `%s`",
+  "rank.list.next_rank_nodes": "<green>The available next rank nodes for player `%s` are `%s`",
+  "rank.list.previous_rank_nodes": "<green>The available previous rank nodes for player `%s` are `%s`",
   "rank.list.starting_rank_nodes": "<green>The available starting rank nodes for player `%s` are `%s`",
+  "rank.list.walked_rank_nodes": "<green>The walked rank nodes for player `%s` are `%s`",
   "rank.progress.no_rank": "<red>Player %s currently have no rank.",
   "rank.rank_node.display_name": "<yellow>- Display Name: %s",
   "rank.rank_node.id": "<yellow>◉ Rank Node Id: `%s`",
@@ -402,8 +406,8 @@
   "rank.rank_node.not_found": "<red>The rank node `%s` not found.",
   "rank.remove": "<yellow>Set the player %s's rank to none.",
   "rank.set": "<green>Player %s's rank has been set to `%s`",
+  "rank.unavailable_rank_node": "<red>The rank node `%s` is un-available.",
   "rank.up": "<green>You have been ranked up to %s.",
-  "rank.up.unavailable_rank_node": "<red>The rank node `%s` is un-available.",
   "registry.list.gui.title": "<blue>Registry",
   "registry.type.is_dynamic": "<yellow>Is dynamic: %s",
   "reject.button": "<red>[❌]</red>",
@@ -1356,5 +1360,9 @@
   "docstring.1754417962937": "Set the rank for specified player.",
   "docstring.1754418507342": "Rank up to the next available rank node.",
   "docstring.1754420858807": "Query the rank progress.",
-  "docstring.1754421296792": "Set the specified player's rank to none."
+  "docstring.1754421296792": "Set the specified player's rank to none.",
+  "docstring.1754423529102": "Rank down to the previous available rank node.",
+  "docstring.1754424553830": "List all available `next rank nodes` for the specified player.",
+  "docstring.1754424619470": "List all available `previous rank nodes` for the specified player.",
+  "docstring.1754430022210": "List all `walked rank nodes` for the specified player."
 }

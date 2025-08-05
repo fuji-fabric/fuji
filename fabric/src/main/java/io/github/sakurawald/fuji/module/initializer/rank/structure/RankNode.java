@@ -22,12 +22,25 @@ public class RankNode {
         return rankNode;
     }
 
+    Requirements requirements = new Requirements();
+    @Data
+    @NoArgsConstructor
+    public static class Requirements {
+        List<String> predicateCommands = new ArrayList<>() {
+            {
+
+
+            }
+        };
+    }
+
     Events events = new Events();
     @Data
     @NoArgsConstructor
     public static class Events {
         List<String> onEnterThisRankNodeCommands = new ArrayList<>();
         List<String> onLeaveThisRankNodeCommands = new ArrayList<>();
+        List<String> onFirstEnterThisRankNodeCommands = new ArrayList<>();
     }
 
 }

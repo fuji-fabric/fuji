@@ -9,7 +9,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
-import io.github.sakurawald.fuji.module.initializer.rank.command.argument.wrapper.NextAvailableRankNode;
+import io.github.sakurawald.fuji.module.initializer.rank.command.argument.wrapper.PreviousAvailableRankNode;
 import io.github.sakurawald.fuji.module.initializer.rank.service.RankService;
 import io.github.sakurawald.fuji.module.initializer.rank.structure.RankNode;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-public class NextAvailableRankNodesArgumentTypeAdapter extends BaseArgumentTypeAdapter {
+public class PreviousAvailableRankNodesArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected ArgumentType<?> makeArgumentType() {
         return StringArgumentType.string();
@@ -29,14 +29,14 @@ public class NextAvailableRankNodesArgumentTypeAdapter extends BaseArgumentTypeA
 
         ServerPlayerEntity player = context.getSource().getPlayer();
 
-        Optional<RankNode> nextRankNode = RankService
-            .getNextAvailableRankNodes(player)
+        Optional<RankNode> previousRankNode = RankService
+            .getPreviousAvailableRankNodes(player)
             .stream()
             .filter(it -> it.getId().equals(rankId))
             .findFirst();
 
-        return nextRankNode
-            .map(NextAvailableRankNode::new)
+        return previousRankNode
+            .map(PreviousAvailableRankNode::new)
             .orElseThrow(() -> {
                 TextHelper.sendTextByKey(context.getSource(), "rank.unavailable_rank_node", rankId);
                 return new AbortCommandExecutionException();
@@ -45,12 +45,12 @@ public class NextAvailableRankNodesArgumentTypeAdapter extends BaseArgumentTypeA
 
     @Override
     public List<Class<?>> getTypeClasses() {
-        return List.of(NextAvailableRankNode.class);
+        return List.of(PreviousAvailableRankNode.class);
     }
 
     @Override
     public List<String> getTypeStrings() {
-        return List.of("next-available-rank-nodes");
+        return List.of("previous-available-rank-nodes");
     }
 
     @Override
@@ -62,7 +62,7 @@ public class NextAvailableRankNodesArgumentTypeAdapter extends BaseArgumentTypeA
                     return builder.buildFuture();
                 }
 
-                List<String> ids = RankService.getNextAvailableRankNodes(player).stream().map(RankNode::getId).toList();
+                List<String> ids = RankService.getPreviousAvailableRankNodes(player).stream().map(RankNode::getId).toList();
                 return CommandHelper.Suggestion.makeSuggestionsCompletableFuture(() -> ids, builder);
             });
     }

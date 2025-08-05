@@ -9,9 +9,12 @@ import io.github.sakurawald.fuji.module.initializer.rank.RankInitializer;
 import io.github.sakurawald.fuji.module.initializer.rank.structure.RankDataNode;
 import io.github.sakurawald.fuji.module.initializer.rank.structure.RankNode;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -25,6 +28,9 @@ public class RankService {
         You can assign multiple `starting rank nodes` to be selected.
         """)
     private static final PermissionDescriptor RANK_STARTING_RANK_NODE_PERMISSION_DESCRIPTOR = new PermissionDescriptor("rank.starting_rank_node.<rank-node-id>", 1754414038512L);
+
+    private static final Map<RankNode, List<RankNode>> PREVIOUS_RANK_NODES_MAP = new HashMap<>();
+    private static final Map<RankNode, List<RankNode>> NEXT_RANK_NODES_MAP = new HashMap<>();
 
     public static List<RankNode> getAllRankNodes() {
         return RankInitializer.config.model().getGraph()
@@ -75,6 +81,10 @@ public class RankService {
         withRankDataNode(player, true, rankDataNode -> {
             String newValue = rankNode == null ? null : rankNode.getId();
             rankDataNode.setCurrentRankNodeId(newValue);
+
+            if (rankNode != null) {
+                rankDataNode.getWalkedRankNodeIds().add(rankNode.getId());
+            }
             return null;
         });
     }
@@ -105,11 +115,48 @@ public class RankService {
 
     public static List<RankNode> getNextAvailableRankNodes(@NotNull ServerPlayerEntity player) {
         return getCurrentRankNode(player)
-            .map(RankService::getNextRankNodes)
+            .map(NEXT_RANK_NODES_MAP::get)
             .orElseGet(() -> getAvailableStartingRankNodes(player));
     }
 
-    private static @NotNull List<RankNode> getNextRankNodes(@NotNull RankNode it) {
+    public static List<RankNode> getPreviousAvailableRankNodes(@NotNull ServerPlayerEntity player) {
+        return getCurrentRankNode(player)
+            .map(currentRankNode -> {
+                Set<String> walkedRankNodeIds = getWalkedRankNodeIds(player);
+                return PREVIOUS_RANK_NODES_MAP
+                    .get(currentRankNode)
+                    .stream()
+                    .filter(it -> walkedRankNodeIds.contains(it.getId()))
+                    .toList();
+            })
+            .orElseGet(List::of);
+    }
+
+    public static Set<String> getWalkedRankNodeIds(@NotNull ServerPlayerEntity player) {
+        return withRankDataNode(player, false, RankDataNode::getWalkedRankNodeIds);
+    }
+
+    public static void computeRankGraph() {
+        NEXT_RANK_NODES_MAP.clear();
+        PREVIOUS_RANK_NODES_MAP.clear();
+
+        getAllRankNodes()
+            .forEach(it -> {
+                List<RankNode> nextRankNodes = computeNextRankNodes(it);
+                NEXT_RANK_NODES_MAP.put(it, nextRankNodes);
+                nextRankNodes.forEach(nextRankNode -> {
+                    PREVIOUS_RANK_NODES_MAP
+                        .computeIfAbsent(nextRankNode, k -> new ArrayList<>())
+                        .add(it);
+                });
+
+                /* Create the dummy previous rank nodes for starting rank nodes. */
+                PREVIOUS_RANK_NODES_MAP.computeIfAbsent(it, k -> new ArrayList<>());
+            });
+
+    }
+
+    private static @NotNull List<RankNode> computeNextRankNodes(@NotNull RankNode it) {
         return it.getNextRankNodes()
             .stream()
             .map(id -> findRankNode(id).orElse(null))
@@ -117,10 +164,4 @@ public class RankService {
             .toList();
     }
 
-    public static @NotNull List<String> getNextAvailableRankNodeIds(@NotNull ServerPlayerEntity player) {
-        return getNextAvailableRankNodes(player)
-            .stream()
-            .map(RankNode::getId)
-            .toList();
-    }
 }
