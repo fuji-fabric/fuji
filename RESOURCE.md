@@ -23,3 +23,4 @@
 # Reading things
 - https://projectarc.co.uk/sw-engineering/i18n-is-hard-in-so-many-ways
 - https://errorprone.info/bugpatterns
+- https://github.com/manifold-systems/manifold/tree/master/manifold-deps-parent/manifold-delegation
