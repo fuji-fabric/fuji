@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.command_attachment.service;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
@@ -51,41 +52,43 @@ public class CommandAttachmentService {
 
     public static void tryTriggerAttachmentModel(@Nullable String uuid, @NotNull PlayerEntity player, @NotNull List<InteractType> receivedInteractTypes, @NotNull Runnable postTriggered) {
         findAttachmentDataNode(uuid)
-            .ifPresent(it -> triggerAttachmentModel(it.getModel(), uuid, player, receivedInteractTypes, postTriggered));
+            .ifPresent(it -> triggerAttachmentModel(it.getModel(), player, receivedInteractTypes, postTriggered));
     }
 
-    private static void triggerAttachmentModel(@NotNull CommandAttachmentModel model, String uuid, @NotNull PlayerEntity player, @NotNull List<InteractType> receivedInteractTypes, @NotNull Runnable postTriggered) {
-        /* Process attachment nodes. */
-        for (BaseCommandAttachmentEntry e : model.getEntries()) {
-            /* Filter for interaction type. */
-            if (!receivedInteractTypes.contains(e.getInteractType())) continue;
+    private static void triggerAttachmentModel(@NotNull CommandAttachmentModel model, @NotNull PlayerEntity player, @NotNull List<InteractType> receivedInteractTypes, @NotNull Runnable postTriggered) {
+        ServerHelper.withServerPlayerEntity(player,() -> {
+            /* Process attachment nodes. */
+            for (BaseCommandAttachmentEntry e : model.getEntries()) {
+                /* Filter for interaction type. */
+                if (!receivedInteractTypes.contains(e.getInteractType())) continue;
 
-            /* Filter for usage times limit. */
-            if (e.getUseTimes() >= e.getMaxUseTimes()) continue;
+                /* Filter for usage times limit. */
+                if (e.getUseTimes() >= e.getMaxUseTimes()) continue;
 
-            /* Switch for execute-as-type. */
-            ExecuteAsType executeAsType = e.getExecuteAsType();
-            ServerCommandSource source = CommandHelper.Source.getCommandSource(player);
-            switch (executeAsType) {
-                case CONSOLE ->
-                    CommandExecutor.execute(ExtendedCommandSource.asConsole(source), e.getCommand());
-                case PLAYER ->
-                    CommandExecutor.execute(ExtendedCommandSource.asPlayer(source, (ServerPlayerEntity) player), e.getCommand());
-                case FAKE_OP ->
-                    CommandExecutor.execute(ExtendedCommandSource.asFakeOp(source, (ServerPlayerEntity) player), e.getCommand());
-            }
+                /* Switch for execute-as-type. */
+                ExecuteAsType executeAsType = e.getExecuteAsType();
+                ServerCommandSource source = CommandHelper.Source.getCommandSource(player);
+                switch (executeAsType) {
+                    case CONSOLE ->
+                        CommandExecutor.execute(ExtendedCommandSource.asConsole(source), e.getCommand());
+                    case PLAYER ->
+                        CommandExecutor.execute(ExtendedCommandSource.asPlayer(source, (ServerPlayerEntity) player), e.getCommand());
+                    case FAKE_OP ->
+                        CommandExecutor.execute(ExtendedCommandSource.asFakeOp(source, (ServerPlayerEntity) player), e.getCommand());
+                }
 
-            /* Eval post-triggered function. */
-            postTriggered.run();
+                /* Eval post-triggered function. */
+                postTriggered.run();
 
-            /* Handler for destroy-item. */
-            e.setUseTimes(e.getUseTimes() + 1);
-            if (e instanceof ItemStackCommandAttachmentEntry ie) {
-                if (ie.isDestroyItem() && e.getUseTimes() >= e.getMaxUseTimes()) {
-                    player.getMainHandStack().decrement(1);
+                /* Handler for destroy-item. */
+                e.setUseTimes(e.getUseTimes() + 1);
+                if (e instanceof ItemStackCommandAttachmentEntry ie) {
+                    if (ie.isDestroyItem() && e.getUseTimes() >= e.getMaxUseTimes()) {
+                        player.getMainHandStack().decrement(1);
+                    }
                 }
             }
-        }
+        });
     }
 
     public static void removeAttachmentModel(@NotNull String uuid) {
