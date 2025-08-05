@@ -178,7 +178,7 @@ import org.jetbrains.annotations.Nullable;
     The value of `DayTime` in `level.dat` = `/time query day` * 24000 + `/time query daytime`.
 
     NOTE: The `minecraft:overworld`, `minecraft:the_nether` and `minecraft:the_end` shares the same instance of `DayTime`.
-    NOTE: The `/time set {day/midnight/night/noon} command directly sets the `DayTime` to the first day.
+    NOTE: The `/time set {day/midnight/night/noon}` command directly sets the `DayTime` to the first day.
 
     ◉ The logic of `/time query ...` command.
     For `/time query daytime` command, it returns the `DayTime % 24000` of `the world of the command source`:

@@ -63,6 +63,7 @@ command_toolbox.repair
 command_toolbox.reply
 command_toolbox.rules
 command_toolbox.seen
+command_toolbox.speed
 command_toolbox.suicide
 command_toolbox.top
 command_toolbox.tphere
