@@ -22,4 +22,12 @@ public class RankNode {
         return rankNode;
     }
 
+    Events events = new Events();
+    @Data
+    @NoArgsConstructor
+    public static class Events {
+        List<String> onEnterThisRankNodeCommands = new ArrayList<>();
+        List<String> onLeaveThisRankNodeCommands = new ArrayList<>();
+    }
+
 }

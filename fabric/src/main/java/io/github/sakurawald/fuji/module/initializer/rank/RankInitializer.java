@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.rank;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
@@ -13,7 +14,9 @@ import io.github.sakurawald.fuji.module.initializer.rank.config.model.RankConfig
 import io.github.sakurawald.fuji.module.initializer.rank.config.model.RankDataModel;
 import io.github.sakurawald.fuji.module.initializer.rank.service.RankService;
 import io.github.sakurawald.fuji.module.initializer.rank.structure.RankNode;
+import java.util.List;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 
 @Document(id = 1754411151804L, value = """
@@ -25,14 +28,14 @@ public class RankInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<RankDataModel> data = new ObjectConfigurationHandler<>("rank-data.json", RankDataModel.class);
 
     @Document(id = 1754412528895L, value = "List all defined `rank nodes`.")
-    @CommandNode("rank list")
+    @CommandNode("rank list all-rank-nodes")
     @CommandRequirement(level = 4)
-    private static int $list(@CommandSource ServerCommandSource source) {
-        TextHelper.sendTextByKey(source, "rank.list", RankService.getAllRankIds());
+    private static int $listAllRankNodes(@CommandSource ServerCommandSource source) {
+        TextHelper.sendTextByKey(source, "rank.list.all_rank_nodes", RankService.getAllRankIds());
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document(id = 1754412670219L, value = "Query the info of specified `rank node`.")
+    @Document(id = 1754412670219L, value = "Query the info of the specified `rank node`.")
     @CommandNode("rank info")
     @CommandRequirement(level = 4)
     private static int $info(@CommandSource ServerCommandSource source, RankNode rankNode) {
@@ -41,4 +44,20 @@ public class RankInitializer extends ModuleInitializer {
         TextHelper.sendTextByKey(source, "rank.rank_node.next_nodes", rankNode.getNextRankNodes());
         return CommandHelper.Return.SUCCESS;
     }
+
+    @Document(id = 1754414840437L, value = "List all available `starting rank nodes` for the specified player.")
+    @CommandNode("rank list starting-rank-nodes")
+    @CommandRequirement(level = 4)
+    private static int $listStartingRankNodes(@CommandSource ServerPlayerEntity player, ServerPlayerEntity target) {
+        String playerName = PlayerHelper.getPlayerName(target);
+        List<String> availableStartingRankNodes = RankService
+            .getAvailableStartingRankNodes(target)
+            .stream()
+            .map(RankNode::getId)
+            .toList();
+        TextHelper.sendTextByKey(player, "rank.list.starting_rank_nodes", playerName, availableStartingRankNodes);
+        return CommandHelper.Return.SUCCESS;
+    }
+
+
 }

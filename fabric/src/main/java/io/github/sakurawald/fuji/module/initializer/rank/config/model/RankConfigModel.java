@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RankConfigModel {
 
+    String startingRankNodeId = "newbie";
+
     List<RankNode> graph = new ArrayList<>() {
         {
             /* Define the orphan nodes. */
