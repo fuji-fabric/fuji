@@ -239,6 +239,10 @@ public class CommandHelper {
             });
         }
 
+        public static int withCommandConfirmed(ServerPlayerEntity player, Optional<Boolean> confirm, Supplier<Integer> supplier) {
+            return withCommandConfirmed(player.getCommandSource(), confirm, supplier);
+        }
+
         @SuppressWarnings({"BooleanMethodIsAlwaysInverted", "UnnecessaryLocalVariable"})
         public static int withCommandConfirmed(ServerCommandSource source, Optional<Boolean> confirm, Supplier<Integer> supplier) {
             boolean confirmed = confirm.orElse(false);

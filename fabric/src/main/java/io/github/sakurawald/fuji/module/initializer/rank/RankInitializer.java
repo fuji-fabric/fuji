@@ -89,7 +89,6 @@ public class RankInitializer extends ModuleInitializer {
         return $rankProgress(player.getCommandSource(), player);
     }
 
-
     @Document(id = 1754417962937L, value = "Set the rank for specified player.")
     @CommandNode("rank set")
     @CommandRequirement(level = 4)
@@ -101,20 +100,24 @@ public class RankInitializer extends ModuleInitializer {
 
     @Document(id = 1754418507342L, value = "Rank up to the next available rank node.")
     @CommandNode("rank up")
-    private static int $rankUp(@CommandSource ServerPlayerEntity player, NextAvailableRankNode nextRank) {
-        RankNode $nextRank = nextRank.getValue();
-        RankService.setCurrentRankNode(player, $nextRank);
-        TextHelper.sendTextByKey(player, "rank.up", $nextRank.getDisplayName());
-        return CommandHelper.Return.SUCCESS;
+    private static int $rankUp(@CommandSource ServerPlayerEntity player, NextAvailableRankNode nextRank, Optional<Boolean> confirm) {
+        return CommandHelper.Pattern.withCommandConfirmed(player, confirm, () -> {
+            RankNode $nextRank = nextRank.getValue();
+            RankService.setCurrentRankNode(player, $nextRank);
+            TextHelper.sendTextByKey(player, "rank.up", $nextRank.getDisplayName());
+            return CommandHelper.Return.SUCCESS;
+        });
     }
 
     @Document(id = 1754423529102L, value = "Rank down to the previous available rank node.")
     @CommandNode("rank down")
-    private static int $rankDown(@CommandSource ServerPlayerEntity player, PreviousAvailableRankNode previousRank) {
-        RankNode $previousRank = previousRank.getValue();
-        RankService.setCurrentRankNode(player, $previousRank);
-        TextHelper.sendTextByKey(player, "rank.down", $previousRank.getDisplayName());
-        return CommandHelper.Return.SUCCESS;
+    private static int $rankDown(@CommandSource ServerPlayerEntity player, PreviousAvailableRankNode previousRank, Optional<Boolean> confirm) {
+        return CommandHelper.Pattern.withCommandConfirmed(player, confirm, () -> {
+            RankNode $previousRank = previousRank.getValue();
+            RankService.setCurrentRankNode(player, $previousRank);
+            TextHelper.sendTextByKey(player, "rank.down", $previousRank.getDisplayName());
+            return CommandHelper.Return.SUCCESS;
+        });
     }
 
     @Document(id = 1754421296792L, value = "Set the specified player's rank to none.")
