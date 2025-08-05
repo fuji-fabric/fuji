@@ -6,7 +6,10 @@ import lombok.Getter;
 import lombok.Setter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @TestCase(steps = "Consider the possible runtime environments.", purposes = {
     "The fabric server-side environment."
@@ -36,6 +39,17 @@ public class ServerHelper {
 
     public static boolean isServerSideDedicatedServer() {
         return FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER;
+    }
+
+    @ForDeveloper("""
+        If your mod is installed on the client-side, and run the single-player world.
+        Then some functions will be called twice.
+        One for ClientPlayerEntity, one for ServerPlayerEntity.
+        """)
+    public static void withServerPlayerEntity(@Nullable PlayerEntity player, @NotNull Runnable runnable) {
+        if (player == null) return;
+        if (!PlayerHelper.isServerPlayer(player)) return;
+        runnable.run();
     }
 
 }

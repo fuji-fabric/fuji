@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.anti_build;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
@@ -75,21 +76,23 @@ public class AntiBuildInitializer extends ModuleInitializer {
         """)
     private static final PermissionDescriptor ANTI_BUILD_OVERRIDE_PERMISSION = new PermissionDescriptor("fuji.anti_build.<anti-type>.override.<id>", 1752994843864L);
 
-    public static <T> void checkAntiBuild(@Nullable PlayerEntity player, @NotNull String antiType, @NotNull Set<String> ids, @NotNull String id, @NotNull CallbackInfoReturnable<T> cir, @NotNull T cancelWithValue, @NotNull Supplier<Boolean> shouldSendFeedback) {
-        // NOTE: This method will NOT be called for a dispenser block.
-        if (isThisActionAllowed(player, antiType, ids, id)) {
-            return;
-        }
+    public static <T> void processAntiBuild(@Nullable PlayerEntity player, @NotNull String antiType, @NotNull Set<String> ids, @NotNull String id, @NotNull CallbackInfoReturnable<T> cir, @NotNull T cancelWithValue, @NotNull Supplier<Boolean> shouldSendFeedback) {
+        ServerHelper.withServerPlayerEntity(player,() -> {
+            // NOTE: This method will NOT be called for a dispenser block.
+            if (isThisActionAllowed(player, antiType, ids, id)) {
+                return;
+            }
 
-        /* Send the cation cancelled message to the player. */
-        if (shouldSendFeedback.get() && player != null) {
-            // NOTE: The `dispenser block` can also place blocks in the world.
-            // NOTE: You may see the double message if you install the mod in client-side.
-            TextHelper.sendTextByKey(player, "anti_build.disallow");
-        }
+            /* Send the cation cancelled message to the player. */
+            if (shouldSendFeedback.get() && player != null) {
+                // NOTE: The `dispenser block` can also place blocks in the world.
+                // NOTE: You may see the double message if you install the mod in client-side.
+                TextHelper.sendTextByKey(player, "anti_build.disallow");
+            }
 
-        /* Cancel the call with specified value. */
-        cir.setReturnValue(cancelWithValue);
+            /* Cancel the call with specified value. */
+            cir.setReturnValue(cancelWithValue);
+        });
     }
 
     private static boolean isThisActionAllowed(@Nullable PlayerEntity player, @NotNull String antiType, @NotNull Set<String> ids, @NotNull String id) {
