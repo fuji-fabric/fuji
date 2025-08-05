@@ -170,4 +170,11 @@ public class RankInitializer extends ModuleInitializer {
     protected void onReload() {
         RankService.computeRankGraph();
     }
+
+    @Override
+    protected void registerPlaceholders() {
+        RankPlaceholders.registerRankIdPlaceholder();
+        RankPlaceholders.registerRankDisplayNamePlaceholder();
+        RankPlaceholders.registerRankDisplayNameRawPlaceholder();
+    }
 }

@@ -1364,5 +1364,8 @@
   "docstring.1754423529102": "Rank down to the previous available rank node.",
   "docstring.1754424553830": "List all available `next rank nodes` for the specified player.",
   "docstring.1754424619470": "List all available `previous rank nodes` for the specified player.",
-  "docstring.1754430022210": "List all `walked rank nodes` for the specified player."
+  "docstring.1754430022210": "List all `walked rank nodes` for the specified player.",
+  "docstring.1754432388361": "Returns the `rank id` of the player's current rank.\n",
+  "docstring.1754432587319": "Returns the `rank display name` of the player's current rank.\n",
+  "docstring.1754432726443": "Returns the `rank display name raw string` of the player's current rank.\n"
 }

@@ -17,7 +17,7 @@ public class RankConfigModel {
     List<RankNode> graph = new ArrayList<>() {
         {
             /* Define the orphan nodes. */
-            RankNode newbie = RankNode.make("newbie", "<grey>Newbie", List.of());
+            RankNode newbie = RankNode.make("newbie", "<dark_grey>Newbie", List.of());
             RankNode branchFirst = RankNode.make("branch-1", "<pink>Branch-1", List.of());
             RankNode branchFirstFirst = RankNode.make("branch-1-1", "<pink>Branch-1-1", List.of());
             RankNode branchFirstSecond = RankNode.make("branch-1-2", "<pink>Branch-1-2", List.of());

@@ -41,7 +41,7 @@ public class RankNode {
         List<String> onEnterThisRankNodeCommands = new ArrayList<>() {
             {
                 this.add("lp user %player:name% permission set group.rank_id");
-                this.add("send-broadcast <pink>Player %player:name% has been ranked up to ");
+                this.add("send-broadcast <#FFA1F5>Player %player:name% has been ranked up to %fuji:rank_displayname_raw%");
             }
         };
         List<String> onLeaveThisRankNodeCommands = new ArrayList<>() {
@@ -53,7 +53,6 @@ public class RankNode {
             {
                 this.add("when-online %player:name% send-message %player:name% <orange>You have received the ranked up bonus!");
                 this.add("when-online %player:name% give %player:name% minecraft:apple 1");
-
             }
         };
     }

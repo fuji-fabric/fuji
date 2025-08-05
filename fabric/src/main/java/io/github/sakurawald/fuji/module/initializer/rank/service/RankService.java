@@ -79,7 +79,7 @@ public class RankService {
         return result;
     }
 
-    public static void setCurrentRankNode(@NotNull ServerPlayerEntity player, @Nullable RankNode rankNode) {
+    public static void setCurrentRankNode(@NotNull ServerPlayerEntity player, @Nullable RankNode newRankNode) {
         ExtendedCommandSource source = ExtendedCommandSource.asConsole(player.getCommandSource());
 
         /* Execute the leave commands for previous rank node. */
@@ -91,21 +91,21 @@ public class RankService {
 
         /* Save the state. */
         withRankDataNode(player, true, rankDataNode -> {
-            String newValue = rankNode == null ? null : rankNode.getId();
+            String newValue = newRankNode == null ? null : newRankNode.getId();
             rankDataNode.setCurrentRankNodeId(newValue);
 
             /* If new rank node is not null. */
-            if (rankNode != null) {
+            if (newRankNode != null) {
                 /* Execute the enter commands for new rank node. */
-                CommandExecutor.execute(source, rankNode.getEvents().getOnEnterThisRankNodeCommands());
+                CommandExecutor.execute(source, newRankNode.getEvents().getOnEnterThisRankNodeCommands());
 
                 /* Is the first time to enter this rank node? */
                 if (!rankDataNode.getWalkedRankNodeIds().contains(newValue)) {
-                    CommandExecutor.execute(source, rankNode.getEvents().getOnFirstEnterThisRankNodeCommands());
+                    CommandExecutor.execute(source, newRankNode.getEvents().getOnFirstEnterThisRankNodeCommands());
                 }
 
                 /* Remember this rank node. */
-                rankDataNode.getWalkedRankNodeIds().add(rankNode.getId());
+                rankDataNode.getWalkedRankNodeIds().add(newRankNode.getId());
             }
             return null;
         });
