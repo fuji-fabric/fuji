@@ -191,6 +191,7 @@ public class ConfigModel {
         public Title title = new Title();
         public LeaderBoard leaderboard = new LeaderBoard();
         public Jail jail = new Jail();
+        public Rank rank = new Rank();
         public Head head = new Head();
         public Profiler profiler = new Profiler();
         public Tester tester = new Tester();
@@ -861,6 +862,10 @@ public class ConfigModel {
         }
 
         public static class Jail {
+            public boolean enable = false;
+        }
+
+        public static class Rank {
             public boolean enable = false;
         }
 

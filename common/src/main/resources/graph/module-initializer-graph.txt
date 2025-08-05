@@ -112,6 +112,7 @@ io.github.sakurawald.fuji.module.initializer.placeholder.PlaceholderInitializer
 io.github.sakurawald.fuji.module.initializer.predicate.PredicateInitializer
 io.github.sakurawald.fuji.module.initializer.profiler.ProfilerInitializer
 io.github.sakurawald.fuji.module.initializer.pvp.PvpInitializer
+io.github.sakurawald.fuji.module.initializer.rank.RankInitializer
 io.github.sakurawald.fuji.module.initializer.rtp.RtpInitializer
 io.github.sakurawald.fuji.module.initializer.sit.SitInitializer
 io.github.sakurawald.fuji.module.initializer.skin.SkinInitializer

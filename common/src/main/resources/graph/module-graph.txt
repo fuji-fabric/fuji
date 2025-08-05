@@ -118,6 +118,7 @@ placeholder
 predicate
 profiler
 pvp
+rank
 rtp
 sit
 skin

@@ -393,6 +393,11 @@
   "pvp.on.already": "<dark_aqua>You already have PvP on!",
   "pvp.status.off": "<dark_aqua>PvP for you is now <green>off</green>",
   "pvp.status.on": "<dark_aqua>PvP for you is now <red>on</red>",
+  "rank.list": "<green>All defined rank nodes: `%s`",
+  "rank.rank_node.display_name": "- Display Name: %s",
+  "rank.rank_node.id": "◉ Rank Node Id: `%s`",
+  "rank.rank_node.next_nodes": "- Next Nodes: `%s`",
+  "rank.rank_node.not_found": "<red>The rank node `%s` not found.",
   "registry.list.gui.title": "<blue>Registry",
   "registry.type.is_dynamic": "<yellow>Is dynamic: %s",
   "reject.button": "<red>[❌]</red>",
@@ -1335,5 +1340,8 @@
   "docstring.1754322053339": "Should we validate the `arguments` when loading a `language file`?\n",
   "docstring.1754329012853": "◉ Restrict `jailed players` to using only allowed commands.\nYou can integrate with `command_permission` module.\nIssue:\n1. `/lp group jailed permission set fuji.permission.* false`\nDis-allow to use `all commands`.\n\n2. `/lp group jailed permission set fuji.permission.back true`\nAllow to use the `/back` command.\n",
   "docstring.1754399924653": "Provides `/speed` command, to:\n1. Modify the `walk speed`.\n2. Modify the `fly speed`.\n",
-  "docstring.1754400656952": "◉ Double the `walk speed`\nThe default value is `0.1`\nIssue: `/speed walk set Steve 0.2`\n\n◉ Double the `fly speed`\nThe default value is `0.05`\nIssue: `/speed fly set Steve 0.1`\n"
+  "docstring.1754400656952": "◉ Double the `walk speed`\nThe default value is `0.1`\nIssue: `/speed walk set Steve 0.2`\n\n◉ Double the `fly speed`\nThe default value is `0.05`\nIssue: `/speed fly set Steve 0.1`\n",
+  "docstring.1754411151804": "This module provides the rank up system.\n",
+  "docstring.1754412528895": "List all defined `rank nodes`.",
+  "docstring.1754412670219": "Query the info of specified `rank node`."
 }

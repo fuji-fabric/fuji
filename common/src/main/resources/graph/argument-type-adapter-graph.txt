@@ -68,6 +68,7 @@ io.github.sakurawald.fuji.module.initializer.jail.command.argument.adapter.Jaile
 io.github.sakurawald.fuji.module.initializer.kit.command.argument.adapter.KitNameArgumentTypeAdapter
 io.github.sakurawald.fuji.module.initializer.leaderboard.command.argument.adapter.LeaderBoardDescriptorArgumentTypeAdapter
 io.github.sakurawald.fuji.module.initializer.leaderboard.command.argument.adapter.LeaderBoardTimeWindowArgumentTypeAdapter
+io.github.sakurawald.fuji.module.initializer.rank.command.argument.adapter.RankNodeArgumentTypeAdapter
 io.github.sakurawald.fuji.module.initializer.skin.command.argument.adapter.DefaultSkinNameArgumentTypeAdapter
 io.github.sakurawald.fuji.module.initializer.world.manager.command.argument.adapter.ChunkGeneratorTypeArgumentTypeAdapter
 io.github.sakurawald.fuji.module.initializer.world.manager.command.argument.adapter.LoadedRuntimeDimensionDescriptorArgumentTypeAdapter
