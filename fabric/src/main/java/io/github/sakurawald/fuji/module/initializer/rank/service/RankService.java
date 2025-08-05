@@ -3,6 +3,8 @@ package io.github.sakurawald.fuji.module.initializer.rank.service;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
+import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.module.initializer.rank.RankInitializer;
@@ -78,15 +80,37 @@ public class RankService {
     }
 
     public static void setCurrentRankNode(@NotNull ServerPlayerEntity player, @Nullable RankNode rankNode) {
+        ExtendedCommandSource source = ExtendedCommandSource.asConsole(player.getCommandSource());
+
+        /* Execute the leave commands for previous rank node. */
+        Optional<RankNode> previousRankNode = getCurrentRankNode(player);
+        previousRankNode
+            .ifPresent(it -> {
+                CommandExecutor.execute(source, it.getEvents().getOnLeaveThisRankNodeCommands());
+            });
+
+        /* Save the state. */
         withRankDataNode(player, true, rankDataNode -> {
             String newValue = rankNode == null ? null : rankNode.getId();
             rankDataNode.setCurrentRankNodeId(newValue);
 
+            /* If new rank node is not null. */
             if (rankNode != null) {
+                /* Execute the enter commands for new rank node. */
+                CommandExecutor.execute(source, rankNode.getEvents().getOnEnterThisRankNodeCommands());
+
+                /* Is the first time to enter this rank node? */
+                if (!rankDataNode.getWalkedRankNodeIds().contains(newValue)) {
+                    CommandExecutor.execute(source, rankNode.getEvents().getOnFirstEnterThisRankNodeCommands());
+                }
+
+                /* Remember this rank node. */
                 rankDataNode.getWalkedRankNodeIds().add(rankNode.getId());
             }
             return null;
         });
+
+
     }
 
     public static Optional<RankNode> getCurrentRankNode(@NotNull ServerPlayerEntity player) {

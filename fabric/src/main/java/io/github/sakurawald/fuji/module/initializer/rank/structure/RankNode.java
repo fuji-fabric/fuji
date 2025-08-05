@@ -38,9 +38,24 @@ public class RankNode {
     @Data
     @NoArgsConstructor
     public static class Events {
-        List<String> onEnterThisRankNodeCommands = new ArrayList<>();
-        List<String> onLeaveThisRankNodeCommands = new ArrayList<>();
-        List<String> onFirstEnterThisRankNodeCommands = new ArrayList<>();
+        List<String> onEnterThisRankNodeCommands = new ArrayList<>() {
+            {
+                this.add("lp user %player:name% permission set group.rank_id");
+                this.add("send-broadcast <pink>Player %player:name% has been ranked up to ");
+            }
+        };
+        List<String> onLeaveThisRankNodeCommands = new ArrayList<>() {
+            {
+                this.add("lp user %player:name% permission unset group.rank_id");
+            }
+        };
+        List<String> onFirstEnterThisRankNodeCommands = new ArrayList<>() {
+            {
+                this.add("when-online %player:name% send-message %player:name% <orange>You have received the ranked up bonus!");
+                this.add("when-online %player:name% give %player:name% minecraft:apple 1");
+
+            }
+        };
     }
 
 }
