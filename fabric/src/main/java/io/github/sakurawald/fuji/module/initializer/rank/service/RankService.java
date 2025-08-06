@@ -37,7 +37,7 @@ public class RankService {
         The `starting rank node` is allowed to be selected for this `player`, if they have no rank yet.
         You can assign multiple `starting rank nodes` to be selected.
         """)
-    private static final PermissionDescriptor RANK_STARTING_RANK_NODE_PERMISSION_DESCRIPTOR = new PermissionDescriptor("rank.starting_rank_node.<rank-node-id>", 1754414038512L);
+    private static final PermissionDescriptor RANK_STARTING_RANK_NODE_PERMISSION_DESCRIPTOR = new PermissionDescriptor("fuji.rank.starting_rank_node.<rank-node-id>", 1754414038512L);
 
     private static final Map<RankNode, List<RankNode>> PREVIOUS_RANK_NODES_MAP = new HashMap<>();
     private static final Map<RankNode, List<RankNode>> NEXT_RANK_NODES_MAP = new HashMap<>();

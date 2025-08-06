@@ -17,17 +17,17 @@ public class RankConfigModel {
     List<RankNode> graph = new ArrayList<>() {
         {
             /* Define the orphan nodes. */
-            RankNode newbie = RankNode.make("newbie", "<dark_grey>Newbie", List.of());
-            RankNode branchFirst = RankNode.make("branch-1", "<pink>Branch-1", List.of());
-            RankNode branchFirstFirst = RankNode.make("branch-1-1", "<pink>Branch-1-1", List.of());
-            RankNode branchFirstSecond = RankNode.make("branch-1-2", "<pink>Branch-1-2", List.of());
-            RankNode branchFirstThird = RankNode.make("branch-1-3", "<pink>Branch-1-3", List.of());
+            RankNode newbie = RankNode.make("newbie", "<dark_grey>Newbie</dark_grey>", List.of());
+            RankNode branchFirst = RankNode.make("branch-1", "<pink>Branch-1</pink>", List.of());
+            RankNode branchFirstFirst = RankNode.make("branch-1-1", "<pink>Branch-1-1</pink>", List.of());
+            RankNode branchFirstSecond = RankNode.make("branch-1-2", "<pink>Branch-1-2</pink>", List.of());
+            RankNode branchFirstThird = RankNode.make("branch-1-3", "<pink>Branch-1-3</pink>", List.of());
 
-            RankNode branchSecond = RankNode.make("branch-2", "<aqua>Branch-2", List.of());
-            RankNode branchSecondFirst = RankNode.make("branch-2-1", "<aqua>Branch-2-1", List.of());
-            RankNode branchSecondSecond = RankNode.make("branch-2-2", "<aqua>Branch-2-2", List.of());
+            RankNode branchSecond = RankNode.make("branch-2", "<aqua>Branch-2</aqua>", List.of());
+            RankNode branchSecondFirst = RankNode.make("branch-2-1", "<aqua>Branch-2-1</aqua>", List.of());
+            RankNode branchSecondSecond = RankNode.make("branch-2-2", "<aqua>Branch-2-2</aqua>", List.of());
 
-            RankNode expert = RankNode.make("expert", "<purple>Expert", List.of());
+            RankNode expert = RankNode.make("expert", "<purple>Expert</purple>", List.of());
 
 
             /* Add the nodes. */
