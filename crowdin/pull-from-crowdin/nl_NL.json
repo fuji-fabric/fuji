@@ -406,7 +406,7 @@
   "rank.list.starting_rank_nodes": "<green>The available starting rank nodes for player `%s` are `%s`",
   "rank.list.walked_rank_nodes": "<green>The walked rank nodes for player `%s` are `%s`",
   "rank.progress.no_rank": "<red>Player %s currently have no rank.",
-  "rank.rank_node.description": "<yellow>◉ Description: %s",
+  "rank.rank_node.description": "<yellow>⚪ Description: %s",
   "rank.rank_node.display_name": "<yellow>⚪ Display Name: %s",
   "rank.rank_node.id": "<yellow>◉ Rank Id: `%s`",
   "rank.rank_node.next_nodes": "<yellow>⚪ Next Ranks: `%s`",
