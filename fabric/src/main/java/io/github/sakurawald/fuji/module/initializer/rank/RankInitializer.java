@@ -47,6 +47,13 @@ import net.minecraft.server.network.ServerPlayerEntity;
     3.c. A player can use `/rank down <rank>` to `rank down` to a previously `earned rank`.
     3.d. The admin can use `/rank remove <player>` to set a player's rank to `none`.
     """)
+@ColorBox(id = 1754466653435L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ Automatic rank up to the only available next rank.
+    You can use `command_schedule` module to define a job.
+    To execute the `/rank try-up %player:name%` command for each online player.
+    So that each player will get auto rank up if there is only one `available next rank` for them.
+    It can be `/execute as @a run rank try-up @s` or `/foreach rank try-up %player:name%`
+    """)
 @ColorBox(id = 1754451752816L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ List rank nodes by type
     1. `/rank list all-rank-nodes`
@@ -73,9 +80,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
     Issue: `/rank remove Steve --confirm true`.
     """)
 @ColorBox(id = 1754465524369L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
-    ◉ Allow a player to choose an `intermediate rank` as its `starting rank`.
+    ◉ Allow a player to choose an `intermediate rank` as their `starting rank`.
     You can define one `starting rank node` as the public `starting rank node` for all players.
-    However, you can allow some players to pick other `rank nodes` as their starting rank node, and skip some path.
+    However, you can also allow some players to pick other `rank nodes` as their starting rank node, and skip some path.
     Issue: `/lp group default permission set fuji.rank.starting_rank_node.branch-1-3`
     This will allow players to pick `branch-1-3` as their `starting rank node`.
     You can define multiple `starting rank nodes` for different `luckperms groups`.
@@ -208,11 +215,17 @@ public class RankInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document(id = 1754466143852L, value = "If there is only one `next rank node` for the player, then rank up to that node.")
+    @Document(id = 1754466143852L, value = "If there is only one `next rank node` for the player, then rank up to that node, else do nothing.")
     @CommandNode("rank try-up")
     @CommandRequirement(level = 4)
     private static int $tryUp(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
+        List<RankNode> nextAvailableRankNodes = RankService.getNextAvailableRankNodes(target);
+        if (nextAvailableRankNodes.size() != 1) {
+            return CommandHelper.Return.FAIL;
+        }
 
+        NextAvailableRankNode theOnlyNode = new NextAvailableRankNode(nextAvailableRankNodes.get(0));
+        $rankUp(target, theOnlyNode, Optional.of(true));
         return CommandHelper.Return.SUCCESS;
     }
 
