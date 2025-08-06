@@ -8,6 +8,7 @@ import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
+import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.rank.RankInitializer;
 import io.github.sakurawald.fuji.module.initializer.rank.structure.RankDataNode;
 import io.github.sakurawald.fuji.module.initializer.rank.structure.RankNode;
@@ -19,8 +20,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.ClickEvent;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -225,4 +231,83 @@ public class RankService {
             .toList();
     }
 
+    public static void sendRankNodeInfo(@NotNull ServerCommandSource source, @NotNull RankNode rankNode, boolean displayRequirements) {
+        /* Send basic info for the rank node. */
+        TextHelper.sendTextByKey(source, "rank.info.header");
+        TextHelper.sendTextByKey(source, "rank.rank_node.id", rankNode.getId());
+        TextHelper.sendTextByKey(source, "rank.rank_node.display_name", rankNode.getDisplayName());
+        TextHelper.sendTextByKey(source, "rank.rank_node.description", rankNode.getDescription());
+
+        /* Send next rank nodes for the rank node. */
+        List<String> nextRankNodes = rankNode.getNextRankNodes();
+        if (nextRankNodes.isEmpty()) {
+            TextHelper.sendTextByKey(source, "rank.rank_node.next_nodes", TextHelper.Operators.visitString(getNoRankStatusText()));
+        } else {
+            TextHelper.sendTextByKey(source, "rank.rank_node.next_nodes", nextRankNodes.toString());
+        }
+
+        /* Send requirements for the rank node. */
+        if (displayRequirements) {
+            TextHelper.sendTextByKey(source, "rank.rank_node.requirements");
+            List<RankRequirement> requirements = rankNode.getRequirements();
+            if (requirements.isEmpty()) {
+                TextHelper.sendTextByKey(source, "rank.rank_node.requirements.empty");
+            } else {
+                requirements
+                    .forEach(rankRequirement -> {
+                        ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(source);
+                        boolean rankRequirementMet = isRankRequirementMet(rankRequirement, extendedCommandSource);
+                        String languageKey = rankRequirementMet ? "checkbox.true" : "checkbox.false";
+                        TextHelper.sendTextByKey(source, languageKey, rankRequirement.getDescription());
+                    });
+            }
+        }
+    }
+
+    public static int sendRankProgress(@NotNull ServerCommandSource source, @NotNull ServerPlayerEntity target, @Nullable RankNode specifiedRankNode) {
+        Optional<RankNode> $specifiedRankNode;
+        if (specifiedRankNode == null) {
+            $specifiedRankNode = getCurrentRankNode(target);
+        } else {
+            $specifiedRankNode = Optional.of(specifiedRankNode);
+        }
+
+        return $specifiedRankNode
+            .map(currentRankNode -> {
+                /* Send current rank node info. */
+                sendRankNodeInfo(source, currentRankNode, specifiedRankNode != null);
+
+                /* Send click-able text for next rank nodes. */
+                List<RankNode> nextRankNodes = getNextAvailableRankNodes(target, Optional.of(currentRankNode));
+                if (!nextRankNodes.isEmpty()) {
+                    TextHelper.sendTextByKey(source, "rank.progress.next_ranks");
+                    MutableText textBuilder = Text.empty();
+                    nextRankNodes
+                        .forEach(nextRankNode -> {
+                            String value = "<aqua>[%s]".formatted(nextRankNode.getDisplayName());
+                            MutableText singleText = TextHelper.getTextByValue(source, value).copy();
+                            ClickEvent clickEvent = Managers.getCallbackManager().makeCallbackEvent((player) -> {
+                                sendRankProgress(source, target, nextRankNode);
+                            }, 5, TimeUnit.MINUTES);
+                            Text hoverText = TextHelper.getTextByKey(source, "prompt.click.see_it.any");
+                            singleText
+                                .fillStyle(Style.EMPTY
+                                    .withClickEvent(clickEvent)
+                                    .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(hoverText)));
+
+                            textBuilder.append(singleText);
+                            textBuilder.append(TextHelper.TEXT_SPACE);
+                        });
+                    source.sendMessage(textBuilder);
+                } else {
+                    TextHelper.sendTextByKey(source, "rank.progress.no_next_rank");
+                }
+                return CommandHelper.Return.SUCCESS;
+            })
+            .orElseGet(() -> {
+                String playerName = PlayerHelper.getPlayerName(target);
+                TextHelper.sendTextByKey(source, "rank.progress.no_rank", playerName);
+                return CommandHelper.Return.FAIL;
+            });
+    }
 }
