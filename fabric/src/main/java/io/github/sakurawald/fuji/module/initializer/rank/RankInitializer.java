@@ -104,14 +104,14 @@ public class RankInitializer extends ModuleInitializer {
     @Document(id = 1754414840437L, value = "List all available `starting rank nodes` for the specified player.")
     @CommandNode("rank list starting-rank-nodes")
     @CommandRequirement(level = 4)
-    private static int $listStartingRankNodes(@CommandSource ServerPlayerEntity player, ServerPlayerEntity target) {
+    private static int $listStartingRankNodes(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
         String playerName = PlayerHelper.getPlayerName(target);
         List<String> availableStartingRankNodes = RankService
             .getAvailableStartingRankNodes(target)
             .stream()
             .map(RankNode::getId)
             .toList();
-        TextHelper.sendTextByKey(player, "rank.list.starting_rank_nodes", playerName, availableStartingRankNodes);
+        TextHelper.sendTextByKey(source, "rank.list.starting_rank_nodes", playerName, availableStartingRankNodes);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -181,32 +181,41 @@ public class RankInitializer extends ModuleInitializer {
     @Document(id = 1754424553830L, value = "List all available `next rank nodes` for the specified player.")
     @CommandNode("rank list next-rank-nodes")
     @CommandRequirement(level = 4)
-    private static int $listNextRankNodes(@CommandSource ServerPlayerEntity player, ServerPlayerEntity target) {
+    private static int $listNextRankNodes(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
         String playerName = PlayerHelper.getPlayerName(target);
         List<String> ids = RankService.getNextAvailableRankNodes(target).stream().map(RankNode::getId).toList();
-        TextHelper.sendTextByKey(player, "rank.list.next_rank_nodes", playerName, ids);
+        TextHelper.sendTextByKey(source, "rank.list.next_rank_nodes", playerName, ids);
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1754424619470L, value = "List all available `previous rank nodes` for the specified player.")
     @CommandNode("rank list previous-rank-nodes")
     @CommandRequirement(level = 4)
-    private static int $listPreviousRankNodes(@CommandSource ServerPlayerEntity player, ServerPlayerEntity target) {
+    private static int $listPreviousRankNodes(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
         String playerName = PlayerHelper.getPlayerName(target);
         List<String> ids = RankService.getPreviousAvailableRankNodes(target).stream().map(RankNode::getId).toList();
-        TextHelper.sendTextByKey(player, "rank.list.previous_rank_nodes", playerName, ids);
+        TextHelper.sendTextByKey(source, "rank.list.previous_rank_nodes", playerName, ids);
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1754430022210L, value = "List all `walked rank nodes` for the specified player.")
     @CommandNode("rank list walked-rank-nodes")
     @CommandRequirement(level = 4)
-    private static int $listWalkedRankNodes(@CommandSource ServerPlayerEntity player, ServerPlayerEntity target) {
+    private static int $listWalkedRankNodes(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
         String playerName = PlayerHelper.getPlayerName(target);
         Set<String> ids = RankService.getWalkedRankNodeIds(target);
-        TextHelper.sendTextByKey(player, "rank.list.walked_rank_nodes", playerName, ids);
+        TextHelper.sendTextByKey(source, "rank.list.walked_rank_nodes", playerName, ids);
         return CommandHelper.Return.SUCCESS;
     }
+
+    @Document(id = 1754466143852L, value = "If there is only one `next rank node` for the player, then rank up to that node.")
+    @CommandNode("rank try-up")
+    @CommandRequirement(level = 4)
+    private static int $tryUp(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
+
+        return CommandHelper.Return.SUCCESS;
+    }
+
 
     @Override
     protected void onInitialize() {
