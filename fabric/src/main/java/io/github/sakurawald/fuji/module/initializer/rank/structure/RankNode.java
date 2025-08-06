@@ -39,13 +39,13 @@ public class RankNode {
     public static class Events {
         List<String> onEnterThisRankNodeCommands = new ArrayList<>() {
             {
-                this.add("lp user %player:name% permission set group.%fuji:rank_id%");
+                this.add("lp user %player:name% permission set group.rank-%fuji:rank_id%");
                 this.add("send-broadcast <#FFA1F5>Player %player:name% has been ranked up to %fuji:rank_displayname_raw%");
             }
         };
         List<String> onLeaveThisRankNodeCommands = new ArrayList<>() {
             {
-                this.add("lp user %player:name% permission unset group.%fuji:rank_id%");
+                this.add("lp user %player:name% permission unset group.rank-%fuji:rank_id%");
             }
         };
         List<String> onFirstEnterThisRankNodeCommands = new ArrayList<>() {
