@@ -1,5 +1,7 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
+**This version is the re-publish of `v12.11.0` and `v12.11.1`, it improves the `rank requirements` display, making it more user-friendly.**
+
 ### [rank] — New **Rank** System
 - Introduced a `rank` module to define **ranks** with customizable **requirements** and **awards**.
 - For each rank, you can set:
