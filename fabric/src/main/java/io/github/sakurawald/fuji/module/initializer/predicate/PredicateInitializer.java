@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.predicate;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.InventoryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
@@ -14,6 +15,7 @@ import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import net.minecraft.command.argument.ItemPredicateArgumentType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.GameMode;
@@ -72,6 +74,20 @@ public class PredicateInitializer extends ModuleInitializer {
     private static int $isHolding(@CommandSource ServerCommandSource source, ServerPlayerEntity player, ItemPredicateArgumentType.ItemStackPredicateArgument itemPredicate) {
         boolean value = player.isHolding(itemPredicate);
         return CommandHelper.Return.returnBoolean(source, value);
+    }
+
+    @CommandNode("has-item?")
+    private static int $hasItem(@CommandSource ServerCommandSource source, ServerPlayerEntity player, ItemPredicateArgumentType.ItemStackPredicateArgument itemPredicate, int count) {
+        int matchCount = 0;
+        for (ItemStack inventoryStack : InventoryHelper.getInventoryStacks(player)) {
+            boolean test = itemPredicate.test(inventoryStack);
+            if (test) {
+                matchCount += inventoryStack.getCount();
+            }
+        }
+
+        boolean success = matchCount >= count;
+        return CommandHelper.Return.returnBoolean(source, success);
     }
 
     @CommandNode("has-exp?")

@@ -4,3 +4,4 @@
   - The `/speed` command is a convenient and useful command.
   - Makes it possible to modify the `fly speed` of a player.
 - [command_attachment] fix: this module now works in `single-player world` if this mod is installed on the `client-side`.
+- [predicate] feature: add `/has-item? <player> <item-predicate> <count>` command, to check whether the player has specified item and count.

@@ -2,6 +2,8 @@ package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import com.google.common.collect.ImmutableList;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
+import java.util.HashSet;
+import java.util.Set;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SimpleInventory;
@@ -46,6 +48,17 @@ public class InventoryHelper {
         }
 
         return itemStacks;
+    }
+
+    public static Set<ItemStack> getInventoryStacks(@NotNull PlayerEntity player) {
+        DefaultedList<ItemStack> mainStacks = getMainStacks(player);
+        DefaultedList<ItemStack> offhandStacks = getOffhandStack(player);
+        DefaultedList<ItemStack> armorStacks = getArmorStacks(player);
+        HashSet<ItemStack> stacks = new HashSet<>();
+        stacks.addAll(mainStacks);
+        stacks.addAll(offhandStacks);
+        stacks.addAll(armorStacks);
+        return stacks;
     }
 
     public static void setArmorStacks(@NotNull PlayerEntity player, @NotNull List<ItemStack> stacks) {
