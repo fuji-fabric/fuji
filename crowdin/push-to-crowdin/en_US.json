@@ -319,6 +319,7 @@
   "placeholder.coordinate_scale": "%s: %s",
   "placeholder.current_position": "Current Position: %s",
   "placeholder.list.gui.title": "<pink>Placeholder",
+  "placeholder.number.parse.failed": "<red>Failed to parse the placeholder string into a valid number: %s",
   "placeholder.position": "<#2596be>[%s (%d, %d, %d) <pink>%s</pink>]",
   "placeholder.position.waypoint.name": "Waypoint",
   "placeholder.prompt.xaero_waypoint_add": "<green><i>Click to add a Xaero's minimap waypoint",
@@ -1376,5 +1377,6 @@
   "docstring.1754430022210": "List all `walked rank nodes` for the specified player.",
   "docstring.1754432388361": "Returns the `rank id` of the player's current rank.\n",
   "docstring.1754432587319": "Returns the `rank display name` of the player's current rank.\n",
-  "docstring.1754432726443": "Returns the `rank display name raw string` of the player's current rank.\n"
+  "docstring.1754432726443": "Returns the `rank display name raw string` of the player's current rank.\n",
+  "docstring.1754448424606": "◉ Test if a player is holding an apple\nIssue: `/command-debug is-holding? Steve minecraft:apple`\n\n◉ Test if a player has specified string permission\nIssue: `/command-debug has-perm? Steve fuji.permission.back`\n\n◉ Test if a player's health >= 10\nIssue: `/command-debug <=? Steve 10 %player:health%`\n\n◉ Test if a player killed more than 100 zombies.\nIssue: `/command-debug <=? Steve 100 %player:statistic_raw minecraft:deaths%`\n\n◉ More examples\nYou can see more examples in `command_meta.IF` module and `command_meta.chain` module.\n"
 }
