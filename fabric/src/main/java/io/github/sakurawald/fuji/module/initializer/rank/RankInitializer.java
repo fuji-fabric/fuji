@@ -55,6 +55,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
     4. `/rank list previous-rank-nodes Steve`
     5. `/rank list walked-rank-nodes Steve`
 
+    ◉ Query the info of a rank
+    Issue: `/rank info newbie`
+
     ◉ Query current rank progress
     1. `/rank progress`
     2. `/rank progress Steve`
@@ -66,10 +69,17 @@ import net.minecraft.server.network.ServerPlayerEntity;
     Issue: `/rank down branch-1 --confirm true`
     <red>NOTE: If you `rank down` from this rank node, you must meet its `requirements` again before you can `rank back up` to it.
 
-
+    ◉ Set a player's rank to none
+    Issue: `/rank remove Steve --confirm true`.
     """)
-
-
+@ColorBox(id = 1754465524369L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Allow a player to choose an `intermediate rank` as its `starting rank`.
+    You can define one `starting rank node` as the public `starting rank node` for all players.
+    However, you can allow some players to pick other `rank nodes` as their starting rank node, and skip some path.
+    Issue: `/lp group default permission set fuji.rank.starting_rank_node.branch-1-3`
+    This will allow players to pick `branch-1-3` as their `starting rank node`.
+    You can define multiple `starting rank nodes` for different `luckperms groups`.
+    """)
 public class RankInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<RankConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, RankConfigModel.class);
