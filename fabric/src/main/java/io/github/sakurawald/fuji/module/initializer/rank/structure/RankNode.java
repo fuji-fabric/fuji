@@ -12,6 +12,7 @@ public class RankNode {
     boolean enable = true;
     String id;
     String displayName;
+    String description = "<orange>This is the first line.\n<orange>This is the second line.";
     List<String> nextRankNodes = new ArrayList<>();
 
     public static RankNode make(String id, String displayName, List<String> nextRankNodes)  {
@@ -22,17 +23,13 @@ public class RankNode {
         return rankNode;
     }
 
-    Requirements requirements = new Requirements();
-    @Data
-    @NoArgsConstructor
-    public static class Requirements {
-        List<String> predicateCommands = new ArrayList<>() {
-            {
-
-
-            }
-        };
-    }
+    List<RankRequirement> requirements = new ArrayList<>() {
+        {
+            this.add(new RankRequirement("Requires 16 dirt blocks in your inventory.", List.of("has-item? %player:name% minecraft:dirt 16")));
+            this.add(new RankRequirement("Requires 8 apples in your inventory.", List.of("has-item? %player:name% minecraft:apple 8")));
+            this.add(new RankRequirement("Requires 4 diamonds in your inventory.", List.of("has-item? %player:name% minecraft:diamond 4")));
+        }
+    };
 
     Events events = new Events();
     @Data

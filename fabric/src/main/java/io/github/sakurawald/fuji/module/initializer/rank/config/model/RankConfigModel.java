@@ -43,6 +43,7 @@ public class RankConfigModel {
 
             /* Connect the nodes. */
             newbie.setNextRankNodes(new ArrayList<>(List.of("branch-1", "branch-2")));
+            newbie.getRequirements().clear();
 
             branchFirst.setNextRankNodes(new ArrayList<>(List.of("branch-1-1", "branch-1-2", "branch-1-3")));
             branchSecond.setNextRankNodes(new ArrayList<>(List.of("branch-2-1", "branch-2-2")));

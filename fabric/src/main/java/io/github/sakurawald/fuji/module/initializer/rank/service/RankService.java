@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.rank.service;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -10,6 +11,7 @@ import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.module.initializer.rank.RankInitializer;
 import io.github.sakurawald.fuji.module.initializer.rank.structure.RankDataNode;
 import io.github.sakurawald.fuji.module.initializer.rank.structure.RankNode;
+import io.github.sakurawald.fuji.module.initializer.rank.structure.RankRequirement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -79,7 +81,38 @@ public class RankService {
         return result;
     }
 
-    public static void setCurrentRankNode(@NotNull ServerPlayerEntity player, @Nullable RankNode newRankNode) {
+    @SuppressWarnings("UnnecessaryLocalVariable")
+    public static boolean canMoveTo(@NotNull ServerPlayerEntity player, @NotNull RankNode rankNode) {
+        ExtendedCommandSource source = ExtendedCommandSource.asConsole(player.getCommandSource());
+        boolean canMoveTo = rankNode
+            .getRequirements()
+            .stream()
+            .allMatch(rankRequirement -> isRankRequirementMet(rankRequirement, source));
+        return canMoveTo;
+    }
+
+    public static boolean isRankRequirementMet(RankRequirement rankRequirement, ExtendedCommandSource source) {
+        return rankRequirement
+            .getCommands()
+            .stream()
+            .allMatch(command -> CommandHelper.Return.isSuccess(CommandExecutor.execute(source, command)));
+    }
+
+    public static void tryMoveTo(@NotNull ServerPlayerEntity player, @Nullable RankNode newRankNode) {
+        /* Check requirements if new rank node is not null. */
+        if (newRankNode != null) {
+            if (canMoveTo(player, newRankNode)) {
+                moveTo(player, newRankNode);
+                TextHelper.sendTextByKey(player, "rank.up", newRankNode.getDisplayName());
+            } else {
+                TextHelper.sendTextByKey(player, "rank.up.requirements_not_meet", newRankNode.getDisplayName());
+            }
+        } else {
+            moveTo(player, null);
+        }
+    }
+
+    public static void moveTo(@NotNull ServerPlayerEntity player, @Nullable RankNode newRankNode) {
         ExtendedCommandSource source = ExtendedCommandSource.asConsole(player.getCommandSource());
 
         /* Execute the leave commands for previous rank node. */
@@ -138,7 +171,11 @@ public class RankService {
     }
 
     public static List<RankNode> getNextAvailableRankNodes(@NotNull ServerPlayerEntity player) {
-        return getCurrentRankNode(player)
+        return getNextAvailableRankNodes(player, getCurrentRankNode(player));
+    }
+
+    public static @NotNull List<RankNode> getNextAvailableRankNodes(@NotNull ServerPlayerEntity player, Optional<RankNode> currentRankNode) {
+        return currentRankNode
             .map(NEXT_RANK_NODES_MAP::get)
             .orElseGet(() -> getAvailableStartingRankNodes(player));
     }
