@@ -8,6 +8,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.rank.command.argument.wrapper.NextAvailableRankNode;
@@ -25,7 +26,50 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 @Document(id = 1754411151804L, value = """
     This module provides the rank up system.
+    You can define a `rank` with `requirements` and `award`.
     """)
+
+@ColorBox(id = 1754450877863L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ How it works?
+    1. A `rank node` is used to define a `rank`.
+    1.a. A `rank` has basic information, like `id`, `display name` and `description`.
+    1.b. A `rank` can have multiple `next ranks`, to construct the `rank paths`.
+    1.b.i. From `rank A` to `rank E`, you can define a `rank path` as `A -> B -> C -> D -> E`
+    1.b.ii. From `rank A` to `rank E`, you can define another `rank path` as `A -> F -> G -> E`
+    1.b.iii. A player can use `/rank up <next-rank>` to choose a `rank path` to `walk`.
+    2. A `rank` can have `events`:
+    2.a. The `on_enter_this_rank_node_commands` will be executed when a player `enter` this `rank`.
+    2.b. The `on_lave_this_rank_node_commands` will be executed when a player `leave` this `rank`.
+    2.c. The `on_first_enter_this_rank_node_commands` will be executed when a player `the first time enter` this `rank`.
+    3. A `rank` can have `requirements`.
+    3.a. A player must meet all the `requirements`, so that the `/rank up <next-rank>` command can be executed successfully.
+    3.b. The admin can use `/rank set <player> <rank>` command to `force set` a player's rank. (Ignore requirements)
+    3.c. A player can use `/rank down <rank>` to `rank down` to a previously `earned rank`.
+    3.d. The admin can use `/rank remove <player>` to set a player's rank to `none`.
+    """)
+@ColorBox(id = 1754451752816L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ List rank nodes by type
+    1. `/rank list all-rank-nodes`
+    2. `/rank list starting-rank-nodes Steve`
+    3. `/rank list next-rank-nodes Steve`
+    4. `/rank list previous-rank-nodes Steve`
+    5. `/rank list walked-rank-nodes Steve`
+
+    ◉ Query current rank progress
+    1. `/rank progress`
+    2. `/rank progress Steve`
+
+    ◉ Rank up to a specified rank
+    Issue: `/rank up branch-1 --confirm true`
+
+    ◉ Rank down to a `walked rank`
+    Issue: `/rank down branch-1 --confirm true`
+    <red>NOTE: If you `rank down` from this rank node, you must meet its `requirements` again before you can `rank back up` to it.
+
+
+    """)
+
+
 public class RankInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<RankConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, RankConfigModel.class);
@@ -65,7 +109,16 @@ public class RankInitializer extends ModuleInitializer {
     @CommandNode("rank progress")
     @CommandRequirement(level = 4)
     private static int $rankProgress(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
-        return RankService.sendRankProgress(source, target, null);
+        return RankService.getCurrentRankNode(target)
+            .map(currentRankNode -> {
+                RankService.sendRankNodeInfo(source, currentRankNode, false);
+                return CommandHelper.Return.SUCCESS;
+            })
+            .orElseGet(() -> {
+                String playerName = PlayerHelper.getPlayerName(target);
+                TextHelper.sendTextByKey(source, "rank.progress.no_rank", playerName);
+                return CommandHelper.Return.FAIL;
+            });
     }
 
     @Document(id = 1754420858807L, value = "Query the rank progress.")

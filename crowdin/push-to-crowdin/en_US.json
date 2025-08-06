@@ -403,8 +403,8 @@
   "rank.list.previous_rank_nodes": "<green>The available previous rank nodes for player `%s` are `%s`",
   "rank.list.starting_rank_nodes": "<green>The available starting rank nodes for player `%s` are `%s`",
   "rank.list.walked_rank_nodes": "<green>The walked rank nodes for player `%s` are `%s`",
-  "rank.progress.next_ranks": "<yellow>◉ Click to see next ranks.",
-  "rank.progress.no_next_rank": "<yellow>There are no further ranks for this rank!",
+  "rank.info.next_ranks": "<yellow>◉ Click to see next ranks.",
+  "rank.info.no_next_rank": "<yellow>There are no further ranks for %s rank!",
   "rank.progress.no_rank": "<red>Player %s currently have no rank.",
   "rank.rank_node.description": "<yellow>◉ Description: %s",
   "rank.rank_node.display_name": "<yellow>⚪ Display Name: %s",
@@ -1361,7 +1361,7 @@
   "docstring.1754329012853": "◉ Restrict `jailed players` to using only allowed commands.\nYou can integrate with `command_permission` module.\nIssue:\n1. `/lp group jailed permission set fuji.permission.* false`\nDis-allow to use `all commands`.\n\n2. `/lp group jailed permission set fuji.permission.back true`\nAllow to use the `/back` command.\n",
   "docstring.1754399924653": "Provides `/speed` command, to:\n1. Modify the `walk speed`.\n2. Modify the `fly speed`.\n",
   "docstring.1754400656952": "◉ Double the `walk speed`\nThe default value is `0.1`\nIssue: `/speed walk set Steve 0.2`\n\n◉ Double the `fly speed`\nThe default value is `0.05`\nIssue: `/speed fly set Steve 0.1`\n",
-  "docstring.1754411151804": "This module provides the rank up system.\n",
+  "docstring.1754411151804": "This module provides the rank up system.\nYou can define a `rank` with `requirements` and `award`.\n",
   "docstring.1754412528895": "List all defined `rank nodes`.",
   "docstring.1754412670219": "Query the info of the specified `rank node`.",
   "docstring.1754414038512": "The `starting rank node` is allowed to be selected for this `player`, if they have no rank yet.\nYou can assign multiple `starting rank nodes` to be selected.\n",
@@ -1378,5 +1378,7 @@
   "docstring.1754432388361": "Returns the `rank id` of the player's current rank.\n",
   "docstring.1754432587319": "Returns the `rank display name` of the player's current rank.\n",
   "docstring.1754432726443": "Returns the `rank display name raw string` of the player's current rank.\n",
-  "docstring.1754448424606": "◉ Test if a player is holding an apple\nIssue: `/command-debug is-holding? Steve minecraft:apple`\n\n◉ Test if a player has specified string permission\nIssue: `/command-debug has-perm? Steve fuji.permission.back`\n\n◉ Test if a player's health >= 10\nIssue: `/command-debug <=? Steve 10 %player:health%`\n\n◉ Test if a player killed more than 100 zombies.\nIssue: `/command-debug <=? Steve 100 %player:statistic_raw minecraft:deaths%`\n\n◉ More examples\nYou can see more examples in `command_meta.IF` module and `command_meta.chain` module.\n"
+  "docstring.1754448424606": "◉ Test if a player is holding an apple\nIssue: `/command-debug is-holding? Steve minecraft:apple`\n\n◉ Test if a player has specified string permission\nIssue: `/command-debug has-perm? Steve fuji.permission.back`\n\n◉ Test if a player's health >= 10\nIssue: `/command-debug <=? Steve 10 %player:health%`\n\n◉ Test if a player killed more than 100 zombies.\nIssue: `/command-debug <=? Steve 100 %player:statistic_raw minecraft:deaths%`\n\n◉ Leverage the `vanilla Minecraft statistics`\nSee: https://minecraft.fandom.com/wiki/Statistics\n\n◉ More examples\nYou can see more examples in `command_meta.IF` module and `command_meta.chain` module.\n",
+  "docstring.1754450877863": "◉ How it works?\n1. A `rank node` is used to define a `rank`.\n1.a. A `rank` has basic information, like `id`, `display name` and `description`.\n1.b. A `rank` can have multiple `next ranks`, to construct the `rank paths`.\n1.b.i. From `rank A` to `rank E`, you can define a `rank path` as `A -> B -> C -> D -> E`\n1.b.ii. From `rank A` to `rank E`, you can define another `rank path` as `A -> F -> G -> E`\n1.b.iii. A player can use `/rank up <next-rank>` to choose a `rank path` to `walk`.\n2. A `rank` can have `events`:\n2.a. The `on_enter_this_rank_node_commands` will be executed when a player `enter` this `rank`.\n2.b. The `on_lave_this_rank_node_commands` will be executed when a player `leave` this `rank`.\n2.c. The `on_first_enter_this_rank_node_commands` will be executed when a player `the first time enter` this `rank`.\n3. A `rank` can have `requirements`.\n3.a. A player must meet all the `requirements`, so that the `/rank up <next-rank>` command can be executed successfully.\n3.b. The admin can use `/rank set <player> <rank>` command to `force set` a player's rank. (Ignore requirements)\n3.c. A player can use `/rank down <rank>` to `rank down` to a previously `earned rank`.\n3.d. The admin can use `/rank remove <player>` to set a player's rank to `none`.\n",
+  "docstring.1754451752816": "◉ List rank nodes by type\n1. `/rank list all-rank-nodes`\n2. `/rank list starting-rank-nodes Steve`\n3. `/rank list next-rank-nodes Steve`\n4. `/rank list previous-rank-nodes Steve`\n5. `/rank list walked-rank-nodes Steve`\n\n◉ Query current rank progress\n1. `/rank progress`\n2. `/rank progress Steve`\n\n◉ Rank up to a specified rank\nIssue: `/rank up branch-1 --confirm true`\n\n◉ Rank down to a `walked rank`\nIssue: `/rank down branch-1 --confirm true`\n<red>NOTE: If you `rank down` from this rank node, you must meet its `requirements` again before you can `rank back up` to it.\n\n\n"
 }

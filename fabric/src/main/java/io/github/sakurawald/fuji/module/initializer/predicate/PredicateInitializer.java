@@ -55,6 +55,9 @@ import java.util.Optional;
     ◉ Test if a player killed more than 100 zombies.
     Issue: `/command-debug <=? Steve 100 %player:statistic_raw minecraft:deaths%`
 
+    ◉ Leverage the `vanilla Minecraft statistics`
+    See: https://minecraft.fandom.com/wiki/Statistics
+
     ◉ More examples
     You can see more examples in `command_meta.IF` module and `command_meta.chain` module.
     """)

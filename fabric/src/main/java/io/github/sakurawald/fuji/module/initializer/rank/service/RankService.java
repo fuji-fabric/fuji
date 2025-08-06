@@ -68,16 +68,17 @@ public class RankService {
         return findRankNode(startingRankNodeId);
     }
 
-    @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
-    public static List<RankNode> getAvailableStartingRankNodes(@NotNull ServerPlayerEntity player) {
+    public static List<RankNode> getAvailableStartingRankNodes(@Nullable ServerPlayerEntity player) {
         ArrayList<RankNode> result = new ArrayList<>();
 
         /* Get available starting rank nodes from permission. */
-        List<RankNode> A = getAllRankNodes()
-            .stream()
-            .filter(it -> LuckpermsHelper.hasPermission(player.getUuid(), RANK_STARTING_RANK_NODE_PERMISSION_DESCRIPTOR, it.getId()))
-            .toList();
-        result.addAll(A);
+        if (player != null) {
+            List<RankNode> A = getAllRankNodes()
+                .stream()
+                .filter(it -> LuckpermsHelper.hasPermission(player.getUuid(), RANK_STARTING_RANK_NODE_PERMISSION_DESCRIPTOR, it.getId()))
+                .toList();
+            result.addAll(A);
+        }
 
         /* Get available starting rank node from the config. */
         getStartingRankNode()
@@ -180,7 +181,7 @@ public class RankService {
         return getNextAvailableRankNodes(player, getCurrentRankNode(player));
     }
 
-    public static @NotNull List<RankNode> getNextAvailableRankNodes(@NotNull ServerPlayerEntity player, Optional<RankNode> currentRankNode) {
+    public static @NotNull List<RankNode> getNextAvailableRankNodes(@Nullable ServerPlayerEntity player, Optional<RankNode> currentRankNode) {
         return currentRankNode
             .map(NEXT_RANK_NODES_MAP::get)
             .orElseGet(() -> getAvailableStartingRankNodes(player));
@@ -239,11 +240,11 @@ public class RankService {
         TextHelper.sendTextByKey(source, "rank.rank_node.description", rankNode.getDescription());
 
         /* Send next rank nodes for the rank node. */
-        List<String> nextRankNodes = rankNode.getNextRankNodes();
-        if (nextRankNodes.isEmpty()) {
+        List<String> nextRankNodeIds = rankNode.getNextRankNodes();
+        if (nextRankNodeIds.isEmpty()) {
             TextHelper.sendTextByKey(source, "rank.rank_node.next_nodes", TextHelper.Operators.visitString(getNoRankStatusText()));
         } else {
-            TextHelper.sendTextByKey(source, "rank.rank_node.next_nodes", nextRankNodes.toString());
+            TextHelper.sendTextByKey(source, "rank.rank_node.next_nodes", nextRankNodeIds.toString());
         }
 
         /* Send requirements for the rank node. */
@@ -262,52 +263,32 @@ public class RankService {
                     });
             }
         }
-    }
 
-    public static int sendRankProgress(@NotNull ServerCommandSource source, @NotNull ServerPlayerEntity target, @Nullable RankNode specifiedRankNode) {
-        Optional<RankNode> $specifiedRankNode;
-        if (specifiedRankNode == null) {
-            $specifiedRankNode = getCurrentRankNode(target);
+        /* Send click-able text for next rank nodes. */
+        List<RankNode> nextRankNodes = getNextAvailableRankNodes(null, Optional.of(rankNode));
+        if (!nextRankNodes.isEmpty()) {
+            TextHelper.sendTextByKey(source, "rank.info.next_ranks");
+            MutableText textBuilder = Text.empty();
+            nextRankNodes
+                .forEach(nextRankNode -> {
+                    String value = "<grey>[</grey>%s<grey>]</grey>".formatted(nextRankNode.getDisplayName());
+                    MutableText singleText = TextHelper.getTextByValue(source, value).copy();
+                    ClickEvent clickEvent = Managers.getCallbackManager().makeCallbackEvent((player) -> {
+                        sendRankNodeInfo(source, nextRankNode, displayRequirements);
+                    }, 5, TimeUnit.MINUTES);
+                    Text hoverText = TextHelper.getTextByKey(source, "prompt.click.see_it.any");
+                    singleText
+                        .fillStyle(Style.EMPTY
+                            .withClickEvent(clickEvent)
+                            .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(hoverText)));
+
+                    textBuilder.append(singleText);
+                    textBuilder.append(TextHelper.TEXT_SPACE);
+                });
+            source.sendMessage(textBuilder);
         } else {
-            $specifiedRankNode = Optional.of(specifiedRankNode);
+            TextHelper.sendTextByKey(source, "rank.info.no_next_rank", rankNode.getDisplayName());
         }
-
-        return $specifiedRankNode
-            .map(currentRankNode -> {
-                /* Send current rank node info. */
-                sendRankNodeInfo(source, currentRankNode, specifiedRankNode != null);
-
-                /* Send click-able text for next rank nodes. */
-                List<RankNode> nextRankNodes = getNextAvailableRankNodes(target, Optional.of(currentRankNode));
-                if (!nextRankNodes.isEmpty()) {
-                    TextHelper.sendTextByKey(source, "rank.progress.next_ranks");
-                    MutableText textBuilder = Text.empty();
-                    nextRankNodes
-                        .forEach(nextRankNode -> {
-                            String value = "<aqua>[%s]".formatted(nextRankNode.getDisplayName());
-                            MutableText singleText = TextHelper.getTextByValue(source, value).copy();
-                            ClickEvent clickEvent = Managers.getCallbackManager().makeCallbackEvent((player) -> {
-                                sendRankProgress(source, target, nextRankNode);
-                            }, 5, TimeUnit.MINUTES);
-                            Text hoverText = TextHelper.getTextByKey(source, "prompt.click.see_it.any");
-                            singleText
-                                .fillStyle(Style.EMPTY
-                                    .withClickEvent(clickEvent)
-                                    .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(hoverText)));
-
-                            textBuilder.append(singleText);
-                            textBuilder.append(TextHelper.TEXT_SPACE);
-                        });
-                    source.sendMessage(textBuilder);
-                } else {
-                    TextHelper.sendTextByKey(source, "rank.progress.no_next_rank");
-                }
-                return CommandHelper.Return.SUCCESS;
-            })
-            .orElseGet(() -> {
-                String playerName = PlayerHelper.getPlayerName(target);
-                TextHelper.sendTextByKey(source, "rank.progress.no_rank", playerName);
-                return CommandHelper.Return.FAIL;
-            });
     }
+
 }
