@@ -113,6 +113,7 @@ public class RankService {
                 TextHelper.sendTextByKey(player, "rank.up", newRankNode.getDisplayName());
             } else {
                 TextHelper.sendTextByKey(player, "rank.up.requirements_not_meet", newRankNode.getDisplayName());
+                sendRankNodeRequirements(player.getCommandSource(), newRankNode);
             }
         } else {
             moveTo(player, null);
@@ -249,19 +250,7 @@ public class RankService {
 
         /* Send requirements for the rank node. */
         if (displayRequirements) {
-            TextHelper.sendTextByKey(source, "rank.rank_node.requirements");
-            List<RankRequirement> requirements = rankNode.getRequirements();
-            if (requirements.isEmpty()) {
-                TextHelper.sendTextByKey(source, "rank.rank_node.requirements.empty");
-            } else {
-                requirements
-                    .forEach(rankRequirement -> {
-                        ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(source);
-                        boolean rankRequirementMet = isRankRequirementMet(rankRequirement, extendedCommandSource);
-                        String languageKey = rankRequirementMet ? "checkbox.true" : "checkbox.false";
-                        TextHelper.sendTextByKey(source, languageKey, rankRequirement.getDescription());
-                    });
-            }
+            sendRankNodeRequirements(source, rankNode);
         }
 
         /* Send click-able text for next rank nodes. */
@@ -274,7 +263,7 @@ public class RankService {
                     String value = "<grey>[</grey>%s<grey>]</grey>".formatted(nextRankNode.getDisplayName());
                     MutableText singleText = TextHelper.getTextByValue(source, value).copy();
                     ClickEvent clickEvent = Managers.getCallbackManager().makeCallbackEvent((player) -> {
-                        sendRankNodeInfo(source, nextRankNode, displayRequirements);
+                        sendRankNodeInfo(source, nextRankNode, true);
                     }, 5, TimeUnit.MINUTES);
                     Text hoverText = TextHelper.getTextByKey(source, "prompt.click.see_it.any");
                     singleText
@@ -288,6 +277,22 @@ public class RankService {
             source.sendMessage(textBuilder);
         } else {
             TextHelper.sendTextByKey(source, "rank.info.no_next_rank", rankNode.getDisplayName());
+        }
+    }
+
+    public static void sendRankNodeRequirements(@NotNull ServerCommandSource source, @NotNull RankNode rankNode) {
+        TextHelper.sendTextByKey(source, "rank.rank_node.requirements");
+        List<RankRequirement> requirements = rankNode.getRequirements();
+        if (requirements.isEmpty()) {
+            TextHelper.sendTextByKey(source, "rank.rank_node.requirements.empty");
+        } else {
+            requirements
+                .forEach(rankRequirement -> {
+                    ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(source);
+                    boolean rankRequirementMet = isRankRequirementMet(rankRequirement, extendedCommandSource);
+                    String languageKey = rankRequirementMet ? "checkbox.true" : "checkbox.false";
+                    TextHelper.sendTextByKey(source, languageKey, rankRequirement.getDescription());
+                });
         }
     }
 

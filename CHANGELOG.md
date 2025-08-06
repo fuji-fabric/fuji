@@ -1,6 +1,5 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
-
 ### [rank] — New **Rank** System
 - Introduced a `rank` module to define **ranks** with customizable **requirements** and **awards**.
 - For each rank, you can set:
