@@ -21,7 +21,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
     public ServerPlayerEntity player;
 
     @ModifyArgs(method = "handleDecoratedMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;broadcast(Lnet/minecraft/network/message/SignedMessage;Lnet/minecraft/server/network/ServerPlayerEntity;Lnet/minecraft/network/message/MessageType$Parameters;)V"))
-    public void modifyChatMessageSentByPlayers(Args args) {
+    public void modifyChatMessage(Args args) {
         /* Get signed message. */
         SignedMessage signedMessage = args.get(0);
 

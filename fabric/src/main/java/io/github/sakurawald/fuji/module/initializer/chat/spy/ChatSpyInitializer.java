@@ -15,8 +15,6 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.chat.spy.config.model.ChatSpyConfigModel;
 import io.github.sakurawald.fuji.module.initializer.chat.spy.config.model.ChatSpyDataModel;
 import java.util.function.Function;
-import net.minecraft.network.message.MessageType;
-import net.minecraft.network.message.SignedMessage;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -65,20 +63,19 @@ public class ChatSpyInitializer extends ModuleInitializer {
         return apply;
     }
 
-    public static void processChatSpy(@NotNull String messageTypeString, @NotNull ServerPlayerEntity receiverPlayer, @NotNull SignedMessage signedMessage, @NotNull MessageType.Parameters parameters) {
-        LogUtil.debug("Receive a message with message type {}", messageTypeString);
+    public static void processChatSpy(@NotNull String messageTypeString, @NotNull ServerPlayerEntity receiverPlayer, @NotNull Text contentText) {
+        String contentString = TextHelper.Operators.getString(contentText);
+        LogUtil.debug("Process chat spy: message type = {}, content string = {}", messageTypeString, contentString);
 
-        /* Filter for whitelisted message types.  */
-        if (config.model().getMessageType().getAcceptors()
+        /* Filter by the message types.  */
+        if (config.model().getMessageType()
+            .getAcceptors()
             .stream()
             .noneMatch(it -> it.matches(messageTypeString))) {
             return;
         }
 
         /* Make notification text. */
-        Text content = parameters.applyChatDecoration(signedMessage.getContent());
-        String contentString = content.getString();
-
         /* Filter for duplicated chat string. */
         // NOTE: The sent message will be sent to all online players.
         if (config.model().isIgnoreConsecutiveSameText() && contentString.equals(lastContentString)) {
@@ -88,7 +85,7 @@ public class ChatSpyInitializer extends ModuleInitializer {
 
         Text receiverPlayerName = receiverPlayer.getDisplayName();
         MutableText notificationText = Text.empty();
-        notificationText.append(content)
+        notificationText.append(contentText)
             .append(TextHelper.TEXT_SPACE)
             .append(TextHelper.getTextByKey(null, "chat.spy.indicator"))
             .append(TextHelper.TEXT_SPACE)

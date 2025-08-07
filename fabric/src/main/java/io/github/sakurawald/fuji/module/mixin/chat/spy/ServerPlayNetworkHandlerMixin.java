@@ -6,6 +6,7 @@ import net.minecraft.network.message.MessageType;
 import net.minecraft.network.message.SignedMessage;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,12 +21,13 @@ public abstract class ServerPlayNetworkHandlerMixin {
     public abstract ServerPlayerEntity getPlayer();
 
     @Inject(method = "sendChatMessage", at = @At(value = "HEAD"))
-    public void spy(SignedMessage signedMessage, MessageType.Parameters parameters, CallbackInfo ci) {
+    public void onChatMessageSentToAllOnlinePlayers(SignedMessage signedMessage, MessageType.Parameters parameters, CallbackInfo ci) {
         /* Extract the message type string. */
         String messageTypeString = RegistryHelper.getIdAsString(parameters);
 
         /* Process it. */
-        ChatSpyInitializer.processChatSpy(messageTypeString, getPlayer(), signedMessage, parameters);
+        Text contentText = parameters.applyChatDecoration(signedMessage.getContent());
+        ChatSpyInitializer.processChatSpy(messageTypeString, getPlayer(), contentText);
     }
 
 }
