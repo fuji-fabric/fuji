@@ -38,7 +38,7 @@ public class ChatReplaceInitializer extends ModuleInitializer {
     public static Text replaceChatText(@NotNull PlayerEntity player, @NotNull Text text) {
         MutableText ret = text.copy();
 
-        for (RegexRewriteNode rule : config.model().replace.regex) {
+        for (RegexRewriteNode rule : config.model().replace.rules) {
             Pattern pattern = rule.getCachedPattern();
             ret = TextHelper.Replacer.replaceTextWithPattern(ret, pattern, (matcher) -> {
                 String replacement = rule.getReplacement();

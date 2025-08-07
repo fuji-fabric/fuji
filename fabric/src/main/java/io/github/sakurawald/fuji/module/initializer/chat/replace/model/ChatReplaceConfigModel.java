@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.chat.replace.model;
 
+import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.structure.RegexRewriteNode;
 
@@ -13,7 +14,8 @@ public class ChatReplaceConfigModel {
         """)
     public Replace replace = new Replace();
     public static class Replace {
-        public List<RegexRewriteNode> regex = new ArrayList<>() {
+        @SerializedName(value = "rules", alternate = "regex")
+        public List<RegexRewriteNode> rules = new ArrayList<>() {
             {
                 this.add(new RegexRewriteNode("(?<=^|\\s)item(?=\\s|$)", "%fuji:item%"));
                 this.add(new RegexRewriteNode("(?<=^|\\s)inv(?=\\s|$)", "%fuji:inv%"));
