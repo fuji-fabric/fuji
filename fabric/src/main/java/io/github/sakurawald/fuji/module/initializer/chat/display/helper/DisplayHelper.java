@@ -22,27 +22,28 @@ import java.util.concurrent.TimeUnit;
 
 public class DisplayHelper {
 
-    private static final SoftReferenceMap<String, BaseDisplayGuiFactory> uuid2gui = new SoftReferenceMap<>();
+    private static final SoftReferenceMap<String, BaseDisplayGuiFactory> uuid2factory = new SoftReferenceMap<>();
 
-    private static String bindUUID(BaseDisplayGuiFactory displayGuiFactory) {
+    private static String bindUUID(@NotNull BaseDisplayGuiFactory displayGuiFactory) {
         String uuid = RandomUtil.randomUUID();
-        uuid2gui.put(uuid, displayGuiFactory);
+        uuid2factory.put(uuid, displayGuiFactory);
         return uuid;
     }
 
-    private static void viewDisplayGui(@NotNull ServerPlayerEntity viewingPlayer, String displayUUID) {
-        BaseDisplayGuiFactory baseDisplayGui = uuid2gui.get(displayUUID);
+    private static void viewDisplayGui(@NotNull ServerPlayerEntity viewingPlayer, @NotNull String displayUUID) {
+        BaseDisplayGuiFactory baseDisplayGui = uuid2factory.get(displayUUID);
         if (baseDisplayGui == null) {
             TextHelper.sendTextByKey(viewingPlayer, "display.invalid");
             return;
         }
-        baseDisplayGui.build(viewingPlayer).open();
+        baseDisplayGui
+            .build(viewingPlayer)
+            .open();
     }
 
-    public static MutableText createEnderDisplayText(ServerPlayerEntity sharingPlayer) {
+    public static MutableText createEnderDisplayText(@NotNull ServerPlayerEntity sharingPlayer) {
         String displayUUID = bindUUID(new EnderChestDisplayGuiFactory(sharingPlayer));
-        return TextHelper.getTextByKey(sharingPlayer, "display.ender_chest.text")
-            .copy()
+        return TextHelper.getTextByKey(sharingPlayer, "display.ender_chest.text").copy()
             .fillStyle(
                 Style.EMPTY
                     .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(sharingPlayer, "display.click.prompt")))
@@ -50,17 +51,16 @@ public class DisplayHelper {
             );
     }
 
-    public static MutableText createInvDisplayText(ServerPlayerEntity sharingPlayer) {
+    public static MutableText createInvDisplayText(@NotNull ServerPlayerEntity sharingPlayer) {
         String displayUUID = bindUUID(new InventoryDisplayGuiFactory(sharingPlayer));
-        return TextHelper.getTextByKey(sharingPlayer, "display.inventory.text")
-            .copy()
+        return TextHelper.getTextByKey(sharingPlayer, "display.inventory.text").copy()
             .fillStyle(Style.EMPTY
                 .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(sharingPlayer, "display.click.prompt")))
                 .withClickEvent(makeDisplayClickEvent(displayUUID))
             );
     }
 
-    public static @NotNull MutableText createItemDisplayText(ServerPlayerEntity sharingPlayer) {
+    public static @NotNull MutableText createItemDisplayText(@NotNull ServerPlayerEntity sharingPlayer) {
         /* Make the display gui. */
         BaseDisplayGuiFactory displayGui;
         ItemStack itemStack = sharingPlayer.getMainHandStack().copy();
@@ -74,19 +74,19 @@ public class DisplayHelper {
         String displayUUID = bindUUID(displayGui);
 
         /* Make display text. */
-        MutableText translatable = Text.translatable(sharingPlayer.getMainHandStack().getItem().getTranslationKey());
-        translatable.fillStyle(Style.EMPTY
+        MutableText translatableItemNameText = Text.translatable(sharingPlayer.getMainHandStack().getItem().getTranslationKey());
+        translatableItemNameText.fillStyle(Style.EMPTY
             .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(TextHelper.getTextByKey(sharingPlayer, "display.click.prompt")))
             .withClickEvent(makeDisplayClickEvent(displayUUID))
         );
 
-        MutableText text = TextHelper.getTextByKey(sharingPlayer, "display.item.text").copy();
-        text = TextHelper.Replacer.replaceTextWithNamedArgument(text, "item", (matcher) -> translatable);
-        return text;
+        MutableText displayText = TextHelper.getTextByKey(sharingPlayer, "display.item.text").copy();
+        displayText = TextHelper.Replacer.replaceTextWithNamedArgument(displayText, "item", (matcher) -> translatableItemNameText);
+        return displayText;
     }
 
     @NotNull
-    private static ClickEvent makeDisplayClickEvent(String displayUUID) {
+    private static ClickEvent makeDisplayClickEvent(@NotNull String displayUUID) {
         return Managers
             .getCallbackManager()
             .makeCallbackEvent((player) -> viewDisplayGui(player, displayUUID), ChatDisplayInitializer.config.model().getExpirationDurationS(), TimeUnit.SECONDS);

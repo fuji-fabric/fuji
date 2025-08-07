@@ -12,13 +12,13 @@ public class ItemDisplayGuiFactory extends BaseDisplayGuiFactory {
 
     private final ItemStack itemStack;
 
-    public ItemDisplayGuiFactory(ServerPlayerEntity sourcePlayer, ItemStack itemStack) {
+    public ItemDisplayGuiFactory(@NotNull ServerPlayerEntity sourcePlayer, @NotNull ItemStack itemStack) {
         super(sourcePlayer);
         this.itemStack = itemStack;
     }
 
     @Override
-    public @NotNull SimpleGui build(ServerPlayerEntity viewingPlayer) {
+    public @NotNull SimpleGui build(@NotNull ServerPlayerEntity viewingPlayer) {
         /* Make the GUI. */
         SimpleGui gui = new SimpleGui(ScreenHandlerType.GENERIC_3X3, viewingPlayer, false);
         gui.setTitle(this.title);

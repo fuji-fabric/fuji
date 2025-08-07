@@ -22,24 +22,26 @@ public abstract class BaseDisplayGuiFactory {
     protected final Text title;
     protected static final int LINE_SIZE = 9;
 
-    protected BaseDisplayGuiFactory(Text title) {
+    protected BaseDisplayGuiFactory(@NotNull Text title) {
         this.title = title;
     }
 
-    protected BaseDisplayGuiFactory(ServerPlayerEntity sourcePlayer) {
+    protected BaseDisplayGuiFactory(@NotNull ServerPlayerEntity sourcePlayer) {
         this(TextHelper.getTextByKey(sourcePlayer, "display.gui.title", PlayerHelper.getPlayerName(sourcePlayer)));
     }
 
-    protected static void placeDisplayItemStack(@NotNull SimpleGui gui, int i, @NotNull ItemStack itemStack, SlotClickForDeeperDisplayCallback slotClickForDeeperDisplayCallback) {
+    protected static void placeDisplayItemStack(@NotNull SimpleGui gui, int slotIndex, @NotNull ItemStack itemStack, @NotNull SlotClickForDeeperDisplayCallback slotClickForDeeperDisplayCallback) {
         /* Support to go into a shulker box. */
         // Add click callback to go into a shulker box.
-        GuiElementBuilder guiElementBuilder = GuiElementBuilder.from(itemStack).setCallback(slotClickForDeeperDisplayCallback);
+        GuiElementBuilder guiElementBuilder = GuiElementBuilder
+            .from(itemStack)
+            .setCallback(slotClickForDeeperDisplayCallback);
 
         // Add click prompt for shulker box.
         if (isShulkerBox(itemStack)) {
             guiElementBuilder.addLoreLine(TextHelper.getTextByKey(gui.getPlayer(), "display.click.prompt"));
         }
-        gui.setSlot(i, guiElementBuilder.build());
+        gui.setSlot(slotIndex, guiElementBuilder.build());
     }
 
     public abstract SimpleGui build(ServerPlayerEntity viewingPlayer);
@@ -50,8 +52,7 @@ public abstract class BaseDisplayGuiFactory {
     }
 
     @TestCase(steps = "Create an inventory display that contains a shulker box.", purposes = "See if we can go inside the shulker box.")
-    public record SlotClickForDeeperDisplayCallback(SimpleGui parentGui,
-                                                       ServerPlayerEntity viewingPlayer) implements GuiElementInterface.ClickCallback {
+    public record SlotClickForDeeperDisplayCallback(@NotNull SimpleGui parentGui, @NotNull ServerPlayerEntity viewingPlayer) implements GuiElementInterface.ClickCallback {
         @Override
         public void click(int i, ClickType clickType, SlotActionType clickType1, @NotNull SlotGuiInterface slotGuiInterface) {
             GuiElementInterface slot = slotGuiInterface.getSlot(i);
@@ -65,7 +66,9 @@ public abstract class BaseDisplayGuiFactory {
             if (isShulkerBox(itemStack)) {
                 // NOTE: Here we just copy the parent GUI's title, to ensure the title is correct.
                 ShulkerBoxDisplayGuiFactory shulkerBoxDisplayGui = new ShulkerBoxDisplayGuiFactory(parentGui.getTitle(), itemStack, parentGui);
-                shulkerBoxDisplayGui.build(viewingPlayer).open();
+                shulkerBoxDisplayGui
+                    .build(viewingPlayer)
+                    .open();
             }
         }
     }

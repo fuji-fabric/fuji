@@ -23,7 +23,7 @@ public class EnderChestDisplayGuiFactory extends BaseDisplayGuiFactory {
     }
 
     @Override
-    public @NotNull SimpleGui build(ServerPlayerEntity viewingPlayer) {
+    public @NotNull SimpleGui build(@NotNull ServerPlayerEntity viewingPlayer) {
         SimpleGui gui = new SimpleGui(ScreenHandlerType.GENERIC_9X4, viewingPlayer, false);
         gui.setTitle(this.title);
 
@@ -34,9 +34,9 @@ public class EnderChestDisplayGuiFactory extends BaseDisplayGuiFactory {
         gui.setSlot(4, Items.ENDER_CHEST.getDefaultStack());
 
         /* Place container items. */
-        SlotClickForDeeperDisplayCallback slotClickForDeeperDisplayCallback = new SlotClickForDeeperDisplayCallback(gui, viewingPlayer);
+        SlotClickForDeeperDisplayCallback callback = new SlotClickForDeeperDisplayCallback(gui, viewingPlayer);
         for (int i = 0; i < this.enderChestItems.size(); i++) {
-            placeDisplayItemStack(gui, LINE_SIZE + i, this.enderChestItems.get(i), slotClickForDeeperDisplayCallback);
+            placeDisplayItemStack(gui, LINE_SIZE + i, this.enderChestItems.get(i), callback);
         }
         return gui;
     }
