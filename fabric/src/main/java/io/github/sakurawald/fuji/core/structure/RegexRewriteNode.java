@@ -2,7 +2,9 @@ package io.github.sakurawald.fuji.core.structure;
 
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import java.util.regex.Pattern;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.ToString;
 
 @Data
@@ -18,14 +20,15 @@ public class RegexRewriteNode {
     final String replacement;
 
     @ToString.Exclude
+    @Getter(AccessLevel.NONE)
     transient Pattern pattern;
 
     public Pattern getCachedPattern() {
-        if (pattern == null) {
-            pattern = Pattern.compile(regex);
+        if (this.pattern == null) {
+            this.pattern = Pattern.compile(this.regex);
         }
 
-        return pattern;
+        return this.pattern;
     }
 
 }

@@ -1,17 +1,21 @@
 package io.github.sakurawald.fuji.module.initializer.chat.trigger.structure;
 
 import java.util.regex.Pattern;
+import lombok.AccessLevel;
 import lombok.Data;
 
 import java.util.List;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 @Data
+@NoArgsConstructor
 public class ChatTrigger {
 
-    public String regex;
-    public List<String> commands;
+    String regex;
+    List<String> commands;
 
     public static ChatTrigger make(@NotNull String regex, @NotNull List<String> commands) {
         ChatTrigger chatTrigger = new ChatTrigger();
@@ -21,9 +25,10 @@ public class ChatTrigger {
     }
 
     @ToString.Exclude
+    @Getter(AccessLevel.NONE)
     transient Pattern pattern;
 
-    public Pattern getCompiledRegex() {
+    public Pattern getCachedPattern() {
         if (this.pattern == null) {
             this.pattern = Pattern.compile(this.regex);
         }

@@ -15,17 +15,16 @@ import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
 import java.util.regex.Matcher;
+import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826730890L, value = """
     This module allows you to define magic spells in chat, to execute commands.
     """)
-
 @ColorBox(id = 1751899049909L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ To define a simple magic spell in chat string.
     Regex: `magic`
     Commands: `say magic!`
     """)
-
 @ColorBox(id = 1751899198263L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ To define a complex magic spell with arguments in chat string.
     Regex: `i am (.+)`
@@ -33,44 +32,35 @@ import java.util.regex.Matcher;
     1. `say You just said: $0`
     2. `say Hello $1`
     """)
-
 @ColorBox(id = 1751899201560L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ To define a shortcut for chat display module with Styled Chat mod.
     Regex: `(?<=^|\\\\s)item(?=\\\\s|$)`
     Commands: `run as fake-op %player:name% chat display item`
     """)
-
 public class ChatTriggerInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<ChatTriggerConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatTriggerConfigModel.class);
 
-    @SuppressWarnings({"DuplicatedCode", "UnusedReturnValue"})
-    public static String processChatTriggers(ServerCommandSource source, String chatString) {
-        /* Log it. */
-        LogUtil.debug("Process Chat Triggers: chatString = {}", chatString);
+    public static void processChatTriggers(@NotNull ServerCommandSource source, @NotNull String chatString) {
+        LogUtil.debug("Process chat triggers for input: source = {}, chatString = {}", source.getName(), chatString);
 
         /* Enumerate triggers. */
-        List<ChatTrigger> triggers = config.model().triggers;
-        triggers
-            .stream()
-            .filter(it -> chatString.matches(it.regex))
-            .forEach(it -> {
+        config.model()
+            .getTriggers()
+            .forEach(chatTrigger -> {
                 /* Initialize the matcher. */
-                Matcher matcher = it.getCompiledRegex().matcher(chatString);
-                matcher.find();
+                Matcher matcher = chatTrigger.getCachedPattern().matcher(chatString);
+                if (matcher.find()) {
+                    /* Replace the captured groups for commands. */
+                    List<String> commands = chatTrigger.getCommands()
+                        .stream()
+                        .map(cmd -> StringUtil.replaceAllAndResetMatcher(matcher, cmd))
+                        .toList();
 
-                /* Replace captured-groups for commands. */
-                List<String> commands = it.commands
-                    .stream()
-                    .map(cmd -> StringUtil.replaceAllAndResetMatcher(matcher, cmd))
-                    .toList();
-
-                /* Execute commands. */
-                LogUtil.debug("Execute commands {} for {}", commands, it);
-                CommandExecutor.execute(ExtendedCommandSource.asConsole(source), commands);
+                    /* Execute commands. */
+                    CommandExecutor.execute(ExtendedCommandSource.asConsole(source), commands);
+                }
             });
-
-        return chatString;
     }
 
 }

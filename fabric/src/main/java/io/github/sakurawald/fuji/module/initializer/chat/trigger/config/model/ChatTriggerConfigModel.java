@@ -5,13 +5,17 @@ import io.github.sakurawald.fuji.module.initializer.chat.trigger.structure.ChatT
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 public class ChatTriggerConfigModel {
 
     @Document(id = 1751826732919L, value = """
         Use `regex` expression to define `triggers`.
         """)
-    public List<ChatTrigger> triggers = new ArrayList<>() {
+    List<ChatTrigger> triggers = new ArrayList<>() {
         {
             this.add(ChatTrigger.make("magic", List.of("say magic!")));
             this.add(ChatTrigger.make("i am (.+)", List.of("say You just said: $0", "say Hello $1")));
