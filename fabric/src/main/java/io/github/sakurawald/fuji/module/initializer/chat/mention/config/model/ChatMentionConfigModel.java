@@ -2,14 +2,18 @@ package io.github.sakurawald.fuji.module.initializer.chat.mention.config.model;
 
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.job.impl.PlaySoundJob;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 public class ChatMentionConfigModel {
 
-    public PlaySoundJob.PlaySoundJobSetup mention_player = new PlaySoundJob.PlaySoundJobSetup();
+    PlaySoundJob.PlaySoundJobSetup mentionPlayer = new PlaySoundJob.PlaySoundJobSetup();
 
     @Document(id = 1751826735560L, value = """
         The format used in `chat message` when a player is `mentioned`.
         """)
-    public String mention_format = "<aqua>@%s</aqua>";
+    String mentionFormat = "<aqua>@%s</aqua>";
 
 }

@@ -9,6 +9,8 @@ import java.util.regex.Matcher;
 
 public class StringUtil {
 
+    public static final String SPACE = " ";
+
     public static String replaceAllAndResetMatcher(@NotNull Matcher matcher, @NotNull String replacement) {
         replacement = matcher.replaceAll(replacement);
         matcher.reset();

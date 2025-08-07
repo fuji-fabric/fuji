@@ -30,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 })
 public class PlayerHelper {
 
+    @ForDeveloper("It's possible to generate invalid player name using `/player abc++ spawn` command.")
     public static String getPlayerName(@NotNull PlayerEntity player) {
         return player.getGameProfile().getName();
     }
