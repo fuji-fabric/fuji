@@ -1,10 +1,21 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
-- [chat.trigger] feature: slightly performance improve.
-- [chat.mention] fix: should display the `mentioned players` properly when there are `common name prefix` in the `mentioned players`.
-- [chat.display] feature: now allow the player to modify their inventory when viewing other's display GUI.
-- [chat.spy] feature: improve the `debug logging` for this module, making it easier to find out the `message type` of the `target message`.
-- [chat.history] improvements and fixes
-  - feature: improve the `debug loggins` and `config fields`, making it clearer.
-  - fix: the chat history module didn't work in `offline-mode server` when `MC >= 1.21.5`.
-- [core] now will attach `MOD_VERSION` property for each `config file`.
+### [chat.history]
+**Improvements and Fixes:**
+- **Feature:** Improved debug logging and configuration fields for better clarity.
+- **Fix:** The chat history module was non-functional on offline-mode servers when Minecraft version ≥ 1.21.5.
+ 
+### [chat.trigger]
+**Feature:** Slight performance improvement.
+
+### [chat.mention]
+**Fix:** Mentioned players are now displayed correctly even when their names share a common prefix.
+
+### [chat.display]
+**Feature:** Players can now modify their own inventory while viewing another player's display GUI.
+
+### [chat.spy]
+**Feature:** Enhanced debug logging for this module, making it easier to identify the message type of the target message.
+
+### [core]
+**Change:** Now attaches the `MOD_VERSION` property to each generated config file.
