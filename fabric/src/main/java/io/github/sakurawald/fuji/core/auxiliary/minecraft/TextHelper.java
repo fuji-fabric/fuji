@@ -425,21 +425,21 @@ public class TextHelper {
         private static MutableText replaceText(@NotNull Text text, @NotNull Pattern pattern, @NotNull Function<Matcher, Text> replacementSupplier) {
             MutableText replacedText;
 
-            /* process the atom */
-            String textString = Operators.flattenTextContent(text.getContent());
-            @Nullable List<Text> splits = trySplitString(textString, pattern, replacementSupplier);
+            /* Process the atom. */
+            String textString = flattenTextContent(text.getContent());
+            @Nullable List<Text> splits = splitAndReplaceText(textString, pattern, replacementSupplier);
 
             if (splits == null) {
                 replacedText = text.copyContentOnly();
             } else {
-                // use a dummy root to represent the replaced node.
+                // Use a dummy root to represent the replaced node.
                 MutableText dummyRoot = Text.empty();
                 replacedText = dummyRoot;
                 splits.forEach(dummyRoot::append);
             }
             replacedText.fillStyle(text.getStyle());
 
-            /* go down */
+            /* Go down. */
             for (Text sibling : text.getSiblings()) {
                 MutableText replacedSibling = replaceText(sibling, pattern, replacementSupplier);
                 replacedText.append(replacedSibling);
@@ -448,54 +448,54 @@ public class TextHelper {
             return replacedText;
         }
 
-        private static @Nullable List<Text> trySplitString(String string, Pattern pattern, @NotNull Function<Matcher, Text> replacementSupplier) {
-            /* quick return */
-            Matcher matcher = pattern.matcher(string);
+        private static @Nullable List<Text> splitAndReplaceText(@NotNull String string, @NotNull Pattern pattern, @NotNull Function<Matcher, Text> replacementSupplier) {
+            List<Text> result = new ArrayList<>();
 
-            List<Text> ret = new ArrayList<>();
+            /* Iterate the matcher. */
+            Matcher matcher = pattern.matcher(string);
             int startIndex = 0;
             while (matcher.find()) {
-                int i = matcher.start();
+                int matchedStringIndex = matcher.start();
 
-                // append the head text if exists
-                if (i != startIndex) {
-                    ret.add(Text.literal(string.substring(startIndex, i)));
+                // Append the prefix text if exists.
+                if (matchedStringIndex != startIndex) {
+                    MutableText prefixText = Text.literal(string.substring(startIndex, matchedStringIndex));
+                    result.add(prefixText);
                 }
 
-                // append the replacement text
+                // Append the replacement text.
                 Text replacementText = replacementSupplier.apply(matcher);
-                ret.add(replacementText);
+                result.add(replacementText);
 
-                // update the start index.
+                // Update the start index.
                 startIndex = matcher.end();
             }
 
-            // return null if nothing is replaced.
-            if (ret.isEmpty()) return null;
+            /* Return null if nothing is replaced. */
+            if (result.isEmpty()) return null;
 
-            /* append the tail string if exists */
+            /* Append the suffix string if exists. */
             if (startIndex < string.length()) {
-                ret.add(Text.literal(string.substring(startIndex)));
+                MutableText suffixText = Text.literal(string.substring(startIndex));
+                result.add(suffixText);
             }
 
-            return ret;
+            return result;
         }
 
+        @SuppressWarnings("CodeBlock2Expr")
         private static <T> Function<Matcher, T> makeMemoizeSupplier(@NotNull Function<Matcher, T> delegate) {
             AtomicReference<T> value = new AtomicReference<>();
             return (matcher) -> {
                 T val = value.get();
                 if (val == null) {
-                    val = value.updateAndGet(cur -> cur == null ?
-                        Objects.requireNonNull(delegate.apply(matcher)) : cur);
+                    val = value.updateAndGet(cur -> {
+                        return cur == null ? Objects.requireNonNull(delegate.apply(matcher)) : cur;
+                    });
                 }
                 return val;
             };
         }
-    }
-
-    @ForDeveloper("The functions to operate on the Text domain entity.")
-    public static class Operators {
 
         private static String flattenTextContent(@NotNull TextContent textContent) {
             StringBuilder stringBuilder = new StringBuilder();
@@ -505,6 +505,10 @@ public class TextHelper {
             });
             return stringBuilder.toString();
         }
+    }
+
+    @ForDeveloper("The functions to operate on the Text domain entity.")
+    public static class Operators {
 
         public static String getString(Text text) {
             return text.getString();
