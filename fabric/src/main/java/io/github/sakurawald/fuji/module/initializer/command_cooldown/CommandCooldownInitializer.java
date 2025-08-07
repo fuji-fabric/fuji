@@ -133,10 +133,12 @@ public class CommandCooldownInitializer extends ModuleInitializer {
 
     @Document(id = 1751826416666L, value = "Delete a named-cooldown.")
     @CommandNode("delete")
-    private static int $delete(@CommandSource ServerCommandSource source, NamedCooldownDescriptor namedCooldown) {
-        NamedCooldownService.deleteNamedCooldownDescriptor(namedCooldown);
-        TextHelper.sendTextByKey(source, "command_cooldown.deleted", namedCooldown.getName());
-        return CommandHelper.Return.SUCCESS;
+    private static int $delete(@CommandSource ServerCommandSource source, NamedCooldownDescriptor namedCooldown, Optional<Boolean> confirm) {
+        return CommandHelper.Pattern.withCommandConfirmed(source, confirm, () -> {
+            NamedCooldownService.deleteNamedCooldownDescriptor(namedCooldown);
+            TextHelper.sendTextByKey(source, "command_cooldown.deleted", namedCooldown.getName());
+            return CommandHelper.Return.SUCCESS;
+        });
     }
 
     @Document(id = 1751826418447L, value = "List all named-cooldown.")
