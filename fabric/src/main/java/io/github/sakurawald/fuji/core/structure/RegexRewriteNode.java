@@ -1,7 +1,9 @@
 package io.github.sakurawald.fuji.core.structure;
 
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import java.util.regex.Pattern;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 public class RegexRewriteNode {
@@ -14,4 +16,16 @@ public class RegexRewriteNode {
         The `pattern` used to replace the `matched target string`.
         """)
     final String replacement;
+
+    @ToString.Exclude
+    transient Pattern pattern;
+
+    public Pattern getCachedPattern() {
+        if (pattern == null) {
+            pattern = Pattern.compile(regex);
+        }
+
+        return pattern;
+    }
+
 }

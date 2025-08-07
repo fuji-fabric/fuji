@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.core.auxiliary;
 
 import java.util.Locale;
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,5 +64,11 @@ public class StringUtil {
             }
         }
         return dp[lenStr1][lenStr2];
+    }
+
+    public static String copyMatcherAndReplaceFirst(@NotNull Pattern pattern, @NotNull Matcher matcher, @NotNull String replacement) {
+        Matcher copyMatcher = pattern.matcher(matcher.group());
+        replacement = copyMatcher.replaceFirst(replacement);
+        return replacement;
     }
 }

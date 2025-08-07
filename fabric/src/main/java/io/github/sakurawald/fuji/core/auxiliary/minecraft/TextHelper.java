@@ -28,7 +28,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Supplier;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.entity.player.PlayerEntity;
@@ -422,18 +422,21 @@ public class TextHelper {
             return text.getString();
         }
 
-        public static MutableText replaceTextWithNamedArgument(@NotNull Text text, @NotNull String namedArgumentName, @NotNull Supplier<Text> replacementSupplier) {
+        public static MutableText replaceTextWithNamedArgument(@NotNull Text text, @NotNull String namedArgumentName, @NotNull Function<Matcher, Text> replacementSupplier) {
             return replaceTextWithRegex(text, "\\$\\{%s}".formatted(namedArgumentName), replacementSupplier);
         }
 
-        public static MutableText replaceTextWithRegex(@NotNull Text text, @NotNull String regex, @NotNull Supplier<Text> nonMemorizedReplacementSupplier) {
+        public static MutableText replaceTextWithPattern(@NotNull Text text, @NotNull Pattern pattern, @NotNull Function<Matcher, Text> nonMemorizedReplacementSupplier) {
             // memorize the supplier
             nonMemorizedReplacementSupplier = makeMemoizeSupplier(nonMemorizedReplacementSupplier);
-
-            return replaceText(text, Pattern.compile(regex), nonMemorizedReplacementSupplier);
+            return replaceText(text, pattern, nonMemorizedReplacementSupplier);
         }
 
-        private static MutableText replaceText(@NotNull Text text, @NotNull Pattern pattern, @NotNull Supplier<Text> replacementSupplier) {
+        public static MutableText replaceTextWithRegex(@NotNull Text text, @NotNull String regex, @NotNull Function<Matcher, Text> nonMemorizedReplacementSupplier) {
+            return replaceTextWithPattern(text, Pattern.compile(regex), nonMemorizedReplacementSupplier);
+        }
+
+        private static MutableText replaceText(@NotNull Text text, @NotNull Pattern pattern, @NotNull Function<Matcher, Text> replacementSupplier) {
             MutableText replacedText;
 
             /* process the atom */
@@ -459,7 +462,7 @@ public class TextHelper {
             return replacedText;
         }
 
-        private static @Nullable List<Text> trySplitString(String string, Pattern pattern, Supplier<Text> replacementSupplier) {
+        private static @Nullable List<Text> trySplitString(String string, Pattern pattern, @NotNull Function<Matcher, Text> replacementSupplier) {
             /* quick return */
             Matcher matcher = pattern.matcher(string);
 
@@ -474,8 +477,10 @@ public class TextHelper {
                 }
 
                 // append the replacement text
-                ret.add(replacementSupplier.get());
+                Text replacementText = replacementSupplier.apply(matcher);
+                ret.add(replacementText);
 
+                // update the start index.
                 startIndex = matcher.end();
             }
 
@@ -490,13 +495,13 @@ public class TextHelper {
             return ret;
         }
 
-        private static <T> Supplier<T> makeMemoizeSupplier(Supplier<T> delegate) {
+        private static <T> Function<Matcher, T> makeMemoizeSupplier(@NotNull Function<Matcher, T> delegate) {
             AtomicReference<T> value = new AtomicReference<>();
-            return () -> {
+            return (matcher) -> {
                 T val = value.get();
                 if (val == null) {
                     val = value.updateAndGet(cur -> cur == null ?
-                        Objects.requireNonNull(delegate.get()) : cur);
+                        Objects.requireNonNull(delegate.apply(matcher)) : cur);
                 }
                 return val;
             };
