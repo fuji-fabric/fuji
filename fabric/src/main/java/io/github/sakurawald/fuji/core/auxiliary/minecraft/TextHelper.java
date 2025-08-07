@@ -406,21 +406,7 @@ public class TextHelper {
 
     }
 
-    @ForDeveloper("The functions to operate on the Text domain entity.")
-    public static class Operators {
-
-        private static String visitString(TextContent textContent) {
-            StringBuilder stringBuilder = new StringBuilder();
-            textContent.visit(string -> {
-                stringBuilder.append(string);
-                return Optional.empty();
-            });
-            return stringBuilder.toString();
-        }
-
-        public static String visitString(Text text) {
-            return text.getString();
-        }
+    public static class Replacer {
 
         public static MutableText replaceTextWithNamedArgument(@NotNull Text text, @NotNull String namedArgumentName, @NotNull Function<Matcher, Text> replacementSupplier) {
             return replaceTextWithRegex(text, "\\$\\{%s}".formatted(namedArgumentName), replacementSupplier);
@@ -440,7 +426,7 @@ public class TextHelper {
             MutableText replacedText;
 
             /* process the atom */
-            String textString = visitString(text.getContent());
+            String textString = Operators.visitString(text.getContent());
             @Nullable List<Text> splits = trySplitString(textString, pattern, replacementSupplier);
 
             if (splits == null) {
@@ -505,6 +491,23 @@ public class TextHelper {
                 }
                 return val;
             };
+        }
+    }
+
+    @ForDeveloper("The functions to operate on the Text domain entity.")
+    public static class Operators {
+
+        private static String visitString(TextContent textContent) {
+            StringBuilder stringBuilder = new StringBuilder();
+            textContent.visit(string -> {
+                stringBuilder.append(string);
+                return Optional.empty();
+            });
+            return stringBuilder.toString();
+        }
+
+        public static String visitString(Text text) {
+            return text.getString();
         }
 
         public static @NotNull MutableText condenseTextList(List<Text> textList) {

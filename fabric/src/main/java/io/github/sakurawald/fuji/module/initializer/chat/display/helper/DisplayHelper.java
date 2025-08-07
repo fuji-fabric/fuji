@@ -81,7 +81,7 @@ public class DisplayHelper {
         );
 
         MutableText text = TextHelper.getTextByKey(sharingPlayer, "display.item.text").copy();
-        text = TextHelper.Operators.replaceTextWithNamedArgument(text, "item", (matcher) -> translatable);
+        text = TextHelper.Replacer.replaceTextWithNamedArgument(text, "item", (matcher) -> translatable);
         return text;
     }
 

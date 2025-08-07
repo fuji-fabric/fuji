@@ -69,7 +69,7 @@ public class ChatMentionInitializer extends ModuleInitializer {
             Text replacementText = TextHelper.getTextByValue(mentionedPlayer, replacementString);
 
             // Re-assign the value of original.
-            original = TextHelper.Operators.replaceTextWithRegex(original, playerName, (matcher) -> replacementText);
+            original = TextHelper.Replacer.replaceTextWithRegex(original, playerName, (matcher) -> replacementText);
         }
 
         return original;

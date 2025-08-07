@@ -25,7 +25,7 @@ public class TestFunctions {
         LogUtil.debug("before = {}", root);
         player.sendMessage(root);
 
-        MutableText after = TextHelper.Operators.replaceTextWithRegex(root, "hi", (matcher) -> Text.literal("{replacement}"));
+        MutableText after = TextHelper.Replacer.replaceTextWithRegex(root, "hi", (matcher) -> Text.literal("{replacement}"));
         LogUtil.debug("after = {}", after);
         player.sendMessage(after);
     }

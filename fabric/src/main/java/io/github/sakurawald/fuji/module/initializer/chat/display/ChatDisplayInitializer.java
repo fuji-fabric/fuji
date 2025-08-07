@@ -45,7 +45,7 @@ public class ChatDisplayInitializer extends ModuleInitializer {
 
     private static void broadcastDisplayText(ServerPlayerEntity player, String broadcastTextKey, MutableText displayText) {
         Text broadcastText = TextHelper.getTextByKey(player, broadcastTextKey);
-        broadcastText = TextHelper.Operators.replaceTextWithNamedArgument(broadcastText, DISPLAY_TEXT_PLACEHOLDER, (matcher) -> displayText);
+        broadcastText = TextHelper.Replacer.replaceTextWithNamedArgument(broadcastText, DISPLAY_TEXT_PLACEHOLDER, (matcher) -> displayText);
         TextHelper.sendBroadcastByText(broadcastText);
     }
 

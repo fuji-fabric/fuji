@@ -96,7 +96,7 @@ public class EconomyInitializer extends ModuleInitializer {
             TextHelper.sendTextByKey(source, "economy.provider.id", provider.id());
 
             Text providerNameText = TextHelper.getTextByKey(source, "economy.provider.name.display");
-            providerNameText = TextHelper.Operators.replaceTextWithNamedArgument(providerNameText, "name", (matcher) -> provider.name());
+            providerNameText = TextHelper.Replacer.replaceTextWithNamedArgument(providerNameText, "name", (matcher) -> provider.name());
             source.sendMessage(providerNameText);
 
             TextHelper.sendTextByKey(source, "economy.provider.icon", provider.icon().getItem());
@@ -105,7 +105,7 @@ public class EconomyInitializer extends ModuleInitializer {
                 TextHelper.sendTextByKey(source, "economy.currency.id", currency.id());
 
                 Text currencyNameText = TextHelper.getTextByKey(source, "economy.currency.name.display");
-                currencyNameText = TextHelper.Operators.replaceTextWithNamedArgument(currencyNameText, "name", (matcher) -> currency.name());
+                currencyNameText = TextHelper.Replacer.replaceTextWithNamedArgument(currencyNameText, "name", (matcher) -> currency.name());
                 source.sendMessage(currencyNameText);
 
                 TextHelper.sendTextByKey(source, "economy.currency.icon", currency.icon().getItem());
@@ -130,10 +130,10 @@ public class EconomyInitializer extends ModuleInitializer {
 
     private static void printEconomyAccountInfo(ServerCommandSource source, EconomyAccount account) {
         Text accountNameText = TextHelper.getTextByKey(source, "economy.account.name.display");
-        accountNameText = TextHelper.Operators.replaceTextWithNamedArgument(accountNameText,"name", (matcher) -> account.name());
+        accountNameText = TextHelper.Replacer.replaceTextWithNamedArgument(accountNameText,"name", (matcher) -> account.name());
 
         Text balanceText = TextHelper.getTextByKey(source, "economy.account.balance.display");
-        balanceText = TextHelper.Operators.replaceTextWithNamedArgument(balanceText, "balance", (matcher) -> account.formattedBalance());
+        balanceText = TextHelper.Replacer.replaceTextWithNamedArgument(balanceText, "balance", (matcher) -> account.formattedBalance());
 
         source.sendMessage(accountNameText);
         source.sendMessage(balanceText);

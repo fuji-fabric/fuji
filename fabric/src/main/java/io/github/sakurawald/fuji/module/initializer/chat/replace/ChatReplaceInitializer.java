@@ -40,7 +40,7 @@ public class ChatReplaceInitializer extends ModuleInitializer {
 
         for (RegexRewriteNode rule : config.model().replace.regex) {
             Pattern pattern = rule.getCachedPattern();
-            ret = TextHelper.Operators.replaceTextWithPattern(ret, pattern, (matcher) -> {
+            ret = TextHelper.Replacer.replaceTextWithPattern(ret, pattern, (matcher) -> {
                 String replacement = rule.getReplacement();
                 replacement = StringUtil.copyMatcherAndReplaceFirst(pattern, matcher, replacement);
                 return TextHelper.getTextByValue(player, replacement);
