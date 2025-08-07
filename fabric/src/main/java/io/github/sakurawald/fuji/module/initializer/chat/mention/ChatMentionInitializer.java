@@ -59,7 +59,7 @@ public class ChatMentionInitializer extends ModuleInitializer {
 
     public static Text replaceMentionText(@NotNull Text original) {
         /* Resolve mentioned player names. */
-        String chatString = TextHelper.Operators.visitString(original);
+        String chatString = TextHelper.Operators.getString(original);
         List<ServerPlayerEntity> mentionedPlayers = resolveMentionedOnlinePlayers(chatString);
 
         /* Replace the mentioned player texts. */

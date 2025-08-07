@@ -82,7 +82,7 @@ public class TopChunksService {
 
             if (nearestPlayer != null) {
                 String nearestPlayerName = PlayerHelper.getPlayerName(nearestPlayer);
-                String nearestPlayerString = TextHelper.Operators.visitString(TextHelper.getTextByKey(source, "top_chunks.prop.players.nearest", nearestPlayerName));
+                String nearestPlayerString = TextHelper.Operators.getString(TextHelper.getTextByKey(source, "top_chunks.prop.players.nearest", nearestPlayerName));
                 chunkScore.getPlayers().add(nearestPlayerString);
             }
         }

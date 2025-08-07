@@ -201,7 +201,7 @@ public class TextHelper {
 
         public static @NotNull String parsePlaceholderString(@Nullable Object audience, String value) {
             Text text = TextHelper.getText(PLACEHOLDER_ONLY_PARSER, audience, false, value);
-            return Operators.visitString(text);
+            return Operators.getString(text);
         }
     }
 
@@ -426,7 +426,7 @@ public class TextHelper {
             MutableText replacedText;
 
             /* process the atom */
-            String textString = Operators.visitString(text.getContent());
+            String textString = Operators.flattenTextContent(text.getContent());
             @Nullable List<Text> splits = trySplitString(textString, pattern, replacementSupplier);
 
             if (splits == null) {
@@ -497,7 +497,7 @@ public class TextHelper {
     @ForDeveloper("The functions to operate on the Text domain entity.")
     public static class Operators {
 
-        private static String visitString(TextContent textContent) {
+        private static String flattenTextContent(@NotNull TextContent textContent) {
             StringBuilder stringBuilder = new StringBuilder();
             textContent.visit(string -> {
                 stringBuilder.append(string);
@@ -506,7 +506,7 @@ public class TextHelper {
             return stringBuilder.toString();
         }
 
-        public static String visitString(Text text) {
+        public static String getString(Text text) {
             return text.getString();
         }
 
@@ -771,7 +771,7 @@ public class TextHelper {
     public static void sendBroadcastByKey(@NotNull String key, Object... args) {
         /* Log the console, using the default language. */
         Text text = getTextByKey(null, key, args);
-        LogUtil.info(Operators.visitString(text));
+        LogUtil.info(Operators.getString(text));
 
         /* Send the text using the player's client side language. */
         for (ServerPlayerEntity player : PlayerHelper.Lookup.getOnlinePlayers()) {
@@ -781,7 +781,7 @@ public class TextHelper {
 
     public static void sendBroadcastByText(Text text) {
         /* Log the console, using the given text. */
-        LogUtil.info(Operators.visitString(text));
+        LogUtil.info(Operators.getString(text));
 
         /* Send the text, using the given text. */
         for (ServerPlayerEntity player : PlayerHelper.Lookup.getOnlinePlayers()) {

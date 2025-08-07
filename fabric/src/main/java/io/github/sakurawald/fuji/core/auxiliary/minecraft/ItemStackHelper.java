@@ -136,7 +136,7 @@ public class ItemStackHelper {
 
         @SuppressWarnings("RedundantIfStatement")
         private static boolean filterItemName(@NotNull ItemStack itemStack, @NotNull String keyword) {
-            String itemName = TextHelper.Operators.visitString(itemStack.getName());
+            String itemName = TextHelper.Operators.getString(itemStack.getName());
             if (StringUtil.containsIgnoreCase(itemName, keyword)) return true;
 
             return false;
@@ -147,7 +147,7 @@ public class ItemStackHelper {
             boolean matched = Lore.getLore(itemStack)
                 .stream()
                 .anyMatch(text -> {
-                    String content = TextHelper.Operators.visitString(text);
+                    String content = TextHelper.Operators.getString(text);
                     return StringUtil.containsIgnoreCase(content, keyword);
                 });
             if (matched) return true;

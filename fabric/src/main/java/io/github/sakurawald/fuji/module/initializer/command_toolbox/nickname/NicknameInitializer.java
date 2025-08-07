@@ -26,7 +26,7 @@ public class NicknameInitializer extends ModuleInitializer {
     private static String formatNickname(@NotNull ServerPlayerEntity player, @NotNull String inputNickName) {
         // Parse the placeholders first to make the Java Formatter happy.
         String nicknameFormat = config.model().nicknameFormat;
-        nicknameFormat = TextHelper.Operators.visitString(TextHelper.getTextByValue(player, nicknameFormat));
+        nicknameFormat = TextHelper.Operators.getString(TextHelper.getTextByValue(player, nicknameFormat));
         return nicknameFormat.formatted(inputNickName);
     }
 

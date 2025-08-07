@@ -170,7 +170,7 @@ public class PredicateInitializer extends ModuleInitializer {
     private static int compareNumericValue(ServerCommandSource source, ServerPlayerEntity player, double value, GreedyString numericValueProvider, BiPredicate<Double, Double> predicate) {
         String $numericValueProvider = numericValueProvider.getValue();
         Text numericValueText = TextHelper.getTextByValue(player, $numericValueProvider);
-        String numericValueString = TextHelper.Operators.visitString(numericValueText);
+        String numericValueString = TextHelper.Operators.getString(numericValueText);
         try {
             double numericValue = Double.parseDouble(numericValueString);
             boolean testResult = predicate.test(value, numericValue);

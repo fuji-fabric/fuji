@@ -243,7 +243,7 @@ public class RankService {
         /* Send next rank nodes for the rank node. */
         List<String> nextRankNodeIds = rankNode.getNextRankNodes();
         if (nextRankNodeIds.isEmpty()) {
-            TextHelper.sendTextByKey(source, "rank.rank_node.next_nodes", TextHelper.Operators.visitString(getNoRankStatusText()));
+            TextHelper.sendTextByKey(source, "rank.rank_node.next_nodes", TextHelper.Operators.getString(getNoRankStatusText()));
         } else {
             TextHelper.sendTextByKey(source, "rank.rank_node.next_nodes", nextRankNodeIds.toString());
         }

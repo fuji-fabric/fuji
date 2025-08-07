@@ -185,7 +185,7 @@ public class EconomyInitializer extends ModuleInitializer {
         PagedMessageText pagedMessageText = PagedMessageText.makePagedMessageText(player, entities, EconomyService.getBalanceTopPageSize(), (entity, index, pageBuilder) -> {
             int numbering = index + 1;
             String playerName = entity.getGameProfile().getName();
-            String balanceString = TextHelper.Operators.visitString(entity.economyAccount.formattedBalance());
+            String balanceString = TextHelper.Operators.getString(entity.economyAccount.formattedBalance());
             pageBuilder.append(TextHelper.getTextByKey(player, "economy.balance.top.entry", numbering, playerName, balanceString));
             pageBuilder.append(TextHelper.TEXT_NEWLINE);
         });

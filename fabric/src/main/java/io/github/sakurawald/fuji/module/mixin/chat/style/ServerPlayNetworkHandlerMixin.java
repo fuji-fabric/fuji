@@ -30,7 +30,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
         args.set(2, MessageType.params(ChatStyleInitializer.MESSAGE_TYPE_KEY, ServerHelper.getServer().getRegistryManager(), senderText));
 
         /* Make content text. */
-        String contentString = TextHelper.Operators.visitString(signedMessage.getContent());
+        String contentString = TextHelper.Operators.getString(signedMessage.getContent());
         Text contentText = ChatStyleInitializer.parseContentText(player, contentString);
         args.set(0, signedMessage.withUnsignedContent(contentText));
     }
