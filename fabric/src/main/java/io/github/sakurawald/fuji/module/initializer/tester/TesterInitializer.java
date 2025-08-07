@@ -35,8 +35,6 @@ public class TesterInitializer extends ModuleInitializer {
     @SneakyThrows(Exception.class)
     @CommandNode("run")
     private static int $run(@CommandSource ServerCommandSource source) {
-//        source.getPlayer().getAbilities().setFlySpeed();
-//        source.getPlayer().getAbilities().setWalkSpeed();
 
         LogUtil.info("Done");
         return 0;

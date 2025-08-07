@@ -93,7 +93,7 @@ public class CommandAdviceInitializer extends ModuleInitializer {
                 matcher.find();
                 List<String> commands = it.commands
                     .stream()
-                    .map(cmd -> StringUtil.substituteGroupPlaceholders(matcher, cmd))
+                    .map(cmd -> StringUtil.replaceAllAndResetMatcher(matcher, cmd))
                     .collect(Collectors.toCollection(ArrayList::new));
 
                 // Execute commands

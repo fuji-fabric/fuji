@@ -62,7 +62,7 @@ public class ChatTriggerInitializer extends ModuleInitializer {
                 /* Replace captured-groups for commands. */
                 List<String> commands = it.commands
                     .stream()
-                    .map(cmd -> StringUtil.substituteGroupPlaceholders(matcher, cmd))
+                    .map(cmd -> StringUtil.replaceAllAndResetMatcher(matcher, cmd))
                     .toList();
 
                 /* Execute commands. */

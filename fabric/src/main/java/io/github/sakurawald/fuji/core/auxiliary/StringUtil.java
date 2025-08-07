@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 
 public class StringUtil {
 
-    public static String substituteGroupPlaceholders(@NotNull Matcher matcher, @NotNull String replacement) {
+    public static String replaceAllAndResetMatcher(@NotNull Matcher matcher, @NotNull String replacement) {
         replacement = matcher.replaceAll(replacement);
         matcher.reset();
         return replacement;
