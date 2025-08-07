@@ -78,23 +78,23 @@ public class RegistryLoaderMixin {
         , List<RegistryLoader.Loader<?>> iterable
         , RegistryOps.RegistryInfoGetter registryInfoGetter
     )
-    #endif {
-
-        for (var entry : iterable) {
+    #endif
+    {
+        for (var loader : iterable) {
             #if MC_VER <= MC_1_20_4
-            MutableRegistry<?> registry = entry.getFirst();
+            MutableRegistry<?> registry = loader.getFirst();
             #elif MC_VER > MC_1_20_4
-            MutableRegistry<?> registry = entry.comp_2246();
+            MutableRegistry<?> registry = loader.comp_2246();
             #endif
 
-            /* Register out custom message type in the proper registry. */
+            /* Register out custom message type in the Registry<MessageType> instance. */
             RegistryKey<? extends Registry<?>> registryKey = registry.getKey();
             if (registryKey.equals(RegistryKeys.MESSAGE_TYPE)) {
-                Registry<MessageType> registryForMessageType = (Registry<MessageType>) registry;
+                Registry<MessageType> messageTypeRegistry = (Registry<MessageType>) registry;
 
                 // NOTE: in single-player world, the MESSAGE_TYPE_KEY will be registered twice, causing a `network protocol error` while join the world.
-                if (!registryForMessageType.contains(ChatStyleInitializer.MESSAGE_TYPE_KEY)) {
-                    Registry.register(registryForMessageType, ChatStyleInitializer.MESSAGE_TYPE_KEY, ChatStyleInitializer.MESSAGE_TYPE_VALUE);
+                if (!messageTypeRegistry.contains(ChatStyleInitializer.MESSAGE_TYPE_KEY)) {
+                    Registry.register(messageTypeRegistry, ChatStyleInitializer.MESSAGE_TYPE_KEY, ChatStyleInitializer.MESSAGE_TYPE_VALUE);
                 }
             }
         }

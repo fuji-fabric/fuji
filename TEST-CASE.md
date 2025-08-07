@@ -19,6 +19,15 @@
 - Purpose: It should work fine with other mods.
 
 [Test Case]
+- Module: chat.replace
+- Steps: **Test the `chat replace` and `chat trigger` module.**
+- Purpose: Case: `inv`
+- Purpose: Case: `prefix inv`
+- Purpose: Case: `prefix inv `
+- Purpose: Case: `prefix inv item ender suffix inv suffix`
+- Purpose: Case: `prefix prefix item`
+
+[Test Case]
 - Module: color.sign
 - Steps: **Place a `sign block` and write style tags in it, then re-open the sign.**
 - Purpose: The style tags in the sign block should be `parsed` and `reversed`.

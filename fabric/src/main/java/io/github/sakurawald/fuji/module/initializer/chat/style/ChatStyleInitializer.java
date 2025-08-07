@@ -14,6 +14,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.service.style_striper.StyleStriper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -81,30 +82,24 @@ import org.jetbrains.annotations.NotNull;
     ◉ Customize the chat format using placeholders.
     You may want to enable `placeholder` module, to provide more useful placeholders.
     """)
-
-
-
 @CommandNode("chat style")
 public class ChatStyleInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<ChatStyleConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatStyleConfigModel.class);
 
-    // To avoid the message type already registered in the client-side, and the client-side message type will influence the client-side decorator.
+    @ForDeveloper("To avoid the message type already registered in the client-side, and the client-side message type will influence the client-side decorator.")
     public static final RegistryKey<MessageType> MESSAGE_TYPE_KEY = RegistryKey.of(RegistryKeys.MESSAGE_TYPE, Identifier.of(Fuji.MOD_ID, "chat_" + StringUtil.toLowerCase(FabricLoader.getInstance().getEnvironmentType().toString())));
-
     public static final MessageType MESSAGE_TYPE_VALUE = new MessageType(
         Decoration.ofChat("%s%s"),
         Decoration.ofChat("%s%s"));
 
     private static final BaseConfigurationHandler<ChatFormatModel> chatFormatData = new ObjectConfigurationHandler<>("chat.json", ChatFormatModel.class);
-
     private static final NodeParser CHAT_STYLE_PARSER = TextHelper.Parsers.MINI_MESSAGE_ONLY_PARSER;
     private static final String DEFAULT_CONTENT_FORMAT = "%message%";
-
     private static final String CHAT_STYLE_TYPE = "chat";
 
-    private static String stripeStyleTags(PlayerEntity player, String string) {
-        return StyleStriper.stripe(player, CHAT_STYLE_TYPE, string);
+    private static @NotNull String stripeStyleTags(@NotNull PlayerEntity player, @NotNull String chatString) {
+        return StyleStriper.stripe(player, CHAT_STYLE_TYPE, chatString);
     }
 
     @Document(id = 1751826679326L, value = """
@@ -118,7 +113,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
         String newFormat = format.getValue();
         newFormat = stripeStyleTags(player, newFormat);
         String stripedFormat = newFormat;
-        chatFormatData.model().format.player2format.put(playerName, newFormat);
+        chatFormatData.model().getFormat().getPlayer2format().put(playerName, newFormat);
         chatFormatData.writeStorage();
 
         /* Feedback. */
@@ -135,7 +130,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
     private static int $resetPerPlayerFormat(@CommandSource @CommandTarget ServerPlayerEntity player) {
         /* Remove the per-player format. */
         String playerName = PlayerHelper.getPlayerName(player);
-        chatFormatData.model().format.player2format.remove(playerName);
+        chatFormatData.model().getFormat().getPlayer2format().remove(playerName);
         chatFormatData.writeStorage();
 
         /* Feedback. */
@@ -151,7 +146,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
     public static @NotNull Text parseContentText(@NotNull ServerPlayerEntity player, String message) {
         String contentString = config.model().style.content.formatted(message);
         String playerName = PlayerHelper.getPlayerName(player);
-        contentString = chatFormatData.model().format.player2format.getOrDefault(playerName, DEFAULT_CONTENT_FORMAT)
+        contentString = chatFormatData.model().getFormat().getPlayer2format().getOrDefault(playerName, DEFAULT_CONTENT_FORMAT)
             .replace("%message%", contentString);
         contentString = stripeStyleTags(player, contentString);
 
