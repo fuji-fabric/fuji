@@ -49,7 +49,6 @@ public class InventoryDisplayGuiFactory extends BaseDisplayGuiFactory {
                 }
             }
         };
-        gui.setLockPlayerInventory(true);
         gui.setTitle(this.title);
 
         for (int i = 0; i < LINE_SIZE * 2; i++) {

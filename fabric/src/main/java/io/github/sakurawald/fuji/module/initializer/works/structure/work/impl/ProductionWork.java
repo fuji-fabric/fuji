@@ -145,7 +145,6 @@ public class ProductionWork extends Work implements Schedulable {
     public void openSpecializedSettingsGui(ServerPlayerEntity player, @NotNull SimpleGui parentGui) {
         final SimpleGui gui = new SimpleGui(ScreenHandlerType.GENERIC_9X1, player, false);
         gui.setTitle(TextHelper.getTextByKey(player, "works.work.set.specialized_settings.title"));
-        gui.setLockPlayerInventory(true);
         gui.addSlot(new GuiElementBuilder()
             .setItem(Items.CLOCK)
             .setName(TextHelper.getTextByKey(player, "works.production_work.set.sample"))

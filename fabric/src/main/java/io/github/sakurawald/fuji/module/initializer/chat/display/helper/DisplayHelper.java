@@ -89,6 +89,6 @@ public class DisplayHelper {
     private static ClickEvent makeDisplayClickEvent(String displayUUID) {
         return Managers
             .getCallbackManager()
-            .makeCallbackEvent((player) -> viewDisplayGui(player, displayUUID), ChatDisplayInitializer.config.model().expiration_duration_s, TimeUnit.SECONDS);
+            .makeCallbackEvent((player) -> viewDisplayGui(player, displayUUID), ChatDisplayInitializer.config.model().getExpirationDurationS(), TimeUnit.SECONDS);
     }
 }

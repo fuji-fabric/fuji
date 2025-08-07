@@ -21,7 +21,6 @@ public class ItemDisplayGuiFactory extends BaseDisplayGuiFactory {
     public @NotNull SimpleGui build(ServerPlayerEntity viewingPlayer) {
         /* Make the GUI. */
         SimpleGui gui = new SimpleGui(ScreenHandlerType.GENERIC_3X3, viewingPlayer, false);
-        gui.setLockPlayerInventory(true);
         gui.setTitle(this.title);
 
         /* Place UI items. */

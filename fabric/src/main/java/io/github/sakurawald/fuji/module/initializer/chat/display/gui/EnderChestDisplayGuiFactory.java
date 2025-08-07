@@ -25,7 +25,6 @@ public class EnderChestDisplayGuiFactory extends BaseDisplayGuiFactory {
     @Override
     public @NotNull SimpleGui build(ServerPlayerEntity viewingPlayer) {
         SimpleGui gui = new SimpleGui(ScreenHandlerType.GENERIC_9X4, viewingPlayer, false);
-        gui.setLockPlayerInventory(true);
         gui.setTitle(this.title);
 
         /* Place UI items. */
