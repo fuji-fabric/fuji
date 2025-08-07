@@ -8,12 +8,10 @@ import java.util.regex.Matcher;
 
 public class StringUtil {
 
-    public static String substituteGroupPlaceholders(@NotNull Matcher matcher, @NotNull String string) {
-        for (int i = 0; i <= matcher.groupCount(); i++) {
-            string = string.replace("$" + i, matcher.group(i));
-        }
-
-        return string;
+    public static String substituteGroupPlaceholders(@NotNull Matcher matcher, @NotNull String replacement) {
+        replacement = matcher.replaceAll(replacement);
+        matcher.reset();
+        return replacement;
     }
 
     public static @NotNull String trimPathString(@NotNull String path) {

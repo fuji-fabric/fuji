@@ -20,6 +20,6 @@ public abstract class ServerPlayNetworkHandlerMixin {
     @Inject(method = "handleDecoratedMessage", at = @At(value = "TAIL"))
     public void listenChatString(SignedMessage signedMessage, CallbackInfo ci) {
         String chatString = TextHelper.Operators.visitString(signedMessage.getContent());
-        ChatTriggerInitializer.processChatTriggers(player.getCommandSource(), chatString, ci);
+        ChatTriggerInitializer.processChatTriggers(player.getCommandSource(), chatString);
     }
 }
