@@ -1,20 +1,27 @@
 package io.github.sakurawald.fuji.module.initializer.chat.history.config.model;
 
+import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 public class ChatHistoryConfigModel {
+
     @Document(id = 1751826688467L, value = """
         Max stored `chat message` in history.
         """)
-    public int buffer_size = 50;
+    int bufferSize = 50;
 
     @Document(id = 1751826690768L, value = """
         Only accept and save messages with these `message types`.
         """)
-    public List<String> message_type_filters = new ArrayList<>() {
+    @SerializedName(value = "message_type_acceptors", alternate = "message_type_filters")
+    List<String> messageTypeAcceptors = new ArrayList<>() {
         {
             this.add("minecraft:chat");
             this.add("minecraft:say_command");
@@ -28,24 +35,33 @@ public class ChatHistoryConfigModel {
     @Document(id = 1751826693489L, value = """
         Should reject and never save messages that meet the `rejector`.
         """)
-    public MessageRejectors message_rejectors = new MessageRejectors();
+    MessageRejectors messageRejectors = new MessageRejectors();
+
+    @Data
+    @NoArgsConstructor
     public static class MessageRejectors {
 
         @Document(id = 1751826695706L, value = """
             Should reject and never save messages whose `content` meets the rejector.
             """)
-        public ContentRejector content_rejector = new ContentRejector();
+        ContentRejector contentRejector = new ContentRejector();
+
+        @Data
+        @NoArgsConstructor
         public static class ContentRejector {
             @Document(id = 1751826699229L, value = """
                 Define `regex` expression to match `message content`
                 """)
-            public List<String> rules = new ArrayList<>() {};
+            List<String> rules = new ArrayList<>() {};
         }
 
         @Document(id = 1751826702393L, value = """
             Should reject and never save messages whose `parameter` meets the rejector.
             """)
-        public ParameterRejector parameter_rejector = new ParameterRejector();
+        ParameterRejector parameterRejector = new ParameterRejector();
+
+        @Data
+        @NoArgsConstructor
         public static class ParameterRejector {
             @Document(id = 1751826704630L, value = """
                 Use `regex` expression to match `message parameter`.
@@ -53,7 +69,7 @@ public class ChatHistoryConfigModel {
                 Issue `/fuji debug` to see the `parameter` of a message.
                 """)
 
-            public List<String> rules = new ArrayList<>() {
+            List<String> rules = new ArrayList<>() {
                 {
                     this.add("literal{PM}");
                 }
