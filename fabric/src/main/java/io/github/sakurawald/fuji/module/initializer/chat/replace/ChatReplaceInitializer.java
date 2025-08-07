@@ -35,20 +35,23 @@ public class ChatReplaceInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<ChatReplaceConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatReplaceConfigModel.class);
 
-    public static Text replaceChatText(@NotNull PlayerEntity player, @NotNull Text text) {
-        MutableText ret = text.copy();
+    public static Text replaceChatText(@NotNull PlayerEntity player, @NotNull Text oldText) {
+        MutableText newText = oldText.copy();
 
-        for (RegexRewriteNode rule : config.model().replace.rules) {
-            Pattern pattern = rule.getCachedPattern();
-            ret = TextHelper.Replacer.replaceTextWithPattern(ret, pattern, (matcher) -> {
+        for (RegexRewriteNode rule : config.model().getReplace().getRules()) {
+            Pattern cachedPattern = rule.getCachedPattern();
+            newText = TextHelper.Replacer.replaceTextWithPattern(newText, cachedPattern, (matcher) -> {
+                /* Replace the captured groups. */
                 String replacement = rule.getReplacement();
-                replacement = StringUtil.copyMatcherAndReplaceFirst(pattern, matcher, replacement);
+                replacement = StringUtil.copyMatcherAndReplaceFirst(cachedPattern, matcher, replacement);
+
+                /* Parse the placeholders. */
                 return TextHelper.getTextByValue(player, replacement);
             });
         }
 
-        LogUtil.debug("Replace chat text: old = {}, new = {}", text, ret);
-        return ret;
+        LogUtil.debug("Replace chat text: old = {}, new = {}", oldText, newText);
+        return newText;
     }
 
 }

@@ -6,16 +6,23 @@ import io.github.sakurawald.fuji.core.structure.RegexRewriteNode;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 public class ChatReplaceConfigModel {
 
     @Document(id = 1751826659782L, value = """
         Define `regex` expression, to replace `chat string`.
         """)
-    public Replace replace = new Replace();
+    Replace replace = new Replace();
+
+    @Data
+    @NoArgsConstructor
     public static class Replace {
         @SerializedName(value = "rules", alternate = "regex")
-        public List<RegexRewriteNode> rules = new ArrayList<>() {
+        List<RegexRewriteNode> rules = new ArrayList<>() {
             {
                 this.add(new RegexRewriteNode("(?<=^|\\s)item(?=\\s|$)", "%fuji:item%"));
                 this.add(new RegexRewriteNode("(?<=^|\\s)inv(?=\\s|$)", "%fuji:inv%"));

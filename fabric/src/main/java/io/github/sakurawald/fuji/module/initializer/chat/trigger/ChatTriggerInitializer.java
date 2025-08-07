@@ -42,7 +42,7 @@ public class ChatTriggerInitializer extends ModuleInitializer {
     private static final BaseConfigurationHandler<ChatTriggerConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatTriggerConfigModel.class);
 
     public static void processChatTriggers(@NotNull ServerCommandSource source, @NotNull String chatString) {
-        LogUtil.debug("Process chat triggers for input: source = {}, chatString = {}", source.getName(), chatString);
+        LogUtil.debug("Process chat triggers for input: chatString = {}", chatString);
 
         /* Enumerate triggers. */
         config.model()

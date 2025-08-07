@@ -19,7 +19,6 @@ public abstract class ServerPlayNetworkHandlerMixin {
 
     /* If you hack the onChatMessage method, and modify the chat string in chat packet, then you will break the chat signature in online-mode server.
     *  The only possible way is to keep the chat string and signature, but modify the chat text. (In online-mode server, the client will complain that the chat text is modified by the server, but it will still allow the player to see and play in the server.)
-    *
     * */
     @ModifyArgs(method = "handleDecoratedMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;broadcast(Lnet/minecraft/network/message/SignedMessage;Lnet/minecraft/server/network/ServerPlayerEntity;Lnet/minecraft/network/message/MessageType$Parameters;)V"))
     public void modifyChatMessageSentByPlayers(Args args) {
