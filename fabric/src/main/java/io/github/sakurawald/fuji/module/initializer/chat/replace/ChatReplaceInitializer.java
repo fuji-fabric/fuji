@@ -6,6 +6,7 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.structure.RegexRewriteNode;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -35,6 +36,13 @@ public class ChatReplaceInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<ChatReplaceConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatReplaceConfigModel.class);
 
+    @TestCase(steps = "Test the `chat replace` and `chat trigger` module.", purposes = {
+         "Case: `inv`"
+        , "Case: `prefix inv`"
+        , "Case: `prefix inv `"
+        , "Case: `prefix inv item ender suffix inv suffix`"
+        , "Case: `prefix prefix item`"
+    })
     public static Text replaceChatText(@NotNull PlayerEntity player, @NotNull Text oldText) {
         MutableText newText = oldText.copy();
 

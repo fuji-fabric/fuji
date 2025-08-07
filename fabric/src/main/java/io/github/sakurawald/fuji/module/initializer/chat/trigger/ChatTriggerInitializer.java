@@ -1,20 +1,18 @@
 package io.github.sakurawald.fuji.module.initializer.chat.trigger;
 
-import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
-import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
-import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.chat.trigger.config.model.ChatTriggerConfigModel;
-import io.github.sakurawald.fuji.module.initializer.chat.trigger.structure.ChatTrigger;
-import net.minecraft.server.command.ServerCommandSource;
-
 import java.util.List;
 import java.util.regex.Matcher;
+import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826730890L, value = """
@@ -47,19 +45,20 @@ public class ChatTriggerInitializer extends ModuleInitializer {
         /* Enumerate triggers. */
         config.model()
             .getTriggers()
+            .stream()
+            .filter(it -> it.getCachedPattern().matcher(chatString).matches())
             .forEach(chatTrigger -> {
                 /* Initialize the matcher. */
                 Matcher matcher = chatTrigger.getCachedPattern().matcher(chatString);
-                if (matcher.find()) {
-                    /* Replace the captured groups for commands. */
-                    List<String> commands = chatTrigger.getCommands()
-                        .stream()
-                        .map(cmd -> StringUtil.replaceAllAndResetMatcher(matcher, cmd))
-                        .toList();
 
-                    /* Execute commands. */
-                    CommandExecutor.execute(ExtendedCommandSource.asConsole(source), commands);
-                }
+                /* Replace the captured groups for commands. */
+                List<String> commands = chatTrigger.getCommands()
+                    .stream()
+                    .map(cmd -> StringUtil.replaceAllAndResetMatcher(matcher, cmd))
+                    .toList();
+
+                /* Execute commands. */
+                CommandExecutor.execute(ExtendedCommandSource.asConsole(source), commands);
             });
     }
 
