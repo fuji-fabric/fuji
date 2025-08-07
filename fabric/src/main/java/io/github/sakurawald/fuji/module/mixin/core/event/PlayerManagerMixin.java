@@ -19,9 +19,9 @@ import net.minecraft.server.network.ConnectedClientData;
 public class PlayerManagerMixin {
 
     #if MC_VER <= MC_1_20_1
-       @Inject(method = "onPlayerConnect", at = @At("TAIL"))
-       void onPlayerJoined(ClientConnection clientConnection, ServerPlayerEntity player, CallbackInfo ci)
-       #elif MC_VER > MC_1_20_1
+    @Inject(method = "onPlayerConnect", at = @At("TAIL"))
+    void onPlayerJoined(ClientConnection clientConnection, ServerPlayerEntity player, CallbackInfo ci)
+    #elif MC_VER > MC_1_20_1
     @Inject(method = "onPlayerConnect", at = @At("TAIL"))
     void onPlayerJoined(ClientConnection clientConnection, @NotNull ServerPlayerEntity player, ConnectedClientData connectedClientData, CallbackInfo ci)
     #endif

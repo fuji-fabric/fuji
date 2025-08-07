@@ -30,7 +30,7 @@ public class CommandNodeMixin {
     private Predicate<ServerCommandSource> requirement;
 
     @SuppressWarnings("unchecked")
-    @ModifyReturnValue(method = "getRequirement", at = @At("TAIL"))
+    @ModifyReturnValue(method = "getRequirement", at = @At("RETURN"))
     private Predicate<?> wrapRequirementPredicateForThisCommandNode(Predicate<?> original) {
 
         /* Only try to wrap the requirement predicate of command node until the command dispatcher is initialized. */
