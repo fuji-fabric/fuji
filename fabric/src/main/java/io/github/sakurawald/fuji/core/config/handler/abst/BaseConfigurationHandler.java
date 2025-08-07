@@ -12,9 +12,11 @@ import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 import com.jayway.jsonpath.spi.json.JsonProvider;
 import com.jayway.jsonpath.spi.mapper.GsonMappingProvider;
 import com.jayway.jsonpath.spi.mapper.MappingProvider;
+import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.config.job.ConfigurationHandlerWriteStorageJob;
+import io.github.sakurawald.fuji.core.config.structure.IgnoreModVersionStrategy;
 import io.github.sakurawald.fuji.core.config.transformer.abst.ConfigurationTransformer;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
@@ -54,6 +56,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     public static final String CONFIG_JSON = "config.json";
 
     public static final Set<BaseConfigurationHandler<?>> REGISTERED_CONFIGURATION_HANDLERS = new HashSet<>();
+    public static final String MOD_VERSION_KEY = "MOD_VERSION";
 
     @Getter
     protected static Gson gson = new GsonBuilder()
@@ -65,6 +68,8 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         .disableHtmlEscaping()
         // Null-value is legal value, we should serialize it.
         .serializeNulls()
+        // Exclude the mod version property in both serialization and de-serialization.
+        .setExclusionStrategies(new IgnoreModVersionStrategy())
         .create();
 
     /* Json Path Parser. */
@@ -169,7 +174,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     }
 
     @SneakyThrows
-    public void writeStorage() {
+    public final void writeStorage() {
         try {
             /* Ensure the model is initialized. */
             if (this.model == null) {
@@ -180,13 +185,23 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
             /* Call hook functions. */
             this.beforeWriteStorage();
 
+            /* Serialize the Java object into Json tree. */
+            JsonElement modelJsonTree = this.convertModelToJsonTree();
+            beforeSerializeIntoString(modelJsonTree);
+            String jsonString = gson.toJson(modelJsonTree);
+
             /* Write model to storage. */
             Files.createDirectories(this.path.getParent());
-            Files.writeString(this.path, gson.toJson(this.model));
+            Files.writeString(this.path, jsonString);
         } catch (Exception e) {
             LogUtil.error("Failed to write configuration file {} to disk.", this.path, e);
             throw e;
         }
+    }
+
+    private void beforeSerializeIntoString(@NotNull JsonElement jsonElement) {
+        jsonElement.getAsJsonObject()
+            .addProperty(MOD_VERSION_KEY, Fuji.MOD_VERSION);
     }
 
     public JsonElement convertModelToJsonTree() {

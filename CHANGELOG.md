@@ -7,3 +7,4 @@
 - [chat.history] improvements and fixes
   - feature: improve the `debug loggins` and `config fields`, making it clearer.
   - fix: the chat history module didn't work in `offline-mode server` when `MC >= 1.21.5`.
+- [core] now will attach `MOD_VERSION` property for each `config file`.

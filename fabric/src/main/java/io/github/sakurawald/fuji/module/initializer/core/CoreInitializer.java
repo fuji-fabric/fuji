@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.core;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
@@ -9,6 +10,7 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 @ColorBox(id = 1751870436910L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     ◉ How to use fuji?
@@ -127,4 +129,9 @@ public class CoreInitializer extends ModuleInitializer {
         /* Print the user guide for new users. */
         tryPrintUserGuide();
     }
+
+    public static @NotNull String getModVersion() {
+        return ServerHelper.getSelfModContainer().getMetadata().getVersion().getFriendlyString();
+    }
+
 }

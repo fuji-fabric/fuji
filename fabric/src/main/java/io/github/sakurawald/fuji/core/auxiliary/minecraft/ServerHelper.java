@@ -1,11 +1,13 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
+import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import lombok.Getter;
 import lombok.Setter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.NotNull;
@@ -50,6 +52,12 @@ public class ServerHelper {
         if (player == null) return;
         if (!PlayerHelper.isServerPlayer(player)) return;
         runnable.run();
+    }
+
+    public static @NotNull ModContainer getSelfModContainer() {
+        return FabricLoader.getInstance()
+            .getModContainer(Fuji.MOD_ID)
+            .orElseThrow(() -> new IllegalStateException("Failed to get 'fuji' mod container."));
     }
 
 }

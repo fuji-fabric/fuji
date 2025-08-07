@@ -5,6 +5,7 @@ import com.google.common.collect.Iterables;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.context.CommandContext;
+import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;

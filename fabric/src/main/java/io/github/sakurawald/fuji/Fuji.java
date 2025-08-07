@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji;
 
 import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.manager.Managers;
+import io.github.sakurawald.fuji.module.initializer.core.CoreInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -18,6 +19,7 @@ public class Fuji implements ModInitializer {
 
     public static final String MOD_ID = "fuji";
     public static final Path MOD_CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve(MOD_ID).toAbsolutePath();
+    public static final String MOD_VERSION = CoreInitializer.getModVersion();
 
     @Override
     public void onInitialize() {
