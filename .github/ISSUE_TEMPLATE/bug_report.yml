@@ -20,20 +20,20 @@ body:
   - type: textarea
     attributes:
       label: Current Behavior
-      description: A concise description of what you're experiencing.
+      placeholder: A concise description of what you're experiencing.
     validations:
       required: false
   - type: textarea
     attributes:
       label: Expected Behavior
-      description: A concise description of what you expected to happen.
+      placeholder: A concise description of what you expected to happen.
     validations:
       required: false
   - type: textarea
     attributes:
       label: Steps To Reproduce
-      description: Steps to reproduce the behavior.
       placeholder: |
+        Steps to produce the behaviour.
         1. In this environment...
         2. With this config...
         3. Run '...'
@@ -50,7 +50,7 @@ body:
   - type: textarea
     attributes:
       label: Anything else?
-      description: |
+      placeholder: |
         Add any other context about the problem here.
         
         Tip: You can attach screenshots or log files to help explain your problem by clicking this area to highlight it and then dragging files in.
