@@ -20,12 +20,14 @@ body:
   - type: textarea
     attributes:
       label: Current Behavior
+      value: "<br>"
       placeholder: A concise description of what you're experiencing.
     validations:
       required: false
   - type: textarea
     attributes:
       label: Expected Behavior
+      value: "<br>"
       placeholder: A concise description of what you expected to happen.
     validations:
       required: false
