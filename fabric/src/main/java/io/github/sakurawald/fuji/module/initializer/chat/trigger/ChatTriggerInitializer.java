@@ -18,6 +18,13 @@ import org.jetbrains.annotations.NotNull;
 @Document(id = 1751826730890L, value = """
     This module allows you to define magic spells in chat, to execute commands.
     """)
+@ColorBox(id = 1754612494551L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+    ◉ Use `chat.trigger` to create `chat commands`.
+    The `regex` in `chat.replace` is used to `find` the target pattern in `the given string`.
+    The `regex` in `chat.trigger` is used to `match` the target pattern against `the given string`.
+
+    You can define a `chat command` like `!report` or `!noclip` in other games.
+    """)
 @ColorBox(id = 1751899049909L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ To define a simple magic spell in chat string.
     Regex: `magic`
