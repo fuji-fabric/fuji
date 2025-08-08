@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.warning.structure;
 
 import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import java.util.List;
 import lombok.Data;
@@ -44,6 +45,11 @@ public class Warning {
     }
 
     public @NotNull Item asItem() {
-        return this.getExpirationTimestamp() == null ? Items.PAPER : Items.MAP;
+        if (this.getExpirationTimestamp() == null) {
+            return Items.GREEN_STAINED_GLASS;
+
+        }
+
+        return GuiHelper.Material.fromBooleanValue(System.currentTimeMillis() < this.getExpirationTimestamp());
     }
 }
