@@ -110,14 +110,14 @@ public class WarningService {
             .sorted(Comparator
                 .comparing(WarningRule::getIfNumberOfWarningsGreaterEqualThan)
                 .reversed())
-            .filter(it -> {
+            .filter(warningRule -> {
                 int numberOfWarnings = getPlayerWarnings(targetPlayerName)
                     .getWarnings()
                     .stream()
-                    .filter(warningTypeFilter)
+                    .filter(warning -> warningTypeFilter.test(warning) && warning.isActive())
                     .toList()
                     .size();
-                return numberOfWarnings >= it.getIfNumberOfWarningsGreaterEqualThan();
+                return numberOfWarnings >= warningRule.getIfNumberOfWarningsGreaterEqualThan();
             })
             .findFirst();
 

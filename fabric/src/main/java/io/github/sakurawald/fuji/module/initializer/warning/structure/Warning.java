@@ -36,7 +36,8 @@ public class Warning {
 
     public @NotNull List<Text> asLore(Object audience) {
         return List.of(
-            TextHelper.getTextByKey(audience, "entity.created_by_player", creatorName)
+            TextHelper.getTextByKey(audience, "entity.active", isActive())
+            , TextHelper.getTextByKey(audience, "entity.created_by_player", creatorName)
             , TextHelper.getTextByKey(audience, "entity.created_timestamp", ChronosUtil.Formatter.formatDate(createdTimestamp))
             , TextHelper.getTextByKey(audience, "entity.expiration_timestamp", ChronosUtil.Formatter.formatDate(expirationTimestamp))
             , TextHelper.getTextByKey(audience, "entity.description", description)

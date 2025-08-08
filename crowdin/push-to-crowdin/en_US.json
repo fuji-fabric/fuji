@@ -159,6 +159,7 @@
   "economy.provider.id": "<blue>⚫ Provider ID: `%s`",
   "economy.provider.name.display": "<blue>⚫ Provider Name: ${name}",
   "empty": "<#FFA1F5>Empty",
+  "entity.active": "<blue>Active: `%s`",
   "entity.created_by_player": "<blue>Created by player: `%s`",
   "entity.created_timestamp": "<blue>Created time: `%s`",
   "entity.creator_name": "<blue>Creator Name: `%s`",
@@ -1392,5 +1393,6 @@
   "docstring.1754640787907": "Returns the `created date` of the last created warning.",
   "docstring.1754641445726": "Returns the `expiration date` of the last created warning.",
   "docstring.1754641490973": "Returns the `creator name` of the last created warning.",
-  "docstring.1754641570588": "Returns the `reason` of the last created warning."
+  "docstring.1754641570588": "Returns the `reason` of the last created warning.",
+  "docstring.1754643107428": "◉ Create a `permanent warning` for a player.\nIssue: `/warning create Steve Steal items.`\n\n◉ Create a `temporal warning` for a player.\nIssue: `/warning create-temp Steve 3d Steal items.`\n\n◉ List all the warnings of a player.\nIssue: `/warning list Steve`\n\n◉ Open the `Warning GUI`.\nIssue: `/warning gui`\n"
 }

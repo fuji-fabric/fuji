@@ -45,6 +45,19 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @ColorBox(id = 1751870597904L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     You can use `command_bundle` module, to define `template` for `warnings`.
     """)
+@ColorBox(id = 1754643107428L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+    ◉ Create a `permanent warning` for a player.
+    Issue: `/warning create Steve Steal items.`
+
+    ◉ Create a `temporal warning` for a player.
+    Issue: `/warning create-temp Steve 3d Steal items.`
+
+    ◉ List all the warnings of a player.
+    Issue: `/warning list Steve`
+
+    ◉ Open the `Warning GUI`.
+    Issue: `/warning gui`
+    """)
 public class WarningInitializer extends ModuleInitializer {
 
     @DocStringProvider(id = 1752000385223L, value = "To `create` a new `warning` for a `player`.")

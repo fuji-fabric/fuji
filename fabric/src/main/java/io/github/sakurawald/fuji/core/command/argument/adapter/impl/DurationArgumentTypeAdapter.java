@@ -46,6 +46,6 @@ public class DurationArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
-            .suggests(CommandHelper.Suggestion.iterable(() -> List.of("30m", "12h", "1d", "1w", "1M")));
+            .suggests(CommandHelper.Suggestion.iterable(() -> List.of("30m", "12h", "1d", "3d", "1w", "1M")));
     }
 }
