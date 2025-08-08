@@ -1,11 +1,13 @@
 package io.github.sakurawald.fuji.module.initializer.warning.service;
 
+import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
+import io.github.sakurawald.fuji.core.service.paged_text.PagedMessageText;
 import io.github.sakurawald.fuji.module.initializer.warning.WarningInitializer;
 import io.github.sakurawald.fuji.module.initializer.warning.structure.PlayerWarnings;
 import io.github.sakurawald.fuji.module.initializer.warning.structure.Warning;
@@ -17,6 +19,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -136,5 +139,35 @@ public class WarningService {
             List<String> commands = warningRule.getCommands();
             CommandExecutor.execute(extendedCommandSource, commands);
         }
+    }
+
+    public static void processWarningReminder(@NotNull ServerPlayerEntity targetPlayer) {
+        var config = WarningInitializer.config.model().getWarningReminder();
+        if (!config.isRemindWarnedPlayerOnJoinServer()) {
+            return;
+        }
+
+        /* Filter all active warnings. */
+        String playerName = PlayerHelper.getPlayerName(targetPlayer);
+        PlayerWarnings playerWarnings = getPlayerWarnings(playerName);
+        List<Warning> reminderSourceWarnings = playerWarnings
+            .getWarnings()
+            .stream()
+            .filter(Warning::isActive)
+            .filter(it -> (config.getReminderSource().isRemindPermanentWarningsType() && it.isPermanentWarning())
+                || (config.getReminderSource().isRemindTemporalWarningsType() && it.isTemporalWarning()))
+            .toList();
+        if (reminderSourceWarnings.isEmpty()) return;
+
+        /* Send the reminders to the target player. */
+        TextHelper.sendTextByKey(targetPlayer, "warning.remind.header");
+        PagedMessageText pagedMessageText = PagedMessageText.makePagedMessageText(targetPlayer, reminderSourceWarnings, 1, (entity, index, builder) -> {
+            String description = entity.getDescription();
+            String createdDate = ChronosUtil.Formatter.formatDate(entity.getCreatedTimestamp());
+            String expirationDate = ChronosUtil.Formatter.formatDate(entity.getExpirationTimestamp());
+            Text entityText = TextHelper.getTextByKey(targetPlayer, "warning.remind.entry", description, createdDate, expirationDate);
+            builder.append(entityText);
+        });
+        pagedMessageText.sendPage(targetPlayer, 0);
     }
 }

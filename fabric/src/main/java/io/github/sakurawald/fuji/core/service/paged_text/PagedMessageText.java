@@ -38,6 +38,7 @@ public class PagedMessageText extends PagedText {
 
             T entity = entities.get(i);
             entityConsumer.accept(entity, i, pageBuilder);
+            pageBuilder.append(TextHelper.TEXT_NEWLINE);
 
             if (i == entities.size() - 1) {
                 pages.add(pageBuilder);

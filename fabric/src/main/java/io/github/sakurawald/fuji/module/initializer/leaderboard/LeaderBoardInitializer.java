@@ -138,7 +138,6 @@ public class LeaderBoardInitializer extends ModuleInitializer {
             int score = entity.getEffectiveScore();
             Text entryText = TextHelper.getTextByKey(player, "leaderboard.list.entry", numbering, playerName, score);
             pageBuilder.append(entryText);
-            pageBuilder.append(TextHelper.TEXT_NEWLINE);
         });
         pagedMessageText.sendPage(player, 0);
     }

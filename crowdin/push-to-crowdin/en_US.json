@@ -493,6 +493,8 @@
   "warning.list.message": "<green>Player %s has %d warnings.",
   "warning.notify.join": "<dark_red>The player %s with %d warnings joined the server!",
   "warning.notify.leave": "<dark_red>The player %s with %d warnings left the server!",
+  "warning.remind.entry": "<dark_red>◉ Warning Reason: %s<newline><dark_red>⚪ Created Time: %s<newline><dark_red>⚪ Expiration Time: %s",
+  "warning.remind.header": "<dark_red>----- Warning Reminder -----",
   "warp.gui.title": "<blue>Warps",
   "warp.list": "<gold>All warps: %s",
   "warp.not_found": "<red>Warp %s not found.",
@@ -1394,5 +1396,6 @@
   "docstring.1754641445726": "Returns the `expiration date` of the last created warning.",
   "docstring.1754641490973": "Returns the `creator name` of the last created warning.",
   "docstring.1754641570588": "Returns the `reason` of the last created warning.",
-  "docstring.1754643107428": "◉ Create a `permanent warning` for a player.\nIssue: `/warning create Steve Steal items.`\n\n◉ Create a `temporal warning` for a player.\nIssue: `/warning create-temp Steve 3d Steal items.`\n\n◉ List all the warnings of a player.\nIssue: `/warning list Steve`\n\n◉ Open the `Warning GUI`.\nIssue: `/warning gui`\n"
+  "docstring.1754643107428": "◉ Create a `permanent warning` for a player.\nIssue: `/warning create Steve Steal items.`\n\n◉ Create a `temporal warning` for a player.\nIssue: `/warning create-temp Steve 3d Steal items.`\n\n◉ List all the warnings of a player.\nIssue: `/warning list Steve`\n\n◉ Open the `Warning GUI`.\nIssue: `/warning gui`\n",
+  "docstring.1754643821825": "Should we send the reminders to the warned player?"
 }

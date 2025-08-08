@@ -169,6 +169,8 @@ public class WarningInitializer extends ModuleInitializer {
     protected void onInitialize() {
         PlayerEvents.ON_PLAYER_JOINED.register(player -> WarningService.processNotify(player, true));
         PlayerEvents.ON_PLAYER_LEAVE.register(player -> WarningService.processNotify(player, false));
+
+        PlayerEvents.ON_PLAYER_JOINED.register(WarningService::processWarningReminder);
     }
 
     @Override

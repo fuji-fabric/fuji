@@ -12,6 +12,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WarningConfigModel {
 
+    @Document(id = 1754643821825L, value = "Should we send the reminders to the warned player?")
+    WarningReminder warningReminder = new WarningReminder();
+
+    @Data
+    @NoArgsConstructor
+    public static class WarningReminder {
+        boolean remindWarnedPlayerOnJoinServer = true;
+
+        ReminderSource reminderSource = new ReminderSource();
+        @Data
+        @NoArgsConstructor
+        public static class ReminderSource {
+            boolean remindPermanentWarningsType = false;
+            boolean remindTemporalWarningsType = true;
+        }
+    }
+
     @Document(id = 1751827028093L, value = """
         Define `warning rules`, to execute `punishment commands`.
 
