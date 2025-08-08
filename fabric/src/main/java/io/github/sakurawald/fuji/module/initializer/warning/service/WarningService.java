@@ -16,12 +16,29 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.jetbrains.annotations.NotNull;
 
 public class WarningService {
 
-    public static void createWarning(String creatorName, String targetPlayerName, String warningDescription) {
+    public static @NotNull PlayerWarnings getPlayerWarnings(@NotNull String playerName) {
+        List<PlayerWarnings> players = WarningInitializer.data.model().players;
+        Optional<PlayerWarnings> playerWarnings = players
+            .stream()
+            .filter(it -> it.player.equals(playerName))
+            .findFirst();
+
+        return playerWarnings
+            .orElseGet(() -> {
+                PlayerWarnings newValue = new PlayerWarnings(playerName);
+                players.add(newValue);
+                WarningInitializer.data.writeStorage();
+                return newValue;
+            });
+    }
+
+    public static void createWarning(@NotNull String creatorName, @NotNull String targetPlayerName, @NotNull String warningDescription) {
         /* Create a new warning for the target player. */
-        Warning newWarning = Warning.makeWarning(creatorName, warningDescription);
+        Warning newWarning = Warning.make(creatorName, warningDescription);
         getPlayerWarnings(targetPlayerName)
             .warnings
             .add(newWarning);
@@ -31,14 +48,14 @@ public class WarningService {
         processWarningRules(targetPlayerName);
     }
 
-    public static void deleteWarning(String targetPlayerName, Warning warning) {
+    public static void deleteWarning(@NotNull String targetPlayerName, @NotNull Warning warning) {
         getPlayerWarnings(targetPlayerName)
             .warnings
             .remove(warning);
         WarningInitializer.data.writeStorage();
     }
 
-    public static int clearWarnings(String targetPlayerName) {
+    public static int clearWarnings(@NotNull String targetPlayerName) {
         List<Warning> warnings = getPlayerWarnings(targetPlayerName).warnings;
         int originalSize = warnings.size();
         warnings.clear();
@@ -51,25 +68,7 @@ public class WarningService {
         WarningInitializer.data.writeStorage();
     }
 
-    public static PlayerWarnings getPlayerWarnings(String playerName) {
-        /* Return existed player warnings. */
-        List<PlayerWarnings> players = WarningInitializer.data.model().players;
-        Optional<PlayerWarnings> playerWarningsOpt = players
-            .stream()
-            .filter(it -> it.player.equals(playerName))
-            .findFirst();
-        if (playerWarningsOpt.isPresent()) {
-            return playerWarningsOpt.get();
-        }
-
-        /* Make a new one. */
-        PlayerWarnings playerWarnings = new PlayerWarnings(playerName);
-        players.add(playerWarnings);
-        WarningInitializer.data.writeStorage();
-        return playerWarnings;
-    }
-
-    public static void processNotify(ServerPlayerEntity targetPlayer, boolean isJoin) {
+    public static void processNotify(@NotNull ServerPlayerEntity targetPlayer, boolean isJoin) {
         /* Does the player have any warnings? */
         String playerName = PlayerHelper.getPlayerName(targetPlayer);
         PlayerWarnings playerWarnings = getPlayerWarnings(playerName);
@@ -90,7 +89,7 @@ public class WarningService {
             });
     }
 
-    public static void processWarningRules(String targetPlayerName) {
+    public static void processWarningRules(@NotNull String targetPlayerName) {
         Optional<WarningRule> first = WarningInitializer.config.model().rules
             .stream()
             // Sort the higher value first.
@@ -116,7 +115,7 @@ public class WarningService {
                 .getCommandSource();
             ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(offlineServerCommandSource);
 
-            List<String> commands = warningRule.commands;
+            List<String> commands = warningRule.getCommands();
             CommandExecutor.execute(extendedCommandSource, commands);
         }
 

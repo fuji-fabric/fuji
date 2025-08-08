@@ -103,7 +103,7 @@ public class ListPlayerWarningsGui extends CrudPagedGui<Warning> {
             return;
         }
 
-        String originalDescription = entity.description;
+        String originalDescription = entity.getDescription();
         new EditSignGui(getPlayer(), originalDescription) {
             @Override
             public void onClose() {

@@ -163,6 +163,7 @@
   "entity.creator_name": "<blue>Creator Name: `%s`",
   "entity.description": "<blue>Description: <yellow>%s</yellow>",
   "entity.executed_timestamp": "<blue>Executed time: `%s`",
+  "entity.expiration_timestamp": "<blue>Expiration time: `%s`",
   "entity.list.all": "<pink>List all",
   "entity.list.mine": "<dark_green>List mine",
   "entity.not_found": "<red>Target entity no found.",
