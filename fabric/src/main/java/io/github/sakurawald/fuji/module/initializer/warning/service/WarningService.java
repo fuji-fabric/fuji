@@ -46,7 +46,11 @@ public class WarningService {
         WarningInitializer.data.writeStorage();
 
         /* Process the warning rules. */
-        processWarningRules(targetPlayerName);
+        if (expirationTimestamp != null) {
+            processTemporalWarningRules(targetPlayerName);
+        } else {
+            processPermanentWarningRules(targetPlayerName);
+        }
     }
 
     public static void deleteWarning(@NotNull String targetPlayerName, @NotNull Warning warning) {
@@ -90,8 +94,16 @@ public class WarningService {
             });
     }
 
-    public static void processWarningRules(@NotNull String targetPlayerName) {
-        Optional<WarningRule> first = WarningInitializer.config.model().rules
+    private static void processPermanentWarningRules(@NotNull String targetPlayerName) {
+        processWarningRules(targetPlayerName, WarningInitializer.config.model().getOnPermanentWarningCreated());
+    }
+
+    private static void processTemporalWarningRules(@NotNull String targetPlayerName) {
+        processWarningRules(targetPlayerName, WarningInitializer.config.model().getOnTemporalWarningCreated());
+    }
+
+    private static void processWarningRules(@NotNull String targetPlayerName, @NotNull List<WarningRule> warningRules) {
+        Optional<WarningRule> first = warningRules
             .stream()
             // Sort the higher value first.
             .sorted(Comparator
@@ -119,6 +131,5 @@ public class WarningService {
             List<String> commands = warningRule.getCommands();
             CommandExecutor.execute(extendedCommandSource, commands);
         }
-
     }
 }
