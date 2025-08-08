@@ -36,7 +36,7 @@ public class ListPlayerWarningsGui extends CrudPagedGui<Warning> {
 
     public static ListPlayerWarningsGui make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull String targetPlayerName) {
         PlayerWarnings playerWarnings = WarningService.getPlayerWarnings(targetPlayerName);
-        return new ListPlayerWarningsGui(parent, player, targetPlayerName, playerWarnings.warnings, 0);
+        return new ListPlayerWarningsGui(parent, player, targetPlayerName, playerWarnings.getWarnings(), 0);
     }
 
     @Override

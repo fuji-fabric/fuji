@@ -114,9 +114,9 @@ public class WarningInitializer extends ModuleInitializer {
     private static int $listWarning(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer) {
         String targetPlayerName = targetPlayer.getValue();
         PlayerWarnings playerWarnings = WarningService.getPlayerWarnings(targetPlayerName);
-        TextHelper.sendTextByKey(source, "warning.list.message", targetPlayerName, playerWarnings.warnings.size());
+        TextHelper.sendTextByKey(source, "warning.list.message", targetPlayerName, playerWarnings.getWarnings().size());
 
-        playerWarnings.warnings.forEach(warning -> {
+        playerWarnings.getWarnings().forEach(warning -> {
             warning
                 .asLore(source)
                 .forEach(source::sendMessage);
@@ -158,4 +158,11 @@ public class WarningInitializer extends ModuleInitializer {
         PlayerEvents.ON_PLAYER_LEAVE.register(player -> WarningService.processNotify(player, false));
     }
 
+    @Override
+    protected void registerPlaceholders() {
+        WarningPlaceholders.registerLastWarningCreatedDatePlaceholder();
+        WarningPlaceholders.registerLastWarningCreatorNamePlaceholder();
+        WarningPlaceholders.registerLastWarningExpirationDatePlaceholder();
+        WarningPlaceholders.registerLastWarningReasonPlaceholder();
+    }
 }

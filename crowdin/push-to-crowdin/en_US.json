@@ -167,6 +167,7 @@
   "entity.expiration_timestamp": "<blue>Expiration time: `%s`",
   "entity.list.all": "<pink>List all",
   "entity.list.mine": "<dark_green>List mine",
+  "entity.none": "<grey>[None]",
   "entity.not_found": "<red>Target entity no found.",
   "entity.obtained": "<yellow>Obtained: `%s`",
   "fake_player_manager.kick_for_amount": "<green>Kick fake-player %s (%s) for the limit",
@@ -1387,5 +1388,9 @@
   "docstring.1754466143852": "If there is only one `next rank node` for the player, then rank up to that node, else do nothing.",
   "docstring.1754466653435": "◉ Automatic rank up to the only available next rank.\nYou can use `command_schedule` module to define a job.\nTo execute the `/rank try-up %player:name%` command for each online player.\nSo that each player will get auto rank up if there is only one `available next rank` for them.\nIt can be `/execute as @a run rank try-up @s` or `/foreach rank try-up %player:name%`\n",
   "docstring.1754612494551": "◉ Use `chat.trigger` to create `chat commands`.\nThe `regex` in `chat.replace` is used to `find` the target pattern in `the given string`.\nThe `regex` in `chat.trigger` is used to `match` the target pattern against `the given string`.\n\nYou can define a `chat command` like `!report` or `!noclip` in other games.\n",
-  "docstring.1754620576300": "Create a new warning with expiration for the player."
+  "docstring.1754620576300": "Create a new warning with expiration for the player.",
+  "docstring.1754640787907": "Returns the `created date` of the last created warning.",
+  "docstring.1754641445726": "Returns the `expiration date` of the last created warning.",
+  "docstring.1754641490973": "Returns the `creator name` of the last created warning.",
+  "docstring.1754641570588": "Returns the `reason` of the last created warning."
 }

@@ -25,12 +25,12 @@ public class WarningService {
         List<PlayerWarnings> players = WarningInitializer.data.model().players;
         Optional<PlayerWarnings> playerWarnings = players
             .stream()
-            .filter(it -> it.player.equals(playerName))
+            .filter(it -> it.getPlayer().equals(playerName))
             .findFirst();
 
         return playerWarnings
             .orElseGet(() -> {
-                PlayerWarnings newValue = new PlayerWarnings(playerName);
+                PlayerWarnings newValue = PlayerWarnings.make(playerName);
                 players.add(newValue);
                 WarningInitializer.data.writeStorage();
                 return newValue;
@@ -41,7 +41,7 @@ public class WarningService {
         /* Create a new warning for the target player. */
         Warning newWarning = Warning.make(creatorName, warningDescription, expirationTimestamp);
         getPlayerWarnings(targetPlayerName)
-            .warnings
+            .getWarnings()
             .add(newWarning);
         WarningInitializer.data.writeStorage();
 
@@ -55,13 +55,13 @@ public class WarningService {
 
     public static void deleteWarning(@NotNull String targetPlayerName, @NotNull Warning warning) {
         getPlayerWarnings(targetPlayerName)
-            .warnings
+            .getWarnings()
             .remove(warning);
         WarningInitializer.data.writeStorage();
     }
 
     public static int clearWarnings(@NotNull String targetPlayerName) {
-        List<Warning> warnings = getPlayerWarnings(targetPlayerName).warnings;
+        List<Warning> warnings = getPlayerWarnings(targetPlayerName).getWarnings();
         int originalSize = warnings.size();
         warnings.clear();
         WarningInitializer.data.writeStorage();
@@ -77,7 +77,7 @@ public class WarningService {
         /* Does the player have any warnings? */
         String playerName = PlayerHelper.getPlayerName(targetPlayer);
         PlayerWarnings playerWarnings = getPlayerWarnings(playerName);
-        if (playerWarnings.warnings.isEmpty()) return;
+        if (playerWarnings.getWarnings().isEmpty()) return;
 
         /* Send notify to online staffs. */
         PlayerHelper.Lookup
@@ -85,7 +85,7 @@ public class WarningService {
             .stream()
             .filter(it -> LuckpermsHelper.hasPermission(it.getUuid(), WarningInitializer.NOTIFY_WARNINGS_PERMISSION))
             .forEach(it -> {
-                int warningsSize = playerWarnings.warnings.size();
+                int warningsSize = playerWarnings.getWarnings().size();
                 if (isJoin) {
                     TextHelper.sendTextByKey(it, "warning.notify.join", playerName, warningsSize);
                 } else {
@@ -111,7 +111,7 @@ public class WarningService {
                 .reversed())
             .filter(it -> {
                 int numberOfWarnings = getPlayerWarnings(targetPlayerName)
-                    .warnings.size();
+                    .getWarnings().size();
                 return numberOfWarnings >= it.getIfNumberOfWarningsGreaterEqualThan();
             })
             .findFirst();

@@ -24,8 +24,8 @@ public class WarningConfigModel {
     List<WarningRule> onPermanentWarningCreated = new ArrayList<>() {
         {
             this.add(WarningRule.make(1, List.of(
-                "send-broadcast <dark_red>Player %player:name% just receive a permanent-warning."
-                , "when-online %player:name% send-message %player:name% <red>You are warned. Watch your behaviour!")));
+                "send-broadcast <dark_red>Player %player:name% has just received a permanent-warning.<newline><dark_red>◉ Reason: %fuji:last_warning_reason%"
+                , "when-online %player:name% send-message %player:name% <dark_red>You have received a warning.")));
             this.add(WarningRule.make(3, List.of(
                 "temp-ban player %player:name% 30m Warned 3 times.")));
 
@@ -35,7 +35,7 @@ public class WarningConfigModel {
     List<WarningRule> onTemporalWarningCreated = new ArrayList<>() {
         {
             this.add(WarningRule.make(1, List.of(
-                "send-broadcast <dark_red>Player %player:name% just receive a temporal-warning."
+                "send-broadcast <dark_red>Player %player:name% has just received a temporal-warning.<newline><dark_red>◉ Expiration Date: %fuji:last_warning_expiration_date%<newline><dark_red>◉ Reason: %fuji:last_warning_reason%"
             )));
 
         }
