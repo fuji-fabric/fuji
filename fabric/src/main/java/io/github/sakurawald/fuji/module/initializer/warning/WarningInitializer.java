@@ -38,12 +38,11 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
     You can use `warnings` to `track` the behaviours of a `player`.
     """)
-@ColorBox(id = 1751870593979L, color = ColorBox.ColorBlockTypes.TIPS, value = """
-    You can use `command_scheduler` module, to define a `job`.
-    To execute `/warning clear-all --confirm true` command automatically. (e.g. every week)
-    """)
-@ColorBox(id = 1751870597904L, color = ColorBox.ColorBlockTypes.TIPS, value = """
-    You can use `command_bundle` module, to define `template` for `warnings`.
+@ColorBox(id = 1754646463245L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+    ◉ Integrate with advanced `ban` tools.
+    You can integrate the `warning` module with `temp_ban` module.
+    However, you may want some advanced ban tools.
+    See: https://github.com/Patbox/BanHammer
     """)
 @ColorBox(id = 1754643107428L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Create a `permanent warning` for a player.
