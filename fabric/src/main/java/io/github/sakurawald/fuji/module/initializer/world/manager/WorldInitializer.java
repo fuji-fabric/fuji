@@ -475,7 +475,7 @@ public class WorldInitializer extends ModuleInitializer {
             String dimensionIdentifier = RegistryHelper.getIdAsString(dimensionInstance);
             Optional<RuntimeDimensionDescriptor> runtimeDimensionDescriptor = WorldService.getRuntimeDimensionDescriptor(dimensionIdentifier);
             if (runtimeDimensionDescriptor.isEmpty()) {
-                TextHelper.sendTextByKey(source, "world.dimension.not_found");
+                TextHelper.sendTextByKey(source, "world.dimension.not_found", dimensionIdentifier);
                 return CommandHelper.Return.FAIL;
             }
             RuntimeDimensionDescriptor $runtimeDimensionDescriptor = runtimeDimensionDescriptor.get();
