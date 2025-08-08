@@ -493,6 +493,8 @@
   "warning.list.message": "<green>Player %s has %d warnings.",
   "warning.notify.join": "<dark_red>The player %s with %d warnings joined the server!",
   "warning.notify.leave": "<dark_red>The player %s with %d warnings left the server!",
+  "warning.remind.entry": "<dark_red>◉ Warning Reason: %s<newline><dark_red>⚪ Created Time: %s<newline><dark_red>⚪ Expiration Time: %s",
+  "warning.remind.header": "<dark_red>----- Warning Reminder -----",
   "warp.gui.title": "<blue>Warps",
   "warp.list": "<gold>Alle Warps: %s",
   "warp.not_found": "<red>Warp %s nicht gefunden.",
@@ -1025,8 +1027,6 @@
   "docstring.1751870585373": "For safety, the `cleaner` will `always ignore` the following types:\n1. player\n2. any block attached entity (e.g. leash_knot)\n3. any vehicle entity (e.g. minecart, boat)\n",
   "docstring.1751870587446": "◉ Make the `Admin Shops` and `Player Shops`.\nYou can use this module with `Universal Shops` mod.\nThis mod provides the `Admin Shops` and `Player Shops`.\nIt brings the similar gameplay into `fabric` like `QuickShop` plugin in `bukkit`.\n",
   "docstring.1751870591800": "◉ Create a `/balance` command for players to use.\nYou can use `command_bundle` module.\nTo create a `/balance` command, to wrap the `/economy account %player:name% fuji:gold` command.\nSo the players can query the balance conveniently.\n\n◉ Query the `balance` of all `currencies` for self.\nIssue: `/economy balance`\n\n◉ Query the `balance` of all `currencies` for a target player.\nIssue: `/economy accounts Steve`\n\n◉ Query the `balance` of the specified `currency` for a target player.\nIssue: `/economy account Steve fuji:gold`\n\n◉ `Give`, `take`, `set` or `clear` the `balance` of specified `currency` for a player.\n1. `/economy give Steve fuji:gold 100`\n2. `/economy take Steve fuji:gold 100`\n3. `/economy set Steve fuji:gold 100`\n4. `/economy clear Steve fuji:gold --confirm true`\n\n◉ Transfer the specified `balance` of specified `currency` from self to another player.\nIssue: `/economy pay Bob fuji:gold 100`\n",
-  "docstring.1751870593979": "You can use `command_scheduler` module, to define a `job`.\nTo execute `/warning clear-all --confirm true` command automatically. (e.g. every week)\n",
-  "docstring.1751870597904": "You can use `command_bundle` module, to define `template` for `warnings`.\n",
   "docstring.1751896813134": "Read the document to see the definition of `identifier` in Minecraft.\n",
   "docstring.1751896904529": "Use the `command suggestion` from `luckperms` mod to see the supported types by this module.\n",
   "docstring.1751897087633": "◉ To ban the placement of TNT block:\nJust add the `minecraft:tnt` into the `place_block` list in config file.\n\n◉ To ban the placement of TNT block, but allow player Alice to use it.\nGrant a `bypass permission` for that player: `/lp user Alice permission set fuji.anti_build.place_block.bypass.minecraft:tnt`.\n\n◉ To assign a override permission for a player explicitly.\nIssue: `/lp user Alice permission set fuji.anti_build.break_block.override.minecraft:grass_block false`\nThis will `dis-allow` the player Alice to `break a minecraft:grass_block block`.\n\n◉ Dis-allow to place `any` blocks.\nUse `*` as the wildcard character, put it into the `place_block` list.\n",
@@ -1109,7 +1109,7 @@
   "docstring.1751976654799": "This module provides `/send-custom` command.\nTo define `custom text` and auto-page them.\nAnd then send it `as message` or `as book` to a specified player.\n",
   "docstring.1751976733551": "◉ Send a custom text as a book.\nIssue: `/send-custom as-book Alice guide --author \"alice\" --title \"<rb>The Guide\" --giveBook true --openBook true`\n\n◉ Send a custom text as a message.\nIssue: `/send-custom as-message Alice guide`\n",
   "docstring.1751976790532": "This module provides the `/send-console` command.\nTo send a string into the `console`.\n",
-  "docstring.1751976813043": "◉ Send a string to the console.\nIssue: `/send-console Hello World`\n",
+  "docstring.1751976813043": "◉ Send a string to the console.\nIssue: `/send-console Hello World`\n\n◉ Log an action to the console.\nYou can integrate with other modules, to `log a specific action`.\nThe effect is like: `/run as console send-console Player %player:name% joins the server.`\n",
   "docstring.1751976929010": "The `functional` modules provide `virtual GUI` of `functional blocks`.\n",
   "docstring.1751976988699": "◉ All the obsidian platforms are vanilla-respect.\nThat's to say, all the additional `obsidian platforms` have the `identical` behaviour as the vanilla one, which locates in (100, 50, 0).\n\n◉ A well-known feature if you create the `Ender Portal` in the nether.\nSee https://bugs.mojang.com/browse/MC-252361\n",
   "docstring.1751977086541": "The `rules` to define how many fake-players can each player spawned. (At different times)\n\nThe tuple means (`day_of_week`, `minutes_of_the_day`, `max_fake_players_per_player`)\nThe range of `day_of_week` is `[1, 7]`\nThe range of `minutes_of_the_day` is `[0, 1440]`\n\nTaken the tuple `(1, 0 2)` for example.\nThe rule says, if `day_of_week` >= 1, and `minutes_of_the_day` >= 0, then the `max_fake_players_per_player` is now `2`.\n\nYou can define multiple `rules`.\nRules are matched from up to down.\nThe first matched rule will be used.\n",
@@ -1394,5 +1394,8 @@
   "docstring.1754641445726": "Returns the `expiration date` of the last created warning.",
   "docstring.1754641490973": "Returns the `creator name` of the last created warning.",
   "docstring.1754641570588": "Returns the `reason` of the last created warning.",
-  "docstring.1754643107428": "◉ Create a `permanent warning` for a player.\nIssue: `/warning create Steve Steal items.`\n\n◉ Create a `temporal warning` for a player.\nIssue: `/warning create-temp Steve 3d Steal items.`\n\n◉ List all the warnings of a player.\nIssue: `/warning list Steve`\n\n◉ Open the `Warning GUI`.\nIssue: `/warning gui`\n"
+  "docstring.1754643107428": "◉ Create a `permanent warning` for a player.\nIssue: `/warning create Steve Steal items.`\n\n◉ Create a `temporal warning` for a player.\nIssue: `/warning create-temp Steve 3d Steal items.`\n\n◉ List all the warnings of a player.\nIssue: `/warning list Steve`\n\n◉ Open the `Warning GUI`.\nIssue: `/warning gui`\n",
+  "docstring.1754643821825": "Should we send the reminders to the warned player?",
+  "docstring.1754646463245": "◉ Integrate with advanced `ban` tools.\nYou can integrate the `warning` module with `temp_ban` module.\nHowever, you may want some advanced ban tools.\nSee: https://github.com/Patbox/BanHammer\n",
+  "docstring.1754648842246": "Do nothing, simply return SUCCESS as the command return value."
 }
