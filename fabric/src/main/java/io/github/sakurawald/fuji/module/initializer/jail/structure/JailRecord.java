@@ -45,11 +45,11 @@ public class JailRecord {
     }
 
     public String getSpecifiedJailDuration() {
-        return DateParser.formatAccumulatedSeconds(this.getSpecifiedJailSeconds());
+        return DateParser.formatSeconds(this.getSpecifiedJailSeconds());
     }
 
     public String getRemainingJailDuration() {
-        return DateParser.formatAccumulatedSeconds(this.getRemainingJailSeconds());
+        return DateParser.formatSeconds(this.getRemainingJailSeconds());
     }
 
     public String getFormattedCreatedTimestamp() {

@@ -6,6 +6,8 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,21 +25,25 @@ public class Warning {
 
     String description;
 
-    public static Warning make(String creatorName, String description) {
-        Warning warning = new Warning();
-        warning.createdTimestamp = System.currentTimeMillis();
-        warning.creatorName = creatorName;
-        warning.description = description;
-        return warning;
+    public static Warning make(@NotNull String creatorName, @NotNull String description, @Nullable Long expirationTimestamp) {
+        Warning entity = new Warning();
+        entity.createdTimestamp = System.currentTimeMillis();
+        entity.creatorName = creatorName;
+        entity.description = description;
+        entity.expirationTimestamp = expirationTimestamp;
+        return entity;
     }
 
-    @NotNull
-    public List<Text> asLore(Object audience) {
+    public @NotNull List<Text> asLore(Object audience) {
         return List.of(
             TextHelper.getTextByKey(audience, "entity.created_by_player", creatorName)
             , TextHelper.getTextByKey(audience, "entity.created_timestamp", ChronosUtil.Formatter.formatDate(createdTimestamp))
             , TextHelper.getTextByKey(audience, "entity.expiration_timestamp", ChronosUtil.Formatter.formatDate(expirationTimestamp))
             , TextHelper.getTextByKey(audience, "entity.description", description)
         );
+    }
+
+    public @NotNull Item asItem() {
+        return this.getExpirationTimestamp() == null ? Items.PAPER : Items.MAP;
     }
 }

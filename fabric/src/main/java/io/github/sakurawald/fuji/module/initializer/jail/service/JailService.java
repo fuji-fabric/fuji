@@ -119,7 +119,7 @@ public class JailService {
 
     public static void createJailRecord(String creatorName, String playerName, JailDescriptor jail, String reason, String $duration) {
         withJailDataNode(jail, jailDataNode -> {
-            int specifiedJailSeconds = DateParser.parseAccumulatedSeconds($duration);
+            int specifiedJailSeconds = DateParser.parseIntoSeconds($duration);
             JailRecord jailRecord = JailRecord.make(creatorName, playerName, specifiedJailSeconds, reason);
             jailDataNode.getRecords().add(jailRecord);
             return null;

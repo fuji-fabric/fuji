@@ -482,7 +482,7 @@
   "view.inv.title": "%s 's Inventory",
   "warning.clear": "<green>Clear %d warnings for player %s.",
   "warning.clear_all": "<green>Clear all warnings for all players done.",
-  "warning.created": "<green>New warning created for player %s.",
+  "warning.created": "<green>New warning created for player %s with expiration date `%s`.",
   "warning.gui.title": "<#5EABD6>Warning",
   "warning.list.gui.help.lore": "<green> - Left click -> Edit warning\n<green> - Right click -> Delete warning",
   "warning.list.gui.name": "<#5EABD6>Warning",
@@ -1385,5 +1385,6 @@
   "docstring.1754465524369": "◉ Allow a player to choose an `intermediate rank` as their `starting rank`.\nYou can define one `starting rank node` as the public `starting rank node` for all players.\nHowever, you can also allow some players to pick other `rank nodes` as their starting rank node, and skip some path.\nIssue: `/lp group default permission set fuji.rank.starting_rank_node.branch-1-3`\nThis will allow players to pick `branch-1-3` as their `starting rank node`.\nYou can define multiple `starting rank nodes` for different `luckperms groups`.\n",
   "docstring.1754466143852": "If there is only one `next rank node` for the player, then rank up to that node, else do nothing.",
   "docstring.1754466653435": "◉ Automatic rank up to the only available next rank.\nYou can use `command_schedule` module to define a job.\nTo execute the `/rank try-up %player:name%` command for each online player.\nSo that each player will get auto rank up if there is only one `available next rank` for them.\nIt can be `/execute as @a run rank try-up @s` or `/foreach rank try-up %player:name%`\n",
-  "docstring.1754612494551": "◉ Use `chat.trigger` to create `chat commands`.\nThe `regex` in `chat.replace` is used to `find` the target pattern in `the given string`.\nThe `regex` in `chat.trigger` is used to `match` the target pattern against `the given string`.\n\nYou can define a `chat command` like `!report` or `!noclip` in other games.\n"
+  "docstring.1754612494551": "◉ Use `chat.trigger` to create `chat commands`.\nThe `regex` in `chat.replace` is used to `find` the target pattern in `the given string`.\nThe `regex` in `chat.trigger` is used to `match` the target pattern against `the given string`.\n\nYou can define a `chat command` like `!report` or `!noclip` in other games.\n",
+  "docstring.1754620576300": "Create a new warning with expiration for the player."
 }

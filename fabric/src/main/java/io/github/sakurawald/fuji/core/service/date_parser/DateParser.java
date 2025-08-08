@@ -1,10 +1,13 @@
 package io.github.sakurawald.fuji.core.service.date_parser;
 
 
+import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class DateParser {
 
@@ -18,9 +21,9 @@ public class DateParser {
     private static final int YEAR_TO_SECOND = 12 * MONTH_TO_SECOND;
     private static final Pattern DATE_PARSER_DSL = Pattern.compile("(\\d+)([smhdwMy])");
 
-    public static Date parseDate(String period) {
+    public static @NotNull Date parseIntoExpirationDate(@NotNull String period) {
         /* Compute the sum of seconds. */
-        int accumulateSeconds = parseAccumulatedSeconds(period);
+        int accumulateSeconds = parseIntoSeconds(period);
 
         /* Add delta seconds to now. */
         Calendar nowCalendar = Calendar.getInstance();
@@ -28,7 +31,15 @@ public class DateParser {
         return nowCalendar.getTime();
     }
 
-    public static int parseAccumulatedSeconds(String period) {
+    public static @Nullable Long parseIntoExpirationTimestamp(@Nullable String period) {
+        if (period == null) {
+            return null;
+        }
+
+        return ChronosUtil.toTimestamp(parseIntoExpirationDate(period));
+    }
+
+    public static int parseIntoSeconds(@NotNull String period) {
         Matcher matcher = DATE_PARSER_DSL.matcher(period);
         int accumulateSeconds = 0;
         while (matcher.find()) {
@@ -69,7 +80,7 @@ public class DateParser {
         return accumulateSeconds;
     }
 
-    public static String formatAccumulatedSeconds(int totalSeconds) {
+    public static String formatSeconds(int totalSeconds) {
         if (totalSeconds < 0) throw new IllegalArgumentException("Seconds must be non-negative");
 
         StringBuilder result = new StringBuilder();

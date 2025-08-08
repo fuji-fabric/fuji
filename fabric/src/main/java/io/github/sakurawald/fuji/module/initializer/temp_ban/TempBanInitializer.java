@@ -51,7 +51,7 @@ public class TempBanInitializer extends ModuleInitializer {
         }
 
         // Add.
-        Date expire = DateParser.parseDate(expiry);
+        Date expire = DateParser.parseIntoExpirationDate(expiry);
         BannedIpEntry bannedIpEntry = new BannedIpEntry(ip, null, source.getName(), expire, reason.getValue());
         source.getServer().getPlayerManager().getIpBanList().add(bannedIpEntry);
         source.sendFeedback(() -> Text.translatable("commands.banip.success", ip, bannedIpEntry.getReason()), true);
@@ -72,7 +72,7 @@ public class TempBanInitializer extends ModuleInitializer {
     private static int $player(@CommandSource ServerCommandSource source, GameProfileCollection collection, String expiry, GreedyString reason) {
         MinecraftServer server = source.getServer();
         PlayerManager playerManager = server.getPlayerManager();
-        Date expire = DateParser.parseDate(expiry);
+        Date expire = DateParser.parseIntoExpirationDate(expiry);
 
         for (GameProfile gameProfile : collection.getValue()) {
             // Add.

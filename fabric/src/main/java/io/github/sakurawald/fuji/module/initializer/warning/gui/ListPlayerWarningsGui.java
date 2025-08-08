@@ -44,7 +44,7 @@ public class ListPlayerWarningsGui extends CrudPagedGui<Warning> {
         GuiElementBuilder builder = new GuiElementBuilder();
 
         builder
-            .setItem(Items.PAPER)
+            .setItem(entity.asItem())
             .setName(TextHelper.getTextByKey(getPlayer(), "warning.list.gui.name"))
             .setLore(entity.asLore(getPlayer()));
 
@@ -69,7 +69,7 @@ public class ListPlayerWarningsGui extends CrudPagedGui<Warning> {
                 }
 
                 String creatorName = PlayerHelper.getPlayerName(player);
-                WarningService.createWarning(creatorName, targetPlayerName, warningDescription);
+                WarningService.createWarning(creatorName, targetPlayerName, warningDescription, null);
 
                 ListPlayerWarningsGui.make(getParent(), player, targetPlayerName)
                     .open();

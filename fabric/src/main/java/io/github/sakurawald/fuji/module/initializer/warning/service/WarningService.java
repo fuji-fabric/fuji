@@ -17,6 +17,7 @@ import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class WarningService {
 
@@ -36,9 +37,9 @@ public class WarningService {
             });
     }
 
-    public static void createWarning(@NotNull String creatorName, @NotNull String targetPlayerName, @NotNull String warningDescription) {
+    public static void createWarning(@NotNull String creatorName, @NotNull String targetPlayerName, @NotNull String warningDescription, @Nullable Long expirationTimestamp) {
         /* Create a new warning for the target player. */
-        Warning newWarning = Warning.make(creatorName, warningDescription);
+        Warning newWarning = Warning.make(creatorName, warningDescription, expirationTimestamp);
         getPlayerWarnings(targetPlayerName)
             .warnings
             .add(newWarning);

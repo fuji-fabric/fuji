@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.warning;
 
 
+import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -16,6 +17,7 @@ import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.core.event.impl.PlayerEvents;
+import io.github.sakurawald.fuji.core.service.date_parser.DateParser;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.warning.config.model.WarningConfigModel;
 import io.github.sakurawald.fuji.module.initializer.warning.config.model.WarningDataModel;
@@ -85,14 +87,25 @@ public class WarningInitializer extends ModuleInitializer {
     @CommandNode("warning create")
     @CommandRequirement(level = 4)
     private static int $createWarning(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer, GreedyString warning) {
+        return $createTemporalWarning(source, targetPlayer, null, warning);
+    }
+
+    @Document(id = 1754620576300L, value = "Create a new warning with expiration for the player.")
+    @CommandNode("warning create-temp")
+    @CommandRequirement(level = 4)
+    private static int $createTemporalWarning(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer, String duration, GreedyString warning) {
         String creatorName = source.getName();
         String targetPlayerName = targetPlayer.getValue();
         String warningDescription = warning.getValue();
 
-        WarningService.createWarning(creatorName, targetPlayerName, warningDescription);
-        TextHelper.sendTextByKey(source, "warning.created", targetPlayerName);
+        Long expirationTimestamp = DateParser.parseIntoExpirationTimestamp(duration);
+        String expirationDate = ChronosUtil.Formatter.formatDate(expirationTimestamp);
+
+        WarningService.createWarning(creatorName, targetPlayerName, warningDescription, expirationTimestamp);
+        TextHelper.sendTextByKey(source, "warning.created", targetPlayerName, expirationDate);
         return CommandHelper.Return.SUCCESS;
     }
+
 
     @Document(id = 1751827040456L, value = "List the warnings of a player.")
     @CommandNode("warning list")
