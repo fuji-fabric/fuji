@@ -15,6 +15,7 @@ import net.minecraft.server.command.ServerCommandSource;
     """)
 public class NopInitializer extends ModuleInitializer {
 
+    @Document(id = 1754648842246L, value = "Do nothing, simply return SUCCESS as the command return value.")
     @CommandNode("nop")
     @CommandRequirement(level = 4)
     private static int $nop(@CommandSource ServerCommandSource source) {

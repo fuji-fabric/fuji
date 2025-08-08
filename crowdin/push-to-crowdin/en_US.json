@@ -1396,5 +1396,6 @@
   "docstring.1754641570588": "Returns the `reason` of the last created warning.",
   "docstring.1754643107428": "◉ Create a `permanent warning` for a player.\nIssue: `/warning create Steve Steal items.`\n\n◉ Create a `temporal warning` for a player.\nIssue: `/warning create-temp Steve 3d Steal items.`\n\n◉ List all the warnings of a player.\nIssue: `/warning list Steve`\n\n◉ Open the `Warning GUI`.\nIssue: `/warning gui`\n",
   "docstring.1754643821825": "Should we send the reminders to the warned player?",
-  "docstring.1754646463245": "◉ Integrate with advanced `ban` tools.\nYou can integrate the `warning` module with `temp_ban` module.\nHowever, you may want some advanced ban tools.\nSee: https://github.com/Patbox/BanHammer\n"
+  "docstring.1754646463245": "◉ Integrate with advanced `ban` tools.\nYou can integrate the `warning` module with `temp_ban` module.\nHowever, you may want some advanced ban tools.\nSee: https://github.com/Patbox/BanHammer\n",
+  "docstring.1754648842246": "Do nothing, simply return SUCCESS as the command return value."
 }
