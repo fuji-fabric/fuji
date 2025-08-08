@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
@@ -95,14 +96,14 @@ public class WarningService {
     }
 
     private static void processPermanentWarningRules(@NotNull String targetPlayerName) {
-        processWarningRules(targetPlayerName, WarningInitializer.config.model().getOnPermanentWarningCreated());
+        processWarningRules(targetPlayerName, WarningInitializer.config.model().getOnPermanentWarningCreated(), Warning::isPermanentWarning);
     }
 
     private static void processTemporalWarningRules(@NotNull String targetPlayerName) {
-        processWarningRules(targetPlayerName, WarningInitializer.config.model().getOnTemporalWarningCreated());
+        processWarningRules(targetPlayerName, WarningInitializer.config.model().getOnTemporalWarningCreated(), Warning::isTemporalWarning);
     }
 
-    private static void processWarningRules(@NotNull String targetPlayerName, @NotNull List<WarningRule> warningRules) {
+    private static void processWarningRules(@NotNull String targetPlayerName, @NotNull List<WarningRule> warningRules, @NotNull Predicate<Warning> warningTypeFilter) {
         Optional<WarningRule> first = warningRules
             .stream()
             // Sort the higher value first.
@@ -111,7 +112,11 @@ public class WarningService {
                 .reversed())
             .filter(it -> {
                 int numberOfWarnings = getPlayerWarnings(targetPlayerName)
-                    .getWarnings().size();
+                    .getWarnings()
+                    .stream()
+                    .filter(warningTypeFilter)
+                    .toList()
+                    .size();
                 return numberOfWarnings >= it.getIfNumberOfWarningsGreaterEqualThan();
             })
             .findFirst();

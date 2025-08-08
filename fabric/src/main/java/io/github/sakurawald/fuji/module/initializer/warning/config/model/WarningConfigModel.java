@@ -38,6 +38,11 @@ public class WarningConfigModel {
                 "send-broadcast <dark_red>Player %player:name% has just received a temporal-warning.<newline><dark_red>◉ Expiration Date: %fuji:last_warning_expiration_date%<newline><dark_red>◉ Reason: %fuji:last_warning_reason%"
             )));
 
+            this.add(WarningRule.make(3, List.of(
+                "send-broadcast <dark_red>Player %player:name% has just received a temporal-warning.<newline><dark_red>◉ Expiration Date: %fuji:last_warning_expiration_date%<newline><dark_red>◉ Reason: %fuji:last_warning_reason%"
+                , "warning create %player:name% Received too many temporal warnings in a short period of time."
+            )));
+
         }
     };
 

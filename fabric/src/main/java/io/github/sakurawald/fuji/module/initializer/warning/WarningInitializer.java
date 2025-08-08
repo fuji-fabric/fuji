@@ -88,7 +88,7 @@ public class WarningInitializer extends ModuleInitializer {
     @CommandNode("warning create")
     @CommandRequirement(level = 4)
     private static int $createWarning(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer, GreedyString warning) {
-        return $createTemporalWarning(source, targetPlayer, null, warning);
+        return $createTemporalWarning(source, targetPlayer, new Duration(null), warning);
     }
 
     @Document(id = 1754620576300L, value = "Create a new warning with expiration for the player.")

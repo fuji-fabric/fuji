@@ -8,7 +8,6 @@ import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.minecraft.item.Item;
-import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,12 +43,23 @@ public class Warning {
         );
     }
 
-    public @NotNull Item asItem() {
-        if (this.getExpirationTimestamp() == null) {
-            return Items.GREEN_STAINED_GLASS;
+    public boolean isTemporalWarning() {
+        return !isPermanentWarning();
+    }
 
+    public boolean isPermanentWarning() {
+        return this.getExpirationTimestamp() == null;
+    }
+
+    public boolean isActive() {
+        if (this.getExpirationTimestamp() == null) {
+            return true;
         }
 
-        return GuiHelper.Material.fromBooleanValue(System.currentTimeMillis() < this.getExpirationTimestamp());
+        return System.currentTimeMillis() < this.getExpirationTimestamp();
+    }
+
+    public @NotNull Item asItem() {
+        return GuiHelper.Material.fromBooleanValue(this.isActive());
     }
 }
