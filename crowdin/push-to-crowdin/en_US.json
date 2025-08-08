@@ -139,6 +139,7 @@
   "display.inventory.text": "<#D2E0FB>[Inventory Display]",
   "display.item.broadcast": "<#FFA1F5>Player %player:name% just share an item display: <#D2E0FB>${display}",
   "display.item.text": "<#D2E0FB>[${item}]",
+  "duration.invalid": "Invalid duration: `%s`",
   "echo.send_bossbar.notify": "<green>The bossbar sent to `%s` with command list `%s` is completed.",
   "echo.send_custom.custom_text.invalid_page": "<red>Invalid page.",
   "echo.send_custom.custom_text.not_found": "<red>Custom text `%s` not found.",

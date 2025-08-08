@@ -8,6 +8,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.Duration;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlayerName;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
@@ -93,12 +94,12 @@ public class WarningInitializer extends ModuleInitializer {
     @Document(id = 1754620576300L, value = "Create a new warning with expiration for the player.")
     @CommandNode("warning create-temp")
     @CommandRequirement(level = 4)
-    private static int $createTemporalWarning(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer, String duration, GreedyString warning) {
+    private static int $createTemporalWarning(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer, Duration duration, GreedyString warning) {
         String creatorName = source.getName();
         String targetPlayerName = targetPlayer.getValue();
         String warningDescription = warning.getValue();
 
-        Long expirationTimestamp = DateParser.parseIntoExpirationTimestamp(duration);
+        Long expirationTimestamp = DateParser.parseIntoExpirationTimestamp(duration.getValue());
         String expirationDate = ChronosUtil.Formatter.formatDate(expirationTimestamp);
 
         WarningService.createWarning(creatorName, targetPlayerName, warningDescription, expirationTimestamp);

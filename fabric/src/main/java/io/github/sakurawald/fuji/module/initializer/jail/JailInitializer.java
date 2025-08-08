@@ -6,6 +6,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.Duration;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlayerName;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
@@ -155,11 +156,13 @@ public class JailInitializer extends ModuleInitializer {
     @Document(id = 1753686063844L, value = "Put the `player` into a specified `jail`.")
     @CommandNode("jail put")
     @CommandRequirement(level = 4)
-    private static int $put(@CommandSource ServerCommandSource source, OfflinePlayerName playerName, JailDescriptor jail, Optional<String> duration, GreedyString reason) {
+    private static int $put(@CommandSource ServerCommandSource source, OfflinePlayerName playerName, JailDescriptor jail, Optional<Duration> duration, GreedyString reason) {
         String creatorName = source.getName();
         String $playerName = playerName.getValue();
         String $reason = reason.getValue();
-        String $duration = duration.orElseGet(jail::getDefaultJailedDuration);
+        String $duration = duration
+            .orElseGet(() -> new Duration(jail.getDefaultJailedDuration()))
+            .getValue();
 
         return JailService
             .getActiveJailRecord($playerName)

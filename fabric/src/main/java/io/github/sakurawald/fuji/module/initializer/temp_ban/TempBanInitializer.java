@@ -8,6 +8,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.Duration;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GameProfileCollection;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
@@ -44,14 +45,14 @@ public class TempBanInitializer extends ModuleInitializer {
     // NOTE: The recreation of BanCommand and BanIpCommand, but with a specified expiry date.
 
     @CommandNode("ip")
-    private static int $ip(@CommandSource ServerCommandSource source, String ip, String expiry, GreedyString reason) throws CommandSyntaxException {
+    private static int $ip(@CommandSource ServerCommandSource source, String ip, Duration expiry, GreedyString reason) throws CommandSyntaxException {
 
         if (!InetAddresses.isInetAddress(ip)) {
             throw new SimpleCommandExceptionType(Text.translatable("commands.banip.invalid")).create();
         }
 
         // Add.
-        Date expire = DateParser.parseIntoExpirationDate(expiry);
+        Date expire = DateParser.parseIntoExpirationDate(expiry.getValue());
         BannedIpEntry bannedIpEntry = new BannedIpEntry(ip, null, source.getName(), expire, reason.getValue());
         source.getServer().getPlayerManager().getIpBanList().add(bannedIpEntry);
         source.sendFeedback(() -> Text.translatable("commands.banip.success", ip, bannedIpEntry.getReason()), true);
@@ -69,10 +70,10 @@ public class TempBanInitializer extends ModuleInitializer {
     }
 
     @CommandNode("player")
-    private static int $player(@CommandSource ServerCommandSource source, GameProfileCollection collection, String expiry, GreedyString reason) {
+    private static int $player(@CommandSource ServerCommandSource source, GameProfileCollection collection, Duration expiry, GreedyString reason) {
         MinecraftServer server = source.getServer();
         PlayerManager playerManager = server.getPlayerManager();
-        Date expire = DateParser.parseIntoExpirationDate(expiry);
+        Date expire = DateParser.parseIntoExpirationDate(expiry.getValue());
 
         for (GameProfile gameProfile : collection.getValue()) {
             // Add.

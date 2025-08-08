@@ -72,11 +72,9 @@ public class DateParser {
             }
         }
 
-        /* Return a small enough value, to prevent the `0s` result. */
         if (accumulateSeconds == 0) {
-            accumulateSeconds = 3;
+            throw new IllegalArgumentException("Invalid period: " + period);
         }
-
         return accumulateSeconds;
     }
 
