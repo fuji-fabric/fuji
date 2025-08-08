@@ -16,6 +16,10 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 @ColorBox(id = 1751976813043L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
     ◉ Send a string to the console.
     Issue: `/send-console Hello World`
+
+    ◉ Log an action to the console.
+    You can integrate with other modules, to `log a specific action`.
+    The effect is like: `/run as console send-console Player %player:name% joins the server.`
     """)
 public class SendConsoleInitializer extends ModuleInitializer {
 
