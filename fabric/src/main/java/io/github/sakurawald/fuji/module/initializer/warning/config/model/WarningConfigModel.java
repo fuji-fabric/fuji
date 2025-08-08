@@ -44,7 +44,8 @@ public class WarningConfigModel {
                 "send-broadcast <dark_red>Player %player:name% has just received a permanent-warning.<newline><dark_red>◉ Reason: %fuji:last_warning_reason%"
                 , "when-online %player:name% send-message %player:name% <dark_red>You have received a warning.")));
             this.add(WarningRule.make(3, List.of(
-                "temp-ban player %player:name% 30m Warned 3 times.")));
+                "send-broadcast <dark_red>Player %player:name% has just received a permanent-warning.<newline><dark_red>◉ Reason: %fuji:last_warning_reason%"
+                , "temp-ban player %player:name% 30m Warned 3 times.")));
 
         }
     };
