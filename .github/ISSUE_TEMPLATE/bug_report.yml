@@ -1,14 +1,14 @@
 name: 🐞 Bug Report
-description: Create a report to help us improve
-title: '[bug] <insert your title here>'
+description: Report a bug for this project
+title: '[bug] Insert your title here'
 labels: [ bug ]
 body:
   - type: checkboxes
     attributes:
-      label: Are you using the latest available version for your server?
-      description: The bug may be fixed in the latest available version.
+      label: Are you using the latest available Mod version for your Minecraft server?
+      description: The bug may already be fixed in the latest available Mod version.
       options:
-        - label: I am using the latest available version of fuji for my minecraft server.
+        - label: I am using the latest available Mod version for my Minecraft server.
           required: true
   - type: checkboxes
     attributes:
@@ -44,7 +44,7 @@ body:
     attributes:
       label: Server Logs
       description: Please upload the server logs using https://mclo.gs/
-      placeholder: paste your mclo.gs links here
+      placeholder: Paste your mclo.gs link here
     validations:
       required: false
   - type: textarea
@@ -52,6 +52,7 @@ body:
       label: Anything else?
       description: |
         Add any other context about the problem here.
+        
         Tip: You can attach screenshots or log files to help explain your problem by clicking this area to highlight it and then dragging files in.
     validations:
       required: false
