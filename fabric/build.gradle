@@ -60,7 +60,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
 
     /* For fabric-carpet mod */
-    modImplementation("carpet:fabric-carpet:${project.carpet_core_version}")
+    modImplementation("com.github.gnembon:fabric-carpet:${project.carpet_core_version}")
 
     /* For json parser: gson */
     implementation "com.google.code.gson:gson:${project.gson_version}"
