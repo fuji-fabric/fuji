@@ -5,7 +5,7 @@ import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
-import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
+import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
 import io.github.sakurawald.fuji.module.initializer.jail.service.JailService;
 import io.github.sakurawald.fuji.module.initializer.jail.structure.JailDescriptor;
 import io.github.sakurawald.fuji.module.initializer.jail.structure.JailRecord;

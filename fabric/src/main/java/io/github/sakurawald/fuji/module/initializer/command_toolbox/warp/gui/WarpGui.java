@@ -5,7 +5,7 @@ import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
-import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
+import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
 import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.WarpInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.structure.WarpNode;
 import net.minecraft.server.network.ServerPlayerEntity;

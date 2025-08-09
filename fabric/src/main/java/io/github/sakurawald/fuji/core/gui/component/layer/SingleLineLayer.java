@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.gui.impl.layer;
+package io.github.sakurawald.fuji.core.gui.component.layer;
 
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.layered.Layer;

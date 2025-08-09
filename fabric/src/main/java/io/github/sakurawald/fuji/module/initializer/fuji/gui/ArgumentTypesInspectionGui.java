@@ -5,15 +5,15 @@ import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
-import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
+import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class ArgumentTypesInspectionGui extends PagedGui<BaseArgumentTypeAdapter> {
 
@@ -55,14 +55,15 @@ public class ArgumentTypesInspectionGui extends PagedGui<BaseArgumentTypeAdapter
 
     @Override
     protected @NotNull GuiElementInterface toGuiElement(@NotNull BaseArgumentTypeAdapter entity) {
+        List<Text> lore = new ArrayList<>();
+        lore.add(TextHelper.getTextByKey(getPlayer(), "from_module", entity.getFromModule()));
+        lore.add(TextHelper.getTextByKey(getPlayer(), "command.argument.type.class", entity.getTypeClasses().stream().map(Class::getSimpleName).toList()));
+        lore.add(TextHelper.getTextByKey(getPlayer(), "command.argument.type.string", entity.getTypeStrings()));
+
         GuiElementBuilder guiElementBuilder = new GuiElementBuilder()
             .setName(Text.literal(entity.getClass().getSimpleName()))
             .setItem(toItem(entity))
-            .setLore(List.of(
-                TextHelper.getTextByKey(getPlayer(), "from_module", entity.getFromModule())
-                , TextHelper.getTextByKey(getPlayer(), "command.argument.type.class", entity.getTypeClasses().stream().map(Class::getSimpleName).toList())
-                , TextHelper.getTextByKey(getPlayer(), "command.argument.type.string", entity.getTypeStrings())
-            ));
+            .setLore(lore);
 
         if (!isVanillaMinecraftArgumentType(entity)) {
             guiElementBuilder.glow();

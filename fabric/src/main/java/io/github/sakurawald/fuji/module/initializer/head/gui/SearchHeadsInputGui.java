@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.head.gui;
 
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
-import io.github.sakurawald.fuji.core.gui.impl.gui.InputSignGui;
+import io.github.sakurawald.fuji.core.gui.component.gui.InputSignGui;
 import io.github.sakurawald.fuji.module.initializer.head.privoder.HeadProvider;
 import io.github.sakurawald.fuji.module.initializer.head.structure.Head;
 import net.minecraft.text.Text;

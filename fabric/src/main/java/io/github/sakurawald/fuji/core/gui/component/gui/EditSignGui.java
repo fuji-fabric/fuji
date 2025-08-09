@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.gui.impl.gui;
+package io.github.sakurawald.fuji.core.gui.component.gui;
 
 import java.util.ArrayList;
 import java.util.List;

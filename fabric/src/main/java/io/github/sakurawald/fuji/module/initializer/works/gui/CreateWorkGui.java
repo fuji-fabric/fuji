@@ -5,7 +5,7 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
-import io.github.sakurawald.fuji.core.gui.impl.gui.InputSignGui;
+import io.github.sakurawald.fuji.core.gui.component.gui.InputSignGui;
 import io.github.sakurawald.fuji.module.initializer.works.WorksInitializer;
 import io.github.sakurawald.fuji.module.initializer.works.config.model.WorksDataModel;
 import io.github.sakurawald.fuji.module.initializer.works.structure.work.impl.NonProductionWork;

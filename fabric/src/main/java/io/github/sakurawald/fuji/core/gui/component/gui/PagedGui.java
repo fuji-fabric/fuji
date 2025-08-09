@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.gui.impl.gui;
+package io.github.sakurawald.fuji.core.gui.component.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
@@ -7,7 +7,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
-import io.github.sakurawald.fuji.core.gui.impl.layer.SingleLineLayer;
+import io.github.sakurawald.fuji.core.gui.component.layer.SingleLineLayer;
 import io.github.sakurawald.fuji.core.gui.structure.EntityToElementMapping;
 import lombok.Getter;
 import net.minecraft.item.ItemStack;
