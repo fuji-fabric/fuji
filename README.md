@@ -32,7 +32,7 @@ For any contributors, you are welcome to open a `pull-request` in github to add 
 ## Cite
 
 This software cites the following open source
-projects: [cite](https://github.com/sakurawald/fuji/blob/dev/CITE)
+projects: [cite](https://github.com/sakurawald/fuji/blob/dev/CITE.md)
 
 ## License
 

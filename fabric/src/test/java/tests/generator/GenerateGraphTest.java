@@ -32,7 +32,7 @@ public class GenerateGraphTest {
 
     public static final Path COMPILE_TIME_RESOURCE_PATH = TestUtil.PROJECT_ROOT_PATH.resolve("common/src/main/resources/");
     public static final Path COMPILE_TIME_GRAPH_PATH = COMPILE_TIME_RESOURCE_PATH.resolve(ReflectionUtil.CompileTimeGraph.GRAPH_DIRECTORY_NAME);
-    public static final Path COMPILE_TIME_CITE_FILE_PATH = TestUtil.PROJECT_ROOT_PATH.resolve("CITE");
+    public static final Path COMPILE_TIME_CITE_FILE_PATH = TestUtil.PROJECT_ROOT_PATH.resolve("CITE.md");
     public static final Path COMPILE_TIME_TEST_CASE_FILE_PATH = TestUtil.PROJECT_ROOT_PATH.resolve("TEST-CASE.md");
 
     @Test
@@ -74,7 +74,7 @@ public class GenerateGraphTest {
                     return Arrays.stream(value);
                 })
                 .sorted()
-                .forEach(writer::println);
+                .forEach(it -> writer.println(it + "\n"));
         }
     }
 
