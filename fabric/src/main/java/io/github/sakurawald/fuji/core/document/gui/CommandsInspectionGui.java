@@ -19,18 +19,18 @@ import java.util.List;
 
 public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
 
-    public CommandsInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, @NotNull List<CommandDescriptor> entities, int pageIndex) {
+    public CommandsInspectionGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull List<CommandDescriptor> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "fuji.inspect.fuji_commands.gui.title"), entities, pageIndex);
     }
 
     public static CommandsInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
-        List<CommandDescriptor> descriptors = CommandAnnotationProcessor
+        List<CommandDescriptor> entities = CommandAnnotationProcessor
             .REGISTERED_COMMAND_DESCRIPTORS
             .stream()
             .sorted(Comparator.comparing(CommandDescriptor::getCommandNodePath))
             .toList();
 
-        return new CommandsInspectionGui(parent, player, descriptors, 0);
+        return new CommandsInspectionGui(parent, player, entities, 0);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
         return new CommandsInspectionGui(parent, player, entities, pageIndex);
     }
 
-    private List<Text> computeDocumentsLore(CommandDescriptor entity) {
+    private @NotNull List<Text> asLore(@NotNull CommandDescriptor entity) {
         List<Text> lore = new ArrayList<>();
 
         /* Attach method document. */
@@ -60,6 +60,7 @@ public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
         return lore;
     }
 
+    @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
     @Override
     protected GuiElementInterface toGuiElement(CommandDescriptor entity) {
         List<Text> lore = new ArrayList<>();
@@ -74,7 +75,7 @@ public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
         ));
 
         /* Add documents lore of this command. */
-        List<Text> documents = computeDocumentsLore(entity);
+        List<Text> documents = asLore(entity);
         if (!documents.isEmpty()) {
             documents.add(0, Text.empty());
             lore.addAll(documents);
