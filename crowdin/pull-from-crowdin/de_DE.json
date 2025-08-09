@@ -35,6 +35,7 @@
   "command.args.number_not_match": "<red>Die Anzahl der Args ist nicht identisch.",
   "command.argument.type.class": "<blue>Type Class: %s",
   "command.argument.type.gui.title": "<blue>Argument Type",
+  "command.argument.type.is_vanilla": "<blue>Is Vanilla: %s",
   "command.argument.type.string": "<blue>Type String: %s",
   "command.console_only": "<red>Dieser Befehl kann nur von der Konsole ausgeführt werden.",
   "command.descriptor.type": "<blue>Descriptor: %s",
@@ -1082,7 +1083,7 @@
   "docstring.1751972399779": "This module provides the `/hat` command.\nAnd allows a player to put `any item` in the `head slot`.\n",
   "docstring.1751972433657": "This module provides the `/reply` command.\nTo reply the player who recently `/msg` or `/tell` you.\n",
   "docstring.1751972495394": "You can use `command_alias` module, to create a new command `/r` as the alias to `/reply` command.\n",
-  "docstring.1751972580951": "◉ Set lore for item in mainhand.\nIssue: `/lore set <rainbow>the first line<newline><bold><green>the second`\n",
+  "docstring.1751972580951": "◉ Set lore for item in mainhand.\nIssue: `/lore set \\<rainbow\\>the first line\\<newline\\>\\<bold\\>\\<green\\>the second`\n",
   "docstring.1751972643858": "◉ Set a display name for a warp.\nIssue: `/warp set-name \\<warp\\> \\<blue\\>This is the display name`\n\n◉ Set a lore for a warp.\nIssue: `/warp set-lore \\<warp\\> \\<blue\\>This is the first line|<red>This is the second line`\n\n",
   "docstring.1751974763151": "◉ Set up the warmup for all commands.\nRegex: `.+`\n\nThe `.` character in regex means `match any character`.\nThe `+` character in regex means `a quantifier, one or more times`.\n",
   "docstring.1751974917420": "◉ Set up the warmup for all commands, but specify a special setup for `/back` command.\nYou can just write the `config section` for `/back` command `at the top` of rules.\nThe `rules` are `matched` from up to down, and `the first matched rule` will be used.\nSo, you can just write the `special rule` at the top of other rules.\n",
@@ -1398,5 +1399,7 @@
   "docstring.1754643107428": "◉ Create a `permanent warning` for a player.\nIssue: `/warning create Steve Steal items.`\n\n◉ Create a `temporal warning` for a player.\nIssue: `/warning create-temp Steve 3d Steal items.`\n\n◉ List all the warnings of a player.\nIssue: `/warning list Steve`\n\n◉ Open the `Warning GUI`.\nIssue: `/warning gui`\n",
   "docstring.1754643821825": "Should we send the reminders to the warned player?",
   "docstring.1754646463245": "◉ Integrate with advanced `ban` tools.\nYou can integrate the `warning` module with `temp_ban` module.\nHowever, you may want some advanced ban tools.\nSee: https://github.com/Patbox/BanHammer\n",
-  "docstring.1754648842246": "Do nothing, simply return SUCCESS as the command return value."
+  "docstring.1754648842246": "Do nothing, simply return SUCCESS as the command return value.",
+  "docstring.1754726496693": "This `argument type adapter` is used to `handle` a `vanilla` Minecraft argument type.\nA `vanilla` Minecraft argument type is a `built-in` type provided by the base Minecraft game.\nExamples include: `int`, `double`, `float`, `entity type`, `item type`, `block pos`...\n",
+  "docstring.1754726568501": "This `argument type adapter` is used to `handle` a `non-vanilla` Minecraft argument type.\nA `non-vanilla` Minecraft argument type is registered by a `module`.\nExamples include: `home name`, `warp name`, `jail name`...\n"
 }
