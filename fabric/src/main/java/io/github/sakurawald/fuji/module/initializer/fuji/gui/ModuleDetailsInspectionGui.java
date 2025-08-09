@@ -201,7 +201,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
     private static List<GuiElementInterface> searchModuleArgumentTypes(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString) {
         return ArgumentTypesInspectionGui
             .inspectAll(parent, player)
-            .skipCurrentGuiAndSearch(it -> it.getFromModule().equals(modulePathString))
+            .skipCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
             .toGuiElements();
     }
 

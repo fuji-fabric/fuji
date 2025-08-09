@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
+import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import net.minecraft.server.command.CommandManager;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public abstract class BaseArgumentTypeAdapter {
+public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
 
     // NOTE: Pre-define these argument types to make the fabric test environment happy.
     private static final Map<String, Class<?>> PREDEFINED_ARGUMENT_TYPES = new HashMap<>() {
@@ -96,7 +97,8 @@ public abstract class BaseArgumentTypeAdapter {
         throw new RuntimeException("No adapters match the argument type: " + type.getTypeName());
     }
 
-    public @NotNull String getFromModule() {
+    @Override
+    public @NotNull String getSourceModule() {
         return ModuleManager.computeJoinedModulePath(this.getClass().getName());
     }
 

@@ -51,17 +51,17 @@ public class DocumentUtil {
         return getDocString(audience, annotation.id());
     }
 
-    public static @Nullable String getClassDocumentString(@Nullable Object audience, Class<?> clazz) {
+    public static @Nullable String getClassDocumentString(@Nullable Object audience, @NotNull Class<?> clazz) {
         Document annotation = clazz.getAnnotation(Document.class);
         return getDocumentString(audience, annotation);
     }
 
-    public static @Nullable String getFieldDocumentString(@Nullable Object audience, Field field) {
+    public static @Nullable String getFieldDocumentString(@Nullable Object audience, @NotNull Field field) {
         Document annotation = field.getAnnotation(Document.class);
         return getDocumentString(audience, annotation);
     }
 
-    public static String compileDocumentString(String documentString) {
+    public static @NotNull String compileDocumentString(@NotNull String documentString) {
         /* Adds the color prefix for each line. */
         return Arrays
             .stream(documentString.split("\n"))
@@ -69,7 +69,7 @@ public class DocumentUtil {
             .collect(Collectors.joining("\n"));
     }
 
-    private static @NotNull String compileDocumentStringLine(String line) {
+    private static @NotNull String compileDocumentStringLine(@NotNull String line) {
         if (line.startsWith("◉")) {
             line = "<bold>" + line;
         }

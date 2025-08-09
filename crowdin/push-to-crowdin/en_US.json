@@ -1398,5 +1398,7 @@
   "docstring.1754643107428": "◉ Create a `permanent warning` for a player.\nIssue: `/warning create Steve Steal items.`\n\n◉ Create a `temporal warning` for a player.\nIssue: `/warning create-temp Steve 3d Steal items.`\n\n◉ List all the warnings of a player.\nIssue: `/warning list Steve`\n\n◉ Open the `Warning GUI`.\nIssue: `/warning gui`\n",
   "docstring.1754643821825": "Should we send the reminders to the warned player?",
   "docstring.1754646463245": "◉ Integrate with advanced `ban` tools.\nYou can integrate the `warning` module with `temp_ban` module.\nHowever, you may want some advanced ban tools.\nSee: https://github.com/Patbox/BanHammer\n",
-  "docstring.1754648842246": "Do nothing, simply return SUCCESS as the command return value."
+  "docstring.1754648842246": "Do nothing, simply return SUCCESS as the command return value.",
+  "docstring.1754726496693": "This `argument type adapter` is used to `handle` a `vanilla` Minecraft argument type.\nA `vanilla` Minecraft argument type is a `built-in` type provided by the base Minecraft game.\nExamples include: `int`, `double`, `float`, `entity type`, `item type`, `block pos`...\n",
+  "docstring.1754726568501": "This `argument type adapter` is used to `handle` a `non-vanilla` Minecraft argument type.\nA `non-vanilla` Minecraft argument type is registered by a `module`.\nExamples include: `home name`, `warp name`, `jail name`...\n"
 }

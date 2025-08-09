@@ -793,12 +793,12 @@ public class TextHelper {
         }
     }
 
-    public static Text getDocumentText(Object audience, String docString) {
+    public static Text getDocumentText(@Nullable Object audience, @NotNull String docString) {
         docString = DocumentUtil.compileDocumentString(docString);
         return getText(Parsers.STYLE_ONLY_PARSER, audience, false, docString);
     }
 
-    public static List<Text> getDocumentTextList(Object audience, String docString) {
+    public static List<Text> getDocumentTextList(@Nullable Object audience, @NotNull String docString) {
         return Arrays
             .stream(splitStringIntoLines(docString))
             .map(line -> getDocumentText(audience, line))

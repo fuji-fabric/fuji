@@ -5,6 +5,8 @@ import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
+import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
+import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,19 +40,34 @@ public class ArgumentTypesInspectionGui extends PagedGui<BaseArgumentTypeAdapter
         return Items.HOPPER;
     }
 
-    private static List<Text> toDocumentTexts(@NotNull BaseArgumentTypeAdapter entity) {
+    @DocStringProvider(id = 1754726496693L, value = """
+        This `argument type adapter` is used to `handle` a `vanilla` Minecraft argument type.
+        A `vanilla` Minecraft argument type is a `built-in` type provided by the base Minecraft game.
+        Examples include: `int`, `double`, `float`, `entity type`, `item type`, `block pos`...
+        """)
+    @DocStringProvider(id = 1754726568501L, value = """
+        This `argument type adapter` is used to `handle` a `non-vanilla` Minecraft argument type.
+        A `non-vanilla` Minecraft argument type is registered by a `module`.
+        Examples include: `home name`, `warp name`, `jail name`...
+        """)
+    private List<Text> toDocumentTexts(@NotNull BaseArgumentTypeAdapter entity) {
+        String docString;
+        if (entity.isVanillaMinecraftArgumentType()) {
+            docString = DocumentUtil.getDocString(getPlayer(), 1754726496693L);
+        } else {
+            docString = DocumentUtil.getDocString(getPlayer(), 1754726568501L);
+        }
 
-
-
-
+        return TextHelper.getDocumentTextList(getPlayer(), docString);
     }
 
     @Override
     protected @NotNull GuiElementInterface toGuiElement(@NotNull BaseArgumentTypeAdapter entity) {
         List<Text> lore = new ArrayList<>();
-        lore.add(TextHelper.getTextByKey(getPlayer(), "from_module", entity.getFromModule()));
+        lore.add(TextHelper.getTextByKey(getPlayer(), "from_module", entity.getSourceModule()));
         lore.add(TextHelper.getTextByKey(getPlayer(), "command.argument.type.class", entity.getTypeClasses().stream().map(Class::getSimpleName).toList()));
         lore.add(TextHelper.getTextByKey(getPlayer(), "command.argument.type.string", entity.getTypeStrings()));
+        lore.add(TextHelper.TEXT_EMPTY);
         lore.addAll(toDocumentTexts(entity));
 
 
