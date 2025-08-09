@@ -35,6 +35,7 @@
   "command.args.number_not_match": "<red>The number of args not matched.",
   "command.argument.type.class": "<blue>Type Class: %s",
   "command.argument.type.gui.title": "<blue>Argument Type",
+  "command.argument.type.is_vanilla": "<blue>Is Vanilla: %s",
   "command.argument.type.string": "<blue>Type String: %s",
   "command.console_only": "<red>This command can only be executed by the console.",
   "command.descriptor.type": "<blue>Descriptor: %s",

@@ -65,6 +65,7 @@ public class ArgumentTypesInspectionGui extends PagedGui<BaseArgumentTypeAdapter
     protected @NotNull GuiElementInterface toGuiElement(@NotNull BaseArgumentTypeAdapter entity) {
         List<Text> lore = new ArrayList<>();
         lore.add(TextHelper.getTextByKey(getPlayer(), "from_module", entity.getSourceModule()));
+        lore.add(TextHelper.getTextByKey(getPlayer(), "command.argument.type.is_vanilla", entity.isVanillaMinecraftArgumentType()));
         lore.add(TextHelper.getTextByKey(getPlayer(), "command.argument.type.class", entity.getTypeClasses().stream().map(Class::getSimpleName).toList()));
         lore.add(TextHelper.getTextByKey(getPlayer(), "command.argument.type.string", entity.getTypeStrings()));
         lore.add(TextHelper.TEXT_EMPTY);
