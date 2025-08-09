@@ -26,7 +26,7 @@ public class BalanceTopGui extends PagedGui<GameProfileAndEconomyAccount> {
     }
 
     @Override
-    protected PagedGui<GameProfileAndEconomyAccount> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<GameProfileAndEconomyAccount> entities, int pageIndex) {
+    protected PagedGui<GameProfileAndEconomyAccount> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<GameProfileAndEconomyAccount> entities, int pageIndex) {
         return new BalanceTopGui(parent, player, this.currencyId, entities, pageIndex);
     }
 
@@ -36,7 +36,7 @@ public class BalanceTopGui extends PagedGui<GameProfileAndEconomyAccount> {
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(GameProfileAndEconomyAccount entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull GameProfileAndEconomyAccount entity) {
         List<Text> lore = new ArrayList<>();
         lore.add(TextHelper.getTextByKey(getPlayer(), "economy.balance", TextHelper.Operators.getString(entity.economyAccount.formattedBalance())));
 

@@ -33,7 +33,7 @@ public class PermissionsAndMetasInspectionGui extends StringDescriptorInspection
     }
 
     @Override
-    protected PagedGui<StringDescriptor> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<StringDescriptor> entities, int pageIndex) {
+    protected PagedGui<StringDescriptor> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<StringDescriptor> entities, int pageIndex) {
         return new PermissionsAndMetasInspectionGui(parent, player, entities, pageIndex);
     }
 

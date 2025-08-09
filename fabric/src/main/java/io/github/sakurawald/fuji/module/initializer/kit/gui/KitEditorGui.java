@@ -117,12 +117,12 @@ public class KitEditorGui extends PagedGui<Kit> {
     }
 
     @Override
-    protected PagedGui<Kit> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<Kit> entities, int pageIndex) {
+    protected PagedGui<Kit> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Kit> entities, int pageIndex) {
         return new KitEditorGui(player, entities, pageIndex);
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(@NotNull Kit entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull Kit entity) {
         return new GuiElementBuilder()
             .setItem(Items.CHEST)
             .setName(Text.literal(entity.getName()))

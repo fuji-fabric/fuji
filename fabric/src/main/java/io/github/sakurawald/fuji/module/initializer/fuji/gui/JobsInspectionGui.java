@@ -35,7 +35,7 @@ public class JobsInspectionGui extends PagedGui<JobDescriptor> {
     }
 
     @Override
-    protected PagedGui<JobDescriptor> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<JobDescriptor> entities, int pageIndex) {
+    protected PagedGui<JobDescriptor> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<JobDescriptor> entities, int pageIndex) {
         return new JobsInspectionGui(parent, player, entities, pageIndex);
     }
 
@@ -77,7 +77,7 @@ public class JobsInspectionGui extends PagedGui<JobDescriptor> {
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(JobDescriptor entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull JobDescriptor entity) {
         JobDetail jobDetail = entity.jobDetail;
         JobKey jobKey = jobDetail.getKey();
         String sourceModule = entity.getSourceModule();

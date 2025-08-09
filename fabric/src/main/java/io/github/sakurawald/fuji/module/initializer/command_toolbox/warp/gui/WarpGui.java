@@ -23,12 +23,12 @@ public class WarpGui extends PagedGui<WarpNode> {
     }
 
     @Override
-    protected PagedGui<WarpNode> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<WarpNode> entities, int pageIndex) {
+    protected PagedGui<WarpNode> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<WarpNode> entities, int pageIndex) {
         return new WarpGui(player, entities, pageIndex);
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(WarpNode entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull WarpNode entity) {
         return new GuiElementBuilder()
             .setName(TextHelper.getTextByValue(getPlayer(), entity.getName()))
             .setItem(ItemStackHelper.getItem(entity.getItem()))

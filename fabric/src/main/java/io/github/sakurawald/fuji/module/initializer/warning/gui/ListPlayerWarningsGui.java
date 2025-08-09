@@ -15,7 +15,6 @@ import io.github.sakurawald.fuji.module.initializer.warning.service.WarningServi
 import io.github.sakurawald.fuji.module.initializer.warning.structure.Warning;
 import io.github.sakurawald.fuji.module.initializer.warning.structure.PlayerWarnings;
 import java.util.List;
-import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +29,7 @@ public class ListPlayerWarningsGui extends CrudPagedGui<Warning> {
     }
 
     @Override
-    protected PagedGui<Warning> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<Warning> entities, int pageIndex) {
+    protected PagedGui<Warning> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Warning> entities, int pageIndex) {
         return new ListPlayerWarningsGui(parent, player, this.targetPlayerName, entities, pageIndex);
     }
 

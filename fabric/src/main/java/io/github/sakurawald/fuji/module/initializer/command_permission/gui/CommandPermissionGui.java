@@ -25,12 +25,12 @@ public class CommandPermissionGui extends PagedGui<CommandNodePermissionWrapper>
     }
 
     @Override
-    protected PagedGui<CommandNodePermissionWrapper> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<CommandNodePermissionWrapper> entities, int pageIndex) {
+    protected PagedGui<CommandNodePermissionWrapper> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<CommandNodePermissionWrapper> entities, int pageIndex) {
         return new CommandPermissionGui(player, entities, pageIndex);
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(CommandNodePermissionWrapper entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull CommandNodePermissionWrapper entity) {
         boolean commandNodeWrapped = CommandPermissionInitializer.isCommandNodeWrapped(entity.getNode());
 
         return new GuiElementBuilder()

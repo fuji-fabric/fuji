@@ -40,12 +40,12 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
     }
 
     @Override
-    protected PagedGui<BaseConfigurationHandler<?>> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<BaseConfigurationHandler<?>> entities, int pageIndex) {
+    protected PagedGui<BaseConfigurationHandler<?>> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<BaseConfigurationHandler<?>> entities, int pageIndex) {
         return new ConfigurationsInspectionGui(parent, player, entities, pageIndex);
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(BaseConfigurationHandler<?> entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull BaseConfigurationHandler<?> entity) {
         String configModelClassName = ReflectionUtil.getSimpleClassName(entity.getClass());
         String configRelativePath = IOUtil.computeRelativePathBasedOnGameDir(entity.getPath().toFile());
         String fromModule = entity.getSourceModule();

@@ -21,7 +21,7 @@ public class JailListGui extends PagedGui<JailDescriptor> {
     }
 
     @Override
-    protected PagedGui<JailDescriptor> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<JailDescriptor> entities, int pageIndex) {
+    protected PagedGui<JailDescriptor> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<JailDescriptor> entities, int pageIndex) {
         return new JailListGui(parent, player, entities, pageIndex);
     }
 
@@ -32,7 +32,7 @@ public class JailListGui extends PagedGui<JailDescriptor> {
 
     @SuppressWarnings("CodeBlock2Expr")
     @Override
-    protected GuiElementInterface toGuiElement(JailDescriptor entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull JailDescriptor entity) {
         GuiElementBuilder builder = new GuiElementBuilder();
 
         builder

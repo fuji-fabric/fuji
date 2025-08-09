@@ -19,7 +19,7 @@ public class WarningGui extends PagedGui<String> {
     }
 
     @Override
-    protected PagedGui<String> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<String> entities, int pageIndex) {
+    protected PagedGui<String> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<String> entities, int pageIndex) {
         return new WarningGui(parent, player, entities, pageIndex);
     }
 
@@ -31,7 +31,7 @@ public class WarningGui extends PagedGui<String> {
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(String entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull String entity) {
         GuiElementBuilder builder = GuiHelper.Button.makeLuckyBlockButton();
         builder
             .setName(Text.literal(entity))

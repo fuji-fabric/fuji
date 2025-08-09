@@ -54,12 +54,12 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
     }
 
     @Override
-    protected PagedGui<IdentifierDescriptor> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<IdentifierDescriptor> entities, int pageIndex) {
+    protected PagedGui<IdentifierDescriptor> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<IdentifierDescriptor> entities, int pageIndex) {
         return new RegistriesInspectionGui(parent, player, this.isMetaRegistry, entities, pageIndex);
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(IdentifierDescriptor entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull IdentifierDescriptor entity) {
         List<Text> lore = new ArrayList<>();
         lore.add(TextHelper.getTextByKey(getPlayer(), "registry.type.is_dynamic", entity.isDynamic()));
         if (this.isMetaRegistry) {

@@ -21,12 +21,12 @@ public class JobGui extends PagedGui<Job> {
     }
 
     @Override
-    protected PagedGui<Job> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<Job> entities, int pageIndex) {
+    protected PagedGui<Job> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Job> entities, int pageIndex) {
         return new JobGui(player, entities, pageIndex);
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(Job entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull Job entity) {
         return new GuiElementBuilder()
             .setName(Text.literal(entity.getName()))
             .setItem(GuiHelper.Material.fromBooleanValue(entity.isEnable()))

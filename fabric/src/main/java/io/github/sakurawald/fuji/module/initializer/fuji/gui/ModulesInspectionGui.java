@@ -32,7 +32,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
     }
 
     @Override
-    protected PagedGui<Pair<String, Boolean>> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<Pair<String, Boolean>> entities, int pageIndex) {
+    protected PagedGui<Pair<String, Boolean>> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Pair<String, Boolean>> entities, int pageIndex) {
         return new ModulesInspectionGui(parent, player, entities, pageIndex);
     }
 
@@ -52,7 +52,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(Pair<String, Boolean> entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull Pair<String, Boolean> entity) {
         List<Text> lore = new ArrayList<>();
 
         /* Attach module enable status. */

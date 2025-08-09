@@ -36,12 +36,12 @@ public class DeathDataListGui extends PagedGui<String> {
     }
 
     @Override
-    protected PagedGui<String> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<String> entities, int pageIndex) {
+    protected PagedGui<String> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<String> entities, int pageIndex) {
         return new DeathDataListGui(player, entities, 0);
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(String entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull String entity) {
         GuiElementBuilder builder = new GuiElementBuilder();
 
         builder

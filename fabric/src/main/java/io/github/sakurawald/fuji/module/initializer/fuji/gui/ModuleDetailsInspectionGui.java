@@ -98,7 +98,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
     }
 
     @Override
-    protected PagedGui<GuiElementInterface> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<GuiElementInterface> entities, int pageIndex) {
+    protected PagedGui<GuiElementInterface> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<GuiElementInterface> entities, int pageIndex) {
         return new ModuleDetailsInspectionGui(parent, player, title, entities, pageIndex);
     }
 
@@ -234,7 +234,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(GuiElementInterface entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull GuiElementInterface entity) {
         return entity;
     }
 

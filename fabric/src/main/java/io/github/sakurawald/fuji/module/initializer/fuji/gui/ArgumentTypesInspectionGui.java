@@ -27,7 +27,7 @@ public class ArgumentTypesInspectionGui extends PagedGui<BaseArgumentTypeAdapter
     }
 
     @Override
-    protected PagedGui<BaseArgumentTypeAdapter> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<BaseArgumentTypeAdapter> entities, int pageIndex) {
+    protected PagedGui<BaseArgumentTypeAdapter> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<BaseArgumentTypeAdapter> entities, int pageIndex) {
         return new ArgumentTypesInspectionGui(parent, player, entities, pageIndex);
     }
 
@@ -54,7 +54,7 @@ public class ArgumentTypesInspectionGui extends PagedGui<BaseArgumentTypeAdapter
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(BaseArgumentTypeAdapter entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull BaseArgumentTypeAdapter entity) {
         GuiElementBuilder guiElementBuilder = new GuiElementBuilder()
             .setName(Text.literal(entity.getClass().getSimpleName()))
             .setItem(toItem(entity))

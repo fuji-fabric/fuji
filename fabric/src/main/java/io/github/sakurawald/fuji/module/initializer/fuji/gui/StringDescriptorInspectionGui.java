@@ -20,7 +20,7 @@ public abstract class StringDescriptorInspectionGui extends PagedGui<StringDescr
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(StringDescriptor entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull StringDescriptor entity) {
         GuiElementBuilder builder = new GuiElementBuilder();
 
         List<Text> lore = new ArrayList<>();

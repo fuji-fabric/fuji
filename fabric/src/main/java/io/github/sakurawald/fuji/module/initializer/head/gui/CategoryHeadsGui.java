@@ -26,12 +26,12 @@ public class CategoryHeadsGui extends PagedGui<Head> {
     }
 
     @Override
-    protected PagedGui<Head> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<Head> entities, int pageIndex) {
+    protected PagedGui<Head> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Head> entities, int pageIndex) {
         return new CategoryHeadsGui(parent, player, title, entities, pageIndex);
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(Head entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull Head entity) {
         /* Add the price text to the head stack. */
         var builder = GuiElementBuilder.from(entity.toItemStack());
         if (HeadInitializer.config.model().economy_type != EconomyType.FREE) {
@@ -45,7 +45,7 @@ public class CategoryHeadsGui extends PagedGui<Head> {
     }
 
     @Override
-    protected boolean filterEntity(Head entity, String keywords) {
+    protected boolean filterEntity(@NotNull Head entity, @NotNull String keywords) {
         return StringUtil.containsIgnoreCase(entity.name, keywords)
             || StringUtil.containsIgnoreCase(entity.getTagsOrEmpty(), keywords);
     }

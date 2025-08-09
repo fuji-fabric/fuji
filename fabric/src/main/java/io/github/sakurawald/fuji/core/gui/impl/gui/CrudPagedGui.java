@@ -41,7 +41,7 @@ public abstract class CrudPagedGui<T> extends PagedGui<T> {
     }
 
     @Override
-    protected final GuiElementInterface toGuiElement(T entity) {
+    protected final @NotNull GuiElementInterface toGuiElement(@NotNull T entity) {
         /* Hide the entity if no permission to view. */
         if (!this.canReadEntity(entity)) {
             return new GuiElementBuilder()

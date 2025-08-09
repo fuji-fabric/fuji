@@ -37,12 +37,12 @@ public class ServerCommandsInspectionGui extends PagedGui<ServerCommandNodeWrapp
     }
 
     @Override
-    protected PagedGui<ServerCommandNodeWrapper> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<ServerCommandNodeWrapper> entities, int pageIndex) {
+    protected PagedGui<ServerCommandNodeWrapper> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<ServerCommandNodeWrapper> entities, int pageIndex) {
         return new ServerCommandsInspectionGui(player, entities, pageIndex);
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(ServerCommandNodeWrapper entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull ServerCommandNodeWrapper entity) {
         List<Text> lore = new ArrayList<>();
 
         /* Guess what package the command node is. */

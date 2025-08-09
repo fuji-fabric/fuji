@@ -55,7 +55,7 @@ public abstract class PagedGui<T> extends LayeredGui {
         return super.open();
     }
 
-    protected abstract PagedGui<T> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<T> entities, int pageIndex);
+    protected abstract PagedGui<T> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<T> entities, int pageIndex);
 
     private void drawNavigator(int pageIndex) {
         SingleLineLayer pageLayer = new SingleLineLayer(GuiHelper.Button.makeSlotPlaceholderButton());
@@ -100,7 +100,7 @@ public abstract class PagedGui<T> extends LayeredGui {
         make(this.parent, getPlayer(), this.prefixTitle, this.entities, newPageIndex).open();
     }
 
-    public @NotNull PagedGui<T> linkCurrentGuiAndSearch(String keywords) {
+    public @NotNull PagedGui<T> linkCurrentGuiAndSearch(@NotNull String keywords) {
         // NOTE: When search with keywords, we should remember previous GUI.
         Text resultTitle = TextHelper.getTextByKey(getPlayer(), "gui.search.title", keywords);
         List<T> resultEntities = filterEntities(keywords);
@@ -114,7 +114,7 @@ public abstract class PagedGui<T> extends LayeredGui {
         return make(trueParent, getPlayer(), resultTitle, resultEntities, 0);
     }
 
-    public @NotNull PagedGui<T> skipCurrentGuiAndSearch(Predicate<T> predicate) {
+    public @NotNull PagedGui<T> skipCurrentGuiAndSearch(@NotNull Predicate<T> predicate) {
         // NOTE: This method is usually called after inspectAll() method, to only filters the GUI elements, and link this GUI to `parent GUI` (The true GUI). In this use-case, we return an intermediate GUI, someone else wil take bits from it.
         Text resultTitle = TextHelper.getTextByKey(getPlayer(), "gui.search.title", "YOU SHOULD NOT SEE THIS");
         List<T> resultEntities = entities.stream()
@@ -123,20 +123,20 @@ public abstract class PagedGui<T> extends LayeredGui {
         return make(this.parent, getPlayer(), resultTitle, resultEntities, 0);
     }
 
-    protected abstract GuiElementInterface toGuiElement(T entity);
+    protected abstract @NotNull GuiElementInterface toGuiElement(@NotNull T entity);
 
-    private @NotNull GuiElementInterface makeGuiElementAndBindIt(T entity) {
+    private @NotNull GuiElementInterface makeGuiElementAndBindIt(@NotNull T entity) {
         GuiElementInterface element = this.toGuiElement(entity);
         this.entityToElementMapping.setBinding(entity, element);
         return element;
     }
 
-    protected boolean filterEntity(T entity, String keyword) {
+    protected boolean filterEntity(@NotNull T entity, @NotNull String keyword) {
         return false;
     }
 
     @SuppressWarnings("RedundantIfStatement")
-    private boolean combinedFilterEntity(T entity, String keyword) {
+    private boolean combinedFilterEntity(@NotNull T entity, @NotNull String keyword) {
         /* Filter using the displaying GUI item stack. (What you see is what you get) */
         // NOTE: We have to make the GUI element for each entity. It's expensive, but saves time.
         GuiElementInterface element = entityToElementMapping.getBinding(entity);
@@ -157,7 +157,7 @@ public abstract class PagedGui<T> extends LayeredGui {
         return false;
     }
 
-    private List<T> filterEntities(String keyword) {
+    private List<T> filterEntities(@NotNull String keyword) {
         return this.entities
             .stream()
             .filter(entity -> combinedFilterEntity(entity, keyword))

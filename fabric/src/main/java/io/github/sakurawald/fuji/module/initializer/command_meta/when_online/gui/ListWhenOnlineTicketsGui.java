@@ -27,7 +27,7 @@ public class ListWhenOnlineTicketsGui extends PagedGui<WhenOnlineTicket> {
     }
 
     @Override
-    protected PagedGui<WhenOnlineTicket> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<WhenOnlineTicket> entities, int pageIndex) {
+    protected PagedGui<WhenOnlineTicket> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<WhenOnlineTicket> entities, int pageIndex) {
         return new ListWhenOnlineTicketsGui(parent, player, entities, pageIndex);
     }
 
@@ -44,7 +44,7 @@ public class ListWhenOnlineTicketsGui extends PagedGui<WhenOnlineTicket> {
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(WhenOnlineTicket entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull WhenOnlineTicket entity) {
         GuiElementBuilder builder = new GuiElementBuilder();
 
         List<Text> lore = new ArrayList<>();

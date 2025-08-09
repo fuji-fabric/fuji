@@ -21,12 +21,12 @@ public class PlaceholderGui extends PagedGui<Identifier> {
     }
 
     @Override
-    protected PagedGui<Identifier> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<Identifier> entities, int pageIndex) {
+    protected PagedGui<Identifier> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Identifier> entities, int pageIndex) {
         return new PlaceholderGui(player, entities, pageIndex);
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(Identifier entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull Identifier entity) {
         return new GuiElementBuilder()
             .setName(Text.literal(entity.toString()))
             .setItem(Items.NAME_TAG)

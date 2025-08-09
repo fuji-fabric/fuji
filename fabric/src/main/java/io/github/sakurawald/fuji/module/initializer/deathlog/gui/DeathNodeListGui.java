@@ -25,12 +25,12 @@ public class DeathNodeListGui extends PagedGui<DeathNode> {
     }
 
     @Override
-    protected PagedGui<DeathNode> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<DeathNode> entities, int pageIndex) {
+    protected PagedGui<DeathNode> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<DeathNode> entities, int pageIndex) {
         return new DeathNodeListGui(parent, player, this.deadPlayerName, entities, pageIndex);
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(DeathNode entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull DeathNode entity) {
         return new GuiElementBuilder()
             .setItem(Items.CHEST)
             .setName(Text.of(entity.time))
@@ -46,7 +46,7 @@ public class DeathNodeListGui extends PagedGui<DeathNode> {
     }
 
     @Override
-    protected boolean filterEntity(DeathNode entity, String keyword) {
+    protected boolean filterEntity(@NotNull DeathNode entity, @NotNull String keyword) {
         // NOTE: Make it possible to search a specific item in death node.
         return entity.dimension.contains(keyword)
             || entity.time.contains(keyword)

@@ -45,7 +45,7 @@ public class ListWorksGui extends CrudPagedGui<Work> {
     }
 
     @Override
-    protected PagedGui<Work> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<Work> entities, int pageIndex) {
+    protected PagedGui<Work> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Work> entities, int pageIndex) {
         return new ListWorksGui(player, entities, pageIndex);
     }
 

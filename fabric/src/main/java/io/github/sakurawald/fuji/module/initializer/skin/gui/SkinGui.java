@@ -22,7 +22,7 @@ public class SkinGui extends PagedGui<SkinDescriptor> {
     }
 
     @Override
-    protected PagedGui<SkinDescriptor> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<SkinDescriptor> entities, int pageIndex) {
+    protected PagedGui<SkinDescriptor> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<SkinDescriptor> entities, int pageIndex) {
         return new SkinGui(parent, player, entities, pageIndex);
     }
 
@@ -32,7 +32,7 @@ public class SkinGui extends PagedGui<SkinDescriptor> {
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(SkinDescriptor entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull SkinDescriptor entity) {
         GuiElementBuilder builder = new GuiElementBuilder();
         Property skinProperty = entity.getSkinProperty();
         String value = PlayerHelper.getPropertyValue(skinProperty);

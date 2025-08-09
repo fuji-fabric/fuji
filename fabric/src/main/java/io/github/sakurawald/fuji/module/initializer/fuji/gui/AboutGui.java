@@ -57,7 +57,7 @@ public class AboutGui extends PagedGui<Person> {
     }
 
     @Override
-    protected PagedGui<Person> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<Person> entities, int pageIndex) {
+    protected PagedGui<Person> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Person> entities, int pageIndex) {
         return new AboutGui(parent, player, entities, pageIndex);
     }
 
@@ -92,7 +92,7 @@ public class AboutGui extends PagedGui<Person> {
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(Person entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull Person entity) {
         return GuiHelper.Button.makeLuckyBlockButton()
             .setName(TextHelper.getTextByKey(getPlayer(), "contact.name", entity.getName()))
             .setLore(makeTextListFromContact(entity.getContact()))

@@ -27,12 +27,12 @@ public class TopChunksGui extends PagedGui<ChunkScore> {
     }
 
     @Override
-    protected PagedGui<ChunkScore> make(@Nullable SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<ChunkScore> entities, int pageIndex) {
+    protected PagedGui<ChunkScore> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<ChunkScore> entities, int pageIndex) {
         return new TopChunksGui(player, entities, pageIndex);
     }
 
     @Override
-    protected GuiElementInterface toGuiElement(ChunkScore entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull ChunkScore entity) {
         ServerCommandSource commandSource = getPlayer().getCommandSource();
 
         List<Text> lore = new ArrayList<>();
