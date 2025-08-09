@@ -30,7 +30,7 @@ import java.util.Optional;
     Provides `predicate` commands, which suffix with `?`.
     """)
 
-@ColorBox(id = 1751978705157L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751978705157L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
     A `predicate command` will return an `integer value` to represent the `SUCCESS` or `FAILED` test result.
     It relies on the `return value of command` in vanilla Minecraft.
@@ -38,11 +38,11 @@ import java.util.Optional;
 
     Actually, you can also use the `predicate command` with `command block`.
     """)
-@ColorBox(id = 1751978789271L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751978789271L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Test a condition, and then run a command if success.
     Issue: `/run as player Alice chain has-perm? %player:name% 4 chain say value is true`
     """)
-@ColorBox(id = 1754448424606L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1754448424606L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Test if a player is holding an apple
     Issue: `/command-debug is-holding? Steve minecraft:apple`
 

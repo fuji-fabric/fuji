@@ -27,7 +27,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @Document(id = 1751826807167L, value = """
     This module provides the `skin` management for players.
     """)
-@ColorBox(id = 1753325192275L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1753325192275L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
     This module provides the `skin` management:
     1. This module will `modify the skin` when the the player `login the server`.
@@ -38,7 +38,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
     2. A player can use `/skin` command to `change the skin` in-game.
     """)
-@ColorBox(id = 1751979120689L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751979120689L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Use the `Mojang skin`.
     Issue: `/skin use-my-mojang-skin` to use your own skin.
     Issue: `/skin use-mojang-skin Alice` to use another player's skin.

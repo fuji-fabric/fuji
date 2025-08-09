@@ -15,7 +15,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     This module provides `/send-chat` command.
     To send a `chat message` as a player.
     """)
-@ColorBox(id = 1751976268778L, color = ColorBox.ColorBlockTypes.EXAMPLE,value = """
+@ColorBox(id = 1751976268778L, color = ColorBox.ColorBoxTypes.EXAMPLE,value = """
     ◉ Send a chat message as a player.
     Issue: `/send-chat Steve i am steve.`
 

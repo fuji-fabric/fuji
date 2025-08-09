@@ -20,7 +20,7 @@ import java.util.Map;
 @Document(id = 1751827009997L, value = """
     This module makes every `ender portal frame` generates its own `obsidian platform`.
     """)
-@ColorBox(id = 1751976988699L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751976988699L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ All the obsidian platforms are vanilla-respect.
     That's to say, all the additional `obsidian platforms` have the `identical` behaviour as the vanilla one, which locates in (100, 50, 0).
 

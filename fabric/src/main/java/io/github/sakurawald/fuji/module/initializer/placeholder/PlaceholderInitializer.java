@@ -50,12 +50,12 @@ import java.util.regex.Pattern;
 @Document(id = 1751826512394L, value = """
     Provides extra placeholders for `Text Placeholder API` mod.
     """)
-@ColorBox(id = 1751978623242L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751978623242L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Use `placeholder` in `language file`
     Actually, you can write the `placeholder` in the `language file`.
     The `contextual player` will be used to parse the placeholders.
     """)
-@ColorBox(id = 1751978671933L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751978671933L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ Install more mods to provide extra placeholders.
     See https://placeholders.pb4.eu/user/mod-placeholders/
     """)

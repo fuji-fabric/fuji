@@ -36,7 +36,7 @@ import net.minecraft.util.Formatting;
     This module provides the `entity` cleaner.
     To remove specified entities automatically.
     """)
-@ColorBox(id = 1751870582940L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751870582940L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     You should only use this module to clean some edge-case entity.
     The vanilla Minecraft also has a `cleaner` to remove dropped items.
     In normal case, you can rely on the `vanilla cleaner`.
@@ -46,7 +46,7 @@ import net.minecraft.util.Formatting;
     Yeah, the `vanilla cleaner` only cleans `dropped items`.
     But this module, allows you to define rules, to clean `dropped items` and `entities`.
     """)
-@ColorBox(id = 1751870585373L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751870585373L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     For safety, the `cleaner` will `always ignore` the following types:
     1. player
     2. any block attached entity (e.g. leash_knot)

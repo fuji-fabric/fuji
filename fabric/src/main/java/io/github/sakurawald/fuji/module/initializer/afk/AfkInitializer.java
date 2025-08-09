@@ -34,7 +34,7 @@ import java.util.Map;
     2. Afk event: Execute commands when a player enters or leaves afk state.
     3. Afk name customization: For a afk player, we can customize its display name in tab list.
     """)
-@ColorBox(id = 1751870451351L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751870451351L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
 
     For each player, define a `number` to track `the last action time`.

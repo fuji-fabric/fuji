@@ -55,7 +55,7 @@ import org.jetbrains.annotations.Nullable;
 @Document(id = 1751826605981L, value = """
     Provides a unified world management.
     """)
-@ColorBox(id = 1751981919874L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751981919874L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ The definition of `world`, ` dimension` and `dimension type`.
     In early Minecraft, a `world` only contains `1 dimension` (The overworld dimension).
     In modern Minecraft, a `world` can contain `3 or more dimensions`. (The overworld, the end and the nether)
@@ -68,7 +68,7 @@ import org.jetbrains.annotations.Nullable;
 
     <green>NOTE: You can just think the `dimension` word is identical to `world`.
     """)
-@ColorBox(id = 1752458381916L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1752458381916L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
     In vanilla Minecraft, there is a variable `worlds` in `server`, used to store all `loaded dimensions`.
 
@@ -98,7 +98,7 @@ import org.jetbrains.annotations.Nullable;
     2. https://minecraft.wiki/w/Dimension_definition
     3. https://minecraft.wiki/w/Noise_settings
     """)
-@ColorBox(id = 1752458991398L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1752458991398L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How the `world` module generate the dimension?
     Actually, the `world` module didn't do the `world generation` itself.
 
@@ -123,7 +123,7 @@ import org.jetbrains.annotations.Nullable;
     If the specified chunk is not `generated`, then the chunk generator will `generate` a new one.
     If the specified chunk is `generated`, the chunk generator will just use the `existed chunk data` in storage.
     """)
-@ColorBox(id = 1752297520453L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1752297520453L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ Advanced World Management and Per-world rules.
     The `world` module provided by fuji is a simple module.
     If you want a more powerful tool, you can try use `WorldManager` mod and `WorldGameRules` mod.
@@ -132,7 +132,7 @@ import org.jetbrains.annotations.Nullable;
     1. https://github.com/DrexHD/WorldManager
     2. https://github.com/DrexHD/WorldGameRules
     """)
-@ColorBox(id = 1752788919780L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1752788919780L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ Useful concepts about a `dimension`.
     - https://minecraft.wiki/w/World_generation
     - https://minecraft.wiki/w/World_type
@@ -147,7 +147,7 @@ import org.jetbrains.annotations.Nullable;
     - https://minecraft.wiki/w/Chunk_format
     - https://minecraft.wiki/w/Loot_table
     """)
-@ColorBox(id = 1751982071236L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751982071236L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Create an extra `the_nether` dimension
     Issue: `/world create my_nether minecraft:the_nether`
 
@@ -161,11 +161,11 @@ import org.jetbrains.annotations.Nullable;
     1. `/world create my_nether --seed 1234567890 minecraft:the_nether`
     2. `/world reset fuji:my_nether --useTheSameSeed true --confirm true`
     """)
-@ColorBox(id = 1751982158414L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751982158414L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Make a resource world that reset automatically every day.
     You can use `command_scheduler` module, to execute `/world reset` command automatically.
     """)
-@ColorBox(id = 1752261661452L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1752261661452L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ The logic of `passed ticks` is per-dimension.
     Each fuji runtime dimension will save its own `time_of_day` (The equivalent to `DayTime` in `level.dat`).
 
@@ -188,7 +188,7 @@ import org.jetbrains.annotations.Nullable;
     ◉ The logic of `/time {set/add} ...` command.
     For command `/time {set/add}`, it operates on `all dimensions` in the server.
     """)
-@ColorBox(id = 1752287089199L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1752287089199L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ The `weather system` of the `world`.
     There are 3 types of `weather`: `clear`, `rain` and `thunder`.
     If `clear`, then both `rain` and `thunder` is false.
@@ -204,13 +204,13 @@ import org.jetbrains.annotations.Nullable;
     ◉ Set the weather per-dimension.
     You can modify the weather directly in config file, and issue `/fuji reload` to apply it.
     """)
-@ColorBox(id = 1752429441664L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1752429441664L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Does the `runtime dimension` support `datapack`?
     It depends on how the `datapack` interfaces with the `world`.
     Most of datapack should work.
     Anyway, always backup your world data before install a new datapack.
     """)
-@ColorBox(id = 1752431019812L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1752431019812L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ The logic of `nether portal` and `ender portal`.
     In vanilla Minecraft, there are only 3 dimensions.
     They are `minecraft:overworld`, `minecraft:the_nether` and `minecraft:the_end`.
@@ -227,7 +227,7 @@ import org.jetbrains.annotations.Nullable;
     1. If the player is now in `minecraft:the_end`, then destination dimension is `minecraft:overworld`.
     2. Else the destination dimension is `minecraft:the_end`.
     """)
-@ColorBox(id = 1752733447050L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1752733447050L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Create a `flat dimension` with `overworld` dimension type.
     Issue: `/world create my_flat_world minecraft:overworld --chunkGeneratorType FLAT`
 
@@ -245,7 +245,7 @@ import org.jetbrains.annotations.Nullable;
     The definition of `world preset`: https://minecraft.fandom.com/wiki/World_preset
     The definition of `superflat dimension`: https://minecraft.fandom.com/wiki/Superflat
     """)
-@ColorBox(id = 1752741022214L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1752741022214L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Create a `runtime dimension` using pre-defined `world preset`.
     Issue: `/world create example minecraft:overworld --worldPresetType DEBUG_ALL_BLOCK_STATES`
 
@@ -254,7 +254,7 @@ import org.jetbrains.annotations.Nullable;
     2. `chunk generator type`
     3. `chunk generator parameters`.
     """)
-@ColorBox(id = 1752807649896L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1752807649896L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ The definition of `import`, `make`, `load`, `unload`.
     The `import` means: define a `runtime dimension descriptor` in config file.
     So that we know how make the `original chunk generator` used by the dimension.
@@ -271,7 +271,7 @@ import org.jetbrains.annotations.Nullable;
     The `/world create` command does the `import`, `make` and `load`.
     The `/world delete` command does the `unload` and also `delete the chunk files of that dimension`.
     """)
-@ColorBox(id = 1752811309081L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1752811309081L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ How to `import` a `dimension dir`?
     The `/world import` is similar to `/world create` command.
     You need to specify `enough information` to define the `runtime dimension descriptor`.
@@ -294,7 +294,7 @@ import org.jetbrains.annotations.Nullable;
     ◉ Import a `superflat dimension`.
     Issue: `/world import my_superflat minecraft:overworld --seed \\<seed\\> --chunkGeneratorType FLAT`
     """)
-@ColorBox(id = 1753243335351L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1753243335351L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Use `command_bundle` module to create a `/tpw` command.
     The `/world tp` command is an `admin-level` command.
     You can use `command_bundle` module to create a `/tpw resource-world` command, to teleport players to `fuji:overworld`.

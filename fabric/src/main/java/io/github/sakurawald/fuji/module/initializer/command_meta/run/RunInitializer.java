@@ -16,7 +16,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @Document(id = 1751823988812L, value = """
     Provides `/run` command, to run a command with context.
     """)
-@ColorBox(id = 1752982945496L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1752982945496L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ What is the difference between `/run` and `/execute` command?
     1. The main purpose of `/run` command is to `modify the command context` while executing a `command` instance.
     2. The `/run` command will parse `placeholders` like `%player:name%`. (However, you can still use vanilla target selector, but NOT recommended)
@@ -48,7 +48,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     However, we didn't actually `/op` the player `Alice`.
     What we do is simple, we just tell the `command executor` to treat the player `Alice` as if he has a `level permission` of `4` when executing `this command` instance.
     """)
-@ColorBox(id = 1751968631536L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751968631536L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Execute a command as a specified player.
     Issue: `/run as player Alice back`
 
@@ -61,7 +61,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     ◉ Give online players random amount of diamonds.
     Issue: `/run as console foreach give %fuji:escape player:name% minecraft:diamond %fuji:escape fuji:random 8 32 1%`
     """)
-@ColorBox(id = 1753585969328L, color = ColorBox.ColorBlockTypes.WARNING, value = """
+@ColorBox(id = 1753585969328L, color = ColorBox.ColorBoxTypes.WARNING, value = """
     ◉ Be careful with the vanilla Minecraft `target selector`.
     The vanilla Minecraft `target selectors` are: `@a`, `@e`, `@n`, `@p`, `@r` and `@s`.
     They are used to select the value for `Player` argument type and `Entity` argument type:

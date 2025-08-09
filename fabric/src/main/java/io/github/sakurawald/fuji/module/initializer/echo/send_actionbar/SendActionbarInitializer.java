@@ -14,7 +14,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     This module provides `/send-actionbar` command.
     To send the `text` as `action bar` to a specified player.
     """)
-@ColorBox(id = 1751976088392L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751976088392L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Send a title to a player.
     Issue: `/send-title Alice --mainTitle "\\<rainbow\\>Hello" --subTitle "\\<blue\\>World" --fadeInTicks 60 --stayTicks 60 --fadeOutTicks 60`
 

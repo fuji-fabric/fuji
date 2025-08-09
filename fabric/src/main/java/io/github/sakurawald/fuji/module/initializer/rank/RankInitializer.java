@@ -29,7 +29,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     You can define a `rank` with `requirements` and `award`.
     """)
 
-@ColorBox(id = 1754450877863L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1754450877863L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
     1. A `rank node` is used to define a `rank`.
     1.a. A `rank` has basic information, like `id`, `display name` and `description`.
@@ -47,14 +47,14 @@ import net.minecraft.server.network.ServerPlayerEntity;
     3.c. A player can use `/rank down <rank>` to `rank down` to a previously `earned rank`.
     3.d. The admin can use `/rank remove <player>` to set a player's rank to `none`.
     """)
-@ColorBox(id = 1754466653435L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1754466653435L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Automatic rank up to the only available next rank.
     You can use `command_schedule` module to define a job.
     To execute the `/rank try-up %player:name%` command for each online player.
     So that each player will get auto rank up if there is only one `available next rank` for them.
     It can be `/execute as @a run rank try-up @s` or `/foreach rank try-up %player:name%`
     """)
-@ColorBox(id = 1754451752816L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1754451752816L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ List rank nodes by type
     1. `/rank list all-rank-nodes`
     2. `/rank list starting-rank-nodes Steve`
@@ -79,7 +79,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     ◉ Set a player's rank to none
     Issue: `/rank remove Steve --confirm true`.
     """)
-@ColorBox(id = 1754465524369L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1754465524369L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Allow a player to choose an `intermediate rank` as their `starting rank`.
     You can define one `starting rank node` as the public `starting rank node` for all players.
     However, you can also allow some players to pick other `rank nodes` as their starting rank node, and skip some path.

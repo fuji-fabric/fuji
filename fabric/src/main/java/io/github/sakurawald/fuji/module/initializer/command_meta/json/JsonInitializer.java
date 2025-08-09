@@ -25,7 +25,7 @@ import java.util.function.BiFunction;
     Provides `/json` command.
     A powerful and unified tool to edit json file.
     """)
-@ColorBox(id = 1751969995780L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751969995780L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Read a json key.
     Issue: `/json read "config/fuji/config.json" "$.core.debug"`
 
@@ -35,7 +35,7 @@ import java.util.function.BiFunction;
     ◉ Set the value of a json key.
     Issue: `/json write "config/fuji/config.json" "$.core.debug.log_debug_messages" BOOLEAN true`
     """)
-@ColorBox(id = 1751970168900L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751970168900L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     Read the detailed document for `Json Path`:
     See https://goessner.net/articles/JsonPath/
     """)

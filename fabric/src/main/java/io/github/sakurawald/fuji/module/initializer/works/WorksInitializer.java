@@ -21,11 +21,11 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @Document(id = 1751825536620L, value = """
     Provides a `bill-board`, for `players` to post and share their works.
     """)
-@ColorBox(id = 1751981616732L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751981616732L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ The difference between `non-production work` and `production work`.
     For a `production work`, we provide the `production sample` to count the `hopper` and `minecart-hopper`.
     """)
-@ColorBox(id = 1751981677001L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751981677001L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ What is the `sample` in a `production work`?
     It's a counter for `hopper` and `minecart-hopper`.
     It will counts the `rate of items transferred` in defined sample duration.

@@ -19,7 +19,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @Document(id = 1751824812720L, value = """
     Make a set of `item stacks` as a `kit`, and give the kit to players.
     """)
-@ColorBox(id = 1751977591928L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751977591928L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Create a kit.
     Issue: `/kit editor` to create a new `kit`.
 
@@ -30,7 +30,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     <red>The `/kit give` command is a `admin-level` command, you should NOT allow players to use it directly.
     <green>TIP: You need to use `command_bundle` module to create a new `user-level` command, for players to `claim a kit`.
     """)
-@ColorBox(id = 1751977756034L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751977756034L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Associate a cooldown to a kit.
     You can use `command_cooldown` module, to create a `named cooldown` for the `kit claim command`.
 
@@ -40,11 +40,11 @@ import net.minecraft.server.network.ServerPlayerEntity;
     To test the cooldown, and give the kit if the cooldown is satisfied.
     Issue: `/command-cooldown test example-kit-cooldown Alice --onFailed "send-message %player:name% wait a moment" kit give %player:name% example-kit|send-message %player:name% kit received.`
     """)
-@ColorBox(id = 1751977848415L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751977848415L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Claim a specific kit automatically for online players.
     You can use `command_scheduler` module, to execute the `kit claim command` for online players automatically every minute.
     """)
-@ColorBox(id = 1751977880532L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751977880532L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Give the new-bie player a kit.
     You can use `command_event` module, to give a kit to the new-bie player.
     """)

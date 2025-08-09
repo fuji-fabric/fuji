@@ -31,19 +31,19 @@ import java.util.Optional;
     To define `custom text` and auto-page them.
     And then send it `as message` or `as book` to a specified player.
     """)
-@ColorBox(id = 1753055756228L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1753055756228L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Download the example custom text.
     You can download the `example-custom-text.txt` file.
     It is in https://github.com/sakurawald/fuji/blob/dev/.github/files/example-custom-text.txt
     """)
-@ColorBox(id = 1751976733551L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751976733551L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Send a custom text as a book.
     Issue: `/send-custom as-book Alice guide --author "alice" --title "<rb>The Guide" --giveBook true --openBook true`
 
     ◉ Send a custom text as a message.
     Issue: `/send-custom as-message Alice guide`
     """)
-@ColorBox(id = 1753331827763L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1753331827763L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Ensure the players are allowed to use `/command-callback` command.
     The `/command-callback` command is a fuji command, used for `click event`.
     In vanilla Minecraft, if a player has `no permission` to use that command, the client will says `Unknown Command` error.

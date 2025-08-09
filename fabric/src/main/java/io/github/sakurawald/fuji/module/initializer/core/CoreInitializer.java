@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
-@ColorBox(id = 1751870436910L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870436910L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ How to use fuji?
 
     All `modules` are `disabled` by default.
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
     Modify the `config/fuji/config.json` file to `enable` a module.
     After that, `re-start` the server, to apply the `module enable status`.
     """)
-@ColorBox(id = 1751870440489L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751870440489L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ Does fuji support the `hot reload`?
 
     Yes, fuji does support to `hot reload` the `files` from a `enabled module`.
@@ -33,12 +33,12 @@ import org.jetbrains.annotations.NotNull;
     2. If any other mods conflicts with `a module`, you can just `disable that module`.
     3. You only enable the `interested modules`, and there is no performance paying for `disabled module`.
     """)
-@ColorBox(id = 1752891903903L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1752891903903L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Adjust the `lore` text font size.
     If the `lore` text is too large in your UI.
     You can configure it in `Esc` - `Options` - `Video Settings` - `GUI Scale`
     """)
-@ColorBox(id = 1753331128791L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1753331128791L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Use a `modern` text editor.
     The most of `config files` are written in `json language`, and contains lots of lines.
     A `modern` text editor can `highlight` the structure of the file, and check the `syntax errors` for you.
@@ -49,7 +49,7 @@ import org.jetbrains.annotations.NotNull;
     2. Vim: https://neovim.io/
     3. Emacs: https://www.gnu.org/software/emacs/
     """)
-@ColorBox(id = 1753331405512L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1753331405512L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Setup a `test server` in your `local machine`.
     You may have a `remote machine` (Typically named `production server`) that is `running` and `hosting` your `Minecraft network`.
     However, it's strongly recommended to setup a `test server` in your `local machine`.
@@ -59,7 +59,7 @@ import org.jetbrains.annotations.NotNull;
     You can modify and test new things in your `test server`.
     After everything is configured and working properly, you just upload the `mods` and `config files` into your `remote machine`.
     """)
-@ColorBox(id = 1754014854649L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1754014854649L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Open `this` GUI
     Issue: `/fuji`
 

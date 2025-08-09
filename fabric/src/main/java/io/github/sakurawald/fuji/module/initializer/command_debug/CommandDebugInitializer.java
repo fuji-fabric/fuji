@@ -17,7 +17,7 @@ import java.util.Objects;
 @Document(id = 1751827007525L, value = """
     This module provides debug tools for executing commands.
     """)
-@ColorBox(id = 1751903540774L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751903540774L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Execute a specified command, and sees the debug info.
     Issue `/command-debug has-exp? Alice 100`
     """)

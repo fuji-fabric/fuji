@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
     This module will store chat message as history.
     And send them to the player joined the server.
     """)
-@ColorBox(id = 1751870560992L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870560992L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ This module works with `Styled Chat` mod.
     You can use this module to provide the `chat history` for it.
     """)

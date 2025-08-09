@@ -27,7 +27,7 @@ import java.util.Optional;
     This module provides `/send-bossbar` command.
     To send a `text` as the `bossbar` to a specified player.
     """)
-@ColorBox(id = 1751976574472L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751976574472L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ A simple example.
     Issue: `/send-bossbar Alice Hello World`
 

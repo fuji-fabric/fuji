@@ -22,7 +22,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @Document(id = 1751824895470L, value = """
     This module allows you to define `menu` GUI, to execute commands.
     """)
-@ColorBox(id = 1752900650332L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1752900650332L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ The definition of `menu` and `slot`.
     A `menu` is a virtual `container GUI`.
     The `virtual GUI` is composed of `slots`.
@@ -33,11 +33,11 @@ import net.minecraft.server.network.ServerPlayerEntity;
     <green>In short, you can define a `menu` to hold `slots`.
     <green>And bind `commands` to the `slots`.
     """)
-@ColorBox(id = 1751870445592L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751870445592L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     The `/command-menu open` command is an `admin-level` command.
     You need to use `command_bundle` module, to creat a `user-level` command.
     """)
-@ColorBox(id = 1751968513281L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751968513281L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Create a `nested` menus.
     If you want to create a `nested menu`:
     Click a `slot` in `menu A`, it will opens the `menu B`.
@@ -48,7 +48,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     You can use `/run as fake-op %player:name% command-menu close %player:name%` command.
     To `close` the `opened GUI` for a `player`.
     """)
-@ColorBox(id = 1753435167488L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1753435167488L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Use the `menu editor` online to design a menu easily.
     Thanks to <dark_green>Hitnam</dark_green>, we have an `online editor` for `command_menu` module.
     The tool is hosted in: https://fuji-command-menu-editor-k4k4.vercel.app/

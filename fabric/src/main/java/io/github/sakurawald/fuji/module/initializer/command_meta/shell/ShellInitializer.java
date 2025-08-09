@@ -32,11 +32,11 @@ import java.io.InputStreamReader;
 
     A `powerful` and `dangerous` module.
     """)
-@ColorBox(id = 1751870434188L, color = ColorBox.ColorBlockTypes.DANGER, value = """
+@ColorBox(id = 1751870434188L, color = ColorBox.ColorBoxTypes.DANGER, value = """
     ◉ This is a `dangerous` module.
     This module is a powerful and dangerous module, not recommended to enable it.
     """)
-@ColorBox(id = 1751970272178L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751970272178L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Create a file using placeholder.
     Issue: `/shell touch %player:name%.dangerous`
 

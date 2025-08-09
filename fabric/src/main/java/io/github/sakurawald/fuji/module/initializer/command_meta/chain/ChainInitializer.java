@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
     The first command is `any command`.
     The second command is `the chain command`.
     """)
-@ColorBox(id = 1751870431402L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751870431402L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ What is the purpose of `/chain` command?
     Its typical use-case is to `condense` two commands into one command.
     So that you can put `more than 1 command` in some places.
@@ -52,7 +52,7 @@ import java.util.regex.Pattern;
     The second part is `chain say 2`, and the `/chain` command will decide whether to submit it `based on` the return value of `the previous submitted command`.
     It's a recursive process.
     """)
-@ColorBox(id = 1751969034903L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751969034903L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ A nested chain
     Issue: `/chain say 1 chain say 2 chain say 3`
 

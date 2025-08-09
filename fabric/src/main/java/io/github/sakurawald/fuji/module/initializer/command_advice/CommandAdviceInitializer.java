@@ -30,16 +30,16 @@ import java.util.stream.Collectors;
     2. Run other commands `after` execution the target command.
     3. Cancel the execution of the target command, and run other commands.
     """)
-@ColorBox(id = 1751900137390L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751900137390L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     Execute other commands before/after a target command.
     """)
-@ColorBox(id = 1751900375812L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751900375812L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     Decorate an existing command with other commands.
     """)
-@ColorBox(id = 1751900379675L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751900379675L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     Cancel the execution of the target command, and execute other commands instead.
     """)
-@ColorBox(id = 1751900258020L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751900258020L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     This module provides `similar` functions to `command_bundle` module.
     """)
 @TestCase(action = "Issue `/say hi` command.", targets = "The command should be cancelled with the `/send-broadcast` command.")

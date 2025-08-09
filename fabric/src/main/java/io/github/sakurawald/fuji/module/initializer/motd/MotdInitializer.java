@@ -32,17 +32,17 @@ import java.util.stream.Stream;
 @Document(id = 1751826866342L, value = """
     Customize the MOTD of the server.
     """)
-@ColorBox(id = 1751978213888L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751978213888L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Configure server icons.
     You can put `64x64 pixels .png image file` into the directory `config/fuji/modules/motd/icon` dir.
     The module will pick up a random image as the icon of the server.
     To respond the server status request.
     """)
-@ColorBox(id = 1751978273696L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751978273696L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Use an `editor` to help you design the MOTD.
     Online MOTD editor: https://colorize.fun/en/minecraft
     """)
-@ColorBox(id = 1753458678347L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1753458678347L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Customize the MOTD using `Formating Codes`.
     The `Formating Codes` is a vanilla Minecraft feature.
     See: https://minecraft.fandom.com/wiki/Formatting_codes

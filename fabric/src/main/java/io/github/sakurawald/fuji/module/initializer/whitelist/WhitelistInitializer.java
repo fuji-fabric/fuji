@@ -7,7 +7,7 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 @Document(id = 1751981390616L, value = """
     This module makes the `vanilla whitelist system` only compares the `username`, and `ignore the UUID`.
     """)
-@ColorBox(id = 1751981431675L, color = ColorBox.ColorBlockTypes.WARNING, value = """
+@ColorBox(id = 1751981431675L, color = ColorBox.ColorBoxTypes.WARNING, value = """
     ◉ Only enable this module in offline server.
     If you are hosting an online-mode server, then you didn't need to enable this module.
 

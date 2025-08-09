@@ -18,7 +18,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     1. Modify the `walk speed`.
     2. Modify the `fly speed`.
     """)
-@ColorBox(id = 1754400656952L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1754400656952L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Double the `walk speed`
     The default value is `0.1`
     Issue: `/speed walk set Steve 0.2`

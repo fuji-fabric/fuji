@@ -31,13 +31,13 @@ import java.util.function.Supplier;
     4. Interact with a specified block.
     5. Interact with a specified entity.
     """)
-@ColorBox(id = 1751896813134L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751896813134L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     Read the document to see the definition of `identifier` in Minecraft.
     """)
-@ColorBox(id = 1751896904529L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751896904529L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     Use the `command suggestion` from `luckperms` mod to see the supported types by this module.
     """)
-@ColorBox(id = 1751897087633L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751897087633L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ To ban the placement of TNT block:
     Just add the `minecraft:tnt` into the `place_block` list in config file.
 
@@ -51,7 +51,7 @@ import java.util.function.Supplier;
     ◉ Dis-allow to place `any` blocks.
     Use `*` as the wildcard character, put it into the `place_block` list.
     """)
-@ColorBox(id = 1753246687639L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1753246687639L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Ban the `placement` of `mushroom` in `minecraft:the_end` dimension.
     Issue:
     1. `/lp group default permission set fuji.anti_build.place_block.override.minecraft:red_mushroom false world=the_end`

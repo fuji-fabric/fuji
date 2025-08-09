@@ -11,8 +11,6 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
-import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
-import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.ExecuteAsType;
@@ -41,14 +39,14 @@ import java.util.Optional;
     2. Attach commands into a block.
     3. Attach commands into an entity.
     """)
-@ColorBox(id = 1751870462624L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751870462624L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
 
     When you attach commands into an item.
     We will save a `binding ID` in the item NBT.
     Every item that has the same `binding ID` in its NBT data, shares the same `binding commands instance`.
     """)
-@ColorBox(id = 1751870464919L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870464919L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     To give the item with attached commands.
     You can use `kit` module.
     The kit module will save the item NBT.
@@ -56,11 +54,11 @@ import java.util.Optional;
     Then give the kit to a player.
     The player will get the magic item.
     """)
-@ColorBox(id = 1751900879800L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751900879800L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Make a magic-stick, which heals the player on clicked.
     Issue `/command-attachment attach-item-one heal`
     """)
-@ColorBox(id = 1751900919703L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751900919703L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Make a magic-stick, which:
     1. Gives diamonds * 1 on left clicked. (With use limit 3)
     2. Gives gold_ingot *1 on right clicked. (With use limit 5)
@@ -69,19 +67,19 @@ import java.util.Optional;
     1. `/command-attachment attach-item-one --maxUseTimes 3 --interactType LEFT give %player:name% minecraft:diamond 1`
     2. `/command-attachment attach-item-one --maxUseTimes 5 --interactType RIGHT give %player:name% minecraft:gold_ingot 1`
     """)
-@ColorBox(id = 1751901028033L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751901028033L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Make a magic-stick, which gives apple * 1, with use limit 3 times, and keep the item without destroying it.
     Issue: `/command-attachment attach-item-one --maxUseTimes 3 --destroyItem false give %player:name% minecraft:apple 1`.
     """)
-@ColorBox(id = 1751901112988L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751901112988L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Query the attached commands in a specific item.
     Issue `/command-attachment query-item`.
     """)
-@ColorBox(id = 1751901147901L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751901147901L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Let an entity say hello on right clicked.
     Issue: `/command-attachment attach-entity-one \\<entity-id\\> say hello %player:name%`
     """)
-@ColorBox(id = 1751901221023L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751901221023L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Make a portal block.
     Issue: `/command-attachment attach-block-one 0 0 0 --interactType STEP_ON tppos --targetPlayer %player:name% --dimension minecraft:the_end --x 0 --y 66 --z 0 %player:name%`.
     """)

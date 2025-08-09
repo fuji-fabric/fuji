@@ -43,7 +43,7 @@ import java.util.function.Predicate;
 @Document(id = 1751826772214L, value = """
     This module provides the `luckperms permissions` for `all commands`.
     """)
-@ColorBox(id = 1751970566759L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751970566759L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
     The vanilla Minecraft use a command system, named `brigadier command system`.
     All `commands` are `registered`, `parsed` and `executed` by this system.
@@ -63,7 +63,7 @@ import java.util.function.Predicate;
     To open the command permission GUI, issue `/command-permission gui` command.
     To list all commands and their command path, issue `/fuji inspect server-commands` command.
     """)
-@ColorBox(id = 1751970931219L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751970931219L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     Let's continue, the `brigadier command system`, organize all `command nodes` into a `tree structure`.
     And for each `command node`, there is a `requirement` option, it's a `predicate`, to decide whether the `command source` can use this `command node`.
 
@@ -75,7 +75,7 @@ import java.util.function.Predicate;
 
     Issue: `/command-permission describe gamemode creative Steve` to see how it works.
     """)
-@ColorBox(id = 1751971202478L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751971202478L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How does `command_permission` module handles the `inheritance permission`, `wildcard permission` and `regex permission`?
 
     Actually, the `command_permission` module didn't handle them.
@@ -83,20 +83,20 @@ import java.util.function.Predicate;
     The complex things like `inheritance permission`, `wildcard permission` and `regex permission` are all processed by `luckperms` mod.
     Yeah, the `luckperms` mod does the complex `permission calculation`.
     """)
-@ColorBox(id = 1751971384898L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751971384898L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Allow everyone to use `/gamemode` command.
     You can issue `/lp group default permission set fuji.permission.gamemode true`
 
     NOTE: If you want to allow the client-side to use the gamemode switcher menu, you have to install extra mods in the client-side, to let the client-side believe they are `op`, and they can switch the gamemode.
     The mod can be https://modrinth.com/mod/switcher
     """)
-@ColorBox(id = 1751971538425L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751971538425L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Allow everyone to use `/gamemode` command, except the player Alice.
     Issue the commands:
     1. `/lp group default permission set fuji.permission.gamemode true`
     2. `/lp user Alice permission set fuji.permission.gamemode false`
     """)
-@ColorBox(id = 1751971597924L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751971597924L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Allow everyone to use `/gamemode spectator`, but disallows the `/gamemode creative`.
     You have touch the core, and the tricky things.
     Now, issue `/command-permission describe gamemode spectator` command.
@@ -109,7 +109,7 @@ import java.util.function.Predicate;
     You can use `command_bundle` to create a `user-level` command, to wrap the `/gamemode` command.
     Like, create a new command named `/switch-to-survival`, as a wrapper command for `/gamemode` command.
     """)
-@ColorBox(id = 1751990106002L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751990106002L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Allow players to use `/seed` command.
     The `/seed` command provided by Mojang, requires `level permission` to be `3` to use.
     If you want to `allow` players to use `/seed` command, but you don't want to grant `op` for them.
@@ -119,7 +119,7 @@ import java.util.function.Predicate;
 
     Issue `/command-permission describe seed` command, to see how it works.
     """)
-@ColorBox(id = 1751990203999L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751990203999L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Dis-allow players to use `/list` command.
     The `/list` command provided by Mojang, requires `level permission` to be `0` to use.
     If you want to `dis-allow` players to use `/list` command.
@@ -132,13 +132,13 @@ import java.util.function.Predicate;
 
     Issue `/command-permission describe list` command, to see how it works.
     """)
-@ColorBox(id = 1751990343803L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751990343803L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Unset the override of requirement of a specific command.
     To `undo` the operation in the `/seed` example.
     You can `unset` the assigned permission before.
     Issue `/lp group default permission unset fuji.permission.seed` command, to unset the assign permission.
     """)
-@ColorBox(id = 1751990466823L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751990466823L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Advanced Usage
     The `luckperms` mod have a feature named `permission context`.
     Which allows you to specify the `per-dimension permission` and `temporary permission`.

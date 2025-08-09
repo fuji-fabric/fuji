@@ -40,13 +40,13 @@ import net.minecraft.util.Identifier;
     One `player` can have many `accounts`.
     One `account` holds one type of `currency`.
     """)
-@ColorBox(id = 1751870587446L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870587446L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Make the `Admin Shops` and `Player Shops`.
     You can use this module with `Universal Shops` mod.
     This mod provides the `Admin Shops` and `Player Shops`.
     It brings the similar gameplay into `fabric` like `QuickShop` plugin in `bukkit`.
     """)
-@ColorBox(id = 1751870591800L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751870591800L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Create a `/balance` command for players to use.
     You can use `command_bundle` module.
     To create a `/balance` command, to wrap the `/economy account %player:name% fuji:gold` command.

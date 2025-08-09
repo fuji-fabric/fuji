@@ -14,7 +14,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     This module provides the `/send-message` command.
     To send the `text` as `message` to a specified player.
     """)
-@ColorBox(id = 1751976017118L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751976017118L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Say hello to a player
     Issue: `/send-message Alice \\<blue\\>Hello %player:name%`
     """)

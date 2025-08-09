@@ -19,7 +19,7 @@ import java.util.Optional;
     This module provides `/send-title` command.
     To send the `text` as `title` to a specified player.
     """)
-@ColorBox(id = 1751976416056L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751976416056L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Send a title to a player.
     Issue: `/send-title Alice --mainTitle "\\<rainbow\\>Hello" --subTitle "\\<blue\\>World" --fadeInTicks 60 --stayTicks 60 --fadeOutTicks 60`
 

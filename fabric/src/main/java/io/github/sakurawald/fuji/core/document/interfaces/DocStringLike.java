@@ -7,6 +7,7 @@ import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
     1. Document
     2. DocStringLike
     3. DocStringProvider
+    4. ColorBox
     """)
 public interface DocStringLike {
     long getId();

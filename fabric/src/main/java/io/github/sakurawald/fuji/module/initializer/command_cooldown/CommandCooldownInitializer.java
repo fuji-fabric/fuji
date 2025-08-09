@@ -27,7 +27,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @Document(id = 1751826375815L, value = """
     This module allows you to define a `cooldown` for a specified `command`.
     """)
-@ColorBox(id = 1751902763633L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751902763633L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ There are 2 types of `cooldown`.
     1. `Unnamed Cooldown`
     You can use it to define a `cooldown duration` for a specified command. (It is `tested` and managed automatically)
@@ -50,7 +50,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
     <green>NOTE: If you only want to define a simple `cooling duration` for a specified command, just use `unnamed cooldown`.
     """)
-@ColorBox(id = 1751902885278L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751902885278L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Create a `named cooldown`. (With 3 seconds `cooldown duration`.)
     Issue: `/command-cooldown create kitfood 3000`
 
@@ -84,7 +84,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     A `global` named cooldown applies `per-server`.
     Issue: `/command-cooldown create kitfood 3000 --global true`
     """)
-@ColorBox(id = 1751903262817L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751903262817L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Make a `non-persistent named cooldown`.
     By default, a `named cooldown` will be `persisted` on the `storage`.
     However, you can create a `non-persist named cooldown`.

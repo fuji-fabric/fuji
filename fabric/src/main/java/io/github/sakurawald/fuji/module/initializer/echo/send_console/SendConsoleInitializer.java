@@ -13,7 +13,7 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
     This module provides the `/send-console` command.
     To send a string into the `console`.
     """)
-@ColorBox(id = 1751976813043L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751976813043L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Send a string to the console.
     Issue: `/send-console Hello World`
 

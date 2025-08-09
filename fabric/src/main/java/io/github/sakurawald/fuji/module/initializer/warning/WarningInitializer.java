@@ -38,13 +38,13 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
     You can use `warnings` to `track` the behaviours of a `player`.
     """)
-@ColorBox(id = 1754646463245L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1754646463245L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ Integrate with advanced `ban` tools.
     You can integrate the `warning` module with `temp_ban` module.
     However, you may want some advanced ban tools.
     See: https://github.com/Patbox/BanHammer
     """)
-@ColorBox(id = 1754643107428L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1754643107428L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Create a `permanent warning` for a player.
     Issue: `/warning create Steve Steal items.`
 

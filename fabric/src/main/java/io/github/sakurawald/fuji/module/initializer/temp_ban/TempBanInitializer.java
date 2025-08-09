@@ -31,7 +31,7 @@ import java.util.List;
     This module provides the `/temp-ban` command.
     So that you can specify `the duration` for `/ban` command.
     """)
-@ColorBox(id = 1751980845082L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751980845082L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ All in one example
     Issue: `/temp-ban player Alice 1s2m3h4d5w6M7y bad boy`
     """)

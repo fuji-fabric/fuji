@@ -19,7 +19,7 @@ import java.util.Optional;
     1. `damage`: The damage to a player.
     2. `experience`: The gained experience of a player.
     """)
-@ColorBox(id = 1751978406823L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751978406823L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Double the damage from `zombie` to a player.
     Issue: `/lp group default meta set fuji.multiplier.damage.minecraft:zombie 2`
 

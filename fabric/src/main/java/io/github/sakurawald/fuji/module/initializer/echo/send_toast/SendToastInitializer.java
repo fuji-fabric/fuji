@@ -52,7 +52,7 @@ import java.util.Set;
     This module provides `/send-toast` command.
     To send the `text` as `toast` to a specified player.
     """)
-@ColorBox(id = 1751976364671L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751976364671L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Send a toast to a player.
     Issue: `/send-toast Alice --icon minecraft:golden_carrot \\<rb\\>eat this carrot`
     """)

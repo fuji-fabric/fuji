@@ -38,7 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Document(id = 1751825018627L, value = """
     Customize the nametag above the players.
     """)
-@ColorBox(id = 1751978505336L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751978505336L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Set the background of nametag to blue color.
     Set `background` to `-16776961` (The integer representation of blue color)
 

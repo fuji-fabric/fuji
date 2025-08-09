@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 @Document(id = 1751826791752L, value = """
     Adds a warmup cooldown before player teleportation.
     """)
-@ColorBox(id = 1751980526151L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751980526151L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
     Inside the vanilla Minecraft, there is a teleport function for teleportation.
     We listen on this teleport function, and wrap it with a warmup cooldown.

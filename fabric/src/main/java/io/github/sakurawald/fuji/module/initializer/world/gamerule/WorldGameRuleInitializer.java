@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 @Document(id = 1752577892546L, value = """
     This module allows you to customize the `per-dimension gamerule`.
     """)
-@ColorBox(id = 1753064698840L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1753064698840L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
     In internal Minecraft, each `dimension` has a function named `getGameRules()`.
     It returns the `gamerules` of this `dimension`.
@@ -33,7 +33,7 @@ import net.minecraft.world.World;
     ◉ Can I use this module in vanilla dimensions?
     Yes, you can.
     """)
-@ColorBox(id = 1752292508145L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1752292508145L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ The logic of `/gamerule` command.
     The `/gamerule` command `only` operates on `minecraft:overworld` dimension.
 

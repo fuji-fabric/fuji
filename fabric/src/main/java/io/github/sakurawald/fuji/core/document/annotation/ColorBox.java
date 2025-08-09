@@ -16,11 +16,11 @@ public @interface ColorBox {
 
     long id();
 
-    ColorBlockTypes color();
+    ColorBoxTypes color();
 
     String value();
 
-    enum ColorBlockTypes {
+    enum ColorBoxTypes {
         EXAMPLE("colorbox.example.name", Items.LIGHT_GRAY_CANDLE)
         , TIPS("colorbox.tips.name", Items.LIME_CANDLE)
         , NOTE("colorbox.note.name", Items.BLUE_CANDLE)
@@ -30,7 +30,7 @@ public @interface ColorBox {
         final String languageKey;
         final Item item;
 
-        ColorBlockTypes(String languageKey, Item item) {
+        ColorBoxTypes(String languageKey, Item item) {
             this.languageKey = languageKey;
             this.item = item;
         }

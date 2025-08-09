@@ -16,7 +16,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     To query the server health status.
     Including: os, vm, cpu, disk, ram, tps, mspt and gc.
     """)
-@ColorBox(id = 1751978840922L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751978840922L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ Install the `spark` mod to display the `TPS`, `MSPT` and `CPU` info.
     You need to install the `spark` mod, to provide the `placeholders`.
     To display `tps`, `mspt` and `cpu` info.

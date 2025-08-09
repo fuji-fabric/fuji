@@ -14,12 +14,12 @@ import org.jetbrains.annotations.NotNull;
 @Document(id = 1751826288031L, value = """
     This module allows you to define `regex` to rewrite the command line a player issued.
     """)
-@ColorBox(id = 1751971914915L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751971914915L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ You can use this module to shorten the command string.
     Like, rewrite the command string `/home` into `/home tp default`.
     And provide a shortcut, for `/home tp default` command.
     """)
-@ColorBox(id = 1751971980398L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751971980398L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ The different compared to `command_alias` module and `command_bundle` module.
     1. The `command alias` module allows you to define `new command`, and redirects it into `an existing command`.
     2. The `command bundle` module allows you to define `new command`, and define the argument and body of the new command.

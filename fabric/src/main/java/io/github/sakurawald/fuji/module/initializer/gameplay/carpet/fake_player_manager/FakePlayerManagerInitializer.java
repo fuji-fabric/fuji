@@ -20,7 +20,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @Document(id = 1751827019419L, value = """
     This module provides `fake player management` for `carpet` mod.
     """)
-@ColorBox(id = 1753153100239L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1753153100239L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ This module introduces the `authority` for each `fake-player`.
     1. Disables the `/player shadow` command.
     2. For each `fake-player`, the `player` who `spawned` it is its `owner player`.

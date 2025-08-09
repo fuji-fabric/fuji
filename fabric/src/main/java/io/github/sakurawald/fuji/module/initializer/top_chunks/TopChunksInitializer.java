@@ -22,7 +22,7 @@ import net.minecraft.text.Text;
 @Document(id = 1751826535209L, value = """
     Analyze all loaded chunks of the server, and find the most lagged chunks.
     """)
-@ColorBox(id = 1751981000562L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751981000562L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
     This module use a `simple statistical method` to estimate the `degree of lag of a chunk`.
     The method is simple, it simply counts the `entities` and `block entities` inside a `chunk`.

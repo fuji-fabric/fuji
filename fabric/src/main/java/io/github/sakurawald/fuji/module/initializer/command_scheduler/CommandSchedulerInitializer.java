@@ -27,13 +27,13 @@ import java.util.List;
     This module allows you to define `jobs` using `cron` language.
     To execute commands at schedule.
     """)
-@ColorBox(id = 1751870574475L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751870574475L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
 
     A `job` is used to execute commands periodically.
     We use `cron` language to define when the `job` should be `triggered`.
     """)
-@ColorBox(id = 1751972254866L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751972254866L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ You can use `cron expression` generator, to specify when the job should be triggered.
     See https://www.freeformatter.com/cron-expression-generator-quartz.html
 

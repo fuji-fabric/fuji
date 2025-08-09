@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
     The `time window` of a `leaderboard` can be `hourly`, `daily`, `weekly`, `monthly`, `yearly` and `all_time`.
     You can display the `leaderboard` using `placeholders` or `commands`.
     """)
-@ColorBox(id = 1753491862403L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1753491862403L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
     1. You need to define a `leaderboard` in the config file.
     2. The defined `leaderboards` will be `updated` if:
@@ -46,7 +46,7 @@ import org.jetbrains.annotations.NotNull;
     3.a. You can use `placeholders` to display the `leaderboard`.
     3.b. You can use `commands` to display the `leaderboard`.
     """)
-@ColorBox(id = 1753498010821L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1753498010821L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ You can use a `placeholder` to fetch data from `statistics`.
     For example:
     1. `%player:statistic_raw minecraft:deaths%`
@@ -57,7 +57,7 @@ import org.jetbrains.annotations.NotNull;
     ◉ You can use a `placeholder` to fetch data from `objective`.
     For example: `%player:objective [objective]%`
     """)
-@ColorBox(id = 1753492108539L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1753492108539L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ How to define a `leaderboard`?
     To define a `leaderboard`, you need to specify:
     1. `Leaderboard ID`: The unique name for this leaderboard.
@@ -74,7 +74,7 @@ import org.jetbrains.annotations.NotNull;
     1. `%fuji:lowest_n_score death-board 1 all_time%`
     2. `%fuji:highest_n_score zombie-kill-board 1 all_time%`
     """)
-@ColorBox(id = 1753497840128L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1753497840128L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ List the specified `leaderboard` with `lowest first` order.
     Issue: `/leaderboard lowest death-board ALL_TIME`
 

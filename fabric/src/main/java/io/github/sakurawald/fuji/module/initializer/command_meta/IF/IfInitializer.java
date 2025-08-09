@@ -22,7 +22,7 @@ import net.minecraft.server.command.ServerCommandSource;
     This module provides a simple `/IF` command.
     It can be used to express `conditional logic`, such as `IF ... THEN ... ELSE ...`.
     """)
-@ColorBox(id = 1753515940860L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1753515940860L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
     The syntax of `/IF` command is: `/IF \\<condition-command\\> THEN \\<then-command\\> ELSE \\<else-command\\>`
     <red>The `IF`, `THEN`, `ELSE` literals must be `capitalized`.
@@ -47,7 +47,7 @@ import net.minecraft.server.command.ServerCommandSource;
     The `nested IF` is not supported.
     Once there is an `ambiguity` found in the `/IF` command, the entire execution of the `/IF` command will be aborted.
     """)
-@ColorBox(id = 1753596414690L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1753596414690L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ The difference between `/IF` command and `/execute if` command.
     The `/execute if` command is a powerful command:
     1. You can use `recursive if`.
@@ -63,7 +63,7 @@ import net.minecraft.server.command.ServerCommandSource;
     4. It supports the `placeholders`.
     5. Still, You can leverage the `/execute if` command as the `condition-command` of `/IF` command.
     """)
-@ColorBox(id = 1753594904128L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1753594904128L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Useful commands.
     1. https://minecraft.fandom.com/wiki/Commands/execute
     2. https://minecraft.wiki/w/Commands/return
@@ -71,12 +71,12 @@ import net.minecraft.server.command.ServerCommandSource;
     4. https://minecraft.fandom.com/wiki/Commands/tag
     5. https://minecraft.fandom.com/wiki/Commands/data
     """)
-@ColorBox(id = 1753668342721L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1753668342721L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Write the `IF ... THEN ... ELSE ...` logic conveniently.
     You can use `command_bundle` module to create a `template command` to help you write `conditional logic`.
     For example, you can create a new command `/try-give-item <item> <required-balance>`.
     """)
-@ColorBox(id = 1753521193815L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1753521193815L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Check whether a player is an `operator`.
     Issue: `/IF is-op? %player:name% THEN say It is op. ELSE say It is not op.`
 
@@ -100,7 +100,7 @@ import net.minecraft.server.command.ServerCommandSource;
     1. The player is standing on a `minecraft:diamond_block` block.
     2. The player has a `minecraft:diamond` item in its inventory.
     """)
-@ColorBox(id = 1753592396075L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1753592396075L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ Use `/command-debug` command to see the `return value` of a command.
     The `return value` is not displayed explicitly in-game.
     However, you can use `/command-debug` command to see `the return value` of a specified command.

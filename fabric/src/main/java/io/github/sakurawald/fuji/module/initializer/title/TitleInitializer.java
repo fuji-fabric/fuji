@@ -18,7 +18,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     This module allows you to define `titles` to display in the chat.
     Or display the `active title` in any place that supports placeholders.
     """)
-@ColorBox(id = 1753008337658L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1753008337658L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Give the `fisher` title to player Alice.
     Issue: `/lp user Alice permission set fuji.title.obtain.fisher true`
 

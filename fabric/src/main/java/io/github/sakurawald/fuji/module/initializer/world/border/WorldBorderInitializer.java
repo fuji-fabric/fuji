@@ -27,7 +27,7 @@ import net.minecraft.world.border.WorldBorder;
 @Document(id = 1752561532728L, value = """
     This module allows you to customize the `per-dimension border`.
     """)
-@ColorBox(id = 1753064857726L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1753064857726L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
     In internal Minecraft, each `dimension` has a function named `getWorldBorder()`.
     It returns the `world border` of this `dimension`.
@@ -41,12 +41,12 @@ import net.minecraft.world.border.WorldBorder;
     ◉ Can I use this module in vanilla dimensions?
     Yes, you can.
     """)
-@ColorBox(id = 1752460350802L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1752460350802L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ The logic of `/worldborder` command.
     The `/worldborder` command only sets the `World Border` of `minecraft:overworld`.
     But the `minecraft:the_nether` and `minecraft:the_end` dimensions will `sync` the `world border` of `minecraft:overworld`.
     """)
-@ColorBox(id = 1752569349615L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1752569349615L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ The semantics of options for `world border`.
     See: https://minecraft.wiki/w/World_border
     """)

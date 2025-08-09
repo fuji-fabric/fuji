@@ -33,7 +33,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     This module allows you to define a `jail`.
     It can be used to `punish` a player with bad behaviour, without `banning` it.
     """)
-@ColorBox(id = 1753757093710L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1753757093710L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
     1. Each `jail descriptor` is used to define a `jail` instance.
     1.a. You can `create` a descriptor using the `/jail create` command.
@@ -59,7 +59,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     <green> You need to write `punishment commands` in `onJailedEvent` and `onUnjailedEvent`.
     <green> You can also write `patrol commands` to check and restrict the actions of the jailed players.
     """)
-@ColorBox(id = 1753774841738L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1753774841738L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ The `placeholders` to the `position` of a `jail`.
     1. `%fuji:jail_dimension%`
     2. `%fuji:jail_x%`
@@ -81,7 +81,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     <green>NOTE: To disable the `vanilla Minecraft command feedbacks`, you can issue:
     1. `/gamerule sendCommandFeedback false`
     """)
-@ColorBox(id = 1753750852480L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1753750852480L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Understand the `execution time` of a `command`.
     Some commands require the `target player` online to work.
     For example, the `/send-message %player:name% You are jailed.` didn't work if the target player is `off-line`.
@@ -104,7 +104,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     5. `/lp group jailed permission set fuji.anti_build.interact_block.override.* false`
     <green>NOTE: You need to enable the `wildcard permission` feature in `luckperms` mod config.
     """)
-@ColorBox(id = 1754329012853L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1754329012853L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Restrict `jailed players` to using only allowed commands.
     You can integrate with `command_permission` module.
     Issue:
@@ -114,7 +114,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     2. `/lp group jailed permission set fuji.permission.back true`
     Allow to use the `/back` command.
     """)
-@ColorBox(id = 1753780761908L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1753780761908L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Create a `jail` in your current position.
     Issue: `/jail create \\<jail-id\\>`
 

@@ -24,14 +24,14 @@ import java.util.List;
     The defined alies command will redirect to the existing command node.
     """)
 
-@ColorBox(id = 1751900420030L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751900420030L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Define a `new shortcut command` as an alias to `an existing command`.
     For example:
     1. Define a new `/r` command, as alias to `/reply` command.
     2. Define a new `/sudo` command, as alias to `/run as fake-op` command.
     """)
 
-@ColorBox(id = 1751900579678L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751900579678L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     The `command_alias` command only has the ability to define `a new command`, as the alias of `an existing command`.
     It works by `command redirecting`.
     You can't use `command_alias` module to actually define `a new command with arguments`, that's the weakness.

@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
     This module allows you to spy on specified chat message type. (Mainly used for private message types)
     """)
 
-@ColorBox(id = 1751899727098L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751899727098L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     Pick a good implementation of `chat spy` in fabric platform is hard.
     In vanilla Minecraft, each chat message has its `message type`.
     You can identify the `private chat` from its `message type`.

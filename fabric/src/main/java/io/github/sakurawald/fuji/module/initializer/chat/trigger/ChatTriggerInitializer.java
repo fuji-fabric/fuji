@@ -18,26 +18,26 @@ import org.jetbrains.annotations.NotNull;
 @Document(id = 1751826730890L, value = """
     This module allows you to define magic spells in chat, to execute commands.
     """)
-@ColorBox(id = 1754612494551L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1754612494551L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Use `chat.trigger` to create `chat commands`.
     The `regex` in `chat.replace` is used to `find` the target pattern in `the given string`.
     The `regex` in `chat.trigger` is used to `match` the target pattern against `the given string`.
 
     You can define a `chat command` like `!report` or `!noclip` in other games.
     """)
-@ColorBox(id = 1751899049909L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751899049909L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ To define a simple magic spell in chat string.
     Regex: `magic`
     Commands: `say magic!`
     """)
-@ColorBox(id = 1751899198263L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751899198263L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ To define a complex magic spell with arguments in chat string.
     Regex: `i am (.+)`
     Commands:
     1. `say You just said: $0`
     2. `say Hello $1`
     """)
-@ColorBox(id = 1751899201560L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751899201560L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ To define a shortcut for chat display module with Styled Chat mod.
     Regex: `(?<=^|\\\\s)item(?=\\\\s|$)`
     Commands: `run as fake-op %player:name% chat display item`

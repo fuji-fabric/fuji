@@ -28,7 +28,7 @@ import java.util.Map;
     7. Player banned screen message.
     8. ... (There are many translatable texts in server-side)
     """)
-@ColorBox(id = 1751979387990L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751979387990L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ What is a `translatable text`.
     In client-side, you can change the `language option`, and see different `translatable texts`.
     There are `language files for different languages` in your client.
@@ -42,12 +42,12 @@ import java.util.Map;
     We will see what `translatable text` is going to be sent, and `replace` it with `user-defined text` if needed.
     The client just receive the `user-define text`, and display it to the player.
     """)
-@ColorBox(id = 1751979760808L, color = ColorBox.ColorBlockTypes.WARNING, value = """
+@ColorBox(id = 1751979760808L, color = ColorBox.ColorBoxTypes.WARNING, value = """
     ◉ Don't customize the `translatable text` that is already handled by other mods
     For example, if you are using `Styled Chat` mod, then you should not modify the `player join message` and `player leave message`.
     Because the `Styled Chat` mod already handles them.
     """)
-@ColorBox(id = 1751979931584L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751979931584L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Customize the player join message
     Key: `multiplayer.player.joined`
     Value: `\\<rainbow\\>+ %s`
@@ -56,7 +56,7 @@ import java.util.Map;
     Key: `multiplayer.player.left`
     Value: `\\<dark_gray\\>%s leeeeeeeeft the game`
     """)
-@ColorBox(id = 1751979996501L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751979996501L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Customize a specific death type message
     Key: `death.attack.explosion.player`
     Value: `\\<rainbow\\>%1$s booooooom because of %2$s`
@@ -65,7 +65,7 @@ import java.util.Map;
     Key: `commands.seed.success`
     Value: `\\<rainbow\\> Seeeeeeeeeeed: %s`
     """)
-@ColorBox(id = 1751980039595L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751980039595L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Customize the text used in screen.
     Key: `multiplayer.disconnect.server_shutdown`
     Value: `Server closeeeeeeeed`
@@ -76,14 +76,14 @@ import java.util.Map;
     Key: `container.chest`
     Value: `\\<rb\\>I see you opening the chest!`
     """)
-@ColorBox(id = 1751980149228L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751980149228L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Cancel the sending of a specific message.
     Key: `multiplayer.player.left`
     Value: `null`
 
     <green>NOTE: If you leave the `value` to `null`, then it means let's `cancel` the sending of this translatable text.
     """)
-@ColorBox(id = 1753460512853L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1753460512853L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Customize the `text` in a `screen`.
     Yes, you can customize the `text` in a `screen`, like the `ban screen`.
     Key: `multiplayer.disconnect.banned`

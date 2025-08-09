@@ -17,12 +17,12 @@ import net.minecraft.stat.Stats;
 @Document(id = 1751826634816L, value = """
     This module allows you to execute commands on specified events.
     """)
-@ColorBox(id = 1751904334639L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751904334639L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
     When an interested event occurs, this module will execute specified commands for that event as console.
     The `contextual player` in that `event` will be used as the `placeholder context`, to parse the `placeholders` in the `command string`.
     """)
-@ColorBox(id = 1751904417278L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751904417278L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Send messages on player join.
     You can use `/send-custom` or `/send-message` to send messages when a player joins.
 

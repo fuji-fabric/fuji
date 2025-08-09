@@ -34,7 +34,7 @@ import java.util.function.Function;
     Provides `/warp` command.
     As a public teleport point.
     """)
-@ColorBox(id = 1751972643858L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751972643858L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Set a display name for a warp.
     Issue: `/warp set-name \\<warp\\> \\<blue\\>This is the display name`
 

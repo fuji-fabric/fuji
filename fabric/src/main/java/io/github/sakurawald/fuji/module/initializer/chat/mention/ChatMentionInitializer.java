@@ -25,7 +25,7 @@ import java.util.List;
     1. The target player name will be highlighted.
     2. The target player will be sound notified.
     """)
-@ColorBox(id = 1751870571897L, color = ColorBox.ColorBlockTypes.WARNING, value = """
+@ColorBox(id = 1751870571897L, color = ColorBox.ColorBoxTypes.WARNING, value = """
     ◉ This module work partially with `Styled Chat` mod.
     You can use this module with that mod.
     It works, but you will not get the `mention player` rendered in chat.

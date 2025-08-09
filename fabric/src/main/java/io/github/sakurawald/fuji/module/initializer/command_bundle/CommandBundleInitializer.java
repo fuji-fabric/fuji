@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
     1. The new command can accept arguments.
     2. The body of the new command, can be a list of commands.
     """)
-@ColorBox(id = 1751870454656L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751870454656L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ The features of this module:
     1. Provide a user-friendly DSL, to create `a new custom command` easily.
     2. Support the inter-operation with `user-defined variable`, `placeholders` and `vanilla target selectors`.
@@ -40,7 +40,7 @@ import org.jetbrains.annotations.NotNull;
     4. A powerful `type-system`, to use the built-in `argument types`.
     5. Register and un-register `custom commands` on the fly, without a server re-start.
     """)
-@ColorBox(id = 1751870456781L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751870456781L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ The `purpose` of this module
     This module allows you to `define` a `new command`.
     To `define` a new command, you need to specify the following things:
@@ -51,7 +51,7 @@ import org.jetbrains.annotations.NotNull;
     The `pattern` describes: what does your `new command` look like?
     The `bundle` describes: what `commands` should we execute when your `new command` is executed?
     """)
-@ColorBox(id = 1752892603255L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1752892603255L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ The syntax of the `pattern`.
     The `pattern` is composed by a list of `command node`.
     For example, the `pattern` instance `first second third` describes a command `/first second third`.
@@ -70,7 +70,7 @@ import org.jetbrains.annotations.NotNull;
     You can issue `/fuji inspect argument-types` to list all registered `adapters`.
     You can use any `argument type` listed in that GUI.
     """)
-@ColorBox(id = 1752893166889L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1752893166889L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ The syntax of the `bundle`.
     Actually, the `bundle` is just a `list of commands`.
     You can write `Minecraft commands` directly in the `bundle` list.
@@ -79,12 +79,12 @@ import org.jetbrains.annotations.NotNull;
     Commands are executed `as console`.
     You can use `/run as player` or `/run as fake-op` to switch the command execution context, if it is needed.
     """)
-@ColorBox(id = 1751870458514L, color = ColorBox.ColorBlockTypes.TIPS, value = """
+@ColorBox(id = 1751870458514L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Generate powerful commands using a generator.
     You can use command generator to get powerful commands:
     https://www.gamergeeks.net/apps/minecraft/particle-command-generator
     """)
-@ColorBox(id = 1751901598337L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751901598337L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Use a `bundle command` to combine many commands into one command.
     In this example, we want to register a new command `/composite-heal`.
     To `decorate` an existed command `/heal`.
@@ -101,7 +101,7 @@ import org.jetbrains.annotations.NotNull;
     3. `run as player %player:name% heal`
     4. `say after heal %player:name%`
     """)
-@ColorBox(id = 1751901750629L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751901750629L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Use a `bundle command` to transform the form of an existed command.
     In this example, we want to register a new command `/warn`.
     As a `shortcut command` to a specific command instance.
@@ -110,7 +110,7 @@ import org.jetbrains.annotations.NotNull;
     Bundle:
     1. `run as player %player:name% send-message $player-arg \\<red\\>You are warned: $greedy-arg`
     """)
-@ColorBox(id = 1752894328505L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1752894328505L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Use a `bundle command` to wrap a specific command instance.
     In this example, if you want to allow players to use `/give @s minecraft:apple`.
     You only want to allow the players to get free `apples`.
@@ -126,7 +126,7 @@ import org.jetbrains.annotations.NotNull;
     Bundle:
     1. `run as fake-op %player:name% kit give @s kit-food`
     """)
-@ColorBox(id = 1752895095176L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1752895095176L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ See more advanced examples.
     The default config file contains a set of `advanced examples`.
     You can see there are many pre-defined `bundle commands`.
@@ -135,7 +135,7 @@ import org.jetbrains.annotations.NotNull;
     Besides, there are also a set of pre-defined `bundle commands` for convenience.
     For example: `/gmc`, `/gms`, `/day`, `/sun`...
     """)
-@ColorBox(id = 1751983696805L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751983696805L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Transform the form of a command.
     - `/blocknbt` -> `/data get block`
     - `/entitynbt` -> `/data get entity`
@@ -149,7 +149,7 @@ import org.jetbrains.annotations.NotNull;
     - `/shoot` -> `/summon` with motion
     - `/smite` and `/thunder` -> `/summon minecraft:lighting_bolt`
     """)
-@ColorBox(id = 1753243426623L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1753243426623L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Define a `/tpw` command to teleport players to a specified dimension.
     Pattern: `tpw resource-world`
     Bundle:

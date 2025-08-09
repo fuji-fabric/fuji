@@ -154,7 +154,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
             .forEach(colorBox -> {
                 GuiElementBuilder colorboxElementBuilder = new GuiElementBuilder();
 
-                ColorBox.ColorBlockTypes color = colorBox.color();
+                ColorBox.ColorBoxTypes color = colorBox.color();
                 Text colorBoxName = TextHelper.getTextByKey(player, color.toLanguageKey());
 
                 String documentString = DocumentUtil.getColorBoxString(player, colorBox);

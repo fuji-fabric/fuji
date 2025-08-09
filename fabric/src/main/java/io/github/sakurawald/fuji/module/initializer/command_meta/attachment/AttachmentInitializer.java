@@ -22,7 +22,7 @@ import java.io.IOException;
 @Document(id = 1751824793427L, value = """
     Provides a unified attachment facility, to attach any data to any object.
     """)
-@ColorBox(id = 1751970220438L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751970220438L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Set a attachment.
     Issue: `/attachment set news today hello world`
 

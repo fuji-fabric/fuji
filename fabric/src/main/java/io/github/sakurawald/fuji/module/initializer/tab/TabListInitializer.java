@@ -14,7 +14,7 @@ import io.github.sakurawald.fuji.module.initializer.tab.job.RenderHeaderAndFoote
 @Document(id = 1751826913154L, value = """
     Customize the TAB list.
     """)
-@ColorBox(id = 1751980365809L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751980365809L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ I want a complex `tab` list.
     If you want to design a complex and advanced `tab` list.
     I would recommend to use https://github.com/NEZNAMY/TAB

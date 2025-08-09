@@ -22,11 +22,11 @@ import java.util.concurrent.TimeUnit;
     This module provides the `/delay` command.
     To allow you `delay` the `execution time` of a specified command.
     """)
-@ColorBox(id = 1751870419626L, color = ColorBox.ColorBlockTypes.NOTE, value = """
+@ColorBox(id = 1751870419626L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ Only use `/delay` to perform short-term job.
     The `delayed commands` will not be persisted, if the server get a re-start.
     """)
-@ColorBox(id = 1751969752045L, color = ColorBox.ColorBlockTypes.EXAMPLE, value = """
+@ColorBox(id = 1751969752045L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ A basic usage.
     Issue: `/delay 3 say three seconds passed`
 
