@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.fuji.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.gui.impl.gui.PagedGui;
@@ -83,6 +84,9 @@ public class JobsInspectionGui extends PagedGui<JobDescriptor> {
 
         List<Text> lore = new ArrayList<>();
         lore.add(TextHelper.getTextByKey(getPlayer(), "from_module", sourceModule));
+
+        Class<? extends Job> jobClass = jobDetail.getJobClass();
+        lore.add(TextHelper.getTextByKey(getPlayer(), "job.class", ReflectionUtil.getSimpleClassName(jobClass)));
         lore.add(TextHelper.getTextByKey(getPlayer(), "job.job_group", jobKey.getGroup()));
         lore.add(TextHelper.getTextByKey(getPlayer(), "job.job_name", jobKey.getName()));
 
@@ -95,7 +99,6 @@ public class JobsInspectionGui extends PagedGui<JobDescriptor> {
                 });
 
         /* Attach document string. */
-        Class<? extends Job> jobClass = jobDetail.getJobClass();
         String jobDocument = DocumentUtil.getClassDocumentString(getPlayer(), jobClass);
         if (jobDocument != null) {
             lore.add(TextHelper.TEXT_EMPTY);
