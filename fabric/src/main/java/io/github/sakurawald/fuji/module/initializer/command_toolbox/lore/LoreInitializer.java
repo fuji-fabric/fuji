@@ -17,7 +17,7 @@ import java.util.List;
 
 @ColorBox(id = 1751972580951L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Set lore for item in mainhand.
-    Issue: `/lore set <rainbow>the first line<newline><bold><green>the second`
+    Issue: `/lore set \\<rainbow\\>the first line\\<newline\\>\\<bold\\>\\<green\\>the second`
     """)
 
 
