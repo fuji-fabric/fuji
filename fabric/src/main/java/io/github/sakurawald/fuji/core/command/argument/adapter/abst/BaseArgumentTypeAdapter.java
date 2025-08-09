@@ -126,8 +126,14 @@ public abstract class BaseArgumentTypeAdapter {
         return true;
     }
 
-    public boolean markAsVanillaMinecraftArgumentType() {
-        return false;
+    public boolean isVanillaMinecraftArgumentType() {
+        return getTypeClasses()
+            .stream()
+            .anyMatch(argumentClass -> {
+                String className = argumentClass.getName();
+                return className.startsWith("net.minecraft")
+                    || className.startsWith("com.mojang")
+                    || className.startsWith("java.lang");
+            });
     }
-
 }

@@ -32,7 +32,7 @@ public class WordArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public boolean markAsVanillaMinecraftArgumentType() {
+    public boolean isVanillaMinecraftArgumentType() {
         return true;
     }
 }

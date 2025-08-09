@@ -36,7 +36,7 @@ public class GameProfileArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public boolean markAsVanillaMinecraftArgumentType() {
+    public boolean isVanillaMinecraftArgumentType() {
         return true;
     }
 }

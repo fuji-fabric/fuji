@@ -34,7 +34,7 @@ public class PlayerCollectionArgumentTypeAdapter extends BaseArgumentTypeAdapter
     }
 
     @Override
-    public boolean markAsVanillaMinecraftArgumentType() {
+    public boolean isVanillaMinecraftArgumentType() {
         return true;
     }
 }

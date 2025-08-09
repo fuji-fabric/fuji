@@ -41,7 +41,7 @@ public class DimensionTypeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public boolean markAsVanillaMinecraftArgumentType() {
+    public boolean isVanillaMinecraftArgumentType() {
         return true;
     }
 }

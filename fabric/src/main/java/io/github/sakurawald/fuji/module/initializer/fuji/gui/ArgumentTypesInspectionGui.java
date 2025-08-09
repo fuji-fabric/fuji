@@ -31,26 +31,18 @@ public class ArgumentTypesInspectionGui extends PagedGui<BaseArgumentTypeAdapter
         return new ArgumentTypesInspectionGui(parent, player, entities, pageIndex);
     }
 
-    private @NotNull Item toItem(@NotNull BaseArgumentTypeAdapter adapter) {
-        if (isVanillaMinecraftArgumentType(adapter)) {
+    private @NotNull Item toItem(@NotNull BaseArgumentTypeAdapter entity) {
+        if (entity.isVanillaMinecraftArgumentType()) {
             return Items.HOPPER_MINECART;
         }
         return Items.HOPPER;
     }
 
-    private static boolean isVanillaMinecraftArgumentType(BaseArgumentTypeAdapter adapter) {
-        if (adapter.markAsVanillaMinecraftArgumentType()) {
-            return true;
-        }
+    private static List<Text> toDocumentTexts(@NotNull BaseArgumentTypeAdapter entity) {
 
-        return adapter.getTypeClasses()
-            .stream()
-            .anyMatch(argumentClass -> {
-                String className = argumentClass.getName();
-                return className.startsWith("net.minecraft")
-                    || className.startsWith("com.mojang")
-                    || className.startsWith("java.lang");
-            });
+
+
+
     }
 
     @Override
@@ -59,13 +51,15 @@ public class ArgumentTypesInspectionGui extends PagedGui<BaseArgumentTypeAdapter
         lore.add(TextHelper.getTextByKey(getPlayer(), "from_module", entity.getFromModule()));
         lore.add(TextHelper.getTextByKey(getPlayer(), "command.argument.type.class", entity.getTypeClasses().stream().map(Class::getSimpleName).toList()));
         lore.add(TextHelper.getTextByKey(getPlayer(), "command.argument.type.string", entity.getTypeStrings()));
+        lore.addAll(toDocumentTexts(entity));
+
 
         GuiElementBuilder guiElementBuilder = new GuiElementBuilder()
             .setName(Text.literal(entity.getClass().getSimpleName()))
             .setItem(toItem(entity))
             .setLore(lore);
 
-        if (!isVanillaMinecraftArgumentType(entity)) {
+        if (!entity.isVanillaMinecraftArgumentType()) {
             guiElementBuilder.glow();
         }
 
