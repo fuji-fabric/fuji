@@ -10,10 +10,10 @@ plugins {
 /* Define the jar repositories. */
 repositories {
     mavenCentral()
-    // For fabric-carpet mod.
-    maven { url "https://masa.dy.fi/maven" }
     // For text-placeholder and sgui mod.
     maven { url "https://maven.nucleoid.xyz" }
+    // For fabric-carpet mod.
+    maven { url "https://masa.dy.fi/maven" }
 }
 
 /* Configure fabric-loom plugin. */
