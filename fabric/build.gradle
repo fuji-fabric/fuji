@@ -14,7 +14,7 @@ repositories {
     maven { url "https://maven.nucleoid.xyz" }
 
     // For fabric-carpet mod.
-    maven { url "https://masa.dy.fi/maven" }
+    maven { url 'https://jitpack.io' }
 }
 
 /* Configure fabric-loom plugin. */
