@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.fuji.structure;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.tree.CommandNode;
-import io.github.sakurawald.fuji.core.structure.CommandNodeWrapper;
+import io.github.sakurawald.fuji.core.command.structure.CommandNodeWrapper;
 import net.minecraft.server.command.ServerCommandSource;
 
 public class ServerCommandNodeWrapper extends CommandNodeWrapper {

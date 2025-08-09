@@ -21,26 +21,26 @@ public class DateParser {
     private static final int YEAR_TO_SECOND = 12 * MONTH_TO_SECOND;
     private static final Pattern DATE_PARSER_DSL = Pattern.compile("(\\d+)([smhdwMy])");
 
-    public static @NotNull Date parseIntoExpirationDate(@NotNull String period) {
+    public static @NotNull Date parseIntoExpirationDate(@NotNull String inputString) {
         /* Compute the sum of seconds. */
-        int accumulateSeconds = parseIntoSeconds(period);
+        int seconds = parseIntoSeconds(inputString);
 
         /* Add delta seconds to now. */
         Calendar nowCalendar = Calendar.getInstance();
-        nowCalendar.add(Calendar.SECOND, accumulateSeconds);
+        nowCalendar.add(Calendar.SECOND, seconds);
         return nowCalendar.getTime();
     }
 
-    public static @Nullable Long parseIntoExpirationTimestamp(@Nullable String period) {
-        if (period == null) {
+    public static @Nullable Long parseIntoExpirationTimestamp(@Nullable String inputString) {
+        if (inputString == null) {
             return null;
         }
 
-        return ChronosUtil.toTimestamp(parseIntoExpirationDate(period));
+        return ChronosUtil.toTimestamp(parseIntoExpirationDate(inputString));
     }
 
-    public static int parseIntoSeconds(@NotNull String period) {
-        Matcher matcher = DATE_PARSER_DSL.matcher(period);
+    public static int parseIntoSeconds(@NotNull String inputString) {
+        Matcher matcher = DATE_PARSER_DSL.matcher(inputString);
         int accumulateSeconds = 0;
         while (matcher.find()) {
             int quantity = Integer.parseInt(matcher.group(1));
@@ -67,13 +67,11 @@ public class DateParser {
                 case "y":
                     accumulateSeconds += quantity * YEAR_TO_SECOND;
                     break;
-                default:
-                    throw new IllegalArgumentException("Unknown time unit: " + unit);
             }
         }
 
         if (accumulateSeconds == 0) {
-            throw new IllegalArgumentException("Invalid period: " + period);
+            throw new IllegalArgumentException("Invalid period: " + inputString);
         }
         return accumulateSeconds;
     }

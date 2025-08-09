@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_permission.structure;
 
-import io.github.sakurawald.fuji.core.structure.CommandNodeWrapper;
+import io.github.sakurawald.fuji.core.command.structure.CommandNodeWrapper;
 import io.github.sakurawald.fuji.module.initializer.command_permission.CommandPermissionInitializer;
 import lombok.Getter;
 import net.minecraft.server.command.ServerCommandSource;
