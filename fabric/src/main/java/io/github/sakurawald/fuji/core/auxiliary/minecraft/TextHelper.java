@@ -586,7 +586,7 @@ public class TextHelper {
         return getText(Parsers.POWERFUL_PARSER, audience, false, languageValue, args);
     }
 
-    public static Text getTextByKeyAndReplaceTheKeyword(@Nullable Object audience, String languageKey, String keywordName) {
+    public static Text getTextByKeyAndReplaceTheKeyword(@Nullable Object audience, @NotNull String languageKey, @NotNull String keywordName) {
         /* Get the keyword value. */
         String keywordKey = "keyword." + keywordName;
         String keywordValue = Translator.getLanguageValueByKey(audience, keywordKey);

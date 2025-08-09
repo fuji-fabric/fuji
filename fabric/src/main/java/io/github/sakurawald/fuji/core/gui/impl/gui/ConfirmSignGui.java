@@ -2,10 +2,11 @@ package io.github.sakurawald.fuji.core.gui.impl.gui;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class ConfirmSignGui extends InputSignGui {
 
-    public ConfirmSignGui(ServerPlayerEntity player) {
+    public ConfirmSignGui(@NotNull ServerPlayerEntity player) {
         super(player, TextHelper.getTextByKeyAndReplaceTheKeyword(player, "prompt.input.confirm", "confirm"));
     }
 
@@ -23,7 +24,7 @@ public abstract class ConfirmSignGui extends InputSignGui {
 
     private boolean isConfirmed() {
         String confirmationString = TextHelper.Translator.getLanguageValueByKey(getPlayer(), "keyword.confirm");
-        return this.getLine(0).getString().equals(confirmationString);
+        return this.getLine(0).getString().equalsIgnoreCase(confirmationString);
     }
 
     public abstract void onConfirm();

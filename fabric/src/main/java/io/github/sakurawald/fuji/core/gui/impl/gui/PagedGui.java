@@ -8,7 +8,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.gui.impl.layer.SingleLineLayer;
-import io.github.sakurawald.fuji.core.gui.structure.EntityToElementMapper;
+import io.github.sakurawald.fuji.core.gui.structure.EntityToElementMapping;
 import lombok.Getter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerType;
@@ -35,7 +35,7 @@ public abstract class PagedGui<T> extends LayeredGui {
     @Getter
     private final SingleLineLayer footer = new SingleLineLayer();
 
-    private final EntityToElementMapper<T> entityToElementMapper = new EntityToElementMapper<>();
+    private final EntityToElementMapping<T> entityToElementMapping = new EntityToElementMapping<>();
 
     private boolean openParentGuiWhenClose = true;
 
@@ -127,7 +127,7 @@ public abstract class PagedGui<T> extends LayeredGui {
 
     private @NotNull GuiElementInterface makeGuiElementAndBindIt(T entity) {
         GuiElementInterface element = this.toGuiElement(entity);
-        this.entityToElementMapper.setBinding(entity, element);
+        this.entityToElementMapping.setBinding(entity, element);
         return element;
     }
 
@@ -139,7 +139,7 @@ public abstract class PagedGui<T> extends LayeredGui {
     private boolean combinedFilterEntity(T entity, String keyword) {
         /* Filter using the displaying GUI item stack. (What you see is what you get) */
         // NOTE: We have to make the GUI element for each entity. It's expensive, but saves time.
-        GuiElementInterface element = entityToElementMapper.getBinding(entity);
+        GuiElementInterface element = entityToElementMapping.getBinding(entity);
         if (element == null) {
             element = makeGuiElementAndBindIt(entity);
         }

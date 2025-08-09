@@ -23,7 +23,7 @@ public class EditSignGui extends InputSignGui {
         }
     }
 
-    private static List<String> splitLines(String string) {
+    private static @NotNull List<String> splitLines(@NotNull String string) {
         List<String> lines = new ArrayList<>();
 
         final int maxLineCharacters = 22;

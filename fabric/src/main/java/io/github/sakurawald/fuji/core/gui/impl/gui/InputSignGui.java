@@ -31,7 +31,7 @@ public class InputSignGui extends SignGui {
         return joinedString;
     }
 
-    protected boolean hasNoInput() {
+    protected boolean isEmptyInput() {
         return this.joinStrings().isBlank();
     }
 
