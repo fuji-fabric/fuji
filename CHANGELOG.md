@@ -1,8 +1,6 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
-
-- [core] feature: display the `job class` property when inspecting a `job` object.  
-- [warning] feature: staff notifications now include only active warnings.  
-- [core] docs: improve the `/fuji inspect argument-types` command, to distinguish the `vanilla argument types` and `non-vanilla argument types` more precise.
-- [core] docs: add the document for `argument type adapters` in the inspector GUI.
-
+- [core] feature: Display the `job class` property when inspecting a `job` object.
+- [warning] feature: Staff notifications now include only active warnings.
+- [core] docs: Improve the `/fuji inspect argument-types` command to more precisely distinguish between `vanilla argument types` and `non-vanilla argument types`.
+- [core] docs: Add documentation for `argument type adapters` in the inspector GUI.
