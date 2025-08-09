@@ -51,4 +51,9 @@ public class DimensionArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     public List<String> getTypeStrings() {
         return List.of("dimension", "world");
     }
+
+    @Override
+    public boolean markAsVanillaMinecraftArgumentType() {
+        return true;
+    }
 }

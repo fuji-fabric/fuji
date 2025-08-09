@@ -34,4 +34,9 @@ public class GameProfileArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     public List<String> getTypeStrings() {
         return List.of("game-profile", "profile");
     }
+
+    @Override
+    public boolean markAsVanillaMinecraftArgumentType() {
+        return true;
+    }
 }

@@ -39,4 +39,9 @@ public class DimensionTypeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName).suggests(CommandHelper.Suggestion.identifiers(RegistryKeys.DIMENSION_TYPE));
     }
+
+    @Override
+    public boolean markAsVanillaMinecraftArgumentType() {
+        return true;
+    }
 }

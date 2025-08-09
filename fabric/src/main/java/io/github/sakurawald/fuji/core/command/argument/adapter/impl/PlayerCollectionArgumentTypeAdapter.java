@@ -32,4 +32,9 @@ public class PlayerCollectionArgumentTypeAdapter extends BaseArgumentTypeAdapter
     public List<String> getTypeStrings() {
         return List.of("players", "player-list");
     }
+
+    @Override
+    public boolean markAsVanillaMinecraftArgumentType() {
+        return true;
+    }
 }

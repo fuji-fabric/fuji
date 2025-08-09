@@ -31,4 +31,9 @@ public class GreedyArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     public List<String> getTypeStrings() {
         return List.of("greedy-string", "greedy");
     }
+
+    @Override
+    public boolean markAsVanillaMinecraftArgumentType() {
+        return true;
+    }
 }

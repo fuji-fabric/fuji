@@ -30,4 +30,9 @@ public class WordArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     public List<String> getTypeStrings() {
         return List.of("word");
     }
+
+    @Override
+    public boolean markAsVanillaMinecraftArgumentType() {
+        return true;
+    }
 }

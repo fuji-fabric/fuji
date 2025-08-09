@@ -31,7 +31,7 @@ public class ArgumentTypesInspectionGui extends PagedGui<BaseArgumentTypeAdapter
         return new ArgumentTypesInspectionGui(parent, player, entities, pageIndex);
     }
 
-    private Item toItem(BaseArgumentTypeAdapter adapter) {
+    private @NotNull Item toItem(@NotNull BaseArgumentTypeAdapter adapter) {
         if (isVanillaMinecraftArgumentType(adapter)) {
             return Items.HOPPER_MINECART;
         }
@@ -39,6 +39,10 @@ public class ArgumentTypesInspectionGui extends PagedGui<BaseArgumentTypeAdapter
     }
 
     private static boolean isVanillaMinecraftArgumentType(BaseArgumentTypeAdapter adapter) {
+        if (adapter.markAsVanillaMinecraftArgumentType()) {
+            return true;
+        }
+
         return adapter.getTypeClasses()
             .stream()
             .anyMatch(argumentClass -> {

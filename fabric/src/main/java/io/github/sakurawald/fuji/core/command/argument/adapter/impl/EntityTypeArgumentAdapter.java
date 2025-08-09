@@ -47,4 +47,9 @@ public class EntityTypeArgumentAdapter extends BaseArgumentTypeAdapter {
     public List<String> getTypeStrings() {
         return List.of("entity-type");
     }
+
+    @Override
+    public boolean markAsVanillaMinecraftArgumentType() {
+        return true;
+    }
 }

@@ -126,4 +126,8 @@ public abstract class BaseArgumentTypeAdapter {
         return true;
     }
 
+    public boolean markAsVanillaMinecraftArgumentType() {
+        return false;
+    }
+
 }
