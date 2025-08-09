@@ -129,7 +129,7 @@ public class PlayerHelper {
 
         private static void applyPlayerData(
             #if MC_VER < MC_1_21_6
-            @NotNull ServerPlayerEntity player, @Nullable NbtCompound playerData
+            @NotNull ServerPlayerEntity player, @Nullable net.minecraft.nbt.NbtCompound playerData
             #elif MC_VER >= MC_1_21_6
             @NotNull ServerPlayerEntity player, @Nullable net.minecraft.storage.ReadView playerData
             #endif
@@ -172,10 +172,10 @@ public class PlayerHelper {
             ServerPlayerEntity $player = makePlayer(gameProfile.get());
 
             #if MC_VER <= MC_1_20_4
-            NbtCompound playerData = getPlayerManager().loadPlayerData($player);
+            net.minecraft.nbt.NbtCompound playerData = getPlayerManager().loadPlayerData($player);
             applyPlayerData($player, playerData);
             #elif MC_VER > MC_1_20_4 && MC_VER < MC_1_21_6
-            Optional<NbtCompound> playerData = getPlayerManager().loadPlayerData($player);
+            Optional<net.minecraft.nbt.NbtCompound> playerData = getPlayerManager().loadPlayerData($player);
             applyPlayerData($player, playerData.orElse(null));
             #elif MC_VER >= MC_1_21_6
             Optional<net.minecraft.storage.ReadView> playerData = getPlayerManager().loadPlayerData($player, net.minecraft.util.ErrorReporter.Impl.EMPTY);
