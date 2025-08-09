@@ -80,8 +80,12 @@ public class WarningService {
     public static void processNotify(@NotNull ServerPlayerEntity targetPlayer, boolean isJoin) {
         /* Does the player have any warnings? */
         String playerName = PlayerHelper.getPlayerName(targetPlayer);
-        PlayerWarnings playerWarnings = getPlayerWarnings(playerName);
-        if (playerWarnings.getWarnings().isEmpty()) return;
+        List<Warning> activeWarnings = getPlayerWarnings(playerName)
+            .getWarnings()
+            .stream()
+            .filter(Warning::isActive)
+            .toList();
+        if (activeWarnings.isEmpty()) return;
 
         /* Send notify to online staffs. */
         PlayerHelper.Lookup
@@ -89,11 +93,11 @@ public class WarningService {
             .stream()
             .filter(it -> LuckpermsHelper.hasPermission(it.getUuid(), WarningInitializer.NOTIFY_WARNINGS_PERMISSION))
             .forEach(it -> {
-                int warningsSize = playerWarnings.getWarnings().size();
+                int activeWarningsSize = activeWarnings.size();
                 if (isJoin) {
-                    TextHelper.sendTextByKey(it, "warning.notify.join", playerName, warningsSize);
+                    TextHelper.sendTextByKey(it, "warning.notify.join", playerName, activeWarningsSize);
                 } else {
-                    TextHelper.sendTextByKey(it, "warning.notify.leave", playerName, warningsSize);
+                    TextHelper.sendTextByKey(it, "warning.notify.leave", playerName, activeWarningsSize);
                 }
             });
     }
