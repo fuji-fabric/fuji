@@ -6,7 +6,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
-import io.github.sakurawald.fuji.core.service.date_parser.DateParser;
+import io.github.sakurawald.fuji.core.service.duration_parser.DurationParser;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.jail.JailInitializer;
 import io.github.sakurawald.fuji.module.initializer.jail.structure.JailDataNode;
@@ -119,7 +119,7 @@ public class JailService {
 
     public static void createJailRecord(String creatorName, String playerName, JailDescriptor jail, String reason, String $duration) {
         withJailDataNode(jail, jailDataNode -> {
-            int specifiedJailSeconds = DateParser.parseIntoSeconds($duration);
+            int specifiedJailSeconds = DurationParser.parseIntoSeconds($duration).orElseThrow();
             JailRecord jailRecord = JailRecord.make(creatorName, playerName, specifiedJailSeconds, reason);
             jailDataNode.getRecords().add(jailRecord);
             return null;

@@ -55,7 +55,7 @@ public class CommandCooldownPlaceholders {
             String key = NamedCooldownDataNode.toKey(player);
             long remainingDuration = dataNode.getRemainingTime(key, dataNode.getDescriptor().getCooldownDuration());
             remainingDuration = Math.max(0, remainingDuration);
-            String formattedRemainingDuration = DurationParser.formatDurationIntoCompact(remainingDuration);
+            String formattedRemainingDuration = DurationParser.formatMillSeconds(remainingDuration);
             return Text.literal(formattedRemainingDuration);
         }));
     }

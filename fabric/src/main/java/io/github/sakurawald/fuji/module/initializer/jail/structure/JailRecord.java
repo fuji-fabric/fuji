@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.jail.structure;
 import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
-import io.github.sakurawald.fuji.core.service.date_parser.DateParser;
+import io.github.sakurawald.fuji.core.service.duration_parser.DurationParser;
 import io.github.sakurawald.fuji.module.initializer.jail.service.JailService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -45,11 +45,11 @@ public class JailRecord {
     }
 
     public String getSpecifiedJailDuration() {
-        return DateParser.formatSeconds(this.getSpecifiedJailSeconds());
+        return DurationParser.formatSeconds(this.getSpecifiedJailSeconds());
     }
 
     public String getRemainingJailDuration() {
-        return DateParser.formatSeconds(this.getRemainingJailSeconds());
+        return DurationParser.formatSeconds(this.getRemainingJailSeconds());
     }
 
     public String getFormattedCreatedTimestamp() {

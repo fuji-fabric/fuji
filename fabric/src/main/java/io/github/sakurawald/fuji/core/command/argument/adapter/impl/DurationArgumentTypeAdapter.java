@@ -10,7 +10,7 @@ import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgument
 import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.Duration;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
-import io.github.sakurawald.fuji.core.service.date_parser.DateParser;
+import io.github.sakurawald.fuji.core.service.duration_parser.DurationParser;
 import java.util.List;
 import net.minecraft.server.command.ServerCommandSource;
 
@@ -24,13 +24,13 @@ public class DurationArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
         String durationString = StringArgumentType.getString(context, argument.getArgumentName());
 
-        try {
-            DateParser.parseIntoSeconds(durationString);
-        } catch (IllegalArgumentException e) {
-            TextHelper.sendTextByKey(context.getSource(), "duration.invalid", durationString);
-            throw new AbortCommandExecutionException();
-        }
-        return new Duration(durationString);
+        return DurationParser
+            .parseIntoSeconds(durationString)
+            .map(it -> new Duration(durationString))
+            .orElseThrow(() -> {
+                TextHelper.sendTextByKey(context.getSource(), "duration.invalid", durationString);
+                return new AbortCommandExecutionException();
+            });
     }
 
     @Override

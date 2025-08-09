@@ -13,7 +13,7 @@ import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GameProfileC
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
-import io.github.sakurawald.fuji.core.service.date_parser.DateParser;
+import io.github.sakurawald.fuji.core.service.duration_parser.DurationParser;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import net.minecraft.command.EntitySelector;
 import net.minecraft.server.BannedIpEntry;
@@ -52,7 +52,7 @@ public class TempBanInitializer extends ModuleInitializer {
         }
 
         // Add.
-        Date expire = DateParser.parseIntoExpirationDate(expiry.getValue());
+        Date expire = DurationParser.parseIntoExpirationDate(expiry.getValue()).orElseThrow();
         BannedIpEntry bannedIpEntry = new BannedIpEntry(ip, null, source.getName(), expire, reason.getValue());
         source.getServer().getPlayerManager().getIpBanList().add(bannedIpEntry);
         source.sendFeedback(() -> Text.translatable("commands.banip.success", ip, bannedIpEntry.getReason()), true);
@@ -73,7 +73,7 @@ public class TempBanInitializer extends ModuleInitializer {
     private static int $player(@CommandSource ServerCommandSource source, GameProfileCollection collection, Duration expiry, GreedyString reason) {
         MinecraftServer server = source.getServer();
         PlayerManager playerManager = server.getPlayerManager();
-        Date expire = DateParser.parseIntoExpirationDate(expiry.getValue());
+        Date expire = DurationParser.parseIntoExpirationDate(expiry.getValue()).orElseThrow();
 
         for (GameProfile gameProfile : collection.getValue()) {
             // Add.

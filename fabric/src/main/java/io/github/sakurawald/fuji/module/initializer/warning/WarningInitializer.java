@@ -18,7 +18,7 @@ import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.core.event.impl.PlayerEvents;
-import io.github.sakurawald.fuji.core.service.date_parser.DateParser;
+import io.github.sakurawald.fuji.core.service.duration_parser.DurationParser;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.warning.config.model.WarningConfigModel;
 import io.github.sakurawald.fuji.module.initializer.warning.config.model.WarningDataModel;
@@ -111,7 +111,7 @@ public class WarningInitializer extends ModuleInitializer {
         String targetPlayerName = targetPlayer.getValue();
         String warningDescription = warning.getValue();
 
-        Long expirationTimestamp = DateParser.parseIntoExpirationTimestamp(duration.getValue());
+        Long expirationTimestamp = DurationParser.parseIntoExpirationTimestamp(duration.getValue()).orElseThrow();
         String expirationDate = ChronosUtil.Formatter.formatDate(expirationTimestamp);
 
         WarningService.createWarning(creatorName, targetPlayerName, warningDescription, expirationTimestamp);
