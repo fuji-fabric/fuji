@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-@TestCase(steps = "Create a new production work and start the sample.", purposes = {
+@TestCase(action = "Create a new production work and start the sample.", targets = {
     "See if the chunk iterator works."
     , "See if the hopper mixin works."
 })

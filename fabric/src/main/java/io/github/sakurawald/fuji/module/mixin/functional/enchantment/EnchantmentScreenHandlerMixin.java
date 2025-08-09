@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 @Mixin(EnchantmentScreenHandler.class)
 public class EnchantmentScreenHandlerMixin {
 
-    @TestCase(steps = "See if a pickaxe gets the max power level in `/enchantment`", purposes = "See if the lambda of enchantment context is modified.")
+    @TestCase(action = "See if a pickaxe gets the max power level in `/enchantment`", targets = "See if the lambda of enchantment context is modified.")
     @ModifyArg(method = "method_17411(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;calculateRequiredExperienceLevel(Lnet/minecraft/util/math/random/Random;IILnet/minecraft/item/ItemStack;)I"), index = 2)
     int modifyTheNumberOfPowerOfProviders(int i) {
         var enchantment = Configs.MAIN_CONTROL_CONFIG.model().modules.functional.enchantment;

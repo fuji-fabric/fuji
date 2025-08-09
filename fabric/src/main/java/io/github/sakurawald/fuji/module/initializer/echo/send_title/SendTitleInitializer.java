@@ -26,7 +26,7 @@ import java.util.Optional;
     ◉ Send a title to online players.
     Issue: `/foreach send-title %player:name% --mainTitle "\\<rainbow\\>Hello %player:name%"`
     """)
-@TestCase(steps = "Issue the command `/send-title @s --mainTitle \"<rainbow>Hello\" --subTitle \"<blue>World\" --fadeInTicks 60 --stayTicks 60 --fadeOutTicks 60`", purposes = "Consecutive optional argument should work.")
+@TestCase(action = "Issue the command `/send-title @s --mainTitle \"<rainbow>Hello\" --subTitle \"<blue>World\" --fadeInTicks 60 --stayTicks 60 --fadeOutTicks 60`", targets = "Consecutive optional argument should work.")
 public class SendTitleInitializer extends ModuleInitializer {
 
     @CommandNode("send-title")

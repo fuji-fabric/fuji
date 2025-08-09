@@ -20,7 +20,7 @@ import java.util.Map;
 import net.minecraft.registry.RegistryKey;
 #endif
 
-@TestCase(steps = "Issue the `/save-all` command without the installation of `fabric-api` mod.", purposes = "The runtime dimensions should be saved.")
+@TestCase(action = "Issue the `/save-all` command without the installation of `fabric-api` mod.", targets = "The runtime dimensions should be saved.")
 @Mixin(WorldGenSettings.class)
 public class WorldGenSettingsMixin {
 

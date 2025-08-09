@@ -13,7 +13,7 @@ import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@TestCase(steps = "Consider the possible runtime environments.", purposes = {
+@TestCase(action = "Consider the possible runtime environments.", targets = {
     "The fabric server-side environment."
     , "The fabric client-side environment."
     , "The neo-forge server-side environment. (With `sinytra-connector` mod)"

@@ -24,7 +24,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 @CommandNode("view")
 @CommandRequirement(level = 4)
-@TestCase(steps = "Issue the `/view {inv/ender}` command on a fake-player.", purposes = "You should be able to modify the slots on the fly.")
+@TestCase(action = "Issue the `/view {inv/ender}` command on a fake-player.", targets = "You should be able to modify the slots on the fly.")
 public class ViewInitializer extends ModuleInitializer {
 
     private static void checkSelfView(ServerPlayerEntity source, OfflinePlayerName target) {

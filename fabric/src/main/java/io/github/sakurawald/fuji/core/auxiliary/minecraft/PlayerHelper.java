@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
@@ -21,7 +20,7 @@ import net.minecraft.util.UserCache;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@TestCase(steps = "Consider special states of a player.", purposes = {
+@TestCase(action = "Consider special states of a player.", targets = {
     "A player may be a fake-player from `carpet` mod."
     , "Once a player die, the old ServerPlayerEntity is invalid."
     , "A player may `disconnect` from the server."

@@ -51,7 +51,7 @@ public abstract class BaseDisplayGuiFactory {
             && bi.getBlock() instanceof ShulkerBoxBlock;
     }
 
-    @TestCase(steps = "Create an inventory display that contains a shulker box.", purposes = "See if we can go inside the shulker box.")
+    @TestCase(action = "Create an inventory display that contains a shulker box.", targets = "See if we can go inside the shulker box.")
     public record SlotClickForDeeperDisplayCallback(@NotNull SimpleGui parentGui, @NotNull ServerPlayerEntity viewingPlayer) implements GuiElementInterface.ClickCallback {
         @Override
         public void click(int i, ClickType clickType, SlotActionType clickType1, @NotNull SlotGuiInterface slotGuiInterface) {

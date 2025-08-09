@@ -28,7 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@TestCase(steps = "Issue `/stop` in the production environment.", purposes = "The program should be terminated.")
+@TestCase(action = "Issue `/stop` in the production environment.", targets = "The program should be terminated.")
 @SuppressWarnings("LombokGetterMayBeUsed")
 public class ScheduleManager extends BaseManager {
 

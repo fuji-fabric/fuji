@@ -24,7 +24,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @Document(id = 1751826596329L, value = """
     This module allows player to buy decorative heads from a head shop.
     """)
-@TestCase(steps = "Buy a new head in `/head`.", purposes = "See if the structure of skin is changed by Mojang.")
+@TestCase(action = "Buy a new head in `/head`.", targets = "See if the structure of skin is changed by Mojang.")
 
 @CommandNode("head")
 public class HeadInitializer extends ModuleInitializer {

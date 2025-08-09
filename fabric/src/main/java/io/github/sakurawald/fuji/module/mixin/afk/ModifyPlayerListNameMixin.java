@@ -16,7 +16,7 @@ public class ModifyPlayerListNameMixin {
     @Unique
     private final ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
 
-    @TestCase(steps = "Issue `/afk` and see the player list.", purposes = "The display name of an afk player should be modified.")
+    @TestCase(action = "Issue `/afk` and see the player list.", targets = "The display name of an afk player should be modified.")
     @ModifyReturnValue(method = "getPlayerListName", at = @At("RETURN"))
     public Text handlePlayerListName(Text original) {
         if (AfkInitializer.isAfk(player)) {

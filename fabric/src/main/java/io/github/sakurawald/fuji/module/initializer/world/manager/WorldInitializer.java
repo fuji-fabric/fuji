@@ -299,7 +299,7 @@ import org.jetbrains.annotations.Nullable;
     The `/world tp` command is an `admin-level` command.
     You can use `command_bundle` module to create a `/tpw resource-world` command, to teleport players to `fuji:overworld`.
     """)
-@TestCase(steps = "In MC 1.20.1, create a `overworld` dimension type with seed `12345`.", purposes = {
+@TestCase(action = "In MC 1.20.1, create a `overworld` dimension type with seed `12345`.", targets = {
     "Goto `/tp @s 14665 ~ 345`. (You should get `emerald * 7`, `gold ingot * 3`, `iron ingot * 11`, `tnt * 2`, `heart of the sea * 1`, `cooked cod * 8` and `potion of water breathing * 1`.)"
     , "Goto `/tp @s 0 128 0`, you should in `minecraft:ocean`, and there is a `minecraft:dark_forest` in front of you, also there is a `lava source` flowing down."
 })

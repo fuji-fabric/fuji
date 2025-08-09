@@ -91,18 +91,18 @@ public class GenerateGraphTest {
                     String module = ModuleManager.computeJoinedModulePath(declaringClassInfo.getName());
 
                     AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
-                    String steps = (String) parameterValues.get("steps").getValue();
-                    String[] purposes = (String[]) parameterValues.get("purposes").getValue();
+                    String action = (String) parameterValues.get("action").getValue();
+                    String[] targets = (String[]) parameterValues.get("targets").getValue();
 
                     StringBuilder sb = new StringBuilder();
                     sb.append("""
                         [Test Case]
                         - Module: %s
-                        - Steps: **%s**
-                        """.formatted(module, steps));
-                    Arrays.stream(purposes)
-                        .forEach(purpose -> {
-                            sb.append("- Purpose: %s".formatted(purpose));
+                        - Action: **%s**
+                        """.formatted(module, action));
+                    Arrays.stream(targets)
+                        .forEach(target -> {
+                            sb.append("- Target: %s".formatted(target));
                             sb.append("\n");
                         });
                     return sb;

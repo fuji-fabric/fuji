@@ -39,9 +39,9 @@ import java.util.Set;
     All 4 lines will be joined and treated as one single big line.
     So be careful with the `space character`, and ignore the `linefeed character`.
     """)
-@TestCase(steps = "Test the `command_interactive` module in `online-mode` server.", purposes = "The packet should not break the client-side signature validation.")
-@TestCase(steps = "Enable `command_warmup` module, issue `/back` command.", purposes = "It should work with un-signed argument type.")
-@TestCase(steps = "Enable `command_warmup` module, issue `/say hi` command.", purposes = "It should work with signed argument type.")
+@TestCase(action = "Test the `command_interactive` module in `online-mode` server.", targets = "The packet should not break the client-side signature validation.")
+@TestCase(action = "Enable `command_warmup` module, issue `/back` command.", targets = "It should work with un-signed argument type.")
+@TestCase(action = "Enable `command_warmup` module, issue `/say hi` command.", targets = "It should work with signed argument type.")
 public class CommandInteractiveInitializer extends ModuleInitializer {
 
     // NOTE: It's annoy, see https://gist.github.com/kennytv/ed783dd244ca0321bbd882c347892874

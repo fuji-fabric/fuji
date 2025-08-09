@@ -38,7 +38,7 @@ import java.util.Set;
 @Document(id = 1751826999379L, value = """
     Provides a facility to sit on blocks.
     """)
-@TestCase(steps = "Issue `/sit` command while stepping on the `bed block`.", purposes = "The raycast height should be proper.")
+@TestCase(action = "Issue `/sit` command while stepping on the `bed block`.", targets = "The raycast height should be proper.")
 public class SitInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<SitConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, SitConfigModel.class);

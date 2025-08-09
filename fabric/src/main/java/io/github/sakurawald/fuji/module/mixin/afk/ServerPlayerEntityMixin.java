@@ -89,7 +89,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Af
     }
 
 
-    @TestCase(steps = "Try to move a player in afk state.", purposes = "The `moveable` option should work.")
+    @TestCase(action = "Try to move a player in afk state.", targets = "The `moveable` option should work.")
     // NOTE: Here we override the original move() function, we use @Override since we can't inject into a super method.
     @Override
     public void move(MovementType movementType, Vec3d vec3d) {

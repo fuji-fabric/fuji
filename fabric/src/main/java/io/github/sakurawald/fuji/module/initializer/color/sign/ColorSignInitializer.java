@@ -27,7 +27,7 @@ import java.io.IOException;
     ◉ You can write `style tags` on the sign.
     Foe example: `\\<red\\>`, `\\<rb\\>`, `\\<bold\\>` and `\\<i\\>`.
     """)
-@TestCase(steps = "Place a `sign block` and write style tags in it, then re-open the sign.", purposes = "The style tags in the sign block should be `parsed` and `reversed`.")
+@TestCase(action = "Place a `sign block` and write style tags in it, then re-open the sign.", targets = "The style tags in the sign block should be `parsed` and `reversed`.")
 public class ColorSignInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<ColorSignConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ColorSignConfigModel.class);

@@ -36,7 +36,7 @@ import java.util.Optional;
     5. `/tppos --minRange 1000 --maxRange 2000` to specify the setup for `a random tp`.
     6. `/tppos here @a` to teleport `all online players` to `you`.
     """)
-@TestCase(steps = "Issue the command `/tppos --z 64 --x 32 --y 128`", purposes = "The command context should be passed after the command redirection.")
+@TestCase(action = "Issue the command `/tppos --z 64 --x 32 --y 128`", targets = "The command context should be passed after the command redirection.")
 public class TpposInitializer extends ModuleInitializer {
 
     @Document(id = 1751825250986L, value = "The unified teleport command.")
@@ -95,7 +95,7 @@ public class TpposInitializer extends ModuleInitializer {
     @Document(id = 1751825355777L, value = "Teleport to the offline position of a player.")
     @CommandNode("tppos offline")
     @CommandRequirement(level = 4)
-    @TestCase(steps = "Teleport to an offline player's location using `/tppos offline`", purposes = {
+    @TestCase(action = "Teleport to an offline player's location using `/tppos offline`", targets = {
         "We should be able to make the offline player instance."
         , "The saved dimension of the offline player should not be reset to minecraft:overworld"
     })

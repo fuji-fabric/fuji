@@ -883,7 +883,7 @@ public class TextHelper {
 
     public static class Fixer {
 
-        @TestCase(steps = "Issue `/fuji`, and see the `document of afk module`, the `details of run module` and the `details of skin` module.", purposes = {
+        @TestCase(action = "Issue `/fuji`, and see the `document of afk module`, the `details of run module` and the `details of skin` module.", targets = {
             "The text parser should parse the text properly from the earliest version to the latest version."
             , "The URL highlighter should work properly."
             , "Ensure the `</>` doesn't break the style of texts."

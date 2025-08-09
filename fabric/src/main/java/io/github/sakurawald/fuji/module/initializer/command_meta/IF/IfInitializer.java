@@ -120,7 +120,7 @@ import net.minecraft.server.command.ServerCommandSource;
     """)
 public class IfInitializer extends ModuleInitializer {
 
-    @TestCase(steps = "Issue `/IF execute if block ~ ~-1 ~ minecraft:diamond_block THEN say You are standing on diamond block. ELSE say You are not standing on diamond block.` command.", purposes = {
+    @TestCase(action = "Issue `/IF execute if block ~ ~-1 ~ minecraft:diamond_block THEN say You are standing on diamond block. ELSE say You are not standing on diamond block.` command.", targets = {
         "You should not see the red `Test failed` in the feedback."
     })
     private static final String CONDITIONAL_FAIL_EXCEPTION_PREFIX_STRING = "Test failed";

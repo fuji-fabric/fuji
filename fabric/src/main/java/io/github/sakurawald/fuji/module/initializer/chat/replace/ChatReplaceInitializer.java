@@ -36,7 +36,7 @@ public class ChatReplaceInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<ChatReplaceConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatReplaceConfigModel.class);
 
-    @TestCase(steps = "Test the `chat replace` and `chat trigger` module.", purposes = {
+    @TestCase(action = "Test the `chat replace` and `chat trigger` module.", targets = {
          "Case: `inv`"
         , "Case: `prefix inv`"
         , "Case: `prefix inv `"

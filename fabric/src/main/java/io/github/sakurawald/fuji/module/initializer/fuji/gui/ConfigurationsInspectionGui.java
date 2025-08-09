@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-@TestCase(steps = "Inspect the configurations of `command_menu` module.", purposes = "It should be able to inspect complex data structures.")
+@TestCase(action = "Inspect the configurations of `command_menu` module.", targets = "It should be able to inspect complex data structures.")
 public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandler<?>> {
 
     public ConfigurationsInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, @NotNull List<BaseConfigurationHandler<?>> entities, int pageIndex) {

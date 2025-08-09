@@ -50,7 +50,7 @@ import net.minecraft.world.border.WorldBorder;
     ◉ The semantics of options for `world border`.
     See: https://minecraft.wiki/w/World_border
     """)
-@TestCase(steps = "Issue `/tp` and `/world tp` between dimensions.", purposes = "The per-dimension border should be synced on the client-side.")
+@TestCase(action = "Issue `/tp` and `/world tp` between dimensions.", targets = "The per-dimension border should be synced on the client-side.")
 public class WorldBorderInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<WorldBorderConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, WorldBorderConfigModel.class);

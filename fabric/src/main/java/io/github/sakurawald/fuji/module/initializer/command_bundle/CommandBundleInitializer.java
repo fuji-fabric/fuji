@@ -238,7 +238,7 @@ public class CommandBundleInitializer extends ModuleInitializer {
         });
     }
 
-    @TestCase(steps = "Issue `/reload`, `/fuji reload`, `/fuji inspect fuji-commands` and `/command-bundle list`", purposes = "The bundle commands should be able to register and un-register on the fly.")
+    @TestCase(action = "Issue `/reload`, `/fuji reload`, `/fuji inspect fuji-commands` and `/command-bundle list`", targets = "The bundle commands should be able to register and un-register on the fly.")
     @Override
     protected void onReload() {
         $unregisterAllBundleCommands(CommandHelper.Source.getConsoleCommandSource());

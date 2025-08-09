@@ -35,7 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
     "https://github.com/Revxrsal/Lamp"
     , "https://github.com/henkelmax/admiral"
 })
-@TestCase(steps = "List the command tree of a normal user.", purposes = "The command permissions should be handled properly.")
+@TestCase(action = "List the command tree of a normal user.", targets = "The command permissions should be handled properly.")
 public class CommandAnnotationProcessor {
 
     private static final String REQUIRED_ARGUMENT_PLACEHOLDER = "$";

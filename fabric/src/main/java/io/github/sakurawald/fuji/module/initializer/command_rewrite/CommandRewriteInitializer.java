@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
     2. The `command bundle` module allows you to define `new command`, and define the argument and body of the new command.
     3. The `command rewrite` module didn't define any new command. It just works in `network packet` level, and modifies the `issued command string` from the command source player.
     """)
-@TestCase(steps = "Issue `/home` command.", purposes = "It should be rewrite to `/home tp default` command.")
+@TestCase(action = "Issue `/home` command.", targets = "It should be rewrite to `/home tp default` command.")
 public class CommandRewriteInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<CommandRewriteConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandRewriteConfigModel.class);
 

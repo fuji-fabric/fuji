@@ -48,8 +48,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
     ◉ Give the new-bie player a kit.
     You can use `command_event` module, to give a kit to the new-bie player.
     """)
-@TestCase(steps = "Create a new kit using `/kit editor` command.", purposes = "See if the `kit editor` works.")
-@TestCase(steps = "Give the new kit using `/kit give` command.", purposes = "See if the items is inserted in the proper slots. (Note that the player in creative mode can always pick up the same items even their inventory is full.)")
+@TestCase(action = "Create a new kit using `/kit editor` command.", targets = "See if the `kit editor` works.")
+@TestCase(action = "Give the new kit using `/kit give` command.", targets = "See if the items is inserted in the proper slots. (Note that the player in creative mode can always pick up the same items even their inventory is full.)")
 
 
 @CommandNode("kit")

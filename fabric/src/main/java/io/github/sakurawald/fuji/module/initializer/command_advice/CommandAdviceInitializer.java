@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 @ColorBox(id = 1751900258020L, color = ColorBox.ColorBlockTypes.TIPS, value = """
     This module provides `similar` functions to `command_bundle` module.
     """)
-@TestCase(steps = "Issue `/say hi` command.", purposes = "The command should be cancelled with the `/send-broadcast` command.")
+@TestCase(action = "Issue `/say hi` command.", targets = "The command should be cancelled with the `/send-broadcast` command.")
 public class CommandAdviceInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<CommandAdviceConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandAdviceConfigModel.class);

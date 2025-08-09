@@ -24,8 +24,8 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 
     See: https://luckperms.net/wiki/Prefixes,-Suffixes-&-Meta
     """)
-@TestCase(steps = "Enable the `online-mode` in server.properties", purposes = "All of chat-related modules should not break the Mojang's chat signature.")
-@TestCase(steps = "Test the chat-related modules with `Styled Chat` mod.", purposes = "It should work fine with other mods.")
+@TestCase(action = "Enable the `online-mode` in server.properties", targets = "All of chat-related modules should not break the Mojang's chat signature.")
+@TestCase(action = "Test the chat-related modules with `Styled Chat` mod.", targets = "It should work fine with other mods.")
 public class ChatInitializer extends ModuleInitializer {
 
 }

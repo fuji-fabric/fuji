@@ -42,7 +42,7 @@ public class MultiplierInitializer extends ModuleInitializer{
         """)
     public static final MetaDescriptor<Float> MULTIPLIER_META = new MetaDescriptor<>("fuji.multiplier.<multiplier-type>.<id>", Float::valueOf, 1752000356004L);
 
-    @TestCase(steps = "Summon a fake player using `/player 1 spawn` and throw exp bottle to it.", purposes = "Test the compatibility between `luckperms` and `carpet`'s fake player.")
+    @TestCase(action = "Summon a fake player using `/player 1 spawn` and throw exp bottle to it.", targets = "Test the compatibility between `luckperms` and `carpet`'s fake player.")
     public static float transform(@NotNull ServerPlayerEntity player, String type, String key, float f) {
         Optional<Float> meta = LuckpermsHelper.getMeta(player.getUuid(), MULTIPLIER_META, type, key);
         return meta.map(factor -> f * factor).orElse(f);

@@ -39,7 +39,7 @@ import java.util.List;
 
     Issue `/fuji inspect jobs` to see the `fire dates` of defined `jobs`.
     """)
-@TestCase(steps = "Issue `/fuji reload` command.", purposes = "The jobs from command_scheduler module should be re-scheduled.")
+@TestCase(action = "Issue `/fuji reload` command.", targets = "The jobs from command_scheduler module should be re-scheduled.")
 
 
 @CommandNode("command-scheduler")

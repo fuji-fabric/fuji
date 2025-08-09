@@ -48,7 +48,7 @@ import java.util.concurrent.ConcurrentHashMap;
     ◉ Scale the size of text into double.
     Set the `x`, `y`, and `z` in `scale` to `2.0`.
     """)
-@TestCase(steps = "Pass through a nether portal.", purposes = {
+@TestCase(action = "Pass through a nether portal.", targets = {
     "The nametag entity should be discarded in the old dimension."
     , "A new nametag entity should be created in the new dimension."
 })
