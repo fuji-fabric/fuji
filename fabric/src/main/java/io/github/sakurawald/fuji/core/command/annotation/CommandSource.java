@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.PARAMETER, ElementType.TYPE, ElementType.METHOD})
+@Target({ElementType.PARAMETER})
 @Keep
 public @interface CommandSource {
 }
