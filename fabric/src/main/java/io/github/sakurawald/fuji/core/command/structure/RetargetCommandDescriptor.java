@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.core.command.structure;
 import com.mojang.brigadier.Command;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
+import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.PlayerCollection;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -17,17 +17,17 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
 
     private final int parameterIndexOfCommandTarget;
 
-    private RetargetCommandDescriptor(Method method, List<Argument> arguments, int parameterIndexOfCommandTarget) {
-        super(method, arguments);
+    private RetargetCommandDescriptor(Method method, List<CommandArgument> commandArguments, int parameterIndexOfCommandTarget) {
+        super(method, commandArguments);
         this.parameterIndexOfCommandTarget = parameterIndexOfCommandTarget;
     }
 
     private static Optional<Integer> computeParameterIndexOfCommandTarget(CommandDescriptor descriptor) {
-        List<Argument> args = descriptor.collectArgumentsToMakeObjects();
+        List<CommandArgument> args = descriptor.collectArgumentsToMakeObjects();
 
         for (int i = 0; i < args.size(); i++) {
-            Argument argument = args.get(i);
-            if (argument.isCommandTarget()) {
+            CommandArgument commandArgument = args.get(i);
+            if (commandArgument.isCommandTarget()) {
                 return Optional.of(i);
             }
         }
@@ -44,7 +44,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
         int index = indexOpt.get();
 
         /* make retarget command descriptor */
-        List<Argument> transformedArgs = transformWithOthersArguments(commandDescriptor.arguments);
+        List<CommandArgument> transformedArgs = transformWithOthersArguments(commandDescriptor.commandArguments);
 
         RetargetCommandDescriptor retargetCommandDescriptor = new RetargetCommandDescriptor(commandDescriptor.method, transformedArgs, index);
         retargetCommandDescriptor.setDocument(commandDescriptor.document);
@@ -53,8 +53,8 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
     }
 
 
-    private static List<Argument> transformWithOthersArguments(List<Argument> arguments) {
-        List<Argument> ret = new ArrayList<>(arguments
+    private static List<CommandArgument> transformWithOthersArguments(List<CommandArgument> commandArguments) {
+        List<CommandArgument> ret = new ArrayList<>(commandArguments
             .stream()
             .filter(it ->
                 /*
@@ -66,19 +66,19 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
             )
             .toList());
 
-        for (int argumentIndex = 0; argumentIndex < arguments.size(); argumentIndex++) {
-            Argument argument = arguments.get(argumentIndex);
+        for (int argumentIndex = 0; argumentIndex < commandArguments.size(); argumentIndex++) {
+            CommandArgument commandArgument = commandArguments.get(argumentIndex);
 
             /* ensure the `others` args are the `first required argument`, so that the `makeCommandFunctionArgs()` can extract the targets in the first arg */
-            if (argument.isRequiredArgument() || argumentIndex == ret.size() - 1) {
+            if (commandArgument.isRequiredArgument() || argumentIndex == ret.size() - 1) {
 
                 /* all retarget commands require level 4 permission to use.
                  *  There is a bug about the tab completion for `/warp tp others`.
                  */
                 CommandRequirementDescriptor requirement = new CommandRequirementDescriptor(4, null);
 
-                ret.add(argumentIndex, Argument.makeLiteralArgument("others", requirement));
-                ret.add(argumentIndex + 1, Argument.makeRequiredArgument(PlayerCollection.class, "others", false, requirement));
+                ret.add(argumentIndex, CommandArgument.makeLiteralArgument("others", requirement));
+                ret.add(argumentIndex + 1, CommandArgument.makeRequiredArgument(PlayerCollection.class, "others", false, requirement));
                 break;
             }
         }

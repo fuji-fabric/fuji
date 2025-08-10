@@ -7,7 +7,7 @@ import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
-import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
+import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.module.initializer.echo.send_custom.SendCustomInitializer;
 import io.github.sakurawald.fuji.module.initializer.echo.send_custom.command.argument.wrapper.CustomTextName;
 import lombok.Cleanup;
@@ -29,8 +29,8 @@ public class CustomTextNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
-        return new CustomTextName(StringArgumentType.getString(context, argument.getArgumentName()));
+    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+        return new CustomTextName(StringArgumentType.getString(context, commandArgument.getArgumentName()));
     }
 
     @SneakyThrows

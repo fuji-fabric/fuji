@@ -7,7 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
-import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
+import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.Dimension;
 import lombok.SneakyThrows;
 import net.minecraft.command.argument.DimensionArgumentType;
@@ -39,8 +39,8 @@ public class DimensionArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @SneakyThrows(CommandSyntaxException.class)
     @Override
-    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
-        return new Dimension(DimensionArgumentType.getDimensionArgument(context, argument.getArgumentName()));
+    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+        return new Dimension(DimensionArgumentType.getDimensionArgument(context, commandArgument.getArgumentName()));
     }
 
     @Override

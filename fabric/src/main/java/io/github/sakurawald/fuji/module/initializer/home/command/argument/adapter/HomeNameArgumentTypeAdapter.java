@@ -5,7 +5,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
-import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
+import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.home.HomeInitializer;
 import io.github.sakurawald.fuji.module.initializer.home.command.argument.wrapper.HomeName;
@@ -24,8 +24,8 @@ public class HomeNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
-        return new HomeName(StringArgumentType.getString(context, argument.getArgumentName()));
+    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+        return new HomeName(StringArgumentType.getString(context, commandArgument.getArgumentName()));
     }
 
     @Override

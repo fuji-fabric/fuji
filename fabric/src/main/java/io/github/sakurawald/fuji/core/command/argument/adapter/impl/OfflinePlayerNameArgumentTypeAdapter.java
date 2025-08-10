@@ -8,7 +8,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
-import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
+import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlayerName;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
 import net.minecraft.server.command.ServerCommandSource;
@@ -30,8 +30,8 @@ public class OfflinePlayerNameArgumentTypeAdapter extends BaseArgumentTypeAdapte
     }
 
     @Override
-    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
-        String offlinePlayerName = StringArgumentType.getString(context, argument.getArgumentName());
+    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+        String offlinePlayerName = StringArgumentType.getString(context, commandArgument.getArgumentName());
 
         return PlayerHelper.Cache
             .getOfflineGameProfileByName(offlinePlayerName)

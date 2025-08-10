@@ -9,7 +9,7 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
-import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
+import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.structure.CommandDescriptor;
 import io.github.sakurawald.fuji.core.command.structure.CommandRequirementDescriptor;
@@ -52,8 +52,8 @@ public class BundleCommandDescriptor extends CommandDescriptor {
     @Getter
     final Map<String, String> optionalArgumentName2DefaultValue;
 
-    private BundleCommandDescriptor(Method method, List<Argument> arguments, BundleCommandNode entry, Map<String, String> optionalArgumentName2DefaultValue, String document) {
-        super(method, arguments);
+    private BundleCommandDescriptor(Method method, List<CommandArgument> commandArguments, BundleCommandNode entry, Map<String, String> optionalArgumentName2DefaultValue, String document) {
+        super(method, commandArguments);
         this.entry = entry;
         this.optionalArgumentName2DefaultValue = optionalArgumentName2DefaultValue;
         this.setDocument(document);
@@ -83,10 +83,10 @@ public class BundleCommandDescriptor extends CommandDescriptor {
         Map<String, String> variables = new HashMap<>();
 
         int argumentIndex = 0;
-        for (Argument argument : descriptor.arguments) {
-            if (argument.isLiteralArgument()) continue;
+        for (CommandArgument commandArgument : descriptor.commandArguments) {
+            if (commandArgument.isLiteralArgument()) continue;
 
-            String argumentName = argument.getArgumentName();
+            String argumentName = commandArgument.getArgumentName();
             String argumentValue = (String) args.get(argumentIndex);
             variables.put(argumentName, argumentValue);
             argumentIndex++;
@@ -117,7 +117,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
 
     public static BundleCommandDescriptor make(BundleCommandNode entry) {
         /* make arguments */
-        List<Argument> arguments = new ArrayList<>();
+        List<CommandArgument> commandArguments = new ArrayList<>();
         Map<String, String> defaultValueForOptionalArguments = new HashMap<>();
 
         String pattern = entry.getPattern();
@@ -129,14 +129,14 @@ public class BundleCommandDescriptor extends CommandDescriptor {
 
             if (matchLiteralArgument(matcher)) {
                 String argumentName = matcher.group(LITERAL_ARGUMENT_NAME_GROUP_INDEX);
-                arguments.add(Argument.makeLiteralArgument(argumentName, requirement));
+                commandArguments.add(CommandArgument.makeLiteralArgument(argumentName, requirement));
             } else {
                 boolean isOptional = matcher.group(LEXEME_GROUP_INDEX).startsWith("[");
                 if (isOptional) {
                     String argumentType = matcher.group(REQUIRED_OPTIONAL_ARGUMENT_TYPE_GROUP_INDEX);
                     String argumentName = matcher.group(REQUIRED_OPTIONAL_ARGUMENT_NAME_GROUP_INDEX);
                     Class<?> type = BaseArgumentTypeAdapter.Registry.toTypeClass(argumentType);
-                    arguments.add(Argument.makeRequiredArgument(type, argumentName, true, requirement));
+                    commandArguments.add(CommandArgument.makeRequiredArgument(type, argumentName, true, requirement));
 
                     // put default value for optional argument
                     String defaultValue = matcher.group(REQUIRED_OPTIONAL_ARGUMENT_DEFAULT_VALUE_GROUP_INDEX);
@@ -149,7 +149,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
                     String argumentType = matcher.group(REQUIRED_NON_OPTIONAL_ARGUMENT_TYPE_GROUP_INDEX);
                     String argumentName = matcher.group(REQUIRED_NON_OPTIONAL_ARGUMENT_NAME_GROUP_INDEX);
                     Class<?> type = BaseArgumentTypeAdapter.Registry.toTypeClass(argumentType);
-                    arguments.add(Argument.makeRequiredArgument(type, argumentName, false, requirement));
+                    commandArguments.add(CommandArgument.makeRequiredArgument(type, argumentName, false, requirement));
                 }
 
             }
@@ -158,7 +158,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
         }
 
         String document = entry.getDocument();
-        return new BundleCommandDescriptor(getFunctionClosure(), arguments, entry, defaultValueForOptionalArguments, document);
+        return new BundleCommandDescriptor(getFunctionClosure(), commandArguments, entry, defaultValueForOptionalArguments, document);
     }
 
     private static boolean matchLiteralArgument(Matcher matcher) {
@@ -170,8 +170,8 @@ public class BundleCommandDescriptor extends CommandDescriptor {
         List<Object> args = new ArrayList<>();
 
         CommandContextAccessor<?> ctxAccessor = (CommandContextAccessor<?>) ctx;
-        for (Argument argument : this.collectArgumentsToMakeObjects()) {
-            String argumentName = argument.getArgumentName();
+        for (CommandArgument commandArgument : this.collectArgumentsToMakeObjects()) {
+            String argumentName = commandArgument.getArgumentName();
 
             /* Collect the matched lexeme. */
             String arg;

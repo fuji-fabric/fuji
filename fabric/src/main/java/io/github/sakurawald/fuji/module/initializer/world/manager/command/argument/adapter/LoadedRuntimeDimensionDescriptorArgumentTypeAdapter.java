@@ -5,7 +5,7 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
-import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
+import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.module.initializer.world.manager.command.argument.wrapper.LoadedRuntimeDimensionDescriptor;
 import io.github.sakurawald.fuji.module.initializer.world.manager.service.WorldService;
 import io.github.sakurawald.fuji.module.initializer.world.manager.structure.RuntimeDimensionDescriptor;
@@ -23,8 +23,8 @@ public class LoadedRuntimeDimensionDescriptorArgumentTypeAdapter extends BaseArg
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
-        Identifier identifier = IdentifierArgumentType.getIdentifier(context, argument.getArgumentName());
+    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+        Identifier identifier = IdentifierArgumentType.getIdentifier(context, commandArgument.getArgumentName());
         Optional<RuntimeDimensionDescriptor> runtimeDimensionDescriptor = WorldService.getRuntimeDimensionDescriptor(identifier.toString());
         RuntimeDimensionDescriptor value = runtimeDimensionDescriptor.get();
         if (value.isDimensionLoaded()) {

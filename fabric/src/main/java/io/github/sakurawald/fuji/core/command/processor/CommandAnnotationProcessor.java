@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.core.command.processor;
 
 import com.mojang.brigadier.CommandDispatcher;
+import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
@@ -8,7 +9,6 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
-import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
 import io.github.sakurawald.fuji.core.command.structure.CommandDescriptor;
 import io.github.sakurawald.fuji.core.command.structure.CommandRequirementDescriptor;
 import io.github.sakurawald.fuji.core.command.structure.RetargetCommandDescriptor;
@@ -110,22 +110,22 @@ public class CommandAnnotationProcessor {
         return parameter.getType();
     }
 
-    private static boolean isRequiredArgumentPlaceholder(Argument argument) {
-        return argument.getArgumentName().startsWith(REQUIRED_ARGUMENT_PLACEHOLDER);
+    private static boolean isRequiredArgumentPlaceholder(CommandArgument commandArgument) {
+        return commandArgument.getArgumentName().startsWith(REQUIRED_ARGUMENT_PLACEHOLDER);
     }
 
-    private static int parseMethodParameterIndexFromArgumentName(Argument argument) {
+    private static int parseMethodParameterIndexFromArgumentName(CommandArgument commandArgument) {
         // parse the method parameter index
-        String argumentName = argument.getArgumentName();
+        String argumentName = commandArgument.getArgumentName();
         if (argumentName.startsWith(REQUIRED_ARGUMENT_PLACEHOLDER)) {
             return Integer.parseInt(argumentName.substring(REQUIRED_ARGUMENT_PLACEHOLDER.length()));
         }
 
-        throw new IllegalArgumentException("failed to parse parameter index from argument name for argument" + argument);
+        throw new IllegalArgumentException("failed to parse parameter index from argument name for argument" + commandArgument);
     }
 
     private static @NotNull CommandDescriptor makeCommandDescriptor(Class<?> clazz, Method method) {
-        List<Argument> argumentList = new ArrayList<>();
+        List<CommandArgument> commandArgumentList = new ArrayList<>();
 
         /* process the @CommandNode above the class. */
         CommandNode classAnnotation = clazz.getAnnotation(CommandNode.class);
@@ -133,8 +133,8 @@ public class CommandAnnotationProcessor {
         if (classAnnotation != null && !classAnnotation.value().isBlank()) {
             Arrays.stream(classAnnotation.value().trim().split(" "))
                 .filter(it -> !it.isBlank())
-                .forEach(argumentName -> argumentList.add(
-                    Argument.makeLiteralArgument(argumentName, CommandRequirementDescriptor.of(classRequirement))
+                .forEach(argumentName -> commandArgumentList.add(
+                    CommandArgument.makeLiteralArgument(argumentName, CommandRequirementDescriptor.of(classRequirement))
                 ));
         }
 
@@ -143,7 +143,7 @@ public class CommandAnnotationProcessor {
         CommandNode methodAnnotation = method.getAnnotation(CommandNode.class);
 
         if (methodAnnotation.topLevel()) {
-            argumentList.clear();
+            commandArgumentList.clear();
         }
 
         CommandRequirement methodRequirement = null;
@@ -158,25 +158,25 @@ public class CommandAnnotationProcessor {
             }
 
             /* make requirement descriptor */
-            argumentList.add(Argument.makeLiteralArgument(argumentName, CommandRequirementDescriptor.of(methodRequirement)));
+            commandArgumentList.add(CommandArgument.makeLiteralArgument(argumentName, CommandRequirementDescriptor.of(methodRequirement)));
         }
 
         /* process the required arguments */
-        boolean hasAnyRequiredArgumentPlaceholder = argumentList.stream().anyMatch(CommandAnnotationProcessor::isRequiredArgumentPlaceholder);
+        boolean hasAnyRequiredArgumentPlaceholder = commandArgumentList.stream().anyMatch(CommandAnnotationProcessor::isRequiredArgumentPlaceholder);
         if (hasAnyRequiredArgumentPlaceholder) {
             /* specify the mappings between argument and parameter manually.  */
-            for (int argumentIndex = 0; argumentIndex < argumentList.size(); argumentIndex++) {
+            for (int argumentIndex = 0; argumentIndex < commandArgumentList.size(); argumentIndex++) {
                 /* find $1, $2 ... and replace them with the correct argument. */
-                Argument argument = argumentList.get(argumentIndex);
-                if (!isRequiredArgumentPlaceholder(argument)) continue;
+                CommandArgument commandArgument = commandArgumentList.get(argumentIndex);
+                if (!isRequiredArgumentPlaceholder(commandArgument)) continue;
 
                 /* replace the required argument placeholder `$1` with the parameter in method whose index is 1*/
-                int methodParameterIndex = parseMethodParameterIndexFromArgumentName(argument);
+                int methodParameterIndex = parseMethodParameterIndexFromArgumentName(commandArgument);
                 Parameter parameter = method.getParameters()[methodParameterIndex];
                 Class<?> type = unbox(parameter);
                 boolean isOptional = parameter.getType().equals(Optional.class);
-                argumentList.set(argumentIndex,
-                    Argument
+                commandArgumentList.set(argumentIndex,
+                    CommandArgument
                         .makeRequiredArgument(type, parameter.getName(), isOptional, CommandRequirementDescriptor.of(methodRequirement))
                         .markWithParameter(parameter)
                         .withDocument(parameter.getAnnotation(Document.class))
@@ -188,7 +188,7 @@ public class CommandAnnotationProcessor {
                 if (parameter.getAnnotation(CommandSource.class) == null) continue;
                 Class<?> type = unbox(parameter);
                 // for a command source argument, we don't care the index
-                argumentList.add(0, Argument
+                commandArgumentList.add(0, CommandArgument
                     .makeRequiredArgument(type, parameter.getName(), false, CommandRequirementDescriptor.of(methodRequirement))
                     .markWithParameter(parameter)
                     .withDocument(parameter.getAnnotation(Document.class))
@@ -201,20 +201,20 @@ public class CommandAnnotationProcessor {
                 /* append the argument to the tail*/
                 Class<?> type = unbox(parameter);
                 boolean isOptional = parameter.getType().equals(Optional.class);
-                Argument argument = Argument
+                CommandArgument commandArgument = CommandArgument
                     .makeRequiredArgument(type, parameter.getName(), isOptional, CommandRequirementDescriptor.of(methodRequirement))
                     .markWithParameter(parameter)
                     .withDocument(parameter.getAnnotation(Document.class));
-                argumentList.add(argument);
+                commandArgumentList.add(commandArgument);
             }
         }
 
         /* verify */
-        if (argumentList.isEmpty()) {
+        if (commandArgumentList.isEmpty()) {
             throw new RuntimeException("The argument list of @CommandNode annotated in method `%s` in class `%s` is empty.".formatted(method.getName(), clazz.getName()));
         }
 
-        return new CommandDescriptor(method, argumentList)
+        return new CommandDescriptor(method, commandArgumentList)
             .setDocument(method.getAnnotation(Document.class));
     }
 

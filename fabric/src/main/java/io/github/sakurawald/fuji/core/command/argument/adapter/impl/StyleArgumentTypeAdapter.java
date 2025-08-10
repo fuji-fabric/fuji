@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.core.command.argument.adapter.impl;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
-import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
+import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 #if MC_VER <= MC_1_20_2
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -37,11 +37,11 @@ public class StyleArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
         #if MC_VER <= MC_1_20_2
         return new GreedyString(StringArgumentType.getString(context, argument.getArgumentName()));
         #elif MC_VER > MC_1_20_2
-        return StyleArgumentType.getStyle(context, argument.getArgumentName());
+        return StyleArgumentType.getStyle(context, commandArgument.getArgumentName());
         #endif
     }
 

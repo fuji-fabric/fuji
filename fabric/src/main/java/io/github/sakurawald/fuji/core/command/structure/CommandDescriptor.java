@@ -9,6 +9,7 @@ import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
@@ -17,7 +18,6 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
-import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
 import io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
 public class CommandDescriptor implements SourceModuleGetter {
     public final Method method;
 
-    public final List<Argument> arguments;
+    public final List<CommandArgument> commandArguments;
 
     // it's null if get before register()
     private @Nullable LiteralArgumentBuilder<ServerCommandSource> registerReturnValue;
@@ -62,18 +62,18 @@ public class CommandDescriptor implements SourceModuleGetter {
         return this;
     }
 
-    public CommandDescriptor(Method method, List<Argument> arguments) {
+    public CommandDescriptor(Method method, List<CommandArgument> commandArguments) {
         this.method = method;
-        this.arguments = arguments;
+        this.commandArguments = commandArguments;
     }
 
-    private static LiteralArgumentBuilder<ServerCommandSource> makeLiteralArgumentBuilder(Argument argument) {
-        return CommandManager.literal(argument.getArgumentName());
+    private static LiteralArgumentBuilder<ServerCommandSource> makeLiteralArgumentBuilder(CommandArgument commandArgument) {
+        return CommandManager.literal(commandArgument.getArgumentName());
     }
 
-    private static RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(Argument argument) {
+    private static RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(CommandArgument commandArgument) {
         /* use adapter to make the required argument builder */
-        return BaseArgumentTypeAdapter.Registry.getTypeAdapter(argument.getType()).makeRequiredArgumentBuilder(argument.getArgumentName());
+        return BaseArgumentTypeAdapter.Registry.getTypeAdapter(commandArgument.getType()).makeRequiredArgumentBuilder(commandArgument.getArgumentName());
     }
 
     @DocStringProvider(id = 1751999362278L, value = "The permission used as the default string permission, for a command descriptor.")
@@ -151,11 +151,11 @@ public class CommandDescriptor implements SourceModuleGetter {
                 || targetNode.getChildren().isEmpty();
     }
 
-    private static CommandNode<ServerCommandSource> computeRedirectTargetOfOptionalArgument(List<Argument> arguments) {
-        List<String> prefix = arguments.stream()
+    private static CommandNode<ServerCommandSource> computeRedirectTargetOfOptionalArgument(List<CommandArgument> commandArguments) {
+        List<String> prefix = commandArguments.stream()
             .filter(arg -> !arg.isCommandSource())
             .takeWhile(arg -> !arg.isOptional())
-            .map(Argument::getArgumentName)
+            .map(CommandArgument::getArgumentName)
             .toList();
 
         return CommandAnnotationProcessor.COMMAND_DISPATCHER.findNode(prefix);
@@ -163,7 +163,7 @@ public class CommandDescriptor implements SourceModuleGetter {
 
     private static List<ArgumentBuilder<ServerCommandSource, ?>> makeArgumentBuilders(CommandDescriptor descriptor) {
         List<ArgumentBuilder<ServerCommandSource, ?>> builders = new ArrayList<>();
-        descriptor.arguments
+        descriptor.commandArguments
             .stream()
             .filter(
                 it ->
@@ -185,12 +185,12 @@ public class CommandDescriptor implements SourceModuleGetter {
         return builders;
     }
 
-    private static ArgumentBuilder<ServerCommandSource, ?> makeArgumentBuilder(Argument argument) {
+    private static ArgumentBuilder<ServerCommandSource, ?> makeArgumentBuilder(CommandArgument commandArgument) {
         ArgumentBuilder<ServerCommandSource, ?> builder;
-        if (argument.isRequiredArgument()) {
-            builder = makeRequiredArgumentBuilder(argument);
+        if (commandArgument.isRequiredArgument()) {
+            builder = makeRequiredArgumentBuilder(commandArgument);
         } else {
-            builder = makeLiteralArgumentBuilder(argument);
+            builder = makeLiteralArgumentBuilder(commandArgument);
         }
         return builder;
     }
@@ -216,9 +216,9 @@ public class CommandDescriptor implements SourceModuleGetter {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     protected static boolean verifyCommandSource(CommandContext<ServerCommandSource> ctx, CommandDescriptor descriptor) {
-        List<Argument> expectedCommandSources = descriptor.arguments
+        List<CommandArgument> expectedCommandSources = descriptor.commandArguments
             .stream()
-            .filter(Argument::isCommandSource)
+            .filter(CommandArgument::isCommandSource)
             .toList();
 
         // yeah, any type of source can use it.
@@ -288,23 +288,23 @@ public class CommandDescriptor implements SourceModuleGetter {
         CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS.remove(this);
     }
 
-    protected List<Argument> collectArgumentsToMakeObjects() {
-        return this.arguments
+    protected List<CommandArgument> collectArgumentsToMakeObjects() {
+        return this.commandArguments
             .stream()
             /* filter out the literal command node and root command node. */
-            .filter(Argument::isRequiredArgument)
+            .filter(CommandArgument::isRequiredArgument)
             .toList();
     }
 
     protected List<Object> makeObjectsByArguments(CommandContext<ServerCommandSource> ctx) {
         List<Object> args = new ArrayList<>();
 
-        for (Argument argument : this.collectArgumentsToMakeObjects()) {
+        for (CommandArgument commandArgument : this.collectArgumentsToMakeObjects()) {
             /* inject the value into a required argument. */
             try {
                 Object arg = BaseArgumentTypeAdapter.Registry
-                    .getTypeAdapter(argument.getType())
-                    .makeParameterValue(ctx, argument);
+                    .getTypeAdapter(commandArgument.getType())
+                    .makeParameterValue(ctx, commandArgument);
 
                 args.add(arg);
             } catch (Exception e) {
@@ -386,10 +386,10 @@ public class CommandDescriptor implements SourceModuleGetter {
     }
 
     private void registerOptionalArguments() {
-        CommandNode<ServerCommandSource> redirectTargetNode = computeRedirectTargetOfOptionalArgument(this.arguments);
+        CommandNode<ServerCommandSource> redirectTargetNode = computeRedirectTargetOfOptionalArgument(this.commandArguments);
 
-        this.arguments.stream()
-            .filter(Argument::isOptional)
+        this.commandArguments.stream()
+            .filter(CommandArgument::isOptional)
             .forEach(optionalArgument -> {
                 /* make it */
                 ArgumentBuilder<ServerCommandSource, ?> optionalArgumentBuilder =
@@ -404,14 +404,14 @@ public class CommandDescriptor implements SourceModuleGetter {
 
     @Override
     public String toString() {
-        return "/" + this.arguments.stream().map(Argument::toString).collect(Collectors.joining(" "));
+        return "/" + this.commandArguments.stream().map(CommandArgument::toString).collect(Collectors.joining(" "));
     }
 
     public String getCommandSyntax() {
         StringBuilder syntax = new StringBuilder()
             .append("/");
 
-        this.arguments.stream()
+        this.commandArguments.stream()
             .filter(it -> !it.isCommandSource())
             .forEach(it -> syntax.append(it.toHumanReadableString()).append(" "));
 
@@ -421,20 +421,20 @@ public class CommandDescriptor implements SourceModuleGetter {
     public int getDefaultLevelPermission() {
         int minRequiredLevel = CommandRequirementDescriptor.getDefaultLevel();
 
-        for (Argument argument : this.arguments) {
-            if (argument.getRequirement() == null) continue;
+        for (CommandArgument commandArgument : this.commandArguments) {
+            if (commandArgument.getRequirement() == null) continue;
 
-            minRequiredLevel = Math.max(minRequiredLevel, argument.getRequirement().getLevel());
+            minRequiredLevel = Math.max(minRequiredLevel, commandArgument.getRequirement().getLevel());
         }
         return minRequiredLevel;
     }
 
     public String getDefaultStringPermission() {
         String requiredString = CommandRequirementDescriptor.getDefaultString();
-        for (Argument argument : this.arguments) {
-            if (argument.getRequirement() == null) continue;
+        for (CommandArgument commandArgument : this.commandArguments) {
+            if (commandArgument.getRequirement() == null) continue;
 
-            String string = argument.getRequirement().getString();
+            String string = commandArgument.getRequirement().getString();
             if (string != null && !string.isBlank()) {
                 requiredString = string;
                 break;
@@ -445,12 +445,12 @@ public class CommandDescriptor implements SourceModuleGetter {
     }
 
     public boolean canBeExecutedByConsole() {
-        for (Argument argument : this.arguments) {
-            if (!argument.isCommandSource()) continue;
+        for (CommandArgument commandArgument : this.commandArguments) {
+            if (!commandArgument.isCommandSource()) continue;
 
-            assert argument.getType() != null;
-            return argument.getType().equals(CommandContext.class)
-                || argument.getType().equals(ServerCommandSource.class);
+            assert commandArgument.getType() != null;
+            return commandArgument.getType().equals(CommandContext.class)
+                || commandArgument.getType().equals(ServerCommandSource.class);
         }
 
         return true;

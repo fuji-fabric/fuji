@@ -5,7 +5,7 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
-import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
+import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
 import io.github.sakurawald.fuji.core.manager.Managers;
@@ -112,16 +112,16 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
 
     protected abstract ArgumentType<?> makeArgumentType();
 
-    protected abstract Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument);
+    protected abstract Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument);
 
     public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         ArgumentType<?> argumentType = this.makeArgumentType();
         return CommandManager.argument(argumentName, argumentType);
     }
 
-    public final @NotNull Object makeParameterValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
-        Object argumentValue = this.makeArgumentValue(context, argument);
-        if (argument.isOptional()) {
+    public final @NotNull Object makeParameterValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+        Object argumentValue = this.makeArgumentValue(context, commandArgument);
+        if (commandArgument.isOptional()) {
             return Optional.of(argumentValue);
         }
 

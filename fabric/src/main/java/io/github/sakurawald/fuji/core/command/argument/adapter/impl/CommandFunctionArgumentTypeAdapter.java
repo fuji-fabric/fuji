@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.core.command.argument.adapter.impl;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
-import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
+import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import lombok.SneakyThrows;
 import net.minecraft.command.argument.CommandFunctionArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
@@ -20,8 +20,8 @@ public class CommandFunctionArgumentTypeAdapter extends BaseArgumentTypeAdapter 
 
     @SneakyThrows
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
-        return CommandFunctionArgumentType.getFunctions(context, argument.getArgumentName());
+    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+        return CommandFunctionArgumentType.getFunctions(context, commandArgument.getArgumentName());
     }
 
     @Override

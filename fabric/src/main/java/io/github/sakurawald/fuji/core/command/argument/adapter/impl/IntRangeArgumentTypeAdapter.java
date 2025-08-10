@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.core.command.argument.adapter.impl;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
-import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
+import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import net.minecraft.command.argument.NumberRangeArgumentType;
 import net.minecraft.predicate.NumberRange;
 import net.minecraft.server.command.ServerCommandSource;
@@ -18,8 +18,8 @@ public class IntRangeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
-        return NumberRangeArgumentType.IntRangeArgumentType.getRangeArgument(context, argument.getArgumentName());
+    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+        return NumberRangeArgumentType.IntRangeArgumentType.getRangeArgument(context, commandArgument.getArgumentName());
     }
 
     @Override

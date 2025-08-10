@@ -21,7 +21,7 @@ import java.lang.reflect.Parameter;
  * - The parameter names in a method annotated with @CommandNode is a part of the command path, be careful to refactor these parameter names.
  */
 @Getter
-public class Argument {
+public class CommandArgument {
 
     @Keep
     private static final int THE_METHOD_PARAMETER_INDEX_FOR_LITERAL_ARGUMENT = -1;
@@ -37,22 +37,22 @@ public class Argument {
 
     @Nullable String document;
 
-    private Argument(@Nullable Class<?> type, @NotNull String argumentName, boolean isOptional, @Nullable CommandRequirementDescriptor requirement) {
+    private CommandArgument(@Nullable Class<?> type, @NotNull String argumentName, boolean isOptional, @Nullable CommandRequirementDescriptor requirement) {
         this.type = type;
         this.argumentName = argumentName;
         this.isOptional = isOptional;
         this.requirement = requirement;
     }
 
-    public static Argument makeRequiredArgument(@NotNull Class<?> type, @NotNull String argumentName, boolean isOptional, @Nullable CommandRequirementDescriptor requirement) {
-        return new Argument(type, argumentName, isOptional, requirement);
+    public static CommandArgument makeRequiredArgument(@NotNull Class<?> type, @NotNull String argumentName, boolean isOptional, @Nullable CommandRequirementDescriptor requirement) {
+        return new CommandArgument(type, argumentName, isOptional, requirement);
     }
 
-    public static Argument makeLiteralArgument(@NotNull String argumentName, @Nullable CommandRequirementDescriptor requirement) {
-        return new Argument(null, argumentName, false, requirement);
+    public static CommandArgument makeLiteralArgument(@NotNull String argumentName, @Nullable CommandRequirementDescriptor requirement) {
+        return new CommandArgument(null, argumentName, false, requirement);
     }
 
-    public Argument withDocument(@Nullable Document document) {
+    public CommandArgument withDocument(@Nullable Document document) {
         if (document == null) return this;
 
         this.document = document.value();
@@ -111,13 +111,13 @@ public class Argument {
         }
     }
 
-    public Argument markWithParameter(Parameter parameter) {
+    public CommandArgument markWithParameter(Parameter parameter) {
         this.markAsCommandSourceWithParameter(parameter);
         this.markAsCommandTargetWithParameter(parameter);
         return this;
     }
 
-    private Argument markAsCommandSourceWithParameter(Parameter parameter) {
+    private CommandArgument markAsCommandSourceWithParameter(Parameter parameter) {
         if (!parameter.isAnnotationPresent(CommandSource.class)) return this;
 
         if (!this.isRequiredArgument())
@@ -127,7 +127,7 @@ public class Argument {
         return this;
     }
 
-    private Argument markAsCommandTargetWithParameter(Parameter parameter) {
+    private CommandArgument markAsCommandTargetWithParameter(Parameter parameter) {
         if (!parameter.isAnnotationPresent(CommandTarget.class)) return this;
 
         if (!this.isRequiredArgument())

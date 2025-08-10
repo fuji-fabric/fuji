@@ -48,7 +48,7 @@ public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
         }
 
         /* Attach parameters document. */
-        List<Text> parameterDocumentTextList = entity.arguments
+        List<Text> parameterDocumentTextList = entity.commandArguments
             .stream()
             .filter(it -> it.getDocument() != null)
             .map(it -> {
