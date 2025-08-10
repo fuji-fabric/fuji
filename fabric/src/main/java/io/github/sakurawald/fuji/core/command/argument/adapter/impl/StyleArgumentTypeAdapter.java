@@ -39,7 +39,7 @@ public class StyleArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
         #if MC_VER <= MC_1_20_2
-        return new GreedyString(StringArgumentType.getString(context, argument.getArgumentName()));
+        return new GreedyString(StringArgumentType.getString(context, commandArgument.getArgumentName()));
         #elif MC_VER > MC_1_20_2
         return StyleArgumentType.getStyle(context, commandArgument.getArgumentName());
         #endif
