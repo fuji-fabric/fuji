@@ -55,12 +55,12 @@ public class CommandDescriptor implements SourceModuleGetter {
 
     private @Nullable LiteralArgumentBuilder<ServerCommandSource> registerReturnValue;
 
-    public CommandDescriptor fillDocument(@Nullable Document document) {
+    public @NotNull CommandDescriptor fillDocument(@Nullable Document document) {
         if (document == null) return this;
         return this.fillDocument(document.value());
     }
 
-    public CommandDescriptor fillDocument(@Nullable String document) {
+    public @NotNull CommandDescriptor fillDocument(@Nullable String document) {
         if (document == null) return this;
         this.document = document;
         return this;
@@ -133,24 +133,36 @@ public class CommandDescriptor implements SourceModuleGetter {
 
     @DocStringProvider(id = 1751999362278L, value = "The permission used as the default string permission, for a command descriptor.")
     @SuppressWarnings("RedundantIfStatement")
-    private static void setRequirementForArgumentBuilder(@NotNull ArgumentBuilder<ServerCommandSource, ?> builder, @Nullable CommandRequirementDescriptor requirement) {
-        // don't override the command requirement if the annotation is null
-        if (requirement == null) return;
+    private static void fillCommandRequirement(@NotNull ArgumentBuilder<ServerCommandSource, ?> builder, @Nullable CommandRequirementDescriptor requirement) {
+        // Don't override the command requirement if the annotation is null
+        if (requirement == null) {
+            return;
+        }
 
-        /* make the predicate */
+        /* Make the predicate. */
         Predicate<ServerCommandSource> predicate = (ctx) -> {
             ServerPlayerEntity player = ctx.getPlayer();
+
+            /* The console can use all commands. */
             if (player == null) return true;
+
+            /* Check the string permission. */
             if (requirement.getString() != null
                 && !requirement.getString().isEmpty()
-                && LuckpermsHelper.hasPermission(player.getUuid(), new PermissionDescriptor(requirement.getString(), 1751999362278L)))
+                && LuckpermsHelper.hasPermission(player.getUuid(), new PermissionDescriptor(requirement.getString(), 1751999362278L))) {
                 return true;
-            if (ctx.hasPermissionLevel(requirement.getLevel())) return true;
+            }
 
+            /* Check the level permission. */
+            if (ctx.hasPermissionLevel(requirement.getLevel())) {
+                return true;
+            }
+
+            /* Insufficient permission to use this command. */
             return false;
         };
 
-        /* set the predicate */
+        /* Set the predicate. */
         builder.requires(predicate);
     }
 
@@ -251,7 +263,7 @@ public class CommandDescriptor implements SourceModuleGetter {
 
     private void registerNonOptionalArguments() {
         /* Make the assembled argument builder. */
-        List<ArgumentBuilder<ServerCommandSource, ?>> argumentBuilders = ArgumentBuilderMaker.makeArgumentBuilders(this);
+        List<ArgumentBuilder<ServerCommandSource, ?>> argumentBuilders = ArgumentBuilderMaker.makeNonOptionalArgumentBuilders(this);
         Command<ServerCommandSource> commandAction = makeCommandAction();
         LiteralArgumentBuilder<ServerCommandSource> assembledArgumentBuilder = ArgumentBuilderMaker.assembleArgumentBuilders(argumentBuilders, commandAction);
 
@@ -372,30 +384,6 @@ public class CommandDescriptor implements SourceModuleGetter {
             return (LiteralArgumentBuilder<ServerCommandSource>) root;
         }
 
-        private static List<ArgumentBuilder<ServerCommandSource, ?>> makeArgumentBuilders(@NotNull CommandDescriptor descriptor) {
-            List<ArgumentBuilder<ServerCommandSource, ?>> builders = new ArrayList<>();
-            descriptor.commandArguments
-                .stream()
-                .filter(
-                    it ->
-                        // ignore the optional arguments, since we will process them in the second pass.
-                        !it.isOptional()
-                            // ignore the command source arguments, the command source value is directly inject into the method invoke, should not register it in game.
-                            && !it.isCommandSource())
-                .forEach(argument -> {
-                    // make the builder
-                    ArgumentBuilder<ServerCommandSource, ?> builder = makeArgumentBuilder(argument);
-
-                    // set requirement specified by the argument for the builder
-                    setRequirementForArgumentBuilder(builder, argument.getRequirement());
-
-                    // add the builder
-                    builders.add(builder);
-                });
-
-            return builders;
-        }
-
         private static @NotNull ArgumentBuilder<ServerCommandSource, ?> makeArgumentBuilder(@NotNull CommandArgument commandArgument) {
             ArgumentBuilder<ServerCommandSource, ?> builder;
             if (commandArgument.isRequiredArgument()) {
@@ -405,6 +393,31 @@ public class CommandDescriptor implements SourceModuleGetter {
             }
             return builder;
         }
+
+        private static List<ArgumentBuilder<ServerCommandSource, ?>> makeNonOptionalArgumentBuilders(@NotNull CommandDescriptor descriptor) {
+            List<ArgumentBuilder<ServerCommandSource, ?>> builders = new ArrayList<>();
+            descriptor.commandArguments
+                .stream()
+                .filter(
+                    it ->
+                        // Ignore the optional arguments, since we will process them in the second pass.
+                        !it.isOptional()
+                            // Ignore the command source arguments, the command source value is directly injected into the method arguments, should not register it in the command tree.
+                            && !it.isCommandSource())
+                .forEach(argument -> {
+                    /* Make the argument builder. */
+                    ArgumentBuilder<ServerCommandSource, ?> builder = makeArgumentBuilder(argument);
+
+                    /* Fill the requirement for the builder. */
+                    fillCommandRequirement(builder, argument.getRequirement());
+
+                    /* Add the builder. */
+                    builders.add(builder);
+                });
+
+            return builders;
+        }
+
     }
 
     public static class CommandSource {
