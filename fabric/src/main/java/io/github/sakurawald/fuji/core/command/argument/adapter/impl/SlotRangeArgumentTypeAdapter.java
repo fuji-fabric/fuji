@@ -38,7 +38,7 @@ public class SlotRangeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     public List<Class<?>> getTypeClasses() {
         #if MC_VER <= MC_1_20_4
-            return List.of(NotSupportedType.class);
+            return List.of(io.github.sakurawald.fuji.core.command.argument.wrapper.impl.NotSupportedType.class);
         #elif MC_VER > MC_1_20_4
             return List.of(SlotRange.class);
         #endif
