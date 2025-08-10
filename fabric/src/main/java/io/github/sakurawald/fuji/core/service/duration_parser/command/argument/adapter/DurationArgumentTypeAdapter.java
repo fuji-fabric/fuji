@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.command.argument.adapter.impl;
+package io.github.sakurawald.fuji.core.service.duration_parser.command.argument.adapter;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -8,7 +8,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
-import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.Duration;
+import io.github.sakurawald.fuji.core.service.duration_parser.command.argument.wrapper.Duration;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
 import io.github.sakurawald.fuji.core.service.duration_parser.DurationParser;
 import java.util.List;
