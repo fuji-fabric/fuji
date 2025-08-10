@@ -178,8 +178,7 @@ public class CommandAnnotationProcessor {
                 commandArgumentList.set(argumentIndex,
                     CommandArgument
                         .ofRequiredArgument(type, parameter.getName(), isOptional, CommandRequirementDescriptor.of(methodRequirement))
-                        .markWithParameter(parameter)
-                        .withDocument(parameter.getAnnotation(Document.class))
+                        .fillParameter(parameter)
                 );
             }
             /* generate the command source argument for lazy programmers. */
@@ -190,8 +189,7 @@ public class CommandAnnotationProcessor {
                 // for a command source argument, we don't care the index
                 commandArgumentList.add(0, CommandArgument
                     .ofRequiredArgument(type, parameter.getName(), false, CommandRequirementDescriptor.of(methodRequirement))
-                    .markWithParameter(parameter)
-                    .withDocument(parameter.getAnnotation(Document.class))
+                    .fillParameter(parameter)
                 );
             }
         } else {
@@ -203,8 +201,7 @@ public class CommandAnnotationProcessor {
                 boolean isOptional = parameter.getType().equals(Optional.class);
                 CommandArgument commandArgument = CommandArgument
                     .ofRequiredArgument(type, parameter.getName(), isOptional, CommandRequirementDescriptor.of(methodRequirement))
-                    .markWithParameter(parameter)
-                    .withDocument(parameter.getAnnotation(Document.class));
+                    .fillParameter(parameter);
                 commandArgumentList.add(commandArgument);
             }
         }

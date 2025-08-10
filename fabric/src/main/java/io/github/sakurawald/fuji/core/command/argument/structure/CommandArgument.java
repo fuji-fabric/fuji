@@ -62,7 +62,7 @@ public class CommandArgument {
             return "NONE";
         }
 
-        return "%d %s"
+        return "{%d %s}"
             .formatted(this.requirement.getLevel(), this.requirement.getString())
             .trim();
     }
@@ -98,37 +98,41 @@ public class CommandArgument {
         }
     }
 
-    public CommandArgument withDocument(@Nullable Document document) {
+    public @NotNull CommandArgument fillParameter(@NotNull Parameter parameter) {
+        this.fillDocument(parameter);
+        this.fillCommandSource(parameter);
+        this.fillCommandTarget(parameter);
+        return this;
+    }
+
+    @SuppressWarnings("UnusedReturnValue")
+    private @NotNull CommandArgument fillDocument(@NotNull Parameter parameter) {
+        Document document = parameter.getAnnotation(Document.class);
         if (document == null) return this;
 
         this.document = document.value();
         return this;
     }
 
-    public CommandArgument markWithParameter(Parameter parameter) {
-        this.markAsCommandSourceWithParameter(parameter);
-        this.markAsCommandTargetWithParameter(parameter);
-        return this;
-    }
-
-    private CommandArgument markAsCommandSourceWithParameter(Parameter parameter) {
+    @SuppressWarnings("UnusedReturnValue")
+    private @NotNull CommandArgument fillCommandSource(@NotNull Parameter parameter) {
         if (!parameter.isAnnotationPresent(CommandSource.class)) return this;
-
-        if (!this.isRequiredArgument())
-            throw new IllegalArgumentException("The argument for command source must be a required argument.");
+        if (!this.isRequiredArgument()) {
+            throw new IllegalArgumentException("The argument used as the command source must be a required argument.");
+        }
 
         this.isCommandSource = true;
         return this;
     }
 
-    private CommandArgument markAsCommandTargetWithParameter(Parameter parameter) {
+    @SuppressWarnings("UnusedReturnValue")
+    private @NotNull CommandArgument fillCommandTarget(@NotNull Parameter parameter) {
         if (!parameter.isAnnotationPresent(CommandTarget.class)) return this;
-
-        if (!this.isRequiredArgument())
-            throw new IllegalArgumentException("The argument for command target must be a required argument.");
-
+        if (!this.isRequiredArgument()){
+            throw new IllegalArgumentException("The argument used as the command target must be a required argument.");
+        }
         if (!parameter.getType().equals(ServerPlayerEntity.class)) {
-            throw new IllegalArgumentException("the annotation @CommandTarget can only be used in a parameter whose type is ServerPlayerEntity: class = %s, method = %s".formatted(parameter.getDeclaringExecutable().getName(), parameter.getDeclaringExecutable().getDeclaringClass().getSimpleName()));
+            throw new IllegalArgumentException("The @CommandTarget annotation can only be annotated on the ServerPlayerEntity parameter type: class = %s, method = %s".formatted(parameter.getDeclaringExecutable().getName(), parameter.getDeclaringExecutable().getDeclaringClass().getName()));
         }
 
         this.isCommandTarget = true;
