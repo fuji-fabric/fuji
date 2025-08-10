@@ -77,8 +77,8 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
                  */
                 CommandRequirementDescriptor requirement = new CommandRequirementDescriptor(4, null);
 
-                ret.add(argumentIndex, CommandArgument.makeLiteralArgument("others", requirement));
-                ret.add(argumentIndex + 1, CommandArgument.makeRequiredArgument(PlayerCollection.class, "others", false, requirement));
+                ret.add(argumentIndex, CommandArgument.ofLiteralArgument("others", requirement));
+                ret.add(argumentIndex + 1, CommandArgument.ofRequiredArgument(PlayerCollection.class, "others", false, requirement));
                 break;
             }
         }

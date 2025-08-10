@@ -129,14 +129,14 @@ public class BundleCommandDescriptor extends CommandDescriptor {
 
             if (matchLiteralArgument(matcher)) {
                 String argumentName = matcher.group(LITERAL_ARGUMENT_NAME_GROUP_INDEX);
-                commandArguments.add(CommandArgument.makeLiteralArgument(argumentName, requirement));
+                commandArguments.add(CommandArgument.ofLiteralArgument(argumentName, requirement));
             } else {
                 boolean isOptional = matcher.group(LEXEME_GROUP_INDEX).startsWith("[");
                 if (isOptional) {
                     String argumentType = matcher.group(REQUIRED_OPTIONAL_ARGUMENT_TYPE_GROUP_INDEX);
                     String argumentName = matcher.group(REQUIRED_OPTIONAL_ARGUMENT_NAME_GROUP_INDEX);
                     Class<?> type = BaseArgumentTypeAdapter.Registry.toTypeClass(argumentType);
-                    commandArguments.add(CommandArgument.makeRequiredArgument(type, argumentName, true, requirement));
+                    commandArguments.add(CommandArgument.ofRequiredArgument(type, argumentName, true, requirement));
 
                     // put default value for optional argument
                     String defaultValue = matcher.group(REQUIRED_OPTIONAL_ARGUMENT_DEFAULT_VALUE_GROUP_INDEX);
@@ -149,7 +149,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
                     String argumentType = matcher.group(REQUIRED_NON_OPTIONAL_ARGUMENT_TYPE_GROUP_INDEX);
                     String argumentName = matcher.group(REQUIRED_NON_OPTIONAL_ARGUMENT_NAME_GROUP_INDEX);
                     Class<?> type = BaseArgumentTypeAdapter.Registry.toTypeClass(argumentType);
-                    commandArguments.add(CommandArgument.makeRequiredArgument(type, argumentName, false, requirement));
+                    commandArguments.add(CommandArgument.ofRequiredArgument(type, argumentName, false, requirement));
                 }
 
             }

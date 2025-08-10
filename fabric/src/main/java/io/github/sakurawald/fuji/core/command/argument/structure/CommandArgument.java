@@ -1,55 +1,101 @@
 package io.github.sakurawald.fuji.core.command.argument.structure;
 
-import com.google.errorprone.annotations.Keep;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
 import io.github.sakurawald.fuji.core.command.structure.CommandRequirementDescriptor;
-import lombok.Getter;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
+import lombok.Data;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Parameter;
 
-/**
- * Rules:
- * - There are 2 kinds of Argument: LiteralArgument and RequiredArgument.
- * - The treatment of RequiredArgument is the same as the LiteralArgument, except the GreedyStringArgument.
- * - The GreedyStringArgument should always be the last parameter written in the method.
- * - An optional argument is a RequiredArgument.
- * - The parameter names in a method annotated with @CommandNode is a part of the command path, be careful to refactor these parameter names.
- */
-@Getter
+@ForDeveloper("""
+    A `CommandArgument` is used to describe a `parameter` declared in the command method.
+    It's used to hold the bits.
+    It's the component of a CommandDescriptor.
+
+    ◉ Rules:
+    - There are 2 kinds of Argument: LiteralArgument and RequiredArgument.
+    - The treatment of RequiredArgument is the same as the LiteralArgument, except the GreedyStringArgument.
+    - The GreedyStringArgument should always be the last parameter declared in the method.
+    - An optional argument is a RequiredArgument, with command node redirects.
+    - The parameter names in a method annotated with @CommandNode is a part of the command path, be careful to refactor these parameter names.
+    """)
+@Data
 public class CommandArgument {
 
-    @Keep
-    private static final int THE_METHOD_PARAMETER_INDEX_FOR_LITERAL_ARGUMENT = -1;
+    private static final Class<?> LITERAL_ARGUMENT_TYPE_CLASS = Void.class;
 
-    final @Nullable Class<?> type;
+    final @NotNull Class<?> argumentType;
     final @NotNull String argumentName;
     final boolean isOptional;
     final @Nullable CommandRequirementDescriptor requirement;
+
     boolean isCommandSource;
 
-    // this field is only used for RetargetCommandDescriptor
+    @ForDeveloper("This field is used for RetargetCommandDescriptor.")
     boolean isCommandTarget;
 
     @Nullable String document;
 
-    private CommandArgument(@Nullable Class<?> type, @NotNull String argumentName, boolean isOptional, @Nullable CommandRequirementDescriptor requirement) {
-        this.type = type;
-        this.argumentName = argumentName;
-        this.isOptional = isOptional;
-        this.requirement = requirement;
+    public static @NotNull CommandArgument ofRequiredArgument(@NotNull Class<?> typeClass, @NotNull String argumentName, boolean isOptional, @Nullable CommandRequirementDescriptor commandRequirement) {
+        return new CommandArgument(typeClass, argumentName, isOptional, commandRequirement);
     }
 
-    public static CommandArgument makeRequiredArgument(@NotNull Class<?> type, @NotNull String argumentName, boolean isOptional, @Nullable CommandRequirementDescriptor requirement) {
-        return new CommandArgument(type, argumentName, isOptional, requirement);
+    public static @NotNull CommandArgument ofLiteralArgument(@NotNull String argumentName, @Nullable CommandRequirementDescriptor requirement) {
+        return new CommandArgument(LITERAL_ARGUMENT_TYPE_CLASS, argumentName, false, requirement);
     }
 
-    public static CommandArgument makeLiteralArgument(@NotNull String argumentName, @Nullable CommandRequirementDescriptor requirement) {
-        return new CommandArgument(null, argumentName, false, requirement);
+    public boolean isRequiredArgument() {
+        return !isLiteralArgument();
+    }
+
+    public boolean isLiteralArgument() {
+        return this.argumentType == LITERAL_ARGUMENT_TYPE_CLASS;
+    }
+
+    private @NotNull String toRequirementString() {
+        if (this.requirement == null) {
+            return "NONE";
+        }
+
+        return "%d %s"
+            .formatted(this.requirement.getLevel(), this.requirement.getString())
+            .trim();
+    }
+
+    @Override
+    public String toString() {
+        /* For required argument. */
+        if (this.isRequiredArgument()) {
+            String flags = "";
+            if (this.isCommandSource) flags += "S";
+            if (this.isCommandTarget) flags += "T";
+            if (this.isOptional) {
+                return "[%s]{flags=%s req=%s}".formatted(this.argumentName, flags, this.toRequirementString());
+            } else {
+                return "<%s>{flags=%s req=%s}".formatted(this.argumentName, flags, this.toRequirementString());
+            }
+        }
+
+        /* For literal argument. */
+        return "%s{req=%s}".formatted(this.argumentName, this.toRequirementString());
+    }
+
+    public @NotNull String toFriendlyString() {
+        if (this.isLiteralArgument()) {
+            return this.argumentName;
+        }
+
+        String argumentType = this.getArgumentType().getSimpleName();
+        if (this.isOptional) {
+            return "[%s %s]".formatted(argumentType, this.argumentName);
+        } else {
+            return "<%s %s>".formatted(argumentType, this.argumentName);
+        }
     }
 
     public CommandArgument withDocument(@Nullable Document document) {
@@ -57,58 +103,6 @@ public class CommandArgument {
 
         this.document = document.value();
         return this;
-    }
-
-    public boolean isRequiredArgument() {
-        // the type for literal argument is always null.
-        return this.type != null;
-    }
-
-    public boolean isLiteralArgument() {
-        return !this.isRequiredArgument();
-    }
-
-
-    private String computeRequirementString() {
-        if (this.requirement != null) {
-            return "%d %s".formatted(this.requirement.getLevel(), this.requirement.getString())
-                .trim();
-        }
-
-        return "";
-    }
-
-    @Override
-    public String toString() {
-        /* required argument */
-        String flags = "";
-        if (this.isCommandSource) flags += "S";
-        if (this.isCommandTarget) flags += "T";
-
-        if (this.isRequiredArgument()) {
-            if (isOptional) {
-                return "[%s](%s){%s}".formatted(this.argumentName, flags, this.computeRequirementString());
-            } else {
-                return "<%s>(%s){%s}".formatted(this.argumentName, flags, this.computeRequirementString());
-            }
-        }
-
-        /* literal argument */
-        return "%s{%s}".formatted(this.argumentName, this.computeRequirementString());
-    }
-
-    public String toHumanReadableString() {
-        if (this.isLiteralArgument()) {
-            return this.argumentName;
-        }
-
-        // the type is only null if this is a literal argument.
-        assert this.getType() != null;
-        if (isOptional) {
-            return "[%s %s]".formatted(this.getType().getSimpleName(), this.argumentName);
-        } else {
-            return "<%s %s>".formatted(this.getType().getSimpleName(), this.argumentName);
-        }
     }
 
     public CommandArgument markWithParameter(Parameter parameter) {

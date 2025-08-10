@@ -134,7 +134,7 @@ public class CommandAnnotationProcessor {
             Arrays.stream(classAnnotation.value().trim().split(" "))
                 .filter(it -> !it.isBlank())
                 .forEach(argumentName -> commandArgumentList.add(
-                    CommandArgument.makeLiteralArgument(argumentName, CommandRequirementDescriptor.of(classRequirement))
+                    CommandArgument.ofLiteralArgument(argumentName, CommandRequirementDescriptor.of(classRequirement))
                 ));
         }
 
@@ -158,7 +158,7 @@ public class CommandAnnotationProcessor {
             }
 
             /* make requirement descriptor */
-            commandArgumentList.add(CommandArgument.makeLiteralArgument(argumentName, CommandRequirementDescriptor.of(methodRequirement)));
+            commandArgumentList.add(CommandArgument.ofLiteralArgument(argumentName, CommandRequirementDescriptor.of(methodRequirement)));
         }
 
         /* process the required arguments */
@@ -177,7 +177,7 @@ public class CommandAnnotationProcessor {
                 boolean isOptional = parameter.getType().equals(Optional.class);
                 commandArgumentList.set(argumentIndex,
                     CommandArgument
-                        .makeRequiredArgument(type, parameter.getName(), isOptional, CommandRequirementDescriptor.of(methodRequirement))
+                        .ofRequiredArgument(type, parameter.getName(), isOptional, CommandRequirementDescriptor.of(methodRequirement))
                         .markWithParameter(parameter)
                         .withDocument(parameter.getAnnotation(Document.class))
                 );
@@ -189,7 +189,7 @@ public class CommandAnnotationProcessor {
                 Class<?> type = unbox(parameter);
                 // for a command source argument, we don't care the index
                 commandArgumentList.add(0, CommandArgument
-                    .makeRequiredArgument(type, parameter.getName(), false, CommandRequirementDescriptor.of(methodRequirement))
+                    .ofRequiredArgument(type, parameter.getName(), false, CommandRequirementDescriptor.of(methodRequirement))
                     .markWithParameter(parameter)
                     .withDocument(parameter.getAnnotation(Document.class))
                 );
@@ -202,7 +202,7 @@ public class CommandAnnotationProcessor {
                 Class<?> type = unbox(parameter);
                 boolean isOptional = parameter.getType().equals(Optional.class);
                 CommandArgument commandArgument = CommandArgument
-                    .makeRequiredArgument(type, parameter.getName(), isOptional, CommandRequirementDescriptor.of(methodRequirement))
+                    .ofRequiredArgument(type, parameter.getName(), isOptional, CommandRequirementDescriptor.of(methodRequirement))
                     .markWithParameter(parameter)
                     .withDocument(parameter.getAnnotation(Document.class));
                 commandArgumentList.add(commandArgument);

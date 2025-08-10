@@ -73,7 +73,7 @@ public class CommandDescriptor implements SourceModuleGetter {
 
     private static RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(CommandArgument commandArgument) {
         /* use adapter to make the required argument builder */
-        return BaseArgumentTypeAdapter.Registry.getTypeAdapter(commandArgument.getType()).makeRequiredArgumentBuilder(commandArgument.getArgumentName());
+        return BaseArgumentTypeAdapter.Registry.getTypeAdapter(commandArgument.getArgumentType()).makeRequiredArgumentBuilder(commandArgument.getArgumentName());
     }
 
     @DocStringProvider(id = 1751999362278L, value = "The permission used as the default string permission, for a command descriptor.")
@@ -227,7 +227,7 @@ public class CommandDescriptor implements SourceModuleGetter {
         if (expectedCommandSources.size() > 1)
             throw new IllegalArgumentException("Expected only one command source: " + descriptor);
 
-        return BaseArgumentTypeAdapter.Registry.getTypeAdapter(expectedCommandSources.get(0).getType()).verifyCommandSource(ctx);
+        return BaseArgumentTypeAdapter.Registry.getTypeAdapter(expectedCommandSources.get(0).getArgumentType()).verifyCommandSource(ctx);
     }
 
     protected static void reportException(ServerCommandSource source, Method method, Throwable throwable) {
@@ -303,7 +303,7 @@ public class CommandDescriptor implements SourceModuleGetter {
             /* inject the value into a required argument. */
             try {
                 Object arg = BaseArgumentTypeAdapter.Registry
-                    .getTypeAdapter(commandArgument.getType())
+                    .getTypeAdapter(commandArgument.getArgumentType())
                     .makeParameterValue(ctx, commandArgument);
 
                 args.add(arg);
@@ -413,7 +413,7 @@ public class CommandDescriptor implements SourceModuleGetter {
 
         this.commandArguments.stream()
             .filter(it -> !it.isCommandSource())
-            .forEach(it -> syntax.append(it.toHumanReadableString()).append(" "));
+            .forEach(it -> syntax.append(it.toFriendlyString()).append(" "));
 
         return syntax.toString();
     }
@@ -448,9 +448,9 @@ public class CommandDescriptor implements SourceModuleGetter {
         for (CommandArgument commandArgument : this.commandArguments) {
             if (!commandArgument.isCommandSource()) continue;
 
-            assert commandArgument.getType() != null;
-            return commandArgument.getType().equals(CommandContext.class)
-                || commandArgument.getType().equals(ServerCommandSource.class);
+            assert commandArgument.getArgumentType() != null;
+            return commandArgument.getArgumentType().equals(CommandContext.class)
+                || commandArgument.getArgumentType().equals(ServerCommandSource.class);
         }
 
         return true;
