@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
@@ -20,6 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@ForDeveloper("""
+    An `argument type adapter` is used to map a specific `ArgumentType` into its `Java Object instances`.
+    """)
 public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
 
     // NOTE: Pre-define these argument types to make the fabric test environment happy.
@@ -29,6 +33,7 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
             this.put("int", int.class);
         }
     };
+
     private static final Map<String, Class<?>> TYPE_STRING_2_TYPE_CLASS = new HashMap<>() {
         {
             this.putAll(PREDEFINED_ARGUMENT_TYPES);
@@ -38,8 +43,8 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
     public static final List<BaseArgumentTypeAdapter> REGISTERED_COMMAND_ARGUMENT_TYPE_ADAPTERS = new ArrayList<>();
 
     @SuppressWarnings({"unchecked"})
-    public static void registerAdapters() {
-        // the `/reload` command will trigger the command registration event.
+    public static void registerKnownAdapters() {
+        // NOTE: The `/reload` command will trigger the command registration event.
         TYPE_STRING_2_TYPE_CLASS.clear();
 
         ReflectionUtil.CompileTimeGraph.getCompileTimeGraph(ReflectionUtil.CompileTimeGraph.ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME)
@@ -47,19 +52,23 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
             .filter(className -> Managers.getModuleManager().shouldWeLoadThis(className))
             .forEach(className -> {
                 try {
-                    /* make instance of type adapter */
-                    Class<? extends BaseArgumentTypeAdapter> clazz = (Class<? extends BaseArgumentTypeAdapter>) Class.forName(className);
-                    Constructor<? extends BaseArgumentTypeAdapter> constructor = clazz.getDeclaredConstructor();
-                    BaseArgumentTypeAdapter adapter = constructor.newInstance();
-                    REGISTERED_COMMAND_ARGUMENT_TYPE_ADAPTERS.add(adapter);
+                    /* Make the instance of type adapter */
+                    Class<? extends BaseArgumentTypeAdapter> adapterClass = (Class<? extends BaseArgumentTypeAdapter>) Class.forName(className);
+                    Constructor<? extends BaseArgumentTypeAdapter> adapterConstructor = adapterClass.getDeclaredConstructor();
+                    BaseArgumentTypeAdapter adapterInstance = adapterConstructor.newInstance();
+                    REGISTERED_COMMAND_ARGUMENT_TYPE_ADAPTERS.add(adapterInstance);
 
-                    /* register type mapping */
-                    Class<?> typeClass = adapter.getTypeClasses().get(0);
-                    adapter.getTypeStrings().forEach(typeString -> {
+                    /* Register type mapping. */
+                    Class<?> adaptedTypeClass = adapterInstance
+                        .getTypeClasses()
+                        .get(0);
+                    adapterInstance
+                        .getTypeStrings()
+                        .forEach(typeString -> {
                         if (TYPE_STRING_2_TYPE_CLASS.containsKey(typeString) && !PREDEFINED_ARGUMENT_TYPES.containsKey(typeString)) {
                             throw new IllegalStateException("Type `%s` is already registered".formatted(typeString));
                         }
-                        TYPE_STRING_2_TYPE_CLASS.put(typeString, typeClass);
+                        TYPE_STRING_2_TYPE_CLASS.put(typeString, adaptedTypeClass);
                     });
 
                 } catch (Exception e) {
