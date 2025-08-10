@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.core.manager.impl.bossbar;
 
-import io.github.sakurawald.fuji.core.command.argument.wrapper.StepType;
+import io.github.sakurawald.fuji.core.manager.impl.bossbar.command.argument.wrapper.StepType;
 import lombok.Data;
 import lombok.Setter;
 import net.minecraft.entity.boss.ServerBossBar;

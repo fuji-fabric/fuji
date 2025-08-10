@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.echo.send_bossbar.structure;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
-import io.github.sakurawald.fuji.core.command.argument.wrapper.StepType;
+import io.github.sakurawald.fuji.core.manager.impl.bossbar.command.argument.wrapper.StepType;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarTicket;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.boss.ServerBossBar;
