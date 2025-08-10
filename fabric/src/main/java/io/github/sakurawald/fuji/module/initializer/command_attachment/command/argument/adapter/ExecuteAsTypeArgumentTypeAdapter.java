@@ -11,6 +11,7 @@ import io.github.sakurawald.fuji.module.initializer.command_attachment.command.a
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class ExecuteAsTypeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
@@ -20,7 +21,7 @@ public class ExecuteAsTypeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    public Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return ExecuteAsType.valueOf(StringArgumentType.getString(context, argument.getArgumentName()));
     }
 
@@ -35,7 +36,7 @@ public class ExecuteAsTypeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
+    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName).suggests(CommandHelper.Suggestion.enums(ExecuteAsType::values));
     }
 }

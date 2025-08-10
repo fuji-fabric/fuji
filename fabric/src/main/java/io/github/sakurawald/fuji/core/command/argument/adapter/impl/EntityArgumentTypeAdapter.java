@@ -11,6 +11,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class EntityArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
@@ -21,7 +22,7 @@ public class EntityArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @SneakyThrows(CommandSyntaxException.class)
     @Override
-    public Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    public Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return EntityArgumentType.getEntity(context, argument.getArgumentName());
     }
 

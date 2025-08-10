@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.Word;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class WordArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
@@ -17,7 +18,7 @@ public class WordArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return new Word(StringArgumentType.getString(context, argument.getArgumentName()));
     }
 

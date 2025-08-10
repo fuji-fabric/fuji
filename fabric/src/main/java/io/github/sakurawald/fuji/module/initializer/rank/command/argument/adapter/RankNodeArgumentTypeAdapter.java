@@ -13,6 +13,7 @@ import io.github.sakurawald.fuji.module.initializer.rank.service.RankService;
 import io.github.sakurawald.fuji.module.initializer.rank.structure.RankNode;
 import java.util.List;
 import net.minecraft.server.command.ServerCommandSource;
+import org.jetbrains.annotations.NotNull;
 
 public class RankNodeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
@@ -21,7 +22,7 @@ public class RankNodeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         String rankId = StringArgumentType.getString(context,argument.getArgumentName());
         return RankService
             .findRankNode(rankId)
@@ -42,7 +43,7 @@ public class RankNodeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
+    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests(CommandHelper.Suggestion.iterable(RankService::getAllRankIds));
     }

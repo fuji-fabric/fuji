@@ -16,6 +16,7 @@ import net.minecraft.scoreboard.ScoreboardDisplaySlot;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class ScoreboardSlotArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
@@ -29,7 +30,7 @@ public class ScoreboardSlotArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         #if MC_VER <= MC_1_20_1
         return new GreedyString(StringArgumentType.getString(context, argument.getArgumentName()));
         #elif MC_VER > MC_1_20_1

@@ -10,7 +10,6 @@ io.github.sakurawald.fuji.core.command.argument.adapter.impl.CommandFunctionArgu
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.DimensionArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.DimensionTypeArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.DoubleArgumentTypeAdapter
-io.github.sakurawald.fuji.core.service.duration_parser.command.argument.adapter.DurationArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.EntityAnchorArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.EntityArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.EntityTypeArgumentAdapter
@@ -42,7 +41,6 @@ io.github.sakurawald.fuji.core.command.argument.adapter.impl.ScoreboardObjective
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.ScoreboardSlotArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.ServerCommandSourceAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.SlotRangeArgumentTypeAdapter
-io.github.sakurawald.fuji.core.manager.impl.bossbar.command.argument.adapter.StepTypeArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.StringArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.StringListArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.StyleArgumentTypeAdapter
@@ -51,6 +49,8 @@ io.github.sakurawald.fuji.core.command.argument.adapter.impl.TextArgumentTypeAda
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.Vec2ArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.Vec3ArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.WordArgumentTypeAdapter
+io.github.sakurawald.fuji.core.manager.impl.bossbar.command.argument.adapter.StepTypeArgumentTypeAdapter
+io.github.sakurawald.fuji.core.service.duration_parser.command.argument.adapter.DurationArgumentTypeAdapter
 io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.adapter.ExecuteAsTypeArgumentTypeAdapter
 io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.adapter.InteractTypeArgumentTypeAdapter
 io.github.sakurawald.fuji.module.initializer.command_cooldown.command.argument.adapter.NamedCooldownDescriptorArgumentTypeAdapter

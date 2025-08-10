@@ -10,6 +10,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.world.GameMode;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class GamemodeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
@@ -20,7 +21,7 @@ public class GamemodeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @SneakyThrows
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return GameModeArgumentType.getGameMode(context, argument.getArgumentName());
     }
 

@@ -14,6 +14,7 @@ import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class DimensionArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
@@ -23,7 +24,7 @@ public class DimensionArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
+    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
             /*
              The DimensionArgumentType.dimension() will not suggest the new registered dimension types.
              Each time the server started, the dimensions will be shared with client and server.
@@ -38,7 +39,7 @@ public class DimensionArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @SneakyThrows(CommandSyntaxException.class)
     @Override
-    public Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    public Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return new Dimension(DimensionArgumentType.getDimensionArgument(context, argument.getArgumentName()));
     }
 

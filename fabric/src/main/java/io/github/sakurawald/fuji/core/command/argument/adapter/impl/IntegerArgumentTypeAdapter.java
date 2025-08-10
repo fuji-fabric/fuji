@@ -8,6 +8,7 @@ import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class IntegerArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
@@ -17,7 +18,7 @@ public class IntegerArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    public Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return IntegerArgumentType.getInteger(context, argument.getArgumentName());
     }
 

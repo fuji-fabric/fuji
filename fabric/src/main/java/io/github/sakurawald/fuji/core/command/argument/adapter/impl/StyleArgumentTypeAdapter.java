@@ -22,6 +22,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Style;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class StyleArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
@@ -36,7 +37,7 @@ public class StyleArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         #if MC_VER <= MC_1_20_2
         return new GreedyString(StringArgumentType.getString(context, argument.getArgumentName()));
         #elif MC_VER > MC_1_20_2

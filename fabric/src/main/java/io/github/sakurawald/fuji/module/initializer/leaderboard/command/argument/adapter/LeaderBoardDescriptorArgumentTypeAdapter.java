@@ -14,6 +14,7 @@ import io.github.sakurawald.fuji.module.initializer.leaderboard.structure.Leader
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
+import org.jetbrains.annotations.NotNull;
 
 public class LeaderBoardDescriptorArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
@@ -22,7 +23,7 @@ public class LeaderBoardDescriptorArgumentTypeAdapter extends BaseArgumentTypeAd
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         String leaderBoardDescriptorId = StringArgumentType.getString(context, argument.getArgumentName());
 
         Optional<LeaderBoardDescriptor> leaderBoardDescriptor = LeaderBoardService.findLeaderBoardDescriptor(leaderBoardDescriptorId);
@@ -45,7 +46,7 @@ public class LeaderBoardDescriptorArgumentTypeAdapter extends BaseArgumentTypeAd
     }
 
     @Override
-    public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
+    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests(CommandHelper.Suggestion.iterable(() -> LeaderBoardService
                 .getLeaderBoardDescriptors()

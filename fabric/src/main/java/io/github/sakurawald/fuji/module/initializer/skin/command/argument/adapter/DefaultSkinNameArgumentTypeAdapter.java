@@ -12,6 +12,7 @@ import io.github.sakurawald.fuji.module.initializer.skin.service.SkinService;
 import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinDescriptor;
 import java.util.List;
 import net.minecraft.server.command.ServerCommandSource;
+import org.jetbrains.annotations.NotNull;
 
 public class DefaultSkinNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
@@ -21,7 +22,7 @@ public class DefaultSkinNameArgumentTypeAdapter extends BaseArgumentTypeAdapter 
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return new DefaultSkinName(StringArgumentType.getString(context, argument.getArgumentName()));
     }
 
@@ -36,7 +37,7 @@ public class DefaultSkinNameArgumentTypeAdapter extends BaseArgumentTypeAdapter 
     }
 
     @Override
-    public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
+    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests(CommandHelper.Suggestion.iterable(() -> SkinService.getDefaultSkinList()
                 .stream()

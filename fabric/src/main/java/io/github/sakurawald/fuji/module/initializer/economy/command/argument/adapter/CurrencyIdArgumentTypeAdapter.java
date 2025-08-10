@@ -12,6 +12,7 @@ import java.util.List;
 import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 public class CurrencyIdArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
@@ -20,7 +21,7 @@ public class CurrencyIdArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         Identifier identifier = IdentifierArgumentType.getIdentifier(context, argument.getArgumentName());
         return new CurrencyId(identifier);
     }
@@ -36,7 +37,7 @@ public class CurrencyIdArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
+    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests(CommandHelper.Suggestion.iterable(EconomyService::getServerCurrencyIds));
     }

@@ -13,6 +13,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class TextArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
@@ -25,7 +26,7 @@ public class TextArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return TextArgumentType.getTextArgument(context, argument.getArgumentName());
     }
 

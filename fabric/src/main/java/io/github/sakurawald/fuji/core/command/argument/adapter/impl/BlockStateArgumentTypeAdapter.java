@@ -10,6 +10,7 @@ import net.minecraft.command.argument.BlockStateArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class BlockStateArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
@@ -19,7 +20,7 @@ public class BlockStateArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return BlockStateArgumentType.getBlockState(context, argument.getArgumentName());
     }
 

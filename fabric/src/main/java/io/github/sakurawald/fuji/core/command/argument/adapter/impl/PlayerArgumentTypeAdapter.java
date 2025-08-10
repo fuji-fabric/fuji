@@ -12,6 +12,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class PlayerArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
@@ -22,7 +23,7 @@ public class PlayerArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @SneakyThrows(CommandSyntaxException.class)
     @Override
-    public Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    public Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         if (argument.isCommandSource()) {
             return context.getSource().getPlayer();
         }
@@ -41,7 +42,7 @@ public class PlayerArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public boolean verifyCommandSource(CommandContext<ServerCommandSource> context) {
+    public boolean verifyCommandSource(@NotNull CommandContext<ServerCommandSource> context) {
         ServerPlayerEntity player = context.getSource().getPlayer();
         if (player == null) {
             TextHelper.sendTextByKey(context.getSource(), "command.player_only");

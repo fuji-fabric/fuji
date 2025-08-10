@@ -11,6 +11,7 @@ import io.github.sakurawald.fuji.module.initializer.jail.command.argument.wrappe
 import io.github.sakurawald.fuji.module.initializer.jail.service.JailService;
 import java.util.List;
 import net.minecraft.server.command.ServerCommandSource;
+import org.jetbrains.annotations.NotNull;
 
 public class JailedPlayerNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
@@ -19,7 +20,7 @@ public class JailedPlayerNameArgumentTypeAdapter extends BaseArgumentTypeAdapter
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         String string = StringArgumentType.getString(context, argument.getArgumentName());
         return new JailedPlayerName(string);
     }
@@ -35,7 +36,7 @@ public class JailedPlayerNameArgumentTypeAdapter extends BaseArgumentTypeAdapter
     }
 
     @Override
-    public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
+    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests(CommandHelper.Suggestion.iterable(JailService::getJailedPlayerNames));
     }

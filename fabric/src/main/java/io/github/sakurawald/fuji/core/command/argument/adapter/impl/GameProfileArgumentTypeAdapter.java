@@ -11,6 +11,7 @@ import net.minecraft.command.argument.GameProfileArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class GameProfileArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
@@ -21,7 +22,7 @@ public class GameProfileArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @SneakyThrows(CommandSyntaxException.class)
     @Override
-    public Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    public Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return new GameProfileCollection(GameProfileArgumentType.getProfileArgument(context, argument.getArgumentName()));
     }
 

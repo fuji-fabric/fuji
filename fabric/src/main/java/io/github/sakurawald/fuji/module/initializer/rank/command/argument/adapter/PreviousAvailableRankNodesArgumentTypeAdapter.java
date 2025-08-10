@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.jetbrains.annotations.NotNull;
 
 public class PreviousAvailableRankNodesArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
@@ -24,7 +25,7 @@ public class PreviousAvailableRankNodesArgumentTypeAdapter extends BaseArgumentT
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         String rankId = StringArgumentType.getString(context, argument.getArgumentName());
 
         ServerPlayerEntity player = context.getSource().getPlayer();
@@ -54,7 +55,7 @@ public class PreviousAvailableRankNodesArgumentTypeAdapter extends BaseArgumentT
     }
 
     @Override
-    public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
+    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests((context, builder) -> {
                 ServerPlayerEntity player = context.getSource().getPlayer();

@@ -14,6 +14,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.List;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 public class HomeNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
@@ -23,7 +24,7 @@ public class HomeNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    public Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return new HomeName(StringArgumentType.getString(context, argument.getArgumentName()));
     }
 
@@ -38,7 +39,7 @@ public class HomeNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
+    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName).suggests((context, builder) -> {
                 ServerPlayerEntity player = context.getSource().getPlayer();
                 if (player == null) return builder.buildFuture();

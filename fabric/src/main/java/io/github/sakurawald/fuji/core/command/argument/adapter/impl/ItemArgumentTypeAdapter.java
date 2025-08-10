@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class ItemArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
@@ -19,7 +20,7 @@ public class ItemArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    public Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return ItemStackArgumentType.getItemStackArgument(context, argument.getArgumentName()).getItem();
     }
 

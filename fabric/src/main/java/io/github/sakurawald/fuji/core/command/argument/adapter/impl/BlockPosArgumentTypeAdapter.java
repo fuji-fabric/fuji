@@ -10,6 +10,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class BlockPosArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
@@ -19,7 +20,7 @@ public class BlockPosArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    public Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return BlockPosArgumentType.getBlockPos(context, argument.getArgumentName());
     }
 

@@ -10,6 +10,7 @@ import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class ScoreboardObjectiveArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
@@ -20,7 +21,7 @@ public class ScoreboardObjectiveArgumentTypeAdapter extends BaseArgumentTypeAdap
 
     @SneakyThrows
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return ScoreboardObjectiveArgumentType.getObjective(context, argument.getArgumentName());
     }
 

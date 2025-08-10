@@ -8,6 +8,7 @@ import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class EntityAnchorArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
@@ -16,7 +17,7 @@ public class EntityAnchorArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return EntityAnchorArgumentType.getEntityAnchor(context, argument.getArgumentName());
     }
 

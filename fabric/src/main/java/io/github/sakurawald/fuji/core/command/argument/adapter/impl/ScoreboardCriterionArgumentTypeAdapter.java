@@ -9,6 +9,7 @@ import net.minecraft.scoreboard.ScoreboardCriterion;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class ScoreboardCriterionArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
@@ -17,7 +18,7 @@ public class ScoreboardCriterionArgumentTypeAdapter extends BaseArgumentTypeAdap
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return ScoreboardCriterionArgumentType.getCriterion(context, argument.getArgumentName());
     }
 

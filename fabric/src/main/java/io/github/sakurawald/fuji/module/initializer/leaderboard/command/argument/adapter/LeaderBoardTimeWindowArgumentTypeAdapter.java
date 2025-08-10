@@ -10,6 +10,7 @@ import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
 import io.github.sakurawald.fuji.module.initializer.leaderboard.structure.LeaderBoardTimeWindow;
 import java.util.List;
 import net.minecraft.server.command.ServerCommandSource;
+import org.jetbrains.annotations.NotNull;
 
 public class LeaderBoardTimeWindowArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
@@ -18,7 +19,7 @@ public class LeaderBoardTimeWindowArgumentTypeAdapter extends BaseArgumentTypeAd
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         String string = StringArgumentType.getString(context, argument.getArgumentName());
         return LeaderBoardTimeWindow.valueOf(string);
     }
@@ -34,7 +35,7 @@ public class LeaderBoardTimeWindowArgumentTypeAdapter extends BaseArgumentTypeAd
     }
 
     @Override
-    public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
+    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests(CommandHelper.Suggestion.enums(LeaderBoardTimeWindow::values));
     }

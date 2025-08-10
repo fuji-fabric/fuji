@@ -4,7 +4,6 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.command.argument.structure.Argument;
-import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.NotSupportedType;
 #if MC_VER <= MC_1_20_4
 import com.mojang.brigadier.arguments.StringArgumentType;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
@@ -15,6 +14,7 @@ import net.minecraft.inventory.SlotRange;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class SlotRangeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
@@ -27,7 +27,7 @@ public class SlotRangeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         #if MC_VER <= MC_1_20_4
         return new GreedyString(StringArgumentType.getString(context, argument.getArgumentName()));
         #elif MC_VER > MC_1_20_4

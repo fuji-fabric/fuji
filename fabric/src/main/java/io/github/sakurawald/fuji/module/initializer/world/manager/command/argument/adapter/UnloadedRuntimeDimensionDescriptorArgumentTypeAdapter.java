@@ -14,6 +14,7 @@ import java.util.Optional;
 import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 public class UnloadedRuntimeDimensionDescriptorArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
@@ -22,7 +23,7 @@ public class UnloadedRuntimeDimensionDescriptorArgumentTypeAdapter extends BaseA
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         Identifier identifier = IdentifierArgumentType.getIdentifier(context, argument.getArgumentName());
         Optional<RuntimeDimensionDescriptor> runtimeDimensionDescriptor = WorldService.getRuntimeDimensionDescriptor(identifier.toString());
         RuntimeDimensionDescriptor value = runtimeDimensionDescriptor.get();
@@ -44,7 +45,7 @@ public class UnloadedRuntimeDimensionDescriptorArgumentTypeAdapter extends BaseA
     }
 
     @Override
-    public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
+    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super
             .makeRequiredArgumentBuilder(argumentName)
             .suggests(CommandHelper.Suggestion.iterable(() -> WorldService

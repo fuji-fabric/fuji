@@ -8,6 +8,7 @@ import net.minecraft.command.argument.NbtPathArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class NbtPathArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
@@ -17,7 +18,7 @@ public class NbtPathArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return NbtPathArgumentType.getNbtPath(context, argument.getArgumentName());
     }
 

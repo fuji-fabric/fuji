@@ -9,6 +9,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.util.math.Vec2f;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class Vec2ArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
@@ -17,7 +18,7 @@ public class Vec2ArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return Vec2ArgumentType.getVec2(context, argument.getArgumentName());
     }
 

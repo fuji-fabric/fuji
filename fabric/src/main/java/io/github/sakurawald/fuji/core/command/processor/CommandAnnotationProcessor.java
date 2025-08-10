@@ -60,7 +60,7 @@ public class CommandAnnotationProcessor {
             CommandAnnotationProcessor.COMMAND_REGISTRY_ACCESS = registryAccess;
 
             /* register argument type adapters */
-            BaseArgumentTypeAdapter.registerKnownAdapters();
+            BaseArgumentTypeAdapter.registerTypeAdapters();
 
             /* register commands */
             REGISTERED_COMMAND_DESCRIPTORS.clear();

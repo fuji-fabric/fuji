@@ -9,6 +9,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class NbtCompoundArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
@@ -17,7 +18,7 @@ public class NbtCompoundArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return NbtCompoundArgumentType.getNbtCompound(context, argument.getArgumentName());
     }
 

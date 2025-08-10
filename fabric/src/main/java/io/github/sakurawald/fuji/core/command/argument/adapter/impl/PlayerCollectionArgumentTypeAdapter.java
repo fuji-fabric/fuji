@@ -10,6 +10,7 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class PlayerCollectionArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
@@ -19,7 +20,7 @@ public class PlayerCollectionArgumentTypeAdapter extends BaseArgumentTypeAdapter
 
     @SneakyThrows
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return new PlayerCollection(EntityArgumentType.getPlayers(context, argument.getArgumentName()));
     }
 

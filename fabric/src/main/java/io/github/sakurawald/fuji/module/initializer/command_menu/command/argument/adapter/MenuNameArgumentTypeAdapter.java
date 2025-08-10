@@ -12,6 +12,7 @@ import io.github.sakurawald.fuji.module.initializer.command_menu.command.argumen
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class MenuNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
@@ -20,12 +21,12 @@ public class MenuNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return new MenuName(StringArgumentType.getString(context, argument.getArgumentName()));
     }
 
     @Override
-    public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
+    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests(CommandHelper.Suggestion.iterable(() -> CommandMenuInitializer.menus.model().menus.keySet()));
     }

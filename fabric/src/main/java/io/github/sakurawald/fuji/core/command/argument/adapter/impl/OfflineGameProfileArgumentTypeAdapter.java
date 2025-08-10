@@ -15,6 +15,7 @@ import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionExc
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
+import org.jetbrains.annotations.NotNull;
 
 public class OfflineGameProfileArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
@@ -24,12 +25,12 @@ public class OfflineGameProfileArgumentTypeAdapter extends BaseArgumentTypeAdapt
     }
 
     @Override
-    public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
+    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName).suggests(CommandHelper.Suggestion.iterable(PlayerHelper.Cache::getOfflinePlayerNames));
     }
 
     @Override
-    public Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    public Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         String offlinePlayerName = StringArgumentType.getString(context, argument.getArgumentName());
 
         Optional<GameProfile> offlineGameProfile = PlayerHelper.Cache.getOfflineGameProfileByName(offlinePlayerName);

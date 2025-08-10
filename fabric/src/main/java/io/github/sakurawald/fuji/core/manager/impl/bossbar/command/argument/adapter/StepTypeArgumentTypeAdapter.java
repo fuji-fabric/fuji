@@ -11,6 +11,7 @@ import io.github.sakurawald.fuji.core.manager.impl.bossbar.command.argument.wrap
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class StepTypeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
@@ -20,13 +21,13 @@ public class StepTypeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         String name = StringArgumentType.getString(context, argument.getArgumentName());
         return StepType.valueOf(name);
     }
 
     @Override
-    public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
+    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests(CommandHelper.Suggestion.enums(StepType::values));
     }

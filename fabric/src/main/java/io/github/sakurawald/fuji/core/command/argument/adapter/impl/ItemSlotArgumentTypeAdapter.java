@@ -8,6 +8,7 @@ import net.minecraft.command.argument.ItemSlotArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class ItemSlotArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
@@ -16,7 +17,7 @@ public class ItemSlotArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return ItemSlotArgumentType.getItemSlot(context, argument.getArgumentName());
     }
 

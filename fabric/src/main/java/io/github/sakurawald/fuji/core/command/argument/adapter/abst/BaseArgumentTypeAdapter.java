@@ -10,16 +10,15 @@ import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import org.jetbrains.annotations.NotNull;
-
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import net.minecraft.server.command.CommandManager;
+import net.minecraft.server.command.ServerCommandSource;
+import org.jetbrains.annotations.NotNull;
 
 @ForDeveloper("""
     An `argument type adapter` is used to map a specific `ArgumentType` into its `Java Object instances`.
@@ -43,7 +42,7 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
     public static final List<BaseArgumentTypeAdapter> REGISTERED_COMMAND_ARGUMENT_TYPE_ADAPTERS = new ArrayList<>();
 
     @SuppressWarnings({"unchecked"})
-    public static void registerKnownAdapters() {
+    public static void registerTypeAdapters() {
         // NOTE: The `/reload` command will trigger the command registration event.
         TYPE_STRING_2_TYPE_CLASS.clear();
 
@@ -65,29 +64,30 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
                     adapterInstance
                         .getTypeStrings()
                         .forEach(typeString -> {
-                        if (TYPE_STRING_2_TYPE_CLASS.containsKey(typeString) && !PREDEFINED_ARGUMENT_TYPES.containsKey(typeString)) {
-                            throw new IllegalStateException("Type `%s` is already registered".formatted(typeString));
-                        }
-                        TYPE_STRING_2_TYPE_CLASS.put(typeString, adaptedTypeClass);
-                    });
+                            if (TYPE_STRING_2_TYPE_CLASS.containsKey(typeString) && !PREDEFINED_ARGUMENT_TYPES.containsKey(typeString)) {
+                                throw new IllegalStateException("Type string `%s` is already registered.".formatted(typeString));
+                            }
+                            TYPE_STRING_2_TYPE_CLASS.put(typeString, adaptedTypeClass);
+                        });
 
                 } catch (Exception e) {
-                    LogUtil.error("Failed to register argument type adapter: className = {}", className, e);
+                    LogUtil.error("Failed to register an argument type adapter: className = {}", className, e);
                     throw new RuntimeException(e);
                 }
             });
 
     }
 
-    public static Class<?> toTypeClass(String typeString) {
+    public static @NotNull Class<?> toTypeClass(@NotNull String typeString) {
         Class<?> type = TYPE_STRING_2_TYPE_CLASS.get(typeString);
-        if (type == null)
+        if (type == null) {
             throw new IllegalArgumentException("Unknown argument type `%s`".formatted(typeString));
+        }
 
         return type;
     }
 
-    private static Object box(Argument argument, Object value) {
+    private static @NotNull Object box(@NotNull Argument argument, @NotNull Object value) {
         // pack the type
         if (argument.isOptional()) {
             return Optional.of(value);
@@ -96,7 +96,7 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
         return value;
     }
 
-    public static BaseArgumentTypeAdapter getAdapter(Class<?> type) {
+    public static @NotNull BaseArgumentTypeAdapter getAdapter(@NotNull Class<?> type) {
         for (BaseArgumentTypeAdapter adapter : REGISTERED_COMMAND_ARGUMENT_TYPE_ADAPTERS) {
             if (adapter.match(type)) {
                 return adapter;
@@ -106,34 +106,31 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
         throw new RuntimeException("No adapters match the argument type: " + type.getTypeName());
     }
 
-    @Override
-    public @NotNull String getSourceModule() {
-        return ModuleManager.computeJoinedModulePath(this.getClass().getName());
-    }
-
     private boolean match(Class<?> clazz) {
         return this.getTypeClasses().stream().anyMatch(it -> it.equals(clazz));
     }
 
-    public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
+    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         ArgumentType<?> argumentType = this.makeArgumentType();
         return CommandManager.argument(argumentName, argumentType);
     }
 
     protected abstract ArgumentType<?> makeArgumentType();
 
-    protected abstract Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument);
+    protected abstract Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument);
 
+    @ForDeveloper("This function returns a list of classes, to handle a specific type and all of its wrapper types.")
     public abstract List<Class<?>> getTypeClasses();
 
+    @ForDeveloper("Allow to refer to an adapter using formal name or shortcut name.")
     public abstract List<String> getTypeStrings();
 
-    public final Object makeParameterObject(CommandContext<ServerCommandSource> ctx, Argument argument) {
+    public final @NotNull Object makeParameterObject(@NotNull CommandContext<ServerCommandSource> ctx, @NotNull Argument argument) {
         Object argumentObject = this.makeArgumentObject(ctx, argument);
         return box(argument, argumentObject);
     }
 
-    public boolean verifyCommandSource(CommandContext<ServerCommandSource> context) {
+    public boolean verifyCommandSource(@NotNull CommandContext<ServerCommandSource> context) {
         return true;
     }
 
@@ -147,4 +144,10 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
                     || className.startsWith("java.lang");
             });
     }
+
+    @Override
+    public @NotNull String getSourceModule() {
+        return ModuleManager.computeJoinedModulePath(this.getClass().getName());
+    }
+
 }

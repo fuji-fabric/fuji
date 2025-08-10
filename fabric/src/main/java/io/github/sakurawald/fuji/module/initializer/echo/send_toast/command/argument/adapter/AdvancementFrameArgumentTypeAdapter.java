@@ -11,6 +11,7 @@ import net.minecraft.advancement.AdvancementFrame;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class AdvancementFrameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
@@ -20,7 +21,7 @@ public class AdvancementFrameArgumentTypeAdapter extends BaseArgumentTypeAdapter
     }
 
     @Override
-    public Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    public Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return AdvancementFrame.valueOf(StringArgumentType.getString(context, argument.getArgumentName()));
     }
 
@@ -35,7 +36,7 @@ public class AdvancementFrameArgumentTypeAdapter extends BaseArgumentTypeAdapter
     }
 
     @Override
-    public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
+    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName).suggests(CommandHelper.Suggestion.enums(AdvancementFrame::values));
     }
 }

@@ -10,6 +10,7 @@ import io.github.sakurawald.fuji.core.service.string_splitter.StringSplitter;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class GreedyStringListArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
@@ -19,7 +20,7 @@ public class GreedyStringListArgumentTypeAdapter extends BaseArgumentTypeAdapter
     }
 
     @Override
-    public Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    public Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         String string = StringArgumentType.getString(context, argument.getArgumentName());
         return new GreedyStringList(StringSplitter.split(string));
     }

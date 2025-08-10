@@ -14,6 +14,7 @@ import io.github.sakurawald.fuji.module.initializer.jail.structure.JailDescripto
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
+import org.jetbrains.annotations.NotNull;
 
 public class JailDescriptorArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
@@ -22,7 +23,7 @@ public class JailDescriptorArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         String jailId = StringArgumentType.getString(context, argument.getArgumentName());
         Optional<JailDescriptor> jailDescriptor = JailService.findJailDescriptor(jailId);
 
@@ -43,7 +44,7 @@ public class JailDescriptorArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
+    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests(CommandHelper.Suggestion.iterable(JailService::getJailIds));
     }

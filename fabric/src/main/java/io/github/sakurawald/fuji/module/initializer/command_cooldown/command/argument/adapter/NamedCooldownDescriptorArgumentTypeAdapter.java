@@ -14,6 +14,7 @@ import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.N
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class NamedCooldownDescriptorArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
@@ -23,7 +24,7 @@ public class NamedCooldownDescriptorArgumentTypeAdapter extends BaseArgumentType
     }
 
     @Override
-    protected Object makeArgumentObject(CommandContext<ServerCommandSource> context, Argument argument) {
+    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         String id = StringArgumentType.getString(context, argument.getArgumentName());
         return NamedCooldownService
             .findNamedCooldownDescriptor(id)
@@ -34,7 +35,7 @@ public class NamedCooldownDescriptorArgumentTypeAdapter extends BaseArgumentType
     }
 
     @Override
-    public RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(String argumentName) {
+    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests(CommandHelper.Suggestion.iterable(() -> NamedCooldownService.getNamedCooldownDescriptors().keySet()));
     }
