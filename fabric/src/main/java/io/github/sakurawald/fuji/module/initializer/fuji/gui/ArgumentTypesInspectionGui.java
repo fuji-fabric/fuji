@@ -24,7 +24,7 @@ public class ArgumentTypesInspectionGui extends PagedGui<BaseArgumentTypeAdapter
     }
 
     public static ArgumentTypesInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
-        List<BaseArgumentTypeAdapter> adapters = BaseArgumentTypeAdapter.REGISTERED_COMMAND_ARGUMENT_TYPE_ADAPTERS;
+        List<BaseArgumentTypeAdapter> adapters = BaseArgumentTypeAdapter.Registry.REGISTERED_COMMAND_ARGUMENT_TYPE_ADAPTERS;
         return new ArgumentTypesInspectionGui(parent, player, adapters, 0);
     }
 

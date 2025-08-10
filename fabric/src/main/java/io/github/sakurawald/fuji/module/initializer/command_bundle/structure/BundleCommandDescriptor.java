@@ -135,7 +135,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
                 if (isOptional) {
                     String argumentType = matcher.group(REQUIRED_OPTIONAL_ARGUMENT_TYPE_GROUP_INDEX);
                     String argumentName = matcher.group(REQUIRED_OPTIONAL_ARGUMENT_NAME_GROUP_INDEX);
-                    Class<?> type = BaseArgumentTypeAdapter.toTypeClass(argumentType);
+                    Class<?> type = BaseArgumentTypeAdapter.Registry.toTypeClass(argumentType);
                     arguments.add(Argument.makeRequiredArgument(type, argumentName, true, requirement));
 
                     // put default value for optional argument
@@ -148,7 +148,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
                 } else {
                     String argumentType = matcher.group(REQUIRED_NON_OPTIONAL_ARGUMENT_TYPE_GROUP_INDEX);
                     String argumentName = matcher.group(REQUIRED_NON_OPTIONAL_ARGUMENT_NAME_GROUP_INDEX);
-                    Class<?> type = BaseArgumentTypeAdapter.toTypeClass(argumentType);
+                    Class<?> type = BaseArgumentTypeAdapter.Registry.toTypeClass(argumentType);
                     arguments.add(Argument.makeRequiredArgument(type, argumentName, false, requirement));
                 }
 

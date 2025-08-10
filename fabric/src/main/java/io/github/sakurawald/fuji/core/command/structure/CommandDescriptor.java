@@ -73,7 +73,7 @@ public class CommandDescriptor implements SourceModuleGetter {
 
     private static RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(Argument argument) {
         /* use adapter to make the required argument builder */
-        return BaseArgumentTypeAdapter.getAdapter(argument.getType()).makeRequiredArgumentBuilder(argument.getArgumentName());
+        return BaseArgumentTypeAdapter.Registry.getTypeAdapter(argument.getType()).makeRequiredArgumentBuilder(argument.getArgumentName());
     }
 
     @DocStringProvider(id = 1751999362278L, value = "The permission used as the default string permission, for a command descriptor.")
@@ -227,7 +227,7 @@ public class CommandDescriptor implements SourceModuleGetter {
         if (expectedCommandSources.size() > 1)
             throw new IllegalArgumentException("Expected only one command source: " + descriptor);
 
-        return BaseArgumentTypeAdapter.getAdapter(expectedCommandSources.get(0).getType()).verifyCommandSource(ctx);
+        return BaseArgumentTypeAdapter.Registry.getTypeAdapter(expectedCommandSources.get(0).getType()).verifyCommandSource(ctx);
     }
 
     protected static void reportException(ServerCommandSource source, Method method, Throwable throwable) {
@@ -302,8 +302,8 @@ public class CommandDescriptor implements SourceModuleGetter {
         for (Argument argument : this.collectArgumentsToMakeObjects()) {
             /* inject the value into a required argument. */
             try {
-                Object arg = BaseArgumentTypeAdapter
-                    .getAdapter(argument.getType())
+                Object arg = BaseArgumentTypeAdapter.Registry
+                    .getTypeAdapter(argument.getType())
                     .makeParameterValue(ctx, argument);
 
                 args.add(arg);
