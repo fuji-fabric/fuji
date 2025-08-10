@@ -170,7 +170,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
         List<Object> args = new ArrayList<>();
 
         CommandContextAccessor<?> ctxAccessor = (CommandContextAccessor<?>) ctx;
-        for (CommandArgument commandArgument : this.collectArgumentsToMakeObjects()) {
+        for (CommandArgument commandArgument : this.getParameterSpecifiers()) {
             String argumentName = commandArgument.getArgumentName();
 
             /* Collect the matched lexeme. */

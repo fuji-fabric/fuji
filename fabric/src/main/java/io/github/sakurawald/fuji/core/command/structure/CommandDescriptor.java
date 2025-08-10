@@ -8,22 +8,29 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
-import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
-import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
-import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
+import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
 import io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor;
+import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
-import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -33,14 +40,6 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @ForDeveloper("""
@@ -86,9 +85,9 @@ public class CommandDescriptor implements SourceModuleGetter {
         RootCommandNode<ServerCommandSource> root = CommandAnnotationProcessor.COMMAND_DISPATCHER.getRoot();
         assert this.registerReturnValue != null;
         LiteralCommandNode<ServerCommandSource> navigationNode = this.registerReturnValue.build();
-        CommandNode<ServerCommandSource> targetNode = root.getChild(navigationNode.getName());
-        if (targetNode != null) {
-            if (CommandDescriptor.unregisterRecursively(targetNode, navigationNode)) {
+        CommandNode<ServerCommandSource> startNode = root.getChild(navigationNode.getName());
+        if (startNode != null) {
+            if (CommandDescriptor.unregisterRecursively(startNode, navigationNode)) {
                 root.getChildren()
                     .removeIf(commandNode -> commandNode.getName().equals(navigationNode.getName()));
             }
@@ -96,6 +95,30 @@ public class CommandDescriptor implements SourceModuleGetter {
 
         /* Sync the registry. */
         CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS.remove(this);
+    }
+
+    private static boolean unregisterRecursively(@Nullable CommandNode<ServerCommandSource> targetNode, @NotNull CommandNode<ServerCommandSource> navigationNode) {
+        /* If there is no target node in the server command tree, return true to report empty. */
+        if (targetNode == null) {
+            return true;
+        }
+
+        /* Go down with the navigation node. */
+        navigationNode.getChildren()
+            .stream()
+            .toList()
+            .forEach(child -> {
+                if (unregisterRecursively(targetNode.getChild(child.getName()), child)) {
+                    // NODE: Identify the `command node` by its name, should not use `equals` method.
+                    targetNode
+                        .getChildren()
+                        .removeIf(it -> it.getName().equals(child.getName()));
+                }
+            });
+
+        /* Return if target node is empty. */
+        return targetNode.getChildren() == null
+            || targetNode.getChildren().isEmpty();
     }
 
     @Override
@@ -131,71 +154,39 @@ public class CommandDescriptor implements SourceModuleGetter {
         builder.requires(predicate);
     }
 
-    private static String getCommandNodePath(CommandNode<ServerCommandSource> node) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(node.getName());
-        node.getChildren().forEach(child -> sb.append(".").append(getCommandNodePath(child)));
-        return sb.toString();
+    @ForDeveloper("Returns the only possible path to the command node.")
+    public @NotNull String getCommandNodePath() {
+        assert this.registerReturnValue != null;
+        return getCommandNodePathRecursively(this.registerReturnValue.build());
     }
 
-    private static boolean unregisterRecursively(@Nullable CommandNode<ServerCommandSource> targetNode, @NotNull CommandNode<ServerCommandSource> navigationNode) {
-        /* check npe */
-        if (targetNode == null) return true;
+    private static @NotNull String getCommandNodePathRecursively(@NotNull CommandNode<ServerCommandSource> registeredRootNode) {
+        StringBuilder commandPath = new StringBuilder();
+        commandPath.append(registeredRootNode.getName());
 
-        /* go down */
-        navigationNode.getChildren()
+        registeredRootNode
+            .getChildren()
+            .forEach(child -> commandPath
+                .append(".")
+                .append(getCommandNodePathRecursively(child)));
+        return commandPath.toString();
+    }
+
+    private static @NotNull CommandNode<ServerCommandSource> findOptionalArgumentAnchor(@NotNull List<CommandArgument> commandArguments) {
+        List<String> commandPath = commandArguments
             .stream()
-            .toList()
-            .forEach(child -> {
-                if (unregisterRecursively(targetNode.getChild(child.getName()), child)) {
-                    // identify by argument name
-                    targetNode.getChildren().removeIf(it -> it.getName().equals(child.getName()));
-                }
-            });
-
-        /* remove leaf node */
-        return targetNode.getChildren() == null
-                || targetNode.getChildren().isEmpty();
-    }
-
-    private static @NotNull CommandNode<ServerCommandSource> computeOptionalArgumentAnchor(@NotNull List<CommandArgument> commandArguments) {
-        List<String> prefix = commandArguments.stream()
             .filter(arg -> !arg.isCommandSource())
             .takeWhile(arg -> !arg.isOptional())
             .map(CommandArgument::getArgumentName)
             .toList();
 
-        return CommandAnnotationProcessor.COMMAND_DISPATCHER.findNode(prefix);
+        return CommandAnnotationProcessor.COMMAND_DISPATCHER.findNode(commandPath);
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    protected static boolean verifyCommandSource(@NotNull CommandContext<ServerCommandSource> commandContext, @NotNull CommandDescriptor descriptor) {
-        List<CommandArgument> expectedCommandSources = descriptor.commandArguments
-            .stream()
-            .filter(CommandArgument::isCommandSource)
-            .toList();
-
-        // Yeah, any type of source can use it.
-        if (expectedCommandSources.isEmpty()) return true;
-        // Oh no, specify too many command sources.
-        if (expectedCommandSources.size() > 1) throw new IllegalArgumentException("Expected only one argument as the command source: " + descriptor);
-
-        // Verify the expected command source.
-        return BaseArgumentTypeAdapter.Registry
-            .getTypeAdapter(expectedCommandSources.get(0).getArgumentType())
-            .verifyCommandSource(commandContext);
-    }
-
-    public String getCommandNodePath() {
-        assert this.registerReturnValue != null;
-        return getCommandNodePath(this.registerReturnValue.build());
-    }
-
-
-    protected List<CommandArgument> collectArgumentsToMakeObjects() {
+    protected @NotNull List<CommandArgument> getParameterSpecifiers() {
         return this.commandArguments
             .stream()
-            /* filter out the literal command node and root command node. */
+            /* Filter out the literal command node and root command node. */
             .filter(CommandArgument::isRequiredArgument)
             .toList();
     }
@@ -203,7 +194,7 @@ public class CommandDescriptor implements SourceModuleGetter {
     protected @NotNull List<Object> makeParameterValues(@NotNull CommandContext<ServerCommandSource> ctx) {
         List<Object> args = new ArrayList<>();
 
-        for (CommandArgument commandArgument : this.collectArgumentsToMakeObjects()) {
+        for (CommandArgument commandArgument : this.getParameterSpecifiers()) {
             /* inject the value into a required argument. */
             try {
                 Object arg = BaseArgumentTypeAdapter.Registry
@@ -229,7 +220,7 @@ public class CommandDescriptor implements SourceModuleGetter {
                     continue;
                 }
 
-                // Throw other exceptions for upper-level handler.
+                // Throw other exceptions to upper-level handler.
                 throw e;
             }
 
@@ -243,7 +234,7 @@ public class CommandDescriptor implements SourceModuleGetter {
             int commandReturnValue;
             try {
                 /* Verify the command source. */
-                if (!verifyCommandSource(commandContext, this)) {
+                if (!CommandSource.verifyCommandSource(commandContext, this)) {
                     return CommandHelper.Return.FAIL;
                 }
 
@@ -258,31 +249,33 @@ public class CommandDescriptor implements SourceModuleGetter {
         };
     }
 
-    @SuppressWarnings("UnusedReturnValue")
     private void registerNonOptionalArguments() {
-        /* make root builder */
-        List<ArgumentBuilder<ServerCommandSource, ?>> builders = ArgumentBuilderMaker.makeArgumentBuilders(this);
-        Command<ServerCommandSource> command = makeCommandAction();
-        LiteralArgumentBuilder<ServerCommandSource> root = ArgumentBuilderMaker.makeRootArgumentBuilder(builders, command);
+        /* Make the assembled argument builder. */
+        List<ArgumentBuilder<ServerCommandSource, ?>> argumentBuilders = ArgumentBuilderMaker.makeArgumentBuilders(this);
+        Command<ServerCommandSource> commandAction = makeCommandAction();
+        LiteralArgumentBuilder<ServerCommandSource> assembledArgumentBuilder = ArgumentBuilderMaker.assembleArgumentBuilders(argumentBuilders, commandAction);
 
-        /* register it */
-        CommandAnnotationProcessor.COMMAND_DISPATCHER.register(root);
-        this.registerReturnValue = root;
+        /* Register the assembled argument builder as the child of the global root argument builder. */
+        CommandAnnotationProcessor.COMMAND_DISPATCHER.register(assembledArgumentBuilder);
+        this.registerReturnValue = assembledArgumentBuilder;
     }
 
     private void registerOptionalArguments() {
-        CommandNode<ServerCommandSource> redirectTargetNode = computeOptionalArgumentAnchor(this.commandArguments);
-
-        this.commandArguments.stream()
+        CommandNode<ServerCommandSource> redirectTargetNode = findOptionalArgumentAnchor(this.commandArguments);
+        this.commandArguments
+            .stream()
             .filter(CommandArgument::isOptional)
             .forEach(optionalArgument -> {
-                /* make it */
+                /* Make the builder for the optional argument. */
                 ArgumentBuilder<ServerCommandSource, ?> optionalArgumentBuilder =
                     CommandManager
                         .literal("--" + optionalArgument.getArgumentName())
-                        .then(ArgumentBuilderMaker.makeRequiredArgumentBuilder(optionalArgument).executes(redirectTargetNode.getCommand()).redirect(redirectTargetNode));
+                        .then(ArgumentBuilderMaker
+                            .makeRequiredArgumentBuilder(optionalArgument)
+                            .executes(redirectTargetNode.getCommand())
+                            .redirect(redirectTargetNode));
 
-                /* register it */
+                /* Register the optional argument builder as the child of the redirect target node. */
                 redirectTargetNode.addChild(optionalArgumentBuilder.build());
             });
     }
@@ -358,8 +351,8 @@ public class CommandDescriptor implements SourceModuleGetter {
         }
 
         @SuppressWarnings("unchecked")
-        private static @NotNull LiteralArgumentBuilder<ServerCommandSource> makeRootArgumentBuilder(@NotNull List<ArgumentBuilder<ServerCommandSource, ?>> builders, @NotNull Command<ServerCommandSource> commandAction) {
-            /* Build the command path. */
+        private static @NotNull LiteralArgumentBuilder<ServerCommandSource> assembleArgumentBuilders(@NotNull List<ArgumentBuilder<ServerCommandSource, ?>> builders, @NotNull Command<ServerCommandSource> commandAction) {
+            /* Assemble the argument builders into one argument builder. */
             ArgumentBuilder<ServerCommandSource, ?> root = null;
 
             for (int i = builders.size() - 1; i >= 0; i--) {
@@ -372,14 +365,14 @@ public class CommandDescriptor implements SourceModuleGetter {
                 root = node.then(root);
             }
 
-            /* Return the root argument builder. */
+            /* Return the assembled argument builder. */
             if (!(root instanceof LiteralArgumentBuilder)) {
-                throw new IllegalArgumentException("The root argument builder must be a literal argument builder.");
+                throw new IllegalArgumentException("The first argument builder must be a literal argument builder.");
             }
             return (LiteralArgumentBuilder<ServerCommandSource>) root;
         }
 
-        private static List<ArgumentBuilder<ServerCommandSource, ?>> makeArgumentBuilders(CommandDescriptor descriptor) {
+        private static List<ArgumentBuilder<ServerCommandSource, ?>> makeArgumentBuilders(@NotNull CommandDescriptor descriptor) {
             List<ArgumentBuilder<ServerCommandSource, ?>> builders = new ArrayList<>();
             descriptor.commandArguments
                 .stream()
@@ -414,6 +407,29 @@ public class CommandDescriptor implements SourceModuleGetter {
         }
     }
 
+    public static class CommandSource {
+
+        @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+        protected static boolean verifyCommandSource(@NotNull CommandContext<ServerCommandSource> commandContext, @NotNull CommandDescriptor descriptor) {
+            List<CommandArgument> expectedCommandSources = descriptor.commandArguments
+                .stream()
+                .filter(CommandArgument::isCommandSource)
+                .toList();
+
+            // Yeah, any type of source can use it.
+            if (expectedCommandSources.isEmpty()) return true;
+            // Oh no, specify too many command sources.
+            if (expectedCommandSources.size() > 1)
+                throw new IllegalArgumentException("Expected only one argument as the command source: " + descriptor);
+
+            // Verify the expected command source.
+            return BaseArgumentTypeAdapter.Registry
+                .getTypeAdapter(expectedCommandSources.get(0).getArgumentType())
+                .verifyCommandSource(commandContext);
+        }
+
+    }
+
     public int getDefaultLevelPermission() {
         int minRequiredLevel = CommandRequirementDescriptor.getDefaultLevel();
 
@@ -446,7 +462,7 @@ public class CommandDescriptor implements SourceModuleGetter {
             .filter(CommandArgument::isCommandSource)
             .allMatch(commandArgument ->
                 commandArgument.getArgumentType().equals(CommandContext.class)
-                || commandArgument.getArgumentType().equals(ServerCommandSource.class));
+                    || commandArgument.getArgumentType().equals(ServerCommandSource.class));
     }
 
     @Override

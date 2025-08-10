@@ -24,7 +24,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
     }
 
     private static Optional<Integer> computeParameterIndexOfCommandTarget(CommandDescriptor descriptor) {
-        List<CommandArgument> args = descriptor.collectArgumentsToMakeObjects();
+        List<CommandArgument> args = descriptor.getParameterSpecifiers();
 
         for (int i = 0; i < args.size(); i++) {
             CommandArgument commandArgument = args.get(i);
@@ -92,7 +92,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
         return (ctx) -> {
 
             /* verify command source */
-            if (!verifyCommandSource(ctx, this)) {
+            if (!CommandSource.verifyCommandSource(ctx, this)) {
                 return CommandHelper.Return.FAIL;
             }
 
