@@ -23,7 +23,7 @@ public class UnloadedRuntimeDimensionDescriptorArgumentTypeAdapter extends BaseA
     }
 
     @Override
-    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         Identifier identifier = IdentifierArgumentType.getIdentifier(context, argument.getArgumentName());
         Optional<RuntimeDimensionDescriptor> runtimeDimensionDescriptor = WorldService.getRuntimeDimensionDescriptor(identifier.toString());
         RuntimeDimensionDescriptor value = runtimeDimensionDescriptor.get();

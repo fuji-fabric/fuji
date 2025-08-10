@@ -25,7 +25,7 @@ public class PreviousAvailableRankNodesArgumentTypeAdapter extends BaseArgumentT
     }
 
     @Override
-    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         String rankId = StringArgumentType.getString(context, argument.getArgumentName());
 
         ServerPlayerEntity player = context.getSource().getPlayer();

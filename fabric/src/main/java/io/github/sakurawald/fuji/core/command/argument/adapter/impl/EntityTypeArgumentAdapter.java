@@ -31,7 +31,7 @@ public class EntityTypeArgumentAdapter extends BaseArgumentTypeAdapter {
 
     @SneakyThrows
     @Override
-    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         #if MC_VER <= MC_1_20_4
         return new GreedyString(StringArgumentType.getString(context, argument.getArgumentName()));
         #elif MC_VER > MC_1_20_4

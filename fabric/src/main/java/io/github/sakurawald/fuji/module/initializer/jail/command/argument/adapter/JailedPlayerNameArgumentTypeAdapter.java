@@ -20,7 +20,7 @@ public class JailedPlayerNameArgumentTypeAdapter extends BaseArgumentTypeAdapter
     }
 
     @Override
-    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         String string = StringArgumentType.getString(context, argument.getArgumentName());
         return new JailedPlayerName(string);
     }

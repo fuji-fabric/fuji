@@ -20,7 +20,7 @@ public class ChunkGeneratorTypeArgumentTypeAdapter extends BaseArgumentTypeAdapt
     }
 
     @Override
-    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return ChunkGeneratorType.valueOf(StringArgumentType.getString(context, argument.getArgumentName()));
     }
 

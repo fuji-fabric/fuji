@@ -19,7 +19,7 @@ public class LeaderBoardTimeWindowArgumentTypeAdapter extends BaseArgumentTypeAd
     }
 
     @Override
-    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         String string = StringArgumentType.getString(context, argument.getArgumentName());
         return LeaderBoardTimeWindow.valueOf(string);
     }

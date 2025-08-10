@@ -304,7 +304,7 @@ public class CommandDescriptor implements SourceModuleGetter {
             try {
                 Object arg = BaseArgumentTypeAdapter
                     .getAdapter(argument.getType())
-                    .makeParameterObject(ctx, argument);
+                    .makeParameterValue(ctx, argument);
 
                 args.add(arg);
             } catch (Exception e) {

@@ -87,15 +87,6 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
         return type;
     }
 
-    private static @NotNull Object box(@NotNull Argument argument, @NotNull Object value) {
-        // pack the type
-        if (argument.isOptional()) {
-            return Optional.of(value);
-        }
-
-        return value;
-    }
-
     public static @NotNull BaseArgumentTypeAdapter getAdapter(@NotNull Class<?> type) {
         for (BaseArgumentTypeAdapter adapter : REGISTERED_COMMAND_ARGUMENT_TYPE_ADAPTERS) {
             if (adapter.match(type)) {
@@ -117,7 +108,7 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
 
     protected abstract ArgumentType<?> makeArgumentType();
 
-    protected abstract Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument);
+    protected abstract Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument);
 
     @ForDeveloper("This function returns a list of classes, to handle a specific type and all of its wrapper types.")
     public abstract List<Class<?>> getTypeClasses();
@@ -125,9 +116,13 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
     @ForDeveloper("Allow to refer to an adapter using formal name or shortcut name.")
     public abstract List<String> getTypeStrings();
 
-    public final @NotNull Object makeParameterObject(@NotNull CommandContext<ServerCommandSource> ctx, @NotNull Argument argument) {
-        Object argumentObject = this.makeArgumentObject(ctx, argument);
-        return box(argument, argumentObject);
+    public final @NotNull Object makeParameterValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
+        Object argumentObject = this.makeArgumentValue(context, argument);
+        if (argument.isOptional()) {
+            return Optional.of(argumentObject);
+        }
+
+        return argumentObject;
     }
 
     public boolean verifyCommandSource(@NotNull CommandContext<ServerCommandSource> context) {

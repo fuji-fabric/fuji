@@ -21,7 +21,7 @@ public class WarpNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
+    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return new WarpName(StringArgumentType.getString(context, argument.getArgumentName()));
     }
 

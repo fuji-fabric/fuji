@@ -20,7 +20,7 @@ public class TeamArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @SneakyThrows
     @Override
-    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return TeamArgumentType.getTeam(context, argument.getArgumentName());
     }
 

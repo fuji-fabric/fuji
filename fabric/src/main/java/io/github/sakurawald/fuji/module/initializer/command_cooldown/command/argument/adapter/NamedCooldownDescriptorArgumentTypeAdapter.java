@@ -24,7 +24,7 @@ public class NamedCooldownDescriptorArgumentTypeAdapter extends BaseArgumentType
     }
 
     @Override
-    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         String id = StringArgumentType.getString(context, argument.getArgumentName());
         return NamedCooldownService
             .findNamedCooldownDescriptor(id)

@@ -23,7 +23,7 @@ public class LeaderBoardDescriptorArgumentTypeAdapter extends BaseArgumentTypeAd
     }
 
     @Override
-    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         String leaderBoardDescriptorId = StringArgumentType.getString(context, argument.getArgumentName());
 
         Optional<LeaderBoardDescriptor> leaderBoardDescriptor = LeaderBoardService.findLeaderBoardDescriptor(leaderBoardDescriptorId);

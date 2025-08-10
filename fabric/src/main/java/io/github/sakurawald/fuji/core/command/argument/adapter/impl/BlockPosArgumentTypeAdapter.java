@@ -20,7 +20,7 @@ public class BlockPosArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
+    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return BlockPosArgumentType.getBlockPos(context, argument.getArgumentName());
     }
 

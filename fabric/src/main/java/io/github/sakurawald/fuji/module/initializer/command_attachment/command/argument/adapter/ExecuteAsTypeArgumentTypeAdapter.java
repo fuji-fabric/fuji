@@ -21,7 +21,7 @@ public class ExecuteAsTypeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
+    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return ExecuteAsType.valueOf(StringArgumentType.getString(context, argument.getArgumentName()));
     }
 

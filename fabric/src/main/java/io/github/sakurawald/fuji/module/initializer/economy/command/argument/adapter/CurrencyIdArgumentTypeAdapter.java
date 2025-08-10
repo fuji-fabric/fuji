@@ -21,7 +21,7 @@ public class CurrencyIdArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         Identifier identifier = IdentifierArgumentType.getIdentifier(context, argument.getArgumentName());
         return new CurrencyId(identifier);
     }

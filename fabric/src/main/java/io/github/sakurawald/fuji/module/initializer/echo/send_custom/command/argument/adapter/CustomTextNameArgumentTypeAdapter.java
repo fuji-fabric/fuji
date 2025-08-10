@@ -29,7 +29,7 @@ public class CustomTextNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return new CustomTextName(StringArgumentType.getString(context, argument.getArgumentName()));
     }
 

@@ -30,7 +30,7 @@ public class OfflineGameProfileArgumentTypeAdapter extends BaseArgumentTypeAdapt
     }
 
     @Override
-    public Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
+    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         String offlinePlayerName = StringArgumentType.getString(context, argument.getArgumentName());
 
         Optional<GameProfile> offlineGameProfile = PlayerHelper.Cache.getOfflineGameProfileByName(offlinePlayerName);

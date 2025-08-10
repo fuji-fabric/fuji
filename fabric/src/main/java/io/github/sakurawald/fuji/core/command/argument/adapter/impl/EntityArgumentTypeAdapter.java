@@ -22,7 +22,7 @@ public class EntityArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @SneakyThrows(CommandSyntaxException.class)
     @Override
-    public Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
+    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         return EntityArgumentType.getEntity(context, argument.getArgumentName());
     }
 

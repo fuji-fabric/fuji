@@ -23,7 +23,7 @@ public class PlayerArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @SneakyThrows(CommandSyntaxException.class)
     @Override
-    public Object makeArgumentObject(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
+    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull Argument argument) {
         if (argument.isCommandSource()) {
             return context.getSource().getPlayer();
         }
