@@ -99,7 +99,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
             LogUtil.debug("Execute retarget command: initialing command source = {}", ctx.getSource().getName());
 
             /* invoke the command function */
-            List<Object> objs = makeObjectsByArguments(ctx);
+            List<Object> objs = makeParameterValues(ctx);
 
             /* apply the command execution for each target. */
             PlayerCollection targets = (PlayerCollection) objs.get(0);
@@ -140,7 +140,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
                     }
 
                 } catch (Exception wrappedOrUnwrappedException) {
-                    return handleCommandException(ctx, this.method, wrappedOrUnwrappedException);
+                    return CommandException.handleCommandException(ctx, this.method, wrappedOrUnwrappedException);
                 }
             }
 

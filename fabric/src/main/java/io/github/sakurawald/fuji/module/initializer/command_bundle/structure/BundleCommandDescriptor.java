@@ -166,7 +166,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
     }
 
     @Override
-    protected List<Object> makeObjectsByArguments(CommandContext<ServerCommandSource> ctx) {
+    protected @NotNull List<Object> makeParameterValues(@NotNull CommandContext<ServerCommandSource> ctx) {
         List<Object> args = new ArrayList<>();
 
         CommandContextAccessor<?> ctxAccessor = (CommandContextAccessor<?>) ctx;
@@ -198,13 +198,13 @@ public class BundleCommandDescriptor extends CommandDescriptor {
 
             /* Invoke the command lambda. */
             BundleCommandDescriptor descriptor = this;
-            List<Object> args = makeObjectsByArguments(ctx);
+            List<Object> args = makeParameterValues(ctx);
 
             int value;
             try {
                 value = (int) this.method.invoke(null, ctx, descriptor, args);
             } catch (Exception e) {
-                return handleCommandException(ctx, this.method, e);
+                return CommandException.handleCommandException(ctx, this.method, e);
             }
 
             return value;

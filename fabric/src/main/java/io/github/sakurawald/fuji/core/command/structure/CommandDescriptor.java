@@ -52,9 +52,9 @@ public class CommandDescriptor implements SourceModuleGetter {
 
     public final @NotNull List<CommandArgument> commandArguments;
 
-    private @Nullable LiteralArgumentBuilder<ServerCommandSource> registerReturnValue;
-
     public @Nullable String document;
+
+    private @Nullable LiteralArgumentBuilder<ServerCommandSource> registerReturnValue;
 
     public CommandDescriptor fillDocument(@Nullable Document document) {
         if (document == null) return this;
@@ -67,35 +67,45 @@ public class CommandDescriptor implements SourceModuleGetter {
         return this;
     }
 
-    private static LiteralArgumentBuilder<ServerCommandSource> makeLiteralArgumentBuilder(@NotNull CommandArgument commandArgument) {
-        return CommandManager.literal(commandArgument.getArgumentName());
+    public void register() {
+        LogUtil.debug("Register command: {}", this);
+
+        /* First pass: build the non-optional arguments. */
+        registerNonOptionalArguments();
+
+        /* Second pass: build the optional arguments. */
+        registerOptionalArguments();
+
+        /* Sync the registry. */
+        CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS.add(this);
     }
 
-    private static RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull CommandArgument commandArgument) {
-        /* use adapter to make the required argument builder */
-        return BaseArgumentTypeAdapter.Registry.getTypeAdapter(commandArgument.getArgumentType()).makeRequiredArgumentBuilder(commandArgument.getArgumentName());
-    }
+    public void unregister() {
+        LogUtil.debug("Un-register command: {}", this);
 
-    @SuppressWarnings("unchecked")
-    private static LiteralArgumentBuilder<ServerCommandSource> makeRootArgumentBuilder(List<ArgumentBuilder<ServerCommandSource, ?>> builders, Command<ServerCommandSource> command) {
-        ArgumentBuilder<ServerCommandSource, ?> root = null;
-
-        for (int i = builders.size() - 1; i >= 0; i--) {
-            ArgumentBuilder<ServerCommandSource, ?> node = builders.get(i);
-            if (root == null) {
-                root = node;
-                root = root.executes(command);
-                continue;
+        RootCommandNode<ServerCommandSource> root = CommandAnnotationProcessor.COMMAND_DISPATCHER.getRoot();
+        assert this.registerReturnValue != null;
+        LiteralCommandNode<ServerCommandSource> navigationNode = this.registerReturnValue.build();
+        CommandNode<ServerCommandSource> targetNode = root.getChild(navigationNode.getName());
+        if (targetNode != null) {
+            if (CommandDescriptor.unregisterRecursively(targetNode, navigationNode)) {
+                root.getChildren()
+                    .removeIf(commandNode -> commandNode.getName().equals(navigationNode.getName()));
             }
-            root = node.then(root);
         }
 
-        // the command dispatcher only accepts the LiteralArgumentBuilder for register()
-        if (!(root instanceof LiteralArgumentBuilder)) {
-            throw new IllegalArgumentException("The root argument builder must be a literal argument builder.");
-        }
+        /* Sync the registry. */
+        CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS.remove(this);
+    }
 
-        return (LiteralArgumentBuilder<ServerCommandSource>) root;
+    @Override
+    public final boolean equals(Object obj) {
+        return this == obj;
+    }
+
+    @Override
+    public final int hashCode() {
+        return super.hashCode();
     }
 
     @DocStringProvider(id = 1751999362278L, value = "The permission used as the default string permission, for a command descriptor.")
@@ -128,7 +138,7 @@ public class CommandDescriptor implements SourceModuleGetter {
         return sb.toString();
     }
 
-    private static boolean unregister(CommandNode<ServerCommandSource> targetNode, CommandNode<ServerCommandSource> navigationNode) {
+    private static boolean unregisterRecursively(@Nullable CommandNode<ServerCommandSource> targetNode, @NotNull CommandNode<ServerCommandSource> navigationNode) {
         /* check npe */
         if (targetNode == null) return true;
 
@@ -137,7 +147,7 @@ public class CommandDescriptor implements SourceModuleGetter {
             .stream()
             .toList()
             .forEach(child -> {
-                if (unregister(targetNode.getChild(child.getName()), child)) {
+                if (unregisterRecursively(targetNode.getChild(child.getName()), child)) {
                     // identify by argument name
                     targetNode.getChildren().removeIf(it -> it.getName().equals(child.getName()));
                 }
@@ -148,7 +158,7 @@ public class CommandDescriptor implements SourceModuleGetter {
                 || targetNode.getChildren().isEmpty();
     }
 
-    private static CommandNode<ServerCommandSource> computeRedirectTargetOfOptionalArgument(List<CommandArgument> commandArguments) {
+    private static @NotNull CommandNode<ServerCommandSource> computeOptionalArgumentAnchor(@NotNull List<CommandArgument> commandArguments) {
         List<String> prefix = commandArguments.stream()
             .filter(arg -> !arg.isCommandSource())
             .takeWhile(arg -> !arg.isOptional())
@@ -158,108 +168,22 @@ public class CommandDescriptor implements SourceModuleGetter {
         return CommandAnnotationProcessor.COMMAND_DISPATCHER.findNode(prefix);
     }
 
-    private static List<ArgumentBuilder<ServerCommandSource, ?>> makeArgumentBuilders(CommandDescriptor descriptor) {
-        List<ArgumentBuilder<ServerCommandSource, ?>> builders = new ArrayList<>();
-        descriptor.commandArguments
-            .stream()
-            .filter(
-                it ->
-                    // ignore the optional arguments, since we will process them in the second pass.
-                    !it.isOptional()
-                        // ignore the command source arguments, the command source value is directly inject into the method invoke, should not register it in game.
-                        && !it.isCommandSource())
-            .forEach(argument -> {
-                // make the builder
-                ArgumentBuilder<ServerCommandSource, ?> builder = makeArgumentBuilder(argument);
-
-                // set requirement specified by the argument for the builder
-                setRequirementForArgumentBuilder(builder, argument.getRequirement());
-
-                // add the builder
-                builders.add(builder);
-            });
-
-        return builders;
-    }
-
-    private static ArgumentBuilder<ServerCommandSource, ?> makeArgumentBuilder(CommandArgument commandArgument) {
-        ArgumentBuilder<ServerCommandSource, ?> builder;
-        if (commandArgument.isRequiredArgument()) {
-            builder = makeRequiredArgumentBuilder(commandArgument);
-        } else {
-            builder = makeLiteralArgumentBuilder(commandArgument);
-        }
-        return builder;
-    }
-
-    @SuppressWarnings("SameReturnValue")
-    protected static int handleCommandException(CommandContext<ServerCommandSource> ctx, Method method, Exception wrappedOrUnwrappedException) {
-        /* get the real exception during reflection. */
-        Throwable theRealException = wrappedOrUnwrappedException;
-        if (wrappedOrUnwrappedException instanceof InvocationTargetException) {
-            theRealException = wrappedOrUnwrappedException.getCause();
-        }
-
-        /* handle AbortCommandExecutionException */
-        if (theRealException instanceof AbortCommandExecutionException) {
-            // the logging is done before throwing the AbortOperationException, here we just swallow this exception.
-            return CommandHelper.Return.FAIL;
-        }
-
-        /* report the exception */
-        reportException(ctx.getSource(), method, theRealException);
-        return CommandHelper.Return.FAIL;
-    }
-
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    protected static boolean verifyCommandSource(CommandContext<ServerCommandSource> ctx, CommandDescriptor descriptor) {
+    protected static boolean verifyCommandSource(@NotNull CommandContext<ServerCommandSource> commandContext, @NotNull CommandDescriptor descriptor) {
         List<CommandArgument> expectedCommandSources = descriptor.commandArguments
             .stream()
             .filter(CommandArgument::isCommandSource)
             .toList();
 
-        // yeah, any type of source can use it.
+        // Yeah, any type of source can use it.
         if (expectedCommandSources.isEmpty()) return true;
-        // oh no, specify too many command sources.
-        if (expectedCommandSources.size() > 1)
-            throw new IllegalArgumentException("Expected only one command source: " + descriptor);
+        // Oh no, specify too many command sources.
+        if (expectedCommandSources.size() > 1) throw new IllegalArgumentException("Expected only one argument as the command source: " + descriptor);
 
-        return BaseArgumentTypeAdapter.Registry.getTypeAdapter(expectedCommandSources.get(0).getArgumentType()).verifyCommandSource(ctx);
-    }
-
-    protected static void reportException(ServerCommandSource source, Method method, Throwable throwable) {
-        /* report to console */
-        String errorString = """
-            [Fuji Exception Catcher]
-            - Source: %s
-            - Module: %s
-            - Method: %s
-            - Message: %s
-
-            """.formatted(
-            source.getName()
-            , ModuleManager.computeSplitModulePath(method.getDeclaringClass().getName())
-            , method.getName()
-            , throwable);
-        LogUtil.error(errorString, throwable);
-
-        /* report to command source */
-        Style style = Style.EMPTY
-            .withColor(CommandHelper.COMMAND_EXCEPTION_COLOR_INT);
-
-        // NOTE: Only send the stack trace if the command source is admin.
-        if (PlayerHelper.isAdmin(source)) {
-            String stacktrace = String.join("\n", ReflectionUtil.extractStackTraceElements(throwable));
-            style
-                .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(Text.of("Click to copy the stacktrace.")))
-                .withClickEvent(TextHelper.Events.ClickEvent.makeCopyToClipboardAction(stacktrace));
-        }
-
-        MutableText report = TextHelper.getTextByValue(source, errorString)
-            .copy()
-            .setStyle(style);
-
-        source.sendMessage(report);
+        // Verify the expected command source.
+        return BaseArgumentTypeAdapter.Registry
+            .getTypeAdapter(expectedCommandSources.get(0).getArgumentType())
+            .verifyCommandSource(commandContext);
     }
 
     public String getCommandNodePath() {
@@ -267,23 +191,6 @@ public class CommandDescriptor implements SourceModuleGetter {
         return getCommandNodePath(this.registerReturnValue.build());
     }
 
-    public void unregister() {
-        LogUtil.debug("Un-register command: {}", this);
-
-        RootCommandNode<ServerCommandSource> root = CommandAnnotationProcessor.COMMAND_DISPATCHER.getRoot();
-
-        assert this.registerReturnValue != null;
-        LiteralCommandNode<ServerCommandSource> navigationNode = this.registerReturnValue.build();
-        CommandNode<ServerCommandSource> targetNode = root.getChild(navigationNode.getName());
-        if (targetNode != null) {
-            if (CommandDescriptor.unregister(targetNode, navigationNode)) {
-                root.getChildren().removeIf(p -> p.getName().equals(navigationNode.getName()));
-            }
-        }
-
-        // sync the registry
-        CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS.remove(this);
-    }
 
     protected List<CommandArgument> collectArgumentsToMakeObjects() {
         return this.commandArguments
@@ -293,7 +200,7 @@ public class CommandDescriptor implements SourceModuleGetter {
             .toList();
     }
 
-    protected List<Object> makeObjectsByArguments(CommandContext<ServerCommandSource> ctx) {
+    protected @NotNull List<Object> makeParameterValues(@NotNull CommandContext<ServerCommandSource> ctx) {
         List<Object> args = new ArrayList<>();
 
         for (CommandArgument commandArgument : this.collectArgumentsToMakeObjects()) {
@@ -333,57 +240,38 @@ public class CommandDescriptor implements SourceModuleGetter {
 
     protected @NotNull Command<ServerCommandSource> makeCommandAction() {
         return (commandContext) -> {
-
-            int value;
+            int commandReturnValue;
             try {
-                /* verify command source */
+                /* Verify the command source. */
                 if (!verifyCommandSource(commandContext, this)) {
                     return CommandHelper.Return.FAIL;
                 }
 
                 /* invoke the command function */
-                List<Object> args = makeObjectsByArguments(commandContext);
-                value = (int) this.method.invoke(null, args.toArray());
+                List<Object> args = makeParameterValues(commandContext);
+                commandReturnValue = (int) this.method.invoke(null, args.toArray());
             } catch (Exception wrappedOrUnwrappedException) {
-                return handleCommandException(commandContext, this.method, wrappedOrUnwrappedException);
+                return CommandException.handleCommandException(commandContext, this.method, wrappedOrUnwrappedException);
             }
 
-            return value;
+            return commandReturnValue;
         };
     }
 
-    public LiteralArgumentBuilder<ServerCommandSource> register() {
-        LogUtil.debug("Register command: {}", this);
-
-        /* first pass */
-        var root = registerNonOptionalArguments();
-
-        /* second pass */
-        registerOptionalArguments();
-
-        /* fill the props */
-        this.registerReturnValue = root;
-
-        /* sync the registry */
-        CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS.add(this);
-        return root;
-    }
-
     @SuppressWarnings("UnusedReturnValue")
-    private LiteralArgumentBuilder<ServerCommandSource> registerNonOptionalArguments() {
+    private void registerNonOptionalArguments() {
         /* make root builder */
-        List<ArgumentBuilder<ServerCommandSource, ?>> builders = makeArgumentBuilders(this);
+        List<ArgumentBuilder<ServerCommandSource, ?>> builders = ArgumentBuilderMaker.makeArgumentBuilders(this);
         Command<ServerCommandSource> command = makeCommandAction();
-        LiteralArgumentBuilder<ServerCommandSource> root = makeRootArgumentBuilder(builders, command);
+        LiteralArgumentBuilder<ServerCommandSource> root = ArgumentBuilderMaker.makeRootArgumentBuilder(builders, command);
 
         /* register it */
         CommandAnnotationProcessor.COMMAND_DISPATCHER.register(root);
-
-        return root;
+        this.registerReturnValue = root;
     }
 
     private void registerOptionalArguments() {
-        CommandNode<ServerCommandSource> redirectTargetNode = computeRedirectTargetOfOptionalArgument(this.commandArguments);
+        CommandNode<ServerCommandSource> redirectTargetNode = computeOptionalArgumentAnchor(this.commandArguments);
 
         this.commandArguments.stream()
             .filter(CommandArgument::isOptional)
@@ -392,11 +280,138 @@ public class CommandDescriptor implements SourceModuleGetter {
                 ArgumentBuilder<ServerCommandSource, ?> optionalArgumentBuilder =
                     CommandManager
                         .literal("--" + optionalArgument.getArgumentName())
-                        .then(makeRequiredArgumentBuilder(optionalArgument).executes(redirectTargetNode.getCommand()).redirect(redirectTargetNode));
+                        .then(ArgumentBuilderMaker.makeRequiredArgumentBuilder(optionalArgument).executes(redirectTargetNode.getCommand()).redirect(redirectTargetNode));
 
                 /* register it */
                 redirectTargetNode.addChild(optionalArgumentBuilder.build());
             });
+    }
+
+    public static class CommandException {
+
+        @SuppressWarnings("SameReturnValue")
+        public static int handleCommandException(CommandContext<ServerCommandSource> ctx, Method method, Exception wrappedOrUnwrappedException) {
+            /* get the real exception during reflection. */
+            Throwable theRealException = wrappedOrUnwrappedException;
+            if (wrappedOrUnwrappedException instanceof InvocationTargetException) {
+                theRealException = wrappedOrUnwrappedException.getCause();
+            }
+
+            /* handle AbortCommandExecutionException */
+            if (theRealException instanceof AbortCommandExecutionException) {
+                // the logging is done before throwing the AbortOperationException, here we just swallow this exception.
+                return CommandHelper.Return.FAIL;
+            }
+
+            /* report the exception */
+            reportException(ctx.getSource(), method, theRealException);
+            return CommandHelper.Return.FAIL;
+        }
+
+        protected static void reportException(ServerCommandSource source, Method method, Throwable throwable) {
+            /* report to console */
+            String errorString = """
+                [Fuji Exception Catcher]
+                - Source: %s
+                - Module: %s
+                - Method: %s
+                - Message: %s
+
+                """.formatted(
+                source.getName()
+                , ModuleManager.computeSplitModulePath(method.getDeclaringClass().getName())
+                , method.getName()
+                , throwable);
+            LogUtil.error(errorString, throwable);
+
+            /* report to command source */
+            Style style = Style.EMPTY
+                .withColor(CommandHelper.COMMAND_EXCEPTION_COLOR_INT);
+
+            // NOTE: Only send the stack trace if the command source is admin.
+            if (PlayerHelper.isAdmin(source)) {
+                String stacktrace = String.join("\n", ReflectionUtil.extractStackTraceElements(throwable));
+                style
+                    .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(Text.of("Click to copy the stacktrace.")))
+                    .withClickEvent(TextHelper.Events.ClickEvent.makeCopyToClipboardAction(stacktrace));
+            }
+
+            MutableText report = TextHelper.getTextByValue(source, errorString)
+                .copy()
+                .setStyle(style);
+
+            source.sendMessage(report);
+        }
+    }
+
+    private static class ArgumentBuilderMaker {
+
+        private static @NotNull LiteralArgumentBuilder<ServerCommandSource> makeLiteralArgumentBuilder(@NotNull CommandArgument commandArgument) {
+            return CommandManager.literal(commandArgument.getArgumentName());
+        }
+
+        private static @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull CommandArgument commandArgument) {
+            /* use adapter to make the required argument builder */
+            return BaseArgumentTypeAdapter.Registry
+                .getTypeAdapter(commandArgument.getArgumentType())
+                .makeRequiredArgumentBuilder(commandArgument.getArgumentName());
+        }
+
+        @SuppressWarnings("unchecked")
+        private static @NotNull LiteralArgumentBuilder<ServerCommandSource> makeRootArgumentBuilder(@NotNull List<ArgumentBuilder<ServerCommandSource, ?>> builders, @NotNull Command<ServerCommandSource> commandAction) {
+            /* Build the command path. */
+            ArgumentBuilder<ServerCommandSource, ?> root = null;
+
+            for (int i = builders.size() - 1; i >= 0; i--) {
+                ArgumentBuilder<ServerCommandSource, ?> node = builders.get(i);
+                if (root == null) {
+                    root = node;
+                    root = root.executes(commandAction);
+                    continue;
+                }
+                root = node.then(root);
+            }
+
+            /* Return the root argument builder. */
+            if (!(root instanceof LiteralArgumentBuilder)) {
+                throw new IllegalArgumentException("The root argument builder must be a literal argument builder.");
+            }
+            return (LiteralArgumentBuilder<ServerCommandSource>) root;
+        }
+
+        private static List<ArgumentBuilder<ServerCommandSource, ?>> makeArgumentBuilders(CommandDescriptor descriptor) {
+            List<ArgumentBuilder<ServerCommandSource, ?>> builders = new ArrayList<>();
+            descriptor.commandArguments
+                .stream()
+                .filter(
+                    it ->
+                        // ignore the optional arguments, since we will process them in the second pass.
+                        !it.isOptional()
+                            // ignore the command source arguments, the command source value is directly inject into the method invoke, should not register it in game.
+                            && !it.isCommandSource())
+                .forEach(argument -> {
+                    // make the builder
+                    ArgumentBuilder<ServerCommandSource, ?> builder = makeArgumentBuilder(argument);
+
+                    // set requirement specified by the argument for the builder
+                    setRequirementForArgumentBuilder(builder, argument.getRequirement());
+
+                    // add the builder
+                    builders.add(builder);
+                });
+
+            return builders;
+        }
+
+        private static @NotNull ArgumentBuilder<ServerCommandSource, ?> makeArgumentBuilder(@NotNull CommandArgument commandArgument) {
+            ArgumentBuilder<ServerCommandSource, ?> builder;
+            if (commandArgument.isRequiredArgument()) {
+                builder = makeRequiredArgumentBuilder(commandArgument);
+            } else {
+                builder = makeLiteralArgumentBuilder(commandArgument);
+            }
+            return builder;
+        }
     }
 
     public int getDefaultLevelPermission() {
@@ -426,14 +441,12 @@ public class CommandDescriptor implements SourceModuleGetter {
     }
 
     public boolean canBeExecutedByConsole() {
-        for (CommandArgument commandArgument : this.commandArguments) {
-            if (!commandArgument.isCommandSource()) continue;
-
-            return commandArgument.getArgumentType().equals(CommandContext.class)
-                || commandArgument.getArgumentType().equals(ServerCommandSource.class);
-        }
-
-        return true;
+        return this.commandArguments
+            .stream()
+            .filter(CommandArgument::isCommandSource)
+            .allMatch(commandArgument ->
+                commandArgument.getArgumentType().equals(CommandContext.class)
+                || commandArgument.getArgumentType().equals(ServerCommandSource.class));
     }
 
     @Override
