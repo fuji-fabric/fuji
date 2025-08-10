@@ -46,7 +46,7 @@ public class NamedCooldownDescriptorArgumentTypeAdapter extends BaseArgumentType
     }
 
     @Override
-    public List<String> getTypeStrings() {
+    public List<String> getTypeNames() {
         return List.of("named-command-cooldown");
     }
 }

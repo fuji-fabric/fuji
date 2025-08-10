@@ -31,7 +31,7 @@ public class ScoreboardObjectiveArgumentTypeAdapter extends BaseArgumentTypeAdap
     }
 
     @Override
-    public List<String> getTypeStrings() {
+    public List<String> getTypeNames() {
         return List.of("scoreboard-objective");
     }
 }

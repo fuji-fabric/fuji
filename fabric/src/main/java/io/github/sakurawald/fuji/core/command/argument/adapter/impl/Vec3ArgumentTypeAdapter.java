@@ -28,7 +28,7 @@ public class Vec3ArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public List<String> getTypeStrings() {
+    public List<String> getTypeNames() {
         return List.of("vec3d");
     }
 }

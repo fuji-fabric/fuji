@@ -48,7 +48,7 @@ public class OfflineGameProfileArgumentTypeAdapter extends BaseArgumentTypeAdapt
     }
 
     @Override
-    public List<String> getTypeStrings() {
+    public List<String> getTypeNames() {
         return List.of("offline-game-profile");
     }
 }

@@ -50,7 +50,7 @@ public class NextAvailableRankNodesArgumentTypeAdapter extends BaseArgumentTypeA
     }
 
     @Override
-    public List<String> getTypeStrings() {
+    public List<String> getTypeNames() {
         return List.of("next-available-rank-nodes");
     }
 

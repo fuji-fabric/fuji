@@ -31,7 +31,7 @@ public class JailedPlayerNameArgumentTypeAdapter extends BaseArgumentTypeAdapter
     }
 
     @Override
-    public List<String> getTypeStrings() {
+    public List<String> getTypeNames() {
         return List.of("jailed-player-name");
     }
 

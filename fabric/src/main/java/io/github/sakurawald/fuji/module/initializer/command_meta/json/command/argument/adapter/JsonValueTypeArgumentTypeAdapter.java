@@ -31,7 +31,7 @@ public class JsonValueTypeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public List<String> getTypeStrings() {
+    public List<String> getTypeNames() {
         return List.of("json-value-type");
     }
 

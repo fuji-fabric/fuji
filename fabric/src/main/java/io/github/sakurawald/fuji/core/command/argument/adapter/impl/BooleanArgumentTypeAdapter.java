@@ -28,7 +28,7 @@ public class BooleanArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public List<String> getTypeStrings() {
+    public List<String> getTypeNames() {
         return List.of("bool", "boolean");
     }
 }

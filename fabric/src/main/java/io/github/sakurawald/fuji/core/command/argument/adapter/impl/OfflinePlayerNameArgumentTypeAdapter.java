@@ -48,7 +48,7 @@ public class OfflinePlayerNameArgumentTypeAdapter extends BaseArgumentTypeAdapte
     }
 
     @Override
-    public List<String> getTypeStrings() {
+    public List<String> getTypeNames() {
         return List.of("offline-player");
     }
 }

@@ -21,7 +21,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.NotNull;
 
 @ForDeveloper("""
-    An `argument type adapter` is used to map a specific `ArgumentType` into its `Java Object instances`.
+    An `ArgumentTypeAdapter` is used to map a specific `ArgumentType` into its `ArgumentValue`.
     """)
 public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
 
@@ -62,7 +62,7 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
                             .getTypeClasses()
                             .get(0);
                         adapterInstance
-                            .getTypeStrings()
+                            .getTypeNames()
                             .forEach(typeString -> {
                                 if (TYPE_STRING_2_TYPE_CLASS.containsKey(typeString) && !PREDEFINED_ARGUMENT_TYPES.containsKey(typeString)) {
                                     throw new IllegalStateException("Type string `%s` is already registered.".formatted(typeString));
@@ -108,7 +108,7 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
     public abstract List<Class<?>> getTypeClasses();
 
     @ForDeveloper("Allow to refer to an adapter using formal name or shortcut name.")
-    public abstract List<String> getTypeStrings();
+    public abstract List<String> getTypeNames();
 
     protected abstract ArgumentType<?> makeArgumentType();
 

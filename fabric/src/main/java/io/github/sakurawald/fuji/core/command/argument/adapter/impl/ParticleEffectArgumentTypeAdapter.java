@@ -29,7 +29,7 @@ public class ParticleEffectArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public List<String> getTypeStrings() {
+    public List<String> getTypeNames() {
         return List.of("particle-effect");
     }
 }

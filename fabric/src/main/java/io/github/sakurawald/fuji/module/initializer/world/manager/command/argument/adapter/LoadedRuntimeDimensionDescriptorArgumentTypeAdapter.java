@@ -40,7 +40,7 @@ public class LoadedRuntimeDimensionDescriptorArgumentTypeAdapter extends BaseArg
     }
 
     @Override
-    public List<String> getTypeStrings() {
+    public List<String> getTypeNames() {
         return List.of("loaded-runtime-dimension-descriptor");
     }
 

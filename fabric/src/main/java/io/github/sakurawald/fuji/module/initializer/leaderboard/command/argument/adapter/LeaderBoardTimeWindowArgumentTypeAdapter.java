@@ -30,7 +30,7 @@ public class LeaderBoardTimeWindowArgumentTypeAdapter extends BaseArgumentTypeAd
     }
 
     @Override
-    public List<String> getTypeStrings() {
+    public List<String> getTypeNames() {
         return List.of("leaderboard-time-window");
     }
 

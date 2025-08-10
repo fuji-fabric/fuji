@@ -28,7 +28,7 @@ public class ServerCommandSourceAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public List<String> getTypeStrings() {
+    public List<String> getTypeNames() {
         return Collections.emptyList();
     }
 }

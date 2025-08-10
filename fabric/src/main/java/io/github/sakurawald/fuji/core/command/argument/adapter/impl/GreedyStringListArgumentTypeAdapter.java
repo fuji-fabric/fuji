@@ -31,7 +31,7 @@ public class GreedyStringListArgumentTypeAdapter extends BaseArgumentTypeAdapter
     }
 
     @Override
-    public List<String> getTypeStrings() {
+    public List<String> getTypeNames() {
         return List.of("greedy-string-list", "greedy-list");
     }
 }

@@ -29,7 +29,7 @@ public class WorldPresetTypeArgumentTypeAdapter extends BaseArgumentTypeAdapter 
     }
 
     @Override
-    public List<String> getTypeStrings() {
+    public List<String> getTypeNames() {
         return List.of("world-preset-type");
     }
 

@@ -41,7 +41,7 @@ public class LeaderBoardDescriptorArgumentTypeAdapter extends BaseArgumentTypeAd
     }
 
     @Override
-    public List<String> getTypeStrings() {
+    public List<String> getTypeNames() {
         return List.of("leaderboard");
     }
 

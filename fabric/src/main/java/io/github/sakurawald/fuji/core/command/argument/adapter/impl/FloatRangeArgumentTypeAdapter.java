@@ -32,7 +32,7 @@ public class FloatRangeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public List<String> getTypeStrings() {
+    public List<String> getTypeNames() {
         return List.of("float-range");
     }
 }

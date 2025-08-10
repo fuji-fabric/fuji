@@ -28,7 +28,7 @@ public class ColumnPosArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public List<String> getTypeStrings() {
+    public List<String> getTypeNames() {
         return List.of("column-pos");
     }
 }

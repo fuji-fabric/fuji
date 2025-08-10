@@ -40,7 +40,7 @@ public class UnloadedRuntimeDimensionDescriptorArgumentTypeAdapter extends BaseA
     }
 
     @Override
-    public List<String> getTypeStrings() {
+    public List<String> getTypeNames() {
         return List.of("unloaded-runtime-dimension-descriptor");
     }
 

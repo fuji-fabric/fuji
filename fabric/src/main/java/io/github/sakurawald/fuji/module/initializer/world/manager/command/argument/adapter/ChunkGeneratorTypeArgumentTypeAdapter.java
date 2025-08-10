@@ -30,7 +30,7 @@ public class ChunkGeneratorTypeArgumentTypeAdapter extends BaseArgumentTypeAdapt
     }
 
     @Override
-    public List<String> getTypeStrings() {
+    public List<String> getTypeNames() {
         return List.of("chunk-generator-type");
     }
 
