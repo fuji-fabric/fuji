@@ -56,7 +56,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
         super(method, commandArguments);
         this.entry = entry;
         this.optionalArgumentName2DefaultValue = optionalArgumentName2DefaultValue;
-        this.setDocument(document);
+        this.fillDocument(document);
     }
 
     @SneakyThrows
@@ -193,7 +193,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
 
     @SuppressWarnings("DuplicatedCode")
     @Override
-    protected Command<ServerCommandSource> makeCommandFunctionClosure() {
+    protected @NotNull Command<ServerCommandSource> makeCommandAction() {
         return (ctx) -> {
 
             /* Invoke the command lambda. */

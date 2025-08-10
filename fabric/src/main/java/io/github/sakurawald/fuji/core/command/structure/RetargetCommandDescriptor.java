@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
 
 public class RetargetCommandDescriptor extends CommandDescriptor {
 
@@ -47,7 +48,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
         List<CommandArgument> transformedArgs = transformWithOthersArguments(commandDescriptor.commandArguments);
 
         RetargetCommandDescriptor retargetCommandDescriptor = new RetargetCommandDescriptor(commandDescriptor.method, transformedArgs, index);
-        retargetCommandDescriptor.setDocument(commandDescriptor.document);
+        retargetCommandDescriptor.fillDocument(commandDescriptor.document);
 
         return Optional.of(retargetCommandDescriptor);
     }
@@ -87,7 +88,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
     }
 
     @Override
-    protected Command<ServerCommandSource> makeCommandFunctionClosure() {
+    protected @NotNull Command<ServerCommandSource> makeCommandAction() {
         return (ctx) -> {
 
             /* verify command source */

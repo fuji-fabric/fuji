@@ -20,9 +20,11 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
 import io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
+import lombok.RequiredArgsConstructor;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -40,40 +42,60 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
+@ForDeveloper("""
+    A command descriptor is used to describe a command instance.
+    """)
 public class CommandDescriptor implements SourceModuleGetter {
-    public final Method method;
 
-    public final List<CommandArgument> commandArguments;
+    public final @NotNull Method method;
 
-    // it's null if get before register()
+    public final @NotNull List<CommandArgument> commandArguments;
+
     private @Nullable LiteralArgumentBuilder<ServerCommandSource> registerReturnValue;
 
     public @Nullable String document;
 
-    public CommandDescriptor setDocument(@Nullable Document document) {
+    public CommandDescriptor fillDocument(@Nullable Document document) {
         if (document == null) return this;
-        return this.setDocument(document.value());
+        return this.fillDocument(document.value());
     }
 
-    public CommandDescriptor setDocument(@Nullable String document) {
+    public CommandDescriptor fillDocument(@Nullable String document) {
         if (document == null) return this;
-
         this.document = document;
         return this;
     }
 
-    public CommandDescriptor(Method method, List<CommandArgument> commandArguments) {
-        this.method = method;
-        this.commandArguments = commandArguments;
-    }
-
-    private static LiteralArgumentBuilder<ServerCommandSource> makeLiteralArgumentBuilder(CommandArgument commandArgument) {
+    private static LiteralArgumentBuilder<ServerCommandSource> makeLiteralArgumentBuilder(@NotNull CommandArgument commandArgument) {
         return CommandManager.literal(commandArgument.getArgumentName());
     }
 
-    private static RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(CommandArgument commandArgument) {
+    private static RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull CommandArgument commandArgument) {
         /* use adapter to make the required argument builder */
         return BaseArgumentTypeAdapter.Registry.getTypeAdapter(commandArgument.getArgumentType()).makeRequiredArgumentBuilder(commandArgument.getArgumentName());
+    }
+
+    @SuppressWarnings("unchecked")
+    private static LiteralArgumentBuilder<ServerCommandSource> makeRootArgumentBuilder(List<ArgumentBuilder<ServerCommandSource, ?>> builders, Command<ServerCommandSource> command) {
+        ArgumentBuilder<ServerCommandSource, ?> root = null;
+
+        for (int i = builders.size() - 1; i >= 0; i--) {
+            ArgumentBuilder<ServerCommandSource, ?> node = builders.get(i);
+            if (root == null) {
+                root = node;
+                root = root.executes(command);
+                continue;
+            }
+            root = node.then(root);
+        }
+
+        // the command dispatcher only accepts the LiteralArgumentBuilder for register()
+        if (!(root instanceof LiteralArgumentBuilder)) {
+            throw new IllegalArgumentException("The root argument builder must be a literal argument builder.");
+        }
+
+        return (LiteralArgumentBuilder<ServerCommandSource>) root;
     }
 
     @DocStringProvider(id = 1751999362278L, value = "The permission used as the default string permission, for a command descriptor.")
@@ -99,28 +121,6 @@ public class CommandDescriptor implements SourceModuleGetter {
         builder.requires(predicate);
     }
 
-    @SuppressWarnings("unchecked")
-    private static LiteralArgumentBuilder<ServerCommandSource> makeRootArgumentBuilder(List<ArgumentBuilder<ServerCommandSource, ?>> builders, Command<ServerCommandSource> command) {
-        ArgumentBuilder<ServerCommandSource, ?> root = null;
-
-        for (int i = builders.size() - 1; i >= 0; i--) {
-            ArgumentBuilder<ServerCommandSource, ?> node = builders.get(i);
-            if (root == null) {
-                root = node;
-                root = root.executes(command);
-                continue;
-            }
-            root = node.then(root);
-        }
-
-        // the command dispatcher only accepts the LiteralArgumentBuilder for register()
-        if (!(root instanceof LiteralArgumentBuilder)) {
-            throw new IllegalArgumentException("The root argument builder must be a literal argument builder.");
-        }
-
-        return (LiteralArgumentBuilder<ServerCommandSource>) root;
-    }
-
     private static String getCommandNodePath(CommandNode<ServerCommandSource> node) {
         StringBuilder sb = new StringBuilder();
         sb.append(node.getName());
@@ -128,10 +128,7 @@ public class CommandDescriptor implements SourceModuleGetter {
         return sb.toString();
     }
 
-    private static boolean unregister(
-        CommandNode<ServerCommandSource> targetNode
-        , CommandNode<ServerCommandSource> navigationNode
-    ) {
+    private static boolean unregister(CommandNode<ServerCommandSource> targetNode, CommandNode<ServerCommandSource> navigationNode) {
         /* check npe */
         if (targetNode == null) return true;
 
@@ -334,21 +331,21 @@ public class CommandDescriptor implements SourceModuleGetter {
         return args;
     }
 
-    protected Command<ServerCommandSource> makeCommandFunctionClosure() {
-        return (ctx) -> {
+    protected @NotNull Command<ServerCommandSource> makeCommandAction() {
+        return (commandContext) -> {
 
             int value;
             try {
                 /* verify command source */
-                if (!verifyCommandSource(ctx, this)) {
+                if (!verifyCommandSource(commandContext, this)) {
                     return CommandHelper.Return.FAIL;
                 }
 
                 /* invoke the command function */
-                List<Object> args = makeObjectsByArguments(ctx);
+                List<Object> args = makeObjectsByArguments(commandContext);
                 value = (int) this.method.invoke(null, args.toArray());
             } catch (Exception wrappedOrUnwrappedException) {
-                return handleCommandException(ctx, this.method, wrappedOrUnwrappedException);
+                return handleCommandException(commandContext, this.method, wrappedOrUnwrappedException);
             }
 
             return value;
@@ -376,7 +373,7 @@ public class CommandDescriptor implements SourceModuleGetter {
     private LiteralArgumentBuilder<ServerCommandSource> registerNonOptionalArguments() {
         /* make root builder */
         List<ArgumentBuilder<ServerCommandSource, ?>> builders = makeArgumentBuilders(this);
-        Command<ServerCommandSource> command = makeCommandFunctionClosure();
+        Command<ServerCommandSource> command = makeCommandAction();
         LiteralArgumentBuilder<ServerCommandSource> root = makeRootArgumentBuilder(builders, command);
 
         /* register it */
@@ -400,22 +397,6 @@ public class CommandDescriptor implements SourceModuleGetter {
                 /* register it */
                 redirectTargetNode.addChild(optionalArgumentBuilder.build());
             });
-    }
-
-    @Override
-    public String toString() {
-        return "/" + this.commandArguments.stream().map(CommandArgument::toString).collect(Collectors.joining(" "));
-    }
-
-    public String getCommandSyntax() {
-        StringBuilder syntax = new StringBuilder()
-            .append("/");
-
-        this.commandArguments.stream()
-            .filter(it -> !it.isCommandSource())
-            .forEach(it -> syntax.append(it.toFriendlyString()).append(" "));
-
-        return syntax.toString();
     }
 
     public int getDefaultLevelPermission() {
@@ -448,12 +429,27 @@ public class CommandDescriptor implements SourceModuleGetter {
         for (CommandArgument commandArgument : this.commandArguments) {
             if (!commandArgument.isCommandSource()) continue;
 
-            assert commandArgument.getArgumentType() != null;
             return commandArgument.getArgumentType().equals(CommandContext.class)
                 || commandArgument.getArgumentType().equals(ServerCommandSource.class);
         }
 
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "/" + this.commandArguments
+            .stream()
+            .map(CommandArgument::toString)
+            .collect(Collectors.joining(" "));
+    }
+
+    public String getCommandSyntax() {
+        return "/" + this.commandArguments
+            .stream()
+            .filter(it -> !it.isCommandSource())
+            .map(CommandArgument::toFriendlyString)
+            .collect(Collectors.joining(" "));
     }
 
     @Override
