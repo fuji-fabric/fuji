@@ -131,7 +131,7 @@ public class BackInitializer extends ModuleInitializer {
     }
 
     @Document(id = 1751825615959L, value = "Back to the specified location.")
-    @CommandNode("back")
+    @CommandNode("back 1")
     private static int $back(@CommandSource ServerPlayerEntity player, Dimension targetDimension) {
         return backWithParameters(player, 1, targetDimension);
     }
