@@ -1,10 +1,11 @@
-package io.github.sakurawald.fuji.core.command.structure;
+package io.github.sakurawald.fuji.core.command.descriptor;
 
 import com.mojang.brigadier.Command;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.PlayerCollection;
+import io.github.sakurawald.fuji.core.command.structure.CommandRequirementDescriptor;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 

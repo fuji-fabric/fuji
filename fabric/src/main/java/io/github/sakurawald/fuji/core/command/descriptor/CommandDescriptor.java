@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.command.structure;
+package io.github.sakurawald.fuji.core.command.descriptor;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -19,6 +19,7 @@ import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
 import io.github.sakurawald.fuji.core.command.extension.CommandNodeExtension;
 import io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor;
+import io.github.sakurawald.fuji.core.command.structure.CommandRequirementDescriptor;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
