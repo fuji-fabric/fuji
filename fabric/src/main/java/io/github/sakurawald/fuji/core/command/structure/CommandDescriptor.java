@@ -22,6 +22,7 @@ import io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcess
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
@@ -29,10 +30,8 @@ import io.github.sakurawald.fuji.core.structure.Pair;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -58,8 +57,6 @@ public class CommandDescriptor implements SourceModuleGetter {
     public @Nullable String document;
 
     private @Nullable LiteralArgumentBuilder<ServerCommandSource> registerReturnValue;
-
-    private static final Set<String> PUBLIC_COMMAND_PATHS = new HashSet<>();
 
     public @NotNull CommandDescriptor fillDocument(@Nullable Document document) {
         if (document == null) return this;
@@ -305,6 +302,10 @@ public class CommandDescriptor implements SourceModuleGetter {
             return new CommandRequirementDescriptor(levelPermission, stringPermission);
         }
 
+        @TestCase(action = "Issue the `/warp` and `/back` command as normal user.", targets = {
+            "The default command permission should be registered properly."
+            , "A public command, that shares a common command path prefix with another admin command, should be accessible to normal users."
+        })
         @DocStringProvider(id = 1751999362278L, value = "The permission used as the default string permission, for a command descriptor.")
         private static void fillCommandRequirement(@NotNull List<Pair<ArgumentBuilder<ServerCommandSource, ?>, CommandArgument>> pairs, @NotNull CommandDescriptor descriptor) {
             /* Fill the command requirements based on the command arguments. */
@@ -321,9 +322,9 @@ public class CommandDescriptor implements SourceModuleGetter {
 
                 /* Track the public command prefix path. */
                 if (!seenAnyNonNullRequiremnt && commandArgument.getRequirement() == null) {
-                    if (!PUBLIC_COMMAND_PATHS.contains(walkingCommandPath)) {
+                    if (!CommandAnnotationProcessor.PUBLIC_COMMAND_PATHS.contains(walkingCommandPath)) {
                         LogUtil.debug("Add command path '{}' as the path of public command.", walkingCommandPath);
-                        PUBLIC_COMMAND_PATHS.add(walkingCommandPath);
+                        CommandAnnotationProcessor.PUBLIC_COMMAND_PATHS.add(walkingCommandPath);
 
                         // NOTE: Update the existing command nodes in the path, if they are registered before by some non-public commands.
                         CommandHelper.Node
@@ -342,7 +343,7 @@ public class CommandDescriptor implements SourceModuleGetter {
                 /* Stop tracking the public command prefix path, since we have seen a specified requirement. */
                 seenAnyNonNullRequiremnt = true;
 
-                if (PUBLIC_COMMAND_PATHS.contains(walkingCommandPath)) {
+                if (CommandAnnotationProcessor.PUBLIC_COMMAND_PATHS.contains(walkingCommandPath)) {
                     LogUtil.debug("Skip setting the requirement for the path of public command: {}", walkingCommandPath);
                 } else {
                     /* Resolve the command requirement from the command descriptor. */

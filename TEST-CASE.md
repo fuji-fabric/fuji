@@ -126,6 +126,12 @@
 
 [Test Case]
 - Module: core
+- Action: **Issue the `/warp` and `/back` command as normal user.**
+- Target: The default command permission should be registered properly.
+- Target: A public command, that shares a common command path prefix with another admin command, should be accessible to normal users.
+
+[Test Case]
+- Module: core
 - Action: **List the command tree of a normal user.**
 - Target: The command permissions should be handled properly.
 

@@ -15,6 +15,7 @@ import io.github.sakurawald.fuji.core.command.structure.RetargetCommandDescripto
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.impl.CommandEvents;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
+import java.util.HashSet;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.NotNull;
@@ -45,6 +46,7 @@ public class CommandAnnotationProcessor {
      Be careful don't write the hashCode() for command descriptor, just use the memory address, use the command path to identify a command descriptor is possible to broken in some cases of register() and unregister().
      */
     public static final Set<CommandDescriptor> REGISTERED_COMMAND_DESCRIPTORS = ConcurrentHashMap.newKeySet();
+    public static final Set<String> PUBLIC_COMMAND_PATHS = new HashSet<>();
 
     public static CommandDispatcher<ServerCommandSource> COMMAND_DISPATCHER;
     public static CommandRegistryAccess COMMAND_REGISTRY_ACCESS;
@@ -64,6 +66,7 @@ public class CommandAnnotationProcessor {
 
             /* register commands */
             REGISTERED_COMMAND_DESCRIPTORS.clear();
+            PUBLIC_COMMAND_PATHS.clear();
             processClasses();
         });
     }

@@ -9,11 +9,11 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.Dimension;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
+import java.util.List;
 import lombok.SneakyThrows;
 import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
-
-import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
 public class DimensionArgumentTypeAdapter extends BaseArgumentTypeAdapter {
@@ -23,13 +23,15 @@ public class DimensionArgumentTypeAdapter extends BaseArgumentTypeAdapter {
         return DimensionArgumentType.dimension();
     }
 
+    @ForDeveloper("""
+        1. The DimensionArgumentType.dimension() will not suggest the new registered dimensions, or un-registered dimensions.
+        2. The dimension registry is synced when the client joins the server, and it's fixed.
+        3. FIXME: When you call RequiredArgumentBuilder#suggests() method, the `/back {push|clear}` will also be suggested, even the command source has no permission to use it.
+        """)
     @Override
     public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
-            /*
-             The DimensionArgumentType.dimension() will not suggest the new registered dimension types.
-             Each time the server started, the dimensions will be shared with client and server.
-             */
-        return super.makeRequiredArgumentBuilder(argumentName).suggests(
+        return super.makeRequiredArgumentBuilder(argumentName)
+            .suggests(
             (ctx, builder) -> {
                 WorldHelper.getWorlds().forEach(it -> builder.suggest(RegistryHelper.getIdAsString(it)));
                 return builder.buildFuture();
