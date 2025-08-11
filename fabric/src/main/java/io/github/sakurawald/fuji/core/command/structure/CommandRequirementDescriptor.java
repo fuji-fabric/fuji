@@ -20,21 +20,16 @@ public class CommandRequirementDescriptor {
         } else this.string = string;
     }
 
-    /*
-         1. This function will not work for BundleCommandDescriptor, since the gson will create the java object via the reflection.
-         2. The command `/command-callback` is registered directly via the brigadier system.
-         */
     public static @Nullable CommandRequirementDescriptor of(@Nullable CommandRequirement annotation) {
-        /* override the default requirement */
+        /* Override the default requirement. */
         if (Configs.MAIN_CONTROL_CONFIG.model().core.permission.all_commands_require_level_4_permission_to_use_by_default) {
             return new CommandRequirementDescriptor(4, null);
         }
 
-        /* primary */
+        /* Use the default requirement specified by code. */
         if (annotation == null) {
             return null;
         }
-
         return new CommandRequirementDescriptor(annotation.level(), annotation.string());
     }
 
