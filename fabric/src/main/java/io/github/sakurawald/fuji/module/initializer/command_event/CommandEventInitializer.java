@@ -32,7 +32,7 @@ import net.minecraft.stat.Stats;
     1. `send-broadcast \\<light_purple\\>Welcome new player %player:name% to join us!`
     2. `kit give %player:name% \\<kit-name\\>`
     3. `send-custom as-message %player:name% new-player-guide`
-    4. `run as fake-op %player:name% rtp"`
+    4. `run as fake-op %player:name% rtp`
     5. `delay 10 spawnpoint %player:name%"`
     """)
 public class CommandEventInitializer extends ModuleInitializer {
