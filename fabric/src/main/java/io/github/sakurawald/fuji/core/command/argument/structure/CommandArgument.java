@@ -1,5 +1,7 @@
 package io.github.sakurawald.fuji.core.command.argument.structure;
 
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyStringList;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
@@ -144,6 +146,11 @@ public class CommandArgument {
 
         this.isCommandTarget = true;
         return this;
+    }
+
+    public boolean isGreedyStringType() {
+        return this.argumentType.equals(GreedyString.class)
+            || this.argumentType.equals(GreedyStringList.class);
     }
 
 }

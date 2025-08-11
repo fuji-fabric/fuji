@@ -1,36 +1,35 @@
 package io.github.sakurawald.fuji.core.command.processor;
 
 import com.mojang.brigadier.CommandDispatcher;
-import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
-import io.github.sakurawald.fuji.core.document.annotation.Cite;
-import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
+import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.core.command.descriptor.CommandDescriptor;
-import io.github.sakurawald.fuji.core.command.structure.CommandRequirementDescriptor;
 import io.github.sakurawald.fuji.core.command.descriptor.RetargetCommandDescriptor;
+import io.github.sakurawald.fuji.core.command.structure.CommandRequirementDescriptor;
+import io.github.sakurawald.fuji.core.document.annotation.Cite;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.impl.CommandEvents;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
-import java.util.HashSet;
-import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.server.command.ServerCommandSource;
-import org.jetbrains.annotations.NotNull;
-
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.server.command.ServerCommandSource;
+import org.jetbrains.annotations.NotNull;
 
 @Cite({
     "https://github.com/Revxrsal/Lamp"
@@ -41,10 +40,6 @@ public class CommandAnnotationProcessor {
 
     private static final String REQUIRED_ARGUMENT_PLACEHOLDER = "$";
 
-    /*
-     yeah, this is a concurrent hash set.
-     Be careful don't write the hashCode() for command descriptor, just use the memory address, use the command path to identify a command descriptor is possible to broken in some cases of register() and unregister().
-     */
     public static final Set<CommandDescriptor> REGISTERED_COMMAND_DESCRIPTORS = ConcurrentHashMap.newKeySet();
     public static final Set<String> PUBLIC_COMMAND_PATHS = new HashSet<>();
 
@@ -52,19 +47,16 @@ public class CommandAnnotationProcessor {
     public static CommandRegistryAccess COMMAND_REGISTRY_ACCESS;
 
     public static void process() {
-        /*
-         note that: the `/reload` will trigger the `REGISTRATION` event.
-         Also, the vanilla minecraft will remove all commands, so we must register fuji commands after reload.
-         */
+        // NOTE: The `/reload` command will clear all registered commands, and trigger the `REGISTRATION` event.
         CommandEvents.REGISTRATION.register((dispatcher, registryAccess, environment) -> {
-            /* environment */
+            /* Capture the variables. */
             CommandAnnotationProcessor.COMMAND_DISPATCHER = dispatcher;
             CommandAnnotationProcessor.COMMAND_REGISTRY_ACCESS = registryAccess;
 
-            /* register argument type adapters */
+            /* Register argument type adapters. */
             BaseArgumentTypeAdapter.Registry.registerTypeAdapters();
 
-            /* register commands */
+            /* Register commands. */
             REGISTERED_COMMAND_DESCRIPTORS.clear();
             PUBLIC_COMMAND_PATHS.clear();
             processClasses();
@@ -78,33 +70,40 @@ public class CommandAnnotationProcessor {
             .forEach(initializer -> processClass(initializer.getClass()));
     }
 
-    private static void processClass(Class<?> clazz) {
+    private static void processClass(@NotNull Class<?> clazz) {
         ReflectionUtil
             .getMethodsWithAnnotation(clazz, CommandNode.class)
             .forEach(method -> processMethod(clazz, method));
     }
 
-    private static void processMethod(Class<?> clazz, Method method) {
-        /* verify */
-        if (!method.getReturnType().equals(int.class)) {
-            throw new RuntimeException("The method `%s` in class `%s` must return the primitive int data type.".formatted(method.getName(), clazz.getName()));
-        }
+    private static void processMethod(@NotNull Class<?> clazz, @NotNull Method method) {
+        /* Verify the method. */
+        verifyMethod(clazz, method);
 
-        if (!Modifier.isStatic(method.getModifiers())) {
-            throw new RuntimeException("The method `%s` in class `%s` must be static.".formatted(method.getName(), clazz.getName()));
-        }
-
-        /* make command descriptor */
+        /* Make the command descriptor from the method. */
         CommandDescriptor descriptor = makeCommandDescriptor(clazz, method);
         descriptor.register();
 
-        /* make retarget command descriptor */
+        /* Make the re-target command descriptor. */
         RetargetCommandDescriptor
             .make(descriptor)
             .ifPresent(CommandDescriptor::register);
     }
 
-    private static Class<?> unbox(Parameter parameter) {
+    private static void verifyMethod(@NotNull Class<?> clazz, @NotNull Method method) {
+        /* Verify the return type of the command method. */
+        if (!method.getReturnType().equals(int.class)) {
+            throw new RuntimeException("The method `%s` in class `%s` must return the primitive int data type.".formatted(method.getName(), clazz.getName()));
+        }
+
+        /* Verify the static modifier of the command method. */
+        if (!Modifier.isStatic(method.getModifiers())) {
+            throw new RuntimeException("The method `%s` in class `%s` must be static.".formatted(method.getName(), clazz.getName()));
+        }
+
+    }
+
+    private static @NotNull Class<?> unboxTypeClass(@NotNull Parameter parameter) {
         if (parameter.getType().equals(Optional.class)) {
             ParameterizedType parameterizedType = (ParameterizedType) parameter.getParameterizedType();
             return (Class<?>) parameterizedType.getActualTypeArguments()[0];
@@ -113,11 +112,11 @@ public class CommandAnnotationProcessor {
         return parameter.getType();
     }
 
-    private static boolean isRequiredArgumentPlaceholder(CommandArgument commandArgument) {
+    private static boolean isRequiredArgumentPlaceholder(@NotNull CommandArgument commandArgument) {
         return commandArgument.getArgumentName().startsWith(REQUIRED_ARGUMENT_PLACEHOLDER);
     }
 
-    private static int parseMethodParameterIndexFromArgumentName(CommandArgument commandArgument) {
+    private static int parseMethodParameterIndexFromArgumentName(@NotNull CommandArgument commandArgument) {
         // parse the method parameter index
         String argumentName = commandArgument.getArgumentName();
         if (argumentName.startsWith(REQUIRED_ARGUMENT_PLACEHOLDER)) {
@@ -176,7 +175,7 @@ public class CommandAnnotationProcessor {
                 /* replace the required argument placeholder `$1` with the parameter in method whose index is 1*/
                 int methodParameterIndex = parseMethodParameterIndexFromArgumentName(commandArgument);
                 Parameter parameter = method.getParameters()[methodParameterIndex];
-                Class<?> type = unbox(parameter);
+                Class<?> type = unboxTypeClass(parameter);
                 boolean isOptional = parameter.getType().equals(Optional.class);
                 commandArgumentList.set(argumentIndex,
                     CommandArgument
@@ -188,7 +187,7 @@ public class CommandAnnotationProcessor {
             for (int parameterIndex = 0; parameterIndex < method.getParameters().length; parameterIndex++) {
                 Parameter parameter = method.getParameters()[parameterIndex];
                 if (parameter.getAnnotation(CommandSource.class) == null) continue;
-                Class<?> type = unbox(parameter);
+                Class<?> type = unboxTypeClass(parameter);
                 // for a command source argument, we don't care the index
                 commandArgumentList.add(0, CommandArgument
                     .ofRequiredArgument(type, parameter.getName(), false, CommandRequirementDescriptor.of(methodRequirement))
@@ -200,7 +199,7 @@ public class CommandAnnotationProcessor {
             Parameter[] parameters = method.getParameters();
             for (Parameter parameter : parameters) {
                 /* append the argument to the tail*/
-                Class<?> type = unbox(parameter);
+                Class<?> type = unboxTypeClass(parameter);
                 boolean isOptional = parameter.getType().equals(Optional.class);
                 CommandArgument commandArgument = CommandArgument
                     .ofRequiredArgument(type, parameter.getName(), isOptional, CommandRequirementDescriptor.of(methodRequirement))
@@ -209,13 +208,42 @@ public class CommandAnnotationProcessor {
             }
         }
 
-        /* verify */
+        /* Verify command descriptor. */
+        verifyCommandDescriptor(clazz, method, commandArgumentList);
+
+        return new CommandDescriptor(method, commandArgumentList)
+            .fillDocument(method.getAnnotation(Document.class));
+    }
+
+    private static void verifyCommandDescriptor(@NotNull Class<?> clazz, @NotNull Method method, @NotNull List<CommandArgument> commandArgumentList) {
+        /* A command descriptor must have at least 1 argument. */
         if (commandArgumentList.isEmpty()) {
             throw new RuntimeException("The argument list of @CommandNode annotated in method `%s` in class `%s` is empty.".formatted(method.getName(), clazz.getName()));
         }
 
-        return new CommandDescriptor(method, commandArgumentList)
-            .fillDocument(method.getAnnotation(Document.class));
+
+        /* Verify the command argument types order. */
+        boolean expectNonOptionalArgument = true;
+        for (int i = 0; i < commandArgumentList.size(); i++) {
+            CommandArgument commandArgument = commandArgumentList.get(i);
+
+            /* The greedy string argument must be the last argument. */
+            if (commandArgument.isGreedyStringType() && i != commandArgumentList.size() - 1) {
+                throw new RuntimeException("The GreedyString argument type must be the last argument: class = %s, method = %s".formatted(clazz.getName(), method.getName()));
+            }
+
+            /* Check the order of non-optional arguments and optional arguments. */
+            if (expectNonOptionalArgument) {
+                if (commandArgument.isOptional()) {
+                    expectNonOptionalArgument = false;
+                }
+            } else {
+                if (!commandArgument.isOptional() && !commandArgument.isGreedyStringType()) {
+                    throw new RuntimeException("The order of argument types must be: non-optional arguments, optional arguments and greedy string argument: class = %s, method = %s".formatted(clazz.getName(), method.getName()));
+                }
+            }
+
+        }
     }
 
 }
