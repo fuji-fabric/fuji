@@ -9,7 +9,7 @@ import io.github.sakurawald.fuji.core.manager.impl.bossbar.command.argument.wrap
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.StringList;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
-import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
+import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.manager.Managers;

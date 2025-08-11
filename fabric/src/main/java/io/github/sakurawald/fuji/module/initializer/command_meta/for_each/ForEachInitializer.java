@@ -8,7 +8,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
-import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
+import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import net.minecraft.server.network.ServerPlayerEntity;
 

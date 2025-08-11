@@ -5,7 +5,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
-import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
+import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.core.manager.Managers;

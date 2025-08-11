@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.command_cooldown.service;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
-import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
+import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.CommandCooldownInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCooldownDescriptor;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCooldownDataNode;

@@ -13,7 +13,7 @@ import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.descriptor.CommandDescriptor;
 import io.github.sakurawald.fuji.core.command.structure.CommandRequirementDescriptor;
-import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
+import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.module.initializer.command_bundle.accessor.CommandContextAccessor;
 import lombok.Getter;
 import lombok.SneakyThrows;

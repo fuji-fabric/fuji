@@ -11,7 +11,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
-import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
+import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.module.initializer.command_menu.CommandMenuInitializer;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import lombok.Data;

@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.module.mixin.command_interactive;
 
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
-import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
+import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.module.initializer.command_interactive.CommandInteractiveInitializer;
 import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
 import net.minecraft.server.network.ServerPlayNetworkHandler;

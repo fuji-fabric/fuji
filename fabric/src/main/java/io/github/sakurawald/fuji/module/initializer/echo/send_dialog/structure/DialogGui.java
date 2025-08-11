@@ -4,7 +4,7 @@ import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
-import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
+import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import net.minecraft.item.Item;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;

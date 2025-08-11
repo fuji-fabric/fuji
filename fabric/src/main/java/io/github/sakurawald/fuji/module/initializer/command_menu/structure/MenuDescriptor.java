@@ -5,7 +5,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
-import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
+import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.minecraft.screen.ScreenHandlerType;

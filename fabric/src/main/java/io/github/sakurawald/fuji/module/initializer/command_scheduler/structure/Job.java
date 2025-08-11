@@ -5,7 +5,7 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
-import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
+import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.module.initializer.command_scheduler.CommandSchedulerInitializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;

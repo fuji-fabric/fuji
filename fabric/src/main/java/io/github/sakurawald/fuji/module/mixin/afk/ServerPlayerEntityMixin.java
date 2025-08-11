@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.module.mixin.afk;
 import com.mojang.authlib.GameProfile;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PacketHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
-import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
+import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.module.initializer.afk.AfkInitializer;
 import io.github.sakurawald.fuji.module.initializer.afk.accessor.AfkStateAccessor;

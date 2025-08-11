@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.command_warmup.structure;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
-import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
+import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.structure.InterruptibleTicket;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import lombok.Getter;

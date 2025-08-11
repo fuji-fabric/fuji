@@ -6,7 +6,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
-import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
+import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.service.paged_text.PagedMessageText;
 import io.github.sakurawald.fuji.module.initializer.warning.WarningInitializer;
 import io.github.sakurawald.fuji.module.initializer.warning.structure.PlayerWarnings;

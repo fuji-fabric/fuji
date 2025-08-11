@@ -6,7 +6,7 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
-import io.github.sakurawald.fuji.core.command.structure.ExtendedCommandSource;
+import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;

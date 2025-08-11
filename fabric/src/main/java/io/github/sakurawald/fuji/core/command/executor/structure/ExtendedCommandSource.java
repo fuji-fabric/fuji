@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.command.structure;
+package io.github.sakurawald.fuji.core.command.executor.structure;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
