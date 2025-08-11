@@ -6,6 +6,7 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor;
 import io.github.sakurawald.fuji.core.command.structure.CommandDescriptor;
+import io.github.sakurawald.fuji.core.command.structure.CommandRequirementDescriptor;
 import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -66,12 +67,14 @@ public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
         List<Text> lore = new ArrayList<>();
 
         /* Add basic properties of command descriptor. */
+        CommandRequirementDescriptor commandRequirement = CommandDescriptor.CommandRequirement.computeCommandRequirement(entity);
+
         lore.addAll(List.of(
             TextHelper.getTextByKey(getPlayer(),"from_module", entity.getSourceModule())
             , TextHelper.getTextByKey(getPlayer(), "command.source.can_be_executed_by_console", entity.canBeExecutedByConsole())
             , TextHelper.getTextByKey(getPlayer(), "command.descriptor.type", entity.getClass().getSimpleName())
-            , TextHelper.getTextByKey(getPlayer(), "command.requirement.level_permission", entity.getDefaultLevelPermission())
-            , TextHelper.getTextByKey(getPlayer(), "command.requirement.string_permission", entity.getDefaultStringPermission())
+            , TextHelper.getTextByKey(getPlayer(), "command.requirement.level_permission", commandRequirement.getLevel())
+            , TextHelper.getTextByKey(getPlayer(), "command.requirement.string_permission", commandRequirement.getString())
         ));
 
         /* Add documents lore of this command. */

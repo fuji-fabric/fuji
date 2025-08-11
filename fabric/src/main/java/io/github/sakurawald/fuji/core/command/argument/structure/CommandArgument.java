@@ -41,8 +41,15 @@ public class CommandArgument {
 
     @Nullable String document;
 
-    public static @NotNull CommandArgument ofRequiredArgument(@NotNull Class<?> typeClass, @NotNull String argumentName, boolean isOptional, @Nullable CommandRequirementDescriptor commandRequirement) {
-        return new CommandArgument(typeClass, argumentName, isOptional, commandRequirement);
+    public CommandArgument(@NotNull Class<?> argumentType, @NotNull String argumentName, boolean isOptional, @Nullable CommandRequirementDescriptor requirement) {
+        this.argumentType = argumentType;
+        this.argumentName = argumentName;
+        this.isOptional = isOptional;
+        this.requirement = requirement;
+    }
+
+    public static @NotNull CommandArgument ofRequiredArgument(@NotNull Class<?> typeClass, @NotNull String argumentName, boolean isOptional, @Nullable CommandRequirementDescriptor requirement) {
+        return new CommandArgument(typeClass, argumentName, isOptional, requirement);
     }
 
     public static @NotNull CommandArgument ofLiteralArgument(@NotNull String argumentName, @Nullable CommandRequirementDescriptor requirement) {

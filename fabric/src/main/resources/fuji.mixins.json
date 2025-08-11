@@ -47,6 +47,7 @@
     "command_warmup.ServerPlayNetworkHandlerMixin",
     "core.command.CommandContextBuilderMixin",
     "core.command.CommandDispatcherMixin",
+    "core.command.CommandNodeMixin",
     "core.event.CommandManagerMixin",
     "core.event.MinecraftServerMixin",
     "core.event.PlayerManagerMixin",

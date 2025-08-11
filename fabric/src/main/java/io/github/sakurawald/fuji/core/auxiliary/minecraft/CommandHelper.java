@@ -12,6 +12,7 @@ import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
+import io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor;
 import io.github.sakurawald.fuji.core.command.suggestion.CommandSuggestionOptimizer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,7 +51,7 @@ public class CommandHelper {
             return String.join(".", array);
         }
 
-        private static @NotNull String trimCommandPathString(@NotNull String path) {
+        public static @NotNull String trimCommandPathString(@NotNull String path) {
             return StringUtils.strip(path, ".");
         }
 
@@ -107,6 +108,18 @@ public class CommandHelper {
 
             return "Unknown";
         }
+
+        public static Optional<CommandNode<ServerCommandSource>> findCommandNode(@NotNull String commandPath) {
+            List<String> splitCommandPath = splitCommandPath(commandPath);
+            return Optional.ofNullable(getCommandDispatcher()
+                .findNode(splitCommandPath));
+        }
+
+        private static @NotNull List<String> splitCommandPath(@NotNull String commandPath) {
+            String[] nodeNames = commandPath.split("\\.", -1);
+            List<String> list = Arrays.asList(nodeNames);
+            return list;
+        }
     }
 
     public static void updateCommandTree() {
@@ -117,13 +130,7 @@ public class CommandHelper {
     }
 
     public static @Nullable CommandDispatcher<ServerCommandSource> getCommandDispatcher() {
-        // NOTE: It's null during the server startup.
-        if (ServerHelper.getServer() == null
-            || ServerHelper.getServer().getCommandManager() == null) {
-            return null;
-        }
-
-        return ServerHelper.getServer().getCommandManager().getDispatcher();
+        return CommandAnnotationProcessor.COMMAND_DISPATCHER;
     }
 
     public static class Requirement {

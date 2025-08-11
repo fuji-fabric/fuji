@@ -17,6 +17,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
+import io.github.sakurawald.fuji.core.command.extension.CommandNodeExtension;
 import io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
@@ -24,11 +25,14 @@ import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
+import io.github.sakurawald.fuji.core.structure.Pair;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +58,8 @@ public class CommandDescriptor implements SourceModuleGetter {
     public @Nullable String document;
 
     private @Nullable LiteralArgumentBuilder<ServerCommandSource> registerReturnValue;
+
+    private static final Set<String> PUBLIC_COMMAND_PATHS = new HashSet<>();
 
     public @NotNull CommandDescriptor fillDocument(@Nullable Document document) {
         if (document == null) return this;
@@ -129,41 +135,6 @@ public class CommandDescriptor implements SourceModuleGetter {
     @Override
     public final int hashCode() {
         return super.hashCode();
-    }
-
-    @DocStringProvider(id = 1751999362278L, value = "The permission used as the default string permission, for a command descriptor.")
-    @SuppressWarnings("RedundantIfStatement")
-    private static void fillCommandRequirement(@NotNull ArgumentBuilder<ServerCommandSource, ?> builder, @Nullable CommandRequirementDescriptor requirement) {
-        // Don't override the command requirement if the annotation is null
-        if (requirement == null) {
-            return;
-        }
-
-        /* Make the predicate. */
-        Predicate<ServerCommandSource> predicate = (ctx) -> {
-            ServerPlayerEntity player = ctx.getPlayer();
-
-            /* The console can use all commands. */
-            if (player == null) return true;
-
-            /* Check the string permission. */
-            if (requirement.getString() != null
-                && !requirement.getString().isEmpty()
-                && LuckpermsHelper.hasPermission(player.getUuid(), new PermissionDescriptor(requirement.getString(), 1751999362278L))) {
-                return true;
-            }
-
-            /* Check the level permission. */
-            if (ctx.hasPermissionLevel(requirement.getLevel())) {
-                return true;
-            }
-
-            /* Insufficient permission to use this command. */
-            return false;
-        };
-
-        /* Set the predicate. */
-        builder.requires(predicate);
     }
 
     @ForDeveloper("Returns the only possible path to the command node.")
@@ -272,6 +243,10 @@ public class CommandDescriptor implements SourceModuleGetter {
         this.registerReturnValue = assembledArgumentBuilder;
     }
 
+    @ForDeveloper("""
+        Register all `optional arguments` and redirect them into the `anchor command node`.
+        This method should not handle the command requirements, since it's already done while registering the non-optional arguments.
+        """)
     private void registerOptionalArguments() {
         CommandNode<ServerCommandSource> redirectTargetNode = findOptionalArgumentAnchor(this.commandArguments);
         this.commandArguments
@@ -290,6 +265,123 @@ public class CommandDescriptor implements SourceModuleGetter {
                 /* Register the optional argument builder as the child of the redirect target node. */
                 redirectTargetNode.addChild(optionalArgumentBuilder.build());
             });
+    }
+
+    public static class CommandRequirement {
+
+        private static int computeLevelPermission(@NotNull CommandDescriptor descriptor) {
+            int minRequiredLevel = CommandRequirementDescriptor.getInitialLevel();
+
+            for (CommandArgument commandArgument : descriptor.commandArguments) {
+                if (commandArgument.getRequirement() == null) {
+                    continue;
+                }
+                int permissionLevel = commandArgument.getRequirement().getLevel();
+                minRequiredLevel = Math.max(minRequiredLevel, permissionLevel);
+            }
+            return minRequiredLevel;
+        }
+
+        private static @Nullable String computeStringPermission(@NotNull CommandDescriptor descriptor) {
+            @Nullable String requiredString = CommandRequirementDescriptor.getInitialString();
+            for (CommandArgument commandArgument : descriptor.commandArguments) {
+                if (commandArgument.getRequirement() == null) {
+                    continue;
+                }
+
+                String permissionString = commandArgument.getRequirement().getString();
+                if (permissionString != null && !permissionString.isBlank()) {
+                    requiredString = permissionString;
+                    break;
+                }
+            }
+
+            return requiredString;
+        }
+
+        public static @NotNull CommandRequirementDescriptor computeCommandRequirement(@NotNull CommandDescriptor descriptor) {
+            int levelPermission = computeLevelPermission(descriptor);
+            String stringPermission = computeStringPermission(descriptor);
+            return new CommandRequirementDescriptor(levelPermission, stringPermission);
+        }
+
+        @DocStringProvider(id = 1751999362278L, value = "The permission used as the default string permission, for a command descriptor.")
+        private static void fillCommandRequirement(@NotNull List<Pair<ArgumentBuilder<ServerCommandSource, ?>, CommandArgument>> pairs, @NotNull CommandDescriptor descriptor) {
+            /* Fill the command requirements based on the command arguments. */
+            String walkingCommandPath = "";
+            boolean seenAnyNonNullRequiremnt = false;
+            for (var pair : pairs) {
+                /* Extract the key and value. */
+                ArgumentBuilder<ServerCommandSource, ?> argumentBuilder = pair.getKey();
+                CommandArgument commandArgument = pair.getValue();
+
+                /* Update the walking path. */
+                walkingCommandPath = walkingCommandPath + "." + commandArgument.getArgumentName();
+                walkingCommandPath = CommandHelper.Node.trimCommandPathString(walkingCommandPath);
+
+                /* Track the public command prefix path. */
+                if (!seenAnyNonNullRequiremnt && commandArgument.getRequirement() == null) {
+                    if (!PUBLIC_COMMAND_PATHS.contains(walkingCommandPath)) {
+                        LogUtil.debug("Add command path '{}' as the path of public command.", walkingCommandPath);
+                        PUBLIC_COMMAND_PATHS.add(walkingCommandPath);
+
+                        // NOTE: Update the existing command nodes in the path, if they are registered before by some non-public commands.
+                        CommandHelper.Node
+                            .findCommandNode(walkingCommandPath)
+                            .ifPresent(registeredCommandNode -> {
+                                @SuppressWarnings("unchecked")
+                                CommandNodeExtension<ServerCommandSource> extension = ((CommandNodeExtension<ServerCommandSource>) registeredCommandNode);
+                                extension.fuji$setRequirement((source) -> true);
+                            });
+                    }
+
+                    // For a public command prefix path, skip setting the requirements.
+                    continue;
+                }
+
+                /* Stop tracking the public command prefix path, since we have seen a specified requirement. */
+                seenAnyNonNullRequiremnt = true;
+
+                if (PUBLIC_COMMAND_PATHS.contains(walkingCommandPath)) {
+                    LogUtil.debug("Skip setting the requirement for the path of public command: {}", walkingCommandPath);
+                } else {
+                    /* Resolve the command requirement from the command descriptor. */
+                    CommandRequirementDescriptor requirement = computeCommandRequirement(descriptor);
+
+                    /* Make the command requirement predicate. */
+                    Predicate<ServerCommandSource> predicate = makeCommandRequirementPredicate(requirement);
+
+                    /* Set this predicate. */
+                    argumentBuilder.requires(predicate);
+                }
+            }
+
+        }
+
+        private static @NotNull Predicate<ServerCommandSource> makeCommandRequirementPredicate(CommandRequirementDescriptor requirement) {
+            return (commandContext) -> {
+                ServerPlayerEntity player = commandContext.getPlayer();
+
+                /* The console can use all commands. */
+                if (player == null) return true;
+
+                /* Check the string permission. */
+                if (requirement.getString() != null
+                    && !requirement.getString().isEmpty()
+                    && LuckpermsHelper.hasPermission(player.getUuid(), new PermissionDescriptor(requirement.getString(), 1751999362278L))) {
+                    return true;
+                }
+
+                /* Check the level permission. */
+                if (commandContext.hasPermissionLevel(requirement.getLevel())) {
+                    return true;
+                }
+
+                /* Insufficient permission to use this command. */
+                return false;
+            };
+        }
+
     }
 
     public static class CommandException {
@@ -395,7 +487,7 @@ public class CommandDescriptor implements SourceModuleGetter {
         }
 
         private static List<ArgumentBuilder<ServerCommandSource, ?>> makeNonOptionalArgumentBuilders(@NotNull CommandDescriptor descriptor) {
-            List<ArgumentBuilder<ServerCommandSource, ?>> builders = new ArrayList<>();
+            List<Pair<ArgumentBuilder<ServerCommandSource, ?>, CommandArgument>> pairs = new ArrayList<>();
             descriptor.commandArguments
                 .stream()
                 .filter(
@@ -408,14 +500,18 @@ public class CommandDescriptor implements SourceModuleGetter {
                     /* Make the argument builder. */
                     ArgumentBuilder<ServerCommandSource, ?> builder = makeArgumentBuilder(argument);
 
-                    /* Fill the requirement for the builder. */
-                    fillCommandRequirement(builder, argument.getRequirement());
-
                     /* Add the builder. */
-                    builders.add(builder);
+                    pairs.add(new Pair<>(builder, argument));
                 });
 
-            return builders;
+            /* Fill the requirement for the builder. */
+            CommandRequirement.fillCommandRequirement(pairs, descriptor);
+
+            /* Return the builders. */
+            return pairs
+                .stream()
+                .map(Pair::getKey)
+                .collect(Collectors.toList());
         }
 
     }
@@ -441,32 +537,6 @@ public class CommandDescriptor implements SourceModuleGetter {
                 .verifyCommandSource(commandContext);
         }
 
-    }
-
-    public int getDefaultLevelPermission() {
-        int minRequiredLevel = CommandRequirementDescriptor.getDefaultLevel();
-
-        for (CommandArgument commandArgument : this.commandArguments) {
-            if (commandArgument.getRequirement() == null) continue;
-
-            minRequiredLevel = Math.max(minRequiredLevel, commandArgument.getRequirement().getLevel());
-        }
-        return minRequiredLevel;
-    }
-
-    public String getDefaultStringPermission() {
-        String requiredString = CommandRequirementDescriptor.getDefaultString();
-        for (CommandArgument commandArgument : this.commandArguments) {
-            if (commandArgument.getRequirement() == null) continue;
-
-            String string = commandArgument.getRequirement().getString();
-            if (string != null && !string.isBlank()) {
-                requiredString = string;
-                break;
-            }
-        }
-
-        return requiredString.isBlank() ? "none" : requiredString;
     }
 
     public boolean canBeExecutedByConsole() {

@@ -38,11 +38,11 @@ public class CommandRequirementDescriptor {
         return new CommandRequirementDescriptor(annotation.level(), annotation.string());
     }
 
-    public static int getDefaultLevel() {
+    public static int getInitialLevel() {
         return 0;
     }
 
-    public static String getDefaultString() {
-        return "";
+    public static String getInitialString() {
+        return null;
     }
 }
