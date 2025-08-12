@@ -7,6 +7,7 @@ import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.event.impl.CommandEvents;
+import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import io.github.sakurawald.fuji.core.manager.impl.callback.structure.TTLMap;
 import net.minecraft.server.command.ServerCommandSource;
@@ -23,10 +24,11 @@ public class CallbackManager extends BaseManager {
     private static final String COMMAND_CALLBACK_LITERAL = "command-callback";
     private static final String COMMAND_CALLBACK_UUID_ARGUMENT_NAME = "uuid";
 
-    private final TTLMap<String, Consumer<ServerPlayerEntity>> uuid2consumer = new TTLMap<>();
+    private TTLMap<String, Consumer<ServerPlayerEntity>> uuid2consumer;
 
     @Override
     public void onInitialize() {
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> uuid2consumer = new TTLMap<>());
         this.registerUserCommand();
     }
 

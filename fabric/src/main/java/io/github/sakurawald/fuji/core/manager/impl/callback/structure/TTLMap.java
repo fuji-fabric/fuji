@@ -18,6 +18,10 @@ public class TTLMap<K, V> {
     private final ConcurrentMap<K, ExpiringValue<V>> backendMap = new ConcurrentHashMap<>();
 
     public TTLMap() {
+        scheduleTTLMapCleanerJob();
+    }
+
+    private void scheduleTTLMapCleanerJob() {
         CleanTTLMapJob cleanTTLMapJob = new CleanTTLMapJob(new JobDataMap() {
             {
                 this.put(TTLMap.class.getName(), TTLMap.this);
