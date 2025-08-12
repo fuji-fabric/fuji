@@ -11,7 +11,6 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
@@ -297,7 +296,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
             try {
                 /* Ask the pre-defined rules if the player can use the command. */
                 String requiredPermissionToExecuteThisCommand = COMMAND_PERMISSION_UNIFIED_PERMISSION.withArguments(commandPath);
-                if (!PlayerHelper.isAdmin(source)) {
+                if (!CommandHelper.Requirement.isAdmin(source)) {
                     for (CommandPermissionRule rule : config.model().rules) {
                         if (requiredPermissionToExecuteThisCommand.matches(rule.permissionPatternRegex)) {
                             Tristate predefinePermissionTestResult = rule.permissionTestResult.toTriState();

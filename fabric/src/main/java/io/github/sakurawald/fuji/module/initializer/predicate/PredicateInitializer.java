@@ -89,7 +89,7 @@ public class PredicateInitializer extends ModuleInitializer {
 
     @CommandNode("is-op?")
     private static int $isOp(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {
-        boolean value = PlayerHelper.isOperator(player);
+        boolean value = CommandHelper.Requirement.isOperator(player);
         return CommandHelper.Return.returnBoolean(source, value);
     }
 

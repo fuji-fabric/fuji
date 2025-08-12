@@ -12,7 +12,6 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
@@ -428,7 +427,7 @@ public class CommandDescriptor implements SourceModuleGetter {
                 .withColor(CommandHelper.COMMAND_EXCEPTION_COLOR_INT);
 
             // NOTE: Only send the stack trace if the command source is admin.
-            if (PlayerHelper.isAdmin(source)) {
+            if (CommandHelper.Requirement.isAdmin(source)) {
                 String stacktrace = String.join("\n", ReflectionUtil.extractStackTraceElements(throwable));
                 style
                     .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(Text.of("Click to copy the stacktrace.")))

@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.top_chunks.structure;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
@@ -60,7 +61,7 @@ public class ChunkScore implements Comparable<ChunkScore> {
         if (player == null) {
             return false;
         }
-        return player.hasPermissionLevel(4) || LuckpermsHelper.hasPermission(player.getUuid(), CLICK_TO_TELEPORT_TO_CHUNK_LOCATION_PERMISSION);
+        return CommandHelper.Requirement.isOperator(player) || LuckpermsHelper.hasPermission(player.getUuid(), CLICK_TO_TELEPORT_TO_CHUNK_LOCATION_PERMISSION);
     }
 
     public void plusEntity(@NotNull Entity entity) {
@@ -135,7 +136,7 @@ public class ChunkScore implements Comparable<ChunkScore> {
 
     public Text computeChunkLocationText(@NotNull ServerCommandSource source) {
         if (TopChunksInitializer.config.model().hide_location) {
-            if (source.hasPermissionLevel(4)) {
+            if (CommandHelper.Requirement.isAdmin(source)) {
                 return TextHelper.getTextByKey(source, "top_chunks.prop.chunk.hide_location.bypass", this.chunkPos.toString());
             } else {
                 return TextHelper.getTextByKey(source, "top_chunks.prop.chunk.hide_location");

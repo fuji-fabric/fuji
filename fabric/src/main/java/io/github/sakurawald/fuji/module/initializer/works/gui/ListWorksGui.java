@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.works.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
@@ -77,7 +78,7 @@ public class ListWorksGui extends CrudPagedGui<Work> {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean canOperateOnThisEntity(@NotNull ServerPlayerEntity player, @NotNull Work work) {
         return PlayerHelper.getPlayerName(player).equals(work.creator)
-            || player.hasPermissionLevel(4);
+            || CommandHelper.Requirement.isOperator(player);
     }
 
     @Override

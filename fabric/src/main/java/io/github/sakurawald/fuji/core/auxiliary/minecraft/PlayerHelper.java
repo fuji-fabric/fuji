@@ -11,7 +11,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -71,17 +70,6 @@ public class PlayerHelper {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isServerPlayer(@NotNull PlayerEntity player) {
         return player instanceof ServerPlayerEntity;
-    }
-
-    public static boolean isOperator(@NotNull PlayerEntity player) {
-        return ServerHelper
-            .getServer()
-            .getPlayerManager()
-            .isOperator(player.getGameProfile());
-    }
-
-    public static boolean isAdmin(@NotNull ServerCommandSource source) {
-        return source.hasPermissionLevel(4);
     }
 
     public static @NotNull ServerWorld getServerWorld(@NotNull ServerPlayerEntity player) {

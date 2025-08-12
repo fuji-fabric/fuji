@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.gameplay.carpet.fake_player
 
 import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.module.initializer.gameplay.carpet.fake_player_manager.FakePlayerManagerInitializer;
@@ -82,7 +83,7 @@ public class FakePlayerManagerService {
         if (player == null) return true;
 
         // The op is considered authorized.
-        if (context.getSource().hasPermissionLevel(4)) return true;
+        if (CommandHelper.Requirement.isAdmin(context.getSource())) return true;
 
         // The owner player is considered authorized.
         return isMyFakePlayer(player, fakePlayerName);

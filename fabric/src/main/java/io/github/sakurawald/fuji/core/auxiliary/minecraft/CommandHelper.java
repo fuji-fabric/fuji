@@ -14,6 +14,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor;
 import io.github.sakurawald.fuji.core.command.suggestion.CommandSuggestionOptimizer;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -32,7 +34,6 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class CommandHelper {
 
@@ -129,12 +130,11 @@ public class CommandHelper {
             .forEach(commandManager::sendCommandTree);
     }
 
-    public static @Nullable CommandDispatcher<ServerCommandSource> getCommandDispatcher() {
+    public static @NotNull CommandDispatcher<ServerCommandSource> getCommandDispatcher() {
         return CommandAnnotationProcessor.COMMAND_DISPATCHER;
     }
 
     public static class Requirement {
-
 
         public static boolean canUseThisCommand(ServerPlayerEntity player, String commandString) {
             /* Parse the command string into command nodes. */
@@ -157,6 +157,21 @@ public class CommandHelper {
                 .stream()
                 .map(ParsedCommandNode::getNode)
                 .allMatch(it -> it.canUse(commandSource));
+        }
+
+        public static boolean isOperator(@NotNull PlayerEntity player) {
+            return ServerHelper
+                .getServer()
+                .getPlayerManager()
+                .isOperator(player.getGameProfile());
+        }
+
+        @ForDeveloper("""
+            By default, an `operator` has the permission level `4`.
+            However, it can be configured via `op-permission-level=4` option.
+            """)
+        public static boolean isAdmin(@NotNull ServerCommandSource source) {
+            return source.hasPermissionLevel(4);
         }
     }
 
