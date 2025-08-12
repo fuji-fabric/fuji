@@ -19,6 +19,7 @@ import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionExc
 import io.github.sakurawald.fuji.core.command.extension.CommandNodeExtension;
 import io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor;
 import io.github.sakurawald.fuji.core.command.structure.CommandRequirementDescriptor;
+import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
@@ -399,7 +400,14 @@ public class CommandDescriptor implements SourceModuleGetter {
                 .getDefaultLevelPermission()
                 .getCommands();
             int effectiveDefaultLevelPermission = permissionMap.computeIfAbsent(fullCommandPath, k -> defaultCommandRequirement.getLevel());
-            CommandRequirementDescriptor effectiveDefaultCommandRequirement = new CommandRequirementDescriptor(effectiveDefaultLevelPermission, null);
+
+            /* Make the effective command requirement. */
+            CommandRequirementDescriptor effectiveDefaultCommandRequirement;
+            if (Configs.MAIN_CONTROL_CONFIG.model().core.permission.all_commands_require_level_4_permission_to_use_by_default) {
+                effectiveDefaultCommandRequirement = new CommandRequirementDescriptor(4, null);
+            } else {
+                effectiveDefaultCommandRequirement = new CommandRequirementDescriptor(effectiveDefaultLevelPermission, null);
+            }
 
             /* Apply the requirement for the command arguments. */
             descriptor.commandArguments

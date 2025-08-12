@@ -21,12 +21,6 @@ public class CommandRequirementDescriptor {
     }
 
     public static @Nullable CommandRequirementDescriptor from(@Nullable CommandRequirement annotation) {
-        /* Override the default requirement. */
-        if (Configs.MAIN_CONTROL_CONFIG.model().core.permission.all_commands_require_level_4_permission_to_use_by_default) {
-            return new CommandRequirementDescriptor(4, null);
-        }
-
-        /* Use the default requirement specified by code. */
         if (annotation == null) {
             return null;
         }
