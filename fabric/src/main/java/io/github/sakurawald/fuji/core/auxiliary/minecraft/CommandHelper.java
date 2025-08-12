@@ -43,7 +43,6 @@ public class CommandHelper {
 
         public static @NotNull String findCommandNodePath(@NotNull CommandNode<ServerCommandSource> node) {
             CommandDispatcher<ServerCommandSource> dispatcher = getCommandDispatcher();
-            assert dispatcher != null;
 
             /* Find the first encountered path in root tree, ignore other paths if there are `forks` or `redirects`. */
             String[] array = dispatcher
