@@ -10,3 +10,4 @@
   - before this version: the `default level permission` for each fuji command is defined and `hard-coded`.
   - after this version: the `default level permission` for each fuji command is generated into the `permission.json` file. You can modify this file, and use `/reload` to apply your changes.
   - This feature makes it easier to use this mod in `single-player` world, where there is no `Luckperms` mod installed.
+- [core] feature: now will display the `documetn string` when inspecting `config handler` objects.

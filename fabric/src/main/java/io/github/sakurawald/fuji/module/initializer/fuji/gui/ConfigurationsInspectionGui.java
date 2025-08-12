@@ -10,6 +10,7 @@ import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
+import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -44,22 +45,32 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
         return new ConfigurationsInspectionGui(parent, player, entities, pageIndex);
     }
 
+    @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
     @Override
     protected @NotNull GuiElementInterface toGuiElement(@NotNull BaseConfigurationHandler<?> entity) {
-        String configModelClassName = ReflectionUtil.getSimpleClassName(entity.getClass());
+        Class<?> configHandlerClass = entity.getClass();
+        String configHandlerClassName = ReflectionUtil.getSimpleClassName(configHandlerClass);
         String configRelativePath = IOUtil.computeRelativePathBasedOnGameDir(entity.getPath().toFile());
         String fromModule = entity.getSourceModule();
 
-        List<Text> lore = List.of(
+        List<Text> lore = new ArrayList<>();
+        lore.addAll(List.of(
             TextHelper.getTextByKey(getPlayer(), "from_module", fromModule)
-            , TextHelper.getTextByKey(getPlayer(), "fuji.inspect.configuration.class", configModelClassName)
+            , TextHelper.getTextByKey(getPlayer(), "fuji.inspect.configuration.class", configHandlerClassName)
             , TextHelper.getTextByKey(getPlayer(), "fuji.inspect.configuration.path",  configRelativePath)
             , TextHelper.getTextByKey(getPlayer(), "prompt.click.see_inside")
-        );
+        ));
+
+        /* Attach document. */
+        Class<?> configModelClass = entity.model().getClass();
+        String configModelClassDocumentString = DocumentUtil.getClassDocumentString(getPlayer(), configModelClass);
+        if (configModelClassDocumentString != null) {
+            lore.add(TextHelper.TEXT_EMPTY);
+            lore.addAll(TextHelper.getDocumentTextList(getPlayer(), configModelClassDocumentString));
+        }
 
         // NOTE: The parent may be different, due to the parent of ConfigurationsInspectionGui may be null or non-null (If it's created and open from ModuleDetailsInspectionGui).
         SimpleGui trueParentGui = this.getParent() != null ? this.getParent() : this.getBackendGui();
-
         GuiElementBuilder guiElementBuilder = new GuiElementBuilder()
             .setItem(toItem(entity))
             .setName(Text.literal(configRelativePath))

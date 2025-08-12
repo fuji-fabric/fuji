@@ -6,7 +6,14 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import java.util.ArrayList;
 import java.util.List;
 
-/* Sometimes I really hate the typing system of java... */
+@Document(id = 1754987954725L, value = """
+    This file is named `Main Control File`.
+    It's used to:
+    1. Configure the options for `core`, which affects all `modules`.
+    2. Enable or disable a `module`.
+
+    <green>NOTE: You need to re-start the server, to `enable` or `disable` a `module`.
+    """)
 public class ConfigModel {
 
     @Document(id = 1751823676896L, value = """
