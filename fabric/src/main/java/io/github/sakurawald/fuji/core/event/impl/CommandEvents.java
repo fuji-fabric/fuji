@@ -15,6 +15,8 @@ public class CommandEvents {
         """)
     public static final Event<CommandRegistrationCallback> REGISTRATION = new Event<>((listeners) -> (d, r, e) -> listeners.forEach(listener -> listener.fire(d, r, e)));
 
+    public static final Event<CommandRegistrationCallback> AFTER_REGISTRATION = new Event<>((listeners) -> (d, r, e) -> listeners.forEach(listener -> listener.fire(d, r, e)));
+
     public interface CommandRegistrationCallback {
         void fire(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment);
     }
