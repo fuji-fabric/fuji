@@ -166,8 +166,12 @@ public class CommandAnnotationProcessor {
             .fillDocument(method.getAnnotation(Document.class));
     }
 
-    private static Stream<String> splitCommandNode(CommandNode classAnnotation) {
-        return Arrays.stream(classAnnotation.value().trim().split("\\s+"));
+    private static Stream<String> splitCommandNode(@NotNull CommandNode commandNodeAnnotation) {
+        String[] split = commandNodeAnnotation.value().trim().split("\\s+");
+        return Arrays
+            .stream(split)
+            // NOTE: https://errorprone.info/bugpattern/StringSplitter
+            .filter(argumentName -> !argumentName.trim().isBlank());
     }
 
     private static @NotNull String getArgumentName(@NotNull Parameter parameter) {
