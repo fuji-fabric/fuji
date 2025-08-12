@@ -123,12 +123,14 @@ public class CommandHelper {
     }
 
     public static void updateCommandTree() {
+        updateCommandTree(ServerHelper.getServer().getCommandManager());
+    }
+
+    public static void updateCommandTree(@NotNull CommandManager commandManager) {
         // NOTE: No need to update if the command manager is not initialized.
         if (ServerHelper.getServer() == null) {
             return;
         }
-
-        CommandManager commandManager = ServerHelper.getServer().getCommandManager();
         PlayerHelper.Lookup
             .getOnlinePlayers()
             .forEach(commandManager::sendCommandTree);

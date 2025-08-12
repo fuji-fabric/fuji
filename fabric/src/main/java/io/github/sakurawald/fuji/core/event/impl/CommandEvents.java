@@ -15,9 +15,15 @@ public class CommandEvents {
         """)
     public static final Event<CommandRegistrationCallback> REGISTRATION = new Event<>((listeners) -> (d, r, e) -> listeners.forEach(listener -> listener.fire(d, r, e)));
 
-    public static final Event<CommandRegistrationCallback> AFTER_REGISTRATION = new Event<>((listeners) -> (d, r, e) -> listeners.forEach(listener -> listener.fire(d, r, e)));
+    public static final Event<AfterCommandRegistrationCallback> AFTER_REGISTRATION = new Event<>((listeners) -> (m, d, r, e) -> listeners.forEach(listener -> listener.fire(m, d, r, e)));
 
     public interface CommandRegistrationCallback {
         void fire(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment);
+
+    }
+
+    public interface AfterCommandRegistrationCallback {
+
+        void fire(CommandManager commandManager, CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment);
     }
 }

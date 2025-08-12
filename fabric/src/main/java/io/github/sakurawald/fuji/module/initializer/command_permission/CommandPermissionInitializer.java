@@ -347,7 +347,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
     })
     @Override
     protected void onInitialize() {
-        CommandEvents.AFTER_REGISTRATION.register((d, r, e) -> {
+        CommandEvents.AFTER_REGISTRATION.register((m, d, r, e) -> {
             ensureCommandNodeRequirementIsWrapped();
         });
     }

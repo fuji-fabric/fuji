@@ -74,8 +74,9 @@ public class CommandAnnotationProcessor {
             /* Write the permission file back. */
             permission.writeStorage();
         });
-        CommandEvents.AFTER_REGISTRATION.register((d, r, e) -> {
-            CommandHelper.updateCommandTree();
+        CommandEvents.AFTER_REGISTRATION.register((m, d, r, e) -> {
+            // NOTE: The `/reload` command invalidates the old CommandManager reference, here we have to capture the new reference to CommandManager.
+            CommandHelper.updateCommandTree(m);
         });
     }
 

@@ -26,6 +26,7 @@ public abstract class CommandManagerMixin {
 
     @Inject(at = @At(value = "RETURN", target = "Lcom/mojang/brigadier/CommandDispatcher;setConsumer(Lcom/mojang/brigadier/ResultConsumer;)V", remap = false), method = "<init>")
     private void afterCommandRegistration(CommandManager.RegistrationEnvironment environment, CommandRegistryAccess registryAccess, CallbackInfo ci) {
-        CommandEvents.AFTER_REGISTRATION.invoker().fire(this.dispatcher, registryAccess, environment);
+        CommandManager commandManager = (CommandManager) (Object) this;
+        CommandEvents.AFTER_REGISTRATION.invoker().fire(commandManager, this.dispatcher, registryAccess, environment);
     }
 }
