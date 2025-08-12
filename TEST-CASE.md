@@ -63,6 +63,12 @@
 - Target: You should not see the red `Test failed` in the feedback.
 
 [Test Case]
+- Module: command_permission
+- Action: **Issue `/reload` command, and check the client command tree.**
+- Target: The `command_permission` module should warp the newly registered commands.
+- Target: The client-side command tree should be updated.
+
+[Test Case]
 - Module: command_rewrite
 - Action: **Issue `/home` command.**
 - Target: It should be rewrite to `/home tp default` command.

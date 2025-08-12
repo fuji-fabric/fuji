@@ -18,7 +18,8 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
-import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
+import io.github.sakurawald.fuji.core.event.impl.CommandEvents;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_permission.config.model.CommandPermissionConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_permission.gui.CommandPermissionGui;
@@ -340,9 +341,14 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         return commandNode.getRequirement() instanceof WrappedPredicate<ServerCommandSource>;
     }
 
+    @TestCase(action = "Issue `/reload` command, and check the client command tree.", targets = {
+        "The `command_permission` module should warp the newly registered commands."
+        , "The client-side command tree should be updated."
+    })
     @Override
     protected void onInitialize() {
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> ensureCommandNodeRequirementIsWrapped());
+        CommandEvents.AFTER_REGISTRATION.register((d, r, e) -> {
+            ensureCommandNodeRequirementIsWrapped();
+        });
     }
-
 }
