@@ -31,6 +31,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -321,7 +322,7 @@ public class CommandDescriptor implements SourceModuleGetter {
                 walkingCommandPath = CommandHelper.Node.trimCommandPathString(walkingCommandPath);
 
                 /* Track the public command prefix path. */
-                if (!seenAnyNonNullRequiremnt && commandArgument.getRequirement() == null) {
+                if (!seenAnyNonNullRequiremnt && CommandRequirementDescriptor.isEmptyRequirement(commandArgument.getRequirement())) {
                     if (!CommandAnnotationProcessor.PUBLIC_COMMAND_PATHS.contains(walkingCommandPath)) {
                         LogUtil.debug("Add command path '{}' as the path of public command.", walkingCommandPath);
                         CommandAnnotationProcessor.PUBLIC_COMMAND_PATHS.add(walkingCommandPath);
@@ -359,6 +360,7 @@ public class CommandDescriptor implements SourceModuleGetter {
 
         }
 
+        @SuppressWarnings("RedundantIfStatement")
         private static @NotNull Predicate<ServerCommandSource> makeCommandRequirementPredicate(CommandRequirementDescriptor requirement) {
             return (commandContext) -> {
                 ServerPlayerEntity player = commandContext.getPlayer();
@@ -383,6 +385,26 @@ public class CommandDescriptor implements SourceModuleGetter {
             };
         }
 
+        public static void setEffectiveDefaultCommandRequirement(@NotNull CommandDescriptor descriptor) {
+            /* Compute the effective default command requirement for the full command path. */
+            String fullCommandPath = descriptor.commandArguments
+                .stream()
+                .filter(commandArgument -> !commandArgument.isCommandSource())
+                .map(CommandArgument::getArgumentName)
+                .collect(Collectors.joining("."));
+
+            CommandRequirementDescriptor defaultCommandRequirement = computeCommandRequirement(descriptor);
+
+            Map<String, Integer> permissionMap = CommandAnnotationProcessor.permission.model()
+                .getDefaultLevelPermission()
+                .getCommands();
+            int effectiveDefaultLevelPermission = permissionMap.computeIfAbsent(fullCommandPath, k -> defaultCommandRequirement.getLevel());
+            CommandRequirementDescriptor effectiveDefaultCommandRequirement = new CommandRequirementDescriptor(effectiveDefaultLevelPermission, null);
+
+            /* Apply the requirement for the command arguments. */
+            descriptor.commandArguments
+                .forEach(it -> it.setRequirement(effectiveDefaultCommandRequirement));
+        }
     }
 
     public static class CommandException {
@@ -505,7 +527,7 @@ public class CommandDescriptor implements SourceModuleGetter {
                     pairs.add(new Pair<>(builder, argument));
                 });
 
-            /* Fill the requirement for the builder. */
+            /* Fill the command requirement for the builders. */
             CommandRequirement.fillCommandRequirement(pairs, descriptor);
 
             /* Return the builders. */

@@ -2,11 +2,11 @@ package io.github.sakurawald.fuji.core.command.structure;
 
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.config.Configs;
-import lombok.Getter;
+import lombok.Data;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("ClassCanBeRecord")
-@Getter
+@Data
 public class CommandRequirementDescriptor {
 
     final int level;
@@ -20,7 +20,7 @@ public class CommandRequirementDescriptor {
         } else this.string = string;
     }
 
-    public static @Nullable CommandRequirementDescriptor of(@Nullable CommandRequirement annotation) {
+    public static @Nullable CommandRequirementDescriptor from(@Nullable CommandRequirement annotation) {
         /* Override the default requirement. */
         if (Configs.MAIN_CONTROL_CONFIG.model().core.permission.all_commands_require_level_4_permission_to_use_by_default) {
             return new CommandRequirementDescriptor(4, null);
@@ -31,6 +31,18 @@ public class CommandRequirementDescriptor {
             return null;
         }
         return new CommandRequirementDescriptor(annotation.level(), annotation.string());
+    }
+
+    @SuppressWarnings("RedundantIfStatement")
+    public static boolean isEmptyRequirement(@Nullable CommandRequirementDescriptor commandRequirement) {
+        if (commandRequirement == null) {
+            return true;
+        }
+        if (commandRequirement.level == 0 && commandRequirement.string == null) {
+            return true;
+        }
+
+        return false;
     }
 
     public static int getInitialLevel() {

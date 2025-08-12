@@ -1,15 +1,20 @@
 package io.github.sakurawald.fuji.core.command.processor;
 
 import com.mojang.brigadier.CommandDispatcher;
+import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandArgName;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
+import io.github.sakurawald.fuji.core.command.config.model.PermissionModel;
 import io.github.sakurawald.fuji.core.command.descriptor.CommandDescriptor;
 import io.github.sakurawald.fuji.core.command.descriptor.RetargetCommandDescriptor;
 import io.github.sakurawald.fuji.core.command.structure.CommandRequirementDescriptor;
+import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
@@ -39,12 +44,15 @@ import org.jetbrains.annotations.NotNull;
 @TestCase(action = "List the command tree of a normal user.", targets = "The command permissions should be handled properly.")
 public class CommandAnnotationProcessor {
 
+    public static final BaseConfigurationHandler<PermissionModel> permission = new ObjectConfigurationHandler<>(Fuji.MOD_CONFIG_PATH.resolve("permission.json"), PermissionModel.class);
+
     public static final Set<CommandDescriptor> REGISTERED_COMMAND_DESCRIPTORS = ConcurrentHashMap.newKeySet();
     public static final Set<String> PUBLIC_COMMAND_PATHS = new HashSet<>();
 
     public static CommandDispatcher<ServerCommandSource> COMMAND_DISPATCHER;
     public static CommandRegistryAccess COMMAND_REGISTRY_ACCESS;
 
+    @SuppressWarnings("CodeBlock2Expr")
     public static void process() {
         // NOTE: The `/reload` command will clear all registered commands, and trigger the `REGISTRATION` event.
         CommandEvents.REGISTRATION.register((dispatcher, registryAccess, environment) -> {
@@ -55,10 +63,19 @@ public class CommandAnnotationProcessor {
             /* Register argument type adapters. */
             BaseArgumentTypeAdapter.Registry.registerTypeAdapters();
 
+            /* Read the latest permission file. */
+            permission.readStorage();
+
             /* Register commands. */
             REGISTERED_COMMAND_DESCRIPTORS.clear();
             PUBLIC_COMMAND_PATHS.clear();
             processClasses();
+
+            /* Write the permission file back. */
+            permission.writeStorage();
+        });
+        CommandEvents.AFTER_REGISTRATION.register((d, r, e) -> {
+            CommandHelper.updateCommandTree();
         });
     }
 
@@ -120,7 +137,7 @@ public class CommandAnnotationProcessor {
         if (classAnnotation != null && !classAnnotation.value().isBlank()) {
             splitCommandNode(classAnnotation)
                 .forEach(argumentName -> commandArgumentList.add(
-                    CommandArgument.ofLiteralArgument(argumentName, CommandRequirementDescriptor.of(classRequirement))
+                    CommandArgument.ofLiteralArgument(argumentName, CommandRequirementDescriptor.from(classRequirement))
                 ));
         }
 
@@ -143,7 +160,7 @@ public class CommandAnnotationProcessor {
 
             /* Make requirement descriptor */
             commandArgumentList.add(CommandArgument
-                .ofLiteralArgument(argumentName, CommandRequirementDescriptor.of(methodRequirement)));
+                .ofLiteralArgument(argumentName, CommandRequirementDescriptor.from(methodRequirement)));
         }
 
         /* Push required arguments. */
@@ -153,7 +170,7 @@ public class CommandAnnotationProcessor {
             Class<?> typeClass = unboxTypeClass(parameter);
             boolean isOptional = parameter.getType().equals(Optional.class);
             CommandArgument commandArgument = CommandArgument
-                .ofRequiredArgument(typeClass, getArgumentName(parameter), isOptional, CommandRequirementDescriptor.of(methodRequirement))
+                .ofRequiredArgument(typeClass, getArgumentName(parameter), isOptional, CommandRequirementDescriptor.from(methodRequirement))
                 .fillParameter(parameter);
             commandArgumentList.add(commandArgument);
         }
@@ -161,9 +178,13 @@ public class CommandAnnotationProcessor {
         /* Verify command descriptor. */
         verifyCommandDescriptor(clazz, method, commandArgumentList);
 
-        /* Return it. */
-        return new CommandDescriptor(method, commandArgumentList)
+        /* Make the command descriptor. */
+        CommandDescriptor commandDescriptor = new CommandDescriptor(method, commandArgumentList)
             .fillDocument(method.getAnnotation(Document.class));
+
+        /* Apply the effective default command requirement. */
+        CommandDescriptor.CommandRequirement.setEffectiveDefaultCommandRequirement(commandDescriptor);
+        return commandDescriptor;
     }
 
     private static Stream<String> splitCommandNode(@NotNull CommandNode commandNodeAnnotation) {

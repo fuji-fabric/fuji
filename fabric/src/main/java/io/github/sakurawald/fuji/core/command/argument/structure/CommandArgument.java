@@ -34,7 +34,7 @@ public class CommandArgument {
     final @NotNull Class<?> argumentType;
     final @NotNull String argumentName;
     final boolean isOptional;
-    final @Nullable CommandRequirementDescriptor requirement;
+    @Nullable CommandRequirementDescriptor requirement;
 
     boolean isCommandSource;
 
