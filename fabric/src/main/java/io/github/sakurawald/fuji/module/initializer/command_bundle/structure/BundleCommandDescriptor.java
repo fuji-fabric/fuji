@@ -15,6 +15,8 @@ import io.github.sakurawald.fuji.core.command.descriptor.CommandDescriptor;
 import io.github.sakurawald.fuji.core.command.structure.CommandRequirementDescriptor;
 import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.module.initializer.command_bundle.accessor.CommandContextAccessor;
+import java.util.Comparator;
+import java.util.TreeMap;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.minecraft.server.command.ServerCommandSource;
@@ -28,11 +30,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/*
- * 1. For a bundle command, there is no need to verify the command source: the verification is done by the end commands.
- * 2. A bundle command is type-safe for input, and type-unsafe for output.
- *
- * */
 public class BundleCommandDescriptor extends CommandDescriptor {
 
     /* DSL definition */
@@ -52,52 +49,37 @@ public class BundleCommandDescriptor extends CommandDescriptor {
     @Getter
     final Map<String, String> optionalArgumentName2DefaultValue;
 
-    private BundleCommandDescriptor(Method method, List<CommandArgument> commandArguments, BundleCommandNode entry, Map<String, String> optionalArgumentName2DefaultValue, String document) {
+    private BundleCommandDescriptor(@NotNull Method method, @NotNull List<CommandArgument> commandArguments, @NotNull BundleCommandNode entry, @NotNull Map<String, String> optionalArgumentName2DefaultValue) {
         super(method, commandArguments);
         this.entry = entry;
         this.optionalArgumentName2DefaultValue = optionalArgumentName2DefaultValue;
-        this.fillDocument(document);
-    }
-
-    @SneakyThrows
-    private static Method getFunctionClosure() {
-        Method functionClosure = BundleCommandDescriptor.class.getDeclaredMethod("executeBundleCommandClosure"
-            , CommandContext.class
-            , BundleCommandDescriptor.class
-            , List.class);
-        functionClosure.setAccessible(true);
-
-        return functionClosure;
+        this.fillDocument(entry.getDocument());
     }
 
     @Keep
-    private static int executeBundleCommandClosure(
-        @NotNull CommandContext<ServerCommandSource> ctx
-        , @NotNull BundleCommandDescriptor descriptor
-        , @NotNull List<Object> args) {
-
-        LogUtil.debug("The closure for `bundle command` associated with {} is invoked with args: ", descriptor.entry);
-        args.forEach(arg -> LogUtil.debug("Arg: {}", arg));
+    private static int bundleCommandGenericCommandMethod(@NotNull CommandContext<ServerCommandSource> commandContext, @NotNull BundleCommandDescriptor descriptor, @NotNull List<Object> variableValues) {
+        LogUtil.debug("Execute bundle-command: definition = {}, variableValues = {}", descriptor.entry, variableValues);
 
         /* Define the variables. */
-        Map<String, String> variables = new HashMap<>();
+        // NOTE: Sort with the longest variable name first, to ensure the String#replace works properly.
+        Map<String, String> variableTable = new TreeMap<>(Comparator.comparing(String::length).reversed());
 
         int argumentIndex = 0;
         for (CommandArgument commandArgument : descriptor.commandArguments) {
-            if (commandArgument.isLiteralArgument()) continue;
+            if (!commandArgument.isMethodParameterSpecifier()) continue;
 
             String argumentName = commandArgument.getArgumentName();
-            String argumentValue = (String) args.get(argumentIndex);
-            variables.put(argumentName, argumentValue);
+            String argumentValue = (String) variableValues.get(argumentIndex);
+            variableTable.put(argumentName, argumentValue);
             argumentIndex++;
         }
-        LogUtil.debug("Define the variables: {}", variables);
+        LogUtil.debug("Define the variable table: {}", variableTable);
 
-        /* Resolve the variables. */
+        /* Resolve the user-defined variables. */
         List<String> commands = new ArrayList<>(descriptor.entry.getBundle());
         commands = commands.stream().map(command -> {
             String newCommand = command;
-            for (Map.Entry<String, String> variable : variables.entrySet()) {
+            for (Map.Entry<String, String> variable : variableTable.entrySet()) {
                 String oldStr = ARGUMENT_NAME_PLACEHOLDER + variable.getKey();
                 @NotNull String newStr = variable.getValue();
                 newCommand = newCommand.replace(oldStr, newStr);
@@ -106,8 +88,9 @@ public class BundleCommandDescriptor extends CommandDescriptor {
         }).toList();
 
         /* Resolve the placeholders. */
-        ServerCommandSource source = ctx.getSource();
-        commands = commands.stream().map(command -> TextHelper.Parsers.parsePlaceholderString(source, command)).toList();
+        ServerCommandSource source = commandContext.getSource();
+        commands = commands.stream()
+            .map(command -> TextHelper.Parsers.parsePlaceholderString(source, command)).toList();
 
         /* Execute the commands. */
         LogUtil.debug("Execute bundle command: {}", commands);
@@ -115,99 +98,104 @@ public class BundleCommandDescriptor extends CommandDescriptor {
         return CommandHelper.Return.SUCCESS;
     }
 
-    public static BundleCommandDescriptor make(BundleCommandNode entry) {
-        /* make arguments */
-        List<CommandArgument> commandArguments = new ArrayList<>();
-        Map<String, String> defaultValueForOptionalArguments = new HashMap<>();
-
-        String pattern = entry.getPattern();
-        CommandRequirementDescriptor requirement = entry.getRequirement();
-
-        Matcher matcher = BUNDLE_COMMAND_DSL.matcher(pattern);
-//        int argumentIndex = 0;
-        while (matcher.find()) {
-
-            if (matchLiteralArgument(matcher)) {
-                String argumentName = matcher.group(LITERAL_ARGUMENT_NAME_GROUP_INDEX);
-                commandArguments.add(CommandArgument.ofLiteralArgument(argumentName, requirement));
-            } else {
-                boolean isOptional = matcher.group(LEXEME_GROUP_INDEX).startsWith("[");
-                if (isOptional) {
-                    String argumentType = matcher.group(REQUIRED_OPTIONAL_ARGUMENT_TYPE_GROUP_INDEX);
-                    String argumentName = matcher.group(REQUIRED_OPTIONAL_ARGUMENT_NAME_GROUP_INDEX);
-                    Class<?> type = BaseArgumentTypeAdapter.Registry.toTypeClass(argumentType);
-                    commandArguments.add(CommandArgument.ofRequiredArgument(type, argumentName, true, requirement));
-
-                    // put default value for optional argument
-                    String defaultValue = matcher.group(REQUIRED_OPTIONAL_ARGUMENT_DEFAULT_VALUE_GROUP_INDEX);
-                    if (defaultValue == null) {
-                        defaultValue = "";
-                    }
-                    defaultValueForOptionalArguments.put(argumentName, defaultValue);
-
-                } else {
-                    String argumentType = matcher.group(REQUIRED_NON_OPTIONAL_ARGUMENT_TYPE_GROUP_INDEX);
-                    String argumentName = matcher.group(REQUIRED_NON_OPTIONAL_ARGUMENT_NAME_GROUP_INDEX);
-                    Class<?> type = BaseArgumentTypeAdapter.Registry.toTypeClass(argumentType);
-                    commandArguments.add(CommandArgument.ofRequiredArgument(type, argumentName, false, requirement));
-                }
-
-            }
-
-//            argumentIndex++;
-        }
-
-        String document = entry.getDocument();
-        return new BundleCommandDescriptor(getFunctionClosure(), commandArguments, entry, defaultValueForOptionalArguments, document);
-    }
-
-    private static boolean matchLiteralArgument(Matcher matcher) {
-        return matcher.group(LITERAL_ARGUMENT_NAME_GROUP_INDEX) != null;
-    }
-
     @Override
     protected @NotNull List<Object> makeParameterValues(@NotNull CommandContext<ServerCommandSource> ctx) {
-        List<Object> args = new ArrayList<>();
+        List<Object> parameterValues = new ArrayList<>();
 
         CommandContextAccessor<?> ctxAccessor = (CommandContextAccessor<?>) ctx;
         for (CommandArgument commandArgument : this.getMethodParameterSpecifiers()) {
             String argumentName = commandArgument.getArgumentName();
 
             /* Collect the matched lexeme. */
-            String arg;
+            String lexeme;
             ParsedArgument<?, ?> parsedArgument = ctxAccessor.fuji$getArguments().get(argumentName);
             if (parsedArgument != null) {
-                StringRange range = parsedArgument.getRange();
-                arg = ctx.getInput().substring(range.getStart(), range.getEnd());
+                StringRange lexemeRange = parsedArgument.getRange();
+                lexeme = ctx.getInput().substring(lexemeRange.getStart(), lexemeRange.getEnd());
             } else {
                 // If the optional argument is not specified, it will be null.
-                arg = optionalArgumentName2DefaultValue.get(argumentName);
+                lexeme = optionalArgumentName2DefaultValue.get(argumentName);
             }
 
-            args.add(arg);
+            parameterValues.add(lexeme);
         }
 
-        LogUtil.debug("Make args for bundle command: {}", args);
-        return args;
+        LogUtil.debug("Make parameterValues for bundle command: {}", parameterValues);
+        return parameterValues;
     }
 
     @SuppressWarnings("DuplicatedCode")
     @Override
     protected @NotNull Command<ServerCommandSource> makeCommandAction() {
-        return (ctx) -> {
-
-            /* Invoke the command lambda. */
+        return (commandContext) -> {
             BundleCommandDescriptor descriptor = this;
-            List<Object> args = makeParameterValues(ctx);
+            List<Object> parameterValues = makeParameterValues(commandContext);
 
-            int value;
+            int commandReturnValue;
             try {
-                value = (int) this.method.invoke(null, ctx, descriptor, args);
+                commandReturnValue = (int) this.method.invoke(null, commandContext, descriptor, parameterValues);
             } catch (Exception e) {
-                return CommandException.handleCommandException(ctx, this.method, e);
+                return CommandException.handleCommandException(commandContext, this.method, e);
             }
 
-            return value;
+            return commandReturnValue;
         };
+    }
+
+    public static class Maker {
+
+        public static @NotNull BundleCommandDescriptor from(@NotNull BundleCommandNode entry) {
+            /* Make command arguments. */
+            List<CommandArgument> commandArguments = new ArrayList<>();
+            Map<String, String> defaultValueForOptionalArguments = new HashMap<>();
+
+            String commandPattern = entry.getPattern();
+            CommandRequirementDescriptor commandRequirement = entry.getRequirement();
+
+            Matcher matcher = BUNDLE_COMMAND_DSL.matcher(commandPattern);
+            while (matcher.find()) {
+                if (matchLiteralArgument(matcher)) {
+                    String argumentName = matcher.group(LITERAL_ARGUMENT_NAME_GROUP_INDEX);
+                    commandArguments.add(CommandArgument.ofLiteralArgument(argumentName, commandRequirement));
+                } else {
+                    boolean isOptional = matcher.group(LEXEME_GROUP_INDEX).startsWith("[");
+                    if (isOptional) {
+                        String argumentTypeName = matcher.group(REQUIRED_OPTIONAL_ARGUMENT_TYPE_GROUP_INDEX);
+                        String argumentName = matcher.group(REQUIRED_OPTIONAL_ARGUMENT_NAME_GROUP_INDEX);
+                        Class<?> argumentTypeClass = BaseArgumentTypeAdapter.Registry.toTypeClass(argumentTypeName);
+                        commandArguments.add(CommandArgument.ofRequiredArgument(argumentTypeClass, argumentName, true, commandRequirement));
+
+                        // Remember the default value for this optional argument.
+                        String defaultValue = matcher.group(REQUIRED_OPTIONAL_ARGUMENT_DEFAULT_VALUE_GROUP_INDEX);
+                        if (defaultValue == null) {
+                            defaultValue = "";
+                        }
+                        defaultValueForOptionalArguments.put(argumentName, defaultValue);
+
+                    } else {
+                        String argumentTypeName = matcher.group(REQUIRED_NON_OPTIONAL_ARGUMENT_TYPE_GROUP_INDEX);
+                        String argumentName = matcher.group(REQUIRED_NON_OPTIONAL_ARGUMENT_NAME_GROUP_INDEX);
+                        Class<?> argumentTypeClass = BaseArgumentTypeAdapter.Registry.toTypeClass(argumentTypeName);
+                        commandArguments.add(CommandArgument.ofRequiredArgument(argumentTypeClass, argumentName, false, commandRequirement));
+                    }
+                }
+            }
+
+            return new BundleCommandDescriptor(getBundleCommandGenericCommandMethod(), commandArguments, entry, defaultValueForOptionalArguments);
+        }
+
+        @SneakyThrows
+        private static @NotNull Method getBundleCommandGenericCommandMethod() {
+            Method bundleCommandGenericCommandMethod = BundleCommandDescriptor.class.getDeclaredMethod("bundleCommandGenericCommandMethod"
+                , CommandContext.class
+                , BundleCommandDescriptor.class
+                , List.class);
+            bundleCommandGenericCommandMethod.setAccessible(true);
+            return bundleCommandGenericCommandMethod;
+        }
+
+        private static boolean matchLiteralArgument(@NotNull Matcher matcher) {
+            return matcher.group(LITERAL_ARGUMENT_NAME_GROUP_INDEX) != null;
+        }
     }
 }

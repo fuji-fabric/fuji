@@ -13,7 +13,7 @@ public class BundleCommandModuleDSLTest {
 
     @Test
     void test1() {
-        BundleCommandDescriptor descriptor = BundleCommandDescriptor.make(new BundleCommandNode(null, null, "my-command <int int-arg-name> [str str-arg-name]", null));
+        BundleCommandDescriptor descriptor = BundleCommandDescriptor.Maker.from(new BundleCommandNode(null, null, "my-command <int int-arg-name> [str str-arg-name]", null));
         System.out.println(descriptor);
         List<CommandArgument> args = descriptor.commandArguments;
 
@@ -36,7 +36,7 @@ public class BundleCommandModuleDSLTest {
 
     @Test
     void test2() {
-        BundleCommandDescriptor descriptor = BundleCommandDescriptor.make(new BundleCommandNode(null, null, "my-command <int int-arg-name> first-literal [str str-arg-name] second-literal", null));
+        BundleCommandDescriptor descriptor = BundleCommandDescriptor.Maker.from(new BundleCommandNode(null, null, "my-command <int int-arg-name> first-literal [str str-arg-name] second-literal", null));
         System.out.println(descriptor);
 
         List<CommandArgument> args = descriptor.commandArguments;
@@ -69,7 +69,7 @@ public class BundleCommandModuleDSLTest {
 
     @Test
     void test3() {
-        BundleCommandDescriptor descriptor = BundleCommandDescriptor.make(new BundleCommandNode(null, null, "my-command <int int-arg-name> [str str-arg-name hello world] first-literal", null));
+        BundleCommandDescriptor descriptor = BundleCommandDescriptor.Maker.from(new BundleCommandNode(null, null, "my-command <int int-arg-name> [str str-arg-name hello world] first-literal", null));
         System.out.println(descriptor);
 
         List<CommandArgument> args = descriptor.commandArguments;
