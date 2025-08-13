@@ -44,6 +44,7 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
         @SuppressWarnings({"unchecked"})
         public static void registerTypeAdapters() {
             // NOTE: The `/reload` command will trigger the command registration event.
+            REGISTERED_COMMAND_ARGUMENT_TYPE_ADAPTERS.clear();
             TYPE_STRING_2_TYPE_CLASS.clear();
 
             ReflectionUtil.CompileTimeGraph.getCompileTimeGraph(ReflectionUtil.CompileTimeGraph.ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME)
