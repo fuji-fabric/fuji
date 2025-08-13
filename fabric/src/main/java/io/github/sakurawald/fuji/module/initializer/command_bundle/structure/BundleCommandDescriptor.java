@@ -99,7 +99,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
     }
 
     @Override
-    protected @NotNull List<Object> makeParameterValues(@NotNull CommandContext<ServerCommandSource> ctx) {
+    protected @NotNull List<Object> makeMethodParameterValues(@NotNull CommandContext<ServerCommandSource> ctx) {
         List<Object> parameterValues = new ArrayList<>();
 
         CommandContextAccessor<?> ctxAccessor = (CommandContextAccessor<?>) ctx;
@@ -129,7 +129,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
     protected @NotNull Command<ServerCommandSource> makeCommandAction() {
         return (commandContext) -> {
             BundleCommandDescriptor descriptor = this;
-            List<Object> parameterValues = makeParameterValues(commandContext);
+            List<Object> parameterValues = makeMethodParameterValues(commandContext);
 
             int commandReturnValue;
             try {

@@ -177,7 +177,7 @@ public class CommandDescriptor implements SourceModuleGetter {
         return this.commandArguments;
     }
 
-    protected @NotNull List<Object> makeParameterValues(@NotNull CommandContext<ServerCommandSource> ctx) {
+    protected @NotNull List<Object> makeMethodParameterValues(@NotNull CommandContext<ServerCommandSource> ctx) {
         List<Object> args = new ArrayList<>();
 
         for (CommandArgument commandArgument : this.getMethodParameterSpecifiers()) {
@@ -215,15 +215,15 @@ public class CommandDescriptor implements SourceModuleGetter {
         return args;
     }
 
-    protected Optional<Integer> findCommandSourceParameterSpecifierIndex() {
-        return findParameterSpecifierIndex(CommandArgument::isCommandSource);
+    protected Optional<Integer> findCommandSourceMethodParameterSpecifierIndex() {
+        return findMethodParameterSpecifierIndex(CommandArgument::isCommandSource);
     }
 
-    protected Optional<Integer> findCommandTargetParameterSpecifierIndex() {
-        return findParameterSpecifierIndex(CommandArgument::isCommandTarget);
+    protected Optional<Integer> findCommandTargetMethodParameterSpecifierIndex() {
+        return findMethodParameterSpecifierIndex(CommandArgument::isCommandTarget);
     }
 
-    protected Optional<Integer> findParameterSpecifierIndex(@NotNull Predicate<CommandArgument> predicate) {
+    protected Optional<Integer> findMethodParameterSpecifierIndex(@NotNull Predicate<CommandArgument> predicate) {
         List<CommandArgument> parameterSpecifiers = this.getMethodParameterSpecifiers();
         for (int i = 0; i < parameterSpecifiers.size(); i++) {
             CommandArgument commandArgument = parameterSpecifiers.get(i);
@@ -257,7 +257,7 @@ public class CommandDescriptor implements SourceModuleGetter {
                 }
 
                 /* invoke the command function */
-                List<Object> parameterValues = makeParameterValues(commandContext);
+                List<Object> parameterValues = makeMethodParameterValues(commandContext);
                 commandReturnValue = (int) this.method.invoke(null, parameterValues.toArray());
             } catch (Exception wrappedOrUnwrappedException) {
                 return CommandException.handleCommandException(commandContext, this.method, wrappedOrUnwrappedException);

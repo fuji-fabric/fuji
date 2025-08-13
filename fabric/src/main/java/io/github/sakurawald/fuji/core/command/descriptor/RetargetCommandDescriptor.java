@@ -25,7 +25,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
         super(baseCommandDescriptor.method, makeRetargetCommandArguments(baseCommandDescriptor));
 
         /* Find command target parameter index. */
-        this.commandTargetParameterIndex = baseCommandDescriptor.findCommandTargetParameterSpecifierIndex()
+        this.commandTargetParameterIndex = baseCommandDescriptor.findCommandTargetMethodParameterSpecifierIndex()
             .orElseThrow(() -> new IllegalArgumentException("Failed to find the command target parameter index in command descriptor %s".formatted(this)));
 
         /* Find the others parameter index. */
@@ -33,7 +33,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
             .orElseThrow(() -> new IllegalStateException("Failed to find the others parameter index in command descriptor %s".formatted(this)));
 
         /* Find command source parameter index. */
-        this.commandSourceParameterIndex = this.findCommandSourceParameterSpecifierIndex()
+        this.commandSourceParameterIndex = this.findCommandSourceMethodParameterSpecifierIndex()
             .orElseThrow(() -> new IllegalStateException("Failed to find the command source parameter index in command descriptor %s".formatted(this)));
 
         /* Copy the document from the base command descriptor. */
@@ -42,13 +42,13 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
 
     public static Optional<RetargetCommandDescriptor> from(@NotNull CommandDescriptor commandDescriptor) {
         /* Filter the method that contains @CommandTarget annotation. */
-        Optional<Integer> commandTargetParameterIndex = commandDescriptor.findCommandTargetParameterSpecifierIndex();
+        Optional<Integer> commandTargetParameterIndex = commandDescriptor.findCommandTargetMethodParameterSpecifierIndex();
         return commandTargetParameterIndex
             .map($commandTargetParameterIndex -> new RetargetCommandDescriptor(commandDescriptor));
     }
 
     private Optional<Integer> findOthersParameterIndex() {
-        return findParameterSpecifierIndex(commandArgument ->
+        return findMethodParameterSpecifierIndex(commandArgument ->
             commandArgument.getArgumentName().equals(OTHERS_LITERAL)
                 && commandArgument.isRequiredArgument());
     }
@@ -93,7 +93,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
                 , this.method.getName());
 
             /* Invoke the command method. */
-            List<Object> initialingParameterValues = makeParameterValues(commandContext);
+            List<Object> initialingParameterValues = makeMethodParameterValues(commandContext);
             LogUtil.debug("Initialing parameter values: {}", initialingParameterValues);
 
             /* Apply the command execution for each target. */
