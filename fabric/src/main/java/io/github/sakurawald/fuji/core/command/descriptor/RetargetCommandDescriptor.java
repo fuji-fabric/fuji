@@ -87,10 +87,10 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
                 return CommandHelper.Return.FAIL;
             }
 
-            LogUtil.debug("Execute retarget command method {} in class {}: initialing command source = {}"
-                , this.method.getName()
+            LogUtil.debug("Execute retarget command (tree): initialing command source = {}, class = {}, method = {}"
+                , commandContext.getSource().getName()
                 , this.method.getDeclaringClass().getSimpleName()
-                , commandContext.getSource().getName());
+                , this.method.getName());
 
             /* Invoke the command method. */
             List<Object> initialingParameterValues = makeParameterValues(commandContext);
@@ -101,10 +101,11 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
             // NOTE: Remove the `others parameter` to match the signature of the original command method.
             initialingParameterValues.remove(othersParameterIndex);
 
-            LogUtil.debug("Command targets: {}", targets.getValue().stream().map(PlayerHelper::getPlayerName).toList());
+            LogUtil.debug("Retrieved command targets: {}", targets.getValue().stream().map(PlayerHelper::getPlayerName).toList());
             int treeReturnValue = CommandHelper.Return.SUCCESS;
             for (ServerPlayerEntity target : targets.getValue()) {
                 List<Object> executingParameterValues = new ArrayList<>(initialingParameterValues);
+                // NOTE: Here you have to check whether the @CommandSource and @CommandTarget are in the same place, to handle the off-by-one error while injecting the parameter values.
                 if (this.commandTargetParameterIndex == this.commandSourceParameterIndex) {
                     // Case: the argument annotated with @CommandTarget, is also annotated with @CommandSource.
                     executingParameterValues.set(this.commandTargetParameterIndex, target);
@@ -113,21 +114,20 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
                     executingParameterValues.add(this.commandTargetParameterIndex, target);
                 }
                 LogUtil.debug("Executing parameter values: {}", executingParameterValues);
-
-                LogUtil.debug("Invoke command method {} in class {}: target = {}"
-                    , this.method.getName()
+                LogUtil.debug("Execute retarget command (branch): initialing command source = {}, target = {}, class = {}, method = {}"
+                    , commandContext.getSource().getName()
+                    , PlayerHelper.getPlayerName(target)
                     , this.method.getDeclaringClass().getSimpleName()
-                    , PlayerHelper.getPlayerName(target));
+                    , this.method.getName());
 
                 try {
                     // If one of the execution if failed, then it's considered the whole return value is failed.
                     int branchCommandReturnValue = (int) this.method.invoke(null, executingParameterValues.toArray());
-                    LogUtil.debug("The branch return value of the command method is {}: target = {}, args = {}"
-                        , branchCommandReturnValue
-                        , target.getGameProfile().getName()
-                        , executingParameterValues);
+                    LogUtil.debug("Get the command return value of retarget command (branch): target = {}, returnValue = {}"
+                        , PlayerHelper.getPlayerName(target)
+                        , branchCommandReturnValue);
 
-                    if (branchCommandReturnValue != CommandHelper.Return.SUCCESS) {
+                    if (!CommandHelper.Return.isSuccess(branchCommandReturnValue)) {
                         treeReturnValue = CommandHelper.Return.FAIL;
                     }
 
@@ -136,6 +136,9 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
                 }
             }
 
+            LogUtil.debug("Get the command return value of retarget command (tree): initialing command source = {}, returnValue = {}"
+                , commandContext.getSource().getName()
+                , treeReturnValue);
             return treeReturnValue;
         };
     }
