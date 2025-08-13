@@ -103,7 +103,7 @@ public class CommandAnnotationProcessor {
 
         /* Make the re-target command descriptor. */
         RetargetCommandDescriptor
-            .make(descriptor)
+            .from(descriptor)
             .ifPresent(CommandDescriptor::register);
     }
 

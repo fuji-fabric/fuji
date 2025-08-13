@@ -62,6 +62,10 @@ public class CommandArgument {
         return !isLiteralArgument();
     }
 
+    public boolean isMethodParameterSpecifier() {
+        return isRequiredArgument();
+    }
+
     public boolean isLiteralArgument() {
         return this.argumentType == LITERAL_ARGUMENT_TYPE_CLASS;
     }
@@ -84,9 +88,9 @@ public class CommandArgument {
             if (this.isCommandSource) flags += "S";
             if (this.isCommandTarget) flags += "T";
             if (this.isOptional) {
-                return "[%s]{flags=%s req=%s}".formatted(this.argumentName, flags, this.toRequirementString());
+                return "[%s %s]{flags=%s req=%s}".formatted(this.argumentType.getSimpleName(), this.argumentName, flags, this.toRequirementString());
             } else {
-                return "<%s>{flags=%s req=%s}".formatted(this.argumentName, flags, this.toRequirementString());
+                return "<%s %s>{flags=%s req=%s}".formatted(this.argumentType.getSimpleName(), this.argumentName, flags, this.toRequirementString());
             }
         }
 

@@ -3,149 +3,141 @@ package io.github.sakurawald.fuji.core.command.descriptor;
 import com.mojang.brigadier.Command;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.PlayerCollection;
 import io.github.sakurawald.fuji.core.command.structure.CommandRequirementDescriptor;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
 public class RetargetCommandDescriptor extends CommandDescriptor {
 
-    private final int parameterIndexOfCommandTarget;
+    public static final String OTHERS_LITERAL = "others";
+    private final int commandSourceParameterIndex;
+    private final int commandTargetParameterIndex;
+    private final int othersParameterIndex;
 
-    private RetargetCommandDescriptor(Method method, List<CommandArgument> commandArguments, int parameterIndexOfCommandTarget) {
-        super(method, commandArguments);
-        this.parameterIndexOfCommandTarget = parameterIndexOfCommandTarget;
+    private RetargetCommandDescriptor(@NotNull CommandDescriptor baseCommandDescriptor) {
+        super(baseCommandDescriptor.method, makeRetargetCommandArguments(baseCommandDescriptor));
+
+        /* Find command target parameter index. */
+        this.commandTargetParameterIndex = baseCommandDescriptor.findCommandTargetParameterSpecifierIndex()
+            .orElseThrow(() -> new IllegalArgumentException("Failed to find the command target parameter index in command descriptor %s".formatted(this)));
+
+        /* Find the others parameter index. */
+        this.othersParameterIndex = this.findOthersParameterIndex()
+            .orElseThrow(() -> new IllegalStateException("Failed to find the others parameter index in command descriptor %s".formatted(this)));
+
+        /* Find command source parameter index. */
+        this.commandSourceParameterIndex = this.findCommandSourceParameterSpecifierIndex()
+            .orElseThrow(() -> new IllegalStateException("Failed to find the command source parameter index in command descriptor %s".formatted(this)));
+
+        /* Copy the document from the base command descriptor. */
+        this.fillDocument(baseCommandDescriptor.document);
     }
 
-    private static Optional<Integer> computeParameterIndexOfCommandTarget(CommandDescriptor descriptor) {
-        List<CommandArgument> args = descriptor.getParameterSpecifiers();
-
-        for (int i = 0; i < args.size(); i++) {
-            CommandArgument commandArgument = args.get(i);
-            if (commandArgument.isCommandTarget()) {
-                return Optional.of(i);
-            }
-        }
-
-        return Optional.empty();
+    public static Optional<RetargetCommandDescriptor> from(@NotNull CommandDescriptor commandDescriptor) {
+        /* Filter the method that contains @CommandTarget annotation. */
+        Optional<Integer> commandTargetParameterIndex = commandDescriptor.findCommandTargetParameterSpecifierIndex();
+        return commandTargetParameterIndex
+            .map($commandTargetParameterIndex -> new RetargetCommandDescriptor(commandDescriptor));
     }
 
-    public static Optional<RetargetCommandDescriptor> make(CommandDescriptor commandDescriptor) {
-        /* filter: the method that contains @CommandTarget */
-        Optional<Integer> indexOpt = computeParameterIndexOfCommandTarget(commandDescriptor);
-        if (indexOpt.isEmpty()) {
-            return Optional.empty();
-        }
-        int index = indexOpt.get();
-
-        /* make retarget command descriptor */
-        List<CommandArgument> transformedArgs = transformWithOthersArguments(commandDescriptor.commandArguments);
-
-        RetargetCommandDescriptor retargetCommandDescriptor = new RetargetCommandDescriptor(commandDescriptor.method, transformedArgs, index);
-        retargetCommandDescriptor.fillDocument(commandDescriptor.document);
-
-        return Optional.of(retargetCommandDescriptor);
+    private Optional<Integer> findOthersParameterIndex() {
+        return findParameterSpecifierIndex(commandArgument ->
+            commandArgument.getArgumentName().equals(OTHERS_LITERAL)
+                && commandArgument.isRequiredArgument());
     }
 
+    private static @NotNull List<CommandArgument> makeRetargetCommandArguments(@NotNull CommandDescriptor commandDescriptor) {
+        /* Make the result command arguments. */
+        List<CommandArgument> retargetCommandArguments = new ArrayList<>(commandDescriptor.commandArguments);
 
-    private static List<CommandArgument> transformWithOthersArguments(List<CommandArgument> commandArguments) {
-        List<CommandArgument> ret = new ArrayList<>(commandArguments
-            .stream()
-            .filter(it ->
-                /*
-                 remove the argument that is annotated with @CommandTarget and is not annotated with @CommandSource,
-                 so that this argument will not be registered in the command tree.
-                 Consider `/fly{4} others{4} <others>(){4} <player>(ST){4}`
-                 */
-                it.isCommandSource() || !it.isCommandTarget()
-            )
-            .toList());
+        /* Find the command target argument index. */
+        int commandTargetArgumentIndex = commandDescriptor.findCommandArgumentIndex(CommandArgument::isCommandTarget)
+            .orElseThrow(() -> new IllegalStateException("Failed to find the target argument index in command descriptor %s".formatted(commandDescriptor)));
+        CommandArgument commandTargetArgument = retargetCommandArguments.get(commandTargetArgumentIndex);
 
-        for (int argumentIndex = 0; argumentIndex < commandArguments.size(); argumentIndex++) {
-            CommandArgument commandArgument = commandArguments.get(argumentIndex);
+        /* All the retarget commands require level 4 permission to use. */
+        // FIXME: There is a bug about the command suggestion for: `/warp tp others`
+        CommandRequirementDescriptor requirement = new CommandRequirementDescriptor(4, null);
 
-            /* ensure the `others` args are the `first required argument`, so that the `makeCommandFunctionArgs()` can extract the targets in the first arg */
-            if (commandArgument.isRequiredArgument() || argumentIndex == ret.size() - 1) {
-
-                /* all retarget commands require level 4 permission to use.
-                 *  There is a bug about the tab completion for `/warp tp others`.
-                 */
-                CommandRequirementDescriptor requirement = new CommandRequirementDescriptor(4, null);
-
-                ret.add(argumentIndex, CommandArgument.ofLiteralArgument("others", requirement));
-                ret.add(argumentIndex + 1, CommandArgument.ofRequiredArgument(PlayerCollection.class, "others", false, requirement));
-                break;
-            }
+        /* If the argument annotated with @CommandTarget is also annotated with @CommandSource, then split the @CommandSource argument and @CommandTarget argument. */
+        if (commandTargetArgument.isCommandSource()) {
+            retargetCommandArguments.add(commandTargetArgumentIndex + 1, CommandArgument.ofLiteralArgument(OTHERS_LITERAL, requirement));
+            retargetCommandArguments.add(commandTargetArgumentIndex + 2, CommandArgument.ofRequiredArgument(PlayerCollection.class, OTHERS_LITERAL, false, requirement));
+        } else {
+            /* If the argument annotated with @CommandTarget is NOT annotated with @CommandSource, then the @CommandSource argument and @CommandTarget argument are already split. */
+            retargetCommandArguments.set(commandTargetArgumentIndex, CommandArgument.ofLiteralArgument(OTHERS_LITERAL, requirement));
+            retargetCommandArguments.add(commandTargetArgumentIndex + 1, CommandArgument.ofRequiredArgument(PlayerCollection.class, OTHERS_LITERAL, false, requirement));
         }
 
-        return ret;
+        return retargetCommandArguments;
     }
 
     @Override
     protected @NotNull Command<ServerCommandSource> makeCommandAction() {
-        return (ctx) -> {
-
-            /* verify command source */
-            if (!CommandSource.verifyCommandSource(ctx, this)) {
+        return (commandContext) -> {
+            /* Verify command source */
+            if (!CommandSource.verifyCommandSource(commandContext, this)) {
                 return CommandHelper.Return.FAIL;
             }
 
-            LogUtil.debug("Execute retarget command: initialing command source = {}", ctx.getSource().getName());
+            LogUtil.debug("Execute retarget command method {} in class {}: initialing command source = {}"
+                , this.method.getName()
+                , this.method.getDeclaringClass().getSimpleName()
+                , commandContext.getSource().getName());
 
-            /* invoke the command function */
-            List<Object> objs = makeParameterValues(ctx);
+            /* Invoke the command method. */
+            List<Object> initialingParameterValues = makeParameterValues(commandContext);
+            LogUtil.debug("Initialing parameter values: {}", initialingParameterValues);
 
-            /* apply the command execution for each target. */
-            PlayerCollection targets = (PlayerCollection) objs.get(0);
-            LogUtil.debug("Get the targets argument (the first argument in args): {}", targets.getValue().stream().map(it -> it.getGameProfile().getName()).toList());
+            /* Apply the command execution for each target. */
+            PlayerCollection targets = (PlayerCollection) initialingParameterValues.get(this.othersParameterIndex);
+            // NOTE: Remove the `others parameter` to match the signature of the original command method.
+            initialingParameterValues.remove(othersParameterIndex);
 
-            int finalValue = CommandHelper.Return.SUCCESS;
+            LogUtil.debug("Command targets: {}", targets.getValue().stream().map(PlayerHelper::getPlayerName).toList());
+            int treeReturnValue = CommandHelper.Return.SUCCESS;
             for (ServerPlayerEntity target : targets.getValue()) {
-                /*
-                 if the @CommandSource and @CommandTarget are both annotated in the same parameter:
-                 1. The @CommandSource will still be used to verify the type of `initialing command source`.
-                 2. After that, the command source passed to the command method will be overridden by the @CommandTarget.
-                 3. Any exceptions thrown during the execution of the command method, will be reported to the `initialing command source`.
-                 */
-                List<Object> args = objs.subList(1, objs.size());
-                if (this.parameterIndexOfCommandTarget < args.size()) {
-                    args.set(this.parameterIndexOfCommandTarget, target);
+                List<Object> executingParameterValues = new ArrayList<>(initialingParameterValues);
+                if (this.commandTargetParameterIndex == this.commandSourceParameterIndex) {
+                    // Case: the argument annotated with @CommandTarget, is also annotated with @CommandSource.
+                    executingParameterValues.set(this.commandTargetParameterIndex, target);
                 } else {
-                    // if the index < unboxedArgs.size(), then it means the argument annotated with @CommandTarget is removed.
-                    args.add(this.parameterIndexOfCommandTarget, target);
+                    // Case: the argument annotated with @CommandTarget, is not annotated with @CommandSource.
+                    executingParameterValues.add(this.commandTargetParameterIndex, target);
                 }
+                LogUtil.debug("Executing parameter values: {}", executingParameterValues);
 
-                LogUtil.debug("Invoke command method {} in class {}: target = {}, args = {}"
+                LogUtil.debug("Invoke command method {} in class {}: target = {}"
                     , this.method.getName()
                     , this.method.getDeclaringClass().getSimpleName()
-                    , target.getGameProfile().getName()
-                    , args);
+                    , PlayerHelper.getPlayerName(target));
 
                 try {
-                    // if one of the execution if failed, then it's considered the whole return value is failed.
-                    int singleValue = (int) this.method.invoke(null, args.toArray());
-                    LogUtil.debug("The return value of command method is {}: target = {}, args = {}"
-                        , singleValue
+                    // If one of the execution if failed, then it's considered the whole return value is failed.
+                    int branchCommandReturnValue = (int) this.method.invoke(null, executingParameterValues.toArray());
+                    LogUtil.debug("The branch return value of the command method is {}: target = {}, args = {}"
+                        , branchCommandReturnValue
                         , target.getGameProfile().getName()
-                        , args);
+                        , executingParameterValues);
 
-                    if (singleValue != CommandHelper.Return.SUCCESS) {
-                        finalValue = CommandHelper.Return.FAIL;
+                    if (branchCommandReturnValue != CommandHelper.Return.SUCCESS) {
+                        treeReturnValue = CommandHelper.Return.FAIL;
                     }
 
                 } catch (Exception wrappedOrUnwrappedException) {
-                    return CommandException.handleCommandException(ctx, this.method, wrappedOrUnwrappedException);
+                    return CommandException.handleCommandException(commandContext, this.method, wrappedOrUnwrappedException);
                 }
             }
 
-            return finalValue;
+            return treeReturnValue;
         };
     }
+
 }

@@ -165,18 +165,22 @@ public class CommandDescriptor implements SourceModuleGetter {
         return CommandAnnotationProcessor.COMMAND_DISPATCHER.findNode(commandPath);
     }
 
-    protected @NotNull List<CommandArgument> getParameterSpecifiers() {
+    protected @NotNull List<CommandArgument> getMethodParameterSpecifiers() {
         return this.commandArguments
             .stream()
             /* Filter out the literal command node and root command node. */
-            .filter(CommandArgument::isRequiredArgument)
+            .filter(CommandArgument::isMethodParameterSpecifier)
             .toList();
+    }
+
+    protected @NotNull List<CommandArgument> getCommandArguments() {
+        return this.commandArguments;
     }
 
     protected @NotNull List<Object> makeParameterValues(@NotNull CommandContext<ServerCommandSource> ctx) {
         List<Object> args = new ArrayList<>();
 
-        for (CommandArgument commandArgument : this.getParameterSpecifiers()) {
+        for (CommandArgument commandArgument : this.getMethodParameterSpecifiers()) {
             /* inject the value into a required argument. */
             try {
                 Object arg = BaseArgumentTypeAdapter.Registry
@@ -211,6 +215,38 @@ public class CommandDescriptor implements SourceModuleGetter {
         return args;
     }
 
+    protected Optional<Integer> findCommandSourceParameterSpecifierIndex() {
+        return findParameterSpecifierIndex(CommandArgument::isCommandSource);
+    }
+
+    protected Optional<Integer> findCommandTargetParameterSpecifierIndex() {
+        return findParameterSpecifierIndex(CommandArgument::isCommandTarget);
+    }
+
+    protected Optional<Integer> findParameterSpecifierIndex(@NotNull Predicate<CommandArgument> predicate) {
+        List<CommandArgument> parameterSpecifiers = this.getMethodParameterSpecifiers();
+        for (int i = 0; i < parameterSpecifiers.size(); i++) {
+            CommandArgument commandArgument = parameterSpecifiers.get(i);
+            if (predicate.test(commandArgument)) {
+                return Optional.of(i);
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    protected Optional<Integer> findCommandArgumentIndex(@NotNull Predicate<CommandArgument> predicate) {
+        List<CommandArgument> commandArguments = this.getCommandArguments();
+        for (int i = 0; i < commandArguments.size(); i++) {
+            CommandArgument commandArgument = commandArguments.get(i);
+            if (predicate.test(commandArgument)) {
+                return Optional.of(i);
+            }
+        }
+
+        return Optional.empty();
+    }
+
     protected @NotNull Command<ServerCommandSource> makeCommandAction() {
         return (commandContext) -> {
             int commandReturnValue;
@@ -221,8 +257,8 @@ public class CommandDescriptor implements SourceModuleGetter {
                 }
 
                 /* invoke the command function */
-                List<Object> args = makeParameterValues(commandContext);
-                commandReturnValue = (int) this.method.invoke(null, args.toArray());
+                List<Object> parameterValues = makeParameterValues(commandContext);
+                commandReturnValue = (int) this.method.invoke(null, parameterValues.toArray());
             } catch (Exception wrappedOrUnwrappedException) {
                 return CommandException.handleCommandException(commandContext, this.method, wrappedOrUnwrappedException);
             }
