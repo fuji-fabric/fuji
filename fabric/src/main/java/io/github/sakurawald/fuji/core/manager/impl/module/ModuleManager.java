@@ -108,6 +108,16 @@ public class ModuleManager extends BaseManager {
             .toList();
     }
 
+    public static @NotNull List<String> getEnabledModulePaths() {
+        List<String> enabledModuleList = new ArrayList<>();
+        MODULE_ENABLE_STATUS.forEach((module, enable) -> {
+            if (enable) enabledModuleList.add(joinModulePath(module));
+        });
+
+        enabledModuleList.sort(String::compareTo);
+        return enabledModuleList;
+    }
+
     @Override
     public void onInitialize() {
         invokeModuleInitializers();
@@ -152,16 +162,18 @@ public class ModuleManager extends BaseManager {
     public void reloadModuleInitializers() {
         MODULE_INITIALIZER_BY_CLASS
             .values()
-            .forEach(initializer -> {
-                try {
-                    initializer.doReload();
-                } catch (Exception originalException) {
-                    LogUtil.error("Failed to reload the module: initializer = {}", initializer.getClass().getName(), originalException);
-                    // NOTE: Throw the original exception to surrounding exception handler.
-                    throw originalException;
-                }
-            }
+            .forEach(ModuleManager::reloadModuleInitializer
         );
+    }
+
+    private static void reloadModuleInitializer(@NotNull ModuleInitializer initializer) {
+        try {
+            initializer.doReload();
+        } catch (Exception originalException) {
+            LogUtil.error("Failed to reload the module: initializer = {}", initializer.getClass().getName(), originalException);
+            // NOTE: Throw the original exception to surrounding exception handler.
+            throw originalException;
+        }
     }
 
     public boolean shouldWeLoadThis(String className) {

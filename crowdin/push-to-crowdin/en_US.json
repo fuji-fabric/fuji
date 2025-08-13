@@ -298,6 +298,7 @@
   "minecraft:the_end": "<yellow>The End</yellow>",
   "minecraft:the_nether": "<dark_red>The Nether</dark_red>",
   "module.enable.status": "<yellow>Enable: %s",
+  "module.path.invalid": "<red>Invalid module path `%s`",
   "module.registered_commands": "<blue>This module registers `%d` commands.",
   "module.status.disabled.gui.lore": "<red>This module is disabled, you may not see the contents here.",
   "module.status.disabled.gui.name": "<red>Module Disabled",

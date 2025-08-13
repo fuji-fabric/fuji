@@ -8,7 +8,6 @@ import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
@@ -118,12 +117,7 @@ public class CoreInitializer extends ModuleInitializer {
 
     private static void onServerStartSuccess() {
         /* Report enabled/disabled modules. */
-        List<String> enabledModuleList = new ArrayList<>();
-        ModuleManager.MODULE_ENABLE_STATUS.forEach((module, enable) -> {
-            if (enable) enabledModuleList.add(ModuleManager.joinModulePath(module));
-        });
-
-        enabledModuleList.sort(String::compareTo);
+        List<String> enabledModuleList = ModuleManager.getEnabledModulePaths();
         LogUtil.info("Enabled {}/{} modules -> {}", enabledModuleList.size(), ModuleManager.MODULE_ENABLE_STATUS.size(), enabledModuleList);
 
         /* Print the user guide for new users. */
