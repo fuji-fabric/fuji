@@ -636,38 +636,27 @@ public class TextHelper {
         }
         if (audience instanceof CommandContext<?> ctx) {
             audience = ctx.getSource();
-
-            /* Check the stdout flag. */
-            processStdoutOptionalArgument(audience, text, textLocation, ctx);
-
-            /* Check the silent flag. */
-            Boolean silentFlag = CommandHelper.Context
-                .tryGetArgument(ctx, CommandDescriptor.SILENT_LITERAL, Boolean.class)
-                .orElse(false);
-            if (silentFlag) {
-                LogUtil.debug("Cancel the text sending (Reason: `--silent=true`): audience = {}, text = {}", audience, text);
-                return;
-            }
-
         }
 
-        /* Dispatch the method to send the Text to the command source. */
-        Sender.sendTextToAudience(audience, text, textLocation);
-    }
-
-    private static void processStdoutOptionalArgument(@NotNull Object audience, @NotNull Text text, @NotNull Sender.TextLocation textLocation, @NotNull CommandContext<?> ctx) {
-        Boolean stdoutFlag = CommandHelper.Context
-            .tryGetArgument(ctx, CommandDescriptor.STDOUT_LITERAL, Boolean.class)
-            .orElse(false);
-        if (stdoutFlag) {
+        /* Check the command stdout flag. */
+        if (CommandDescriptor.stdoutSpecialVariable.get()) {
             LogUtil.debug("Redirect the text sending into the console (Reason: `--std=true`): audience = {}, text = {}", audience, text);
             LogUtil.info("""
                 ◉ Redirect the text sending to the console
                 - Audience = {}
                 - TextLocation = {}
                 - Text = {}
-                """, CommandHelper.Context.getSourceName(ctx), textLocation, text);
+                """, audience, textLocation, text);
         }
+
+        /* Check the command silent flag. */
+        if (CommandDescriptor.silentSpecialVariable.get()) {
+            LogUtil.debug("Cancel the text sending (Reason: `--silent=true`): audience = {}, text = {}", audience, text);
+            return;
+        }
+
+        /* Dispatch the method to send the Text to the command source. */
+        Sender.sendTextToAudience(audience, text, textLocation);
     }
 
     @ForDeveloper("Use this function to send a text to an audience.")

@@ -28,12 +28,14 @@ import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.structure.Pair;
+import io.github.sakurawald.fuji.core.structure.SpecialVariable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +54,8 @@ import org.jetbrains.annotations.Nullable;
     """)
 public class CommandDescriptor implements SourceModuleGetter {
 
+    public static final SpecialVariable<Boolean> stdoutSpecialVariable = new SpecialVariable<>(false);
+    public static final SpecialVariable<Boolean> silentSpecialVariable = new SpecialVariable<>(false);
     public static final String SILENT_LITERAL = "silent";
     public static final String STDOUT_LITERAL = "stdout";
     public final @NotNull Method method;
@@ -236,23 +240,43 @@ public class CommandDescriptor implements SourceModuleGetter {
         return Optional.empty();
     }
 
+    @SuppressWarnings("CodeBlock2Expr")
     protected @NotNull Command<ServerCommandSource> makeCommandAction() {
         return (commandContext) -> {
-            int commandReturnValue;
-            try {
-                /* Verify the command source. */
-                if (!CommandSource.verifyCommandSource(commandContext, this)) {
-                    return CommandHelper.Return.FAILURE;
-                }
+            AtomicInteger commandReturnValue = new AtomicInteger();
 
-                /* invoke the command function */
-                List<Object> parameterValues = makeMethodParameterValues(commandContext);
-                commandReturnValue = (int) this.method.invoke(null, parameterValues.toArray());
-            } catch (Exception wrappedOrUnwrappedException) {
-                return CommandException.handleCommandException(commandContext, this.method, wrappedOrUnwrappedException);
-            }
+            Boolean stdoutFlag = CommandHelper.Context
+                .tryGetArgument(commandContext, CommandDescriptor.STDOUT_LITERAL, Boolean.class)
+                .orElse(false);
 
-            return commandReturnValue;
+            Boolean silentFlag = CommandHelper.Context
+                .tryGetArgument(commandContext, CommandDescriptor.SILENT_LITERAL, Boolean.class)
+                .orElseGet(() -> {
+                    // Respect the vanilla silent flag.
+                    return commandContext.getSource().isSilent();
+                });
+
+            stdoutSpecialVariable.bind(stdoutFlag, () -> {
+                silentSpecialVariable.bind(silentFlag, () -> {
+                    try {
+                        /* Verify the command source. */
+                        if (!CommandSource.verifyCommandSource(commandContext, this)) {
+                            commandReturnValue.set(CommandHelper.Return.FAILURE);
+                            return;
+                        }
+
+                        /* Invoke the command function */
+                        List<Object> parameterValues = makeMethodParameterValues(commandContext);
+                        commandReturnValue.set((int) this.method.invoke(null, parameterValues.toArray()));
+
+                    } catch (Exception wrappedOrUnwrappedException) {
+                        commandReturnValue.set(CommandException.handleCommandException(commandContext, this.method, wrappedOrUnwrappedException));
+                    }
+
+                });
+            });
+
+            return commandReturnValue.get();
         };
     }
 
