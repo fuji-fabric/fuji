@@ -648,6 +648,7 @@ public class TextHelper {
         if (CommandDescriptor.stdoutSpecialVariable.get()) {
             LogUtil.debug("Redirect the text sending into the console (Reason: `--stdout=true`): audience = {}, text = {}", audience, text);
             LogUtil.info("""
+
                 ◉ Redirect the text sending to the console
                 - Audience = {}
                 - TextLocation = {}
@@ -835,7 +836,7 @@ public class TextHelper {
 
         /* Send the text, using the given text. */
         for (ServerPlayerEntity player : PlayerHelper.Lookup.getOnlinePlayers()) {
-            Sender.sendMessageToServerPlayerEntity(player, text);
+            sendMessageByText(player, text);
         }
     }
 
