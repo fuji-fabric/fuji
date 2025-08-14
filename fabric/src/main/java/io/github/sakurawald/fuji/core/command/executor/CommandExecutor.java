@@ -52,10 +52,8 @@ public class CommandExecutor {
         command = TextHelper.Parsers.escapeTags(command);
 
         // NOTE: Log the console first. (Make the debug easier)
-        if (!CommandDescriptor.silentSpecialVariable.get()) {
-            if (!context.getExecutingSource().isExecutedByPlayer()) {
-                LogUtil.warn("Failed to execute command: command = {}, context = {}", command, context);
-            }
+        if (!context.getExecutingSource().isExecutedByPlayer()) {
+            LogUtil.warn("Failed to execute command: command = {}, context = {}", command, context);
         }
 
         /* Echo to the executing source. */
