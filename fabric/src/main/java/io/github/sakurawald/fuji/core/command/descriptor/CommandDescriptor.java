@@ -157,7 +157,7 @@ public class CommandDescriptor implements SourceModuleGetter {
     private static @NotNull CommandNode<ServerCommandSource> findOptionalArgumentAnchor(@NotNull List<CommandArgument> commandArguments) {
         List<String> commandPath = commandArguments
             .stream()
-            .filter(arg -> !arg.isCommandSource())
+            .filter(CommandArgument::isCommandArgumentSpecifier)
             .takeWhile(arg -> !arg.isOptional())
             .map(CommandArgument::getArgumentName)
             .toList();
