@@ -646,7 +646,7 @@ public class TextHelper {
                 - Audience = {}
                 - TextLocation = {}
                 - Text = {}
-                """, audience, textLocation, text);
+                """, Sender.getAudienceName(audience), textLocation, text);
         }
 
         /* Check the command silent flag. */
@@ -790,6 +790,20 @@ public class TextHelper {
                 textLocation = TextLocation.SUB_TITLE;
             }
             return new Pair<>(string, textLocation);
+        }
+
+        public static String getAudienceName(@Nullable Object audience) {
+            if (audience == null) return "[audience is null]";
+
+            if (audience instanceof CommandContext<?> commandContext) {
+                audience = commandContext.getSource();
+            }
+
+            if (audience instanceof ServerCommandSource serverCommandSource) {
+                return serverCommandSource.getName();
+            }
+
+            return audience.toString();
         }
 
         public enum TextLocation {

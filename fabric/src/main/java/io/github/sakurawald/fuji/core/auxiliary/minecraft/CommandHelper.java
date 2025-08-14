@@ -295,14 +295,5 @@ public class CommandHelper {
             }
         }
 
-        public static String getSourceName(@NotNull CommandContext<?> commandContext) {
-            Object commandSource = commandContext.getSource();
-
-            if (commandSource instanceof ServerCommandSource serverCommandSource) {
-                return serverCommandSource.getName();
-            }
-
-            return commandSource.toString();
-        }
     }
 }
