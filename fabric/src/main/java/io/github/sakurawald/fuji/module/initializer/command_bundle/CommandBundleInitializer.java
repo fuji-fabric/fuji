@@ -218,10 +218,11 @@ public class CommandBundleInitializer extends ModuleInitializer {
             .stream()
             .filter(it -> it instanceof BundleCommandDescriptor);
 
-        if (ctx.getSource().isExecutedByPlayer()) {
-            new CommandsInspectionGui(null, ctx.getSource().getPlayer(), commandDescriptorStream.toList(), 0).open();
+        ServerCommandSource source = ctx.getSource();
+        if (source.isExecutedByPlayer()) {
+            new CommandsInspectionGui(null, source.getPlayer(), commandDescriptorStream.toList(), 0).open();
         } else {
-            commandDescriptorStream.forEach(it -> ctx.getSource().sendMessage(Text.literal(it.getCommandNodePath())));
+            commandDescriptorStream.forEach(it -> TextHelper.sendText(source, Text.literal(it.getCommandNodePath())));
         }
 
         return CommandHelper.Return.SUCCESS;

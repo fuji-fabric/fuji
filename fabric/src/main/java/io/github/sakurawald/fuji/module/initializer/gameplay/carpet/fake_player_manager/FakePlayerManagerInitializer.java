@@ -53,7 +53,7 @@ public class FakePlayerManagerInitializer extends ModuleInitializer {
     @CommandNode("player who")
     private static int $who(@CommandSource ServerCommandSource source) {
         TextHelper.sendTextByKey(source, "fake_player_manager.who.header");
-        source.sendMessage(TextHelper.Formatter.formatMapMultiLine(FakePlayerManagerService.player2fakePlayers));
+        TextHelper.sendText(source, TextHelper.Formatter.formatMapMultiLine(FakePlayerManagerService.player2fakePlayers));
         return CommandHelper.Return.SUCCESS;
     }
 

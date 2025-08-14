@@ -629,6 +629,10 @@ public class TextHelper {
         return textList;
     }
 
+    public static void sendText(@NotNull Object audience, @NotNull Text text) {
+        sendText(audience, text, Sender.TextLocation.MESSAGE);
+    }
+
     public static void sendText(@NotNull Object audience, @NotNull Text text, @NotNull Sender.TextLocation textLocation) {
         /* Unbox the command context, to get the command source. */
         if (audience instanceof CommandActor commandActor) {

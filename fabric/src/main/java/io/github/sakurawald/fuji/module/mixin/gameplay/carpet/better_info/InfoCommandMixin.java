@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.mixin.gameplay.carpet.better_info;
 
 import carpet.commands.InfoCommand;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
@@ -23,7 +24,7 @@ public class InfoCommandMixin {
 
         BlockEntity blockEntity = source.getWorld().getBlockEntity(pos);
         if (blockEntity == null) {
-            source.sendMessage(additionalText.append(Text.literal("No block entity found at " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ())));
+            TextHelper.sendText(source, additionalText.append(Text.literal("No block entity found at " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ())));
             return;
         }
 
@@ -35,6 +36,6 @@ public class InfoCommandMixin {
         MutableText nbtDataText = Text.translatable("commands.data.block.query", pos.getX(), pos.getY(), pos.getZ(), NbtHelper.toPrettyPrintedText(compoundTag));
         additionalText = additionalText.append(nbtDataText);
 
-        source.sendMessage(additionalText);
+        TextHelper.sendText(source, additionalText);
     }
 }

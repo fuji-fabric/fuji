@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.command_toolbox.realname;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
@@ -34,7 +35,7 @@ public class RealnameInitializer extends ModuleInitializer {
                 .append(Text.literal("\n"));
         }
 
-        source.sendMessage(builder);
+        TextHelper.sendText(source, builder);
         return CommandHelper.Return.SUCCESS;
     }
 

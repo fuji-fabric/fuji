@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.command_meta.json;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.mojang.brigadier.context.CommandContext;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -67,7 +68,7 @@ public class JsonInitializer extends ModuleInitializer {
     private static int $read(@CommandSource CommandContext<ServerCommandSource> ctx, String filePath, String jsonPath) {
         operateJson(filePath, (documentContext, path) -> {
             Object read = documentContext.read(jsonPath);
-            ctx.getSource().sendMessage(Text.literal(read.toString()));
+            TextHelper.sendText(ctx.getSource(), Text.literal(read.toString()));
             return false;
         });
         return CommandHelper.Return.SUCCESS;

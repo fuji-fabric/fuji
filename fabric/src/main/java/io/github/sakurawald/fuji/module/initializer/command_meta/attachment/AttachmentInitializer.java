@@ -56,7 +56,7 @@ public class AttachmentInitializer extends ModuleInitializer {
     private static int $get(@CommandSource CommandContext<ServerCommandSource> ctx, SubjectName subject, SubjectId uuid) {
         String attachment = Managers.getAttachmentManager().getAttachment(subject.getValue(), uuid.getValue());
 
-        ctx.getSource().sendMessage(Text.literal(attachment));
+        TextHelper.sendText(ctx.getSource(), Text.literal(attachment));
         return CommandHelper.Return.SUCCESS;
     }
 }

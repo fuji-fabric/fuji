@@ -62,7 +62,7 @@ public class TopChunksInitializer extends ModuleInitializer {
             }
             reportText.append(TextHelper.TEXT_NEWLINE);
         }
-        source.sendMessage(reportText);
+        TextHelper.sendText(source, reportText);
         return CommandHelper.Return.SUCCESS;
     }
 

@@ -131,9 +131,9 @@ public class WarningInitializer extends ModuleInitializer {
         playerWarnings.getWarnings().forEach(warning -> {
             warning
                 .asLore(source)
-                .forEach(source::sendMessage);
+                .forEach(text -> TextHelper.sendText(source, text));
 
-            source.sendMessage(TextHelper.TEXT_EMPTY);
+            TextHelper.sendText(source, TextHelper.TEXT_EMPTY);
         });
 
         return CommandHelper.Return.SUCCESS;
