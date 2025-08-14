@@ -11,6 +11,9 @@ plugins {
 repositories {
     mavenCentral()
 
+    // For text-placeholder and sgui mod.
+    maven { url "https://maven.nucleoid.xyz" }
+
     // For fabric-carpet mod.
     maven { url 'https://api.modrinth.com/maven' }
 }
