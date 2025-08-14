@@ -77,7 +77,7 @@ public class AboutGui extends PagedGui<Person> {
                 .append(TextHelper.TEXT_NEWLINE));
 
             // send it
-            getPlayer().sendMessage(text);
+            TextHelper.sendText(getPlayer(), text);
             this.closeWithoutOpenParentGui();
         };
     }

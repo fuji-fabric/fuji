@@ -146,7 +146,7 @@ public class CleanerInitializer extends ModuleInitializer {
                 .fillStyle(
                     Style.EMPTY
                         .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(hoverText)));
-            player.sendMessage(reportText);
+            TextHelper.sendText(player, reportText);
         }
     }
 

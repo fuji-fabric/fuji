@@ -1,24 +1,23 @@
 package io.github.sakurawald.fuji.module.initializer.tpa;
 
-import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.job.impl.PlaySoundJob;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.tpa.config.model.TpaConfigModel;
 import io.github.sakurawald.fuji.module.initializer.tpa.structure.TpaRequest;
-import lombok.Getter;
-import net.minecraft.server.network.ServerPlayerEntity;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.Getter;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 
 @Document(id = 1751826540953L, value = "This module provides `/tpa` and `/tpahere` commands.")
@@ -120,14 +119,14 @@ public class TpaInitializer extends ModuleInitializer {
             new GlobalPos(to.getWorld(), to.getX(), to.getY(), to.getZ(), to.getYaw(), to.getPitch())
                 .teleport(who);
 
-            request.getSender().sendMessage(request.toSenderText$Accepted(), true);
-            request.getReceiver().sendMessage(request.toReceiverText$Accepted());
+            TextHelper.sendText(request.getSender(), request.toSenderText$Accepted(), TextHelper.Sender.TextLocation.ACTION_BAR);
+            TextHelper.sendText(request.getReceiver(), request.toReceiverText$Accepted());
         } else if (status == ResponseStatus.DENY) {
-            request.getSender().sendMessage(request.toSenderText$Denied(), true);
-            request.getReceiver().sendMessage(request.toReceiverText$Denied());
+            TextHelper.sendText(request.getSender(), request.toSenderText$Denied(), TextHelper.Sender.TextLocation.ACTION_BAR);
+            TextHelper.sendText(request.getReceiver(), request.toReceiverText$Denied());
         } else if (status == ResponseStatus.CANCEL) {
-            request.getSender().sendMessage(request.toSenderText$Cancelled());
-            request.getReceiver().sendMessage(request.toReceiverText$Cancelled());
+            TextHelper.sendText(request.getSender(), request.toSenderText$Cancelled());
+            TextHelper.sendText(request.getReceiver(), request.toReceiverText$Cancelled());
         }
 
         /* Invalidate the request. */
@@ -158,8 +157,8 @@ public class TpaInitializer extends ModuleInitializer {
         PlaySoundJob.scheduleJob(config.model().mention_player, request.getReceiver());
 
         /* Send feedback messages. */
-        request.getReceiver().sendMessage(request.toReceiverText$Sent());
-        request.getSender().sendMessage(request.toSenderText$Sent());
+        TextHelper.sendText(request.getReceiver(), request.toReceiverText$Sent());
+        TextHelper.sendText(request.getSender(), request.toSenderText$Sent());
         return CommandHelper.Return.SUCCESS;
     }
 

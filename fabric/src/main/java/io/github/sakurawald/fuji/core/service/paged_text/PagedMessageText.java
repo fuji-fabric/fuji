@@ -87,13 +87,13 @@ public class PagedMessageText extends PagedText {
                 return;
             }
 
-            player.sendMessage(this.getPages().get(pageIndex));
+            TextHelper.sendText(player, this.getPages().get(pageIndex));
         }, 1, TimeUnit.HOURS);
     }
 
 
     public void sendPage(ServerPlayerEntity player, int pageIndex) {
-        player.sendMessage(getPages().get(pageIndex));
+        TextHelper.sendText(player, this.getPages().get(pageIndex));
     }
 
 }

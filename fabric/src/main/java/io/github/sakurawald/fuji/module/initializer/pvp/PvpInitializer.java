@@ -66,7 +66,7 @@ public class PvpInitializer extends ModuleInitializer {
         String playerName = PlayerHelper.getPlayerName(player);
 
         boolean flag = whitelist.contains(playerName);
-        player.sendMessage(TextHelper.getTextByKey(player, flag ? "pvp.status.on" : "pvp.status.off"));
+        TextHelper.sendText(player, TextHelper.getTextByKey(player, flag ? "pvp.status.on" : "pvp.status.off"));
         return CommandHelper.Return.SUCCESS;
     }
 

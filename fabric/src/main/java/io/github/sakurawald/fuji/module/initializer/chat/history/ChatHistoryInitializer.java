@@ -133,7 +133,7 @@ public class ChatHistoryInitializer extends ModuleInitializer {
     }
 
     public static void replayChatHistory(@NotNull ServerPlayerEntity player) {
-        chatHistory.forEach(player::sendMessage);
+        chatHistory.forEach(text -> TextHelper.sendText(player, text));
     }
 
 }

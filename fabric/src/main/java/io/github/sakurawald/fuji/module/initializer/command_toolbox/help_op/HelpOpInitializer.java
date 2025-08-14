@@ -28,7 +28,7 @@ public class HelpOpInitializer extends ModuleInitializer {
         }
 
         Text text = TextHelper.getTextByKey(player, "helpop.format", player.getGameProfile().getName(), message.getValue());
-        ops.forEach(o -> o.sendMessage(text));
+        ops.forEach(op -> TextHelper.sendText(op, text));
 
         TextHelper.sendTextByKey(player, "helpop.success");
         return CommandHelper.Return.SUCCESS;
