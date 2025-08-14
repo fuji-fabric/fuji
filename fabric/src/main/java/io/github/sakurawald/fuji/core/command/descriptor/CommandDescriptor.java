@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -240,11 +241,27 @@ public class CommandDescriptor implements SourceModuleGetter {
         return Optional.empty();
     }
 
-    @SuppressWarnings("CodeBlock2Expr")
+    @SuppressWarnings({"UnnecessaryLocalVariable"})
     protected @NotNull Command<ServerCommandSource> makeCommandAction() {
+        return withBaseCommandAction((commandContext) -> {
+            try {
+                /* Invoke the command function */
+                List<Object> parameterValues = makeMethodParameterValues(commandContext);
+                int commandReturnValue = (int) this.method.invoke(null, parameterValues.toArray());
+                return commandReturnValue;
+            } catch (Exception wrappedOrUnwrappedException) {
+                return CommandException.handleCommandException(commandContext, this.method, wrappedOrUnwrappedException);
+            }
+        });
+    }
+
+    @SuppressWarnings("CodeBlock2Expr")
+    protected final @NotNull Command<ServerCommandSource> withBaseCommandAction(@NotNull Function<CommandContext<ServerCommandSource>, Integer> commandAction) {
         return (commandContext) -> {
+            /* Define the return value holder. */
             AtomicInteger commandReturnValue = new AtomicInteger();
 
+            /* Define the special variables during the dynamic extent of this command execution. */
             Boolean stdoutFlag = CommandHelper.Context
                 .tryGetArgument(commandContext, CommandDescriptor.STDOUT_LITERAL, Boolean.class)
                 .orElse(false);
@@ -258,24 +275,19 @@ public class CommandDescriptor implements SourceModuleGetter {
 
             stdoutSpecialVariable.bind(stdoutFlag, () -> {
                 silentSpecialVariable.bind(silentFlag, () -> {
-                    try {
-                        /* Verify the command source. */
-                        if (!CommandSource.verifyCommandSource(commandContext, this)) {
-                            commandReturnValue.set(CommandHelper.Return.FAILURE);
-                            return;
-                        }
-
-                        /* Invoke the command function */
-                        List<Object> parameterValues = makeMethodParameterValues(commandContext);
-                        commandReturnValue.set((int) this.method.invoke(null, parameterValues.toArray()));
-
-                    } catch (Exception wrappedOrUnwrappedException) {
-                        commandReturnValue.set(CommandException.handleCommandException(commandContext, this.method, wrappedOrUnwrappedException));
+                    /* Verify the command source. */
+                    if (!CommandSource.verifyCommandSource(commandContext, this)) {
+                        commandReturnValue.set(CommandHelper.Return.FAILURE);
+                        return;
                     }
 
+                    /* Call the wrapped command action. */
+                    int apply = commandAction.apply(commandContext);
+                    commandReturnValue.set(apply);
                 });
             });
 
+            /* Return the command return value to the top-level. */
             return commandReturnValue.get();
         };
     }

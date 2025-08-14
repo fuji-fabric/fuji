@@ -81,11 +81,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
 
     @Override
     protected @NotNull Command<ServerCommandSource> makeCommandAction() {
-        return (commandContext) -> {
-            /* Verify command source */
-            if (!CommandSource.verifyCommandSource(commandContext, this)) {
-                return CommandHelper.Return.FAILURE;
-            }
+        return withBaseCommandAction((commandContext) -> {
 
             LogUtil.debug("Execute retarget command (tree): initialing command source = {}, class = {}, method = {}"
                 , commandContext.getSource().getName()
@@ -140,7 +136,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
                 , commandContext.getSource().getName()
                 , treeReturnValue);
             return treeReturnValue;
-        };
+        });
     }
 
 }
