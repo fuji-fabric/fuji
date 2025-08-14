@@ -127,7 +127,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
     @SuppressWarnings("DuplicatedCode")
     @Override
     protected @NotNull Command<ServerCommandSource> makeCommandAction() {
-        return (commandContext) -> {
+        return withBaseCommandAction((commandContext) -> {
             BundleCommandDescriptor descriptor = this;
             List<Object> parameterValues = makeMethodParameterValues(commandContext);
 
@@ -139,7 +139,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
             }
 
             return commandReturnValue;
-        };
+        });
     }
 
     public static class Maker {
