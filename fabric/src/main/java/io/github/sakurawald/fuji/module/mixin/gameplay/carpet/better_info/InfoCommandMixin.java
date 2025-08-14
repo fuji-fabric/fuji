@@ -24,7 +24,7 @@ public class InfoCommandMixin {
 
         BlockEntity blockEntity = source.getWorld().getBlockEntity(pos);
         if (blockEntity == null) {
-            TextHelper.sendText(source, additionalText.append(Text.literal("No block entity found at " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ())));
+            TextHelper.sendMessageByText(source, additionalText.append(Text.literal("No block entity found at " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ())));
             return;
         }
 
@@ -36,6 +36,6 @@ public class InfoCommandMixin {
         MutableText nbtDataText = Text.translatable("commands.data.block.query", pos.getX(), pos.getY(), pos.getZ(), NbtHelper.toPrettyPrintedText(compoundTag));
         additionalText = additionalText.append(nbtDataText);
 
-        TextHelper.sendText(source, additionalText);
+        TextHelper.sendMessageByText(source, additionalText);
     }
 }

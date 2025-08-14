@@ -87,7 +87,7 @@ public class EconomyInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     private static int $providers(@CommandSource ServerCommandSource source) {
         Collection<EconomyProvider> providers = EconomyService.getProviders();
-        TextHelper.sendText(source, Text.literal("There are %d providers installed in this server.".formatted(providers.size())));
+        TextHelper.sendMessageByText(source, Text.literal("There are %d providers installed in this server.".formatted(providers.size())));
 
         providers.forEach(provider -> {
             MinecraftServer server = ServerHelper.getServer();
@@ -97,7 +97,7 @@ public class EconomyInitializer extends ModuleInitializer {
 
             Text providerNameText = TextHelper.getTextByKey(source, "economy.provider.name.display");
             providerNameText = TextHelper.Replacer.replaceTextWithNamedArgument(providerNameText, "name", (matcher) -> provider.name());
-            TextHelper.sendText(source, providerNameText);
+            TextHelper.sendMessageByText(source, providerNameText);
 
             TextHelper.sendTextByKey(source, "economy.provider.icon", provider.icon().getItem());
             Collection<EconomyCurrency> currencies = provider.getCurrencies(server);
@@ -106,10 +106,10 @@ public class EconomyInitializer extends ModuleInitializer {
 
                 Text currencyNameText = TextHelper.getTextByKey(source, "economy.currency.name.display");
                 currencyNameText = TextHelper.Replacer.replaceTextWithNamedArgument(currencyNameText, "name", (matcher) -> currency.name());
-                TextHelper.sendText(source, currencyNameText);
+                TextHelper.sendMessageByText(source, currencyNameText);
 
                 TextHelper.sendTextByKey(source, "economy.currency.icon", currency.icon().getItem());
-                TextHelper.sendText(source, TextHelper.TEXT_EMPTY);
+                TextHelper.sendMessageByText(source, TextHelper.TEXT_EMPTY);
             });
         });
 
@@ -135,9 +135,9 @@ public class EconomyInitializer extends ModuleInitializer {
         Text balanceText = TextHelper.getTextByKey(source, "economy.account.balance.display");
         balanceText = TextHelper.Replacer.replaceTextWithNamedArgument(balanceText, "balance", (matcher) -> account.formattedBalance());
 
-        TextHelper.sendText(source, accountNameText);
-        TextHelper.sendText(source, balanceText);
-        TextHelper.sendText(source, TextHelper.TEXT_EMPTY);
+        TextHelper.sendMessageByText(source, accountNameText);
+        TextHelper.sendMessageByText(source, balanceText);
+        TextHelper.sendMessageByText(source, TextHelper.TEXT_EMPTY);
     }
 
     @Document(id = 1751826922680L, value = """
@@ -201,7 +201,7 @@ public class EconomyInitializer extends ModuleInitializer {
         long deltaValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
         EconomyTransaction economyTransaction = economyAccount.increaseBalance(deltaValue);
 
-        TextHelper.sendText(source, economyTransaction.message());
+        TextHelper.sendMessageByText(source, economyTransaction.message());
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -214,7 +214,7 @@ public class EconomyInitializer extends ModuleInitializer {
         long deltaValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
         EconomyTransaction economyTransaction = economyAccount.decreaseBalance(deltaValue);
 
-        TextHelper.sendText(source, economyTransaction.message());
+        TextHelper.sendMessageByText(source, economyTransaction.message());
         return CommandHelper.Return.SUCCESS;
     }
 

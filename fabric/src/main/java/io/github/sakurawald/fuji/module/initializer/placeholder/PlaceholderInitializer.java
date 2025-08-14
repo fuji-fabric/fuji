@@ -86,7 +86,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
         ServerPlayerEntity target = player.orElse(null);
 
         Text text = TextHelper.getTextByValue(target, input.getValue());
-        TextHelper.sendText(source, text);
+        TextHelper.sendMessageByText(source, text);
         return CommandHelper.Return.SUCCESS;
     }
 

@@ -100,7 +100,7 @@ public class CommandAttachmentService {
         return findAttachmentDataNode(uuid)
             .map(it -> {
                 String attachmentDataNodeString = it.toString();
-                TextHelper.sendText(source, Text.literal(attachmentDataNodeString));
+                TextHelper.sendMessageByText(source, Text.literal(attachmentDataNodeString));
                 return CommandHelper.Return.SUCCESS;
             })
             .orElseThrow(() -> {

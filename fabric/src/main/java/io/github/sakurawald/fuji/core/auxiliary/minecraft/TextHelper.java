@@ -512,11 +512,11 @@ public class TextHelper {
     @ForDeveloper("The functions to operate on the Text domain entity.")
     public static class Operators {
 
-        public static String getString(Text text) {
+        public static String getString(@NotNull Text text) {
             return text.getString();
         }
 
-        public static @NotNull MutableText condenseTextList(List<Text> textList) {
+        public static @NotNull MutableText condenseTextList(@NotNull List<Text> textList) {
             MutableText condensedText = Text.empty();
             for (int i = 0; i < textList.size(); i++) {
                 condensedText.append(textList.get(i));
@@ -629,10 +629,12 @@ public class TextHelper {
         return textList;
     }
 
-    public static void sendText(@NotNull Object audience, @NotNull Text text) {
+    @ForDeveloper("The abstraction method to CommandOutput#sendMessage, ServerCommandSource#sendMessage, PlayerEntity#sendMessage and ServerPlayerEntity#sendMessage.")
+    public static void sendMessageByText(@NotNull Object audience, @NotNull Text text) {
         sendText(audience, text, Sender.TextLocation.MESSAGE);
     }
 
+    @ForDeveloper("Send the given text to an audience.")
     public static void sendText(@NotNull Object audience, @NotNull Text text, @NotNull Sender.TextLocation textLocation) {
         /* Unbox the command context, to get the command source. */
         if (audience instanceof CommandActor commandActor) {
@@ -663,7 +665,7 @@ public class TextHelper {
         Sender.sendTextToAudience(audience, text, textLocation);
     }
 
-    @ForDeveloper("Use this function to send a text to an audience.")
+    @ForDeveloper("Send a language key with arguments to an audience.")
     public static void sendTextByKey(@NotNull Object audience, @NotNull String languageKey, Object... args) {
         /* Get the language value by language key for that audience. */
         String languageValue = Translator.getLanguageValueByKey(audience, languageKey);
@@ -695,14 +697,15 @@ public class TextHelper {
         }
     }
 
+    @SuppressWarnings("IfCanBeSwitch")
     @ForDeveloper("The functions to send a text to the audience.")
     public static class Sender {
         private static final String SUPPRESS_SENDING_STRING_MARKER = "[suppress-sending]";
-        public static final String SEND_ACTION_BAR_MARKER = "[send-action-bar]";
-        public static final String SEND_MAIN_TITLE_MARKER = "[send-main-title]";
-        public static final String SEND_SUB_TITLE_MARKER = "[send-sub-title]";
+        private static final String SEND_ACTION_BAR_MARKER = "[send-action-bar]";
+        private static final String SEND_MAIN_TITLE_MARKER = "[send-main-title]";
+        private static final String SEND_SUB_TITLE_MARKER = "[send-sub-title]";
 
-        private static void sendMessageToServerPlayerEntity(ServerPlayerEntity serverPlayerEntity, Text text) {
+        private static void sendMessageToServerPlayerEntity(@NotNull ServerPlayerEntity serverPlayerEntity, @NotNull Text text) {
             if (serverPlayerEntity.networkHandler == null) {
                 LogUtil.warn("Failed to send the message to player {}, because its network handler is null. (Is it an dummy offline player entity?): text = {}", serverPlayerEntity, text);
                 return;
@@ -710,7 +713,7 @@ public class TextHelper {
             serverPlayerEntity.sendMessage(text, false);
         }
 
-        private static void sendActionBarToAudience(Object audience, Text text) {
+        private static void sendActionBarToAudience(@NotNull Object audience, @NotNull Text text) {
             if (audience instanceof PlayerEntity playerEntity) {
                 playerEntity.sendMessage(text, true);
                 return;
@@ -720,7 +723,7 @@ public class TextHelper {
             throw new IllegalStateException();
         }
 
-        private static void sendTitleToAudience(Object audience, Text text, boolean useMainTitle) {
+        private static void sendTitleToAudience(@NotNull Object audience, @NotNull Text text, boolean useMainTitle) {
             if (audience instanceof ServerPlayerEntity serverPlayerEntity) {
                 if (useMainTitle) {
                     sendTitleToServerPlayerEntity(serverPlayerEntity, text, Text.empty());
@@ -734,7 +737,7 @@ public class TextHelper {
             throw new IllegalStateException();
         }
 
-        private static void sendMessageToAudience(Object audience, Text text) {
+        private static void sendMessageToAudience(@NotNull Object audience, @NotNull Text text) {
             if (audience instanceof ServerPlayerEntity serverPlayerEntity) {
                 sendMessageToServerPlayerEntity(serverPlayerEntity, text);
                 return;
@@ -796,7 +799,7 @@ public class TextHelper {
             return new Pair<>(string, textLocation);
         }
 
-        public static String getAudienceName(@Nullable Object audience) {
+        private static String getAudienceName(@Nullable Object audience) {
             if (audience == null) return "[audience is null]";
 
             if (audience instanceof CommandContext<?> commandContext) {
@@ -832,7 +835,7 @@ public class TextHelper {
 
         /* Send the text, using the given text. */
         for (ServerPlayerEntity player : PlayerHelper.Lookup.getOnlinePlayers()) {
-            player.sendMessage(text);
+            Sender.sendMessageToServerPlayerEntity(player, text);
         }
     }
 
@@ -853,7 +856,7 @@ public class TextHelper {
 
         public static class ClickEvent {
 
-            public static net.minecraft.text.ClickEvent makeSuggestCommandAction(String command) {
+            public static net.minecraft.text.ClickEvent makeSuggestCommandAction(@NotNull String command) {
                 #if MC_VER <= MC_1_21_4
                 return new net.minecraft.text.ClickEvent(net.minecraft.text.ClickEvent.Action.SUGGEST_COMMAND, command);
                 #elif MC_VER >= MC_1_21_5
@@ -861,7 +864,7 @@ public class TextHelper {
                 #endif
             }
 
-            public static net.minecraft.text.ClickEvent makeRunCommandAction(String command) {
+            public static net.minecraft.text.ClickEvent makeRunCommandAction(@NotNull String command) {
                 #if MC_VER <= MC_1_21_4
                     return new net.minecraft.text.ClickEvent(net.minecraft.text.ClickEvent.Action.RUN_COMMAND, command);
                 #elif MC_VER >= MC_1_21_5
@@ -869,7 +872,7 @@ public class TextHelper {
                 #endif
             }
 
-            public static net.minecraft.text.ClickEvent makeCopyToClipboardAction(String string) {
+            public static net.minecraft.text.ClickEvent makeCopyToClipboardAction(@NotNull String string) {
                 #if MC_VER <= MC_1_21_4
                     return new net.minecraft.text.ClickEvent(net.minecraft.text.ClickEvent.Action.COPY_TO_CLIPBOARD, string);
                 #elif MC_VER >= MC_1_21_5
@@ -880,7 +883,7 @@ public class TextHelper {
 
         public static class HoverEvent {
 
-            public static net.minecraft.text.HoverEvent makeShowTextAction(Text hoverText) {
+            public static net.minecraft.text.HoverEvent makeShowTextAction(@NotNull Text hoverText) {
                 #if MC_VER <= MC_1_21_4
                 return new net.minecraft.text.HoverEvent(net.minecraft.text.HoverEvent.Action.SHOW_TEXT, hoverText);
                 #elif MC_VER >= MC_1_21_5
@@ -931,7 +934,7 @@ public class TextHelper {
             , "The URL highlighter should work properly."
             , "Ensure the `</>` doesn't break the style of texts."
         })
-        public static String fixParserInput(String input) {
+        public static String fixParserInput(@NotNull String input) {
             // NOTE: Older Text Placeholder API can't parse the closing tag for custom color style tag. (e.g. `</#FF0000>`)
             #if MC_VER < MC_1_20_4
             return input.replaceAll("</#.+?>", "</>");

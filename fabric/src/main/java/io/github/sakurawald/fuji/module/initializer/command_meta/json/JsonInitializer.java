@@ -68,7 +68,7 @@ public class JsonInitializer extends ModuleInitializer {
     private static int $read(@CommandSource CommandContext<ServerCommandSource> ctx, String filePath, String jsonPath) {
         operateJson(filePath, (documentContext, path) -> {
             Object read = documentContext.read(jsonPath);
-            TextHelper.sendText(ctx.getSource(), Text.literal(read.toString()));
+            TextHelper.sendMessageByText(ctx.getSource(), Text.literal(read.toString()));
             return false;
         });
         return CommandHelper.Return.SUCCESS;

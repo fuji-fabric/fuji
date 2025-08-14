@@ -610,7 +610,7 @@ public class WorldInitializer extends ModuleInitializer {
         gameRulesText
             .fillStyle(Style.EMPTY
                 .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(gameRulesHoverText)));
-        TextHelper.sendText(source, gameRulesText);
+        TextHelper.sendMessageByText(source, gameRulesText);
         TextHelper.sendTextByKey(source, "prompt.hover.see_it");
 
         return CommandHelper.Return.SUCCESS;

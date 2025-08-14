@@ -192,10 +192,10 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
     }
 
     private static void sendColorBoxMessage(ServerPlayerEntity player, Text colorBoxName, List<Text> colorBoxTestList) {
-        TextHelper.sendText(player, colorBoxName);
-        colorBoxTestList.forEach(text -> TextHelper.sendText(player, text));
-        TextHelper.sendText(player, TextHelper.TEXT_EMPTY);
-        TextHelper.sendText(player, TextHelper.TEXT_EMPTY);
+        TextHelper.sendMessageByText(player, colorBoxName);
+        colorBoxTestList.forEach(text -> TextHelper.sendMessageByText(player, text));
+        TextHelper.sendMessageByText(player, TextHelper.TEXT_EMPTY);
+        TextHelper.sendMessageByText(player, TextHelper.TEXT_EMPTY);
     }
 
     private static List<GuiElementInterface> searchModuleArgumentTypes(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString) {

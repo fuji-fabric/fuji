@@ -120,13 +120,13 @@ public class TpaInitializer extends ModuleInitializer {
                 .teleport(who);
 
             TextHelper.sendText(request.getSender(), request.toSenderText$Accepted(), TextHelper.Sender.TextLocation.ACTION_BAR);
-            TextHelper.sendText(request.getReceiver(), request.toReceiverText$Accepted());
+            TextHelper.sendMessageByText(request.getReceiver(), request.toReceiverText$Accepted());
         } else if (status == ResponseStatus.DENY) {
             TextHelper.sendText(request.getSender(), request.toSenderText$Denied(), TextHelper.Sender.TextLocation.ACTION_BAR);
-            TextHelper.sendText(request.getReceiver(), request.toReceiverText$Denied());
+            TextHelper.sendMessageByText(request.getReceiver(), request.toReceiverText$Denied());
         } else if (status == ResponseStatus.CANCEL) {
-            TextHelper.sendText(request.getSender(), request.toSenderText$Cancelled());
-            TextHelper.sendText(request.getReceiver(), request.toReceiverText$Cancelled());
+            TextHelper.sendMessageByText(request.getSender(), request.toSenderText$Cancelled());
+            TextHelper.sendMessageByText(request.getReceiver(), request.toReceiverText$Cancelled());
         }
 
         /* Invalidate the request. */
@@ -157,8 +157,8 @@ public class TpaInitializer extends ModuleInitializer {
         PlaySoundJob.scheduleJob(config.model().mention_player, request.getReceiver());
 
         /* Send feedback messages. */
-        TextHelper.sendText(request.getReceiver(), request.toReceiverText$Sent());
-        TextHelper.sendText(request.getSender(), request.toSenderText$Sent());
+        TextHelper.sendMessageByText(request.getReceiver(), request.toReceiverText$Sent());
+        TextHelper.sendMessageByText(request.getSender(), request.toSenderText$Sent());
         return CommandHelper.Return.SUCCESS;
     }
 

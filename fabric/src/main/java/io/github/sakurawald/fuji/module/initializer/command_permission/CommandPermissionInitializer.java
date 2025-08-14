@@ -254,7 +254,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         });
 
         /* Newline. */
-        TextHelper.sendText(source, Text.empty());
+        TextHelper.sendMessageByText(source, Text.empty());
         return CommandHelper.Return.SUCCESS;
     }
 

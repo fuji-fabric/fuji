@@ -222,7 +222,7 @@ public class CommandBundleInitializer extends ModuleInitializer {
         if (source.isExecutedByPlayer()) {
             new CommandsInspectionGui(null, source.getPlayer(), commandDescriptorStream.toList(), 0).open();
         } else {
-            commandDescriptorStream.forEach(it -> TextHelper.sendText(source, Text.literal(it.getCommandNodePath())));
+            commandDescriptorStream.forEach(it -> TextHelper.sendMessageByText(source, Text.literal(it.getCommandNodePath())));
         }
 
         return CommandHelper.Return.SUCCESS;

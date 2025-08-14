@@ -274,7 +274,7 @@ public class RankService {
                     textBuilder.append(singleText);
                     textBuilder.append(TextHelper.TEXT_SPACE);
                 });
-            TextHelper.sendText(source, textBuilder);
+            TextHelper.sendMessageByText(source, textBuilder);
         } else {
             TextHelper.sendTextByKey(source, "rank.info.no_next_rank", rankNode.getDisplayName());
         }

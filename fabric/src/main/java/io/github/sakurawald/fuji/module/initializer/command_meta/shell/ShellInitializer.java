@@ -103,7 +103,7 @@ public class ShellInitializer extends ModuleInitializer {
 
                 // Send feedback.
                 LogUtil.info(output.toString());
-                TextHelper.sendText(ctx.getSource(), Text.literal(output.toString()));
+                TextHelper.sendMessageByText(ctx.getSource(), Text.literal(output.toString()));
             } catch (IOException | InterruptedException e) {
                 LogUtil.error("Failed to execute the shell command: {}", commandString, e);
             }

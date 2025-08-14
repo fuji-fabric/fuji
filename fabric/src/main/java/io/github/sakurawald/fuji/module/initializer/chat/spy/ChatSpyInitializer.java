@@ -100,6 +100,6 @@ public class ChatSpyInitializer extends ModuleInitializer {
         PlayerHelper.Lookup.getOnlinePlayers()
             .stream()
             .filter(it -> withPlayerOptions(it, false, ChatSpyDataModel.PerPlayerOptions::isEnabled))
-            .forEach(it -> TextHelper.sendText(it, notificationText));
+            .forEach(it -> TextHelper.sendMessageByText(it, notificationText));
     }
 }

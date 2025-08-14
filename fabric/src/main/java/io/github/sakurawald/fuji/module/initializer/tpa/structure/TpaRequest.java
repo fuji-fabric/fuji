@@ -49,8 +49,8 @@ public class TpaRequest {
                 @Override
                 public void run() {
                     TpaInitializer.getRequests().remove(that);
-                    TextHelper.sendText(getSender(), toSenderText$Cancelled());
-                    TextHelper.sendText(getReceiver(), toReceiverText$Cancelled());
+                    TextHelper.sendMessageByText(getSender(), toSenderText$Cancelled());
+                    TextHelper.sendMessageByText(getReceiver(), toReceiverText$Cancelled());
                 }
             },
             TpaInitializer.config.model().request_timeout * 1000L

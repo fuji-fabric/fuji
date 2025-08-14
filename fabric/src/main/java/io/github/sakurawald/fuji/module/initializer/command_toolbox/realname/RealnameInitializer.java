@@ -35,7 +35,7 @@ public class RealnameInitializer extends ModuleInitializer {
                 .append(Text.literal("\n"));
         }
 
-        TextHelper.sendText(source, builder);
+        TextHelper.sendMessageByText(source, builder);
         return CommandHelper.Return.SUCCESS;
     }
 
