@@ -285,4 +285,24 @@ public class CommandHelper {
             return commandReturnValue;
         }
     }
+
+    public static class Context {
+        public static <T> Optional<T> tryGetArgument(@NotNull CommandContext<?> commandContext, String argumentName, Class<T> clazz) {
+            try {
+                return Optional.ofNullable(commandContext.getArgument(argumentName, clazz));
+            } catch (Exception e) {
+                return Optional.empty();
+            }
+        }
+
+        public static String getSourceName(@NotNull CommandContext<?> commandContext) {
+            Object commandSource = commandContext.getSource();
+
+            if (commandSource instanceof ServerCommandSource serverCommandSource) {
+                return serverCommandSource.getName();
+            }
+
+            return commandSource.toString();
+        }
+    }
 }

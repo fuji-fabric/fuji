@@ -13,6 +13,7 @@ import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
+import io.github.sakurawald.fuji.core.command.descriptor.CommandDescriptor;
 import io.github.sakurawald.fuji.core.command.structure.CommandActor;
 import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.config.handler.impl.LanguageConfigurationHandler;
@@ -628,8 +629,49 @@ public class TextHelper {
         return textList;
     }
 
+    public static void sendText(@NotNull Object audience, @NotNull Text text, @NotNull Sender.TextLocation textLocation) {
+        /* Unbox the command context, to get the command source. */
+        if (audience instanceof CommandActor commandActor) {
+            audience = commandActor.getCommandContext();
+        }
+        if (audience instanceof CommandContext<?> ctx) {
+            audience = ctx.getSource();
+
+            /* Check the stdout flag. */
+            processStdoutOptionalArgument(audience, text, textLocation, ctx);
+
+            /* Check the silent flag. */
+            Boolean silentFlag = CommandHelper.Context
+                .tryGetArgument(ctx, CommandDescriptor.SILENT_LITERAL, Boolean.class)
+                .orElse(false);
+            if (silentFlag) {
+                LogUtil.debug("Cancel the text sending (Reason: `--silent=true`): audience = {}, text = {}", audience, text);
+                return;
+            }
+
+        }
+
+        /* Dispatch the method to send the Text to the command source. */
+        Sender.sendTextToAudience(audience, text, textLocation);
+    }
+
+    private static void processStdoutOptionalArgument(@NotNull Object audience, @NotNull Text text, @NotNull Sender.TextLocation textLocation, @NotNull CommandContext<?> ctx) {
+        Boolean stdoutFlag = CommandHelper.Context
+            .tryGetArgument(ctx, CommandDescriptor.STDOUT_LITERAL, Boolean.class)
+            .orElse(false);
+        if (stdoutFlag) {
+            LogUtil.debug("Redirect the text sending into the console (Reason: `--std=true`): audience = {}, text = {}", audience, text);
+            LogUtil.info("""
+                ◉ Redirect the text sending to the console
+                - Audience = {}
+                - TextLocation = {}
+                - Text = {}
+                """, CommandHelper.Context.getSourceName(ctx), textLocation, text);
+        }
+    }
+
     @ForDeveloper("Use this function to send a text to an audience.")
-    public static void sendTextByKey(@NotNull Object audience, String languageKey, Object... args) {
+    public static void sendTextByKey(@NotNull Object audience, @NotNull String languageKey, Object... args) {
         /* Get the language value by language key for that audience. */
         String languageValue = Translator.getLanguageValueByKey(audience, languageKey);
 
@@ -646,15 +688,10 @@ public class TextHelper {
         /* Parse the language value into text using parsers. */
         Text text = getTextByValue(audience, languageValue, args);
 
-        /* Pick the way to send the text to the audience. */
-        // Unbox the command context, to get the command source.
-        audience = Sender.unboxAudience(audience);
-
         try {
-            Sender.sendTextToAudience(audience, text, textLocation);
+            sendText(audience, text, textLocation);
         } catch (Exception e) {
-            Object audienceType = (audience == null ? null : audience.getClass().getName());
-
+            Object audienceType = audience.getClass().getName();
             LogUtil.error("""
                 Failed to send a text to the audience {}.
                 ◉ Audience Type: {}
@@ -733,7 +770,7 @@ public class TextHelper {
             sendTitleToServerPlayerEntity(player, 10, 70, 20, mainTitle, subTitle);
         }
 
-        public static void sendTitleToServerPlayerEntity(ServerPlayerEntity player, int fadeInTicks, int stayTicks, int fadeOutTicks, Text mainTitle, Text subTitle) {
+        public static void sendTitleToServerPlayerEntity(@NotNull ServerPlayerEntity player, int fadeInTicks, int stayTicks, int fadeOutTicks, @NotNull Text mainTitle, @NotNull Text subTitle) {
             player.networkHandler.sendPacket(new TitleFadeS2CPacket(fadeInTicks, stayTicks, fadeOutTicks));
             player.networkHandler.sendPacket(new TitleS2CPacket(mainTitle));
             player.networkHandler.sendPacket(new SubtitleS2CPacket(subTitle));
@@ -766,17 +803,6 @@ public class TextHelper {
             return new Pair<>(string, textLocation);
         }
 
-        @ForDeveloper("Unbox the object until its type is ServerCommandSource.")
-        private static Object unboxAudience(Object audience) {
-            if (audience instanceof CommandActor commandActor) {
-                audience = commandActor.getCommandContext();
-            }
-            if (audience instanceof CommandContext<?> ctx) {
-                audience = ctx.getSource();
-            }
-            return audience;
-        }
-
         public enum TextLocation {
             MESSAGE, ACTION_BAR, MAIN_TITLE, SUB_TITLE
         }
@@ -793,7 +819,7 @@ public class TextHelper {
         }
     }
 
-    public static void sendBroadcastByText(Text text) {
+    public static void sendBroadcastByText(@NotNull Text text) {
         /* Log the console, using the given text. */
         LogUtil.info(Operators.getString(text));
 

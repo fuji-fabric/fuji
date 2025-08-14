@@ -26,6 +26,10 @@ import java.lang.reflect.Parameter;
     - The GreedyStringArgument should always be the last parameter declared in the method.
     - An optional argument is a RequiredArgument, with command node redirects.
     - The parameter names in a method annotated with @CommandNode is a part of the command path, be careful to refactor these parameter names.
+    - To introduce a new method parameter:
+      1. If it's a non-optional parameter, you should add it as the last one in non-optional parameters.
+      2. If it's an optional parameter, you can add it at any position in optional parameters.
+      3. If it's a GreedyString parameter, you should add it as the last method parameter.
     """)
 @Data
 public class CommandArgument {

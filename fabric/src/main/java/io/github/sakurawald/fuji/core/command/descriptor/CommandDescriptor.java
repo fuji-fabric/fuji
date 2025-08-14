@@ -52,6 +52,8 @@ import org.jetbrains.annotations.Nullable;
     """)
 public class CommandDescriptor implements SourceModuleGetter {
 
+    public static final String SILENT_LITERAL = "silent";
+    public static final String STDOUT_LITERAL = "stdout";
     public final @NotNull Method method;
 
     public final @NotNull List<CommandArgument> commandArguments;
@@ -281,20 +283,24 @@ public class CommandDescriptor implements SourceModuleGetter {
         /* Register global optional arguments. */
         // NOTE: The global optional arguments are registered into the server command tree directly, without modifying the command descriptor.
         CommandRequirementDescriptor requirement = new CommandRequirementDescriptor(4, null);
-        registerOptionalArgument(CommandArgument.ofRequiredArgument(Boolean.class,"silent", true, requirement), redirectTargetNode);
-        registerOptionalArgument(CommandArgument.ofRequiredArgument(Boolean.class,"verbose", true, requirement), redirectTargetNode);
+        registerOptionalArgument(CommandArgument.ofRequiredArgument(Boolean.class, SILENT_LITERAL, true, requirement), redirectTargetNode);
+        registerOptionalArgument(CommandArgument.ofRequiredArgument(Boolean.class, STDOUT_LITERAL, true, requirement), redirectTargetNode);
     }
 
     private static void registerOptionalArgument(@NotNull CommandArgument optionalArgument, @NotNull CommandNode<ServerCommandSource> redirectTargetNode) {
         /* Make the leading literal argument for this optional argument. */
         CommandArgument leadingLiteralArgument = CommandArgument.ofLiteralArgument("--" + optionalArgument.getArgumentName(), optionalArgument.getRequirement());
 
+        Predicate<ServerCommandSource> requirementPredicate = CommandRequirement.makeCommandRequirementPredicate(optionalArgument.getRequirement());
+
         /* Make the builder for the optional argument. */
         ArgumentBuilder<ServerCommandSource, ?> optionalArgumentBuilder =
             ArgumentBuilderMaker
                 .makeLiteralArgumentBuilder(leadingLiteralArgument)
+                .requires(requirementPredicate)
                 .then(ArgumentBuilderMaker
                     .makeRequiredArgumentBuilder(optionalArgument)
+                    .requires(requirementPredicate)
                     .executes(redirectTargetNode.getCommand())
                     .redirect(redirectTargetNode));
 
@@ -531,7 +537,8 @@ public class CommandDescriptor implements SourceModuleGetter {
                 throw new IllegalArgumentException("The command argument must be literal argument.");
             }
 
-            return CommandManager.literal(commandArgument.getArgumentName());
+            return CommandManager
+                .literal(commandArgument.getArgumentName());
         }
 
         private static @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull CommandArgument commandArgument) {
