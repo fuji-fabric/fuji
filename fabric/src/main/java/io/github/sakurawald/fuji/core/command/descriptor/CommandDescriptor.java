@@ -266,11 +266,11 @@ public class CommandDescriptor implements SourceModuleGetter {
             /* Define the special variables during the dynamic extent of this command execution. */
             Boolean stdoutFlag = CommandHelper.Context
                 .tryGetArgument(commandContext, CommandDescriptor.STDOUT_LITERAL, Boolean.class)
-                .orElse(false);
+                .orElse(stdoutSpecialVariable.get());
 
             Boolean silentFlag = CommandHelper.Context
                 .tryGetArgument(commandContext, CommandDescriptor.SILENT_LITERAL, Boolean.class)
-                .orElse(false);
+                .orElse(silentSpecialVariable.get());
 
             stdoutSpecialVariable.bind(stdoutFlag, () -> {
                 silentSpecialVariable.bind(silentFlag, () -> {
