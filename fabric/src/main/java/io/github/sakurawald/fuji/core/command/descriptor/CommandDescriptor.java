@@ -165,7 +165,9 @@ public class CommandDescriptor implements SourceModuleGetter {
         List<String> commandPath = commandArguments
             .stream()
             .filter(CommandArgument::isCommandArgumentSpecifier)
-            .takeWhile(arg -> !arg.isOptional())
+            .takeWhile(commandArgument -> !commandArgument.isOptional()
+                // NOTE: Should not redirect to the greedy string argument type, or the greedy string will eat all the remaining input characters.
+                && !commandArgument.isGreedyStringType())
             .map(CommandArgument::getArgumentName)
             .toList();
 
