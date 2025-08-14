@@ -646,7 +646,7 @@ public class TextHelper {
 
         /* Check the command stdout flag. */
         if (CommandDescriptor.stdoutSpecialVariable.get()) {
-            LogUtil.debug("Redirect the text sending into the console (Reason: `--std=true`): audience = {}, text = {}", audience, text);
+            LogUtil.debug("Redirect the text sending into the console (Reason: `--stdout=true`): audience = {}, text = {}", audience, text);
             LogUtil.info("""
                 ◉ Redirect the text sending to the console
                 - Audience = {}
