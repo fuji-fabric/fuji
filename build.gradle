@@ -213,6 +213,9 @@ allprojects { p ->
         maven { url "https://jitpack.io" }
         maven { url "https://projectlombok.org/edge-releases" }
 
+        // For text-placeholder and sgui mod.
+        maven { url "https://maven.nucleoid.xyz" }
+
         // VanillaGradle and Mixins in common module.
         maven { url "https://repo.spongepowered.org/maven/" }
     }
