@@ -4,11 +4,11 @@
 The files inside \tbf{config/fuji/languages/} directory are called \tbf{language files}. \\
 Each \tbf{language file} defines a table to map a \tbf{language key} into a \tbf{language value}.
 
-\LevelOne{Modify the default language used by fuji.}
+\LevelOne{Modify the default language used by fuji}
 You can modify the \tbf{default language} in \mainconfig file.
 After that, issue \cmd{/fuji reload} command to apply the changes.
 
-\LevelOne{Control how the text is sent.}
+\LevelOne{Control how the text is sent}
 The \tbf{language value} only defines what is the text.
 It didn't define how to use that text.
 You can use \tbf{language instructions} to specify how to use that \tbf{language value}. \\
@@ -21,7 +21,16 @@ Currently supported language instructions:
 \end{description}
 If no \tbf{language instruction} is used, we will send the \tbf{text} via the \tbf{message}.
 
-\LevelOne{Enable multiple language support.}
+\LevelOne{Control the text sending stream}
+For each fuji command, you can use \str{--silent true/false} and \str{--stdout true/false} to control the text sending stream during the command execution.\\
+For example:\\
+1. The \cmd{/fly others Steve --silent true} will \tbf{cancel the text sending} during the execution of \cmd{/fly} command.\\
+2. The \cmd{/fly others Steve --stdout true} will \tbf{log the text sending into the console} during the execution of \cmd{/fly} command.\\
+3. You can use the \str{--silent true} and \str{--stdout true} both at the same time. \\
+4. You can pass the flags into sub-command: \str{/run as console --stdout true send-message @r Hello}
+
+
+\LevelOne{Enable multiple language support}
 You can enable the \str{language} module, to provide the multiple language support for each player, and respect their client side language option.
 
 \begin{tips}{How to know what languages are loaded and in use?}
