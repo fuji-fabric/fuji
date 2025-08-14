@@ -178,31 +178,18 @@ public class CommandDescriptor implements SourceModuleGetter {
     }
 
     protected @NotNull List<Object> makeMethodParameterValues(@NotNull CommandContext<ServerCommandSource> ctx) {
-        List<Object> args = new ArrayList<>();
+        List<Object> parameterValues = new ArrayList<>();
 
         for (CommandArgument commandArgument : this.getMethodParameterSpecifiers()) {
             /* inject the value into a required argument. */
             try {
-                Object arg = BaseArgumentTypeAdapter.Registry
+                Object parameterValue = BaseArgumentTypeAdapter.Registry
                     .getTypeAdapter(commandArgument.getArgumentType())
                     .makeParameterValue(ctx, commandArgument);
-
-                args.add(arg);
+                parameterValues.add(parameterValue);
             } catch (Exception e) {
-                /*
-                 * for command redirect, given 3 optional arguments named x, y and z.
-                 * The arguments are defined in order: (x, y, z).
-                 * The optional argument must be passed in the order that matches the defined order.
-                 * If the command source pass the optional arguments in the order (z, x, y), then thw following exceptions will be thrown:
-                 * java.lang.IllegalArgumentException, e.message = No such argument 'x' exists on this command
-                 * java.lang.IllegalArgumentException, e.message = No such argument 'y' exists on this command
-                 *
-                 * In order to continue the command-context passing process, we will temporally ignore the exception, so that the optional argument can be filled properly.
-                 *
-                 * The magic field "No such argument" is thrown by mojang's brigadier system.
-                 * */
-                if (e.getMessage() != null && e.getMessage().startsWith("No such argument")) {
-                    args.add(Optional.empty());
+                if (CommandException.isOptionalArgumentNotSpecifiedException(e)) {
+                    parameterValues.add(Optional.empty());
                     continue;
                 }
 
@@ -212,7 +199,7 @@ public class CommandDescriptor implements SourceModuleGetter {
 
         }
 
-        return args;
+        return parameterValues;
     }
 
     protected Optional<Integer> findCommandSourceMethodParameterSpecifierIndex() {
@@ -284,22 +271,35 @@ public class CommandDescriptor implements SourceModuleGetter {
         """)
     private void registerOptionalArguments() {
         CommandNode<ServerCommandSource> redirectTargetNode = findOptionalArgumentAnchor(this.commandArguments);
+
+        /* Register declared optional arguments. */
         this.commandArguments
             .stream()
             .filter(CommandArgument::isOptional)
-            .forEach(optionalArgument -> {
-                /* Make the builder for the optional argument. */
-                ArgumentBuilder<ServerCommandSource, ?> optionalArgumentBuilder =
-                    CommandManager
-                        .literal("--" + optionalArgument.getArgumentName())
-                        .then(ArgumentBuilderMaker
-                            .makeRequiredArgumentBuilder(optionalArgument)
-                            .executes(redirectTargetNode.getCommand())
-                            .redirect(redirectTargetNode));
+            .forEach(optionalArgument -> registerOptionalArgument(optionalArgument, redirectTargetNode));
 
-                /* Register the optional argument builder as the child of the redirect target node. */
-                redirectTargetNode.addChild(optionalArgumentBuilder.build());
-            });
+        /* Register global optional arguments. */
+        // NOTE: The global optional arguments are registered into the server command tree directly, without modifying the command descriptor.
+        CommandRequirementDescriptor requirement = new CommandRequirementDescriptor(4, null);
+        registerOptionalArgument(CommandArgument.ofRequiredArgument(Boolean.class,"silent", true, requirement), redirectTargetNode);
+        registerOptionalArgument(CommandArgument.ofRequiredArgument(Boolean.class,"verbose", true, requirement), redirectTargetNode);
+    }
+
+    private static void registerOptionalArgument(@NotNull CommandArgument optionalArgument, @NotNull CommandNode<ServerCommandSource> redirectTargetNode) {
+        /* Make the leading literal argument for this optional argument. */
+        CommandArgument leadingLiteralArgument = CommandArgument.ofLiteralArgument("--" + optionalArgument.getArgumentName(), optionalArgument.getRequirement());
+
+        /* Make the builder for the optional argument. */
+        ArgumentBuilder<ServerCommandSource, ?> optionalArgumentBuilder =
+            ArgumentBuilderMaker
+                .makeLiteralArgumentBuilder(leadingLiteralArgument)
+                .then(ArgumentBuilderMaker
+                    .makeRequiredArgumentBuilder(optionalArgument)
+                    .executes(redirectTargetNode.getCommand())
+                    .redirect(redirectTargetNode));
+
+        /* Register the optional argument builder as the child of the redirect target node. */
+        redirectTargetNode.addChild(optionalArgumentBuilder.build());
     }
 
     public static class CommandRequirement {
@@ -506,15 +506,39 @@ public class CommandDescriptor implements SourceModuleGetter {
 
             source.sendMessage(report);
         }
+
+        private static boolean isOptionalArgumentNotSpecifiedException(Exception e) {
+            /*
+             * For command redirect, given 3 optional arguments named x, y and z.
+             * The arguments are defined in order: (x, y, z).
+             * The optional argument must be passed in the order that matches the defined order.
+             * If the command source pass the optional arguments in the order (z, x, y), then thw following exceptions will be thrown:
+             * java.lang.IllegalArgumentException, e.message = No such argument 'x' exists on this command
+             * java.lang.IllegalArgumentException, e.message = No such argument 'y' exists on this command
+             *
+             * In order to continue the command-context passing process, we will temporally ignore the exception, so that the optional argument can be filled properly.
+             *
+             * The magic field "No such argument" is thrown by mojang's brigadier system. (CommandContext#getArgument)
+             * */
+            return e.getMessage() != null && e.getMessage().startsWith("No such argument");
+        }
     }
 
     private static class ArgumentBuilderMaker {
 
         private static @NotNull LiteralArgumentBuilder<ServerCommandSource> makeLiteralArgumentBuilder(@NotNull CommandArgument commandArgument) {
+            if (!commandArgument.isLiteralArgument()) {
+                throw new IllegalArgumentException("The command argument must be literal argument.");
+            }
+
             return CommandManager.literal(commandArgument.getArgumentName());
         }
 
         private static @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull CommandArgument commandArgument) {
+            if (!commandArgument.isRequiredArgument()) {
+                throw new IllegalArgumentException("The command argument must be required argument.");
+            }
+
             /* use adapter to make the required argument builder */
             return BaseArgumentTypeAdapter.Registry
                 .getTypeAdapter(commandArgument.getArgumentType())
