@@ -71,7 +71,7 @@ public class NamedCooldownService {
             int availableUses = descriptor.getMaxUses() - uses;
             if (remainingDuration > 0 || availableUses <= 0) {
                 CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), onFailureCommands);
-                return CommandHelper.Return.FAIL;
+                return CommandHelper.Return.FAILURE;
             }
 
             /* If succeeded. */

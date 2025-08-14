@@ -78,7 +78,7 @@ public class SkinInitializer extends ModuleInitializer {
             })
             .orElseGet(() -> {
                 TextHelper.sendTextByKey(player, "skin.default_skin.unknown", $defaultSkinName);
-                return CommandHelper.Return.FAIL;
+                return CommandHelper.Return.FAILURE;
             });
     }
 

@@ -105,7 +105,7 @@ public class WarpInitializer extends ModuleInitializer {
         if (data.model().name2warp.containsKey(name)) {
             if (!override.orElse(false)) {
                 TextHelper.sendTextByKey(player, "warp.set.fail.need_override", name);
-                return CommandHelper.Return.FAIL;
+                return CommandHelper.Return.FAILURE;
             }
         }
 

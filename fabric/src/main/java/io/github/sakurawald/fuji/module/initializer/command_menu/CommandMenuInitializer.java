@@ -70,7 +70,7 @@ public class CommandMenuInitializer extends ModuleInitializer {
         String $menuName = menuName.getValue();
         if (!menus.model().menus.containsKey($menuName)) {
             TextHelper.getTextByKey(source, "command_menu.menu.not_found", $menuName);
-            return CommandHelper.Return.FAIL;
+            return CommandHelper.Return.FAILURE;
         }
 
         /* Make the menu GUI and open it. */

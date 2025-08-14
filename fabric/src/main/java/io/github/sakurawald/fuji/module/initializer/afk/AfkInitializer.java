@@ -60,7 +60,7 @@ public class AfkInitializer extends ModuleInitializer {
             || ((PlayerCombatExtension) player).fuji$inCombat()) {
 
             TextHelper.sendTextByKey(player, "afk.on.failed");
-            return CommandHelper.Return.FAIL;
+            return CommandHelper.Return.FAILURE;
         }
 
         ((AfkStateAccessor) player).fuji$changeAfk(true);

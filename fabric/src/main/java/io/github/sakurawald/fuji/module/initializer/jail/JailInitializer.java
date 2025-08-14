@@ -168,7 +168,7 @@ public class JailInitializer extends ModuleInitializer {
             .getActiveJailRecord($playerName)
             .map(activeJailRecord -> {
                 TextHelper.sendTextByKey(source, "jail.already_in_jail", $playerName, jail.getId());
-                return CommandHelper.Return.FAIL;
+                return CommandHelper.Return.FAILURE;
             })
             .orElseGet(() -> {
                 try {
@@ -197,7 +197,7 @@ public class JailInitializer extends ModuleInitializer {
             })
             .orElseGet(() -> {
                 TextHelper.sendTextByKey(source, "jail.not_in_jail", $playerName);
-                return CommandHelper.Return.FAIL;
+                return CommandHelper.Return.FAILURE;
             });
     }
 
@@ -222,7 +222,7 @@ public class JailInitializer extends ModuleInitializer {
             })
             .orElseGet(() -> {
                 TextHelper.sendTextByKey(source, "jail.not_in_jail", $playerName);
-                return CommandHelper.Return.FAIL;
+                return CommandHelper.Return.FAILURE;
             });
     }
 
@@ -240,7 +240,7 @@ public class JailInitializer extends ModuleInitializer {
         return JailService.findJailDescriptor(jailId)
             .map(it -> {
                 TextHelper.sendTextByKey(source,"jail.already_exists", jailId);
-                return CommandHelper.Return.FAIL;
+                return CommandHelper.Return.FAILURE;
             })
             .orElseGet(() -> {
                 JailService.createJailDescriptor(jailId, source);

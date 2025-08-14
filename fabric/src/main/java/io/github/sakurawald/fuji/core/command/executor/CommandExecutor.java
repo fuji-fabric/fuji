@@ -42,7 +42,7 @@ public class CommandExecutor {
                 .execute(command, context.getExecutingSource());
         } catch (CommandSyntaxException commandSyntaxException) {
             exceptionHandler.accept(context, command, commandSyntaxException);
-            return CommandHelper.Return.FAIL;
+            return CommandHelper.Return.FAILURE;
         }
     }
 

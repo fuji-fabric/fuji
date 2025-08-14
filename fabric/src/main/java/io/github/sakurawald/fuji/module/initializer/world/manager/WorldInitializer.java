@@ -413,13 +413,13 @@ public class WorldInitializer extends ModuleInitializer {
             .resolve(name);
         if (!Files.exists(targetDimensionPath)) {
             TextHelper.sendTextByKey(source, "world.dimension.import.dimension_dir_not_found", targetDimensionPath.toFile().getCanonicalPath());
-            return CommandHelper.Return.FAIL;
+            return CommandHelper.Return.FAILURE;
         }
 
         /* Ensure seed existed. */
         if (seed.isEmpty()) {
             TextHelper.sendTextByKey(source, "dimension.seed.empty");
-            return CommandHelper.Return.FAIL;
+            return CommandHelper.Return.FAILURE;
         }
 
         return $create(source, name, dimensionType, seed, chunkGeneratorType, chunkGeneratorParameters, worldPresetType);
@@ -476,7 +476,7 @@ public class WorldInitializer extends ModuleInitializer {
             Optional<RuntimeDimensionDescriptor> runtimeDimensionDescriptor = WorldService.getRuntimeDimensionDescriptor(dimensionIdentifier);
             if (runtimeDimensionDescriptor.isEmpty()) {
                 TextHelper.sendTextByKey(source, "world.dimension.not_found", dimensionIdentifier);
-                return CommandHelper.Return.FAIL;
+                return CommandHelper.Return.FAILURE;
             }
             RuntimeDimensionDescriptor $runtimeDimensionDescriptor = runtimeDimensionDescriptor.get();
 

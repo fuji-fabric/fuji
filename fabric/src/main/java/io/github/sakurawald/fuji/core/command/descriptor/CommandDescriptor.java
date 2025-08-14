@@ -253,7 +253,7 @@ public class CommandDescriptor implements SourceModuleGetter {
             try {
                 /* Verify the command source. */
                 if (!CommandSource.verifyCommandSource(commandContext, this)) {
-                    return CommandHelper.Return.FAIL;
+                    return CommandHelper.Return.FAILURE;
                 }
 
                 /* invoke the command function */
@@ -464,12 +464,12 @@ public class CommandDescriptor implements SourceModuleGetter {
             /* handle AbortCommandExecutionException */
             if (theRealException instanceof AbortCommandExecutionException) {
                 // the logging is done before throwing the AbortOperationException, here we just swallow this exception.
-                return CommandHelper.Return.FAIL;
+                return CommandHelper.Return.FAILURE;
             }
 
             /* report the exception */
             reportException(ctx.getSource(), method, theRealException);
-            return CommandHelper.Return.FAIL;
+            return CommandHelper.Return.FAILURE;
         }
 
         protected static void reportException(ServerCommandSource source, Method method, Throwable throwable) {

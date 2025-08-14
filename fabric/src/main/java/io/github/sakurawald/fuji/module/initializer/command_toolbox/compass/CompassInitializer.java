@@ -39,7 +39,7 @@ public class CompassInitializer extends ModuleInitializer {
         ItemStack itemStack = source.getMainHandStack();
         if (!itemStack.getItem().equals(Items.COMPASS)) {
             TextHelper.sendTextByKey(source, "compass.no_compass");
-            return CommandHelper.Return.FAIL;
+            return CommandHelper.Return.FAILURE;
         }
 
         return function.apply(itemStack);

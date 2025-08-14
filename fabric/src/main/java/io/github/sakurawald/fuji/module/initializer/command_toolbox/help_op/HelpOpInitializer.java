@@ -24,7 +24,7 @@ public class HelpOpInitializer extends ModuleInitializer {
 
         if (ops.isEmpty()) {
             TextHelper.sendTextByKey(player, "helpop.fail");
-            return CommandHelper.Return.FAIL;
+            return CommandHelper.Return.FAILURE;
         }
 
         Text text = TextHelper.getTextByKey(player, "helpop.format", player.getGameProfile().getName(), message.getValue());

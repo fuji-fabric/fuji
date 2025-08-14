@@ -206,13 +206,11 @@ public class CommandHelper {
     }
 
     public static class Return {
-        public static final int FAIL = -1;
-        @SuppressWarnings("unused")
-        public static final int PASS = 0;
+        public static final int FAILURE = 0;
         public static final int SUCCESS = 1;
 
         private static int fromBoolean(boolean value) {
-            return value ? SUCCESS : FAIL;
+            return value ? SUCCESS : FAILURE;
         }
 
         public static int returnBoolean(ServerCommandSource source, boolean value) {
@@ -265,7 +263,7 @@ public class CommandHelper {
                 ItemStack mainHandStack = player.getMainHandStack();
                 if (mainHandStack.isEmpty()) {
                     TextHelper.sendTextByKey(player, "item.empty.not_allow");
-                    return Return.FAIL;
+                    return Return.FAILURE;
                 }
                 return consumer.apply(player, mainHandStack);
             });
@@ -280,7 +278,7 @@ public class CommandHelper {
             boolean confirmed = confirm.orElse(false);
             if (!confirmed) {
                 TextHelper.sendTextByKey(source, "operation.confirm.failed");
-                return Return.FAIL;
+                return Return.FAILURE;
             }
 
             int commandReturnValue = supplier.get();

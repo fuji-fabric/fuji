@@ -169,7 +169,7 @@ public class CommandBundleInitializer extends ModuleInitializer {
     private static int $registerAllBundleCommands(@CommandSource ServerCommandSource source) {
         if (!getRegisteredBundleCommandDescriptors().isEmpty()) {
             TextHelper.sendTextByKey(source, "command_bundle.register.already_registered");
-            return CommandHelper.Return.FAIL;
+            return CommandHelper.Return.FAILURE;
         }
 
         LogUtil.info("Register bundle commands.");
@@ -190,7 +190,7 @@ public class CommandBundleInitializer extends ModuleInitializer {
         List<CommandDescriptor> registeredBundleCommandDescriptors = getRegisteredBundleCommandDescriptors();
         if (registeredBundleCommandDescriptors.isEmpty()) {
             TextHelper.sendTextByKey(source, "command_bundle.un-register.none_registered");
-            return CommandHelper.Return.FAIL;
+            return CommandHelper.Return.FAILURE;
         }
 
         LogUtil.info("Un-register bundle commands.");

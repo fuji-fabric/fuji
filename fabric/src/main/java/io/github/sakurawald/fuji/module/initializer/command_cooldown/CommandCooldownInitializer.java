@@ -118,7 +118,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
             .findNamedCooldownDescriptor(name)
             .map(it -> {
                 TextHelper.sendTextByKey(source, "command_cooldown.already_exists", name);
-                return CommandHelper.Return.FAIL;
+                return CommandHelper.Return.FAILURE;
             })
             .orElseGet(() -> {
                 int $maxUses = maxUses.orElse(Integer.MAX_VALUE);

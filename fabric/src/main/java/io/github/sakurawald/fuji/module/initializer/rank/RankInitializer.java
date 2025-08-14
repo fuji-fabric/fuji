@@ -134,7 +134,7 @@ public class RankInitializer extends ModuleInitializer {
             .orElseGet(() -> {
                 String playerName = PlayerHelper.getPlayerName(target);
                 TextHelper.sendTextByKey(source, "rank.progress.no_rank", playerName);
-                return CommandHelper.Return.FAIL;
+                return CommandHelper.Return.FAILURE;
             });
     }
 
@@ -221,7 +221,7 @@ public class RankInitializer extends ModuleInitializer {
     private static int $tryUp(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
         List<RankNode> nextAvailableRankNodes = RankService.getNextAvailableRankNodes(target);
         if (nextAvailableRankNodes.size() != 1) {
-            return CommandHelper.Return.FAIL;
+            return CommandHelper.Return.FAILURE;
         }
 
         NextAvailableRankNode theOnlyNode = new NextAvailableRankNode(nextAvailableRankNodes.get(0));

@@ -38,7 +38,7 @@ public class PvpInitializer extends ModuleInitializer {
         }
 
         TextHelper.sendTextByKey(player, "pvp.on.already");
-        return CommandHelper.Return.FAIL;
+        return CommandHelper.Return.FAILURE;
     }
 
     @Document(id = 1751826844847L, value = "Disable the PvP for the player.")
@@ -56,7 +56,7 @@ public class PvpInitializer extends ModuleInitializer {
         }
 
         TextHelper.sendTextByKey(player, "pvp.off.already");
-        return CommandHelper.Return.FAIL;
+        return CommandHelper.Return.FAILURE;
     }
 
     @Document(id = 1751826847105L, value = "Query the status of PvP for the player.")

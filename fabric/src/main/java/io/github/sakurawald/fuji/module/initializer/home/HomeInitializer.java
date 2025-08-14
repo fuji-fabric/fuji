@@ -80,14 +80,14 @@ public class HomeInitializer extends ModuleInitializer {
         if (name2position.containsKey(homeName)) {
             if (!override.orElse(false)) {
                 TextHelper.sendTextByKey(player, "home.set.fail.need_override", homeName);
-                return CommandHelper.Return.FAIL;
+                return CommandHelper.Return.FAILURE;
             }
         }
 
         Optional<Integer> limit = LuckpermsHelper.getMeta(player.getUuid(), MAX_HOME_AMOUNT_META);
         if (limit.isPresent() && name2position.size() >= limit.get()) {
             TextHelper.sendTextByKey(player, "home.set.fail.limit");
-            return CommandHelper.Return.FAIL;
+            return CommandHelper.Return.FAILURE;
         }
 
         name2position.put(homeName, GlobalPos.of(player));

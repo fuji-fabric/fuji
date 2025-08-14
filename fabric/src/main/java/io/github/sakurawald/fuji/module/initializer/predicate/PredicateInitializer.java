@@ -177,7 +177,7 @@ public class PredicateInitializer extends ModuleInitializer {
             return CommandHelper.Return.returnBoolean(source, testResult);
         } catch (NumberFormatException e) {
             TextHelper.sendTextByKey(source, "placeholder.number.parse.failed", TextHelper.Parsers.escapeTags($numericValueProvider));
-            return CommandHelper.Return.FAIL;
+            return CommandHelper.Return.FAILURE;
         }
     }
 }

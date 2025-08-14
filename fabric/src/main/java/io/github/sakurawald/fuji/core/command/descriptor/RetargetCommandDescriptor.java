@@ -84,7 +84,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
         return (commandContext) -> {
             /* Verify command source */
             if (!CommandSource.verifyCommandSource(commandContext, this)) {
-                return CommandHelper.Return.FAIL;
+                return CommandHelper.Return.FAILURE;
             }
 
             LogUtil.debug("Execute retarget command (tree): initialing command source = {}, class = {}, method = {}"
@@ -128,7 +128,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
                         , branchCommandReturnValue);
 
                     if (!CommandHelper.Return.isSuccess(branchCommandReturnValue)) {
-                        treeReturnValue = CommandHelper.Return.FAIL;
+                        treeReturnValue = CommandHelper.Return.FAILURE;
                     }
 
                 } catch (Exception wrappedOrUnwrappedException) {

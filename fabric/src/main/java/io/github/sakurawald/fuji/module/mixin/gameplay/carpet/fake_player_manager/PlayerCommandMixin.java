@@ -44,7 +44,7 @@ public abstract class PlayerCommandMixin {
         ServerPlayerEntity player = context.getSource().getPlayer();
         if (!FakePlayerManagerService.canSpawnMoreFakePlayers(player)) {
             TextHelper.sendTextByKey(player, "fake_player_manager.spawn.limit_exceed");
-            cir.setReturnValue(CommandHelper.Return.FAIL);
+            cir.setReturnValue(CommandHelper.Return.FAILURE);
         }
     }
 

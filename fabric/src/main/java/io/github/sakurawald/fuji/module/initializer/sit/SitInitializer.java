@@ -73,7 +73,7 @@ public class SitInitializer extends ModuleInitializer {
             || steppingBlockState.isAir()
             || steppingBlockState.isLiquid()) {
             TextHelper.sendTextByKey(player, "sit.fail");
-            return CommandHelper.Return.FAIL;
+            return CommandHelper.Return.FAILURE;
         }
 
         /* Spawn the chair entity, and let the player ride it. */

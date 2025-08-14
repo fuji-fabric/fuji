@@ -108,7 +108,7 @@ public class TpaInitializer extends ModuleInitializer {
             .findFirst();
         if (requestOpt.isEmpty()) {
             TextHelper.sendTextByKey(player, "tpa.no_relative_ticket");
-            return CommandHelper.Return.FAIL;
+            return CommandHelper.Return.FAILURE;
         }
 
         /* Send feedback messages. */
@@ -143,13 +143,13 @@ public class TpaInitializer extends ModuleInitializer {
         // Should not send a request to self.
         if (request.getSender().equals(request.getReceiver())) {
             TextHelper.sendTextByKey(request.getSender(), "tpa.request_to_self");
-            return CommandHelper.Return.FAIL;
+            return CommandHelper.Return.FAILURE;
         }
 
         // Should not have existed similar request.
         if (requests.stream().anyMatch(request::isSimilarTo)) {
             TextHelper.sendTextByKey(request.getSender(), "tpa.similar_request_exists");
-            return CommandHelper.Return.FAIL;
+            return CommandHelper.Return.FAILURE;
         }
 
         /* Submit the request. */

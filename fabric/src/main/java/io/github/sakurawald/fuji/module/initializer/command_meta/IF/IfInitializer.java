@@ -167,7 +167,7 @@ public class IfInitializer extends ModuleInitializer {
 
         } else {
             TextHelper.sendTextByKey(source, "if.matcher.failed");
-            return CommandHelper.Return.FAIL;
+            return CommandHelper.Return.FAILURE;
         }
 
         return CommandHelper.Return.SUCCESS;

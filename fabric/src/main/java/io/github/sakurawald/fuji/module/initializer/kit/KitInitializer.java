@@ -71,7 +71,7 @@ public class KitInitializer extends ModuleInitializer {
         String kitName = kit.getValue();
         if (!KitService.hasKit(kitName)) {
             TextHelper.sendTextByKey(source, "kit.kit.empty");
-            return CommandHelper.Return.FAIL;
+            return CommandHelper.Return.FAILURE;
         }
 
         /* Give the kit. */
