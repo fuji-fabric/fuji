@@ -4,6 +4,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.command.descriptor.CommandDescriptor;
 import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import org.apache.logging.log4j.util.TriConsumer;
@@ -51,8 +52,10 @@ public class CommandExecutor {
         command = TextHelper.Parsers.escapeTags(command);
 
         // NOTE: Log the console first. (Make the debug easier)
-        if (!context.getExecutingSource().isExecutedByPlayer()) {
-            LogUtil.warn("Failed to execute command: command = {}, context = {}", command, context);
+        if (!CommandDescriptor.silentSpecialVariable.get()) {
+            if (!context.getExecutingSource().isExecutedByPlayer()) {
+                LogUtil.warn("Failed to execute command: command = {}, context = {}", command, context);
+            }
         }
 
         /* Echo to the executing source. */
