@@ -5,6 +5,7 @@ io.github.sakurawald.fuji.core.command.argument.adapter.impl.BossBarColorArgumen
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.BossBarStyleArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.ColorArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.ColumnPosArgumentTypeAdapter
+io.github.sakurawald.fuji.core.command.argument.adapter.impl.CommandActorArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.CommandContextArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.CommandFunctionArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.DimensionArgumentTypeAdapter

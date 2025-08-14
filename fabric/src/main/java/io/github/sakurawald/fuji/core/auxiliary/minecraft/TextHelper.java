@@ -13,6 +13,7 @@ import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
+import io.github.sakurawald.fuji.core.command.structure.CommandActor;
 import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.config.handler.impl.LanguageConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ResourceConfigurationHandler;
@@ -647,9 +648,7 @@ public class TextHelper {
 
         /* Pick the way to send the text to the audience. */
         // Unbox the command context, to get the command source.
-        if (audience instanceof CommandContext<?> ctx) {
-            audience = ctx.getSource();
-        }
+        audience = Sender.unboxAudience(audience);
 
         try {
             Sender.sendTextToAudience(audience, text, textLocation);
@@ -765,6 +764,17 @@ public class TextHelper {
                 textLocation = TextLocation.SUB_TITLE;
             }
             return new Pair<>(string, textLocation);
+        }
+
+        @ForDeveloper("Unbox the object until its type is ServerCommandSource.")
+        private static Object unboxAudience(Object audience) {
+            if (audience instanceof CommandActor commandActor) {
+                audience = commandActor.getCommandContext();
+            }
+            if (audience instanceof CommandContext<?> ctx) {
+                audience = ctx.getSource();
+            }
+            return audience;
         }
 
         public enum TextLocation {

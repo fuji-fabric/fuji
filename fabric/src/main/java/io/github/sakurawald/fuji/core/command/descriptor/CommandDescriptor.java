@@ -426,7 +426,7 @@ public class CommandDescriptor implements SourceModuleGetter {
             /* Compute the effective default command requirement for the full command path. */
             String fullCommandPath = descriptor.commandArguments
                 .stream()
-                .filter(commandArgument -> !commandArgument.isCommandSource())
+                .filter(CommandArgument::isCommandArgumentSpecifier)
                 .map(CommandArgument::getArgumentName)
                 .collect(Collectors.joining("."));
 
@@ -561,8 +561,7 @@ public class CommandDescriptor implements SourceModuleGetter {
                     it ->
                         // Ignore the optional arguments, since we will process them in the second pass.
                         !it.isOptional()
-                            // Ignore the command source arguments, the command source value is directly injected into the method arguments, should not register it in the command tree.
-                            && !it.isCommandSource())
+                            && it.isCommandArgumentSpecifier())
                 .forEach(argument -> {
                     /* Make the argument builder. */
                     ArgumentBuilder<ServerCommandSource, ?> builder = makeArgumentBuilder(argument);
@@ -626,7 +625,7 @@ public class CommandDescriptor implements SourceModuleGetter {
     public String getCommandSyntax() {
         return "/" + this.commandArguments
             .stream()
-            .filter(it -> !it.isCommandSource())
+            .filter(CommandArgument::isCommandArgumentSpecifier)
             .map(CommandArgument::toFriendlyString)
             .collect(Collectors.joining(" "));
     }

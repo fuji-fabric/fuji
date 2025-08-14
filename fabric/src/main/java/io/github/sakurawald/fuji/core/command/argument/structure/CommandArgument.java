@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.core.command.argument.structure;
 
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyStringList;
+import io.github.sakurawald.fuji.core.command.structure.CommandActor;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
@@ -65,6 +66,22 @@ public class CommandArgument {
     public boolean isMethodParameterSpecifier() {
         return isRequiredArgument();
     }
+
+    @SuppressWarnings("RedundantIfStatement")
+    public boolean isCommandArgumentSpecifier() {
+        // Ignore the command source argument, the command source value is directly injected into the method arguments, should not register it in the command tree.
+        if (this.isCommandSource()) {
+            return false;
+        }
+
+        // Ignore the command actor argument, its value is directly injected into the method arguments, if needed.
+        if (this.getArgumentType().equals(CommandActor.class)) {
+            return false;
+        }
+
+        return true;
+    }
+
 
     public boolean isLiteralArgument() {
         return this.argumentType == LITERAL_ARGUMENT_TYPE_CLASS;
