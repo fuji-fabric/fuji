@@ -16,17 +16,11 @@ import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 
-import java.util.Collection;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import lombok.SneakyThrows;
-import net.minecraft.command.ReturnValueConsumer;
-import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.thread.FutureQueue;
 
 @Document(id = 1751980891153L, value = """
     This module is only used for `development`.
@@ -44,42 +38,6 @@ public class TesterInitializer extends ModuleInitializer {
         callSmartUsage(source,commandLine);
 
         LogUtil.info("Done");
-        return CommandHelper.Return.SUCCESS;
-    }
-
-    @CommandNode("greeter")
-    private static int $greeter(@CommandSource ServerCommandSource source) {
-        FeatureSet enabledFeatures = source.getEnabledFeatures();
-        LogUtil.info("enabled features = {}", enabledFeatures);
-
-        Collection<String> chatSuggestions = source.getChatSuggestions();
-        LogUtil.info("chat suggestions = {}", chatSuggestions);
-
-        ReturnValueConsumer returnValueConsumer = source.getReturnValueConsumer();
-        LogUtil.info("returnValueConsumer = {}", returnValueConsumer);
-
-        FutureQueue messageChainTaskQueue = source.getMessageChainTaskQueue();
-        messageChainTaskQueue.append(() -> {
-            LogUtil.info("chain task: 1");
-        });
-        messageChainTaskQueue.append(() -> {
-            LogUtil.info("chain task: 2");
-        });
-        CompletableFuture<Integer> integerCompletableFuture = CompletableFuture.supplyAsync(() -> {
-//            while (true) {}
-            return 42;
-        });
-
-        boolean silent = source.isSilent();
-        LogUtil.info("silent = {}", silent);
-
-        messageChainTaskQueue.append(integerCompletableFuture, (intValue) -> {
-            LogUtil.info("value is: {}", intValue);
-        });
-        LogUtil.info("messageChainTaskQueue = {}", messageChainTaskQueue);
-
-        MutableText text = Text.literal("Hello %s".formatted(source.getName()));
-        source.sendMessage(text);
         return CommandHelper.Return.SUCCESS;
     }
 
