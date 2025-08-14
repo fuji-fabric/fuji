@@ -270,10 +270,7 @@ public class CommandDescriptor implements SourceModuleGetter {
 
             Boolean silentFlag = CommandHelper.Context
                 .tryGetArgument(commandContext, CommandDescriptor.SILENT_LITERAL, Boolean.class)
-                .orElseGet(() -> {
-                    // Respect the vanilla silent flag.
-                    return commandContext.getSource().isSilent();
-                });
+                .orElse(false);
 
             stdoutSpecialVariable.bind(stdoutFlag, () -> {
                 silentSpecialVariable.bind(silentFlag, () -> {
