@@ -1,7 +1,6 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
 
 
-
 ## Changelog
 
 - [core] feature: add `--silent` and `--stdout` optional arguments for all fuji commands. (#266)
