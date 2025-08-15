@@ -178,6 +178,7 @@ subprojects { p ->
     }
 
     tasks.register('dumpClasspathFile') {
+        outputs.upToDateWhen { false }
         def outputFile = file("${layout.buildDirectory.get()}/collected-classpath.txt")
         doLast {
             outputFile.text = ""
