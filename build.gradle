@@ -194,7 +194,9 @@ subprojects { p ->
 
     /* Configure Java compiler. */
     tasks.withType(JavaCompile).configureEach { task ->
-        dependsOn(tasks.named('dumpClasspathFile'))
+        if (p.name == "fabric") {
+            dependsOn(tasks.named('dumpClasspathFile'))
+        }
 
         options.release = rootProject.java_version as Integer
         options.encoding = "UTF-8"
