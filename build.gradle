@@ -194,6 +194,8 @@ subprojects { p ->
 
     /* Configure Java compiler. */
     tasks.withType(JavaCompile).configureEach { task ->
+        outputs.upToDateWhen { false }
+
         if (p.name == "fabric") {
             dependsOn(tasks.named('dumpClasspathFile'))
         }
