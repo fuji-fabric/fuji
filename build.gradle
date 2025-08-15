@@ -286,7 +286,7 @@ allprojects { p ->
         maven { url "https://maven.nucleoid.xyz" }
 
         // VanillaGradle and Mixins in common module.
-        maven { url "https://repo.spongepowered.org/maven/" }
+//        maven { url "https://repo.spongepowered.org/maven/" }
     }
 
     /* Define the archive name. */
