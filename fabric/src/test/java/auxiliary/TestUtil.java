@@ -21,7 +21,16 @@ import java.util.regex.Pattern;
 @UtilityClass
 public class TestUtil {
 
-    public static final Path PROJECT_ROOT_PATH = Path.of("../");
+    public static final Path ROOT_PROJECT_ROOT_PATH = Path.of("../");
+    public static final Path FABRIC_PROJECT_ROOT_PATH = ROOT_PROJECT_ROOT_PATH.resolve("fabric");
+    public static final Path FABRIC_PROJECT_SOURCE_PATH = FABRIC_PROJECT_ROOT_PATH
+        .resolve("src")
+        .resolve("main")
+        .resolve("java");
+    public static final Path FABRIC_PROJECT_MANIFOLD_DUMP_SOURCE_PATH = FABRIC_PROJECT_ROOT_PATH
+        .resolve("build")
+        .resolve("manifold-dump-source");
+
     public static final String ROOT_PACKAGE_NAME = Fuji.class.getPackageName();
 
     public static ClassGraph makeBaseClassGraph() {

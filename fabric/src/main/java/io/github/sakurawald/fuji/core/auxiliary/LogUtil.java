@@ -62,4 +62,9 @@ public class LogUtil {
         MOD_LOGGER.error(message, args);
     }
 
+    @SuppressWarnings("unused")
+    public static void disabled(String message, Object... args) {
+        // This logging method is a dummy method used for disabled logs.
+    }
+
 }

@@ -87,8 +87,11 @@ subprojects { p ->
         testImplementation("org.junit.jupiter:junit-jupiter")
         testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-        /* For code reflection: Classgraph */
+        /* For Java class file reflection: Classgraph */
         testImplementation "io.github.classgraph:classgraph:${project.classgraph_version}"
+
+        /* For Java source file generator, transformer and analyzer: java parser */
+        testImplementation "com.github.javaparser:javaparser-symbol-solver-core:${project.javaparser_version}"
 
         /* For error prone gradle plugin. */
         errorprone("com.google.errorprone:error_prone_core:${project.errorprone_version}")
@@ -176,12 +179,24 @@ subprojects { p ->
         }
 
         configure(options) {
-            // include the 'parameter name' in compiled .class file, for command annotation processor reflection
-            options.compilerArgs << '-parameters'
-            // yeah, the code of fuji is more dynamic.
-            options.compilerArgs << '-Xlint:-unchecked'
-            // Fail the compiling if there is any warning.
-            options.compilerArgs << "-Werror"
+            /* Include the 'parameter name' in compiled .class file, for command annotation processor reflection */
+            options.compilerArgs << "-parameters"
+
+            /* Keep the parameter names for command annotation processor. */
+            options.compilerArgs << "-Xlint:-unchecked"
+//            options.compilerArgs << "-Xlint:-processing"
+
+            /* Fail the compiling if there is any warning. */
+//            options.compilerArgs << "-Werror"
+
+            /* Dump the processed manifold source. */
+            if (JavaVersion.current() != JavaVersion.VERSION_1_8 && sourceSets.main.allJava.files.any { it.name == "module-info.java" }) {
+                options.compilerArgs += ['-Xplugin:Manifold', '--module-path', it.classpath.asPath]
+            } else {
+                options.compilerArgs += ['-Xplugin:Manifold']
+            }
+            def manifoldDumpSourceDir = file("${layout.buildDirectory.get()}/manifold-dump-source/")
+            options.compilerArgs += "-Amanifold.source.target=$manifoldDumpSourceDir"
         }
     }
 

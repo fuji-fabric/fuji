@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 
 public class GenerateDocStringTest {
 
-    private static final Path COMPILE_TIME_CROWDIN_PATH = TestUtil.PROJECT_ROOT_PATH.resolve("crowdin/");
+    private static final Path COMPILE_TIME_CROWDIN_PATH = TestUtil.ROOT_PROJECT_ROOT_PATH.resolve("crowdin/");
     private static final Path COMPILE_TIME_PULL_FROM_CROWDIN_LANGUAGE_PATH = COMPILE_TIME_CROWDIN_PATH.resolve("pull-from-crowdin/");
     private static final Path COMPILE_TIME_PUSH_TO_CROWDIN_LANGUAGE_PATH = COMPILE_TIME_CROWDIN_PATH.resolve("push-to-crowdin/");
     private static final Path COMPILE_TIME_DEFAULT_LANGUAGE_FILE_PATH = COMPILE_TIME_PUSH_TO_CROWDIN_LANGUAGE_PATH.resolve("en_US.json");
