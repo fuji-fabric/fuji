@@ -6,8 +6,10 @@ import io.github.sakurawald.fuji.module.initializer.motd.structure.MotdEntry;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class MotdConfigModel {
 
     @Document(id = 1751826857082L, value = """
@@ -27,12 +29,14 @@ public class MotdConfigModel {
     PlayersInfo playersInfo = new PlayersInfo();
 
     @Data
+    @NoArgsConstructor
     public static class PlayersInfo {
         @Document(id = 1753456677368L, value = """
             Increase `the number of max players` by a `random delta number`.
             """)
         MaxPlayers maxPlayers = new MaxPlayers();
         @Data
+        @NoArgsConstructor
         public static class MaxPlayers {
             int deltaMin = 0;
             int deltaMax = 0;
@@ -43,6 +47,7 @@ public class MotdConfigModel {
             """)
         OnlinePlayers onlinePlayers = new OnlinePlayers();
         @Data
+        @NoArgsConstructor
         public static class OnlinePlayers {
             int deltaMin = 0;
             int deltaMax = 0;
@@ -53,6 +58,7 @@ public class MotdConfigModel {
             """)
         HoverText hoverText = new HoverText();
         @Data
+        @NoArgsConstructor
         public static class HoverText {
             boolean enable = true;
 
@@ -74,6 +80,7 @@ public class MotdConfigModel {
             """)
     VersionText versionText = new VersionText();
     @Data
+    @NoArgsConstructor
     public static class VersionText {
         boolean enable = false;
         String text = "§bJoin to play now.";

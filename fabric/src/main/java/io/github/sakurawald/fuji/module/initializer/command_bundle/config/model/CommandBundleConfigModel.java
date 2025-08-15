@@ -7,8 +7,10 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class CommandBundleConfigModel {
 
     @Document(id = 1751826342919L, value = """

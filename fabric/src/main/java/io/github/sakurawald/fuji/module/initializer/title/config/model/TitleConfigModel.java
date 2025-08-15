@@ -4,8 +4,10 @@ import io.github.sakurawald.fuji.module.initializer.title.structure.TitleDescrip
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class TitleConfigModel {
 
     String defaultActiveTitleId = "resident";

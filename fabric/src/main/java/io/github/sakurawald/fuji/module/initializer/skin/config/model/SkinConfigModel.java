@@ -7,13 +7,16 @@ import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinDescripto
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class SkinConfigModel {
 
     DefaultSkin defaultSkin = new DefaultSkin();
 
     @Data
+    @NoArgsConstructor
     public static class DefaultSkin {
 
         @Document(id = 1753269459208L, value = """

@@ -6,8 +6,10 @@ import io.github.sakurawald.fuji.module.initializer.jail.structure.JailDescripto
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class JailConfigModel {
 
     String noJailStatusText = "<grey>[None]";

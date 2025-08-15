@@ -6,8 +6,10 @@ import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class LeaderBoardConfigModel {
 
     @Document(id = 1753491705006L, value = """
