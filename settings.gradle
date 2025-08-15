@@ -15,9 +15,17 @@ pluginManagement {
 
 		/* The fallback repos. */
 		mavenCentral()
-
 	}
 }
+
+/* Define the name of root project. */
+rootProject.name = 'fuji'
+
+/* Include child projects. */
+include("common")
+include("crowdin")
+include("docs")
+include("fabric")
 
 /* Define shared variables. */
 gradle.ext.languageDirectoryName = "languages"
@@ -54,18 +62,10 @@ def loadProperties() {
 
 	props.each { prop ->
 		gradle.ext.set(prop.key, prop.value)
-		 println "Add prop in gradle.ext [key:" + prop.key + ", value:" + prop.value + "]"
+		println "Add prop in gradle.ext [key:" + prop.key + ", value:" + prop.value + "]"
 	}
 	gradle.ext.mcVers = mcVers
 	gradle.ext.mcIndex = mcIndex
 }
 loadProperties()
 
-/* Include child projects. */
-include("common")
-include("crowdin")
-include("fabric")
-include("docs")
-
-/* Define the name of root project. */
-rootProject.name = 'fuji'
