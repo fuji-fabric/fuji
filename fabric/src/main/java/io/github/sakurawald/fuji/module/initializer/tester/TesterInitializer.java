@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.tester;
 
 
 import com.google.common.collect.Iterables;
+import com.google.gson.JsonObject;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
@@ -35,9 +36,7 @@ public class TesterInitializer extends ModuleInitializer {
     @SneakyThrows(Exception.class)
     @CommandNode("run")
     private static int $run(@CommandSource ServerCommandSource source, GreedyString commandLine) {
-        callSmartUsage(source,commandLine);
-
-        LogUtil.info("Done");
+        callSmartUsage(source, commandLine);
         return CommandHelper.Return.SUCCESS;
     }
 

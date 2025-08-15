@@ -14,6 +14,9 @@ plugins {
 
     // Google error prone
     id "net.ltgt.errorprone" version "4.3.0"
+
+    // Used to de-lombok and dump the source.
+    id "io.freefair.lombok" version "8.13.1"
 }
 
 /* Configure the checkstyle gradle plugin. */
@@ -69,6 +72,34 @@ subprojects { p ->
 
     /* Configure error prone gradle plugin. */
     apply plugin: "net.ltgt.errorprone"
+
+    /* Configure lombok plugin. */
+    apply plugin: "io.freefair.lombok"
+    configurations {
+        delombokClasspath {
+            canBeResolved = true
+            extendsFrom compileOnly, annotationProcessor, runtimeClasspath
+        }
+    }
+    def manifoldDumpSourceDir = file("${layout.buildDirectory.get()}/manifold-dump-source/")
+    def delombokInputDir = manifoldDumpSourceDir
+    def delombokOutputDir = file("${layout.buildDirectory.get()}/delombok-output-dir/")
+    tasks.register('delombokJava', JavaExec) {
+        outputs.upToDateWhen { false }
+
+        group = 'build'
+        description = 'Generates delomboked source code'
+        mainClass.set('lombok.launch.Main')
+        classpath = configurations.delombokClasspath
+        args = [
+                'delombok',
+                delombokInputDir,
+                '-d', delombokOutputDir
+        ]
+    }
+    tasks.named('test') {
+        dependsOn(tasks.named('delombokJava'))
+    }
 
     /* Configure dependencies. */
     dependencies {
@@ -146,8 +177,24 @@ subprojects { p ->
 
     }
 
+    tasks.register('dumpClasspathFile') {
+        def outputFile = file("${layout.buildDirectory.get()}/collected-classpath.txt")
+        doLast {
+            outputFile.text = ""
+            configurations.runtimeClasspath.each { file ->
+                outputFile << file.absolutePath + System.lineSeparator()
+            }
+            configurations.testRuntimeClasspath.each { file ->
+                outputFile << file.absolutePath + System.lineSeparator()
+            }
+            println "Classpath file written to: ${outputFile}"
+        }
+    }
+
     /* Configure Java compiler. */
-    tasks.withType(JavaCompile).configureEach {
+    tasks.withType(JavaCompile).configureEach { task ->
+        dependsOn(tasks.named('dumpClasspathFile'))
+
         options.release = rootProject.java_version as Integer
         options.encoding = "UTF-8"
 
@@ -184,19 +231,21 @@ subprojects { p ->
 
             /* Keep the parameter names for command annotation processor. */
             options.compilerArgs << "-Xlint:-unchecked"
-//            options.compilerArgs << "-Xlint:-processing"
 
             /* Fail the compiling if there is any warning. */
 //            options.compilerArgs << "-Werror"
 
             /* Dump the processed manifold source. */
-            if (JavaVersion.current() != JavaVersion.VERSION_1_8 && sourceSets.main.allJava.files.any { it.name == "module-info.java" }) {
-                options.compilerArgs += ['-Xplugin:Manifold', '--module-path', it.classpath.asPath]
-            } else {
-                options.compilerArgs += ['-Xplugin:Manifold']
+            // NOTE: Only dump the main source files, ignore the test source files.
+            if (task.getName() != "compileTestJava") {
+
+                if (JavaVersion.current() != JavaVersion.VERSION_1_8 && sourceSets.main.allJava.files.any { it.name == "module-info.java" }) {
+                    options.compilerArgs += ['-Xplugin:Manifold', '--module-path', it.classpath.asPath]
+                } else {
+                    options.compilerArgs += ['-Xplugin:Manifold']
+                }
+                options.compilerArgs += "-Amanifold.source.target=$manifoldDumpSourceDir"
             }
-            def manifoldDumpSourceDir = file("${layout.buildDirectory.get()}/manifold-dump-source/")
-            options.compilerArgs += "-Amanifold.source.target=$manifoldDumpSourceDir"
         }
     }
 

@@ -30,6 +30,7 @@ import io.github.sakurawald.fuji.module.initializer.placeholder.job.UpdateSumUpP
 import io.github.sakurawald.fuji.module.initializer.placeholder.structure.SumUpPlaceholder;
 import java.time.format.DateTimeFormatter;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
@@ -304,7 +305,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
     private void registerDatePlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("date", 1752000061565L);
         PlaceholderHelper.registerServerPlaceholder(descriptor, (server, arg) -> {
-            if (arg == null || arg.isEmpty()) {
+            if (arg == null || arg.isBlank()) {
                 return Text.literal(ChronosUtil.Formatter.getFormattedCurrentDate());
             }
 
