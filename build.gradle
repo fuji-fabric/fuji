@@ -1,6 +1,5 @@
 /* Define the gradle plugins. */
 plugins {
-    id "java"
     id "idea"
 
     // Used to get info from git.
@@ -86,7 +85,6 @@ subprojects { p ->
     def delombokOutputDir = file("${layout.buildDirectory.get()}/delombok-output-dir/")
     tasks.register('delombokJava', JavaExec) {
         dependsOn(tasks.named("compileJava"))
-
         outputs.upToDateWhen { false }
 
         group = 'build'
@@ -196,7 +194,6 @@ subprojects { p ->
 
     /* Configure Java compiler. */
     tasks.withType(JavaCompile).configureEach { task ->
-        outputs.upToDateWhen { false }
 
         if (p.name == "fabric") {
             dependsOn(tasks.named('dumpClasspathFile'))
@@ -269,7 +266,6 @@ subprojects { p ->
 
 /* Configure for all projects. */
 allprojects { p ->
-    apply plugin: "java"
     apply plugin: "maven-publish"
 
     repositories {
@@ -355,18 +351,4 @@ allprojects { p ->
     }
 
 }
-
-/* Configure Publishing. */
-publishing {
-
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {}
-}
-
 
