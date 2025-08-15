@@ -85,6 +85,8 @@ subprojects { p ->
     def delombokInputDir = manifoldDumpSourceDir
     def delombokOutputDir = file("${layout.buildDirectory.get()}/delombok-output-dir/")
     tasks.register('delombokJava', JavaExec) {
+        dependsOn(tasks.named("compileJava"))
+
         outputs.upToDateWhen { false }
 
         group = 'build'
@@ -243,6 +245,7 @@ subprojects { p ->
             /* Dump the processed manifold source. */
             // NOTE: Only dump the main source files, ignore the test source files.
             if (task.getName() != "compileTestJava") {
+                println("apply the de-manifold block")
 
                 if (JavaVersion.current() != JavaVersion.VERSION_1_8 && sourceSets.main.allJava.files.any { it.name == "module-info.java" }) {
                     options.compilerArgs += ['-Xplugin:Manifold', '--module-path', it.classpath.asPath]
