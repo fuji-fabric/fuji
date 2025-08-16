@@ -5,20 +5,11 @@ plugins {
     // Used to get info from git.
     id "com.palantir.git-version" version "3.4.0"
 
-    // Used to check coding style.
-    id 'checkstyle'
-
     // Used for pre-processor.
     id "systems.manifold.manifold-gradle-plugin" version "0.0.2-alpha"
 
     // Google error prone
     id "net.ltgt.errorprone" version "4.3.0"
-}
-
-/* Configure the checkstyle gradle plugin. */
-checkstyle {
-    configFile = project.rootProject.file("checkstyle.xml")
-    toolVersion = '10.18.0'
 }
 
 /* Configure Pre-Processor. */
