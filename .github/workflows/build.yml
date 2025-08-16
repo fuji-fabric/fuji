@@ -11,16 +11,16 @@ jobs:
         target-mc-version: [1.21.6, 1.21.5, 1.21.4, 1.21.3, 1.21, 1.20.6, 1.20.4, 1.20.2, 1.20.1]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v3
-      - name: validate gradle wrapper
+      - name: Validate gradle wrapper
         uses: gradle/actions/setup-gradle@v4
-      - name: setup jdk ${{ matrix.java }}
+      - name: Setup jdk ${{ matrix.java }}
         uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java }}
           distribution: 'microsoft'
-      - name: crowdin action
+      - name: Crowdin action
         uses: crowdin/github-action@v2
         # If we parallel run the crowdin action, it will fail with 409 error.
         if: github.ref == 'refs/heads/dev' && matrix.target-mc-version == '1.21.6'
@@ -55,18 +55,18 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
             CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_TOKEN }}
-      - name: make gradle wrapper executable
+      - name: Make gradle wrapper executable
         if: ${{ runner.os != 'Windows' }}
         run: chmod +x ./gradlew
-      - name: build
+      - name: Build
         run: ./gradlew build -PmcVer=${{matrix.target-mc-version}}
-      - name: capture build artifacts
+      - name: Capture build artifacts
         if: ${{ runner.os == 'Linux' && matrix.java == '21' }}
         uses: actions/upload-artifact@v4
         with:
           name: "artifact-${{matrix.target-mc-version}}"
           path: fabric/build/libs/
-      - name: mc-publish
+      - name: MC-publish action
         uses: Kir-Antipov/mc-publish@v3.3.0
         if: github.ref == 'refs/heads/release' || contains(github.event.head_commit.message, '[publish]')
         with:
