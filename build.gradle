@@ -180,7 +180,7 @@ subprojects { p ->
 
             /* Apply custom checkers. */
             if (p.name != "checker") {
-                error("NoEmptyJsonChecker")
+                error("BanJsonObjectIsEmptyMethodCall")
             }
         }
 
