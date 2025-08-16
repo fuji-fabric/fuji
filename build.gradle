@@ -70,7 +70,9 @@ subprojects { p ->
     }
 
     /* Configure error prone gradle plugin. */
-    apply plugin: "net.ltgt.errorprone"
+    if (p.name != "chcker") {
+        apply plugin: "net.ltgt.errorprone"
+    }
 
     /* Configure lombok plugin. */
     apply plugin: "io.freefair.lombok"
@@ -125,8 +127,14 @@ subprojects { p ->
         testImplementation "com.github.javaparser:javaparser-symbol-solver-core:${project.javaparser_version}"
 
         /* For error prone gradle plugin. */
-        errorprone("com.google.errorprone:error_prone_core:${project.errorprone_version}")
-        compileOnly("com.google.errorprone:error_prone_annotations:${project.errorprone_annotations_version}")
+        if (p.name != "checker") {
+            annotationProcessor project(':checker')
+            errorprone("com.google.errorprone:error_prone_core:${project.errorprone_version}")
+            errorprone(project(':checker'))
+            compileOnly("com.google.errorprone:error_prone_annotations:${project.errorprone_annotations_version}")
+        }
+
+//        implementation 'com.google.errorprone:error_prone_core:2.22.0'
     }
 
     /* Replace properties for each mc version. */
@@ -203,30 +211,34 @@ subprojects { p ->
         options.encoding = "UTF-8"
 
         /* Configure error-prone gradle plugin. */
-        options.errorprone.excludedPaths = ".*/module/mixin/.*"
-        options.errorprone {
-            // I would like to include the Minecraft Items constants in the enum class.
-            disable("ImmutableEnumChecker")
+        if (p.name != "checker") {
+            options.errorprone.excludedPaths = ".*/module/mixin/.*"
+            options.errorprone {
+                // I would like to include the Minecraft Items constants in the enum class.
+                disable("ImmutableEnumChecker")
 
-            // For readability, and Java version compatibility.
-            disable("StatementSwitchToExpressionSwitch")
+                // For readability, and Java version compatibility.
+                disable("StatementSwitchToExpressionSwitch")
 
-            // For readability, the exception is handled by the helper function.
-            disable("FutureReturnValueIgnored")
+                // For readability, the exception is handled by the helper function.
+                disable("FutureReturnValueIgnored")
 
-            // Let me compare the memory address.
-            disable("ReferenceEquality")
+                // Let me compare the memory address.
+                disable("ReferenceEquality")
 
-            // Conflict with the manifold pre-processor, hard to manage.
-            disable("UnusedVariable")
-            disable("UnusedMethod")
-            disable("DoNotCallSuggester")
+                // Conflict with the manifold pre-processor, hard to manage.
+                disable("UnusedVariable")
+                disable("UnusedMethod")
+                disable("DoNotCallSuggester")
 
-            // Use the double brace initialization.
-            // 1. For readability, the syntax is much simple and clear. A call to custom collection factory method to make a mutable collection is complex.
-            // 2. The non-static inner class does capture the reference of enclosing outer class, but it's expected, the lifespans of outer class and its inner class fields are the same in this use-case. (Remember not to leak the reference of the inner class)
-            // Note that for non-static inner class, the Gson will calls the field initializer for that inner class N times during the serialization. (Where N = the depth of that field)
-            disable("DoubleBraceInitialization")
+                // Use the double brace initialization.
+                // 1. For readability, the syntax is much simple and clear. A call to custom collection factory method to make a mutable collection is complex.
+                // 2. The non-static inner class does capture the reference of enclosing outer class, but it's expected, the lifespans of outer class and its inner class fields are the same in this use-case. (Remember not to leak the reference of the inner class)
+                // Note that for non-static inner class, the Gson will calls the field initializer for that inner class N times during the serialization. (Where N = the depth of that field)
+                disable("DoubleBraceInitialization")
+
+                error("NoEmptyJsonChecker")
+            }
         }
 
         configure(options) {

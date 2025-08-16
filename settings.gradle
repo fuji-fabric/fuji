@@ -26,6 +26,7 @@ include("common")
 include("crowdin")
 include("docs")
 include("fabric")
+include("checker")
 
 /* Define shared variables. */
 gradle.ext.languageDirectoryName = "languages"
