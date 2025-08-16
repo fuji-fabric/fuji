@@ -2,7 +2,6 @@
 
 ## Changelog
 
-This is the re-publish of `v12.18.0` and `v12.19.0`.
+This release improves the build process and includes minor bug fixes.
 
-- [echo.send_broadcast] feature: now `/send-broadcast` supports `--silent` and `--stdoud` flags.
-
+- [core] fix: the `broadcast text` should respect `--silent` and `--stdout` flags.
