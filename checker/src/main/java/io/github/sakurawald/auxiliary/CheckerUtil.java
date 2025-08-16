@@ -6,11 +6,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Type;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 public class CheckerUtil {
@@ -30,6 +26,10 @@ public class CheckerUtil {
     public static @NotNull String getEnclosingClassQualifiedName(@NotNull VisitorState state) {
         Symbol.ClassSymbol enclosingClassSymbol = findEnclosingClass(state);
         return enclosingClassSymbol.toString();
+    }
+
+    public static @NotNull String getQualifiedName(@NotNull ClassTree classTree) {
+        return ASTHelpers.getSymbol(classTree).getQualifiedName().toString();
     }
 
     private static @NotNull List<Symbol> getAnnotationSymbols(@NotNull ClassTree tree) {
@@ -64,19 +64,4 @@ public class CheckerUtil {
         return tree.getName().toString();
     }
 
-    public static class Types {
-
-        private static final Map<String, Type> KNOWN_TYPES = new HashMap<>();
-
-        @SuppressWarnings({"ReturnValueIgnored", "CodeBlock2Expr"})
-        public static void ensureTypeExists(@NotNull VisitorState state, @NotNull String typeString) {
-            KNOWN_TYPES.computeIfAbsent(typeString, key -> {
-                return Optional
-                    .ofNullable(state.getTypeFromString(typeString))
-                    .map(value -> KNOWN_TYPES.put(key, value))
-                    .orElseThrow(() -> new RuntimeException("Unknown type %s, did you refactor this type before?".formatted(typeString)));
-            });
-        }
-
-    }
 }
