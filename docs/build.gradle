@@ -44,6 +44,8 @@ tasks.register('processLatex', Copy) {
 }
 
 tasks.register('compileLatex') {
+    dependsOn(tasks.processLatex)
+
     /* Clean the original builds. */
     doFirst {
         recreateDir(outputTexDir)
@@ -75,4 +77,3 @@ tasks.register('compileLatex') {
         }
     }
 }
-tasks.compileLatex.dependsOn(processLatex)
