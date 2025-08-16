@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'java-library'
     id "net.ltgt.errorprone" version "4.3.0"
 }
 
@@ -8,6 +7,7 @@ repositories {
     mavenCentral()
 }
 
+/* Expose the JDK internal packages. */
 tasks.named('compileJava') {
     options.release.set(null)
     options.compilerArgs += [
@@ -18,15 +18,10 @@ tasks.named('compileJava') {
 }
 
 dependencies {
-    compileOnly 'com.google.errorprone:error_prone_annotations:2.22.0'
+    /* Use error-prone. */
     errorprone("com.google.errorprone:error_prone_core:${project.errorprone_version}")
-    implementation 'com.google.errorprone:error_prone_core:2.22.0'
-}
+    implementation("com.google.errorprone:error_prone_core:${project.errorprone_version}")
 
-jar {
-    manifest {
-        attributes(
-            'Automatic-Module-Name': 'com.example.checker'
-        )
-    }
+    /* Use auto-service to generate the services meta information. */
+    annotationProcessor("com.google.auto.service:auto-service:${project.autoservice_version}")
 }

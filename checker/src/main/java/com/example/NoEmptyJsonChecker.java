@@ -1,5 +1,6 @@
 package com.example;
 
+import com.google.auto.service.AutoService;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -8,6 +9,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol;
 
+@AutoService(BugChecker.class)
 @BugPattern(
     summary = "Do not call JsonObject.isEmpty()",
     severity = BugPattern.SeverityLevel.ERROR
@@ -19,8 +21,8 @@ public class NoEmptyJsonChecker extends BugChecker implements BugChecker.MethodI
         Symbol.MethodSymbol methodSymbol = ASTHelpers.getSymbol(tree);
         Symbol.ClassSymbol classSymbol = methodSymbol.enclClass();
 
-        System.out.println("class symbol = " + classSymbol.toString());
-        System.out.println("method name = " + methodSymbol.getSimpleName());
+//        System.out.println("class symbol = " + classSymbol.toString());
+//        System.out.println("method name = " + methodSymbol.getSimpleName());
 
         if (classSymbol.toString().equals("com.google.gson.JsonObject") && methodSymbol.getSimpleName().toString().equals("isEmpty")) {
             return buildDescription(tree)
