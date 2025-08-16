@@ -13,9 +13,6 @@ plugins {
 
     // Google error prone
     id "net.ltgt.errorprone" version "4.3.0"
-
-    // Used to de-lombok and dump the source.
-    id "io.freefair.lombok" version "8.13.1"
 }
 
 /* Configure the checkstyle gradle plugin. */
@@ -74,35 +71,6 @@ subprojects { p ->
         apply plugin: "net.ltgt.errorprone"
     }
 
-    /* Configure lombok plugin. */
-    apply plugin: "io.freefair.lombok"
-    configurations {
-        delombokClasspath {
-            canBeResolved = true
-            extendsFrom compileOnly, annotationProcessor, runtimeClasspath
-        }
-    }
-    def manifoldDumpSourceDir = file("${layout.buildDirectory.get()}/manifold-dump-source/")
-    def delombokInputDir = manifoldDumpSourceDir
-    def delombokOutputDir = file("${layout.buildDirectory.get()}/delombok-output-dir/")
-    tasks.register('delombokJava', JavaExec) {
-        dependsOn(tasks.named("compileJava"))
-        outputs.upToDateWhen { false }
-
-        group = 'build'
-        description = 'Generates delomboked source code'
-        mainClass.set('lombok.launch.Main')
-        classpath = configurations.delombokClasspath
-        args = [
-                'delombok',
-                delombokInputDir,
-                '-d', delombokOutputDir
-        ]
-    }
-    tasks.named('test') {
-        dependsOn(tasks.named('delombokJava'))
-    }
-
     /* Configure dependencies. */
     dependencies {
         /* For pre-processor: manifold */
@@ -123,18 +91,13 @@ subprojects { p ->
         /* For Java class file reflection: Classgraph */
         testImplementation "io.github.classgraph:classgraph:${project.classgraph_version}"
 
-        /* For Java source file generator, transformer and analyzer: java parser */
-        testImplementation "com.github.javaparser:javaparser-symbol-solver-core:${project.javaparser_version}"
-
         /* For error prone gradle plugin. */
         if (p.name != "checker") {
-            annotationProcessor project(':checker')
             errorprone("com.google.errorprone:error_prone_core:${project.errorprone_version}")
             errorprone(project(':checker'))
             compileOnly("com.google.errorprone:error_prone_annotations:${project.errorprone_annotations_version}")
         }
 
-//        implementation 'com.google.errorprone:error_prone_core:2.22.0'
     }
 
     /* Replace properties for each mc version. */
@@ -185,27 +148,8 @@ subprojects { p ->
 
     }
 
-    tasks.register('dumpClasspathFile') {
-        outputs.upToDateWhen { false }
-        def outputFile = file("${layout.buildDirectory.get()}/collected-classpath.txt")
-        doLast {
-            outputFile.text = ""
-            configurations.runtimeClasspath.each { file ->
-                outputFile << file.absolutePath + System.lineSeparator()
-            }
-            configurations.testRuntimeClasspath.each { file ->
-                outputFile << file.absolutePath + System.lineSeparator()
-            }
-            println "Classpath file written to: ${outputFile}"
-        }
-    }
-
     /* Configure Java compiler. */
     tasks.withType(JavaCompile).configureEach { task ->
-
-        if (p.name == "fabric") {
-            dependsOn(tasks.named('dumpClasspathFile'))
-        }
 
         options.release = rootProject.java_version as Integer
         options.encoding = "UTF-8"
@@ -249,20 +193,7 @@ subprojects { p ->
             options.compilerArgs << "-Xlint:-unchecked"
 
             /* Fail the compiling if there is any warning. */
-//            options.compilerArgs << "-Werror"
-
-            /* Dump the processed manifold source. */
-            // NOTE: Only dump the main source files, ignore the test source files.
-            if (task.getName() != "compileTestJava") {
-                println("apply the de-manifold block")
-
-                if (JavaVersion.current() != JavaVersion.VERSION_1_8 && sourceSets.main.allJava.files.any { it.name == "module-info.java" }) {
-                    options.compilerArgs += ['-Xplugin:Manifold', '--module-path', it.classpath.asPath]
-                } else {
-                    options.compilerArgs += ['-Xplugin:Manifold']
-                }
-                options.compilerArgs += "-Amanifold.source.target=$manifoldDumpSourceDir"
-            }
+            options.compilerArgs << "-Werror"
         }
     }
 

@@ -10,18 +10,18 @@ import org.junit.jupiter.api.Test;
 
 public class TextTest {
 
-    @Test
-    void banTheDirectCallToVanillaMinecraftTextSendingMethods() {
-        JavaParserUtil.banMethodCalls(
-            List.of("net.minecraft.server.command.ServerCommandSource.sendMessage"
-                , "net.minecraft.server.network.ServerPlayerEntity.sendMessage"
-                , "net.minecraft.entity.player.PlayerEntity.sendMessage"
-                , "net.minecraft.server.command.CommandOutput.sendMessage")
-        , List.of(TesterInitializer.class, TestFunctions.class, TextHelper.class, CommandDescriptor.class)
-        , """
-                Directly calls to sendMessage() methods breaks the functionality of `--silent` and `--stdout` global optional arguments.
-                Use the wrapped methods in TextHelper instead.
-                """);
-    }
+//    @Test
+//    void banTheDirectCallToVanillaMinecraftTextSendingMethods() {
+//        JavaParserUtil.banMethodCalls(
+//            List.of("net.minecraft.server.command.ServerCommandSource.sendMessage"
+//                , "net.minecraft.server.network.ServerPlayerEntity.sendMessage"
+//                , "net.minecraft.entity.player.PlayerEntity.sendMessage"
+//                , "net.minecraft.server.command.CommandOutput.sendMessage")
+//        , List.of(TesterInitializer.class, TestFunctions.class, TextHelper.class, CommandDescriptor.class)
+//        , """
+//                Directly calls to sendMessage() methods breaks the functionality of `--silent` and `--stdout` global optional arguments.
+//                Use the wrapped methods in TextHelper instead.
+//                """);
+//    }
 
 }

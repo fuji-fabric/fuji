@@ -14,6 +14,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
+import io.github.sakurawald.fuji.core.config.model.ConfigModel;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 
@@ -36,7 +37,9 @@ public class TesterInitializer extends ModuleInitializer {
     @SneakyThrows(Exception.class)
     @CommandNode("run")
     private static int $run(@CommandSource ServerCommandSource source, GreedyString commandLine) {
-        callSmartUsage(source, commandLine);
+//        callSmartUsage(source, commandLine);
+//        JsonObject jsonObject = new JsonObject();
+//        boolean empty = jsonObject.isEmpty();
         return CommandHelper.Return.SUCCESS;
     }
 

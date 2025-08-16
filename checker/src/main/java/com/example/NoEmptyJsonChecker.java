@@ -9,7 +9,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol;
 
 @BugPattern(
-    name = "NoEmptyJsonChecker",
     summary = "Do not call JsonObject.isEmpty()",
     severity = BugPattern.SeverityLevel.ERROR
 )
