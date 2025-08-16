@@ -1,6 +1,5 @@
 package tests.config;
 
-import auxiliary.JavaParserUtil;
 //import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import java.nio.file.FileSystems;

@@ -16,7 +16,13 @@ import java.util.List;
 )
 public class BanJsonObjectIsEmptyMethodCall extends BanMethodCall {
 
-    public BanJsonObjectIsEmptyMethodCall() {
-        super(List.of("com.google.gson.JsonObject.isEmpty"), List.of());
+    @Override
+    public List<String> bannedMethodQualifiedNames() {
+        return List.of("com.google.gson.JsonObject.isEmpty");
+    }
+
+    @Override
+    public List<String> ignoreClassQualifiedNamePrefixes() {
+        return List.of();
     }
 }

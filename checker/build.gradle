@@ -24,4 +24,10 @@ dependencies {
 
     /* Use auto-service to generate the services meta information. */
     annotationProcessor("com.google.auto.service:auto-service:${project.autoservice_version}")
+
+    /* Use lombok. */
+    compileOnly "org.projectlombok:lombok:${project.lombok_version}"
+    annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
+    testCompileOnly "org.projectlombok:lombok:${project.lombok_version}"
+    testAnnotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
 }
