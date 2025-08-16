@@ -96,6 +96,8 @@ subprojects { p ->
             compileOnly("com.google.errorprone:error_prone_annotations:${project.errorprone_annotations_version}")
         }
 
+        /* For IDE analyser: jetbrains annotations. */
+        compileOnly "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
     }
 
     /* Replace properties for each mc version. */
@@ -171,6 +173,9 @@ subprojects { p ->
             disable("UnusedVariable")
             disable("UnusedMethod")
             disable("DoNotCallSuggester")
+
+            /* Let me get the name from the AST. */
+            disable("TreeToString")
 
             /* Use the double brace initialization. */
             // 1. For readability, the syntax is much simple and clear. A call to custom collection factory method to make a mutable collection is complex.
