@@ -18,7 +18,7 @@ tasks.named('compileJava') {
 }
 
 dependencies {
-    /* Use error-prone. */
+    /* Use error-prone to write our custom checkers. */
     errorprone("com.google.errorprone:error_prone_core:${project.errorprone_version}")
     implementation("com.google.errorprone:error_prone_core:${project.errorprone_version}")
 
