@@ -36,7 +36,8 @@ public class SubjectIdArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    @NotNull
+    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName).suggests((ctx, builder) -> {
             String subject = StringArgumentType.getString(ctx, "subject");
             Managers.getAttachmentManager().listSubjectId(subject).forEach(builder::suggest);

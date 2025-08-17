@@ -55,7 +55,8 @@ public class PreviousAvailableRankNodesArgumentTypeAdapter extends BaseArgumentT
     }
 
     @Override
-    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    @NotNull
+    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests((context, builder) -> {
                 ServerPlayerEntity player = context.getSource().getPlayer();
@@ -64,7 +65,7 @@ public class PreviousAvailableRankNodesArgumentTypeAdapter extends BaseArgumentT
                 }
 
                 List<String> ids = RankService.getPreviousAvailableRankNodes(player).stream().map(RankNode::getId).toList();
-                return CommandHelper.Suggestion.makeSuggestionsCompletableFuture(() -> ids, builder);
+                return CommandHelper.Suggestion.makeSuggestionsCompletableFuture(context, builder, () -> ids);
             });
     }
 

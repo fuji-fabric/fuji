@@ -21,7 +21,8 @@ public class BossBarColorArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    @NotNull
+    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests(CommandHelper.Suggestion.enums(BossBar.Color::values));
     }

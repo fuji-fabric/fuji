@@ -39,7 +39,8 @@ public class HomeNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    @NotNull
+    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName).suggests((context, builder) -> {
                 ServerPlayerEntity player = context.getSource().getPlayer();
                 if (player == null) return builder.buildFuture();

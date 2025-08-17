@@ -6,6 +6,8 @@ import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
+import io.github.sakurawald.fuji.core.command.assistant.CommandAssistant;
+import io.github.sakurawald.fuji.core.command.suggestion.structure.ComposedCommandSuggestionsProvider;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
 import io.github.sakurawald.fuji.core.manager.Managers;
@@ -115,7 +117,17 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
 
     protected abstract Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument);
 
-    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    public final @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeComposedRequiredArgumentBuilder(@NotNull String argumentName) {
+        RequiredArgumentBuilder<ServerCommandSource, ?> result = makeRequiredArgumentBuilder(argumentName);
+
+        /* Wrap the original command suggestions provider. */
+        ComposedCommandSuggestionsProvider composedCommandSuggestionsProvider = new ComposedCommandSuggestionsProvider(result, result.getSuggestionsProvider(), CommandAssistant::assist);
+        result.suggests(composedCommandSuggestionsProvider);
+        return result;
+    }
+
+    @NotNull
+    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         ArgumentType<?> argumentType = this.makeArgumentType();
         return CommandManager.argument(argumentName, argumentType);
     }

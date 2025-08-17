@@ -29,7 +29,8 @@ public class DimensionArgumentTypeAdapter extends BaseArgumentTypeAdapter {
         3. FIXME: When you call RequiredArgumentBuilder#suggests() method, the `/back {push|clear}` will also be suggested, even the command source has no permission to use it.
         """)
     @Override
-    public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    @NotNull
+    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests(
             (ctx, builder) -> {
