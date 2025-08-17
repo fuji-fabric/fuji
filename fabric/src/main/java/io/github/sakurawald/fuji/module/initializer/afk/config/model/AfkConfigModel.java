@@ -45,7 +45,6 @@ public class AfkConfigModel {
         public List<String> on_leave_afk = new ArrayList<>() {
             {
                 this.add("send-broadcast <gold>Player %player:name% is no longer afk");
-                this.add("effect give %player:name% minecraft:absorption 5 4");
             }
         };
     }
