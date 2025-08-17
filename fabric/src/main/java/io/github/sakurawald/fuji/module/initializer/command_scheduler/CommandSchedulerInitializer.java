@@ -23,15 +23,25 @@ import org.quartz.JobDataMap;
 import java.util.List;
 
 
-@Document(id = 1751826754641L, value = """
-    This module allows you to define `jobs` using `cron` language.
-    To execute commands at schedule.
-    """)
-@ColorBox(id = 1751870574475L, color = ColorBox.ColorBoxTypes.NOTE, value = """
-    ◉ How it works?
+@Document(id = 1755407283186L, value = """
+    This module allows you to execute commands on a schedule.
 
-    A `job` is used to execute commands periodically.
-    We use `cron` language to define when the `job` should be `triggered`.
+    Typical use cases:
+    1. Send broadcast messages at scheduled times.
+    2. Execute a specified group of commands at scheduled times.
+    """)
+@ColorBox(id = 1755407830073L, color = ColorBox.ColorBoxTypes.NOTE, value = """
+    ◉ How it works?
+    1. Define a `job` to execute `commands` on a schedule.
+    1.a. The `schedule` is expressed using the `cron expression` language.
+    1.b. You can specify multiple `cron expressions` for a `job`.
+    1.c. A `job` is `triggered` if any of its `cron expressions` match.
+    2. A `job` is automatically `triggered` according to its `cron expressions`.
+    3. When a `job` is `triggered`, it will do:
+    3.a. If the `enable` property is `false`, then do nothing.
+    3.b. If the `remaining runs` property is `<= 0`, then do nothing.
+    3.c. Otherwise, it decreases the `remaining runs` property by 1, and pick a random `command group` to execute.
+    4. You can `trigger` a `job` using `/command-scheduler trigger \\<job\\>` manually.
     """)
 @ColorBox(id = 1751972254866L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ You can use `cron expression` generator, to specify when the job should be triggered.
