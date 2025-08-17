@@ -45,7 +45,10 @@ import java.util.List;
     """)
 @ColorBox(id = 1751972254866L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ You can use `cron expression` generator, to specify when a `job` should be `triggered`.
-    See https://www.freeformatter.com/cron-expression-generator-quartz.html
+    See
+    1. https://www.freeformatter.com/cron-expression-generator-quartz.html
+    2. https://crontab.cronhub.io/
+    3. https://odown.com/free-tools/cron-expression-generator/
 
     ◉ List the `next fire dates` for each defined `job`.
     Issue `/fuji inspect jobs` to see the `fire dates` of defined `jobs`.
