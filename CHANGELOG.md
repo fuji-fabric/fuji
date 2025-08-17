@@ -8,3 +8,6 @@
   - feature: optimize the `default config` for this module, provide an intuitive default example, make it easier to understand.
   - docs: document how this module works.
 - [afk] feature: optimize the `default config` file.
+- [command_meta.when_online] improvements
+  - feature: new `/when-online` command as an alias for `/when-online list` command.
+  - docs: add document for commands.

@@ -39,6 +39,7 @@ public class WhenOnlineInitializer extends ModuleInitializer {
 
     public static BaseConfigurationHandler<WhenOnlineDataModel> data = new ObjectConfigurationHandler<>("when-online-data.json", WhenOnlineDataModel.class);
 
+    @Document(id = 1755412463665L, value = "Execute the specified command `exactly once`, when the target player `is online`.")
     @CommandNode("when-online")
     @CommandRequirement(level = 4)
     private static int $whenOnline(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer, GreedyString command) {
@@ -54,6 +55,15 @@ public class WhenOnlineInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Document(id = 1755412352252L, value = "An alias command for `/when-online list` command.")
+    @CommandNode("when-online")
+    @CommandRequirement(level = 4)
+    private static int $root(@CommandSource ServerPlayerEntity player) {
+        return $list(player);
+    }
+
+
+    @Document(id = 1755412381305L, value = "List all submitted `when-online` tickets.")
     @CommandNode("when-online list")
     @CommandRequirement(level = 4)
     private static int $list(@CommandSource ServerPlayerEntity player) {
