@@ -224,7 +224,8 @@ public class CommandHelper {
 
     public static class Suggestion {
 
-        public static <T> CompletableFuture<Suggestions> makeSuggestionsCompletableFuture(@NotNull Supplier<Iterable<T>> iterableSupplier, @NotNull SuggestionsBuilder builder) {
+        public static <T> @NotNull CompletableFuture<Suggestions> makeSuggestionsCompletableFuture(@NotNull SuggestionsBuilder builder, @NotNull Supplier<Iterable<T>> iterableSupplier) {
+            /* Optimize the command suggestion. */
             Iterable<T> iterable = iterableSupplier.get();
             CommandSuggestionOptimizer
                 .optimize(iterable, builder.getRemaining())
@@ -234,7 +235,7 @@ public class CommandHelper {
         }
 
         public static <T> @NotNull SuggestionProvider<ServerCommandSource> iterable(@NotNull Supplier<Iterable<T>> iterableSupplier) {
-            return (context, builder) -> makeSuggestionsCompletableFuture(iterableSupplier, builder);
+            return (context, builder) -> makeSuggestionsCompletableFuture(builder, iterableSupplier);
         }
 
         public static <T> @NotNull SuggestionProvider<ServerCommandSource> enums(@NotNull Supplier<T[]> enumValuesSupplier) {

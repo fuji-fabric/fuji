@@ -65,7 +65,7 @@ public class NextAvailableRankNodesArgumentTypeAdapter extends BaseArgumentTypeA
                 }
 
                 List<String> ids = RankService.getNextAvailableRankNodes(player).stream().map(RankNode::getId).toList();
-                return CommandHelper.Suggestion.makeSuggestionsCompletableFuture(context, builder, () -> ids);
+                return CommandHelper.Suggestion.makeSuggestionsCompletableFuture(builder, () -> ids);
             });
     }
 
