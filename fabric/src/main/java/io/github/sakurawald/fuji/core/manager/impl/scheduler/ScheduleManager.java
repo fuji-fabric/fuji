@@ -33,9 +33,12 @@ import java.util.Set;
 public class ScheduleManager extends BaseManager {
 
     public static final String CRON_EVERY_SECOND = "* * * ? * *";
-    public static final String CRON_EVERY_MINUTE = "0 * * ? * * *";
     public static final String CRON_EVERY_FIVE_SECONDS = "0/5 * * ? * * *";
     public static final String CRON_EVERY_TEN_SECONDS = "0/10 * * ? * * *";
+
+    public static final String CRON_EVERY_MINUTE = "0 * * ? * * *";
+    public static final String CRON_EVERY_THREE_MINUTES = "0 */3 * ? * *";
+    public static final String CRON_EVERY_FIVE_MINUTES = "0 */5 * ? * *";
 
     private static final Set<BaseJob> RESCHEDULABLE_JOBS = new HashSet<>();
 

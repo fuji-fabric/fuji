@@ -87,8 +87,8 @@ public class JobsInspectionGui extends PagedGui<JobDescriptor> {
 
         Class<? extends Job> jobClass = jobDetail.getJobClass();
         lore.add(TextHelper.getTextByKey(getPlayer(), "job.class", ReflectionUtil.getSimpleClassName(jobClass)));
-        lore.add(TextHelper.getTextByKey(getPlayer(), "job.job_group", jobKey.getGroup()));
-        lore.add(TextHelper.getTextByKey(getPlayer(), "job.job_name", jobKey.getName()));
+        lore.add(TextHelper.getTextByKey(getPlayer(), "job.job_group", TextHelper.Parsers.escapeTags(jobKey.getGroup())));
+        lore.add(TextHelper.getTextByKey(getPlayer(), "job.job_name", TextHelper.Parsers.escapeTags(jobKey.getName())));
 
         /* Attach fire dates. */
         entity.getTriggersOfJob()

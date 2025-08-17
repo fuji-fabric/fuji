@@ -102,7 +102,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         return new ModuleDetailsInspectionGui(parent, player, title, entities, pageIndex);
     }
 
-    public static ModuleDetailsInspectionGui inspectModuleDetails(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString, boolean moduleEnableStatus) {
+    public static ModuleDetailsInspectionGui inspectModuleDetails(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull String modulePathString, boolean moduleEnableStatus) {
         /* Make the GUI. */
         List<GuiElementInterface> entities = new ArrayList<>();
         Text title = TextHelper.getTextByKey(player, "fuji.inspect.module_details.gui.title", modulePathString);

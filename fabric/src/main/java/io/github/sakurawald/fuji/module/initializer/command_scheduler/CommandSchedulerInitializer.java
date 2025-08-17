@@ -44,9 +44,10 @@ import java.util.List;
     4. You can `trigger` a `job` using `/command-scheduler trigger \\<job\\>` manually.
     """)
 @ColorBox(id = 1751972254866L, color = ColorBox.ColorBoxTypes.TIPS, value = """
-    ◉ You can use `cron expression` generator, to specify when the job should be triggered.
+    ◉ You can use `cron expression` generator, to specify when a `job` should be `triggered`.
     See https://www.freeformatter.com/cron-expression-generator-quartz.html
 
+    ◉ List the `next fire dates` for each defined `job`.
     Issue `/fuji inspect jobs` to see the `fire dates` of defined `jobs`.
     """)
 @TestCase(action = "Issue `/fuji reload` command.", targets = "The jobs from command_scheduler module should be re-scheduled.")
@@ -98,7 +99,8 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
             definedJob
                 .getSchedules()
                 .forEach(cron -> {
-                    CommandScheduleJob job = new CommandScheduleJob(definedJob.getName(), new JobDataMap() {
+                    String jobName = definedJob.getName() + " -> " + cron;
+                    CommandScheduleJob job = new CommandScheduleJob(jobName, new JobDataMap() {
                         {
                             this.put("job", definedJob);
                         }
