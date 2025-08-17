@@ -10,6 +10,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,11 +37,15 @@ public class ServerHelper {
         One for the client, one for the client integrated server.
         """)
     public static boolean isClientSideIntegratedServer() {
-        return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
+        return getEnvironmentType() == EnvType.CLIENT;
     }
 
     public static boolean isServerSideDedicatedServer() {
-        return FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER;
+        return getEnvironmentType() == EnvType.SERVER;
+    }
+
+    public static @NotNull EnvType getEnvironmentType() {
+        return FabricLoader.getInstance().getEnvironmentType();
     }
 
     @ForDeveloper("""
@@ -52,6 +57,17 @@ public class ServerHelper {
         if (player == null) return;
         if (!PlayerHelper.isServerPlayer(player)) return;
         runnable.run();
+    }
+
+    @ForDeveloper("""
+        If your mod is installed on the client-side, and run the single-player world.
+        Then the injected methods in brigadier will be called twice.
+        One for ClientCommandSource, one for ServerCommandSource.
+        """)
+    public static void withServerCommandSource(@NotNull Object source, @NotNull Runnable runnable) {
+        if (source instanceof ServerCommandSource) {
+            runnable.run();
+        }
     }
 
     public static @NotNull ModContainer getSelfModContainer() {
