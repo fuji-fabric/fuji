@@ -28,6 +28,7 @@ public class BanDirectSendMessageMethodCall extends BanMethodCall {
         return List.of("io.github.sakurawald.fuji.module.initializer.tester.TesterInitializer"
                 , "io.github.sakurawald.fuji.module.initializer.tester.functions.TestFunctions"
                 , "io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper"
-                , "io.github.sakurawald.fuji.core.command.descriptor.CommandDescriptor");
+                , "io.github.sakurawald.fuji.core.command.descriptor.CommandDescriptor"
+                , "io.github.sakurawald.fuji.core.command.assistant.CommandAssistant");
     }
 }

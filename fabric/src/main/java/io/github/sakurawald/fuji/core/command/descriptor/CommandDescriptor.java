@@ -584,7 +584,7 @@ public class CommandDescriptor implements SourceModuleGetter {
             /* use adapter to make the required argument builder */
             return BaseArgumentTypeAdapter.Registry
                 .getTypeAdapter(commandArgument.getArgumentType())
-                .makeRequiredArgumentBuilder(commandArgument.getArgumentName());
+                .makeComposedRequiredArgumentBuilder(commandArgument.getArgumentName());
         }
 
         @SuppressWarnings("unchecked")

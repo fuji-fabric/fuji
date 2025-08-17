@@ -121,8 +121,8 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
         RequiredArgumentBuilder<ServerCommandSource, ?> result = makeRequiredArgumentBuilder(argumentName);
 
         /* Wrap the original command suggestions provider. */
-        ComposedCommandSuggestionsProvider composedCommandSuggestionsProvider = new ComposedCommandSuggestionsProvider(result, result.getSuggestionsProvider(), CommandAssistant::assist);
-        result.suggests(composedCommandSuggestionsProvider);
+//        ComposedCommandSuggestionsProvider composedCommandSuggestionsProvider = new ComposedCommandSuggestionsProvider(result, result.getSuggestionsProvider(), CommandAssistant::assist);
+//        result.suggests(composedCommandSuggestionsProvider);
         return result;
     }
 
