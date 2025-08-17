@@ -104,9 +104,11 @@ tasks.compileJava.dependsOn(validateAccessWidener)
 tasks.register('deleteWorldLockFile') {
     outputs.upToDateWhen { false }
 
-    def file = project.rootProject.file("run/server/world/session.lock")
-    println("Delete runtime world session.lock file: " + file)
-    delete(file)
+    doFirst {
+        def file = project.rootProject.file("run/server/world/session.lock")
+        println("Delete runtime world session.lock file: " + file)
+        delete(file)
+    }
 }
 tasks.runServer.dependsOn(deleteWorldLockFile)
 
@@ -114,9 +116,11 @@ tasks.runServer.dependsOn(deleteWorldLockFile)
 tasks.register('deleteLanguageFiles') {
     outputs.upToDateWhen { false }
 
-    def file = project.rootProject.file("run/server/config/fuji/${languageDirectoryName}/")
-    println("Delete runtime language files: " + file)
-    delete(file)
+    doFirst {
+        def file = project.rootProject.file("run/server/config/fuji/${languageDirectoryName}/")
+        println("Delete runtime language files: " + file)
+        delete(file)
+    }
 }
 tasks.runServer.dependsOn(deleteLanguageFiles)
 

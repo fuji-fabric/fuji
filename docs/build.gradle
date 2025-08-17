@@ -5,10 +5,9 @@ def docsProjectRootDir = file("$projectDir")
 println("The root dir of docs project is " + docsProjectRootDir)
 
 def processTexDir = file("${layout.buildDirectory.get()}/processTeX")
-println("Copy the original docs project into the processing dir: " + processTexDir)
+println("The tex process dir is " + processTexDir)
 
 def inputTexFile = "fuji.tex"
-
 def outputTexDir = file("${layout.buildDirectory.get()}/outTeX")
 println("The build output dir is " + outputTexDir)
 
@@ -27,11 +26,6 @@ def recreateDir(File dir) {
 tasks.register('processLatex', Copy) {
     outputs.upToDateWhen { false }
 
-    /* Clean the original builds. */
-    doFirst {
-        recreateDir(processTexDir)
-    }
-
     /* Copy the original docs dir, and process it. */
     from(docsProjectRootDir)
     into("${processTexDir}")
@@ -41,6 +35,12 @@ tasks.register('processLatex', Copy) {
             'TOKEN_PROJECT_ROOT': project.rootDir.absolutePath,
             'TOKEN_TEX_OUT_DIR' : outputTexDir.toString()
     ])
+
+
+    doFirst {
+        /* Clean the original builds. */
+        recreateDir(processTexDir)
+    }
 }
 
 tasks.register('compileLatex') {

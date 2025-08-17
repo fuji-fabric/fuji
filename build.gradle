@@ -49,150 +49,153 @@ writeBuildGradlePredefine(rootProject.mcVers, rootProject.mcIndex)
 group = project.maven_group
 
 /* Configure shared parts for each sub project. */
-subprojects { p ->
+def javaProjects = ["fabric", "checker"]
+javaProjects.each { projectName ->
+    project(projectName) { p ->
 
-    /* Configure manifold gradle plugin. */
-    apply plugin: "systems.manifold.manifold-gradle-plugin"
-    manifold {
-        manifoldVersion = rootProject.manifold_version
-    }
-
-    /* Configure error prone gradle plugin. */
-    apply plugin: "net.ltgt.errorprone"
-
-    /* Configure dependencies. */
-    dependencies {
-        /* For pre-processor: manifold */
-        annotationProcessor("systems.manifold:manifold-preprocessor:${rootProject.manifold_version}")
-        testAnnotationProcessor("systems.manifold:manifold-preprocessor:${rootProject.manifold_version}")
-
-        /* For code generation: lombok */
-        compileOnly "org.projectlombok:lombok:${project.lombok_version}"
-        annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
-        testCompileOnly "org.projectlombok:lombok:${project.lombok_version}"
-        testAnnotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
-
-        /* For testing: JUnit */
-        testImplementation(platform("org.junit:junit-bom:${project.junit_version}"))
-        testImplementation("org.junit.jupiter:junit-jupiter")
-        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
-        /* For Java class file reflection: Classgraph */
-        testImplementation "io.github.classgraph:classgraph:${project.classgraph_version}"
-
-        /* For error prone gradle plugin. */
-        if (p.name != "checker") {
-            errorprone("com.google.errorprone:error_prone_core:${project.errorprone_version}")
-            errorprone(project(':checker'))
-            compileOnly("com.google.errorprone:error_prone_annotations:${project.errorprone_annotations_version}")
+        /* Configure manifold gradle plugin. */
+        apply plugin: "systems.manifold.manifold-gradle-plugin"
+        manifold {
+            manifoldVersion = rootProject.manifold_version
         }
 
-        /* For IDE analyser: jetbrains annotations. */
-        compileOnly "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
-    }
 
-    /* Replace properties for each mc version. */
-    processResources {
-        // Define the locations to inject the properties.
-        def resourceTargets = [
-                // Properties for each of the loaders
-                "fabric.mod.json",
-                "quilt.mod.json",
-                "META-INF/mods.toml",
-                "META-INF/neoforge.mods.toml",
+        /* Configure error prone gradle plugin. */
+        apply plugin: "net.ltgt.errorprone"
 
-                // The mixins for each of the loaders
-                "fuji." + p.name + ".fabricLike.mixins.json"
-        ]
-        def intoTargets = ["$buildDir/resources/main/"] // Location of the built resources folder
+        /* Configure dependencies. */
+        dependencies {
+            /* For pre-processor: manifold */
+            annotationProcessor("systems.manifold:manifold-preprocessor:${rootProject.manifold_version}")
+            testAnnotationProcessor("systems.manifold:manifold-preprocessor:${rootProject.manifold_version}")
 
-        // The left side is what gets replaced in the mod info and the right side is where to get it from in the gradle.properties
-        def replaceProperties = [
-                version                      : mod_version,
-                mod_id                       : mod_id,
-                group                        : maven_group,
-                minecraft_version            : minecraft_version,
-                compatible_minecraft_versions: compatible_minecraft_versions,
-                java_version                 : java_version,
+            /* For code generation: lombok */
+            compileOnly "org.projectlombok:lombok:${project.lombok_version}"
+            annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
+            testCompileOnly "org.projectlombok:lombok:${project.lombok_version}"
+            testAnnotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
 
-                mc_publish_dependencies_list : mc_publish_dependencies_list
-        ]
+            /* For testing: JUnit */
+            testImplementation(platform("org.junit:junit-bom:${project.junit_version}"))
+            testImplementation("org.junit.jupiter:junit-jupiter")
+            testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-        // replace any properties in the sub-projects with the values defined here
-        inputs.properties replaceProperties
-        replaceProperties.put "project", project
-        filesMatching(resourceTargets) {
-            expand replaceProperties
+            /* For Java class file reflection: Classgraph */
+            testImplementation "io.github.classgraph:classgraph:${project.classgraph_version}"
+
+            /* For error prone gradle plugin. */
+            if (p.name != "checker") {
+                errorprone("com.google.errorprone:error_prone_core:${project.errorprone_version}")
+                errorprone(project(':checker'))
+                compileOnly("com.google.errorprone:error_prone_annotations:${project.errorprone_annotations_version}")
+            }
+
+            /* For IDE analyser: jetbrains annotations. */
+            compileOnly "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
         }
 
-        intoTargets.each { target ->
-            if (file(target).exists()) {
-                copy {
-                    from(sourceSets.main.resources) {
-                        include resourceTargets
-                        expand replaceProperties
+        /* Replace properties for each mc version. */
+        processResources {
+            // Define the locations to inject the properties.
+            def resourceTargets = [
+                    // Properties for each of the loaders
+                    "fabric.mod.json",
+                    "quilt.mod.json",
+                    "META-INF/mods.toml",
+                    "META-INF/neoforge.mods.toml",
+
+                    // The mixins for each of the loaders
+                    "fuji." + p.name + ".fabricLike.mixins.json"
+            ]
+            def intoTargets = ["$buildDir/resources/main/"] // Location of the built resources folder
+
+            // The left side is what gets replaced in the mod info and the right side is where to get it from in the gradle.properties
+            def replaceProperties = [
+                    version                      : mod_version,
+                    mod_id                       : mod_id,
+                    group                        : maven_group,
+                    minecraft_version            : minecraft_version,
+                    compatible_minecraft_versions: compatible_minecraft_versions,
+                    java_version                 : java_version,
+
+                    mc_publish_dependencies_list : mc_publish_dependencies_list
+            ]
+
+            // replace any properties in the sub-projects with the values defined here
+            inputs.properties replaceProperties
+            replaceProperties.put "project", project
+            filesMatching(resourceTargets) {
+                expand replaceProperties
+            }
+
+            intoTargets.each { target ->
+                if (file(target).exists()) {
+                    copy {
+                        from(sourceSets.main.resources) {
+                            include resourceTargets
+                            expand replaceProperties
+                        }
+                        into target
                     }
-                    into target
                 }
             }
         }
 
-    }
+        /* Configure Java compiler. */
+        tasks.withType(JavaCompile).configureEach { task ->
 
-    /* Configure Java compiler. */
-    tasks.withType(JavaCompile).configureEach { task ->
+            options.release = rootProject.java_version as Integer
+            options.encoding = "UTF-8"
 
-        options.release = rootProject.java_version as Integer
-        options.encoding = "UTF-8"
+            /* Configure error-prone gradle plugin. */
+            options.errorprone.excludedPaths = ".*/module/mixin/.*"
+            options.errorprone {
+                /* I would like to include the Minecraft Items constants in the enum class. */
+                disable("ImmutableEnumChecker")
 
-        /* Configure error-prone gradle plugin. */
-        options.errorprone.excludedPaths = ".*/module/mixin/.*"
-        options.errorprone {
-            /* I would like to include the Minecraft Items constants in the enum class. */
-            disable("ImmutableEnumChecker")
+                /* For readability, and Java version compatibility. */
+                disable("StatementSwitchToExpressionSwitch")
 
-            /* For readability, and Java version compatibility. */
-            disable("StatementSwitchToExpressionSwitch")
+                /* For readability, the exception is handled by the helper function. */
+                disable("FutureReturnValueIgnored")
 
-            /* For readability, the exception is handled by the helper function. */
-            disable("FutureReturnValueIgnored")
+                /* Let me compare the memory address. */
+                disable("ReferenceEquality")
 
-            /* Let me compare the memory address. */
-            disable("ReferenceEquality")
+                /* Conflict with the manifold pre-processor, hard to manage. */
+                disable("UnusedVariable")
+                disable("UnusedMethod")
+                disable("DoNotCallSuggester")
 
-            /* Conflict with the manifold pre-processor, hard to manage. */
-            disable("UnusedVariable")
-            disable("UnusedMethod")
-            disable("DoNotCallSuggester")
+                /* Let me get the name from the AST. */
+                disable("TreeToString")
 
-            /* Let me get the name from the AST. */
-            disable("TreeToString")
+                /* Use the double brace initialization. */
+                // 1. For readability, the syntax is much simple and clear. A call to custom collection factory method to make a mutable collection is complex.
+                // 2. The non-static inner class does capture the reference of enclosing outer class, but it's expected, the lifespans of outer class and its inner class fields are the same in this use-case. (Remember not to leak the reference of the inner class)
+                // Note that for non-static inner class, the Gson will calls the field initializer for that inner class N times during the serialization. (Where N = the depth of that field)
+                disable("DoubleBraceInitialization")
+            }
 
-            /* Use the double brace initialization. */
-            // 1. For readability, the syntax is much simple and clear. A call to custom collection factory method to make a mutable collection is complex.
-            // 2. The non-static inner class does capture the reference of enclosing outer class, but it's expected, the lifespans of outer class and its inner class fields are the same in this use-case. (Remember not to leak the reference of the inner class)
-            // Note that for non-static inner class, the Gson will calls the field initializer for that inner class N times during the serialization. (Where N = the depth of that field)
-            disable("DoubleBraceInitialization")
+            configure(options) {
+                /* Include the 'parameter name' in compiled .class file, for command annotation processor reflection */
+                options.compilerArgs << "-parameters"
+
+                /* Keep the parameter names for command annotation processor. */
+                options.compilerArgs << "-Xlint:-unchecked"
+
+                /* Fail the compiling if there is any warning. */
+                options.compilerArgs << "-Werror"
+            }
         }
 
-        configure(options) {
-            /* Include the 'parameter name' in compiled .class file, for command annotation processor reflection */
-            options.compilerArgs << "-parameters"
-
-            /* Keep the parameter names for command annotation processor. */
-            options.compilerArgs << "-Xlint:-unchecked"
-
-            /* Fail the compiling if there is any warning. */
-            options.compilerArgs << "-Werror"
-        }
-    }
-
-    /* Copy LICENSE file into jar file. */
-    jar {
-        outputs.upToDateWhen { false }
-        def licenseFilePath = rootProject.file("LICENSE")
-        from(licenseFilePath) {
-            rename { "${it}" }
+        /* Copy LICENSE file into jar file. */
+        jar {
+            outputs.upToDateWhen { false }
+            def licenseFilePath = rootProject.file("LICENSE")
+            from(licenseFilePath) {
+                rename { "${it}" }
+            }
         }
     }
 }
@@ -202,7 +205,6 @@ allprojects { p ->
     apply plugin: "maven-publish"
 
     repositories {
-        // The central repo.
         mavenCentral()
 
         google()
@@ -229,10 +231,13 @@ allprojects { p ->
 
     /* Copy resource files. */
     tasks.register('copyCommonResources', Copy) {
-        println("Copy all resource files in :common project.")
         from project(":common").file("src/main/resources/")
         into(file(p.file("build/resources/main/")))
         exclude '**/*.accesswidener'
+
+        doFirst {
+            println("Copy all resource files in :common project.")
+        }
     }
 
     tasks.register('copyLanguageResources') {
@@ -240,39 +245,45 @@ allprojects { p ->
     }
 
     tasks.register('copyPullFromCrowdinResources', Copy) {
-        println("Copy pull-from-crowdin language files from source to destination.")
-
         def sourceDir = project(":crowdin").file("pull-from-crowdin/")
-        println("The source dir: " + sourceDir)
-
         def destinationDir = file("${layout.buildDirectory.get()}/resources/main/${languageDirectoryName}/")
-        println("The destination dir: " + destinationDir)
-
         from(sourceDir)
         into(destinationDir)
         include "**/*.json"
+
+        doFirst {
+            println("Copy pull-from-crowdin language files from source to destination.")
+            println("The source dir: " + sourceDir)
+            println("The destination dir: " + destinationDir)
+        }
     }
 
     tasks.register('copyPushToCrowdinResources', Copy) {
         mustRunAfter(tasks.named('copyPullFromCrowdinResources'))
-        println("Copy push-to-crowdin language files from source to destination.")
 
         def sourceDir = project(":crowdin").file("push-to-crowdin/")
-        println("The source dir: " + sourceDir)
 
         def destinationDir = file("${layout.buildDirectory.get()}/resources/main/${languageDirectoryName}/")
-        println("The destination dir: " + destinationDir)
 
         from(sourceDir)
         into(destinationDir)
         include "**/*.json"
+
+        doFirst {
+            println("Copy push-to-crowdin language files from source to destination.")
+            println("The source dir: " + sourceDir)
+            println("The destination dir: " + destinationDir)
+        }
     }
 
     tasks.register('copyAccessWidenerResources', Copy) {
-        println("Copy accesswidener file for specified MC version.")
         from project(":common").file("src/main/resources/${access_widener_version}.fuji.accesswidener")
         into(file(p.file("build/resources/main")))
         rename "${access_widener_version}.fuji.accesswidener", "fuji.accesswidener"
+
+        doFirst {
+            println("Copy accesswidener file for specified MC version.")
+        }
     }
 
     /* Configure test framework. */

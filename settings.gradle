@@ -63,7 +63,7 @@ def loadProperties() {
 
 	props.each { prop ->
 		gradle.ext.set(prop.key, prop.value)
-		println "Add prop in gradle.ext [key:" + prop.key + ", value:" + prop.value + "]"
+//		println "Add prop in gradle.ext [key:" + prop.key + ", value:" + prop.value + "]"
 	}
 	gradle.ext.mcVers = mcVers
 	gradle.ext.mcIndex = mcIndex

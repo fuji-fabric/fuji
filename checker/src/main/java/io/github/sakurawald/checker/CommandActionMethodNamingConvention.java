@@ -5,11 +5,9 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.matchers.Description;
-import com.google.googlejavaformat.Op;
 import com.sun.source.tree.MethodTree;
 
 import io.github.sakurawald.auxiliary.CheckerUtil;
-import java.util.Optional;
 
 @AutoService(BugChecker.class)
 @BugPattern(
