@@ -1,28 +1,29 @@
 package io.github.sakurawald.fuji.module.initializer.command_scheduler.structure;
 
 import com.google.gson.annotations.SerializedName;
+import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.module.initializer.command_scheduler.CommandSchedulerInitializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Random;
 
 @Data
 @AllArgsConstructor
-public class Job {
+public class CommandSchedulerJobDescriptor {
+
+    boolean enable;
 
     @Document(id = 1751826743418L, value = """
         The `unique` name of this `job`.
         """)
     String name;
-
-    boolean enable;
 
     @Document(id = 1751826745342L, value = """
         Allowed left times to run.
@@ -44,22 +45,24 @@ public class Job {
     @SerializedName(value = "commands_groups", alternate = "commands_list")
     List<List<String>> commands_groups;
 
-    // for implement simplification, the job will always be scheduled, and the trigger() will always be called.
+    @ForDeveloper("For implement simplification, the job will always be scheduled, and the trigger() will always be called.")
     public void tryTrigger() {
-        /* Filter for enable option. */
-        if (!this.enable) return;
+        /* Verify the enable property. */
+        if (!this.enable) {
+            return;
+        }
 
-        /* Filter for leftTimes option. */
+        /* Verify the remaining runs property. */
         if (remainingRuns <= 0) {
             return;
         }
         remainingRuns--;
 
-        /* Save storage. */
+        /* Update storage. */
         CommandSchedulerInitializer.scheduler.writeStorage();
 
         /* Execute specified commands. */
-        List<String> commands = this.commands_groups.get(new Random().nextInt(this.commands_groups.size()));
+        List<String> commands = RandomUtil.drawList(this.commands_groups);
         LogUtil.info("Execute commands in job `{}`: {}", this.getName(), commands);
         ServerHelper.executeSync(() -> CommandExecutor.execute(ExtendedCommandSource.asConsole(ServerHelper.getServer().getCommandSource()), commands));
     }

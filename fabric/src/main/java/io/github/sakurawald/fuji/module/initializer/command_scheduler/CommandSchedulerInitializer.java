@@ -16,7 +16,7 @@ import io.github.sakurawald.fuji.module.initializer.command_scheduler.command.ar
 import io.github.sakurawald.fuji.module.initializer.command_scheduler.config.model.CommandSchedulerConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_scheduler.gui.JobGui;
 import io.github.sakurawald.fuji.module.initializer.command_scheduler.job.CommandScheduleJob;
-import io.github.sakurawald.fuji.module.initializer.command_scheduler.structure.Job;
+import io.github.sakurawald.fuji.module.initializer.command_scheduler.structure.CommandSchedulerJobDescriptor;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.quartz.JobDataMap;
 
@@ -61,8 +61,9 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
     @Document(id = 1751826757048L, value = "List all defined jobs.")
     @CommandNode("list")
     private static int $list(@CommandSource ServerPlayerEntity player) {
-        List<Job> jobs = scheduler.model().jobs;
-        new JobGui(player, jobs, 0).open();
+        List<CommandSchedulerJobDescriptor> jobs = scheduler.model().jobs;
+        new JobGui(player, jobs, 0)
+            .open();
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -72,7 +73,7 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
         scheduler.model().jobs.stream()
             .filter(it -> it.getName().equals(jobName.getValue()))
             .findFirst()
-            .ifPresent(Job::tryTrigger);
+            .ifPresent(CommandSchedulerJobDescriptor::tryTrigger);
 
         return CommandHelper.Return.SUCCESS;
     }

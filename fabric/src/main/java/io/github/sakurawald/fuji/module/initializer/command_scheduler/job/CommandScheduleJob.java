@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.command_scheduler.job;
 
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.job.abst.CronJob;
-import io.github.sakurawald.fuji.module.initializer.command_scheduler.structure.Job;
+import io.github.sakurawald.fuji.module.initializer.command_scheduler.structure.CommandSchedulerJobDescriptor;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.quartz.JobDataMap;
@@ -28,7 +28,7 @@ public class CommandScheduleJob extends CronJob {
 
     @Override
     public void execute(@NotNull JobExecutionContext context) {
-        Job job = (Job) context.getJobDetail().getJobDataMap().get("job");
+        CommandSchedulerJobDescriptor job = (CommandSchedulerJobDescriptor) context.getJobDetail().getJobDataMap().get("job");
         job.tryTrigger();
     }
 }

@@ -9,7 +9,7 @@ import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgument
 import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.module.initializer.command_scheduler.CommandSchedulerInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_scheduler.command.argument.wrapper.JobName;
-import io.github.sakurawald.fuji.module.initializer.command_scheduler.structure.Job;
+import io.github.sakurawald.fuji.module.initializer.command_scheduler.structure.CommandSchedulerJobDescriptor;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class JobNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     public @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName).suggests(CommandHelper.Suggestion.iterable(
-            () -> CommandSchedulerInitializer.scheduler.model().jobs.stream().map(Job::getName).toList()
+            () -> CommandSchedulerInitializer.scheduler.model().jobs.stream().map(CommandSchedulerJobDescriptor::getName).toList()
         ));
     }
 }

@@ -6,7 +6,7 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
-import io.github.sakurawald.fuji.module.initializer.command_scheduler.structure.Job;
+import io.github.sakurawald.fuji.module.initializer.command_scheduler.structure.CommandSchedulerJobDescriptor;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -14,19 +14,19 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class JobGui extends PagedGui<Job> {
+public class JobGui extends PagedGui<CommandSchedulerJobDescriptor> {
 
-    public JobGui(ServerPlayerEntity player, @NotNull List<Job> entities, int pageIndex) {
+    public JobGui(ServerPlayerEntity player, @NotNull List<CommandSchedulerJobDescriptor> entities, int pageIndex) {
         super(null, player, TextHelper.getTextByKey(player, "job.list.gui.title"), entities, pageIndex);
     }
 
     @Override
-    protected PagedGui<Job> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Job> entities, int pageIndex) {
+    protected PagedGui<CommandSchedulerJobDescriptor> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<CommandSchedulerJobDescriptor> entities, int pageIndex) {
         return new JobGui(player, entities, pageIndex);
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull Job entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull CommandSchedulerJobDescriptor entity) {
         return new GuiElementBuilder()
             .setName(Text.literal(entity.getName()))
             .setItem(GuiHelper.Material.fromBooleanValue(entity.isEnable()))
