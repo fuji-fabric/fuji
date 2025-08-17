@@ -27,20 +27,22 @@ public class Job {
     @Document(id = 1751826745342L, value = """
         Allowed left times to run.
         """)
-    @SerializedName(value = "left_times", alternate = "left_trigger_times")
-    int leftTimes;
+    @SerializedName(value = "remaining_runs", alternate = {"left_trigger_times", "left_times"})
+    int remainingRuns;
 
     @Document(id = 1751826746949L, value = """
         Defined `cron` expression list.
 
         Any met `cron` expression can `trigger` this `job`.
         """)
-    List<String> crons;
+        @SerializedName(value = "schedules", alternate = "crons")
+    List<String> schedules;
 
     @Document(id = 1751826749083L, value = """
         The commands to execute when the `job` is `triggered`.
         """)
-    List<List<String>> commands_list;
+    @SerializedName(value = "commands_groups", alternate = "commands_list")
+    List<List<String>> commands_groups;
 
     // for implement simplification, the job will always be scheduled, and the trigger() will always be called.
     public void tryTrigger() {
@@ -48,16 +50,16 @@ public class Job {
         if (!this.enable) return;
 
         /* Filter for leftTimes option. */
-        if (leftTimes <= 0) {
+        if (remainingRuns <= 0) {
             return;
         }
-        leftTimes--;
+        remainingRuns--;
 
         /* Save storage. */
         CommandSchedulerInitializer.scheduler.writeStorage();
 
         /* Execute specified commands. */
-        List<String> commands = this.commands_list.get(new Random().nextInt(this.commands_list.size()));
+        List<String> commands = this.commands_groups.get(new Random().nextInt(this.commands_groups.size()));
         LogUtil.info("Execute commands in job `{}`: {}", this.getName(), commands);
         ServerHelper.executeSync(() -> CommandExecutor.execute(ExtendedCommandSource.asConsole(ServerHelper.getServer().getCommandSource()), commands));
     }

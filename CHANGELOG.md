@@ -2,7 +2,5 @@
 
 ## Changelog
 
-
-This release improves the build process and includes minor bug fixes.
-
-- [core] fix: the `broadcast text` should respect `--silent` and `--stdout` flags.
+- [command_schedule] improvements to this module.
+  - feature: optimize the `default config` for this module, provide an intuitive default example, make it easier to understand.

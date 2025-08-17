@@ -85,7 +85,7 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
         /* Schedule jobs. */
         scheduler.model().jobs.forEach(definedJob -> {
             definedJob
-                .getCrons()
+                .getSchedules()
                 .forEach(cron -> {
                     CommandScheduleJob job = new CommandScheduleJob(definedJob.getName(), new JobDataMap() {
                         {

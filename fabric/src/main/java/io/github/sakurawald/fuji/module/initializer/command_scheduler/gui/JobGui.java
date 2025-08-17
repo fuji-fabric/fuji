@@ -32,7 +32,7 @@ public class JobGui extends PagedGui<Job> {
             .setItem(GuiHelper.Material.fromBooleanValue(entity.isEnable()))
             .setLore(List.of(
                 TextHelper.getTextByKey(getPlayer(), "job.props.enabled", entity.isEnable())
-                , TextHelper.getTextByKey(getPlayer(), "job.props.left_times", entity.getLeftTimes())
+                , TextHelper.getTextByKey(getPlayer(), "job.props.left_times", entity.getRemainingRuns())
             ))
             .build();
     }
