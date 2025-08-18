@@ -10,8 +10,13 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.command.assistant.structure.AvailableNextCommandPath;
+import io.github.sakurawald.fuji.core.command.assistant.structure.AvailableNextCommandPathList;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.structure.Pair;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.server.command.ServerCommandSource;
@@ -20,34 +25,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class CommandAssistant {
 
-    private static void inspectCommandContext(@NotNull CommandContext<ServerCommandSource> commandContext, @NotNull String walkingPath) {
-        LogUtil.info(LogUtil.AnsiColor.BLUE + "◉ Inspect command context {} (path = {})", commandContext, walkingPath);
-        LogUtil.info("input string = {}", commandContext.getInput());
-        LogUtil.info("input string range = {}", commandContext.getRange());
-        LogUtil.info("command action = {}", commandContext.getCommand());
-        LogUtil.info("root command node = {}", commandContext.getRootNode());
-        LogUtil.info("parsed command nodes = {}", commandContext.getNodes());
-        LogUtil.info("child command context = {}", commandContext.getChild());
-        if (commandContext.getChild() != null) {
-            inspectCommandContext(commandContext.getChild(), walkingPath + ".child");
-        }
-    }
-
-    private static void inspectSuggestionsBuilder(@NotNull SuggestionsBuilder builder) {
-        LogUtil.info(LogUtil.AnsiColor.YELLOW + "◉ Inspect suggestions builder {}", builder);
-        LogUtil.info("input string = {}", builder.getInput());
-        LogUtil.info("remaining string = {}", builder.getRemaining());
-        LogUtil.info("start = {}", builder.getStart());
-    }
-
-    private static void inspectCommandNode(@NotNull CommandNode<ServerCommandSource> commandNode) {
-        LogUtil.info(LogUtil.AnsiColor.GREEN + "◉ Inspect command node {}", commandNode);
-        LogUtil.info("name = {}", commandNode.getName());
-        LogUtil.info("command action = {}", commandNode.getCommand());
-        LogUtil.info("redirect command node = {}", commandNode.getRedirect());
-        LogUtil.info("is fork = {}", commandNode.isFork());
-        LogUtil.info("children command nodes = {}", commandNode.getChildren());
-    }
+    private static final Map<String, AvailableNextCommandPathList> DEBOUNCE_AVAILABLE_NEXT_COMMAND_PATHS = new HashMap<>();
+    private static final Map<String, String> DEBOUNCE_COMPLETED_COMMAND_PATH = new HashMap<>();
 
     private static String getFriendlyName(@NotNull CommandNode<ServerCommandSource> commandNode) {
         if (commandNode instanceof ArgumentCommandNode<ServerCommandSource, ?>) {
@@ -101,17 +80,29 @@ public class CommandAssistant {
         return new Pair<>(rootCommandContext, rootCommandContext.getNodes().getLast().getNode());
     }
 
-    private static void printUsageForCommandNode(@NotNull ServerCommandSource source, @NotNull CommandContext<ServerCommandSource> commandContext, @NotNull CommandNode<ServerCommandSource> targetCommandNode, @NotNull SuggestionsBuilder builder) {
-        inspectCommandNode(targetCommandNode);
-        inspectSuggestionsBuilder(builder);
+    @SuppressWarnings("CodeBlock2Expr")
+    private static @NotNull String getParsedCommandPath(@NotNull CommandContext<ServerCommandSource> rootCommandContext) {
+        StringBuilder sb = new StringBuilder("/");
+        List<CommandContext<ServerCommandSource>> commandContexts = makeCommandContextChain(rootCommandContext);
 
-        /* Print the header. */
-        Text headerText = TextHelper.getTextByKey(source, "command.assistant.header");
-        source.sendMessage(headerText);
+        commandContexts
+                .forEach(commandContext -> {
+                    commandContext.getNodes().forEach(parsedCommandNode -> {
+                        sb.append(getFriendlyName(parsedCommandNode.getNode())).append(" ");
+                    });
+                });
+        return sb.toString();
+    }
 
-        /* Print the body. */
+    private static void printUsageForCommandNode(@NotNull ServerCommandSource source, @NotNull CommandContext<ServerCommandSource> rootCommandContext, @NotNull CommandContext<ServerCommandSource> commandContext, @NotNull CommandNode<ServerCommandSource> targetCommandNode, @NotNull SuggestionsBuilder builder) {
+        Inspector.inspectCommandNode(targetCommandNode);
+        Inspector.inspectSuggestionsBuilder(builder);
+
+        /* Make the output. */
+        AvailableNextCommandPathList previousAvailableNextCommandPathList = DEBOUNCE_AVAILABLE_NEXT_COMMAND_PATHS.getOrDefault(source.getName(), new AvailableNextCommandPathList());
+        AvailableNextCommandPathList currentAvailableNextCommandPathList = new AvailableNextCommandPathList();
+
         String inputString = commandContext.getInput();
-
         Map<CommandNode<ServerCommandSource>, String> usage = CommandHelper.getCommandDispatcher().getSmartUsage(targetCommandNode, source);
         for (Map.Entry<CommandNode<ServerCommandSource>, String> entry : usage.entrySet()) {
             CommandNode<ServerCommandSource> key = entry.getKey();
@@ -126,31 +117,62 @@ public class CommandAssistant {
                 infixString = getFriendlyName(commandContext.getNodes().getLast().getNode());
             }
 
-            LogUtil.info("key = {}", key);
             String suffixString = " " + value;
 
-            LogUtil.info("prefix string = {}", prefixString);
-            LogUtil.info("infix string = {}", infixString);
-            LogUtil.info("suffixString = {}", suffixString);
+            /* Update the output. */
+            prefixString = prefixString.trim();
+            infixString = infixString.trim();
+            suffixString = suffixString.trim();
+            currentAvailableNextCommandPathList.getEntries().add(new AvailableNextCommandPath(prefixString, infixString, suffixString));
+        }
 
-            Text textByValue = TextHelper.getTextByKey(source, "command.assistant.incomplete"
-                    , TextHelper.Parsers.escapeTags(prefixString)
-                    , TextHelper.Parsers.escapeTags(infixString)
-                    , TextHelper.Parsers.escapeTags(suffixString));
-            source.sendMessage(textByValue);
+        /* Send the output. */
+        if (!currentAvailableNextCommandPathList.equals(previousAvailableNextCommandPathList)) {
+            DEBOUNCE_AVAILABLE_NEXT_COMMAND_PATHS.put(source.getName(), currentAvailableNextCommandPathList);
+            DEBOUNCE_COMPLETED_COMMAND_PATH.remove(source.getName());
+
+            /* Print the header. */
+            Text headerText = TextHelper.getTextByKey(source, "command.assistant.header");
+            source.sendMessage(headerText);
+
+            /* Print the body. */
+            currentAvailableNextCommandPathList
+                    .getEntries()
+                    .forEach(entry -> {
+                        Text possiblePathText = TextHelper.getTextByKey(source, "command.assistant.incomplete"
+                                , TextHelper.Parsers.escapeTags(entry.getPrefixString())
+                                , TextHelper.Parsers.escapeTags(entry.getInfixString())
+                                , TextHelper.Parsers.escapeTags(entry.getSuffixString()));
+                        source.sendMessage(possiblePathText);
+                    });
+
         }
 
         /* Check if current command node is executable. */
         if (targetCommandNode.getCommand() != null) {
-            Text text = TextHelper.getTextByKey(source, "command.assistant.complete", TextHelper.Parsers.escapeTags(inputString));
-            source.sendMessage(text);
+            String previousCompleteCommandPath = DEBOUNCE_COMPLETED_COMMAND_PATH.getOrDefault(source.getName(), "");
+            String currentCompletedCommandPath = getParsedCommandPath(rootCommandContext);
+            if (!currentCompletedCommandPath.equals(previousCompleteCommandPath)) {
+                DEBOUNCE_COMPLETED_COMMAND_PATH.put(source.getName(), currentCompletedCommandPath);
+                Text text = TextHelper.getTextByKey(source, "command.assistant.complete", TextHelper.Parsers.escapeTags(currentCompletedCommandPath));
+                source.sendMessage(text);
+            }
         }
     }
 
-
-
+    @TestCase(action = "Test the command assistant.", targets = {
+            "Change the `cursor` using mouse click, and see the output."
+            , "Test the assistant with command redirect"
+            , "Test the assistant at the beginning of the token"
+            , "Test the assistant at the end of the token"
+    })
+    @ForDeveloper("""
+            The command suggestions provider will be called:
+            1. A new character is inserted or deleted.
+            2. The position of the cursor is changed.
+            """)
     public static void assist(@NotNull CommandContext<ServerCommandSource> commandContext, @NotNull SuggestionsBuilder builder) {
-        inspectCommandContext(commandContext, "current");
+        Inspector.inspectCommandContext(commandContext, "current");
         Pair<CommandContext<ServerCommandSource>, CommandNode<ServerCommandSource>> pair = getLastParsedCommandNode(commandContext);
         CommandContext<ServerCommandSource> targetCommandContext = pair.getKey();
         CommandNode<ServerCommandSource> targetCommandNode = pair.getValue();
@@ -163,7 +185,40 @@ public class CommandAssistant {
 
         /* Print command usage for target command node. */
         ServerCommandSource source = commandContext.getSource();
-        printUsageForCommandNode(source, targetCommandContext, targetCommandNode, builder);
+        printUsageForCommandNode(source, commandContext, targetCommandContext, targetCommandNode, builder);
+    }
+
+
+    public static class Inspector {
+
+        private static void inspectCommandContext(@NotNull CommandContext<ServerCommandSource> commandContext, @NotNull String walkingPath) {
+            LogUtil.info(LogUtil.AnsiColor.BLUE + "◉ Inspect command context {} (path = {})", commandContext, walkingPath);
+            LogUtil.info("input string = {}", commandContext.getInput());
+            LogUtil.info("input string range = {}", commandContext.getRange());
+            LogUtil.info("command action = {}", commandContext.getCommand());
+            LogUtil.info("root command node = {}", commandContext.getRootNode());
+            LogUtil.info("parsed command nodes = {}", commandContext.getNodes());
+            LogUtil.info("child command context = {}", commandContext.getChild());
+            if (commandContext.getChild() != null) {
+                inspectCommandContext(commandContext.getChild(), walkingPath + ".child");
+            }
+        }
+
+        private static void inspectSuggestionsBuilder(@NotNull SuggestionsBuilder builder) {
+            LogUtil.info(LogUtil.AnsiColor.YELLOW + "◉ Inspect suggestions builder {}", builder);
+            LogUtil.info("input string = {}", builder.getInput());
+            LogUtil.info("remaining string = {}", builder.getRemaining());
+            LogUtil.info("start = {}", builder.getStart());
+        }
+
+        private static void inspectCommandNode(@NotNull CommandNode<ServerCommandSource> commandNode) {
+            LogUtil.info(LogUtil.AnsiColor.GREEN + "◉ Inspect command node {}", commandNode);
+            LogUtil.info("name = {}", commandNode.getName());
+            LogUtil.info("command action = {}", commandNode.getCommand());
+            LogUtil.info("redirect command node = {}", commandNode.getRedirect());
+            LogUtil.info("is fork = {}", commandNode.isFork());
+            LogUtil.info("children command nodes = {}", commandNode.getChildren());
+        }
     }
 
 }
