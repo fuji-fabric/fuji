@@ -1,11 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.tester;
 
 
-import com.google.common.collect.Iterables;
-import com.google.gson.JsonObject;
-import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.ParseResults;
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -14,11 +9,9 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
-import io.github.sakurawald.fuji.core.config.model.ConfigModel;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 
-import java.util.Map;
 import lombok.SneakyThrows;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -37,38 +30,9 @@ public class TesterInitializer extends ModuleInitializer {
     @SneakyThrows(Exception.class)
     @CommandNode("run")
     private static int $run(@CommandSource ServerCommandSource source, GreedyString commandLine) {
-//        callSmartUsage(source, commandLine);
 //        JsonObject jsonObject = new JsonObject();
 //        boolean empty = jsonObject.isEmpty();
         return CommandHelper.Return.SUCCESS;
-    }
-
-    private static void callAllUsage(ServerCommandSource source, GreedyString commandLine) {
-        CommandDispatcher<ServerCommandSource> commandDispatcher = CommandHelper.getCommandDispatcher();
-        ParseResults<ServerCommandSource> parseResults = commandDispatcher.parse(commandLine.getValue(), source);
-        parseResults.getExceptions().forEach((k, v) -> {
-            source.sendMessage(Text.literal("k = %s v = %s".formatted(k, v)));
-        });
-
-        String[] map = commandDispatcher.getAllUsage(Iterables.getLast(parseResults.getContext().getNodes()).getNode(), source, true);
-        for (String string : map) {
-            source.sendMessage(Text.literal("/" + parseResults.getReader().getString() + " " + string));
-        }
-
-    }
-
-    private static void callSmartUsage(ServerCommandSource source, GreedyString commandLine) {
-        CommandDispatcher<ServerCommandSource> commandDispatcher = CommandHelper.getCommandDispatcher();
-        ParseResults<ServerCommandSource> parseResults = commandDispatcher.parse(commandLine.getValue(), source);
-        parseResults.getExceptions().forEach((k, v) -> {
-            source.sendMessage(Text.literal("k = %s v = %s".formatted(k, v)));
-        });
-
-        Map<com.mojang.brigadier.tree.CommandNode<ServerCommandSource>, String> map = commandDispatcher.getSmartUsage(Iterables.getLast(parseResults.getContext().getNodes()).getNode(), source);
-        for (String string : map.values()) {
-            source.sendMessage(Text.literal("/" + parseResults.getReader().getString() + " " + string));
-        }
-
     }
 
     @CommandNode("split")
