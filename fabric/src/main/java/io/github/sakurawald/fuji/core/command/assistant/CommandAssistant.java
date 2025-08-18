@@ -41,10 +41,15 @@ public class CommandAssistant {
     }
 
     private static boolean hasUnparsedCharacters(@NotNull CommandContext<ServerCommandSource> commandContext, @NotNull SuggestionsBuilder builder) {
-        ParsedCommandNode<ServerCommandSource> lastCommandNode = commandContext.getNodes().getLast();
+        ParsedCommandNode<ServerCommandSource> lastCommandNode = getLastParsedCommandNode(commandContext);
         int parsedNodeStart = lastCommandNode.getRange().getStart();
         int suggestionsBuilderStart = builder.getStart();
         return parsedNodeStart != suggestionsBuilderStart;
+    }
+
+    private static ParsedCommandNode<ServerCommandSource> getLastParsedCommandNode(@NotNull CommandContext<ServerCommandSource> commandContext) {
+        List<ParsedCommandNode<ServerCommandSource>> nodes = commandContext.getNodes();
+        return nodes.get(nodes.size() - 1);
     }
 
     @ForDeveloper("A child command context will be made, if there is any command redirect or command fork.")
@@ -62,7 +67,7 @@ public class CommandAssistant {
         return commandContextChain;
     }
 
-    private static @NotNull Pair<CommandContext<ServerCommandSource>, CommandNode<ServerCommandSource>> getLastParsedCommandNode(@NotNull CommandContext<ServerCommandSource> rootCommandContext) {
+    private static @NotNull Pair<CommandContext<ServerCommandSource>, CommandNode<ServerCommandSource>> getLastParsedCommandNodeRecursively(@NotNull CommandContext<ServerCommandSource> rootCommandContext) {
         List<CommandContext<ServerCommandSource>> commandContexts = makeCommandContextChain(rootCommandContext);
 
         for (int i = commandContexts.size() - 1; i >= 0; i--) {
@@ -78,7 +83,7 @@ public class CommandAssistant {
         }
 
         LogUtil.warn("Failed to get last parsed command node from command context chain, falling back to the last command nodes of the root command context {}.", commandContexts);
-        return new Pair<>(rootCommandContext, rootCommandContext.getNodes().getLast().getNode());
+        return new Pair<>(rootCommandContext, getLastParsedCommandNode(rootCommandContext).getNode());
     }
 
     @SuppressWarnings("CodeBlock2Expr")
@@ -111,7 +116,7 @@ public class CommandAssistant {
             /* Compute infix string. */
             String infixString = "...";
             if (!hasUnparsedCharacters(commandContext, builder)) {
-                infixString = toStringByArgumentType(commandContext.getNodes().getLast().getNode());
+                infixString = toStringByArgumentType(getLastParsedCommandNode(commandContext).getNode());
             }
 
             /* Compute suffix string. */
@@ -178,7 +183,7 @@ public class CommandAssistant {
     public static void assist(@NotNull CommandContext<ServerCommandSource> rootCommandContext, @NotNull SuggestionsBuilder builder) {
         Inspector.inspectCommandContext(rootCommandContext, "current");
 
-        Pair<CommandContext<ServerCommandSource>, CommandNode<ServerCommandSource>> pair = getLastParsedCommandNode(rootCommandContext);
+        Pair<CommandContext<ServerCommandSource>, CommandNode<ServerCommandSource>> pair = getLastParsedCommandNodeRecursively(rootCommandContext);
         CommandContext<ServerCommandSource> targetCommandContext = pair.getKey();
         CommandNode<ServerCommandSource> targetCommandNode = pair.getValue();
 
