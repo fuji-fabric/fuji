@@ -148,7 +148,7 @@
 - Target: Test the assistant with command redirect
 - Target: Test the assistant at the beginning of the token
 - Target: Test the assistant at the end of the token
-- Target: Test the optional argument: `/back 3`
+- Target: Test the assistant with the optional argument: `/back 3`
 
 [Test Case]
 - Module: disabler.move_wrongly_disabler

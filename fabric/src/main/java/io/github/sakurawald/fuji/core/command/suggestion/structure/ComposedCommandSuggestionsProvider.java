@@ -6,6 +6,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import io.github.sakurawald.fuji.core.auxiliary.AsyncUtil;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import lombok.Data;
@@ -21,12 +22,17 @@ public class ComposedCommandSuggestionsProvider implements SuggestionProvider<Se
     final @NotNull BiConsumer<CommandContext<ServerCommandSource>, SuggestionsBuilder> runnable;
 
     @Override
-    public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) throws CommandSyntaxException {
-        runnable.accept(context, builder);
+    public @NotNull CompletableFuture<Suggestions> getSuggestions(@NotNull CommandContext<ServerCommandSource> context, @NotNull SuggestionsBuilder builder) throws CommandSyntaxException {
+        /* Submit the command assistant task. */
+        AsyncUtil.runAsyncAndHandleExceptions(() -> {
+            this.runnable.accept(context, builder);
+        });
 
-        if (delegate == null) {
+
+        /* Create the command suggestions future. */
+        if (this.delegate == null) {
             // List the suggestions from the argument type, if no custom suggestions provider specified.
-            return argumentBuilder.getType().listSuggestions(context,builder);
+            return this.argumentBuilder.getType().listSuggestions(context,builder);
         }
 
         // List the suggestions from the custom suggestions provider.
