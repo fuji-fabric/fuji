@@ -32,7 +32,7 @@ public class ComposedCommandSuggestionsProvider implements SuggestionProvider<Se
         /* Create the command suggestions future. */
         if (this.delegate == null) {
             // List the suggestions from the argument type, if no custom suggestions provider specified.
-            return this.argumentBuilder.getType().listSuggestions(context,builder);
+            return this.argumentBuilder.getType().listSuggestions(context, builder);
         }
 
         // List the suggestions from the custom suggestions provider.

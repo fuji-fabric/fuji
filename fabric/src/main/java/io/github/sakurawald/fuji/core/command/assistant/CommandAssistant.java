@@ -47,10 +47,11 @@ public class CommandAssistant {
         return parsedNodeStart != suggestionsBuilderStart;
     }
 
-    private static @NotNull List<CommandContext<ServerCommandSource>> makeCommandContextChain(@NotNull CommandContext<ServerCommandSource> commandContext) {
+    @ForDeveloper("A child command context will be made, if there is any command redirect or command fork.")
+    private static @NotNull List<CommandContext<ServerCommandSource>> makeCommandContextChain(@NotNull CommandContext<ServerCommandSource> rootCommandContext) {
         List<CommandContext<ServerCommandSource>> commandContextChain = new ArrayList<>();
 
-        CommandContext<ServerCommandSource> root = commandContext;
+        CommandContext<ServerCommandSource> root = rootCommandContext;
         commandContextChain.add(root);
 
         while (root.getChild() != null) {
@@ -167,15 +168,17 @@ public class CommandAssistant {
             , "Test the assistant at the beginning of the token"
             , "Test the assistant at the end of the token"
             , "Test the assistant with the optional argument: `/back 3`"
+            , "Test the assistant with the entity selector: `/send-message `"
     })
     @ForDeveloper("""
             The command suggestions provider will be called:
             1. A new character is inserted or deleted.
             2. The position of the cursor is changed.
             """)
-    public static void assist(@NotNull CommandContext<ServerCommandSource> commandContext, @NotNull SuggestionsBuilder builder) {
-        Inspector.inspectCommandContext(commandContext, "current");
-        Pair<CommandContext<ServerCommandSource>, CommandNode<ServerCommandSource>> pair = getLastParsedCommandNode(commandContext);
+    public static void assist(@NotNull CommandContext<ServerCommandSource> rootCommandContext, @NotNull SuggestionsBuilder builder) {
+        Inspector.inspectCommandContext(rootCommandContext, "current");
+
+        Pair<CommandContext<ServerCommandSource>, CommandNode<ServerCommandSource>> pair = getLastParsedCommandNode(rootCommandContext);
         CommandContext<ServerCommandSource> targetCommandContext = pair.getKey();
         CommandNode<ServerCommandSource> targetCommandNode = pair.getValue();
 
@@ -186,16 +189,16 @@ public class CommandAssistant {
         }
 
         /* Print command usage for target command node. */
-        ServerCommandSource source = commandContext.getSource();
-        printUsageForCommandNode(source, commandContext, targetCommandContext, targetCommandNode, builder);
+        ServerCommandSource source = rootCommandContext.getSource();
+        printUsageForCommandNode(source, rootCommandContext, targetCommandContext, targetCommandNode, builder);
     }
 
 
     public static class Inspector {
 
-        private static void inspectCommandContext(@NotNull CommandContext<ServerCommandSource> commandContext, @NotNull String walkingPath) {
+        public static void inspectCommandContext(@NotNull CommandContext<ServerCommandSource> commandContext, @NotNull String walkingPath) {
             LogUtil.info(LogUtil.AnsiColor.BLUE + "◉ Inspect command context {} (path = {})", commandContext, walkingPath);
-            LogUtil.info("input string = {}", commandContext.getInput());
+            LogUtil.info("input string = '{}'", commandContext.getInput());
             LogUtil.info("input string range = {}", commandContext.getRange());
             LogUtil.info("command action = {}", commandContext.getCommand());
             LogUtil.info("root command node = {}", commandContext.getRootNode());
@@ -207,9 +210,9 @@ public class CommandAssistant {
         }
 
         private static void inspectSuggestionsBuilder(@NotNull SuggestionsBuilder builder) {
-            LogUtil.info(LogUtil.AnsiColor.YELLOW + "◉ Inspect suggestions builder {}", builder);
-            LogUtil.info("input string = {}", builder.getInput());
-            LogUtil.info("remaining string = {}", builder.getRemaining());
+            LogUtil.info(LogUtil.AnsiColor.MAGENTA + "◉ Inspect suggestions builder {}", builder);
+            LogUtil.info("input string = '{}'", builder.getInput());
+            LogUtil.info("remaining string = '{}'", builder.getRemaining());
             LogUtil.info("start = {}", builder.getStart());
         }
 
