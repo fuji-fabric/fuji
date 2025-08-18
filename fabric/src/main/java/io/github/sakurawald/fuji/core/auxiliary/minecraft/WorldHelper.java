@@ -4,10 +4,14 @@ import java.util.Collection;
 import java.util.Optional;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ChunkHolder;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.DimensionTypes;
@@ -89,4 +93,39 @@ public class WorldHelper {
         Iterable<ChunkHolder> chunkHolders = getChunkStorage(world).entryIterator();
         return chunkHolders;
     }
+
+    public static class Formatter {
+
+        public static @NotNull String format(@NotNull BlockPos blockPos) {
+            return "%d %d %d".formatted(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+        }
+    }
+
+    public static class Raycast {
+
+        public static Optional<BlockPos> getLookingAtBlock(@NotNull ServerPlayerEntity player) {
+            return getLookingAtBlock(player, 5.0);
+        }
+
+        public static Optional<BlockPos> getLookingAtBlock(@NotNull ServerPlayerEntity player, double maxDistance) {
+            Vec3d eyePos = player.getCameraPosVec(1.0F);
+            Vec3d lookVec = player.getRotationVec(1.0F);
+            Vec3d reachVec = eyePos.add(lookVec.multiply(maxDistance));
+
+            BlockHitResult blockHitResult = player.getWorld().raycast(new RaycastContext(
+                    eyePos,
+                    reachVec,
+                    RaycastContext.ShapeType.OUTLINE,
+                    RaycastContext.FluidHandling.NONE,
+                    player
+            ));
+
+            if (blockHitResult.getType() == HitResult.Type.BLOCK) {
+                return Optional.ofNullable(blockHitResult.getBlockPos());
+            }
+
+            return Optional.empty();
+        }
+    }
+
 }
