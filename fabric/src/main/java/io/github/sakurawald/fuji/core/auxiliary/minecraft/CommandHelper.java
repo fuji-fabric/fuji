@@ -224,7 +224,7 @@ public class CommandHelper {
 
     public static class Suggestion {
 
-        public static <T> @NotNull CompletableFuture<Suggestions> makeSuggestionsCompletableFuture(@NotNull SuggestionsBuilder builder, @NotNull Supplier<Iterable<T>> iterableSupplier) {
+        private static <T> @NotNull CompletableFuture<Suggestions> makeSuggestionsCompletableFuture(@NotNull SuggestionsBuilder builder, @NotNull Supplier<Iterable<T>> iterableSupplier) {
             /* Optimize the command suggestion. */
             Iterable<T> iterable = iterableSupplier.get();
             CommandSuggestionOptimizer
@@ -232,6 +232,10 @@ public class CommandHelper {
                 .forEach(builder::suggest);
 
             return builder.buildFuture();
+        }
+
+        public static <T> @NotNull SuggestionProvider<ServerCommandSource> iterable(@NotNull BiFunction<CommandContext<ServerCommandSource>, SuggestionsBuilder, Iterable<T>> iterableSupplier) {
+            return (context, builder) -> makeSuggestionsCompletableFuture(builder, () -> iterableSupplier.apply(context, builder));
         }
 
         public static <T> @NotNull SuggestionProvider<ServerCommandSource> iterable(@NotNull Supplier<Iterable<T>> iterableSupplier) {

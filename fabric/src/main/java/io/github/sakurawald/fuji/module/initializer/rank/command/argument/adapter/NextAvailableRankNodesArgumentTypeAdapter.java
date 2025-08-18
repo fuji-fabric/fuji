@@ -57,16 +57,16 @@ public class NextAvailableRankNodesArgumentTypeAdapter extends BaseArgumentTypeA
     @Override
     @NotNull
     protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
-        return super.makeRequiredArgumentBuilder(argumentName)
-            .suggests((context, builder) -> {
+        return super
+            .makeRequiredArgumentBuilder(argumentName)
+            .suggests(CommandHelper.Suggestion.iterable((context, builder) -> {
                 ServerPlayerEntity player = context.getSource().getPlayer();
                 if (player == null) {
-                    return builder.buildFuture();
+                    return List.of();
                 }
 
-                List<String> ids = RankService.getNextAvailableRankNodes(player).stream().map(RankNode::getId).toList();
-                return CommandHelper.Suggestion.makeSuggestionsCompletableFuture(builder, () -> ids);
-            });
+                return RankService.getNextAvailableRankNodes(player).stream().map(RankNode::getId).toList();
+            }));
     }
 
 }
