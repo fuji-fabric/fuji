@@ -28,7 +28,7 @@ public class CommandAssistant {
     private static final Map<String, AvailableNextCommandPathList> DEBOUNCE_AVAILABLE_NEXT_COMMAND_PATHS = new HashMap<>();
     private static final Map<String, String> DEBOUNCE_COMPLETED_COMMAND_PATH = new HashMap<>();
 
-    private static String getFriendlyName(@NotNull CommandNode<ServerCommandSource> commandNode) {
+    private static @NotNull String toStringByArgumentType(@NotNull CommandNode<ServerCommandSource> commandNode) {
         if (commandNode instanceof ArgumentCommandNode<ServerCommandSource, ?>) {
             return "<" + commandNode.getName() + ">";
         }
@@ -40,9 +40,9 @@ public class CommandAssistant {
         return "root";
     }
 
-    private static boolean isInputIncomplete(@NotNull CommandContext<ServerCommandSource> commandContext, @NotNull SuggestionsBuilder builder) {
-        ParsedCommandNode<ServerCommandSource> last = commandContext.getNodes().getLast();
-        int parsedNodeStart = last.getRange().getStart();
+    private static boolean hasUnparsedCharacters(@NotNull CommandContext<ServerCommandSource> commandContext, @NotNull SuggestionsBuilder builder) {
+        ParsedCommandNode<ServerCommandSource> lastCommandNode = commandContext.getNodes().getLast();
+        int parsedNodeStart = lastCommandNode.getRange().getStart();
         int suggestionsBuilderStart = builder.getStart();
         return parsedNodeStart != suggestionsBuilderStart;
     }
@@ -88,7 +88,7 @@ public class CommandAssistant {
         commandContexts
                 .forEach(commandContext -> {
                     commandContext.getNodes().forEach(parsedCommandNode -> {
-                        sb.append(getFriendlyName(parsedCommandNode.getNode())).append(" ");
+                        sb.append(toStringByArgumentType(parsedCommandNode.getNode())).append(" ");
                     });
                 });
         return sb.toString();
@@ -103,30 +103,31 @@ public class CommandAssistant {
         AvailableNextCommandPathList currentAvailableNextCommandPathList = new AvailableNextCommandPathList();
 
         String inputString = commandContext.getInput();
-        Map<CommandNode<ServerCommandSource>, String> usage = CommandHelper.getCommandDispatcher().getSmartUsage(targetCommandNode, source);
-        for (Map.Entry<CommandNode<ServerCommandSource>, String> entry : usage.entrySet()) {
-            CommandNode<ServerCommandSource> key = entry.getKey();
-            String value = entry.getValue();
-
+        for (String value : CommandHelper.getCommandDispatcher().getSmartUsage(targetCommandNode, source).values()) {
+            /* Compute prefix string. */
             String prefixString = inputString.substring(0, builder.getStart());
-            String infixString = "";
 
-            if (isInputIncomplete(commandContext, builder)) {
-                // NOTE: If the remaining string is empty, that means the user just complete an argument, and press the space key.
-            } else {
-                infixString = getFriendlyName(commandContext.getNodes().getLast().getNode());
+            /* Compute infix string. */
+            String infixString = "...";
+            if (!hasUnparsedCharacters(commandContext, builder)) {
+                infixString = toStringByArgumentType(commandContext.getNodes().getLast().getNode());
             }
 
+            /* Compute suffix string. */
             String suffixString = " " + value;
 
-            /* Update the output. */
+            /* Trim the strings. */
             prefixString = prefixString.trim();
             infixString = infixString.trim();
             suffixString = suffixString.trim();
-            currentAvailableNextCommandPathList.getEntries().add(new AvailableNextCommandPath(prefixString, infixString, suffixString));
+
+            /* Update the strings. */
+            currentAvailableNextCommandPathList
+                    .getEntries()
+                    .add(new AvailableNextCommandPath(prefixString, infixString, suffixString));
         }
 
-        /* Send the output. */
+        /* Send current available next command path list. */
         if (!currentAvailableNextCommandPathList.equals(previousAvailableNextCommandPathList)) {
             DEBOUNCE_AVAILABLE_NEXT_COMMAND_PATHS.put(source.getName(), currentAvailableNextCommandPathList);
             DEBOUNCE_COMPLETED_COMMAND_PATH.remove(source.getName());
@@ -165,6 +166,7 @@ public class CommandAssistant {
             , "Test the assistant with command redirect"
             , "Test the assistant at the beginning of the token"
             , "Test the assistant at the end of the token"
+            , "Test the assistant with the optional argument: `/back 3`"
     })
     @ForDeveloper("""
             The command suggestions provider will be called:

@@ -142,6 +142,15 @@
 - Target: The command permissions should be handled properly.
 
 [Test Case]
+- Module: core
+- Action: **Test the command assistant.**
+- Target: Change the `cursor` using mouse click, and see the output.
+- Target: Test the assistant with command redirect
+- Target: Test the assistant at the beginning of the token
+- Target: Test the assistant at the end of the token
+- Target: Test the optional argument: `/back 3`
+
+[Test Case]
 - Module: disabler.move_wrongly_disabler
 - Action: **Sit in a `boat` and try to move it.**
 - Target: The `vehicle moved wrongly` should be disabled.
