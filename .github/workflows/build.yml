@@ -14,18 +14,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Check for open PRs from github actions.
-        run: |
-          # List all open PRs from github actions.
-          prs=$(gh pr list --state open --search "author:app/github-actions" --json number --jq '.[].number')
-          
-          if [ -n "$prs" ]; then
-            echo "Found open PR(s) from github actions: $prs"
-            echo "github_actions_pr_found=true" >> $GITHUB_ENV
-          else
-            echo "No open PRs from github actions."
-            echo "github_actions_pr_found=false" >> $GITHUB_ENV
-          fi
       - name: Crowdin action
         uses: crowdin/github-action@v2
         # If we parallel run the crowdin action, it will fail with 409 error.
@@ -61,6 +49,18 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
             CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_TOKEN }}
+      - name: Check for open PRs from github actions.
+        run: |
+          # List all open PRs from github actions.
+          prs=$(gh pr list --state open --search "author:app/github-actions" --json number --jq '.[].number')
+          
+          if [ -n "$prs" ]; then
+            echo "Found open PR(s) from github actions: $prs"
+            echo "github_actions_pr_found=true" >> $GITHUB_ENV
+          else
+            echo "No open PRs from github actions."
+            echo "github_actions_pr_found=false" >> $GITHUB_ENV
+          fi
       - name: Validate gradle wrapper
         uses: gradle/actions/setup-gradle@v4
       - name: Setup jdk ${{ matrix.java }}
@@ -80,7 +80,7 @@ jobs:
           name: "artifact-${{matrix.target-mc-version}}"
           path: fabric/build/libs/
       - name: Ensure no open PRs from github actions before publishing a new release.
-        if: contains(github.event.head_commit.message, '[publish]') && github.env.github_actions_pr_found == 'true'
+        if: contains(github.event.head_commit.message, '[publish]') && env.github_actions_pr_found == 'true'
         run: |
           echo "Open PR from github-actions found. Cancelling workflow."
           gh run cancel ${{ github.run_id }}
