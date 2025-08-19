@@ -38,7 +38,7 @@
   "command.argument.type.is_vanilla": "<blue>Is Vanilla: %s",
   "command.argument.type.name": "<blue>Type Name: %s",
   "command.assistant.complete": "<green>%s",
-  "command.assistant.header": "<yellow>----- Command Assistant -----",
+  "command.assistant.header": "<bold><yellow>--------------- Command Assistant ---------------",
   "command.assistant.incomplete": "<grey>%s <aqua><u>%s</u> <red>%s",
   "command.console_only": "<red>This command can only be executed by the console.",
   "command.descriptor.type": "<blue>Descriptor: `%s`",
@@ -1412,6 +1412,6 @@
   "docstring.1755412381305": "List all submitted `when-online` tickets.",
   "docstring.1755412463665": "Execute the specified command `exactly once`, when the target player `is online`.",
   "docstring.1755571534946": "The options for all fuji commands.\n",
-  "docstring.1755571654986": "The `command assistant` offers an `auto help` feature for all fuji commands.\nIt dynamically inspects possible command paths and provides users with real-time command hints.\n\n<green>NOTE: To hot-switch this feature without a server re-start, you have to:\n1. Issue `/fuji reload` first, to reload the `main control file`.\n2. Issue `/reload`, to reload all the commands.\n",
+  "docstring.1755571654986": "The `command assistant` offers an `auto help` feature for all fuji commands.\nIt dynamically inspects possible command paths and provides users with real-time command hints.\n\n<green>NOTE: To hot-switch this feature without a server re-start, you have to:\n1. Issue `/fuji reload` first, to reload the `main control file`.\n2. Issue `/reload`, to reload `all the commands`.\n",
   "docstring.1755571789064": "The requirement to use the `command assistant`.\n"
 }
