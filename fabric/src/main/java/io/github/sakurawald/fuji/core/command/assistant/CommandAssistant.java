@@ -209,9 +209,8 @@ public class CommandAssistant {
             , "Test the assistant with custom parser and non-zero-offset suggestions builder: `/fly others @a[distance=..8`"
     })
     @ForDeveloper("""
-            The command suggestions provider will be called:
-            1. A new character is inserted or deleted.
-            2. The position of the cursor is changed.
+            1. The custom command suggestions provider will be called when the cursor enters, leaves, or moves within a required argument. (Except case 2.)
+            2. If the client use `Tab` key or `Shift + Tab` key to change the `input` and `cursor`, then the custom command suggestion provider will not be called.
             """)
     public static void assist(@NotNull CommandContext<ServerCommandSource> rootCommandContext, @NotNull SuggestionsBuilder builder) {
         if (canUseCommandAssistant(rootCommandContext)) {

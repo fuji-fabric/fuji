@@ -132,7 +132,7 @@ public class ConfigModel {
                     """)
                 public Requirement requirement = new Requirement();
                 public static class Requirement {
-                    public int level_permission = 2;
+                    public int level_permission = 0;
                 }
 
             }
