@@ -38,7 +38,7 @@
   "command.argument.type.is_vanilla": "<blue>Is Vanilla: %s",
   "command.argument.type.name": "<blue>Type Name: %s",
   "command.assistant.complete": "<green>%s",
-  "command.assistant.header": "<bold><yellow>--------------- Command Assistant ---------------",
+  "command.assistant.header": "<yellow>➜ Command Assistant <dark_grey><i>(Esc = Hide, Tab = Show & Next, Shift + Tab = Prev)",
   "command.assistant.incomplete": "<grey>%s <aqua><u>%s</u> <red>%s",
   "command.console_only": "<red>This command can only be executed by the console.",
   "command.descriptor.type": "<blue>Descriptor: `%s`",
