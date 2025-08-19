@@ -36,6 +36,12 @@ public class ConfigModel {
             """)
         public Core.Language language = new Core.Language();
 
+        @Document(id = 1755571534946L, value = """
+            The options for all fuji commands.
+            """)
+        public Command command = new Command();
+
+
         @Document(id = 1751823755527L, value = """
             The permission related options.
             """)
@@ -102,6 +108,32 @@ public class ConfigModel {
                 Should we validate the `arguments` when loading a `language file`?
                 """)
             public boolean validate_arguments = true;
+        }
+
+        public static class Command {
+
+            @Document(id = 1755571654986L, value = """
+                The `command assistant` offers an `auto help` feature for all fuji commands.
+                It dynamically inspects possible command paths and provides users with real-time command hints.
+
+                <green>NOTE: To hot-switch this feature without a server re-start, you have to:
+                1. Issue `/fuji reload` first, to reload the `main control file`.
+                2. Issue `/reload`, to reload `all the commands`.
+                """)
+            public Assistant assistant = new Assistant();
+            public static class Assistant {
+                public boolean enable = true;
+
+                @Document(id = 1755571789064L, value = """
+                    The requirement to use the `command assistant`.
+                    """)
+                public Requirement requirement = new Requirement();
+                public static class Requirement {
+                    public int level_permission = 2;
+                }
+
+            }
+
         }
 
         public static class Permission {

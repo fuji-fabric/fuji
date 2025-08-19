@@ -76,4 +76,10 @@ public class ServerHelper {
             .orElseThrow(() -> new IllegalStateException("Failed to get 'fuji' mod container."));
     }
 
+    public static void withDevelopmentEnvironment(@NotNull Runnable runnable) {
+        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+            runnable.run();
+        }
+    }
+
 }

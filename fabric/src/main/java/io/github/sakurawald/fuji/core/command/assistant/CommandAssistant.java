@@ -12,6 +12,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.assistant.structure.AvailableNextCommandPath;
 import io.github.sakurawald.fuji.core.command.assistant.structure.AvailableNextCommandPathList;
+import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.structure.Pair;
@@ -101,8 +102,8 @@ public class CommandAssistant {
     }
 
     private static void printUsageForCommandNode(@NotNull ServerCommandSource source, @NotNull CommandContext<ServerCommandSource> rootCommandContext, @NotNull CommandContext<ServerCommandSource> commandContext, @NotNull CommandNode<ServerCommandSource> targetCommandNode, @NotNull SuggestionsBuilder builder) {
-        Inspector.inspectCommandNode(targetCommandNode);
-        Inspector.inspectSuggestionsBuilder(builder);
+//        Inspector.inspectCommandNode(targetCommandNode);
+//        Inspector.inspectSuggestionsBuilder(builder);
 
         /* Make the output. */
         AvailableNextCommandPathList previousAvailableNextCommandPathList = DEBOUNCE_AVAILABLE_NEXT_COMMAND_PATHS.getOrDefault(source.getName(), new AvailableNextCommandPathList());
@@ -182,7 +183,11 @@ public class CommandAssistant {
             2. The position of the cursor is changed.
             """)
     public static void assist(@NotNull CommandContext<ServerCommandSource> rootCommandContext, @NotNull SuggestionsBuilder builder) {
-        Inspector.inspectCommandContext(rootCommandContext, "current");
+        if (canUseCommandAssistant(rootCommandContext)) {
+            return;
+        }
+
+//        Inspector.inspectCommandContext(rootCommandContext, "current");
 
         Pair<CommandContext<ServerCommandSource>, CommandNode<ServerCommandSource>> pair = getLastParsedCommandNodeRecursively(rootCommandContext);
         CommandContext<ServerCommandSource> targetCommandContext = pair.getKey();
@@ -199,7 +204,11 @@ public class CommandAssistant {
         printUsageForCommandNode(source, rootCommandContext, targetCommandContext, targetCommandNode, builder);
     }
 
+    private static boolean canUseCommandAssistant(@NotNull CommandContext<ServerCommandSource> rootCommandContext) {
+        return !rootCommandContext.getSource().hasPermissionLevel(Configs.MAIN_CONTROL_CONFIG.model().core.command.assistant.requirement.level_permission);
+    }
 
+    @SuppressWarnings("unused")
     public static class Inspector {
 
         public static void inspectCommandContext(@NotNull CommandContext<ServerCommandSource> commandContext, @NotNull String walkingPath) {

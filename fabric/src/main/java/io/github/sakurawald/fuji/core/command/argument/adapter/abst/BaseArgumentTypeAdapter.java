@@ -8,6 +8,7 @@ import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.core.command.assistant.CommandAssistant;
 import io.github.sakurawald.fuji.core.command.suggestion.structure.ComposedCommandSuggestionsProvider;
+import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
 import io.github.sakurawald.fuji.core.manager.Managers;
@@ -120,9 +121,11 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
     public final @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeComposedRequiredArgumentBuilder(@NotNull String argumentName) {
         RequiredArgumentBuilder<ServerCommandSource, ?> result = makeRequiredArgumentBuilder(argumentName);
 
-        /* Wrap the original command suggestions provider. */
-        ComposedCommandSuggestionsProvider composedCommandSuggestionsProvider = new ComposedCommandSuggestionsProvider(result, result.getSuggestionsProvider(), CommandAssistant::assist);
-        result.suggests(composedCommandSuggestionsProvider);
+        /* Command assistant feature. */
+        if (Configs.MAIN_CONTROL_CONFIG.model().core.command.assistant.enable) {
+            ComposedCommandSuggestionsProvider composedCommandSuggestionsProvider = new ComposedCommandSuggestionsProvider(result.getType(), result.getSuggestionsProvider(), CommandAssistant::assist);
+            result.suggests(composedCommandSuggestionsProvider);
+        }
         return result;
     }
 
