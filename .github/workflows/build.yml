@@ -1,6 +1,7 @@
 name: build
 on: [ pull_request, push ]
-
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   build:
