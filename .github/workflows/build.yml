@@ -87,7 +87,7 @@ jobs:
           path: fabric/build/libs/
       - name: MC-publish action
         uses: Kir-Antipov/mc-publish@v3.3.0
-        if: github.ref == 'refs/heads/release' || contains(github.event.head_commit.message, '[publish]')
+        if: contains(github.event.head_commit.message, '[publish]')
         with:
           loaders:
             fabric
