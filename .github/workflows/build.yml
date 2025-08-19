@@ -80,7 +80,7 @@ jobs:
           name: "artifact-${{matrix.target-mc-version}}"
           path: fabric/build/libs/
       - name: Ensure no open PRs from github actions before publishing a new release.
-        if: (github.ref == 'refs/heads/release' || contains(github.event.head_commit.message, '[publish]')) && github.env.github_actions_pr_found == 'true'
+        if: (github.ref == 'refs/heads/release' || contains(github.event.head_commit.message, '[publish]')) && $github_actions_pr_found == 'true'
         run: |
           echo "Open PR from github-actions found. Cancelling workflow."
           gh run cancel ${{ github.run_id }}
