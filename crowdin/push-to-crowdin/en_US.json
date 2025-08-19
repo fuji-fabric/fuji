@@ -37,7 +37,7 @@
   "command.argument.type.gui.title": "<blue>Argument Type",
   "command.argument.type.is_vanilla": "<blue>Is Vanilla: %s",
   "command.argument.type.name": "<blue>Type Name: %s",
-  "command.assistant.complete": "<green>%s",
+  "command.assistant.complete": "<green>%s <dark_grey><i>(Enter = Run Command)",
   "command.assistant.header": "<yellow>➜ Command Assistant <dark_grey><i>(Esc = Hide, Tab = Show & Next, Shift + Tab = Prev)",
   "command.assistant.incomplete": "<grey>%s <aqua><u>%s</u> <red>%s",
   "command.console_only": "<red>This command can only be executed by the console.",
