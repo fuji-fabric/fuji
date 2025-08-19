@@ -98,7 +98,7 @@ public class LanguageConfigurationHandler extends ResourceConfigurationHandler {
     }
 
     private void validateArguments(@NotNull JsonObject dataTree, @NotNull JsonObject schemaTree) {
-        if (!Configs.MAIN_CONTROL_CONFIG.model().core.language.validate_arguments) {
+        if (!Configs.MAIN_CONTROL_CONFIG.model().core.language.validator.validate_arguments) {
             return;
         }
 

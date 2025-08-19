@@ -104,10 +104,13 @@ public class ConfigModel {
                 """)
             public String default_language = "en_US";
 
-            @Document(id = 1754322053339L, value = """
+            public Validator validator = new Validator();
+            public static class Validator {
+                @Document(id = 1754322053339L, value = """
                 Should we validate the `arguments` when loading a `language file`?
                 """)
-            public boolean validate_arguments = true;
+                public boolean validate_arguments = true;
+            }
         }
 
         public static class Command {
