@@ -107,7 +107,9 @@ public class CommandAssistant {
 //        Inspector.inspectCommandNode(targetCommandNode);
 //        Inspector.inspectSuggestionsBuilder(builder);
 
-        /* Make the output. */
+        /* Compute the possible next command path list. */
+        // NOTE: Handle the edge-case for `/tpadeny all` and `/tpadeny <target>`. (When literal `al` becomes literal `all`)
+        boolean headerMessagePrinted = false;
         AvailableNextCommandPathList previousAvailableNextCommandPathList = DEBOUNCE_AVAILABLE_NEXT_COMMAND_PATHS.getOrDefault(commandSource.getName(), new AvailableNextCommandPathList());
         AvailableNextCommandPathList currentAvailableNextCommandPathList = new AvailableNextCommandPathList();
 
@@ -144,8 +146,8 @@ public class CommandAssistant {
             DEBOUNCE_COMPLETED_COMMAND_PATH.remove(commandSource.getName());
 
             /* Print the header. */
-            Text headerText = TextHelper.getTextByKey(commandSource, "command.assistant.header");
-            commandSource.sendMessage(headerText);
+            printCommandAssistantHeader(commandSource);
+            headerMessagePrinted = true;
 
             /* Print the body. */
             currentAvailableNextCommandPathList
@@ -166,10 +168,20 @@ public class CommandAssistant {
             String currentCompletedCommandPath = getParsedCommandPath(rootCommandContext);
             if (!currentCompletedCommandPath.equals(previousCompleteCommandPath)) {
                 DEBOUNCE_COMPLETED_COMMAND_PATH.put(commandSource.getName(), currentCompletedCommandPath);
+
+                if (!headerMessagePrinted) {
+                    printCommandAssistantHeader(commandSource);
+                }
+
                 Text text = TextHelper.getTextByKey(commandSource, "command.assistant.complete", TextHelper.Parsers.escapeTags(currentCompletedCommandPath));
                 commandSource.sendMessage(text);
             }
         }
+    }
+
+    private static void printCommandAssistantHeader(@NotNull ServerCommandSource commandSource) {
+        Text headerText = TextHelper.getTextByKey(commandSource, "command.assistant.header");
+        commandSource.sendMessage(headerText);
     }
 
     private static boolean isCommandNodeExecutable(@NotNull CommandNode<ServerCommandSource> targetCommandNode) {
