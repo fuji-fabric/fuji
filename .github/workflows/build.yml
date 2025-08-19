@@ -13,13 +13,20 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Validate gradle wrapper
-        uses: gradle/actions/setup-gradle@v4
-      - name: Setup jdk ${{ matrix.java }}
-        uses: actions/setup-java@v3
-        with:
-          java-version: ${{ matrix.java }}
-          distribution: 'microsoft'
+      - name: Install GitHub CLI
+        uses: cli/cli-action@v2
+      - name: Check for open PRs from crowdin-bot
+        run: |
+          # List all open PRs from crowdin-bot
+          prs=$(gh pr list --author crowdin-bot --state open --json number --jq '.[].number')
+          
+          if [ -n "$prs" ]; then
+            echo "Found open PR(s) from crowdin-bot: $prs"
+            echo "crowdin_pr_found=true" >> $GITHUB_ENV
+          else
+            echo "No open PRs from crowdin-bot."
+            echo "crowdin_pr_found=false" >> $GITHUB_ENV
+          fi
       - name: Crowdin action
         uses: crowdin/github-action@v2
         # If we parallel run the crowdin action, it will fail with 409 error.
@@ -55,6 +62,13 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
             CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_TOKEN }}
+      - name: Validate gradle wrapper
+        uses: gradle/actions/setup-gradle@v4
+      - name: Setup jdk ${{ matrix.java }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'microsoft'
       - name: Make gradle wrapper executable
         if: ${{ runner.os != 'Windows' }}
         run: chmod +x ./gradlew
