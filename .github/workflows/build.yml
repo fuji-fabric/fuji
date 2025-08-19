@@ -79,28 +79,34 @@ jobs:
         with:
           name: "artifact-${{matrix.target-mc-version}}"
           path: fabric/build/libs/
-      - name: MC-publish action
-        uses: Kir-Antipov/mc-publish@v3.3.0
-        if: github.ref == 'refs/heads/release' || contains(github.event.head_commit.message, '[publish]')
-        with:
-          loaders:
-            fabric
-            quilt
-
-          files: |
-            fabric/build/libs/!(*-@(dev|sources|javadoc)).jar
-            fabric/build/libs/*-@(dev|sources|javadocs).jar
-
-          game-version-filter: any
-
-          version-type: release
-
-          changelog-file: CHANGELOG.md
-
-          modrinth-id: 1TowMm2v
-          modrinth-token: "${{secrets.MODRINTH_TOKEN}}"
-
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-          curseforge-id: 1096649
-          curseforge-token: "${{secrets.CURSEFORGE_TOKEN}}"
+      - name: Ensure no open PRs from github actions before publishing a new release.
+        if: (github.ref == 'refs/heads/release' || contains(github.event.head_commit.message, '[publish]')) && github.env.github_actions_pr_found == 'true'
+        run: |
+          echo "Open PR from github-actions found. Cancelling workflow."
+          gh run cancel ${{ github.run_id }}
+          gh run watch ${{ github.run_id }}
+#      - name: MC-publish action
+#        uses: Kir-Antipov/mc-publish@v3.3.0
+#        if: github.ref == 'refs/heads/release' || contains(github.event.head_commit.message, '[publish]')
+#        with:
+#          loaders:
+#            fabric
+#            quilt
+#
+#          files: |
+#            fabric/build/libs/!(*-@(dev|sources|javadoc)).jar
+#            fabric/build/libs/*-@(dev|sources|javadocs).jar
+#
+#          game-version-filter: any
+#
+#          version-type: release
+#
+#          changelog-file: CHANGELOG.md
+#
+#          modrinth-id: 1TowMm2v
+#          modrinth-token: "${{secrets.MODRINTH_TOKEN}}"
+#
+#          github-token: ${{ secrets.GITHUB_TOKEN }}
+#
+#          curseforge-id: 1096649
+#          curseforge-token: "${{secrets.CURSEFORGE_TOKEN}}"
