@@ -3,5 +3,5 @@
 ## Changelog
 
 
-- [core] fix: when install this mod in `client-side`, the use of `optional argument` may crash the `client` in `single player world` due to `array index out of bound` error.
-- [command_scheduler] fix: the missing language keys.
+- [core] fix: the `required argument` with `custom suggestions provider` should not be listed in the `command suggestions` if the command source can't use that command. **(Actually, this is a minor bug from Mojang, and it breaks the consistence between `/help` command and `Tab key completions`. We fix it to prevent user confusion.)**
+- [back] feature: add shortcut command `/back <dimension>` to `/back 1 <dimension` command.

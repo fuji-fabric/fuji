@@ -48,8 +48,7 @@ public class ComposedCommandSuggestionsProvider implements SuggestionProvider<Se
         if (this.originalCustomSuggestionsProvider != null) {
             secondFuture = this.originalCustomSuggestionsProvider.getSuggestions(context, builder);
         } else {
-            Suggestions dummy = new Suggestions(StringRange.at(0), Collections.emptyList());
-            secondFuture = CompletableFuture.completedFuture(dummy);
+            secondFuture = Suggestions.empty();
         }
 
         return firstFuture
