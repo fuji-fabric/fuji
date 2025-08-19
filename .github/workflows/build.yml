@@ -17,7 +17,7 @@ jobs:
       - name: Check for open PRs from crowdin-bot
         run: |
           # List all open PRs from crowdin-bot
-          prs=$(gh pr list --author crowdin-bot --state open --json number --jq '.[].number')
+          prs=$(gh pr list --state open --search "participant:crowdin-bot" --json number --jq '.[].number')
           
           if [ -n "$prs" ]; then
             echo "Found open PR(s) from crowdin-bot: $prs"
