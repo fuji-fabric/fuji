@@ -2,6 +2,8 @@
 
 ## Changelog
 
+This release is the re-publish of `v12.22.0`
+
 This release introduces a new **core feature** called **Command Assistant**, along with several bug fixes and improvements.
 
 ### Features
