@@ -17,17 +17,18 @@ import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.structure.Pair;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 public class CommandAssistant {
 
-    private static final Map<String, AvailableNextCommandPathList> DEBOUNCE_AVAILABLE_NEXT_COMMAND_PATHS = new HashMap<>();
-    private static final Map<String, String> DEBOUNCE_COMPLETED_COMMAND_PATH = new HashMap<>();
+    private static final Map<String, AvailableNextCommandPathList> DEBOUNCE_AVAILABLE_NEXT_COMMAND_PATHS = new ConcurrentHashMap<>();
+    private static final Map<String, String> DEBOUNCE_COMPLETED_COMMAND_PATH = new ConcurrentHashMap<>();
 
     private static @NotNull String toStringByArgumentType(@NotNull CommandNode<ServerCommandSource> commandNode) {
         if (commandNode instanceof ArgumentCommandNode<ServerCommandSource, ?>) {
@@ -109,8 +110,7 @@ public class CommandAssistant {
 
         /* Compute the possible next command path list. */
         // NOTE: Handle the edge-case for `/tpadeny all` and `/tpadeny <target>`. (When literal `al` becomes literal `all`)
-        boolean headerMessagePrinted = false;
-        AvailableNextCommandPathList previousAvailableNextCommandPathList = DEBOUNCE_AVAILABLE_NEXT_COMMAND_PATHS.getOrDefault(commandSource.getName(), new AvailableNextCommandPathList());
+        AtomicBoolean headerMessagePrinted = new AtomicBoolean(false);
         AvailableNextCommandPathList currentAvailableNextCommandPathList = new AvailableNextCommandPathList();
 
         String inputString = commandContext.getInput();
@@ -140,48 +140,59 @@ public class CommandAssistant {
         }
 
         /* Debounce and send current available next command path list. */
-        if (!currentAvailableNextCommandPathList.equals(previousAvailableNextCommandPathList)) {
-            DEBOUNCE_AVAILABLE_NEXT_COMMAND_PATHS.put(commandSource.getName(), currentAvailableNextCommandPathList);
-            // NOTE: Re-send the completed command path, as the old message has already been buried.
-            DEBOUNCE_COMPLETED_COMMAND_PATH.remove(commandSource.getName());
+        DEBOUNCE_AVAILABLE_NEXT_COMMAND_PATHS.compute(commandSource.getName(), (key, previousValue) -> {
+            /* Debounce and send. */
+            if (!currentAvailableNextCommandPathList.equals(previousValue)) {
+                // NOTE: Re-send the completed command path, as the old message has already been buried.
+                DEBOUNCE_COMPLETED_COMMAND_PATH.remove(commandSource.getName());
 
-            /* Print the header. */
-            printCommandAssistantHeader(commandSource);
-            headerMessagePrinted = true;
+                /* Print the header. */
+                if (!currentAvailableNextCommandPathList.getEntries().isEmpty()) {
+                    // NOTE: Only print the header if the entries are not empty. (For `/back abc` command)
+                    printCommandAssistantHeaderIfAbsent(headerMessagePrinted, commandSource);
+                }
 
-            /* Print the body. */
-            currentAvailableNextCommandPathList
+                /* Print the body. */
+                currentAvailableNextCommandPathList
                     .getEntries()
                     .forEach(entry -> {
                         Text possiblePathText = TextHelper.getTextByKey(commandSource, "command.assistant.incomplete"
-                                , TextHelper.Parsers.escapeTags(entry.getPrefixString())
-                                , TextHelper.Parsers.escapeTags(entry.getInfixString())
-                                , TextHelper.Parsers.escapeTags(entry.getSuffixString()));
+                            , TextHelper.Parsers.escapeTags(entry.getPrefixString())
+                            , TextHelper.Parsers.escapeTags(entry.getInfixString())
+                            , TextHelper.Parsers.escapeTags(entry.getSuffixString()));
                         commandSource.sendMessage(possiblePathText);
                     });
 
-        }
+            }
+
+            /* Update the value. */
+            return currentAvailableNextCommandPathList;
+        });
 
         /* Debounce and send the completed command path. */
         if (isCommandNodeExecutable(targetCommandNode)) {
-            String previousCompleteCommandPath = DEBOUNCE_COMPLETED_COMMAND_PATH.getOrDefault(commandSource.getName(), "");
             String currentCompletedCommandPath = getParsedCommandPath(rootCommandContext);
-            if (!currentCompletedCommandPath.equals(previousCompleteCommandPath)) {
-                DEBOUNCE_COMPLETED_COMMAND_PATH.put(commandSource.getName(), currentCompletedCommandPath);
+            DEBOUNCE_COMPLETED_COMMAND_PATH.compute(commandSource.getName(), (key, previousValue) -> {
+                /* Debounce and send. */
+                if (!currentCompletedCommandPath.equals(previousValue)) {
+                    printCommandAssistantHeaderIfAbsent(headerMessagePrinted, commandSource);
 
-                if (!headerMessagePrinted) {
-                    printCommandAssistantHeader(commandSource);
+                    Text text = TextHelper.getTextByKey(commandSource, "command.assistant.complete", TextHelper.Parsers.escapeTags(currentCompletedCommandPath));
+                    commandSource.sendMessage(text);
                 }
 
-                Text text = TextHelper.getTextByKey(commandSource, "command.assistant.complete", TextHelper.Parsers.escapeTags(currentCompletedCommandPath));
-                commandSource.sendMessage(text);
-            }
+                /* Update the value. */
+                return currentCompletedCommandPath;
+            });
+
         }
     }
 
-    private static void printCommandAssistantHeader(@NotNull ServerCommandSource commandSource) {
-        Text headerText = TextHelper.getTextByKey(commandSource, "command.assistant.header");
-        commandSource.sendMessage(headerText);
+    private static void printCommandAssistantHeaderIfAbsent(@NotNull AtomicBoolean headerPrinted, @NotNull ServerCommandSource commandSource) {
+        if (headerPrinted.compareAndSet(false, true)) {
+            Text headerText = TextHelper.getTextByKey(commandSource, "command.assistant.header");
+            commandSource.sendMessage(headerText);
+        }
     }
 
     private static boolean isCommandNodeExecutable(@NotNull CommandNode<ServerCommandSource> targetCommandNode) {
