@@ -37,6 +37,9 @@
   "command.argument.type.gui.title": "<blue>Argument Type",
   "command.argument.type.is_vanilla": "<blue>Is Vanilla: %s",
   "command.argument.type.name": "<blue>Type Name: %s",
+  "command.assistant.complete": "<green>%s <dark_grey><i>(Enter = Run Command)",
+  "command.assistant.header": "<yellow>➜ Command Assistant <dark_grey><i>(Esc = Hide, Tab = Show & Next, Shift + Tab = Prev)",
+  "command.assistant.incomplete": "<grey>%s <aqua><u>%s</u> <red>%s",
   "command.console_only": "<red>Lệnh này chỉ có thể thực hiện trên console.",
   "command.descriptor.type": "<blue>Descriptor: `%s`",
   "command.execute.echo.executing_source": "<#FF5F00>Đã xảy ra lỗi trong quá trình thực thi lệnh `/%s`\nNội dung: %s",
@@ -1407,5 +1410,8 @@
   "docstring.1755407830073": "◉ How it works?\n1. Define a `job` to execute `commands` on a schedule.\n1.a. The `schedule` is expressed using the `cron expression` language.\n1.b. You can specify multiple `cron expressions` for a `job`.\n1.c. A `job` is `triggered` if any of its `cron expressions` match.\n2. A `job` is automatically `triggered` according to its `cron expressions`.\n3. When a `job` is `triggered`, it will do:\n3.a. If the `enable` property is `false`, then do nothing.\n3.b. If the `remaining runs` property is `<= 0`, then do nothing.\n3.c. Otherwise, it decreases the `remaining runs` property by 1, and pick a random `command group` to execute.\n4. You can `trigger` a `job` using `/command-scheduler trigger \\<job\\>` manually.\n",
   "docstring.1755412352252": "An alias command for `/when-online list` command.",
   "docstring.1755412381305": "List all submitted `when-online` tickets.",
-  "docstring.1755412463665": "Execute the specified command `exactly once`, when the target player `is online`."
+  "docstring.1755412463665": "Execute the specified command `exactly once`, when the target player `is online`.",
+  "docstring.1755571534946": "The options for all fuji commands.\n",
+  "docstring.1755571654986": "The `command assistant` offers an `auto help` feature for all fuji commands.\nIt dynamically inspects possible command paths and provides users with real-time command hints.\n\n<green>NOTE: To hot-switch this feature without a server re-start, you have to:\n1. Issue `/fuji reload` first, to reload the `main control file`.\n2. Issue `/reload`, to reload `all the commands`.\n",
+  "docstring.1755571789064": "The requirement to use the `command assistant`.\n"
 }
