@@ -13,8 +13,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Install GitHub CLI
-        uses: cli/cli-action@v2
       - name: Check for open PRs from crowdin-bot
         run: |
           # List all open PRs from crowdin-bot
