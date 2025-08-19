@@ -45,7 +45,7 @@
   "command.execute.echo.executing_source": "<#FF5F00>An exception occurs during the execution of `/%s`\nMessage: %s",
   "command.execute.echo.initiating_source": "<#FF5F00>An exception occurs during executing the command `/%1$s` as `%2$s`\nMessage: %3$s",
   "command.path": "<blue>Command Path: `%s`",
-  "command.player_only": "<red>This command can only be executed by a player",
+  "command.player_only": "<red>This command can only be executed by a player.",
   "command.requirement.level_permission": "<blue>Required Level Permission: `%d`",
   "command.requirement.string_permission": "<blue>Required String Permission: `%s`",
   "command.return": "◉ Command Return: %s",
