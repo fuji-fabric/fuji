@@ -149,6 +149,16 @@
 - Target: Test the assistant at the beginning of the token
 - Target: Test the assistant at the end of the token
 - Target: Test the assistant with the optional argument: `/back 3`
+- Target: Test the assistant with the entity selector: `/send-message @r`
+- Target: Test the assistant with custom parser and non-zero-offset suggestions builder: `/fly others @a[distance=..8`
+
+[Test Case]
+- Module: core
+- Action: **Test the command suggestion functionality.**
+- Target: Issue `/command-attachment attach-entity-one <uuid>` command, it should suggest the looking at entity UUID.
+- Target: Issue `/command-attachment attach-entity-one @e[type` command, it should be able to `insert` the suggestion content in the proper position. (non-zero-offset suggestions builder)
+- Target: Issue `/command-attachment attach-entity-one <uuid>` command, it should be able to `insert` the suggestion content in the proper position. (zero-offset suggestions builder)
+- Target: Issue `/command-attachment attach-block-one ` command, it should filter out the duplicated suggestions. (client-side suggestions and server-side suggestions)
 
 [Test Case]
 - Module: disabler.move_wrongly_disabler
