@@ -45,12 +45,12 @@ public class CommandAssistant {
         ParsedCommandNode<ServerCommandSource> lastCommandNode = getLastParsedCommandNode(commandContext);
         int parsedNodeStart = lastCommandNode.getRange().getStart();
         int suggestionsBuilderStart = builder.getStart();
-        return parsedNodeStart != suggestionsBuilderStart;
+        return suggestionsBuilderStart != parsedNodeStart;
     }
 
     private static ParsedCommandNode<ServerCommandSource> getLastParsedCommandNode(@NotNull CommandContext<ServerCommandSource> commandContext) {
-        List<ParsedCommandNode<ServerCommandSource>> nodes = commandContext.getNodes();
-        return nodes.get(nodes.size() - 1);
+        List<ParsedCommandNode<ServerCommandSource>> parsedCommandNodes = commandContext.getNodes();
+        return parsedCommandNodes.get(parsedCommandNodes.size() - 1);
     }
 
     @ForDeveloper("A child command context will be made, if there is any command redirect or command fork.")
@@ -68,22 +68,24 @@ public class CommandAssistant {
         return commandContextChain;
     }
 
-    private static @NotNull Pair<CommandContext<ServerCommandSource>, CommandNode<ServerCommandSource>> getLastParsedCommandNodeRecursively(@NotNull CommandContext<ServerCommandSource> rootCommandContext) {
-        List<CommandContext<ServerCommandSource>> commandContexts = makeCommandContextChain(rootCommandContext);
+    private static @NotNull Pair<CommandContext<ServerCommandSource>, CommandNode<ServerCommandSource>> getAssistanceTargetCommandNode(@NotNull CommandContext<ServerCommandSource> rootCommandContext) {
+        List<CommandContext<ServerCommandSource>> commandContextChain = makeCommandContextChain(rootCommandContext);
 
-        for (int i = commandContexts.size() - 1; i >= 0; i--) {
-            CommandContext<ServerCommandSource> currentCommandContext = commandContexts.get(i);
-            List<ParsedCommandNode<ServerCommandSource>> nodes = currentCommandContext.getNodes();
-            for (int j = nodes.size() - 1; j >= 0; j--) {
-                ParsedCommandNode<ServerCommandSource> node = nodes.get(j);
-                StringRange range = node.getRange();
+        for (int i = commandContextChain.size() - 1; i >= 0; i--) {
+            CommandContext<ServerCommandSource> currentCommandContext = commandContextChain.get(i);
+            List<ParsedCommandNode<ServerCommandSource>> currentParsedCommandNodes = currentCommandContext.getNodes();
+            for (int j = currentParsedCommandNodes.size() - 1; j >= 0; j--) {
+                ParsedCommandNode<ServerCommandSource> candidateParsedCommandNode = currentParsedCommandNodes.get(j);
+
+                // NOTE: For GreedyString argument type, if its value is empty, then you will get `<argument rest:string()>@StringRange{start=39, end=39}`
+                StringRange range = candidateParsedCommandNode.getRange();
                 if (range.getStart() != range.getEnd()) {
-                    return new Pair<>(currentCommandContext, node.getNode());
+                    return new Pair<>(currentCommandContext, candidateParsedCommandNode.getNode());
                 }
             }
         }
 
-        LogUtil.warn("Failed to get last parsed command node from command context chain, falling back to the last command nodes of the root command context {}.", commandContexts);
+        LogUtil.warn("Failed to get last parsed command node from command context chain, falling back to the last command nodes of the root command context {}.", commandContextChain);
         return new Pair<>(rootCommandContext, getLastParsedCommandNode(rootCommandContext).getNode());
     }
 
@@ -101,29 +103,30 @@ public class CommandAssistant {
         return sb.toString();
     }
 
-    private static void printUsageForCommandNode(@NotNull ServerCommandSource source, @NotNull CommandContext<ServerCommandSource> rootCommandContext, @NotNull CommandContext<ServerCommandSource> commandContext, @NotNull CommandNode<ServerCommandSource> targetCommandNode, @NotNull SuggestionsBuilder builder) {
+    private static void printUsageForCommandNode(@NotNull ServerCommandSource commandSource, @NotNull CommandContext<ServerCommandSource> rootCommandContext, @NotNull CommandContext<ServerCommandSource> commandContext, @NotNull CommandNode<ServerCommandSource> targetCommandNode, @NotNull SuggestionsBuilder builder) {
 //        Inspector.inspectCommandNode(targetCommandNode);
 //        Inspector.inspectSuggestionsBuilder(builder);
 
         /* Make the output. */
-        AvailableNextCommandPathList previousAvailableNextCommandPathList = DEBOUNCE_AVAILABLE_NEXT_COMMAND_PATHS.getOrDefault(source.getName(), new AvailableNextCommandPathList());
+        AvailableNextCommandPathList previousAvailableNextCommandPathList = DEBOUNCE_AVAILABLE_NEXT_COMMAND_PATHS.getOrDefault(commandSource.getName(), new AvailableNextCommandPathList());
         AvailableNextCommandPathList currentAvailableNextCommandPathList = new AvailableNextCommandPathList();
 
         String inputString = commandContext.getInput();
-        for (String value : CommandHelper.getCommandDispatcher().getSmartUsage(targetCommandNode, source).values()) {
-            /* Compute prefix string. */
+        for (String value : CommandHelper.getCommandDispatcher().getSmartUsage(targetCommandNode, commandSource).values()) {
+            /* Compute prefix string: truncate the input string to make room for infix string. */
             String prefixString = inputString.substring(0, builder.getStart());
 
-            /* Compute infix string. */
-            String infixString = "...";
+            /* Compute infix string: the infix string can be pending state representation `...` or a selected command path. */
+            String infixString = "..."; // There are multiple possible command paths, pending for more information.
             if (!hasUnparsedCharacters(commandContext, builder)) {
+                // The user has selected a command path, now we have the information to print the selected argument name.
                 infixString = toStringByArgumentType(getLastParsedCommandNode(commandContext).getNode());
             }
 
             /* Compute suffix string. */
             String suffixString = " " + value;
 
-            /* Trim the strings. */
+            /* Trim the strings, to improve cache hits. */
             prefixString = prefixString.trim();
             infixString = infixString.trim();
             suffixString = suffixString.trim();
@@ -134,38 +137,43 @@ public class CommandAssistant {
                     .add(new AvailableNextCommandPath(prefixString, infixString, suffixString));
         }
 
-        /* Send current available next command path list. */
+        /* Debounce and send current available next command path list. */
         if (!currentAvailableNextCommandPathList.equals(previousAvailableNextCommandPathList)) {
-            DEBOUNCE_AVAILABLE_NEXT_COMMAND_PATHS.put(source.getName(), currentAvailableNextCommandPathList);
-            DEBOUNCE_COMPLETED_COMMAND_PATH.remove(source.getName());
+            DEBOUNCE_AVAILABLE_NEXT_COMMAND_PATHS.put(commandSource.getName(), currentAvailableNextCommandPathList);
+            // NOTE: Re-send the completed command path, as the old message has already been buried.
+            DEBOUNCE_COMPLETED_COMMAND_PATH.remove(commandSource.getName());
 
             /* Print the header. */
-            Text headerText = TextHelper.getTextByKey(source, "command.assistant.header");
-            source.sendMessage(headerText);
+            Text headerText = TextHelper.getTextByKey(commandSource, "command.assistant.header");
+            commandSource.sendMessage(headerText);
 
             /* Print the body. */
             currentAvailableNextCommandPathList
                     .getEntries()
                     .forEach(entry -> {
-                        Text possiblePathText = TextHelper.getTextByKey(source, "command.assistant.incomplete"
+                        Text possiblePathText = TextHelper.getTextByKey(commandSource, "command.assistant.incomplete"
                                 , TextHelper.Parsers.escapeTags(entry.getPrefixString())
                                 , TextHelper.Parsers.escapeTags(entry.getInfixString())
                                 , TextHelper.Parsers.escapeTags(entry.getSuffixString()));
-                        source.sendMessage(possiblePathText);
+                        commandSource.sendMessage(possiblePathText);
                     });
 
         }
 
-        /* Check if current command node is executable. */
-        if (targetCommandNode.getCommand() != null) {
-            String previousCompleteCommandPath = DEBOUNCE_COMPLETED_COMMAND_PATH.getOrDefault(source.getName(), "");
+        /* Debounce and send the completed command path. */
+        if (isCommandNodeExecutable(targetCommandNode)) {
+            String previousCompleteCommandPath = DEBOUNCE_COMPLETED_COMMAND_PATH.getOrDefault(commandSource.getName(), "");
             String currentCompletedCommandPath = getParsedCommandPath(rootCommandContext);
             if (!currentCompletedCommandPath.equals(previousCompleteCommandPath)) {
-                DEBOUNCE_COMPLETED_COMMAND_PATH.put(source.getName(), currentCompletedCommandPath);
-                Text text = TextHelper.getTextByKey(source, "command.assistant.complete", TextHelper.Parsers.escapeTags(currentCompletedCommandPath));
-                source.sendMessage(text);
+                DEBOUNCE_COMPLETED_COMMAND_PATH.put(commandSource.getName(), currentCompletedCommandPath);
+                Text text = TextHelper.getTextByKey(commandSource, "command.assistant.complete", TextHelper.Parsers.escapeTags(currentCompletedCommandPath));
+                commandSource.sendMessage(text);
             }
         }
+    }
+
+    private static boolean isCommandNodeExecutable(@NotNull CommandNode<ServerCommandSource> targetCommandNode) {
+        return targetCommandNode.getCommand() != null;
     }
 
     @TestCase(action = "Test the command assistant.", targets = {
@@ -189,19 +197,25 @@ public class CommandAssistant {
 
 //        Inspector.inspectCommandContext(rootCommandContext, "current");
 
-        Pair<CommandContext<ServerCommandSource>, CommandNode<ServerCommandSource>> pair = getLastParsedCommandNodeRecursively(rootCommandContext);
+        Pair<CommandContext<ServerCommandSource>, CommandNode<ServerCommandSource>> pair = getAssistanceTargetCommandNode(rootCommandContext);
         CommandContext<ServerCommandSource> targetCommandContext = pair.getKey();
         CommandNode<ServerCommandSource> targetCommandNode = pair.getValue();
 
-        /* Try to use redirect command node. */
-        CommandNode<ServerCommandSource> redirect = targetCommandNode.getRedirect();
-        if (redirect != null) {
-            targetCommandNode = redirect;
-        }
+        /* Perform the forward action for target command node, if there is any redirect target. */
+        // NOTE: If you didn't perform the forward action, then there is no result for next available paths. (e.g. `/help send-message @s --silent true`)
+        targetCommandNode = performForwardAction(targetCommandNode);
 
         /* Print command usage for target command node. */
         ServerCommandSource source = rootCommandContext.getSource();
         printUsageForCommandNode(source, rootCommandContext, targetCommandContext, targetCommandNode, builder);
+    }
+
+    private static @NotNull CommandNode<ServerCommandSource> performForwardAction(CommandNode<ServerCommandSource> targetCommandNode) {
+        CommandNode<ServerCommandSource> redirectTargetCommandNode = targetCommandNode.getRedirect();
+        if (redirectTargetCommandNode != null) {
+            targetCommandNode = redirectTargetCommandNode;
+        }
+        return targetCommandNode;
     }
 
     private static boolean canUseCommandAssistant(@NotNull CommandContext<ServerCommandSource> rootCommandContext) {
