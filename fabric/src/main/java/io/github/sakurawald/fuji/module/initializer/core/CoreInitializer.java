@@ -105,6 +105,8 @@ public class CoreInitializer extends ModuleInitializer {
             - To discover new things, use `/fuji inspect` command.
             - Anything unclear, open an issue in [2;34mhttps://github.com/sakurawald/fuji/issues[0m[2;35m[0m[2;35m
             - Now, issue `[2;34m/fuji[0m[2;35m` to get started!
+
+            \033[0m
            """;
         LogUtil.info(userGuide);
     }
