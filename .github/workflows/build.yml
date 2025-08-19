@@ -14,17 +14,17 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Check for open PRs from crowdin-bot
+      - name: Check for open PRs from github actions.
         run: |
-          # List all open PRs from crowdin-bot
-          prs=$(gh pr list --state open --search "participant:crowdin-bot" --json number --jq '.[].number')
+          # List all open PRs from github actions.
+          prs=$(gh pr list --state open --search "author:app/github-actions" --json number --jq '.[].number')
           
           if [ -n "$prs" ]; then
-            echo "Found open PR(s) from crowdin-bot: $prs"
-            echo "crowdin_pr_found=true" >> $GITHUB_ENV
+            echo "Found open PR(s) from github actions: $prs"
+            echo "github_actions_pr_found=true" >> $GITHUB_ENV
           else
-            echo "No open PRs from crowdin-bot."
-            echo "crowdin_pr_found=false" >> $GITHUB_ENV
+            echo "No open PRs from github actions."
+            echo "github_actions_pr_found=false" >> $GITHUB_ENV
           fi
       - name: Crowdin action
         uses: crowdin/github-action@v2
