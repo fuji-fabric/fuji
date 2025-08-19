@@ -173,7 +173,8 @@ public class CommandAssistant {
             , "Test the assistant at the beginning of the token"
             , "Test the assistant at the end of the token"
             , "Test the assistant with the optional argument: `/back 3`"
-            , "Test the assistant with the entity selector: `/send-message `"
+            , "Test the assistant with the entity selector: `/send-message @r`"
+            , "Test the assistant with custom parser and non-zero-offset suggestions builder: `/fly others @a[distance=..8`"
     })
     @ForDeveloper("""
             The command suggestions provider will be called:

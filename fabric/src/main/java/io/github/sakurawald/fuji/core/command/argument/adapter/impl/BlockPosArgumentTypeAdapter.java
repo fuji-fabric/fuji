@@ -34,7 +34,7 @@ public class BlockPosArgumentTypeAdapter extends BaseArgumentTypeAdapter {
         return super
             .makeRequiredArgumentBuilder(argumentName)
             .suggests(CommandHelper.Suggestion.iterable((context, builder) -> {
-                List<String> suggestions = new ArrayList<>(List.of("~", "~ ~", "~ ~ ~"));
+                List<String> suggestions = new ArrayList<>();
 
                 CommandHelper.Source.withServerPlayerEntity(context, player -> {
                     WorldHelper.Raycast

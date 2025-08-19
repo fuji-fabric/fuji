@@ -1,10 +1,14 @@
 package io.github.sakurawald.fuji.core.command.argument.adapter.impl;
 
 import com.mojang.brigadier.arguments.ArgumentType;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
+import java.util.ArrayList;
 import lombok.SneakyThrows;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
@@ -24,6 +28,27 @@ public class EntityArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
         return EntityArgumentType.getEntity(context, commandArgument.getArgumentName());
+    }
+
+    @SuppressWarnings("CodeBlock2Expr")
+    @Override
+    protected @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+        return super.makeRequiredArgumentBuilder(argumentName)
+            .suggests(CommandHelper.Suggestion.iterable((context, builder) -> {
+                List<String> suggestions = new ArrayList<>(List.of());
+
+                CommandHelper.Source
+                    .withServerPlayerEntity(context, player -> {
+                        WorldHelper.Raycast
+                            .getLookingAtEntity(player)
+                            .ifPresent(lookingAtEntity -> {
+                                suggestions.add(lookingAtEntity.getUuidAsString());
+                            });
+                    });
+
+                return suggestions;
+            }))
+            ;
     }
 
     @Override
