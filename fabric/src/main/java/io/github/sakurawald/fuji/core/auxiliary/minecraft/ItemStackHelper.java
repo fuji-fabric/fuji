@@ -110,7 +110,7 @@ public class ItemStackHelper {
             try {
                 ItemStack stack;
 
-                #if MC_VER < MC_1_21_5
+                #if MC_VER < MC_1_21_6
                 ItemStackArgument itemStackArgument = ItemStackArgumentType.itemStack(CommandHelper.getCommandRegistryAccess()).parse(stringReader);
                 stack = itemStackArgument.createStack(1, false);
                 #elif MC_VER >= MC_1_21_6
