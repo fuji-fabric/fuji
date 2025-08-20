@@ -13,6 +13,7 @@ public class AntiBuildConfigModel {
         public InteractItem interact_item = new InteractItem();
         public InteractBlock interact_block = new InteractBlock();
         public InteractEntity interact_entity = new InteractEntity();
+        public AttackEntity attack_entity = new AttackEntity();
 
         public static class BreakBlock {
             public Set<String> id = new HashSet<>() {
@@ -47,6 +48,15 @@ public class AntiBuildConfigModel {
         }
 
         public static class InteractEntity {
+            public Set<String> id = new HashSet<>() {
+                {
+                    this.add("minecraft:villager");
+                }
+            };
+
+        }
+
+        public static class AttackEntity {
             public Set<String> id = new HashSet<>() {
                 {
                     this.add("minecraft:villager");

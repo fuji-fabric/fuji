@@ -9,6 +9,7 @@
     "afk.effect.ServerPlayerEntityMixin",
     "anti_build.BlockItemMixin",
     "anti_build.EntityMixin",
+    "anti_build.ServerPlayerEntityMixin",
     "anti_build.ServerPlayerInteractionManagerMixin",
     "back.ServerPlayerEntityMixin",
     "chat.history.SendChatHistoryMixin",

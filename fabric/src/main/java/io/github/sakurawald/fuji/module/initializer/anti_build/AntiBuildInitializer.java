@@ -76,23 +76,28 @@ public class AntiBuildInitializer extends ModuleInitializer {
         """)
     private static final PermissionDescriptor ANTI_BUILD_OVERRIDE_PERMISSION = new PermissionDescriptor("fuji.anti_build.<anti-type>.override.<id>", 1752994843864L);
 
-    public static <T> void processAntiBuild(@Nullable PlayerEntity player, @NotNull String antiType, @NotNull Set<String> ids, @NotNull String id, @NotNull CallbackInfoReturnable<T> cir, @NotNull T cancelWithValue, @NotNull Supplier<Boolean> shouldSendFeedback) {
+    public static void processAntiBuild(@Nullable PlayerEntity player, @NotNull String antiType, @NotNull Set<String> ids, @NotNull String id, @NotNull Runnable canceller, @NotNull Supplier<Boolean> feedbackTrigger) {
         ServerHelper.withServerPlayerEntity(player,() -> {
             // NOTE: This method will NOT be called for a dispenser block.
             if (isThisActionAllowed(player, antiType, ids, id)) {
                 return;
             }
 
+            /* Call the canceller to cancel this event. */
+            canceller.run();
+
             /* Send the cation cancelled message to the player. */
-            if (shouldSendFeedback.get() && player != null) {
+            if (feedbackTrigger.get() && player != null) {
                 // NOTE: The `dispenser block` can also place blocks in the world.
                 // NOTE: You may see the double message if you install the mod in client-side.
                 TextHelper.sendTextByKey(player, "anti_build.disallow");
             }
-
-            /* Cancel the call with specified value. */
-            cir.setReturnValue(cancelWithValue);
         });
+
+    }
+
+    public static <T> void processAntiBuild(@Nullable PlayerEntity player, @NotNull String antiType, @NotNull Set<String> ids, @NotNull String id, @NotNull CallbackInfoReturnable<T> cir, @NotNull T cancelWithValue, @NotNull Supplier<Boolean> feedbackTrigger) {
+        processAntiBuild(player, antiType, ids, id, () -> cir.setReturnValue(cancelWithValue), feedbackTrigger);
     }
 
     private static boolean isThisActionAllowed(@Nullable PlayerEntity player, @NotNull String antiType, @NotNull Set<String> ids, @NotNull String id) {
