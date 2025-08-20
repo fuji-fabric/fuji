@@ -30,6 +30,7 @@ import java.util.function.Supplier;
     3. Interact with a specified item.
     4. Interact with a specified block.
     5. Interact with a specified entity.
+    6. Attack a specified entity.
     """)
 @ColorBox(id = 1751896813134L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     Read the document to see the definition of `identifier` in Minecraft.
