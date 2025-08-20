@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ServerPlayerEntityMixin {
 
     @Inject(method = "attack", at = @At("HEAD"), cancellable = true)
-    void f(Entity entity, CallbackInfo ci) {
+    void handleAttackEntity(Entity entity, CallbackInfo ci) {
         ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) (Object) this;
         String id = RegistryHelper.getIdAsString(entity);
         AntiBuildInitializer.processAntiBuild(serverPlayerEntity, "attack_entity", AntiBuildInitializer.config.model().anti.attack_entity.id, id, ci::cancel, () -> true);
