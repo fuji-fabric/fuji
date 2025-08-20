@@ -72,6 +72,8 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         .setExclusionStrategies(new IgnoreModVersionStrategy())
         // If the Gson can't find a no-args-constructor, then it will try to create an instance using Unsafe, and ignore all the declared field initializers.
         .disableJdkUnsafe()
+        // Note that non-static inner class always holds a reference to its enclosing outer class. (Makes the no args constructor failed)
+        .disableInnerClassSerialization()
         // Let's create it.
         .create();
 
