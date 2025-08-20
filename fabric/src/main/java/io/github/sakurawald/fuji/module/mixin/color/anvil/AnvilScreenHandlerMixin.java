@@ -1,7 +1,9 @@
 package io.github.sakurawald.fuji.module.mixin.color.anvil;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.module.initializer.color.anvil.ColorAnvilInitializer;
+import java.util.concurrent.atomic.AtomicReference;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.AnvilScreenHandler;
@@ -39,12 +41,17 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
 
     @Unique
     private @NotNull Text parseInputNewItemName() {
-        /* Stripe style tags. */
-        if (ColorAnvilInitializer.config.model().requires_corresponding_permission_to_use_style_tag) {
-            PlayerEntity player = super.player;
-            newItemName = ColorAnvilInitializer.stripeStyleTags(player, newItemName);
-        }
-        return TextHelper.getTextByValue(null, newItemName);
+        AtomicReference<Text> modifiedText = new AtomicReference<>();
+        ServerHelper.withServerPlayerEntity(player,() -> {
+            /* Stripe style tags. */
+            if (ColorAnvilInitializer.config.model().requires_corresponding_permission_to_use_style_tag) {
+                PlayerEntity player = super.player;
+                newItemName = ColorAnvilInitializer.stripeStyleTags(player, newItemName);
+            }
+            modifiedText.set(TextHelper.getTextByValue(null, newItemName));
+        });
+
+        return modifiedText.get();
     }
 
     #if MC_VER <= MC_1_20_4
