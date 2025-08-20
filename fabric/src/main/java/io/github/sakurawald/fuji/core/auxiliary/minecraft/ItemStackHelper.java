@@ -110,10 +110,10 @@ public class ItemStackHelper {
             try {
                 ItemStack stack;
 
-                #if MC_VER < MC_1_21_6
+                #if MC_VER < MC_1_21_4
                 ItemStackArgument itemStackArgument = ItemStackArgumentType.itemStack(CommandHelper.getCommandRegistryAccess()).parse(stringReader);
                 stack = itemStackArgument.createStack(1, false);
-                #elif MC_VER >= MC_1_21_6
+                #elif MC_VER >= MC_1_21_4
                 var itemStringParser = new ItemStringReader(CommandHelper.getCommandRegistryAccess());
                 ItemStringReader.ItemResult consume = itemStringParser.consume(stringReader);
                 ItemStackArgument itemStackArgument = new ItemStackArgument(consume.comp_628(), consume.comp_2439());
