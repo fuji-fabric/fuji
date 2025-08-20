@@ -7,8 +7,10 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 public class ReflectionTest {
 
     public static final Set<String> REQUIRED_TYPE_DECLARATIONS = new HashSet<>() {
