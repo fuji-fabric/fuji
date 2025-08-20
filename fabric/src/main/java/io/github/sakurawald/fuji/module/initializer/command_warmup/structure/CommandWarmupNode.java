@@ -3,31 +3,37 @@ package io.github.sakurawald.fuji.module.initializer.command_warmup.structure;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.structure.Interruptible;
 import io.github.sakurawald.fuji.core.structure.Tag;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CommandWarmupNode {
 
-    final Tag tag;
+    Tag tag;
 
     @Document(id = 1751826877229L, value = """
         The `target command` and `warmup time in ms`.
         """)
-    final Command command;
+    Command command;
 
-    final Interruptible interruptible;
+    Interruptible interruptible;
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Command {
         @Document(id = 1751826879068L, value = """
             The `regex` expression used to match the `target command`.
             """)
-        final String regex;
+        String regex;
 
         @Document(id = 1751826881411L, value = """
             The `warmup time` in ms.
             """)
-        final int ms;
+        int ms;
     }
 
     public static CommandWarmupNode make(Command command, Interruptible interruptible) {

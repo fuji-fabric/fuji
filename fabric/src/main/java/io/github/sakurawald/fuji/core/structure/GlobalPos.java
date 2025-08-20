@@ -5,6 +5,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import java.util.Optional;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.With;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.s2c.play.PositionFlag;
@@ -17,14 +18,15 @@ import java.util.Set;
 import java.util.EnumSet;
 
 @Data
+@NoArgsConstructor
 @With
 public class GlobalPos {
-    final String level;
-    final double x;
-    final double y;
-    final double z;
-    final float yaw;
-    final float pitch;
+    String level;
+    double x;
+    double y;
+    double z;
+    float yaw;
+    float pitch;
 
     public GlobalPos(String level, double x, double y, double z, float yaw, float pitch) {
         this.level = level;

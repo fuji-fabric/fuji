@@ -3,8 +3,14 @@ package io.github.sakurawald.fuji.module.initializer.command_attachment.structur
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.ExecuteAsType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.CommandAttackmentType;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Getter
 public class ItemStackCommandAttachmentEntry extends BaseCommandAttachmentEntry {
     public boolean destroyItem;

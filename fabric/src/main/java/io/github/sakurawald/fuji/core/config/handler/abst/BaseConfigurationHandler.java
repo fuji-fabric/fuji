@@ -70,6 +70,9 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         .serializeNulls()
         // Exclude the mod version property in both serialization and de-serialization.
         .setExclusionStrategies(new IgnoreModVersionStrategy())
+        // If the Gson can't find a no-args-constructor, then it will try to create an instance using Unsafe, and ignore all the declared field initializers.
+        .disableJdkUnsafe()
+        // Let's create it.
         .create();
 
     /* Json Path Parser. */

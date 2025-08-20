@@ -4,12 +4,14 @@ import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class LocationEntry implements Comparable<LocationEntry> {
     GlobalPos location;

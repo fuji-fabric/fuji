@@ -1,16 +1,16 @@
 package io.github.sakurawald.fuji.core.command.structure;
 
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
-import io.github.sakurawald.fuji.core.config.Configs;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("ClassCanBeRecord")
 @Data
+@NoArgsConstructor
 public class CommandRequirementDescriptor {
 
-    final int level;
-    final @Nullable String string;
+    int level;
+    @Nullable String string;
 
     public CommandRequirementDescriptor(int level, @Nullable String string) {
         this.level = level;

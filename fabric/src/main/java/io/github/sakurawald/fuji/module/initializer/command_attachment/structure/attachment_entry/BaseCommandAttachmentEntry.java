@@ -5,9 +5,11 @@ import io.github.sakurawald.fuji.module.initializer.command_attachment.command.a
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.CommandAttackmentType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@SuppressWarnings({"UnusedAssignment", "unused"})
+@SuppressWarnings({"unused"})
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class BaseCommandAttachmentEntry {
     public CommandAttackmentType type = CommandAttackmentType.ITEMSTACK;

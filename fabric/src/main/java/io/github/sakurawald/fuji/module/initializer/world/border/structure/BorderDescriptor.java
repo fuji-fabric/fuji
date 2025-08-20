@@ -2,17 +2,23 @@ package io.github.sakurawald.fuji.module.initializer.world.border.structure;
 
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import net.minecraft.world.border.WorldBorder;
 
 @Document(id = 1752567811335L, value = """
     Used to describe the `border` of a `dimension`.
     """)
 @Data
+@NoArgsConstructor
 public class BorderDescriptor {
 
     public boolean enable = true;
-    public final String dimensionId;
+    public String dimensionId;
     public Border border = new Border();
+
+    public BorderDescriptor(String dimensionId) {
+        this.dimensionId = dimensionId;
+    }
 
     @Data
     public static class Border {

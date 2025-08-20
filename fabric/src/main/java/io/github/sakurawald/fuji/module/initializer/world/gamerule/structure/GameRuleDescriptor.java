@@ -1,13 +1,19 @@
 package io.github.sakurawald.fuji.module.initializer.world.gamerule.structure;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import net.minecraft.world.GameRules;
 
 @Data
+@NoArgsConstructor
 public class GameRuleDescriptor {
     public boolean enable = true;
-    public final String dimensionId;
+    public String dimensionId;
     public GameRuleStore gameRules = GameRuleStore.makeDefaultGameRuleStore();
+
+    public GameRuleDescriptor(String dimensionId) {
+        this.dimensionId = dimensionId;
+    }
 
     private transient GameRules vanillaGameRules;
 

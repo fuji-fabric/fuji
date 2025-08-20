@@ -3,5 +3,4 @@
 
 ## Changelog
 
-- [anti_build] feature: new `attack_entity` anti build type support.
-  - **NOTE: The `atatck_entity` come with `minecraft:villager` as its default config. You may need to configure it, to satisfy your needs.**
+- [core] feature: improved data de-serialization, ensure all data types will generate a default config, if the user mis-delete it.
