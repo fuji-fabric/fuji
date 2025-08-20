@@ -5,6 +5,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
@@ -74,18 +75,17 @@ public class SkinService {
             .stream()
             .filter(it -> it.getSkinName().contains(preferredDefaultSkinNameForNewPlayers))
             .findFirst();
-        if (preferredDefaultSkin.isPresent()) {
-            return preferredDefaultSkin.get().getSkinProperty();
-        }
 
         /* Get a random default skin. */
-        return getRandomDefaultSkin();
+        return preferredDefaultSkin
+            .map(skinDescriptor -> skinDescriptor.getSkinProperty().toVanillaType()).orElseGet(SkinService::getRandomDefaultSkin);
     }
 
     public static Property getRandomDefaultSkin() {
         return RandomUtil
             .drawList(getDefaultSkinList())
-            .getSkinProperty();
+            .getSkinProperty()
+            .toVanillaType();
     }
 
     private static boolean isSkinPropertyEqual(@NotNull Property x, @NotNull GameProfile y) {
@@ -112,7 +112,7 @@ public class SkinService {
     }
 
     private static @NotNull JsonObject makeComparableJsonObjectFromSkinProperty(Property property) {
-        String jsonString = new String(Base64.getDecoder().decode(PlayerHelper.getPropertyValue(property)), StandardCharsets.UTF_8);
+        String jsonString = new String(Base64.getDecoder().decode(AuthlibHelper.getPropertyValue(property)), StandardCharsets.UTF_8);
         JsonObject jsonObject = BaseConfigurationHandler.getGson().fromJson(jsonString, JsonObject.class);
         jsonObject.remove("timestamp");
         return jsonObject;

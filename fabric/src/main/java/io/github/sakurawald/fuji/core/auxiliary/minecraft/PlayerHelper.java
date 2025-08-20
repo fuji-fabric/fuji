@@ -1,7 +1,6 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import java.util.List;
@@ -46,14 +45,6 @@ public class PlayerHelper {
         return player.pingMilliseconds;
         #elif MC_VER > MC_1_20_1
         return player.networkHandler.getLatency();
-        #endif
-    }
-
-    public static String getPropertyValue(@NotNull Property property) {
-        #if MC_VER <= MC_1_20_1
-        return property.getValue();
-        #elif MC_VER > MC_1_20_1
-        return property.value();
         #endif
     }
 

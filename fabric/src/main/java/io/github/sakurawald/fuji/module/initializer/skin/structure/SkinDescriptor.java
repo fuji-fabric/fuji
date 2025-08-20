@@ -19,6 +19,6 @@ public class SkinDescriptor {
     @Document(id = 1753249413432L, value = """
         The `properties` of this `skin`.
         """)
-    Property skinProperty;
+    PropertyWrapper skinProperty;
 
 }

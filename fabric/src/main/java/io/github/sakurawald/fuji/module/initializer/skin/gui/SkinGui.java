@@ -4,7 +4,7 @@ import com.mojang.authlib.properties.Property;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
 import io.github.sakurawald.fuji.module.initializer.skin.service.SkinService;
@@ -34,8 +34,8 @@ public class SkinGui extends PagedGui<SkinDescriptor> {
     @Override
     protected @NotNull GuiElementInterface toGuiElement(@NotNull SkinDescriptor entity) {
         GuiElementBuilder builder = new GuiElementBuilder();
-        Property skinProperty = entity.getSkinProperty();
-        String value = PlayerHelper.getPropertyValue(skinProperty);
+        Property skinProperty = entity.getSkinProperty().toVanillaType();
+        String value = AuthlibHelper.getPropertyValue(skinProperty);
         builder
             .setItem(Items.PLAYER_HEAD)
             .setName(TextHelper.getTextByKey(getPlayer(), "skin.gui.entity.name", entity.getSkinName()))
@@ -45,7 +45,7 @@ public class SkinGui extends PagedGui<SkinDescriptor> {
             .setSkullOwner(value)
             .setCallback(() -> {
                 closeWithoutOpenParentGui();
-                SkinService.changeSkin(getPlayer(), entity::getSkinProperty);
+                SkinService.changeSkin(getPlayer(), () -> entity.getSkinProperty().toVanillaType());
             });
 
         return builder.build();
