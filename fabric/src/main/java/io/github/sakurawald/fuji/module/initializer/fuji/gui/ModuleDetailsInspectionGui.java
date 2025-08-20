@@ -36,8 +36,8 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         if (!modulePathString.equals(ModuleManager.CORE_MODULE_PATH)) return;
 
         /* Place about button. */
-        GuiElementBuilder aboutButton = new GuiElementBuilder()
-            .setItem(Items.NETHER_STAR)
+        GuiElementBuilder aboutButton = GuiHelper.Button
+            .makeModIconButton()
             .setName(TextHelper.getTextByKey(player, "about"))
             .setLore(List.of(TextHelper.getTextByKey(player, "prompt.click.see_inside")))
             .setCallback(() -> AboutGui.make(gui.getBackendGui(), player).open());
