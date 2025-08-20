@@ -2,7 +2,6 @@ package io.github.sakurawald.fuji.core.command.argument.adapter.impl;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.ItemStackWrapper;
@@ -28,7 +27,14 @@ public class ItemStackArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
         ItemStackArgument itemStackArgument = ItemStackArgumentType.getItemStackArgument(context, commandArgument.getArgumentName());
         ItemStack itemStack = itemStackArgument.createStack(1, false);
-        String inputString = itemStackArgument.asString(RegistryHelper.getDefaultWrapperLookup());
+        String inputString;
+
+        #if MC_VER <= MC_1_20_4
+        inputString = itemStackArgument.asString();
+        #elif MC_VER > MC_1_20_4
+        inputString = itemStackArgument.asString(RegistryHelper.getDefaultWrapperLookup());
+        #endif
+
         return new ItemStackWrapper(itemStack, inputString);
     }
 
