@@ -8,6 +8,7 @@
   - You can use the same syntax as in `/give <item>` command, specify a custom `player head` in anywhere the item is used: `warp icon`, `head economy item`, `title item`, `works item`, `command menu slot item`...
   - Examples:
     - `/warp set-item city minecraft:player_head[minecraft:profile=Steve]` (Use a custom player head as the icon of a warp)
+    - `/warp set-item spawn minecraft:diamond_sword[minecraft:damage=1024]`
     - `/send-toast @s --icon "minecraft:player_head[minecraft:profile=Steve]" <rb>Hello World` (Used in toast icon)
     - `/send-dialog @s --yesButtonItem minecraft:player_head[minecraft:profile=Steve] <rb>Hello World`
 - [color.anvil] fix: make this module works in `single-player world`, if the user installs this mod in client-side.

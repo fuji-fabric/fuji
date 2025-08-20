@@ -8,6 +8,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.ItemStackWrapper;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
@@ -224,10 +225,12 @@ public class SendToastInitializer extends ModuleInitializer {
     private static int $sendToast(@CommandSource ServerCommandSource source
         , ServerPlayerEntity player
         , Optional<AdvancementFrame> toastType
-        , Optional<ItemStack> icon
+        , Optional<ItemStackWrapper> icon
         , GreedyString message
     ) {
-        ItemStack $icon = icon.orElse(Items.SLIME_BALL.getDefaultStack());
+        ItemStack $icon = icon
+            .map(ItemStackWrapper::getItemStack)
+            .orElse(Items.SLIME_BALL.getDefaultStack());
         AdvancementFrame $toastType = toastType.orElse(AdvancementFrame.CHALLENGE);
         Text title = TextHelper.getTextByValue(player, message.getValue());
         sendToast(player, $toastType, $icon, title);

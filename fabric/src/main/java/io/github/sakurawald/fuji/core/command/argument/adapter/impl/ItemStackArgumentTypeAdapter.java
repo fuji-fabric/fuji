@@ -2,8 +2,10 @@ package io.github.sakurawald.fuji.core.command.argument.adapter.impl;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.ItemStackWrapper;
 import io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor;
 import lombok.SneakyThrows;
 import net.minecraft.command.argument.ItemStackArgument;
@@ -25,12 +27,14 @@ public class ItemStackArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
         ItemStackArgument itemStackArgument = ItemStackArgumentType.getItemStackArgument(context, commandArgument.getArgumentName());
-        return itemStackArgument.createStack(1, false);
+        ItemStack itemStack = itemStackArgument.createStack(1, false);
+        String inputString = itemStackArgument.asString(RegistryHelper.getDefaultWrapperLookup());
+        return new ItemStackWrapper(itemStack, inputString);
     }
 
     @Override
     public List<Class<?>> getTypeClasses() {
-        return List.of(ItemStack.class);
+        return List.of(ItemStackWrapper.class);
     }
 
     @Override

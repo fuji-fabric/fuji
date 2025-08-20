@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_toolbox.warp;
 
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.ItemStackWrapper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -145,9 +146,9 @@ public class WarpInitializer extends ModuleInitializer {
     @Document(id = 1751825422424L, value = "Set the item for a warp.")
     @CommandNode("set-item")
     @CommandRequirement(level = 4)
-    private static int $setItem(@CommandSource ServerPlayerEntity player, WarpName warp, GreedyString itemString) {
+    private static int $setItem(@CommandSource ServerPlayerEntity player, WarpName warp, ItemStackWrapper itemStack) {
         return withWarpNode(player, warp, warpNode -> {
-            warpNode.setItem(itemString.getValue());
+            warpNode.setItem(itemStack.getInputString());
             return CommandHelper.Return.SUCCESS;
         });
     }

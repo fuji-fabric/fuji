@@ -6,6 +6,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.ItemStackWrapper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.echo.send_dialog.structure.DialogGui;
@@ -34,11 +35,11 @@ public class SendDialogInitializer extends ModuleInitializer {
         , ServerPlayerEntity player
         , Optional<Integer> rows
         , Optional<Integer> yesButtonSlotIndex
-        , Optional<ItemStack> yesButtonItem
+        , Optional<ItemStackWrapper> yesButtonItem
         , Optional<String> yesButtonName
         , Optional<String> yesButtonCommand
         , Optional<Integer> noButtonSlotIndex
-        , Optional<ItemStack> noButtonItem
+        , Optional<ItemStackWrapper> noButtonItem
         , Optional<String> noButtonName
         , Optional<String> noButtonCommand
         , Optional<Boolean> canCloseUsingNoButton
@@ -50,13 +51,17 @@ public class SendDialogInitializer extends ModuleInitializer {
         Text dialogTitleText = TextHelper.getTextByValue(player, $title);
 
         int $yesButtonSlotIndex = yesButtonSlotIndex.orElse(2);
-        ItemStack $yesButtonItem = yesButtonItem.orElse(Items.SLIME_BALL.getDefaultStack());
+        ItemStack $yesButtonItem = yesButtonItem
+            .map(ItemStackWrapper::getItemStack)
+            .orElse(Items.SLIME_BALL.getDefaultStack());
         String $yesButtonName = yesButtonName.orElse("<green><b>YES");
         Text $$yesButtonName = TextHelper.getTextByValue(player, $yesButtonName);
         String $yesButtonCommand = yesButtonCommand.orElse("");
 
         int $noButtonSlotIndex = noButtonSlotIndex.orElse(6);
-        ItemStack $noButtonItem = noButtonItem.orElse(Items.MAGMA_CREAM.getDefaultStack());
+        ItemStack $noButtonItem = noButtonItem
+            .map(ItemStackWrapper::getItemStack)
+            .orElse(Items.MAGMA_CREAM.getDefaultStack());
         String $noButtonName = noButtonName.orElse("<dark_red><b>NO");
         Text $$noButtonName = TextHelper.getTextByValue(player, $noButtonName);
         String $noButtonCommand = noButtonCommand.orElse("");
