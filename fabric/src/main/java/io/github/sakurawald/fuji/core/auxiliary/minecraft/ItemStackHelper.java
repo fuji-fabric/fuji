@@ -110,13 +110,17 @@ public class ItemStackHelper {
             try {
                 ItemStack stack;
                 ItemStackArgument itemStackArgument = ItemStackArgumentType.itemStack(CommandHelper.getCommandRegistryAccess()).parse(stringReader);
-                stack = itemStackArgument.createStack(1, false);
+                stack = createItemStack(itemStackArgument);
                 return stack;
             } catch (CommandSyntaxException e) {
                 LogUtil.warn("Failed to parse the item string {} into an ItemStack instance, falling back to minecraft:barrier as the result ItemStack instance.", itemString);
                 return Items.BARRIER.getDefaultStack();
             }
 
+        }
+
+        public static @NotNull ItemStack createItemStack(@NotNull ItemStackArgument itemStackArgument) throws CommandSyntaxException {
+            return itemStackArgument.createStack(1, false);
         }
     }
 
