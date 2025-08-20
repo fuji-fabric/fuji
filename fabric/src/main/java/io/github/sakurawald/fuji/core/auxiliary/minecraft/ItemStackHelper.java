@@ -8,9 +8,8 @@ import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import java.util.ArrayList;
 import java.util.function.Consumer;
-import lombok.Getter;
 import net.minecraft.command.argument.ItemStackArgument;
-import net.minecraft.command.argument.ItemStringReader;
+import net.minecraft.command.argument.ItemStackArgumentType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -106,19 +105,21 @@ public class ItemStackHelper {
 
     public static class Parser {
 
-        @Getter(lazy = true)
-        private static final ItemStringReader ITEM_STRING_READER = getItemStringReader();
-
-        private static @NotNull ItemStringReader getItemStringReader() {
-            return new ItemStringReader(CommandHelper.getCommandRegistryAccess());
-        }
-
         public static @NotNull ItemStack parseItemStack(@NotNull String itemString) {
             StringReader stringReader = new StringReader(itemString);
             try {
-                ItemStringReader.ItemResult consume = getItemStringReader().consume(stringReader);
+                ItemStack stack;
+
+                #if MC_VER < MC_1_21_6
+                ItemStackArgument itemStackArgument = ItemStackArgumentType.itemStack(CommandHelper.getCommandRegistryAccess()).parse(stringReader);
+                stack = itemStackArgument.createStack(1, false);
+                #elif MC_VER >= MC_1_21_6
+                var itemStringParser = new ItemStringReader(CommandHelper.getCommandRegistryAccess());
+                ItemStringReader.ItemResult consume = itemStringParser.consume(stringReader);
                 ItemStackArgument itemStackArgument = new ItemStackArgument(consume.comp_628(), consume.comp_2439());
-                ItemStack stack = itemStackArgument.createStack(1, false);
+                stack = itemStackArgument.createStack(1, false);
+                #endif
+
                 return stack;
             } catch (CommandSyntaxException e) {
                 LogUtil.warn("Failed to parse the item string {} into an ItemStack instance, falling back to minecraft:barrier as the result ItemStack instance.", itemString);
@@ -226,7 +227,7 @@ public class ItemStackHelper {
             }
 
             return fromNbt(nbtCompound)
-                    .orElse(ItemStack.EMPTY);
+                .orElse(ItemStack.EMPTY);
         }
 
         public static NbtList writeSlotsNode(@NotNull NbtList node, @NotNull List<ItemStack> stackList) {
