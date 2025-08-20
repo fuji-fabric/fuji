@@ -28,7 +28,7 @@ import net.minecraft.advancement.AdvancementRequirements;
 import net.minecraft.advancement.AdvancementRewards;
 import net.minecraft.advancement.criterion.CriterionProgress;
 import net.minecraft.advancement.criterion.ImpossibleCriterion;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.s2c.play.AdvancementUpdateS2CPacket;
 import net.minecraft.server.command.ServerCommandSource;
@@ -56,16 +56,23 @@ import java.util.Set;
     ◉ Send a toast to a player.
     Issue: `/send-toast Alice --icon minecraft:golden_carrot \\<rb\\>eat this carrot`
     """)
+@ColorBox(id = 1755692848834L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+    You can send a toast with a custom icon.
+    The syntax is the same as `/give` command.
+
+    For example:
+    1. `/send-toast @s --icon "minecraft:player_head[minecraft:profile=Steve]" \\<rb\\>Hello World`
+    """)
 public class SendToastInitializer extends ModuleInitializer {
 
     private static final String IMPOSSIBLE = "impossible";
     private static final String DUMMY_RESOURCE_IMAGE_IDENTIFIER = "minecraft:textures/gui/advancements/backgrounds/end.png";
     private static final Identifier SEND_TOAST_IDENTIFIER = Identifier.of("custom", "custom");
 
-    private static void sendToast(ServerPlayerEntity player, AdvancementFrame advancementFrame, Item icon, Text title) {
+    private static void sendToast(ServerPlayerEntity player, AdvancementFrame advancementFrame, ItemStack icon, Text title) {
         /* Make an advancement display. */
         AdvancementDisplay advancementDisplay = new AdvancementDisplay(
-            icon.getDefaultStack()
+            icon
             , title
             , Text.empty()
             ,
@@ -217,10 +224,10 @@ public class SendToastInitializer extends ModuleInitializer {
     private static int $sendToast(@CommandSource ServerCommandSource source
         , ServerPlayerEntity player
         , Optional<AdvancementFrame> toastType
-        , Optional<Item> icon
+        , Optional<ItemStack> icon
         , GreedyString message
     ) {
-        Item $icon = icon.orElse(Items.SLIME_BALL);
+        ItemStack $icon = icon.orElse(Items.SLIME_BALL.getDefaultStack());
         AdvancementFrame $toastType = toastType.orElse(AdvancementFrame.CHALLENGE);
         Text title = TextHelper.getTextByValue(player, message.getValue());
         sendToast(player, $toastType, $icon, title);

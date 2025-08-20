@@ -23,9 +23,9 @@ io.github.sakurawald.fuji.core.command.argument.adapter.impl.GreedyStringListArg
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.IdentifierArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.IntRangeArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.IntegerArgumentTypeAdapter
-io.github.sakurawald.fuji.core.command.argument.adapter.impl.ItemArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.ItemPredicateArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.ItemSlotArgumentTypeAdapter
+io.github.sakurawald.fuji.core.command.argument.adapter.impl.ItemStackArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.LongArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.NbtCompoundArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.NbtElementArgumentTypeAdapter

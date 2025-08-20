@@ -10,7 +10,7 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.echo.send_dialog.structure.DialogGui;
 import java.util.Optional;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -34,11 +34,11 @@ public class SendDialogInitializer extends ModuleInitializer {
         , ServerPlayerEntity player
         , Optional<Integer> rows
         , Optional<Integer> yesButtonSlotIndex
-        , Optional<Item> yesButtonItem
+        , Optional<ItemStack> yesButtonItem
         , Optional<String> yesButtonName
         , Optional<String> yesButtonCommand
         , Optional<Integer> noButtonSlotIndex
-        , Optional<Item> noButtonItem
+        , Optional<ItemStack> noButtonItem
         , Optional<String> noButtonName
         , Optional<String> noButtonCommand
         , Optional<Boolean> canCloseUsingNoButton
@@ -50,13 +50,13 @@ public class SendDialogInitializer extends ModuleInitializer {
         Text dialogTitleText = TextHelper.getTextByValue(player, $title);
 
         int $yesButtonSlotIndex = yesButtonSlotIndex.orElse(2);
-        Item $yesButtonItem = yesButtonItem.orElse(Items.SLIME_BALL);
+        ItemStack $yesButtonItem = yesButtonItem.orElse(Items.SLIME_BALL.getDefaultStack());
         String $yesButtonName = yesButtonName.orElse("<green><b>YES");
         Text $$yesButtonName = TextHelper.getTextByValue(player, $yesButtonName);
         String $yesButtonCommand = yesButtonCommand.orElse("");
 
         int $noButtonSlotIndex = noButtonSlotIndex.orElse(6);
-        Item $noButtonItem = noButtonItem.orElse(Items.MAGMA_CREAM);
+        ItemStack $noButtonItem = noButtonItem.orElse(Items.MAGMA_CREAM.getDefaultStack());
         String $noButtonName = noButtonName.orElse("<dark_red><b>NO");
         Text $$noButtonName = TextHelper.getTextByValue(player, $noButtonName);
         String $noButtonCommand = noButtonCommand.orElse("");

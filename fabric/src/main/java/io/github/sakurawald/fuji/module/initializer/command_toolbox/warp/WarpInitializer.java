@@ -3,7 +3,6 @@ package io.github.sakurawald.fuji.module.initializer.command_toolbox.warp;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
@@ -22,7 +21,6 @@ import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.command
 import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.config.model.WarpDataModel;
 import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.gui.WarpGui;
 import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.structure.WarpNode;
-import net.minecraft.item.Item;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
