@@ -109,15 +109,8 @@ public class ItemStackHelper {
             StringReader stringReader = new StringReader(itemString);
             try {
                 ItemStack stack;
-
-                #if MC_VER < MC_1_21_6
                 ItemStackArgument itemStackArgument = ItemStackArgumentType.itemStack(CommandHelper.getCommandRegistryAccess()).parse(stringReader);
                 stack = itemStackArgument.createStack(1, false);
-                #elif MC_VER >= MC_1_21_6
-                ItemStackArgument itemStackArgument = ItemStackArgumentType.itemStack(CommandHelper.getCommandRegistryAccess()).parse(stringReader);
-                stack = itemStackArgument.createStack(1, false);
-                #endif
-
                 return stack;
             } catch (CommandSyntaxException e) {
                 LogUtil.warn("Failed to parse the item string {} into an ItemStack instance, falling back to minecraft:barrier as the result ItemStack instance.", itemString);

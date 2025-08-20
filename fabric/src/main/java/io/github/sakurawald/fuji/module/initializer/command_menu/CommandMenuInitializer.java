@@ -53,6 +53,15 @@ import net.minecraft.server.network.ServerPlayerEntity;
     Thanks to <dark_green>Hitnam</dark_green>, we have an `online editor` for `command_menu` module.
     The tool is hosted in: https://fuji-command-menu-editor-k4k4.vercel.app/
     """)
+@ColorBox(id = 1755690116092L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+    ◉ Use a custom player skull as the slot's icon.
+    You can modify the `item` property for that slot directly.
+    The syntax of `item` is the same as the `/give \\<item\\>` command.
+
+    <green>NOTE: The data format may be different across MC versions.
+    1. `/give @s minecraft:player_head[minecraft:profile=Steve]`
+    2. `/give @s minecraft:player_head{SkullOwner:"Steve"}`
+    """)
 
 
 
