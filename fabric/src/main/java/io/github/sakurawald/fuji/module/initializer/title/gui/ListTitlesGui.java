@@ -76,8 +76,8 @@ public class ListTitlesGui extends PagedGui<TitleDescriptor> {
     protected @NotNull GuiElementInterface toGuiElement(@NotNull TitleDescriptor entity) {
         ServerPlayerEntity player = getPlayer();
 
-        GuiElementBuilder builder = new GuiElementBuilder();
-        builder.setItem(entity.toItem());
+        GuiElementBuilder builder = GuiElementBuilder
+            .from(entity.toItemStack());
         builder.setName(TextHelper.getTextByValue(player, entity.getDisplayName()));
 
         List<Text> lore = new ArrayList<>();

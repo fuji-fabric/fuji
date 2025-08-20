@@ -3,7 +3,6 @@ package io.github.sakurawald.fuji.module.initializer.head.structure;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.InventoryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.module.initializer.head.HeadInitializer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -17,13 +16,13 @@ public enum EconomyType {
     FREE;
 
     @SuppressWarnings("WhileLoopReplaceableByForEach")
-    private static boolean tryExtractItems(ServerPlayerEntity player, @NotNull Item item, int amount) {
+    private static boolean tryExtractItems(@NotNull ServerPlayerEntity player, @NotNull ItemStack economyItemStack, int amount) {
         Iterator<DefaultedList<ItemStack>> iterator = InventoryHelper.getCombinedInventory(player).iterator();
         while (iterator.hasNext()) {
             DefaultedList<ItemStack> list = iterator.next();
 
             for (ItemStack itemStack : list) {
-                if (itemStack.getItem().equals(item)
+                if (ItemStackHelper.canCombine(itemStack, economyItemStack)
                     && !itemStack.hasEnchantments()
                     && itemStack.getCount() >= amount
                 ) {
@@ -57,7 +56,7 @@ public enum EconomyType {
         };
     }
 
-    private static @NotNull Item getCostItem() {
-        return ItemStackHelper.getItem(HeadInitializer.config.model().cost_item_type);
+    private static @NotNull ItemStack getCostItem() {
+        return ItemStackHelper.Parser.parseItemStack(HeadInitializer.config.model().cost_item_type);
     }
 }

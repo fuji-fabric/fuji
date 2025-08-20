@@ -1,24 +1,26 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import java.util.ArrayList;
 import java.util.function.Consumer;
-import net.minecraft.item.Item;
+import lombok.Getter;
+import net.minecraft.command.argument.ItemStackArgument;
+import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import net.minecraft.nbt.NbtList;
@@ -102,14 +104,28 @@ public class ItemStackHelper {
         return Objects.equals(CustomData.getCustomDataNbt(a), CustomData.getCustomDataNbt(b));
     }
 
-    public static @NotNull Item getItem(@NotNull String identifier) {
-        // NOTE: For un-known identifier, it will always return minecraft:air as the dummy item.
-        Item item = Registries.ITEM.get(Identifier.tryParse(identifier));
-        if (Items.AIR.equals(item)) {
-            LogUtil.warn("Failed to find the item {} in registry, we will return BARRIER instead.", identifier);
-            return Items.BARRIER;
+    public static class Parser {
+
+        @Getter(lazy = true)
+        private static final ItemStringReader ITEM_STRING_READER = getItemStringReader();
+
+        private static @NotNull ItemStringReader getItemStringReader() {
+            return new ItemStringReader(CommandHelper.getCommandRegistryAccess());
         }
-        return item;
+
+        public static @NotNull ItemStack parseItemStack(@NotNull String itemString) {
+            StringReader stringReader = new StringReader(itemString);
+            try {
+                ItemStringReader.ItemResult consume = getItemStringReader().consume(stringReader);
+                ItemStackArgument itemStackArgument = new ItemStackArgument(consume.comp_628(), consume.comp_2439());
+                ItemStack stack = itemStackArgument.createStack(1, false);
+                return stack;
+            } catch (CommandSyntaxException e) {
+                LogUtil.warn("Failed to parse the item string {} into an ItemStack instance, falling back to minecraft:barrier as the result ItemStack instance.", itemString);
+                return Items.BARRIER.getDefaultStack();
+            }
+
+        }
     }
 
     public static class Filter {

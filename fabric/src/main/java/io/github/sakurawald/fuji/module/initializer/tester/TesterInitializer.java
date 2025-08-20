@@ -30,6 +30,7 @@ public class TesterInitializer extends ModuleInitializer {
     @SneakyThrows(Exception.class)
     @CommandNode("run")
     private static int $run(@CommandSource ServerCommandSource source, GreedyString commandLine) {
+//        Class<int[]> aClass = int[].class;
 //        JsonObject jsonObject = new JsonObject();
 //        boolean empty = jsonObject.isEmpty();
         return CommandHelper.Return.SUCCESS;

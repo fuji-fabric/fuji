@@ -13,6 +13,7 @@ import io.github.sakurawald.fuji.module.initializer.works.gui.WorkGeneralSetting
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -71,12 +72,12 @@ public abstract class Work implements ObjectTypeStringGetter {
 
     protected abstract Item getDefaultEntityIcon();
 
-    public Item getEntityIcon() {
+    public ItemStack getEntityIcon() {
         if (this.icon == null) {
-            return this.getDefaultEntityIcon();
+            return this.getDefaultEntityIcon().getDefaultStack();
         }
 
-        return ItemStackHelper.getItem(this.icon);
+        return ItemStackHelper.Parser.parseItemStack(this.icon);
     }
 
     public abstract void openSpecializedSettingsGui(ServerPlayerEntity player, SimpleGui parentGui);

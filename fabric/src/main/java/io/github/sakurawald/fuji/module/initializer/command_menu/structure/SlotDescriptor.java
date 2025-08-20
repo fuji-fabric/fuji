@@ -16,6 +16,7 @@ import io.github.sakurawald.fuji.module.initializer.command_menu.CommandMenuInit
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -152,9 +153,9 @@ public class SlotDescriptor {
     }
 
     public GuiElementInterface buildGuiElement(ServerPlayerEntity viewingPlayer, MenuDescriptor menuDescriptor) {
-        GuiElementBuilder slotElementBuilder = new GuiElementBuilder();
+        ItemStack itemStack = ItemStackHelper.Parser.parseItemStack(this.item);
+        GuiElementBuilder slotElementBuilder = GuiElementBuilder.from(itemStack);
 
-        slotElementBuilder.setItem(ItemStackHelper.getItem(this.item));
         slotElementBuilder.setCount(this.count);
 
         if (this.hideTooltip) {

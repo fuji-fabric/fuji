@@ -29,9 +29,9 @@ public class WarpGui extends PagedGui<WarpNode> {
 
     @Override
     protected @NotNull GuiElementInterface toGuiElement(@NotNull WarpNode entity) {
-        return new GuiElementBuilder()
+        return GuiElementBuilder
+            .from(ItemStackHelper.Parser.parseItemStack(entity.getItem()))
             .setName(TextHelper.getTextByValue(getPlayer(), entity.getName()))
-            .setItem(ItemStackHelper.getItem(entity.getItem()))
             .setLore(new ArrayList<>() {
                 {
                     entity.getLore().forEach(it -> this.add(TextHelper.getTextByValue(getPlayer(), it)));

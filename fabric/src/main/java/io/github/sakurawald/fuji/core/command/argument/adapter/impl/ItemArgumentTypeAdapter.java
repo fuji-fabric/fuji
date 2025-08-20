@@ -21,7 +21,9 @@ public class ItemArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        return ItemStackArgumentType.getItemStackArgument(context, commandArgument.getArgumentName()).getItem();
+        return ItemStackArgumentType
+            .getItemStackArgument(context, commandArgument.getArgumentName())
+            .getItem();
     }
 
     @Override

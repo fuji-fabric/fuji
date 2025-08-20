@@ -77,7 +77,7 @@ public class HeadProvider {
                     Head head = BaseConfigurationHandler.getGson().fromJson(headJsonElement, Head.class);
                     result.put(category, head);
                 } catch (Exception e) {
-                    LogUtil.warn("Invalid head: " + headJsonElement);
+                    LogUtil.error("Invalid head: {}", headJsonElement, e);
                 }
             }
         } catch (IOException e) {

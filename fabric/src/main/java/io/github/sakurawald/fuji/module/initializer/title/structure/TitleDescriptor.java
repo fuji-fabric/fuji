@@ -4,7 +4,8 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -15,8 +16,8 @@ public class TitleDescriptor {
     String displayName;
     List<String> lore;
 
-    public Item toItem() {
-        return ItemStackHelper.getItem(this.item);
+    public @NotNull ItemStack toItemStack() {
+        return ItemStackHelper.Parser.parseItemStack(this.item);
     }
 
 }

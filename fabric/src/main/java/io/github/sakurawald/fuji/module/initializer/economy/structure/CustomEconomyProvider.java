@@ -62,7 +62,7 @@ public class CustomEconomyProvider implements EconomyProvider {
 
     @Override
     public ItemStack icon() {
-        return ItemStackHelper.getItem(EconomyInitializer.config.model().getProviderIcon()).getDefaultStack();
+        return ItemStackHelper.Parser.parseItemStack(EconomyInitializer.config.model().getProviderIcon());
     }
 
     private static void registerDefinedFujiCurrencies() {

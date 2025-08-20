@@ -25,6 +25,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -139,6 +140,10 @@ public class CommandHelper {
 
     public static @NotNull CommandDispatcher<ServerCommandSource> getCommandDispatcher() {
         return CommandAnnotationProcessor.COMMAND_DISPATCHER;
+    }
+
+    public static @NotNull CommandRegistryAccess getCommandRegistryAccess() {
+        return CommandAnnotationProcessor.COMMAND_REGISTRY_ACCESS;
     }
 
     public static class Requirement {

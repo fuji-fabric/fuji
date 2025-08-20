@@ -58,8 +58,8 @@ public class ListWorksGui extends CrudPagedGui<Work> {
     protected GuiElementBuilder toGuiElementBuilder(Work entity) {
         ServerPlayerEntity player = getPlayer();
 
-        return new GuiElementBuilder()
-            .setItem(entity.getEntityIcon())
+        return GuiElementBuilder
+            .from(entity.getEntityIcon())
             .setName(TextHelper.getTextByValue(null, entity.name))
             .setLore(entity.ofLore(player));
     }

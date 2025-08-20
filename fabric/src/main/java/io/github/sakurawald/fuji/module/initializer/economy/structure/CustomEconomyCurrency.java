@@ -33,7 +33,7 @@ public class CustomEconomyCurrency implements EconomyCurrency {
 
     @Override
     public ItemStack icon() {
-        return ItemStackHelper.getItem(this.currencyDescriptor.currencyIconItem).getDefaultStack();
+        return ItemStackHelper.Parser.parseItemStack(this.currencyDescriptor.currencyIconItem);
     }
 
     @Override
