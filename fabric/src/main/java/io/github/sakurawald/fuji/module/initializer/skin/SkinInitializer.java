@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.skin;
 
+import com.mojang.authlib.properties.Property;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
@@ -15,6 +16,7 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.skin.command.argument.wrapper.DefaultSkinName;
+import io.github.sakurawald.fuji.module.initializer.skin.config.adapter.PropertyAdapter;
 import io.github.sakurawald.fuji.module.initializer.skin.config.model.SkinConfigModel;
 import io.github.sakurawald.fuji.module.initializer.skin.config.model.SkinDataModel;
 import io.github.sakurawald.fuji.module.initializer.skin.gui.SkinGui;
@@ -132,4 +134,8 @@ public class SkinInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @Override
+    protected void registerGsonTypeAdapter() {
+        BaseConfigurationHandler.registerGsonTypeAdapter(Property.class, new PropertyAdapter());
+    }
 }
