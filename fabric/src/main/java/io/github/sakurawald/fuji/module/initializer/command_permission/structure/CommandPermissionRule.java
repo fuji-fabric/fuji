@@ -3,10 +3,11 @@ package io.github.sakurawald.fuji.module.initializer.command_permission.structur
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
-
 @Document(id = 1751826762371L, value = """
     This object describes one rule.
     """)
