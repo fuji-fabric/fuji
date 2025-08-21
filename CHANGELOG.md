@@ -2,6 +2,7 @@
 
 # Changelog
 
+
 - **[core] Feature:** Improved data de-serialization.
   - All data types now automatically generate a default configuration if the user accidentally deletes it.
 
