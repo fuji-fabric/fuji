@@ -10,7 +10,7 @@ import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.mojang.brigadier.tree.CommandNode;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.extension.CommandContextBuilderExtension;
 import java.util.concurrent.CompletableFuture;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,7 +24,7 @@ public class CommandDispatcherMixin<S> {
     @SuppressWarnings({"unchecked", "rawtypes"})
     @ModifyVariable(method = "parseNodes", at = @At(value = "STORE"), ordinal = 2, remap = false)
     CommandContextBuilder passChildContextAfterRedirect(CommandContextBuilder<S> childContext, @Local(ordinal = 1) CommandContextBuilder<S> parentContext) {
-        ServerHelper.withServerCommandSource(parentContext.getSource(), () -> {
+        CommandHelper.Source.withServerCommandSource(parentContext.getSource(), () -> {
             CommandContextBuilderExtension<S> accessor = (CommandContextBuilderExtension<S>) childContext;
             accessor.fuji$withArguments(parentContext.getArguments());
         });
@@ -36,14 +36,19 @@ public class CommandDispatcherMixin<S> {
     @WrapOperation(method = "getCompletionSuggestions(Lcom/mojang/brigadier/ParseResults;I)Ljava/util/concurrent/CompletableFuture;"
         , at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/tree/CommandNode;listSuggestions(Lcom/mojang/brigadier/context/CommandContext;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;")
         , remap = false)
-    CompletableFuture<Suggestions> f(CommandNode<S> instance, CommandContext<S> commandContext, SuggestionsBuilder suggestionsBuilder, Operation<CompletableFuture<Suggestions>> original, @Local(argsOnly = true) ParseResults<S> parse) {
+    CompletableFuture<Suggestions> checkRequirementWhenListCommandSuggestions(CommandNode<S> instance, CommandContext<S> commandContext, SuggestionsBuilder suggestionsBuilder, Operation<CompletableFuture<Suggestions>> original, @Local(argsOnly = true) ParseResults<S> parse) {
         S commandSource = parse.getContext().getSource();
 
-        if (instance.canUse(commandSource)) {
-            return original.call(instance, commandContext, suggestionsBuilder);
+        // NOTE: Prevent the ClientCommandSource crash the client-side.
+        if (CommandHelper.Source.isServerCommandSource(commandSource)) {
+            if (instance.canUse(commandSource)) {
+                return original.call(instance, commandContext, suggestionsBuilder);
+            }
+
+            return Suggestions.empty();
         }
 
-        return Suggestions.empty();
+        return original.call(instance, commandContext, suggestionsBuilder);
     }
 
 }

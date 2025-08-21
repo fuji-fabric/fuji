@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.function.Predicate;
@@ -21,20 +20,17 @@ import java.util.function.Predicate;
 @Mixin(value = CommandNode.class, remap = false)
 public class CommandNodeMixin {
 
-    @SuppressWarnings("unchecked")
-    @Unique
-    final CommandNode<ServerCommandSource> node = (CommandNode<ServerCommandSource>) (Object) this;
     @Mutable
     @Shadow
     @Final
-    private Predicate<ServerCommandSource> requirement;
+    private Predicate<Object> requirement;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "ConstantValue"})
     @ModifyReturnValue(method = "getRequirement", at = @At("RETURN"))
-    private Predicate<?> wrapRequirementPredicateForThisCommandNode(Predicate<?> original) {
+    private Predicate<Object> wrapRequirementPredicateForThisCommandNode(Predicate<Object> original) {
 
         /* Only try to wrap the requirement predicate of command node until the command dispatcher is initialized. */
-        @Nullable CommandDispatcher<ServerCommandSource> dispatcher = CommandHelper.getCommandDispatcher();
+        @Nullable CommandDispatcher<?> dispatcher = CommandHelper.getCommandDispatcher();
         if (dispatcher == null) {
             LogUtil.debug("The CommandNode#getRequirement is triggered too early, fuji will just ignore this call.");
             return original;
@@ -42,11 +38,13 @@ public class CommandNodeMixin {
 
         /* Wrap the requirement predicate for command node. */
         if (!(original instanceof WrappedPredicate<?>)) {
+            final CommandNode<ServerCommandSource> node = (CommandNode<ServerCommandSource>) (Object) this;
             String path = CommandHelper.Node.findCommandNodePath(node);
-            requirement = CommandPermissionInitializer.makeWrappedPredicate(path, (Predicate<ServerCommandSource>) original);
+            requirement = CommandPermissionInitializer.makeWrappedPredicate(path, original);
             return requirement;
         }
 
+        /* The requirement is already wrapped, simply return it. */
         return original;
     }
 

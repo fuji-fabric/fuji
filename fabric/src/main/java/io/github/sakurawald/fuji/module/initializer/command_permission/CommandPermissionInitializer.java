@@ -289,37 +289,43 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         return explanation;
     }
 
-    public static @NotNull WrappedPredicate<ServerCommandSource> makeWrappedPredicate(String commandPath, @NotNull Predicate<ServerCommandSource> originalRequirement) {
-        return source -> {
-            /* Ignore the non-player command source. */
-            if (source.getPlayer() == null) return originalRequirement.test(source);
+    public static @NotNull WrappedPredicate<Object> makeWrappedPredicate(String commandPath, @NotNull Predicate<Object> originalRequirement) {
+        return commandSource -> {
+            /* If the command source if client command source, use the original predicate. */
+            if (commandSource instanceof ServerCommandSource serverCommandSource) {
+                /* Ignore the non-player command source. */
+                if (serverCommandSource.getPlayer() == null) return originalRequirement.test(serverCommandSource);
 
-            try {
-                /* Ask the pre-defined rules if the player can use the command. */
-                String requiredPermissionToExecuteThisCommand = COMMAND_PERMISSION_UNIFIED_PERMISSION.withArguments(commandPath);
-                if (!CommandHelper.Requirement.isAdmin(source)) {
-                    for (CommandPermissionRule rule : config.model().rules) {
-                        if (requiredPermissionToExecuteThisCommand.matches(rule.permissionPatternRegex)) {
-                            Tristate predefinePermissionTestResult = rule.permissionTestResult.toTriState();
-                            processVerboseModeFeature("PREDEFINED RULES", source, commandPath, predefinePermissionTestResult);
+                try {
+                    /* Ask the pre-defined rules if the player can use the command. */
+                    String requiredPermissionToExecuteThisCommand = COMMAND_PERMISSION_UNIFIED_PERMISSION.withArguments(commandPath);
+                    if (!CommandHelper.Requirement.isAdmin(serverCommandSource)) {
+                        for (CommandPermissionRule rule : config.model().rules) {
+                            if (requiredPermissionToExecuteThisCommand.matches(rule.permissionPatternRegex)) {
+                                Tristate predefinePermissionTestResult = rule.permissionTestResult.toTriState();
+                                processVerboseModeFeature("PREDEFINED RULES", serverCommandSource, commandPath, predefinePermissionTestResult);
 
-                            return canUseThisCommand(source, predefinePermissionTestResult, originalRequirement);
+                                return canUseThisCommand(serverCommandSource, predefinePermissionTestResult, originalRequirement);
+                            }
                         }
                     }
+
+                    /* Ask luckperms if the player can use the command. */
+                    Tristate luckpermsPermissionTestResult = LuckpermsHelper.getPermission(serverCommandSource.getPlayer().getUuid(), COMMAND_PERMISSION_UNIFIED_PERMISSION, commandPath);
+                    processVerboseModeFeature("LUCKPERMS", serverCommandSource, commandPath, luckpermsPermissionTestResult);
+
+                    return canUseThisCommand(serverCommandSource, luckpermsPermissionTestResult, originalRequirement);
+                } catch (Throwable useOriginalPredicateIfFailed) {
+                    return originalRequirement.test(commandSource);
                 }
-
-                /* Ask luckperms if the player can use the command. */
-                Tristate luckpermsPermissionTestResult = LuckpermsHelper.getPermission(source.getPlayer().getUuid(), COMMAND_PERMISSION_UNIFIED_PERMISSION, commandPath);
-                processVerboseModeFeature("LUCKPERMS", source, commandPath, luckpermsPermissionTestResult);
-
-                return canUseThisCommand(source, luckpermsPermissionTestResult, originalRequirement);
-            } catch (Throwable useOriginalPredicateIfFailed) {
-                return originalRequirement.test(source);
+            } else {
+                /* The command source is not ServerCommandSource, simply use the original requirement. */
+                return originalRequirement.test(commandSource);
             }
         };
     }
 
-    private static boolean canUseThisCommand(ServerCommandSource source, Tristate permissionTestResult, @NotNull Predicate<ServerCommandSource> originalRequirement) {
+    private static boolean canUseThisCommand(ServerCommandSource source, Tristate permissionTestResult, @NotNull Predicate<Object> originalRequirement) {
         /* If the corresponding permission is DEFINED, we use it to override the original requirement. */
         if (permissionTestResult != Tristate.UNDEFINED) {
             return permissionTestResult.asBoolean();

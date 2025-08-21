@@ -220,6 +220,21 @@ public class CommandHelper {
                 consumer.accept(serverPlayerEntity);
             }
         }
+
+        @ForDeveloper("""
+            If your mod is installed on the client-side, and run the single-player world.
+            Then the injected methods in brigadier will be called twice.
+            One for ClientCommandSource, one for ServerCommandSource.
+            """)
+        public static void withServerCommandSource(@NotNull Object source, @NotNull Runnable runnable) {
+            if (isServerCommandSource(source)) {
+                runnable.run();
+            }
+        }
+
+        public static boolean isServerCommandSource(@NotNull Object source) {
+            return source instanceof ServerCommandSource;
+        }
     }
 
     public static class Return {
