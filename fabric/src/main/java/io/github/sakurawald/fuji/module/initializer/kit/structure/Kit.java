@@ -1,14 +1,14 @@
 package io.github.sakurawald.fuji.module.initializer.kit.structure;
 
-import lombok.Data;
+import lombok.Value;
 import lombok.With;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-@Data
+@Value
 @With
 public class Kit {
-    final String name;
-    final List<ItemStack> stackList;
+    String name;
+    List<ItemStack> stackList;
 }

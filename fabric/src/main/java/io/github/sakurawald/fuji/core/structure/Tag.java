@@ -5,6 +5,7 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import net.minecraft.entity.player.PlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @Data
+@NoArgsConstructor
 public class Tag {
 
     private static final Map<String, PermissionDescriptor> CREATED_TAG_PERMISSIONS = new HashMap<>();

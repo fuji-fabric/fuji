@@ -7,15 +7,17 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.module.initializer.economy.config.structure.CustomEconomyCurrencyDescriptor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 @Data
+@NoArgsConstructor
 public class CustomEconomyCurrency implements EconomyCurrency {
 
-    public final @NotNull CustomEconomyCurrencyDescriptor currencyDescriptor;
+    public @NotNull CustomEconomyCurrencyDescriptor currencyDescriptor;
 
     public CustomEconomyCurrency(@NotNull CustomEconomyCurrencyDescriptor currencyDescriptor) {
         this.currencyDescriptor = currencyDescriptor;

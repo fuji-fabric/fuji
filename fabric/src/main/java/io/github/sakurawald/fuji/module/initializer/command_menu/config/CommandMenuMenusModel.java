@@ -5,6 +5,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.module.initializer.command_menu.structure.MenuDescriptor;
 import io.github.sakurawald.fuji.module.initializer.command_menu.structure.SlotDescriptor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import net.minecraft.item.Items;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @Data
+@NoArgsConstructor
 public class CommandMenuMenusModel {
 
     @Document(id = 1751824827629L, value = """

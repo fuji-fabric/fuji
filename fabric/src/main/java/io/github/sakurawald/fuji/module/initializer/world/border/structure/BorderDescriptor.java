@@ -21,6 +21,7 @@ public class BorderDescriptor {
     }
 
     @Data
+    @NoArgsConstructor
     public static class Border {
         public double centerX = 0.0;
         public double centerZ = 0.0;

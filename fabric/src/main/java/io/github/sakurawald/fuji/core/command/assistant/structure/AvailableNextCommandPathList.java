@@ -2,9 +2,9 @@ package io.github.sakurawald.fuji.core.command.assistant.structure;
 
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class AvailableNextCommandPathList {
     List<AvailableNextCommandPath> entries = new ArrayList<>();
 }

@@ -3,11 +3,13 @@ package io.github.sakurawald.fuji.core.structure;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class GlobalBlockPos {
     String dimension;

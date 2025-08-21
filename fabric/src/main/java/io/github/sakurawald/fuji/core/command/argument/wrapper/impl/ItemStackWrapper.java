@@ -1,10 +1,10 @@
 package io.github.sakurawald.fuji.core.command.argument.wrapper.impl;
 
-import lombok.Data;
+import lombok.Value;
 import net.minecraft.item.ItemStack;
 
-@Data
+@Value
 public class ItemStackWrapper {
-    final ItemStack itemStack;
-    final String inputString;
+    ItemStack itemStack;
+    String inputString;
 }

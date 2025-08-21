@@ -25,6 +25,7 @@ public class JailDescriptor {
 
     Events events = new Events();
     @Data
+    @NoArgsConstructor
     public static class Events {
         List<String> onJailedEvent = new ArrayList<>() {
             {
@@ -44,6 +45,7 @@ public class JailDescriptor {
 
     Patrol patrol = new Patrol();
     @Data
+    @NoArgsConstructor
     public static class Patrol {
         int patrolIntervalMillSeconds = 3 * 1000;
         List<String> patrolCommands = new ArrayList<>() {

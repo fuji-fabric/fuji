@@ -2,9 +2,11 @@ package io.github.sakurawald.fuji.module.initializer.command_meta.when_online.st
 
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
 @Data
+@NoArgsConstructor
 public class WhenOnlineTicket {
 
     public long createdTimestamp;

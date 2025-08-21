@@ -67,6 +67,7 @@ public class PlaySoundJob extends FixedIntervalJob {
     }
 
     @Data
+    @NoArgsConstructor
     public static class PlaySoundJobSetup {
         @Document(id = 1751823822772L, value = "The `sound` identifier.")
         public @NotNull String sound = "entity.experience_orb.pickup";

@@ -1,10 +1,10 @@
 package io.github.sakurawald.fuji.core.structure;
 
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class Triple<A, B, C> {
-    final A first;
-    final B second;
-    final C third;
+    A first;
+    B second;
+    C third;
 }

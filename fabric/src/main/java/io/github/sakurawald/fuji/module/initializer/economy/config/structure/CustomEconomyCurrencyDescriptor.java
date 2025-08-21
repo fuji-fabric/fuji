@@ -3,10 +3,12 @@ package io.github.sakurawald.fuji.module.initializer.economy.config.structure;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 @Data
+@NoArgsConstructor
 public class CustomEconomyCurrencyDescriptor {
 
     @Document(id = 1751826969290L, value = "The `custom currency` identifier. The `namespace` must be `fuji`.")

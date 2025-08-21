@@ -5,8 +5,10 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class CommandMenuConfigModel {
 
     @SerializedName(value = "onSneakingAndSwapHandsEvent", alternate = "onShiftAndSwapHandsEvent")

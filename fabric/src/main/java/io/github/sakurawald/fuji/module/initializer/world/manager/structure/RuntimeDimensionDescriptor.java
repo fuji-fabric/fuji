@@ -8,6 +8,7 @@ import io.github.sakurawald.fuji.module.initializer.world.manager.command.argume
 import io.github.sakurawald.fuji.module.initializer.world.manager.command.argument.wrapper.WorldPresetType;
 import java.util.Optional;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.Difficulty;
 import org.jetbrains.annotations.Nullable;
@@ -17,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
     It contains the important info about a `dimension`, like the `dimension id`, `dimension type` and `seed`...
     """)
 @Data
+@NoArgsConstructor
 public class RuntimeDimensionDescriptor {
 
     @Document(id = 1752170969085L, value = """

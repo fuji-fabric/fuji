@@ -1,13 +1,13 @@
 package io.github.sakurawald.fuji.core.command.structure;
 
 import com.mojang.brigadier.context.CommandContext;
-import lombok.Data;
+import lombok.Value;
 import net.minecraft.server.command.ServerCommandSource;
 
 @SuppressWarnings("ClassCanBeRecord")
-@Data
+@Value
 public class CommandActor {
 
-    final CommandContext<ServerCommandSource> commandContext;
+    CommandContext<ServerCommandSource> commandContext;
 
 }

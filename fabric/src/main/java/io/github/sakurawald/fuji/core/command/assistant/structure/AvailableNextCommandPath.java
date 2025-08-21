@@ -1,10 +1,10 @@
 package io.github.sakurawald.fuji.core.command.assistant.structure;
 
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class AvailableNextCommandPath {
-    final String prefixString;
-    final String infixString;
-    final String suffixString;
+    String prefixString;
+    String infixString;
+    String suffixString;
 }

@@ -3,8 +3,10 @@ package io.github.sakurawald.fuji.module.initializer.economy.config.structure;
 import com.mojang.authlib.GameProfile;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class CustomEconomyAccountNode {
 
     @Document(id = 1751826959911L, value = "The owner of this account.")

@@ -30,6 +30,7 @@ public class NamedCooldownDescriptor {
     TryUse tryUse = new TryUse();
 
     @Data
+    @NoArgsConstructor
     public static class TryUse {
         @Document(id = 1752918599016L, value = """
             The commands to be executed if the `try-use` result of this named-cooldown is `success`.
