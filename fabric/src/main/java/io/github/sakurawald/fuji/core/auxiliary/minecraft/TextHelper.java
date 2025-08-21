@@ -652,7 +652,7 @@ public class TextHelper {
             LogUtil.debug("Redirect the text sending into the console (Reason: `--stdout=true`): audience = {}, text = {}", audience, text);
             LogUtil.info("""
 
-                ◉ Redirect the text sending to the console
+                ◉ Stream the text sending to the console (Reason: --stdout=true)
                 - Audience = {}
                 - TextLocation = {}
                 - Text = {}
