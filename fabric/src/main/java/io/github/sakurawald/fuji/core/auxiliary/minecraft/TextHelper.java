@@ -176,6 +176,9 @@ public class TextHelper {
             return parser.parseNode(input).toText();
         }
 
+        @TestCase(action = "Test the parsers in Sign block and Anvil block.", targets = {
+            "The `color.sign` and `color.anvil` should work in single-player world, when installed client-side."
+        })
         private static @NotNull PlaceholderContext makePlaceholderContext(@Nullable Object audience) {
             /* Unbox the player from server command source. */
             if (audience instanceof ServerCommandSource) {

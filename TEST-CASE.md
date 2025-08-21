@@ -161,6 +161,11 @@
 - Target: Issue `/command-attachment attach-block-one ` command, it should filter out the duplicated suggestions. (client-side suggestions and server-side suggestions)
 
 [Test Case]
+- Module: core
+- Action: **Test the parsers in Sign block and Anvil block.**
+- Target: The `color.sign` and `color.anvil` should work in single-player world, when installed client-side.
+
+[Test Case]
 - Module: disabler.move_wrongly_disabler
 - Action: **Sit in a `boat` and try to move it.**
 - Target: The `vehicle moved wrongly` should be disabled.
