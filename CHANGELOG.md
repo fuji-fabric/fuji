@@ -34,5 +34,5 @@
     ```  
 
 - **[color.anvil] Fix:** Ensured the module works in single-player worlds when installed client-side.  
-- [core] improve the compatibility when running on `neoforge` platform (with `connector` mod)
-  - [command_permission] feature: make it working in `neoforge single-player world`.
+- [core] feature: Improve the compatibility when running on `neoforge` platform (with `connector` mod)
+  - [command_permission] fix: make it working in `neoforge single-player world`.
