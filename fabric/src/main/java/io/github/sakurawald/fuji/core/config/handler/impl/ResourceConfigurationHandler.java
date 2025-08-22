@@ -55,17 +55,9 @@ public abstract class ResourceConfigurationHandler extends BaseConfigurationHand
             });
     }
 
+    @Override
     protected void validateModel(@NotNull JsonObject dataTree, @NotNull JsonObject schemaTree) {
         mergeTrees(dataTree, schemaTree);
     }
 
-    @Override
-    public void readStorage() {
-        super.readStorage();
-
-        if (this.model != null) {
-            validateModel(this.model.getAsJsonObject(), this.getDefaultModel().getAsJsonObject());
-            this.writeStorage();
-        }
-    }
 }

@@ -4,8 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
-import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.config.job.ConfigurationHandlerWriteStorageJob;
+import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.config.migrator.version.VersionPropertyInjector;
 import io.github.sakurawald.fuji.core.config.transformer.abst.ConfigurationTransformer;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
@@ -14,7 +14,17 @@ import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import lombok.AccessLevel;
@@ -24,17 +34,6 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.quartz.JobDataMap;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @ForDeveloper("""
     1. Only use static inner class for a nested structure. (This is because a historical design problem in Java)
@@ -94,20 +93,21 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
             /* Write default configuration into the storage, if file not exists. */
             if (Files.notExists(this.filePath)) {
                 writeStorage();
-            } else {
-                // Merge data tree with schema tree: the gson.fromJson() will use default model as the schema tree, to generate missing default kv-pairs in data tree.
-                @Cleanup Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.filePath.toFile()), StandardCharsets.UTF_8));
-                T defaultModel = getDefaultModel();
-                this.model = (T) GsonMapper.getGson().fromJson(reader, defaultModel.getClass());
-
-                /* Write storage at once, to:
-                 * 1. Keep the sync between memory and disk.
-                 * 2. Trigger the field naming conversion in gson.
-                 * */
-                this.writeStorage();
             }
 
+            // Merge data tree with schema tree: the gson.fromJson() will use default model as the schema tree, to generate missing default kv-pairs in data tree.
+            @Cleanup Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.filePath.toFile()), StandardCharsets.UTF_8));
+            T defaultModel = getDefaultModel();
+            this.model = (T) GsonMapper.getGson().fromJson(reader, defaultModel.getClass());
+
             /* Validate the model. */
+            validateModel(getModelAsJsonTree(), getDefaultModelAsJsonTree());
+
+            /* Write storage at once, to:
+             * 1. Keep the sync between memory and disk.
+             * 2. Trigger the field naming conversion in gson.
+             * */
+            this.writeStorage();
 
             /* Register self. */
             REGISTERED_CONFIGURATION_HANDLERS.add(this);
@@ -130,7 +130,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
             this.beforeWriteStorageHooks.forEach(hook -> hook.accept(this));
 
             /* Serialize the Java object into Json tree. */
-            JsonElement modelJsonTree = this.convertModelToJsonTree();
+            JsonElement modelJsonTree = this.getModelAsJsonTree();
             beforeSerializeIntoString(modelJsonTree);
             String jsonString = GsonMapper.getGson().toJson(modelJsonTree);
 
@@ -151,8 +151,12 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         VersionPropertyInjector.injectVersionProperty(jsonElement);
     }
 
-    public JsonElement convertModelToJsonTree() {
-        return GsonMapper.getGson().toJsonTree(this.model());
+    public @NotNull JsonObject getModelAsJsonTree() {
+        return GsonMapper.getGson().toJsonTree(this.model()).getAsJsonObject();
+    }
+
+    public @NotNull JsonObject getDefaultModelAsJsonTree() {
+        return GsonMapper.getGson().toJsonTree(this.getDefaultModel()).getAsJsonObject();
     }
 
     public @NotNull T model() {

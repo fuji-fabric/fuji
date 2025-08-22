@@ -192,7 +192,7 @@ public class ModuleManager extends BaseManager {
 
         // check enable-supplier
         boolean enable = true;
-        JsonObject parent = Configs.MAIN_CONTROL_CONFIG.convertModelToJsonTree().getAsJsonObject().get("modules").getAsJsonObject();
+        JsonObject parent = Configs.MAIN_CONTROL_CONFIG.getModelAsJsonTree().get("modules").getAsJsonObject();
         for (String node : modulePath) {
             parent = parent.getAsJsonObject(node);
 
