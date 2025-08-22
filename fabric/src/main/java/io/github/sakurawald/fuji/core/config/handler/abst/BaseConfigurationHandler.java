@@ -57,6 +57,8 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
 
     private final List<Consumer<T>> preMappingModelIntoJsonObject = new ArrayList<>();
     private final List<Consumer<JsonObject>> postMappingModelIntoJsonObject = new ArrayList<>();
+    private final List<Consumer<JsonObject>> preMappingJsonObjectIntoModel = new ArrayList<>();
+    private final List<Consumer<T>> postMappingJsonObjectIntoModel = new ArrayList<>();
 
     private final List<ConfigurationTransformer> installedTransformers = new ArrayList<>();
 
@@ -66,13 +68,23 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     }
 
     public BaseConfigurationHandler<T> addPreMappingModelIntoJsonObjectHook(@NotNull Consumer<T> hook) {
-        preMappingModelIntoJsonObject.add(hook);
+        this.preMappingModelIntoJsonObject.add(hook);
         return this;
     }
 
     @SuppressWarnings("UnusedReturnValue")
     public BaseConfigurationHandler<T> addPostMappingModelIntoJsonObjectHook(@NotNull Consumer<JsonObject> hook) {
-        postMappingModelIntoJsonObject.add(hook);
+        this.postMappingModelIntoJsonObject.add(hook);
+        return this;
+    }
+
+    public BaseConfigurationHandler<T> addPreMappingJsonObjectIntoModelHook(@NotNull Consumer<JsonObject> hook) {
+        this.preMappingJsonObjectIntoModel.add(hook);
+        return this;
+    }
+
+    public BaseConfigurationHandler<T> addPostMappingJsonObjectIntoModelHook(@NotNull Consumer<T> hook) {
+        this.postMappingJsonObjectIntoModel.add(hook);
         return this;
     }
 
@@ -110,8 +122,9 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
             validateModel(jsonObject, getDefaultModelAsJsonTree());
 
             /* Map the JsonObject instance into the model typed T. */
-            // Merge data tree with schema tree: the gson.fromJson() will use default model as the schema tree, to generate missing default kv-pairs in data tree.
+            this.preMappingJsonObjectIntoModel.forEach(hook -> hook.accept(jsonObject));
             this.model = (T) GsonMapper.getGson().fromJson(jsonObject, getDefaultModel().getClass());
+            this.postMappingJsonObjectIntoModel.forEach(hook -> hook.accept(model));
 
             /* Write storage at once, to:
              * 1. Keep the sync between memory and disk.
