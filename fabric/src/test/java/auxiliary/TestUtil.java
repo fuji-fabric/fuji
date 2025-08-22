@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class TestUtil {
@@ -48,7 +49,7 @@ public class TestUtil {
     }
 
     @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
-    public static List<ExtendedAnnotationInfo> findTargetAnnotationInstancesAnywhere(ScanResult scanResult, Class<? extends Annotation> targetAnnotation, boolean isRepeatableAnnotation) {
+    public static List<ExtendedAnnotationInfo> findTargetAnnotationInstancesAnywhere(@NotNull ScanResult scanResult, @NotNull Class<? extends Annotation> targetAnnotation, boolean isRepeatableAnnotation) {
         List<ExtendedAnnotationInfo> targetAnnotationInstanceAnywhere = new ArrayList<>();
 
         /* Collect target annotation instances on class. */

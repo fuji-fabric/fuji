@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.mixin.afk.effect;
 
+import com.google.errorprone.annotations.Keep;
 import com.mojang.authlib.GameProfile;
 import io.github.sakurawald.fuji.module.initializer.afk.AfkInitializer;
 import io.github.sakurawald.fuji.module.initializer.afk.accessor.AfkStateAccessor;
@@ -56,6 +57,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
 
     // NOTE: function move() in 'afk.effect module' will override that one in 'afk module', since the latter Mixin will override the original one.
     @Override
+    @Keep
     public void move(MovementType movementType, Vec3d vec3d) {
         AfkStateAccessor afkEx = (AfkStateAccessor) player;
 

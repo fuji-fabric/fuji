@@ -24,7 +24,7 @@ public abstract class PlayerManagerMixin {
 
     // NOTE: The code is used to fix a bug that mojang didn't notice.
     @Inject(method = "checkCanJoin", at = @At(value = "HEAD"))
-    void check(SocketAddress socketAddress, GameProfile gameProfile, CallbackInfoReturnable<Text> cir) {
+    void removeInvalidTempBanEntries(SocketAddress socketAddress, GameProfile gameProfile, CallbackInfoReturnable<Text> cir) {
         getBannedProfiles().removeInvalidEntries();
         getBannedIps().removeInvalidEntries();
     }

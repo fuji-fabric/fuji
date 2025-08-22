@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.mixin.afk;
 
+import com.google.errorprone.annotations.Keep;
 import com.mojang.authlib.GameProfile;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PacketHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
@@ -91,6 +92,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Af
 
     @TestCase(action = "Try to move a player in afk state.", targets = "The `moveable` option should work.")
     // NOTE: Here we override the original move() function, we use @Override since we can't inject into a super method.
+    @Keep
     @Override
     public void move(MovementType movementType, Vec3d vec3d) {
         /* Count input on move. */
