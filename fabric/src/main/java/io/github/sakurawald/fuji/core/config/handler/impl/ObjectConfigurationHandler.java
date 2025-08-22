@@ -1,7 +1,9 @@
 package io.github.sakurawald.fuji.core.config.handler.impl;
 
+import com.google.gson.JsonObject;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.validator.RemoveNullElementsInJsonArrayValidator;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,4 +34,9 @@ public class ObjectConfigurationHandler<T> extends BaseConfigurationHandler<T> {
         return typeOfModel.getDeclaredConstructor().newInstance();
     }
 
+    @Override
+    protected void validateModel(@NotNull JsonObject dataTree, @NotNull JsonObject schemaTree) {
+        super.validateModel(dataTree, schemaTree);
+        RemoveNullElementsInJsonArrayValidator.validate(dataTree);
+    }
 }
