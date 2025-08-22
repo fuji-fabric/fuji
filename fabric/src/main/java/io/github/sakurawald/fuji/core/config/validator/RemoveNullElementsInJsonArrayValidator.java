@@ -30,6 +30,10 @@ public class RemoveNullElementsInJsonArrayValidator {
                 JsonArray jsonArray = dataTree.get(key).getAsJsonArray();
                 List<JsonElement> arrayElementsToRemove = new ArrayList<>();
                 jsonArray.forEach(arrayElement -> {
+                    if (arrayElement.isJsonObject()) {
+                        validate(arrayElement.getAsJsonObject());
+                    }
+
                     if (arrayElement.isJsonNull()) {
                         arrayElementsToRemove.add(arrayElement);
                     }
