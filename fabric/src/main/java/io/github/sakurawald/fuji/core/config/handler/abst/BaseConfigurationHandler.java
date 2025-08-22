@@ -95,13 +95,16 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
                 writeStorage();
             }
 
-            // Merge data tree with schema tree: the gson.fromJson() will use default model as the schema tree, to generate missing default kv-pairs in data tree.
-            @Cleanup Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.filePath.toFile()), StandardCharsets.UTF_8));
-            T defaultModel = getDefaultModel();
-            this.model = (T) GsonMapper.getGson().fromJson(reader, defaultModel.getClass());
+            /* Map *.json file into JsonObject instance. */
+            @Cleanup Reader jsonReader = new BufferedReader(new InputStreamReader(new FileInputStream(this.filePath.toFile()), StandardCharsets.UTF_8));
+            JsonObject jsonObject = GsonMapper.getGson().fromJson(jsonReader, JsonObject.class);
 
-            /* Validate the model. */
-            validateModel(getModelAsJsonTree(), getDefaultModelAsJsonTree());
+            /* Validate the JsonObject instance. */
+            validateModel(jsonObject, getDefaultModelAsJsonTree());
+
+            /* Map the JsonObject instance into the model typed T. */
+            // Merge data tree with schema tree: the gson.fromJson() will use default model as the schema tree, to generate missing default kv-pairs in data tree.
+            this.model = (T) GsonMapper.getGson().fromJson(jsonObject, getDefaultModel().getClass());
 
             /* Write storage at once, to:
              * 1. Keep the sync between memory and disk.
