@@ -11,19 +11,17 @@ import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import java.util.EnumSet;
 import java.util.Set;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 public class JsonPathParser {
 
-    private static ParseContext JSON_PATH_PARSER = null;
+    @Getter(lazy = true)
+    private static final ParseContext JSON_PATH_PARSER = getInstance();
 
-    public static @NotNull ParseContext getJsonPathParser() {
-        if (JSON_PATH_PARSER == null) {
-            configureJsonPathLibrary();
-            JSON_PATH_PARSER = JsonPath.using(Configuration.defaultConfiguration());
-        }
-
-        return JSON_PATH_PARSER;
+    public static @NotNull ParseContext getInstance() {
+        configureJsonPathLibrary();
+        return JsonPath.using(Configuration.defaultConfiguration());
     }
 
     private static void configureJsonPathLibrary() {
