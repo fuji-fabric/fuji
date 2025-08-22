@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.config.structure;
+package io.github.sakurawald.fuji.core.config.validator.structure;
 
 import java.util.HashMap;
 import java.util.Map;
