@@ -44,7 +44,7 @@ public class ColorSignInitializer extends ModuleInitializer {
 
         try {
             String data = Managers.getAttachmentManager().getAttachment(ATTACHMENT_SUBJECT, uuid);
-            return GsonMapper.getGson().fromJson(data, SignCache.class);
+            return GsonMapper.fromJson(data, SignCache.class);
         } catch (IOException e) {
             LogUtil.error("Failed to read sign cache: spatialBlock = {}", globalBlockPos, e);
             return null;
@@ -53,7 +53,7 @@ public class ColorSignInitializer extends ModuleInitializer {
 
     public static void writeSignCache(@NotNull GlobalBlockPos globalBlockPos, @NotNull SignCache signCache) {
         String uuid = UuidHelper.getAttachedUuid(globalBlockPos);
-        String data = GsonMapper.getGson().toJson(signCache);
+        String data = GsonMapper.toJsonString(signCache);
         try {
             Managers.getAttachmentManager().setAttachment(ATTACHMENT_SUBJECT, uuid, data);
         } catch (IOException e) {

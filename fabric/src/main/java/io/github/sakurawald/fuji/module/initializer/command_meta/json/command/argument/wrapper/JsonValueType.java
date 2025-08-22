@@ -24,8 +24,7 @@ public enum JsonValueType {
     }
 
     public Object parse(String jsonValue) {
-        Gson gson = GsonMapper.getGson();
-        return gson.fromJson(jsonValue, valueTransformer);
+        return GsonMapper.fromJson(jsonValue, valueTransformer);
     }
 
 }

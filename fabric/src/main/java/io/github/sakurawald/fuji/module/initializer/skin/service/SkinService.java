@@ -114,7 +114,7 @@ public class SkinService {
 
     private static @NotNull JsonObject makeComparableJsonObjectFromSkinProperty(Property property) {
         String jsonString = new String(Base64.getDecoder().decode(AuthlibHelper.getPropertyValue(property)), StandardCharsets.UTF_8);
-        JsonObject jsonObject = GsonMapper.getGson().fromJson(jsonString, JsonObject.class);
+        JsonObject jsonObject = GsonMapper.fromJson(jsonString, JsonObject.class);
         jsonObject.remove("timestamp");
         return jsonObject;
     }

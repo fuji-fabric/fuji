@@ -61,7 +61,7 @@ public class FlattenTreeTransformer extends JsonConfigurationTransformer {
         if (!JsonUtil.isEmpty(parentTree) && Files.notExists(currentTreeOutPath)) {
             logOperation("Flatten the tree `{}` into the file `{}`", walkingPath, currentTreeOutPath);
             Files.createDirectories(currentTreeOutPath.getParent());
-            String json = GsonMapper.getGson().toJson(parentTree);
+            String json = GsonMapper.toJsonString(parentTree);
             Files.writeString(currentTreeOutPath, json);
             this.overrideTheOriginalFileWithSkeletonTree = true;
         }

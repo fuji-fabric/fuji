@@ -39,7 +39,7 @@ public abstract class ResourceConfigurationHandler extends BaseConfigurationHand
             throw new FailedToLoadResourceException("Failed to load specified resource file from class path: %s".formatted(resourceClassPath));
         }
         @Cleanup Reader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-        return GsonMapper.getGson().fromJson(reader, JsonObject.class);
+        return GsonMapper.fromJson(reader, JsonObject.class);
     }
 
     @Override

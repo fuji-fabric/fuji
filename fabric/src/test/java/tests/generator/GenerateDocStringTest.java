@@ -118,7 +118,7 @@ public class GenerateDocStringTest {
         defaultLanguageJson = LanguageConfigurationHandler.makeSortedLanguageJsonObject(defaultLanguageJson);
 
         /* Override the default language file. */
-        String jsonString = GsonMapper.getGson().toJson(defaultLanguageJson);
+        String jsonString = GsonMapper.toJsonString(defaultLanguageJson);
         Files.writeString(COMPILE_TIME_DEFAULT_LANGUAGE_FILE_PATH, jsonString);
     }
 

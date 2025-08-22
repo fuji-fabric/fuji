@@ -3,14 +3,16 @@ package io.github.sakurawald.fuji.core.config.mapper;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSyntaxException;
 import io.github.sakurawald.fuji.core.config.migrator.version.IgnoreModVersionStrategy;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
+import java.io.Reader;
 import java.lang.reflect.Type;
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 public class GsonMapper {
 
-    @Getter
     private static Gson gson = new GsonBuilder()
         // The default naming policy is IDENTIFY, we need to ensure the naming style is consistent.
         .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
@@ -29,10 +31,40 @@ public class GsonMapper {
         // Let's create it.
         .create();
 
+    @ForDeveloper("I want a friend class, the package visibility is hard to use.")
+    public static @NotNull Gson getInternalGsonReferenceWithoutTheUseOfWrappedFunctions() {
+        return gson;
+    }
+
     public static void registerGsonTypeAdapter(@NotNull Type type, @NotNull Object typeAdapter) {
         gson = gson
             .newBuilder()
             .registerTypeAdapter(type, typeAdapter)
             .create();
     }
+
+    public static <T> @NotNull T fromJson(@NotNull Reader jsonReader, @NotNull Class<T> classOfT) {
+        return gson.fromJson(jsonReader, classOfT);
+    }
+
+    public static <T> @NotNull T fromJson(@NotNull String json, @NotNull Class<T> classOfT) throws JsonSyntaxException {
+        return gson.fromJson(json, classOfT);
+    }
+
+    public static <T> @NotNull T fromJson(@NotNull JsonElement jsonElement, @NotNull Class<T> classOfT) throws JsonSyntaxException {
+        return gson.fromJson(jsonElement, classOfT);
+    }
+
+    public static @NotNull JsonElement toJsonTree(@NotNull Object src) {
+        return gson.toJsonTree(src);
+    }
+
+    public static @NotNull String toJsonString(@NotNull Object src) {
+        return gson.toJson(src);
+    }
+
+    public static @NotNull String toJsonString(@NotNull JsonElement jsonElement) {
+        return gson.toJson(jsonElement);
+    }
+
 }

@@ -55,7 +55,7 @@ public class JsonInitializer extends ModuleInitializer {
         Boolean destructiveFlag = function.apply(documentContext, path);
 
         if (destructiveFlag) {
-            String json = GsonMapper.getGson().toJson(documentContext.json());
+            String json = GsonMapper.toJsonString(documentContext.json());
             try {
                 Files.writeString(path, json);
             } catch (IOException e) {

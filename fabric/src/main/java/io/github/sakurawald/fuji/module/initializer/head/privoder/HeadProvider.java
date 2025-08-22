@@ -74,7 +74,7 @@ public class HeadProvider {
             JsonArray headJsonArray = JsonParser.parseReader(reader).getAsJsonArray();
             for (JsonElement headJsonElement : headJsonArray) {
                 try {
-                    Head head = GsonMapper.getGson().fromJson(headJsonElement, Head.class);
+                    Head head = GsonMapper.fromJson(headJsonElement, Head.class);
                     result.put(category, head);
                 } catch (Exception e) {
                     LogUtil.error("Invalid head: {}", headJsonElement, e);

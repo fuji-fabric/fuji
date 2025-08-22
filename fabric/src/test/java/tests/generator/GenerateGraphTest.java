@@ -157,7 +157,7 @@ public class GenerateGraphTest {
     @Test
     public void generateModulesGraphFile() {
         /* Generate module-graph.txt file. */
-        JsonObject modules = GsonMapper.getGson().toJsonTree(new MainControlConfigModel())
+        JsonObject modules = GsonMapper.toJsonTree(new MainControlConfigModel())
             .getAsJsonObject().getAsJsonObject("modules");
         ArrayList<String> result = new ArrayList<>();
         searchDefinedModules(modules, "", result);

@@ -2,7 +2,6 @@ package io.github.sakurawald.fuji.core.auxiliary;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
@@ -63,18 +62,18 @@ public class JsonUtil {
     }
 
     @SneakyThrows(IOException.class)
-    public static JsonElement readJsonElement(Path path) {
+    public static @NotNull JsonElement readJsonElement(@NotNull Path path) {
         @Cleanup Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path.toFile()), StandardCharsets.UTF_8));
-        return JsonParser.parseReader(reader);
+        return GsonMapper.fromJson(reader, JsonElement.class);
     }
 
-    public static JsonElement readJsonString(String jsonString) {
-        return JsonParser.parseString(jsonString);
+    public static @NotNull JsonElement readJsonString(@NotNull String jsonString) {
+        return GsonMapper.fromJson(jsonString, JsonElement.class);
     }
 
     @SneakyThrows
     public static void writeJsonObject(@NotNull JsonObject jsonObject, @NotNull Path outputFilePath){
-        String json = GsonMapper.getGson().toJson(jsonObject);
+        String json = GsonMapper.toJsonString(jsonObject);
         Files.writeString(outputFilePath, json);
     }
 }

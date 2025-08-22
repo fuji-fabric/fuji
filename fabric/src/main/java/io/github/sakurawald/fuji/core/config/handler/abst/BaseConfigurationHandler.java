@@ -116,14 +116,14 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
 
             /* Map *.json file into JsonObject instance. */
             @Cleanup Reader jsonReader = new BufferedReader(new InputStreamReader(new FileInputStream(this.filePath.toFile()), StandardCharsets.UTF_8));
-            JsonObject jsonObject = GsonMapper.getGson().fromJson(jsonReader, JsonObject.class);
+            JsonObject jsonObject = GsonMapper.fromJson(jsonReader, JsonObject.class);
 
             /* Validate the JsonObject instance. */
             validateModel(jsonObject, getDefaultModelAsJsonTree());
 
             /* Map the JsonObject instance into the model typed T. */
             this.preMappingJsonObjectIntoModelHooks.forEach(hook -> hook.accept(jsonObject));
-            this.model = (T) GsonMapper.getGson().fromJson(jsonObject, getDefaultModel().getClass());
+            this.model = (T) GsonMapper.fromJson(jsonObject, getDefaultModel().getClass());
             this.postMappingJsonObjectIntoModelHooks.forEach(hook -> hook.accept(model));
 
             /* Write storage at once, to:
@@ -156,7 +156,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
 
             /* Map JsonObject instance into *.json file. */
             Files.createDirectories(this.filePath.getParent());
-            Files.writeString(this.filePath, GsonMapper.getGson().toJson(jsonObject));
+            Files.writeString(this.filePath, GsonMapper.toJsonString(jsonObject));
         } catch (Exception e) {
             LogUtil.error("Failed to write configuration file {} into storage.", this.filePath, e);
             throw e;
@@ -168,11 +168,11 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     }
 
     public @NotNull JsonObject getModelAsJsonTree() {
-        return GsonMapper.getGson().toJsonTree(this.model()).getAsJsonObject();
+        return GsonMapper.toJsonTree(this.model()).getAsJsonObject();
     }
 
     public @NotNull JsonObject getDefaultModelAsJsonTree() {
-        return GsonMapper.getGson().toJsonTree(this.getDefaultModel()).getAsJsonObject();
+        return GsonMapper.toJsonTree(this.getDefaultModel()).getAsJsonObject();
     }
 
     public @NotNull T model() {
