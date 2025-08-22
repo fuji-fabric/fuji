@@ -51,7 +51,7 @@ public class JsonInitializer extends ModuleInitializer {
     @SneakyThrows(IOException.class)
     private static void operateJson(String filePath, BiFunction<DocumentContext, Path, Boolean> function) {
         Path path = Path.of(filePath);
-        DocumentContext documentContext = JsonPathParser.getInstance().parse(path.toFile());
+        DocumentContext documentContext = JsonPathParser.getJsonPathParser().parse(path.toFile());
         Boolean destructiveFlag = function.apply(documentContext, path);
 
         if (destructiveFlag) {

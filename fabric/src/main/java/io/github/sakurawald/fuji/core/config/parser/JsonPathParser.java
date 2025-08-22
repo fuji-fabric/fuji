@@ -17,9 +17,9 @@ import org.jetbrains.annotations.NotNull;
 public class JsonPathParser {
 
     @Getter(lazy = true)
-    private static final ParseContext JSON_PATH_PARSER = getInstance();
+    private static final ParseContext jsonPathParser = makeJsonPathParser();
 
-    public static @NotNull ParseContext getInstance() {
+    private static @NotNull ParseContext makeJsonPathParser() {
         configureJsonPathLibrary();
         return JsonPath.using(Configuration.defaultConfiguration());
     }

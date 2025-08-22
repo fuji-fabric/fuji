@@ -16,7 +16,7 @@ public abstract class JsonConfigurationTransformer extends ConfigurationTransfor
 
     @SneakyThrows(IOException.class)
     private DocumentContext makeJsonDocumentContext() {
-        return JsonPathParser.getInstance().parse(this.targetFilePath.toFile());
+        return JsonPathParser.getJsonPathParser().parse(this.targetFilePath.toFile());
     }
 
     public boolean existsJsonPath(@NotNull DocumentContext context, @NotNull String jsonPath) {
