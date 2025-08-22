@@ -29,7 +29,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @CommandNode("head")
 public class HeadInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<HeadConfigModel> config = new ObjectConfigurationHandler<>("config.json", HeadConfigModel.class)
+    public static final BaseConfigurationHandler<HeadConfigModel> config = ObjectConfigurationHandler
+        .ofModule("config.json", HeadConfigModel.class)
         .installTransformer(() -> {
             Path moduleConfigPath = ReflectionUtil.computeModuleConfigPath(HeadInitializer.class);
             Path sourceFilePath = moduleConfigPath.resolve("head.json");
