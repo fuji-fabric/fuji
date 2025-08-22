@@ -4,14 +4,6 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.Option;
-import com.jayway.jsonpath.ParseContext;
-import com.jayway.jsonpath.spi.json.GsonJsonProvider;
-import com.jayway.jsonpath.spi.json.JsonProvider;
-import com.jayway.jsonpath.spi.mapper.GsonMappingProvider;
-import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
@@ -40,7 +32,6 @@ import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -77,9 +68,6 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         // Let's create it.
         .create();
 
-    /* Json Path Parser. */
-    private static ParseContext JSON_PATH_PARSER = null;
-
     /* File path and data model. */
     @Getter
     protected final @NotNull Path path;
@@ -89,35 +77,6 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
 
     public BaseConfigurationHandler(@NotNull Path path) {
         this.path = path;
-    }
-
-    public static ParseContext getJsonPathParser() {
-        if (JSON_PATH_PARSER == null) {
-            configureJsonPathLibrary();
-            JSON_PATH_PARSER = JsonPath.using(Configuration.defaultConfiguration());
-        }
-
-        return JSON_PATH_PARSER;
-    }
-
-    private static void configureJsonPathLibrary() {
-        Configuration.setDefaults(new Configuration.Defaults() {
-
-            @Override
-            public JsonProvider jsonProvider() {
-                return new GsonJsonProvider(gson);
-            }
-
-            @Override
-            public MappingProvider mappingProvider() {
-                return new GsonMappingProvider(gson);
-            }
-
-            @Override
-            public Set<Option> options() {
-                return EnumSet.noneOf(Option.class);
-            }
-        });
     }
 
     public static void registerGsonTypeAdapter(Type type, Object typeAdapter) {

@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.command_meta.json;
 import com.jayway.jsonpath.DocumentContext;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.config.parser.JsonPathParser;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -50,7 +51,7 @@ public class JsonInitializer extends ModuleInitializer {
     @SneakyThrows(IOException.class)
     private static void operateJson(String filePath, BiFunction<DocumentContext, Path, Boolean> function) {
         Path path = Path.of(filePath);
-        DocumentContext documentContext = BaseConfigurationHandler.getJsonPathParser().parse(path.toFile());
+        DocumentContext documentContext = JsonPathParser.getJsonPathParser().parse(path.toFile());
         Boolean destructiveFlag = function.apply(documentContext, path);
 
         if (destructiveFlag) {

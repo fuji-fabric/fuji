@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.core.config.transformer.abst;
 
 import com.jayway.jsonpath.DocumentContext;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
-import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.parser.JsonPathParser;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
@@ -16,7 +16,7 @@ public abstract class JsonConfigurationTransformer extends ConfigurationTransfor
 
     @SneakyThrows(IOException.class)
     private DocumentContext makeJsonDocumentContext() {
-        return BaseConfigurationHandler.getJsonPathParser().parse(this.targetFilePath.toFile());
+        return JsonPathParser.getJsonPathParser().parse(this.targetFilePath.toFile());
     }
 
     public boolean existsJsonPath(@NotNull DocumentContext context, @NotNull String jsonPath) {
