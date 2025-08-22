@@ -55,10 +55,10 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     @Setter(AccessLevel.PROTECTED)
     protected T model;
 
-    private final List<Consumer<T>> preMappingModelIntoJsonObject = new ArrayList<>();
-    private final List<Consumer<JsonObject>> postMappingModelIntoJsonObject = new ArrayList<>();
-    private final List<Consumer<JsonObject>> preMappingJsonObjectIntoModel = new ArrayList<>();
-    private final List<Consumer<T>> postMappingJsonObjectIntoModel = new ArrayList<>();
+    private final List<Consumer<T>> preMappingModelIntoJsonObjectHooks = new ArrayList<>();
+    private final List<Consumer<JsonObject>> postMappingModelIntoJsonObjectHooks = new ArrayList<>();
+    private final List<Consumer<JsonObject>> preMappingJsonObjectIntoModelHooks = new ArrayList<>();
+    private final List<Consumer<T>> postMappingJsonObjectIntoModelHooks = new ArrayList<>();
 
     private final List<ConfigurationTransformer> installedTransformers = new ArrayList<>();
 
@@ -68,23 +68,23 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     }
 
     public BaseConfigurationHandler<T> addPreMappingModelIntoJsonObjectHook(@NotNull Consumer<T> hook) {
-        this.preMappingModelIntoJsonObject.add(hook);
+        this.preMappingModelIntoJsonObjectHooks.add(hook);
         return this;
     }
 
     @SuppressWarnings("UnusedReturnValue")
     public BaseConfigurationHandler<T> addPostMappingModelIntoJsonObjectHook(@NotNull Consumer<JsonObject> hook) {
-        this.postMappingModelIntoJsonObject.add(hook);
+        this.postMappingModelIntoJsonObjectHooks.add(hook);
         return this;
     }
 
     public BaseConfigurationHandler<T> addPreMappingJsonObjectIntoModelHook(@NotNull Consumer<JsonObject> hook) {
-        this.preMappingJsonObjectIntoModel.add(hook);
+        this.preMappingJsonObjectIntoModelHooks.add(hook);
         return this;
     }
 
     public BaseConfigurationHandler<T> addPostMappingJsonObjectIntoModelHook(@NotNull Consumer<T> hook) {
-        this.postMappingJsonObjectIntoModel.add(hook);
+        this.postMappingJsonObjectIntoModelHooks.add(hook);
         return this;
     }
 
@@ -122,9 +122,9 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
             validateModel(jsonObject, getDefaultModelAsJsonTree());
 
             /* Map the JsonObject instance into the model typed T. */
-            this.preMappingJsonObjectIntoModel.forEach(hook -> hook.accept(jsonObject));
+            this.preMappingJsonObjectIntoModelHooks.forEach(hook -> hook.accept(jsonObject));
             this.model = (T) GsonMapper.getGson().fromJson(jsonObject, getDefaultModel().getClass());
-            this.postMappingJsonObjectIntoModel.forEach(hook -> hook.accept(model));
+            this.postMappingJsonObjectIntoModelHooks.forEach(hook -> hook.accept(model));
 
             /* Write storage at once, to:
              * 1. Keep the sync between memory and disk.
@@ -150,9 +150,9 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
             }
 
             /* Map model T into JsonObject instance. */
-            this.preMappingModelIntoJsonObject.forEach(hook -> hook.accept(this.model()));
+            this.preMappingModelIntoJsonObjectHooks.forEach(hook -> hook.accept(this.model()));
             JsonObject jsonObject = this.getModelAsJsonTree();
-            this.postMappingModelIntoJsonObject.forEach(hook -> hook.accept(jsonObject));
+            this.postMappingModelIntoJsonObjectHooks.forEach(hook -> hook.accept(jsonObject));
 
             /* Map JsonObject instance into *.json file. */
             Files.createDirectories(this.filePath.getParent());
