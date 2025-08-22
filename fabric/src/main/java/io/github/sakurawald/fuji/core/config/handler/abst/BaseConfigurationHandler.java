@@ -6,7 +6,7 @@ import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.config.job.ConfigurationHandlerWriteStorageJob;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.config.migrator.version.VersionPropertyInjector;
-import io.github.sakurawald.fuji.core.config.transformer.abst.ConfigurationTransformer;
+import io.github.sakurawald.fuji.core.config.migrator.transformer.abst.ConfigurationTransformer;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;

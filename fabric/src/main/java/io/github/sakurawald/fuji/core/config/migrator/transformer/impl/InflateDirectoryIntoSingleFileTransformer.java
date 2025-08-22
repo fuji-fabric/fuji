@@ -1,9 +1,9 @@
-package io.github.sakurawald.fuji.core.config.transformer.impl;
+package io.github.sakurawald.fuji.core.config.migrator.transformer.impl;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
-import io.github.sakurawald.fuji.core.config.transformer.abst.ConfigurationTransformer;
+import io.github.sakurawald.fuji.core.config.migrator.transformer.abst.ConfigurationTransformer;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

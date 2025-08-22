@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.head;
 
 import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
-import io.github.sakurawald.fuji.core.config.transformer.impl.MoveFileTransformer;
+import io.github.sakurawald.fuji.core.config.migrator.transformer.impl.MoveFileTransformer;
 import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;

@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.config.transformer.impl;
+package io.github.sakurawald.fuji.core.config.migrator.transformer.impl;
 
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 

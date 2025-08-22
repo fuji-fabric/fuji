@@ -1,11 +1,11 @@
-package io.github.sakurawald.fuji.core.config.transformer.impl;
+package io.github.sakurawald.fuji.core.config.migrator.transformer.impl;
 
 import com.google.gson.JsonObject;
 import com.jayway.jsonpath.DocumentContext;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
-import io.github.sakurawald.fuji.core.config.transformer.abst.JsonConfigurationTransformer;
+import io.github.sakurawald.fuji.core.config.migrator.transformer.abst.JsonConfigurationTransformer;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import java.io.IOException;
 import java.nio.file.Files;

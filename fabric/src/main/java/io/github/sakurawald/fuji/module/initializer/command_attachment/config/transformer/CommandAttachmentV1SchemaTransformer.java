@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.command_attachment.config.t
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
-import io.github.sakurawald.fuji.core.config.transformer.impl.InflateDirectoryIntoSingleFileTransformer;
+import io.github.sakurawald.fuji.core.config.migrator.transformer.impl.InflateDirectoryIntoSingleFileTransformer;
 import io.github.sakurawald.fuji.core.manager.impl.attachment.AttachmentManager;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.CommandAttachmentInitializer;
 import java.nio.file.Path;

@@ -6,7 +6,7 @@ import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.exception.FailedToLoadResourceException;
 import io.github.sakurawald.fuji.core.config.validator.ArgumentsValidator;
-import io.github.sakurawald.fuji.core.config.transformer.impl.MoveFileTransformer;
+import io.github.sakurawald.fuji.core.config.migrator.transformer.impl.MoveFileTransformer;
 import io.github.sakurawald.fuji.core.document.structure.DocString;
 import java.nio.file.Path;
 import java.util.Map;

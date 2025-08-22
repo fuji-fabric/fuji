@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.jayway.jsonpath.DocumentContext;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
-import io.github.sakurawald.fuji.core.config.transformer.abst.JsonConfigurationTransformer;
+import io.github.sakurawald.fuji.core.config.migrator.transformer.abst.JsonConfigurationTransformer;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.CommandCooldownInitializer;
 import java.nio.file.Files;
 

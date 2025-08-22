@@ -1,6 +1,6 @@
-package io.github.sakurawald.fuji.core.config.transformer.impl;
+package io.github.sakurawald.fuji.core.config.migrator.transformer.impl;
 
-import io.github.sakurawald.fuji.core.config.transformer.abst.ConfigurationTransformer;
+import io.github.sakurawald.fuji.core.config.migrator.transformer.abst.ConfigurationTransformer;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 

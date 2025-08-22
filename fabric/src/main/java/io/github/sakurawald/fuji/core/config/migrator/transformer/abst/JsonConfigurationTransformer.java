@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.config.transformer.abst;
+package io.github.sakurawald.fuji.core.config.migrator.transformer.abst;
 
 import com.jayway.jsonpath.DocumentContext;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
