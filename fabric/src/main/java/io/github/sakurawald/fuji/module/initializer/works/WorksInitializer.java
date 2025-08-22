@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.works;
 
+import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -54,7 +55,7 @@ public class WorksInitializer extends ModuleInitializer {
 
     @Override
     protected void registerGsonTypeAdapter() {
-        BaseConfigurationHandler.registerGsonTypeAdapter(Work.class, new WorkTypeAdapter());
+        GsonMapper.registerGsonTypeAdapter(Work.class, new WorkTypeAdapter());
     }
 
     @Override

@@ -1,13 +1,10 @@
 package io.github.sakurawald.fuji.core.config.handler.abst;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
+import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.config.job.ConfigurationHandlerWriteStorageJob;
-import io.github.sakurawald.fuji.core.config.migrator.version.IgnoreModVersionStrategy;
 import io.github.sakurawald.fuji.core.config.migrator.version.VersionPropertyInjector;
 import io.github.sakurawald.fuji.core.config.transformer.abst.ConfigurationTransformer;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
@@ -28,7 +25,6 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -48,25 +44,6 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
 
     public static final Set<BaseConfigurationHandler<?>> REGISTERED_CONFIGURATION_HANDLERS = new HashSet<>();
 
-    @Getter
-    protected static Gson gson = new GsonBuilder()
-        // The default naming policy is IDENTIFY, we need to ensure the naming style is consistent.
-        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-        // Pretty print for readability.
-        .setPrettyPrinting()
-        // Pass through html characters, to support mini language.
-        .disableHtmlEscaping()
-        // Null-value is legal value, we should serialize it.
-        .serializeNulls()
-        // Exclude the mod version property in both serialization and de-serialization.
-        .setExclusionStrategies(new IgnoreModVersionStrategy())
-        // If the Gson can't find a no-args-constructor, then it will try to create an instance using Unsafe, and ignore all the declared field initializers.
-        .disableJdkUnsafe()
-        // Note that non-static inner class always holds a reference to its enclosing outer class. (Makes the no args constructor failed)
-        .disableInnerClassSerialization()
-        // Let's create it.
-        .create();
-
     /* File path and data model. */
     @Getter
     protected final @NotNull Path path;
@@ -76,13 +53,6 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
 
     public BaseConfigurationHandler(@NotNull Path path) {
         this.path = path;
-    }
-
-    public static void registerGsonTypeAdapter(Type type, Object typeAdapter) {
-        gson = gson
-            .newBuilder()
-            .registerTypeAdapter(type, typeAdapter)
-            .create();
     }
 
     @SuppressWarnings("UnusedReturnValue")
@@ -114,7 +84,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
                 // Merge data tree with schema tree: the gson.fromJson() will use default model as the schema tree, to generate missing default kv-pairs in data tree.
                 @Cleanup Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.path.toFile()), StandardCharsets.UTF_8));
                 T defaultModel = getDefaultModel();
-                this.model = (T) gson.fromJson(reader, defaultModel.getClass());
+                this.model = (T) GsonMapper.getGson().fromJson(reader, defaultModel.getClass());
 
                 /* Write storage at once, to:
                  * 1. Keep the sync between memory and disk.
@@ -151,7 +121,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
             /* Serialize the Java object into Json tree. */
             JsonElement modelJsonTree = this.convertModelToJsonTree();
             beforeSerializeIntoString(modelJsonTree);
-            String jsonString = gson.toJson(modelJsonTree);
+            String jsonString = GsonMapper.getGson().toJson(modelJsonTree);
 
             /* Write model to storage. */
             Files.createDirectories(this.path.getParent());
@@ -167,12 +137,11 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     }
 
     public JsonElement convertModelToJsonTree() {
-        return gson.toJsonTree(this.model());
+        return GsonMapper.getGson().toJsonTree(this.model());
     }
 
     @SneakyThrows
-    @SuppressWarnings("SameParameterValue")
-    private void scheduleWriteStorageJob(@NotNull String cron) {
+    public BaseConfigurationHandler<T> enableAutoSaveFeature() {
         /* Make and schedule the job. */
         String jobName = this.path.toFile().getCanonicalPath();
         ConfigurationHandlerWriteStorageJob writeStorageJob = new ConfigurationHandlerWriteStorageJob(jobName, new JobDataMap() {
@@ -184,7 +153,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
                 String sourceModuleInCurrentStackTrace = ReflectionUtil.Stacktrace.findSourceModuleInCurrentStackTrace();
                 this.put(SourceModuleGetter.SPECIFIED_SOURCE_MODULE_KEY, sourceModuleInCurrentStackTrace);
             }
-        }, () -> cron);
+        }, () -> ScheduleManager.CRON_EVERY_TEN_SECONDS);
         Managers.getScheduleManager().scheduleJob(writeStorageJob);
 
         /* Write storage on server stopping. */
@@ -192,10 +161,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
             LogUtil.debug("Write storage on server stopping: {}", this.path);
             this.writeStorage();
         });
-    }
 
-    public BaseConfigurationHandler<T> enableAutoSaveFeature() {
-        this.scheduleWriteStorageJob(ScheduleManager.CRON_EVERY_TEN_SECONDS);
         return this;
     }
 

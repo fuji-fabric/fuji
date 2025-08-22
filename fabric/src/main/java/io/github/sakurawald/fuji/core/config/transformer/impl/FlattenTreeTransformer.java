@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.jayway.jsonpath.DocumentContext;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
-import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.config.transformer.abst.JsonConfigurationTransformer;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import java.io.IOException;
@@ -61,7 +61,7 @@ public class FlattenTreeTransformer extends JsonConfigurationTransformer {
         if (!JsonUtil.isEmpty(parentTree) && Files.notExists(currentTreeOutPath)) {
             logOperation("Flatten the tree `{}` into the file `{}`", walkingPath, currentTreeOutPath);
             Files.createDirectories(currentTreeOutPath.getParent());
-            String json = BaseConfigurationHandler.getGson().toJson(parentTree);
+            String json = GsonMapper.getGson().toJson(parentTree);
             Files.writeString(currentTreeOutPath, json);
             this.overrideTheOriginalFileWithSkeletonTree = true;
         }

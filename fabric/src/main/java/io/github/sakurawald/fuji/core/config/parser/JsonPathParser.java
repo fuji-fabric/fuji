@@ -8,7 +8,7 @@ import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 import com.jayway.jsonpath.spi.json.JsonProvider;
 import com.jayway.jsonpath.spi.mapper.GsonMappingProvider;
 import com.jayway.jsonpath.spi.mapper.MappingProvider;
-import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import java.util.EnumSet;
 import java.util.Set;
 import lombok.Getter;
@@ -29,12 +29,12 @@ public class JsonPathParser {
 
             @Override
             public JsonProvider jsonProvider() {
-                return new GsonJsonProvider(BaseConfigurationHandler.getGson());
+                return new GsonJsonProvider(GsonMapper.getGson());
             }
 
             @Override
             public MappingProvider mappingProvider() {
-                return new GsonMappingProvider(BaseConfigurationHandler.getGson());
+                return new GsonMappingProvider(GsonMapper.getGson());
             }
 
             @Override

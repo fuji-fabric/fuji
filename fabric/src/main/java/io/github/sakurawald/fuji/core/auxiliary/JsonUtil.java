@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -74,7 +74,7 @@ public class JsonUtil {
 
     @SneakyThrows
     public static void writeJsonObject(@NotNull JsonObject jsonObject, @NotNull Path outputFilePath){
-        String json = BaseConfigurationHandler.getGson().toJson(jsonObject);
+        String json = GsonMapper.getGson().toJson(jsonObject);
         Files.writeString(outputFilePath, json);
     }
 }

@@ -7,7 +7,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
-import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.structure.Downloader;
 import io.github.sakurawald.fuji.module.initializer.head.HeadInitializer;
 import io.github.sakurawald.fuji.module.initializer.head.structure.Category;
@@ -74,7 +74,7 @@ public class HeadProvider {
             JsonArray headJsonArray = JsonParser.parseReader(reader).getAsJsonArray();
             for (JsonElement headJsonElement : headJsonArray) {
                 try {
-                    Head head = BaseConfigurationHandler.getGson().fromJson(headJsonElement, Head.class);
+                    Head head = GsonMapper.getGson().fromJson(headJsonElement, Head.class);
                     result.put(category, head);
                 } catch (Exception e) {
                     LogUtil.error("Invalid head: {}", headJsonElement, e);

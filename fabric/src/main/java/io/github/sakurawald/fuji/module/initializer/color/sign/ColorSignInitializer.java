@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.color.sign;
 
+import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
@@ -43,7 +44,7 @@ public class ColorSignInitializer extends ModuleInitializer {
 
         try {
             String data = Managers.getAttachmentManager().getAttachment(ATTACHMENT_SUBJECT, uuid);
-            return BaseConfigurationHandler.getGson().fromJson(data, SignCache.class);
+            return GsonMapper.getGson().fromJson(data, SignCache.class);
         } catch (IOException e) {
             LogUtil.error("Failed to read sign cache: spatialBlock = {}", globalBlockPos, e);
             return null;
@@ -52,7 +53,7 @@ public class ColorSignInitializer extends ModuleInitializer {
 
     public static void writeSignCache(@NotNull GlobalBlockPos globalBlockPos, @NotNull SignCache signCache) {
         String uuid = UuidHelper.getAttachedUuid(globalBlockPos);
-        String data = BaseConfigurationHandler.getGson().toJson(signCache);
+        String data = GsonMapper.getGson().toJson(signCache);
         try {
             Managers.getAttachmentManager().setAttachment(ATTACHMENT_SUBJECT, uuid, data);
         } catch (IOException e) {

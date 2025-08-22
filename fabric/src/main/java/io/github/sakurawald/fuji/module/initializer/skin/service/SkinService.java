@@ -10,7 +10,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
-import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.module.initializer.skin.SkinInitializer;
 import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinDataNode;
 import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinDescriptor;
@@ -113,7 +113,7 @@ public class SkinService {
 
     private static @NotNull JsonObject makeComparableJsonObjectFromSkinProperty(Property property) {
         String jsonString = new String(Base64.getDecoder().decode(AuthlibHelper.getPropertyValue(property)), StandardCharsets.UTF_8);
-        JsonObject jsonObject = BaseConfigurationHandler.getGson().fromJson(jsonString, JsonObject.class);
+        JsonObject jsonObject = GsonMapper.getGson().fromJson(jsonString, JsonObject.class);
         jsonObject.remove("timestamp");
         return jsonObject;
     }

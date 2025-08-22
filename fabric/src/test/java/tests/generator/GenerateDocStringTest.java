@@ -8,7 +8,7 @@ import io.github.classgraph.ScanResult;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
-import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.config.handler.impl.LanguageConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
@@ -117,7 +117,7 @@ public class GenerateDocStringTest {
         defaultLanguageJson = LanguageConfigurationHandler.makeSortedLanguageJsonObject(defaultLanguageJson);
 
         /* Override the default language file. */
-        String jsonString = BaseConfigurationHandler.getGson().toJson(defaultLanguageJson);
+        String jsonString = GsonMapper.getGson().toJson(defaultLanguageJson);
         Files.writeString(COMPILE_TIME_DEFAULT_LANGUAGE_FILE_PATH, jsonString);
     }
 

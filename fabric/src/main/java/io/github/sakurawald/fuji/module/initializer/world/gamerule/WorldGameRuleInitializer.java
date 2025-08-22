@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.world.gamerule;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
+import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
@@ -66,7 +67,7 @@ public class WorldGameRuleInitializer extends ModuleInitializer {
 
     @Override
     protected void registerGsonTypeAdapter() {
-        BaseConfigurationHandler.registerGsonTypeAdapter(Reference2BooleanMap.class, new BooleanGameRuleMapAdapter());
-        BaseConfigurationHandler.registerGsonTypeAdapter(Reference2IntMap.class, new IntegerGameRuleMapAdapter());
+        GsonMapper.registerGsonTypeAdapter(Reference2BooleanMap.class, new BooleanGameRuleMapAdapter());
+        GsonMapper.registerGsonTypeAdapter(Reference2IntMap.class, new IntegerGameRuleMapAdapter());
     }
 }

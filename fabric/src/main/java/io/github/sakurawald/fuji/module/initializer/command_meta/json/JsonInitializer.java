@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.command_meta.json;
 import com.jayway.jsonpath.DocumentContext;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.config.parser.JsonPathParser;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
@@ -11,7 +12,6 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
-import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_meta.json.command.argument.wrapper.JsonValueType;
 import lombok.SneakyThrows;
@@ -55,7 +55,7 @@ public class JsonInitializer extends ModuleInitializer {
         Boolean destructiveFlag = function.apply(documentContext, path);
 
         if (destructiveFlag) {
-            String json = BaseConfigurationHandler.getGson().toJson(documentContext.json());
+            String json = GsonMapper.getGson().toJson(documentContext.json());
             try {
                 Files.writeString(path, json);
             } catch (IOException e) {

@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.command_attachment;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
+import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -238,6 +239,6 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @Override
     protected void registerGsonTypeAdapter() {
-        BaseConfigurationHandler.registerGsonTypeAdapter(BaseCommandAttachmentEntry.class, new CommandAttachmentNodeAdapter());
+        GsonMapper.registerGsonTypeAdapter(BaseCommandAttachmentEntry.class, new CommandAttachmentNodeAdapter());
     }
 }

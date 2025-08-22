@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 
 public enum JsonValueType {
 
@@ -24,7 +24,7 @@ public enum JsonValueType {
     }
 
     public Object parse(String jsonValue) {
-        Gson gson = BaseConfigurationHandler.getGson();
+        Gson gson = GsonMapper.getGson();
         return gson.fromJson(jsonValue, valueTransformer);
     }
 
