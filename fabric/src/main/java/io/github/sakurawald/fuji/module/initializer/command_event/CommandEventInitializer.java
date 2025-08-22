@@ -37,7 +37,7 @@ import net.minecraft.stat.Stats;
     """)
 public class CommandEventInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<CommandEventConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandEventConfigModel.class);
+    public static final BaseConfigurationHandler<CommandEventConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandEventConfigModel.class);
 
     @Override
     protected void onInitialize() {

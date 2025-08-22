@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 @TestCase(action = "Issue `/say hi` command.", targets = "The command should be cancelled with the `/send-broadcast` command.")
 public class CommandAdviceInitializer extends ModuleInitializer {
 
-    private static final BaseConfigurationHandler<CommandAdviceConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandAdviceConfigModel.class);
+    private static final BaseConfigurationHandler<CommandAdviceConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandAdviceConfigModel.class);
 
     @SuppressWarnings({"ResultOfMethodCallIgnored", "unchecked"})
     public static void processCommandAdvice(Object handler, ServerCommandSource source, String commandString, CommandAdviceType adviceType, CallbackInfo ci) {

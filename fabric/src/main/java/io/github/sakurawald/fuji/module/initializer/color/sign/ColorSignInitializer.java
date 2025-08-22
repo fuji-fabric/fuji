@@ -30,7 +30,7 @@ import java.io.IOException;
 @TestCase(action = "Place a `sign block` and write style tags in it, then re-open the sign.", targets = "The style tags in the sign block should be `parsed` and `reversed`.")
 public class ColorSignInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<ColorSignConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ColorSignConfigModel.class);
+    public static final BaseConfigurationHandler<ColorSignConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ColorSignConfigModel.class);
 
     private static final String ATTACHMENT_SUBJECT = "color-sign-cache";
 

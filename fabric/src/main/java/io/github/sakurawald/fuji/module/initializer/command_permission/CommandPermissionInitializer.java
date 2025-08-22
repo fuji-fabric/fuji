@@ -151,7 +151,7 @@ import java.util.function.Predicate;
 @CommandRequirement(level = 4)
 public class CommandPermissionInitializer extends ModuleInitializer {
 
-    private static final BaseConfigurationHandler<CommandPermissionConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandPermissionConfigModel.class);
+    private static final BaseConfigurationHandler<CommandPermissionConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandPermissionConfigModel.class);
 
     private static boolean verboseModeFlag = false;
 

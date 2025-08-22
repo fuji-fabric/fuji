@@ -20,7 +20,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     """)
 public class RulesInitializer extends ModuleInitializer {
 
-    private static final BaseConfigurationHandler<RulesConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, RulesConfigModel.class);
+    private static final BaseConfigurationHandler<RulesConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, RulesConfigModel.class);
 
     @Document(id = 1751825371097L, value = "Query the server rules.")
     @CommandNode("rules")

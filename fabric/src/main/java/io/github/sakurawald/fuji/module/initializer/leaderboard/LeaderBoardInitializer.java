@@ -91,7 +91,7 @@ import org.jetbrains.annotations.NotNull;
     """)
 public class LeaderBoardInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<LeaderBoardConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, LeaderBoardConfigModel.class);
+    public static final BaseConfigurationHandler<LeaderBoardConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, LeaderBoardConfigModel.class);
 
     public static final BaseConfigurationHandler<LeaderBoardDataModel> data = new ObjectConfigurationHandler<>("leaderboard-data.json", LeaderBoardDataModel.class);
 

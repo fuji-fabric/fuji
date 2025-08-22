@@ -53,7 +53,7 @@ import net.minecraft.world.border.WorldBorder;
 @TestCase(action = "Issue `/tp` and `/world tp` between dimensions.", targets = "The per-dimension border should be synced on the client-side.")
 public class WorldBorderInitializer extends ModuleInitializer {
 
-    private static final BaseConfigurationHandler<WorldBorderConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, WorldBorderConfigModel.class);
+    private static final BaseConfigurationHandler<WorldBorderConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, WorldBorderConfigModel.class);
 
     public static Optional<BorderDescriptor> getEffectiveBorderDescriptor(String dimensionId) {
         return config.model().borders

@@ -13,7 +13,7 @@ import net.minecraft.server.command.ServerCommandSource;
     This module logs the `issued commands` into the console.
     """)
 public class CommandSpyInitializer extends ModuleInitializer {
-    public static final BaseConfigurationHandler<CommandSpyConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandSpyConfigModel.class);
+    public static final BaseConfigurationHandler<CommandSpyConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandSpyConfigModel.class);
 
     public static void processCommandSpy(ParseResults<ServerCommandSource> parseResults) {
         /* Verify command source. */

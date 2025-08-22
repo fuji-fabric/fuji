@@ -42,7 +42,7 @@ public class WorksInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<WorksDataModel> works = new ObjectConfigurationHandler<>("works.json", WorksDataModel.class)
         .enableAutoSaveFeature();
 
-    public static final BaseConfigurationHandler<WorksConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, WorksConfigModel.class);
+    public static final BaseConfigurationHandler<WorksConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, WorksConfigModel.class);
 
     @Document(id = 1751825541296L, value = "Open the works GUI.")
     @CommandNode("works")

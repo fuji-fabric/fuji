@@ -43,7 +43,7 @@ import java.util.List;
 public class WorldDownloaderInitializer extends ModuleInitializer {
 
     private static final double BYTE_TO_MEGABYTE = 1.0 * 1024 * 1024;
-    private static final BaseConfigurationHandler<WorldDownloaderConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, WorldDownloaderConfigModel.class);
+    private static final BaseConfigurationHandler<WorldDownloaderConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, WorldDownloaderConfigModel.class);
 
     private static EvictingQueue<String> downloadContextQueue;
     private static HttpServer httpServer;

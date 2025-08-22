@@ -140,7 +140,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     """)
 public class JailInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<JailConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, JailConfigModel.class);
+    public static final BaseConfigurationHandler<JailConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, JailConfigModel.class);
 
     public static final BaseConfigurationHandler<JailDataModel> data = new ObjectConfigurationHandler<>("jail-data.json", JailDataModel.class)
         .enableAutoSaveFeature();

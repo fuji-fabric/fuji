@@ -56,7 +56,7 @@ import java.io.InputStreamReader;
 
 public class ShellInitializer extends ModuleInitializer {
 
-    private static final BaseConfigurationHandler<ShellConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ShellConfigModel.class);
+    private static final BaseConfigurationHandler<ShellConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ShellConfigModel.class);
 
     private static void checkSecurity(CommandContext<ServerCommandSource> ctx) {
         var config = ShellInitializer.config.model();

@@ -44,7 +44,7 @@ import java.util.Set;
     """)
 public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter {
 
-    public static final String CONFIG_JSON = "config.json";
+    public static final String CONFIG_JSON_LITERAL = "config.json";
 
     public static final Set<BaseConfigurationHandler<?>> REGISTERED_CONFIGURATION_HANDLERS = new HashSet<>();
     public static final String MOD_VERSION_KEY = "MOD_VERSION";

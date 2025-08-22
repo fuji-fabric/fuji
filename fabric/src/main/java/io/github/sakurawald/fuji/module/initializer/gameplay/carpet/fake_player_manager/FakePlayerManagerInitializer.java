@@ -40,7 +40,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     """)
 public class FakePlayerManagerInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<FakePlayerManagerConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, FakePlayerManagerConfigModel.class);
+    public static final BaseConfigurationHandler<FakePlayerManagerConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, FakePlayerManagerConfigModel.class);
 
     @Document(id = 1751827022331L, value = "Renew the expiration time of `all` fake-player you have `spawned`.")
     @CommandNode("player renew")

@@ -44,7 +44,7 @@ import java.util.List;
 
 public class CommandAliasInitializer extends ModuleInitializer {
 
-    private static final BaseConfigurationHandler<CommandAliasConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandAliasConfigModel.class);
+    private static final BaseConfigurationHandler<CommandAliasConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandAliasConfigModel.class);
 
     @Override
     protected void onInitialize() {

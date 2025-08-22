@@ -37,7 +37,7 @@ import net.minecraft.text.Text;
     """)
 public class TopChunksInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<TopChunksConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, TopChunksConfigModel.class);
+    public static final BaseConfigurationHandler<TopChunksConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, TopChunksConfigModel.class);
 
     @Document(id = 1753056668984L, value = "An alias command to `/chunks message`.")
     @CommandNode("chunks")

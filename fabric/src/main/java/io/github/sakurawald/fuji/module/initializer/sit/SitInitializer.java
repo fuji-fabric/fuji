@@ -41,7 +41,7 @@ import java.util.Set;
 @TestCase(action = "Issue `/sit` command while stepping on the `bed block`.", targets = "The raycast height should be proper.")
 public class SitInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<SitConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, SitConfigModel.class);
+    public static final BaseConfigurationHandler<SitConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, SitConfigModel.class);
 
     private static final Vec3d CHAIR_ENTITY_OFFSET =
         #if MC_VER <= MC_1_20_1

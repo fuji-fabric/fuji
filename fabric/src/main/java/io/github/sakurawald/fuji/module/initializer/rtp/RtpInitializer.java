@@ -47,7 +47,7 @@ import java.util.Optional;
     """)
 public class RtpInitializer extends ModuleInitializer {
 
-    private static final BaseConfigurationHandler<RtpConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, RtpConfigModel.class);
+    private static final BaseConfigurationHandler<RtpConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, RtpConfigModel.class);
 
     private static @NotNull TeleportSetup withTeleportSetup(@NotNull ServerPlayerEntity player, @NotNull ServerWorld world) {
         List<TeleportSetup> list = config.model().setup.dimension;

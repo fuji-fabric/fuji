@@ -38,7 +38,7 @@ import org.jetbrains.annotations.NotNull;
 public class ChatSpyInitializer extends ModuleInitializer {
 
     private static String lastContentString = "";
-    public static final BaseConfigurationHandler<ChatSpyConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatSpyConfigModel.class);
+    public static final BaseConfigurationHandler<ChatSpyConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatSpyConfigModel.class);
     public static final BaseConfigurationHandler<ChatSpyDataModel> data = new ObjectConfigurationHandler<>("data.json", ChatSpyDataModel.class);
 
     @Document(id = 1751826711342L, value = "Enable/disable the chat spy mode for you.")

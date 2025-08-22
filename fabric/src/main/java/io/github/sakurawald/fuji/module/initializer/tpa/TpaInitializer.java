@@ -23,7 +23,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @Document(id = 1751826540953L, value = "This module provides `/tpa` and `/tpahere` commands.")
 public class TpaInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<TpaConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, TpaConfigModel.class);
+    public static final BaseConfigurationHandler<TpaConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, TpaConfigModel.class);
 
     @Getter
     private static final List<TpaRequest> requests = new ArrayList<>();

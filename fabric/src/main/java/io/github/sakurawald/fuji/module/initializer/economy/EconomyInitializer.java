@@ -72,7 +72,7 @@ import net.minecraft.util.Identifier;
     """)
 public class EconomyInitializer extends ModuleInitializer {
 
-    public static BaseConfigurationHandler<EconomyConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, EconomyConfigModel.class);
+    public static BaseConfigurationHandler<EconomyConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, EconomyConfigModel.class);
 
     public static BaseConfigurationHandler<EconomyDataModel> data = new ObjectConfigurationHandler<>("economy-data.json", EconomyDataModel.class);
 

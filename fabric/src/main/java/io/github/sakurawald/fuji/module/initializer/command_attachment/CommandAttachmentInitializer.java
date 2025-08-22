@@ -89,7 +89,7 @@ import java.util.Optional;
 @CommandRequirement(level = 4)
 public class CommandAttachmentInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<CommandAttachmentConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandAttachmentConfigModel.class);
+    public static final BaseConfigurationHandler<CommandAttachmentConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandAttachmentConfigModel.class);
 
     public static final BaseConfigurationHandler<CommandAttachmentDataModel> data = new ObjectConfigurationHandler<>("command-attachment-data.json", CommandAttachmentDataModel.class)
         .enableAutoSaveFeature()

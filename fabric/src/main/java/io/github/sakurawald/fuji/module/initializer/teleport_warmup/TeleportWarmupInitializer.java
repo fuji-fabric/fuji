@@ -51,7 +51,7 @@ public class TeleportWarmupInitializer extends ModuleInitializer {
         """)
     public static final MetaDescriptor<Double> TELEPORT_WARMUP_TIME_META = new MetaDescriptor<>("fuji.teleport_warmup.warmup", Double::valueOf, 1752000334206L);
 
-    public static final BaseConfigurationHandler<TeleportWarmupConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, TeleportWarmupConfigModel.class);
+    public static final BaseConfigurationHandler<TeleportWarmupConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, TeleportWarmupConfigModel.class);
 
     public static Optional<BossBarTicket> getExistingTeleportTicket(@NotNull ServerPlayerEntity player) {
         return Managers.getBossBarManager()

@@ -34,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
     """)
 public class ChatReplaceInitializer extends ModuleInitializer {
 
-    private static final BaseConfigurationHandler<ChatReplaceConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, ChatReplaceConfigModel.class);
+    private static final BaseConfigurationHandler<ChatReplaceConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatReplaceConfigModel.class);
 
     @TestCase(action = "Test the `chat replace` and `chat trigger` module.", targets = {
          "Case: `inv`"

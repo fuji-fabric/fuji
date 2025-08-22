@@ -59,7 +59,7 @@ import java.util.function.Supplier;
     2. `/lp group default permission set fuji.anti_build.place_block.override.minecraft:brown_mushroom false world=the_end`
     """)
 public class AntiBuildInitializer extends ModuleInitializer {
-    public static final BaseConfigurationHandler<AntiBuildConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, AntiBuildConfigModel.class);
+    public static final BaseConfigurationHandler<AntiBuildConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, AntiBuildConfigModel.class);
 
     @DocStringProvider(id = 1751999560958L, value = """
         To bypass a specific `anti type` with a specific `id`.

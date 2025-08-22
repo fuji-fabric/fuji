@@ -97,7 +97,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @CommandRequirement(level = 4)
 public class CommandCooldownInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<CommandCooldownConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandCooldownConfigModel.class)
+    public static final BaseConfigurationHandler<CommandCooldownConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandCooldownConfigModel.class)
         .installTransformer(new NamedCooldownSchemaV1Transformer());
 
     public static final BaseConfigurationHandler<NamedCooldownDataModel> namedCooldownData = new ObjectConfigurationHandler<>("named-cooldown-data.json", NamedCooldownDataModel.class) {

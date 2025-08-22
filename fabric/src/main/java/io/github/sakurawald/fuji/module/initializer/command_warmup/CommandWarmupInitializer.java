@@ -50,7 +50,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
     You can use the `alternative character |` in `regex`.
     """)
 public class CommandWarmupInitializer extends ModuleInitializer {
-    private static final BaseConfigurationHandler<CommandWarmupConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandWarmupConfigModel.class);
+    private static final BaseConfigurationHandler<CommandWarmupConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandWarmupConfigModel.class);
 
     public static void processCommandWarmup(ServerPlayerEntity player, String commandString, CallbackInfo ci) {
         LogUtil.debug("Process command warmup: player = {}, command = {}", PlayerHelper.getPlayerName(player), commandString);

@@ -25,7 +25,7 @@ public class FlattenModulesTransformer extends JsonConfigurationTransformer {
                 modulesPath + "." + topLevelModule
                 , ModuleManager.ENABLE_SUPPLIER_KEY
                 , topLevelModule
-                , (walkingPath) -> ReflectionUtil.computeModuleConfigPath(walkingPath).resolve(BaseConfigurationHandler.CONFIG_JSON));
+                , (walkingPath) -> ReflectionUtil.computeModuleConfigPath(walkingPath).resolve(BaseConfigurationHandler.CONFIG_JSON_LITERAL));
 
             flattenTreeTransformer.configure(this.getTargetFilePath());
             flattenTreeTransformer.apply();

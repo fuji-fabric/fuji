@@ -21,7 +21,7 @@ public class NicknameInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<NicknameDataModel> data = new ObjectConfigurationHandler<>("nickname.json", NicknameDataModel.class);
 
-    public static final BaseConfigurationHandler<NicknameConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, NicknameConfigModel.class);
+    public static final BaseConfigurationHandler<NicknameConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, NicknameConfigModel.class);
 
     private static String formatNickname(@NotNull ServerPlayerEntity player, @NotNull String inputNickName) {
         // Parse the placeholders first to make the Java Formatter happy.

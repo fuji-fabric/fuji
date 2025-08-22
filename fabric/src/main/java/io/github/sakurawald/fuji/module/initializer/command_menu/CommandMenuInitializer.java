@@ -69,7 +69,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @CommandRequirement(level = 4)
 public class CommandMenuInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<CommandMenuConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, CommandMenuConfigModel.class);
+    public static final BaseConfigurationHandler<CommandMenuConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandMenuConfigModel.class);
     public static final BaseConfigurationHandler<CommandMenuMenusModel> menus = new ObjectConfigurationHandler<>("menus.json", CommandMenuMenusModel.class);
 
     @Document(id = 1751824900662L, value = "Open the specified `menu` for the player.")

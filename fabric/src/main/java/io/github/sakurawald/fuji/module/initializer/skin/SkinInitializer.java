@@ -57,7 +57,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @CommandNode("skin")
 public class SkinInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<SkinConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON, SkinConfigModel.class);
+    public static final BaseConfigurationHandler<SkinConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, SkinConfigModel.class);
     public static final BaseConfigurationHandler<SkinDataModel> data = new ObjectConfigurationHandler<>("skin-data.json", SkinDataModel.class);
 
     @Document(id = 1751826809279L, value = "Set skin to a random default skin.")
