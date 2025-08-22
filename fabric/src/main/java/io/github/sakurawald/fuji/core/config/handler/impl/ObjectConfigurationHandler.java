@@ -22,8 +22,8 @@ public class ObjectConfigurationHandler<T> extends BaseConfigurationHandler<T> {
     }
 
     public static <T> @NotNull ObjectConfigurationHandler<T> ofModule(@NotNull String other, @NotNull Class<T> typeOfModel) {
-        Path resolvedModuleFile = ReflectionUtil.computeModuleConfigPath(typeOfModel).resolve(other);
-        return ofPath(resolvedModuleFile, typeOfModel);
+        Path moduleFilePath = ReflectionUtil.computeModuleConfigPath(typeOfModel).resolve(other);
+        return ofPath(moduleFilePath, typeOfModel);
     }
 
     @SneakyThrows(Exception.class)

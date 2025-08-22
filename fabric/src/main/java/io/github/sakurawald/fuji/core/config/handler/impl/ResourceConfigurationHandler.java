@@ -2,11 +2,11 @@ package io.github.sakurawald.fuji.core.config.handler.impl;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.exception.FailedToLoadResourceException;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import java.nio.charset.StandardCharsets;
 import lombok.Cleanup;
@@ -34,13 +34,13 @@ public abstract class ResourceConfigurationHandler extends BaseConfigurationHand
     }
 
     @SneakyThrows(IOException.class)
-    protected static @Nullable JsonObject readJsonTreeFromResource(@NotNull String resourceClassPath) {
+    protected static @Nullable JsonObject loadJsonFileFromResourceClassPath(@NotNull String resourceClassPath) {
         InputStream inputStream = Fuji.class.getResourceAsStream(resourceClassPath);
         if (inputStream == null) {
             throw new FailedToLoadResourceException("Failed to load specified resource file from class path: %s".formatted(resourceClassPath));
         }
         @Cleanup Reader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-        return JsonParser.parseReader(reader).getAsJsonObject();
+        return GsonMapper.getGson().fromJson(reader, JsonObject.class);
     }
 
     private void mergeTrees(@NotNull JsonObject dataTree, @NotNull JsonObject schemaTree) {

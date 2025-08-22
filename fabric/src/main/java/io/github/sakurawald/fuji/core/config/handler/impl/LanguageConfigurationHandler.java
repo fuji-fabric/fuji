@@ -80,10 +80,10 @@ public class LanguageConfigurationHandler extends ResourceConfigurationHandler {
     protected JsonObject makeDefaultModel() {
         // NOTE: When `language` module is enabled, a player joined with an un-supported language `aa_BB` the first time, a file `lang/aa_BB.json` will be created.
         try {
-            return readJsonTreeFromResource(this.resourceClassPath);
+            return loadJsonFileFromResourceClassPath(this.resourceClassPath);
         } catch (FailedToLoadResourceException e) {
             LogUtil.debug("Failed to make the default configuration model from `{}` resource path. (Fallback to the `{}`)", this.resourceClassPath, FALLBACK_LANGUAGE_FILE_CLASS_PATH);
-            return readJsonTreeFromResource(FALLBACK_LANGUAGE_FILE_CLASS_PATH);
+            return loadJsonFileFromResourceClassPath(FALLBACK_LANGUAGE_FILE_CLASS_PATH);
         }
     }
 

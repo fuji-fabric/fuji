@@ -70,6 +70,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         return this;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public BaseConfigurationHandler<T> addPostMappingModelIntoJsonObjectHook(@NotNull Consumer<JsonObject> hook) {
         postMappingModelIntoJsonObject.add(hook);
         return this;
