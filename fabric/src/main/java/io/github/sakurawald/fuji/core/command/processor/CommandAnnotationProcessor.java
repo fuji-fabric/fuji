@@ -44,7 +44,7 @@ import org.jetbrains.annotations.NotNull;
 @TestCase(action = "List the command tree of a normal user.", targets = "The command permissions should be handled properly.")
 public class CommandAnnotationProcessor {
 
-    public static final BaseConfigurationHandler<PermissionModel> permission = new ObjectConfigurationHandler<>(Fuji.MOD_CONFIG_PATH.resolve("permission.json"), PermissionModel.class);
+    public static final BaseConfigurationHandler<PermissionModel> permission = ObjectConfigurationHandler.ofPath(Fuji.MOD_CONFIG_PATH.resolve("permission.json"), PermissionModel.class);
 
     public static final Set<CommandDescriptor> REGISTERED_COMMAND_DESCRIPTORS = ConcurrentHashMap.newKeySet();
     public static final Set<String> PUBLIC_COMMAND_PATHS = new HashSet<>();

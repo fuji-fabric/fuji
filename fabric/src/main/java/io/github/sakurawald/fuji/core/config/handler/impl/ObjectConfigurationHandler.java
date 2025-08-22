@@ -12,7 +12,7 @@ public class ObjectConfigurationHandler<T> extends BaseConfigurationHandler<T> {
 
     final @NotNull Class<T> typeOfModel;
 
-    public ObjectConfigurationHandler(@NotNull Path path, @NotNull Class<T> typeOfModel) {
+    private ObjectConfigurationHandler(@NotNull Path path, @NotNull Class<T> typeOfModel) {
         super(path);
         this.typeOfModel = typeOfModel;
     }
@@ -21,9 +21,13 @@ public class ObjectConfigurationHandler<T> extends BaseConfigurationHandler<T> {
         this(ReflectionUtil.computeModuleConfigPath(typeOfModel).resolve(other), typeOfModel);
     }
 
+    public static <T> @NotNull ObjectConfigurationHandler<T> ofPath(@NotNull Path path, @NotNull Class<T> typeOfModel) {
+        return new ObjectConfigurationHandler<>(path, typeOfModel);
+    }
+
     public static <T> @NotNull ObjectConfigurationHandler<T> ofModule(@NotNull String other, @NotNull Class<T> typeOfModel) {
         Path resolvedModuleFile = ReflectionUtil.computeModuleConfigPath(typeOfModel).resolve(other);
-        return new ObjectConfigurationHandler<>(resolvedModuleFile, typeOfModel);
+        return ofPath(resolvedModuleFile, typeOfModel);
     }
 
     @SneakyThrows(Exception.class)

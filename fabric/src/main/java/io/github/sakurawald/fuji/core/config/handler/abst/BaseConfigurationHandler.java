@@ -40,14 +40,14 @@ import java.util.Set;
     """)
 public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter {
 
-    public static final String CONFIG_JSON_LITERAL = "config.json";
-
     public static final Set<BaseConfigurationHandler<?>> REGISTERED_CONFIGURATION_HANDLERS = new HashSet<>();
+    public static final String CONFIG_JSON_LITERAL = "config.json";
 
     /* File path and data model. */
     @Getter
     protected final @NotNull Path path;
     protected T model;
+
 
     private final List<ConfigurationTransformer> installedTransformers = new ArrayList<>();
 
