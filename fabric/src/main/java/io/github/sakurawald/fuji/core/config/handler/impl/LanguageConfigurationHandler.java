@@ -18,18 +18,18 @@ public class LanguageConfigurationHandler extends ResourceConfigurationHandler {
     private static final String LANGUAGE_DIRECTORY_NAME = "languages";
     private static final String LANGUAGE_FILE_CLASS_PATH_PREFIX = "/" + LANGUAGE_DIRECTORY_NAME + "/";
     private static final String FALLBACK_LANGUAGE_FILE_CLASS_PATH = LANGUAGE_FILE_CLASS_PATH_PREFIX + toLanguageFileName("en_US");
+    public static final String JSON_FILE_EXTENSION_LITERAL = ".json";
 
     public LanguageConfigurationHandler(@NotNull String languageCode) {
         super(getLanguageFilePath(languageCode), getLanguageFileClassPath(languageCode));
         this.installTransformer(new MoveFileTransformer(Fuji.MOD_CONFIG_PATH.resolve("lang"), Fuji.MOD_CONFIG_PATH.resolve("languages")));
-        this.addPreMappingModelIntoJsonObjectHook((model) -> {
-            setModel(makeSortedLanguageJsonObject(model));
-        });
+        this.addPreMappingModelIntoJsonObjectHook((model) -> setModel(makeSortedLanguageJsonObject(model)));
     }
 
     private static @NotNull Path getLanguageFilePath(@NotNull String languageCode) {
         String languageFileName = toLanguageFileName(languageCode);
-        return Fuji.MOD_CONFIG_PATH
+        return Fuji
+            .MOD_CONFIG_PATH
             .resolve(LANGUAGE_DIRECTORY_NAME)
             .resolve(languageFileName);
     }
@@ -39,11 +39,11 @@ public class LanguageConfigurationHandler extends ResourceConfigurationHandler {
     }
 
     private static @NotNull String toLanguageFileName(@NotNull String languageCode) {
-        return languageCode + ".json";
+        return languageCode + JSON_FILE_EXTENSION_LITERAL;
     }
 
     public static @NotNull String toLanguageCode(@NotNull String languageFileName) {
-        return languageFileName.replace(".json", "");
+        return languageFileName.replace(JSON_FILE_EXTENSION_LITERAL, "");
     }
 
     public static @NotNull JsonObject makeSortedLanguageJsonObject(@NotNull JsonObject original) {
