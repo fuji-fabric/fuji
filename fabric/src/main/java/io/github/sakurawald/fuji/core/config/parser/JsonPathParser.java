@@ -29,12 +29,12 @@ public class JsonPathParser {
 
             @Override
             public JsonProvider jsonProvider() {
-                return new GsonJsonProvider(GsonMapper.getInternalGsonReferenceWithoutTheUseOfWrappedFunctions());
+                return new GsonJsonProvider(GsonMapper.__GetInternalGsonReferenceWithoutTheUseOfWrappedFunctions());
             }
 
             @Override
             public MappingProvider mappingProvider() {
-                return new GsonMappingProvider(GsonMapper.getInternalGsonReferenceWithoutTheUseOfWrappedFunctions());
+                return new GsonMappingProvider(GsonMapper.__GetInternalGsonReferenceWithoutTheUseOfWrappedFunctions());
             }
 
             @Override
