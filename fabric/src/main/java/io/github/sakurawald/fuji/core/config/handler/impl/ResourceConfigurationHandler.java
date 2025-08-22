@@ -26,10 +26,10 @@ import java.nio.file.Path;
     """)
 public abstract class ResourceConfigurationHandler extends BaseConfigurationHandler<JsonElement> {
 
-    protected final String resourceClassPath;
+    protected final @NotNull String resourceClassPath;
 
-    protected ResourceConfigurationHandler(@NotNull Path path, @NotNull String resourceClassPath) {
-        super(path);
+    protected ResourceConfigurationHandler(@NotNull Path filePath, @NotNull String resourceClassPath) {
+        super(filePath);
         this.resourceClassPath = resourceClassPath;
     }
 
@@ -49,7 +49,7 @@ public abstract class ResourceConfigurationHandler extends BaseConfigurationHand
             .stream()
             .filter(key -> !dataTree.has(key))
             .forEach(key -> {
-                LogUtil.debug("Add missing configuration key `{}` to file `{}`", key, this.path);
+                LogUtil.debug("Add missing configuration key `{}` to file `{}`", key, this.filePath);
                 JsonElement value = schemaTree.get(key);
                 dataTree.add(key, value);
             });

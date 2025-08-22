@@ -12,8 +12,8 @@ public class ObjectConfigurationHandler<T> extends BaseConfigurationHandler<T> {
 
     final @NotNull Class<T> typeOfModel;
 
-    private ObjectConfigurationHandler(@NotNull Path path, @NotNull Class<T> typeOfModel) {
-        super(path);
+    private ObjectConfigurationHandler(@NotNull Path filePath, @NotNull Class<T> typeOfModel) {
+        super(filePath);
         this.typeOfModel = typeOfModel;
     }
 

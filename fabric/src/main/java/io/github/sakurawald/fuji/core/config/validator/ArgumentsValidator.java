@@ -40,7 +40,7 @@ public class ArgumentsValidator {
                 ◉ Language Key: {}
                 ◉ Actual Language Value: {}
                 ◉ Expected Language Value: {}
-                """, checkName, baseConfigurationHandler.getPath(), languageKey, dataValue, schemaValue);
+                """, checkName, baseConfigurationHandler.getFilePath(), languageKey, dataValue, schemaValue);
             dataTree.addProperty(languageKey, schemaValue);
         }
     }

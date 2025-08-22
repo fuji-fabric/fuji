@@ -32,7 +32,7 @@ public class ConfigurationHandlerWriteStorageJob extends CronJob {
             .get(BaseConfigurationHandler.class.getName());
 
         // NOTE: The debug() function is not guaranteed to be printed while shutdown the jvm.
-        LogUtil.debug("Save configuration file: {}", configHandler.getPath());
+        LogUtil.debug("Save configuration file: {}", configHandler.getFilePath());
 
         // Write storage when stopping the server.
         configHandler.writeStorage();

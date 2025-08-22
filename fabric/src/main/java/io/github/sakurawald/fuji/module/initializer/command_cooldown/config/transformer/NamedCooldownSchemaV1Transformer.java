@@ -56,6 +56,6 @@ public class NamedCooldownSchemaV1Transformer extends JsonConfigurationTransform
             });
 
         /* Write it. */
-        JsonUtil.writeJsonObject(outputRoot, CommandCooldownInitializer.namedCooldownData.getPath());
+        JsonUtil.writeJsonObject(outputRoot, CommandCooldownInitializer.namedCooldownData.getFilePath());
     }
 }

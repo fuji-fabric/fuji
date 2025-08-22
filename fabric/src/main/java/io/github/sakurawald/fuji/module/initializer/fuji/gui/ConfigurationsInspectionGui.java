@@ -34,7 +34,7 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
         List<BaseConfigurationHandler<?>> entities = BaseConfigurationHandler.REGISTERED_CONFIGURATION_HANDLERS
             .stream()
             .filter(it -> it instanceof ObjectConfigurationHandler<?>)
-            .sorted(Comparator.comparing(BaseConfigurationHandler::getPath))
+            .sorted(Comparator.comparing(BaseConfigurationHandler::getFilePath))
             .toList();
 
         return new ConfigurationsInspectionGui(parent, player, entities, 0);
@@ -50,7 +50,7 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
     protected @NotNull GuiElementInterface toGuiElement(@NotNull BaseConfigurationHandler<?> entity) {
         Class<?> configHandlerClass = entity.getClass();
         String configHandlerClassName = ReflectionUtil.getSimpleClassName(configHandlerClass);
-        String configRelativePath = IOUtil.computeRelativePathBasedOnGameDir(entity.getPath().toFile());
+        String configRelativePath = IOUtil.computeRelativePathBasedOnGameDir(entity.getFilePath().toFile());
         String fromModule = entity.getSourceModule();
 
         List<Text> lore = new ArrayList<>();

@@ -48,7 +48,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
 
     /* File path and data model. */
     @Getter
-    protected final @NotNull Path path;
+    protected final @NotNull Path filePath;
 
     @Setter(AccessLevel.PROTECTED)
     protected T model;
@@ -57,8 +57,8 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
 
     private final List<ConfigurationTransformer> installedTransformers = new ArrayList<>();
 
-    public BaseConfigurationHandler(@NotNull Path path) {
-        this.path = path;
+    public BaseConfigurationHandler(@NotNull Path filePath) {
+        this.filePath = filePath;
     }
 
     public BaseConfigurationHandler<T> addBeforeWriteStorageHook(@NotNull Consumer<BaseConfigurationHandler<T>> hook) {
@@ -66,7 +66,6 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         return this;
     }
 
-    @SuppressWarnings("UnusedReturnValue")
     public BaseConfigurationHandler<T> installTransformer(@NotNull ConfigurationTransformer transformer) {
         this.installedTransformers.add(transformer);
         return this;
@@ -84,16 +83,16 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         try {
             /* Apply transformers before read the storage. */
             this.installedTransformers.forEach(it -> {
-                it.configure(this.path);
+                it.configure(this.filePath);
                 it.apply();
             });
 
             /* Write default configuration into the storage, if file not exists. */
-            if (Files.notExists(this.path)) {
+            if (Files.notExists(this.filePath)) {
                 writeStorage();
             } else {
                 // Merge data tree with schema tree: the gson.fromJson() will use default model as the schema tree, to generate missing default kv-pairs in data tree.
-                @Cleanup Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.path.toFile()), StandardCharsets.UTF_8));
+                @Cleanup Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.filePath.toFile()), StandardCharsets.UTF_8));
                 T defaultModel = getDefaultModel();
                 this.model = (T) GsonMapper.getGson().fromJson(reader, defaultModel.getClass());
 
@@ -105,7 +104,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
             }
 
         } catch (Exception e) {
-            LogUtil.error("Failed to read configuration file {} from storage.", this.path, e);
+            LogUtil.error("Failed to read configuration file {} from storage.", this.filePath, e);
             throw e;
         }
 
@@ -119,7 +118,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
             /* Ensure the model is initialized. */
             if (this.model == null) {
                 this.model = this.getDefaultModel();
-                LogUtil.debug("Write default configuration: {}", this.path.toFile().getAbsolutePath());
+                LogUtil.debug("Write default configuration: {}", this.filePath.toFile().getAbsolutePath());
             }
 
             /* Call hook functions. */
@@ -131,10 +130,10 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
             String jsonString = GsonMapper.getGson().toJson(modelJsonTree);
 
             /* Write model to storage. */
-            Files.createDirectories(this.path.getParent());
-            Files.writeString(this.path, jsonString);
+            Files.createDirectories(this.filePath.getParent());
+            Files.writeString(this.filePath, jsonString);
         } catch (Exception e) {
-            LogUtil.error("Failed to write configuration file {} to disk.", this.path, e);
+            LogUtil.error("Failed to write configuration file {} to disk.", this.filePath, e);
             throw e;
         }
     }
@@ -154,7 +153,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         }
 
         if (this.model == null) {
-            throw new IllegalStateException("The model of configuration file %s is null".formatted(this.path));
+            throw new IllegalStateException("The model of configuration file %s is null".formatted(this.filePath));
         }
 
         return this.model;
@@ -168,7 +167,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     @SneakyThrows
     public BaseConfigurationHandler<T> enableAutoSaveFeature() {
         /* Make and schedule the job. */
-        String jobName = this.path.toFile().getCanonicalPath();
+        String jobName = this.filePath.toFile().getCanonicalPath();
         ConfigurationHandlerWriteStorageJob writeStorageJob = new ConfigurationHandlerWriteStorageJob(jobName, new JobDataMap() {
             {
                 // Specify the configuration handler instance.
@@ -183,7 +182,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
 
         /* Write storage on server stopping. */
         ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
-            LogUtil.debug("Write storage on server stopping: {}", this.path);
+            LogUtil.debug("Write storage on server stopping: {}", this.filePath);
             this.writeStorage();
         });
 
