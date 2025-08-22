@@ -30,8 +30,8 @@ public class FileDependencyChecker extends BaseDependencyChecker {
         String fileText = FileUtils.readFileToString(filePath.toFile(), Charset.defaultCharset());
 
         List<String> referenceNames = new ArrayList<>();
-        referenceNames.addAll(TestUtil.extractMatches(JAVA_IMPORT_STATEMENT_PATTERN, fileText, 1));
-        referenceNames.addAll(TestUtil.extractMatches(JAVA_STATIC_IMPORT_STATEMENT_PATTERN, fileText, 1));
+        referenceNames.addAll(TestUtil.collectAllMatches(JAVA_IMPORT_STATEMENT_PATTERN, fileText, 1));
+        referenceNames.addAll(TestUtil.collectAllMatches(JAVA_STATIC_IMPORT_STATEMENT_PATTERN, fileText, 1));
         return referenceNames;
     }
 

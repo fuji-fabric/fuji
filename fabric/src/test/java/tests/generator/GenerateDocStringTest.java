@@ -1,5 +1,6 @@
 package tests.generator;
 
+import auxiliary.ClassGraphUtil;
 import auxiliary.TestUtil;
 import auxiliary.structure.ExtendedAnnotationInfo;
 import com.google.gson.JsonObject;
@@ -54,7 +55,7 @@ public class GenerateDocStringTest {
     @Test
     @SneakyThrows
     public void generateDocStringListInRuntimeEnvironment() {
-        try (ScanResult scanResult = TestUtil.makeBaseClassGraph()
+        try (ScanResult scanResult = ClassGraphUtil.makeBaseClassGraph()
             .enableAllInfo()
             .scan()) {
 
@@ -81,7 +82,7 @@ public class GenerateDocStringTest {
     }
 
     private List<DocString> makeDocStringFromDocStringProviderAnnotation(ScanResult scanResult) {
-        return TestUtil.findTargetAnnotationInstancesAnywhere(scanResult, DocStringProvider.class, true)
+        return ClassGraphUtil.findTargetAnnotationInstancesAnywhere(scanResult, DocStringProvider.class, true)
             .stream()
             .map(ExtendedAnnotationInfo::getAnnotationInfo)
             .map(annotationInfo -> {
@@ -122,7 +123,7 @@ public class GenerateDocStringTest {
     }
 
     private static @NotNull List<DocString> makeDocStringFromDocumentAnnotation(ScanResult scanResult) {
-        return TestUtil.findTargetAnnotationInstancesAnywhere(scanResult, Document.class, false)
+        return ClassGraphUtil.findTargetAnnotationInstancesAnywhere(scanResult, Document.class, false)
             .stream()
             .map(ExtendedAnnotationInfo::getAnnotationInfo)
             .map(annotationInfo -> {
@@ -135,7 +136,7 @@ public class GenerateDocStringTest {
     }
 
     private @NotNull List<DocString> makeDocStringFromColorBoxAnnotation(ScanResult scanResult) {
-        return TestUtil.findTargetAnnotationInstancesAnywhere(scanResult, ColorBox.class, true)
+        return ClassGraphUtil.findTargetAnnotationInstancesAnywhere(scanResult, ColorBox.class, true)
             .stream()
             .map(ExtendedAnnotationInfo::getAnnotationInfo)
             .map(annotationInfo -> {

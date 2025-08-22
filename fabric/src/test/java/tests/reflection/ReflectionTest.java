@@ -1,6 +1,6 @@
 package tests.reflection;
 
-import auxiliary.TestUtil;
+import auxiliary.ClassGraphUtil;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
@@ -21,7 +21,7 @@ public class ReflectionTest {
 
     @Test
     void ensureTypesDeclared() {
-        try (ScanResult scanResult = TestUtil
+        try (ScanResult scanResult = ClassGraphUtil
             .makeBaseClassGraph()
             .enableAllInfo()
             .scan()) {

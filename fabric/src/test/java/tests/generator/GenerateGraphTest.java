@@ -1,5 +1,6 @@
 package tests.generator;
 
+import auxiliary.ClassGraphUtil;
 import auxiliary.TestUtil;
 import auxiliary.structure.ExtendedAnnotationInfo;
 import com.google.gson.JsonObject;
@@ -39,7 +40,7 @@ public class GenerateGraphTest {
     @SneakyThrows(IOException.class)
     public void generateBitsFromCodebase() {
         /* Scan the codebase. */
-        try (ScanResult scanResult = TestUtil
+        try (ScanResult scanResult = ClassGraphUtil
             .makeBaseClassGraph()
             .enableAllInfo()
             .scan()) {
@@ -64,7 +65,7 @@ public class GenerateGraphTest {
     private static void generateCiteFile(ScanResult scanResult) {
         try (PrintWriter writer = new PrintWriter(COMPILE_TIME_CITE_FILE_PATH.toFile(), StandardCharsets.UTF_8)) {
 
-            List<ExtendedAnnotationInfo> citeAnnotationList = TestUtil.findTargetAnnotationInstancesAnywhere(scanResult, Cite.class, false);
+            List<ExtendedAnnotationInfo> citeAnnotationList = ClassGraphUtil.findTargetAnnotationInstancesAnywhere(scanResult, Cite.class, false);
             citeAnnotationList
                 .stream()
                 .map(ExtendedAnnotationInfo::getAnnotationInfo)
@@ -82,7 +83,7 @@ public class GenerateGraphTest {
     private static void generateTestCaseFile(ScanResult scanResult) {
         try (PrintWriter writer = new PrintWriter(COMPILE_TIME_TEST_CASE_FILE_PATH.toFile(), StandardCharsets.UTF_8)) {
 
-            List<ExtendedAnnotationInfo> annotationList = TestUtil.findTargetAnnotationInstancesAnywhere(scanResult, TestCase.class, true);
+            List<ExtendedAnnotationInfo> annotationList = ClassGraphUtil.findTargetAnnotationInstancesAnywhere(scanResult, TestCase.class, true);
             annotationList
                 .stream()
                 .map(extendedAnnotationInfo -> {

@@ -1,6 +1,6 @@
 package tests.mixin;
 
-import auxiliary.TestUtil;
+import auxiliary.ClassGraphUtil;
 import auxiliary.structure.ExtendedAnnotationInfo;
 import com.google.errorprone.annotations.Keep;
 import io.github.classgraph.MethodInfo;
@@ -15,12 +15,12 @@ public class CheckMixinTreeTest {
 
     @Test
     void checkMixinNamingConvention() {
-        try (ScanResult scanResult = TestUtil
+        try (ScanResult scanResult = ClassGraphUtil
             .makeBaseClassGraph()
             .enableAllInfo()
             .scan()) {
 
-            List<ExtendedAnnotationInfo> mixinClasses = TestUtil.findTargetAnnotationInstancesAnywhere(scanResult, Mixin.class, false);
+            List<ExtendedAnnotationInfo> mixinClasses = ClassGraphUtil.findTargetAnnotationInstancesAnywhere(scanResult, Mixin.class, false);
             checkMixinClassNamingConvention(mixinClasses);
             checkMixinMethodNamingConvention(mixinClasses);
         }

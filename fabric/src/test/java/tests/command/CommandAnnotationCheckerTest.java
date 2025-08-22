@@ -1,6 +1,6 @@
 package tests.command;
 
-import auxiliary.TestUtil;
+import auxiliary.ClassGraphUtil;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.MethodInfo;
 import io.github.classgraph.ScanResult;
@@ -13,7 +13,7 @@ public class CommandAnnotationCheckerTest {
 
     @Test
     public void testCommandAnnotations() {
-        try (ScanResult scanResult = TestUtil
+        try (ScanResult scanResult = ClassGraphUtil
             .makeBaseClassGraph()
             .enableAllInfo()
             .scan()) {

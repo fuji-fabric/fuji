@@ -1,6 +1,6 @@
 package tests.mixin;
 
-import auxiliary.TestUtil;
+import auxiliary.ClassGraphUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -49,7 +49,7 @@ public class CheckMixinRegistryTest {
         /* Scan the codebase, to find un-registered mixins. */
         String mixinPackage = Fuji.class.getPackageName() + ".module.mixin";
         List<String> unregisteredMixins = new ArrayList<>();
-        try (ScanResult scanResult = TestUtil
+        try (ScanResult scanResult = ClassGraphUtil
             .makeBaseClassGraph()
             .enableAllInfo()
             .scan()) {
