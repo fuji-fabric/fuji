@@ -2,7 +2,7 @@ package tests.dependency;
 
 import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.Fuji;
-import io.github.sakurawald.fuji.core.config.model.ConfigModel;
+import io.github.sakurawald.fuji.core.config.model.MainControlConfigModel;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -94,7 +94,7 @@ public class DependencyTest {
     private static final Path COMPILE_TIME_MAIN_FUNCTION_PACKAGE_PATH = COMPILE_TIME_JAVA_SOURCE_PATH.resolve(PROJECT_ROOT_PACKAGE_NAME.replace(".", "/"));
     private static final Path COMPILE_TIME_CORE_PACKAGE_PATH = COMPILE_TIME_MAIN_FUNCTION_PACKAGE_PATH.resolve("core");
 
-    private static final Path COMPILE_TIME_MAIN_CONTROL_FILE_PATH = COMPILE_TIME_JAVA_SOURCE_PATH.resolve(ConfigModel.class.getName().replace(".", "/") + ".java");
+    private static final Path COMPILE_TIME_MAIN_CONTROL_FILE_PATH = COMPILE_TIME_JAVA_SOURCE_PATH.resolve(MainControlConfigModel.class.getName().replace(".", "/") + ".java");
 
     private static @NotNull String[] getAllowedReferencesInCore() {
         List<String> allowedReferences = new ArrayList<>();

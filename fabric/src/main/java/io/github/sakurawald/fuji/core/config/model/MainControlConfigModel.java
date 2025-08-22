@@ -14,7 +14,7 @@ import java.util.List;
 
     <green>NOTE: You need to re-start the server, to `enable` or `disable` a `module`.
     """)
-public class ConfigModel {
+public class MainControlConfigModel {
 
     @Document(id = 1751823676896L, value = """
         Fuji is composed by `core` and `module`.

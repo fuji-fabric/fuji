@@ -11,7 +11,7 @@ import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
-import io.github.sakurawald.fuji.core.config.model.ConfigModel;
+import io.github.sakurawald.fuji.core.config.model.MainControlConfigModel;
 import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
@@ -156,7 +156,7 @@ public class GenerateGraphTest {
     @Test
     public void generateModulesGraphFile() {
         /* Generate module-graph.txt file. */
-        JsonObject modules = BaseConfigurationHandler.getGson().toJsonTree(new ConfigModel())
+        JsonObject modules = BaseConfigurationHandler.getGson().toJsonTree(new MainControlConfigModel())
             .getAsJsonObject().getAsJsonObject("modules");
         ArrayList<String> result = new ArrayList<>();
         searchDefinedModules(modules, "", result);

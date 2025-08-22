@@ -48,7 +48,7 @@ import java.util.Set;
 @ForDeveloper("""
     1. Only use static inner class for a nested structure. (This is because a historical design problem in Java)
     2. If you want to register a new type for gson, just override the template method in module initializer.
-    3. The type system of java is static, so you only need to give the object instance to gson.
+    3. The type system of java is static, so you only need to give the object instance to gson. (A generic type can be passed via method parameter)
     4. Define configuration handler using static variable, to ensure it's unique.
     """)
 public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter {
