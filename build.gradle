@@ -88,7 +88,7 @@ javaProjects.each { projectName ->
                 errorprone("com.google.errorprone:error_prone_core:${project.errorprone_version}")
                 errorprone(project(':checker'))
                 compileOnly("com.google.errorprone:error_prone_annotations:${project.errorprone_annotations_version}")
-                testCompileOnly("com.google.errorprone:error_prone_annotations:${project.errorprone_annotations_version}")
+                testRuntimeOnly("com.google.errorprone:error_prone_annotations:${project.errorprone_annotations_version}")
             }
 
             /* For IDE analyser: jetbrains annotations. */
