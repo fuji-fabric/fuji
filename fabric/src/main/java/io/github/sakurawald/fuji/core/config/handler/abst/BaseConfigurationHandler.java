@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.core.config.handler.abst;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
@@ -56,16 +55,23 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     @Setter(AccessLevel.PROTECTED)
     protected T model;
 
-    private final List<Consumer<T>> preMapModelIntoJsonObject = new ArrayList<>();
+    private final List<Consumer<T>> preMappingModelIntoJsonObject = new ArrayList<>();
+    private final List<Consumer<JsonObject>> postMappingModelIntoJsonObject = new ArrayList<>();
 
     private final List<ConfigurationTransformer> installedTransformers = new ArrayList<>();
 
     public BaseConfigurationHandler(@NotNull Path filePath) {
         this.filePath = filePath;
+        this.addPostMappingModelIntoJsonObjectHook(VersionPropertyInjector::injectVersionProperty);
     }
 
-    public BaseConfigurationHandler<T> addPreMapModelIntoJsonObjectHook(@NotNull Consumer<T> hook) {
-        preMapModelIntoJsonObject.add(hook);
+    public BaseConfigurationHandler<T> addPreMappingModelIntoJsonObjectHook(@NotNull Consumer<T> hook) {
+        preMappingModelIntoJsonObject.add(hook);
+        return this;
+    }
+
+    public BaseConfigurationHandler<T> addPostMappingModelIntoJsonObjectHook(@NotNull Consumer<JsonObject> hook) {
+        postMappingModelIntoJsonObject.add(hook);
         return this;
     }
 
@@ -130,14 +136,13 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
             }
 
             /* Map model T into JsonObject instance. */
-            this.preMapModelIntoJsonObject.forEach(hook -> hook.accept(this.model()));
-            JsonObject modelJsonObject = this.getModelAsJsonTree();
-
-            beforeSerializeIntoString(modelJsonObject);
+            this.preMappingModelIntoJsonObject.forEach(hook -> hook.accept(this.model()));
+            JsonObject jsonObject = this.getModelAsJsonTree();
+            this.postMappingModelIntoJsonObject.forEach(hook -> hook.accept(jsonObject));
 
             /* Map JsonObject instance into *.json file. */
             Files.createDirectories(this.filePath.getParent());
-            Files.writeString(this.filePath, GsonMapper.getGson().toJson(modelJsonObject));
+            Files.writeString(this.filePath, GsonMapper.getGson().toJson(jsonObject));
         } catch (Exception e) {
             LogUtil.error("Failed to write configuration file {} into storage.", this.filePath, e);
             throw e;
@@ -146,10 +151,6 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
 
     protected void validateModel(@NotNull JsonObject dataTree, @NotNull JsonObject schemaTree) {
         // no-op
-    }
-
-    private void beforeSerializeIntoString(@NotNull JsonElement jsonElement) {
-        VersionPropertyInjector.injectVersionProperty(jsonElement);
     }
 
     public @NotNull JsonObject getModelAsJsonTree() {

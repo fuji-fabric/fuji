@@ -22,7 +22,7 @@ public class LanguageConfigurationHandler extends ResourceConfigurationHandler {
     public LanguageConfigurationHandler(@NotNull String languageCode) {
         super(getLanguageFilePath(languageCode), getLanguageFileClassPath(languageCode));
         this.installTransformer(new MoveFileTransformer(Fuji.MOD_CONFIG_PATH.resolve("lang"), Fuji.MOD_CONFIG_PATH.resolve("languages")));
-        this.addPreMapModelIntoJsonObjectHook((model) -> {
+        this.addPreMappingModelIntoJsonObjectHook((model) -> {
             setModel(makeSortedLanguageJsonObject(model));
         });
     }
