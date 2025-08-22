@@ -2,8 +2,6 @@
 
 # Changelog
 
-
-- **[core] Feature:** Optimized the `performance` of `configuration handlers` by eliminating unnecessary I/O operations.
-- **[core] Feature:** Introduced a new `validator` to detect `trailing commas` and `null` elements in JSON arrays, simplifying configuration management.  
-- **[core] Fix:** Possible concurrent modification exception for config handlers with auto save feature.
-- **[skin] Fix:** Failed to initialize `skin` module, due to `Unable to create instance of class com.mojang.authlib.properties.Property`.
+- **[core] Feature:** Added support for a fallback instance creator when the default creator fails.
+  - **Before:** If the default Gson instance failed to create an object for a given class, the process resulted in a hard failure.
+  - **Now:** If the default Gson instance fails to create an object for a given class, the system automatically falls back to a secondary Gson instance and retries the creation.
