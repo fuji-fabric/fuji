@@ -22,6 +22,9 @@ public class LanguageConfigurationHandler extends ResourceConfigurationHandler {
     public LanguageConfigurationHandler(@NotNull String languageCode) {
         super(getLanguageFilePath(languageCode), getLanguageFileClassPath(languageCode));
         this.installTransformer(new MoveFileTransformer(Fuji.MOD_CONFIG_PATH.resolve("lang"), Fuji.MOD_CONFIG_PATH.resolve("languages")));
+        this.addBeforeWriteStorageHook((self) -> {
+            setModel(makeSortedLanguageJsonObject((JsonObject) this.model));
+        });
     }
 
     private static @NotNull Path getLanguageFilePath(@NotNull String languageCode) {
@@ -41,11 +44,6 @@ public class LanguageConfigurationHandler extends ResourceConfigurationHandler {
 
     public static @NotNull String toLanguageCode(@NotNull String languageFileName) {
         return languageFileName.replace(".json", "");
-    }
-
-    @Override
-    protected void beforeWriteStorage() {
-        this.model = makeSortedLanguageJsonObject((JsonObject) this.model);
     }
 
     public static @NotNull JsonObject makeSortedLanguageJsonObject(@NotNull JsonObject original) {

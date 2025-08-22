@@ -101,15 +101,14 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         .ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandCooldownConfigModel.class)
         .installTransformer(new NamedCooldownSchemaV1Transformer());
 
-    public static final BaseConfigurationHandler<NamedCooldownDataModel> namedCooldownData = new ObjectConfigurationHandler<>("named-cooldown-data.json", NamedCooldownDataModel.class) {
-        @Override
-        protected void beforeWriteStorage() {
-            this.model.getNodes()
+    public static final BaseConfigurationHandler<NamedCooldownDataModel> namedCooldownData = ObjectConfigurationHandler
+        .ofModule("named-cooldown-data.json", NamedCooldownDataModel.class)
+        .addBeforeWriteStorageHook((self) -> {
+            self.model().getNodes()
                 .stream()
                 .filter(it -> it.getDescriptor() != null && !it.getDescriptor().isPersistent())
                 .forEach(it -> it.getCooldown().getTimestamp().clear());
-        }
-    }
+        })
         .enableAutoSaveFeature();
 
     @Document(id = 1751826400837L, value = "Create a named-cooldown.")

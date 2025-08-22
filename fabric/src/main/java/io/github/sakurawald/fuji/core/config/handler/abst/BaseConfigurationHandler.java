@@ -14,9 +14,12 @@ import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
 import java.nio.charset.StandardCharsets;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
+import lombok.AccessLevel;
 import lombok.Cleanup;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.quartz.JobDataMap;
@@ -46,13 +49,21 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     /* File path and data model. */
     @Getter
     protected final @NotNull Path path;
+
+    @Setter(AccessLevel.PROTECTED)
     protected T model;
 
+    protected List<Consumer<BaseConfigurationHandler<T>>> beforeWriteStorageHooks = new ArrayList<>();
 
     private final List<ConfigurationTransformer> installedTransformers = new ArrayList<>();
 
     public BaseConfigurationHandler(@NotNull Path path) {
         this.path = path;
+    }
+
+    public BaseConfigurationHandler<T> addBeforeWriteStorageHook(@NotNull Consumer<BaseConfigurationHandler<T>> hook) {
+        beforeWriteStorageHooks.add(hook);
+        return this;
     }
 
     @SuppressWarnings("UnusedReturnValue")
@@ -102,10 +113,6 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         REGISTERED_CONFIGURATION_HANDLERS.add(this);
     }
 
-    protected void beforeWriteStorage() {
-        // no-op
-    }
-
     @SneakyThrows
     public final void writeStorage() {
         try {
@@ -116,7 +123,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
             }
 
             /* Call hook functions. */
-            this.beforeWriteStorage();
+            this.beforeWriteStorageHooks.forEach(hook -> hook.accept(this));
 
             /* Serialize the Java object into Json tree. */
             JsonElement modelJsonTree = this.convertModelToJsonTree();
@@ -152,7 +159,6 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
 
         return this.model;
     }
-
 
     @Override
     public String getSourceModule() {
