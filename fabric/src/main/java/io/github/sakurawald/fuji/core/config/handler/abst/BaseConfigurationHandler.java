@@ -4,11 +4,11 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.config.job.ConfigurationHandlerWriteStorageJob;
-import io.github.sakurawald.fuji.core.config.structure.IgnoreModVersionStrategy;
+import io.github.sakurawald.fuji.core.config.migrator.version.IgnoreModVersionStrategy;
+import io.github.sakurawald.fuji.core.config.migrator.version.VersionPropertyInjector;
 import io.github.sakurawald.fuji.core.config.transformer.abst.ConfigurationTransformer;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
@@ -47,7 +47,6 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     public static final String CONFIG_JSON_LITERAL = "config.json";
 
     public static final Set<BaseConfigurationHandler<?>> REGISTERED_CONFIGURATION_HANDLERS = new HashSet<>();
-    public static final String MOD_VERSION_KEY = "MOD_VERSION";
 
     @Getter
     protected static Gson gson = new GsonBuilder()
@@ -164,8 +163,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     }
 
     private void beforeSerializeIntoString(@NotNull JsonElement jsonElement) {
-        jsonElement.getAsJsonObject()
-            .addProperty(MOD_VERSION_KEY, Fuji.MOD_VERSION);
+        VersionPropertyInjector.injectVersionProperty(jsonElement);
     }
 
     public JsonElement convertModelToJsonTree() {
