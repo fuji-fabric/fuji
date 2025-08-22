@@ -12,16 +12,13 @@ public class ObjectConfigurationHandler<T> extends BaseConfigurationHandler<T> {
 
     final Class<T> typeOfModel;
 
-    public ObjectConfigurationHandler(Path path, Class<T> typeOfModel) {
+    public ObjectConfigurationHandler(@NotNull Path path, @NotNull Class<T> typeOfModel) {
         super(path);
         this.typeOfModel = typeOfModel;
     }
 
     public ObjectConfigurationHandler(@NotNull String other, Class<T> typeOfModel) {
-        this(ReflectionUtil
-            .computeModuleConfigPath(typeOfModel)
-            .resolve(other)
-            , typeOfModel);
+        this(ReflectionUtil.computeModuleConfigPath(typeOfModel).resolve(other), typeOfModel);
     }
 
     @SneakyThrows(Exception.class)

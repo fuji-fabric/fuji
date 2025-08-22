@@ -140,6 +140,25 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         return GsonMapper.getGson().toJsonTree(this.model());
     }
 
+    public @NotNull T model() {
+        /* Ensure the model is initialized. */
+        if (this.model == null) {
+            this.readStorage();
+        }
+
+        if (this.model == null) {
+            throw new IllegalStateException("The model of configuration file %s is null".formatted(this.path));
+        }
+
+        return this.model;
+    }
+
+
+    @Override
+    public String getSourceModule() {
+        return ModuleManager.computeJoinedModulePath(this.model().getClass().getName());
+    }
+
     @SneakyThrows
     public BaseConfigurationHandler<T> enableAutoSaveFeature() {
         /* Make and schedule the job. */
@@ -164,23 +183,4 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
 
         return this;
     }
-
-    public @NotNull T model() {
-        /* Ensure the model is initialized. */
-        if (this.model == null) {
-            this.readStorage();
-        }
-
-        if (this.model == null) {
-            throw new IllegalStateException("The model of configuration file %s is null".formatted(this.path));
-        }
-
-        return this.model;
-    }
-
-    @Override
-    public String getSourceModule() {
-        return ModuleManager.computeJoinedModulePath(this.model().getClass().getName());
-    }
-
 }
