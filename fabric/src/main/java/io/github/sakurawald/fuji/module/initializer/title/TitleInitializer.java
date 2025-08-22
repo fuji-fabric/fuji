@@ -31,8 +31,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public class TitleInitializer extends ModuleInitializer {
 
-    public static BaseConfigurationHandler<TitleConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, TitleConfigModel.class);
-    public static BaseConfigurationHandler<TitleDataModel> data = new ObjectConfigurationHandler<>("data.json", TitleDataModel.class);
+    public static BaseConfigurationHandler<TitleConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, TitleConfigModel.class);
+    public static BaseConfigurationHandler<TitleDataModel> data = ObjectConfigurationHandler.ofModule("data.json", TitleDataModel.class);
 
     @Document(id = 1753001051805L, value = """
         Open the `title` GUI.

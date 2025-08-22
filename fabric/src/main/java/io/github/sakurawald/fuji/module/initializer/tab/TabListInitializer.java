@@ -24,7 +24,7 @@ import io.github.sakurawald.fuji.module.initializer.tab.job.RenderHeaderAndFoote
     """)
 public class TabListInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<TabListConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, TabListConfigModel.class);
+    public static final BaseConfigurationHandler<TabListConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, TabListConfigModel.class);
 
     @Override
     protected void onInitialize() {

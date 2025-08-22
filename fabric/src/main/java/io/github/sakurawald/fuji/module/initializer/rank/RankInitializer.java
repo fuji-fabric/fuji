@@ -89,8 +89,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
     """)
 public class RankInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<RankConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, RankConfigModel.class);
-    public static final BaseConfigurationHandler<RankDataModel> data = new ObjectConfigurationHandler<>("rank-data.json", RankDataModel.class);
+    public static final BaseConfigurationHandler<RankConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, RankConfigModel.class);
+    public static final BaseConfigurationHandler<RankDataModel> data = ObjectConfigurationHandler.ofModule("rank-data.json", RankDataModel.class);
 
     @Document(id = 1754412528895L, value = "List all defined `rank nodes`.")
     @CommandNode("rank list all-rank-nodes")

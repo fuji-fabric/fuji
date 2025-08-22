@@ -13,7 +13,7 @@ import net.minecraft.entity.player.PlayerEntity;
     """)
 public class ColorAnvilInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<ColorAnvilConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ColorAnvilConfigModel.class);
+    public static final BaseConfigurationHandler<ColorAnvilConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ColorAnvilConfigModel.class);
 
     public static String stripeStyleTags(PlayerEntity player, String string) {
          return StyleStriper.stripe(player, "anvil", string);

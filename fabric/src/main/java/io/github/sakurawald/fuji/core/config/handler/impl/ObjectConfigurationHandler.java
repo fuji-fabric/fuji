@@ -10,7 +10,7 @@ import java.nio.file.Path;
 
 public class ObjectConfigurationHandler<T> extends BaseConfigurationHandler<T> {
 
-    final Class<T> typeOfModel;
+    final @NotNull Class<T> typeOfModel;
 
     public ObjectConfigurationHandler(@NotNull Path path, @NotNull Class<T> typeOfModel) {
         super(path);
@@ -19,6 +19,11 @@ public class ObjectConfigurationHandler<T> extends BaseConfigurationHandler<T> {
 
     public ObjectConfigurationHandler(@NotNull String other, Class<T> typeOfModel) {
         this(ReflectionUtil.computeModuleConfigPath(typeOfModel).resolve(other), typeOfModel);
+    }
+
+    public static <T> @NotNull ObjectConfigurationHandler<T> ofModule(@NotNull String other, @NotNull Class<T> typeOfModel) {
+        Path resolvedModuleFile = ReflectionUtil.computeModuleConfigPath(typeOfModel).resolve(other);
+        return new ObjectConfigurationHandler<>(resolvedModuleFile, typeOfModel);
     }
 
     @SneakyThrows(Exception.class)

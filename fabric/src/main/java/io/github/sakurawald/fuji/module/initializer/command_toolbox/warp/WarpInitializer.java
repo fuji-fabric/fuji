@@ -46,7 +46,8 @@ import java.util.function.Function;
 @CommandNode("warp")
 public class WarpInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<WarpDataModel> data = new ObjectConfigurationHandler<>("warp.json", WarpDataModel.class)
+    public static final BaseConfigurationHandler<WarpDataModel> data = ObjectConfigurationHandler
+        .ofModule("warp.json", WarpDataModel.class)
         .enableAutoSaveFeature();
 
     private static void ensureWarpExists(ServerPlayerEntity player, WarpName warpName) {

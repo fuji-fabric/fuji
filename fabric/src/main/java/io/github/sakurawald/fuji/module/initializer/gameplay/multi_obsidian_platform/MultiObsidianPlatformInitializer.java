@@ -31,7 +31,7 @@ public class MultiObsidianPlatformInitializer extends ModuleInitializer {
 
     private static final Map<BlockPos, BlockPos> TRANSFORM_CACHE = new ConcurrentHashMap<>();
 
-    private static final BaseConfigurationHandler<MultiObsidianPlatformConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, MultiObsidianPlatformConfigModel.class);
+    private static final BaseConfigurationHandler<MultiObsidianPlatformConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, MultiObsidianPlatformConfigModel.class);
 
     @ForDeveloper("This method is used to fix Entity#position() drift.")
     private static BlockPos findNearbyEndPortalBlock(@NotNull BlockPos bp) {

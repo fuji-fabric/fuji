@@ -74,9 +74,9 @@ public class WarningInitializer extends ModuleInitializer {
     @DocStringProvider(id = 1752000488085L, value = "When a `player` with `warnings` join/leave the server, you will get notified.")
     public static PermissionDescriptor NOTIFY_WARNINGS_PERMISSION = new PermissionDescriptor("fuji.warning.notify", 1752000488085L);
 
-    public static final BaseConfigurationHandler<WarningConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, WarningConfigModel.class);
+    public static final BaseConfigurationHandler<WarningConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, WarningConfigModel.class);
 
-    public static final BaseConfigurationHandler<WarningDataModel> data = new ObjectConfigurationHandler<>("warning-data.json", WarningDataModel.class);
+    public static final BaseConfigurationHandler<WarningDataModel> data = ObjectConfigurationHandler.ofModule("warning-data.json", WarningDataModel.class);
 
     @Document(id = 1751827034962L, value = "Open the warning GUI.")
     @CommandNode("warning")

@@ -60,7 +60,7 @@ import java.util.List;
 @CommandRequirement(level = 4)
 public class CommandSchedulerInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<CommandSchedulerConfigModel> scheduler = new ObjectConfigurationHandler<>("scheduler.json", CommandSchedulerConfigModel.class);
+    public static final BaseConfigurationHandler<CommandSchedulerConfigModel> scheduler = ObjectConfigurationHandler.ofModule("scheduler.json", CommandSchedulerConfigModel.class);
 
     @Override
     protected void onInitialize() {

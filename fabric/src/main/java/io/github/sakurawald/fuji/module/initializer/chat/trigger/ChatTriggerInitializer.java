@@ -44,7 +44,7 @@ import org.jetbrains.annotations.NotNull;
     """)
 public class ChatTriggerInitializer extends ModuleInitializer {
 
-    private static final BaseConfigurationHandler<ChatTriggerConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatTriggerConfigModel.class);
+    private static final BaseConfigurationHandler<ChatTriggerConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatTriggerConfigModel.class);
 
     public static void processChatTriggers(@NotNull ServerCommandSource source, @NotNull String chatString) {
         LogUtil.debug("Process chat triggers for input: chatString = {}", chatString);

@@ -37,7 +37,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     """)
 public class WhenOnlineInitializer extends ModuleInitializer {
 
-    public static BaseConfigurationHandler<WhenOnlineDataModel> data = new ObjectConfigurationHandler<>("when-online-data.json", WhenOnlineDataModel.class);
+    public static BaseConfigurationHandler<WhenOnlineDataModel> data = ObjectConfigurationHandler.ofModule("when-online-data.json", WhenOnlineDataModel.class);
 
     @Document(id = 1755412463665L, value = "Execute the specified command `exactly once`, when the target player `is online`.")
     @CommandNode("when-online")

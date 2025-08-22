@@ -54,7 +54,7 @@ import java.util.concurrent.ConcurrentHashMap;
 })
 public class NametagInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<NametagConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, NametagConfigModel.class);
+    public static final BaseConfigurationHandler<NametagConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, NametagConfigModel.class);
     private static Map<ServerPlayerEntity, DisplayEntity.TextDisplayEntity> player2nametag;
 
     private static DisplayEntity.TextDisplayEntity makeNametag(ServerPlayerEntity player) {

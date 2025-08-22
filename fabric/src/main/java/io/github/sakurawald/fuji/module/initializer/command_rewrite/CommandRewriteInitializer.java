@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
     """)
 @TestCase(action = "Issue `/home` command.", targets = "It should be rewrite to `/home tp default` command.")
 public class CommandRewriteInitializer extends ModuleInitializer {
-    public static final BaseConfigurationHandler<CommandRewriteConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandRewriteConfigModel.class);
+    public static final BaseConfigurationHandler<CommandRewriteConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandRewriteConfigModel.class);
 
     public static String rewriteCommand(@NotNull String oldString) {
         for (RegexRewriteNode entry : CommandRewriteInitializer.config.model().rules) {

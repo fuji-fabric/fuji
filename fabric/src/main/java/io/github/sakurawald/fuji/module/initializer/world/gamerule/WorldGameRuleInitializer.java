@@ -46,7 +46,7 @@ import net.minecraft.world.World;
     """)
 public class WorldGameRuleInitializer extends ModuleInitializer {
 
-    private static final BaseConfigurationHandler<WorldGameRuleConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, WorldGameRuleConfigModel.class);
+    private static final BaseConfigurationHandler<WorldGameRuleConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, WorldGameRuleConfigModel.class);
 
     public static Optional<GameRuleDescriptor> getEffectiveGameRuleDescriptor(String dimensionId) {
         return config.model().gameRules

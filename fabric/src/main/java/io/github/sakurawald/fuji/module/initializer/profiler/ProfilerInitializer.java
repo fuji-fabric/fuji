@@ -23,7 +23,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     """)
 public class ProfilerInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<ProfilerConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ProfilerConfigModel.class);
+    public static final BaseConfigurationHandler<ProfilerConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ProfilerConfigModel.class);
 
     @Document(id = 1751824806374L, value = "Open the server health status GUI.")
     @CommandNode("profiler")

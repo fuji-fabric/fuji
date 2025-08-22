@@ -32,7 +32,7 @@ import java.util.List;
     Other things like the `sound notify` will still work.
     """)
 public class ChatMentionInitializer extends ModuleInitializer {
-    private static final BaseConfigurationHandler<ChatMentionConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatMentionConfigModel.class);
+    private static final BaseConfigurationHandler<ChatMentionConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatMentionConfigModel.class);
 
     private static List<ServerPlayerEntity> resolveMentionedOnlinePlayers(@NotNull String chatString) {
         /* Resolve mentioned online players. */

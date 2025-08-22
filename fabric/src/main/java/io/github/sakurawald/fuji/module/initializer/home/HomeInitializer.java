@@ -33,7 +33,8 @@ public class HomeInitializer extends ModuleInitializer {
     private static final MetaDescriptor<Integer> MAX_HOME_AMOUNT_META = new MetaDescriptor<>("fuji.home.home_limit", Integer::valueOf, 1752000367398L);
 
     @Getter
-    private static final BaseConfigurationHandler<HomeDataModel> storage = new ObjectConfigurationHandler<>("home.json", HomeDataModel.class)
+    private static final BaseConfigurationHandler<HomeDataModel> storage = ObjectConfigurationHandler
+        .ofModule("home.json", HomeDataModel.class)
         .enableAutoSaveFeature();
 
     public static Map<String, GlobalPos> withHomes(@NotNull ServerPlayerEntity player) {

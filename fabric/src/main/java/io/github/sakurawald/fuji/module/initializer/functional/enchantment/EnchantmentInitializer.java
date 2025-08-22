@@ -17,7 +17,7 @@ import net.minecraft.text.Text;
 
 public class EnchantmentInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<EnchantmentConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, EnchantmentConfigModel.class);
+    public static final BaseConfigurationHandler<EnchantmentConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, EnchantmentConfigModel.class);
 
     @CommandNode("enchantment")
     @CommandRequirement(level = 4)

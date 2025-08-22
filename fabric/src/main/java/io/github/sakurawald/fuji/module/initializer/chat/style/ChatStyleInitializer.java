@@ -85,7 +85,7 @@ import org.jetbrains.annotations.NotNull;
 @CommandNode("chat style")
 public class ChatStyleInitializer extends ModuleInitializer {
 
-    private static final BaseConfigurationHandler<ChatStyleConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatStyleConfigModel.class);
+    private static final BaseConfigurationHandler<ChatStyleConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatStyleConfigModel.class);
 
     @ForDeveloper("To avoid the message type already registered in the client-side, and the client-side message type will influence the client-side decorator.")
     public static final RegistryKey<MessageType> MESSAGE_TYPE_KEY = RegistryKey.of(RegistryKeys.MESSAGE_TYPE, Identifier.of(Fuji.MOD_ID, "chat_" + StringUtil.toLowerCase(FabricLoader.getInstance().getEnvironmentType().toString())));
@@ -93,7 +93,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
         Decoration.ofChat("%s%s"),
         Decoration.ofChat("%s%s"));
 
-    private static final BaseConfigurationHandler<ChatFormatModel> chatFormatData = new ObjectConfigurationHandler<>("chat.json", ChatFormatModel.class);
+    private static final BaseConfigurationHandler<ChatFormatModel> chatFormatData = ObjectConfigurationHandler.ofModule("chat.json", ChatFormatModel.class);
     private static final NodeParser CHAT_STYLE_PARSER = TextHelper.Parsers.MINI_MESSAGE_ONLY_PARSER;
     private static final String DEFAULT_CONTENT_FORMAT = "%message%";
     private static final String CHAT_STYLE_TYPE = "chat";

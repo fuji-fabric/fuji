@@ -18,7 +18,7 @@ import net.minecraft.server.command.ServerCommandSource;
 public class SeenInitializer extends ModuleInitializer {
 
     @Getter
-    private static final BaseConfigurationHandler<SeenDataModel> data = new ObjectConfigurationHandler<>("seen.json", SeenDataModel.class);
+    private static final BaseConfigurationHandler<SeenDataModel> data = ObjectConfigurationHandler.ofModule("seen.json", SeenDataModel.class);
 
     @Document(id = 1751825128305L, value = "Query the last online time of a player.")
     @CommandNode("seen")

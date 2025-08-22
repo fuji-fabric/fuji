@@ -21,7 +21,7 @@ import java.util.Set;
     """)
 public class PvpInitializer extends ModuleInitializer {
 
-    private static final BaseConfigurationHandler<PvPDataModel> data = new ObjectConfigurationHandler<>("pvp.json", PvPDataModel.class);
+    private static final BaseConfigurationHandler<PvPDataModel> data = ObjectConfigurationHandler.ofModule("pvp.json", PvPDataModel.class);
 
     @Document(id = 1751826842506L, value = "Enable the PvP for the player.")
     @CommandNode("pvp on")

@@ -37,9 +37,10 @@ import java.util.function.Function;
     """)
 public class BackInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<BackConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, BackConfigModel.class);
+    public static final BaseConfigurationHandler<BackConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, BackConfigModel.class);
 
-    private static final BaseConfigurationHandler<BackLocationHistoryModel> savedPositionConfig = new ObjectConfigurationHandler<>("location-history.json", BackLocationHistoryModel.class)
+    private static final BaseConfigurationHandler<BackLocationHistoryModel> savedPositionConfig = ObjectConfigurationHandler
+        .ofModule("location-history.json", BackLocationHistoryModel.class)
         .enableAutoSaveFeature();
 
     @DocStringProvider(id = 1751999540893L, value = """

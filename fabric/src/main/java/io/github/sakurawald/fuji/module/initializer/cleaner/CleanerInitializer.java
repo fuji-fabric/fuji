@@ -58,7 +58,7 @@ import net.minecraft.util.Formatting;
 @CommandRequirement(level = 4)
 public class CleanerInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<CleanerConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CleanerConfigModel.class);
+    public static final BaseConfigurationHandler<CleanerConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CleanerConfigModel.class);
 
     @SuppressWarnings("RedundantIfStatement")
     private static boolean shouldIgnoreEntity(Entity entity) {

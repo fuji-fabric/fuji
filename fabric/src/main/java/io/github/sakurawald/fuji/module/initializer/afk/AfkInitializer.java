@@ -46,7 +46,7 @@ import java.util.Map;
     """)
 public class AfkInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<AfkConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, AfkConfigModel.class);
+    public static final BaseConfigurationHandler<AfkConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, AfkConfigModel.class);
 
     public static final Map<String, Long> player2prevInputCounter = new HashMap<>();
 

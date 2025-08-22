@@ -162,7 +162,7 @@ import org.jetbrains.annotations.NotNull;
 @CommandRequirement(level = 4)
 public class CommandBundleInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<CommandBundleConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandBundleConfigModel.class);
+    public static final BaseConfigurationHandler<CommandBundleConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandBundleConfigModel.class);
 
     @Document(id = 1751826359683L, value = "Register all commands defined in bundle-command configuration file.")
     @CommandNode("register")

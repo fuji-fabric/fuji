@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
     """)
 public class ChatHistoryInitializer extends ModuleInitializer {
 
-    private static final BaseConfigurationHandler<ChatHistoryConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatHistoryConfigModel.class);
+    private static final BaseConfigurationHandler<ChatHistoryConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatHistoryConfigModel.class);
 
     private static final Queue<Long> DUPLICATED_SENT_TEXT_FILTER = EvictingQueue.create(10);
     private static Queue<Text> chatHistory;

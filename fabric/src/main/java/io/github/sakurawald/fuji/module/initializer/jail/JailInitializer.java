@@ -140,9 +140,10 @@ import net.minecraft.server.network.ServerPlayerEntity;
     """)
 public class JailInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<JailConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, JailConfigModel.class);
+    public static final BaseConfigurationHandler<JailConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, JailConfigModel.class);
 
-    public static final BaseConfigurationHandler<JailDataModel> data = new ObjectConfigurationHandler<>("jail-data.json", JailDataModel.class)
+    public static final BaseConfigurationHandler<JailDataModel> data = ObjectConfigurationHandler
+        .ofModule("jail-data.json", JailDataModel.class)
         .enableAutoSaveFeature();
 
     @Document(id = 1753686048373L, value = "List all defined `jails`.")

@@ -40,7 +40,7 @@ import net.minecraft.text.Text;
 
 public class ChatDisplayInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<ChatDisplayConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatDisplayConfigModel.class);
+    public static final BaseConfigurationHandler<ChatDisplayConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatDisplayConfigModel.class);
     private static final String DISPLAY_TEXT_PLACEHOLDER = "display";
 
     private static void broadcastDisplayText(ServerPlayerEntity player, String broadcastTextKey, MutableText displayText) {

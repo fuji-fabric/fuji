@@ -90,9 +90,10 @@ import java.util.Optional;
 @CommandRequirement(level = 4)
 public class CommandAttachmentInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<CommandAttachmentConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandAttachmentConfigModel.class);
+    public static final BaseConfigurationHandler<CommandAttachmentConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandAttachmentConfigModel.class);
 
-    public static final BaseConfigurationHandler<CommandAttachmentDataModel> data = new ObjectConfigurationHandler<>("command-attachment-data.json", CommandAttachmentDataModel.class)
+    public static final BaseConfigurationHandler<CommandAttachmentDataModel> data = ObjectConfigurationHandler
+        .ofModule("command-attachment-data.json", CommandAttachmentDataModel.class)
         .enableAutoSaveFeature()
         .installTransformer(new CommandAttachmentV1SchemaTransformer());
 

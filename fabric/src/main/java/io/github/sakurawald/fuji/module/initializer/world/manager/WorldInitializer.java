@@ -310,9 +310,10 @@ import org.jetbrains.annotations.Nullable;
 @CommandRequirement(level = 4)
 public class WorldInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<WorldConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, WorldConfigModel.class);
+    public static final BaseConfigurationHandler<WorldConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, WorldConfigModel.class);
 
-    public static final BaseConfigurationHandler<WorldDataModel> world = new ObjectConfigurationHandler<>("world.json", WorldDataModel.class)
+    public static final BaseConfigurationHandler<WorldDataModel> world = ObjectConfigurationHandler
+        .ofModule("world.json", WorldDataModel.class)
         .enableAutoSaveFeature();
 
     private static void ensureDimensionNotExists(ServerCommandSource source, Identifier identifier) {

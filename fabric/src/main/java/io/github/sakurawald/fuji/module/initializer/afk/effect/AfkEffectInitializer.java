@@ -14,5 +14,5 @@ import io.github.sakurawald.fuji.module.initializer.afk.effect.config.model.AfkE
     """)
 public class AfkEffectInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<AfkEffectConfigModel> config = new ObjectConfigurationHandler<>(BaseConfigurationHandler.CONFIG_JSON_LITERAL, AfkEffectConfigModel.class);
+    public static final BaseConfigurationHandler<AfkEffectConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, AfkEffectConfigModel.class);
 }
