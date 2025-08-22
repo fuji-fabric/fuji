@@ -4,6 +4,7 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import java.util.Collections;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -39,6 +40,10 @@ public class SkinSyncer {
             });
     }
 
+    @TestCase(action = "Try to send a chat message after the skin changed in online-mode server.", targets = {
+        "The chat message validation should be proper after a player changed its skin."
+        , "It should work in both `online-mode` and `offline-mode` servers."
+    })
     private static void sendPacketsToSelfPlayer(@NotNull ServerPlayerEntity player) {
         // NOTE: This function is used to simulate the PlayerManager#respawnPlayer
         if (player.isRemoved()) {
@@ -52,6 +57,9 @@ public class SkinSyncer {
         #elif MC_VER > MC_1_20_1
         player.networkHandler.sendPacket(new PlayerRespawnS2CPacket(player.createCommonPlayerSpawnInfo(EntityHelper.getServerWorld(player)), (byte) 3));
         #endif
+
+        /* Re-initialize the chat to prevent chat validation error in the client. */
+        player.networkHandler.sendPacket(new PlayerListS2CPacket(PlayerListS2CPacket.Action.INITIALIZE_CHAT, player));
 
         /* Update the position and rotation. (Does not harm) */
         player.networkHandler.requestTeleport(player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
