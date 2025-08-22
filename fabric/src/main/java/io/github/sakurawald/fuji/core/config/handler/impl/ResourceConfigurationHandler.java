@@ -1,12 +1,11 @@
 package io.github.sakurawald.fuji.core.config.handler.impl;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.sakurawald.fuji.Fuji;
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.exception.FailedToLoadResourceException;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
+import io.github.sakurawald.fuji.core.config.validator.MissingJsonKeysValidator;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import java.nio.charset.StandardCharsets;
 import lombok.Cleanup;
@@ -43,21 +42,9 @@ public abstract class ResourceConfigurationHandler extends BaseConfigurationHand
         return GsonMapper.getGson().fromJson(reader, JsonObject.class);
     }
 
-    private void mergeTrees(@NotNull JsonObject dataTree, @NotNull JsonObject schemaTree) {
-        schemaTree
-            .keySet()
-            .stream()
-            .filter(key -> !dataTree.has(key))
-            .forEach(key -> {
-                LogUtil.debug("Add missing configuration key `{}` to file `{}`", key, this.filePath);
-                JsonElement value = schemaTree.get(key);
-                dataTree.add(key, value);
-            });
-    }
-
     @Override
     protected void validateModel(@NotNull JsonObject dataTree, @NotNull JsonObject schemaTree) {
-        mergeTrees(dataTree, schemaTree);
+        MissingJsonKeysValidator.mergeTrees(this, dataTree, schemaTree);
     }
 
 }
