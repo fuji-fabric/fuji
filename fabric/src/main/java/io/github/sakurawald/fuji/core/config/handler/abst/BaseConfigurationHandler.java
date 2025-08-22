@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.core.config.handler.abst;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
@@ -50,6 +51,9 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     @Getter
     protected final @NotNull Path filePath;
 
+    @Getter(lazy = true)
+    private final T defaultModel = makeDefaultModel();
+
     @Setter(AccessLevel.PROTECTED)
     protected T model;
 
@@ -75,11 +79,11 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         return installTransformer(transformerSupplier.get());
     }
 
-    protected abstract T getDefaultModel();
+    protected abstract T makeDefaultModel();
 
     @SneakyThrows
     @SuppressWarnings("unchecked")
-    public void readStorage() {
+    public final void readStorage() {
         try {
             /* Apply transformers before read the storage. */
             this.installedTransformers.forEach(it -> {
@@ -103,13 +107,14 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
                 this.writeStorage();
             }
 
+            /* Validate the model. */
+
+            /* Register self. */
+            REGISTERED_CONFIGURATION_HANDLERS.add(this);
         } catch (Exception e) {
             LogUtil.error("Failed to read configuration file {} from storage.", this.filePath, e);
             throw e;
         }
-
-        /* Register self. */
-        REGISTERED_CONFIGURATION_HANDLERS.add(this);
     }
 
     @SneakyThrows
@@ -136,6 +141,10 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
             LogUtil.error("Failed to write configuration file {} to disk.", this.filePath, e);
             throw e;
         }
+    }
+
+    protected void validateModel(@NotNull JsonObject dataTree, @NotNull JsonObject schemaTree) {
+        // no-op
     }
 
     private void beforeSerializeIntoString(@NotNull JsonElement jsonElement) {

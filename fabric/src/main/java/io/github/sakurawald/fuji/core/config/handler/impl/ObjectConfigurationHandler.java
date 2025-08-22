@@ -28,7 +28,7 @@ public class ObjectConfigurationHandler<T> extends BaseConfigurationHandler<T> {
 
     @SneakyThrows(Exception.class)
     @Override
-    protected T getDefaultModel() {
+    protected T makeDefaultModel() {
         return typeOfModel.getDeclaredConstructor().newInstance();
     }
 
