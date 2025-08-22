@@ -24,7 +24,7 @@ import java.nio.file.Path;
 @ForDeveloper("""
     For resource configuration handler, the type of model is JsonElement, which equals to the type of data tree.
     """)
-public abstract class ResourceConfigurationHandler extends BaseConfigurationHandler<JsonElement> {
+public abstract class ResourceConfigurationHandler extends BaseConfigurationHandler<JsonObject> {
 
     protected final @NotNull String resourceClassPath;
 
@@ -34,13 +34,13 @@ public abstract class ResourceConfigurationHandler extends BaseConfigurationHand
     }
 
     @SneakyThrows(IOException.class)
-    protected static @Nullable JsonElement readJsonTreeFromResource(@NotNull String resourceClassPath) {
+    protected static @Nullable JsonObject readJsonTreeFromResource(@NotNull String resourceClassPath) {
         InputStream inputStream = Fuji.class.getResourceAsStream(resourceClassPath);
         if (inputStream == null) {
             throw new FailedToLoadResourceException("Failed to load specified resource file from class path: %s".formatted(resourceClassPath));
         }
         @Cleanup Reader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-        return JsonParser.parseReader(reader);
+        return JsonParser.parseReader(reader).getAsJsonObject();
     }
 
     private void mergeTrees(@NotNull JsonObject dataTree, @NotNull JsonObject schemaTree) {

@@ -22,8 +22,8 @@ public class LanguageConfigurationHandler extends ResourceConfigurationHandler {
     public LanguageConfigurationHandler(@NotNull String languageCode) {
         super(getLanguageFilePath(languageCode), getLanguageFileClassPath(languageCode));
         this.installTransformer(new MoveFileTransformer(Fuji.MOD_CONFIG_PATH.resolve("lang"), Fuji.MOD_CONFIG_PATH.resolve("languages")));
-        this.addBeforeWriteStorageHook((self) -> {
-            setModel(makeSortedLanguageJsonObject((JsonObject) this.model));
+        this.addPreMapModelIntoJsonObjectHook((model) -> {
+            setModel(makeSortedLanguageJsonObject(model));
         });
     }
 
@@ -77,7 +77,7 @@ public class LanguageConfigurationHandler extends ResourceConfigurationHandler {
     }
 
     @Override
-    protected JsonElement makeDefaultModel() {
+    protected JsonObject makeDefaultModel() {
         // NOTE: When `language` module is enabled, a player joined with an un-supported language `aa_BB` the first time, a file `lang/aa_BB.json` will be created.
         try {
             return readJsonTreeFromResource(this.resourceClassPath);

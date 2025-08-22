@@ -56,7 +56,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     @Setter(AccessLevel.PROTECTED)
     protected T model;
 
-    protected List<Consumer<BaseConfigurationHandler<T>>> beforeWriteStorageHooks = new ArrayList<>();
+    private final List<Consumer<T>> preMapModelIntoJsonObject = new ArrayList<>();
 
     private final List<ConfigurationTransformer> installedTransformers = new ArrayList<>();
 
@@ -64,8 +64,8 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         this.filePath = filePath;
     }
 
-    public BaseConfigurationHandler<T> addBeforeWriteStorageHook(@NotNull Consumer<BaseConfigurationHandler<T>> hook) {
-        beforeWriteStorageHooks.add(hook);
+    public BaseConfigurationHandler<T> addPreMapModelIntoJsonObjectHook(@NotNull Consumer<T> hook) {
+        preMapModelIntoJsonObject.add(hook);
         return this;
     }
 
@@ -129,19 +129,17 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
                 LogUtil.debug("Write default configuration: {}", this.filePath.toFile().getAbsolutePath());
             }
 
-            /* Call hook functions. */
-            this.beforeWriteStorageHooks.forEach(hook -> hook.accept(this));
+            /* Map model T into JsonObject instance. */
+            this.preMapModelIntoJsonObject.forEach(hook -> hook.accept(this.model()));
+            JsonObject modelJsonObject = this.getModelAsJsonTree();
 
-            /* Serialize the Java object into Json tree. */
-            JsonElement modelJsonTree = this.getModelAsJsonTree();
-            beforeSerializeIntoString(modelJsonTree);
-            String jsonString = GsonMapper.getGson().toJson(modelJsonTree);
+            beforeSerializeIntoString(modelJsonObject);
 
-            /* Write model to storage. */
+            /* Map JsonObject instance into *.json file. */
             Files.createDirectories(this.filePath.getParent());
-            Files.writeString(this.filePath, jsonString);
+            Files.writeString(this.filePath, GsonMapper.getGson().toJson(modelJsonObject));
         } catch (Exception e) {
-            LogUtil.error("Failed to write configuration file {} to disk.", this.filePath, e);
+            LogUtil.error("Failed to write configuration file {} into storage.", this.filePath, e);
             throw e;
         }
     }

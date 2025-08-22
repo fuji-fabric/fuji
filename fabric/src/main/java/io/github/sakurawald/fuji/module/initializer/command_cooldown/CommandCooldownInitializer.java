@@ -103,8 +103,8 @@ public class CommandCooldownInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<NamedCooldownDataModel> namedCooldownData = ObjectConfigurationHandler
         .ofModule("named-cooldown-data.json", NamedCooldownDataModel.class)
-        .addBeforeWriteStorageHook((self) -> {
-            self.model().getNodes()
+        .addPreMapModelIntoJsonObjectHook((model) -> {
+            model.getNodes()
                 .stream()
                 .filter(it -> it.getDescriptor() != null && !it.getDescriptor().isPersistent())
                 .forEach(it -> it.getCooldown().getTimestamp().clear());
