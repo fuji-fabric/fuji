@@ -25,15 +25,25 @@ public abstract class ConfigurationTransformer {
     @Getter
     protected Path targetFilePath;
 
-    public void configure(@NotNull Path targetFilePath) {
+    private void configure(@NotNull Path targetFilePath) {
         this.targetFilePath = targetFilePath;
     }
 
-    public abstract boolean canApply();
+    public final void tryApply(@NotNull Path targetFilePath) {
+        this.configure(targetFilePath);
+        boolean canApply = this.canApply();
+        LogUtil.debug("Can apply the transformer installed in file {}? -> {}", this.targetFilePath, canApply);
 
-    public abstract void apply();
+        if (canApply) {
+            this.apply();
+        }
+    }
 
-    public void logOperation(@NotNull String message, Object... args) {
+    protected abstract boolean canApply();
+
+    protected abstract void apply();
+
+    protected void logOperation(@NotNull String message, Object... args) {
         Object[] finalArgs = new Object[args.length + 1];
         finalArgs[0] = this.targetFilePath;
         System.arraycopy(args, 0, finalArgs, 1, args.length);

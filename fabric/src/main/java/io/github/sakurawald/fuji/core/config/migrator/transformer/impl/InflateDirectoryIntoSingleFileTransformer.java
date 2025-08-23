@@ -18,7 +18,7 @@ public abstract class InflateDirectoryIntoSingleFileTransformer extends Configur
 
     @SuppressWarnings("RedundantIfStatement")
     @Override
-    public boolean canApply() {
+    protected boolean canApply() {
         if (!Files.exists(inputDirectoryPath())) {
             return false;
         }
@@ -28,7 +28,7 @@ public abstract class InflateDirectoryIntoSingleFileTransformer extends Configur
 
     @SneakyThrows
     @Override
-    public void apply() {
+    protected void apply() {
         var inputDirectoryPath = inputDirectoryPath();
         var outputFilePath = outputFilePath();
 

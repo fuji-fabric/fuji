@@ -104,7 +104,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     public final void readStorage() {
         try {
             /* Process installed transformers before I/O operations. */
-            this.processInstalledTransformers();
+            this.installedTransformers.forEach(transformer -> transformer.tryApply(this.filePath));
 
             /* Write default configuration into the storage, if file not exists. */
             if (Files.notExists(this.filePath)) {
@@ -215,13 +215,4 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         return this;
     }
 
-    private void processInstalledTransformers() {
-        this.installedTransformers
-            .stream()
-            .filter(transformer -> {
-                transformer.configure(this.filePath);
-                return transformer.canApply();
-            })
-            .forEach(ConfigurationTransformer::apply);
-    }
 }

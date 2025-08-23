@@ -17,7 +17,7 @@ public class MoveFileTransformer extends ConfigurationTransformer {
 
     @SuppressWarnings("RedundantIfStatement")
     @Override
-    public boolean canApply() {
+    protected boolean canApply() {
         if (Files.notExists(sourceFile)) return false;
         if (Files.exists(destinationFile)) return false;
 
@@ -26,7 +26,7 @@ public class MoveFileTransformer extends ConfigurationTransformer {
 
     @SneakyThrows(IOException.class)
     @Override
-    public void apply() {
+    protected void apply() {
         logOperation("Move the file: sourceFile = {}, destinationFile = {}", sourceFile, destinationFile);
         Files.createDirectories(this.destinationFile.getParent());
         Files.move(sourceFile, destinationFile);

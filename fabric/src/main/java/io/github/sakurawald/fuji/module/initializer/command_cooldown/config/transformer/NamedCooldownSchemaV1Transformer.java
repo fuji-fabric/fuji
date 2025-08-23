@@ -14,7 +14,7 @@ public class NamedCooldownSchemaV1Transformer extends JsonConfigurationTransform
 
     @SuppressWarnings({"UnnecessaryLocalVariable", "SizeReplaceableByIsEmpty"})
     @Override
-    public void apply() {
+    protected void apply() {
         /* Skip the transformation if this is the first time use. */
         if (!Files.exists(getTargetFilePath())) {
             return;

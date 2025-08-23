@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.core.config.migrator.transformer.abst;
 
+import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.PathNotFoundException;
@@ -22,6 +23,10 @@ public abstract class JsonConfigurationTransformer extends ConfigurationTransfor
     @SneakyThrows(IOException.class)
     private DocumentContext makeJsonDocumentContext() {
         return JsonPathParser.getJsonPathParser().parse(this.targetFilePath.toFile());
+    }
+
+    public @NotNull JsonObject readRootJsonObject() {
+        return getJsonDocumentContext().read("$");
     }
 
     public boolean existsJsonPath(@NotNull DocumentContext context, @NotNull String jsonPath) {
@@ -51,10 +56,15 @@ public abstract class JsonConfigurationTransformer extends ConfigurationTransfor
         JsonUtil.writeJsonObject(context.json(), this.targetFilePath);
     }
 
+    public void writeJsonObjectToOriginalFile(@NotNull JsonObject jsonObject) {
+        this.logOperation("Write storage.");
+        JsonUtil.writeJsonObject(jsonObject, this.targetFilePath);
+    }
+
     public abstract String sinceVersion();
 
     @Override
-    public boolean canApply() {
+    protected boolean canApply() {
         DocumentContext documentContext = getJsonDocumentContext();
         String jsonVersionString = getJsonVersion(documentContext);
         String sinceVersionString = sinceVersion();
