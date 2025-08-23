@@ -1,7 +1,12 @@
 package io.github.sakurawald.fuji.core.config.migrator.transformer.abst;
 
+import com.google.gson.JsonPrimitive;
 import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.PathNotFoundException;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.config.migrator.version.SemVerComparator;
+import io.github.sakurawald.fuji.core.config.migrator.version.VersionPropertyInjector;
 import io.github.sakurawald.fuji.core.config.parser.JsonPathParser;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -46,4 +51,28 @@ public abstract class JsonConfigurationTransformer extends ConfigurationTransfor
         JsonUtil.writeJsonObject(context.json(), this.targetFilePath);
     }
 
+    public abstract String sinceVersion();
+
+    @Override
+    public boolean canApply() {
+        DocumentContext documentContext = getJsonDocumentContext();
+        String jsonVersionString = getJsonVersion(documentContext);
+        String sinceVersionString = sinceVersion();
+        boolean canApply = SemVerComparator.compareSemVer(jsonVersionString, sinceVersionString) <= 0;
+
+        LogUtil.debug("Check if the transformer can be applied: file path = {}, json version string = {}, since version string = {}, can apply = {}", this.targetFilePath, jsonVersionString, sinceVersionString, canApply);
+        return canApply;
+    }
+
+    private @NotNull String getJsonVersion(@NotNull DocumentContext documentContext) {
+        String jsonVersionString;
+        try {
+            jsonVersionString = ((JsonPrimitive) getJsonPath(documentContext, "$.MOD_VERSION")).getAsString();
+        } catch (PathNotFoundException e) {
+            LogUtil.warn("There is no mod version string in file {}, treating it as {}", this.targetFilePath, VersionPropertyInjector.UNKNOWN_MOD_VERSION);
+            jsonVersionString = VersionPropertyInjector.UNKNOWN_MOD_VERSION;
+        }
+
+        return jsonVersionString;
+    }
 }

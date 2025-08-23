@@ -25,9 +25,11 @@ public abstract class ConfigurationTransformer {
     @Getter
     protected Path targetFilePath;
 
-    public void configure(Path targetFilePath) {
+    public void configure(@NotNull Path targetFilePath) {
         this.targetFilePath = targetFilePath;
     }
+
+    public abstract boolean canApply();
 
     public abstract void apply();
 

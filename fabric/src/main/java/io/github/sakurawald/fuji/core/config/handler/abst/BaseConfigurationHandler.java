@@ -103,8 +103,9 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     @SuppressWarnings("unchecked")
     public final void readStorage() {
         try {
-            /* Apply transformers before read the storage. */
-            this.installedTransformers.forEach(it -> {
+            /* Apply transformers before I/O operations. */
+            this.computeApplicableTransformers()
+                .forEach(it -> {
                 it.configure(this.filePath);
                 it.apply();
             });
@@ -216,5 +217,15 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         });
 
         return this;
+    }
+
+    public List<ConfigurationTransformer> computeApplicableTransformers() {
+        return this.installedTransformers
+            .stream()
+            .filter(transformer -> {
+                transformer.configure(this.filePath);
+                return transformer.canApply();
+            })
+            .toList();
     }
 }

@@ -2,11 +2,15 @@ package io.github.sakurawald.fuji.core.config.migrator.version;
 
 import com.google.gson.JsonElement;
 import io.github.sakurawald.fuji.Fuji;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import org.jetbrains.annotations.NotNull;
 
 public class VersionPropertyInjector {
 
     public static final String MOD_VERSION_KEY = "MOD_VERSION";
+
+    @ForDeveloper("The mod version string in only available since v12.13.0")
+    public static final String UNKNOWN_MOD_VERSION = "999.999.999";
 
     public static void injectVersionProperty(@NotNull JsonElement jsonElement) {
         jsonElement

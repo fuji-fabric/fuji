@@ -4,6 +4,10 @@ public class SemVerComparator {
 
     @SuppressWarnings("StringSplitter")
     public static int compareSemVer(String v1, String v2) {
+        if (v1.isBlank() || v2.isBlank()) {
+            throw new IllegalArgumentException("One of the input version strings is blank: v1 = %s, v2 = %s".formatted(v1, v2));
+        }
+
         String[] parts1 = v1.split("\\.");
         String[] parts2 = v2.split("\\.");
 
@@ -15,7 +19,8 @@ public class SemVerComparator {
                 return Integer.compare(num1, num2);
             }
         }
-        return 0; // equal
+
+        return 0;
     }
 
 }

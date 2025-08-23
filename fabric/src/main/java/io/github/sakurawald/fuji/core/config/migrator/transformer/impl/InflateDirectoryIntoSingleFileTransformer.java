@@ -16,6 +16,16 @@ import org.jetbrains.annotations.NotNull;
 @AllArgsConstructor
 public abstract class InflateDirectoryIntoSingleFileTransformer extends ConfigurationTransformer {
 
+    @SuppressWarnings("RedundantIfStatement")
+    @Override
+    public boolean canApply() {
+        if (!Files.exists(inputDirectoryPath())) {
+            return false;
+        }
+
+        return true;
+    }
+
     @SneakyThrows
     @Override
     public void apply() {

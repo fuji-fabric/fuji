@@ -15,11 +15,18 @@ public class MoveFileTransformer extends ConfigurationTransformer {
     @NotNull Path sourceFile;
     @NotNull Path destinationFile;
 
+    @SuppressWarnings("RedundantIfStatement")
+    @Override
+    public boolean canApply() {
+        if (Files.notExists(sourceFile)) return false;
+        if (Files.exists(destinationFile)) return false;
+
+        return true;
+    }
+
     @SneakyThrows(IOException.class)
     @Override
     public void apply() {
-        if (Files.notExists(sourceFile) || Files.exists(destinationFile)) return;
-
         logOperation("Move the file: sourceFile = {}, destinationFile = {}", sourceFile, destinationFile);
         Files.createDirectories(this.destinationFile.getParent());
         Files.move(sourceFile, destinationFile);
