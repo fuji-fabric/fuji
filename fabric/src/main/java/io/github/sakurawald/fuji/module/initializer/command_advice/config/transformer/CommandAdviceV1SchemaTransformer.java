@@ -23,6 +23,7 @@ public class CommandAdviceV1SchemaTransformer extends JsonConfigurationTransform
         Optional
             .ofNullable(rootJsonObject.get("entries"))
             .ifPresent(it -> {
+                /* Iterate the existing entries. */
                 it.getAsJsonArray().forEach(arrayElement -> {
                     List<JsonObject> destinationJsonObjects = new ArrayList<>();
 
@@ -36,13 +37,15 @@ public class CommandAdviceV1SchemaTransformer extends JsonConfigurationTransform
 
                     destinationJsonObjects.forEach(jsonObject -> new RenameJsonKeysTransformer(jsonObject, List.of(
                         new Pair<>("match_command_string_regex", "command_string_regex"),
-                        new Pair<>("only_valid_when_command_is_executed_by_player", "executed_by_player")
+                        new Pair<>("only_valid_when_command_is_executed_by_player", "executed_by_player_only")
                     )).tryApply(this.getTargetFilePath()));
 
                 });
+
+                /* Write target file. */
+                writeTargetJsonFile(rootJsonObject);
             });
 
-        writeTargetJsonFile(rootJsonObject);
     }
 
 }

@@ -17,7 +17,7 @@ public abstract class JsonConfigurationTransformer extends ConfigurationTransfor
     protected boolean canApply() {
         String jsonVersionString = getJsonVersion();
         String sinceVersionString = sinceVersion();
-        return SemVerComparator.compareSemVer(jsonVersionString, sinceVersionString) <= 0;
+        return SemVerComparator.compareSemVer(jsonVersionString, sinceVersionString) < 0;
     }
 
     private @NotNull String getJsonVersion() {
@@ -37,7 +37,7 @@ public abstract class JsonConfigurationTransformer extends ConfigurationTransfor
     }
 
     protected void writeTargetJsonFile(@NotNull JsonObject rootJsonObject) {
-        logOperation("Override the original file.");
+        logOperation("Transformer {} applied, now override the original file.", this.getClass().getName());
         JsonUtil.writeJsonObject(rootJsonObject, this.targetFilePath);
     }
 }
