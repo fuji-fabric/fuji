@@ -217,6 +217,12 @@
 - Target: The raycast height should be proper.
 
 [Test Case]
+- Module: skin
+- Action: **Try to send a chat message after the skin changed in online-mode server.**
+- Target: The chat message validation should be proper after a player changed its skin.
+- Target: It should work in both `online-mode` and `offline-mode` servers.
+
+[Test Case]
 - Module: view
 - Action: **Issue the `/view {inv/ender}` command on a fake-player.**
 - Target: You should be able to modify the slots on the fly.
