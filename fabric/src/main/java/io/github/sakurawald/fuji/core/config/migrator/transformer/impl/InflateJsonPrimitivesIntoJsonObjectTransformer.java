@@ -37,6 +37,7 @@ public class InflateJsonPrimitivesIntoJsonObjectTransformer extends Configuratio
             }
         });
 
+        jsonKeys.forEach(sourceJsonObject::remove);
     }
 
 }

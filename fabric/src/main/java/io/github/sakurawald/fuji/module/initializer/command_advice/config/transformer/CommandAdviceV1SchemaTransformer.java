@@ -1,8 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_advice.config.transformer;
 
 import com.google.gson.JsonObject;
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
-import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.config.migrator.transformer.abst.JsonConfigurationTransformer;
 import io.github.sakurawald.fuji.core.config.migrator.transformer.impl.InflateJsonPrimitivesIntoJsonObjectTransformer;
 import io.github.sakurawald.fuji.core.config.migrator.transformer.impl.RenameJsonKeysTransformer;
@@ -43,8 +41,6 @@ public class CommandAdviceV1SchemaTransformer extends JsonConfigurationTransform
 
                 });
             });
-
-        LogUtil.warn("write = {}", GsonMapper.toJsonString(rootJsonObject));
 
         writeTargetJsonFile(rootJsonObject);
     }
