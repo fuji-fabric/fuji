@@ -3,7 +3,6 @@ package io.github.sakurawald.fuji.module.initializer.command_cooldown.config.tra
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.jayway.jsonpath.DocumentContext;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.config.migrator.transformer.abst.JsonConfigurationTransformer;
 import io.github.sakurawald.fuji.core.config.migrator.version.VersionPropertyInjector;
@@ -21,14 +20,17 @@ public class NamedCooldownSchemaV1Transformer extends JsonConfigurationTransform
         }
 
         /* Check requisition. */
-        DocumentContext context = getJsonDocumentContext();
-        JsonArray jsonArray = context.read("$.named_cooldown.list.*.timestamp");
-        if (jsonArray.size() == 0) {
+        JsonObject jsonObject = readRootJsonObject();
+        int arraySize = JsonUtil
+            .<JsonArray>readJsonPath(jsonObject, "$.named_cooldown.list.*.timestamp")
+            .map(JsonArray::size)
+            .orElse(-1);
+        if (arraySize == 0) {
             return;
         }
 
         /* Make the output json object. */
-        JsonObject input$list = context.read("$.named_cooldown.list");
+        JsonObject input$list = JsonUtil.<JsonObject>readJsonPath(jsonObject,"$.named_cooldown.list").get();
         JsonObject outputRoot = new JsonObject();
         JsonArray output$nodes = new JsonArray();
         outputRoot.add("nodes", output$nodes);
