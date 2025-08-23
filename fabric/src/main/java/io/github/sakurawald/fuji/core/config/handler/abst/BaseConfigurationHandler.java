@@ -103,12 +103,8 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     @SuppressWarnings("unchecked")
     public final void readStorage() {
         try {
-            /* Apply transformers before I/O operations. */
-            this.computeApplicableTransformers()
-                .forEach(it -> {
-                it.configure(this.filePath);
-                it.apply();
-            });
+            /* Process installed transformers before I/O operations. */
+            this.processInstalledTransformers();
 
             /* Write default configuration into the storage, if file not exists. */
             if (Files.notExists(this.filePath)) {
@@ -219,13 +215,13 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         return this;
     }
 
-    public List<ConfigurationTransformer> computeApplicableTransformers() {
-        return this.installedTransformers
+    private void processInstalledTransformers() {
+        this.installedTransformers
             .stream()
             .filter(transformer -> {
                 transformer.configure(this.filePath);
                 return transformer.canApply();
             })
-            .toList();
+            .forEach(ConfigurationTransformer::apply);
     }
 }
