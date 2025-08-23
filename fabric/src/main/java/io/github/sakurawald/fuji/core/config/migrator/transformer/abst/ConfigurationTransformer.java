@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.core.config.migrator.transformer.abst;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.config.migrator.exception.AbortConfigurationMigrationException;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import java.nio.file.Path;
 import lombok.Getter;
@@ -30,12 +31,16 @@ public abstract class ConfigurationTransformer {
     }
 
     public final void tryApply(@NotNull Path targetFilePath) {
-        this.configure(targetFilePath);
-        boolean canApply = this.canApply();
-        LogUtil.debug("Can apply the transformer installed in file {}? -> {}", this.targetFilePath, canApply);
+        try {
+            this.configure(targetFilePath);
+            boolean canApply = this.canApply();
+            LogUtil.debug("tryApply(): filePath = {}, transformer = {}, canApply = {}", this.targetFilePath, this.getClass().getName(), canApply);
 
-        if (canApply) {
-            this.apply();
+            if (canApply) {
+                this.apply();
+            }
+        } catch (AbortConfigurationMigrationException e) {
+            // NO-OP
         }
     }
 
