@@ -96,7 +96,7 @@ public class GenerateDocStringTest {
 
     private static void writeDocStringListIntoDefaultLanguageFile(List<DocString> docStringList) throws IOException {
         /* Read the default language json. */
-        JsonObject defaultLanguageJson = JsonUtil.readJsonElement(COMPILE_TIME_DEFAULT_LANGUAGE_FILE_PATH).getAsJsonObject();
+        JsonObject defaultLanguageJson = JsonUtil.readJsonFile(COMPILE_TIME_DEFAULT_LANGUAGE_FILE_PATH).getAsJsonObject();
         if (JsonUtil.isEmpty(defaultLanguageJson)) {
             throw new RuntimeException("Default language file is empty.");
         }

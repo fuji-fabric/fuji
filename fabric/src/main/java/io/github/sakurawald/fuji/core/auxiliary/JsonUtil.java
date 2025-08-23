@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
+import io.github.sakurawald.fuji.core.config.parser.JsonPathParser;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -13,6 +14,7 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -62,13 +64,25 @@ public class JsonUtil {
     }
 
     @SneakyThrows(IOException.class)
-    public static @NotNull JsonElement readJsonElement(@NotNull Path path) {
+    public static @NotNull JsonObject readJsonFile(@NotNull Path path) {
         @Cleanup Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path.toFile()), StandardCharsets.UTF_8));
-        return GsonMapper.fromJson(reader, JsonElement.class);
+        return GsonMapper.fromJson(reader, JsonElement.class).getAsJsonObject();
     }
 
-    public static @NotNull JsonElement readJsonString(@NotNull String jsonString) {
-        return GsonMapper.fromJson(jsonString, JsonElement.class);
+    public static @NotNull JsonObject readJsonString(@NotNull String jsonString) {
+        return GsonMapper.fromJson(jsonString, JsonElement.class).getAsJsonObject();
+    }
+
+    @SuppressWarnings("TypeParameterUnusedInFormals")
+    public static <T> Optional<T> readJsonPath(@NotNull JsonObject root, @NotNull String path) {
+        try {
+            return Optional
+                .ofNullable(JsonPathParser.getJsonPathParser()
+                .parse(root)
+                .read(path));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     @SneakyThrows

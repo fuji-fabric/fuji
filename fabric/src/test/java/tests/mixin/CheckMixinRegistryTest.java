@@ -40,7 +40,7 @@ public class CheckMixinRegistryTest {
     public void ensureAllMixinClassIsRegisteredInMixinJsonFile() {
         /* Read the fuji.mixins.json file, to get the registered mixins. */
         Path mixinJsonFilePath = Path.of("src/main/resources/fuji.mixins.json");
-        JsonElement mixinJsonFileJson = JsonUtil.readJsonElement(mixinJsonFilePath);
+        JsonElement mixinJsonFileJson = JsonUtil.readJsonFile(mixinJsonFilePath);
         List<String> registeredMixins = new ArrayList<>();
         registeredMixins.addAll(collectMixins(mixinJsonFileJson, "mixins"));
         registeredMixins.addAll(collectMixins(mixinJsonFileJson, "client"));
