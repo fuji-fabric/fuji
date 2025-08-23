@@ -20,7 +20,7 @@ public class NamedCooldownSchemaV1Transformer extends JsonConfigurationTransform
         }
 
         /* Check requisition. */
-        JsonObject jsonObject = readRootJsonObject();
+        JsonObject jsonObject = readTargetJsonFile();
         int arraySize = JsonUtil
             .<JsonArray>readJsonPath(jsonObject, "$.named_cooldown.list.*.timestamp")
             .map(JsonArray::size)

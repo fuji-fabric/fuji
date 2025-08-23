@@ -17,14 +17,11 @@ public abstract class JsonConfigurationTransformer extends ConfigurationTransfor
     protected boolean canApply() {
         String jsonVersionString = getJsonVersion();
         String sinceVersionString = sinceVersion();
-        boolean canApply = SemVerComparator.compareSemVer(jsonVersionString, sinceVersionString) <= 0;
-
-        LogUtil.debug("Check if the transformer can be applied: file path = {}, json version string = {}, since version string = {}, can apply = {}", this.targetFilePath, jsonVersionString, sinceVersionString, canApply);
-        return canApply;
+        return SemVerComparator.compareSemVer(jsonVersionString, sinceVersionString) <= 0;
     }
 
     private @NotNull String getJsonVersion() {
-        JsonObject jsonObject = readRootJsonObject();
+        JsonObject jsonObject = readTargetJsonFile();
 
         return Optional
             .ofNullable(jsonObject.get(VersionPropertyInjector.MOD_VERSION_KEY))
@@ -35,11 +32,11 @@ public abstract class JsonConfigurationTransformer extends ConfigurationTransfor
             });
     }
 
-    protected @NotNull JsonObject readRootJsonObject() {
+    protected @NotNull JsonObject readTargetJsonFile() {
         return JsonUtil.readJsonFile(this.getTargetFilePath());
     }
 
-    protected void overrideTargetFile(@NotNull JsonObject rootJsonObject) {
+    protected void writeTargetJsonFile(@NotNull JsonObject rootJsonObject) {
         logOperation("Override the original file.");
         JsonUtil.writeJsonObject(rootJsonObject, this.targetFilePath);
     }

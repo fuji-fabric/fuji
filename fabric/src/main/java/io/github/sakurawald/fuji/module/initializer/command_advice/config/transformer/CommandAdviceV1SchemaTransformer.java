@@ -20,7 +20,7 @@ public class CommandAdviceV1SchemaTransformer extends JsonConfigurationTransform
 
     @Override
     protected void apply() {
-        JsonObject rootJsonObject = readRootJsonObject();
+        JsonObject rootJsonObject = readTargetJsonFile();
 
         Optional
             .ofNullable(rootJsonObject.get("entries"))
@@ -46,7 +46,7 @@ public class CommandAdviceV1SchemaTransformer extends JsonConfigurationTransform
 
         LogUtil.warn("write = {}", GsonMapper.toJsonString(rootJsonObject));
 
-        overrideTargetFile(rootJsonObject);
+        writeTargetJsonFile(rootJsonObject);
     }
 
 }
