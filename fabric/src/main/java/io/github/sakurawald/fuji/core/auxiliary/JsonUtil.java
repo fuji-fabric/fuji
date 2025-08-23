@@ -87,6 +87,7 @@ public class JsonUtil {
 
     @SneakyThrows
     public static void writeJsonObject(@NotNull JsonObject jsonObject, @NotNull Path outputFilePath){
+        Files.createDirectories(outputFilePath.getParent());
         String json = GsonMapper.toJsonString(jsonObject);
         Files.writeString(outputFilePath, json);
     }

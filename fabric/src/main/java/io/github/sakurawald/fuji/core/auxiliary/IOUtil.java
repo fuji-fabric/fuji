@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.core.auxiliary;
 
+import lombok.Cleanup;
 import lombok.SneakyThrows;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.NotNull;
@@ -58,6 +59,13 @@ public class IOUtil {
                     }
                 })
                 .collect(Collectors.toList());
+        }
+    }
+
+    public static void deleteDirectoryIfEmpty(@NotNull Path filePath) throws IOException {
+        @Cleanup Stream<Path> $inputFiles = Files.list(filePath);
+        if ($inputFiles.toList().isEmpty()) {
+            Files.delete(filePath);
         }
     }
 

@@ -13,9 +13,9 @@ import org.jetbrains.annotations.NotNull;
 @EqualsAndHashCode(callSuper = true)
 public class InflateJsonPrimitivesIntoJsonObjectTransformer extends ConfigurationTransformer {
 
-    final JsonObject sourceJsonObject;
-    final List<String> jsonKeys;
-    final Function<JsonObject, JsonObject> destinationJsonObjectMaker;
+    final @NotNull JsonObject sourceJsonObject;
+    final @NotNull List<String> jsonKeys;
+    final @NotNull Function<JsonObject, JsonObject> destinationJsonObjectMaker;
 
     @Override
     protected boolean canApply() {

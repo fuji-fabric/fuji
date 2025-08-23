@@ -27,7 +27,7 @@ public class MoveFileTransformer extends ConfigurationTransformer {
     @SneakyThrows(IOException.class)
     @Override
     protected void apply() {
-        logOperation("Move the file: sourceFile = {}, destinationFile = {}", sourceFile, destinationFile);
+        logOperation("Move file: sourceFile = {}, destinationFile = {}", sourceFile, destinationFile);
         Files.createDirectories(this.destinationFile.getParent());
         Files.move(sourceFile, destinationFile);
     }

@@ -7,29 +7,34 @@ import io.github.sakurawald.fuji.core.structure.Pair;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.NotNull;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class RenameJsonKeysTransformer extends ConfigurationTransformer {
-    final JsonObject jsonObject;
-    final List<Pair<String, String>> renameRules;
+    final @NotNull JsonObject jsonObject;
+    final @NotNull List<Pair<String, String>> renameRules;
 
     @Override
     protected boolean canApply() {
-        return true;
+        return renameRules
+                .stream()
+                .anyMatch(rule -> {
+            String oldJsonKey = rule.getKey();
+            return this.jsonObject.has(oldJsonKey);
+        });
     }
 
     @Override
     protected void apply() {
+        renameRules.forEach(rule -> {
+            String oldJsonKey = rule.getKey();
+            String newJsonKey = rule.getValue();
 
-        renameRules.forEach(pair -> {
-            String oldKey = pair.getKey();
-            String newKey = pair.getValue();
-
-            if (this.jsonObject.has(oldKey) && !this.jsonObject.has(newKey)) {
-                JsonElement value = this.jsonObject.get(oldKey);
-                this.jsonObject.add(newKey, value);
-                this.jsonObject.remove(oldKey);
+            if (this.jsonObject.has(oldJsonKey) && !this.jsonObject.has(newJsonKey)) {
+                JsonElement value = this.jsonObject.get(oldJsonKey);
+                this.jsonObject.add(newJsonKey, value);
+                this.jsonObject.remove(oldJsonKey);
             }
 
         });

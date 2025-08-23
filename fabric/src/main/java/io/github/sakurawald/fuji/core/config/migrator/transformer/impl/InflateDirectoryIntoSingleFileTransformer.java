@@ -2,26 +2,37 @@ package io.github.sakurawald.fuji.core.config.migrator.transformer.impl;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import io.github.sakurawald.fuji.core.auxiliary.IOUtil;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.config.migrator.transformer.abst.ConfigurationTransformer;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.SneakyThrows;
-import org.jetbrains.annotations.NotNull;
 
+@Data
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
-public abstract class InflateDirectoryIntoSingleFileTransformer extends ConfigurationTransformer {
+public class InflateDirectoryIntoSingleFileTransformer extends ConfigurationTransformer {
+
+    final Path inputDirectoryPath;
+    final Path outputFilePath;
+    final Function<JsonObject, JsonArray> outputArrayProvider;
+    final BiFunction<String, JsonObject, JsonObject> mapper;
 
     @SuppressWarnings("RedundantIfStatement")
     @Override
     protected boolean canApply() {
-        if (!Files.exists(inputDirectoryPath())) {
-            return false;
-        }
+        /* Check if the input directory path exists. */
+        if (!Files.exists(this.inputDirectoryPath)) return false;
+        if (Files.exists(this.outputFilePath)) return false;
 
         return true;
     }
@@ -29,29 +40,21 @@ public abstract class InflateDirectoryIntoSingleFileTransformer extends Configur
     @SneakyThrows
     @Override
     protected void apply() {
-        var inputDirectoryPath = inputDirectoryPath();
-        var outputFilePath = outputFilePath();
-
-        /* Check if the input directory path exists. */
-        if (!Files.exists(inputDirectoryPath)) {
-            return;
-        }
-
         /* List files in input directory path. */
-        @Cleanup Stream<Path> inputFiles = Files.list(inputDirectoryPath);
+        @Cleanup Stream<Path> inputFiles = Files.list(this.inputDirectoryPath);
 
         /* Make the output array to hold the inflated data. */
         JsonObject outputJson = new JsonObject();
-        JsonArray outputArray = arrayMaker(outputJson);
+        JsonArray outputArray = this.outputArrayProvider.apply(outputJson);
 
         /* Apply the mapper for each input file. */
         inputFiles
             .toList()
             .forEach(inputFilePath -> {
                 /* Append the mapped JsonObject. */
-                String fileName = inputFilePath.getFileName().toString();
+                String inputFileName = inputFilePath.getFileName().toString();
                 JsonObject inputFileJson = JsonUtil.readJsonFile(inputFilePath).getAsJsonObject();
-                JsonObject outputFileJson = mapper(fileName, inputFileJson);
+                JsonObject outputFileJson = this.mapper.apply(inputFileName, inputFileJson);
                 outputArray.add(outputFileJson);
 
                 /* Delete the input file for that input JsonObject. */
@@ -63,27 +66,10 @@ public abstract class InflateDirectoryIntoSingleFileTransformer extends Configur
             });
 
         /* Write the output file. */
-        if (!Files.exists(outputFilePath)) {
-            Files.createDirectories(outputFilePath.getParent());
-            JsonUtil.writeJsonObject(outputJson, outputFilePath);
-        }
+        JsonUtil.writeJsonObject(outputJson, this.outputFilePath);
 
         /* Delete the empty directory. */
-        @Cleanup Stream<Path> $inputFiles = Files.list(inputDirectoryPath);
-        if ($inputFiles.toList().isEmpty()) {
-            Files.delete(inputDirectoryPath);
-        }
+        IOUtil.deleteDirectoryIfEmpty(this.inputDirectoryPath);
     }
 
-    @NotNull
-    protected abstract Path inputDirectoryPath();
-
-    @NotNull
-    protected abstract Path outputFilePath();
-
-    @NotNull
-    protected abstract JsonArray arrayMaker(@NotNull JsonObject root);
-
-    @NotNull
-    protected abstract JsonObject mapper(@NotNull String fileName, @NotNull JsonObject inputJson);
 }
