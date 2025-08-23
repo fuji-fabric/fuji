@@ -11,7 +11,8 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
-import io.github.sakurawald.fuji.module.initializer.command_advice.model.CommandAdviceConfigModel;
+import io.github.sakurawald.fuji.module.initializer.command_advice.config.model.CommandAdviceConfigModel;
+import io.github.sakurawald.fuji.module.initializer.command_advice.config.transformer.CommandAdviceV1SchemaTransformer;
 import io.github.sakurawald.fuji.module.initializer.command_advice.structure.CommandAdviceEntry;
 import io.github.sakurawald.fuji.module.initializer.command_advice.structure.CommandAdviceType;
 import net.minecraft.server.command.ServerCommandSource;
@@ -45,7 +46,9 @@ import java.util.stream.Collectors;
 @TestCase(action = "Issue `/say hi` command.", targets = "The command should be cancelled with the `/send-broadcast` command.")
 public class CommandAdviceInitializer extends ModuleInitializer {
 
-    private static final BaseConfigurationHandler<CommandAdviceConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandAdviceConfigModel.class);
+    private static final BaseConfigurationHandler<CommandAdviceConfigModel> config = ObjectConfigurationHandler
+        .ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandAdviceConfigModel.class)
+        .installTransformer(new CommandAdviceV1SchemaTransformer());
 
     @SuppressWarnings({"ResultOfMethodCallIgnored", "unchecked"})
     public static void processCommandAdvice(Object handler, ServerCommandSource source, String commandString, CommandAdviceType adviceType, CallbackInfo ci) {
@@ -59,25 +62,25 @@ public class CommandAdviceInitializer extends ModuleInitializer {
         List<CommandAdviceEntry> targetAdviceEntries = config.model()
             .entries
             .stream()
-            .filter(it -> it.adviceType.equals(adviceType)
-            || (it.adviceType.equals(CommandAdviceType.CANCEL_WITH_SUCCESS)
+            .filter(it -> it.getAdviceType().equals(adviceType)
+            || (it.getAdviceType().equals(CommandAdviceType.CANCEL_WITH_SUCCESS)
                 && adviceType.equals(CommandAdviceType.BEFORE_EXECUTING)))
             .collect(Collectors.toCollection(ArrayList::new));
 
         // Filter the advice entries by command source type.
         targetAdviceEntries = targetAdviceEntries
             .stream()
-            .filter(it -> !it.onlyValidWhenCommandIsExecutedByPlayer || source.isExecutedByPlayer())
+            .filter(it -> !it.getMatcher().isExecutedByPlayerOnly() || source.isExecutedByPlayer())
             .collect(Collectors.toCollection(ArrayList::new));
 
 
         // Perform advice.
         targetAdviceEntries
             .stream()
-            .filter(it -> commandString.matches(it.matchCommandStringRegex))
+            .filter(it -> commandString.matches(it.getMatcher().getCommandStringRegex()))
             .forEach(it -> {
                 // Cancel the executing of target command.
-                if (it.adviceType.equals(CommandAdviceType.CANCEL_WITH_SUCCESS)) {
+                if (it.getAdviceType().equals(CommandAdviceType.CANCEL_WITH_SUCCESS)) {
                     LogUtil.debug("Cancel the executing of target command {} with success for {}", commandString, it);
                     if (ci instanceof CallbackInfoReturnable<?>) {
                         ((CallbackInfoReturnable<Integer>) ci).setReturnValue(CommandHelper.Return.SUCCESS);
@@ -88,10 +91,10 @@ public class CommandAdviceInitializer extends ModuleInitializer {
 
                 // Replace captured-groups for commands.
                 Matcher matcher = Pattern
-                    .compile(it.matchCommandStringRegex)
+                    .compile(it.getMatcher().getCommandStringRegex())
                     .matcher(commandString);
                 matcher.find();
-                List<String> commands = it.commands
+                List<String> commands = it.getCommands()
                     .stream()
                     .map(cmd -> StringUtil.replaceAllAndResetMatcher(matcher, cmd))
                     .collect(Collectors.toCollection(ArrayList::new));

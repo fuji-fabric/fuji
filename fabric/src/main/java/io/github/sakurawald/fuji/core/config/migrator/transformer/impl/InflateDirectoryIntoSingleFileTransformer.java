@@ -50,7 +50,7 @@ public abstract class InflateDirectoryIntoSingleFileTransformer extends Configur
             .forEach(inputFilePath -> {
                 /* Append the mapped JsonObject. */
                 String fileName = inputFilePath.getFileName().toString();
-                JsonObject inputFileJson = JsonUtil.readJsonElement(inputFilePath).getAsJsonObject();
+                JsonObject inputFileJson = JsonUtil.readJsonFile(inputFilePath).getAsJsonObject();
                 JsonObject outputFileJson = mapper(fileName, inputFileJson);
                 outputArray.add(outputFileJson);
 

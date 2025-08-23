@@ -12,23 +12,31 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommandAdviceEntry {
 
-    @Document(id = 1751826314407L, value = """
+    Matcher matcher = new Matcher();
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Matcher {
+
+        @Document(id = 1751826314407L, value = """
         The `regex` expression used to match the `target command`.
         """)
-    public String matchCommandStringRegex;
+        String commandStringRegex;
 
-    @Document(id = 1751826318098L, value = """
+        @Document(id = 1751826318098L, value = """
         Is this `advice` only valid, when the target command is executed by a player?
         """)
-    public boolean onlyValidWhenCommandIsExecutedByPlayer;
+        boolean executedByPlayerOnly;
+
+    }
 
     @Document(id = 1751826320651L, value = """
         The type of this advice.
         """)
-    public CommandAdviceType adviceType;
+    CommandAdviceType adviceType;
 
     @Document(id = 1751826322556L, value = """
         The commands to execute when `perform` this `advice`.
         """)
-    public List<String> commands;
+    List<String> commands;
 }
