@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommandAliasEntry {
 
+    String document = "This is the document string for this command.";
 
     CommandRequirementDescriptor requirement = new CommandRequirementDescriptor(4, null);
 

@@ -104,7 +104,10 @@ public class CommandAliasInitializer extends ModuleInitializer {
                     .map(argumentName -> CommandArgument.ofLiteralArgument(argumentName, requirement))
                     .toList();
 
-                return Optional.of(new AliasCommandDescriptor(commandArguments, redirectTargetCommandNode));
+                AliasCommandDescriptor descriptor = new AliasCommandDescriptor(commandArguments, redirectTargetCommandNode);
+                descriptor.fillDocument(entry.getDocument());
+
+                return Optional.of(descriptor);
             })
             .orElseGet(() -> {
                 LogUtil.warn("Failed to find the target command node {} in server command tree. Ignoring the command alias entry: {}", entry.getTo(), entry);
