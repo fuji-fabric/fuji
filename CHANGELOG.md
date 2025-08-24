@@ -1,29 +1,41 @@
 > Read detailed change logs in https://github.com/sakurawald/fuji/commits/dev/
+> 
+## Changelog
 
-# Changelog
+### [command_advice]
+**Improvements and Fixes**
+- **Fix:** Compatibility with Minecraft versions [1.20, 1.20.2].
+- **Feature:** Optimized the default configuration schema. (Make it easier to understand.)
+- **Feature:** Pre-compiled regex patterns to improve performance.
+- **Feature:** Added new `CANCEL_WITH_FAILURE` command advice type. (Useful for return value consumers)
+- **Feature:** Introduced `enable` property for `command advice` configuration. (Easier to switch)
 
-- **[command_advice]** improvements and fixes
-    - **feature:** optimize the default config schema.
-    - **fix:** make it working in MC version [1.20, 1.20.2].
-    - **feature:** Pre-compile the regex pattern to improve performance.
-    - **feature:** New `CANCEL_WITH_FAILURE` command advice type.
-    - **feature:** New `enable` property for `command advice` configuration.
-- **[core] feature:** now the `--silent` optional argument supports the `vanilla Minecraft feedback`.
-  - Example: 
+---
+
+### [core]
+- **Feature:** The `--silent` optional argument now supports vanilla Minecraft feedback. (You can now use `--silent true` to suppress both the `fuji command feedbacks` and `vanilla Minecraft command feedbacks`.)
+  - **Example:**
     - `/run as fake-op @s --silent true particle minecraft:heart ~ ~1 ~ 0.6 0.6 0.6 0 20 force %player:name%`
     - `/run as fake-op @s --silent false particle minecraft:heart ~ ~1 ~ 0.6 0.6 0.6 0 20 force %player:name%`
-- **[core] feature**: now the `/fuji reload` command can re-generate the default config without the server restart.
-  - Before: If you delete the files in disk, the `/fuji reload` will re-write the `in-memory data` into the disk.
-  - Now: You can delete the files in disk, and issue `/fuji reload` command to re-generate a default one.
-- **[core] fix:** the `command descriptor` should be able to `un-register` an old command descriptor, even the new one has different command pattern compared to the old one. (This mainly affects the `hot-reload` feature in `command_bundle` module.)
-- [command_alias] improvements and bug fixes
-  - feature: now you can use `/fuji reload` or `/reload` commands to `hot-reload` the configuration for this module.
-  - feature: now you can inspect all registered `alias command` using `/fuji inspect fuji-commands` or `/fuji` command.
-  - feature: improved console logging, now will log the console when registering an `alias command`.
-  - feature: improved error-handling, if the specified target command not exists.
-  - feature: new `requirement` property for `command alias` configuration, you can now specify the `command requirement` explicitly.
-    - Before: the `command requirement` for an `alias command` is inferred implicitly from the target command.
-    - Now: You can specify the `command requirement` for an `alias command` explicitly, making it clear.
-  - feature: new `document` property for `command alias` configuration, now you can specify the `document string` for each alias command.
-  - feature: new `enable` property for `command alias` configuration, making it easier to switch.
-  - feature: new `/command-alias list` command, to inspect all registered `alias commands`.
+
+- **Feature:** The `/fuji reload` command can now regenerate the default configuration without requiring a server restart.
+  - **Before:** Deleting configuration files would cause `/fuji reload` to rewrite in-memory data back to disk.
+  - **Now:** Deleting configuration files and running `/fuji reload` will regenerate a fresh default configuration.
+
+- **Fix:** The `command descriptor` can now correctly unregister an old command descriptor, even if the new one uses a different command pattern.
+  - This mainly affects the `hot-reload` functionality in the `command_bundle` module.
+
+---
+
+### [command_alias]
+**Improvements and Bug Fixes**
+- **Feature:** Support for hot-reloading configuration via `/fuji reload` or `/reload`.
+- **Feature:** Inspect all registered alias commands with `/fuji inspect fuji-commands` or `/fuji`.
+- **Feature:** Improved console logging when registering alias commands.
+- **Feature:** Enhanced error handling when the specified target command does not exist.
+- **Feature:** New `requirement` property for `command alias` configuration.
+  - **Before:** Requirements were implicitly inferred from the target command.
+  - **Now:** Requirements can be explicitly specified, making them clear.
+- **Feature:** New `document` property for `command alias` configuration, allowing documentation strings for each alias command.
+- **Feature:** New `enable` property for `command alias` configuration, allowing easier toggling of commands.
+- **Feature:** Added `/command-alias list` command to inspect all registered alias commands.  
