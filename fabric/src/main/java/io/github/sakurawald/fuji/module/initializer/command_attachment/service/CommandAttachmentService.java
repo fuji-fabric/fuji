@@ -70,11 +70,11 @@ public class CommandAttachmentService {
                 ServerCommandSource source = CommandHelper.Source.getCommandSource(player);
                 switch (executeAsType) {
                     case CONSOLE ->
-                        CommandExecutor.execute(ExtendedCommandSource.asConsole(source), e.getCommand());
+                        CommandExecutor.executeSingle(ExtendedCommandSource.asConsole(source), e.getCommand());
                     case PLAYER ->
-                        CommandExecutor.execute(ExtendedCommandSource.asPlayer(source, (ServerPlayerEntity) player), e.getCommand());
+                        CommandExecutor.executeSingle(ExtendedCommandSource.asPlayer(source, (ServerPlayerEntity) player), e.getCommand());
                     case FAKE_OP ->
-                        CommandExecutor.execute(ExtendedCommandSource.asFakeOp(source, (ServerPlayerEntity) player), e.getCommand());
+                        CommandExecutor.executeSingle(ExtendedCommandSource.asFakeOp(source, (ServerPlayerEntity) player), e.getCommand());
                 }
 
                 /* Eval post-triggered function. */

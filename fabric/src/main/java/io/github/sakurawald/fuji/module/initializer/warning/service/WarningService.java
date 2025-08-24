@@ -141,7 +141,7 @@ public class WarningService {
             ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(offlineServerCommandSource);
 
             List<String> commands = warningRule.getCommands();
-            CommandExecutor.execute(extendedCommandSource, commands);
+            CommandExecutor.executeBatch(extendedCommandSource, commands);
         }
     }
 

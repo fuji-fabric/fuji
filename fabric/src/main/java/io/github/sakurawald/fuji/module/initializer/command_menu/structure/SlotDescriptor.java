@@ -117,27 +117,27 @@ public class SlotDescriptor {
 
             /* Dispatch click type. */
             if (clickType == ClickType.MOUSE_LEFT && !slotDescriptor.commands.on_left_click_commands.isEmpty()) {
-                CommandExecutor.execute(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.on_left_click_commands);
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.on_left_click_commands);
                 tryCloseThisMenu();
                 return;
             }
             if (clickType == ClickType.MOUSE_RIGHT && !slotDescriptor.commands.on_right_click_commands.isEmpty()) {
-                CommandExecutor.execute(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.on_right_click_commands);
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.on_right_click_commands);
                 tryCloseThisMenu();
                 return;
             }
             if (clickType == ClickType.MOUSE_LEFT_SHIFT && !slotDescriptor.commands.on_left_shift_click_commands.isEmpty()) {
-                CommandExecutor.execute(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.on_left_shift_click_commands);
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.on_left_shift_click_commands);
                 tryCloseThisMenu();
                 return;
             }
             if (clickType == ClickType.MOUSE_RIGHT_SHIFT && !slotDescriptor.commands.on_right_shift_click_commands.isEmpty()) {
-                CommandExecutor.execute(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.on_right_shift_click_commands);
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.on_right_shift_click_commands);
                 tryCloseThisMenu();
                 return;
             }
             if (clickType == ClickType.MOUSE_MIDDLE && !slotDescriptor.commands.on_middle_click_commands.isEmpty()) {
-                CommandExecutor.execute(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.on_middle_click_commands);
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.on_middle_click_commands);
                 tryCloseThisMenu();
                 return;
             }

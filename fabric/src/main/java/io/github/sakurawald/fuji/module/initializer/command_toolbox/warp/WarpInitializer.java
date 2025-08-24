@@ -68,7 +68,7 @@ public class WarpInitializer extends ModuleInitializer {
     public static void doWarp(WarpNode warpNode, ServerPlayerEntity player) {
         warpNode.getPosition().teleport(player);
 
-        CommandExecutor.execute(
+        CommandExecutor.executeBatch(
             ExtendedCommandSource.asConsole(player.getCommandSource())
             , warpNode.getEvent().on_warped.command_list);
 

@@ -46,7 +46,7 @@ public class CommandEventInitializer extends ModuleInitializer {
     }
 
     public static void executeCommandOnEvent(ServerPlayerEntity player, List<String> commands) {
-        CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), commands);
+        CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(player.getCommandSource()), commands);
     }
 
     private static void processOnPlayerJoinedEvent(ServerPlayerEntity player) {

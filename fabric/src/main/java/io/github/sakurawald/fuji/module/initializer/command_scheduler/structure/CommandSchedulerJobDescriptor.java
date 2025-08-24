@@ -66,6 +66,6 @@ public class CommandSchedulerJobDescriptor {
         /* Execute specified commands. */
         List<String> commands = RandomUtil.drawList(this.commands_groups);
         LogUtil.info("Execute commands in job `{}`: {}", this.getName(), commands);
-        ServerHelper.executeSync(() -> CommandExecutor.execute(ExtendedCommandSource.asConsole(ServerHelper.getServer().getCommandSource()), commands));
+        ServerHelper.executeSync(() -> CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(ServerHelper.getServer().getCommandSource()), commands));
     }
 }

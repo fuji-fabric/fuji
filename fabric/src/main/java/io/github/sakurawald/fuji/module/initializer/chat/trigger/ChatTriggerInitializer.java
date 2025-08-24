@@ -65,7 +65,7 @@ public class ChatTriggerInitializer extends ModuleInitializer {
                     .toList();
 
                 /* Execute commands. */
-                CommandExecutor.execute(ExtendedCommandSource.asConsole(source), commands);
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(source), commands);
             });
     }
 

@@ -14,12 +14,12 @@ import java.util.Objects;
 
 public class CommandExecutor {
 
-    public static void execute(@NotNull ExtendedCommandSource context, @NotNull List<String> commands) {
-        commands.forEach(command -> execute(context, command));
+    public static void executeBatch(@NotNull ExtendedCommandSource context, @NotNull List<String> commands) {
+        commands.forEach(command -> executeSingle(context, command));
     }
 
-    public static int execute(@NotNull ExtendedCommandSource context, @NotNull String command) {
-        return execute(context, command, CommandExecutor::handleCommandException);
+    public static int executeSingle(@NotNull ExtendedCommandSource context, @NotNull String command) {
+        return executeSingle(context, command, CommandExecutor::handleCommandException);
     }
 
     @ForDeveloper("""
@@ -29,7 +29,7 @@ public class CommandExecutor {
         3. /run as console run as player <player> run as console bad command
         4. /run as console run as player %player:name% run as fake-op %player:name% say I am %player:name%
         """)
-    public static int execute(@NotNull ExtendedCommandSource context, @NotNull String command, TriConsumer<ExtendedCommandSource, String, Exception> exceptionHandler) {
+    public static int executeSingle(@NotNull ExtendedCommandSource context, @NotNull String command, TriConsumer<ExtendedCommandSource, String, Exception> exceptionHandler) {
 
         /* Expand the command. */
         command = context.expandCommand(command);

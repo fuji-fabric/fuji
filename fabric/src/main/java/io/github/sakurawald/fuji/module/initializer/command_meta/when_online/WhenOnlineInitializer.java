@@ -101,7 +101,7 @@ public class WhenOnlineInitializer extends ModuleInitializer {
                 onlinePlayer.ifPresentOrElse($onlinePlayer -> {
                     ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole($onlinePlayer.getCommandSource());
                     String commandString = ticket.command;
-                    CommandExecutor.execute(extendedCommandSource, commandString);
+                    CommandExecutor.executeSingle(extendedCommandSource, commandString);
                 }, () -> LogUtil.warn("Failed to execute the when-online ticket, the online player is null.", ticket));
             });
 

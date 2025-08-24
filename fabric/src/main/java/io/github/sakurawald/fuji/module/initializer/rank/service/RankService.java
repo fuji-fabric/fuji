@@ -102,7 +102,7 @@ public class RankService {
         return rankRequirement
             .getCommands()
             .stream()
-            .allMatch(command -> CommandHelper.Return.isSuccess(CommandExecutor.execute(source, command)));
+            .allMatch(command -> CommandHelper.Return.isSuccess(CommandExecutor.executeSingle(source, command)));
     }
 
     public static void tryMoveTo(@NotNull ServerPlayerEntity player, @Nullable RankNode newRankNode) {
@@ -127,7 +127,7 @@ public class RankService {
         Optional<RankNode> previousRankNode = getCurrentRankNode(player);
         previousRankNode
             .ifPresent(it -> {
-                CommandExecutor.execute(source, it.getEvents().getOnLeaveThisRankNodeCommands());
+                CommandExecutor.executeBatch(source, it.getEvents().getOnLeaveThisRankNodeCommands());
             });
 
         /* Save the state. */
@@ -138,11 +138,11 @@ public class RankService {
             /* If new rank node is not null. */
             if (newRankNode != null) {
                 /* Execute the enter commands for new rank node. */
-                CommandExecutor.execute(source, newRankNode.getEvents().getOnEnterThisRankNodeCommands());
+                CommandExecutor.executeBatch(source, newRankNode.getEvents().getOnEnterThisRankNodeCommands());
 
                 /* Is the first time to enter this rank node? */
                 if (!rankDataNode.getWalkedRankNodeIds().contains(newValue)) {
-                    CommandExecutor.execute(source, newRankNode.getEvents().getOnFirstEnterThisRankNodeCommands());
+                    CommandExecutor.executeBatch(source, newRankNode.getEvents().getOnFirstEnterThisRankNodeCommands());
                 }
 
                 /* Remember this rank node. */

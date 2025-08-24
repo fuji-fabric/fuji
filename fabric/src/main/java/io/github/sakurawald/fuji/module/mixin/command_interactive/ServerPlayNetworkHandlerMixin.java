@@ -32,7 +32,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
         /* Replace the original method with our logics. */
         ServerPlayerEntity player = getPlayer();
         String commandString = packet.comp_808();
-        CommandExecutor.execute(ExtendedCommandSource.asPlayer(player.getCommandSource(), player), commandString);
+        CommandExecutor.executeSingle(ExtendedCommandSource.asPlayer(player.getCommandSource(), player), commandString);
     }
 
 }

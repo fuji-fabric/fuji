@@ -134,7 +134,7 @@ public class JailService {
 
     private static void executeOnUnjailedCommands(JailDescriptor jail, String playerName) {
         ServerPlayerEntity offlinePlayerEntity = PlayerHelper.Loader.loadDummyPlayer(playerName);
-        CommandExecutor.execute(ExtendedCommandSource.asConsole(offlinePlayerEntity.getCommandSource()), jail.getEvents().getOnUnjailedEvent());
+        CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(offlinePlayerEntity.getCommandSource()), jail.getEvents().getOnUnjailedEvent());
     }
 
     public static void deactivateJailRecord(JailRecord jailRecord) {
@@ -154,7 +154,7 @@ public class JailService {
 
     private static void executeOnJailedCommands(JailDescriptor jail, String playerName) {
         ServerPlayerEntity offlinePlayerEntity = PlayerHelper.Loader.loadDummyPlayer(playerName);
-        CommandExecutor.execute(ExtendedCommandSource.asConsole(offlinePlayerEntity.getCommandSource()), jail.getEvents().getOnJailedEvent());
+        CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(offlinePlayerEntity.getCommandSource()), jail.getEvents().getOnJailedEvent());
     }
 
     public static void updateJailRecords(int passedTimeInMillSeconds) {
@@ -171,7 +171,7 @@ public class JailService {
                     .ifPresent(onlinePlayer -> {
                         LogUtil.debug("Execute patrol commands: jail = {}, jailedPlayer = {}", jail.getId(), playerName);
                         List<String> patrolCommands = jail.getPatrol().getPatrolCommands();
-                        CommandExecutor.execute(ExtendedCommandSource.asConsole(onlinePlayer.getCommandSource()), patrolCommands);
+                        CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(onlinePlayer.getCommandSource()), patrolCommands);
                     });
             }));
     }

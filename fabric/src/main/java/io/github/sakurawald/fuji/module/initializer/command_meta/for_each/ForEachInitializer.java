@@ -29,7 +29,7 @@ public class ForEachInitializer extends ModuleInitializer {
         String $rest = rest.getValue();
 
         for (ServerPlayerEntity player : PlayerHelper.Lookup.getOnlinePlayers()) {
-            CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), $rest);
+            CommandExecutor.executeSingle(ExtendedCommandSource.asConsole(player.getCommandSource()), $rest);
         }
         return CommandHelper.Return.SUCCESS;
     }

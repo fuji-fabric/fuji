@@ -80,13 +80,13 @@ public class ChainInitializer extends ModuleInitializer {
             String first = matcher.group(1);
             String second = matcher.group(2);
 
-            int value = CommandExecutor.execute(ExtendedCommandSource.fromSource(source), first);
+            int value = CommandExecutor.executeSingle(ExtendedCommandSource.fromSource(source), first);
             // Break chain, if command `fail`.
             if (CommandHelper.Return.isSuccess(value)) {
-                CommandExecutor.execute(ExtendedCommandSource.fromSource(source), second);
+                CommandExecutor.executeSingle(ExtendedCommandSource.fromSource(source), second);
             }
         } else {
-            CommandExecutor.execute(ExtendedCommandSource.fromSource(source), $rest);
+            CommandExecutor.executeSingle(ExtendedCommandSource.fromSource(source), $rest);
         }
 
         return CommandHelper.Return.SUCCESS;

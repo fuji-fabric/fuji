@@ -31,7 +31,7 @@ public class CommandWarmupTicket extends InterruptibleTicket {
 
     @Override
     protected void onComplete() {
-        CommandExecutor.execute(ExtendedCommandSource.asPlayer(player.getCommandSource(), player), commandString);
+        CommandExecutor.executeSingle(ExtendedCommandSource.asPlayer(player.getCommandSource(), player), commandString);
     }
 
 }

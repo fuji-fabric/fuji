@@ -70,7 +70,7 @@ public class NamedCooldownService {
             int uses = dataNode.getUses().computeIfAbsent(key, k -> 0);
             int availableUses = descriptor.getMaxUses() - uses;
             if (remainingDuration > 0 || availableUses <= 0) {
-                CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), onFailureCommands);
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(player.getCommandSource()), onFailureCommands);
                 return CommandHelper.Return.FAILURE;
             }
 
@@ -78,7 +78,7 @@ public class NamedCooldownService {
             dataNode.getUses().compute(key, (k, v) -> v == null ? 1 : v + 1);
             CommandCooldownInitializer.config.writeStorage();
 
-            CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), onSuccessCommands);
+            CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(player.getCommandSource()), onSuccessCommands);
             return CommandHelper.Return.SUCCESS;
         });
     }

@@ -58,13 +58,13 @@ public class MenuDescriptor {
             @Override
             public void onOpen() {
                 super.onOpen();
-                CommandExecutor.execute(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), commands.on_open_commands);
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), commands.on_open_commands);
             }
 
             @Override
             public void onClose() {
                 super.onClose();
-                CommandExecutor.execute(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), commands.on_closed_commands);
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), commands.on_closed_commands);
             }
         };
         menuGui.setTitle(TextHelper.getTextByValue(viewingPlayer, this.title));

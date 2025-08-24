@@ -102,7 +102,7 @@ public class CommandMenuInitializer extends ModuleInitializer {
     }
 
     public static void executeOnSneakingAndSwapHandsCommands(ServerPlayerEntity player) {
-        CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), config.model().onSneakingAndSwapHandsEvent.commands);
+        CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(player.getCommandSource()), config.model().onSneakingAndSwapHandsEvent.commands);
     }
 
 }

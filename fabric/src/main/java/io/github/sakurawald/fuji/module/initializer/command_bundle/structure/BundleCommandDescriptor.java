@@ -94,7 +94,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
 
         /* Execute the commands. */
         LogUtil.debug("Execute bundle command: {}", commands);
-        CommandExecutor.execute(ExtendedCommandSource.asConsole(source), commands);
+        CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(source), commands);
         return CommandHelper.Return.SUCCESS;
     }
 

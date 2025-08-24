@@ -66,7 +66,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Af
         // Trigger afk events.
         AfkConfigModel.AfkEvent afkEvent = AfkInitializer.config.model().afk_event;
         List<String> commandList = this.afk ? afkEvent.on_enter_afk : afkEvent.on_leave_afk;
-        CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), commandList);
+        CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(player.getCommandSource()), commandList);
     }
 
     @Override

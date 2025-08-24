@@ -73,7 +73,7 @@ public class DialogGui extends SimpleGui {
         close();
 
         if (!noButtonCommand.isBlank()) {
-            CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), noButtonCommand);
+            CommandExecutor.executeSingle(ExtendedCommandSource.asConsole(player.getCommandSource()), noButtonCommand);
         }
     }
 
@@ -82,7 +82,7 @@ public class DialogGui extends SimpleGui {
         close();
 
         if (!yesButtonCommand.isBlank()) {
-            CommandExecutor.execute(ExtendedCommandSource.asConsole(player.getCommandSource()), yesButtonCommand);
+            CommandExecutor.executeSingle(ExtendedCommandSource.asConsole(player.getCommandSource()), yesButtonCommand);
         }
     }
 

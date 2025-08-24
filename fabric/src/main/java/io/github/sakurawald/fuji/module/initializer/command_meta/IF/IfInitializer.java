@@ -158,11 +158,11 @@ public class IfInitializer extends ModuleInitializer {
             checkAmbiguity(source, conditionCommand, thenCommand, elseCommand);
 
             LogUtil.debug("Execute an `/IF` command: condition-command = {}, then-command = {}, else-command = {}", conditionCommand, thenCommand, elseCommand);
-            int conditionValue = CommandExecutor.execute(ExtendedCommandSource.fromSource(source), conditionCommand, IfInitializer::handleIfCommandException);
+            int conditionValue = CommandExecutor.executeSingle(ExtendedCommandSource.fromSource(source), conditionCommand, IfInitializer::handleIfCommandException);
             if (CommandHelper.Return.isSuccess(conditionValue)) {
-                CommandExecutor.execute(ExtendedCommandSource.fromSource(source), thenCommand, IfInitializer::handleIfCommandException);
+                CommandExecutor.executeSingle(ExtendedCommandSource.fromSource(source), thenCommand, IfInitializer::handleIfCommandException);
             } else {
-                CommandExecutor.execute(ExtendedCommandSource.fromSource(source), elseCommand, IfInitializer::handleIfCommandException);
+                CommandExecutor.executeSingle(ExtendedCommandSource.fromSource(source), elseCommand, IfInitializer::handleIfCommandException);
             }
 
         } else {

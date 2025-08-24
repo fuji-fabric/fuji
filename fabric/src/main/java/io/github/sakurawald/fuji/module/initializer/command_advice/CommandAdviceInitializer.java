@@ -101,7 +101,7 @@ public class CommandAdviceInitializer extends ModuleInitializer {
 
                 /* Execute the commands */
                 LogUtil.debug("Execute commands {} for {}", commands, commandAdvice);
-                CommandExecutor.execute(ExtendedCommandSource.asConsole(source), commands);
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(source), commands);
             });
 
 
