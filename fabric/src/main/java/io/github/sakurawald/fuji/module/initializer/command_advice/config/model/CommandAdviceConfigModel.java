@@ -18,7 +18,7 @@ public class CommandAdviceConfigModel {
 
             this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("heal", true), CommandAdviceType.AFTER_EXECUTING, List.of(
                 "say Display the heard particle for player %player:name%",
-                "run as fake-op %player:name% particle minecraft:heart ~ ~1 ~ 0.6 0.6 0.6 0 20 force %player:name%")));
+                "run as fake-op %player:name% --silent true particle minecraft:heart ~ ~1 ~ 0.6 0.6 0.6 0 20 force %player:name%")));
 
             this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("say (.+)", false), CommandAdviceType.CANCEL_WITH_SUCCESS, List.of(
                 "send-broadcast <rb>[My Server]</rb> $1")));

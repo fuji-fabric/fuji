@@ -3,8 +3,12 @@
 # Changelog
 
 - **[command_advice]** improvements and fixes
-- **feature:** optimize the default config schema.
-- **fix:** make it working in MC version [1.20, 1.20.2].
-- **feature:** Pre-compile the regex pattern to improve performance.
-- **feature:** New `CANCEL_WITH_FAILURE` command advice type.
-- **feature:** New `enable` property for `command advice` configuration.
+    - **feature:** optimize the default config schema.
+    - **fix:** make it working in MC version [1.20, 1.20.2].
+    - **feature:** Pre-compile the regex pattern to improve performance.
+    - **feature:** New `CANCEL_WITH_FAILURE` command advice type.
+    - **feature:** New `enable` property for `command advice` configuration.
+- **[core] feature:** now the `--silent` optional argument supports the `vanilla Minecraft feedback`.
+  - Example: 
+    - `/run as fake-op @s --silent true particle minecraft:heart ~ ~1 ~ 0.6 0.6 0.6 0 20 force %player:name%`
+    - `/run as fake-op @s --silent false particle minecraft:heart ~ ~1 ~ 0.6 0.6 0.6 0 20 force %player:name%`

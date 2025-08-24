@@ -2,9 +2,8 @@ package io.github.sakurawald.fuji.core.command.executor.structure;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.command.descriptor.CommandDescriptor;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Value;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -12,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 
 
 @Value
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ForDeveloper("""
     Cases:
     1. A command is initialized by player Alice, and executed as player Bob.
@@ -25,6 +23,18 @@ public class ExtendedCommandSource {
     @NotNull ServerCommandSource initiatingSource;
     @NotNull ServerCommandSource executingSource;
     boolean parsePlaceholder;
+
+    public ExtendedCommandSource(@NotNull ServerCommandSource initiatingSource, @NotNull ServerCommandSource executingSource, boolean parsePlaceholder) {
+        this.initiatingSource = initiatingSource;
+
+        if (CommandDescriptor.silentSpecialVariable.get()) {
+            this.executingSource = executingSource.withSilent();
+        } else {
+            this.executingSource = executingSource;
+        }
+
+        this.parsePlaceholder = parsePlaceholder;
+    }
 
     public static ExtendedCommandSource fromSource(@NotNull ServerCommandSource initiatingSource) {
         return new ExtendedCommandSource(initiatingSource, initiatingSource, true);
