@@ -20,9 +20,8 @@ public class ServerPlayNetworkHandlerMixin {
     #elif MC_VER > MC_1_20_4
     @ModifyVariable(method = "executeCommand", at = @At(value = "HEAD"), ordinal = 0, argsOnly = true)
     #endif
-    public String interceptPacketsOfIssuedCommand(@NotNull String string)
-     {
-         return CommandRewriteInitializer.rewriteCommand(string);
+    String modifyIssuedCommandString(@NotNull String string) {
+         return CommandRewriteInitializer.processCommandRewrite(string);
      }
 
 }
