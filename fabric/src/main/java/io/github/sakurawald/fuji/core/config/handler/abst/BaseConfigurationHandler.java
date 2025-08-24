@@ -108,6 +108,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
 
             /* Write default configuration into the storage, if file not exists. */
             if (Files.notExists(this.filePath)) {
+                this.model = null;
                 writeStorage();
             }
 

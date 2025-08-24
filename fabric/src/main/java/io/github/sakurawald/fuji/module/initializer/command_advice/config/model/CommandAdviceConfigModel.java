@@ -17,7 +17,7 @@ public class CommandAdviceConfigModel {
         Define `advices` for the `target command`.
         """)
     @SerializedName(value = "advices", alternate = "entries")
-    final List<CommandAdviceEntry> advices = new ArrayList<>() {
+    List<CommandAdviceEntry> advices = new ArrayList<>() {
         {
             this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("back", true), CommandAdviceType.BEFORE_EXECUTING, List.of("run as fake-op %player:name% say Before executing /back command for %player:name%")));
             this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("back", true), CommandAdviceType.AFTER_EXECUTING, List.of("run as fake-op %player:name% say After executing /back command for %player:name%")));

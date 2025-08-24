@@ -12,3 +12,6 @@
   - Example: 
     - `/run as fake-op @s --silent true particle minecraft:heart ~ ~1 ~ 0.6 0.6 0.6 0 20 force %player:name%`
     - `/run as fake-op @s --silent false particle minecraft:heart ~ ~1 ~ 0.6 0.6 0.6 0 20 force %player:name%`
+- **[core] feature**: now the `/fuji reload` command can re-generate the default config without the server restart.
+  - Before: If you delete the files in disk, the `/fuji reload` will re-write the `in-memory data` into the disk.
+  - Now: You can delete the files in disk, and issue `/fuji reload` command to re-generate a default one.
