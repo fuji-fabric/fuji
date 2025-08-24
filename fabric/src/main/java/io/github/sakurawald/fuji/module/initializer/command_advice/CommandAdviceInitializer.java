@@ -55,7 +55,7 @@ public class CommandAdviceInitializer extends ModuleInitializer {
 
         /* Create the command advice stream. */
         Stream<CommandAdviceEntry> effectiveCommandAdvices = config.model()
-            .entries
+            .getAdvices()
             .stream();
 
         /* Filter by enable property. */

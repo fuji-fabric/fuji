@@ -1,17 +1,23 @@
 package io.github.sakurawald.fuji.module.initializer.command_advice.config.model;
 
+import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.command_advice.structure.CommandAdviceEntry;
 import io.github.sakurawald.fuji.module.initializer.command_advice.structure.CommandAdviceType;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 public class CommandAdviceConfigModel {
 
     @Document(id = 1751826311892L, value = """
         Define `advices` for the `target command`.
         """)
-    public final List<CommandAdviceEntry> entries = new ArrayList<>() {
+    @SerializedName(value = "advices", alternate = "entries")
+    final List<CommandAdviceEntry> advices = new ArrayList<>() {
         {
             this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("back", true), CommandAdviceType.BEFORE_EXECUTING, List.of("run as fake-op %player:name% say Before executing /back command for %player:name%")));
             this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("back", true), CommandAdviceType.AFTER_EXECUTING, List.of("run as fake-op %player:name% say After executing /back command for %player:name%")));
