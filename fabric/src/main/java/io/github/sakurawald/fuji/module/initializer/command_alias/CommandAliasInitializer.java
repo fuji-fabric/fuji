@@ -64,6 +64,7 @@ public class CommandAliasInitializer extends ModuleInitializer {
         config.model()
             .getAliases()
             .stream()
+            .filter(CommandAliasEntry::isEnable)
             .map(CommandAliasInitializer::makeRedirectCommandDescriptor)
             .filter(Optional::isPresent)
             .map(Optional::get)

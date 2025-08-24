@@ -25,3 +25,4 @@
     - Before: the `command requirement` for an `alias command` is inferred implicitly from the target command.
     - Now: You can specify the `command requirement` for an `alias command` explicitly, making it clear.
   - feature: new `document` property for `command alias` configuration, now you can specify the `document string` for each alias command.
+  - feature: new `enable` property for `command alias` configuration, making it easier to switch.
