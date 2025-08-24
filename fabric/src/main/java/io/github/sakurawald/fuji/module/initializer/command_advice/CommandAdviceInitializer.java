@@ -16,6 +16,7 @@ import io.github.sakurawald.fuji.module.initializer.command_advice.config.transf
 import io.github.sakurawald.fuji.module.initializer.command_advice.structure.CommandAdviceEntry;
 import io.github.sakurawald.fuji.module.initializer.command_advice.structure.CommandAdviceType;
 import net.minecraft.server.command.ServerCommandSource;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -51,15 +52,11 @@ public class CommandAdviceInitializer extends ModuleInitializer {
         .installTransformer(new CommandAdviceV1SchemaTransformer());
 
     @SuppressWarnings({"ResultOfMethodCallIgnored", "unchecked"})
-    public static void processCommandAdvice(Object handler, ServerCommandSource source, String commandString, CommandAdviceType adviceType, CallbackInfo ci) {
-        // NOTE: If the command is executed by a player, then the CommandManager will call CommandDispatcher.
-        // NOTE: If the command is executed by the console, then it will directly call the function in CommandDispatcher.
-
-        // Log it.
-        LogUtil.debug("Process Command Advice: advice type = {}, command string = {}, command source = {}, handler = {}, ", adviceType, commandString, source.getName(), handler);
+    public static void processCommandAdvice(@NotNull Object executor, @NotNull ServerCommandSource source, @NotNull String commandString, @NotNull CommandAdviceType adviceType, @NotNull CallbackInfo ci) {
+        LogUtil.debug("Process Command Advice: advice type = {}, command string = {}, command source = {}, executor = {}, ", adviceType, commandString, source.getName(), executor);
 
         // Filter the advice entries by advice type.
-        List<CommandAdviceEntry> targetAdviceEntries = config.model()
+        List<CommandAdviceEntry> effectiveCommandAdvices = config.model()
             .entries
             .stream()
             .filter(it -> it.getAdviceType().equals(adviceType)
@@ -68,14 +65,14 @@ public class CommandAdviceInitializer extends ModuleInitializer {
             .collect(Collectors.toCollection(ArrayList::new));
 
         // Filter the advice entries by command source type.
-        targetAdviceEntries = targetAdviceEntries
+        effectiveCommandAdvices = effectiveCommandAdvices
             .stream()
             .filter(it -> !it.getMatcher().isExecutedByPlayerOnly() || source.isExecutedByPlayer())
             .collect(Collectors.toCollection(ArrayList::new));
 
 
         // Perform advice.
-        targetAdviceEntries
+        effectiveCommandAdvices
             .stream()
             .filter(it -> commandString.matches(it.getMatcher().getCommandStringRegex()))
             .forEach(it -> {

@@ -39,7 +39,7 @@ public abstract class ConfigurationTransformer {
             if (canApply) {
                 this.apply();
             }
-        } catch (AbortConfigurationMigrationException e) {
+        } catch (AbortConfigurationMigrationException ignore) {
             // NO-OP
         }
     }

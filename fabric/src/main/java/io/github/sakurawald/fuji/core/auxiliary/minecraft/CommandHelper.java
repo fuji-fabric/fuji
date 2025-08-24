@@ -189,25 +189,16 @@ public class CommandHelper {
 
     public static class Source {
 
-        public static ServerCommandSource getConsoleCommandSource() {
+        public static @NotNull ServerCommandSource getConsoleCommandSource() {
             return ServerHelper.getServer().getCommandSource();
         }
 
-        public static ServerCommandSource getCommandSource(@NotNull Entity entity) {
+        public static @NotNull ServerCommandSource getCommandSource(@NotNull Entity entity) {
             #if MC_VER <= MC_1_21
             return entity.getCommandSource();
             #elif MC_VER > MC_1_21
             return entity.getCommandSource((net.minecraft.server.world.ServerWorld) entity.getWorld());
             #endif
-        }
-
-        public static <S> boolean isExecutedOnServerSide(@NotNull CommandContextBuilder<S> context) {
-            // NOTE: in client-side, the S is not guarantee to be ServerCommandSource. (Can be ClientCommandSource)
-            return context.getSource() instanceof ServerCommandSource;
-        }
-
-        public static boolean isExecutedByConsole(@NotNull CommandContext<ServerCommandSource> commandContext) {
-            return commandContext.getSource().getPlayer() == null;
         }
 
         public static void withServerPlayerEntity(@NotNull CommandContext<?> context, @NotNull Consumer<ServerPlayerEntity> consumer) {
@@ -226,14 +217,47 @@ public class CommandHelper {
             Then the injected methods in brigadier will be called twice.
             One for ClientCommandSource, one for ServerCommandSource.
             """)
-        public static void withServerCommandSource(@NotNull Object source, @NotNull Runnable runnable) {
-            if (isServerCommandSource(source)) {
-                runnable.run();
+        public static void withServerCommandSource(@NotNull Object indicator, @NotNull Consumer<ServerCommandSource> consumer) {
+            indicator = extractCommandSource(indicator);
+            if (isServerCommandSource(indicator)) {
+                @NotNull ServerCommandSource serverCommandSource = (ServerCommandSource) indicator;
+                consumer.accept(serverCommandSource);
             }
         }
 
-        public static boolean isServerCommandSource(@NotNull Object source) {
-            return source instanceof ServerCommandSource;
+        public static void withServerCommandSource(@NotNull Object indicator, @NotNull Runnable runnable) {
+            withServerCommandSource(indicator, (serverCommandSource) -> runnable.run());
+        }
+
+        public static <S> boolean isExecutedOnServerSide(@NotNull CommandContextBuilder<S> context) {
+            // NOTE: in client-side, the S is not guarantee to be ServerCommandSource. (Can be ClientCommandSource)
+            return isExecutedOnServerSide(context.getSource());
+        }
+
+        public static boolean isExecutedOnServerSide(@NotNull Object indicator) {
+            indicator = extractCommandSource(indicator);
+            return isServerCommandSource(indicator);
+        }
+
+        public static boolean isExecutedByConsole(@NotNull CommandContext<ServerCommandSource> commandContext) {
+            return commandContext.getSource().getPlayer() == null;
+        }
+
+        private static boolean isServerCommandSource(@NotNull Object object) {
+            return object instanceof ServerCommandSource;
+        }
+
+        private static @NotNull Object extractCommandSource(@NotNull Object object) {
+            /* Try extracting command source from command context. */
+            if (object instanceof CommandContext<?> commandContext) {
+                object = commandContext.getSource();
+            }
+
+            /* Try extracting command source from command context builder. (If the context comes from parsed result) */
+            if (object instanceof CommandContextBuilder<?> commandContextBuilder) {
+                object = commandContextBuilder.getSource();
+            }
+            return object;
         }
     }
 

@@ -40,7 +40,7 @@ public class CommandDispatcherMixin<S> {
         S commandSource = parse.getContext().getSource();
 
         // NOTE: Prevent the ClientCommandSource crash the client-side.
-        if (CommandHelper.Source.isServerCommandSource(commandSource)) {
+        if (CommandHelper.Source.isExecutedOnServerSide(commandSource)) {
             if (instance.canUse(commandSource)) {
                 return original.call(instance, commandContext, suggestionsBuilder);
             }
