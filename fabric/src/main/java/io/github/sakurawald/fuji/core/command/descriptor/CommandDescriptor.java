@@ -99,6 +99,7 @@ public class CommandDescriptor implements SourceModuleGetter {
         LiteralCommandNode<ServerCommandSource> navigationNode = this.registerReturnValue.build();
         CommandNode<ServerCommandSource> startNode = root.getChild(navigationNode.getName());
         if (startNode != null) {
+            /* Remove the leaf node. */
             if (CommandDescriptor.unregisterRecursively(startNode, navigationNode)) {
                 root.getChildren()
                     .removeIf(commandNode -> commandNode.getName().equals(navigationNode.getName()));
@@ -109,6 +110,9 @@ public class CommandDescriptor implements SourceModuleGetter {
         CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS.remove(this);
     }
 
+    @TestCase(action = "Modify the `my-command` into `my-command-v2`, and issue `/fuji reload`.", targets = {
+        "The command descriptor should be able to un-register the old command node in the command tree, even the new command node has different structure compared to the old one."
+    })
     private static boolean unregisterRecursively(@Nullable CommandNode<ServerCommandSource> targetNode, @NotNull CommandNode<ServerCommandSource> navigationNode) {
         /* If there is no target node in the server command tree, return true to report empty. */
         if (targetNode == null) {
@@ -120,6 +124,7 @@ public class CommandDescriptor implements SourceModuleGetter {
             .stream()
             .toList()
             .forEach(child -> {
+                /* Remove the leaf node. */
                 if (unregisterRecursively(targetNode.getChild(child.getName()), child)) {
                     // NODE: Identify the `command node` by its name, should not use `equals` method.
                     targetNode
@@ -127,6 +132,10 @@ public class CommandDescriptor implements SourceModuleGetter {
                         .removeIf(it -> it.getName().equals(child.getName()));
                 }
             });
+
+        /* Remove global optional arguments. */
+        targetNode.getChildren().removeIf(commandNode -> commandNode.getName().equals(getOptionalArgumentLeadingArgumentName(SILENT_LITERAL)));
+        targetNode.getChildren().removeIf(commandNode -> commandNode.getName().equals(getOptionalArgumentLeadingArgumentName(STDOUT_LITERAL)));
 
         /* Return if target node is empty. */
         return targetNode.getChildren() == null
@@ -294,12 +303,16 @@ public class CommandDescriptor implements SourceModuleGetter {
     private void registerNonOptionalArguments() {
         /* Make the assembled argument builder. */
         List<ArgumentBuilder<ServerCommandSource, ?>> argumentBuilders = ArgumentBuilderMaker.makeNonOptionalArgumentBuilders(this);
-        Command<ServerCommandSource> commandAction = makeCommandAction();
-        LiteralArgumentBuilder<ServerCommandSource> assembledArgumentBuilder = ArgumentBuilderMaker.assembleArgumentBuilders(argumentBuilders, commandAction);
+        LiteralArgumentBuilder<ServerCommandSource> assembledArgumentBuilder = ArgumentBuilderMaker.assembleArgumentBuilders(argumentBuilders, this::terminalArgumentDecorator);
 
         /* Register the assembled argument builder as the child of the global root argument builder. */
         CommandAnnotationProcessor.COMMAND_DISPATCHER.register(assembledArgumentBuilder);
         this.registerReturnValue = assembledArgumentBuilder;
+    }
+
+    protected @NotNull ArgumentBuilder<ServerCommandSource, ?> terminalArgumentDecorator(@NotNull ArgumentBuilder<ServerCommandSource, ?> terminalArgumentBuilder) {
+        Command<ServerCommandSource> commandAction = makeCommandAction();
+        return terminalArgumentBuilder.executes(commandAction);
     }
 
     @ForDeveloper("""
@@ -324,7 +337,7 @@ public class CommandDescriptor implements SourceModuleGetter {
 
     private static void registerOptionalArgument(@NotNull CommandArgument optionalArgument, @NotNull CommandNode<ServerCommandSource> redirectTargetNode) {
         /* Make the leading literal argument for this optional argument. */
-        CommandArgument leadingLiteralArgument = CommandArgument.ofLiteralArgument("--" + optionalArgument.getArgumentName(), optionalArgument.getRequirement());
+        CommandArgument leadingLiteralArgument = CommandArgument.ofLiteralArgument(getOptionalArgumentLeadingArgumentName(optionalArgument.getArgumentName()), optionalArgument.getRequirement());
 
         Predicate<ServerCommandSource> requirementPredicate = CommandRequirement.makeCommandRequirementPredicate(optionalArgument.getRequirement());
 
@@ -341,6 +354,10 @@ public class CommandDescriptor implements SourceModuleGetter {
 
         /* Register the optional argument builder as the child of the redirect target node. */
         redirectTargetNode.addChild(optionalArgumentBuilder.build());
+    }
+
+    protected static @NotNull String getOptionalArgumentLeadingArgumentName(@NotNull String argumentName) {
+        return "--" + argumentName;
     }
 
     public static class CommandRequirement {
@@ -588,7 +605,7 @@ public class CommandDescriptor implements SourceModuleGetter {
         }
 
         @SuppressWarnings("unchecked")
-        private static @NotNull LiteralArgumentBuilder<ServerCommandSource> assembleArgumentBuilders(@NotNull List<ArgumentBuilder<ServerCommandSource, ?>> builders, @NotNull Command<ServerCommandSource> commandAction) {
+        private static @NotNull LiteralArgumentBuilder<ServerCommandSource> assembleArgumentBuilders(@NotNull List<ArgumentBuilder<ServerCommandSource, ?>> builders, @NotNull Function<ArgumentBuilder<ServerCommandSource, ?>, ArgumentBuilder<ServerCommandSource, ?>> terminalArgumentDecorator) {
             /* Assemble the argument builders into one argument builder. */
             ArgumentBuilder<ServerCommandSource, ?> root = null;
 
@@ -596,7 +613,7 @@ public class CommandDescriptor implements SourceModuleGetter {
                 ArgumentBuilder<ServerCommandSource, ?> node = builders.get(i);
                 if (root == null) {
                     root = node;
-                    root = root.executes(commandAction);
+                    root = terminalArgumentDecorator.apply(root);
                     continue;
                 }
                 root = node.then(root);

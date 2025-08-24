@@ -15,3 +15,4 @@
 - **[core] feature**: now the `/fuji reload` command can re-generate the default config without the server restart.
   - Before: If you delete the files in disk, the `/fuji reload` will re-write the `in-memory data` into the disk.
   - Now: You can delete the files in disk, and issue `/fuji reload` command to re-generate a default one.
+- **[core] fix:** the `command descriptor` should be able to `un-register` an old command descriptor, even the new one has different command pattern compared to the old one. (This mainly affects the `hot-reload` feature in `command_bundle` module.)
