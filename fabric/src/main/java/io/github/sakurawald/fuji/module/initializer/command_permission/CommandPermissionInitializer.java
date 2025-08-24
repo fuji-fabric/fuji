@@ -188,6 +188,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
 
     @Document(id = 1751826781243L, value = "Describe the `required permissions` of `the given command`.")
     @CommandNode("describe")
+    @SuppressWarnings("SameReturnValue")
     public static int $describe(@CommandSource ServerCommandSource source, GreedyString command) {
         /* Parse the command string to get the command context. */
         String $command = command.getValue();
@@ -289,7 +290,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         return explanation;
     }
 
-    public static @NotNull WrappedPredicate<Object> makeWrappedPredicate(String commandPath, @NotNull Predicate<Object> originalRequirement) {
+    public static @NotNull WrappedPredicate<Object> makeWrappedPredicate(@NotNull com.mojang.brigadier.tree.CommandNode<ServerCommandSource> commandNode, @NotNull Predicate<Object> originalRequirement) {
         return commandSource -> {
             /* If the command source if client command source, use the original predicate. */
             if (commandSource instanceof ServerCommandSource serverCommandSource) {
@@ -297,6 +298,9 @@ public class CommandPermissionInitializer extends ModuleInitializer {
                 if (serverCommandSource.getPlayer() == null) return originalRequirement.test(serverCommandSource);
 
                 try {
+                    /* Compute the command node path. */
+                    String commandPath = CommandHelper.Node.findCommandNodePath(commandNode);
+
                     /* Ask the pre-defined rules if the player can use the command. */
                     String requiredPermissionToExecuteThisCommand = COMMAND_PERMISSION_UNIFIED_PERMISSION.withArguments(commandPath);
                     if (!CommandHelper.Requirement.isAdmin(serverCommandSource)) {

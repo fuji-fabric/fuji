@@ -39,8 +39,7 @@ public class CommandNodeMixin {
         /* Wrap the requirement predicate for command node. */
         if (!(original instanceof WrappedPredicate<?>)) {
             final CommandNode<ServerCommandSource> node = (CommandNode<ServerCommandSource>) (Object) this;
-            String path = CommandHelper.Node.findCommandNodePath(node);
-            requirement = CommandPermissionInitializer.makeWrappedPredicate(path, original);
+            requirement = CommandPermissionInitializer.makeWrappedPredicate(node, original);
             return requirement;
         }
 
