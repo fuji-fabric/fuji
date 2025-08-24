@@ -16,3 +16,11 @@
   - Before: If you delete the files in disk, the `/fuji reload` will re-write the `in-memory data` into the disk.
   - Now: You can delete the files in disk, and issue `/fuji reload` command to re-generate a default one.
 - **[core] fix:** the `command descriptor` should be able to `un-register` an old command descriptor, even the new one has different command pattern compared to the old one. (This mainly affects the `hot-reload` feature in `command_bundle` module.)
+- [command_alias] improvements and bug fixes
+  - feature: now you can use `/fuji reload` or `/reload` commands to `hot-reload` the configuration for this module.
+  - feature: now you can inspect all registered `alias command` using `/fuji inspect fuji-commands` or `/fuji` command.
+  - feature: improved console logging, now will log the console when registering an `alias command`.
+  - feature: improved error-handling, if the specified target command not exists.
+  - feature: new `requirement` property for `command alias` configuration, you can now specify the `command requirement` explicitly.
+    - Before: the `command requirement` for an `alias command` is inferred implicitly from the target command.
+    - Now: You can specify the `command requirement` for an `alias command` explicitly, making it clear.

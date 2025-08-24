@@ -63,7 +63,6 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
         CommandArgument commandTargetArgument = retargetCommandArguments.get(commandTargetArgumentIndex);
 
         /* All the retarget commands require level 4 permission to use. */
-        // FIXME: There is a bug about the command suggestion for: `/warp tp others`
         CommandRequirementDescriptor requirement = new CommandRequirementDescriptor(4, null);
 
         /* If the argument annotated with @CommandTarget is also annotated with @CommandSource, then split the @CommandSource argument and @CommandTarget argument. */

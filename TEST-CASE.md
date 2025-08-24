@@ -143,6 +143,11 @@
 
 [Test Case]
 - Module: core
+- Action: **Modify the `my-command` into `my-command-v2`, and issue `/fuji reload`.**
+- Target: The command descriptor should be able to un-register the old command node in the command tree, even the new command node has different structure compared to the old one.
+
+[Test Case]
+- Module: core
 - Action: **Test the command assistant.**
 - Target: Change the `cursor` using mouse click, and see the output.
 - Target: Test the assistant with command redirect
