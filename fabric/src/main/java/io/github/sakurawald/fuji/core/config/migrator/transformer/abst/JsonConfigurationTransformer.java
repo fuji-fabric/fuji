@@ -6,6 +6,7 @@ import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.migrator.version.SemVerComparator;
 import io.github.sakurawald.fuji.core.config.migrator.version.VersionPropertyInjector;
+import java.nio.file.Files;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,19 +22,34 @@ public abstract class JsonConfigurationTransformer extends ConfigurationTransfor
     }
 
     private @NotNull String getJsonVersion() {
-        JsonObject jsonObject = readTargetJsonFile();
+        try {
+            /* If the target file not exists, treating it as the legacy mod version, and apply all installed transformers. */
+            if (Files.notExists(this.getTargetFilePath())) {
+                return VersionPropertyInjector.LEGACY_MOD_VERSION;
+            }
 
-        return Optional
-            .ofNullable(jsonObject.get(VersionPropertyInjector.MOD_VERSION_KEY))
-            .map(JsonElement::getAsString)
-            .orElseGet(() -> {
-                LogUtil.warn("There is no mod version string in file {}, treating it as {}", this.targetFilePath, VersionPropertyInjector.UNKNOWN_MOD_VERSION);
-                return VersionPropertyInjector.UNKNOWN_MOD_VERSION;
-            });
+            /* Read the mod version from the existing target file. */
+            return readTargetJsonFile()
+                .map(jsonObject -> jsonObject.get(VersionPropertyInjector.MOD_VERSION_KEY))
+                .map(JsonElement::getAsString)
+                .orElseGet(() -> {
+                    String fallbackModVersion = VersionPropertyInjector.LEGACY_MOD_VERSION;
+                    LogUtil.warn("There is no mod version string in file {}, treating it as {}", this.targetFilePath, fallbackModVersion);
+                    return fallbackModVersion;
+                });
+        } catch (Exception e) {
+            String fallbackModVersion = VersionPropertyInjector.LEGACY_MOD_VERSION;
+            LogUtil.warn("Failed to read the file to get the mod version string, treating it as {}", this.targetFilePath, fallbackModVersion);
+            return fallbackModVersion;
+        }
     }
 
-    protected @NotNull JsonObject readTargetJsonFile() {
-        return JsonUtil.readJsonFile(this.getTargetFilePath());
+    protected @NotNull Optional<JsonObject> readTargetJsonFile() {
+        try {
+            return Optional.of(JsonUtil.readJsonFile(this.getTargetFilePath()));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     protected void writeTargetJsonFile(@NotNull JsonObject rootJsonObject) {

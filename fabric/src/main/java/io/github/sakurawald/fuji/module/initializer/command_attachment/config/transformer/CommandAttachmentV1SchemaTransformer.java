@@ -28,7 +28,7 @@ public class CommandAttachmentV1SchemaTransformer extends JsonConfigurationTrans
 
     @Override
     public String sinceVersion() {
-        return VersionPropertyInjector.UNKNOWN_MOD_VERSION;
+        return VersionPropertyInjector.FUTURE_MOD_VERSION;
     }
 
     @Override

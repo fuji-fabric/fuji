@@ -7,63 +7,58 @@ import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.config.migrator.transformer.abst.JsonConfigurationTransformer;
 import io.github.sakurawald.fuji.core.config.migrator.version.VersionPropertyInjector;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.CommandCooldownInitializer;
-import java.nio.file.Files;
 
 public class NamedCooldownSchemaV1Transformer extends JsonConfigurationTransformer {
 
     @SuppressWarnings({"UnnecessaryLocalVariable", "SizeReplaceableByIsEmpty"})
     @Override
     protected void apply() {
-        /* Skip the transformation if this is the first time use. */
-        if (!Files.exists(getTargetFilePath())) {
-            return;
-        }
+        readTargetJsonFile().ifPresent(jsonObject -> {
+            int arraySize = JsonUtil
+                .<JsonArray>readJsonPath(jsonObject, "$.named_cooldown.list.*.timestamp")
+                .map(JsonArray::size)
+                .orElse(-1);
+            if (arraySize == 0) {
+                return;
+            }
 
-        /* Check requisition. */
-        JsonObject jsonObject = readTargetJsonFile();
-        int arraySize = JsonUtil
-            .<JsonArray>readJsonPath(jsonObject, "$.named_cooldown.list.*.timestamp")
-            .map(JsonArray::size)
-            .orElse(-1);
-        if (arraySize == 0) {
-            return;
-        }
+            /* Make the output json object. */
+            JsonObject input$list = JsonUtil.<JsonObject>readJsonPath(jsonObject,"$.named_cooldown.list").get();
+            JsonObject outputRoot = new JsonObject();
+            JsonArray output$nodes = new JsonArray();
+            outputRoot.add("nodes", output$nodes);
 
-        /* Make the output json object. */
-        JsonObject input$list = JsonUtil.<JsonObject>readJsonPath(jsonObject,"$.named_cooldown.list").get();
-        JsonObject outputRoot = new JsonObject();
-        JsonArray output$nodes = new JsonArray();
-        outputRoot.add("nodes", output$nodes);
+            input$list
+                .keySet()
+                .forEach(key -> {
+                    String namedCooldownId = key;
+                    JsonObject namedCooldownDescriptor = input$list.get(namedCooldownId).getAsJsonObject();
+                    JsonObject outputObject = new JsonObject();
 
-        input$list
-            .keySet()
-            .forEach(key -> {
-                String namedCooldownId = key;
-                JsonObject namedCooldownDescriptor = input$list.get(namedCooldownId).getAsJsonObject();
-                JsonObject outputObject = new JsonObject();
+                    /* Migrate the id field. */
+                    outputObject.addProperty("id", namedCooldownId);
 
-                /* Migrate the id field. */
-                outputObject.addProperty("id", namedCooldownId);
+                    /* Migrate the timestamp field. */
+                    JsonElement cooldownObject = namedCooldownDescriptor.get("timestamp");
+                    JsonObject cooldownField = new JsonObject();
+                    cooldownField.add("timestamp", cooldownObject);
+                    outputObject.add("cooldown", cooldownField);
 
-                /* Migrate the timestamp field. */
-                JsonElement cooldownObject = namedCooldownDescriptor.get("timestamp");
-                JsonObject cooldownField = new JsonObject();
-                cooldownField.add("timestamp", cooldownObject);
-                outputObject.add("cooldown", cooldownField);
+                    /* Migrate the uses field. */
+                    JsonElement usesField = namedCooldownDescriptor.get("uses");
+                    outputObject.add("uses", usesField);
 
-                /* Migrate the uses field. */
-                JsonElement usesField = namedCooldownDescriptor.get("uses");
-                outputObject.add("uses", usesField);
+                    output$nodes.add(outputObject);
+                });
 
-                output$nodes.add(outputObject);
-            });
+            /* Write it. */
+            JsonUtil.writeJsonObject(outputRoot, CommandCooldownInitializer.namedCooldownData.getFilePath());
+        });
 
-        /* Write it. */
-        JsonUtil.writeJsonObject(outputRoot, CommandCooldownInitializer.namedCooldownData.getFilePath());
     }
 
     @Override
     public String sinceVersion() {
-        return VersionPropertyInjector.UNKNOWN_MOD_VERSION;
+        return VersionPropertyInjector.FUTURE_MOD_VERSION;
     }
 }
