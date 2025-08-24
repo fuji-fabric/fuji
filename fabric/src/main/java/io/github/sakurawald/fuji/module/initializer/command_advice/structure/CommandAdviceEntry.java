@@ -16,6 +16,8 @@ import lombok.ToString;
 @AllArgsConstructor
 public class CommandAdviceEntry {
 
+    boolean enable = true;
+
     Matcher matcher = new Matcher();
     @Data
     @NoArgsConstructor

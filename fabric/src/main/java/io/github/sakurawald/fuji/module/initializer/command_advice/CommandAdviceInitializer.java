@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -52,26 +53,26 @@ public class CommandAdviceInitializer extends ModuleInitializer {
     public static void processCommandAdvice(@NotNull Object executor, @NotNull ServerCommandSource source, @NotNull String commandString, @NotNull CommandAdviceType adviceType, @NotNull CallbackInfo ci) {
         LogUtil.debug("Process Command Advice: advice type = {}, command string = {}, command source = {}, executor = {}, ", adviceType, commandString, source.getName(), executor);
 
-        /* Filter by advice type. */
-        List<CommandAdviceEntry> effectiveCommandAdvices = config.model()
+        /* Create the command advice stream. */
+        Stream<CommandAdviceEntry> effectiveCommandAdvices = config.model()
             .entries
-            .stream()
-            .filter(
+            .stream();
+
+        /* Filter by enable property. */
+        effectiveCommandAdvices = effectiveCommandAdvices.filter(CommandAdviceEntry::isEnable);
+
+        /* Filter by advice type. */
+        effectiveCommandAdvices = effectiveCommandAdvices.filter(
                 it -> it.getAdviceType().equals(adviceType)
-                    || (CommandAdviceType.isCancellableAdviceType(it.getAdviceType()) && adviceType.equals(CommandAdviceType.BEFORE_EXECUTING)))
-            .toList();
+                    || (CommandAdviceType.isCancellableAdviceType(it.getAdviceType()) && adviceType.equals(CommandAdviceType.BEFORE_EXECUTING)));
 
         /* Filter by command source type. */
         effectiveCommandAdvices = effectiveCommandAdvices
-            .stream()
-            .filter(it -> !it.getMatcher().isExecutedByPlayerOnly() || source.isExecutedByPlayer())
-            .toList();
+            .filter(it -> !it.getMatcher().isExecutedByPlayerOnly() || source.isExecutedByPlayer());
 
         /* Filter by command string regex. */
         effectiveCommandAdvices = effectiveCommandAdvices
-            .stream()
-            .filter(it -> commandString.matches(it.getMatcher().getCommandStringRegex()))
-            .toList();
+            .filter(it -> commandString.matches(it.getMatcher().getCommandStringRegex()));
 
         /* Perform advices. */
         effectiveCommandAdvices

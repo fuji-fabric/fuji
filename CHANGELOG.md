@@ -7,3 +7,4 @@
 - **fix:** make it working in MC version [1.20, 1.20.2].
 - **feature:** Pre-compile the regex pattern to improve performance.
 - **feature:** New `CANCEL_WITH_FAILURE` command advice type.
+- **feature:** New `enable` property for `command advice` configuration.
