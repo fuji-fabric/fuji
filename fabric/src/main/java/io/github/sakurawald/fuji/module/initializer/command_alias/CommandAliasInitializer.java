@@ -1,8 +1,12 @@
 package io.github.sakurawald.fuji.module.initializer.command_alias;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
+import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
+import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.core.command.descriptor.CommandDescriptor;
 import io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor;
@@ -11,6 +15,7 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.document.gui.CommandsInspectionGui;
 import io.github.sakurawald.fuji.core.event.impl.CommandEvents;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -42,9 +47,17 @@ import org.jetbrains.annotations.NotNull;
     1. To define `a simple command` with no arguments, use `command_alias` module.
     2. To define `a complex command` with arguments, use `command_bundle` module.
     """)
+@CommandNode("command-alias")
+@CommandRequirement(level = 4)
 public class CommandAliasInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<CommandAliasConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandAliasConfigModel.class);
+
+    @Document(id = 1756022056042L, value = "List all registered alias-commands in server.")
+    @CommandNode("list")
+    private static int $list(@CommandSource CommandContext<ServerCommandSource> ctx) {
+        return CommandsInspectionGui.inspectCommandDescriptors(ctx, it -> it instanceof AliasCommandDescriptor);
+    }
 
     @Override
     protected void onInitialize() {

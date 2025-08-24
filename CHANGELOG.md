@@ -26,3 +26,4 @@
     - Now: You can specify the `command requirement` for an `alias command` explicitly, making it clear.
   - feature: new `document` property for `command alias` configuration, now you can specify the `document string` for each alias command.
   - feature: new `enable` property for `command alias` configuration, making it easier to switch.
+  - feature: new `/command-alias list` command, to inspect all registered `alias commands`.

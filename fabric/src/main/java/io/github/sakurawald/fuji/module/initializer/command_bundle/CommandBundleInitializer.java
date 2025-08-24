@@ -22,9 +22,7 @@ import io.github.sakurawald.fuji.module.initializer.command_bundle.config.model.
 import io.github.sakurawald.fuji.module.initializer.command_bundle.structure.BundleCommandDescriptor;
 import java.util.List;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
 
-import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826356909L, value = """
@@ -214,18 +212,7 @@ public class CommandBundleInitializer extends ModuleInitializer {
     @Document(id = 1751826364625L, value = "List all registered bundle-commands in server.")
     @CommandNode("list")
     private static int $list(@CommandSource CommandContext<ServerCommandSource> ctx) {
-        Stream<CommandDescriptor> commandDescriptorStream = CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS
-            .stream()
-            .filter(it -> it instanceof BundleCommandDescriptor);
-
-        ServerCommandSource source = ctx.getSource();
-        if (source.isExecutedByPlayer()) {
-            new CommandsInspectionGui(null, source.getPlayer(), commandDescriptorStream.toList(), 0).open();
-        } else {
-            commandDescriptorStream.forEach(it -> TextHelper.sendMessageByText(source, Text.literal(it.getCommandNodePath())));
-        }
-
-        return CommandHelper.Return.SUCCESS;
+        return CommandsInspectionGui.inspectCommandDescriptors(ctx, it -> it instanceof BundleCommandDescriptor);
     }
 
     @Override

@@ -1,14 +1,20 @@
 package io.github.sakurawald.fuji.core.document.gui;
 
+import com.mojang.brigadier.context.CommandContext;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor;
 import io.github.sakurawald.fuji.core.command.descriptor.CommandDescriptor;
 import io.github.sakurawald.fuji.core.command.structure.CommandRequirementDescriptor;
 import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 import net.minecraft.item.Items;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +38,23 @@ public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
             .toList();
 
         return new CommandsInspectionGui(parent, player, entities, 0);
+    }
+
+    public static int inspectCommandDescriptors(CommandContext<ServerCommandSource> ctx, Predicate<CommandDescriptor> filter) {
+        Stream<CommandDescriptor> commandDescriptorStream = CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS
+            .stream()
+            .filter(filter);
+
+        ServerCommandSource source = ctx.getSource();
+        return Optional.ofNullable(source.getPlayer())
+            .map(player -> {
+                new CommandsInspectionGui(null, player, commandDescriptorStream.toList(), 0).open();
+                return CommandHelper.Return.SUCCESS;
+            })
+            .orElseGet(() -> {
+                commandDescriptorStream.forEach(it -> TextHelper.sendMessageByText(source, Text.literal(it.getCommandNodePath())));
+                return CommandHelper.Return.SUCCESS;
+            });
     }
 
     @Override
