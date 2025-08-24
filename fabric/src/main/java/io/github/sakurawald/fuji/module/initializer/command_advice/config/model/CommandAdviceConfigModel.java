@@ -14,16 +14,12 @@ public class CommandAdviceConfigModel {
         """)
     public final List<CommandAdviceEntry> entries = new ArrayList<>() {
         {
-            this.add(new CommandAdviceEntry(new CommandAdviceEntry.Matcher("back", true), CommandAdviceType.BEFORE_EXECUTING, List.of("run as fake-op %player:name% say before executing /back for %player:name%")));
-            this.add(new CommandAdviceEntry(new CommandAdviceEntry.Matcher("back", true), CommandAdviceType.AFTER_EXECUTING, List.of("run as fake-op %player:name% say after executing /back for %player:name%")));
+            this.add(new CommandAdviceEntry(new CommandAdviceEntry.Matcher("back", true), CommandAdviceType.BEFORE_EXECUTING, List.of("run as fake-op %player:name% say Before executing /back command for %player:name%")));
+            this.add(new CommandAdviceEntry(new CommandAdviceEntry.Matcher("back", true), CommandAdviceType.AFTER_EXECUTING, List.of("run as fake-op %player:name% say After executing /back command for %player:name%")));
 
             this.add(new CommandAdviceEntry(new CommandAdviceEntry.Matcher("heal", true), CommandAdviceType.AFTER_EXECUTING, List.of(
-                "say spawn a fireworks for player %player:name%",
-                "run as fake-op %player:name% summon firework_rocket ~ ~1 ~ {FireworksItem:{id:firework_rocket,components:{fireworks:{explosions:[{shape:small_ball,colors:[I;15961002]}]}}}}")));
-
-            this.add(new CommandAdviceEntry(new CommandAdviceEntry.Matcher("heal", true), CommandAdviceType.AFTER_EXECUTING, List.of(
-                "say spawn a fireworks for player %player:name%",
-                "run as fake-op %player:name% summon firework_rocket ~ ~1 ~ {FireworksItem:{id:firework_rocket,components:{fireworks:{explosions:[{shape:small_ball,colors:[I;15961002]}]}}}}")));
+                "say Display the heard particle for player %player:name%",
+                "run as fake-op %player:name% particle minecraft:heart ~ ~1 ~ 0.6 0.6 0.6 0 20 force %player:name%")));
 
             this.add(new CommandAdviceEntry(new CommandAdviceEntry.Matcher("say (.+)", false), CommandAdviceType.CANCEL_WITH_SUCCESS, List.of(
                 "send-broadcast <rb>[My Server]</rb> $1")));

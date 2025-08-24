@@ -2,7 +2,6 @@ package io.github.sakurawald.fuji.module.initializer.command_advice;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
@@ -59,7 +58,7 @@ public class CommandAdviceInitializer extends ModuleInitializer {
             .stream()
             .filter(
                 it -> it.getAdviceType().equals(adviceType)
-                    || (it.getAdviceType().equals(CommandAdviceType.CANCEL_WITH_SUCCESS) && adviceType.equals(CommandAdviceType.BEFORE_EXECUTING)))
+                    || (CommandAdviceType.isCancellableAdviceType(it.getAdviceType()) && adviceType.equals(CommandAdviceType.BEFORE_EXECUTING)))
             .toList();
 
         /* Filter by command source type. */
@@ -77,17 +76,18 @@ public class CommandAdviceInitializer extends ModuleInitializer {
         /* Perform advices. */
         effectiveCommandAdvices
             .forEach(commandAdvice -> {
-                // Cancel the executing of target command.
-                if (commandAdvice.getAdviceType().equals(CommandAdviceType.CANCEL_WITH_SUCCESS)) {
-                    LogUtil.debug("Cancel the executing of target command {} with success. (advice = {})", commandString, commandAdvice);
+                /* Cancel the executing of target command. */
+                if (CommandAdviceType.isCancellableAdviceType(commandAdvice.getAdviceType())) {
+                    LogUtil.debug("Cancel the executing of target command {}. (advice = {})", commandString, commandAdvice);
+
                     if (ci instanceof CallbackInfoReturnable<?>) {
-                        ((CallbackInfoReturnable<Integer>) ci).setReturnValue(CommandHelper.Return.SUCCESS);
+                        ((CallbackInfoReturnable<Integer>) ci).setReturnValue(commandAdvice.getAdviceType().getAlternativeReturnValue());
                     } else {
                         ci.cancel();
                     }
                 }
 
-                // Replace captured-groups for commands.
+                /* Expand the captured-groups on commands. */
                 Matcher matcher = commandAdvice
                     .getMatcher()
                     .getCachedPattern()
@@ -98,7 +98,7 @@ public class CommandAdviceInitializer extends ModuleInitializer {
                     .map(cmd -> StringUtil.replaceAllAndResetMatcher(matcher, cmd))
                     .collect(Collectors.toCollection(ArrayList::new));
 
-                // Execute commands
+                /* Execute the commands */
                 LogUtil.debug("Execute commands {} for {}", commands, commandAdvice);
                 CommandExecutor.execute(ExtendedCommandSource.asConsole(source), commands);
             });
