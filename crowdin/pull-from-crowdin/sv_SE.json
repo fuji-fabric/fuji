@@ -1415,5 +1415,6 @@
   "docstring.1755571654986": "The `command assistant` offers an `auto help` feature for all fuji commands.\nIt dynamically inspects possible command paths and provides users with real-time command hints.\n\n<green>NOTE: To hot-switch this feature without a server re-start, you have to:\n1. Issue `/fuji reload` first, to reload the `main control file`.\n2. Issue `/reload`, to reload `all the commands`.\n",
   "docstring.1755571789064": "The requirement to use the `command assistant`.\n",
   "docstring.1755690116092": "◉ Use a custom player skull as the slot's icon.\nYou can modify the `item` property for that slot directly.\nThe syntax of `item` is the same as the `/give \\<item\\>` command.\n\n<green>NOTE: The data format may be different across MC versions.\n1. `/give @s minecraft:player_head[minecraft:profile=Steve]`\n2. `/give @s minecraft:player_head{SkullOwner:\"Steve\"}`\n",
-  "docstring.1755692848834": "You can send a toast with a custom icon.\nThe syntax is the same as `/give` command.\n\nFor example:\n1. `/send-toast @s --icon \"minecraft:player_head[minecraft:profile=Steve]\" \\<rb\\>Hello World`\n"
+  "docstring.1755692848834": "You can send a toast with a custom icon.\nThe syntax is the same as `/give` command.\n\nFor example:\n1. `/send-toast @s --icon \"minecraft:player_head[minecraft:profile=Steve]\" \\<rb\\>Hello World`\n",
+  "docstring.1756022056042": "List all registered alias-commands in server."
 }
