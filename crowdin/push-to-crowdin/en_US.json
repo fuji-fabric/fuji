@@ -189,7 +189,7 @@
   "from_package": "<yellow>From Package: %s",
   "fuji.about.gui.title": "<#6528F7>About",
   "fuji.debug.off": "<green>The fuji debug mode is now off.",
-  "fuji.debug.on": "<pink>The fuji debug mode is now on. You can see debug messages in the console!",
+  "fuji.debug.on": "<pink>The fuji debug mode is now on. Console spam incoming.",
   "fuji.inspect.configuration.class": "<blue>Class: `%s`",
   "fuji.inspect.configuration.gui.title": "<blue>Configuration Handlers",
   "fuji.inspect.configuration.path": "<blue>Path: `%s`",

@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.top_chunks.config.model;
 
+import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 
 import java.util.HashMap;
@@ -18,7 +19,8 @@ public class TopChunksConfigModel {
     @Document(id = 1751826526870L, value = """
         The `max distance` to search `the nearest player` for a `chunk`.
         """)
-    public int nearest_distance = 128;
+    @SerializedName(value = "distance_to_search_nearest_player", alternate = "nearest_distance")
+    public int distanceToSearchNearestPlayer = 128;
 
     @Document(id = 1751826529360L, value = """
         Should we hide the `location` of `chunk`.

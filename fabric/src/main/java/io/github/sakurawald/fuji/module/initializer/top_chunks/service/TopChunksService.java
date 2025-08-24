@@ -78,7 +78,7 @@ public class TopChunksService {
             World world = chunkScore.getDimension();
             ChunkPos chunkPos = chunkScore.getChunkPos();
             BlockPos blockPos = chunkPos.getStartPos();
-            PlayerEntity nearestPlayer = world.getClosestPlayer(blockPos.getX(), blockPos.getY(), blockPos.getZ(), TopChunksInitializer.config.model().nearest_distance, false);
+            PlayerEntity nearestPlayer = world.getClosestPlayer(blockPos.getX(), blockPos.getY(), blockPos.getZ(), TopChunksInitializer.config.model().distanceToSearchNearestPlayer, false);
 
             if (nearestPlayer != null) {
                 String nearestPlayerName = PlayerHelper.getPlayerName(nearestPlayer);
