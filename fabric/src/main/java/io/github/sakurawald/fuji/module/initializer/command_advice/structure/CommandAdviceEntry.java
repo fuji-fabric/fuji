@@ -1,11 +1,15 @@
 package io.github.sakurawald.fuji.module.initializer.command_advice.structure;
 
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import java.util.regex.Pattern;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -15,7 +19,6 @@ public class CommandAdviceEntry {
     Matcher matcher = new Matcher();
     @Data
     @NoArgsConstructor
-    @AllArgsConstructor
     public static class Matcher {
 
         @Document(id = 1751826314407L, value = """
@@ -27,6 +30,22 @@ public class CommandAdviceEntry {
         Is this `advice` only valid, when the target command is executed by a player?
         """)
         boolean executedByPlayerOnly;
+
+        public Matcher(String commandStringRegex, boolean executedByPlayerOnly) {
+            this.commandStringRegex = commandStringRegex;
+            this.executedByPlayerOnly = executedByPlayerOnly;
+        }
+
+        @ToString.Exclude
+        @Getter(AccessLevel.NONE)
+        transient Pattern pattern;
+        public Pattern getCachedPattern() {
+            if (this.pattern == null) {
+                this.pattern = Pattern.compile(this.commandStringRegex);
+            }
+
+            return this.pattern;
+        }
 
     }
 

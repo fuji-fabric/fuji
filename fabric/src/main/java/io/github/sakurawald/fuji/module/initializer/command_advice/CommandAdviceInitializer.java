@@ -1,7 +1,5 @@
 package io.github.sakurawald.fuji.module.initializer.command_advice;
 
-import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
-import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -9,22 +7,22 @@ import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_advice.config.model.CommandAdviceConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_advice.config.transformer.CommandAdviceV1SchemaTransformer;
 import io.github.sakurawald.fuji.module.initializer.command_advice.structure.CommandAdviceEntry;
 import io.github.sakurawald.fuji.module.initializer.command_advice.structure.CommandAdviceType;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Document(id = 1751826306321L, value = """
     This module allows you to decorate existing commands:
@@ -55,30 +53,33 @@ public class CommandAdviceInitializer extends ModuleInitializer {
     public static void processCommandAdvice(@NotNull Object executor, @NotNull ServerCommandSource source, @NotNull String commandString, @NotNull CommandAdviceType adviceType, @NotNull CallbackInfo ci) {
         LogUtil.debug("Process Command Advice: advice type = {}, command string = {}, command source = {}, executor = {}, ", adviceType, commandString, source.getName(), executor);
 
-        // Filter the advice entries by advice type.
+        /* Filter by advice type. */
         List<CommandAdviceEntry> effectiveCommandAdvices = config.model()
             .entries
             .stream()
-            .filter(it -> it.getAdviceType().equals(adviceType)
-            || (it.getAdviceType().equals(CommandAdviceType.CANCEL_WITH_SUCCESS)
-                && adviceType.equals(CommandAdviceType.BEFORE_EXECUTING)))
-            .collect(Collectors.toCollection(ArrayList::new));
+            .filter(
+                it -> it.getAdviceType().equals(adviceType)
+                    || (it.getAdviceType().equals(CommandAdviceType.CANCEL_WITH_SUCCESS) && adviceType.equals(CommandAdviceType.BEFORE_EXECUTING)))
+            .toList();
 
-        // Filter the advice entries by command source type.
+        /* Filter by command source type. */
         effectiveCommandAdvices = effectiveCommandAdvices
             .stream()
             .filter(it -> !it.getMatcher().isExecutedByPlayerOnly() || source.isExecutedByPlayer())
-            .collect(Collectors.toCollection(ArrayList::new));
+            .toList();
 
-
-        // Perform advice.
-        effectiveCommandAdvices
+        /* Filter by command string regex. */
+        effectiveCommandAdvices = effectiveCommandAdvices
             .stream()
             .filter(it -> commandString.matches(it.getMatcher().getCommandStringRegex()))
-            .forEach(it -> {
+            .toList();
+
+        /* Perform advices. */
+        effectiveCommandAdvices
+            .forEach(commandAdvice -> {
                 // Cancel the executing of target command.
-                if (it.getAdviceType().equals(CommandAdviceType.CANCEL_WITH_SUCCESS)) {
-                    LogUtil.debug("Cancel the executing of target command {} with success for {}", commandString, it);
+                if (commandAdvice.getAdviceType().equals(CommandAdviceType.CANCEL_WITH_SUCCESS)) {
+                    LogUtil.debug("Cancel the executing of target command {} with success. (advice = {})", commandString, commandAdvice);
                     if (ci instanceof CallbackInfoReturnable<?>) {
                         ((CallbackInfoReturnable<Integer>) ci).setReturnValue(CommandHelper.Return.SUCCESS);
                     } else {
@@ -87,17 +88,18 @@ public class CommandAdviceInitializer extends ModuleInitializer {
                 }
 
                 // Replace captured-groups for commands.
-                Matcher matcher = Pattern
-                    .compile(it.getMatcher().getCommandStringRegex())
+                Matcher matcher = commandAdvice
+                    .getMatcher()
+                    .getCachedPattern()
                     .matcher(commandString);
                 matcher.find();
-                List<String> commands = it.getCommands()
+                List<String> commands = commandAdvice.getCommands()
                     .stream()
                     .map(cmd -> StringUtil.replaceAllAndResetMatcher(matcher, cmd))
                     .collect(Collectors.toCollection(ArrayList::new));
 
                 // Execute commands
-                LogUtil.debug("Execute commands {} for {}", commands, it);
+                LogUtil.debug("Execute commands {} for {}", commands, commandAdvice);
                 CommandExecutor.execute(ExtendedCommandSource.asConsole(source), commands);
             });
 
