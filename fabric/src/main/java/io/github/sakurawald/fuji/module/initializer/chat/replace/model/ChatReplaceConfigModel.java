@@ -29,7 +29,7 @@ public class ChatReplaceConfigModel {
                 this.add(new RegexRewriteNode("(?<=^|\\s)ender(?=\\s|$)", "%fuji:ender%"));
 
                 this.add(new RegexRewriteNode("(?<=^|\\s)pos(?=\\s|$)", "%fuji:pos%"));
-                this.add(new RegexRewriteNode("(?<=^|\\s)uuid(?=\\s|$)", "<green>my uuid is %player:uuid%</green>"));
+                this.add(new RegexRewriteNode("(?<=^|\\s)uuid(?=\\s|$)", "<green>My uuid is %player:uuid%</green>"));
             }
         };
     }

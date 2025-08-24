@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.chat.display.config.model;
 
+import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ChatDisplayConfigModel {
+
     @Document(id = 1751826638318L, value = "The expiration duration for each created `display`.")
-    int expirationDurationS = 3600;
+    @SerializedName(value = "expiration_duration_seconds", alternate = "expiration_duration_s")
+    int expirationDurationSeconds = 3600;
 }

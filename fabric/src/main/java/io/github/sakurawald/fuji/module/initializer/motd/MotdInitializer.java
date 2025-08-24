@@ -92,7 +92,7 @@ public class MotdInitializer extends ModuleInitializer {
     }
 
     public static @NotNull MotdEntry getEffectiveMotdEntry() {
-        return RandomUtil.drawList(config.model().getEntries());
+        return RandomUtil.drawList(config.model().getMessages());
     }
 
     public static @NotNull ServerMetadata.Players getEffectivePlayersInfo(@NotNull ServerMetadata.Players original) {
