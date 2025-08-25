@@ -40,13 +40,22 @@ import net.minecraft.server.network.ServerPlayerEntity;
     To test the cooldown, and give the kit if the cooldown is satisfied.
     Issue: `/command-cooldown test example-kit-cooldown Alice --onFailed "send-message %player:name% wait a moment" kit give %player:name% example-kit|send-message %player:name% kit received.`
     """)
-@ColorBox(id = 1751977848415L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
+@ColorBox(id = 1751977848415L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Claim a specific kit automatically for online players.
     You can use `command_scheduler` module, to execute the `kit claim command` for online players automatically every minute.
     """)
-@ColorBox(id = 1751977880532L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
+@ColorBox(id = 1751977880532L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Give the new-bie player a kit.
     You can use `command_event` module, to give a kit to the new-bie player.
+    """)
+@ColorBox(id = 1756110650928L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+    ◉ Make a GUI to display all available kits.
+    You can integrate with the `command_menu` module.
+    To create a `menu` to `display` available kits, making it easier to `claim` a `kit`.
+
+    ◉ Attach the kit claim command to objects.
+    You can integrate with `command_attachment` module.
+    To attach the kit claim command to a `block`, `entity` or `item`.
     """)
 @TestCase(action = "Create a new kit using `/kit editor` command.", targets = "See if the `kit editor` works.")
 @TestCase(action = "Give the new kit using `/kit give` command.", targets = "See if the items is inserted in the proper slots. (Note that the player in creative mode can always pick up the same items even their inventory is full.)")
