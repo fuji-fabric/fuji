@@ -1164,7 +1164,7 @@
   "docstring.1751990466823": "◉ Advanced Usage\nThe `luckperms` mod have a feature named `permission context`.\nWhich allows you to specify the `per-dimension permission` and `temporary permission`.\nIf you are interested, see the details in their official wiki.\n",
   "docstring.1751998842298": "Having this `permission`, means having the specified `tag name` for specified `tag type`.\n",
   "docstring.1751999362278": "The permission used as the default string permission, for a command descriptor.",
-  "docstring.1751999453562": "The permission used for `style tags striper`.\nA player requires the `corresponding permission` to use that `style tag` in `a specific style type`.\n",
+  "docstring.1751999453562": "The permission used for `style tags striper`.\nA player requires the `corresponding permission` to use that `style tag` in `a style kind`.\n\nFor example:\n1. The `style kind` can be: `sign`, `anvil`...\n2. The `style tag` can be: `\\<yellow\\>`, `\\<bold\\>`...\n",
   "docstring.1751999474601": "To view this slot, you need the defined `specified permission` for this slot.\n",
   "docstring.1751999540893": "The max location entries to save for this player.\n",
   "docstring.1751999560958": "To bypass a specific `anti type` with a specific `id`.\n\nFor example, the permission `fuji.anti_build.place_block.bypass.minecraft:tnt` allows a player to place the TNT block.\n",

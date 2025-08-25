@@ -11,3 +11,5 @@
     - **Before:** Rewrite rules were applied in a top-down order, with only the first matching rule taking effect.
     - **Now:** Rewrite rules are applied in a top-down order, and multiple matching rules can take effect sequentially.  
 - [deathlog] fix: the `next page button` in `/deathlog` GUI didn't work.
+- [color.sign & color.anvil] improvements
+  - docs: improved document to describe the `style tags permission`.

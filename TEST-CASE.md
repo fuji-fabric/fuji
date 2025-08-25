@@ -64,6 +64,11 @@
 
 [Test Case]
 - Module: command_permission
+- Action: **Issue `/fuji reload` and `/reload` commands in `neoforge single player world`.**
+- Target: It should not trigger the Concurrent Modification Exception.
+
+[Test Case]
+- Module: command_permission
 - Action: **Issue `/reload` command, and check the client command tree.**
 - Target: The `command_permission` module should warp the newly registered commands.
 - Target: The client-side command tree should be updated.
