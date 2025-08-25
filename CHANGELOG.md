@@ -9,3 +9,4 @@
   - Before: The redirect target command must have children command nodes.
   - Now: The redirect target command can be a leaf command node.
 - [tab] feature: new `enable_header` and `enable_footer` options.
+- [command_toolbox] feature: new `/reply set-target <player>` command.
