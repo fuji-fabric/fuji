@@ -641,6 +641,8 @@ public class MainControlConfigModel {
             public Chain chain = new Chain();
             @SerializedName(value = "IF")
             public If IF = new If();
+            @SerializedName(value = "NOT")
+            public Not NOT = new Not();
             public Nop nop = new Nop();
             public Delay delay = new Delay();
             public Json json = new Json();
@@ -685,6 +687,10 @@ public class MainControlConfigModel {
             }
 
             public static class If {
+                public boolean enable = false;
+            }
+
+            public static class Not {
                 public boolean enable = false;
             }
 
