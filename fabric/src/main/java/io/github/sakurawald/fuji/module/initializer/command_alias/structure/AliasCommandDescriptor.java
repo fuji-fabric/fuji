@@ -6,6 +6,7 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.core.command.descriptor.CommandDescriptor;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import java.lang.reflect.Method;
 import java.util.List;
 import lombok.SneakyThrows;
@@ -21,9 +22,16 @@ public class AliasCommandDescriptor extends CommandDescriptor {
         this.redirectTargetCommandNode = redirectTargetCommandNode;
     }
 
+    @TestCase(action = "Test the redirect functionality.", targets = {
+        "The redirect target command is a non-leaf command: `/invsee` -> `/view inv`",
+        "The redirect target command is a leaf command: `/wb` -> `/workbench`"
+    })
     @Override
     protected @NotNull ArgumentBuilder<ServerCommandSource, ?> terminalArgumentDecorator(@NotNull ArgumentBuilder<ServerCommandSource, ?> terminalArgumentBuilder) {
         return terminalArgumentBuilder
+            // NOTE: The execute() handles the literal node to literal node case.
+            .executes(this.redirectTargetCommandNode.getCommand())
+            // NOTE: The redirect() only redirects to a command node with children.
             .redirect(this.redirectTargetCommandNode);
     }
 

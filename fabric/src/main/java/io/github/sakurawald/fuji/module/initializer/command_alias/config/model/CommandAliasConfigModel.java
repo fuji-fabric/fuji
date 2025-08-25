@@ -19,9 +19,15 @@ public class CommandAliasConfigModel {
     @SerializedName(value = "aliases", alternate = "alias")
     List<CommandAliasEntry> aliases = new ArrayList<>() {
         {
+            /* Level 0 commands. */
             this.add(new CommandAliasEntry(true, "Create an alias command from `/r` into `/reply` command.", new CommandRequirementDescriptor(0, null), List.of("r"), List.of("reply")));
             this.add(new CommandAliasEntry(true, "Create an alias command from `/display` into `/chat display` command.", new CommandRequirementDescriptor(0, null), List.of("display"), List.of("chat", "display")));
+
+            /* Level 4 commands. */
             this.add(new CommandAliasEntry(true, "Create an alias command from `/sudo` into `/run as fake-op` command.", new CommandRequirementDescriptor(4, null), List.of("sudo"), List.of("run", "as", "fake-op")));
+            this.add(new CommandAliasEntry(true, "Create an alias command from `/wb` into `/workbench` command.", new CommandRequirementDescriptor(4, null), List.of("wb"), List.of("workbench")));
+            this.add(new CommandAliasEntry(true, "Create an alias command from `/invsee` into `/view inv` command.", new CommandRequirementDescriptor(4, null), List.of("invsee"), List.of("view", "inv")));
+            this.add(new CommandAliasEntry(true, "Create an alias command from `/endersee` into `/view ender` command.", new CommandRequirementDescriptor(4, null), List.of("endersee"), List.of("view", "ender")));
         }
     };
 }

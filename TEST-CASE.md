@@ -38,6 +38,12 @@
 - Target: The command should be cancelled with the `/send-broadcast` command.
 
 [Test Case]
+- Module: command_alias
+- Action: **Test the redirect functionality.**
+- Target: The redirect target command is a non-leaf command: `/invsee` -> `/view inv`
+- Target: The redirect target command is a leaf command: `/wb` -> `/workbench`
+
+[Test Case]
 - Module: command_bundle
 - Action: **Issue `/reload`, `/fuji reload`, `/fuji inspect fuji-commands` and `/command-bundle list`**
 - Target: The bundle commands should be able to register and un-register on the fly.
@@ -145,6 +151,11 @@
 - Module: core
 - Action: **List the command tree of a normal user.**
 - Target: The command permissions should be handled properly.
+
+[Test Case]
+- Module: core
+- Action: **Modify the `my-command` into `my-command-v2`, and issue `/fuji reload`.**
+- Target: The command descriptor should be able to un-register the old command node in the command tree, even the new command node has different structure compared to the old one.
 
 [Test Case]
 - Module: core
