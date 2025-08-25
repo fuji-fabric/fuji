@@ -4,7 +4,6 @@ import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
@@ -23,17 +22,14 @@ import io.github.sakurawald.fuji.core.event.impl.CommandEvents;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_permission.config.model.CommandPermissionConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_permission.gui.CommandPermissionGui;
+import io.github.sakurawald.fuji.module.initializer.command_permission.service.CommandPermissionService;
 import io.github.sakurawald.fuji.module.initializer.command_permission.structure.CommandNodePermissionWrapper;
-import io.github.sakurawald.fuji.module.initializer.command_permission.structure.WrappedPredicate;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Predicate;
-import net.luckperms.api.util.Tristate;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Cite("https://github.com/DrexHD/VanillaPermissions")
@@ -149,8 +145,6 @@ public class CommandPermissionInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<CommandPermissionConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandPermissionConfigModel.class);
 
-    private static boolean verboseModeFlag = false;
-
     @DocStringProvider(id = 1752000303860L, value = """
         To use the `command` with that `command path`.
         You need the corresponding permission.
@@ -176,9 +170,9 @@ public class CommandPermissionInitializer extends ModuleInitializer {
     @Document(id = 1751826779531L, value = "Toggle the command permission verbose mode.")
     @CommandNode("verbose")
     public static int $verbose(@CommandSource ServerCommandSource source) {
-        verboseModeFlag = !verboseModeFlag;
+        CommandPermissionService.verboseModeFlag = !CommandPermissionService.verboseModeFlag;
 
-        TextHelper.sendTextByKey(source, verboseModeFlag ? "command_permission.verbose.on" : "command_permission.verbose.off");
+        TextHelper.sendTextByKey(source, CommandPermissionService.verboseModeFlag ? "command_permission.verbose.on" : "command_permission.verbose.off");
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -234,7 +228,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
             var node = it.getNode();
             String nodeName = node.getName();
             String nodeType = CommandHelper.Node.getCommandNodeType(node);
-            boolean nodeWrapped = isCommandNodeWrapped(node);
+            boolean nodeWrapped = CommandPermissionService.isCommandNodeWrapped(node);
             TextHelper.sendTextByKey(source, "command_permission.describe.command_node.node", nodeName, nodeType, nodeWrapped);
         });
 
@@ -255,63 +249,6 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    public static void processVerboseModeFeature(String askWhoForPermissionTestResult, ServerCommandSource source, String commandPath, Tristate commandPermissionTestResult) {
-        if (!verboseModeFlag) return;
-
-        // Make description.
-        String explanationForPermissionTestResult = makeExplanationForPermissionTestResult(commandPermissionTestResult);
-
-        // Info in console.
-        LogUtil.info("""
-
-            ◉ Command Source: {}
-            ◉ Command Path of the Target Command: {}
-            ◉ Ask who for permission test result: {}
-            ◉ Permission Test Result: {}
-            ◉ Explanation: {}
-            """, source.getName(), commandPath, askWhoForPermissionTestResult, commandPermissionTestResult, explanationForPermissionTestResult);
-    }
-
-    private static @NotNull String makeExplanationForPermissionTestResult(Tristate state) {
-        String explanation;
-        if (state == Tristate.UNDEFINED) {
-            explanation = "The permission test result is UNDEFINED, it means command_permission module WILL NOT HANDLE this command. We simply fallback the requirement predicate of this command to its original predicate.";
-        } else if (state == Tristate.TRUE) {
-            explanation = "The permission test result is TRUE, it means command_permission module WILL ALLOW the command source to use this command.";
-        } else if (state == Tristate.FALSE) {
-            explanation = "The permission test result is FALSE, it means command_permission module WILL DIS-ALLOW the command source to use this command.";
-        } else {
-            explanation = "I don't know why, but the value of Tristate is un-expected.";
-        }
-        return explanation;
-    }
-
-    public static @NotNull WrappedPredicate<Object> makeWrappedPredicate(@NotNull com.mojang.brigadier.tree.CommandNode<ServerCommandSource> commandNode, @NotNull Predicate<Object> originalRequirement) {
-        return new WrappedPredicate<>(commandNode, originalRequirement);
-    }
-
-    public static boolean canUseThisCommand(ServerCommandSource source, Tristate permissionTestResult, @NotNull Predicate<Object> originalRequirement) {
-        /* If the corresponding permission is DEFINED, we use it to override the original requirement. */
-        if (permissionTestResult != Tristate.UNDEFINED) {
-            return permissionTestResult.asBoolean();
-        }
-
-        /* If the corresponding permission is UNDEFINED, we just fall back to original predicate. */
-        return originalRequirement.test(source);
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    private static void ensureCommandNodeRequirementIsWrapped() {
-        // Enumerate all registered commands, to ensure the getRequirement() is triggered. (For luckperms permission cache)
-        CommandHelper.Node
-            .getAllCommandNodes()
-            .forEach(com.mojang.brigadier.tree.CommandNode::getRequirement);
-    }
-
-    public static boolean isCommandNodeWrapped(com.mojang.brigadier.tree.CommandNode<ServerCommandSource> commandNode) {
-        return commandNode.getRequirement() instanceof WrappedPredicate<ServerCommandSource>;
-    }
-
     @TestCase(action = "Issue `/reload` command, and check the client command tree.", targets = {
         "The `command_permission` module should warp the newly registered commands."
         , "The client-side command tree should be updated."
@@ -319,7 +256,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
     @Override
     protected void onInitialize() {
         CommandEvents.AFTER_REGISTRATION.register((m, d, r, e) -> {
-            ensureCommandNodeRequirementIsWrapped();
+            CommandPermissionService.ensureCommandNodeRequirementIsWrapped();
         });
     }
 }

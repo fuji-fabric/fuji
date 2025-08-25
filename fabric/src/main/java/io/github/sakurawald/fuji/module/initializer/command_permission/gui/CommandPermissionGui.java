@@ -7,6 +7,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
 import io.github.sakurawald.fuji.module.initializer.command_permission.CommandPermissionInitializer;
+import io.github.sakurawald.fuji.module.initializer.command_permission.service.CommandPermissionService;
 import io.github.sakurawald.fuji.module.initializer.command_permission.structure.CommandNodePermissionWrapper;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -31,7 +32,7 @@ public class CommandPermissionGui extends PagedGui<CommandNodePermissionWrapper>
 
     @Override
     protected @NotNull GuiElementInterface toGuiElement(@NotNull CommandNodePermissionWrapper entity) {
-        boolean commandNodeWrapped = CommandPermissionInitializer.isCommandNodeWrapped(entity.getNode());
+        boolean commandNodeWrapped = CommandPermissionService.isCommandNodeWrapped(entity.getNode());
 
         return new GuiElementBuilder()
             .setItem(GuiHelper.Material.fromBooleanValue(commandNodeWrapped))

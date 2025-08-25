@@ -5,7 +5,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.CommandNode;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.module.initializer.command_permission.CommandPermissionInitializer;
+import io.github.sakurawald.fuji.module.initializer.command_permission.service.CommandPermissionService;
 import io.github.sakurawald.fuji.module.initializer.command_permission.structure.WrappedPredicate;
 import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.Nullable;
@@ -39,7 +39,7 @@ public class CommandNodeMixin {
         /* Wrap the requirement predicate for command node. */
         if (!(original instanceof WrappedPredicate<?>)) {
             final CommandNode<ServerCommandSource> node = (CommandNode<ServerCommandSource>) (Object) this;
-            requirement = CommandPermissionInitializer.makeWrappedPredicate(node, original);
+            requirement = CommandPermissionService.makeWrappedPredicate(node, original);
             return requirement;
         }
 

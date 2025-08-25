@@ -4,12 +4,17 @@ import com.mojang.brigadier.tree.CommandNode;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.module.initializer.command_permission.CommandPermissionInitializer;
+import io.github.sakurawald.fuji.module.initializer.command_permission.service.CommandPermissionService;
 import java.util.function.Predicate;
 import net.luckperms.api.util.Tristate;
 import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.NotNull;
 
+@TestCase(action = "Issue `/fuji reload` and `/reload` commands in `neoforge single player world`.", targets = {
+    "It should not trigger the Concurrent Modification Exception."
+})
 public class WrappedPredicate<T> implements Predicate<T> {
 
     final CommandNode<ServerCommandSource> commandNode;
@@ -48,18 +53,18 @@ public class WrappedPredicate<T> implements Predicate<T> {
                     for (CommandPermissionRule rule : CommandPermissionInitializer.config.model().rules) {
                         if (requiredPermissionToExecuteThisCommand.matches(rule.permissionPatternRegex)) {
                             Tristate predefinePermissionTestResult = rule.permissionTestResult.toTriState();
-                            CommandPermissionInitializer.processVerboseModeFeature("PREDEFINED RULES", serverCommandSource, commandPath, predefinePermissionTestResult);
+                            CommandPermissionService.processVerboseModeFeature("PREDEFINED RULES", serverCommandSource, commandPath, predefinePermissionTestResult);
 
-                            return CommandPermissionInitializer.canUseThisCommand(serverCommandSource, predefinePermissionTestResult, this.originalRequirement);
+                            return CommandPermissionService.canUseThisCommand(serverCommandSource, predefinePermissionTestResult, this.originalRequirement);
                         }
                     }
                 }
 
                 /* Ask luckperms if the player can use the command. */
                 Tristate luckpermsPermissionTestResult = LuckpermsHelper.getPermission(serverCommandSource.getPlayer().getUuid(), CommandPermissionInitializer.COMMAND_PERMISSION_UNIFIED_PERMISSION, commandPath);
-                CommandPermissionInitializer.processVerboseModeFeature("LUCKPERMS", serverCommandSource, commandPath, luckpermsPermissionTestResult);
+                CommandPermissionService.processVerboseModeFeature("LUCKPERMS", serverCommandSource, commandPath, luckpermsPermissionTestResult);
 
-                return CommandPermissionInitializer.canUseThisCommand(serverCommandSource, luckpermsPermissionTestResult, this.originalRequirement);
+                return CommandPermissionService.canUseThisCommand(serverCommandSource, luckpermsPermissionTestResult, this.originalRequirement);
             } catch (Throwable useOriginalPredicateIfFailed) {
                 LogUtil.error("Failed to test the command requirement using WrappedPredicate, falling back to original predicate. (command node = {}, source = {})", this.commandNode, serverCommandSource, useOriginalPredicateIfFailed);
                 return this.originalRequirement.test(commandSource);
