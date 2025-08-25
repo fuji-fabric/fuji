@@ -21,9 +21,9 @@ public abstract class ModifyPlayerListNameMixin {
     @ModifyReturnValue(method = "getPlayerListName", at = @At("RETURN"))
     @NotNull
     Text modifyPlayerListName(@Nullable Text original) {
-        // respect other's modification.
+        // Respect other's modification.
         if (original == null) {
-            return TextHelper.getTextByValue(player, RandomUtil.drawList(TabListInitializer.config.model().style.body));
+            return TextHelper.getTextByValue(player, RandomUtil.drawList(TabListInitializer.config.model().getStyle().getBody()));
         }
 
         return original;

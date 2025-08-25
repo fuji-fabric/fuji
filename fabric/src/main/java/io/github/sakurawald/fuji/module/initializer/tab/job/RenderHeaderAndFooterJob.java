@@ -18,15 +18,27 @@ import org.quartz.JobExecutionContext;
 public class RenderHeaderAndFooterJob extends CronJob {
 
     public RenderHeaderAndFooterJob() {
-        super(() -> TabListInitializer.config.model().update_cron);
+        super(() -> TabListInitializer.config.model().getUpdateCron());
     }
 
     private static void updateTabList() {
-        String headerFormat = RandomUtil.drawList(TabListInitializer.config.model().style.header);
-        String footerFormat = RandomUtil.drawList(TabListInitializer.config.model().style.footer);
+        String headerFormat = RandomUtil.drawList(TabListInitializer.config.model().getStyle().getHeader());
+        String footerFormat = RandomUtil.drawList(TabListInitializer.config.model().getStyle().getFooter());
         for (ServerPlayerEntity player : PlayerHelper.Lookup.getOnlinePlayers()) {
-            @NotNull Text header = TextHelper.getTextByValue(player, headerFormat);
-            @NotNull Text footer = TextHelper.getTextByValue(player, footerFormat);
+            @NotNull Text header;
+            if (TabListInitializer.config.model().getStyle().isEnableHeader()) {
+                header = TextHelper.getTextByValue(player, headerFormat);
+            } else {
+                header = Text.empty();
+            }
+
+            @NotNull Text footer;
+            if (TabListInitializer.config.model().getStyle().isEnableFooter()) {
+                footer = TextHelper.getTextByValue(player, footerFormat);
+            } else {
+                footer = Text.empty();
+            }
+
             player.networkHandler.sendPacket(new PlayerListHeaderS2CPacket(header, footer));
         }
 
