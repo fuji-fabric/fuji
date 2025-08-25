@@ -4,13 +4,8 @@ import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import io.github.sakurawald.fuji.core.document.annotation.Cite;
-import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
-import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
-import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
@@ -18,15 +13,21 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.Cite;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
+import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.core.event.impl.CommandEvents;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_permission.config.model.CommandPermissionConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_permission.gui.CommandPermissionGui;
 import io.github.sakurawald.fuji.module.initializer.command_permission.structure.CommandNodePermissionWrapper;
-import io.github.sakurawald.fuji.module.initializer.command_permission.structure.CommandPermissionRule;
 import io.github.sakurawald.fuji.module.initializer.command_permission.structure.WrappedPredicate;
-import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.Predicate;
 import net.luckperms.api.util.Tristate;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -34,10 +35,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.Predicate;
 
 @Cite("https://github.com/DrexHD/VanillaPermissions")
 @Document(id = 1751826772214L, value = """
@@ -146,12 +143,11 @@ import java.util.function.Predicate;
     """)
 
 
-
 @CommandNode("command-permission")
 @CommandRequirement(level = 4)
 public class CommandPermissionInitializer extends ModuleInitializer {
 
-    private static final BaseConfigurationHandler<CommandPermissionConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandPermissionConfigModel.class);
+    public static final BaseConfigurationHandler<CommandPermissionConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandPermissionConfigModel.class);
 
     private static boolean verboseModeFlag = false;
 
@@ -200,24 +196,24 @@ public class CommandPermissionInitializer extends ModuleInitializer {
 
         /* Describe the command string. */
         String commandString = TextHelper.Parsers.escapeTags(parseResults.getReader().getString());
-        TextHelper.sendTextByKey(source,"command_permission.describe.command_string", commandString);
+        TextHelper.sendTextByKey(source, "command_permission.describe.command_string", commandString);
 
         /* Check if there is early exceptions. */
         @Nullable CommandSyntaxException earlyException = CommandManager.getException(parseResults);
         if (earlyException != null) {
-            TextHelper.sendTextByKey(source,"command_permission.describe.command_string.parser.exceptions");
-            TextHelper.sendTextByKey(source,"command_permission.describe.command_string.parser.early_exception", earlyException);
+            TextHelper.sendTextByKey(source, "command_permission.describe.command_string.parser.exceptions");
+            TextHelper.sendTextByKey(source, "command_permission.describe.command_string.parser.early_exception", earlyException);
             return CommandHelper.Return.SUCCESS;
         }
 
         /* Report the parser exceptions. */
         var exceptions = parseResults.getExceptions();
         if (!exceptions.isEmpty()) {
-            TextHelper.sendTextByKey(source,"command_permission.describe.command_string.parser.exceptions");
-            exceptions.forEach((k, v)-> {
+            TextHelper.sendTextByKey(source, "command_permission.describe.command_string.parser.exceptions");
+            exceptions.forEach((k, v) -> {
                 String nodeName = k.getName();
                 String exception = v.toString();
-                TextHelper.sendTextByKey(source,"command_permission.describe.command_string.parser.exception", nodeName, exception);
+                TextHelper.sendTextByKey(source, "command_permission.describe.command_string.parser.exception", nodeName, exception);
             });
 
             /* Terminate the describing, to avoid misleading. */
@@ -227,10 +223,10 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         /* Describe the command nodes. */
         List<ParsedCommandNode<ServerCommandSource>> nodes = context.getNodes();
         List<String> nodesName = nodes.stream().map(it -> it.getNode().getName()).toList();
-        TextHelper.sendTextByKey(source,"command_permission.describe.command_node.nodes", nodesName);
+        TextHelper.sendTextByKey(source, "command_permission.describe.command_node.nodes", nodesName);
 
         if (nodesName.isEmpty()) {
-            TextHelper.sendTextByKey(source,"command_permission.describe.command_node.empty");
+            TextHelper.sendTextByKey(source, "command_permission.describe.command_node.empty");
             return CommandHelper.Return.SUCCESS;
         }
 
@@ -244,14 +240,14 @@ public class CommandPermissionInitializer extends ModuleInitializer {
 
         /* Describe the command path. */
         String commandPath = CommandHelper.Node.joinCommandNodePath(context.getNodes());
-        TextHelper.sendTextByKey(source,"command_permission.describe.command_path", commandPath);
+        TextHelper.sendTextByKey(source, "command_permission.describe.command_path", commandPath);
 
         /* Describe the command permissions. */
-        TextHelper.sendTextByKey(source,"command_permission.describe.command_permissions");
+        TextHelper.sendTextByKey(source, "command_permission.describe.command_permissions");
         List<String> commandPathPrefixes = CommandHelper.Node.getPrefixesOfCommandPath(nodes);
         commandPathPrefixes.forEach(path -> {
             String requiredPermission = COMMAND_PERMISSION_UNIFIED_PERMISSION.withArguments(path);
-            TextHelper.sendTextByKey(source,"command_permission.describe.command_permission", requiredPermission);
+            TextHelper.sendTextByKey(source, "command_permission.describe.command_permission", requiredPermission);
         });
 
         /* Newline. */
@@ -259,7 +255,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    private static void processVerboseModeFeature(String askWhoForPermissionTestResult, ServerCommandSource source, String commandPath, Tristate commandPermissionTestResult) {
+    public static void processVerboseModeFeature(String askWhoForPermissionTestResult, ServerCommandSource source, String commandPath, Tristate commandPermissionTestResult) {
         if (!verboseModeFlag) return;
 
         // Make description.
@@ -291,45 +287,10 @@ public class CommandPermissionInitializer extends ModuleInitializer {
     }
 
     public static @NotNull WrappedPredicate<Object> makeWrappedPredicate(@NotNull com.mojang.brigadier.tree.CommandNode<ServerCommandSource> commandNode, @NotNull Predicate<Object> originalRequirement) {
-        return commandSource -> {
-            /* If the command source if client command source, use the original predicate. */
-            if (commandSource instanceof ServerCommandSource serverCommandSource) {
-                /* Ignore the non-player command source. */
-                if (serverCommandSource.getPlayer() == null) return originalRequirement.test(serverCommandSource);
-
-                try {
-                    /* Compute the command node path. */
-                    String commandPath = CommandHelper.Node.findCommandNodePath(commandNode);
-
-                    /* Ask the pre-defined rules if the player can use the command. */
-                    String requiredPermissionToExecuteThisCommand = COMMAND_PERMISSION_UNIFIED_PERMISSION.withArguments(commandPath);
-                    if (!CommandHelper.Requirement.isAdmin(serverCommandSource)) {
-                        for (CommandPermissionRule rule : config.model().rules) {
-                            if (requiredPermissionToExecuteThisCommand.matches(rule.permissionPatternRegex)) {
-                                Tristate predefinePermissionTestResult = rule.permissionTestResult.toTriState();
-                                processVerboseModeFeature("PREDEFINED RULES", serverCommandSource, commandPath, predefinePermissionTestResult);
-
-                                return canUseThisCommand(serverCommandSource, predefinePermissionTestResult, originalRequirement);
-                            }
-                        }
-                    }
-
-                    /* Ask luckperms if the player can use the command. */
-                    Tristate luckpermsPermissionTestResult = LuckpermsHelper.getPermission(serverCommandSource.getPlayer().getUuid(), COMMAND_PERMISSION_UNIFIED_PERMISSION, commandPath);
-                    processVerboseModeFeature("LUCKPERMS", serverCommandSource, commandPath, luckpermsPermissionTestResult);
-
-                    return canUseThisCommand(serverCommandSource, luckpermsPermissionTestResult, originalRequirement);
-                } catch (Throwable useOriginalPredicateIfFailed) {
-                    return originalRequirement.test(commandSource);
-                }
-            } else {
-                /* The command source is not ServerCommandSource, simply use the original requirement. */
-                return originalRequirement.test(commandSource);
-            }
-        };
+        return new WrappedPredicate<>(commandNode, originalRequirement);
     }
 
-    private static boolean canUseThisCommand(ServerCommandSource source, Tristate permissionTestResult, @NotNull Predicate<Object> originalRequirement) {
+    public static boolean canUseThisCommand(ServerCommandSource source, Tristate permissionTestResult, @NotNull Predicate<Object> originalRequirement) {
         /* If the corresponding permission is DEFINED, we use it to override the original requirement. */
         if (permissionTestResult != Tristate.UNDEFINED) {
             return permissionTestResult.asBoolean();
