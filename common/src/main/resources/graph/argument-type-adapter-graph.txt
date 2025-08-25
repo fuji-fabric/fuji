@@ -13,6 +13,7 @@ io.github.sakurawald.fuji.core.command.argument.adapter.impl.DimensionTypeArgume
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.DoubleArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.EntityAnchorArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.EntityArgumentTypeAdapter
+io.github.sakurawald.fuji.core.command.argument.adapter.impl.EntityCollectionArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.EntityTypeArgumentAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.FloatArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.FloatRangeArgumentTypeAdapter
