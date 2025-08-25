@@ -17,7 +17,7 @@ public class CommandWarmupTicket extends InterruptibleTicket {
 
     private CommandWarmupTicket(@NotNull ServerPlayerEntity player, @NotNull String commandString, CommandWarmupNode entry) {
         super(new ServerBossBar(TextHelper.getTextByKey(player, "command_warmup.bossbar.name", commandString), net.minecraft.entity.boss.BossBar.Color.GREEN, net.minecraft.entity.boss.BossBar.Style.PROGRESS)
-            , entry.getCommand().getMs()
+            , entry.getCommand().getWarmupTimeMs()
             , player
             , GlobalPos.of(player)
             , entry.getInterruptible());

@@ -8,10 +8,11 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.manager.Managers;
-import io.github.sakurawald.fuji.core.structure.Tag;
+import io.github.sakurawald.fuji.core.structure.Tags;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_warmup.config.model.CommandWarmupConfigModel;
+import io.github.sakurawald.fuji.module.initializer.command_warmup.config.transformer.CommandWarmupV1SchemaTransformer;
 import io.github.sakurawald.fuji.module.initializer.command_warmup.structure.CommandWarmupNode;
 import io.github.sakurawald.fuji.module.initializer.command_warmup.structure.CommandWarmupTicket;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -50,7 +51,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
     You can use the `alternative character |` in `regex`.
     """)
 public class CommandWarmupInitializer extends ModuleInitializer {
-    private static final BaseConfigurationHandler<CommandWarmupConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandWarmupConfigModel.class);
+    private static final BaseConfigurationHandler<CommandWarmupConfigModel> config = ObjectConfigurationHandler
+        .ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandWarmupConfigModel.class)
+        .installTransformer(new CommandWarmupV1SchemaTransformer());
 
     public static void processCommandWarmup(ServerPlayerEntity player, String commandString, CallbackInfo ci) {
         LogUtil.debug("Process command warmup: player = {}, command = {}", PlayerHelper.getPlayerName(player), commandString);
@@ -60,7 +63,7 @@ public class CommandWarmupInitializer extends ModuleInitializer {
         for (CommandWarmupNode entry : config.rules) {
 
             /* Test if we should bypass this warmup entry. */
-            if (Tag.hasAnyTagPermission(player,"command_warmup.bypass", entry.getTag().getTags())) {
+            if (Tags.hasAnyTagPermission(player,"command_warmup.bypass", entry.getTags())) {
                 continue;
             }
 

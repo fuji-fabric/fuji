@@ -13,3 +13,5 @@
 - [deathlog] fix: the `next page button` in `/deathlog` GUI didn't work.
 - [color.sign & color.anvil] improvements
   - docs: improved document to describe the `style tags permission`.
+- [command_warmup] improvements
+  - docs: improved document to describe the `tag` bypass permission.

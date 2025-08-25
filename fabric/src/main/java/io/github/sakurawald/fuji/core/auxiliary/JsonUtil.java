@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.function.Consumer;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -83,6 +84,17 @@ public class JsonUtil {
         } catch (Exception e) {
             return Optional.empty();
         }
+    }
+
+    public static <T extends JsonElement> void ifJsonElementPresent(@NotNull JsonObject root, @NotNull String key, @NotNull Class<T> expectedJsonElementType, @NotNull Consumer<T> consumer) {
+        Optional
+            .ofNullable(root.get(key))
+            .ifPresent(jsonElement -> {
+                if (expectedJsonElementType.isInstance(jsonElement)) {
+                    T value = expectedJsonElementType.cast(jsonElement);
+                    consumer.accept(value);
+                }
+            });
     }
 
     @SneakyThrows

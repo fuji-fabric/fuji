@@ -1,8 +1,9 @@
 package io.github.sakurawald.fuji.module.initializer.command_warmup.structure;
 
+import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.structure.Interruptible;
-import io.github.sakurawald.fuji.core.structure.Tag;
+import io.github.sakurawald.fuji.core.structure.Tags;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommandWarmupNode {
 
-    Tag tag;
+    Tags tags = new Tags();
 
     @Document(id = 1751826877229L, value = """
         The `target command` and `warmup time in ms`.
@@ -33,11 +34,12 @@ public class CommandWarmupNode {
         @Document(id = 1751826881411L, value = """
             The `warmup time` in ms.
             """)
-        int ms;
+        @SerializedName(value = "warmup_time_ms", alternate = "ms")
+        int warmupTimeMs;
     }
 
     public static CommandWarmupNode make(Command command, Interruptible interruptible) {
-        return new CommandWarmupNode(new Tag(), command, interruptible);
+        return new CommandWarmupNode(new Tags(), command, interruptible);
     }
 
 }
