@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommandWarmupNode {
 
-    Tags tags = new Tags();
+    Tags tags = Tags.makeDefault();
 
     @Document(id = 1751826877229L, value = """
         The `target command` and `warmup time in ms`.
@@ -39,7 +39,7 @@ public class CommandWarmupNode {
     }
 
     public static CommandWarmupNode make(Command command, Interruptible interruptible) {
-        return new CommandWarmupNode(new Tags(), command, interruptible);
+        return new CommandWarmupNode(Tags.makeDefault(), command, interruptible);
     }
 
 }

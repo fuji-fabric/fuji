@@ -22,8 +22,10 @@ import org.jetbrains.annotations.NotNull;
 @EqualsAndHashCode(callSuper = true)
 public class Tags extends ArrayList<String> {
 
-    {
-        this.add("default-tag-name");
+    public static Tags makeDefault() {
+        Tags tags = new Tags();
+        tags.add("default-tag-name");
+        return tags;
     }
 
     private static final Map<String, PermissionDescriptor> CREATED_TAG_KIND_PERMISSIONS = new HashMap<>();
