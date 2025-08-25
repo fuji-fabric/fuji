@@ -7,12 +7,12 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.structure.GlobalBlockPos;
 import io.github.sakurawald.fuji.module.initializer.color.sign.ColorSignInitializer;
 import io.github.sakurawald.fuji.module.initializer.color.sign.structure.SignCache;
+import java.util.concurrent.atomic.AtomicReference;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -34,9 +34,6 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
     @Shadow
     public abstract @Nullable UUID getEditor();
 
-    @Shadow
-    public abstract boolean isPlayerFacingFront(PlayerEntity playerEntity);
-
     public SignBlockEntityMixin(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
     }
@@ -56,19 +53,23 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
             /* Get the line string from the sign text. */
             // NOTE: The messages[i] may be null if you write nothing.
             if (messages[i] == null) messages[i] = Text.literal("");
-            String string = messages[i].getString();
+            AtomicReference<String> lineString = new AtomicReference<>(messages[i].getString());
 
             /* Stripe style tags. */
             if (ColorSignInitializer.config.model().requires_corresponding_permission_to_use_style_tag) {
-                Optional<ServerPlayerEntity> playerOpt = PlayerHelper.Lookup.getOnlinePlayerByUuid(getEditor());
-                if (playerOpt.isPresent()) {
-                    ServerPlayerEntity player = playerOpt.get();
-                    string = ColorSignInitializer.stripeStyleTags(player, string);
-                }
+                Optional
+                    .ofNullable(getEditor())
+                    .ifPresent(editorUUID -> {
+                        Optional<ServerPlayerEntity> playerOpt = PlayerHelper.Lookup.getOnlinePlayerByUuid(editorUUID);
+                        if (playerOpt.isPresent()) {
+                            ServerPlayerEntity player = playerOpt.get();
+                            lineString.set(ColorSignInitializer.stripeStyleTags(player, lineString.get()));
+                        }
+                    });
             }
 
             /* Set the sign texts using parsed texts. */
-            newMessages[i] = TextHelper.Parsers.parseString(TextHelper.Parsers.MINI_MESSAGE_ONLY_PARSER, string);
+            newMessages[i] = TextHelper.Parsers.parseString(TextHelper.Parsers.MINI_MESSAGE_ONLY_PARSER, lineString.get());
         }
 
         /* Write sign cache. */

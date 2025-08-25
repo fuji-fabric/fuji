@@ -42,7 +42,7 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
     @Unique
     private @NotNull Text parseInputNewItemName() {
         AtomicReference<Text> modifiedText = new AtomicReference<>();
-        ServerHelper.withServerPlayerEntity(player,() -> {
+        ServerHelper.withServerPlayerEntity(player, () -> {
             /* Stripe style tags. */
             if (ColorAnvilInitializer.config.model().requires_corresponding_permission_to_use_style_tag) {
                 PlayerEntity player = super.player;
