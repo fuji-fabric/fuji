@@ -189,7 +189,7 @@
   "from_package": "<yellow>From Package: %s",
   "fuji.about.gui.title": "<#6528F7>Tentang",
   "fuji.debug.off": "<green>The fuji debug mode is now off.",
-  "fuji.debug.on": "<pink>The fuji debug mode is now on. You can see debug messages in the console!",
+  "fuji.debug.on": "<pink>The fuji debug mode is now on. Console spam incoming.",
   "fuji.inspect.configuration.class": "<blue>Class: `%s`",
   "fuji.inspect.configuration.gui.title": "<blue>Pengatur Konfigurasi",
   "fuji.inspect.configuration.path": "<blue>Path: `%s`",
@@ -1416,5 +1416,6 @@
   "docstring.1755571789064": "The requirement to use the `command assistant`.\n",
   "docstring.1755690116092": "◉ Use a custom player skull as the slot's icon.\nYou can modify the `item` property for that slot directly.\nThe syntax of `item` is the same as the `/give \\<item\\>` command.\n\n<green>NOTE: The data format may be different across MC versions.\n1. `/give @s minecraft:player_head[minecraft:profile=Steve]`\n2. `/give @s minecraft:player_head{SkullOwner:\"Steve\"}`\n",
   "docstring.1755692848834": "You can send a toast with a custom icon.\nThe syntax is the same as `/give` command.\n\nFor example:\n1. `/send-toast @s --icon \"minecraft:player_head[minecraft:profile=Steve]\" \\<rb\\>Hello World`\n",
-  "docstring.1756022056042": "List all registered alias-commands in server."
+  "docstring.1756022056042": "List all registered alias-commands in server.",
+  "docstring.1756047806466": "◉ How it works?\n1. Intercept the `issued command string` packets.\n2. Apply the defined rewrite rules to `the command string` in top-down order.\n\n<blue>NOTE: The `command_rewrite` occurs at the very beginning of the command lifecycle.\n<blue>You will not receive `command suggestions` or `command exceptions` at this stage.\n<blue>The rewrite rules are applied directly to the raw command string.\n\n◉ Command Lifecycle\n1. **Issuing** – The command is sent as `a raw string`. At this stage, no command suggestions or exceptions are available.\n2. **Parsing** – The command string is parsed into `a command node`. At this point, command suggestions and exceptions can be provided.\n3. **Execution** – The `actions` associated with the command node are `executed`, producing the intended `effects` of the command.\n"
 }
