@@ -54,8 +54,8 @@ public class WarpInitializer extends ModuleInitializer {
     private static int $unset(@CommandSource ServerPlayerEntity player, WarpDescriptor warpName) {
         return WarpService
             .deleteWarp(warpName)
-            .map(it -> {
-                TextHelper.sendTextByKey(player, "warp.unset.success", warpName.getDisplayName());
+            .map(unused -> {
+                TextHelper.sendTextByKey(player, "warp.unset.success", warpName.getKey());
                 return CommandHelper.Return.SUCCESS;
             })
             .orElse(CommandHelper.Return.FAILURE);
