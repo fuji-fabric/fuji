@@ -17,6 +17,7 @@ import io.github.sakurawald.fuji.module.initializer.command_advice.structure.Com
 import io.github.sakurawald.fuji.module.initializer.command_advice.structure.CommandAdviceType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
@@ -51,8 +52,8 @@ public class CommandAdviceInitializer extends ModuleInitializer {
         .ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandAdviceConfigModel.class)
         .installTransformer(new CommandAdviceV1SchemaTransformer());
 
-    public static void processCommandAdvice(@NotNull Object executor, @NotNull ServerCommandSource source, @NotNull String commandString, @NotNull CommandAdviceType adviceType, @NotNull CallbackInfo ci) {
-        LogUtil.debug("Process Command Advice: advice type = {}, command string = {}, command source = {}, executor = {}, ", adviceType, commandString, source.getName(), executor);
+    public static void processCommandAdvice(@NotNull Object executor, @NotNull ServerCommandSource source, @NotNull String commandString, @NotNull CommandAdviceType adviceType, @NotNull Optional<CallbackInfo> callbackInfo, @NotNull Optional<Integer> targetCommandReturnValue) {
+        LogUtil.debug("Process Command Advice: advice type = {}, command string = {}, command source = {}, executor = {}, target command return value = {}", adviceType, commandString, source.getName(), executor, targetCommandReturnValue);
 
         /* Create the command advice stream. */
         Stream<CommandAdviceEntry> filterCommandAdvices = config.model()
@@ -65,10 +66,10 @@ public class CommandAdviceInitializer extends ModuleInitializer {
         /* Filter by advice type. */
         filterCommandAdvices = filterCommandAdvices.filter(
             it -> it.getAdviceType().equals(adviceType)
-                // NOTE: A monitor-advice will be accepted by any other advice types.
-                || it.getAdviceType().isMonitor()
                 // NOTE: All canceller-advice must be performed before the target command execution.
-                || (it.getAdviceType().isCanceller() && adviceType.equals(CommandAdviceType.BEFORE_EXECUTING)));
+                || (it.getAdviceType().isCanceller() && adviceType.equals(CommandAdviceType.BEFORE_EXECUTING))
+                || (it.getAdviceType().equals(CommandAdviceType.ON_EXECUTION_CANCELLED) && adviceType.equals(CommandAdviceType.BEFORE_EXECUTING))
+        );
 
         /* Filter by command source type. */
         filterCommandAdvices = filterCommandAdvices
@@ -87,7 +88,7 @@ public class CommandAdviceInitializer extends ModuleInitializer {
             .stream()
             .filter(it -> it.getAdviceType().isCanceller())
             .forEach(it -> {
-                /* Skip if the target command execution has already been cancelled. */
+                /* Short-circuit: If the target command execution has already been cancelled by other canceller-advice. */
                 if (targetCommandExecutionCancelled.get()) {
                     return;
                 }
@@ -98,24 +99,25 @@ public class CommandAdviceInitializer extends ModuleInitializer {
                 /* Cancel the target command execution conditionally/un-conditionally. */
                 if (it.getAdviceType().equals(CommandAdviceType.CANCEL_IF_ANY_SUCCESS)) {
                     if (adviceCommandReturnValues.stream().anyMatch(CommandHelper.Return::isSuccess)) {
-                        cancelTargetCommandExecution(commandString, it, targetCommandExecutionCancelled, ci);
+                        cancelTargetCommandExecution(commandString, it, targetCommandExecutionCancelled, callbackInfo);
                     }
                 } else if (it.getAdviceType().equals(CommandAdviceType.CANCEL_IF_ALL_SUCCESS)) {
                     if (adviceCommandReturnValues.stream().allMatch(CommandHelper.Return::isSuccess)) {
-                        cancelTargetCommandExecution(commandString, it, targetCommandExecutionCancelled, ci);
+                        cancelTargetCommandExecution(commandString, it, targetCommandExecutionCancelled, callbackInfo);
                     }
                 } else {
-                    cancelTargetCommandExecution(commandString, it, targetCommandExecutionCancelled, ci);
+                    // Un-conditionally canceller-advice types: CANCEL_WITH_SUCCESS, CANCEL_WITH_FAILURE
+                    cancelTargetCommandExecution(commandString, it, targetCommandExecutionCancelled, callbackInfo);
                 }
 
             });
 
         /* If the target command execution is cancelled, perform the cleanup things, and exit. */
         if (targetCommandExecutionCancelled.get()) {
-            /* Perform ON_CANCELLED advices. */
+            /* Perform EXECUTION_CANCELLED advices. */
             effectiveCommandAdvices
                 .stream()
-                .filter(it -> it.getAdviceType().equals(CommandAdviceType.ON_CANCELLED))
+                .filter(it -> it.getAdviceType().equals(CommandAdviceType.ON_EXECUTION_CANCELLED))
                 .forEach(it -> executeAdviceCommands(source, commandString, it));
 
             /* Exit the process. */
@@ -126,21 +128,49 @@ public class CommandAdviceInitializer extends ModuleInitializer {
         effectiveCommandAdvices
             .stream()
             .filter(it -> !it.getAdviceType().isCanceller()
-                && !it.getAdviceType().isMonitor())
-            .forEach(it -> executeAdviceCommands(source, commandString, it));
+                && !it.getAdviceType().equals(CommandAdviceType.ON_EXECUTION_CANCELLED)
+            )
+            .forEach(it -> {
+                if (it.getAdviceType().equals(CommandAdviceType.BEFORE_EXECUTING) || it.getAdviceType().equals(CommandAdviceType.AFTER_EXECUTING)) {
+                    executeAdviceCommands(source, commandString, it);
+                } else if (it.getAdviceType().equals(CommandAdviceType.ON_EXECUTION_SUCCESS) || it.getAdviceType().equals(CommandAdviceType.ON_EXECUTION_FAILURE)) {
+                    targetCommandReturnValue.ifPresentOrElse($targetCommandReturnValue -> {
+                        boolean success = CommandHelper.Return.isSuccess($targetCommandReturnValue);
+
+                        if (it.getAdviceType().equals(CommandAdviceType.ON_EXECUTION_SUCCESS) && success) {
+                            executeAdviceCommands(source, commandString, it);
+                            return;
+                        }
+
+                        if (it.getAdviceType().equals(CommandAdviceType.ON_EXECUTION_FAILURE) && !success) {
+                            executeAdviceCommands(source, commandString, it);
+                            return;
+                        }
+
+                    }, () -> LogUtil.debug("The return value of target command {} is null, can't perform the command advice {}.", commandString, it));
+                }
+            });
+
     }
 
     @SuppressWarnings({"unchecked"})
-    private static void cancelTargetCommandExecution(@NotNull String commandString, @NotNull CommandAdviceEntry commandAdvice, @NotNull AtomicBoolean targetCommandExecutionCancelled, @NotNull CallbackInfo ci) {
-        LogUtil.debug("Cancel the executing of target command {}. (advice = {})", commandString, commandAdvice);
-
+    private static void cancelTargetCommandExecution(@NotNull String commandString, @NotNull CommandAdviceEntry commandAdvice, @NotNull AtomicBoolean targetCommandExecutionCancelled, @NotNull Optional<CallbackInfo> callbackInfo) {
+        /* Mark to exit the advice processing. */
         targetCommandExecutionCancelled.set(true);
 
-        if (ci instanceof CallbackInfoReturnable<?>) {
-            ((CallbackInfoReturnable<Integer>) ci).setReturnValue(commandAdvice.getAdviceType().getAlternativeReturnValue());
-        } else {
-            ci.cancel();
-        }
+        /* Cancel the target command execution. */
+        callbackInfo
+            .ifPresentOrElse($callbackInfo -> {
+                LogUtil.debug("Cancel the executing of target command {}. (advice = {})", commandString, commandAdvice);
+
+                if ($callbackInfo instanceof CallbackInfoReturnable<?>) {
+                    ((CallbackInfoReturnable<Integer>) $callbackInfo).setReturnValue(commandAdvice.getAdviceType().getAlternativeReturnValue());
+                } else {
+                    $callbackInfo.cancel();
+                }
+
+            }, () -> LogUtil.warn("Failed to cancel the execution of target command {}, due to the Optional<CallbackInfo> is empty. (advice = {})", commandString, commandAdvice));
+
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")

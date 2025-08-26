@@ -436,6 +436,7 @@
   "reload": "Reload successfully.",
   "reload.gui.name": "<red>Reload",
   "repair": "<gold>Repaired.",
+  "repair.no_damage": "<red>There is no damage to your item.",
   "reply.no_target": "<red>No reply target",
   "rtp.dimension.disallow": "<red>Not allowed to rtp in dimension %s",
   "rtp.fail": "<gold>Rtp failed, try again.",
