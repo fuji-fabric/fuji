@@ -17,18 +17,26 @@ import org.jetbrains.annotations.NotNull;
 @With
 public class WarpDescriptor {
 
-    public GlobalPos position;
+    GlobalPos position;
 
     @SerializedName(value = "display_name", alternate = "name")
-    public String displayName = "<blue>Display Name";
-    public String item = "minecraft:painting";
-    public List<String> lore = new ArrayList<>();
+    String displayName = "<blue>Display Name";
+    String item = "minecraft:painting";
+    List<String> lore = new ArrayList<>();
 
-    public Event event = new Event();
+    transient String key;
+
+    Event event = new Event();
+
+    @Data
+    @NoArgsConstructor
     public static class Event {
-        public OnWarped on_warped = new OnWarped();
+        OnWarped onWarped = new OnWarped();
+
+        @Data
+        @NoArgsConstructor
         public static class OnWarped {
-            public List<String> command_list = new ArrayList<>();
+            List<String> commandList = new ArrayList<>();
         }
     }
 

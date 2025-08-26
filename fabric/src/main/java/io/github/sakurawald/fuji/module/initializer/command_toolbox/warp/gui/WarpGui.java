@@ -21,6 +21,11 @@ public class WarpGui extends PagedGui<WarpDescriptor> {
         super(null, player, TextHelper.getTextByKey(player, "warp.gui.title"), entities, pageIndex);
     }
 
+    public static @NotNull WarpGui makeDefault(@NotNull ServerPlayerEntity player) {
+        List<WarpDescriptor> list = WarpService.listWarps();
+        return new WarpGui(player, list, 0);
+    }
+
     @Override
     protected PagedGui<WarpDescriptor> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<WarpDescriptor> entities, int pageIndex) {
         return new WarpGui(player, entities, pageIndex);

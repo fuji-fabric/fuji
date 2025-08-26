@@ -9,14 +9,14 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
-import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.command.argument.wrapper.WarpName;
 import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.service.WarpService;
+import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.structure.WarpDescriptor;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
-public class WarpNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
+public class WarpDescriptorArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     protected ArgumentType<?> makeArgumentType() {
@@ -25,20 +25,18 @@ public class WarpNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        String warpName = StringArgumentType.getString(context, commandArgument.getArgumentName());
-
+        String warpId = StringArgumentType.getString(context, commandArgument.getArgumentName());
         return WarpService
-            .findWarp(warpName)
-            .map(it -> new WarpName(warpName))
+            .findWarp(warpId)
             .orElseThrow(() -> {
-                TextHelper.sendTextByKey(context, "warp.not_found", warpName);
+                TextHelper.sendTextByKey(context, "warp.not_found", warpId);
                 return new AbortCommandExecutionException();
             });
     }
 
     @Override
     public List<Class<?>> getTypeClasses() {
-        return List.of(WarpName.class);
+        return List.of(WarpDescriptor.class);
     }
 
     @Override

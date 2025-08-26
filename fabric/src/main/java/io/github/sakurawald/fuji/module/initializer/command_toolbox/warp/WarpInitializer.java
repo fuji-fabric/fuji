@@ -14,7 +14,6 @@ import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.service.string_splitter.StringSplitter;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
-import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.command.argument.wrapper.WarpName;
 import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.config.model.WarpDataModel;
 import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.gui.WarpGui;
 import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.service.WarpService;
@@ -44,21 +43,19 @@ public class WarpInitializer extends ModuleInitializer {
 
     @Document(id = 1751825396093L, value = "Teleport to the specified warp point.")
     @CommandNode("tp")
-    private static int $tp(@CommandSource @CommandTarget ServerPlayerEntity player, WarpName warpName) {
-        return WarpService.withWarp(warpName, it -> {
-            WarpService.doWarp(it, player);
-            return CommandHelper.Return.SUCCESS;
-        });
+    private static int $tp(@CommandSource @CommandTarget ServerPlayerEntity player, WarpDescriptor warpName) {
+        WarpService.doWarp(warpName, player);
+        return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1751825400830L, value = "Delete a warp point.")
     @CommandNode("unset")
     @CommandRequirement(level = 4)
-    private static int $unset(@CommandSource ServerPlayerEntity player, WarpName warpName) {
+    private static int $unset(@CommandSource ServerPlayerEntity player, WarpDescriptor warpName) {
         return WarpService
-            .deleteWarp(warpName.getValue())
+            .deleteWarp(warpName)
             .map(it -> {
-                TextHelper.sendTextByKey(player, "warp.unset.success", warpName.getValue());
+                TextHelper.sendTextByKey(player, "warp.unset.success", warpName.getDisplayName());
                 return CommandHelper.Return.SUCCESS;
             })
             .orElse(CommandHelper.Return.FAILURE);
@@ -88,44 +85,40 @@ public class WarpInitializer extends ModuleInitializer {
     @Document(id = 1751825410558L, value = "List warp points.")
     @CommandNode("list")
     private static int $list(@CommandSource ServerCommandSource source) {
-        if (source.isExecutedByPlayer()) {
-            List<WarpDescriptor> list = WarpService.listWarps();
-            new WarpGui(source.getPlayer(), list, 0).open();
-        } else {
-            TextHelper.sendTextByKey(source, "warp.list", data.model().warps.keySet());
-        }
-
-        return CommandHelper.Return.SUCCESS;
+        return Optional
+            .ofNullable(source.getPlayer())
+            .map(player -> {
+                WarpGui.makeDefault(player).open();
+                return CommandHelper.Return.SUCCESS;
+            })
+            .orElseGet(() -> {
+                TextHelper.sendTextByKey(source, "warp.list", data.model().warps.keySet());
+                return CommandHelper.Return.SUCCESS;
+            });
     }
 
     @Document(id = 1751825417554L, value = "Set the display name for a warp.")
     @CommandNode("set-name")
     @CommandRequirement(level = 4)
-    private static int $setName(@CommandSource ServerPlayerEntity player, WarpName warp, GreedyString name) {
-        return WarpService.withWarp(warp, it -> {
-            it.setDisplayName(name.getValue());
-            return CommandHelper.Return.SUCCESS;
-        });
+    private static int $setName(@CommandSource ServerPlayerEntity player, WarpDescriptor warp, GreedyString name) {
+        warp.setDisplayName(name.getValue());
+        return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1751825422424L, value = "Set the item for a warp.")
     @CommandNode("set-item")
     @CommandRequirement(level = 4)
-    private static int $setItem(@CommandSource ServerPlayerEntity player, WarpName warp, ItemStackWrapper itemStack) {
-        return WarpService.withWarp(warp, it -> {
-            it.setItem(itemStack.getInputString());
-            return CommandHelper.Return.SUCCESS;
-        });
+    private static int $setItem(@CommandSource ServerPlayerEntity player, WarpDescriptor warp, ItemStackWrapper itemStack) {
+        warp.setItem(itemStack.getInputString());
+        return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1751825427963L, value = "Set the lore for a warp.")
     @CommandNode("set-lore")
     @CommandRequirement(level = 4)
-    private static int $setLore(@CommandSource ServerPlayerEntity player, WarpName warp, GreedyString lore) {
-        return WarpService.withWarp(warp, it -> {
-            List<String> split = StringSplitter.split(lore.getValue());
-            it.setLore(split);
-            return CommandHelper.Return.SUCCESS;
-        });
+    private static int $setLore(@CommandSource ServerPlayerEntity player, WarpDescriptor warp, GreedyString lore) {
+        List<String> split = StringSplitter.split(lore.getValue());
+        warp.setLore(split);
+        return CommandHelper.Return.SUCCESS;
     }
 }
