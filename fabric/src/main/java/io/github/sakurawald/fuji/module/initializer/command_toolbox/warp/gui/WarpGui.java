@@ -6,39 +6,40 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
-import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.WarpInitializer;
-import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.structure.WarpNode;
+import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.service.WarpService;
+import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.structure.WarpDescriptor;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class WarpGui extends PagedGui<WarpNode> {
+public class WarpGui extends PagedGui<WarpDescriptor> {
 
-    public WarpGui(ServerPlayerEntity player, @NotNull List<WarpNode> entities, int pageIndex) {
+    public WarpGui(ServerPlayerEntity player, @NotNull List<WarpDescriptor> entities, int pageIndex) {
         super(null, player, TextHelper.getTextByKey(player, "warp.gui.title"), entities, pageIndex);
     }
 
     @Override
-    protected PagedGui<WarpNode> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<WarpNode> entities, int pageIndex) {
+    protected PagedGui<WarpDescriptor> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<WarpDescriptor> entities, int pageIndex) {
         return new WarpGui(player, entities, pageIndex);
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull WarpNode entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull WarpDescriptor entity) {
+        List<Text> lore = entity
+            .getLore()
+            .stream()
+            .map(line -> TextHelper.getTextByValue(getPlayer(), line))
+            .toList();
+
         return GuiElementBuilder
             .from(ItemStackHelper.Parser.parseItemStack(entity.getItem()))
-            .setName(TextHelper.getTextByValue(getPlayer(), entity.getName()))
-            .setLore(new ArrayList<>() {
-                {
-                    entity.getLore().forEach(it -> this.add(TextHelper.getTextByValue(getPlayer(), it)));
-                }
-            })
+            .setName(TextHelper.getTextByValue(getPlayer(), entity.getDisplayName()))
+            .setLore(lore)
             .setCallback(() -> {
-                WarpInitializer.doWarp(entity, getPlayer());
+                WarpService.doWarp(entity, getPlayer());
                 close();
             })
             .build();

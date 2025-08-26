@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.structure;
 
+import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,16 +9,18 @@ import lombok.With;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @With
-public class WarpNode {
+public class WarpDescriptor {
 
     public GlobalPos position;
 
-    public String name = "<blue>Display Name";
+    @SerializedName(value = "display_name", alternate = "name")
+    public String displayName = "<blue>Display Name";
     public String item = "minecraft:painting";
     public List<String> lore = new ArrayList<>();
 
@@ -29,7 +32,7 @@ public class WarpNode {
         }
     }
 
-    public WarpNode(GlobalPos position) {
+    public WarpDescriptor(@NotNull GlobalPos position) {
         this.position = position;
     }
 }

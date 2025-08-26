@@ -4,10 +4,13 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
-import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.WarpInitializer;
+import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
 import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.command.argument.wrapper.WarpName;
+import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.service.WarpService;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.List;
@@ -22,7 +25,15 @@ public class WarpNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        return new WarpName(StringArgumentType.getString(context, commandArgument.getArgumentName()));
+        String warpName = StringArgumentType.getString(context, commandArgument.getArgumentName());
+
+        return WarpService
+            .findWarp(warpName)
+            .map(it -> new WarpName(warpName))
+            .orElseThrow(() -> {
+                TextHelper.sendTextByKey(context, "warp.not_found", warpName);
+                return new AbortCommandExecutionException();
+            });
     }
 
     @Override
@@ -38,10 +49,10 @@ public class WarpNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     @NotNull
     protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
-        return super.makeRequiredArgumentBuilder(argumentName).suggests((ctx, builder) -> {
-            WarpInitializer.data.model().name2warp.keySet().forEach(builder::suggest);
-            return builder.buildFuture();
-        });
+        return super
+            .makeRequiredArgumentBuilder(argumentName)
+            .suggests(CommandHelper.Suggestion.iterable(WarpService::listWarpIds));
     }
+
 }
 
