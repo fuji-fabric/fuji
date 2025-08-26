@@ -60,4 +60,8 @@ public class CommandAdviceEntry {
         The commands to execute when `perform` this `advice`.
         """)
     List<String> commands;
+
+    public boolean isCancellableAdviceType() {
+        return CommandAdviceType.isCancellableAdviceType(this.getAdviceType());
+    }
 }

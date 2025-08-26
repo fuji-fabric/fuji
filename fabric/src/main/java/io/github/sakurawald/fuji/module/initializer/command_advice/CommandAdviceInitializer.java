@@ -16,6 +16,7 @@ import io.github.sakurawald.fuji.module.initializer.command_advice.structure.Com
 import io.github.sakurawald.fuji.module.initializer.command_advice.structure.CommandAdviceType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -49,61 +50,82 @@ public class CommandAdviceInitializer extends ModuleInitializer {
         .ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandAdviceConfigModel.class)
         .installTransformer(new CommandAdviceV1SchemaTransformer());
 
-    @SuppressWarnings({"ResultOfMethodCallIgnored", "unchecked"})
+    @SuppressWarnings({"unchecked"})
     public static void processCommandAdvice(@NotNull Object executor, @NotNull ServerCommandSource source, @NotNull String commandString, @NotNull CommandAdviceType adviceType, @NotNull CallbackInfo ci) {
         LogUtil.debug("Process Command Advice: advice type = {}, command string = {}, command source = {}, executor = {}, ", adviceType, commandString, source.getName(), executor);
 
         /* Create the command advice stream. */
-        Stream<CommandAdviceEntry> effectiveCommandAdvices = config.model()
+        Stream<CommandAdviceEntry> filterCommandAdvices = config.model()
             .getAdvices()
             .stream();
 
         /* Filter by enable property. */
-        effectiveCommandAdvices = effectiveCommandAdvices.filter(CommandAdviceEntry::isEnable);
+        filterCommandAdvices = filterCommandAdvices.filter(CommandAdviceEntry::isEnable);
 
         /* Filter by advice type. */
-        effectiveCommandAdvices = effectiveCommandAdvices.filter(
+        filterCommandAdvices = filterCommandAdvices.filter(
                 it -> it.getAdviceType().equals(adviceType)
                     || (CommandAdviceType.isCancellableAdviceType(it.getAdviceType()) && adviceType.equals(CommandAdviceType.BEFORE_EXECUTING)));
 
         /* Filter by command source type. */
-        effectiveCommandAdvices = effectiveCommandAdvices
+        filterCommandAdvices = filterCommandAdvices
             .filter(it -> !it.getMatcher().isExecutedByPlayerOnly() || source.isExecutedByPlayer());
 
         /* Filter by command string regex. */
-        effectiveCommandAdvices = effectiveCommandAdvices
+        filterCommandAdvices = filterCommandAdvices
             .filter(it -> commandString.matches(it.getMatcher().getCommandStringRegex()));
 
-        /* Perform advices. */
-        effectiveCommandAdvices
-            .forEach(commandAdvice -> {
-                /* Cancel the executing of target command. */
-                if (CommandAdviceType.isCancellableAdviceType(commandAdvice.getAdviceType())) {
-                    LogUtil.debug("Cancel the executing of target command {}. (advice = {})", commandString, commandAdvice);
+        /* Collect effective command advices. */
+        List<CommandAdviceEntry> effectiveCommandAdvices = filterCommandAdvices.toList();
 
-                    if (ci instanceof CallbackInfoReturnable<?>) {
-                        ((CallbackInfoReturnable<Integer>) ci).setReturnValue(commandAdvice.getAdviceType().getAlternativeReturnValue());
-                    } else {
-                        ci.cancel();
-                    }
+        /* Perform cancellable advices.  */
+        AtomicBoolean targetCommandExecutionCancelled = new AtomicBoolean(false);
+
+        effectiveCommandAdvices
+            .stream()
+            .filter(CommandAdviceEntry::isCancellableAdviceType)
+            .forEach(commandAdvice -> {
+                targetCommandExecutionCancelled.set(true);
+                LogUtil.debug("Cancel the executing of target command {}. (advice = {})", commandString, commandAdvice);
+
+                if (ci instanceof CallbackInfoReturnable<?>) {
+                    ((CallbackInfoReturnable<Integer>) ci).setReturnValue(commandAdvice.getAdviceType().getAlternativeReturnValue());
+                } else {
+                    ci.cancel();
                 }
 
-                /* Expand the captured-groups on commands. */
-                Matcher matcher = commandAdvice
-                    .getMatcher()
-                    .getCachedPattern()
-                    .matcher(commandString);
-                matcher.find();
-                List<String> commands = commandAdvice.getCommands()
-                    .stream()
-                    .map(cmd -> StringUtil.replaceAllAndResetMatcher(matcher, cmd))
-                    .collect(Collectors.toCollection(ArrayList::new));
-
-                /* Execute the commands */
-                LogUtil.debug("Execute commands {} for {}", commands, commandAdvice);
-                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(source), commands);
+                executeAdviceCommands(source, commandString, commandAdvice);
             });
 
+        if (targetCommandExecutionCancelled.get()) {
+            return;
+        }
 
+        /* Perform non-cancellable advices. */
+        effectiveCommandAdvices
+            .stream()
+            .filter(it -> !it.isCancellableAdviceType())
+            .forEach(commandAdvice -> {
+                executeAdviceCommands(source, commandString, commandAdvice);
+            });
+    }
+
+    private static void executeAdviceCommands(@NotNull ServerCommandSource source, @NotNull String commandString, @NotNull CommandAdviceEntry commandAdvice) {
+        Matcher matcher = commandAdvice
+            .getMatcher()
+            .getCachedPattern()
+            .matcher(commandString);
+
+        if (matcher.find()) {
+            /* Expand the captured-groups on commands. */
+            List<String> commands = commandAdvice.getCommands()
+                .stream()
+                .map(cmd -> StringUtil.replaceAllAndResetMatcher(matcher, cmd))
+                .collect(Collectors.toCollection(ArrayList::new));
+
+            /* Execute the commands */
+            LogUtil.debug("Execute commands {} for {}", commands, commandAdvice);
+            CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(source), commands);
+        }
     }
 }

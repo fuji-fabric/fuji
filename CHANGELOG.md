@@ -15,3 +15,5 @@
 - [core] feature: new `argument type adapter` for `entities` argument type.
 - [command_meta.NOT] feature: new `/NOT` command, to reverse the return value of `SUCCESS` and `FAILURE`.
   - Example: `/IF NOT has-item? <player> minecraft:apple 16 THEN say You don't have 16 apples. ELSE say You have 16 apples.`
+- [command_advice] features and bug fixes
+  - feature: improve the interactions of `cancellable advices` (`CANCEL_WITH_SUCCESS` and `CANCEL_WITH_FAILUE`) and `non-cancellable advices`. Now the `non-cancellable advice` will not be performed if the target command execution has already been canceled by a `cancellable command advice`.
