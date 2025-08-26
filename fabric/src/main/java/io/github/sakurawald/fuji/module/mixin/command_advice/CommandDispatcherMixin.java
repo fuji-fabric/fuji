@@ -2,12 +2,12 @@ package io.github.sakurawald.fuji.module.mixin.command_advice;
 
 
 #if MC_VER <= MC_1_20_2
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 #elif MC_VER > MC_1_20_2
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 #endif
@@ -41,18 +41,18 @@ public class CommandDispatcherMixin {
     }
 
     #if MC_VER <= MC_1_20_2
-    @WrapOperation(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/Command;run(Lcom/mojang/brigadier/context/CommandContext;)I"))
-    int afterExecuteInCommandDispatcher(Command<ServerCommandSource> instance, CommandContext<ServerCommandSource> commandContext, Operation<Integer> original, @Local(argsOnly = true) ParseResults<ServerCommandSource> parseResults)
+    @ModifyExpressionValue(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/Command;run(Lcom/mojang/brigadier/context/CommandContext;)I"))
+    int afterExecuteInCommandDispatcher(int original, @Local(argsOnly = true) ParseResults<ServerCommandSource> parseResults)
     #elif MC_VER > MC_1_20_2
     @ModifyReturnValue(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At("RETURN"))
     int afterExecuteInCommandDispatcher(int original, @Local(argsOnly = true) ParseResults<ServerCommandSource> parseResults)
     #endif
     {
-        AtomicInteger logicalReturnValue = new AtomicInteger(0);
+        AtomicInteger logicalReturnValue = new AtomicInteger(original);
         CommandHelper.Source.withServerCommandSource(parseResults.getContext(), (serverCommandSource)  -> {
 
             #if MC_VER <= MC_1_20_2
-            logicalReturnValue.set(original.call(instance, commandContext));
+            logicalReturnValue.set(original);
             boolean logicalSuccess = CommandHelper.Return.isSuccess(logicalReturnValue.get());
             CommandAdviceType adviceType = logicalSuccess ? CommandAdviceType.ON_EXECUTION_SUCCESS : CommandAdviceType.ON_EXECUTION_FAILURE;
             CommandAdviceInitializer.processCommandAdvice(this, serverCommandSource, parseResults.getReader().getString(), adviceType, Optional.empty(), Optional.of(logicalReturnValue.get()));
