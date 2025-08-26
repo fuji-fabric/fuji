@@ -13,6 +13,7 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.service.string_splitter.StringSplitter;
+import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.config.model.WarpDataModel;
 import io.github.sakurawald.fuji.module.initializer.command_toolbox.warp.gui.WarpGui;
@@ -119,6 +120,15 @@ public class WarpInitializer extends ModuleInitializer {
     private static int $setLore(@CommandSource ServerPlayerEntity player, WarpDescriptor warp, GreedyString lore) {
         List<String> split = StringSplitter.split(lore.getValue());
         warp.setLore(split);
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document(id = 1756241454472L, value = "Set the position for a warp.")
+    @CommandNode("set-position")
+    @CommandRequirement(level = 4)
+    private static int $setPosition(@CommandSource ServerPlayerEntity player, WarpDescriptor warp) {
+        GlobalPos newPosition = GlobalPos.of(player);
+        warp.setPosition(newPosition);
         return CommandHelper.Return.SUCCESS;
     }
 }
