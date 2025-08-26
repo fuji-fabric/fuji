@@ -65,8 +65,10 @@ public class CommandAdviceInitializer extends ModuleInitializer {
         /* Filter by advice type. */
         filterCommandAdvices = filterCommandAdvices.filter(
             it -> it.getAdviceType().equals(adviceType)
-                // NOTE: All cancellable-advice must be performed before the target command execution.
-                || (it.isCancellableAdviceType() && adviceType.equals(CommandAdviceType.BEFORE_EXECUTING)));
+                // NOTE: A monitor-advice will be accepted by any other advice types.
+                || it.getAdviceType().isMonitor()
+                // NOTE: All canceller-advice must be performed before the target command execution.
+                || (it.getAdviceType().isCanceller() && adviceType.equals(CommandAdviceType.BEFORE_EXECUTING)));
 
         /* Filter by command source type. */
         filterCommandAdvices = filterCommandAdvices
@@ -79,46 +81,53 @@ public class CommandAdviceInitializer extends ModuleInitializer {
         /* Collect effective command advices. */
         List<CommandAdviceEntry> effectiveCommandAdvices = filterCommandAdvices.toList();
 
-        /* Perform cancellable advices.  */
+        /* Perform canceller advices.  */
         AtomicBoolean targetCommandExecutionCancelled = new AtomicBoolean(false);
         effectiveCommandAdvices
             .stream()
-            .filter(CommandAdviceEntry::isCancellableAdviceType)
-            .forEach(commandAdvice -> {
+            .filter(it -> it.getAdviceType().isCanceller())
+            .forEach(it -> {
                 /* Skip if the target command execution has already been cancelled. */
                 if (targetCommandExecutionCancelled.get()) {
                     return;
                 }
 
                 /* Execute the advices commands to get the return values. */
-                @NotNull List<Integer> adviceCommandReturnValues = executeAdviceCommands(source, commandString, commandAdvice);
+                @NotNull List<Integer> adviceCommandReturnValues = executeAdviceCommands(source, commandString, it);
 
                 /* Cancel the target command execution conditionally/un-conditionally. */
-                if (commandAdvice.getAdviceType().equals(CommandAdviceType.CANCEL_IF_ANY_SUCCESS)) {
+                if (it.getAdviceType().equals(CommandAdviceType.CANCEL_IF_ANY_SUCCESS)) {
                     if (adviceCommandReturnValues.stream().anyMatch(CommandHelper.Return::isSuccess)) {
-                        cancelTargetCommandExecution(commandString, commandAdvice, targetCommandExecutionCancelled, ci);
+                        cancelTargetCommandExecution(commandString, it, targetCommandExecutionCancelled, ci);
                     }
-                } else if (commandAdvice.getAdviceType().equals(CommandAdviceType.CANCEL_IF_ALL_SUCCESS)) {
+                } else if (it.getAdviceType().equals(CommandAdviceType.CANCEL_IF_ALL_SUCCESS)) {
                     if (adviceCommandReturnValues.stream().allMatch(CommandHelper.Return::isSuccess)) {
-                        cancelTargetCommandExecution(commandString, commandAdvice, targetCommandExecutionCancelled, ci);
+                        cancelTargetCommandExecution(commandString, it, targetCommandExecutionCancelled, ci);
                     }
                 } else {
-                    cancelTargetCommandExecution(commandString, commandAdvice, targetCommandExecutionCancelled, ci);
+                    cancelTargetCommandExecution(commandString, it, targetCommandExecutionCancelled, ci);
                 }
 
             });
 
+        /* If the target command execution is cancelled, perform the cleanup things, and exit. */
         if (targetCommandExecutionCancelled.get()) {
+            /* Perform ON_CANCELLED advices. */
+            effectiveCommandAdvices
+                .stream()
+                .filter(it -> it.getAdviceType().equals(CommandAdviceType.ON_CANCELLED))
+                .forEach(it -> executeAdviceCommands(source, commandString, it));
+
+            /* Exit the process. */
             return;
         }
 
-        /* Perform non-cancellable advices. */
+        /* Perform non-canceller advices. */
         effectiveCommandAdvices
             .stream()
-            .filter(it -> !it.isCancellableAdviceType())
-            .forEach(commandAdvice -> {
-                executeAdviceCommands(source, commandString, commandAdvice);
-            });
+            .filter(it -> !it.getAdviceType().isCanceller()
+                && !it.getAdviceType().isMonitor())
+            .forEach(it -> executeAdviceCommands(source, commandString, it));
     }
 
     @SuppressWarnings({"unchecked"})

@@ -18,3 +18,4 @@
 - [command_advice] features and bug fixes
   - feature: improve the interactions of `cancellable advices` (`CANCEL_WITH_SUCCESS` and `CANCEL_WITH_FAILUE`) and `non-cancellable advices`. Now the `non-cancellable advice` will not be performed if the target command execution has already been canceled by a `cancellable command advice`.
   - feature: new command advice type: `CANCEL_IF_ANY_SUCCESS` and `CANCEL_IF_ALL_SUCCESS`.
+  - feature: new command advice type: `ON_CANCELLED`.
