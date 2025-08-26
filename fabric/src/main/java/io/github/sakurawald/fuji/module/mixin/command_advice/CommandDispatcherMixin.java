@@ -21,7 +21,7 @@ public class CommandDispatcherMixin {
     #endif
     void beforeExecuteInCommandDispatcher(ParseResults<?> parseResults, CallbackInfoReturnable<Integer> cir) {
         CommandHelper.Source.withServerCommandSource(parseResults.getContext(), (serverCommandSource) -> {
-            CommandAdviceInitializer.processCommandAdvice(this, serverCommandSource, parseResults.getReader().getString(), CommandAdviceType.BEFORE_EXECUTING, Optional.of(cir), Optional.empty());
+            CommandAdviceInitializer.processCommandAdvice(this, serverCommandSource, parseResults.getReader().getString(), CommandAdviceType.BEFORE_EXECUTION, Optional.of(cir), Optional.empty());
         });
     }
 
@@ -32,7 +32,7 @@ public class CommandDispatcherMixin {
     #endif
     void afterExecuteInCommandDispatcher(ParseResults<?> parseResults, CallbackInfoReturnable<Integer> cir) {
         CommandHelper.Source.withServerCommandSource(parseResults.getContext(), (serverCommandSource)  -> {
-            CommandAdviceInitializer.processCommandAdvice(this, serverCommandSource, parseResults.getReader().getString(), CommandAdviceType.AFTER_EXECUTING, Optional.of(cir), Optional.ofNullable(cir.getReturnValue()));
+            CommandAdviceInitializer.processCommandAdvice(this, serverCommandSource, parseResults.getReader().getString(), CommandAdviceType.AFTER_EXECUTION, Optional.of(cir), Optional.ofNullable(cir.getReturnValue()));
         });
     }
 }

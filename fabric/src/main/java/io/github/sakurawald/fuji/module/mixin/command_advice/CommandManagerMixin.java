@@ -39,7 +39,7 @@ public class CommandManagerMixin {
     @Inject(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/command/CommandManager;callWithContext(Lnet/minecraft/server/command/ServerCommandSource;Ljava/util/function/Consumer;)V"), cancellable = true)
     void beforeExecuteInCommandManager(@NotNull ParseResults<ServerCommandSource> parseResults, String string, CallbackInfo ci)
     {
-        CommandAdviceInitializer.processCommandAdvice(this, parseResults.getContext().getSource(), parseResults.getReader().getString(), CommandAdviceType.BEFORE_EXECUTING, Optional.of(ci), Optional.empty());
+        CommandAdviceInitializer.processCommandAdvice(this, parseResults.getContext().getSource(), parseResults.getReader().getString(), CommandAdviceType.BEFORE_EXECUTION, Optional.of(ci), Optional.empty());
     }
     #endif
 
@@ -60,7 +60,7 @@ public class CommandManagerMixin {
         original.call(finalServerCommandSource, finalConsumer);
 
         /* Process the advices. */
-        CommandAdviceInitializer.processCommandAdvice(this, parseResults.getContext().getSource(), parseResults.getReader().getString(), CommandAdviceType.AFTER_EXECUTING, Optional.empty(), Optional.empty());
+        CommandAdviceInitializer.processCommandAdvice(this, parseResults.getContext().getSource(), parseResults.getReader().getString(), CommandAdviceType.AFTER_EXECUTION, Optional.empty(), Optional.empty());
     }
 
     @Unique

@@ -19,10 +19,10 @@ public class CommandAdviceConfigModel {
     @SerializedName(value = "advices", alternate = "entries")
     List<CommandAdviceEntry> advices = new ArrayList<>() {
         {
-            this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("back", true), CommandAdviceType.BEFORE_EXECUTING, List.of("run as fake-op %player:name% say Before executing /back command for %player:name%")));
-            this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("back", true), CommandAdviceType.AFTER_EXECUTING, List.of("run as fake-op %player:name% say After executing /back command for %player:name%")));
+            this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("back", true), CommandAdviceType.BEFORE_EXECUTION, List.of("run as fake-op %player:name% say Before executing /back command for %player:name%")));
+            this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("back", true), CommandAdviceType.AFTER_EXECUTION, List.of("run as fake-op %player:name% say After executing /back command for %player:name%")));
 
-            this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("heal", true), CommandAdviceType.AFTER_EXECUTING, List.of(
+            this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("heal", true), CommandAdviceType.AFTER_EXECUTION, List.of(
                 "say Display the heard particle for player %player:name%",
                 "run as fake-op %player:name% --silent true particle minecraft:heart ~ ~1 ~ 0.6 0.6 0.6 0 20 force %player:name%")));
 

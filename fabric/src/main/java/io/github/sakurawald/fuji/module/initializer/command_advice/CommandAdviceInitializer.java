@@ -67,8 +67,8 @@ public class CommandAdviceInitializer extends ModuleInitializer {
         filterCommandAdvices = filterCommandAdvices.filter(
             it -> it.getAdviceType().equals(adviceType)
                 // NOTE: All canceller-advice must be performed before the target command execution.
-                || (it.getAdviceType().isCanceller() && adviceType.equals(CommandAdviceType.BEFORE_EXECUTING))
-                || (it.getAdviceType().equals(CommandAdviceType.ON_EXECUTION_CANCELLED) && adviceType.equals(CommandAdviceType.BEFORE_EXECUTING))
+                || (it.getAdviceType().isCanceller() && adviceType.equals(CommandAdviceType.BEFORE_EXECUTION))
+                || (it.getAdviceType().equals(CommandAdviceType.ON_EXECUTION_CANCELLED) && adviceType.equals(CommandAdviceType.BEFORE_EXECUTION))
         );
 
         /* Filter by command source type. */
@@ -131,7 +131,7 @@ public class CommandAdviceInitializer extends ModuleInitializer {
                 && !it.getAdviceType().equals(CommandAdviceType.ON_EXECUTION_CANCELLED)
             )
             .forEach(it -> {
-                if (it.getAdviceType().equals(CommandAdviceType.BEFORE_EXECUTING) || it.getAdviceType().equals(CommandAdviceType.AFTER_EXECUTING)) {
+                if (it.getAdviceType().equals(CommandAdviceType.BEFORE_EXECUTION) || it.getAdviceType().equals(CommandAdviceType.AFTER_EXECUTION)) {
                     executeAdviceCommands(source, commandString, it);
                 } else if (it.getAdviceType().equals(CommandAdviceType.ON_EXECUTION_SUCCESS) || it.getAdviceType().equals(CommandAdviceType.ON_EXECUTION_FAILURE)) {
                     targetCommandReturnValue.ifPresentOrElse($targetCommandReturnValue -> {
