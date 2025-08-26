@@ -6,11 +6,13 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 #elif MC_VER > MC_1_20_2
-import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 #endif
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -42,8 +44,8 @@ public class CommandDispatcherMixin {
     @WrapOperation(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/Command;run(Lcom/mojang/brigadier/context/CommandContext;)I"))
     int afterExecuteInCommandDispatcher(Command<ServerCommandSource> instance, CommandContext<ServerCommandSource> commandContext, Operation<Integer> original, @Local(argsOnly = true) ParseResults<ServerCommandSource> parseResults)
     #elif MC_VER > MC_1_20_2
-    @WrapMethod(method = "execute(Lcom/mojang/brigadier/ParseResults;)I")
-    int afterExecuteInCommandDispatcher(ParseResults<ServerCommandSource> parseResults, Operation<Integer> original)
+    @ModifyReturnValue(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At("RETURN"))
+    int afterExecuteInCommandDispatcher(int original, @Local(argsOnly = true) ParseResults<ServerCommandSource> parseResults)
     #endif
     {
         AtomicInteger logicalReturnValue = new AtomicInteger(0);
@@ -55,7 +57,7 @@ public class CommandDispatcherMixin {
             CommandAdviceType adviceType = logicalSuccess ? CommandAdviceType.ON_EXECUTION_SUCCESS : CommandAdviceType.ON_EXECUTION_FAILURE;
             CommandAdviceInitializer.processCommandAdvice(this, serverCommandSource, parseResults.getReader().getString(), adviceType, Optional.empty(), Optional.of(logicalReturnValue.get()));
             #elif MC_VER > MC_1_20_2
-            logicalReturnValue.set(original.call(parseResults));
+            logicalReturnValue.set(original);
             #endif
 
             CommandAdviceInitializer.processCommandAdvice(this, serverCommandSource, parseResults.getReader().getString(), CommandAdviceType.AFTER_EXECUTION, Optional.empty(), Optional.of(logicalReturnValue.get()));
