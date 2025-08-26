@@ -22,7 +22,6 @@ public class CommandCooldownConfigModel {
             this.put("rtp\\s*", 60 * 1000L);
             this.put("download\\s*", 120 * 1000L);
             this.put("heal\\s*", 300 * 1000L);
-            this.put("repair\\s*", 300 * 1000L);
         }
     };
 

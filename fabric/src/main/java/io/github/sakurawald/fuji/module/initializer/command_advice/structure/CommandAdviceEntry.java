@@ -62,6 +62,6 @@ public class CommandAdviceEntry {
     List<String> commands;
 
     public boolean isCancellableAdviceType() {
-        return CommandAdviceType.isCancellableAdviceType(this.getAdviceType());
+        return this.getAdviceType().isCancellable();
     }
 }

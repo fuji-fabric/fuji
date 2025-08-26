@@ -14,8 +14,11 @@ import java.util.Objects;
 
 public class CommandExecutor {
 
-    public static void executeBatch(@NotNull ExtendedCommandSource context, @NotNull List<String> commands) {
-        commands.forEach(command -> executeSingle(context, command));
+    public static @NotNull List<Integer> executeBatch(@NotNull ExtendedCommandSource context, @NotNull List<String> commands) {
+        return commands
+            .stream()
+            .map(command -> executeSingle(context, command))
+            .toList();
     }
 
     public static int executeSingle(@NotNull ExtendedCommandSource context, @NotNull String command) {
