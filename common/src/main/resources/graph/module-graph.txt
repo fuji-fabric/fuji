@@ -44,6 +44,7 @@ command_toolbox
 command_toolbox.bed
 command_toolbox.burn
 command_toolbox.compass
+command_toolbox.disconnect
 command_toolbox.extinguish
 command_toolbox.feed
 command_toolbox.fly

@@ -735,6 +735,7 @@ public class MainControlConfigModel {
             public Freeze freeze = new Freeze();
             public Rules rules = new Rules();
             public Speed speed = new Speed();
+            public Disconnect disconnect = new Disconnect();
 
             public static class Glow {
                 public boolean enable = false;
@@ -855,6 +856,10 @@ public class MainControlConfigModel {
             }
 
             public static class Speed {
+                public boolean enable = false;
+            }
+
+            public static class Disconnect {
                 public boolean enable = false;
             }
         }

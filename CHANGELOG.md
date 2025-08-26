@@ -20,3 +20,4 @@
   - feature: new command advice type: `CANCEL_IF_ANY_SUCCESS` and `CANCEL_IF_ALL_SUCCESS`.
   - feature: new command advice type: `ON_EXECUTION_CANCELLED`.
   - feature: new command advice type: `ON_EXECUTION_SUCCESS` and `ON_EXECUTION_FAILURE`.
+- [command_toolbox] feature: new `/dis-connect <player> <reason>` command, to `dis-connect` a player with `styled reason message`.

@@ -41,6 +41,7 @@ io.github.sakurawald.fuji.module.initializer.command_spy.CommandSpyInitializer
 io.github.sakurawald.fuji.module.initializer.command_toolbox.bed.BedInitializer
 io.github.sakurawald.fuji.module.initializer.command_toolbox.burn.BurnInitializer
 io.github.sakurawald.fuji.module.initializer.command_toolbox.compass.CompassInitializer
+io.github.sakurawald.fuji.module.initializer.command_toolbox.disconnect.DisconnectModuleInitializer
 io.github.sakurawald.fuji.module.initializer.command_toolbox.extinguish.ExtinguishInitializer
 io.github.sakurawald.fuji.module.initializer.command_toolbox.feed.FeedInitializer
 io.github.sakurawald.fuji.module.initializer.command_toolbox.fly.FlyInitializer
