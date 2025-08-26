@@ -34,8 +34,17 @@
 
 [Test Case]
 - Module: command_advice
-- Action: **Issue `/say hi` command.**
-- Target: The command should be cancelled with the `/send-broadcast` command.
+- Action: **Test the advanced use-case of command advice.**
+- Target: Issue `/repair` with `iron_ingot x 8`, `gold_ingot x 16` and `damaged diamond sword`.
+- Target: Issue `/repair` with `iron_ingot x 16`, `gold_ingot x 16` and `non-damaged diamond sword`.
+- Target: Issue `/repair` with `iron_ingot x 16`, `gold_ingot x 16` and `damaged diamond sword`.
+
+[Test Case]
+- Module: command_advice
+- Action: **Test the basic use-case of command advice.**
+- Target: Issue `/heal` command, you should see the heart particle.
+- Target: Issue `/say Hello World` command, you should see the replaced version.
+- Target: Issue `/msg @s Ping` command, you should see the replaced version.
 
 [Test Case]
 - Module: command_alias

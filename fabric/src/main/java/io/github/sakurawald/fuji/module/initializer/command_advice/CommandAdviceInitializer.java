@@ -28,30 +28,67 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Document(id = 1751826306321L, value = """
-    This module allows you to decorate existing commands:
-    1. Run other commands `before` execution the target command.
-    2. Run other commands `after` execution the target command.
-    3. Cancel the execution of the target command, and run other commands.
+    This module allows you to define `advices` to decorate `an existing target command`.
+
+    The command advice types can be:
+    - `BEFORE_EXECUTION`
+    - `AFTER_EXECUTION`
+    - `ON_EXECUTION_SUCCESS`
+    - `ON_EXECUTION_FAILURE`
+    - `ON_EXECUTION_CANCELLED`
+    - `CANCEL_AS_SUCCESS`
+    - `CANCEL_AS_FAILURE`
+    - `CANCEL_IF_ANY_SUCCESS`
+    - `CANCEL_IF_ALL_SUCCESS`
+    - ...
     """)
-@ColorBox(id = 1751900137390L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
-    Execute other commands before/after a target command.
+@ColorBox(id = 1756196951881L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+    ◉ Compare between `command_advice` and `command_bundle` module.
+    The `command_advice` module is used to `decorate` an `existing target command`.
+    The `command_bundle` module is used to `create` a `new command`.
     """)
-@ColorBox(id = 1751900375812L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
-    Decorate an existing command with other commands.
+@ColorBox(id = 1756197023849L, color = ColorBox.ColorBoxTypes.NOTE, value = """
+    ◉ Semantics of each `advice type`.
+    - `BEFORE_EXECUTION`: Run specified commands `before` the execution of target command (If it's not `cancelled` by other advices).
+    - `AFTER_EXECUTION`: Run specified commands `after` the execution of target command (No matter whether it's `SUCCESS` or `FAILURE`).
+    - `ON_EXECUTION_SUCCESS`: Run specified commands `if` the execution of target command is `SUCCESS` (Return value > 0).
+    - `ON_EXECUTION_FAILURE`: Run specified commands `if` the execution of target command is `FAILURE` (Return value = 0).
+    - `ON_EXECUTION_CANCELLED`: Run specified commands `if` the execution of target command is `CANCELLED` by other advices.
+    - `CANCEL_AS_SUCCESS`: Cancel the execution of target command, and treat it as `SUCCESS` (Return value = 1).
+    - `CANCEL_AS_FAILURE`: Cancel the execution of target command, and treat it as `FAILURE` (Return value = 0).
+    - `CANCEL_IF_ANY_SUCCESS`: If `ANY specified command is SUCCESS`, then cancel the execution of target command, and treat it as `FAILURE` (Return value = 0).
+    - `CANCEL_IF_ALL_SUCCESS`: If `ALL specified commands are SUCCESS`, then cancel the execution of target command, and treat it as `FAILURE` (Return value = 0).
     """)
-@ColorBox(id = 1751900379675L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
-    Cancel the execution of the target command, and execute other commands instead.
+@ColorBox(id = 1756198153881L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
+    ◉ `Decorate` an existing target command.
+    See the example for `/heal` command in default config.
+
+    ◉ `Cancel` the execution of target command, and execute specified commands instead.
+    See the example for `/say` command in default config.
+
+    ◉ Ensure that the target command executes only when the specified `conditions` are met, and apply the `cost` if the execution succeeds.
+    See the example for `/repair` command in default config:
+    1. Use `CANCEL_IF_ANY_SUCCESS` advice type, to check the `conditions`.
+    2. Use `ON_EXECUTION_CANCELLED` advice type, to send `feedback` if conditions are not met.
+    3. Use `ON_EXECUTION_SUCCESS` advice type, to apply the `cost` for the execution of target command.
     """)
-@ColorBox(id = 1751900258020L, color = ColorBox.ColorBoxTypes.TIPS, value = """
-    This module provides `similar` functions to `command_bundle` module.
-    """)
-@TestCase(action = "Issue `/say hi` command.", targets = "The command should be cancelled with the `/send-broadcast` command.")
 public class CommandAdviceInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<CommandAdviceConfigModel> config = ObjectConfigurationHandler
         .ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandAdviceConfigModel.class)
         .installTransformer(new CommandAdviceV1SchemaTransformer());
 
+
+    @TestCase(action = "Test the basic use-case of command advice.", targets = {
+        "Issue `/heal` command, you should see the heart particle.",
+        "Issue `/say Hello World` command, you should see the replaced version.",
+        "Issue `/msg @s Ping` command, you should see the replaced version."
+    })
+    @TestCase(action = "Test the advanced use-case of command advice.", targets = {
+        "Issue `/repair` with `iron_ingot x 8`, `gold_ingot x 16` and `damaged diamond sword`.",
+        "Issue `/repair` with `iron_ingot x 16`, `gold_ingot x 16` and `non-damaged diamond sword`.",
+        "Issue `/repair` with `iron_ingot x 16`, `gold_ingot x 16` and `damaged diamond sword`."
+    })
     public static void processCommandAdvice(@NotNull Object executor, @NotNull ServerCommandSource source, @NotNull String commandString, @NotNull CommandAdviceType adviceType, @NotNull Optional<CallbackInfo> callbackInfo, @NotNull Optional<Integer> targetCommandReturnValue) {
         LogUtil.debug("Process Command Advice: advice type = {}, command string = {}, command source = {}, executor = {}, target command return value = {}", adviceType, commandString, source.getName(), executor, targetCommandReturnValue);
 
@@ -106,7 +143,7 @@ public class CommandAdviceInitializer extends ModuleInitializer {
                         cancelTargetCommandExecution(commandString, it, targetCommandExecutionCancelled, callbackInfo);
                     }
                 } else {
-                    // Un-conditionally canceller-advice types: CANCEL_WITH_SUCCESS, CANCEL_WITH_FAILURE
+                    // Un-conditionally canceller-advice types: CANCEL_AS_SUCCESS, CANCEL_AS_FAILURE
                     cancelTargetCommandExecution(commandString, it, targetCommandExecutionCancelled, callbackInfo);
                 }
 

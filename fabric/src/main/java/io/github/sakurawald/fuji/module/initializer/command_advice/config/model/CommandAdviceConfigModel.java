@@ -19,18 +19,39 @@ public class CommandAdviceConfigModel {
     @SerializedName(value = "advices", alternate = "entries")
     List<CommandAdviceEntry> advices = new ArrayList<>() {
         {
-            this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("back", true), CommandAdviceType.BEFORE_EXECUTION, List.of("run as fake-op %player:name% say Before executing /back command for %player:name%")));
-            this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("back", true), CommandAdviceType.AFTER_EXECUTION, List.of("run as fake-op %player:name% say After executing /back command for %player:name%")));
-
+            /* Decorate the `/heal` command with `heart particle`. */
             this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("heal", true), CommandAdviceType.AFTER_EXECUTION, List.of(
                 "say Display the heard particle for player %player:name%",
                 "run as fake-op %player:name% --silent true particle minecraft:heart ~ ~1 ~ 0.6 0.6 0.6 0 20 force %player:name%")));
 
-            this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("say (.+)", false), CommandAdviceType.CANCEL_WITH_SUCCESS, List.of(
+            /* Replace the `/say` with `/send-broadcast` implementation. */
+            this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("say (.+)", false), CommandAdviceType.CANCEL_AS_SUCCESS, List.of(
                 "send-broadcast <rb>[My Server]</rb> $1")));
 
-            this.add(new CommandAdviceEntry(false, new CommandAdviceEntry.Matcher("(?:msg|tell) (\\S+?) (.+)", true), CommandAdviceType.CANCEL_WITH_SUCCESS, List.of(
+            /* Replace the `/msg` with `/send-message` implementation. */
+            this.add(new CommandAdviceEntry(false, new CommandAdviceEntry.Matcher("(?:msg|tell) (\\S+?) (.+)", true), CommandAdviceType.CANCEL_AS_SUCCESS, List.of(
                 "send-message %player:name% <green>[PM] You -> $1: $2", "send-message $1 <green>[PM] %player:name% -> you: $2")));
+
+            /* Guard command execution with specified requirements. */
+            this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("repair", true), CommandAdviceType.BEFORE_EXECUTION, List.of("send-message %player:name% <pink>Before the execution of `/repair` command for %player:name%")));
+            this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("repair", true), CommandAdviceType.AFTER_EXECUTION, List.of("send-message %player:name% <pink>After the execution of `/repair` command for %player:name%")));
+
+            this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("repair", true), CommandAdviceType.CANCEL_IF_ANY_SUCCESS, List.of(
+                "NOT has-item? %player:name% minecraft:iron_ingot 16",
+                "NOT has-item? %player:name% minecraft:gold_ingot 16"
+            )));
+
+            this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("repair", true), CommandAdviceType.ON_EXECUTION_CANCELLED, List.of("send-message %player:name% <red>You need `iron_ingot x 16` and `gold_ingot x 16` to use the `/repair` command.")));
+
+            this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("repair", true), CommandAdviceType.ON_EXECUTION_SUCCESS, List.of(
+                "send-message %player:name% The `/repair` command execution result is `SUCCESS`, I will take `iron_ingot x 16` and `gold_ingot x 16` from your inventory.",
+                "clear %player:name% minecraft:iron_ingot 16",
+                "clear %player:name% minecraft:gold_ingot 16"
+            )));
+            this.add(new CommandAdviceEntry(true, new CommandAdviceEntry.Matcher("repair", true), CommandAdviceType.ON_EXECUTION_FAILURE, List.of(
+                "send-message %player:name% The `/repair` command execution result is `FAILURE`, I will do nothing."
+            )));
+
         }
     };
 }
