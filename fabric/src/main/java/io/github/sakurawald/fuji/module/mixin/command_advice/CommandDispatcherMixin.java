@@ -1,6 +1,15 @@
 package io.github.sakurawald.fuji.module.mixin.command_advice;
 
+
+#if MC_VER <= MC_1_20_2
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.context.CommandContext;
+#elif MC_VER > MC_1_20_2
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+#endif
+
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
@@ -34,17 +43,17 @@ public class CommandDispatcherMixin {
     int afterExecuteInCommandDispatcher(Command<ServerCommandSource> instance, CommandContext<ServerCommandSource> commandContext, Operation<Integer> original, @Local(argsOnly = true) ParseResults<ServerCommandSource> parseResults)
     #elif MC_VER > MC_1_20_2
     @WrapMethod(method = "execute(Lcom/mojang/brigadier/ParseResults;)I")
-    #endif
     int afterExecuteInCommandDispatcher(ParseResults<ServerCommandSource> parseResults, Operation<Integer> original)
+    #endif
     {
         AtomicInteger logicalReturnValue = new AtomicInteger(0);
         CommandHelper.Source.withServerCommandSource(parseResults.getContext(), (serverCommandSource)  -> {
 
             #if MC_VER <= MC_1_20_2
             logicalReturnValue.set(original.call(instance, commandContext));
-            boolean logicalSuccess = CommandHelper.Return.isSuccess(logicalReturnValue);
+            boolean logicalSuccess = CommandHelper.Return.isSuccess(logicalReturnValue.get());
             CommandAdviceType adviceType = logicalSuccess ? CommandAdviceType.ON_EXECUTION_SUCCESS : CommandAdviceType.ON_EXECUTION_FAILURE;
-            CommandAdviceInitializer.processCommandAdvice(this, serverCommandSource, parseResults.getReader().getString(), adviceType, Optional.empty(), Optional.of(logicalReturnValue));
+            CommandAdviceInitializer.processCommandAdvice(this, serverCommandSource, parseResults.getReader().getString(), adviceType, Optional.empty(), Optional.of(logicalReturnValue.get()));
             #elif MC_VER > MC_1_20_2
             logicalReturnValue.set(original.call(parseResults));
             #endif
