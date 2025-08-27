@@ -65,6 +65,7 @@ dependencies {
 
     /* For json parser: gson */
     implementation "com.google.code.gson:gson:${project.gson_version}"
+    implementation "com.google.guava:guava:${project.guava_version}"
     include(implementation("com.jayway.jsonpath:json-path:${project.json_path_version}"))
 
     /* For permission system: luckperms */

@@ -8,6 +8,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
+import io.github.sakurawald.fuji.core.config.mapper.adapter.BiMapTypeAdapterFactory;
 import io.github.sakurawald.fuji.core.config.migrator.version.IgnoreModVersionStrategy;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import java.io.Reader;
@@ -32,6 +33,8 @@ public class GsonMapper {
         .disableJdkUnsafe()
         // Note that non-static inner class always holds a reference to its enclosing outer class. (Makes the no args constructor failed)
         .disableInnerClassSerialization()
+        // Register type adapters.
+        .registerTypeAdapterFactory(new BiMapTypeAdapterFactory())
         // Let's create it.
         .create();
 
