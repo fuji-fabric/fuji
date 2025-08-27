@@ -29,7 +29,7 @@ public class ArgumentTypesInspectionGui extends PagedGui<BaseArgumentTypeAdapter
     }
 
     @Override
-    protected PagedGui<BaseArgumentTypeAdapter> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<BaseArgumentTypeAdapter> entities, int pageIndex) {
+    protected PagedGui<BaseArgumentTypeAdapter> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<BaseArgumentTypeAdapter> entities, int pageIndex) {
         return new ArgumentTypesInspectionGui(parent, player, entities, pageIndex);
     }
 

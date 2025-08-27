@@ -26,7 +26,7 @@ public class CategoryHeadsGui extends PagedGui<Head> {
     }
 
     @Override
-    protected PagedGui<Head> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Head> entities, int pageIndex) {
+    protected PagedGui<Head> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Head> entities, int pageIndex) {
         return new CategoryHeadsGui(parent, player, title, entities, pageIndex);
     }
 

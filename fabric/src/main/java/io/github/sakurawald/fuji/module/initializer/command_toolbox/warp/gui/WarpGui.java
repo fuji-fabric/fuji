@@ -27,7 +27,7 @@ public class WarpGui extends PagedGui<WarpDescriptor> {
     }
 
     @Override
-    protected PagedGui<WarpDescriptor> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<WarpDescriptor> entities, int pageIndex) {
+    protected PagedGui<WarpDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<WarpDescriptor> entities, int pageIndex) {
         return new WarpGui(player, entities, pageIndex);
     }
 

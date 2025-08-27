@@ -40,7 +40,7 @@ public class ListHomesGui extends PagedGui<GlobalPos> {
     }
 
     @Override
-    protected PagedGui<GlobalPos> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<GlobalPos> entities, int pageIndex) {
+    protected PagedGui<GlobalPos> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<GlobalPos> entities, int pageIndex) {
         return new ListHomesGui(parent, player, this.targetPlayerName, entities, pageIndex);
     }
 

@@ -41,7 +41,7 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
     }
 
     @Override
-    protected PagedGui<BaseConfigurationHandler<?>> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<BaseConfigurationHandler<?>> entities, int pageIndex) {
+    protected PagedGui<BaseConfigurationHandler<?>> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<BaseConfigurationHandler<?>> entities, int pageIndex) {
         return new ConfigurationsInspectionGui(parent, player, entities, pageIndex);
     }
 

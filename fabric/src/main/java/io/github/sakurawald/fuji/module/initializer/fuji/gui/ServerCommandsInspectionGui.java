@@ -37,7 +37,7 @@ public class ServerCommandsInspectionGui extends PagedGui<ServerCommandNodeWrapp
     }
 
     @Override
-    protected PagedGui<ServerCommandNodeWrapper> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<ServerCommandNodeWrapper> entities, int pageIndex) {
+    protected PagedGui<ServerCommandNodeWrapper> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<ServerCommandNodeWrapper> entities, int pageIndex) {
         return new ServerCommandsInspectionGui(player, entities, pageIndex);
     }
 

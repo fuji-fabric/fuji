@@ -25,7 +25,7 @@ public class DeathNodeListGui extends PagedGui<DeathNode> {
     }
 
     @Override
-    protected PagedGui<DeathNode> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<DeathNode> entities, int pageIndex) {
+    protected PagedGui<DeathNode> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<DeathNode> entities, int pageIndex) {
         return new DeathNodeListGui(parent, player, this.deadPlayerName, entities, pageIndex);
     }
 

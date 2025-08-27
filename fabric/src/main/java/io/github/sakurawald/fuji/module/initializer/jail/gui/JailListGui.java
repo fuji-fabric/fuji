@@ -21,7 +21,7 @@ public class JailListGui extends PagedGui<JailDescriptor> {
     }
 
     @Override
-    protected PagedGui<JailDescriptor> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<JailDescriptor> entities, int pageIndex) {
+    protected PagedGui<JailDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<JailDescriptor> entities, int pageIndex) {
         return new JailListGui(parent, player, entities, pageIndex);
     }
 

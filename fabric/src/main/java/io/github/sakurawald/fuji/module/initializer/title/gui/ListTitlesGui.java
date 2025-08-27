@@ -66,7 +66,7 @@ public class ListTitlesGui extends PagedGui<TitleDescriptor> {
     }
 
     @Override
-    protected PagedGui<TitleDescriptor> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<TitleDescriptor> entities, int pageIndex) {
+    protected PagedGui<TitleDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<TitleDescriptor> entities, int pageIndex) {
         return new ListTitlesGui(parent, player, entities, pageIndex);
     }
 

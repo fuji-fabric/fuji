@@ -44,7 +44,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
     }
 
     @Override
-    protected PagedGui<Pair<String, Boolean>> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Pair<String, Boolean>> entities, int pageIndex) {
+    protected PagedGui<Pair<String, Boolean>> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Pair<String, Boolean>> entities, int pageIndex) {
         return new ModulesInspectionGui(parent, player, entities, pageIndex);
     }
 

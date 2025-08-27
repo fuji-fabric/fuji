@@ -57,7 +57,7 @@ public class AboutGui extends PagedGui<Person> {
     }
 
     @Override
-    protected PagedGui<Person> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Person> entities, int pageIndex) {
+    protected PagedGui<Person> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Person> entities, int pageIndex) {
         return new AboutGui(parent, player, entities, pageIndex);
     }
 

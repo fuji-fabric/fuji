@@ -58,7 +58,7 @@ public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
     }
 
     @Override
-    protected PagedGui<CommandDescriptor> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<CommandDescriptor> entities, int pageIndex) {
+    protected PagedGui<CommandDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<CommandDescriptor> entities, int pageIndex) {
         return new CommandsInspectionGui(parent, player, entities, pageIndex);
     }
 

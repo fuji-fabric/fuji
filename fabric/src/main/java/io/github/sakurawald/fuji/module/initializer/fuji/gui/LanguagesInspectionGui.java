@@ -67,7 +67,7 @@ public class LanguagesInspectionGui extends PagedGui<GuiElementInterface> {
     }
 
     @Override
-    protected PagedGui<GuiElementInterface> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<GuiElementInterface> entities, int pageIndex) {
+    protected PagedGui<GuiElementInterface> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<GuiElementInterface> entities, int pageIndex) {
         return new LanguagesInspectionGui(parent, player, entities, pageIndex);
     }
 

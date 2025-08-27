@@ -29,7 +29,7 @@ public class ListPlayerWarningsGui extends CrudPagedGui<Warning> {
     }
 
     @Override
-    protected PagedGui<Warning> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Warning> entities, int pageIndex) {
+    protected PagedGui<Warning> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Warning> entities, int pageIndex) {
         return new ListPlayerWarningsGui(parent, player, this.targetPlayerName, entities, pageIndex);
     }
 

@@ -52,7 +52,7 @@ public abstract class PagedGui<T> extends SimpleGui {
         return super.open();
     }
 
-    protected abstract PagedGui<T> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<T> entities, int pageIndex);
+    protected abstract PagedGui<T> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<T> entities, int pageIndex);
 
     private void drawNavigator(int pageIndex) {
         GuiHelper.Placer.fillLastLineIfEmpty(this, GuiHelper.Button.makeSlotPlaceholderButton());
@@ -97,7 +97,7 @@ public abstract class PagedGui<T> extends SimpleGui {
         int entityBeginIndex = getEntityBeginIndex(newPageIndex);
         if (entityBeginIndex < 0 || entityBeginIndex >= getEntitySize()) return;
 
-        make(this.parent, getPlayer(), this.prefixTitle, this.entities, newPageIndex).open();
+        makePage(this.parent, getPlayer(), this.prefixTitle, this.entities, newPageIndex).open();
     }
 
     @TestCase(action = "Test the `search` button in paged GUI.", targets = {
@@ -116,7 +116,7 @@ public abstract class PagedGui<T> extends SimpleGui {
             trueParent = this.parent;
         }
 
-        return make(trueParent, getPlayer(), resultTitle, resultEntities, 0);
+        return makePage(trueParent, getPlayer(), resultTitle, resultEntities, 0);
     }
 
     @TestCase(action = "Test the `GUI linking` in paged GUI.", targets = {
@@ -130,7 +130,7 @@ public abstract class PagedGui<T> extends SimpleGui {
         List<T> resultEntities = entities.stream()
             .filter(predicate)
             .toList();
-        return make(this.parent, getPlayer(), resultTitle, resultEntities, 0);
+        return makePage(this.parent, getPlayer(), resultTitle, resultEntities, 0);
     }
 
     protected abstract @NotNull GuiElementInterface toGuiElement(@NotNull T entity);

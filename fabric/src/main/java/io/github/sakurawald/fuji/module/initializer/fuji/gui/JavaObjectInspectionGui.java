@@ -43,7 +43,7 @@ public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
     }
 
     @Override
-    protected PagedGui<InspectingObject> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<InspectingObject> entities, int pageIndex) {
+    protected PagedGui<InspectingObject> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<InspectingObject> entities, int pageIndex) {
         return new JavaObjectInspectionGui(parent, null, player, entities, pageIndex, this.fileRelativePath, this.walkingPath);
     }
 
