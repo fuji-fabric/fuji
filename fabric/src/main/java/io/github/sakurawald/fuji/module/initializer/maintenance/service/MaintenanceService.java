@@ -21,8 +21,8 @@ public class MaintenanceService {
         return MaintenanceModuleInitializer.config.model().isMaintenanceModeStatus();
     }
 
-    @SuppressWarnings("RedundantIfStatement")
-    private static boolean canJoinNow(@NotNull ServerPlayerEntity player) {
+    @SuppressWarnings({"RedundantIfStatement", "BooleanMethodIsAlwaysInverted"})
+    public static boolean canJoinNow(@NotNull ServerPlayerEntity player) {
         if (!getMaintenanceModeStatus()) return true;
         if (CommandHelper.Requirement.isOperator(player)) return true;
         if (CommandHelper.Requirement.isAdmin(player.getCommandSource())) return true;
@@ -33,9 +33,13 @@ public class MaintenanceService {
 
     public static void processMaintenanceModeOnPlayerJoined(@NotNull ServerPlayerEntity player) {
         if (!canJoinNow(player)) {
-            Text reasonText = TextHelper.getTextByKey(player, "maintenance.disconnect");
-            PlayerHelper.disconnectPlayer(player, reasonText);
+            kickPlayer(player);
         }
+    }
+
+    public static void kickPlayer(@NotNull ServerPlayerEntity player) {
+        Text reasonText = TextHelper.getTextByKey(player, "maintenance.disconnect");
+        PlayerHelper.disconnectPlayer(player, reasonText);
     }
 
     public static void setMaintenanceModeStatus(boolean status) {

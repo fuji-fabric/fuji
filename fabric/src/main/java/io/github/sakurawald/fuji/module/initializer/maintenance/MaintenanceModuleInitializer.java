@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.maintenance;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
@@ -43,6 +44,18 @@ public class MaintenanceModuleInitializer extends ModuleInitializer {
     private static int $off(@CommandSource ServerCommandSource source) {
         MaintenanceService.setMaintenanceModeStatus(false);
         TextHelper.sendTextByKey(source, "maintenance.off");
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @CommandNode("maintenance kick-all")
+    @CommandRequirement(level = 4)
+    private static int $kickAll(@CommandSource ServerCommandSource source) {
+        PlayerHelper.Lookup.getOnlinePlayers()
+            .forEach(player -> {
+                if (!MaintenanceService.canJoinNow(player)) {
+                    MaintenanceService.kickPlayer(player);
+                }
+            });
         return CommandHelper.Return.SUCCESS;
     }
 
