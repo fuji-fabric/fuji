@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.maintenance.service;
 
+import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
@@ -56,6 +57,11 @@ public class MaintenanceService {
         /* Execute commands. */
         ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(ServerHelper.getServer().getCommandSource());
         CommandExecutor.executeBatch(extendedCommandSource, commands);
+    }
+
+    public static Text getEffectiveMaintenanceMessageText() {
+        String message = RandomUtil.drawList(MaintenanceModuleInitializer.config.model().getMaintenanceMessages());
+        return TextHelper.getTextByValue(null, message);
     }
 
 }

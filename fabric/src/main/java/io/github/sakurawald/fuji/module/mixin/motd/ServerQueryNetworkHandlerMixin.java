@@ -26,14 +26,11 @@ package io.github.sakurawald.fuji.module.mixin.motd;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.module.initializer.motd.MotdInitializer;
 import io.github.sakurawald.fuji.module.initializer.motd.structure.MotdEntry;
-import net.minecraft.network.ClientConnection;
 import net.minecraft.server.ServerMetadata;
 import net.minecraft.server.network.ServerQueryNetworkHandler;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
@@ -41,14 +38,6 @@ import java.util.Optional;
 
 @Mixin(ServerQueryNetworkHandler.class)
 public abstract class ServerQueryNetworkHandlerMixin {
-
-    @Shadow
-    @Final
-    private ClientConnection connection;
-
-    @Shadow
-    @Final
-    private static Text REQUEST_HANDLED;
 
     @ModifyArg(method = "onRequest", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/s2c/query/QueryResponseS2CPacket;<init>(Lnet/minecraft/server/ServerMetadata;)V"))
     public @NotNull ServerMetadata handleQueryRequest(ServerMetadata original) {
