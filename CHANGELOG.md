@@ -11,4 +11,7 @@
 - [core] new features
   - feature: new `hotkey F` for the `search button` in all paged GUI.
 - [command_meta.IF] docs: new document to describe how to integrate `/IF` with `/tag` and `/scoreboard`.
+- [home] feature: new features
+  - feature: add `/home gui` and `/home gui <player>` commands, to open the homes GUI.
+    
 

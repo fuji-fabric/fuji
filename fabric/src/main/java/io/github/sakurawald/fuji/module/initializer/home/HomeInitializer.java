@@ -1,5 +1,9 @@
 package io.github.sakurawald.fuji.module.initializer.home;
 
+import com.google.common.collect.BiMap;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlayerName;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -14,8 +18,8 @@ import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.home.command.argument.wrapper.HomeName;
 import io.github.sakurawald.fuji.module.initializer.home.config.model.HomeDataModel;
+import io.github.sakurawald.fuji.module.initializer.home.gui.ListHomesGui;
 import io.github.sakurawald.fuji.module.initializer.home.service.HomeService;
-import io.github.sakurawald.fuji.module.initializer.home.structure.PlayerHomeMap;
 import net.minecraft.server.network.ServerPlayerEntity;
 import java.util.Optional;
 
@@ -36,7 +40,7 @@ public class HomeInitializer extends ModuleInitializer {
     @CommandNode("home tp")
     private static int $tp(@CommandSource ServerPlayerEntity player, HomeName home) {
         HomeService.ensureHomeNameExisting(player, home);
-        PlayerHomeMap homes = HomeService.withHomeMap(player);
+        BiMap<String, GlobalPos> homes = HomeService.withHomeMap(player);
         String homeName = home.getValue();
 
         GlobalPos globalPos = homes.get(homeName);
@@ -47,7 +51,7 @@ public class HomeInitializer extends ModuleInitializer {
     @CommandNode("home unset")
     private static int $unset(@CommandSource ServerPlayerEntity player, HomeName home) {
         HomeService.ensureHomeNameExisting(player, home);
-        PlayerHomeMap homes = HomeService.withHomeMap(player);
+        BiMap<String, GlobalPos> homes = HomeService.withHomeMap(player);
         String homeName = home.getValue();
 
         homes.remove(homeName);
@@ -57,7 +61,7 @@ public class HomeInitializer extends ModuleInitializer {
 
     @CommandNode("home set")
     private static int $set(@CommandSource ServerPlayerEntity player, HomeName home, Optional<Boolean> override) {
-        PlayerHomeMap homes = HomeService.withHomeMap(player);
+        BiMap<String, GlobalPos> homes = HomeService.withHomeMap(player);
 
         String homeName = home.getValue();
         if (homes.containsKey(homeName)) {
@@ -81,6 +85,21 @@ public class HomeInitializer extends ModuleInitializer {
     @CommandNode("home list")
     private static int $list(@CommandSource ServerPlayerEntity player) {
         TextHelper.sendTextByKey(player, "home.list", HomeService.withHomeMap(player).keySet());
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @CommandNode("home gui")
+    private static int $gui(@CommandSource ServerPlayerEntity player) {
+        OfflinePlayerName target = new OfflinePlayerName(PlayerHelper.getPlayerName(player));
+        return $gui(player, target);
+    }
+
+    @CommandNode("home gui")
+    @CommandRequirement(level = 4)
+    private static int $gui(@CommandSource ServerPlayerEntity player, OfflinePlayerName target) {
+        ListHomesGui
+            .make(player, target.getValue())
+            .open();
         return CommandHelper.Return.SUCCESS;
     }
 

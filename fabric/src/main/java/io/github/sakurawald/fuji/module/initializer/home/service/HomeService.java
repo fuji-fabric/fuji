@@ -1,25 +1,26 @@
 package io.github.sakurawald.fuji.module.initializer.home.service;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.home.HomeInitializer;
 import io.github.sakurawald.fuji.module.initializer.home.command.argument.wrapper.HomeName;
-import io.github.sakurawald.fuji.module.initializer.home.structure.PlayerHomeMap;
 import java.util.Optional;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
 public class HomeService {
 
-    public static @NotNull PlayerHomeMap withHomeMap(@NotNull ServerPlayerEntity player) {
+    public static @NotNull BiMap<String, GlobalPos> withHomeMap(@NotNull ServerPlayerEntity player) {
         return withHomeMap(PlayerHelper.getPlayerName(player));
     }
 
-    public static @NotNull PlayerHomeMap withHomeMap(@NotNull String playerName) {
-        return HomeInitializer.data.model().name2home
-            .computeIfAbsent(playerName, k -> new PlayerHomeMap());
+    public static @NotNull BiMap<String, GlobalPos> withHomeMap(@NotNull String playerName) {
+        return HomeInitializer.data.model().getName2home()
+            .computeIfAbsent(playerName, k -> HashBiMap.create());
     }
 
     public static Optional<GlobalPos> findHome(@NotNull String playerName, @NotNull String homeName) {

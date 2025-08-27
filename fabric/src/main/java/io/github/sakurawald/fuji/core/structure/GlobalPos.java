@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.core.structure;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
+import java.util.List;
 import java.util.Optional;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import net.minecraft.network.packet.s2c.play.PositionFlag;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import java.util.Set;
@@ -39,6 +41,17 @@ public class GlobalPos {
 
     public GlobalPos(@NotNull World level, double x, double y, double z, float yaw, float pitch) {
         this(RegistryHelper.getIdAsString(level), x, y, z, yaw, pitch);
+    }
+
+    public List<Text> asLore(@NotNull ServerPlayerEntity player) {
+        return List.of(
+            TextHelper.getTextByKey(player, "dimension", this.level),
+            TextHelper.getTextByKey(player, "x", this.x),
+            TextHelper.getTextByKey(player, "y", this.y),
+            TextHelper.getTextByKey(player, "z", this.z),
+            TextHelper.getTextByKey(player, "yaw", this.yaw),
+            TextHelper.getTextByKey(player, "pitch", this.pitch)
+        );
     }
 
     public static @NotNull GlobalPos of(@NotNull ServerPlayerEntity player) {
