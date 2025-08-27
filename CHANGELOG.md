@@ -8,6 +8,7 @@
 - **[maintenance]**
   - **Feature:** **Introduced a `maintenance` module to provide a maintenance mode.**
     - Added the `/maintenance {on/off}` command.
+    - Added the `/maintenance kick-all` command.
     - Introduced the `fuji.maintenance.bypass` permission, allowing users to join the server during maintenance.
     - Displayed random maintenance messages on the MOTD screen.
     - Added custom events to execute commands when maintenance mode is enabled or disabled.
