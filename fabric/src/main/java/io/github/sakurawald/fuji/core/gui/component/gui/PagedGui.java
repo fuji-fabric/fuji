@@ -3,10 +3,10 @@ package io.github.sakurawald.fuji.core.gui.component.gui;
 import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.gui.structure.EntityToElementMapping;
 import lombok.Getter;
@@ -61,8 +61,8 @@ public abstract class PagedGui<T> extends SimpleGui {
         GuiHelper.Placer.setSlotInLastLine(this, this.getWidth() - 2, GuiHelper.Button.makeSearchButton(getPlayer()).setCallback(this::onSearchButtonClicked));
     }
 
-    private boolean onSearchButtonClicked() {
-        return new InputSignGui(getPlayer(), null) {
+    private void onSearchButtonClicked() {
+        new InputSignGui(getPlayer(), null) {
             @Override
             public void onClose() {
                 String keyword = joinStrings();
@@ -99,7 +99,8 @@ public abstract class PagedGui<T> extends SimpleGui {
 
     @TestCase(action = "Test the `search` button in paged GUI.", targets = {
         "Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.",
-        "Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked."
+        "Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.",
+        "Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.",
     })
     public @NotNull PagedGui<T> linkCurrentGuiAndSearch(@NotNull String keywords) {
         // NOTE: When search with keywords, we should remember previous GUI.
@@ -232,27 +233,26 @@ public abstract class PagedGui<T> extends SimpleGui {
         return this;
     }
 
+    @TestCase(action = "Issue `/fuji` command, and press `F` key.", targets = {
+        "Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version."
+    })
+    @ForDeveloper("This is an internal GUI, but it's stable since years.")
+    @SuppressWarnings("UnstableApiUsage")
     @Override
-    public boolean onClick(int index, ClickType type, SlotActionType action, GuiElementInterface element) {
-        boolean b = super.onClick(index, type, action, element);
-        LogUtil.warn("onClick(), b = {}", b);
-        return false;
-    }
+    public boolean click(int index, ClickType type, SlotActionType action) {
+        GuiElementInterface element = super.getSlot(index);
 
-    @Override
-    public boolean onAnyClick(int index, ClickType type, SlotActionType action) {
-        LogUtil.warn("onAnyClick()");
-
-        boolean b = super.onAnyClick(index, type, action);
-        LogUtil.warn("b = {}", b);
-
-        LogUtil.warn("click type = {}, slot action type = {}", type, action);
-
+        /* Prevent the `gui callback` invoke if the `F` key is pressed. */
         if (action.equals(SlotActionType.SWAP)) {
             this.onSearchButtonClicked();
-            return false;
+            return super.onClick(index, type, action, element);
         }
 
-        return true;
+        if (element != null) {
+            element.getGuiCallback().click(index, type, action, this);
+        }
+
+        return super.onClick(index, type, action, element);
     }
+
 }

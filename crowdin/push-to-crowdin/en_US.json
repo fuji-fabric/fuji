@@ -444,6 +444,7 @@
   "rtp.tip": "[send-action-bar]<gold>Search for a safe location... (don't move)",
   "saved_timestamp": "<gold>Saved Timestamp: %d",
   "search": "<#FFA1F5>Search",
+  "search.lore": "<grey>Hotkey: F",
   "seen.fail": "<red>Seen data no found for the target",
   "seen.success": "<gold>Seen %s at %s",
   "shell.failed.not_in_allowed_list": "<red>You are not in the allowed player name list.",

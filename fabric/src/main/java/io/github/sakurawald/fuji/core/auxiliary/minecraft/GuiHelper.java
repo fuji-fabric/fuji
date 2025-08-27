@@ -183,6 +183,7 @@ public class GuiHelper {
             return new GuiElementBuilder()
                 .setItem(Items.COMPASS)
                 .setName(TextHelper.getTextByKey(player, "search"))
+                .setLore(TextHelper.getTextListByKey(player, "search.lore"))
                 .glow();
         }
 
