@@ -25,6 +25,7 @@ public class MaintenanceService {
     private static boolean canJoinNow(@NotNull ServerPlayerEntity player) {
         if (!getMaintenanceModeStatus()) return true;
         if (CommandHelper.Requirement.isOperator(player)) return true;
+        if (CommandHelper.Requirement.isAdmin(player.getCommandSource())) return true;
         if (LuckpermsHelper.hasPermission(player.getUuid(), MaintenanceModuleInitializer.MAINTENANCE_BYPASS_PERMISSION)) return true;
 
         return false;
