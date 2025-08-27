@@ -36,7 +36,7 @@ public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
         }
 
         /* Place footer. */
-        getFooter().setSlot(4, GuiHelper.Button.makeHelpButton(player)
+        GuiHelper.Placer.setSlotInLastLine(this, 4, GuiHelper.Button.makeHelpButton(player)
             .setLore(List.of(
                 TextHelper.getTextByKey(player, "object.top_level", fileRelativePath)
             )));

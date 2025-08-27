@@ -23,7 +23,7 @@ public class ServerCommandsInspectionGui extends PagedGui<ServerCommandNodeWrapp
     public ServerCommandsInspectionGui(ServerPlayerEntity player, @NotNull List<ServerCommandNodeWrapper> entities, int pageIndex) {
         super(null, player, TextHelper.getTextByKey(player, "fuji.inspect.server_commands.gui.title"), entities, pageIndex);
 
-        getFooter().setSlot(4, GuiHelper.Button.makeHelpButton(player)
+        GuiHelper.Placer.setSlotInLastLine(this, 4, GuiHelper.Button.makeHelpButton(player)
             .setLore(TextHelper.getTextListByKey(player, "fuji.inspect.server_commands.gui.help.lore")));
     }
 

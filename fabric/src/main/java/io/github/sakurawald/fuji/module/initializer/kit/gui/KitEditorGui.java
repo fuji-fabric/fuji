@@ -32,9 +32,9 @@ public class KitEditorGui extends PagedGui<Kit> {
         super(null, player, TextHelper.getTextByKey(player, "kit.gui.editor.title"), entities, pageIndex);
 
         /* Make footer. */
-        getFooter().setSlot(1, GuiHelper.Button.makeHelpButton(player)
+        GuiHelper.Placer.setSlotInLastLine(this, 1, GuiHelper.Button.makeHelpButton(player)
             .setLore(TextHelper.getTextListByKey(player, "kit.gui.editor.help.lore")));
-        getFooter().setSlot(4, GuiHelper.Button.makeAddButton(player).setCallback(() -> new InputSignGui(player, TextHelper.getTextByKey(player, "prompt.input.name")) {
+        GuiHelper.Placer.setSlotInLastLine(this, 4, GuiHelper.Button.makeAddButton(player).setCallback(() -> new InputSignGui(player, TextHelper.getTextByKey(player, "prompt.input.name")) {
 
             @Override
             public void onClose() {

@@ -242,12 +242,16 @@ public class GuiHelper {
             }
         }
 
-        public static void setSlotInLastLine(@NotNull SlotGuiInterface gui, int inlineOffset, @NotNull GuiElementInterface element) {
-            final int lastLineIndex = gui.getHeight() - 1;
-            setSlotInLine(gui, lastLineIndex, inlineOffset, element);
+        public static void setSlotInLastLine(@NotNull SlotGuiInterface gui, int inlineOffset, @NotNull GuiElementBuilder elementBuilder) {
+            setSlotInLastLine(gui, inlineOffset, elementBuilder.build());
         }
 
-        public static void setSlotInLine(@NotNull SlotGuiInterface gui, int lineIndex, int inlineOffset, @NotNull GuiElementInterface element) {
+        public static void setSlotInLastLine(@NotNull SlotGuiInterface gui, int inlineOffset, @NotNull GuiElementInterface element) {
+            final int lastLineIndex = gui.getHeight() - 1;
+            setSlotInSpecifiedLine(gui, lastLineIndex, inlineOffset, element);
+        }
+
+        public static void setSlotInSpecifiedLine(@NotNull SlotGuiInterface gui, int lineIndex, int inlineOffset, @NotNull GuiElementInterface element) {
             final int baseIndex = lineIndex * gui.getWidth();
             int slotIndex = baseIndex + inlineOffset;
             gui.setSlot(slotIndex, element);

@@ -21,7 +21,7 @@ public class CommandPermissionGui extends PagedGui<CommandNodePermissionWrapper>
     public CommandPermissionGui(ServerPlayerEntity player, @NotNull List<CommandNodePermissionWrapper> entities, int pageIndex) {
         super(null, player, TextHelper.getTextByKey(player, "command_permission.list.gui.title"), entities, pageIndex);
 
-        getFooter().setSlot(4, GuiHelper.Button.makeHelpButton(player)
+        GuiHelper.Placer.setSlotInLastLine(this, 4, GuiHelper.Button.makeHelpButton(player)
             .setLore(TextHelper.getTextListByKey(player, "command_permission.list.gui.help.lore")));
     }
 

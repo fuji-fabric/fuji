@@ -19,14 +19,14 @@ public abstract class CrudPagedGui<T> extends PagedGui<T> {
         super(parent, player, prefixTitle, entities, pageIndex);
 
         if (this.canCreateEntity()) {
-            getFooter().setSlot(3, GuiHelper.Button
+            GuiHelper.Placer.setSlotInLastLine(this, 3, GuiHelper.Button
                 .makeAddButton(player)
                 .setName(TextHelper.getTextByKey(player, "add"))
                 .setCallback(this::doCreateEntity)
             );
         }
 
-        getFooter().setSlot(4, GuiHelper.Button
+        GuiHelper.Placer.setSlotInLastLine(this, 4, GuiHelper.Button
             .makeHelpButton(player)
             .setLore(TextHelper.getTextListByKey(player, getGuiHelpLoreKey())));
     }
