@@ -7,7 +7,6 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
-import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
@@ -15,11 +14,9 @@ import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.home.command.argument.wrapper.HomeName;
 import io.github.sakurawald.fuji.module.initializer.home.config.model.HomeDataModel;
-import lombok.Getter;
+import io.github.sakurawald.fuji.module.initializer.home.service.HomeService;
+import io.github.sakurawald.fuji.module.initializer.home.structure.PlayerHomeMap;
 import net.minecraft.server.network.ServerPlayerEntity;
-import org.jetbrains.annotations.NotNull;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Optional;
 
 @Document(id = 1751827004970L, value = """
@@ -32,41 +29,26 @@ public class HomeInitializer extends ModuleInitializer {
         """)
     private static final MetaDescriptor<Integer> MAX_HOME_AMOUNT_META = new MetaDescriptor<>("fuji.home.home_limit", Integer::valueOf, 1752000367398L);
 
-    @Getter
-    private static final BaseConfigurationHandler<HomeDataModel> storage = ObjectConfigurationHandler
+    public static final BaseConfigurationHandler<HomeDataModel> data = ObjectConfigurationHandler
         .ofModule("home.json", HomeDataModel.class)
         .enableAutoSaveFeature();
 
-    public static Map<String, GlobalPos> withHomes(@NotNull ServerPlayerEntity player) {
-        String playerName = player.getGameProfile().getName();
-        Map<String, Map<String, GlobalPos>> homes = storage.model().name2home;
-        homes.computeIfAbsent(playerName, k -> new HashMap<>());
-        return homes.get(playerName);
-    }
-
     @CommandNode("home tp")
     private static int $tp(@CommandSource ServerPlayerEntity player, HomeName home) {
-        Map<String, GlobalPos> homes = withHomes(player);
+        HomeService.ensureHomeNameExisting(player, home);
+        PlayerHomeMap homes = HomeService.withHomeMap(player);
         String homeName = home.getValue();
-        ensureHomeExists(player, homes, homeName);
 
         GlobalPos globalPos = homes.get(homeName);
         globalPos.teleport(player);
         return CommandHelper.Return.SUCCESS;
     }
 
-    private static void ensureHomeExists(ServerPlayerEntity player, Map<String, GlobalPos> homes, String homeName) {
-        if (!homes.containsKey(homeName)) {
-            TextHelper.sendTextByKey(player, "home.not_found", homeName);
-            throw new AbortCommandExecutionException();
-        }
-    }
-
     @CommandNode("home unset")
     private static int $unset(@CommandSource ServerPlayerEntity player, HomeName home) {
-        Map<String, GlobalPos> homes = withHomes(player);
+        HomeService.ensureHomeNameExisting(player, home);
+        PlayerHomeMap homes = HomeService.withHomeMap(player);
         String homeName = home.getValue();
-        ensureHomeExists(player, homes, homeName);
 
         homes.remove(homeName);
         TextHelper.sendTextByKey(player, "home.unset.success", homeName);
@@ -75,30 +57,30 @@ public class HomeInitializer extends ModuleInitializer {
 
     @CommandNode("home set")
     private static int $set(@CommandSource ServerPlayerEntity player, HomeName home, Optional<Boolean> override) {
-        Map<String, GlobalPos> name2position = withHomes(player);
-        String homeName = home.getValue();
+        PlayerHomeMap homes = HomeService.withHomeMap(player);
 
-        if (name2position.containsKey(homeName)) {
+        String homeName = home.getValue();
+        if (homes.containsKey(homeName)) {
             if (!override.orElse(false)) {
-                TextHelper.sendTextByKey(player, "home.set.fail.need_override", homeName);
+                TextHelper.sendTextByKey(player, "home.set.fail.need_override", home);
                 return CommandHelper.Return.FAILURE;
             }
         }
 
-        Optional<Integer> limit = LuckpermsHelper.getMeta(player.getUuid(), MAX_HOME_AMOUNT_META);
-        if (limit.isPresent() && name2position.size() >= limit.get()) {
+        Optional<Integer> maxHomes = LuckpermsHelper.getMeta(player.getUuid(), MAX_HOME_AMOUNT_META);
+        if (maxHomes.isPresent() && homes.size() >= maxHomes.get()) {
             TextHelper.sendTextByKey(player, "home.set.fail.limit");
             return CommandHelper.Return.FAILURE;
         }
 
-        name2position.put(homeName, GlobalPos.of(player));
-        TextHelper.sendTextByKey(player, "home.set.success", homeName);
+        homes.put(homeName, GlobalPos.of(player));
+        TextHelper.sendTextByKey(player, "home.set.success", home);
         return CommandHelper.Return.SUCCESS;
     }
 
     @CommandNode("home list")
     private static int $list(@CommandSource ServerPlayerEntity player) {
-        TextHelper.sendTextByKey(player, "home.list", withHomes(player).keySet());
+        TextHelper.sendTextByKey(player, "home.list", HomeService.withHomeMap(player).keySet());
         return CommandHelper.Return.SUCCESS;
     }
 

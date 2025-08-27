@@ -10,4 +10,5 @@
 - [command_advice] feature: add `document` property, to make the config clear.
 - [core] new features
   - feature: new `hotkey F` for the `search button` in all paged GUI.
+- [command_meta.IF] docs: new document to describe how to integrate `/IF` with `/tag` and `/scoreboard`.
 
