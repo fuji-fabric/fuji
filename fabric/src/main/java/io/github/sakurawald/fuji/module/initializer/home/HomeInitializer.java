@@ -51,10 +51,10 @@ public class HomeInitializer extends ModuleInitializer {
     @CommandNode("home unset")
     private static int $unset(@CommandSource ServerPlayerEntity player, HomeName home) {
         HomeService.ensureHomeNameExisting(player, home);
-        BiMap<String, GlobalPos> homes = HomeService.withHomeMap(player);
+        String playerName = PlayerHelper.getPlayerName(player);
         String homeName = home.getValue();
+        HomeService.removeHome(playerName, homeName);
 
-        homes.remove(homeName);
         TextHelper.sendTextByKey(player, "home.unset.success", homeName);
         return CommandHelper.Return.SUCCESS;
     }

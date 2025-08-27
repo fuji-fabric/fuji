@@ -3,7 +3,9 @@ package io.github.sakurawald.fuji.module.initializer.home.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.gui.component.gui.ConfirmSignGui;
 import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.home.service.HomeService;
@@ -22,6 +24,11 @@ public class ListHomesGui extends PagedGui<GlobalPos> {
     private ListHomesGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull String targetPlayerName, @NotNull List<GlobalPos> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "home.list.gui.title", targetPlayerName), entities, pageIndex);
         this.targetPlayerName = targetPlayerName;
+
+        GuiHelper.Placer.setSlotInLastLine(this, 4, GuiHelper.Button
+            .makeHelpButton(player)
+            .setLore(TextHelper.getTextListByKey(player, "home.list.gui.help.lore"))
+        );
     }
 
     public static ListHomesGui make(@NotNull ServerPlayerEntity player, @NotNull String targetPlayerName) {
@@ -37,7 +44,7 @@ public class ListHomesGui extends PagedGui<GlobalPos> {
         return new ListHomesGui(parent, player, this.targetPlayerName, entities, pageIndex);
     }
 
-    @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
+    @SuppressWarnings({"CollectionAddAllCanBeReplacedWithConstructor", "UnnecessaryReturnStatement"})
     @Override
     protected @NotNull GuiElementInterface toGuiElement(@NotNull GlobalPos entity) {
         String homeName = HomeService
@@ -53,8 +60,23 @@ public class ListHomesGui extends PagedGui<GlobalPos> {
             .setItem(Items.PINK_BED)
             .setName(Text.literal(homeName))
             .setLore(lore)
-            .setCallback(() -> {
-                entity.teleport(player);
+            .setCallback((clickType) -> {
+                if (clickType.isLeft) {
+                    entity.teleport(player);
+                    return;
+                }
+
+                if (clickType.isRight) {
+                    new ConfirmSignGui(player) {
+                        @Override
+                        public void onConfirm() {
+                            HomeService.removeHome(targetPlayerName, homeName);
+                            TextHelper.sendTextByKey(player, "home.unset.success", homeName);
+                        }
+                    }.open();
+                    return;
+                }
+
             })
             .build();
     }

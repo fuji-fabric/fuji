@@ -39,4 +39,8 @@ public class HomeService {
             });
     }
 
+    public static void removeHome(@NotNull String playerName, @NotNull String homeName) {
+        BiMap<String, GlobalPos> homes = withHomeMap(playerName);
+        homes.remove(homeName);
+    }
 }

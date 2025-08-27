@@ -290,6 +290,16 @@
 
 [Test Case]
 - Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
 - Action: **Issue `/fuji` command, and press `F` key.**
 - Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
 
@@ -733,6 +743,20 @@
 - Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
 - Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
 - Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
 
 [Test Case]
 - Module: core

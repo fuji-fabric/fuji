@@ -237,6 +237,7 @@
   "helpop.format": "<orange>Player %s ask for help: %s",
   "helpop.success": "<green>Send help to ops done.",
   "home.list": "<gold>Your homes: %s",
+  "home.list.gui.help.lore": "<blue>Left Click -> Teleport\n<blue>Right Click -> Delete",
   "home.list.gui.title": "<dark_green>%s's homes.",
   "home.not_found": "<red>Home %s not found.",
   "home.set.fail.limit": "<red>Home limit exceed",
