@@ -73,7 +73,7 @@ public class ClassGraphUtil {
         List<ExtendedAnnotationInfo> targetAnnotationOnMethod = scanResult
             .getClassesWithMethodAnnotation(targetAnnotation)
             .stream()
-            .map(ClassInfo::getMethodInfo)
+            .map(ClassInfo::getDeclaredMethodInfo)
             .flatMap(methodInfoList ->
                 methodInfoList
                     .stream()
@@ -96,7 +96,7 @@ public class ClassGraphUtil {
         List<ExtendedAnnotationInfo> targetAnnotationOnMethodParameters = scanResult
             .getClassesWithMethodParameterAnnotation(targetAnnotation)
             .stream()
-            .map(ClassInfo::getMethodInfo)
+            .map(ClassInfo::getDeclaredMethodInfo)
             .flatMap(methodInfoList ->
                 methodInfoList
                     .stream()
