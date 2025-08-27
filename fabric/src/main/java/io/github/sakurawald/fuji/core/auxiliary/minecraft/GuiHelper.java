@@ -9,6 +9,8 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.BiPredicate;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -257,17 +259,32 @@ public class GuiHelper {
             gui.setSlot(slotIndex, element);
         }
 
-        public static void fillLastLine(@NotNull SlotGuiInterface gui, @NotNull GuiElementInterface element) {
-            final int lastLineIndex = gui.getHeight() - 1;
-            fillLine(gui, lastLineIndex, element);
+        public static void fillLastLineIfEmpty(@NotNull SlotGuiInterface gui, @NotNull GuiElementInterface element) {
+            fillLastLineIf(gui, element, ($gui, slotIndex) -> Optional
+                .ofNullable($gui.getSlot(slotIndex))
+                .map(GuiElementInterface::getItemStack)
+                .map(ItemStack::isEmpty)
+                .orElse(true));
         }
 
+        public static void fillLastLineIf(@NotNull SlotGuiInterface gui, @NotNull GuiElementInterface element, @NotNull BiPredicate<SlotGuiInterface, Integer> predicate) {
+            final int lastLineIndex = gui.getHeight() - 1;
+            fillLineIf(gui, lastLineIndex, element, predicate);
+        }
+
+        @SuppressWarnings("unused")
         public static void fillLine(@NotNull SlotGuiInterface gui, int lineIndex, @NotNull GuiElementInterface element) {
+            fillLineIf(gui, lineIndex, element, (a, b) -> true);
+        }
+
+        public static void fillLineIf(@NotNull SlotGuiInterface gui, int lineIndex, @NotNull GuiElementInterface element, @NotNull BiPredicate<SlotGuiInterface, Integer> predicate) {
             final int lineWidth = gui.getWidth();
             final int baseIndex = lineIndex * lineWidth;
 
             for (int i = baseIndex; i < baseIndex + lineWidth; i++) {
-                gui.setSlot(i, element);
+                if (predicate.test(gui, i)) {
+                    gui.setSlot(i, element);
+                }
             }
         }
 

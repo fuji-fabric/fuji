@@ -31,13 +31,13 @@ public class ListWorksGui extends CrudPagedGui<Work> {
 
         /* Place buttons in footer. */
         if (isViewingAllWorks(entities)) {
-            getFooter().setSlot(5, GuiHelper.Button
+            GuiHelper.Placer.setSlotInLastLine(this, 5, GuiHelper.Button
                 .makeLetterAButton()
                 .setName(TextHelper.getTextByKey(player, "works.list.my_works"))
                 .setCallback(() -> linkCurrentGuiAndSearch(player.getGameProfile().getName()).open())
             );
         } else {
-            getFooter().setSlot(5, GuiHelper.Button
+            GuiHelper.Placer.setSlotInLastLine(this, 5, GuiHelper.Button
                 .makeHeartButton()
                 .setName(TextHelper.getTextByKey(player, "works.list.all_works"))
                 .setCallback(() -> new ListWorksGui(player, WorksInitializer.works.model().works, 0).open())
@@ -124,7 +124,7 @@ public class ListWorksGui extends CrudPagedGui<Work> {
             TextHelper.sendTextByKey(player, "works.work.set.no_perm");
             return;
         }
-        entity.openSpecializedSettingsGui(player, gui);
+        entity.openSpecializedSettingsGui(player, getBackendGui());
         this.close();
     }
 
@@ -135,7 +135,7 @@ public class ListWorksGui extends CrudPagedGui<Work> {
             TextHelper.sendTextByKey(player, "works.work.set.no_perm");
             return;
         }
-        entity.openGeneralSettingsGui(player, gui);
+        entity.openGeneralSettingsGui(player, getBackendGui());
         this.close();
     }
 
