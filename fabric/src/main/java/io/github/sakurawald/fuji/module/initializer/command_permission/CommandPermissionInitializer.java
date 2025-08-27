@@ -76,6 +76,11 @@ import org.jetbrains.annotations.Nullable;
     The complex things like `inheritance permission`, `wildcard permission` and `regex permission` are all processed by `luckperms` mod.
     Yeah, the `luckperms` mod does the complex `permission calculation`.
     """)
+@ColorBox(id = 1756284897212L, color = ColorBox.ColorBoxTypes.NOTE, value = """
+    ◉ Advanced universal permission mod.
+    The `command_permission` module was originally inspired by the `Vanilla Permissions` mod.
+    If you want advanced features, check `Vanilla Permissions` mod.
+    """)
 @ColorBox(id = 1751971384898L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Allow everyone to use `/gamemode` command.
     You can issue `/lp group default permission set fuji.permission.gamemode true`
