@@ -49,7 +49,7 @@ public class LanguagesInspectionGui extends PagedGui<GuiElementInterface> {
                 entities.add(builder.build());
             });
 
-        entities.addAll(GuiHelper.Filler.makeLinePaddingElements(TextHelper.Loader.LANGUAGE_CODE_2_LANGUAGE_JSON.size()));
+        entities.addAll(GuiHelper.Placer.makeLinePaddingElements(TextHelper.Loader.LANGUAGE_CODE_2_LANGUAGE_JSON.size()));
 
         /* Add players and their current using language code. */
         TextHelper.Loader

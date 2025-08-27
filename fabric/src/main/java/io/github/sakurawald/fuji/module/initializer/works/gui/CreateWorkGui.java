@@ -33,7 +33,7 @@ public class CreateWorkGui extends InputSignGui {
         /* input type */
         SimpleGui selectWorkTypeGui = new SimpleGui(ScreenHandlerType.GENERIC_9X3, player, false);
         selectWorkTypeGui.setTitle(TextHelper.getTextByKey(player, "works.work.add.select_work_type.title"));
-        GuiHelper.Filler.fillGui(selectWorkTypeGui, GuiHelper.Button.makeSlotPlaceholderButton().getItemStack());
+        GuiHelper.Placer.fillGui(selectWorkTypeGui, GuiHelper.Button.makeSlotPlaceholderButton().getItemStack());
 
         BaseConfigurationHandler<WorksDataModel> worksHandler = WorksInitializer.works;
         selectWorkTypeGui.setSlot(11, new GuiElementBuilder().setItem(Items.GUNPOWDER).setName(TextHelper.getTextByKey(player, "works.non_production_work.name")).setCallback(() -> {
