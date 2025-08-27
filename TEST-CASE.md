@@ -135,6 +135,331 @@
 
 [Test Case]
 - Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` and click `Next Page` button.**
+- Target: You should see the reimu there, the footer should not be over-drawn.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
+- Action: **Issue `/fuji` command, and press `F` key.**
+- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
+
+[Test Case]
+- Module: core
 - Action: **Issue `/fuji`, and see the `document of afk module`, the `details of run module` and the `details of skin` module.**
 - Target: The text parser should parse the text properly from the earliest version to the latest version.
 - Target: The URL highlighter should work properly.
@@ -170,6 +495,482 @@
 - Module: core
 - Action: **Modify the `my-command` into `my-command-v2`, and issue `/fuji reload`.**
 - Target: The command descriptor should be able to un-register the old command node in the command tree, even the new command node has different structure compared to the old one.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `GUI linking` in paged GUI.**
+- Target: Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.
+- Target: Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.
+- Target: Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
+
+[Test Case]
+- Module: core
+- Action: **Test the `search` button in paged GUI.**
+- Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
+- Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.
+- Target: Issue `/fuji`, and search with keyword `world`, then the GUI elements in other pages should be initialized for this search.
 
 [Test Case]
 - Module: core

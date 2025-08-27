@@ -71,6 +71,9 @@ public abstract class PagedGui<T> extends SimpleGui {
         }.open();
     }
 
+    @TestCase(action = "Issue `/fuji` and click `Next Page` button.", targets = {
+        "You should see the reimu there, the footer should not be over-drawn."
+    })
     protected void drawPagedGui() {
         // Draw title.
         this.drawTitle();

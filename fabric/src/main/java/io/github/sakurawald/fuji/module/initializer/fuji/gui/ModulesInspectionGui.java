@@ -29,6 +29,18 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
 
     public ModulesInspectionGui(SimpleGui parent, ServerPlayerEntity player, @NotNull List<Pair<String, Boolean>> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "fuji.inspect.modules.gui.title"), entities, pageIndex);
+
+        int enabledModules = ModuleManager.getEnabledModulePaths().size();
+        int allModules = ModuleManager.MODULE_ENABLE_STATUS.size();
+        List<Text> lore = List.of(
+            TextHelper.getTextByKey(player, "fuji.inspect.modules.gui.reimu.lore", enabledModules, allModules)
+        );
+
+        GuiHelper.Placer.setSlotInLastLine(this, 4, GuiHelper
+            .Button
+            .makeModIconButton()
+            .setName(TextHelper.getTextByKey(player, "fuji.inspect.modules.gui.title"))
+            .setLore(lore));
     }
 
     @Override

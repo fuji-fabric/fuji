@@ -198,6 +198,7 @@
   "fuji.inspect.jobs.gui.title": "<yellow>Jobs",
   "fuji.inspect.languages.gui.title": "<blue>Languages",
   "fuji.inspect.module_details.gui.title": "<blue>Module Details: <yellow>%s",
+  "fuji.inspect.modules.gui.reimu.lore": "<yellow>Enabled modules: %d / %d",
   "fuji.inspect.modules.gui.title": "<blue>Modules",
   "fuji.inspect.permissions_and_metas.gui.item.name": "<#A294F9>%s",
   "fuji.inspect.permissions_and_metas.gui.title": "<#A294F9>Permissions & Metas",
