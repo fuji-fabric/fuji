@@ -2,8 +2,10 @@ package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
+import org.jetbrains.annotations.NotNull;
 
 public class EntityHelper {
 
@@ -53,4 +55,9 @@ public class EntityHelper {
         return entity instanceof PlayerEntity;
     }
 
+    public static void applyVelocity(@NotNull Entity entity, double x, double y, double z) {
+        entity.addVelocity(x, y, z);
+        EntityVelocityUpdateS2CPacket packet = new EntityVelocityUpdateS2CPacket(entity);
+        PacketHelper.sendPacketToAll(packet);
+    }
 }

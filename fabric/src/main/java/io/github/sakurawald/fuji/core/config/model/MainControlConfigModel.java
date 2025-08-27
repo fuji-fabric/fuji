@@ -737,6 +737,7 @@ public class MainControlConfigModel {
             public Rules rules = new Rules();
             public Speed speed = new Speed();
             public Disconnect disconnect = new Disconnect();
+            public ApplyVelocity apply_velocity = new ApplyVelocity();
 
             public static class Glow {
                 public boolean enable = false;
@@ -861,6 +862,10 @@ public class MainControlConfigModel {
             }
 
             public static class Disconnect {
+                public boolean enable = false;
+            }
+
+            public static class ApplyVelocity {
                 public boolean enable = false;
             }
         }

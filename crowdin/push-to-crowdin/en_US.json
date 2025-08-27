@@ -1436,5 +1436,6 @@
   "docstring.1756283844217": "◉ Advanced Chat Style features.\nThe `chat.style` module provided by `fuji` is simple.\nIf you want advanced chat features, you can use `Styled Chat` mod.\nIf you want `/mute`, `/tempmute` commands, you can use `BanHammer` mod.\n\n<green>TIP: While you are using `Styled Chat` mod, you can still use `chat.*` modules from fuji.\n<green>Most of `chat.*` modules are designed to work with other `chat-related mods`, especially the `Styled Chat` mod.\n",
   "docstring.1756284897212": "◉ Advanced universal permission mod.\nThe `command_permission` module was originally inspired by the `Vanilla Permissions` mod.\nIf you want advanced features, check `Vanilla Permissions` mod.\n",
   "docstring.1756285767531": "This module provides a `maintenance mode`, to prevent players joining the server during maintenance.\n",
-  "docstring.1756286747383": "Joins the server while the server is during `maintenance mode`.\n"
+  "docstring.1756286747383": "Joins the server while the server is during `maintenance mode`.\n",
+  "docstring.1756293176728": "Provides `/apply-velocity` command.\n"
 }

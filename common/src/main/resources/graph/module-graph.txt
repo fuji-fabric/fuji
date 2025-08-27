@@ -41,6 +41,7 @@ command_rewrite
 command_scheduler
 command_spy
 command_toolbox
+command_toolbox.apply_velocity
 command_toolbox.bed
 command_toolbox.burn
 command_toolbox.compass
