@@ -205,8 +205,15 @@ public class MainControlConfigModel {
         public View view = new View();
         public Echo echo = new Echo();
         public Functional functional = new Functional();
+        public Economy economy = new Economy();
         public SystemMessage system_message = new SystemMessage();
         public Cleaner cleaner = new Cleaner();
+        public World world = new World();
+        public Skin skin = new Skin();
+        public Title title = new Title();
+        public LeaderBoard leaderboard = new LeaderBoard();
+        public Jail jail = new Jail();
+        public Rank rank = new Rank();
         public CommandScheduler command_scheduler = new CommandScheduler();
         public CommandPermission command_permission = new CommandPermission();
         public CommandRewrite command_rewrite = new CommandRewrite();
@@ -222,18 +229,12 @@ public class MainControlConfigModel {
         public CommandDebug command_debug = new CommandDebug();
         public CommandAdvice command_advice = new CommandAdvice();
         public CommandMenu command_menu = new CommandMenu();
-        public World world = new World();
+        public CommandMeta command_meta = new CommandMeta();
         public TeleportWarmup teleport_warmup = new TeleportWarmup();
         public TopChunks top_chunks = new TopChunks();
-        public Skin skin = new Skin();
         public WorldDownloader world_downloader = new WorldDownloader();
         public Whitelist whitelist = new Whitelist();
         public Warning warning = new Warning();
-        public Economy economy = new Economy();
-        public Title title = new Title();
-        public LeaderBoard leaderboard = new LeaderBoard();
-        public Jail jail = new Jail();
-        public Rank rank = new Rank();
         public Maintenance maintenance = new Maintenance();
         public Head head = new Head();
         public Profiler profiler = new Profiler();
@@ -244,7 +245,6 @@ public class MainControlConfigModel {
         public Color color = new Color();
         public Kit kit = new Kit();
         public TempBan temp_ban = new TempBan();
-        public CommandMeta command_meta = new CommandMeta();
         public Gameplay gameplay = new Gameplay();
         public Sit sit = new Sit();
 
