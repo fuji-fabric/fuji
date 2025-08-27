@@ -234,6 +234,7 @@ public class MainControlConfigModel {
         public LeaderBoard leaderboard = new LeaderBoard();
         public Jail jail = new Jail();
         public Rank rank = new Rank();
+        public Maintenance maintenance = new Maintenance();
         public Head head = new Head();
         public Profiler profiler = new Profiler();
         public Tester tester = new Tester();
@@ -922,6 +923,9 @@ public class MainControlConfigModel {
             public boolean enable = false;
         }
 
+        public static class Maintenance {
+            public boolean enable = false;
+        }
     }
 
 }

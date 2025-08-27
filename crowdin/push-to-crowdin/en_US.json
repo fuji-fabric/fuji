@@ -299,6 +299,9 @@
   "leaderboard.not_found": "<red>Leaderboard `%s` not fuond.",
   "leaderboard.update.all": "<green>Updated all leaderboards for online players.",
   "line.separator": "<grey>----------------------------------------",
+  "maintenance.disconnect": "<red>The server is currently under maintenance.",
+  "maintenance.off": "<green>Maintenance mode: off",
+  "maintenance.on": "<pink>Maintenance mode: on",
   "map.entry": "<green>%s</green> <grey>=</grey> <yellow>%s</yellow>",
   "minecraft:overworld": "<dark_green>Overworld</dark_green>",
   "minecraft:the_end": "<yellow>The End</yellow>",
@@ -1431,5 +1434,7 @@
   "docstring.1756241454472": "Set the position for a warp.",
   "docstring.1756263469899": "◉ Filter all the online players by a predicate\nYou can integrate `/IF` with the `/foreach` command.\n1. `/foreach IF \\<predicate-command\\> THEN ... ELSE ...`\n2. `/foreach IF has-item? %player:name% minecraft:apple 1 THEN say Player %player:name% has an apple. ELSE nop`\n3. `/foreach IF is-in-world? %player:name% minecraft:overworld THEN say Player %player:name% is in overworld. ELSE nop`\n\n◉ Leverage the vanilla Minecraft's `/tag` command, to store states.\nExample:\n1. `/tag Steve add killed_the_dragon`\n2. `/execute if entity @a[tag=killed_the_dragon]`\n\n◉ Leverage the vanilla Minecraft's `/scoreboard` command, to store states.\nIt's similar to `/tag` command, but more advanced.\n",
   "docstring.1756283844217": "◉ Advanced Chat Style features.\nThe `chat.style` module provided by `fuji` is simple.\nIf you want advanced chat features, you can use `Styled Chat` mod.\nIf you want `/mute`, `/tempmute` commands, you can use `BanHammer` mod.\n\n<green>TIP: While you are using `Styled Chat` mod, you can still use `chat.*` modules from fuji.\n<green>Most of `chat.*` modules are designed to work with other `chat-related mods`, especially the `Styled Chat` mod.\n",
-  "docstring.1756284897212": "◉ Advanced universal permission mod.\nThe `command_permission` module was originally inspired by the `Vanilla Permissions` mod.\nIf you want advanced features, check `Vanilla Permissions` mod.\n"
+  "docstring.1756284897212": "◉ Advanced universal permission mod.\nThe `command_permission` module was originally inspired by the `Vanilla Permissions` mod.\nIf you want advanced features, check `Vanilla Permissions` mod.\n",
+  "docstring.1756285767531": "This module provides a `maintenance mode`, to prevent players joining the server during maintenance.\n",
+  "docstring.1756286747383": "Joins the server while the server is during `maintenance mode`.\n"
 }

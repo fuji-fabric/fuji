@@ -14,6 +14,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.Text;
 import net.minecraft.util.UserCache;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -89,6 +90,10 @@ public class PlayerHelper {
     public static void updateDisplayNames() {
         Lookup.getOnlinePlayers()
             .forEach(PlayerHelper::updateDisplayName);
+    }
+
+    public static void disconnectPlayer(@NotNull ServerPlayerEntity target, @NotNull Text reasonText) {
+        target.networkHandler.disconnect(reasonText);
     }
 
     public static class Loader {

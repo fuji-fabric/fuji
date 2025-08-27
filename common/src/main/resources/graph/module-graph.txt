@@ -113,6 +113,7 @@ jail
 kit
 language
 leaderboard
+maintenance
 motd
 multiplier
 nametag
