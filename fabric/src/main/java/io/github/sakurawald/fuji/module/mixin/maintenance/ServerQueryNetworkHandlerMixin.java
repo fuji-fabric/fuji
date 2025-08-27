@@ -10,10 +10,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Mixin(ServerQueryNetworkHandler.class)
+@Mixin(value = ServerQueryNetworkHandler.class, priority = 2000)
 public abstract class ServerQueryNetworkHandlerMixin {
 
-    @ModifyArg(method = "onRequest", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/s2c/query/QueryResponseS2CPacket;<init>(Lnet/minecraft/server/ServerMetadata;)V"), order = 2000)
+    @ModifyArg(method = "onRequest", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/s2c/query/QueryResponseS2CPacket;<init>(Lnet/minecraft/server/ServerMetadata;)V"))
     public @NotNull ServerMetadata handleQueryRequest(ServerMetadata original) {
         Text text = MaintenanceService.getEffectiveMaintenanceMessageText();
         Optional<ServerMetadata.Players> players = original.comp_1274();
