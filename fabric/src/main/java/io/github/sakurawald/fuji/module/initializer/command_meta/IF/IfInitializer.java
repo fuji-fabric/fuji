@@ -99,12 +99,21 @@ import net.minecraft.server.command.ServerCommandSource;
     The `then-command` will only be executed if the `condition-command` is `true`:
     1. The player is standing on a `minecraft:diamond_block` block.
     2. The player has a `minecraft:diamond` item in its inventory.
-
+    """)
+@ColorBox(id = 1756263469899L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Filter all the online players by a predicate
     You can integrate `/IF` with the `/foreach` command.
     1. `/foreach IF \\<predicate-command\\> THEN ... ELSE ...`
     2. `/foreach IF has-item? %player:name% minecraft:apple 1 THEN say Player %player:name% has an apple. ELSE nop`
     3. `/foreach IF is-in-world? %player:name% minecraft:overworld THEN say Player %player:name% is in overworld. ELSE nop`
+
+    ◉ Leverage the vanilla Minecraft's `/tag` command, to store states.
+    Example:
+    1. `/tag Steve add killed_the_dragon`
+    2. `/execute if entity @a[tag=killed_the_dragon]`
+
+    ◉ Leverage the vanilla Minecraft's `/scoreboard` command, to store states.
+    It's similar to `/tag` command, but more advanced.
     """)
 @ColorBox(id = 1753592396075L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ Use `/command-debug` command to see the `return value` of a command.
