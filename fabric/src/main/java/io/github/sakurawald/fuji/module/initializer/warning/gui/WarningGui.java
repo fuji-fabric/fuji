@@ -27,7 +27,7 @@ public class WarningGui extends PagedGui<String> {
     protected void drawPagedGui() {
         super.drawPagedGui();
 
-        GuiHelper.PlayerHead.fetchPlayerHeadTextures(this, this::draw);
+        GuiHelper.PlayerHead.fetchPlayerHeadTextures(this);
     }
 
     @Override

@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SlotGuiInterface;
-import eu.pb4.sgui.api.gui.layered.LayeredGui;
 import io.github.sakurawald.fuji.core.auxiliary.AsyncUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
@@ -67,7 +66,11 @@ public class GuiHelper {
             return builder;
         }
 
-        public static void fetchPlayerHeadTextures(@NotNull LayeredGui gui, @NotNull Runnable drawCallback) {
+        public static void fetchPlayerHeadTextures(@NotNull SlotGuiInterface gui) {
+            fetchPlayerHeadTextures(gui, () -> {});
+        }
+
+        public static void fetchPlayerHeadTextures(@NotNull SlotGuiInterface gui, @NotNull Runnable onCompleteCallback) {
             final int guiSize = gui.getSize();
             for (int i = 0; i < guiSize; i++) {
                 GuiElementInterface previousSlot = gui.getSlot(i);
@@ -95,7 +98,7 @@ public class GuiHelper {
                     }
 
                     // Call draw to re-draw it.
-                    drawCallback.run();
+                    onCompleteCallback.run();
                 });
             }
         }
@@ -222,7 +225,7 @@ public class GuiHelper {
 
     }
 
-    public static class Filler {
+    public static class Placer {
 
         public static void fillEmptySlots(@NotNull SlotGuiInterface gui, @NotNull GuiElementBuilder builder) {
             fillEmptySlots(gui, builder.build());
@@ -239,7 +242,32 @@ public class GuiHelper {
             }
         }
 
-        public static void fillGui(@NotNull SlotGuiInterface gui, ItemStack itemStack) {
+        public static void setSlotInLastLine(@NotNull SlotGuiInterface gui, int inlineOffset, @NotNull GuiElementInterface element) {
+            final int lastLineIndex = gui.getHeight() - 1;
+            setSlotInLine(gui, lastLineIndex, inlineOffset, element);
+        }
+
+        public static void setSlotInLine(@NotNull SlotGuiInterface gui, int lineIndex, int inlineOffset, @NotNull GuiElementInterface element) {
+            final int baseIndex = lineIndex * gui.getWidth();
+            int slotIndex = baseIndex + inlineOffset;
+            gui.setSlot(slotIndex, element);
+        }
+
+        public static void fillLastLine(@NotNull SlotGuiInterface gui, @NotNull GuiElementInterface element) {
+            final int lastLineIndex = gui.getHeight() - 1;
+            fillLine(gui, lastLineIndex, element);
+        }
+
+        public static void fillLine(@NotNull SlotGuiInterface gui, int lineIndex, @NotNull GuiElementInterface element) {
+            final int lineWidth = gui.getWidth();
+            final int baseIndex = lineIndex * lineWidth;
+
+            for (int i = baseIndex; i < baseIndex + lineWidth; i++) {
+                gui.setSlot(i, element);
+            }
+        }
+
+        public static void fillGui(@NotNull SlotGuiInterface gui, @NotNull ItemStack itemStack) {
             for (int i = 0; i < gui.getSize(); i++) {
                 gui.setSlot(i, itemStack);
             }
