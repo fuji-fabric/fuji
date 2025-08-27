@@ -35,6 +35,15 @@ import org.jetbrains.annotations.NotNull;
     This module allows you to customize global chat style.
     Besides, players can use `/chat style` to set per-player chat style.
     """)
+@ColorBox(id = 1756283844217L, color = ColorBox.ColorBoxTypes.NOTE, value = """
+    ◉ Advanced Chat Style features.
+    The `chat.style` module provided by `fuji` is simple.
+    If you want advanced chat features, you can use `Styled Chat` mod.
+    If you want `/mute`, `/tempmute` commands, you can use `BanHammer` mod.
+
+    <green>TIP: While you are using `Styled Chat` mod, you can still use `chat.*` modules from fuji.
+    <green>Most of `chat.*` modules are designed to work with other `chat-related mods`, especially the `Styled Chat` mod.
+    """)
 @ColorBox(id = 1751870542664L, color = ColorBox.ColorBoxTypes.WARNING, value = """
     If you are using `Styled Chat` mod, then you can `disable` this module.
     Because they provide the same `purpose`.
