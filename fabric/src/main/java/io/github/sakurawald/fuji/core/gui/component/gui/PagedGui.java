@@ -1,17 +1,18 @@
 package io.github.sakurawald.fuji.core.gui.component.gui;
 
+import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import eu.pb4.sgui.api.gui.layered.LayeredGui;
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
-import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
-import io.github.sakurawald.fuji.core.gui.component.layer.SingleLineLayer;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.gui.structure.EntityToElementMapping;
 import lombok.Getter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public abstract class PagedGui<T> extends LayeredGui {
+public abstract class PagedGui<T> extends SimpleGui {
 
     @Getter
     private final @Nullable SimpleGui parent;
@@ -30,10 +31,6 @@ public abstract class PagedGui<T> extends LayeredGui {
     private final List<T> entities;
     private final int pageIndex;
     private final Text prefixTitle;
-
-    @ForDeveloper("For Paged Gui, the last line is always used as footer.")
-    @Getter
-    private final SingleLineLayer footer = new SingleLineLayer();
 
     private final EntityToElementMapping<T> entityToElementMapping = new EntityToElementMapping<>();
 
@@ -58,17 +55,20 @@ public abstract class PagedGui<T> extends LayeredGui {
     protected abstract PagedGui<T> make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<T> entities, int pageIndex);
 
     private void drawNavigator(int pageIndex) {
-        SingleLineLayer pageLayer = new SingleLineLayer(GuiHelper.Button.makeSlotPlaceholderButton());
-        pageLayer.setSlot(0, GuiHelper.Button.makePreviousPageButton(getPlayer()).setCallback(() -> tryChangePage(pageIndex - 1)));
-        pageLayer.setSlot(this.getWidth() - 1, GuiHelper.Button.makeNextPageButton(getPlayer()).setCallback(() -> tryChangePage(pageIndex + 1)));
-        pageLayer.setSlot(this.getWidth() - 2, GuiHelper.Button.makeSearchButton(getPlayer()).setCallback(() -> new InputSignGui(getPlayer(), null) {
+        GuiHelper.Placer.fillLastLineIfEmpty(this, GuiHelper.Button.makeSlotPlaceholderButton());
+        GuiHelper.Placer.setSlotInLastLine(this, 0, GuiHelper.Button.makePreviousPageButton(getPlayer()).setCallback(() -> tryChangePage(pageIndex - 1)));
+        GuiHelper.Placer.setSlotInLastLine(this, this.getWidth() - 1, GuiHelper.Button.makeNextPageButton(getPlayer()).setCallback(() -> tryChangePage(pageIndex + 1)));
+        GuiHelper.Placer.setSlotInLastLine(this, this.getWidth() - 2, GuiHelper.Button.makeSearchButton(getPlayer()).setCallback(this::onSearchButtonClicked));
+    }
+
+    private boolean onSearchButtonClicked() {
+        return new InputSignGui(getPlayer(), null) {
             @Override
             public void onClose() {
                 String keyword = joinStrings();
                 linkCurrentGuiAndSearch(keyword).open();
             }
-        }.open()));
-        this.addLayer(pageLayer, 0, this.getHeight() - 1);
+        }.open();
     }
 
     protected void drawPagedGui() {
@@ -80,9 +80,6 @@ public abstract class PagedGui<T> extends LayeredGui {
 
         // Draw navigator.
         this.drawNavigator(pageIndex);
-
-        // Draw footer.
-        this.addLayer(footer, 0, this.getHeight() - 1);
     }
 
     private void drawEntitiesOnThisPage(@NotNull List<T> entities) {
@@ -100,13 +97,17 @@ public abstract class PagedGui<T> extends LayeredGui {
         make(this.parent, getPlayer(), this.prefixTitle, this.entities, newPageIndex).open();
     }
 
+    @TestCase(action = "Test the `search` button in paged GUI.", targets = {
+        "Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.",
+        "Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked."
+    })
     public @NotNull PagedGui<T> linkCurrentGuiAndSearch(@NotNull String keywords) {
         // NOTE: When search with keywords, we should remember previous GUI.
         Text resultTitle = TextHelper.getTextByKey(getPlayer(), "gui.search.title", keywords);
         List<T> resultEntities = filterEntities(keywords);
 
         /* Skip the linking, if the none entity is filtered. */
-        SimpleGui trueParent = this.gui;
+        SimpleGui trueParent = this.getBackendGui();
         if (resultEntities.size() == this.getEntitySize()) {
             trueParent = this.parent;
         }
@@ -114,6 +115,11 @@ public abstract class PagedGui<T> extends LayeredGui {
         return make(trueParent, getPlayer(), resultTitle, resultEntities, 0);
     }
 
+    @TestCase(action = "Test the `GUI linking` in paged GUI.", targets = {
+        "Issue `/fuji`, and click `core` - `About`, then press `Esc` key to close the GUIs.",
+        "Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.",
+        "Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.",
+    })
     public @NotNull PagedGui<T> skipCurrentGuiAndSearch(@NotNull Predicate<T> predicate) {
         // NOTE: This method is usually called after inspectAll() method, to only filters the GUI elements, and link this GUI to `parent GUI` (The true GUI). In this use-case, we return an intermediate GUI, someone else wil take bits from it.
         Text resultTitle = TextHelper.getTextByKey(getPlayer(), "gui.search.title", "YOU SHOULD NOT SEE THIS");
@@ -223,6 +229,30 @@ public abstract class PagedGui<T> extends LayeredGui {
     }
 
     public @NotNull SimpleGui getBackendGui() {
-        return this.gui;
+        return this;
+    }
+
+    @Override
+    public boolean onClick(int index, ClickType type, SlotActionType action, GuiElementInterface element) {
+        boolean b = super.onClick(index, type, action, element);
+        LogUtil.warn("onClick(), b = {}", b);
+        return false;
+    }
+
+    @Override
+    public boolean onAnyClick(int index, ClickType type, SlotActionType action) {
+        LogUtil.warn("onAnyClick()");
+
+        boolean b = super.onAnyClick(index, type, action);
+        LogUtil.warn("b = {}", b);
+
+        LogUtil.warn("click type = {}, slot action type = {}", type, action);
+
+        if (action.equals(SlotActionType.SWAP)) {
+            this.onSearchButtonClicked();
+            return false;
+        }
+
+        return true;
     }
 }
