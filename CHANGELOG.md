@@ -7,4 +7,5 @@
 ## Changelog
 
 - [command_toolbox.warp] feature: new `/warp set-position` command, to change the `position` of a warp conveniently.
+- [command_advice] feature: add `document` property, to make the config clear.
 

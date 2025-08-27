@@ -139,7 +139,7 @@ public class RuntimeDimensionMaker {
         Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifierOrThrow(dimensionDescriptor.dimension_type);
         @Nullable DimensionOptions existedDimensionOptions = dimensionRegistry.get(dimensionTypeIdentifier);
         if (existedDimensionOptions == null) {
-            LogUtil.warn("Failed to make chunk generator, there is no existed DimensionOptions for dimension type {}. Falling back to the `FlatChunkGenerator`.", dimensionTypeIdentifier);
+            LogUtil.warn("Failed to make chunk generator for {}, there is no existed DimensionOptions for dimension type {}. Falling back to the `FlatChunkGenerator`.", dimensionDescriptor.getDimension(), dimensionTypeIdentifier);
             return makeFlatChunkGenerator(dimensionDescriptor);
         }
 

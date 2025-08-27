@@ -10,6 +10,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.jetbrains.annotations.Nullable;
 
 @Data
 @NoArgsConstructor
@@ -17,6 +18,8 @@ import lombok.ToString;
 public class CommandAdviceEntry {
 
     boolean enable = true;
+
+    @Nullable String document = null;
 
     Matcher matcher = new Matcher();
     @Data
