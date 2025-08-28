@@ -14,11 +14,11 @@ import net.minecraft.server.command.ServerCommandSource;
 
 @Document(id = 1756136221326L, value = """
     Provides a `/NOT <command>` command.
-    To execute the command as the console, and `reverse` the return values of `SUCCESS` and `FAILURE`.
+    To execute the specified command, and `reverse` the return values of `SUCCESS` and `FAILURE`.
     """)
 @ColorBox(id = 1756136351403L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
-    1. Execute the `target command` as console, and get the `command return value`.
+    1. Execute the `target command` as the command source, and get the `command return value`.
     1.a. If the `command return value` represents `SUCCESS` (value > 0), then return `FAILURE` (value 0).
     1.b. If the `command return value` represents `FAILURE` (value = 0), then return `SUCCESS` (value 1).
     """)
