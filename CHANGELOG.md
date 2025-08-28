@@ -12,3 +12,5 @@
   - feature: re-open the Home GUI after the `right click`, for convenience.
 - [kit] improvements
   - feature: new `/kit preview <player> <kit>` command, to pre-view the contents of a kit in GUI.
+- [command_toolbox.more] feature: new optional argument `--oversize` for `/more` command.
+  - Example: `/more --oversize true` will set the item count to 64, even for items like `diamond sword` or `ender peral`.
