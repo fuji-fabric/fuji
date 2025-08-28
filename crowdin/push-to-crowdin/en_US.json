@@ -683,12 +683,12 @@
   "docstring.1751825116796": "Toggle the glowing state.",
   "docstring.1751825123433": "Teleport to the top of your current position.",
   "docstring.1751825128305": "Query the last online time of a player.",
-  "docstring.1751825133157": "Burn a target player for ticks.",
+  "docstring.1751825133157": "Burn target entities for ticks.",
   "docstring.1751825137661": "Send help messages to online ops.",
   "docstring.1751825142583": "Toggle the invulnerable state.",
   "docstring.1751825147630": "This is a convenient command, to teleport `others` to `you`.\nSimilar to `/tp @a <player>`.\n\nFor example:\n1. `/tphere Steve` to teleport `Steve` to `you`.\n2. `/tphere @a` to teleport `all online players` to `you`.\n",
   "docstring.1751825152795": "Fill the `health` and `hunger` for the player.",
-  "docstring.1751825159763": "Freeze a player for ticks.",
+  "docstring.1751825159763": "Freeze target entities for ticks.",
   "docstring.1751825164823": "Set food level, saturation level and exhaustion to healthy state.",
   "docstring.1751825169906": "Teleport to the bed location.",
   "docstring.1751825174228": "Allow you to set the target point of a compass item.\n",
@@ -1438,5 +1438,6 @@
   "docstring.1756285767531": "This module provides a `maintenance mode`, to prevent players joining the server during maintenance.\n",
   "docstring.1756286747383": "Joins the server while the server is during `maintenance mode`.\n",
   "docstring.1756293176728": "Provides `/apply-velocity` command.\n",
-  "docstring.1756347408511": "Launch an `entity` with a `velocity`.\n"
+  "docstring.1756347408511": "Launch an `entity` with a `velocity`.\n",
+  "docstring.1756363641856": "Provides the `join queue` feature.\n"
 }
