@@ -11,16 +11,20 @@ public abstract class ConfirmSignGui extends InputSignGui {
     }
 
     @Override
-    public void onClose() {
+    public final void onClose() {
+        this.onConfirmedOrCancelled();
+
         if (!this.isConfirmed()) {
             TextHelper.sendTextByKey(player, "operation.cancelled");
-            onCancelled();
+            this.onCancelled();
             return;
         }
-        onConfirm();
+        this.onConfirm();
     }
 
     protected void onCancelled() {}
+
+    protected void onConfirmedOrCancelled() {}
 
     private boolean isConfirmed() {
         String confirmationString = TextHelper.Translator.getLanguageValueByKey(getPlayer(), "keyword.confirm");

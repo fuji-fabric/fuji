@@ -7,5 +7,7 @@
 
 - [command_toolbox.apply_velocity] feature: new module to provide `/apply-velocity` command.
 - [command_toolbox.{burn/freeze}] feature: `/burn` and `/freeze` commands now support to select a collection of entities as target.
-- [home] feature: new `/home rename <old-name> <new-name>` command.
+- [home] improvements
+  - feature: new `/home rename <old-name> <new-name>` command.
+  - feature: re-open the Home GUI after the `right click`, for convenience.
 

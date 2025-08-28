@@ -73,6 +73,11 @@ public class ListHomesGui extends PagedGui<GlobalPos> {
                             HomeService.removeHome(targetPlayerName, homeName);
                             TextHelper.sendTextByKey(player, "home.unset.success", homeName);
                         }
+
+                        @Override
+                        protected void onConfirmedOrCancelled() {
+                            getBackendGui().open();
+                        }
                     }.open();
                     return;
                 }
