@@ -240,6 +240,8 @@
   "home.list.gui.help.lore": "<blue>Left Click -> Teleport\n<blue>Right Click -> Delete",
   "home.list.gui.title": "<dark_green>%s's homes.",
   "home.not_found": "<red>Home %s not found.",
+  "home.rename.fail.exists": "<red>The home `%s` already exists.",
+  "home.rename.success": "<gold>Home `%s` has been renamed to `%s`",
   "home.set.fail.limit": "<red>Home limit exceed",
   "home.set.fail.need_override": "<red>Home %s exists, you need to add `--override true` argument to override it.",
   "home.set.success": "<gold>Home %s set.",
@@ -1438,6 +1440,5 @@
   "docstring.1756285767531": "This module provides a `maintenance mode`, to prevent players joining the server during maintenance.\n",
   "docstring.1756286747383": "Joins the server while the server is during `maintenance mode`.\n",
   "docstring.1756293176728": "Provides `/apply-velocity` command.\n",
-  "docstring.1756347408511": "Launch an `entity` with a `velocity`.\n",
-  "docstring.1756363641856": "Provides the `join queue` feature.\n"
+  "docstring.1756347408511": "Launch an `entity` with a `velocity`.\n"
 }

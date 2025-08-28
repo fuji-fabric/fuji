@@ -82,6 +82,25 @@ public class HomeInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @CommandNode("home rename")
+    private static int $rename(@CommandSource ServerPlayerEntity player, HomeName oldName, String newName) {
+        HomeService.ensureHomeNameExisting(player, oldName);
+        String playerName = PlayerHelper.getPlayerName(player);
+
+        return HomeService
+            .findHome(playerName, newName)
+            .map(it -> {
+                TextHelper.sendTextByKey(player, "home.rename.fail.exists", newName);
+                return CommandHelper.Return.FAILURE;
+            })
+            .orElseGet(() -> {
+                String $oldName = oldName.getValue();
+                HomeService.renameHome(playerName, $oldName, newName);
+                TextHelper.sendTextByKey(player , "home.rename.success", $oldName, newName);
+                return CommandHelper.Return.SUCCESS;
+            });
+    }
+
     @CommandNode("home list")
     private static int $list(@CommandSource ServerPlayerEntity player) {
         TextHelper.sendTextByKey(player, "home.list", HomeService.withHomeMap(player).keySet());

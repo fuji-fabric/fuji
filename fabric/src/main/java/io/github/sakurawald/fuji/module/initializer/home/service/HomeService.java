@@ -39,6 +39,13 @@ public class HomeService {
             });
     }
 
+    public static void renameHome(@NotNull String playerName, @NotNull String oldName, String newName) {
+        BiMap<String, GlobalPos> homes = withHomeMap(playerName);
+        GlobalPos value = homes.get(oldName);
+        homes.remove(oldName);
+        homes.put(newName, value);
+    }
+
     public static void removeHome(@NotNull String playerName, @NotNull String homeName) {
         BiMap<String, GlobalPos> homes = withHomeMap(playerName);
         homes.remove(homeName);
