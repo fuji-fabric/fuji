@@ -28,7 +28,7 @@ public class RankNode {
             this.add(new RankRequirement("Have 16 dirt blocks in your inventory.", List.of("has-item? %player:name% minecraft:dirt 16")));
             this.add(new RankRequirement("Have 8 apples in your inventory.", List.of("has-item? %player:name% minecraft:apple 8")));
             this.add(new RankRequirement("Have 4 diamonds in your inventory.", List.of("has-item? %player:name% minecraft:diamond 4")));
-            this.add(new RankRequirement("Kill 2 zombies. (Currently %player:statistic_raw minecraft:deaths%)", List.of("<=? %player:name% 2 %player:statistic_raw minecraft:deaths%")));
+            this.add(new RankRequirement("Kill 2 zombies. (Currently %player:statistic_raw minecraft:killed minecraft:zombie%)", List.of("<=? %player:name% 2 %player:statistic_raw minecraft:killed minecraft:zombie%")));
             this.add(new RankRequirement("Play for 5 seconds.", List.of("<=? %player:name% 100 %player:statistic_raw minecraft:play_time%")));
         }
     };
