@@ -107,6 +107,7 @@ io.github.sakurawald.fuji.module.initializer.home.HomeInitializer
 io.github.sakurawald.fuji.module.initializer.jail.JailInitializer
 io.github.sakurawald.fuji.module.initializer.kit.KitInitializer
 io.github.sakurawald.fuji.module.initializer.language.LanguageInitializer
+io.github.sakurawald.fuji.module.initializer.launcher.LauncherInitializer
 io.github.sakurawald.fuji.module.initializer.leaderboard.LeaderBoardInitializer
 io.github.sakurawald.fuji.module.initializer.maintenance.MaintenanceModuleInitializer
 io.github.sakurawald.fuji.module.initializer.motd.MotdInitializer

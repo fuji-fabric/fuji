@@ -113,6 +113,7 @@ home
 jail
 kit
 language
+launcher
 leaderboard
 maintenance
 motd

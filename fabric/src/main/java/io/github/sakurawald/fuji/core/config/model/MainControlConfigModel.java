@@ -213,7 +213,16 @@ public class MainControlConfigModel {
         public Title title = new Title();
         public LeaderBoard leaderboard = new LeaderBoard();
         public Jail jail = new Jail();
+        public Kit kit = new Kit();
         public Rank rank = new Rank();
+        public Head head = new Head();
+        public Color color = new Color();
+        public Sit sit = new Sit();
+        public TeleportWarmup teleport_warmup = new TeleportWarmup();
+        public TempBan temp_ban = new TempBan();
+        public AntiBuild anti_build = new AntiBuild();
+        public Warning warning = new Warning();
+        public Maintenance maintenance = new Maintenance();
         public CommandScheduler command_scheduler = new CommandScheduler();
         public CommandPermission command_permission = new CommandPermission();
         public CommandRewrite command_rewrite = new CommandRewrite();
@@ -230,23 +239,15 @@ public class MainControlConfigModel {
         public CommandAdvice command_advice = new CommandAdvice();
         public CommandMenu command_menu = new CommandMenu();
         public CommandMeta command_meta = new CommandMeta();
-        public TeleportWarmup teleport_warmup = new TeleportWarmup();
         public TopChunks top_chunks = new TopChunks();
         public WorldDownloader world_downloader = new WorldDownloader();
         public Whitelist whitelist = new Whitelist();
-        public Warning warning = new Warning();
-        public Maintenance maintenance = new Maintenance();
-        public Head head = new Head();
         public Profiler profiler = new Profiler();
-        public Tester tester = new Tester();
         public Multiplier multiplier = new Multiplier();
         public Disabler disabler = new Disabler();
-        public AntiBuild anti_build = new AntiBuild();
-        public Color color = new Color();
-        public Kit kit = new Kit();
-        public TempBan temp_ban = new TempBan();
+        public Launcher launcher = new Launcher();
         public Gameplay gameplay = new Gameplay();
-        public Sit sit = new Sit();
+        public Tester tester = new Tester();
 
         public static class World {
             public boolean enable = false;
@@ -476,7 +477,6 @@ public class MainControlConfigModel {
         }
 
         public static class Fuji {
-            // the only module to enable by default
             public boolean enable = true;
         }
 
@@ -929,6 +929,10 @@ public class MainControlConfigModel {
         }
 
         public static class Maintenance {
+            public boolean enable = false;
+        }
+
+        public static class Launcher {
             public boolean enable = false;
         }
     }

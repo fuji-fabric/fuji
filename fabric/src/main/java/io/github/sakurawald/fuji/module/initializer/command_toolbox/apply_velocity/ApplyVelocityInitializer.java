@@ -19,7 +19,7 @@ public class ApplyVelocityInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     private static int $applyVelocity(@CommandSource ServerCommandSource source, EntityCollection target, double x, double y, double z) {
         target.getValue().forEach(entity -> {
-            EntityHelper.applyVelocity(entity, x, y, z);
+            EntityHelper.addVelocity(entity, x, y, z);
         });
 
         return CommandHelper.Return.SUCCESS;
