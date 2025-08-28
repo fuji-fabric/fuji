@@ -40,7 +40,6 @@ io.github.sakurawald.fuji.module.initializer.command_permission.CommandPermissio
 io.github.sakurawald.fuji.module.initializer.command_rewrite.CommandRewriteInitializer
 io.github.sakurawald.fuji.module.initializer.command_scheduler.CommandSchedulerInitializer
 io.github.sakurawald.fuji.module.initializer.command_spy.CommandSpyInitializer
-io.github.sakurawald.fuji.module.initializer.command_toolbox.apply_velocity.ApplyVelocityInitializer
 io.github.sakurawald.fuji.module.initializer.command_toolbox.bed.BedInitializer
 io.github.sakurawald.fuji.module.initializer.command_toolbox.burn.BurnInitializer
 io.github.sakurawald.fuji.module.initializer.command_toolbox.compass.CompassInitializer
