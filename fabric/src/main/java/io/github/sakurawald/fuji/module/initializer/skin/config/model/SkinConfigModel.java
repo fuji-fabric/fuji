@@ -23,7 +23,7 @@ public class SkinConfigModel {
             If this option is `true`, then for a player who doesn't have existing `skin` data, the `default skin` will be applied.
             If this option is `false`, then the `Mojang online skin` will be applied instead.
             """)
-        boolean applyDefaultSkinIfNoData = true;
+        boolean applyDefaultSkinIfNoData = false;
 
         @Document(id = 1753268443704L, value = """
             Specify a `preferred skin` in the `default skin list`, so it will be the `default skin`.
