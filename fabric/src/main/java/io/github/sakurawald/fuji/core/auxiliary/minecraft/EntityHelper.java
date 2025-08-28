@@ -55,8 +55,17 @@ public class EntityHelper {
         return entity instanceof PlayerEntity;
     }
 
-    public static void applyVelocity(@NotNull Entity entity, double x, double y, double z) {
+    public static void addVelocity(@NotNull Entity entity, double x, double y, double z) {
         entity.addVelocity(x, y, z);
+        updateVelocity(entity);
+    }
+
+    public static void setVelocity(@NotNull Entity entity, double x, double y, double z) {
+        entity.setVelocity(x, y, z);
+        updateVelocity(entity);
+    }
+
+    public static void updateVelocity(@NotNull Entity entity) {
         EntityVelocityUpdateS2CPacket packet = new EntityVelocityUpdateS2CPacket(entity);
         PacketHelper.sendPacketToAll(packet);
     }

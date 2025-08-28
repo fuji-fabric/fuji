@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.manager.impl.callback.CallbackManager;
 import io.github.sakurawald.fuji.core.manager.impl.command.CommandManager;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
+import io.github.sakurawald.fuji.core.manager.impl.task.GameTaskManager;
 import lombok.Getter;
 
 // NOTE: Use lazy evaluation, to resolve the dependency graph easily.
@@ -37,4 +38,7 @@ public class Managers {
 
     @Getter(lazy = true)
     private static final CallbackManager callbackManager = new CallbackManager();
+
+    @Getter(lazy = true)
+    private static final GameTaskManager gameTaskManager = new GameTaskManager();
 }
