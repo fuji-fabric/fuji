@@ -10,4 +10,5 @@
 - [home] improvements
   - feature: new `/home rename <old-name> <new-name>` command.
   - feature: re-open the Home GUI after the `right click`, for convenience.
-
+- [kit] improvements
+  - feature: new `/kit preview <player> <kit>` command, to pre-view the contents of a kit in GUI.

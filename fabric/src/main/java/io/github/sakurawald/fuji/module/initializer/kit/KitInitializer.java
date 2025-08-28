@@ -3,7 +3,6 @@ package io.github.sakurawald.fuji.module.initializer.kit;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -11,6 +10,7 @@ import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.kit.command.argument.wrapper.KitName;
 import io.github.sakurawald.fuji.module.initializer.kit.gui.KitEditorGui;
+import io.github.sakurawald.fuji.module.initializer.kit.gui.KitPreviewGui;
 import io.github.sakurawald.fuji.module.initializer.kit.service.KitService;
 import io.github.sakurawald.fuji.module.initializer.kit.structure.Kit;
 import net.minecraft.server.command.ServerCommandSource;
@@ -76,16 +76,18 @@ public class KitInitializer extends ModuleInitializer {
     @Document(id = 1751824821391L, value = "Give the kit to the player.")
     @CommandNode("give")
     private static int $give(@CommandSource ServerCommandSource source, ServerPlayerEntity player, KitName kit) {
-        /* Verify. */
-        String kitName = kit.getValue();
-        if (!KitService.hasKit(kitName)) {
-            TextHelper.sendTextByKey(source, "kit.kit.empty");
-            return CommandHelper.Return.FAILURE;
-        }
-
-        /* Give the kit. */
-        Kit kitInstance = KitService.readKit(kitName);
+        Kit kitInstance = KitService.readKit(kit.getValue());
         KitService.giveKit(player, kitInstance);
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document(id = 1756372814981L, value = "Open a GUI to pre-view the specified kit.")
+    @CommandNode("preview")
+    private static int $preview(@CommandSource ServerCommandSource source, ServerPlayerEntity player, KitName kit) {
+        Kit $kit = KitService.readKit(kit.getValue());
+        KitPreviewGui
+            .make(player, $kit)
+            .open();
         return CommandHelper.Return.SUCCESS;
     }
 

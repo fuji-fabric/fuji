@@ -5,8 +5,10 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
+import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
 import io.github.sakurawald.fuji.module.initializer.kit.command.argument.wrapper.KitName;
 import io.github.sakurawald.fuji.module.initializer.kit.service.KitService;
 import net.minecraft.server.command.ServerCommandSource;
@@ -23,6 +25,11 @@ public class KitNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+        String kitName = StringArgumentType.getString(context,commandArgument.getArgumentName());
+        if (!KitService.hasKit(kitName)) {
+            TextHelper.sendTextByKey(context.getSource(), "kit.kit.not_found", kitName);
+            throw new AbortCommandExecutionException();
+        }
         return new KitName(StringArgumentType.getString(context, commandArgument.getArgumentName()));
     }
 
