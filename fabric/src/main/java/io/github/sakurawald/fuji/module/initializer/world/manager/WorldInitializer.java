@@ -18,6 +18,7 @@ import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.world.manager.command.argument.wrapper.LoadedRuntimeDimensionDescriptor;
@@ -314,7 +315,7 @@ public class WorldInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<WorldDataModel> world = ObjectConfigurationHandler
         .ofModule("world.json", WorldDataModel.class)
-        .enableAutoSaveFeature();
+        .enableAutoSaveFeature(ScheduleManager.CRON_EVERY_MINUTE);
 
     private static void ensureDimensionNotExists(ServerCommandSource source, Identifier identifier) {
         if (WorldService.existsDimension(identifier)) {

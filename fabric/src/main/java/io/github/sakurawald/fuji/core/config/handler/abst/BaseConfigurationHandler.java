@@ -191,8 +191,12 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         return ModuleManager.computeJoinedModulePath(this.model().getClass().getName());
     }
 
-    @SneakyThrows
     public BaseConfigurationHandler<T> enableAutoSaveFeature() {
+        return enableAutoSaveFeature(ScheduleManager.CRON_EVERY_TEN_SECONDS);
+    }
+
+    @SneakyThrows
+    public BaseConfigurationHandler<T> enableAutoSaveFeature(@NotNull String cron) {
         /* Make and schedule the job. */
         String jobName = this.filePath.toFile().getCanonicalPath();
         ConfigurationHandlerWriteStorageJob writeStorageJob = new ConfigurationHandlerWriteStorageJob(jobName, new JobDataMap() {
@@ -204,7 +208,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
                 String sourceModuleInCurrentStackTrace = ReflectionUtil.Stacktrace.findSourceModuleInCurrentStackTrace();
                 this.put(SourceModuleGetter.SPECIFIED_SOURCE_MODULE_KEY, sourceModuleInCurrentStackTrace);
             }
-        }, () -> ScheduleManager.CRON_EVERY_TEN_SECONDS);
+        }, () -> cron);
         Managers.getScheduleManager().scheduleJob(writeStorageJob);
 
         /* Write storage on server stopping. */

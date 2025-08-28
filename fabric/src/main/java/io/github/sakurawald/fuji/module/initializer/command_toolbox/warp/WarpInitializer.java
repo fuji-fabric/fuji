@@ -12,6 +12,7 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
 import io.github.sakurawald.fuji.core.service.string_splitter.StringSplitter;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -40,7 +41,7 @@ public class WarpInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<WarpDataModel> data = ObjectConfigurationHandler
         .ofModule("warp.json", WarpDataModel.class)
-        .enableAutoSaveFeature();
+        .enableAutoSaveFeature(ScheduleManager.CRON_EVERY_MINUTE);
 
     @Document(id = 1751825396093L, value = "Teleport to the specified warp point.")
     @CommandNode("tp")
