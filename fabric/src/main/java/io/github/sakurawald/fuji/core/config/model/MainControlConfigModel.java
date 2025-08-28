@@ -644,6 +644,10 @@ public class MainControlConfigModel {
             public If IF = new If();
             @SerializedName(value = "NOT")
             public Not NOT = new Not();
+            @SerializedName(value = "AND")
+            public And AND = new And();
+            @SerializedName(value = "OR")
+            public Or OR = new Or();
             public Nop nop = new Nop();
             public Delay delay = new Delay();
             public Json json = new Json();
@@ -692,6 +696,14 @@ public class MainControlConfigModel {
             }
 
             public static class Not {
+                public boolean enable = false;
+            }
+
+            public static class And {
+                public boolean enable = false;
+            }
+
+            public static class Or {
                 public boolean enable = false;
             }
 

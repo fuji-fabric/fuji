@@ -24,8 +24,10 @@ command_event
 command_interactive
 command_menu
 command_meta
+command_meta.AND
 command_meta.IF
 command_meta.NOT
+command_meta.OR
 command_meta.attachment
 command_meta.chain
 command_meta.delay

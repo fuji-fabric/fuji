@@ -1427,8 +1427,8 @@
   "docstring.1756103268606": "You can attach a named `tag` to an `entity`.\nThen reference this entity using the `tag` name.\n",
   "docstring.1756110650928": "◉ Make a GUI to display all available kits.\nYou can integrate with the `command_menu` module.\nTo create a `menu` to `display` available kits, making it easier to `claim` a `kit`.\n\n◉ Attach the kit claim command to objects.\nYou can integrate with `command_attachment` module.\nTo attach the kit claim command to a `block`, `entity` or `item`.\n",
   "docstring.1756134707146": "Set the reply target player.",
-  "docstring.1756136221326": "Provides a `/NOT <command>` command.\nTo execute the command as the console, and `reverse` the return values of `SUCCESS` and `FAILURE`.\n",
-  "docstring.1756136351403": "◉ How it works?\n1. Execute the `target command` as console, and get the `command return value`.\n1.a. If the `command return value` represents `SUCCESS` (value > 0), then return `FAILURE` (value 0).\n1.b. If the `command return value` represents `FAILURE` (value = 0), then return `SUCCESS` (value 1).\n",
+  "docstring.1756136221326": "Provides a `/NOT <command>` command.\nTo execute the specified command, and `reverse` the return values of `SUCCESS` and `FAILURE`.\n",
+  "docstring.1756136351403": "◉ How it works?\n1. Execute the `target command` as the command source, and get the `command return value`.\n1.a. If the `command return value` represents `SUCCESS` (value > 0), then return `FAILURE` (value 0).\n1.b. If the `command return value` represents `FAILURE` (value = 0), then return `SUCCESS` (value 1).\n",
   "docstring.1756136578216": "Execute the command as the console, and reverse the return values of `SUCCESS` and `FAILURE`.",
   "docstring.1756137411423": "◉ Use with other `predicate` commands.\nIssue: /IF NOT has-item? \\<player\\> minecraft:apple 16 THEN say You don't have 16 apples. ELSE say You have 16 apples.\n",
   "docstring.1756196951881": "◉ Compare between `command_advice` and `command_bundle` module.\nThe `command_advice` module is used to `decorate` an `existing target command`.\nThe `command_bundle` module is used to `create` a `new command`.\n",
@@ -1442,5 +1442,11 @@
   "docstring.1756286747383": "Joins the server while the server is during `maintenance mode`.\n",
   "docstring.1756293176728": "Provides `/apply-velocity` command.\n",
   "docstring.1756347408511": "Launch an `entity` with a `velocity`.\n",
-  "docstring.1756372814981": "Open a GUI to pre-view the specified kit."
+  "docstring.1756372814981": "Open a GUI to pre-view the specified kit.",
+  "docstring.1756383926802": "Provides the `/AND` command, which allows composing the return values of multiple commands.\n",
+  "docstring.1756383929301": "Returns `SUCCESS` if and only if `all of` the commands returns `SUCCESS`.",
+  "docstring.1756384425927": "Provides the `/OR` command, which allows composing the return values of multiple commands.\n",
+  "docstring.1756384432603": "Returns `SUCCESS` if and only if `any of` the commands returns `SUCCESS`.",
+  "docstring.1756384526884": "◉ Compose the return values of multiple commands.\nIssue: `/AND \\<command-1\\> AND \\<command-2\\> AND \\<command-3\\> AND ...`\n\n◉ Returns `SUCCESS` if the player has `iron_ingot x 8` and `gold_ingot x 4`\nIssue: `/AND has-item? Steve minecraft:iron_ingot 8 AND has-item? Steve minecraft:gold_ingot 4`\n",
+  "docstring.1756385060343": "◉ Compose the return values of multiple commands.\nIssue: `/OR \\<command-1\\> OR \\<command-2\\> OR \\<command-3\\> OR ...`\n\n◉ Returns `SUCCESS` if the player has `iron_ingot x 8` or `gold_ingot x 4`\nIssue: `/OR has-item? Steve minecraft:iron_ingot 8 OR has-item? Steve minecraft:gold_ingot 4`\n"
 }

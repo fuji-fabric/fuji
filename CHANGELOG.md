@@ -14,3 +14,6 @@
   - feature: new `/kit preview <player> <kit>` command, to pre-view the contents of a kit in GUI.
 - [command_toolbox.more] feature: new optional argument `--oversize` for `/more` command.
   - Example: `/more --oversize true` will set the item count to 64, even for items like `diamond sword` or `ender peral`.
+- [command_meta] feature: new modules to provide `/AND` and `/OR` commands.
+  - Example: `/AND has-item? Steve minecraft:iron_ingot 8 AND has-item? Steve minecraft:gold_ingot 4`
+  - Example: `/OR has-item? Steve minecraft:iron_ingot 8 OR has-item? Steve minecraft:gold_ingot 4`
