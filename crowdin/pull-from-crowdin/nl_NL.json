@@ -1440,7 +1440,6 @@
   "docstring.1756284897212": "◉ Advanced universal permission mod.\nThe `command_permission` module was originally inspired by the `Vanilla Permissions` mod.\nIf you want advanced features, check `Vanilla Permissions` mod.\n",
   "docstring.1756285767531": "This module provides a `maintenance mode`, to prevent players joining the server during maintenance.\n",
   "docstring.1756286747383": "Joins the server while the server is during `maintenance mode`.\n",
-  "docstring.1756293176728": "Provides `/apply-velocity` command.\n",
   "docstring.1756347408511": "Launch an `entity` with a `velocity`.\n",
   "docstring.1756372814981": "Open a GUI to pre-view the specified kit.",
   "docstring.1756383926802": "Provides the `/AND` command, which allows composing the return values of multiple commands.\n",
