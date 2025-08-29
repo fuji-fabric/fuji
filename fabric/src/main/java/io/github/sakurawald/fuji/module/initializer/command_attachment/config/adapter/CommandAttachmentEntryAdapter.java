@@ -8,7 +8,7 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.interfaces.ObjectTypeStringGetter;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.BlockCommandAttachmentEntry;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.BaseCommandAttachmentEntry;
-import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.CommandAttackmentType;
+import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.CommandAttackmentType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.EntityCommandAttachmentEntry;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.ItemStackCommandAttachmentEntry;
 import java.lang.reflect.Type;
