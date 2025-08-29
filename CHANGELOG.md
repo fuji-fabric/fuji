@@ -41,3 +41,5 @@
 
 - [command_attachment] improvements
   - feature: improve the `readbility` of `/command-attach query-{block|entity|item}` commands.
+  - feature: support `SWAP_HAND` interaction type.
+  - docs: new documents for this module.

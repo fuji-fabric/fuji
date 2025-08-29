@@ -34,7 +34,6 @@ public class ServerPlayerInteractionManagerMixin {
     @Inject(method = "interactItem", at = @At("HEAD"))
     void onPlayerRightClick(ServerPlayerEntity serverPlayerEntity, World world, @NotNull ItemStack itemStack, Hand hand, @NotNull CallbackInfoReturnable<ActionResult> cir) {
         String uuid = UuidHelper.getAttachedUuid(ItemStackHelper.CustomData.getCustomDataNbt(itemStack));
-
         CommandAttachmentService.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.RIGHT_CLICK, InteractType.ANY_CLICK), () -> {});
     }
 
@@ -47,7 +46,6 @@ public class ServerPlayerInteractionManagerMixin {
      {
         if (string.equals("actual start of destroying")) {
             String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
-
             CommandAttachmentService.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.LEFT_CLICK, InteractType.ANY_CLICK), () -> {});
         }
     }

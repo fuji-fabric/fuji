@@ -26,6 +26,7 @@
     "command_advice.CommandDispatcherMixin",
     "command_advice.CommandManagerMixin",
     "command_attachment.EntityMixin",
+    "command_attachment.ServerPlayerEntityMixin",
     "command_attachment.ServerPlayerInteractionManagerMixin",
     "command_attachment.ServerPlayNetworkHandlerMixin",
     "command_bundle.CommandContextMixin",

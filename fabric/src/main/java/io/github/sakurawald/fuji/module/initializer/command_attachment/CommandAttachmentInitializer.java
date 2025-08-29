@@ -47,6 +47,12 @@ import java.util.Optional;
     We will save a `binding ID` in the item NBT.
     Every item that has the same `binding ID` in its NBT data, shares the same `binding commands instance`.
     """)
+@ColorBox(id = 1756447342634L, color = ColorBox.ColorBoxTypes.NOTE, value = """
+    ◉ Valid `interaction types` for each `attached types`.
+    - `item`: `LEFT_CLICK`, `RIGHT_CLICK`, `ANY_CLICK`, `SWAP_HAND`
+    - `block`: `LEFT_CLICK`, `RIGHT_CLICK`, `ANY_CLICK`, `STEP_ON`
+    - `entity`: `RIGHT_CLICK`, `ANY_CLICK`
+    """)
 @ColorBox(id = 1751870464919L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     To give the item with attached commands.
     You can use `kit` module.

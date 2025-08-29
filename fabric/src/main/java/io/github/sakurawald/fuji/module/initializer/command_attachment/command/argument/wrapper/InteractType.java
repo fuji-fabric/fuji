@@ -10,5 +10,7 @@ public enum InteractType {
     @SerializedName(value = "ANY_CLICK", alternate = "BOTH")
     ANY_CLICK,
 
+    SWAP_HAND,
+
     STEP_ON
 }
