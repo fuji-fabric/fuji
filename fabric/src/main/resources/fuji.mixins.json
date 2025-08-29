@@ -72,6 +72,7 @@
     "jail.ModifyDisplayNameMixin",
     "jail.ModifyPlayerListNameMixin",
     "language.ServerPlayerMixin",
+    "launcher.LivingEntityMixin",
     "maintenance.ServerQueryNetworkHandlerMixin",
     "motd.ServerQueryNetworkHandlerMixin",
     "multiplier.ServerPlayerMixin",

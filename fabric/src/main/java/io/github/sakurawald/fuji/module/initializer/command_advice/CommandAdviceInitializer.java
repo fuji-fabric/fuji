@@ -50,7 +50,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @ColorBox(id = 1756197023849L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ Semantics of each `advice type`.
     - `BEFORE_EXECUTION`: Run specified commands `before` the execution of target command (If it's not `cancelled` by other advices).
-    - `AFTER_EXECUTION`: Run specified commands `after` the execution of target command (No matter whether it's `SUCCESS` or `FAILURE`).
+    - `AFTER_EXECUTION`: Run specified commands `after` the execution of target command (Regardless of whether it's `SUCCESS` or `FAILURE`).
     - `ON_EXECUTION_SUCCESS`: Run specified commands `if` the execution of target command is `SUCCESS` (Return value > 0).
     - `ON_EXECUTION_FAILURE`: Run specified commands `if` the execution of target command is `FAILURE` (Return value = 0).
     - `ON_EXECUTION_CANCELLED`: Run specified commands `if` the execution of target command is `CANCELLED` by other advices.
