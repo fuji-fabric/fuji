@@ -3,11 +3,13 @@ package io.github.sakurawald.fuji.module.initializer.command_attachment.structur
 import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.ExecuteAsType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 @Data
@@ -30,5 +32,10 @@ public class ItemStackCommandAttachmentEntry extends BaseCommandAttachmentEntry 
         if (this.isConsumeItemOnExhaust() && this.getUseTimes() >= this.getMaxUseTimes()) {
             player.getMainHandStack().decrement(1);
         }
+    }
+
+    @Override
+    public List<Text> asLore(@NotNull ServerPlayerEntity player) {
+        return List.of();
     }
 }

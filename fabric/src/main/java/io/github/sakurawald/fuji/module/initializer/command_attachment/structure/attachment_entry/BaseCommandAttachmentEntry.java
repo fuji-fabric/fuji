@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry;
 
+import io.github.sakurawald.fuji.core.gui.interfaces.LoreProvider;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.ExecuteAsType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BaseCommandAttachmentEntry {
+public abstract class BaseCommandAttachmentEntry implements LoreProvider {
     public CommandAttackmentType type = CommandAttackmentType.ITEMSTACK;
     public String command;
     public InteractType interactType;
