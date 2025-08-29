@@ -6,6 +6,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
+import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.CommandAttachmentInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.ExecuteAsType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
@@ -99,8 +100,8 @@ public class CommandAttachmentService {
     public static int queryAttachmentModel(@NotNull ServerCommandSource source, @Nullable String uuid) {
         return findAttachmentDataNode(uuid)
             .map(it -> {
-                String attachmentDataNodeString = it.toString();
-                TextHelper.sendMessageByText(source, Text.literal(attachmentDataNodeString));
+                String attachmentDataNode = GsonMapper.toJsonString(it);
+                TextHelper.sendMessageByText(source, Text.literal(attachmentDataNode));
                 return CommandHelper.Return.SUCCESS;
             })
             .orElseThrow(() -> {

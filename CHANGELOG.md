@@ -38,3 +38,6 @@
     You can integrate with `command_attachment` module.
     Issue: `/command-attachment attach-block-one ~ ~ ~ --interactType STEP_ON \\<command\\>`
 ```
+
+- [command_attachment] improvements
+  - feature: improve the `readbility` of `/command-attach query-{block|entity|item}` commands.

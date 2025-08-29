@@ -6,10 +6,12 @@ import io.github.sakurawald.fuji.module.initializer.command_attachment.structure
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class BlockCommandAttachmentEntry extends BaseCommandAttachmentEntry {
 
     public BlockCommandAttachmentEntry(String created_in, String command, InteractType interactType, ExecuteAsType executeAsType, int maxUseTimes, int useTimes) {
