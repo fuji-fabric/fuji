@@ -78,6 +78,13 @@ public class WorldHelper {
             .orElseThrow(() -> new IllegalStateException("Dimension %s not found.".formatted(dimensionId)));
     }
 
+    public static boolean isServerWorld(@Nullable World world)  {
+        if (world == null) {
+            return false;
+        }
+        return world instanceof ServerWorld;
+    }
+
     public static
     #if  MC_VER <= MC_1_20_6
     net.minecraft.server.world.ThreadedAnvilChunkStorage

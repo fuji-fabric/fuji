@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.structure.GlobalBlockPos;
 import io.github.sakurawald.fuji.module.initializer.color.sign.ColorSignInitializer;
 import io.github.sakurawald.fuji.module.initializer.color.sign.structure.SignCache;
@@ -45,6 +46,9 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
         if (ServerHelper.getServer() == null) {
             return signText;
         }
+
+        if (!WorldHelper.isServerWorld(this.world)) return signText;
+
 
         /* Parse input strings. */
         Text[] messages = signText.getMessages(false);
