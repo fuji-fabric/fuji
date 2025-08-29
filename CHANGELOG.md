@@ -45,3 +45,4 @@
   - docs: new documents for this module.
   - feature: prevent the `block` being broken, if the there are `command attachments` attached in this block.
   - feature: new `/command-attachment editor` command.
+  - feature: add `--confirm` optional argument for dangerous commands: `/command-attachment detach-{item|block|entity}-all`

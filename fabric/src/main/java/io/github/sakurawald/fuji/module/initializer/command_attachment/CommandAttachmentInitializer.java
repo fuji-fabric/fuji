@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.module.initializer.command_attachment;
 
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
@@ -186,30 +185,37 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         });
     }
 
+    @SuppressWarnings("CodeBlock2Expr")
     @Document(id = 1751826477036L, value = "Detach all attached commands in the item.")
     @CommandNode("detach-item-all")
-    private static int $detachItemAll(@CommandSource ServerPlayerEntity player) {
-        return CommandHelper.Pattern.withItemInMainHand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
-            String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
-            CommandAttachmentService.removeAttachmentDataNode(uuid);
-            return CommandHelper.Return.SUCCESS;
+    private static int $detachItemAll(@CommandSource ServerPlayerEntity player, Optional<Boolean> confirm) {
+        return CommandHelper.Pattern.withCommandConfirmed(player, confirm, () -> {
+            return CommandHelper.Pattern.withItemInMainHand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
+                String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
+                CommandAttachmentService.removeAttachmentDataNode(uuid);
+                return CommandHelper.Return.SUCCESS;
+            });
         });
     }
 
     @Document(id = 1751826478770L, value = "Detach all attached commands in the entity.")
     @CommandNode("detach-entity-all")
-    private static int $detachEntityAll(@CommandSource ServerPlayerEntity player, Entity entity) {
-        String uuid = UuidHelper.getAttachedUuid(entity);
-        CommandAttachmentService.removeAttachmentDataNode(uuid);
-        return CommandHelper.Return.SUCCESS;
+    private static int $detachEntityAll(@CommandSource ServerPlayerEntity player, Entity entity, Optional<Boolean> confirm) {
+        return CommandHelper.Pattern.withCommandConfirmed(player,confirm, () -> {
+            String uuid = UuidHelper.getAttachedUuid(entity);
+            CommandAttachmentService.removeAttachmentDataNode(uuid);
+            return CommandHelper.Return.SUCCESS;
+        });
     }
 
     @Document(id = 1751826482248L, value = "Detach all attached commands in the block.")
     @CommandNode("detach-block-all")
-    private static int $detachBlockAll(@CommandSource ServerPlayerEntity player, BlockPos blockPos) {
-        String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
-        CommandAttachmentService.removeAttachmentDataNode(uuid);
-        return CommandHelper.Return.SUCCESS;
+    private static int $detachBlockAll(@CommandSource ServerPlayerEntity player, BlockPos blockPos, Optional<Boolean> confirm) {
+        return CommandHelper.Pattern.withCommandConfirmed(player, confirm, () -> {
+            String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
+            CommandAttachmentService.removeAttachmentDataNode(uuid);
+            return CommandHelper.Return.SUCCESS;
+        });
     }
 
     @Document(id = 1751826486559L, value = "Query all attached commands in the item.")
