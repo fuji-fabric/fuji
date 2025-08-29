@@ -1,7 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.world.border.structure;
 
 import io.github.sakurawald.fuji.module.initializer.world.border.WorldBorderInitializer;
-import lombok.RequiredArgsConstructor;
 import net.minecraft.network.packet.s2c.play.WorldBorderCenterChangedS2CPacket;
 import net.minecraft.network.packet.s2c.play.WorldBorderInterpolateSizeS2CPacket;
 import net.minecraft.network.packet.s2c.play.WorldBorderSizeChangedS2CPacket;
@@ -10,7 +9,6 @@ import net.minecraft.network.packet.s2c.play.WorldBorderWarningTimeChangedS2CPac
 import net.minecraft.world.border.WorldBorder;
 import net.minecraft.world.border.WorldBorderListener;
 
-@RequiredArgsConstructor
 public class PerDimensionWorldBorderListener implements WorldBorderListener {
 
     @Override
