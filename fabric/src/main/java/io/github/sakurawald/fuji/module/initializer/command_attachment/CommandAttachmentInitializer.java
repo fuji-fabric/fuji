@@ -151,7 +151,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
             InteractType $interactType = interactType.orElse(InteractType.ANY_CLICK);
             ExecuteAsType $executeAsType = executeAsType.orElse(ExecuteAsType.FAKE_OP);
             Integer $maxUseTimes = maxUseTimes.orElse(Integer.MAX_VALUE);
-            EntityCommandAttachmentEntry newEntry = new EntityCommandAttachmentEntry($command, $interactType, $executeAsType, $maxUseTimes, 0);
+            EntityCommandAttachmentEntry newEntry = new EntityCommandAttachmentEntry($command, $interactType, $executeAsType, $maxUseTimes, 0, false);
 
             /* Add the entry. */
             model.getEntries().add(newEntry);
@@ -178,7 +178,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
             ExecuteAsType $executeAsType = executeAsType.orElse(ExecuteAsType.FAKE_OP);
             Integer $maxUseTimes = maxUseTimes.orElse(Integer.MAX_VALUE);
             String createdIn = UuidHelper.toString(player.getWorld(), blockPos);
-            BlockCommandAttachmentEntry newEntry = new BlockCommandAttachmentEntry(createdIn, $command, $interactType, $executeAsType, $maxUseTimes, 0);
+            BlockCommandAttachmentEntry newEntry = new BlockCommandAttachmentEntry(createdIn, $command, $interactType, $executeAsType, $maxUseTimes, 0, false);
 
             // Add the entry.
             model.getEntries().add(newEntry);

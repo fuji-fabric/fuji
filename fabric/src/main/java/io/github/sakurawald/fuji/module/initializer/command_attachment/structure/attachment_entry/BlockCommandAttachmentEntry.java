@@ -17,12 +17,12 @@ import org.jetbrains.annotations.NotNull;
 @ToString(callSuper = true)
 public class BlockCommandAttachmentEntry extends BaseCommandAttachmentEntry {
 
-    public BlockCommandAttachmentEntry(String created_in, String command, InteractType interactType, ExecuteAsType executeAsType, int maxUseTimes, int useTimes) {
-        super(CommandAttackmentType.BLOCK, command, interactType, executeAsType, maxUseTimes, useTimes);
+    public BlockCommandAttachmentEntry(String created_in, String command, InteractType interactType, ExecuteAsType executeAsType, int maxUseTimes, int useTimes, boolean vanishOnExhaust) {
+        super(CommandAttackmentType.BLOCK, interactType, executeAsType, command, maxUseTimes, useTimes, vanishOnExhaust);
     }
 
     @Override
     public List<Text> asLore(@NotNull ServerPlayerEntity player) {
-        return List.of();
+        return super.asLore(player);
     }
 }
