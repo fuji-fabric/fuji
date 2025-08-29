@@ -32,7 +32,7 @@ public class PermissionModel {
     @Data
     @NoArgsConstructor
     public static class DefaultLevelPermission {
-        Map<String, Integer> commands = new TreeMap<>();
+        TreeMap<String, Integer> commands = new TreeMap<>();
     }
 
 }

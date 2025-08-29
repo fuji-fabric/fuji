@@ -4,4 +4,6 @@
 
 # Changelog
 
-- [core] feature: auto clean the invalid keys in `permission.json` file, for clarity.
+- [core] feature: improvements to `permission.json` file.
+  - feature: auto clean the invalid keys in `permission.json` file, for clarity.
+  - feature: sort the `command path` alphabetically, making it easier to read.
