@@ -24,7 +24,6 @@ public abstract class EntityMixin {
 
         if (hand == Hand.MAIN_HAND) {
             String uuid = entity.getUuidAsString();
-
             CommandAttachmentService.tryTriggerAttachmentDataNode(uuid, player, List.of(InteractType.RIGHT_CLICK, InteractType.ANY_CLICK), () -> {});
         }
     }

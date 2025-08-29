@@ -37,7 +37,7 @@ public class CommandAttachmentService {
         return function.apply(dataNode);
     }
 
-    private static Optional<CommandAttachmentDataNode> findAttachmentDataNode(@Nullable String uuid) {
+    public static Optional<CommandAttachmentDataNode> findAttachmentDataNode(@Nullable String uuid) {
         return listAttachmentDataNodes()
             .stream()
             .filter(it -> it.getId().equals(uuid))

@@ -5,9 +5,11 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.UuidHelper;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.service.CommandAttachmentService;
+import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -21,8 +23,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.List;
 
 @Mixin(ServerPlayerInteractionManager.class)
 public class ServerPlayerInteractionManagerMixin {
@@ -42,8 +42,7 @@ public class ServerPlayerInteractionManagerMixin {
     #elif MC_VER > MC_1_20_4
     @Inject(method = "onBlockBreakingAction", at = @At("HEAD"))
     #endif
-    void onPlayerLeftClickBlock(BlockPos blockPos, boolean bl, int i, String string, CallbackInfo ci)
-     {
+    void onPlayerLeftClickBlock(BlockPos blockPos, boolean bl, int i, String string, CallbackInfo ci) {
         if (string.equals("actual start of destroying")) {
             String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
             CommandAttachmentService.tryTriggerAttachmentDataNode(uuid, player, List.of(InteractType.LEFT_CLICK, InteractType.ANY_CLICK), () -> {});
@@ -59,6 +58,15 @@ public class ServerPlayerInteractionManagerMixin {
                 cir.setReturnValue(ActionResult.FAIL);
             });
         }
+    }
+
+    @Inject(method = "tryBreakBlock", at = @At("HEAD"), cancellable = true)
+    void handleBreakBlock(BlockPos blockPos, @NotNull CallbackInfoReturnable<Boolean> cir) {
+        ServerWorld world = EntityHelper.getServerWorld(player);
+        String uuid = UuidHelper.getAttachedUuid(world, blockPos);
+        CommandAttachmentService
+            .findAttachmentDataNode(uuid)
+            .ifPresent(it -> cir.setReturnValue(false));
     }
 
 }
