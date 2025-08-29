@@ -53,7 +53,7 @@ public class CommandAttachmentService {
 
     public static void tryTriggerAttachmentModel(@Nullable String uuid, @NotNull PlayerEntity player, @NotNull List<InteractType> inputInteractTypes, @NotNull Runnable postTriggered) {
         findAttachmentDataNode(uuid)
-            .ifPresent(it -> triggerAttachmentModel(it.getModel(), player, inputInteractTypes, postTriggered));
+            .ifPresent(it -> triggerAttachmentModel(it.getAttachments(), player, inputInteractTypes, postTriggered));
     }
 
     private static void triggerAttachmentModel(@NotNull CommandAttachments model, @NotNull PlayerEntity player, @NotNull List<InteractType> receivedInteractTypes, @NotNull Runnable postTriggered) {

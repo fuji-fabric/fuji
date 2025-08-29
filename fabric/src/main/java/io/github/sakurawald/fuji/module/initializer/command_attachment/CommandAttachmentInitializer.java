@@ -115,7 +115,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         return CommandHelper.Pattern.withItemInMainHand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
             String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
             return CommandAttachmentService.withAttachmentDataNode(uuid, it -> {
-                CommandAttachments model = it.getModel();
+                CommandAttachments model = it.getAttachments();
 
                 /* Make new entry. */
                 String $command = command.getValue();
@@ -143,7 +143,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     ) {
         String uuid = entity.getUuidAsString();
         return CommandAttachmentService.withAttachmentDataNode(uuid, it -> {
-            CommandAttachments model = it.getModel();
+            CommandAttachments model = it.getAttachments();
 
             /* Make new entry. */
             String $command = command.getValue();
@@ -169,7 +169,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     ) {
         String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
         return CommandAttachmentService.withAttachmentDataNode(uuid, it -> {
-            CommandAttachments model = it.getModel();
+            CommandAttachments model = it.getAttachments();
 
             /* Make the new entry. */
             String $command = command.getValue();
