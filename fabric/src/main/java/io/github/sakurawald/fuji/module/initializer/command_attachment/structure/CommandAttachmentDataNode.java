@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 public class CommandAttachmentDataNode {
 
     String id;
+
     @SerializedName(value = "attachments", alternate = "model")
     CommandAttachments attachments = new CommandAttachments();
 }
