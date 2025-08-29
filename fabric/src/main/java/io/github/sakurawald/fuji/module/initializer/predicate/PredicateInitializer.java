@@ -138,45 +138,45 @@ public class PredicateInitializer extends ModuleInitializer {
     }
 
     @CommandNode("=?")
-    private static int $equalsNumber(@CommandSource ServerCommandSource source, ServerPlayerEntity player, double value, GreedyString numericValueProvider) {
-        return compareNumericValue(source, player, value, numericValueProvider, Objects::equals);
+    private static int $equalsNumber(@CommandSource ServerCommandSource source, ServerPlayerEntity player, double value, GreedyString numericValueString) {
+        return compareNumericValue(source, player, value, numericValueString, Objects::equals);
     }
 
     @CommandNode("!=?")
-    private static int $notEqualsNumber(@CommandSource ServerCommandSource source, ServerPlayerEntity player, double value, GreedyString numericValueProvider) {
-        return compareNumericValue(source, player, value, numericValueProvider, (a, b) -> !Objects.equals(a, b));
+    private static int $notEqualsNumber(@CommandSource ServerCommandSource source, ServerPlayerEntity player, double value, GreedyString numericValueString) {
+        return compareNumericValue(source, player, value, numericValueString, (a, b) -> !Objects.equals(a, b));
     }
 
     @CommandNode(">?")
-    private static int $greaterThanNumber(@CommandSource ServerCommandSource source, ServerPlayerEntity player, double value, GreedyString numericValueProvider) {
-        return compareNumericValue(source, player, value, numericValueProvider, (a, b) -> a > b);
+    private static int $greaterThanNumber(@CommandSource ServerCommandSource source, ServerPlayerEntity player, double value, GreedyString numericValueString) {
+        return compareNumericValue(source, player, value, numericValueString, (a, b) -> a > b);
     }
 
     @CommandNode(">=?")
-    private static int $greaterEqualsThanNumber(@CommandSource ServerCommandSource source, ServerPlayerEntity player, double value, GreedyString numericValueProvider) {
-        return compareNumericValue(source, player, value, numericValueProvider, (a, b) -> a >= b);
+    private static int $greaterEqualsThanNumber(@CommandSource ServerCommandSource source, ServerPlayerEntity player, double value, GreedyString numericValueString) {
+        return compareNumericValue(source, player, value, numericValueString, (a, b) -> a >= b);
     }
 
     @CommandNode("<?")
-    private static int $lessThanNumber(@CommandSource ServerCommandSource source, ServerPlayerEntity player, double value, GreedyString numericValueProvider) {
-        return compareNumericValue(source, player, value, numericValueProvider, (a, b) -> a < b);
+    private static int $lessThanNumber(@CommandSource ServerCommandSource source, ServerPlayerEntity player, double value, GreedyString numericValueString) {
+        return compareNumericValue(source, player, value, numericValueString, (a, b) -> a < b);
     }
 
     @CommandNode("<=?")
-    private static int $lessEqualsThanNumber(@CommandSource ServerCommandSource source, ServerPlayerEntity player, double value, GreedyString numericValueProvider) {
-        return compareNumericValue(source, player, value, numericValueProvider, (a, b) -> a <= b);
+    private static int $lessEqualsThanNumber(@CommandSource ServerCommandSource source, ServerPlayerEntity player, double value, GreedyString numericValueString) {
+        return compareNumericValue(source, player, value, numericValueString, (a, b) -> a <= b);
     }
 
-    private static int compareNumericValue(ServerCommandSource source, ServerPlayerEntity player, double value, GreedyString numericValueProvider, BiPredicate<Double, Double> predicate) {
-        String $numericValueProvider = numericValueProvider.getValue();
-        Text numericValueText = TextHelper.getTextByValue(player, $numericValueProvider);
-        String numericValueString = TextHelper.Operators.getString(numericValueText);
+    private static int compareNumericValue(ServerCommandSource source, ServerPlayerEntity player, double value, GreedyString numericValueString, BiPredicate<Double, Double> predicate) {
+        String $numericValueString = numericValueString.getValue();
+        Text numericValueText = TextHelper.getTextByValue(player, $numericValueString);
+        $numericValueString = TextHelper.Operators.getString(numericValueText);
         try {
-            double numericValue = Double.parseDouble(numericValueString);
+            double numericValue = Double.parseDouble($numericValueString);
             boolean testResult = predicate.test(value, numericValue);
             return CommandHelper.Return.returnBoolean(source, testResult);
         } catch (NumberFormatException e) {
-            TextHelper.sendTextByKey(source, "placeholder.number.parse.failed", TextHelper.Parsers.escapeTags($numericValueProvider));
+            TextHelper.sendTextByKey(source, "placeholder.number.parse.failed", TextHelper.Parsers.escapeTags($numericValueString));
             return CommandHelper.Return.FAILURE;
         }
     }
