@@ -488,8 +488,11 @@ public class CommandDescriptor implements SourceModuleGetter {
                 .map(CommandArgument::getArgumentName)
                 .collect(Collectors.joining("."));
 
-            CommandRequirementDescriptor defaultCommandRequirement = computeCommandRequirement(descriptor);
+            /* Remember this command path. */
+            CommandAnnotationProcessor.LOADED_COMMAND_PATHS.add(fullCommandPath);
 
+            /* Get the default command requirement from permission.json file. */
+            CommandRequirementDescriptor defaultCommandRequirement = computeCommandRequirement(descriptor);
             Map<String, Integer> permissionMap = CommandAnnotationProcessor.permission.model()
                 .getDefaultLevelPermission()
                 .getCommands();

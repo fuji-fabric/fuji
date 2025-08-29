@@ -4,4 +4,4 @@
 
 # Changelog
 
-- [command_attachment] fix: failed to display the `attachments` in `/command-attachment query-{block|entity|item}-all` commands.
+- [core] feature: auto clean the invalid keys in `permission.json` file, for clarity.

@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.core.command.processor;
 
 import com.mojang.brigadier.CommandDispatcher;
 import io.github.sakurawald.fuji.Fuji;
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandArgName;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -47,6 +49,7 @@ public class CommandAnnotationProcessor {
     public static final BaseConfigurationHandler<PermissionModel> permission = ObjectConfigurationHandler.ofPath(Fuji.MOD_CONFIG_PATH.resolve("permission.json"), PermissionModel.class);
 
     public static final Set<CommandDescriptor> REGISTERED_COMMAND_DESCRIPTORS = ConcurrentHashMap.newKeySet();
+    public static final Set<String> LOADED_COMMAND_PATHS = new HashSet<>();
     public static final Set<String> PUBLIC_COMMAND_PATHS = new HashSet<>();
 
     public static CommandDispatcher<ServerCommandSource> COMMAND_DISPATCHER;
@@ -68,16 +71,36 @@ public class CommandAnnotationProcessor {
 
             /* Register commands. */
             REGISTERED_COMMAND_DESCRIPTORS.clear();
+            LOADED_COMMAND_PATHS.clear();
             PUBLIC_COMMAND_PATHS.clear();
             processClasses();
 
             /* Write the permission file back. */
+            removePermissionMapOfUnloadedCommandPath();
             permission.writeStorage();
         });
         CommandEvents.AFTER_REGISTRATION.register((m, d, r, e) -> {
             // NOTE: The `/reload` command invalidates the old CommandManager reference, here we have to capture the new reference to CommandManager.
             CommandHelper.updateCommandTree(m);
         });
+    }
+
+    private static void removePermissionMapOfUnloadedCommandPath() {
+        Map<String, Integer> permissionMap = permission
+            .model()
+            .getDefaultLevelPermission()
+            .getCommands();
+
+        permissionMap
+            .keySet()
+            .stream()
+            .toList()
+            .forEach(key -> {
+                if (!LOADED_COMMAND_PATHS.contains(key)) {
+                    LogUtil.debug("Remove unused permission map for command path: {}", key);
+                    permissionMap.remove(key);
+                }
+            });
     }
 
     private static void processClasses() {
