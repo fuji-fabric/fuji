@@ -1,19 +1,24 @@
 package io.github.sakurawald.fuji.module.initializer.command_attachment.gui;
 
+import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.fuji.core.auxiliary.CollectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.UuidHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
+import io.github.sakurawald.fuji.core.gui.component.gui.ConfirmSignGui;
 import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.service.CommandAttachmentService;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.CommandAttachmentDataNode;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.BaseCommandAttachmentEntry;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -29,6 +34,10 @@ public class CommandAttachmentEditorGui extends PagedGui<BaseCommandAttachmentEn
     public CommandAttachmentEditorGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull List<BaseCommandAttachmentEntry> entities, int pageIndex, CommandAttachmentDataNode commandAttachmentDataNode) {
         super(parent, player, TextHelper.getTextByKey(player, "command_attachment.editor.gui.title", commandAttachmentDataNode.getId()), entities, pageIndex);
         this.commandAttachmentDataNode = commandAttachmentDataNode;
+
+        GuiHelper.Placer.setSlotInLastLine(this, 4, GuiHelper.Button
+            .makeHelpButton(player)
+            .setLore(TextHelper.getTextListByKey(player, "command_attachment.editor.help.lore")));
     }
 
     @Override
@@ -67,13 +76,15 @@ public class CommandAttachmentEditorGui extends PagedGui<BaseCommandAttachmentEn
         return Optional.empty();
     }
 
+    public static @NotNull CommandAttachmentEditorGui make(@NotNull ServerPlayerEntity player, @NotNull CommandAttachmentDataNode dataNode) {
+        List<BaseCommandAttachmentEntry> entities = dataNode.getAttachments().getEntries();
+        return new CommandAttachmentEditorGui(null, player, entities, 0, dataNode);
+    }
+
     public static @NotNull CommandAttachmentEditorGui make(@NotNull ServerPlayerEntity player) {
         return getTargetUuidForEditor(player)
             .flatMap(CommandAttachmentService::findAttachmentDataNode)
-            .map(node -> {
-                List<BaseCommandAttachmentEntry> entities = node.getAttachments().getEntries();
-                return new CommandAttachmentEditorGui(null, player, entities, 0, node);
-            })
+            .map(dataNode -> make(player, dataNode))
             .orElseThrow(() -> {
                 TextHelper.sendTextByKey(player, "command_attachment.editor.no_target");
                 return new AbortCommandExecutionException();
@@ -87,7 +98,48 @@ public class CommandAttachmentEditorGui extends PagedGui<BaseCommandAttachmentEn
         builder.setItem(Items.NAME_TAG);
         builder.setName(TextHelper.getTextByKey(player, "command_attachment.attachment"));
         builder.setLore(entity.asLore(player));
+        builder.setCallback((clickType) -> onEntityCallback(clickType, entity));
 
         return builder.build();
+    }
+
+    private void reopenThis() {
+        CommandAttachmentEditorGui
+            .make(player, commandAttachmentDataNode)
+            .open();
+    }
+
+    @SuppressWarnings("UnnecessaryReturnStatement")
+    private void onEntityCallback(@NotNull ClickType clickType, @NotNull BaseCommandAttachmentEntry entity) {
+        CopyOnWriteArrayList<BaseCommandAttachmentEntry> entries = commandAttachmentDataNode.getAttachments().getEntries();
+
+        /* Shift + Right = Delete */
+        if (clickType.isRight && clickType.shift) {
+            new ConfirmSignGui(this.getBackendGui(), this.getPlayer()) {
+                @Override
+                public void onConfirm() {
+                    entries.remove(entity);
+                    reopenThis();
+                }
+
+            }.open();
+            return;
+        }
+
+        /* Left = Move entity left */
+        if (clickType.isLeft) {
+            CollectionUtil.moveElementLeft(entries, entity);
+            reopenThis();
+            return;
+        }
+
+        /* Right = Move entity right */
+        if (clickType.isRight) {
+            CollectionUtil.moveElementRight(entries, entity);
+            reopenThis();
+            return;
+        }
+
+
     }
 }

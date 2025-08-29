@@ -1,13 +1,22 @@
 package io.github.sakurawald.fuji.core.gui.component.gui;
 
+import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class ConfirmSignGui extends InputSignGui {
 
-    public ConfirmSignGui(@NotNull ServerPlayerEntity player) {
+    final SlotGuiInterface parent;
+
+    public ConfirmSignGui(@Nullable SlotGuiInterface parent, @NotNull ServerPlayerEntity player) {
         super(player, TextHelper.getTextByKeyAndReplaceTheKeyword(player, "prompt.input.confirm", "confirm"));
+        this.parent = parent;
+    }
+
+    public ConfirmSignGui(@NotNull ServerPlayerEntity player) {
+        this(null, player);
     }
 
     @Override
@@ -24,7 +33,11 @@ public abstract class ConfirmSignGui extends InputSignGui {
 
     protected void onCancelled() {}
 
-    protected void onConfirmedOrCancelled() {}
+    protected void onConfirmedOrCancelled() {
+        if (this.parent != null) {
+            this.parent.open();
+        }
+    }
 
     private boolean isConfirmed() {
         String confirmationString = TextHelper.Translator.getLanguageValueByKey(getPlayer(), "keyword.confirm");

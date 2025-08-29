@@ -61,6 +61,7 @@
   "command_attachment.attachment.use_times": "<blue>Use Times: `%s`",
   "command_attachment.attachment.vanish_on_exhaust": "<blue>Vanish On Exhaust: `%s`",
   "command_attachment.editor.gui.title": "<pink>Editor: `%s`",
+  "command_attachment.editor.help.lore": "<yellow>Left Click = Move Left\n<yellow>Right Click = Move Right\n<yellow>Shift + Right Click = Delete",
   "command_attachment.editor.no_target": "<red>No attachments found in `looking at entity`, `looking at block` and `item in hand`.",
   "command_attachment.protect": "<red>This object is protected by command attachments.",
   "command_attachment.query.no_attachment": "<red>No attachments.",
