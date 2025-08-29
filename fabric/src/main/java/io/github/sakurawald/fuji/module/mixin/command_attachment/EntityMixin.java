@@ -25,7 +25,7 @@ public abstract class EntityMixin {
         if (hand == Hand.MAIN_HAND) {
             String uuid = entity.getUuidAsString();
 
-            CommandAttachmentService.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.RIGHT, InteractType.BOTH), () -> {});
+            CommandAttachmentService.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.RIGHT_CLICK, InteractType.ANY_CLICK), () -> {});
         }
     }
 }

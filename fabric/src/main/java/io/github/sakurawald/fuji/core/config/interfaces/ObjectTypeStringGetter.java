@@ -17,5 +17,7 @@ import org.jetbrains.annotations.NotNull;
     """)
 public interface ObjectTypeStringGetter {
 
+    String TYPE_KEY = "type";
+
     @NotNull String getObjectTypeString();
 }

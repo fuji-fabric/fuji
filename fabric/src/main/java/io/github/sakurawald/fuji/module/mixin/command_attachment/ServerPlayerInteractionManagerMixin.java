@@ -35,7 +35,7 @@ public class ServerPlayerInteractionManagerMixin {
     void onPlayerRightClick(ServerPlayerEntity serverPlayerEntity, World world, @NotNull ItemStack itemStack, Hand hand, @NotNull CallbackInfoReturnable<ActionResult> cir) {
         String uuid = UuidHelper.getAttachedUuid(ItemStackHelper.CustomData.getCustomDataNbt(itemStack));
 
-        CommandAttachmentService.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.RIGHT, InteractType.BOTH), () -> {});
+        CommandAttachmentService.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.RIGHT_CLICK, InteractType.ANY_CLICK), () -> {});
     }
 
     #if MC_VER <= MC_1_20_4
@@ -48,7 +48,7 @@ public class ServerPlayerInteractionManagerMixin {
         if (string.equals("actual start of destroying")) {
             String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
 
-            CommandAttachmentService.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.LEFT, InteractType.BOTH), () -> {});
+            CommandAttachmentService.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.LEFT_CLICK, InteractType.ANY_CLICK), () -> {});
         }
     }
 
@@ -56,7 +56,7 @@ public class ServerPlayerInteractionManagerMixin {
     void onPlayerRightClickBlock(ServerPlayerEntity serverPlayerEntity, @NotNull World world, ItemStack itemStack, Hand hand, @NotNull BlockHitResult blockHitResult, @NotNull CallbackInfoReturnable<ActionResult> cir) {
         if (hand == Hand.MAIN_HAND) {
             String uuid = UuidHelper.getAttachedUuid(world, blockHitResult.getBlockPos());
-            CommandAttachmentService.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.RIGHT, InteractType.BOTH), () -> {
+            CommandAttachmentService.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.RIGHT_CLICK, InteractType.ANY_CLICK), () -> {
                 // Cancel the action if the target block contains attached commands.
                 cir.setReturnValue(ActionResult.FAIL);
             });

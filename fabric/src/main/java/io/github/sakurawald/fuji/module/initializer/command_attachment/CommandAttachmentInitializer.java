@@ -16,7 +16,7 @@ import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.ExecuteAsType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
-import io.github.sakurawald.fuji.module.initializer.command_attachment.config.adapter.CommandAttachmentNodeAdapter;
+import io.github.sakurawald.fuji.module.initializer.command_attachment.config.adapter.CommandAttachmentEntryAdapter;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.config.model.CommandAttachmentDataModel;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.config.model.CommandAttachmentModel;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.config.transformer.CommandAttachmentV1SchemaTransformer;
@@ -65,8 +65,8 @@ import java.util.Optional;
     2. Gives gold_ingot *1 on right clicked. (With use limit 5)
 
     Issue the following commands:
-    1. `/command-attachment attach-item-one --maxUseTimes 3 --interactType LEFT give %player:name% minecraft:diamond 1`
-    2. `/command-attachment attach-item-one --maxUseTimes 5 --interactType RIGHT give %player:name% minecraft:gold_ingot 1`
+    1. `/command-attachment attach-item-one --maxUseTimes 3 --interactType LEFT_CLICK give %player:name% minecraft:diamond 1`
+    2. `/command-attachment attach-item-one --maxUseTimes 5 --interactType RIGHT_CLICK give %player:name% minecraft:gold_ingot 1`
     """)
 @ColorBox(id = 1751901028033L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Make a magic-stick, which gives apple * 1, with use limit 3 times, and keep the item without destroying it.
@@ -113,7 +113,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
                 /* Make new entry. */
                 String $command = command.getValue();
-                InteractType $interactType = interactType.orElse(InteractType.BOTH);
+                InteractType $interactType = interactType.orElse(InteractType.ANY_CLICK);
                 ExecuteAsType $executeAsType = executeAsType.orElse(ExecuteAsType.FAKE_OP);
                 Integer $maxUseTimes = maxUseTimes.orElse(Integer.MAX_VALUE);
                 Boolean $destroyItem = destroyItem.orElse(true);
@@ -141,7 +141,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
             /* Make new entry. */
             String $command = command.getValue();
-            InteractType $interactType = interactType.orElse(InteractType.BOTH);
+            InteractType $interactType = interactType.orElse(InteractType.ANY_CLICK);
             ExecuteAsType $executeAsType = executeAsType.orElse(ExecuteAsType.FAKE_OP);
             Integer $maxUseTimes = maxUseTimes.orElse(Integer.MAX_VALUE);
             EntityCommandAttachmentEntry newEntry = new EntityCommandAttachmentEntry($command, $interactType, $executeAsType, $maxUseTimes, 0);
@@ -167,7 +167,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
             /* Make the new entry. */
             String $command = command.getValue();
-            InteractType $interactType = interactType.orElse(InteractType.BOTH);
+            InteractType $interactType = interactType.orElse(InteractType.ANY_CLICK);
             ExecuteAsType $executeAsType = executeAsType.orElse(ExecuteAsType.FAKE_OP);
             Integer $maxUseTimes = maxUseTimes.orElse(Integer.MAX_VALUE);
             String createdIn = UuidHelper.toString(player.getWorld(), blockPos);
@@ -240,6 +240,6 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @Override
     protected void registerGsonTypeAdapter() {
-        GsonMapper.registerGsonTypeAdapter(BaseCommandAttachmentEntry.class, new CommandAttachmentNodeAdapter());
+        GsonMapper.registerGsonTypeAdapter(BaseCommandAttachmentEntry.class, new CommandAttachmentEntryAdapter());
     }
 }
