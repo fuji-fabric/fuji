@@ -190,7 +190,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     private static int $detachItemAll(@CommandSource ServerPlayerEntity player) {
         return CommandHelper.Pattern.withItemInMainHand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
             String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
-            CommandAttachmentService.removeAttachmentModel(uuid);
+            CommandAttachmentService.removeAttachmentDataNode(uuid);
             return CommandHelper.Return.SUCCESS;
         });
     }
@@ -199,7 +199,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @CommandNode("detach-entity-all")
     private static int $detachEntityAll(@CommandSource ServerPlayerEntity player, Entity entity) {
         String uuid = entity.getUuidAsString();
-        CommandAttachmentService.removeAttachmentModel(uuid);
+        CommandAttachmentService.removeAttachmentDataNode(uuid);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -207,7 +207,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @CommandNode("detach-block-all")
     private static int $detachBlockAll(@CommandSource ServerPlayerEntity player, BlockPos blockPos) {
         String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
-        CommandAttachmentService.removeAttachmentModel(uuid);
+        CommandAttachmentService.removeAttachmentDataNode(uuid);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -216,7 +216,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     private static int $queryItem(@CommandSource ServerPlayerEntity player) {
         return CommandHelper.Pattern.withItemInMainHand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
             String uuid = UuidHelper.getAttachedUuid(ItemStackHelper.CustomData.getCustomDataNbt(mainHandStack));
-            return CommandAttachmentService.queryAttachmentModel(player.getCommandSource(), uuid);
+            return CommandAttachmentService.printAttachmentDataNode(player.getCommandSource(), uuid);
         });
     }
 
@@ -224,14 +224,14 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @CommandNode("query-entity")
     private static int $queryEntity(@CommandSource ServerCommandSource source, Entity entity) {
         String uuid = entity.getUuidAsString();
-        return CommandAttachmentService.queryAttachmentModel(source, uuid);
+        return CommandAttachmentService.printAttachmentDataNode(source, uuid);
     }
 
     @Document(id = 1751826492923L, value = "Query all attached commands in the block.")
     @CommandNode("query-block")
     private static int $queryBlock(@CommandSource ServerCommandSource source, BlockPos blockPos) {
         String uuid = UuidHelper.getAttachedUuid(source.getWorld(), blockPos);
-        return CommandAttachmentService.queryAttachmentModel(source, uuid);
+        return CommandAttachmentService.printAttachmentDataNode(source, uuid);
     }
 
     @Override

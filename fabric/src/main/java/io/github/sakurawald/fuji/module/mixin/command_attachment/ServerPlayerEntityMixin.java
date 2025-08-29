@@ -28,7 +28,7 @@ public abstract class ServerPlayerEntityMixin {
             String uuid = UuidHelper.getAttachedUuid(ItemStackHelper.CustomData.getCustomDataNbt(mainHandStack));
             ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
 
-            CommandAttachmentService.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.LEFT_CLICK, InteractType.ANY_CLICK), () -> {});
+            CommandAttachmentService.tryTriggerAttachmentDataNode(uuid, player, List.of(InteractType.LEFT_CLICK, InteractType.ANY_CLICK), () -> {});
         }
 
     }

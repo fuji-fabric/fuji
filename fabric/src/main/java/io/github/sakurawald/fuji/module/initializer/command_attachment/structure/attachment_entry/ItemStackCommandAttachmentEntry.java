@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import net.minecraft.server.network.ServerPlayerEntity;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -17,5 +19,13 @@ public class ItemStackCommandAttachmentEntry extends BaseCommandAttachmentEntry 
     public ItemStackCommandAttachmentEntry(String command, InteractType interactType, ExecuteAsType executeAsType, int maxUseTimes, int useTimes, boolean destroyItem) {
         super(CommandAttackmentType.ITEMSTACK, command, interactType, executeAsType, maxUseTimes, useTimes);
         this.destroyItem = destroyItem;
+    }
+
+    @Override
+    public void onUsed(@NotNull ServerPlayerEntity player) {
+        super.onUsed(player);
+        if (this.isDestroyItem() && this.getUseTimes() >= this.getMaxUseTimes()) {
+            player.getMainHandStack().decrement(1);
+        }
     }
 }

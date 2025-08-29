@@ -27,7 +27,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
             ItemStack itemStack = player.getMainHandStack();
             String uuid = UuidHelper.getAttachedUuid(ItemStackHelper.CustomData.getCustomDataNbt(itemStack));
 
-            CommandAttachmentService.tryTriggerAttachmentModel(uuid, player, List.of(InteractType.SWAP_HAND), ci::cancel);
+            CommandAttachmentService.tryTriggerAttachmentDataNode(uuid, player, List.of(InteractType.SWAP_HAND), ci::cancel);
         }
     }
 

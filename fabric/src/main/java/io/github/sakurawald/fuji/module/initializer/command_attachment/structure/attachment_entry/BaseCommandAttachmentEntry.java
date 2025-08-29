@@ -5,6 +5,8 @@ import io.github.sakurawald.fuji.module.initializer.command_attachment.command.a
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.minecraft.server.network.ServerPlayerEntity;
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings({"unused"})
 @Data
@@ -17,4 +19,8 @@ public class BaseCommandAttachmentEntry {
     public ExecuteAsType executeAsType;
     public int maxUseTimes;
     public int useTimes;
+
+    public void onUsed(@NotNull ServerPlayerEntity player) {
+        this.useTimes++;
+    }
 }

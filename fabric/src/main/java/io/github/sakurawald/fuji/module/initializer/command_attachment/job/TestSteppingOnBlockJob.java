@@ -57,7 +57,7 @@ public class TestSteppingOnBlockJob extends FixedIntervalJob {
         player2lastSteppingBlockUUID.put(playerName, currentSteppingBlockUUID);
 
         /* Trigger it. */
-        ServerHelper.executeSync(() -> CommandAttachmentService.tryTriggerAttachmentModel(currentSteppingBlockUUID, player, List.of(InteractType.STEP_ON), () -> {}));
+        ServerHelper.executeSync(() -> CommandAttachmentService.tryTriggerAttachmentDataNode(currentSteppingBlockUUID, player, List.of(InteractType.STEP_ON), () -> {}));
     }
 
     private static void testSteppingBlockForPlayers() {
