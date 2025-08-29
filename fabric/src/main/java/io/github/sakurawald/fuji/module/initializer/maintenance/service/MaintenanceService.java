@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class MaintenanceService {
 
-    private static boolean getMaintenanceModeStatus() {
+    public static boolean getMaintenanceModeStatus() {
         return MaintenanceModuleInitializer.config.model().isMaintenanceModeStatus();
     }
 
