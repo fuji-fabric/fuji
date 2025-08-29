@@ -17,7 +17,7 @@ import java.lang.reflect.Field;
 public class ModuleInitializer {
 
     public final void doInitialize() {
-        this.registerGsonTypeAdapter();
+        this.registerGsonTypeAdapters();
         this.loadConfigurationFiles();
         this.onInitialize();
         this.registerPlaceholders();
@@ -32,7 +32,7 @@ public class ModuleInitializer {
         // no-op
     }
 
-    protected void registerGsonTypeAdapter() {
+    protected void registerGsonTypeAdapters() {
         // no-op
     }
 

@@ -245,7 +245,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     }
 
     @Override
-    protected void registerGsonTypeAdapter() {
+    protected void registerGsonTypeAdapters() {
         GsonMapper.registerGsonTypeAdapter(BaseCommandAttachmentEntry.class, new CommandAttachmentEntryAdapter());
     }
 }

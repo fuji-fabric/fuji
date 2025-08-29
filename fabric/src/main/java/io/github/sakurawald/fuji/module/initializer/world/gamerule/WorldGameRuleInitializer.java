@@ -66,7 +66,7 @@ public class WorldGameRuleInitializer extends ModuleInitializer {
     }
 
     @Override
-    protected void registerGsonTypeAdapter() {
+    protected void registerGsonTypeAdapters() {
         GsonMapper.registerGsonTypeAdapter(Reference2BooleanMap.class, new BooleanGameRuleMapAdapter());
         GsonMapper.registerGsonTypeAdapter(Reference2IntMap.class, new IntegerGameRuleMapAdapter());
     }
