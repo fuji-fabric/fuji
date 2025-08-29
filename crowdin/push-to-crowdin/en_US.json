@@ -52,6 +52,7 @@
   "command.source": "◉ Command Source: %s",
   "command.source.can_be_executed_by_console": "<blue>Can be executed by console: `%s`",
   "command.string": "◉ Command String: %s",
+  "command_attachment.protect": "<red>This object is protected by command attachments.",
   "command_attachment.query.no_attachment": "<red>No attachments.",
   "command_bundle.register": "<green>Registered the defined bundle commands into the server command tree.",
   "command_bundle.register.already_registered": "<red>There are already registered bundle commands in the server command tree, please un-register them first.",

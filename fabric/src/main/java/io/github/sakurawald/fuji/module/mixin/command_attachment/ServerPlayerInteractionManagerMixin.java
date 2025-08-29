@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.mixin.command_attachment;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.UuidHelper;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.service.CommandAttachmentService;
@@ -66,7 +67,10 @@ public class ServerPlayerInteractionManagerMixin {
         String uuid = UuidHelper.getAttachedUuid(world, blockPos);
         CommandAttachmentService
             .findAttachmentDataNode(uuid)
-            .ifPresent(it -> cir.setReturnValue(false));
+            .ifPresent(it -> {
+                cir.setReturnValue(false);
+                TextHelper.sendTextByKey(player, "command_attachment.protect");
+            });
     }
 
 }
