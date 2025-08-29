@@ -23,9 +23,12 @@ public abstract class ServerPlayerEntityMixin {
 
         if (hand.equals(Hand.MAIN_HAND)) {
             ItemStack mainHandStack = player.getMainHandStack();
-            String uuid = UuidHelper.getAttachedUuid(ItemStackHelper.CustomData.getCustomDataNbt(mainHandStack));
+            UuidHelper
+                .getAttachedUuid(ItemStackHelper.CustomData.getCustomDataNbt(mainHandStack))
+                .ifPresent($uuid -> {
+                    CommandAttachmentService.tryTriggerAttachmentDataNode($uuid, player, List.of(InteractType.LEFT_CLICK, InteractType.ANY_CLICK), () -> {});
+                });
 
-            CommandAttachmentService.tryTriggerAttachmentDataNode(uuid, player, List.of(InteractType.LEFT_CLICK, InteractType.ANY_CLICK), () -> {});
         }
 
     }

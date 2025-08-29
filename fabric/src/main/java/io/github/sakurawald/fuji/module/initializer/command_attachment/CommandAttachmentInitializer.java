@@ -18,6 +18,7 @@ import io.github.sakurawald.fuji.module.initializer.command_attachment.command.a
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.config.adapter.CommandAttachmentEntryAdapter;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.config.model.CommandAttachmentDataModel;
+import io.github.sakurawald.fuji.module.initializer.command_attachment.gui.CommandAttachmentEditorGui;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.CommandAttachments;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.config.transformer.CommandAttachmentV1SchemaTransformer;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.job.TestSteppingOnBlockJob;
@@ -141,7 +142,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         , Optional<ExecuteAsType> executeAsType
         , GreedyString command
     ) {
-        String uuid = entity.getUuidAsString();
+        String uuid = UuidHelper.getAttachedUuid(entity);
         return CommandAttachmentService.withAttachmentDataNode(uuid, it -> {
             CommandAttachments model = it.getAttachments();
 
@@ -198,7 +199,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @Document(id = 1751826478770L, value = "Detach all attached commands in the entity.")
     @CommandNode("detach-entity-all")
     private static int $detachEntityAll(@CommandSource ServerPlayerEntity player, Entity entity) {
-        String uuid = entity.getUuidAsString();
+        String uuid = UuidHelper.getAttachedUuid(entity);
         CommandAttachmentService.removeAttachmentDataNode(uuid);
         return CommandHelper.Return.SUCCESS;
     }
@@ -215,7 +216,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @CommandNode("query-item")
     private static int $queryItem(@CommandSource ServerPlayerEntity player) {
         return CommandHelper.Pattern.withItemInMainHand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
-            String uuid = UuidHelper.getAttachedUuid(ItemStackHelper.CustomData.getCustomDataNbt(mainHandStack));
+            Optional<String> uuid = UuidHelper.getAttachedUuid(mainHandStack);
             return CommandAttachmentService.printAttachmentDataNode(player.getCommandSource(), uuid);
         });
     }
@@ -223,15 +224,24 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @Document(id = 1751826488228L, value = "Query all attached commands in the entity.")
     @CommandNode("query-entity")
     private static int $queryEntity(@CommandSource ServerCommandSource source, Entity entity) {
-        String uuid = entity.getUuidAsString();
-        return CommandAttachmentService.printAttachmentDataNode(source, uuid);
+        String uuid = UuidHelper.getAttachedUuid(entity);
+        return CommandAttachmentService.printAttachmentDataNode(source, Optional.of(uuid));
     }
 
     @Document(id = 1751826492923L, value = "Query all attached commands in the block.")
     @CommandNode("query-block")
     private static int $queryBlock(@CommandSource ServerCommandSource source, BlockPos blockPos) {
         String uuid = UuidHelper.getAttachedUuid(source.getWorld(), blockPos);
-        return CommandAttachmentService.printAttachmentDataNode(source, uuid);
+        return CommandAttachmentService.printAttachmentDataNode(source, Optional.of(uuid));
+    }
+
+    @Document(id = 1756452396077L, value = "Open the command attachment editor.")
+    @CommandNode("editor")
+    private static int $editor(@CommandSource ServerPlayerEntity player) {
+        CommandAttachmentEditorGui
+            .make(player)
+            .open();
+        return CommandHelper.Return.SUCCESS;
     }
 
     @Override

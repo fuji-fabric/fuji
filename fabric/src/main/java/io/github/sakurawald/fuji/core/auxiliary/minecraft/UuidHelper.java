@@ -1,9 +1,12 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import io.github.sakurawald.fuji.Fuji;
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.structure.GlobalBlockPos;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
@@ -24,11 +27,20 @@ public class UuidHelper {
         return UUID.nameUUIDFromBytes(bytes).toString();
     }
 
-    public static @Nullable String getAttachedUuid(@Nullable NbtCompound root) {
-        if (root == null) return null;
-        if (!root.contains(FUJI_UUID_NBT_KEY)) return null;
+    public static Optional<String> getAttachedUuid(@Nullable NbtCompound root) {
+        if (root == null) return Optional.empty();
+        if (!root.contains(FUJI_UUID_NBT_KEY)) return Optional.empty();
 
-        return NbtHelper.Primitives.getString(root, FUJI_UUID_NBT_KEY).get();
+        return NbtHelper.Primitives.getString(root, FUJI_UUID_NBT_KEY);
+    }
+
+    public static Optional<String> getAttachedUuid(@NotNull ItemStack itemStack) {
+        @Nullable NbtCompound customDataNbt = ItemStackHelper.CustomData.getCustomDataNbt(itemStack);
+        return UuidHelper.getAttachedUuid(customDataNbt);
+    }
+
+    public static @NotNull String getAttachedUuid(@NotNull Entity entity) {
+        return entity.getUuidAsString();
     }
 
     public static String getAttachedUuid(@NotNull GlobalBlockPos globalBlockPos) {
@@ -53,13 +65,17 @@ public class UuidHelper {
         NbtCompound nbt = ItemStackHelper.CustomData.getCustomDataNbt(itemStack);
 
         /* Set the attached UUID first if absent. */
-        if (getAttachedUuid(nbt) == null) {
-            nbt = attachRandomUuidToNbtCompoundIfAbsent(nbt);
-            ItemStackHelper.CustomData.setCustomDataNbt(itemStack, nbt);
-        }
+        return getAttachedUuid(nbt)
+            .orElseGet(() -> {
+                NbtCompound newValue = attachRandomUuidToNbtCompoundIfAbsent(nbt);
+                ItemStackHelper.CustomData.setCustomDataNbt(itemStack, newValue);
 
-        /* Get the attached UUID. */
-        return getAttachedUuid(nbt);
+                return getAttachedUuid(newValue)
+                    .orElseThrow(() -> {
+                        LogUtil.error("Failed to set UUID for item stack: {}", itemStack);
+                        return new IllegalArgumentException("Failed to set UUID for item stack: " + itemStack);
+                    });
+            });
     }
 
     private static @NotNull NbtCompound attachRandomUuidToNbtCompoundIfAbsent(@Nullable NbtCompound root) {

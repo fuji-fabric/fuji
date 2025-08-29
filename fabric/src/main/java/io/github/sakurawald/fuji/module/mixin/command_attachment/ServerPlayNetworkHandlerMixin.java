@@ -25,9 +25,12 @@ public abstract class ServerPlayNetworkHandlerMixin {
     void onPlayerSwapHand(PlayerActionC2SPacket playerActionC2SPacket, CallbackInfo ci) {
         if (playerActionC2SPacket.getAction() == PlayerActionC2SPacket.Action.SWAP_ITEM_WITH_OFFHAND) {
             ItemStack itemStack = player.getMainHandStack();
-            String uuid = UuidHelper.getAttachedUuid(ItemStackHelper.CustomData.getCustomDataNbt(itemStack));
+            UuidHelper
+                .getAttachedUuid(ItemStackHelper.CustomData.getCustomDataNbt(itemStack))
+                .ifPresent($uuid -> {
+                    CommandAttachmentService.tryTriggerAttachmentDataNode($uuid, player, List.of(InteractType.SWAP_HAND), ci::cancel);
+                });
 
-            CommandAttachmentService.tryTriggerAttachmentDataNode(uuid, player, List.of(InteractType.SWAP_HAND), ci::cancel);
         }
     }
 

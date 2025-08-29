@@ -90,8 +90,9 @@ public class CommandAttachmentService {
             .removeIf(it -> it.getId().equals(uuid));
     }
 
-    public static int printAttachmentDataNode(@NotNull ServerCommandSource source, @Nullable String uuid) {
-        return findAttachmentDataNode(uuid)
+    public static int printAttachmentDataNode(@NotNull ServerCommandSource source, Optional<String> uuid) {
+        return uuid
+            .map(CommandAttachmentService::findAttachmentDataNode)
             .map(it -> {
                 String attachmentDataNode = GsonMapper.toJsonString(it);
                 TextHelper.sendMessageByText(source, Text.literal(attachmentDataNode));

@@ -34,8 +34,11 @@ public class ServerPlayerInteractionManagerMixin {
 
     @Inject(method = "interactItem", at = @At("HEAD"))
     void onPlayerRightClick(ServerPlayerEntity serverPlayerEntity, World world, @NotNull ItemStack itemStack, Hand hand, @NotNull CallbackInfoReturnable<ActionResult> cir) {
-        String uuid = UuidHelper.getAttachedUuid(ItemStackHelper.CustomData.getCustomDataNbt(itemStack));
-        CommandAttachmentService.tryTriggerAttachmentDataNode(uuid, player, List.of(InteractType.RIGHT_CLICK, InteractType.ANY_CLICK), () -> {});
+        UuidHelper
+            .getAttachedUuid(ItemStackHelper.CustomData.getCustomDataNbt(itemStack))
+            .ifPresent($uuid -> {
+                CommandAttachmentService.tryTriggerAttachmentDataNode($uuid, player, List.of(InteractType.RIGHT_CLICK, InteractType.ANY_CLICK), () -> {});
+            });
     }
 
     #if MC_VER <= MC_1_20_4
