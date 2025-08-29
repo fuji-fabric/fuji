@@ -53,12 +53,18 @@ import java.util.Optional;
     - `entity`: `RIGHT_CLICK`, `ANY_CLICK`
     """)
 @ColorBox(id = 1751870464919L, color = ColorBox.ColorBoxTypes.TIPS, value = """
-    To give the item with attached commands.
+    ◉ Give the `attached item` to players.
     You can use `kit` module.
     The kit module will save the item NBT.
-    So if you define a kit, puts the magic item in it.
+    So if you define a kit, puts `the attached item` inside it.
     Then give the kit to a player.
     The player will get the magic item.
+    """)
+@ColorBox(id = 1756460500752L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+    ◉ Integrate with `command_cooldown` module.
+    You can use `command_cooldown` module to create a `named cooldown`.
+    The `named cooldown` can restrict the `use interval` and `use times` of a specified command.
+    And then, attach the `named cooldown test command` to an `item` using `command_attachment` module.
     """)
 @ColorBox(id = 1756458386657L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Make a magic-stick, which heals the player on clicked.
@@ -87,7 +93,6 @@ import java.util.Optional;
     ◉ View and edit the attached object.
     Issue: `/command-attachment editor`
     """)
-
 
 
 @CommandNode("command-attachment")
