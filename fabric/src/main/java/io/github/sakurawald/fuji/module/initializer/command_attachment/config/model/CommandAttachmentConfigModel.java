@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.initializer.command_attachment.structure;
+package io.github.sakurawald.fuji.module.initializer.command_attachment.config.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

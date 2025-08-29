@@ -10,7 +10,7 @@ import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.CommandAttachmentInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.ExecuteAsType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
-import io.github.sakurawald.fuji.module.initializer.command_attachment.config.model.CommandAttachmentModel;
+import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.CommandAttachments;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.CommandAttachmentDataNode;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.BaseCommandAttachmentEntry;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.ItemStackCommandAttachmentEntry;
@@ -56,7 +56,7 @@ public class CommandAttachmentService {
             .ifPresent(it -> triggerAttachmentModel(it.getModel(), player, inputInteractTypes, postTriggered));
     }
 
-    private static void triggerAttachmentModel(@NotNull CommandAttachmentModel model, @NotNull PlayerEntity player, @NotNull List<InteractType> receivedInteractTypes, @NotNull Runnable postTriggered) {
+    private static void triggerAttachmentModel(@NotNull CommandAttachments model, @NotNull PlayerEntity player, @NotNull List<InteractType> receivedInteractTypes, @NotNull Runnable postTriggered) {
         ServerHelper.withServerPlayerEntity(player,() -> {
             /* Process attachment nodes. */
             for (BaseCommandAttachmentEntry e : model.getEntries()) {

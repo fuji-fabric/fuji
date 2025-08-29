@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.initializer.command_attachment.config.model;
+package io.github.sakurawald.fuji.module.initializer.command_attachment.structure;
 
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.BaseCommandAttachmentEntry;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class CommandAttachmentModel {
+public class CommandAttachments {
     final CopyOnWriteArrayList<BaseCommandAttachmentEntry> entries = new CopyOnWriteArrayList<>();
 }

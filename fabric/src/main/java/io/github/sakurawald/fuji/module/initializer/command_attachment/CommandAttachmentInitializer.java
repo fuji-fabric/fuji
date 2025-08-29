@@ -18,11 +18,11 @@ import io.github.sakurawald.fuji.module.initializer.command_attachment.command.a
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.config.adapter.CommandAttachmentEntryAdapter;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.config.model.CommandAttachmentDataModel;
-import io.github.sakurawald.fuji.module.initializer.command_attachment.config.model.CommandAttachmentModel;
+import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.CommandAttachments;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.config.transformer.CommandAttachmentV1SchemaTransformer;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.job.TestSteppingOnBlockJob;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.service.CommandAttachmentService;
-import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.CommandAttachmentConfigModel;
+import io.github.sakurawald.fuji.module.initializer.command_attachment.config.model.CommandAttachmentConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.BlockCommandAttachmentEntry;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.BaseCommandAttachmentEntry;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.EntityCommandAttachmentEntry;
@@ -115,7 +115,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         return CommandHelper.Pattern.withItemInMainHand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
             String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
             return CommandAttachmentService.withAttachmentDataNode(uuid, it -> {
-                CommandAttachmentModel model = it.getModel();
+                CommandAttachments model = it.getModel();
 
                 /* Make new entry. */
                 String $command = command.getValue();
@@ -143,7 +143,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     ) {
         String uuid = entity.getUuidAsString();
         return CommandAttachmentService.withAttachmentDataNode(uuid, it -> {
-            CommandAttachmentModel model = it.getModel();
+            CommandAttachments model = it.getModel();
 
             /* Make new entry. */
             String $command = command.getValue();
@@ -169,7 +169,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     ) {
         String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
         return CommandAttachmentService.withAttachmentDataNode(uuid, it -> {
-            CommandAttachmentModel model = it.getModel();
+            CommandAttachments model = it.getModel();
 
             /* Make the new entry. */
             String $command = command.getValue();
