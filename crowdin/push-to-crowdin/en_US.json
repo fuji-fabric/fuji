@@ -52,6 +52,16 @@
   "command.source": "◉ Command Source: %s",
   "command.source.can_be_executed_by_console": "<blue>Can be executed by console: `%s`",
   "command.string": "◉ Command String: %s",
+  "command_attachment.attachment": "<pink>Attachment",
+  "command_attachment.attachment.command": "<blue>Command: `%s`",
+  "command_attachment.attachment.execute_as_type": "<blue>Execute As Type: `%s`",
+  "command_attachment.attachment.interact_type": "<blue>Interact Type: `%s`",
+  "command_attachment.attachment.max_use_times": "<blue>Max Use Times: `%s`",
+  "command_attachment.attachment.type": "<blue>Attachment Type: `%s`",
+  "command_attachment.attachment.use_times": "<blue>Use Times: `%s`",
+  "command_attachment.attachment.vanish_on_exhaust": "<blue>Vanish On Exhaust: `%s`",
+  "command_attachment.editor.gui.title": "<pink>Editor: `%s`",
+  "command_attachment.editor.no_target": "<red>No attachments found in `looking at entity`, `looking at block` and `item in hand`.",
   "command_attachment.protect": "<red>This object is protected by command attachments.",
   "command_attachment.query.no_attachment": "<red>No attachments.",
   "command_bundle.register": "<green>Registered the defined bundle commands into the server command tree.",
@@ -1450,5 +1460,6 @@
   "docstring.1756384526884": "◉ Compose the return values of multiple commands.\nIssue: `/AND \\<command-1\\> AND \\<command-2\\> AND \\<command-3\\> AND ...`\n\n◉ Returns `SUCCESS` if the player has `iron_ingot x 8` and `gold_ingot x 4`\nIssue: `/AND has-item? Steve minecraft:iron_ingot 8 AND has-item? Steve minecraft:gold_ingot 4`\n",
   "docstring.1756385060343": "◉ Compose the return values of multiple commands.\nIssue: `/OR \\<command-1\\> OR \\<command-2\\> OR \\<command-3\\> OR ...`\n\n◉ Returns `SUCCESS` if the player has `iron_ingot x 8` or `gold_ingot x 4`\nIssue: `/OR has-item? Steve minecraft:iron_ingot 8 OR has-item? Steve minecraft:gold_ingot 4`\n",
   "docstring.1756440410476": "◉ Use a lower `angle` for `fast horizontal movement`.\n1. `/launch facing @s 15 1`\n2. `/launch facing @s 15 3.9`\n<green>The `power` is clamped in `[-3.9, +3.9]`\n\n◉ Use a median `angle` for `balanced horizontal and vertical movement`.\n1. `/launch facing @s 30 3.9`\n2. `/launch facing @s 45 3.9`\n\n◉ Use a higher `angle` for a `rocket launcher` effect.\nIssue: `/launch facing @s 60 3.9`\n<green>TIP: Remember to bring your `elytra`.\n\n◉ Use a `vertical angle` for a `trampoline` effect.\nIssue: `/launch facing @s 90 1`\n\n◉ Use a `positive power` for a `push` effect.\nIssue: `/launch facing @s 0 1`\n\n◉ Use a `negative power` for a `pull` effect.\nIssue: `/launch facing @s 0 -1`\n\n◉ Use another entity's perspective as the direction, to `kick` the target entity.\nIssue: `/launch at @s @e[type=!minecraft:player,distance=..8] 30 1`\n\n◉ Create a `jump pad` that launches players when stepped on.\nYou can integrate with `command_attachment` module.\nIssue: `/command-attachment attach-block-one ~ ~ ~ --interactType STEP_ON \\<command\\>`\n",
-  "docstring.1756447342634": "◉ Valid `interaction types` for each `attached types`.\n- `item`: `LEFT_CLICK`, `RIGHT_CLICK`, `ANY_CLICK`, `SWAP_HAND`\n- `block`: `LEFT_CLICK`, `RIGHT_CLICK`, `ANY_CLICK`, `STEP_ON`\n- `entity`: `RIGHT_CLICK`, `ANY_CLICK`\n"
+  "docstring.1756447342634": "◉ Valid `interaction types` for each `attached types`.\n- `item`: `LEFT_CLICK`, `RIGHT_CLICK`, `ANY_CLICK`, `SWAP_HAND`\n- `block`: `LEFT_CLICK`, `RIGHT_CLICK`, `ANY_CLICK`, `STEP_ON`\n- `entity`: `RIGHT_CLICK`, `ANY_CLICK`\n",
+  "docstring.1756452396077": "Open the command attachment editor."
 }

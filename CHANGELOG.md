@@ -44,3 +44,4 @@
   - feature: support `SWAP_HAND` interaction type.
   - docs: new documents for this module.
   - feature: prevent the `block` being broken, if the there are `command attachments` attached in this block.
+  - feature: new `/command-attachment editor` command.
