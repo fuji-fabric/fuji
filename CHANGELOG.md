@@ -4,5 +4,4 @@
 
 # Changelog
 
-- [maintenance] fix: should only display the `maintenance MOTD` while in `maintenance mode`.
-- [color.sign] fix: when installed in `client side`, and used in `single player world`, the `Sign Screen` may crash the client, if the `target world` didn't get synced between `client` and `integrated server`.
+- [command_attachment] fix: failed to display the `attachments` in `/command-attachment query-{block|entity|item}-all` commands.

@@ -92,9 +92,11 @@ public class CommandAttachmentService {
 
     public static int printAttachmentDataNode(@NotNull ServerCommandSource source, Optional<String> uuid) {
         return uuid
-            .map(CommandAttachmentService::findAttachmentDataNode)
+            .flatMap(CommandAttachmentService::findAttachmentDataNode)
             .map(it -> {
-                String attachmentDataNode = GsonMapper.toJsonString(it);
+                @SuppressWarnings("UnnecessaryLocalVariable")
+                CommandAttachmentDataNode dataNode = it;
+                String attachmentDataNode = GsonMapper.toJsonString(dataNode);
                 TextHelper.sendMessageByText(source, Text.literal(attachmentDataNode));
                 return CommandHelper.Return.SUCCESS;
             })
