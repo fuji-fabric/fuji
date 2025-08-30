@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.module.initializer.head.gui;
 
-import com.mojang.authlib.GameProfile;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.AnvilInputGui;
 import eu.pb4.sgui.api.gui.SimpleGui;
@@ -59,10 +58,13 @@ public class PlayerHeadGui extends AnvilInputGui {
 
             AsyncUtil.runAsyncAndSwallowExceptions(() -> {
                 /* Make gui element. */
-                GameProfile gameProfile = MojangProfileFetcher.makeOnlineGameProfile(this.getInput());
                 GuiElementBuilder builder = new GuiElementBuilder()
-                    .setItem(Items.PLAYER_HEAD)
-                    .setSkullOwner(gameProfile, EntityHelper.getMinecraftServer(player));
+                    .setItem(Items.PLAYER_HEAD);
+
+                /* Set skull textures if online game profile is valid. */
+                MojangProfileFetcher
+                    .fetchOnlineGameProfile(this.getInput())
+                    .ifPresent(gameProfile -> builder.setSkullOwner(gameProfile, EntityHelper.getMinecraftServer(player)));
 
                 /* Make head stack. */
                 if (HeadInitializer.config.model().economy_type != EconomyType.FREE) {

@@ -1,12 +1,16 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.yggdrasil.ProfileResult;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import io.github.sakurawald.fuji.core.auxiliary.AsyncUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.config.mapper.wrapper.GameProfileWrapper;
+import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +25,7 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class GuiHelper {
 
@@ -52,6 +57,7 @@ public class GuiHelper {
 
     public static class PlayerSkull {
 
+        private static final String GAME_PROFILE_CACHE_KEY = "game_profile";
 
         private static GuiElementBuilder fromSlot(@NotNull GuiElementInterface slot) {
             GuiElementBuilder builder = new GuiElementBuilder();
@@ -74,25 +80,34 @@ public class GuiHelper {
         }
 
         public static void fetchPlayerHeadTextures(@NotNull SlotGuiInterface gui, @NotNull Runnable onCompleteCallback) {
-            final int guiSize = gui.getSize();
-            for (int i = 0; i < guiSize; i++) {
+            final int logicalSize = gui.getWidth() * (gui.getHeight() - 1);
+            for (int i = 0; i < logicalSize; i++) {
                 GuiElementInterface previousSlot = gui.getSlot(i);
                 if (previousSlot == null) return;
 
                 /* Run async method to fetch game profile. */
                 int finalI = i;
-                AsyncUtil.runAsyncAndSwallowExceptions(() -> {
+                AsyncUtil.runAsyncAndHandleExceptions(() -> {
                     ItemStack itemStack = previousSlot.getItemStack();
+                    if (!itemStack.getItem().equals(Items.PLAYER_HEAD)) return;
 
                     // Fetch the game profile from mojang server.
                     String onlinePlayerName = itemStack.getName().getString().trim();
-                    GameProfile gameProfile = MojangProfileFetcher.makeOnlineGameProfile(onlinePlayerName);
+                    @NotNull GameProfileWrapper gameProfileWrapper = getGameProfileWithCache(onlinePlayerName);
 
                     // Apply the game profile.
                     GuiElementBuilder builder = fromSlot(previousSlot);
-                    builder.setSkullOwner(gameProfile, ServerHelper.getServer());
-                    for (int j = 0; j < guiSize; j++) {
-                        GuiElementInterface currentSlot = gui.getSlot(j);
+
+                    String texturesValue = gameProfileWrapper.getProperties().get("textures")
+                        .stream()
+                        .findFirst()
+                        .map(AuthlibHelper::getPropertyValue)
+                        .orElse(Texture.LUCKY_BLOCK_TEXTURE);
+
+                    builder.setSkullOwner(texturesValue, null, gameProfileWrapper.getId());
+
+                    for (int j = 0; j < logicalSize; j++) {
+                        @Nullable GuiElementInterface currentSlot = gui.getSlot(j);
                         if (currentSlot == null) continue;
                         if (currentSlot.getItemStack() == previousSlot.getItemStack()) {
                             gui.setSlot(finalI, builder);
@@ -104,6 +119,24 @@ public class GuiHelper {
                     onCompleteCallback.run();
                 });
             }
+        }
+
+        private static @NotNull GameProfileWrapper getGameProfileWithCache(@NotNull String onlinePlayerName) {
+            return Managers
+                .getCacheManager()
+                .getCachedValueOrCompute(GAME_PROFILE_CACHE_KEY, onlinePlayerName, GameProfileWrapper.class, Duration.ofDays(7), () -> {
+                    return MojangProfileFetcher
+                        .fetchOnlinePlayerUUID(onlinePlayerName)
+                        .map(uuid -> {
+                            GameProfile gameProfile = new GameProfile(uuid, onlinePlayerName);
+                            ProfileResult tmp = ServerHelper.getServer().getSessionService().fetchProfile(gameProfile.getId(), false);
+                            if (tmp != null) {
+                                gameProfile = tmp.profile();
+                            }
+                            return new GameProfileWrapper(gameProfile.getId(), gameProfile.getName(), gameProfile.getProperties());
+                        })
+                        .orElseGet(() -> new GameProfileWrapper(null, onlinePlayerName));
+                });
         }
     }
 
