@@ -50,7 +50,8 @@ public class CommandAttachmentEditorGui extends PagedGui<BaseCommandAttachmentEn
         /* Try to get UUID from looking at entity. */
         Optional<String> lookingAtEntityUUID = WorldHelper.Raycast
             .getLookingAtEntity(player)
-            .map(UuidHelper::getAttachedUuid);
+            .map(UuidHelper::getAttachedUuid)
+            .filter(uuid -> CommandAttachmentService.findAttachmentDataNode(uuid).isPresent());
         if (lookingAtEntityUUID.isPresent()) {
             return lookingAtEntityUUID;
         }
