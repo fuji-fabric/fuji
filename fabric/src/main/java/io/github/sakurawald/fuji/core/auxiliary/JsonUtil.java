@@ -3,20 +3,14 @@ package io.github.sakurawald.fuji.core.auxiliary;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.google.gson.reflect.TypeToken;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.config.parser.JsonPathParser;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.function.Consumer;
-import lombok.Cleanup;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
@@ -64,10 +58,8 @@ public class JsonUtil {
         return obj.size() == 0;
     }
 
-    @SneakyThrows(IOException.class)
     public static @NotNull JsonObject readJsonFile(@NotNull Path path) {
-        @Cleanup Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path.toFile()), StandardCharsets.UTF_8));
-        return GsonMapper.fromJson(reader, JsonElement.class).getAsJsonObject();
+        return GsonMapper.fromJson(path, TypeToken.get(JsonElement.class)).getAsJsonObject();
     }
 
     public static @NotNull JsonObject readJsonString(@NotNull String jsonString) {

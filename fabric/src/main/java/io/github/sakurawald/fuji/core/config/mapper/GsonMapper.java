@@ -6,14 +6,22 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.config.mapper.adapter.BiMapTypeAdapterFactory;
 import io.github.sakurawald.fuji.core.config.migrator.version.IgnoreModVersionStrategy;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import lombok.Cleanup;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 public class GsonMapper {
@@ -67,34 +75,45 @@ public class GsonMapper {
             .create();
     }
 
-    public static <T> @NotNull T fromJson(@NotNull Reader jsonReader, @NotNull Class<T> classOfT) {
+    @SneakyThrows
+    public static <T> @NotNull T fromJson(@NotNull Path filePath, @NotNull TypeToken<T> runtimeType) {
+        @Cleanup Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath.toFile()), StandardCharsets.UTF_8));
         try {
-            return gson.fromJson(jsonReader, classOfT);
+            return gson.fromJson(reader, runtimeType);
         } catch (JsonIOException e) {
-            handleGsonJdkUnsafeDisabledException(classOfT, e);
-            return getFallbackGson().fromJson(jsonReader, classOfT);
+            handleGsonJdkUnsafeDisabledException(runtimeType.getType(), e);
+            return getFallbackGson().fromJson(reader, runtimeType);
         }
     }
 
-    public static <T> @NotNull T fromJson(@NotNull String json, @NotNull Class<T> classOfT) throws JsonSyntaxException {
+    public static <T> @NotNull T fromJson(@NotNull Reader jsonReader, @NotNull Class<T> rawType) {
         try {
-            return gson.fromJson(json, classOfT);
+            return gson.fromJson(jsonReader, rawType);
         } catch (JsonIOException e) {
-            handleGsonJdkUnsafeDisabledException(classOfT, e);
-            return getFallbackGson().fromJson(json, classOfT);
+            handleGsonJdkUnsafeDisabledException(rawType, e);
+            return getFallbackGson().fromJson(jsonReader, rawType);
         }
     }
 
-    public static <T> @NotNull T fromJson(@NotNull JsonElement jsonElement, @NotNull Class<T> classOfT) throws JsonSyntaxException {
+    public static <T> @NotNull T fromJson(@NotNull String json, @NotNull Class<T> rawType) throws JsonSyntaxException {
         try {
-            return gson.fromJson(jsonElement, classOfT);
+            return gson.fromJson(json, rawType);
         } catch (JsonIOException e) {
-            handleGsonJdkUnsafeDisabledException(classOfT, e);
-            return getFallbackGson().fromJson(jsonElement, classOfT);
+            handleGsonJdkUnsafeDisabledException(rawType, e);
+            return getFallbackGson().fromJson(json, rawType);
         }
     }
 
-    private static <T> void handleGsonJdkUnsafeDisabledException(@NotNull Class<T> classOfT, JsonIOException e) {
+    public static <T> @NotNull T fromJson(@NotNull JsonElement jsonElement, @NotNull Class<T> rawType) throws JsonSyntaxException {
+        try {
+            return gson.fromJson(jsonElement, rawType);
+        } catch (JsonIOException e) {
+            handleGsonJdkUnsafeDisabledException(rawType, e);
+            return getFallbackGson().fromJson(jsonElement, rawType);
+        }
+    }
+
+    private static void handleGsonJdkUnsafeDisabledException(@NotNull Type type, JsonIOException e) {
         if (!StringUtil.toLowerCase(e.getMessage()).contains("jdk unsafe")) {
             throw e;
         }
@@ -104,7 +123,7 @@ public class GsonMapper {
             [JDK Unsafe feature is used to create a Java Object instance]
             ◉ Problem: Failed to create instance of {} using vanilla Java NoArgsConstructor, now falling back to use JDK Unsafe to create the instance.
             ◉ Solution: If you see this, you should create an issue in https://github.com/sakurawald/fuji/issues
-            """, classOfT);
+            """, type);
     }
 
     public static @NotNull JsonElement toJsonTree(@NotNull Object src) {

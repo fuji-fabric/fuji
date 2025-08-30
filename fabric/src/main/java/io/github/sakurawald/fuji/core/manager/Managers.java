@@ -5,6 +5,7 @@ import io.github.sakurawald.fuji.core.manager.impl.backup.BaseBackupManager;
 import io.github.sakurawald.fuji.core.manager.impl.backup.RecoveryBackupManager;
 import io.github.sakurawald.fuji.core.manager.impl.backup.PrimaryBackupManager;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarManager;
+import io.github.sakurawald.fuji.core.manager.impl.cache.CacheManager;
 import io.github.sakurawald.fuji.core.manager.impl.callback.CallbackManager;
 import io.github.sakurawald.fuji.core.manager.impl.command.CommandManager;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
@@ -41,4 +42,7 @@ public class Managers {
 
     @Getter(lazy = true)
     private static final GameTaskManager gameTaskManager = new GameTaskManager();
+
+    @Getter(lazy = true)
+    private static final CacheManager cacheManager = new CacheManager();
 }
