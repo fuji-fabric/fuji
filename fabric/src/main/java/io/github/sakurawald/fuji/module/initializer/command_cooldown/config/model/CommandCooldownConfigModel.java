@@ -18,10 +18,9 @@ public class CommandCooldownConfigModel {
     @SerializedName(value = "unnamed_cooldown", alternate = "regex2ms")
     public Map<String, Long> unnamed_cooldown = new HashMap<>() {
         {
-            this.put("chunks\\s*", 60 * 1000L);
-            this.put("rtp\\s*", 60 * 1000L);
-            this.put("download\\s*", 120 * 1000L);
-            this.put("heal\\s*", 300 * 1000L);
+            this.put("chunks.*", 60 * 1000L);
+            this.put("rtp.*", 60 * 1000L);
+            this.put("download.*", 120 * 1000L);
         }
     };
 
