@@ -29,7 +29,7 @@ public class MenuNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @NotNull
     protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
-            .suggests(CommandHelper.Suggestion.iterable(() -> CommandMenuInitializer.menus.model().menus.keySet()));
+            .suggests(CommandHelper.Suggestion.iterable(() -> CommandMenuInitializer.menus.model().getMenus().keySet()));
     }
 
     @Override

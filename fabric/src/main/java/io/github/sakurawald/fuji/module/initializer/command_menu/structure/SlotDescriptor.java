@@ -40,6 +40,8 @@ public class SlotDescriptor {
         """)
     int index = 0;
 
+    List<Integer> otherIndexes = new ArrayList<>();
+
     @Document(id = 1751824861377L, value = """
         What is the item?
         """)

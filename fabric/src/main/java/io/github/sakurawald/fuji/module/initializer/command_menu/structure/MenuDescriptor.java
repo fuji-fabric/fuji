@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_menu.structure;
 
+import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
@@ -72,7 +73,16 @@ public class MenuDescriptor {
         /* Place defined slots in the menu GUI. */
         this.slots.forEach(slotDescriptor -> {
             if (slotDescriptor.canViewThisSlot(viewingPlayer)) {
-                menuGui.setSlot(slotDescriptor.index, slotDescriptor.buildGuiElement(viewingPlayer, this));
+                /* Make the GUI element. */
+                GuiElementInterface element = slotDescriptor.buildGuiElement(viewingPlayer, this);
+
+                /* Set primary index. */
+                menuGui.setSlot(slotDescriptor.getIndex(), element);
+
+                /* Set other indexes. */
+                slotDescriptor.getOtherIndexes().forEach(otherIndex -> {
+                    menuGui.setSlot(otherIndex, element);
+                });
             }
         });
         return menuGui;

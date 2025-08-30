@@ -77,13 +77,13 @@ public class CommandMenuInitializer extends ModuleInitializer {
     private static int $open(@CommandSource ServerCommandSource source, ServerPlayerEntity player, MenuName menuName) {
         /* Check if menu exists. */
         String $menuName = menuName.getValue();
-        if (!menus.model().menus.containsKey($menuName)) {
+        if (!menus.model().getMenus().containsKey($menuName)) {
             TextHelper.getTextByKey(source, "command_menu.menu.not_found", $menuName);
             return CommandHelper.Return.FAILURE;
         }
 
         /* Make the menu GUI and open it. */
-        MenuDescriptor menuDescriptor = menus.model().menus.get($menuName);
+        MenuDescriptor menuDescriptor = menus.model().getMenus().get($menuName);
         menuDescriptor.build(player)
             .open();
 
