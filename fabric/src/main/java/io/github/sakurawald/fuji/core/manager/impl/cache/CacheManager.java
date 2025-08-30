@@ -6,11 +6,13 @@ import com.google.gson.reflect.TypeToken;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
+import io.github.sakurawald.fuji.core.event.impl.PlayerEvents;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import io.github.sakurawald.fuji.core.manager.impl.cache.config.model.GenericCacheModel;
 import io.github.sakurawald.fuji.core.manager.impl.cache.job.FlushCacheJob;
+import io.github.sakurawald.fuji.core.manager.impl.cache.service.GameProfileCacheService;
 import io.github.sakurawald.fuji.core.manager.impl.cache.structure.Cache;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,6 +33,8 @@ public class CacheManager extends BaseManager {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             Managers.getScheduleManager().scheduleJob(new FlushCacheJob());
         });
+
+        PlayerEvents.ON_PLAYER_JOINED.register(GameProfileCacheService::setGameProfileCache);
     }
 
     @SneakyThrows

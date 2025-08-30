@@ -23,6 +23,12 @@ public class GameProfileWrapper {
         this.name = name;
     }
 
+    public static @NotNull GameProfileWrapper fromVanillaType(@NotNull GameProfile gameProfile) {
+        GameProfileWrapper gameProfileWrapper = new GameProfileWrapper(gameProfile.getId(), gameProfile.getName());
+        gameProfileWrapper.properties.putAll(gameProfile.getProperties());
+        return gameProfileWrapper;
+    }
+
     public Optional<GameProfile> toVanillaType() {
         if (this.id == null) {
             return Optional.empty();

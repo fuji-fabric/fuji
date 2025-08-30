@@ -1,16 +1,12 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.yggdrasil.ProfileResult;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import io.github.sakurawald.fuji.core.auxiliary.AsyncUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.mapper.wrapper.GameProfileWrapper;
-import io.github.sakurawald.fuji.core.manager.Managers;
-import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
-import java.time.Duration;
+import io.github.sakurawald.fuji.core.manager.impl.cache.service.GameProfileCacheService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,8 +53,6 @@ public class GuiHelper {
 
     public static class PlayerSkull {
 
-        private static final String GAME_PROFILE_CACHE_KEY = "game_profile";
-
         private static GuiElementBuilder fromSlot(@NotNull GuiElementInterface slot) {
             GuiElementBuilder builder = new GuiElementBuilder();
             ItemStack itemStack = slot.getItemStack();
@@ -93,7 +87,7 @@ public class GuiHelper {
 
                     // Fetch the game profile from mojang server.
                     String onlinePlayerName = itemStack.getName().getString().trim();
-                    @NotNull GameProfileWrapper gameProfileWrapper = getGameProfileWithCache(onlinePlayerName);
+                    @NotNull GameProfileWrapper gameProfileWrapper = GameProfileCacheService.getCachedGameProfile(onlinePlayerName);
 
                     // Apply the game profile.
                     GuiElementBuilder builder = fromSlot(previousSlot);
@@ -121,23 +115,6 @@ public class GuiHelper {
             }
         }
 
-        private static @NotNull GameProfileWrapper getGameProfileWithCache(@NotNull String onlinePlayerName) {
-            return Managers
-                .getCacheManager()
-                .getCachedValueOrCompute(GAME_PROFILE_CACHE_KEY, onlinePlayerName, GameProfileWrapper.class, Duration.ofDays(7), () -> {
-                    return MojangProfileFetcher
-                        .fetchOnlinePlayerUUID(onlinePlayerName)
-                        .map(uuid -> {
-                            GameProfile gameProfile = new GameProfile(uuid, onlinePlayerName);
-                            ProfileResult tmp = ServerHelper.getServer().getSessionService().fetchProfile(gameProfile.getId(), false);
-                            if (tmp != null) {
-                                gameProfile = tmp.profile();
-                            }
-                            return new GameProfileWrapper(gameProfile.getId(), gameProfile.getName(), gameProfile.getProperties());
-                        })
-                        .orElseGet(() -> new GameProfileWrapper(null, onlinePlayerName));
-                });
-        }
     }
 
     public static class Validator {
