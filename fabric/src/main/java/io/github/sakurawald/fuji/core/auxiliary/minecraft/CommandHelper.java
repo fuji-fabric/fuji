@@ -201,14 +201,22 @@ public class CommandHelper {
             #endif
         }
 
+        public static void withServerPlayerEntity(@NotNull CommandContextBuilder<ServerCommandSource> contextBuilder, @NotNull Consumer<ServerPlayerEntity> consumer) {
+            withServerPlayerEntity(contextBuilder.getSource(), consumer);
+        }
+
+        @SuppressWarnings("UnnecessaryReturnStatement")
         public static void withServerPlayerEntity(@NotNull CommandContext<?> context, @NotNull Consumer<ServerPlayerEntity> consumer) {
             Object source = context.getSource();
             if (source instanceof ServerCommandSource serverCommandSource) {
-                source = serverCommandSource.getPlayer();
+                withServerPlayerEntity(serverCommandSource, consumer);
+                return;
             }
+        }
 
-            if (source instanceof ServerPlayerEntity serverPlayerEntity) {
-                consumer.accept(serverPlayerEntity);
+        public static void withServerPlayerEntity(@NotNull ServerCommandSource serverCommandSource, @NotNull Consumer<ServerPlayerEntity> consumer) {
+            if (serverCommandSource.getPlayer() != null) {
+                consumer.accept(serverCommandSource.getPlayer());
             }
         }
 
