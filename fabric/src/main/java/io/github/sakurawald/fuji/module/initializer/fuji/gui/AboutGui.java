@@ -53,7 +53,7 @@ public class AboutGui extends PagedGui<Person> {
     protected void drawPagedGui() {
         super.drawPagedGui();
 
-        GuiHelper.PlayerHead.fetchPlayerHeadTextures(this);
+        GuiHelper.PlayerSkull.fetchPlayerHeadTextures(this);
     }
 
     @Override

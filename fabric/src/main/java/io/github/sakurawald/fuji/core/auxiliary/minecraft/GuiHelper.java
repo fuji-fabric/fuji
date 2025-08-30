@@ -50,7 +50,8 @@ public class GuiHelper {
         }
     }
 
-    public static class PlayerHead {
+    public static class PlayerSkull {
+
 
         private static GuiElementBuilder fromSlot(@NotNull GuiElementInterface slot) {
             GuiElementBuilder builder = new GuiElementBuilder();

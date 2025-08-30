@@ -52,7 +52,7 @@ public class BalanceTopGui extends PagedGui<GameProfileAndEconomyAccount> {
     protected void drawPagedGui() {
         super.drawPagedGui();
 
-        GuiHelper.PlayerHead.fetchPlayerHeadTextures(this);
+        GuiHelper.PlayerSkull.fetchPlayerHeadTextures(this);
     }
 
 }
