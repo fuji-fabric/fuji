@@ -11,4 +11,6 @@ import lombok.NoArgsConstructor;
 public class GenericCacheModel<T> {
 
     Map<String, Cache<T>> cacheMap = new HashMap<>();
+
+    transient boolean dirty;
 }

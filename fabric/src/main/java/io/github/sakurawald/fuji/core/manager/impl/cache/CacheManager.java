@@ -6,8 +6,11 @@ import com.google.gson.reflect.TypeToken;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
+import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import io.github.sakurawald.fuji.core.manager.impl.cache.config.model.GenericCacheModel;
+import io.github.sakurawald.fuji.core.manager.impl.cache.job.FlushCacheJob;
 import io.github.sakurawald.fuji.core.manager.impl.cache.structure.Cache;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,7 +26,11 @@ public class CacheManager extends BaseManager {
     private static final Map<String, GenericCacheModel<?>> CACHE_FILES = new ConcurrentHashMap<>();
 
     @Override
-    public void onInitialize() {}
+    public void onInitialize() {
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            Managers.getScheduleManager().scheduleJob(new FlushCacheJob());
+        });
+    }
 
     @SneakyThrows
     private @NotNull Path toCacheFilePath(@NotNull String cacheSubject) {
@@ -46,6 +53,7 @@ public class CacheManager extends BaseManager {
 
         Cache<T> newCache = Cache.of(cacheValue);
         model.getCacheMap().put(cacheKey, newCache);
+        model.setDirty(true);
     }
 
     @SuppressWarnings({"unchecked", "UnnecessaryLocalVariable"})
@@ -60,11 +68,14 @@ public class CacheManager extends BaseManager {
         return model;
     }
 
-    public void writeGenericCacheModels() {
+    public void flushGenericCacheModels() {
         CACHE_FILES.forEach((cacheSubject, cacheModel) -> {
+            if (!cacheModel.isDirty()) return;
+
             Path cacheFilePath = toCacheFilePath(cacheSubject);
             JsonObject jsonObject = GsonMapper.toJsonTree(cacheModel).getAsJsonObject();
             JsonUtil.writeJsonObject(jsonObject, cacheFilePath);
+            cacheModel.setDirty(false);
         });
     }
 
