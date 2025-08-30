@@ -5,6 +5,7 @@ import com.mojang.authlib.GameProfile;
 import io.github.sakurawald.fuji.core.auxiliary.HttpUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import java.io.IOException;
 import java.util.Optional;
@@ -33,19 +34,20 @@ public class MojangProfileFetcher {
     public static Optional<UUID> fetchOnlinePlayerUUID(@NotNull String playerName) {
         UserCache userCache = ServerHelper.getServer().getUserCache();
         if (userCache == null) {
-            return fetchOnlinePlayerUUIDFallback(playerName);
+            return fetchOnlinePlayerUUID$Fallback(playerName);
         }
 
         try {
-            return userCache
-                .findByName(playerName)
-                .map(GameProfile::getId);
+            return PlayerHelper.Cache
+                .getOfflineGameProfileByName(playerName)
+                .map(GameProfile::getId)
+                .or(() -> fetchOnlinePlayerUUID$Fallback(playerName));
         } catch (Exception e) {
-            return fetchOnlinePlayerUUIDFallback(playerName);
+            return fetchOnlinePlayerUUID$Fallback(playerName);
         }
     }
 
-    private static Optional<UUID> fetchOnlinePlayerUUIDFallback(@NotNull String playerName) {
+    private static Optional<UUID> fetchOnlinePlayerUUID$Fallback(@NotNull String playerName) {
         String rawUUID;
         try {
             String json = HttpUtil.sendGetRequest(API_SERVER + playerName);

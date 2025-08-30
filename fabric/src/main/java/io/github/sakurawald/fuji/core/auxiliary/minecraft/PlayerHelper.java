@@ -228,6 +228,7 @@ public class PlayerHelper {
         }
 
         public static Optional<GameProfile> getOfflineGameProfileByName(@NotNull String playerName) {
+            // NOTE: Only find the game profile from existing cache, don't compute the value from Mojang server.
             return getOfflineGameProfiles()
                 .stream()
                 .filter(it -> it.getName().equals(playerName))
