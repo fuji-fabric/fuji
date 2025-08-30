@@ -14,9 +14,10 @@ import io.github.sakurawald.fuji.core.manager.impl.cache.job.FlushCacheJob;
 import io.github.sakurawald.fuji.core.manager.impl.cache.structure.Cache;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,22 +39,28 @@ public class CacheManager extends BaseManager {
         return CACHE_DIRECTORY.resolve(cacheSubject + ".json");
     }
 
-    public <T> Optional<Cache<T>> getCache(@NotNull String cacheSubject, @NotNull String cacheKey, @NotNull Class<T> typeOfCacheValue) {
+    public <T> @NotNull T getCachedValueOrCompute(@NotNull String cacheSubject, @NotNull String cacheKey, @NotNull Class<T> typeOfCacheValue, @NotNull Duration expirationDuration, @NotNull Supplier<T> supplier) {
         GenericCacheModel<T> model = getGenericCacheModel(cacheSubject, typeOfCacheValue);
 
-        return Optional
-            .ofNullable(model
-                .getCacheMap()
-                .get(cacheKey));
-    }
+        /* Get or create cache. */
+        Cache<T> cache = model
+            .getCacheMap()
+            .computeIfAbsent(cacheKey, (key) -> {
+                Cache<T> newValue = Cache.of(supplier.get());
+                model.setDirty(true);
+                return newValue;
+            });
 
-    @SuppressWarnings("unchecked")
-    public <T> void setCache(@NotNull String cacheSubject, @NotNull String cacheKey, @NotNull T cacheValue) {
-        GenericCacheModel<T> model = (GenericCacheModel<T>) getGenericCacheModel(cacheSubject, cacheValue.getClass());
+        /* Invalidate the cache by time. */
+        long currentTime = System.currentTimeMillis();
+        if (cache.getUpdatedTimestamp() + expirationDuration.toMillis() < currentTime) {
+            cache.setValue(supplier.get());
+            cache.setUpdatedTimestamp(currentTime);
+            model.setDirty(true);
+        }
 
-        Cache<T> newCache = Cache.of(cacheValue);
-        model.getCacheMap().put(cacheKey, newCache);
-        model.setDirty(true);
+        /* Return the cache value. */
+        return cache.getValue();
     }
 
     @SuppressWarnings({"unchecked", "UnnecessaryLocalVariable"})
