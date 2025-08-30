@@ -20,7 +20,7 @@ public class CommandMenuMenusModel {
     @Document(id = 1751824827629L, value = """
         Defined `menus`.
         """)
-    public Map<String, MenuDescriptor> menus = new HashMap<>() {
+    Map<String, MenuDescriptor> menus = new HashMap<>() {
         {
             /* Menu: example-menu */
             MenuDescriptor exampleMenu = new MenuDescriptor();
@@ -32,17 +32,17 @@ public class CommandMenuMenusModel {
                 {
                     /* slot 1 */
                     SlotDescriptor slot1 = new SlotDescriptor();
-                    slot1.index = 0;
+                    slot1.setIndex(0);
                     this.add(slot1);
 
                     /* slot 2 */
                     SlotDescriptor slot2 = new SlotDescriptor();
-                    slot2.index = 1;
-                    slot2.item = RegistryHelper.getIdAsString(Items.APPLE);
-                    slot2.lore = new ArrayList<>();
-                    slot2.glow = true;
-                    slot2.displayName = "<green>Click to to open another menu.";
-                    slot2.commands.on_left_click_commands = List.of("command-menu open %player:name% another-menu");
+                    slot2.setIndex(1);
+                    slot2.setItem(RegistryHelper.getIdAsString(Items.APPLE));
+                    slot2.setLore(new ArrayList<>());
+                    slot2.setGlow(true);
+                    slot2.setDisplayName("<green>Click to to open another menu.");
+                    slot2.getCommands().setOnLeftClickCommands(List.of("command-menu open %player:name% another-menu"));
                     this.add(slot2);
                 }
             });
@@ -59,7 +59,7 @@ public class CommandMenuMenusModel {
                 {
                     /* slot 1 */
                     SlotDescriptor slot1 = new SlotDescriptor();
-                    slot1.index = 0;
+                    slot1.setIndex(0);
                     slot1.setCount(2);
                     slot1.setLore(new ArrayList<>());
                     slot1.setDisplayName("This is another menu.");
@@ -68,11 +68,11 @@ public class CommandMenuMenusModel {
 
                     /* slot 2 */
                     SlotDescriptor slot2 = new SlotDescriptor();
-                    slot2.index = 1;
+                    slot2.setIndex(1);
                     slot2.setCount(1);
                     slot2.setLore(new ArrayList<>());
                     slot2.setDisplayName("Click me to refresh: %server:uptime%");
-                    slot2.commands.on_left_click_commands = List.of("command-menu open %player:name% another-menu");
+                    slot2.getCommands().setOnLeftClickCommands(List.of("command-menu open %player:name% another-menu"));
                     slot2.setItem(RegistryHelper.getIdAsString(Items.CLOCK));
                     this.add(slot2);
                 }

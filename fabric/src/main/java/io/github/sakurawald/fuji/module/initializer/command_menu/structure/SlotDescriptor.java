@@ -35,39 +35,37 @@ public class SlotDescriptor {
         """)
     private static final PermissionDescriptor SLOT_VIEW_REQUIREMENT_PERMISSION = new PermissionDescriptor("<specified-permission>", 1751999474601L);
 
-    // NOTE: It's possible only provide the NBT field, but it's hard to use.
-
     @Document(id = 1751824853240L, value = """
         Where to place this item in GUI?
         """)
-    public int index = 0;
+    int index = 0;
 
     @Document(id = 1751824861377L, value = """
         What is the item?
         """)
-    public String item = "minecraft:stone";
+    String item = "minecraft:stone";
 
     @Document(id = 1751824865422L, value = """
         The count of this item.
         """)
-    public int count = 42;
+    int count = 42;
 
     @Document(id = 1751824870793L, value = """
         The display name of this item.
         """)
-    public @Nullable String displayName = "<blue>My Nice Item Name";
+    @Nullable String displayName = "<blue>My Nice Item Name";
 
-    public boolean hideTooltip = false;
+    boolean hideTooltip = false;
 
     @Document(id = 1751824877459L, value = """
         Should we glow this item?
         """)
-    public boolean glow = false;
+    boolean glow = false;
 
     @Document(id = 1751824881740L, value = """
         The lore of this item.
         """)
-    public List<String> lore = new ArrayList<>() {
+    List<String> lore = new ArrayList<>() {
         {
             this.add("<green>Hello %player:name%");
             this.add("<yellow>You are in %world:id%");
@@ -77,16 +75,23 @@ public class SlotDescriptor {
     @Document(id = 1751824886812L, value = """
         The `requirement` to `see` this item in GUI.
         """)
-    public ViewRequirement viewRequirement = new ViewRequirement();
+
+    ViewRequirement viewRequirement = new ViewRequirement();
+
+    @Data
+    @NoArgsConstructor
     public static class ViewRequirement {
         // NOTE: The view requirement decides whether the player can see this slot in menu.
-        public int level = 0;
-        public @Nullable String string = null;
+        int level = 0;
+        @Nullable String string = null;
     }
 
-    public Commands commands = new Commands();
+    Commands commands = new Commands();
+
+    @Data
+    @NoArgsConstructor
     public static class Commands {
-        public List<String> on_left_click_commands = new ArrayList<>(){
+        List<String> onLeftClickCommands = new ArrayList<>(){
             {
                 this.add("send-message %player:name% You just clicked me.");
                 this.add("chain has-level? %player:name% 4 chain send-message %player:name% <yellow>You are op player.");
@@ -94,12 +99,13 @@ public class SlotDescriptor {
             }
         };
 
-        public List<String> on_left_shift_click_commands = new ArrayList<>();
-        public List<String> on_right_click_commands = new ArrayList<>();
-        public List<String> on_right_shift_click_commands = new ArrayList<>();
-        public List<String> on_middle_click_commands = new ArrayList<>();
+        List<String> onLeftShiftClickCommands = new ArrayList<>();
+        List<String> onRightClickCommands = new ArrayList<>();
+        List<String> onRightShiftClickCommands = new ArrayList<>();
+        List<String> onMiddleClickCommands = new ArrayList<>();
     }
 
+    @SuppressWarnings("RedundantIfStatement")
     public boolean canViewThisSlot(ServerPlayerEntity player) {
         if (!player.hasPermissionLevel(this.viewRequirement.level)) return false;
         if (this.viewRequirement.string != null
@@ -116,28 +122,28 @@ public class SlotDescriptor {
         public void click(int i, ClickType clickType, SlotActionType clickType1, @NotNull SlotGuiInterface slotGuiInterface) {
 
             /* Dispatch click type. */
-            if (clickType == ClickType.MOUSE_LEFT && !slotDescriptor.commands.on_left_click_commands.isEmpty()) {
-                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.on_left_click_commands);
+            if (clickType == ClickType.MOUSE_LEFT && !slotDescriptor.commands.onLeftClickCommands.isEmpty()) {
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.onLeftClickCommands);
                 tryCloseThisMenu();
                 return;
             }
-            if (clickType == ClickType.MOUSE_RIGHT && !slotDescriptor.commands.on_right_click_commands.isEmpty()) {
-                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.on_right_click_commands);
+            if (clickType == ClickType.MOUSE_RIGHT && !slotDescriptor.commands.onRightClickCommands.isEmpty()) {
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.onRightClickCommands);
                 tryCloseThisMenu();
                 return;
             }
-            if (clickType == ClickType.MOUSE_LEFT_SHIFT && !slotDescriptor.commands.on_left_shift_click_commands.isEmpty()) {
-                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.on_left_shift_click_commands);
+            if (clickType == ClickType.MOUSE_LEFT_SHIFT && !slotDescriptor.commands.onLeftShiftClickCommands.isEmpty()) {
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.onLeftShiftClickCommands);
                 tryCloseThisMenu();
                 return;
             }
-            if (clickType == ClickType.MOUSE_RIGHT_SHIFT && !slotDescriptor.commands.on_right_shift_click_commands.isEmpty()) {
-                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.on_right_shift_click_commands);
+            if (clickType == ClickType.MOUSE_RIGHT_SHIFT && !slotDescriptor.commands.onRightShiftClickCommands.isEmpty()) {
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.onRightShiftClickCommands);
                 tryCloseThisMenu();
                 return;
             }
-            if (clickType == ClickType.MOUSE_MIDDLE && !slotDescriptor.commands.on_middle_click_commands.isEmpty()) {
-                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.on_middle_click_commands);
+            if (clickType == ClickType.MOUSE_MIDDLE && !slotDescriptor.commands.onMiddleClickCommands.isEmpty()) {
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.onMiddleClickCommands);
                 tryCloseThisMenu();
                 return;
             }
