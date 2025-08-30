@@ -4,7 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.module.initializer.skin.SkinInitializer;
-import io.github.sakurawald.fuji.module.initializer.skin.provider.MojangSkinProvider;
+import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangSkinProvider;
 import io.github.sakurawald.fuji.module.initializer.skin.service.SkinService;
 import java.util.List;
 import java.util.Optional;

@@ -1,6 +1,8 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class AuthlibHelper {
@@ -27,5 +29,11 @@ public class AuthlibHelper {
         #elif MC_VER > MC_1_20_1
         return property.signature();
         #endif
+    }
+
+    public static void modifyGameProfile(@NotNull GameProfile gameProfile, @NotNull Property skin) {
+        LogUtil.debug("Modify the skin property for player {}. (skin = {})", gameProfile.getName(), skin);
+        gameProfile.getProperties().removeAll("textures");
+        gameProfile.getProperties().put("textures", skin);
     }
 }

@@ -52,12 +52,6 @@ public class SkinService {
         return CommandHelper.Return.SUCCESS;
     }
 
-    public static void modifyGameProfile(@NotNull GameProfile gameProfile, @NotNull Property skin) {
-        LogUtil.debug("Modify the skin property for player {}. (skin = {})", gameProfile.getName(), skin);
-        gameProfile.getProperties().removeAll("textures");
-        gameProfile.getProperties().put("textures", skin);
-    }
-
     public static @NotNull List<SkinDescriptor> getDefaultSkinList() {
         return SkinInitializer.config.model().getDefaultSkin().getDefaultSkinList();
     }
@@ -160,7 +154,7 @@ public class SkinService {
             }
 
             /* Apply the skin */
-            modifyGameProfile(player.getGameProfile(), skinProperty);
+            AuthlibHelper.modifyGameProfile(player.getGameProfile(), skinProperty);
 
             /* Broadcast the game profile change. */
             SkinSyncer.broadcastGameProfileChange(player);

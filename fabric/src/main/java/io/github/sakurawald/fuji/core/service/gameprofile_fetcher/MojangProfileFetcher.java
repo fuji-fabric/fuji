@@ -4,10 +4,13 @@ import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import io.github.sakurawald.fuji.core.auxiliary.HttpUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
+import net.minecraft.util.UserCache;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -18,13 +21,35 @@ public class MojangProfileFetcher {
 
     public static Optional<GameProfile> fetchOnlineGameProfile(@NotNull String playerName) {
         return fetchOnlinePlayerUUID(playerName)
-            .map(uuid -> new GameProfile(uuid, playerName));
+            .map(uuid -> new GameProfile(uuid, playerName))
+            .map(gameProfile -> {
+                MojangSkinProvider
+                    .fetchSkin(playerName)
+                    .ifPresent(property -> AuthlibHelper.modifyGameProfile(gameProfile, property));
+                return gameProfile;
+            });
     }
 
     public static Optional<UUID> fetchOnlinePlayerUUID(@NotNull String playerName) {
+        UserCache userCache = ServerHelper.getServer().getUserCache();
+        if (userCache == null) {
+            return fetchOnlinePlayerUUIDFallback(playerName);
+        }
+
+        try {
+            return userCache
+                .findByName(playerName)
+                .map(GameProfile::getId);
+        } catch (Exception e) {
+            return fetchOnlinePlayerUUIDFallback(playerName);
+        }
+    }
+
+    private static Optional<UUID> fetchOnlinePlayerUUIDFallback(@NotNull String playerName) {
         String rawUUID;
         try {
-            rawUUID = JsonParser.parseString(HttpUtil.sendGetRequest(API_SERVER + playerName)).getAsJsonObject().get("id").getAsString();
+            String json = HttpUtil.sendGetRequest(API_SERVER + playerName);
+            rawUUID = JsonParser.parseString(json).getAsJsonObject().get("id").getAsString();
         } catch (IOException e) {
             LogUtil.debug("Failed to fetch online uuid from mojang server for {}", playerName);
             return Optional.empty();

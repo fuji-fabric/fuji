@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.mixin.skin;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import io.github.sakurawald.fuji.module.initializer.skin.service.SkinService;
 import net.minecraft.server.network.ServerLoginNetworkHandler;
 import org.jetbrains.annotations.NotNull;
@@ -58,7 +59,7 @@ public abstract class ServerLoginNetworkHandlerMixin {
 
         /* apply the skin if fetched skin is not empty */
         Property valueIfAbsent = SkinService.getPreferredDefaultSkin();
-        SkinService.modifyGameProfile(profile, skinFuture.getNow(valueIfAbsent));
+        AuthlibHelper.modifyGameProfile(profile, skinFuture.getNow(valueIfAbsent));
     }
 
 }

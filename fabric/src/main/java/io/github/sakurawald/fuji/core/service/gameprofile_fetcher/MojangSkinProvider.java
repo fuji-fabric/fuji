@@ -1,11 +1,10 @@
-package io.github.sakurawald.fuji.module.initializer.skin.provider;
+package io.github.sakurawald.fuji.core.service.gameprofile_fetcher;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.properties.Property;
 import io.github.sakurawald.fuji.core.auxiliary.HttpUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
-import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
 import java.io.IOException;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -14,10 +13,10 @@ public class MojangSkinProvider {
 
     private static final String MOJANG_SESSION_SERVER = "https://sessionserver.mojang.com/session/minecraft/profile/";
 
-    public static Optional<Property> fetchSkin(@NotNull String playerName) {
+    public static Optional<Property> fetchSkin(@NotNull String onlinePlayerName) {
         try {
             return MojangProfileFetcher
-                .fetchOnlinePlayerUUID(playerName)
+                .fetchOnlinePlayerUUID(onlinePlayerName)
                 .flatMap(uuid -> {
                     String responseJsonString;
                     try {
@@ -35,7 +34,7 @@ public class MojangSkinProvider {
                     return Optional.of(new Property("textures", value, signature));
                 });
         } catch (Exception e) {
-            LogUtil.debug("Failed to fetch online skin from Mojang server: playerName = {}", playerName);
+            LogUtil.debug("Failed to fetch online skin from Mojang server: playerName = {}", onlinePlayerName);
             return Optional.empty();
         }
     }

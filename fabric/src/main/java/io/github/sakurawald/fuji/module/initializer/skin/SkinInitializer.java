@@ -19,7 +19,7 @@ import io.github.sakurawald.fuji.module.initializer.skin.config.model.SkinConfig
 import io.github.sakurawald.fuji.module.initializer.skin.config.model.SkinDataModel;
 import io.github.sakurawald.fuji.module.initializer.skin.gui.SkinGui;
 import io.github.sakurawald.fuji.module.initializer.skin.provider.MineSkinSkinProvider;
-import io.github.sakurawald.fuji.module.initializer.skin.provider.MojangSkinProvider;
+import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangSkinProvider;
 import io.github.sakurawald.fuji.module.initializer.skin.service.SkinService;
 import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinVariant;
 import net.minecraft.server.network.ServerPlayerEntity;
