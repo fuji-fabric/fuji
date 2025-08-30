@@ -9,3 +9,6 @@
   - feature: sort the `command path` alphabetically, making it easier to read.
 - [command_cooldown] feature: enhanced `/command-cooldown list` command, now it also list the `unnamed cooldown` in details.
 - [core] feature: improve the `game profile` fetch function.
+  - feature: greatly improve the `player skull` responsiveness of `deathlog GUI`, `balance-top GUI`, `warnings GUI`, `about GUI`
+  - feature: now the `/fuji inspect languages` GUI will display the player skull with the skin used by the player.
+- [deathlog] feature: now will display the `player skull` instead of `skeleton skull` in `/deathlog` GUI.

@@ -69,11 +69,11 @@ public class GuiHelper {
             return builder;
         }
 
-        public static void fetchPlayerHeadTextures(@NotNull SlotGuiInterface gui) {
-            fetchPlayerHeadTextures(gui, () -> {});
+        public static void fillPlayerHeadTextures(@NotNull SlotGuiInterface gui) {
+            fillPlayerHeadTextures(gui, () -> {});
         }
 
-        public static void fetchPlayerHeadTextures(@NotNull SlotGuiInterface gui, @NotNull Runnable onCompleteCallback) {
+        public static void fillPlayerHeadTextures(@NotNull SlotGuiInterface gui, @NotNull Runnable onCompleteCallback) {
             final int logicalSize = gui.getWidth() * (gui.getHeight() - 1);
             for (int i = 0; i < logicalSize; i++) {
                 GuiElementInterface previousSlot = gui.getSlot(i);

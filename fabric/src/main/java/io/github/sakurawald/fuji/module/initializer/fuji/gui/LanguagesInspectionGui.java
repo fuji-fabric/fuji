@@ -67,6 +67,12 @@ public class LanguagesInspectionGui extends PagedGui<GuiElementInterface> {
     }
 
     @Override
+    protected void drawPagedGui() {
+        super.drawPagedGui();
+        GuiHelper.PlayerSkull.fillPlayerHeadTextures(this);
+    }
+
+    @Override
     protected PagedGui<GuiElementInterface> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<GuiElementInterface> entities, int pageIndex) {
         return new LanguagesInspectionGui(parent, player, entities, pageIndex);
     }

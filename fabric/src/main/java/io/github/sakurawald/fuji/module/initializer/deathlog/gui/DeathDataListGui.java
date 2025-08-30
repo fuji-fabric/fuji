@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.deathlog.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.NbtHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
@@ -12,7 +13,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -42,14 +42,18 @@ public class DeathDataListGui extends PagedGui<String> {
 
     @Override
     protected @NotNull GuiElementInterface toGuiElement(@NotNull String entity) {
-        GuiElementBuilder builder = new GuiElementBuilder();
-
-        builder
-            .setItem(Items.SKELETON_SKULL)
+        GuiElementBuilder builder = GuiHelper.Button
+            .makeLuckyBlockButton()
             .setName(Text.literal(entity))
             .setCallback(() -> openDeathNodeListGui(entity));
 
         return builder.build();
+    }
+
+    @Override
+    protected void drawPagedGui() {
+        super.drawPagedGui();
+        GuiHelper.PlayerSkull.fillPlayerHeadTextures(this);
     }
 
     @SneakyThrows
