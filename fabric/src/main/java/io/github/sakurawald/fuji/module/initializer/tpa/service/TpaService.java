@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.tpa.service;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.job.impl.PlaySoundJob;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
@@ -20,6 +21,11 @@ public class TpaService {
     private static final List<TpaRequest> requests = new ArrayList<>();
 
     public static int doRequest(ServerPlayerEntity source, ServerPlayerEntity target, boolean tpahere) {
+        if (target.isRemoved()) {
+            TextHelper.sendTextByKey(source, "player.invalid", PlayerHelper.getPlayerName(target));
+            return CommandHelper.Return.FAILURE;
+        }
+
         /* Make a new request. */
         TpaRequest request = new TpaRequest(source, target, tpahere);
 

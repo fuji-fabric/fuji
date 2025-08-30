@@ -12,3 +12,6 @@
   - feature: greatly improve the `player skull` responsiveness of `deathlog GUI`, `balance-top GUI`, `warnings GUI`, `about GUI`
   - feature: now the `/fuji inspect languages` GUI will display the player skull with the skin used by the player.
 - [deathlog] feature: now will display the `player skull` instead of `skeleton skull` in `/deathlog` GUI.
+- [tpa] improvements
+  - feature: new `/tpa gui` command.
+  - feature: new `/tpa` command as alias to `/tpa gui`.

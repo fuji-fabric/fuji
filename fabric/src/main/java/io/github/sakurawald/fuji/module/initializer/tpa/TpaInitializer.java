@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.tpa;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
@@ -7,6 +8,7 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.tpa.config.model.TpaConfigModel;
+import io.github.sakurawald.fuji.module.initializer.tpa.gui.TpaGui;
 import io.github.sakurawald.fuji.module.initializer.tpa.service.TpaService;
 import io.github.sakurawald.fuji.module.initializer.tpa.structure.ResponseStatus;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -55,6 +57,19 @@ public class TpaInitializer extends ModuleInitializer {
     @CommandNode("tpacancel all")
     private static int $tpacancel(@CommandSource ServerPlayerEntity player) {
         return TpaService.doResponseToAll(player, ResponseStatus.CANCEL);
+    }
+
+    @CommandNode("tpa")
+    private static int $root(@CommandSource ServerPlayerEntity player) {
+        return $gui(player);
+    }
+
+    @CommandNode("tpa gui")
+    private static int $gui(@CommandSource ServerPlayerEntity player) {
+        TpaGui
+            .make(player)
+            .open();
+        return CommandHelper.Return.SUCCESS;
     }
 
 }
