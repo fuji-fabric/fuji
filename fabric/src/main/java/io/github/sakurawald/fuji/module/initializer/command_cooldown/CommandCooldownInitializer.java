@@ -16,6 +16,7 @@ import io.github.sakurawald.fuji.module.initializer.command_cooldown.config.mode
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.config.model.NamedCooldownDataModel;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.config.transformer.NamedCooldownSchemaV1Transformer;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.service.NamedCooldownService;
+import io.github.sakurawald.fuji.module.initializer.command_cooldown.service.UnnamedCooldownService;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCooldownDataNode;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCooldownDescriptor;
 import java.util.Collections;
@@ -141,10 +142,14 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         });
     }
 
-    @Document(id = 1751826418447L, value = "List all named-cooldown.")
+    @Document(id = 1756539191422L, value = "List all `unnamed-cooldown` and `named-cooldown`.")
     @CommandNode("list")
     private static int $list(@CommandSource ServerCommandSource source) {
-        TextHelper.sendTextByKey(source, "command_cooldown.list", NamedCooldownService.getNamedCooldownDescriptors().keySet());
+        TextHelper.sendTextByKey(source, "command_cooldown.list.unnamed_cooldown", UnnamedCooldownService.listUnnamedCooldowns().keySet());
+        TextHelper.sendMessageByText(source, TextHelper.Formatter.formatMapMultiLine(UnnamedCooldownService.listUnnamedCooldowns()));
+        TextHelper.sendMessageByText(source, TextHelper.TEXT_EMPTY);
+
+        TextHelper.sendTextByKey(source, "command_cooldown.list.named_cooldown", NamedCooldownService.getNamedCooldownDescriptors().keySet());
         return CommandHelper.Return.SUCCESS;
     }
 

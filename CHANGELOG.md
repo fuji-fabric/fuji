@@ -7,3 +7,4 @@
 - [core] feature: improvements to `permission.json` file.
   - feature: auto clean the invalid keys in `permission.json` file, for clarity.
   - feature: sort the `command path` alphabetically, making it easier to read.
+- [command_cooldown] feature: enhanced `/command-cooldown list` command, now it also list the `unnamed cooldown` in details.

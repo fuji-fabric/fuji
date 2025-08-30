@@ -13,11 +13,15 @@ public class UnnamedCooldownService {
 
     private static final Map<String, Cooldown<String>> playerName2UnnamedCooldown = new HashMap<>();
 
+    public static Map<String, Long> listUnnamedCooldowns() {
+        return CommandCooldownInitializer.config.model().unnamed_cooldown;
+    }
+
     public static long computeRemainingUnnamedCooldownDuration(@NotNull ServerPlayerEntity player, @NotNull String commandLine) {
         String key = PlayerHelper.getPlayerName(player);
         Cooldown<String> unnamedCooldown = playerName2UnnamedCooldown.computeIfAbsent(key, k -> new Cooldown<>());
 
-        Optional<Map.Entry<String, Long>> matchedUnnamedCooldown = CommandCooldownInitializer.config.model().unnamed_cooldown
+        Optional<Map.Entry<String, Long>> matchedUnnamedCooldown = listUnnamedCooldowns()
             .entrySet()
             .stream()
             .filter(it -> commandLine.matches(it.getKey()))

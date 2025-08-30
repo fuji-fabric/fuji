@@ -8,7 +8,6 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
-import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 
@@ -27,12 +26,11 @@ import net.minecraft.text.Text;
 @CommandRequirement(level = 4)
 public class TesterInitializer extends ModuleInitializer {
 
-    @SneakyThrows(Exception.class)
+    @SneakyThrows
     @CommandNode("run")
-    private static int $run(@CommandSource ServerCommandSource source, GreedyString commandLine) {
-//        Class<int[]> aClass = int[].class;
-//        JsonObject jsonObject = new JsonObject();
-//        boolean empty = jsonObject.isEmpty();
+    private static int $run(@CommandSource ServerCommandSource source) {
+
+
         return CommandHelper.Return.SUCCESS;
     }
 
