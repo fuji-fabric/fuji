@@ -34,6 +34,37 @@ public class TesterInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @CommandNode("split")
     private static int $split(@CommandSource ServerCommandSource source, @CommandTarget ServerPlayerEntity target, String string) {
         TextHelper.sendBroadcastByText(Text.literal("Run split(): source = %s, target = %s, string = %s".formatted(source.getName(), PlayerHelper.getPlayerName(target), string)));
