@@ -211,6 +211,13 @@
 
 [Test Case]
 - Module: core
+- Action: **Test the exception handler functions.**
+- Target: This mod failed at server startup, due to mixin injection errors.
+- Target: This mod failed at server startup, due to module initialization failed.
+- Target: This mod failed at `/fuji reload` command.
+
+[Test Case]
+- Module: core
 - Action: **Test the parsers in Sign block and Anvil block.**
 - Target: The `color.sign` and `color.anvil` should work in single-player world, when installed client-side.
 

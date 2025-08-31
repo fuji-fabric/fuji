@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.core.config.handler.abst;
 
 import com.google.gson.JsonObject;
+import io.github.sakurawald.fuji.core.auxiliary.ExceptionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.config.job.ConfigurationHandlerWriteStorageJob;
@@ -99,7 +100,6 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
 
     protected abstract T makeDefaultModel();
 
-    @SneakyThrows
     @SuppressWarnings("unchecked")
     public final void readStorage() {
         try {
@@ -133,9 +133,23 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
             /* Register self. */
             REGISTERED_CONFIGURATION_HANDLERS.add(this);
         } catch (Exception e) {
-            LogUtil.error("Failed to read configuration file {} from storage.", this.filePath, e);
-            throw e;
+            handleConfigurationHandlerException("Failed to read a file", e);
         }
+    }
+
+    private void handleConfigurationHandlerException(@NotNull String title, @NotNull Exception e) {
+        String modulePath = ModuleManager.computeJoinedModulePath(this.makeDefaultModel().getClass().getName());
+        LogUtil.warn("""
+
+
+        [{}]
+        Failed to read configuration file '{}' from storage.
+
+        ◉ Module: {}
+        ◉ File Path: {}
+        ◉ Message: {}
+        """, title, this.filePath, modulePath, this.filePath, e.getMessage());
+        ExceptionUtil.reThrowException(e);
     }
 
     @SneakyThrows
@@ -156,8 +170,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
             Files.createDirectories(this.filePath.getParent());
             Files.writeString(this.filePath, GsonMapper.toJsonString(jsonObject));
         } catch (Exception e) {
-            LogUtil.error("Failed to write configuration file {} into storage.", this.filePath, e);
-            throw e;
+            handleConfigurationHandlerException("Failed to write a file", e);
         }
     }
 

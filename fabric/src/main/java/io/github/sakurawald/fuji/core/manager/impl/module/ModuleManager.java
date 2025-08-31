@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.core.manager.impl.module;
 
 import com.google.gson.JsonObject;
+import io.github.sakurawald.fuji.core.auxiliary.ExceptionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.config.Configs;
@@ -8,11 +9,6 @@ import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.mixin.GlobalMixinConfigPlugin;
-import lombok.Getter;
-import net.fabricmc.loader.api.FabricLoader;
-import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.service.MixinService;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,6 +16,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import lombok.Getter;
+import net.fabricmc.loader.api.FabricLoader;
+import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.service.MixinService;
 
 @Getter
 public class ModuleManager extends BaseManager {
@@ -103,8 +103,8 @@ public class ModuleManager extends BaseManager {
     }
 
     public static List<String> splitModulePath(String modulePath) {
-        return Arrays.stream(modulePath
-            .split("\\."))
+        return Arrays
+            .stream(modulePath.split("\\."))
             .toList();
     }
 
@@ -138,7 +138,7 @@ public class ModuleManager extends BaseManager {
                     if (!enable) return;
                     this.initializeModuleInitializer(clazz);
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    ExceptionUtil.reThrowException(e);
                 }
             });
     }
@@ -152,8 +152,26 @@ public class ModuleManager extends BaseManager {
                     moduleInitializer.doInitialize();
                     MODULE_INITIALIZER_BY_CLASS.put(clazz, moduleInitializer);
                 } catch (Exception e) {
-                    LogUtil.warn("Sorry, failed to initialize the module `{}`. I will crash the server now, to minimize losses.", className);
-                    throw new RuntimeException("Crashed by fuji mod by design, see above.", e);
+                    String modulePath = ModuleManager.computeJoinedModulePath(className);
+                    LogUtil.warn("""
+
+
+                        [Fuji Module Initialization Failed]
+                        ◉ What happened?
+                        Unfortunately, the module `{}` could not be initialized.
+                        To prevent potential data loss or further issues, the server will now shut down.
+
+                        ◉ Which module?
+                        It's `{}` module.
+
+                        ◉ What can I do?
+                        1. Verify that there are no `JSON syntax errors` in the module's configuration files.
+                        2. Check if any `other mods` are conflicting with `{}` module.
+                        3. If you do not require the `{}` module, you may disable it in the `config/fuji/config.json` file, then restart your server.
+                        4. If the issue persists, please open an issue at: https://github.com/sakurawald/fuji/issues
+
+                        """, modulePath, modulePath, modulePath, modulePath);
+                    ExceptionUtil.reThrowException(e);
                 }
             }
         }
@@ -163,16 +181,17 @@ public class ModuleManager extends BaseManager {
         MODULE_INITIALIZER_BY_CLASS
             .values()
             .forEach(ModuleManager::reloadModuleInitializer
-        );
+            );
     }
 
     private static void reloadModuleInitializer(@NotNull ModuleInitializer initializer) {
         try {
             initializer.doReload();
         } catch (Exception originalException) {
-            LogUtil.error("Failed to reload the module: initializer = {}", initializer.getClass().getName(), originalException);
+            String modulePath = ModuleManager.computeJoinedModulePath(initializer.getClass().getName());
+            LogUtil.warn("Failed to re-load the module '{}'.", modulePath);
             // NOTE: Throw the original exception to surrounding exception handler.
-            throw originalException;
+            ExceptionUtil.reThrowException(originalException);
         }
     }
 
