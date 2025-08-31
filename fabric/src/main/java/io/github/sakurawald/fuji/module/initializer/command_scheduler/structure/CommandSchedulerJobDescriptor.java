@@ -44,8 +44,8 @@ public class CommandSchedulerJobDescriptor {
     @Document(id = 1751826749083L, value = """
         The commands to execute when the `job` is `triggered`.
         """)
-    @SerializedName(value = "commands_groups", alternate = "commands_list")
-    List<List<String>> commands_groups;
+    @SerializedName(value = "command_groups", alternate = {"commands_list", "commands_groups"})
+    List<List<String>> command_groups;
 
     @ForDeveloper("For implement simplification, the job will always be scheduled, and the trigger() will always be called.")
     public void tryTrigger() {
@@ -64,7 +64,7 @@ public class CommandSchedulerJobDescriptor {
         CommandSchedulerInitializer.scheduler.writeStorage();
 
         /* Execute specified commands. */
-        List<String> commands = RandomUtil.drawList(this.commands_groups);
+        List<String> commands = RandomUtil.drawList(this.command_groups);
         LogUtil.info("Execute commands in job `{}`: {}", this.getName(), commands);
         ServerHelper.executeSync(() -> CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(ServerHelper.getServer().getCommandSource()), commands));
     }
