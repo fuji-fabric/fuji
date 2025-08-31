@@ -8,6 +8,10 @@
   - **Feature:** Enhanced *command execution exception handling*.
     - Players now see `localized error messages` for command syntax issues (e.g., *no player found*).
     - Administrator players can now **click the error text** to easily **copy the stack trace**.
+  - **Feature:** Improved exception messages for the `/run as {console|player|fake-op}` command.
+    - Now will `stream the command execution feedback` and provide the `command syntax error` for `initialing command source`.
+      - Example: `/run as console run as fake-player Steve bad command`
+    - Make it easier to understand the command context.
   - **Feature:** Simplified exception messages and added clear instructions, making them more user-friendly.
   - **Feature:** Improved handling of *module initialization failures*.
     - Users now receive a **clear, user-friendly error message** along with suggested solutions.
