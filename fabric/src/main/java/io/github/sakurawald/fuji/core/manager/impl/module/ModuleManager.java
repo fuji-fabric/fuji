@@ -138,7 +138,7 @@ public class ModuleManager extends BaseManager {
                     if (!enable) return;
                     this.initializeModuleInitializer(clazz);
                 } catch (Exception e) {
-                    ExceptionUtil.reThrowException(e);
+                    throw ExceptionUtil.makeReThrownException(e);
                 }
             });
     }
@@ -171,7 +171,7 @@ public class ModuleManager extends BaseManager {
                         4. If the issue persists, please open an issue at: https://github.com/sakurawald/fuji/issues
 
                         """, modulePath, modulePath, modulePath, modulePath);
-                    ExceptionUtil.reThrowException(e);
+                    throw ExceptionUtil.makeReThrownException(e);
                 }
             }
         }
@@ -191,7 +191,7 @@ public class ModuleManager extends BaseManager {
             String modulePath = ModuleManager.computeJoinedModulePath(initializer.getClass().getName());
             LogUtil.error("Failed to re-load the module '{}'.", modulePath);
             // NOTE: Throw the original exception to surrounding exception handler.
-            ExceptionUtil.reThrowException(originalException);
+            throw ExceptionUtil.makeReThrownException(originalException);
         }
     }
 
@@ -216,7 +216,7 @@ public class ModuleManager extends BaseManager {
             parent = parent.getAsJsonObject(node);
 
             if (parent == null || !parent.has(ModuleManager.ENABLE_SUPPLIER_KEY)) {
-                throw new RuntimeException("missing `enable supplier` key for dir name list `%s`".formatted(modulePath));
+                throw new RuntimeException("Missing `enable supplier` key for dir name list `%s`".formatted(modulePath));
             }
 
             // only enable a sub-module if the parent module is enabled.

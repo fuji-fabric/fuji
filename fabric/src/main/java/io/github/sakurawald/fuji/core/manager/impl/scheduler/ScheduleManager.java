@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.core.manager.impl.scheduler;
 
 
+import io.github.sakurawald.fuji.core.auxiliary.ExceptionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.config.Configs;
@@ -136,7 +137,7 @@ public class ScheduleManager extends BaseManager {
             StdSchedulerFactory stdSchedulerFactory = new StdSchedulerFactory();
             scheduler = stdSchedulerFactory.getScheduler();
         } catch (SchedulerException e) {
-            throw new RuntimeException(e);
+            throw ExceptionUtil.makeReThrownException(e);
         }
     }
 

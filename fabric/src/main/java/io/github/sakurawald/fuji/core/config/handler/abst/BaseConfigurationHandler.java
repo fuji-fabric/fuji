@@ -149,7 +149,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         ◉ File Path: {}
         ◉ Message: {}
         """, title, this.filePath, modulePath, this.filePath, e.getMessage());
-        ExceptionUtil.reThrowException(e);
+        throw ExceptionUtil.makeReThrownException(e);
     }
 
     @SneakyThrows

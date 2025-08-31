@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.core.config.migrator.transformer.impl;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import io.github.sakurawald.fuji.core.auxiliary.ExceptionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.IOUtil;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.config.migrator.transformer.abst.ConfigurationTransformer;
@@ -61,7 +62,7 @@ public class InflateDirectoryIntoSingleFileTransformer extends ConfigurationTran
                 try {
                     Files.delete(inputFilePath);
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    throw ExceptionUtil.makeReThrownException(e);
                 }
             });
 

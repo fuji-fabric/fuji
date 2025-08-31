@@ -77,7 +77,7 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
 
                     } catch (Exception e) {
                         LogUtil.error("Failed to register an argument type adapter: className = {}", className);
-                        ExceptionUtil.reThrowException(e);
+                        throw ExceptionUtil.makeReThrownException(e);
                     }
                 });
 
