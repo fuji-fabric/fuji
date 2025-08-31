@@ -7,7 +7,6 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import java.util.List;
-import java.util.Objects;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.MutableText;
@@ -44,10 +43,11 @@ public class CommandExecutor {
         LogUtil.debug("Command Executor -> Execute the command: command = `{}`, context = {}", command, context);
 
         try {
-            return Objects
+            return
                 // NOTE: Use CommandDispatcher to run commands. Since Mojang will do chat message validation for online-mode server, if you are using CommandManager.
-                .requireNonNull(CommandHelper.getCommandDispatcher())
-                .execute(command, context.getExecutingSource());
+                CommandHelper
+                    .getCommandDispatcher()
+                    .execute(command, context.getExecutingSource());
         } catch (CommandSyntaxException commandSyntaxException) {
             exceptionHandler.accept(context, command, commandSyntaxException);
             return CommandHelper.Return.FAILURE;
