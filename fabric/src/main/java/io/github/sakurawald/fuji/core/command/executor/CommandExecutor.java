@@ -6,11 +6,16 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
-import org.apache.logging.log4j.util.TriConsumer;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 import java.util.Objects;
+import net.minecraft.screen.ScreenTexts;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.text.Texts;
+import net.minecraft.util.Formatting;
+import org.apache.logging.log4j.util.TriConsumer;
+import org.jetbrains.annotations.NotNull;
 
 public class CommandExecutor {
 
@@ -22,7 +27,7 @@ public class CommandExecutor {
     }
 
     public static int executeSingle(@NotNull ExtendedCommandSource context, @NotNull String command) {
-        return executeSingle(context, command, CommandExecutor::handleCommandException);
+        return executeSingle(context, command, CommandExecutor::handleCommandExecutorException);
     }
 
     @ForDeveloper("""
@@ -49,22 +54,55 @@ public class CommandExecutor {
         }
     }
 
-    public static void handleCommandException(@NotNull ExtendedCommandSource context, String command, Exception exception) {
+    public static void handleCommandExecutorException(@NotNull ExtendedCommandSource context, String command, Exception exception) {
         /* Escape tags when reporting an exception. (e.g. "/run as console aa <yellow> bb")*/
         command = TextHelper.Parsers.escapeTags(command);
 
-        // NOTE: Log the console first. (Make the debug easier)
+        /* Log the console if the command is executed by the console. */
         if (!context.getExecutingSource().isExecutedByPlayer()) {
             LogUtil.warn("Failed to execute command: command = {}, context = {}", command, context);
         }
 
-        /* Echo to the executing source. */
-        TextHelper.sendTextByKey(context.getExecutingSource(), "command.execute.echo.executing_source", command, exception.getMessage());
-
         /* Echo to the initiating source. */
+        // NOTE: If the executing command source is a dummy server player, then its network handler is null.
+        TextHelper.sendTextByKey(context.getInitiatingSource(), "command.execute.echo.initiating_source", command, context.getExecutingSource().getName(), exception);
+
+        // If it's a command syntax exception, stream it to the initialing source.
+        if (exception instanceof CommandSyntaxException commandSyntaxException) {
+            TextHelper.sendMessageByText(context.getInitiatingSource(), TextHelper.TEXT_EMPTY);
+            TextHelper.sendTextByKey(context.getInitiatingSource(), "command.execute.echo.execution.feedback.stream.header");
+            sendCommandSyntaxExceptionErrorText(context.getInitiatingSource(), command, commandSyntaxException);
+            TextHelper.sendTextByKey(context.getInitiatingSource(), "command.execute.echo.execution.feedback.stream.footer");
+        }
+
+        /* Echo to the executing source. */
         if (!context.sameSource()) {
-            // NOTE: If the executing command source is a dummy server player, then its network handler is null.
-            TextHelper.sendTextByKey(context.getInitiatingSource(), "command.execute.echo.initiating_source", command, context.getExecutingSource().getName(), exception.getMessage());
+            TextHelper.sendTextByKey(context.getExecutingSource(), "command.execute.echo.executing_source", command, exception);
+        }
+    }
+
+    private static void sendCommandSyntaxExceptionErrorText(@NotNull ServerCommandSource serverCommandSource, @NotNull String commandString, @NotNull CommandSyntaxException commandSyntaxException) {
+        serverCommandSource.sendError(Texts.toText(commandSyntaxException.getRawMessage()));
+        if (commandSyntaxException.getInput() != null && commandSyntaxException.getCursor() >= 0) {
+            int i = Math.min(commandSyntaxException.getInput().length(), commandSyntaxException.getCursor());
+
+            MutableText mutableText = Text.empty().formatted(Formatting.GRAY).styled(style -> {
+                String suggestionString = "/" + commandString;
+                return style
+                    .withClickEvent(TextHelper.Events.ClickEvent.makeSuggestCommandAction(suggestionString));
+            });
+
+            if (i > 10) {
+                mutableText.append(ScreenTexts.ELLIPSIS);
+            }
+
+            mutableText.append(commandSyntaxException.getInput().substring(Math.max(0, i - 10), i));
+            if (i < commandSyntaxException.getInput().length()) {
+                MutableText text = Text.literal(commandSyntaxException.getInput().substring(i)).formatted(Formatting.RED, Formatting.UNDERLINE);
+                mutableText.append(text);
+            }
+            mutableText.append(Text.translatable("command.context.here").formatted(Formatting.RED, Formatting.ITALIC));
+            serverCommandSource.sendError(mutableText);
         }
     }
 }

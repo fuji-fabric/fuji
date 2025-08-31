@@ -197,7 +197,7 @@ public class IfInitializer extends ModuleInitializer {
         }
 
         /* Fallback to original exception handler. */
-        CommandExecutor.handleCommandException(context, commandString, exception);
+        CommandExecutor.handleCommandExecutorException(context, commandString, exception);
     }
 
 }
