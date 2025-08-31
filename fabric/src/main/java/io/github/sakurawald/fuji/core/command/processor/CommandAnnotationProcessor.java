@@ -97,7 +97,7 @@ public class CommandAnnotationProcessor {
             .toList()
             .forEach(key -> {
                 if (!LOADED_COMMAND_PATHS.contains(key)) {
-                    LogUtil.debug("Remove unused permission map for command path: {}", key);
+                    LogUtil.warn("Removed unused permission map for command path '{}' in '{}' file.", key, permission.getFilePath());
                     permissionMap.remove(key);
                 }
             });
