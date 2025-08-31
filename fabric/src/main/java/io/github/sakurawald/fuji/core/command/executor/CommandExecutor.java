@@ -60,12 +60,12 @@ public class CommandExecutor {
 
         /* Log the console if the command is executed by the console. */
         if (!context.getExecutingSource().isExecutedByPlayer()) {
-            LogUtil.warn("Failed to execute command: command = {}, context = {}", command, context);
+            LogUtil.warn("Failed to execute command: command = {}, context = {}, exception = {}", command, context, exception);
         }
 
         /* Echo to the initiating source. */
         // NOTE: If the executing command source is a dummy server player, then its network handler is null.
-        TextHelper.sendTextByKey(context.getInitiatingSource(), "command.execute.echo.initiating_source", command, context.getExecutingSource().getName(), exception);
+        TextHelper.sendTextByKey(context.getInitiatingSource(), "command.execute.echo.initiating_source", command, context.getExecutingSource().getName(), exception.getMessage());
 
         // If it's a command syntax exception, stream it to the initialing source.
         if (exception instanceof CommandSyntaxException commandSyntaxException) {
@@ -77,7 +77,7 @@ public class CommandExecutor {
 
         /* Echo to the executing source. */
         if (!context.sameSource()) {
-            TextHelper.sendTextByKey(context.getExecutingSource(), "command.execute.echo.executing_source", command, exception);
+            TextHelper.sendTextByKey(context.getExecutingSource(), "command.execute.echo.executing_source", command, exception.getMessage());
         }
     }
 
