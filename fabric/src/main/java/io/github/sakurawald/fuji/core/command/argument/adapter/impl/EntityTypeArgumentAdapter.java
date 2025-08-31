@@ -30,7 +30,7 @@ public class EntityTypeArgumentAdapter extends BaseArgumentTypeAdapter {
         #endif
     }
 
-    @SneakyThrows(CommandSyntaxException.class)
+    @SneakyThrows(Throwable.class)
     @Override
     protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
         #if MC_VER <= MC_1_20_4
