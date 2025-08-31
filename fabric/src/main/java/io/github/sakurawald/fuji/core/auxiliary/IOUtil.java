@@ -54,8 +54,7 @@ public class IOUtil {
                         FileTime t2 = Files.readAttributes(o2, BasicFileAttributes.class).creationTime();
                         return t1.compareTo(t2);
                     } catch (IOException e) {
-                        // NOTE: You can't throw a checked-exception in functional interface.
-                        throw new RuntimeException(e);
+                        throw ExceptionUtil.makeReThrownException(e);
                     }
                 })
                 .collect(Collectors.toList());

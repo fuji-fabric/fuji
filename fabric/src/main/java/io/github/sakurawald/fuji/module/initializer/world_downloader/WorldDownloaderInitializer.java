@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.world_downloader;
 
 import com.google.common.collect.EvictingQueue;
 import com.sun.net.httpserver.HttpServer;
+import io.github.sakurawald.fuji.core.auxiliary.ExceptionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.IOUtil;
@@ -129,7 +130,7 @@ public class WorldDownloaderInitializer extends ModuleInitializer {
             output = Files.createTempFile(regionName + "#", ".zip").toFile();
             IOUtil.Compressor.compressFiles(worldDirectory, input, output);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw ExceptionUtil.makeReThrownException(e);
         }
         LogUtil.info("Generate region file: {}", output.getAbsolutePath());
         return output;

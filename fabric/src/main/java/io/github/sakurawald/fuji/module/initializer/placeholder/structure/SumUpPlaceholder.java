@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.placeholder.structure;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import io.github.sakurawald.fuji.core.auxiliary.ExceptionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import java.nio.charset.StandardCharsets;
 import lombok.Getter;
@@ -77,7 +78,7 @@ public class SumUpPlaceholder {
             ret.moved = moved_all;
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw ExceptionUtil.makeReThrownException(e);
         }
 
         // save

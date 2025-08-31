@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.command_meta.json;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.mojang.brigadier.context.CommandContext;
+import io.github.sakurawald.fuji.core.auxiliary.ExceptionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.config.parser.JsonPathParser;
@@ -59,7 +60,7 @@ public class JsonInitializer extends ModuleInitializer {
             try {
                 Files.writeString(path, json);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw ExceptionUtil.makeReThrownException(e);
             }
         }
 

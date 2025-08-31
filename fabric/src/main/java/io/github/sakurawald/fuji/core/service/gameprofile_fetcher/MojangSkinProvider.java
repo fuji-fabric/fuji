@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.core.service.gameprofile_fetcher;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.properties.Property;
+import io.github.sakurawald.fuji.core.auxiliary.ExceptionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.HttpUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import java.io.IOException;
@@ -22,7 +23,7 @@ public class MojangSkinProvider {
                     try {
                         responseJsonString = HttpUtil.sendGetRequest(MOJANG_SESSION_SERVER + uuid + "?unsigned=false");
                     } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        throw ExceptionUtil.makeReThrownException(e);
                     }
                     JsonObject textureJsonObject = JsonParser
                         .parseString(responseJsonString)
