@@ -4,10 +4,15 @@
 
 # Changelog
 
-- [core] enhanced `exception handling`
-  - feature: simplify the `exception messages`, and providing instructions, making it more user-friendly.
-  - feature: improved `error printing` functions.
-  - feature: optimize the error feedback for `Command Syntax Error`.
-  - feature: optimize the `command execution execption handler`
-    - feature: now the `players` will get `localized exception message` for `command syntax error`, like `no player was found` message.
-    - feature: now the `admin players` can `click` the `error text` to `copy the stacktrace`.
+- [core] Enhanced **Exception Handling**
+  - **Feature:** Enhanced *command execution exception handling*.
+    - Players now see `localized error messages` for command syntax issues (e.g., *no player found*).
+    - Administrator players can now **click the error text** to easily **copy the stack trace**.
+  - **Feature:** Simplified exception messages and added clear instructions, making them more user-friendly.
+  - **Feature:** Improved handling of *module initialization failures*.
+    - Users now receive a **clear, user-friendly error message** along with suggested solutions.
+    - Reduced console noise and spam.
+  - **Feature:** Refined *mixin injection failure messages*.
+    - Reduced console noise and spam.
+  - **Feature:** Improved exception messages for the `/fuji reload` command.
+    - Users now receive **detailed diagnostic messages**, helping them identify the source of the issue.

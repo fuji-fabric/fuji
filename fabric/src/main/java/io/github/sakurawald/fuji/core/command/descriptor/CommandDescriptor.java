@@ -546,7 +546,7 @@ public class CommandDescriptor implements SourceModuleGetter {
 
             /* Log error string to the console. */
             String nonCommandSyntaxErrorString = """
-            [Command Execution Exception]
+            [Command Execution Failed]
             - From Module: %s
             - Command String: /%s
             - Command Source: %s

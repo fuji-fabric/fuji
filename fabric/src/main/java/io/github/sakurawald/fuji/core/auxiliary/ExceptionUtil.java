@@ -10,7 +10,9 @@ public class ExceptionUtil {
     @TestCase(action = "Test the exception handler functions.", targets = {
         "This mod failed at server startup, due to mixin injection errors.",
         "This mod failed at server startup, due to module initialization failed.",
-        "This mod failed at `/fuji reload` command."
+        "This mod failed at the execution of `/fuji reload` command.",
+        "This mod failed at the execution of `/json read a b` command.",
+        "This mod failed at the execution of `/run as console run as player %player:name% bad` command."
     })
     @CheckReturnValue
     public static @NotNull RuntimeException makeReThrownException(@NotNull Exception exception) {

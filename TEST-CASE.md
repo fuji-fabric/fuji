@@ -214,7 +214,9 @@
 - Action: **Test the exception handler functions.**
 - Target: This mod failed at server startup, due to mixin injection errors.
 - Target: This mod failed at server startup, due to module initialization failed.
-- Target: This mod failed at `/fuji reload` command.
+- Target: This mod failed at the execution of `/fuji reload` command.
+- Target: This mod failed at the execution of `/json read a b` command.
+- Target: This mod failed at the execution of `/run as console run as player %player:name% bad` command.
 
 [Test Case]
 - Module: core
