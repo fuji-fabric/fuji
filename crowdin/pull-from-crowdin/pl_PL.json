@@ -43,6 +43,8 @@
   "command.console_only": "<red>Ta komenda może być wykonana tylko przez konsolę.",
   "command.descriptor.type": "<blue>Descriptor: `%s`",
   "command.execute.echo.executing_source": "<#FF5F00>An exception occurs during the execution of `/%s`\nMessage: %s",
+  "command.execute.echo.execution.feedback.stream.footer": "<#FF5F00>⬆⬆⬆⬆⬆ Command Execution Feedback Stream ⬆⬆⬆⬆⬆",
+  "command.execute.echo.execution.feedback.stream.header": "<#FF5F00>⬇⬇⬇⬇⬇ Command Execution Feedback Stream ⬇⬇⬇⬇⬇",
   "command.execute.echo.initiating_source": "<#FF5F00>An exception occurs during executing the command `/%1$s` as `%2$s`\nMessage: %3$s",
   "command.path": "<blue>Command Path: `%s`",
   "command.player_only": "<red>This command can only be executed by a player",

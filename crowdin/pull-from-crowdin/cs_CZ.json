@@ -43,6 +43,8 @@
   "command.console_only": "<red>Tento příkaz může být použit pouze z konzole.",
   "command.descriptor.type": "<blue>Deskriptor: `%s`",
   "command.execute.echo.executing_source": "<#FF5F00>Došlo k výjimce při použití `/%s`\nZpráva: %s",
+  "command.execute.echo.execution.feedback.stream.footer": "<#FF5F00>⬆⬆⬆⬆⬆ Command Execution Feedback Stream ⬆⬆⬆⬆⬆",
+  "command.execute.echo.execution.feedback.stream.header": "<#FF5F00>⬇⬇⬇⬇⬇ Command Execution Feedback Stream ⬇⬇⬇⬇⬇",
   "command.execute.echo.initiating_source": "<#FF5F00>Došlo k výjimce při použití příkazu `/%1$s` jako `%2$s`\nZpráva: %3$s",
   "command.path": "<blue>Cesta příkazu: `%s`",
   "command.player_only": "<red>This command can only be executed by a player",
