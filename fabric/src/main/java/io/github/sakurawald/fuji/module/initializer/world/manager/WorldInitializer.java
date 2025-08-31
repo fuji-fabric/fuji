@@ -32,6 +32,7 @@ import io.github.sakurawald.fuji.module.initializer.world.manager.service.struct
 import io.github.sakurawald.fuji.module.initializer.world.manager.service.structure.DimensionDeletionTicket;
 import io.github.sakurawald.fuji.module.initializer.world.manager.structure.RuntimeDimensionDescriptor;
 import io.github.sakurawald.fuji.module.initializer.world.manager.structure.RuntimeDimensionImporter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -392,7 +393,7 @@ public class WorldInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     @Document(id = 1752809824729L, value = """
         This command will `import` an external `dimension directory` placed in `world/dimensions/fuji/\\<dimension-name\\>`.
         You need to provide enough information to define the `runtime dimension descriptor`.

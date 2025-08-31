@@ -4,6 +4,7 @@ import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.auxiliary.IOUtil;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
+import java.io.IOException;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,7 +25,7 @@ public abstract class BaseBackupManager extends BaseManager {
         this.BACKUP_STORAGE_PATH = BACKUP_STORAGE_PATH;
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     @Override
     public void onInitialize() {
         Files.createDirectories(BACKUP_STORAGE_PATH);
@@ -33,7 +34,7 @@ public abstract class BaseBackupManager extends BaseManager {
 
     protected abstract boolean shouldSkipPath(@NotNull Path dir);
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     protected @NotNull List<File> getInputFiles() {
         List<File> files = new ArrayList<>();
         Files.walkFileTree(Fuji.MOD_CONFIG_PATH, new SimpleFileVisitor<>() {

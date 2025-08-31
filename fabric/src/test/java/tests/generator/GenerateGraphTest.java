@@ -61,7 +61,7 @@ public class GenerateGraphTest {
         }
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     private static void generateCiteFile(ScanResult scanResult) {
         try (PrintWriter writer = new PrintWriter(COMPILE_TIME_CITE_FILE_PATH.toFile(), StandardCharsets.UTF_8)) {
 
@@ -79,7 +79,7 @@ public class GenerateGraphTest {
         }
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     private static void generateTestCaseFile(ScanResult scanResult) {
         try (PrintWriter writer = new PrintWriter(COMPILE_TIME_TEST_CASE_FILE_PATH.toFile(), StandardCharsets.UTF_8)) {
 
@@ -113,7 +113,7 @@ public class GenerateGraphTest {
         }
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     private static void generateArgumentTypeAdapterGraphFile(ScanResult scanResult) {
         File argumentAdapterGraphFile = COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.CompileTimeGraph.ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME).toFile();
         try (PrintWriter writer = new PrintWriter(argumentAdapterGraphFile, StandardCharsets.UTF_8)) {
@@ -126,7 +126,7 @@ public class GenerateGraphTest {
         }
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     private static void generateModuleInitializerGraphFile(ScanResult scanResult) {
         File moduleInitializerGraphFile = COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.CompileTimeGraph.MODULE_INITIALIZER_GRAPH_FILE_NAME).toFile();
         try (PrintWriter writer = new PrintWriter(moduleInitializerGraphFile, StandardCharsets.UTF_8)) {

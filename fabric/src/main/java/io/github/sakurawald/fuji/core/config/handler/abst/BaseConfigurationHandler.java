@@ -16,6 +16,7 @@ import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
@@ -152,7 +153,6 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         throw ExceptionUtil.makeReThrownException(e);
     }
 
-    @SneakyThrows
     public final void writeStorage() {
         try {
             /* Ensure the model is initialized. */
@@ -208,7 +208,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         return enableAutoSaveFeature(ScheduleManager.CRON_EVERY_TEN_SECONDS);
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     public BaseConfigurationHandler<T> enableAutoSaveFeature(@NotNull String cron) {
         /* Make and schedule the job. */
         String jobName = this.filePath.toFile().getCanonicalPath();

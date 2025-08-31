@@ -15,6 +15,7 @@ import io.github.sakurawald.fuji.core.config.migrator.version.IgnoreModVersionSt
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Field;
@@ -81,7 +82,7 @@ public class GsonMapper {
             .create();
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     public static <T> @NotNull T fromJson(@NotNull Path filePath, @NotNull TypeToken<T> runtimeType) {
         @Cleanup Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath.toFile()), StandardCharsets.UTF_8));
         try {

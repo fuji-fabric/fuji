@@ -40,7 +40,7 @@ public class AliasCommandDescriptor extends CommandDescriptor {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @SneakyThrows
+    @SneakyThrows(NoSuchMethodException.class)
     private static Method getDummyMethod() {
         Method dummyMethod = AliasCommandDescriptor.class.getDeclaredMethod("dummyCommandActionMethod");
         dummyMethod.setAccessible(true);

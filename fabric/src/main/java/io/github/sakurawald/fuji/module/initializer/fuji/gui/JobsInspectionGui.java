@@ -19,6 +19,7 @@ import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.impl.matchers.GroupMatcher;
 
@@ -39,7 +40,7 @@ public class JobsInspectionGui extends PagedGui<JobDescriptor> {
         return new JobsInspectionGui(parent, player, entities, pageIndex);
     }
 
-    @SneakyThrows
+    @SneakyThrows(SchedulerException.class)
     public static JobsInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
         List<JobDescriptor> entities = new ArrayList<>();
 

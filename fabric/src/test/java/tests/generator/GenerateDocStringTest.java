@@ -52,8 +52,8 @@ public class GenerateDocStringTest {
         }
     }
 
+    @SneakyThrows(IOException.class)
     @Test
-    @SneakyThrows
     public void generateDocStringListInRuntimeEnvironment() {
         try (ScanResult scanResult = ClassGraphUtil.makeBaseClassGraph()
             .enableAllInfo()

@@ -119,7 +119,7 @@ public class SendCustomInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     @Override
     protected void onInitialize() {
         Files.createDirectories(CUSTOM_TEXT_DIR_PATH);

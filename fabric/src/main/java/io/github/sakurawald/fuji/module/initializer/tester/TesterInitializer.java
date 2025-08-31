@@ -26,7 +26,7 @@ import net.minecraft.text.Text;
 @CommandRequirement(level = 4)
 public class TesterInitializer extends ModuleInitializer {
 
-    @SneakyThrows
+    @SneakyThrows(Throwable.class)
     @CommandNode("run")
     private static int $run(@CommandSource ServerCommandSource source) {
 

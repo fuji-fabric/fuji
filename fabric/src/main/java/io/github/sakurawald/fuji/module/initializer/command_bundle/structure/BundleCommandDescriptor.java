@@ -184,7 +184,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
             return new BundleCommandDescriptor(getBundleCommandGenericCommandMethod(), commandArguments, entry, defaultValueForOptionalArguments);
         }
 
-        @SneakyThrows
+        @SneakyThrows(NoSuchMethodException.class)
         private static @NotNull Method getBundleCommandGenericCommandMethod() {
             Method bundleCommandGenericCommandMethod = BundleCommandDescriptor.class.getDeclaredMethod("bundleCommandGenericCommandMethod"
                 , CommandContext.class

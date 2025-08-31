@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.config.parser.JsonPathParser;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
@@ -89,7 +90,7 @@ public class JsonUtil {
             });
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     public static void writeJsonObject(@NotNull JsonObject jsonObject, @NotNull Path outputFilePath){
         Files.createDirectories(outputFilePath.getParent());
         String json = GsonMapper.toJsonString(jsonObject);

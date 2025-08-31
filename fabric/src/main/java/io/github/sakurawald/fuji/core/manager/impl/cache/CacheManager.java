@@ -14,6 +14,7 @@ import io.github.sakurawald.fuji.core.manager.impl.cache.config.model.GenericCac
 import io.github.sakurawald.fuji.core.manager.impl.cache.job.FlushCacheJob;
 import io.github.sakurawald.fuji.core.manager.impl.cache.service.GameProfileCacheService;
 import io.github.sakurawald.fuji.core.manager.impl.cache.structure.Cache;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -37,7 +38,7 @@ public class CacheManager extends BaseManager {
         PlayerEvents.ON_PLAYER_JOINED.register(GameProfileCacheService::setGameProfileCache);
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     private @NotNull Path toCacheFilePath(@NotNull String cacheSubject) {
         Files.createDirectories(CACHE_DIRECTORY.getParent());
         return CACHE_DIRECTORY.resolve(cacheSubject + ".json");

@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.core.command.argument.adapter.impl;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.EntityCollection;
@@ -27,7 +28,7 @@ public class EntityCollectionArgumentTypeAdapter extends BaseArgumentTypeAdapter
         return EntityArgumentType.entities();
     }
 
-    @SneakyThrows
+    @SneakyThrows(CommandSyntaxException.class)
     @Override
     protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
         return new EntityCollection(EntityArgumentType.getEntities(context, commandArgument.getArgumentName()));

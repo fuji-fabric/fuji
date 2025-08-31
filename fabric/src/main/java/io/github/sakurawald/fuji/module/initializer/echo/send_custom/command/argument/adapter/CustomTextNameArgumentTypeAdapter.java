@@ -11,7 +11,6 @@ import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument
 import io.github.sakurawald.fuji.module.initializer.echo.send_custom.SendCustomInitializer;
 import io.github.sakurawald.fuji.module.initializer.echo.send_custom.command.argument.wrapper.CustomTextName;
 import lombok.Cleanup;
-import lombok.SneakyThrows;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.io.IOException;
@@ -33,7 +32,6 @@ public class CustomTextNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
         return new CustomTextName(StringArgumentType.getString(context, commandArgument.getArgumentName()));
     }
 
-    @SneakyThrows
     @Override
     @NotNull
     protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {

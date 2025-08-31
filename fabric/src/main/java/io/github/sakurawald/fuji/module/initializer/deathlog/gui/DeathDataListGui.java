@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
 import io.github.sakurawald.fuji.module.initializer.deathlog.DeathLogInitializer;
 import io.github.sakurawald.fuji.module.initializer.deathlog.structure.DeathNode;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,7 +57,7 @@ public class DeathDataListGui extends PagedGui<String> {
         GuiHelper.PlayerSkull.fillPlayerHeadTextures(this);
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     private void openDeathNodeListGui(String entity) {
         NbtHelper.Storage.withNbtFile(DeathLogInitializer.getDeathDataPath(entity), root -> {
             /* Check if it has death nodes. */

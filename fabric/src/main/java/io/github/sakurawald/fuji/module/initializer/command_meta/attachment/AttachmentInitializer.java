@@ -43,7 +43,7 @@ public class AttachmentInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     @CommandNode("unset")
     private static int $unset(@CommandSource CommandContext<ServerCommandSource> ctx, SubjectName subject, SubjectId uuid) {
         boolean flag = Managers.getAttachmentManager().unsetAttachment(subject.getValue(), uuid.getValue());

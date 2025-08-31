@@ -12,7 +12,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.spongepowered.asm.mixin.Mixin;
 
@@ -35,7 +34,6 @@ public class CheckMixinRegistryTest {
             .toList();
     }
 
-    @SneakyThrows
     @Test
     public void ensureAllMixinClassIsRegisteredInMixinJsonFile() {
         /* Read the fuji.mixins.json file, to get the registered mixins. */

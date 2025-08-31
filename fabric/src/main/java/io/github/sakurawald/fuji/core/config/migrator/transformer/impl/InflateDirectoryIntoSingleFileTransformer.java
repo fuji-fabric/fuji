@@ -38,7 +38,7 @@ public class InflateDirectoryIntoSingleFileTransformer extends ConfigurationTran
         return true;
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     @Override
     protected void apply() {
         /* List files in input directory path. */

@@ -65,7 +65,7 @@ public class KitService {
         Files.delete(getKitPath(kitName));
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     public static void createKit(@NotNull Kit kit) {
         NbtHelper.Storage.withNbtFile(getKitPath(kit.getName()), root -> {
             NbtList nbtList = new NbtList();
@@ -75,7 +75,7 @@ public class KitService {
         });
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     public static @NotNull Kit readKit(@NotNull String kitName) {
         List<ItemStack> kitStacks = NbtHelper.Storage.withNbtFile(getKitPath(kitName), root -> {
             /* Write empty list if there is no INVENTORY tag. */

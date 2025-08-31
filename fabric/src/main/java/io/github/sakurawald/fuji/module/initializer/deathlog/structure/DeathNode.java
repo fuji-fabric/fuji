@@ -7,6 +7,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.module.initializer.deathlog.DeathLogInitializer;
+import java.io.IOException;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -89,7 +90,7 @@ public class DeathNode {
         return deathNode;
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     public static void createDeathNode(@NotNull ServerPlayerEntity player) {
         if (player.getInventory().isEmpty()) return;
 
