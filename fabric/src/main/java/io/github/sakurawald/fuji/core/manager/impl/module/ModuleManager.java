@@ -153,7 +153,7 @@ public class ModuleManager extends BaseManager {
                     MODULE_INITIALIZER_BY_CLASS.put(clazz, moduleInitializer);
                 } catch (Exception e) {
                     String modulePath = ModuleManager.computeJoinedModulePath(className);
-                    LogUtil.warn("""
+                    LogUtil.error("""
 
 
                         [Fuji Module Initialization Failed]
@@ -189,7 +189,7 @@ public class ModuleManager extends BaseManager {
             initializer.doReload();
         } catch (Exception originalException) {
             String modulePath = ModuleManager.computeJoinedModulePath(initializer.getClass().getName());
-            LogUtil.warn("Failed to re-load the module '{}'.", modulePath);
+            LogUtil.error("Failed to re-load the module '{}'.", modulePath);
             // NOTE: Throw the original exception to surrounding exception handler.
             ExceptionUtil.reThrowException(originalException);
         }

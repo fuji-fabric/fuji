@@ -139,7 +139,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
 
     private void handleConfigurationHandlerException(@NotNull String title, @NotNull Exception e) {
         String modulePath = ModuleManager.computeJoinedModulePath(this.makeDefaultModel().getClass().getName());
-        LogUtil.warn("""
+        LogUtil.error("""
 
 
         [{}]
