@@ -12,7 +12,7 @@ public class ExceptionUtil {
         "This mod failed at `/fuji reload` command."
     })
     public static void reThrowException(@NotNull Exception exception) {
-        ExceptionUtil.reThrowException("⬆⬆⬆⬆⬆ Crash intentionally triggered by Fuji Mod. Refer to the details above. ⬆⬆⬆⬆⬆", exception);
+        ExceptionUtil.reThrowException("⬆⬆⬆⬆⬆ Re-throw exception by Fuji Mod. Refer to the details above. ⬆⬆⬆⬆⬆", exception);
     }
 
     @SuppressWarnings("SameParameterValue")

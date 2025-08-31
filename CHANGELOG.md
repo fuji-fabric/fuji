@@ -6,3 +6,4 @@
 
 - [core] enhanced `exception handling`
   - feature: simplify the `exception messages`, and providing instructions, making it more user-friendly.
+  - feature: improved `error printing` functions.

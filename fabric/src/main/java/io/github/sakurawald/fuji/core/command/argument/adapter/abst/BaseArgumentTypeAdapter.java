@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.core.command.argument.adapter.abst;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import io.github.sakurawald.fuji.core.auxiliary.ExceptionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
@@ -75,8 +76,8 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
                             });
 
                     } catch (Exception e) {
-                        LogUtil.error("Failed to register an argument type adapter: className = {}", className, e);
-                        throw new RuntimeException(e);
+                        LogUtil.error("Failed to register an argument type adapter: className = {}", className);
+                        ExceptionUtil.reThrowException(e);
                     }
                 });
 

@@ -80,7 +80,7 @@ public class HeadProvider {
                     LogUtil.error("Invalid head: {}", headJsonElement, e);
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             LogUtil.error("Failed to load head category: {}", category, e);
         }
     }

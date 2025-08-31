@@ -42,7 +42,7 @@ public class KitService {
             return list
                 .map(it -> it.toFile().getName())
                 .toList();
-        } catch (IOException e) {
+        } catch (Exception e) {
             LogUtil.error("Failed to list kits in storage.");
             return Collections.emptyList();
         }

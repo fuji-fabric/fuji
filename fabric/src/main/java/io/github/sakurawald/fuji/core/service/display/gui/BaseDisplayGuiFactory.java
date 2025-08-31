@@ -57,7 +57,7 @@ public abstract class BaseDisplayGuiFactory {
         public void click(int i, ClickType clickType, SlotActionType clickType1, @NotNull SlotGuiInterface slotGuiInterface) {
             GuiElementInterface slot = slotGuiInterface.getSlot(i);
             if (slot == null) {
-                LogUtil.error("A slot in display gui is null.");
+                LogUtil.error("A slot in display GUI is null.");
                 return;
             }
 

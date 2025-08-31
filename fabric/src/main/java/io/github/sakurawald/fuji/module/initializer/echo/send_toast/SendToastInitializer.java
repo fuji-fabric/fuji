@@ -175,7 +175,7 @@ public class SendToastInitializer extends ModuleInitializer {
         /* Call obtain for criterion progress. */
         CriterionProgress criterionProgress = advancementProgress.getCriterionProgress(IMPOSSIBLE);
         if (criterionProgress == null) {
-            LogUtil.error("It's strange that the statement `advancementProgress.getCriterionProgress(IMPOSSIBLE) is null, abort this advancement packet making.`");
+            LogUtil.error("It's strange that the statement `advancementProgress.getCriterionProgress(IMPOSSIBLE)` is null, aborting this advancement packet making.");
             throw new AbortCommandExecutionException();
         }
         criterionProgress.obtain();
