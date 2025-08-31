@@ -43,6 +43,8 @@
   "command.console_only": "<red>Эта команда может быть выполнена только консолью.",
   "command.descriptor.type": "<blue>Descriptor: `%s`",
   "command.execute.echo.executing_source": "<#FF5F00>Исключение возникает во время выполнения `/%s`\nСообщение: %s",
+  "command.execute.echo.execution.feedback.stream.footer": "<#FF5F00>⬆⬆⬆⬆⬆ Command Execution Feedback Stream ⬆⬆⬆⬆⬆",
+  "command.execute.echo.execution.feedback.stream.header": "<#FF5F00>⬇⬇⬇⬇⬇ Command Execution Feedback Stream ⬇⬇⬇⬇⬇",
   "command.execute.echo.initiating_source": "<#FF5F00>Исключение возникает во время выполнения команды `/%1$s` как `%2$s`\nСообщение: %3$s",
   "command.path": "<blue>Command Path: `%s`",
   "command.player_only": "<red>This command can only be executed by a player",

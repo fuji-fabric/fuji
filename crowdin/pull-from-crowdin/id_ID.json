@@ -43,6 +43,8 @@
   "command.console_only": "<red>Perintah ini hanya dapat dijalankan oleh konsol.",
   "command.descriptor.type": "<blue>Descriptor: `%s`",
   "command.execute.echo.executing_source": "<#FF5F00>Terjadi pengecualian saat menjalankan /%s\nPesan: %s",
+  "command.execute.echo.execution.feedback.stream.footer": "<#FF5F00>⬆⬆⬆⬆⬆ Command Execution Feedback Stream ⬆⬆⬆⬆⬆",
+  "command.execute.echo.execution.feedback.stream.header": "<#FF5F00>⬇⬇⬇⬇⬇ Command Execution Feedback Stream ⬇⬇⬇⬇⬇",
   "command.execute.echo.initiating_source": "<#FF5F00>Terjadi pengecualian saat menjalankan perintah /%1$s sebagai %2$s\nPesan: %3$s",
   "command.path": "<blue>Command Path: `%s`",
   "command.player_only": "<red>This command can only be executed by a player",
