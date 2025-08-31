@@ -15,6 +15,9 @@
 - [tpa] improvements
   - feature: new `/tpa gui` command.
   - feature: new `/tpa` command as alias to `/tpa gui`.
-- [command_menu] feature: new `other_indexes` option for `slot descriptor`.
-  - Now you can specify `other indexes` for a `slot`, except the primary `index`.
-  - Making it easier to `mirror` a slot, and fill the GUI space.
+- [command_menu] improvements
+  - feature: new `other_indexes` option for `slot descriptor`.
+    - Now you can specify `other indexes` for a `slot`, except the primary `index`.
+    - Making it easier to `mirror` a slot, and fill the GUI space.
+  - feature: new `fill_blank_indexes` option for `slot descriptor`.
+    - Now you can specify a `slot` as the `empty slots filler`.

@@ -121,6 +121,15 @@ public class GuiHelper {
 
         private static final Item BANNED_SLOT_PLACEHOLDER_ITEM = Items.BARRIER;
 
+        @SuppressWarnings("RedundantIfStatement")
+        public static boolean isBlankSlot(@Nullable GuiElementInterface slot) {
+            if (slot == null) return true;
+            if (slot.getItemStack() == null) return true;
+            if (slot.getItemStack().isEmpty()) return true;
+
+            return false;
+        }
+
         public static boolean isValidSlotIndex(@NotNull SlotGuiInterface gui, int slotIndex) {
             return slotIndex >= 0 && slotIndex < gui.getSize();
         }
@@ -248,9 +257,7 @@ public class GuiHelper {
         public static void fillEmptySlots(@NotNull SlotGuiInterface gui, @NotNull GuiElementInterface guiElementInterface) {
             for (int i = 0; i < gui.getSize(); i++) {
                 GuiElementInterface slot = gui.getSlot(i);
-                if (slot == null
-                    || slot.getItemStack() == null
-                    || slot.getItemStack().isEmpty()) {
+                if (Validator.isBlankSlot(slot)) {
                     gui.setSlot(i, guiElementInterface);
                 }
             }

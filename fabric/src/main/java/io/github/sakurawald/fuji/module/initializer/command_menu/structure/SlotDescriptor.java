@@ -40,7 +40,15 @@ public class SlotDescriptor {
         """)
     int index = 0;
 
+    @Document(id = 1756620040668L, value = """
+        Also place this item in these specified indexes.
+        """)
     List<Integer> otherIndexes = new ArrayList<>();
+
+    @Document(id = 1756620062788L, value = """
+        Whether to place this item in all blank slots.
+        """)
+    boolean fillBlankIndexes = false;
 
     @Document(id = 1751824861377L, value = """
         What is the item?

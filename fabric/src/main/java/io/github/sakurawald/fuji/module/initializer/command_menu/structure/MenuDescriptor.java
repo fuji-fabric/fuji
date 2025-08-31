@@ -7,6 +7,7 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
+import java.util.concurrent.atomic.AtomicReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.minecraft.screen.ScreenHandlerType;
@@ -71,6 +72,8 @@ public class MenuDescriptor {
         menuGui.setTitle(TextHelper.getTextByValue(viewingPlayer, this.title));
 
         /* Place defined slots in the menu GUI. */
+        AtomicReference<SlotDescriptor> blankSlotsFiller = new AtomicReference<>();
+
         this.slots.forEach(slotDescriptor -> {
             if (slotDescriptor.canViewThisSlot(viewingPlayer)) {
                 /* Make the GUI element. */
@@ -83,8 +86,20 @@ public class MenuDescriptor {
                 slotDescriptor.getOtherIndexes().forEach(otherIndex -> {
                     menuGui.setSlot(otherIndex, element);
                 });
+
+                /* Set blank slots filler. */
+                if (slotDescriptor.isFillBlankIndexes()) {
+                    blankSlotsFiller.set(slotDescriptor);
+                }
             }
         });
+
+        /* Process the blank slots filler. */
+        if (blankSlotsFiller.get() != null) {
+            GuiElementInterface element = blankSlotsFiller.get().buildGuiElement(viewingPlayer, this);
+            GuiHelper.Placer.fillEmptySlots(menuGui, element);
+        }
+
         return menuGui;
     }
 
