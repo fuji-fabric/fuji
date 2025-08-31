@@ -5,6 +5,7 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
@@ -40,6 +41,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -261,7 +263,7 @@ public class CommandDescriptor implements SourceModuleGetter {
                 int commandReturnValue = (int) this.method.invoke(null, parameterValues.toArray());
                 return commandReturnValue;
             } catch (Exception wrappedOrUnwrappedException) {
-                return CommandException.handleCommandException(commandContext, this.method, wrappedOrUnwrappedException);
+                return CommandException.handleCommandExecutionException(commandContext, this.method, wrappedOrUnwrappedException);
             }
         });
     }
@@ -515,60 +517,67 @@ public class CommandDescriptor implements SourceModuleGetter {
     public static class CommandException {
 
         @SuppressWarnings("SameReturnValue")
-        public static int handleCommandException(CommandContext<ServerCommandSource> ctx, Method method, Exception wrappedOrUnwrappedException) {
-            /* get the real exception during reflection. */
-            Throwable theRealException = wrappedOrUnwrappedException;
-            if (wrappedOrUnwrappedException instanceof InvocationTargetException) {
-                theRealException = wrappedOrUnwrappedException.getCause();
+        @SneakyThrows(Throwable.class)
+        public static int handleCommandExecutionException(@NotNull CommandContext<ServerCommandSource> context, @NotNull Method method, @NotNull Throwable throwable) {
+            /* Unbox the real exception during reflection. */
+            if (throwable instanceof InvocationTargetException) {
+                throwable = throwable.getCause();
             }
 
-            /* handle AbortCommandExecutionException */
-            if (theRealException instanceof AbortCommandExecutionException) {
+            /* Handle AbortCommandExecutionException */
+            if (throwable instanceof AbortCommandExecutionException) {
                 // the logging is done before throwing the AbortOperationException, here we just swallow this exception.
                 return CommandHelper.Return.FAILURE;
             }
 
-            /* report the exception */
-            reportException(ctx.getSource(), method, theRealException);
+            /* Re-throw the CommandSyntaxException to enclosing exception handler. */
+            boolean isCommandSyntaxException = throwable instanceof CommandSyntaxException;
+            if (isCommandSyntaxException) {
+                throw throwable;
+            } else {
+                handleNonCommandSyntaxException(context, method, throwable);
+            }
+
             return CommandHelper.Return.FAILURE;
         }
 
-        protected static void reportException(ServerCommandSource source, Method method, Throwable throwable) {
-            /* report to console */
-            String errorString = """
-                [Fuji Exception Catcher]
-                - Source: %s
-                - Module: %s
-                - Method: %s
-                - Message: %s
+        private static void handleNonCommandSyntaxException(@NotNull CommandContext<ServerCommandSource> context, @NotNull Method method, @NotNull Throwable throwable) {
+            ServerCommandSource source = context.getSource();
 
-                """.formatted(
-                source.getName()
-                , ModuleManager.computeSplitModulePath(method.getDeclaringClass().getName())
-                , method.getName()
+            /* Log error string to the console. */
+            String nonCommandSyntaxErrorString = """
+            [Command Execution Exception]
+            - From Module: %s
+            - Command String: /%s
+            - Command Source: %s
+            - Message: %s
+
+            """.formatted(
+                ModuleManager.computeJoinedModulePath(method.getDeclaringClass().getName())
+                , context.getInput()
+                , source.getName()
                 , throwable);
-            LogUtil.error(errorString, throwable);
+            LogUtil.error(nonCommandSyntaxErrorString, throwable);
 
-            /* report to command source */
-            Style style = Style.EMPTY
+            /* Send error text to the command source. */
+            Style errorTextStyle = Style.EMPTY
                 .withColor(CommandHelper.COMMAND_EXCEPTION_COLOR_INT);
 
             // NOTE: Only send the stack trace if the command source is admin.
             if (CommandHelper.Requirement.isAdmin(source)) {
                 String stacktrace = String.join("\n", ReflectionUtil.extractStackTraceElements(throwable));
-                style
+                errorTextStyle = errorTextStyle
                     .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(Text.of("Click to copy the stacktrace.")))
                     .withClickEvent(TextHelper.Events.ClickEvent.makeCopyToClipboardAction(stacktrace));
             }
 
-            MutableText report = TextHelper.getTextByValue(source, errorString)
+            MutableText errorText = TextHelper.getTextByValue(source, nonCommandSyntaxErrorString)
                 .copy()
-                .setStyle(style);
-
-            source.sendMessage(report);
+                .setStyle(errorTextStyle);
+            source.sendMessage(errorText);
         }
 
-        private static boolean isOptionalArgumentNotSpecifiedException(Exception e) {
+        private static boolean isOptionalArgumentNotSpecifiedException(@NotNull Exception e) {
             /*
              * For command redirect, given 3 optional arguments named x, y and z.
              * The arguments are defined in order: (x, y, z).

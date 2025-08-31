@@ -127,7 +127,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
                     }
 
                 } catch (Exception wrappedOrUnwrappedException) {
-                    return CommandException.handleCommandException(commandContext, this.method, wrappedOrUnwrappedException);
+                    return CommandException.handleCommandExecutionException(commandContext, this.method, wrappedOrUnwrappedException);
                 }
             }
 

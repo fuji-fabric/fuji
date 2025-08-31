@@ -7,3 +7,7 @@
 - [core] enhanced `exception handling`
   - feature: simplify the `exception messages`, and providing instructions, making it more user-friendly.
   - feature: improved `error printing` functions.
+  - feature: optimize the error feedback for `Command Syntax Error`.
+  - feature: optimize the `command execution execption handler`
+    - feature: now the `players` will get `localized exception message` for `command syntax error`, like `no player was found` message.
+    - feature: now the `admin players` can `click` the `error text` to `copy the stacktrace`.

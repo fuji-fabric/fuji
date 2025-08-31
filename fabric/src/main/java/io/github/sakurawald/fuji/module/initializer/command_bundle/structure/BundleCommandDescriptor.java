@@ -135,7 +135,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
             try {
                 commandReturnValue = (int) this.method.invoke(null, commandContext, descriptor, parameterValues);
             } catch (Exception e) {
-                return CommandException.handleCommandException(commandContext, this.method, e);
+                return CommandException.handleCommandExecutionException(commandContext, this.method, e);
             }
 
             return commandReturnValue;
