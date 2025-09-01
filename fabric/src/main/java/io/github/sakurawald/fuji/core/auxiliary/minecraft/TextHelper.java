@@ -21,6 +21,7 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ResourceConfigurationH
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
+import io.github.sakurawald.fuji.core.service.toast_sender.ToastSender;
 import io.github.sakurawald.fuji.core.structure.Pair;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +34,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.advancement.AdvancementFrame;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.SubtitleS2CPacket;
 import net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket;
 import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
@@ -635,6 +638,10 @@ public class TextHelper {
     @ForDeveloper("The abstraction method to CommandOutput#sendMessage, ServerCommandSource#sendMessage, PlayerEntity#sendMessage and ServerPlayerEntity#sendMessage.")
     public static void sendMessageByText(@NotNull Object audience, @NotNull Text text) {
         sendText(audience, text, Sender.TextLocation.MESSAGE);
+    }
+
+    public static void sendToastByText(@NotNull ServerPlayerEntity player, @NotNull ItemStack icon, @NotNull Text text) {
+        ToastSender.sendToast(player, AdvancementFrame.TASK, icon, text);
     }
 
     @ForDeveloper("Send the given text to an audience.")
