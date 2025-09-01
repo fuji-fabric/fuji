@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.core.service.display.gui;
 
+import com.google.errorprone.annotations.Keep;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 #if MC_VER <= MC_1_20_4
@@ -23,6 +24,7 @@ import java.util.stream.Stream;
 
 public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
 
+    @Keep
     private static final int SHULKER_BOX_MAX_CAPACITY = 3 * 9;
     private final @NotNull ItemStack shulkerBoxStack;
     private final @Nullable SimpleGui parentGui;

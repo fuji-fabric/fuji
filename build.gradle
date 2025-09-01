@@ -163,10 +163,6 @@ javaProjects.each { projectName ->
                 /* Let me compare the memory address. */
                 disable("ReferenceEquality")
 
-                /* Conflict with the manifold pre-processor, hard to manage. */
-                disable("UnusedVariable")
-                disable("DoNotCallSuggester")
-
                 /* Let me get the name from the AST. */
                 disable("TreeToString")
 
