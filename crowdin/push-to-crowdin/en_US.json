@@ -1486,5 +1486,6 @@
   "docstring.1756695958335": "List all defined `states`.",
   "docstring.1756705595613": "Set the fly state of the player.",
   "docstring.1756707949343": "◉ Define a `state` using `predicate commands`.\nA `state` is composed by `predicate commands`.\n\nYou can define a `state` called `has-iron-and-gold`, with the following `predicate commands`:\n1. `has-item? %player:name% minecraft:iron_ingot 16`\n2. `has-item? %player:name% minecraft:gold_ingot 8`\n\n◉ Integrate with `luckperms`'s `temporary permission`.\nAssign a `temporary permission` using `/lp group default permission settemp fuji.permission.fly true 10s`\n\nThen define a `state` to check whether a player `has specified temporary permission`.\nThis `state` can be called `can-use-fly-command` with the following `predicate commands`:\n1. `has-perm? %player:name% fuji.permission.fly`\n\nLast, you can define `commands to be executed` when a player `leave this state`.\nFor example, define commands to `turn off the flying` while the player `leaves` the `state`.\n\n◉ Check the value of a `state` of a player.\nIssue: `/command-state info Steve`\n\nBesides that, the `/is-in-state? \\<player\\> \\<state-id\\>` can be used as a `predicate command`.\n",
-  "docstring.1756709272938": "Returns the value of specified `state` of the player.\n\nExample:\n- `%fuji:is_in_state is-in-overworld%`\n"
+  "docstring.1756709272938": "Returns the value of specified `state` of the player.\n\nExample:\n- `%fuji:is_in_state is-in-overworld%`\n",
+  "docstring.1756710502594": "Set the invulnerable state."
 }
