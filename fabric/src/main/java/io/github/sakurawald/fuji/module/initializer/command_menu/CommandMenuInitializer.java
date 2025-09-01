@@ -27,7 +27,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     A `menu` is a virtual `container GUI`.
     The `virtual GUI` is composed of `slots`.
     A `slot` is used to hold an `item stack`.
-    The `minimal size` of the GUI is `1 x 6 = 6 slots`
+    The `minimal size` of the GUI is `9 x 1 = 9 slots`
     The `maximal size` of the GUI is `9 x 6 = 54 slots`
 
     <green>In short, you can define a `menu` to hold `slots`.
