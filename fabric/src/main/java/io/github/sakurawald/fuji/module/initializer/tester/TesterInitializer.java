@@ -31,15 +31,9 @@ public class TesterInitializer extends ModuleInitializer {
     private static int $run(@CommandSource ServerCommandSource source) {
 
 
+
         return CommandHelper.Return.SUCCESS;
     }
-
-
-
-
-
-
-
 
 
 
