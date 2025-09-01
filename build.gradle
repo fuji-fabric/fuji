@@ -165,7 +165,6 @@ javaProjects.each { projectName ->
 
                 /* Conflict with the manifold pre-processor, hard to manage. */
                 disable("UnusedVariable")
-                disable("UnusedMethod")
                 disable("DoNotCallSuggester")
 
                 /* Let me get the name from the AST. */

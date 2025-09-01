@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_alias.structure;
 
+import com.google.errorprone.annotations.Keep;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.tree.CommandNode;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
@@ -35,6 +36,7 @@ public class AliasCommandDescriptor extends CommandDescriptor {
             .redirect(this.redirectTargetCommandNode);
     }
 
+    @Keep
     private static int dummyCommandActionMethod() {
         LogUtil.warn("The dummy method for redirect command descriptor is called. You should never see this.");
         return CommandHelper.Return.SUCCESS;
