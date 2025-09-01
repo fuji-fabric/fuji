@@ -154,9 +154,6 @@ javaProjects.each { projectName ->
                 /* For readability, and Java version compatibility. */
                 disable("StatementSwitchToExpressionSwitch")
 
-                /* For readability, the exception is handled by the helper function. */
-                disable("FutureReturnValueIgnored")
-
                 /* Let me compare the memory address. */
                 disable("ReferenceEquality")
 

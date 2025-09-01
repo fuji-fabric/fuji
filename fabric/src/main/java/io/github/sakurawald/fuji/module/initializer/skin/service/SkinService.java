@@ -37,6 +37,7 @@ public class SkinService {
         return SkinStorage.withSkinData(gameProfile, SkinDataNode::getSkinProperty).toVanillaType();
     }
 
+    @SuppressWarnings("FutureReturnValueIgnored")
     public static int changeSkin(@NotNull ServerPlayerEntity player, @NotNull Supplier<Property> skinSupplier) {
         changeSkinAsync(player.getGameProfile(), skinSupplier)
             .thenAccept(success -> {
