@@ -93,7 +93,7 @@ public class CommandStateService {
                     }
 
                     /* Execute predicate commands. */
-                    boolean currentStateStatus = isInState(player, stateDescriptor);
+                    boolean currentStateStatus = checkCurrentStateValue(player, stateDescriptor);
 
                     /* Execute event commands. */
                     if (stateCache == null
@@ -107,7 +107,7 @@ public class CommandStateService {
         });
     }
 
-    public static boolean isInState(@NotNull ServerPlayerEntity player, @NotNull StateDescriptor stateDescriptor) {
+    public static boolean checkCurrentStateValue(@NotNull ServerPlayerEntity player, @NotNull StateDescriptor stateDescriptor) {
         /* Execute the predicate commands, to get the return values. */
         ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(player.getCommandSource());
         List<String> predicateCommands = stateDescriptor.getDefinition().getPredicateCommands();

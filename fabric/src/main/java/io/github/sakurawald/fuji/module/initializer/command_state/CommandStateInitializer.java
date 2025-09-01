@@ -22,27 +22,29 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 @Document(id = 1756692824395L, value = """
-    This module allows you to define a `state` using `predicate commands`.
-    Then, you can:
-    - Define `commands` to be executed on `enter` or `leave` this `state`.
-    - Check the `state` for a player.
-    - Use `placeholders` about this `state`.
+    This module lets you define a `state` using `predicate commands`.
+    With it, you can:
+    - Define commands to be executed when a player `enters` or `leaves` this `state`.
+    - Check whether a player is in the `state`.
+    - Use `placeholders` related to the `state`.
     """)
 @ColorBox(id = 1756707949343L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Define a `state` using `predicate commands`.
     A `state` is composed by `predicate commands`.
+
     You can define a `state` called `has-iron-and-gold`, with the following `predicate commands`:
     1. `has-item? %player:name% minecraft:iron_ingot 16`
     2. `has-item? %player:name% minecraft:gold_ingot 8`
 
     ◉ Integrate with `luckperms`'s `temporary permission`.
-    Assign a `temporary permission` using `/lp group default permission settemp fuji.permission.fly true 10s`.
+    Assign a `temporary permission` using `/lp group default permission settemp fuji.permission.fly true 10s`
+
     Then define a `state` to check whether a player `has specified temporary permission`.
     This `state` can be called `can-use-fly-command` with the following `predicate commands`:
     1. `has-perm? %player:name% fuji.permission.fly`
 
-    Last, you can define `commands to be executed` when a player `leave this state.
-    For example, to execute commands to `turn off the flying` while the player leaves the `state`.
+    Last, you can define `commands to be executed` when a player `leave this state`.
+    For example, define commands to `turn off the flying` while the player `leaves` the `state`.
 
     ◉ Check the value of a `state` of a player.
     Issue: `/command-state info Steve`
@@ -95,12 +97,17 @@ public class CommandStateInitializer extends ModuleInitializer {
     @CommandNode("is-in-state?")
     @Document(id = 1756695870856L, value = "Returns whether the specified `state` value for the player is currently `true`.")
     private static int $isInState(@CommandSource ServerCommandSource source, ServerPlayerEntity player, StateDescriptor state) {
-        boolean inState = CommandStateService.isInState(player, state);
+        boolean inState = CommandStateService.checkCurrentStateValue(player, state);
         return CommandHelper.Return.returnBoolean(source, inState);
     }
 
     @Override
     protected void onInitialize() {
         Managers.getScheduleManager().scheduleJob(new CommandStateAutoUpdaterJob());
+    }
+
+    @Override
+    protected void registerPlaceholders() {
+        CommandStatePlaceholders.registerIsInStatePlaceholder();
     }
 }
