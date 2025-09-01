@@ -62,7 +62,6 @@ public class DeathDataListGui extends PagedGui<String> {
         NbtHelper.Storage.withNbtFile(DeathLogInitializer.getDeathDataPath(entity), root -> {
             /* Check if it has death nodes. */
             if (!hasDeathData(getPlayer(), root, entity)) {
-                close();
                 return;
             }
 

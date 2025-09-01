@@ -9,6 +9,7 @@ import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.node.LiteralNode;
 import eu.pb4.placeholders.api.node.TextNode;
 import eu.pb4.placeholders.api.parsers.NodeParser;
+import eu.pb4.sgui.virtual.inventory.VirtualScreenHandler;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
@@ -21,6 +22,9 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ResourceConfigurationH
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
+import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
+import io.github.sakurawald.fuji.core.manager.Managers;
+import io.github.sakurawald.fuji.core.manager.impl.task.structure.GameTask;
 import io.github.sakurawald.fuji.core.service.toast_sender.ToastSender;
 import io.github.sakurawald.fuji.core.structure.Pair;
 import java.util.ArrayList;
@@ -722,6 +726,30 @@ public class TextHelper {
                 return;
             }
             serverPlayerEntity.sendMessage(text, false);
+
+            /* Stream the text sent to the `message` into the `toast`, if the player has any opened screen handler. */
+            streamMessageToToast(serverPlayerEntity, text);
+        }
+
+        private static void streamMessageToToast(@NotNull ServerPlayerEntity serverPlayerEntity, @NotNull Text text) {
+            if (serverPlayerEntity.currentScreenHandler instanceof VirtualScreenHandler virtualScreenHandler) {
+                if (virtualScreenHandler.getGui() instanceof PagedGui<?> pagedGui) {
+                    /* Filter. */
+                    if (!pagedGui.isStreamMessageIntoToast()) return;
+
+                    /* Send the toast, if this GUI is still alive in ticks. */
+                    GameTask gameTask = new GameTask(3,
+                        () -> {},
+                        () -> {},
+                        () -> {
+                        if (pagedGui.isOpen() && serverPlayerEntity.currentScreenHandler != null) {
+                            ItemStack itemStack = GuiHelper.Button.makeLetterIButton().build().getItemStack();
+                            TextHelper.sendToastByText(serverPlayerEntity, itemStack, text);
+                        }
+                    });
+                    Managers.getGameTaskManager().submitTask(gameTask);
+                }
+            }
         }
 
         private static void sendActionBarToAudience(@NotNull Object audience, @NotNull Text text) {

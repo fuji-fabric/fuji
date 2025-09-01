@@ -10,8 +10,8 @@ public class GameTask {
     Runnable onEnd;
     boolean started = false;
 
-    public GameTask(int remainingRunTicks, Runnable runnable) {
-        this(remainingRunTicks, runnable, () -> {}, () -> {});
+    public GameTask(int remainingRunTicks, Runnable onTick) {
+        this(remainingRunTicks, onTick, () -> {}, () -> {});
     }
 
     public GameTask(int remainingRunTicks, Runnable onTick, Runnable onStart, Runnable onEnd) {

@@ -31,6 +31,8 @@ public abstract class PagedGui<T> extends SimpleGui {
     private final List<T> entities;
     private final int pageIndex;
     private final Text prefixTitle;
+    @Getter
+    protected boolean streamMessageIntoToast = true;
 
     private final EntityToElementMapping<T> entityToElementMapping = new EntityToElementMapping<>();
 

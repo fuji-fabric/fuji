@@ -25,6 +25,7 @@ public class AboutGui extends PagedGui<Person> {
 
     public AboutGui(SimpleGui parent, ServerPlayerEntity player, @NotNull List<Person> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "about"), entities, pageIndex);
+        super.streamMessageIntoToast = false;
 
         ModMetadata metadata = FabricLoader.getInstance().getModContainer(Fuji.MOD_ID).get().getMetadata();
         GuiHelper.Placer.setSlotInLastLine(this, 1, new GuiElementBuilder(Items.BOOK)

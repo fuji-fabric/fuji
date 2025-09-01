@@ -29,6 +29,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
 
     public ModuleDetailsInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, Text prefixTitle, @NotNull List<GuiElementInterface> entities, int pageIndex) {
         super(parent, player, prefixTitle, entities, pageIndex);
+        this.streamMessageIntoToast = false;
     }
 
     public static void attachThingsForCore(ServerPlayerEntity player, ModuleDetailsInspectionGui gui, List<GuiElementInterface> entities, String modulePathString) {
