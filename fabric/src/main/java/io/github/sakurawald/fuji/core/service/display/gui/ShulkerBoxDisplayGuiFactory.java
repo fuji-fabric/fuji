@@ -48,6 +48,7 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
         if (blockEntityData != null) {
             NbtList items = (NbtList) blockEntityData.get("Items");
             if (items == null) return Stream.empty();
+            int x = 42;
 
             DefaultedList<ItemStack> temp = DefaultedList.ofSize(SHULKER_BOX_MAX_CAPACITY, ItemStack.EMPTY);
             items.forEach(item -> {
