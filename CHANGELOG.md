@@ -4,19 +4,28 @@
 
 # Changelog
 
-- [core] Enhanced **Exception Handling**
-  - **Feature:** Enhanced *command execution exception handling*.
-    - Players now see `localized error messages` for command syntax issues (e.g., *no player found*).
-    - Administrator players can now **click the error text** to easily **copy the stack trace**.
-  - **Feature:** Improved exception messages for the `/run as {console|player|fake-op}` command.
-    - Now will `stream the command execution feedback` and provide the `command syntax error` for `initialing command source`.
-      - Example: `/run as console run as fake-player Steve bad command`
-    - Make it easier to understand the command context.
-  - **Feature:** Simplified exception messages and added clear instructions, making them more user-friendly.
-  - **Feature:** Improved handling of *module initialization failures*.
-    - Users now receive a **clear, user-friendly error message** along with suggested solutions.
-    - Reduced console noise and spam.
-  - **Feature:** Refined *mixin injection failure messages*.
-    - Reduced console noise and spam.
-  - **Feature:** Improved exception messages for the `/fuji reload` command.
-    - Users now receive **detailed diagnostic messages**, helping them identify the source of the issue.
+- **[core] Enhanced GUI User Experience**
+  - **Feature:** Messages are now streamed to `toast` notifications if the player has an opened `paged GUI`.  
+    *(Improves feedback message visibility.)*
+  - **Feature:** Optimized the `close handling` of certain GUIs.  
+    *(Some GUIs will now automatically re-open their parent GUI for convenience.)*
+
+---
+
+- **[command_state] Introduced the `command_state` Module**
+  - **Functionality:**
+    - Define a `state` using `predicate commands`.
+    - Configure commands to be executed when a player *enters* or *leaves* the `state`.
+    - Check whether a player is currently in a given `state`.
+    - List all `states` of a player using the `/command-state info <player>` command.
+    - Utilize `placeholders` associated with a `state`.
+  - **Use Case Examples:**
+    - Compose multiple predicate commands into a single `state`.
+    - Integrate with **LuckPerms temporary permissions** to replicate effects such as `temp fly` and `temp god`.
+
+---
+
+- **[command_toolbox] New Features**
+  - Added `/god <flag>` command.
+  - Added `/fly <flag>` command.
+
