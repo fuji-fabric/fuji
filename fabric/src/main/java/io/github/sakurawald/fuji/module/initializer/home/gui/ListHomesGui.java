@@ -63,6 +63,7 @@ public class ListHomesGui extends PagedGui<GlobalPos> {
             .setCallback((clickType) -> {
                 if (clickType.isLeft) {
                     entity.teleport(player);
+                    close();
                     return;
                 }
 
