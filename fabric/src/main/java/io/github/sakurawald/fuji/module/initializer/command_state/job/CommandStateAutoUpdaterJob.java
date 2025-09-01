@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.command_state.job;
 
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.job.abst.CronJob;
 import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
@@ -21,6 +22,6 @@ public class CommandStateAutoUpdaterJob extends CronJob {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        CommandStateService.updateAllCommandStates();
+        ServerHelper.executeSync(CommandStateService::updateAllCommandStates);
     }
 }
