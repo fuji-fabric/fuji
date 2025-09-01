@@ -69,6 +69,7 @@ public enum Category {
     ).toItemStack());
 
     public final String name;
+    @SuppressWarnings("ImmutableEnumChecker")
     public final ItemStack icon;
 
     Category(String name, ItemStack icon) {

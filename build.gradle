@@ -151,9 +151,6 @@ javaProjects.each { projectName ->
             /* Configure error-prone gradle plugin. */
             options.errorprone.excludedPaths = ".*/module/mixin/.*"
             options.errorprone {
-                /* I would like to include the Minecraft Items constants in the enum class. */
-                disable("ImmutableEnumChecker")
-
                 /* For readability, and Java version compatibility. */
                 disable("StatementSwitchToExpressionSwitch")
 

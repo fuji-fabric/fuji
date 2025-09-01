@@ -20,6 +20,7 @@ public enum HeightFindingStrategy implements HeightFinder {
     SKY_TO_SURFACE__FIRST_SOLID(HeightFindingStrategy::findYTopBottom),
     BOTTOM_TO_SKY__FIRST_SAFE_AIR(HeightFindingStrategy::findYBottomUp);
 
+    @SuppressWarnings("ImmutableEnumChecker")
     private final HeightFinder heightFinder;
 
     HeightFindingStrategy(HeightFinder heightFinder) {

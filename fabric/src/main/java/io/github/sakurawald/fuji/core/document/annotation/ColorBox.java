@@ -28,6 +28,7 @@ public @interface ColorBox {
         , DANGER("colorbox.danger.name", Items.RED_CANDLE);
 
         final String languageKey;
+        @SuppressWarnings("ImmutableEnumChecker")
         final Item item;
 
         ColorBoxTypes(String languageKey, Item item) {

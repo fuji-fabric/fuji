@@ -12,6 +12,7 @@ public enum WorldPresetType {
     , SINGLE_BIOME_SURFACE(WorldPresets.SINGLE_BIOME_SURFACE)
     , DEBUG_ALL_BLOCK_STATES(WorldPresets.DEBUG_ALL_BLOCK_STATES);
 
+    @SuppressWarnings("ImmutableEnumChecker")
     private final RegistryKey<WorldPreset> worldPresetKey;
 
     WorldPresetType(RegistryKey<WorldPreset> worldPresetKey) {
