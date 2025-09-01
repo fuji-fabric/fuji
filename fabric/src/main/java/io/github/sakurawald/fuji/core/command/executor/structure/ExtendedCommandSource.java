@@ -22,9 +22,9 @@ public class ExtendedCommandSource {
 
     @NotNull ServerCommandSource initiatingSource;
     @NotNull ServerCommandSource executingSource;
-    boolean parsePlaceholder;
+    boolean parsePlaceholders;
 
-    public ExtendedCommandSource(@NotNull ServerCommandSource initiatingSource, @NotNull ServerCommandSource executingSource, boolean parsePlaceholder) {
+    public ExtendedCommandSource(@NotNull ServerCommandSource initiatingSource, @NotNull ServerCommandSource executingSource, boolean parsePlaceholders) {
         this.initiatingSource = initiatingSource;
 
         if (CommandDescriptor.silentSpecialVariable.get()) {
@@ -33,7 +33,7 @@ public class ExtendedCommandSource {
             this.executingSource = executingSource;
         }
 
-        this.parsePlaceholder = parsePlaceholder;
+        this.parsePlaceholders = parsePlaceholders;
     }
 
     public static ExtendedCommandSource fromSource(@NotNull ServerCommandSource initiatingSource) {
@@ -67,7 +67,7 @@ public class ExtendedCommandSource {
 
     public String expandCommand(String string) {
         /* Parse placeholders. */
-        if (!this.parsePlaceholder) return string;
+        if (!this.parsePlaceholders) return string;
 
         ServerPlayerEntity contextualPlayer = getCommandSourceForPlaceholderParsing().getPlayer();
         if (contextualPlayer != null) {
@@ -84,7 +84,7 @@ public class ExtendedCommandSource {
         return "ExtendedCommandSource{" +
             "initiatingSource=" + initiatingSource.getName() +
             ", executingSource=" + executingSource.getName() +
-            ", parsePlaceholder=" + parsePlaceholder +
+            ", parsePlaceholder=" + parsePlaceholders +
             '}';
     }
 }
