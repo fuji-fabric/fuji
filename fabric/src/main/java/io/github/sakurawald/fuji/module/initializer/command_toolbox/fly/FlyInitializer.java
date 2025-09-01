@@ -18,6 +18,13 @@ public class FlyInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     private static int $fly(@CommandSource @CommandTarget ServerPlayerEntity player) {
         boolean flag = !player.getAbilities().allowFlying;
+        return $fly(player, flag);
+    }
+
+    @Document(id = 1756705595613L, value = "Set the fly state of the player.")
+    @CommandNode("fly")
+    @CommandRequirement(level = 4)
+    private static int $fly(@CommandSource @CommandTarget ServerPlayerEntity player, boolean flag) {
         player.getAbilities().allowFlying = flag;
 
         if (!flag) {

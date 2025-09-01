@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.core.manager.impl.cache.structure;
 
+import java.time.Duration;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,11 @@ public class Cache<T> {
         result.value = value;
         result.updatedTimestamp = System.currentTimeMillis();
         return result;
+    }
+
+    public boolean isWithinExpirationDuration(@NotNull Duration expirationDuration) {
+        long currentTime = System.currentTimeMillis();
+        return this.getUpdatedTimestamp() + expirationDuration.toMillis() < currentTime;
     }
 
 }

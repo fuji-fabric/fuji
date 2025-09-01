@@ -237,6 +237,7 @@ public class MainControlConfigModel {
         public CommandEvent command_event = new CommandEvent();
         public CommandDebug command_debug = new CommandDebug();
         public CommandAdvice command_advice = new CommandAdvice();
+        public CommandState command_state = new CommandState();
         public CommandMenu command_menu = new CommandMenu();
         public CommandMeta command_meta = new CommandMeta();
         public TopChunks top_chunks = new TopChunks();
@@ -883,6 +884,10 @@ public class MainControlConfigModel {
         }
 
         public static class CommandAdvice {
+            public boolean enable = false;
+        }
+
+        public static class CommandState {
             public boolean enable = false;
         }
 

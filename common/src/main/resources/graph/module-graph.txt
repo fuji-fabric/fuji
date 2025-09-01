@@ -42,6 +42,7 @@ command_permission
 command_rewrite
 command_scheduler
 command_spy
+command_state
 command_toolbox
 command_toolbox.bed
 command_toolbox.burn
