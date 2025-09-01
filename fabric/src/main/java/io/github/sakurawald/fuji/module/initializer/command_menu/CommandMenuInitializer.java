@@ -33,9 +33,23 @@ import net.minecraft.server.network.ServerPlayerEntity;
     <green>In short, you can define a `menu` to hold `slots`.
     <green>And bind `commands` to the `slots`.
     """)
-@ColorBox(id = 1751870445592L, color = ColorBox.ColorBoxTypes.NOTE, value = """
+@ColorBox(id = 1751870445592L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+    ◉ Use the built-in `event`, to open the `GUI`
+    The `command_menu` module provides an event called `onSneakingAndSwapHandsEvent`.
+    It will be triggered when a player press `SHIFT + F` key.
+    You can configure this event in the config file.
+
+    ◉ Use `command_bundle` to create a command, to open the `GUI`
     The `/command-menu open` command is an `admin-level` command.
     You need to use `command_bundle` module, to creat a `user-level` command.
+    """)
+@ColorBox(id = 1756687876655L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+    ◉ Switch the `command context` of `command execution`.
+    All commands bound to `slot` are executed `as console`.
+    You may need the `command_meta.run` module, to modify the `command context`.
+    - `/run as console \\<cmd\\>`
+    - `/run as player %player:name% \\<cmd\\>`
+    - `/run as fake-op %player:name% \\<cmd\\>`
     """)
 @ColorBox(id = 1751968513281L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Create a `nested` menus.
