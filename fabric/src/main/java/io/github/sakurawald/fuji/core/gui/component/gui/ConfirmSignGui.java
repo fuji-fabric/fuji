@@ -2,7 +2,9 @@ package io.github.sakurawald.fuji.core.gui.component.gui;
 
 import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,7 +26,9 @@ public abstract class ConfirmSignGui extends InputSignGui {
         this.onConfirmedOrCancelled();
 
         if (!this.isConfirmed()) {
-            TextHelper.sendTextByKey(player, "operation.cancelled");
+            Text cancelledText = TextHelper.getTextByKey(player, "operation.cancelled");
+            TextHelper.sendToastByText(player, Items.BARRIER.getDefaultStack(), cancelledText);
+
             this.onCancelled();
             return;
         }
