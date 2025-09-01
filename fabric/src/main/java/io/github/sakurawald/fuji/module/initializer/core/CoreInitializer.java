@@ -36,6 +36,12 @@ import org.jetbrains.annotations.NotNull;
     ◉ Adjust the `lore` text font size.
     If the `lore` text is too large in your UI.
     You can configure it in `Esc` - `Options` - `Video Settings` - `GUI Scale`
+
+    ◉ Install the `client-side` mod to improve the displaying of `tooltip`.
+    If adjusting the `GUI Scale` option doesn't work well for you.
+    You can install the `ToolTipFix` mod to enhance the `tooltip` displaying.
+    - https://modrinth.com/mod/tooltipfix
+    - https://www.curseforge.com/minecraft/mc-mods/tooltipfix
     """)
 @ColorBox(id = 1753331128791L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Use a `modern` text editor.
