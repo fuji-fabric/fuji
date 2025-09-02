@@ -94,4 +94,12 @@ public class EntityHelper {
     public static boolean isGlowing(@NotNull Entity entity) {
         return entity.isGlowing();
     }
+
+    public static int getEntityEffectiveCount(@NotNull Entity entity) {
+        if (entity instanceof ItemEntity itemEntity) {
+            return itemEntity.getStack().getCount();
+        } else {
+            return 1;
+        }
+    }
 }

@@ -976,7 +976,7 @@
   "docstring.1751826892450": "Ignore and never remove entities that meet the condition.\n",
   "docstring.1751826895787": "This `job` is used to execute `/cleaner clean` command automatically.\n",
   "docstring.1751826898176": "This module provides the `entity` cleaner.\nTo remove specified entities automatically.\n",
-  "docstring.1751826901492": "Trigger the cleaner once.",
+  "docstring.1751826901492": "Remove defined `entities` older than the specified `age`.",
   "docstring.1751826903818": "The `cron` expression used to `update` the tab list.\n",
   "docstring.1751826905489": "Define the style of tab list.\n",
   "docstring.1751826908172": "This `job` is used to `update` the `header` and `footer` in `tab` list.\n",

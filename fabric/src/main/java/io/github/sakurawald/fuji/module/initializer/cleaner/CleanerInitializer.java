@@ -1,36 +1,21 @@
 package io.github.sakurawald.fuji.module.initializer.cleaner;
 
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
+import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.manager.Managers;
-import io.github.sakurawald.fuji.core.service.type_formatter.TypeFormatter;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.cleaner.config.model.CleanerConfigModel;
+import io.github.sakurawald.fuji.module.initializer.cleaner.config.transformer.CleanerV1SchemaTransformer;
 import io.github.sakurawald.fuji.module.initializer.cleaner.job.CleanerJob;
-import java.util.HashMap;
-import java.util.Map;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import io.github.sakurawald.fuji.module.initializer.cleaner.service.CleanerService;
+import net.minecraft.server.command.ServerCommandSource;
 
 @Document(id = 1751826898176L, value = """
     This module provides the `entity` cleaner.
@@ -58,96 +43,15 @@ import net.minecraft.util.Formatting;
 @CommandRequirement(level = 4)
 public class CleanerInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<CleanerConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CleanerConfigModel.class);
+    public static final BaseConfigurationHandler<CleanerConfigModel> config = ObjectConfigurationHandler
+        .ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CleanerConfigModel.class)
+        .installTransformer(new CleanerV1SchemaTransformer());
 
-    @SuppressWarnings("RedundantIfStatement")
-    private static boolean shouldIgnoreEntity(Entity entity) {
-        /* Always ignore these entities. */
-        if (entity.getType().equals(EntityType.PLAYER)) return true;
-        if (EntityHelper.isBlockAttachedEntity(entity)) return true;
-        if (EntityHelper.isVehicleEntity(entity)) return true;
-
-        /* Ignore entities based on config. */
-        var config = CleanerInitializer.config.model().ignore;
-        if (config.ignore_item_entity && entity instanceof ItemEntity) return true;
-        if (config.ignore_living_entity && entity.isLiving()) return true;
-        if (config.ignore_named_entity) {
-            if (entity.hasCustomName()) return true;
-            if (entity instanceof ItemEntity ie) {
-                ItemStack stack = ie.getStack();
-                if (ItemStackHelper.CustomName.hasCustomName(stack)) {
-                    return true;
-                }
-            }
-        }
-        if (config.ignore_entity_with_vehicle && entity.hasVehicle()) return true;
-        if (config.ignore_entity_with_passengers && entity.hasPassengers()) return true;
-        if (config.ignore_glowing_entity && entity.isGlowing()) return true;
-        if (config.ignore_leashed_entity && EntityHelper.isLeashed(entity)) return true;
-
-        /* Should not ignore this entity. */
-        return false;
-    }
-
-    private static boolean shouldRemoveThisEntity(String key, int age) {
-        Map<String, Integer> key2age = config.model().key2age;
-        return key2age.containsKey(key)
-            && age >= key2age.get(key);
-    }
-
-    @Document(id = 1751826901492L, value = "Trigger the cleaner once.")
+    @Document(id = 1751826901492L, value = "Remove defined `entities` older than the specified `age`.")
     @CommandNode("clean")
-    public static int $clean() {
-        /* Clean entities in the server. */
-        Map<String, Integer> cleanedEntities = new HashMap<>();
-        for (ServerWorld world : WorldHelper.getWorlds()) {
-            for (Entity entity : world.iterateEntities()) {
-                if (shouldIgnoreEntity(entity)) continue;
-
-                String key = getTranslatableKey(entity);
-
-                if (shouldRemoveThisEntity(key, entity.age)) {
-                    Integer originalAmount = cleanedEntities.getOrDefault(key, 0);
-                    cleanedEntities.put(key, originalAmount + 1);
-                    entity.discard();
-                }
-            }
-        }
-
-        /* Send cleaning report. */
-        sendCleanerBroadcast(cleanedEntities);
+    private static int $clean(@CommandSource ServerCommandSource source) {
+        CleanerService.cleanEntities();
         return CommandHelper.Return.SUCCESS;
-    }
-
-    private static String getTranslatableKey(Entity entity) {
-        String key;
-        if (entity instanceof ItemEntity itemEntity) {
-            key = itemEntity.getStack().getItem().getTranslationKey();
-        } else {
-            key = entity.getType().getTranslationKey();
-        }
-        return key;
-    }
-
-    private static void sendCleanerBroadcast(Map<String, Integer> counter) {
-        if (counter.isEmpty()) return;
-
-        LogUtil.info("Remove entities: {}", counter);
-
-        Text hoverText =
-            Text.empty()
-                .formatted(Formatting.GOLD)
-                .append(TypeFormatter.formatTypes(null, counter));
-
-        for (ServerPlayerEntity player : PlayerHelper.Lookup.getOnlinePlayers()) {
-            int numberOfCleanedEntities = counter.values().stream().mapToInt(Integer::intValue).sum();
-            MutableText reportText = Text.empty()
-                .append(TextHelper.getTextByKey(player, "cleaner.broadcast", numberOfCleanedEntities))
-                .fillStyle(
-                    Style.EMPTY
-                        .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(hoverText)));
-            TextHelper.sendMessageByText(player, reportText);
-        }
     }
 
     @Override
