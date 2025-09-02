@@ -5,9 +5,9 @@
 
 # Changelog
 
-- [cleaner] Enhanced `cleaner` module.
-  - docs: add detailed documents for this module.
-  - feature: now support to specify the `cleanup method`: `KILL` or `DISCARD`
-  - feature: new `enable` property for each `entity matcher`, makes the configuring easier.
-  - feature: now support to specify `block attached entity` and `vehicle entity` as the `target`.
-  - feature: now will broadcast the `real count` of the cleaned `item entity` in the report.
+- [cleaner] Enhanced the `cleaner` module.
+  - **Documentation**: Added comprehensive documentation for this module.
+  - **Feature**: Introduced support for specifying the `cleanup method` (`KILL` or `DISCARD`).
+  - **Feature**: Added a new `enable` property for each `entity matcher` to simplify configuration.
+  - **Feature**: Added support for targeting both `block-attached entities` and `vehicle entities`.
+  - **Feature**: Cleanup reports now broadcast the `actual count` of cleaned `item entities`.  
