@@ -19,24 +19,43 @@ import net.minecraft.server.command.ServerCommandSource;
 
 @Document(id = 1751826898176L, value = """
     This module provides the `entity` cleaner.
-    To remove specified entities automatically.
+    It monitors defined `conditions` and removes `entities` accordingly.
     """)
 @ColorBox(id = 1751870582940L, color = ColorBox.ColorBoxTypes.NOTE, value = """
-    You should only use this module to clean some edge-case entity.
-    The vanilla Minecraft also has a `cleaner` to remove dropped items.
-    In normal case, you can rely on the `vanilla cleaner`.
-    But for some special case, you may want to use this module.
-    To clean some `annoying dropped items` or even `entities` (`pig` or `boat`).
+    ◉ The vanilla Minecraft `Item Entity` de-spawning.
+    In `vanilla Minecraft`, all `item entities` automatically de-spawn after `6000 ticks (5 minutes)`.
+    In most case, the vanilla `item de-spawning mechanism` is sufficient to meet your needs.
 
-    Yeah, the `vanilla cleaner` only cleans `dropped items`.
-    But this module, allows you to define rules, to clean `dropped items` and `entities`.
+    It's strongly recommended to use the `cleaner` module only for handling `special case`.
+    For example, if your players have built a `large mob farm`, which produces excessive amount of `ender pearls`.
+    You may define a `clean matcher` to match the `ender pearl` entity.
+
+    ◉ Cleaning scope of the `cleaner` module.
+    This module exclusively targets `entities`.
+    It can not be used to clean `blocks` or `block entities`
+    <blue>NOTE: The `block entity` is not a true `entity` within Minecraft internal.
     """)
-@ColorBox(id = 1751870585373L, color = ColorBox.ColorBoxTypes.NOTE, value = """
-    For safety, the `cleaner` will `always ignore` the following types:
-    1. player
-    2. any block attached entity (e.g. leash_knot)
-    3. any vehicle entity (e.g. minecart, boat)
+@ColorBox(id = 1756789894197L, color = ColorBox.ColorBoxTypes.NOTE, value = """
+    ◉ Supported `cleanup methods`
+    - `KILL`: Remove the entity as if it had `died`, triggering the `entity death event`. (Loot will be dropped.)
+    - `DISCARD`: Remove the entity by `discarding` it, without triggering any events. (No loot will be dropped.)
+
+    NOTE: For `item entity`, there is no significant difference between the available cleanup methods.
     """)
+@ColorBox(id = 1756789316771L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
+    ◉ Define a `matcher` to clean `item entities`.
+    A `matcher` identifies entities using their `translatable key`.
+    - For `minecraft:gold_ingot` item-entity, the key is `item.minecraft.gold_ingot`
+    - For `minecraft:gold_block` item-entity, the key is `block.minecraft.gold_block`
+
+    Although the key for a block-based item begins with `block.`, it still refers to an `item entity` whose stack contains `minecraft:gold_block`.
+
+    ◉ Define a `matcher` to clean `living entity`.
+    To enable cleaning of living entities:
+    1. Set `ignore_living_entity` to `false`.
+    2. Define a `matcher` for the target entity, for example: `entity.minecraft.skeleton`.
+    """)
+
 
 
 @CommandNode("cleaner")
@@ -47,7 +66,7 @@ public class CleanerInitializer extends ModuleInitializer {
         .ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CleanerConfigModel.class)
         .installTransformer(new CleanerV1SchemaTransformer());
 
-    @Document(id = 1751826901492L, value = "Remove defined `entities` older than the specified `age`.")
+    @Document(id = 1756788946930L, value = "Perform entity cleanup, and generate a cleanup report if any entities are removed.")
     @CommandNode("clean")
     private static int $clean(@CommandSource ServerCommandSource source) {
         CleanerService.cleanEntities();

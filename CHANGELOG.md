@@ -6,6 +6,7 @@
 # Changelog
 
 - [cleaner] Enhanced `cleaner` module.
+  - docs: add detailed documents for this module.
   - feature: now support to specify the `cleanup method`: `KILL` or `DISCARD`
   - feature: new `enable` property for each `entity matcher`, makes the configuring easier.
   - feature: now support to specify `block attached entity` and `vehicle entity` as the `target`.
