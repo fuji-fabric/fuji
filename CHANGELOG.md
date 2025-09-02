@@ -3,6 +3,7 @@
 > For historical change logs, refer to: https://github.com/sakurawald/fuji/releases
 
 
+
 # Changelog
 
 - [cleaner] Enhanced the `cleaner` module.
