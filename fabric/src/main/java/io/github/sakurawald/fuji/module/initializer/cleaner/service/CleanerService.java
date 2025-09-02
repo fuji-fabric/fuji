@@ -92,6 +92,7 @@ public class CleanerService {
 
     private static void sendCleanerBroadcast(@NotNull Map<String, Integer> cleanedEntitiesMap) {
         if (cleanedEntitiesMap.isEmpty()) return;
+        int cleanedEntitiesCount = cleanedEntitiesMap.values().stream().mapToInt(Integer::intValue).sum();
 
         LogUtil.info("Cleaned entities: {}", cleanedEntitiesMap);
 
@@ -103,7 +104,6 @@ public class CleanerService {
         PlayerHelper.Lookup
             .getOnlinePlayers()
             .forEach(player -> {
-                int cleanedEntitiesCount = cleanedEntitiesMap.values().stream().mapToInt(Integer::intValue).sum();
                 MutableText reportText = Text.empty()
                     .append(TextHelper.getTextByKey(player, "cleaner.broadcast", cleanedEntitiesCount))
                     .fillStyle(
