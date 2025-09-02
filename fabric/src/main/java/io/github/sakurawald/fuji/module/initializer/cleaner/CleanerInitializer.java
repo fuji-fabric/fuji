@@ -42,6 +42,18 @@ import net.minecraft.server.command.ServerCommandSource;
 
     NOTE: For `item entity`, there is no significant difference between the available cleanup methods.
     """)
+@ColorBox(id = 1756790951617L, color = ColorBox.ColorBoxTypes.NOTE, value = """
+    ◉ What is a `translatable key`?
+    A `translatable key` is an identifier used internally by Minecraft to reference `items`, `block-based items`, and other `entities`.
+    It corresponds to the keys defined in Minecraft's `translation files`.
+    An example translation file can be found here:
+    https://github.com/sakurawald/fuji/blob/dev/.github/files/en_us.json
+
+    Common key formats include:
+    - `item.minecraft.*`
+    - `block.minecraft.*`
+    - `entity.minecraft.*`
+    """)
 @ColorBox(id = 1756789316771L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Define a `matcher` to clean `item entities`.
     A `matcher` identifies entities using their `translatable key`.
