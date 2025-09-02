@@ -173,7 +173,7 @@ public class CommandArgument {
         return this;
     }
 
-    public boolean isGreedyStringType() {
+    public boolean isGreedyArgumentType() {
         return this.argumentType.equals(GreedyString.class)
             || this.argumentType.equals(GreedyStringList.class);
     }

@@ -239,7 +239,7 @@ public class CommandAnnotationProcessor {
             CommandArgument commandArgument = commandArgumentList.get(i);
 
             /* The greedy string argument must be the last argument. */
-            if (commandArgument.isGreedyStringType() && i != commandArgumentList.size() - 1) {
+            if (commandArgument.isGreedyArgumentType() && i != commandArgumentList.size() - 1) {
                 throw new RuntimeException("The GreedyString argument type must be the last argument: class = %s, method = %s".formatted(clazz.getName(), method.getName()));
             }
 
@@ -249,7 +249,7 @@ public class CommandAnnotationProcessor {
                     expectNonOptionalArgument = false;
                 }
             } else {
-                if (!commandArgument.isOptional() && !commandArgument.isGreedyStringType()) {
+                if (!commandArgument.isOptional() && !commandArgument.isGreedyArgumentType()) {
                     throw new RuntimeException("The order of argument types must be: non-optional arguments, optional arguments and greedy string argument: class = %s, method = %s".formatted(clazz.getName(), method.getName()));
                 }
             }
