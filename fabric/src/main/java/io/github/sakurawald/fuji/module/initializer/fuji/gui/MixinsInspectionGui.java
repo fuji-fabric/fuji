@@ -15,20 +15,20 @@ import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class MixinInspectionGui extends PagedGui<MixinApplicationInfo> {
+public class MixinsInspectionGui extends PagedGui<MixinApplicationInfo> {
 
-    public MixinInspectionGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull List<MixinApplicationInfo> entities, int pageIndex) {
+    public MixinsInspectionGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull List<MixinApplicationInfo> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "mixin.application"), entities, pageIndex);
     }
 
     @Override
     protected PagedGui<MixinApplicationInfo> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<MixinApplicationInfo> entities, int pageIndex) {
-        return new MixinInspectionGui(parent, player, entities, pageIndex);
+        return new MixinsInspectionGui(parent, player, entities, pageIndex);
     }
 
-    public static MixinInspectionGui inspectAll(@NotNull ServerPlayerEntity player) {
+    public static MixinsInspectionGui inspectAll(@NotNull ServerPlayerEntity player) {
         List<MixinApplicationInfo> entities = GlobalMixinConfigPlugin.mixinApplicationInfoList;
-        return new MixinInspectionGui(null, player, entities, 0);
+        return new MixinsInspectionGui(null, player, entities, 0);
     }
 
     @Override
