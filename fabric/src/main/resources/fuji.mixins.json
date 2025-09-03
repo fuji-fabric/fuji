@@ -54,7 +54,7 @@
     "core.event.PlayerManagerMixin",
     "core.event.ServerPlayerEntityMixin",
     "core.event.on_demand.ModifyPlayerListNameEventMixin",
-    "core.event.on_demand.ServerQueryNetworkHandlerMixin",
+    "core.event.on_demand.ModifyServerMetadataEventMixin",
     "core.extension.PlayerCombatExtensionMixin",
     "core.extension.SimpleRegistryExtensionMixin",
     "core.server.MinecraftServerMixin",

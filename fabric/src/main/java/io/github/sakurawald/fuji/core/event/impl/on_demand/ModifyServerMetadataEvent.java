@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class QueryServerMetadataEvent extends BaseEvent {
+public class ModifyServerMetadataEvent extends BaseEvent {
 
     @NotNull ServerMetadata serverMetadata;
 

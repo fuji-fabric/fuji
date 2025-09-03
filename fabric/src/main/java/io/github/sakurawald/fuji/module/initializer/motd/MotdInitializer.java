@@ -11,7 +11,7 @@ import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.impl.on_demand.QueryServerMetadataEvent;
+import io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyServerMetadataEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.motd.config.model.MotdConfigModel;
 import io.github.sakurawald.fuji.module.initializer.motd.structure.MotdEntry;
@@ -139,7 +139,7 @@ public class MotdInitializer extends ModuleInitializer {
     }
 
     @EventConsumer
-    private static void onRequestServerMetadataHandler(QueryServerMetadataEvent event) {
+    private static void onRequestServerMetadataHandler(ModifyServerMetadataEvent event) {
         ServerMetadata original = event.getServerMetadata();
 
         MotdEntry motdEntry = MotdInitializer.getEffectiveMotdEntry();

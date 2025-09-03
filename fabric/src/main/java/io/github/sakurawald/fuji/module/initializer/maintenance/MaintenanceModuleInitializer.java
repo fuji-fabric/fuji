@@ -13,7 +13,7 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.impl.PlayerEvents;
-import io.github.sakurawald.fuji.core.event.impl.on_demand.QueryServerMetadataEvent;
+import io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyServerMetadataEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.maintenance.config.model.MaintenanceConfigModel;
 import io.github.sakurawald.fuji.module.initializer.maintenance.service.MaintenanceService;
@@ -70,7 +70,7 @@ public class MaintenanceModuleInitializer extends ModuleInitializer {
     }
 
     @EventConsumer(priority = 2000)
-    private static void modifyMaintenanceMotd(QueryServerMetadataEvent event) {
+    private static void modifyMaintenanceMotd(ModifyServerMetadataEvent event) {
         if (!MaintenanceService.getMaintenanceModeStatus()) {
             return;
         }
