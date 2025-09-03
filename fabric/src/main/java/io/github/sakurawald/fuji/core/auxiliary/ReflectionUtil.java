@@ -3,9 +3,11 @@ package io.github.sakurawald.fuji.core.auxiliary;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
+import io.github.sakurawald.fuji.core.event.inject.structure.EventGraph;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import java.nio.charset.StandardCharsets;
 import lombok.Cleanup;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,6 +36,9 @@ public class ReflectionUtil {
         public static final String LANGUAGE_GRAPH_FILE_NAME = "language-graph.txt";
         public static final String MODULE_GRAPH_FILE_NAME = "module-graph.txt";
 
+        @Getter(lazy = true)
+        private static final EventGraph eventGraph = makeEventGraph();
+
         @SneakyThrows(IOException.class)
         public static List<String> getCompileTimeTxtGraph(@NotNull String graphName) {
             InputStream virtualInputStream = getVirtualJarInputStream(graphName);
@@ -49,7 +54,7 @@ public class ReflectionUtil {
         }
 
         @SneakyThrows(IOException.class)
-        public static <T> T getCompileTimeJsonGraph(@NotNull String graphName, @NotNull Class<T> clazz) {
+        private static <T> T getCompileTimeJsonGraph(@NotNull String graphName, @NotNull Class<T> clazz) {
             InputStream virtualInputStream = getVirtualJarInputStream(graphName);
             @Cleanup BufferedReader reader = new BufferedReader(new InputStreamReader(virtualInputStream, StandardCharsets.UTF_8));
 
@@ -66,6 +71,10 @@ public class ReflectionUtil {
                 throw new RuntimeException("Failed to load the graph " + graphName);
             }
             return virtualInputStream;
+        }
+
+        private static @NotNull EventGraph makeEventGraph() {
+            return getCompileTimeJsonGraph(EVENT_GRAPH_FILE_NAME, EventGraph.class);
         }
     }
 

@@ -5,7 +5,7 @@ import io.github.sakurawald.fuji.core.auxiliary.ExceptionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.config.Configs;
-import io.github.sakurawald.fuji.core.manager.Managers;
+import io.github.sakurawald.fuji.core.event.inject.structure.EventGraph;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.mixin.GlobalMixinConfigPlugin;
@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import lombok.Getter;
 import net.fabricmc.loader.api.FabricLoader;
@@ -134,7 +135,7 @@ public class ModuleManager extends BaseManager {
                     ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING.put(modulePathString, clazz);
 
                     /* Initialize the module initializer. */
-                    boolean enable = Managers.getModuleManager().shouldWeLoadThis(className);
+                    boolean enable = ModuleManager.shouldWeLoadThis(className);
                     if (!enable) return;
                     this.initializeModuleInitializer(clazz);
                 } catch (Exception e) {
@@ -195,12 +196,43 @@ public class ModuleManager extends BaseManager {
         }
     }
 
-    public boolean shouldWeLoadThis(String className) {
-        return shouldWeLoadThis(computeSplitModulePath(className));
+    public static boolean shouldWeLoadThis(@NotNull String className) {
+        if (className.contains(".on_demand.")) {
+            return shouldLoadOnDemandEventMixin(className);
+        }
+
+        return shouldLoadModule(computeSplitModulePath(className));
     }
 
+    private static Optional<String> findEventTypeClassName(@NotNull String eventMixinClassName) {
+        return ReflectionUtil.CompileTimeGraph
+            .getEventGraph()
+            .getProducers()
+            .entrySet()
+            .stream()
+            .filter(entry -> entry.getValue().getDeclaringClassName().equals(eventMixinClassName))
+            .findFirst()
+            .map(Map.Entry::getKey);
+    }
+
+    private static boolean shouldLoadOnDemandEventMixin(@NotNull String eventMixinClassName) {
+        /* Apply the event mixin, if there is any event consumer requires it.*/
+        EventGraph eventGraph = ReflectionUtil.CompileTimeGraph.getEventGraph();
+
+        return findEventTypeClassName(eventMixinClassName)
+            .map(eventTypeClassName -> {
+                return eventGraph
+                    .getConsumers()
+                    .get(eventTypeClassName)
+                    .stream()
+                    .anyMatch(it -> ModuleManager.shouldWeLoadThis(it.getDeclaringClassName()));
+            })
+            .orElseThrow(() -> new IllegalStateException("Can't find the event type class name for event mixin class " + eventMixinClassName));
+    }
+
+
     @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
-    private boolean shouldWeLoadThis(@NotNull List<String> modulePath) {
+    private static boolean shouldLoadModule(@NotNull List<String> modulePath) {
         if (Configs.MAIN_CONTROL_CONFIG.model().core.debug.disable_all_modules) return false;
         if (modulePath.get(0).equals(CORE_MODULE_PATH)) return true;
 
@@ -237,7 +269,7 @@ public class ModuleManager extends BaseManager {
         return enable;
     }
 
-    private boolean isRequiredModsInstalled(@NotNull List<String> modulePath) {
+    private static boolean isRequiredModsInstalled(@NotNull List<String> modulePath) {
         if (modulePath.contains("carpet")) {
             return FabricLoader.getInstance().isModLoaded("carpet");
         }

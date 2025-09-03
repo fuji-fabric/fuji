@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 @NoArgsConstructor
 public class EventGraph {
 
-    @NotNull Map<String, EventProducerInfoList> producers = new HashMap<>();
+    @NotNull Map<String, EventProducerInfo> producers = new HashMap<>();
     @NotNull Map<String, EventConsumerInfoList> consumers = new HashMap<>();
 
 }

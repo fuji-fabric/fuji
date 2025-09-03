@@ -7,6 +7,7 @@ import io.github.sakurawald.fuji.core.event.abst.BaseEventConsumer;
 import io.github.sakurawald.fuji.core.event.inject.structure.EventConsumerInfo;
 import io.github.sakurawald.fuji.core.event.inject.structure.EventConsumerInfoList;
 import io.github.sakurawald.fuji.core.event.inject.structure.EventGraph;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import java.lang.reflect.Method;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -14,8 +15,7 @@ import org.jetbrains.annotations.NotNull;
 public class EventInjector {
 
     public static void injectAll() {
-        String eventGraphFileName = ReflectionUtil.CompileTimeGraph.EVENT_GRAPH_FILE_NAME;
-        EventGraph eventGraph = ReflectionUtil.CompileTimeGraph.getCompileTimeJsonGraph(eventGraphFileName, EventGraph.class);
+        EventGraph eventGraph = ReflectionUtil.CompileTimeGraph.getEventGraph();
 
         eventGraph
             .getConsumers()
@@ -27,6 +27,8 @@ public class EventInjector {
     private static void inject(@NotNull String eventTypeClassName, @NotNull EventConsumerInfoList eventConsumerInfoList) {
         Class<? extends BaseEvent> eventTypeClass = (Class<? extends BaseEvent>) Class.forName(eventTypeClassName);
         eventConsumerInfoList
+            .stream()
+            .filter(eventConsumerInfo -> ModuleManager.shouldWeLoadThis(eventConsumerInfo.getDeclaringClassName()))
             .forEach(eventConsumerInfo -> inject(eventTypeClass, eventConsumerInfo));
     }
 

@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.mixin;
 
-import io.github.sakurawald.fuji.core.manager.Managers;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.structure.MixinApplicationInfo;
 import java.util.ArrayList;
 import org.objectweb.asm.tree.ClassNode;
@@ -17,7 +17,7 @@ public class GlobalMixinConfigPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        boolean applied = Managers.getModuleManager().shouldWeLoadThis(mixinClassName);
+        boolean applied = ModuleManager.shouldWeLoadThis(mixinClassName);
         mixinApplicationInfoList.add(new MixinApplicationInfo(targetClassName, mixinClassName, applied));
         return applied;
     }

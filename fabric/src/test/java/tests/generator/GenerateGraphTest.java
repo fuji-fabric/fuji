@@ -25,7 +25,6 @@ import io.github.sakurawald.fuji.core.event.inject.structure.EventGraph;
 import io.github.sakurawald.fuji.core.event.inject.structure.EventConsumerInfo;
 import io.github.sakurawald.fuji.core.event.inject.structure.EventConsumerInfoList;
 import io.github.sakurawald.fuji.core.event.inject.structure.EventProducerInfo;
-import io.github.sakurawald.fuji.core.event.inject.structure.EventProducerInfoList;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import java.io.File;
@@ -167,8 +166,7 @@ public class GenerateGraphTest {
 
             eventGraph
                 .getProducers()
-                .computeIfAbsent(eventName, k -> new EventProducerInfoList())
-                .add(eventProducerInfo);
+                .computeIfAbsent(eventName, k -> eventProducerInfo);
         });
     }
 
