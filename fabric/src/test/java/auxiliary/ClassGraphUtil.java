@@ -4,6 +4,7 @@ import auxiliary.structure.ExtendedAnnotationInfo;
 import io.github.classgraph.AnnotationInfoList;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
+import io.github.classgraph.MethodInfo;
 import io.github.classgraph.MethodParameterInfo;
 import io.github.classgraph.ScanResult;
 import io.github.sakurawald.fuji.Fuji;
@@ -83,9 +84,9 @@ public class ClassGraphUtil {
                 if (isRepeatableAnnotation) {
                     return methodInfo.getAnnotationInfoRepeatable(targetAnnotation)
                         .stream()
-                        .map(it -> new ExtendedAnnotationInfo(it, classInfo));
+                        .map(it -> new ExtendedAnnotationInfo(it, classInfo, methodInfo));
                 } else {
-                    ExtendedAnnotationInfo singularElement = new ExtendedAnnotationInfo(methodInfo.getAnnotationInfo(targetAnnotation), classInfo);
+                    ExtendedAnnotationInfo singularElement = new ExtendedAnnotationInfo(methodInfo.getAnnotationInfo(targetAnnotation), classInfo, methodInfo);
                     return Stream.of(singularElement);
                 }
             })
@@ -107,13 +108,14 @@ public class ClassGraphUtil {
             })
             .filter(methodParameterInfo -> methodParameterInfo.hasAnnotation(targetAnnotation))
             .flatMap(methodParameterInfo -> {
-                ClassInfo classInfo = methodParameterInfo.getMethodInfo().getClassInfo();
+                MethodInfo methodInfo = methodParameterInfo.getMethodInfo();
+                ClassInfo classInfo = methodInfo.getClassInfo();
                 if (isRepeatableAnnotation) {
                     return methodParameterInfo.getAnnotationInfoRepeatable(targetAnnotation)
                         .stream()
-                        .map(it -> new ExtendedAnnotationInfo(it, classInfo));
+                        .map(it -> new ExtendedAnnotationInfo(it, classInfo, methodInfo));
                 } else {
-                    ExtendedAnnotationInfo singularElement = new ExtendedAnnotationInfo(methodParameterInfo.getAnnotationInfo(targetAnnotation), classInfo);
+                    ExtendedAnnotationInfo singularElement = new ExtendedAnnotationInfo(methodParameterInfo.getAnnotationInfo(targetAnnotation), classInfo, methodInfo);
                     return Stream.of(singularElement);
                 }
             })
