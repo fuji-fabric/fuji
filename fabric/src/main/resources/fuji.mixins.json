@@ -75,7 +75,6 @@
     "jail.ModifyPlayerListNameMixin",
     "language.ServerPlayerMixin",
     "launcher.LivingEntityMixin",
-    "maintenance.ServerQueryNetworkHandlerMixin",
     "multiplier.ServerPlayerMixin",
     "nametag.EntityMixin",
     "placeholder.ServerPlayerEntityMixin",
