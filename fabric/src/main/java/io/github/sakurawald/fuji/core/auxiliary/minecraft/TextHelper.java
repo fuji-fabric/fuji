@@ -231,7 +231,7 @@ public class TextHelper {
         }
 
         private static @NotNull List<String> getLanguageFileNameGraph() {
-            return ReflectionUtil.CompileTimeGraph.getCompileTimeGraph(ReflectionUtil.CompileTimeGraph.LANGUAGE_GRAPH_FILE_NAME);
+            return ReflectionUtil.CompileTimeGraph.getCompileTimeTxtGraph(ReflectionUtil.CompileTimeGraph.LANGUAGE_GRAPH_FILE_NAME);
         }
 
         @ForDeveloper("""

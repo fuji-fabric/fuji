@@ -51,7 +51,7 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
             REGISTERED_COMMAND_ARGUMENT_TYPE_ADAPTERS.clear();
             TYPE_STRING_2_TYPE_CLASS.clear();
 
-            ReflectionUtil.CompileTimeGraph.getCompileTimeGraph(ReflectionUtil.CompileTimeGraph.ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME)
+            ReflectionUtil.CompileTimeGraph.getCompileTimeTxtGraph(ReflectionUtil.CompileTimeGraph.ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME)
                 .stream()
                 .filter(className -> Managers.getModuleManager().shouldWeLoadThis(className))
                 .forEach(className -> {

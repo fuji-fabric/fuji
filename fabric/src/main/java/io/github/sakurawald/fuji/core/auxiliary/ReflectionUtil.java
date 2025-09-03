@@ -1,6 +1,8 @@
 package io.github.sakurawald.fuji.core.auxiliary;
 
 import io.github.sakurawald.fuji.Fuji;
+import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import java.nio.charset.StandardCharsets;
 import lombok.Cleanup;
@@ -33,15 +35,8 @@ public class ReflectionUtil {
         public static final String MODULE_GRAPH_FILE_NAME = "module-graph.txt";
 
         @SneakyThrows(IOException.class)
-        public static List<String> getCompileTimeGraph(@NotNull String graphName) {
-            /* Retrieve the resource file from virtual jar file. */
-            String graphPath = GRAPH_CLASSPATH_PREFIX + graphName;
-
-            InputStream virtualInputStream = ReflectionUtil.class.getResourceAsStream(graphPath);
-            if (virtualInputStream == null) {
-                LogUtil.error("Failed to load the graph {} from virtual jar file. Is the jar file damaged?", graphName);
-                throw new RuntimeException("Failed to load the graph " + graphName);
-            }
+        public static List<String> getCompileTimeTxtGraph(@NotNull String graphName) {
+            InputStream virtualInputStream = getVirtualJarInputStream(graphName);
 
             /* Read the bits from the virtual input stream. */
             @Cleanup BufferedReader reader = new BufferedReader(new InputStreamReader(virtualInputStream, StandardCharsets.UTF_8));
@@ -51,6 +46,26 @@ public class ReflectionUtil {
                 lines.add(line);
             }
             return lines;
+        }
+
+        @SneakyThrows(IOException.class)
+        public static <T> T getCompileTimeJsonGraph(@NotNull String graphName, @NotNull Class<T> clazz) {
+            InputStream virtualInputStream = getVirtualJarInputStream(graphName);
+            @Cleanup BufferedReader reader = new BufferedReader(new InputStreamReader(virtualInputStream, StandardCharsets.UTF_8));
+
+            return GsonMapper.fromJson(reader, clazz);
+        }
+
+        @ForDeveloper("Retrieve the resource file from virtual jar file.")
+        private static @NotNull InputStream getVirtualJarInputStream(@NotNull String graphName) {
+            String graphPath = GRAPH_CLASSPATH_PREFIX + graphName;
+
+            InputStream virtualInputStream = ReflectionUtil.class.getResourceAsStream(graphPath);
+            if (virtualInputStream == null) {
+                LogUtil.error("Failed to load the graph {} from virtual jar file. Is the jar file damaged?", graphName);
+                throw new RuntimeException("Failed to load the graph " + graphName);
+            }
+            return virtualInputStream;
         }
     }
 
