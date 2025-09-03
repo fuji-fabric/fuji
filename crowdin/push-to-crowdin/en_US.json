@@ -197,6 +197,10 @@
   "entity.obtained": "<yellow>Obtained: `%s`",
   "entity.updated_timestamp": "<blue>Updated time: `%s`",
   "entity.value": "<blue>Value: `%s`",
+  "event": "<blue>Event",
+  "event.consumer": "<blue>Event Consumer: `%s`",
+  "event.inspection.gui.title": "<blue>Events",
+  "event.type": "<blue>Event Type: `%s`",
   "fake_player_manager.kick_for_amount": "<green>Kick fake-player %s (%s) for the limit",
   "fake_player_manager.kick_for_expiration": "<green>Kick fake-player %s (%s) for the expiration",
   "fake_player_manager.manipulate.forbidden": "<red>You can't manipulate this player",
@@ -465,6 +469,8 @@
   "rank.unavailable_rank_node": "<red>The rank node `%s` is un-available.",
   "rank.up": "<green>You have been ranked up to %s",
   "rank.up.requirements_not_meet": "<red>You haven't met the requirements for the rank %s",
+  "reflect.declaring_class": "<blue>Declaring Class: `%s`",
+  "reflect.declaring_method": "<blue>Declaring Method: `%s`",
   "registry.list.gui.title": "<blue>Registry",
   "registry.type.is_dynamic": "<yellow>Is dynamic: %s",
   "reject.button": "<red>[❌]</red>",
@@ -1495,5 +1501,6 @@
   "docstring.1756789316771": "◉ Define a `matcher` to clean `item entities`.\nA `matcher` identifies entities using their `translatable key`.\n- For `minecraft:gold_ingot` item-entity, the key is `item.minecraft.gold_ingot`\n- For `minecraft:gold_block` item-entity, the key is `block.minecraft.gold_block`\n\nAlthough the key for a block-based item begins with `block.`, it still refers to an `item entity` whose stack contains `minecraft:gold_block`.\n\n◉ Define a `matcher` to clean `living entity`.\nTo enable cleaning of living entities:\n1. Set `ignore_living_entity` to `false`.\n2. Define a `matcher` for the target entity, for example: `entity.minecraft.skeleton`.\n",
   "docstring.1756789894197": "◉ Supported `cleanup methods`\n- `KILL`: Remove the entity as if it had `died`, triggering the `entity death event`. (Loot will be dropped.)\n- `DISCARD`: Remove the entity by `discarding` it, without triggering any events. (No loot will be dropped.)\n\nNOTE: For `item entity`, there is no significant difference between the available cleanup methods.\n",
   "docstring.1756790951617": "◉ What is a `translatable key`?\nA `translatable key` is an identifier used internally by Minecraft to reference `items`, `block-based items`, and other `entities`.\nIt corresponds to the keys defined in Minecraft's `translation files`.\nAn example translation file can be found here:\nhttps://github.com/sakurawald/fuji/blob/dev/.github/files/en_us.json\n\nCommon key formats include:\n- `item.minecraft.*`\n- `block.minecraft.*`\n- `entity.minecraft.*`\n",
-  "docstring.1756906211441": "Inspect applied mixins by fuji."
+  "docstring.1756906211441": "Inspect applied mixins by fuji.",
+  "docstring.1756910112078": "Inspect registered events by fuji."
 }

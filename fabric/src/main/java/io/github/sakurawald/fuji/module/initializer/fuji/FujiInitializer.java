@@ -14,6 +14,7 @@ import io.github.sakurawald.fuji.module.initializer.core.CoreInitializer;
 import io.github.sakurawald.fuji.module.initializer.fuji.gui.AboutGui;
 import io.github.sakurawald.fuji.module.initializer.fuji.gui.ArgumentTypesInspectionGui;
 import io.github.sakurawald.fuji.module.initializer.fuji.gui.ConfigurationsInspectionGui;
+import io.github.sakurawald.fuji.module.initializer.fuji.gui.EventsInspectionGui;
 import io.github.sakurawald.fuji.module.initializer.fuji.gui.JobsInspectionGui;
 import io.github.sakurawald.fuji.module.initializer.fuji.gui.LanguagesInspectionGui;
 import io.github.sakurawald.fuji.module.initializer.fuji.gui.MixinsInspectionGui;
@@ -195,6 +196,15 @@ public class FujiInitializer extends ModuleInitializer {
     @CommandNode("inspect mixins")
     private static int $inspectMixins(@CommandSource ServerPlayerEntity player) {
         MixinsInspectionGui
+            .inspectAll(player)
+            .open();
+        return CommandHelper.Return.SUCCESS;
+    }
+
+    @Document(id = 1756910112078L, value = "Inspect registered events by fuji.")
+    @CommandNode("inspect events")
+    private static int $inspectEvents(@CommandSource ServerPlayerEntity player) {
+        EventsInspectionGui
             .inspectAll(player)
             .open();
         return CommandHelper.Return.SUCCESS;
