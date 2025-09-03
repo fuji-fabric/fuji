@@ -8,8 +8,14 @@
   "consumers": {
     "io.github.sakurawald.fuji.core.event.impl.on_demand.QueryServerMetadataEvent": [
       {
+        "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.maintenance.MaintenanceModuleInitializer",
+        "declaring_method_name": "modifyMaintenanceMotd",
+        "priority": 2000
+      },
+      {
         "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.motd.MotdInitializer",
-        "declaring_method_name": "onRequestServerMetadataHandler"
+        "declaring_method_name": "onRequestServerMetadataHandler",
+        "priority": 1000
       }
     ]
   }

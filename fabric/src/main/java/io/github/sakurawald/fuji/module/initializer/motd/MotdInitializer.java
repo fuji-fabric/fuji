@@ -150,9 +150,6 @@ public class MotdInitializer extends ModuleInitializer {
 
         ServerMetadata serverMetadata = new ServerMetadata(text, players, version, icon, original.secureChatEnforced());
         event.setServerMetadata(serverMetadata);
-
     }
-
-
 
 }

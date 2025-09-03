@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.core.event.abst;
 
+import io.github.sakurawald.fuji.core.event.inject.structure.EventConsumerInfo;
 import java.lang.invoke.CallSite;
 import java.lang.invoke.LambdaMetafactory;
 import java.lang.invoke.MethodHandle;
@@ -14,15 +15,19 @@ import org.jetbrains.annotations.NotNull;
 @Data
 public class BaseEventConsumer<T> {
 
-//    int priority;
+    EventConsumerInfo eventConsumerInfo;
 
     Class<T> eventType;
 
-    Consumer<T> eventConsumerMethod;
+    Method eventConsumerMethod;
 
-    public BaseEventConsumer(@NotNull Class<T> eventType, @NotNull Method eventConsumerMethod) {
+    Consumer<T> compiledEventConsumerMethod;
+
+    public BaseEventConsumer(@NotNull EventConsumerInfo eventConsumerInfo, @NotNull Class<T> eventType, @NotNull Method eventConsumerMethod) {
+        this.eventConsumerInfo = eventConsumerInfo;
         this.eventType = eventType;
-        this.eventConsumerMethod = toConsumer(this.eventType, eventConsumerMethod);
+        this.eventConsumerMethod = eventConsumerMethod;
+        this.compiledEventConsumerMethod = toConsumer(this.eventType, eventConsumerMethod);
     }
 
     @SneakyThrows(Throwable.class)
@@ -48,7 +53,7 @@ public class BaseEventConsumer<T> {
     }
 
     public void handleEvent(T event) {
-        this.eventConsumerMethod.accept(event);
+        this.compiledEventConsumerMethod.accept(event);
     }
 
 }

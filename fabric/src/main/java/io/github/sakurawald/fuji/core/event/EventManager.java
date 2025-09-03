@@ -4,6 +4,7 @@ import io.github.sakurawald.fuji.core.event.abst.BaseEvent;
 import io.github.sakurawald.fuji.core.event.abst.BaseEventConsumer;
 import io.github.sakurawald.fuji.core.event.inject.EventInjector;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,6 +23,9 @@ public class EventManager extends BaseManager {
     public static <T extends BaseEvent> void registerEventConsumer(@NotNull Class<? extends BaseEvent> eventType, @NotNull BaseEventConsumer<T> eventConsumer) {
         getEventConsumerList(eventType)
             .add(eventConsumer);
+
+        getEventConsumerList(eventType)
+                .sort(Comparator.comparing(it -> it.getEventConsumerInfo().getPriority()));
     }
 
     @SuppressWarnings("unchecked")

@@ -11,11 +11,16 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.impl.PlayerEvents;
+import io.github.sakurawald.fuji.core.event.impl.on_demand.QueryServerMetadataEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.maintenance.config.model.MaintenanceConfigModel;
 import io.github.sakurawald.fuji.module.initializer.maintenance.service.MaintenanceService;
+import java.util.Optional;
+import net.minecraft.server.ServerMetadata;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.Text;
 
 
 @Document(id = 1756285767531L, value = """
@@ -62,6 +67,21 @@ public class MaintenanceModuleInitializer extends ModuleInitializer {
     @Override
     protected void onInitialize() {
         PlayerEvents.ON_PLAYER_JOINED.register(MaintenanceService::processMaintenanceModeOnPlayerJoined);
+    }
+
+    @EventConsumer(priority = 2000)
+    private static void modifyMaintenanceMotd(QueryServerMetadataEvent event) {
+        if (!MaintenanceService.getMaintenanceModeStatus()) {
+            return;
+        }
+
+        ServerMetadata original = event.getServerMetadata();
+        Text text = MaintenanceService.getEffectiveMaintenanceMessageText();
+        Optional<ServerMetadata.Players> players = original.comp_1274();
+        Optional<ServerMetadata.Version> version = original.comp_1275();
+        Optional<ServerMetadata.Favicon> icon = original.comp_1276();
+        ServerMetadata newValue = new ServerMetadata(text, players, version, icon, original.secureChatEnforced());
+        event.setServerMetadata(newValue);
     }
 
 }

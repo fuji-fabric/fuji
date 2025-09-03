@@ -37,7 +37,7 @@ public class EventInjector {
         Class<?> eventConsumerDeclaringClass = Class.forName(eventConsumerInfo.getDeclaringClassName());
         Method eventConsumerDeclaringMethod = eventConsumerDeclaringClass.getDeclaredMethod(eventConsumerInfo.getDeclaringMethodName(), eventTypeClass);
 
-        BaseEventConsumer<T> baseEventConsumer = new BaseEventConsumer<>(eventTypeClass, eventConsumerDeclaringMethod);
+        BaseEventConsumer<T> baseEventConsumer = new BaseEventConsumer<>(eventConsumerInfo, eventTypeClass, eventConsumerDeclaringMethod);
         EventManager.registerEventConsumer(eventTypeClass, baseEventConsumer);
     }
 

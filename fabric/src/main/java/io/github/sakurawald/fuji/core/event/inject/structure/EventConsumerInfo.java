@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.core.event.inject.structure;
 
+import io.github.sakurawald.fuji.core.annotation.ReflectiveAccess;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,5 +13,8 @@ public class EventConsumerInfo {
 
     @NotNull String declaringClassName;
     @NotNull String declaringMethodName;
+
+    @ReflectiveAccess
+    int priority;
 
 }

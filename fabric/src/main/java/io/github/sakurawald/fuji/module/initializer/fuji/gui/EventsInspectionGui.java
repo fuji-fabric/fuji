@@ -38,7 +38,7 @@ public class EventsInspectionGui extends PagedGui<BaseEventConsumer<?>> {
     @Override
     protected @NotNull GuiElementInterface toGuiElement(@NotNull BaseEventConsumer<?> entity) {
         GuiElementBuilder builder = new GuiElementBuilder();
-        String declaringClassName = entity.getEventConsumerMethod().getClass().getName();
+        String declaringClassName = entity.getCompiledEventConsumerMethod().getClass().getName();
 
         builder
             .setItem(Items.OBSERVER)
@@ -46,7 +46,9 @@ public class EventsInspectionGui extends PagedGui<BaseEventConsumer<?>> {
             .setLore(List.of(
                 TextHelper.getTextByKey(player, "from_module", ModuleManager.computeJoinedModulePath(declaringClassName)),
                 TextHelper.getTextByKey(player, "event.type", entity.getEventType().getName()),
-                TextHelper.getTextByKey(player, "event.consumer", declaringClassName)
+                TextHelper.getTextByKey(player, "event.consumer.name", entity.getEventConsumerInfo().getDeclaringMethodName()),
+                TextHelper.getTextByKey(player, "event.consumer.lambda.name", declaringClassName),
+                TextHelper.getTextByKey(player, "event.priority", entity.getEventConsumerInfo().getPriority())
             ));
 
         return builder.build();

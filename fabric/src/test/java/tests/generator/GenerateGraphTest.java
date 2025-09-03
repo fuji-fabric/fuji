@@ -177,7 +177,6 @@ public class GenerateGraphTest {
             String declaringClassName = extendedAnnotationInfo.getDeclaringClass().getName();
             MethodInfo declaringMethod = extendedAnnotationInfo.getDeclaringMethod();
             String declaringMethodName = declaringMethod.getName();
-//            String modulePath = ModuleManager.computeJoinedModulePath(declaringClassName);
 
             MethodParameterInfo[] parameterInfo = declaringMethod.getParameterInfo();
             if (parameterInfo.length != 1) {
@@ -198,9 +197,9 @@ public class GenerateGraphTest {
                 throw new IllegalArgumentException("There is no event producer for the event type: " + eventName);
             }
 
+            int priority = (int) extendedAnnotationInfo.getAnnotationInfo().getParameterValues().getValue("priority");
 
-
-            EventConsumerInfo eventConsumerInfo = new EventConsumerInfo(declaringClassName, declaringMethodName);
+            EventConsumerInfo eventConsumerInfo = new EventConsumerInfo(declaringClassName, declaringMethodName, priority);
             eventGraph
                 .getConsumers()
                 .computeIfAbsent(eventName, k -> new EventConsumerInfoList())
