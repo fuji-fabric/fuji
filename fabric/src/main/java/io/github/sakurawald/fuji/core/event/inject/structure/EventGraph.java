@@ -1,7 +1,6 @@
 package io.github.sakurawald.fuji.core.event.inject.structure;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.TreeMap;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 @NoArgsConstructor
 public class EventGraph {
 
-    @NotNull Map<String, EventProducerInfo> producers = new HashMap<>();
-    @NotNull Map<String, EventConsumerInfoList> consumers = new HashMap<>();
+    @NotNull TreeMap<String, EventProducerInfo> producers = new TreeMap<>();
+    @NotNull TreeMap<String, EventConsumerInfoList> consumers = new TreeMap<>();
 
 }

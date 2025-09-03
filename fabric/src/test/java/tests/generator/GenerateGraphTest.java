@@ -35,6 +35,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
@@ -146,9 +147,14 @@ public class GenerateGraphTest {
 
         collectEventProducers(scanResult, eventGraph);
         collectEventConsumers(scanResult, eventGraph);
+        sortEventGraph(eventGraph);
 
         JsonObject eventGraphJsonObject = GsonMapper.toJsonTree(eventGraph).getAsJsonObject();
         JsonUtil.writeJsonObject(eventGraphJsonObject, graphFilePath);
+    }
+
+    private void sortEventGraph(EventGraph eventGraph) {
+        eventGraph.getConsumers().values().forEach(consumer -> consumer.sort(Comparator.comparing(EventConsumerInfo::getPriority)));
     }
 
     @SuppressWarnings("unused")
