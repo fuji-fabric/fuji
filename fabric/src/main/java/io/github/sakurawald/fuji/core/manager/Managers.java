@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.core.manager;
 
+import io.github.sakurawald.fuji.core.event.EventManager;
 import io.github.sakurawald.fuji.core.manager.impl.attachment.AttachmentManager;
 import io.github.sakurawald.fuji.core.manager.impl.backup.BaseBackupManager;
 import io.github.sakurawald.fuji.core.manager.impl.backup.RecoveryBackupManager;
@@ -45,4 +46,7 @@ public class Managers {
 
     @Getter(lazy = true)
     private static final CacheManager cacheManager = new CacheManager();
+
+    @Getter(lazy = true)
+    private static final EventManager eventManager = new EventManager();
 }
