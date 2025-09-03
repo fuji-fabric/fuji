@@ -10,12 +10,15 @@ import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.impl.on_demand.QueryServerMetadataEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.motd.config.model.MotdConfigModel;
 import io.github.sakurawald.fuji.module.initializer.motd.structure.MotdEntry;
 import java.util.UUID;
 import lombok.Cleanup;
 import net.minecraft.server.ServerMetadata;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,7 +52,8 @@ import java.util.stream.Stream;
     """)
 public class MotdInitializer extends ModuleInitializer {
 
-    private static final BaseConfigurationHandler<MotdConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, MotdConfigModel.class);
+    private static final BaseConfigurationHandler<MotdConfigModel> config = ObjectConfigurationHandler
+        .ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, MotdConfigModel.class);
 
     private static final Path ICON_FOLDER = ReflectionUtil.computeModuleConfigPath(MotdInitializer.class).resolve("icon");
 
@@ -133,5 +137,22 @@ public class MotdInitializer extends ModuleInitializer {
         }
 
     }
+
+    @EventConsumer
+    private static void onRequestServerMetadataHandler(QueryServerMetadataEvent event) {
+        ServerMetadata original = event.getServerMetadata();
+
+        MotdEntry motdEntry = MotdInitializer.getEffectiveMotdEntry();
+        Text text = TextHelper.getTextByValue(null, motdEntry.getText());
+        Optional<ServerMetadata.Favicon> icon = MotdInitializer.getEffectiveMotdIcon(motdEntry.getIcon());
+        Optional<ServerMetadata.Players> players = original.comp_1274().map(MotdInitializer::getEffectivePlayersInfo);
+        Optional<ServerMetadata.Version> version = original.comp_1275().map(MotdInitializer::getEffectiveVersion);
+
+        ServerMetadata serverMetadata = new ServerMetadata(text, players, version, icon, original.secureChatEnforced());
+        event.setServerMetadata(serverMetadata);
+
+    }
+
+
 
 }
