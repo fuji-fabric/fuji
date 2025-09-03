@@ -4,10 +4,14 @@ import auxiliary.ClassGraphUtil;
 import auxiliary.TestUtil;
 import auxiliary.structure.ExtendedAnnotationInfo;
 import com.google.gson.JsonObject;
+import io.github.classgraph.AnnotationClassRef;
 import io.github.classgraph.AnnotationInfo;
 import io.github.classgraph.AnnotationParameterValueList;
 import io.github.classgraph.ClassInfo;
+import io.github.classgraph.MethodInfo;
+import io.github.classgraph.MethodParameterInfo;
 import io.github.classgraph.ScanResult;
+import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
@@ -15,6 +19,13 @@ import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.config.model.MainControlConfigModel;
 import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.annotation.EventProducer;
+import io.github.sakurawald.fuji.core.event.inject.EventGraph;
+import io.github.sakurawald.fuji.core.event.inject.EventConsumerInfo;
+import io.github.sakurawald.fuji.core.event.inject.EventConsumerInfoList;
+import io.github.sakurawald.fuji.core.event.inject.EventProducerInfo;
+import io.github.sakurawald.fuji.core.event.inject.EventProducerInfoList;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import java.io.File;
@@ -52,6 +63,9 @@ public class GenerateGraphTest {
 
             /* Generate argument-type-adapter-graph.txt file. */
             generateArgumentTypeAdapterGraphFile(scanResult);
+
+            /* Generate event-graph.json file. */
+            generateEventGraphFile(scanResult);
 
             /* Generate CITE file. */
             generateCiteFile(scanResult);
@@ -125,6 +139,77 @@ public class GenerateGraphTest {
                 .forEach(writer::println);
         }
     }
+
+    private void generateEventGraphFile(ScanResult scanResult) {
+        Path graphFilePath = COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.CompileTimeGraph.EVENT_GRAPH_FILE_NAME);
+
+        EventGraph eventGraph = new EventGraph();
+
+        collectEventProducers(scanResult, eventGraph);
+        collectEventConsumers(scanResult, eventGraph);
+
+        JsonObject eventGraphJsonObject = GsonMapper.toJsonTree(eventGraph).getAsJsonObject();
+        JsonUtil.writeJsonObject(eventGraphJsonObject, graphFilePath);
+    }
+
+    @SuppressWarnings("unused")
+    private static void collectEventProducers(ScanResult scanResult, EventGraph eventGraph) {
+        List<ExtendedAnnotationInfo> extendedAnnotationInfoList = ClassGraphUtil.findTargetAnnotationInstancesAnywhere(scanResult, EventProducer.class, false);
+        extendedAnnotationInfoList.forEach(extendedAnnotationInfo -> {
+
+            String declaringClassName = extendedAnnotationInfo.getDeclaringClass().getName();
+            MethodInfo declaringMethod = extendedAnnotationInfo.getDeclaringMethod();
+            String declaringMethodName = declaringMethod.getName();
+            AnnotationClassRef annotationClassRef = (AnnotationClassRef) extendedAnnotationInfo.getAnnotationInfo().getParameterValues().getValue("value");
+            String eventName = annotationClassRef.getClassInfo().getName();
+
+            EventProducerInfo eventProducerInfo = new EventProducerInfo(declaringClassName, declaringMethodName);
+
+            eventGraph
+                .getProducers()
+                .computeIfAbsent(eventName, k -> new EventProducerInfoList())
+                .add(eventProducerInfo);
+        });
+    }
+
+    private static void collectEventConsumers(ScanResult scanResult, EventGraph eventGraph) {
+        List<ExtendedAnnotationInfo> extendedAnnotationInfoList = ClassGraphUtil.findTargetAnnotationInstancesAnywhere(scanResult, EventConsumer.class, false);
+        extendedAnnotationInfoList.forEach(extendedAnnotationInfo -> {
+
+            String declaringClassName = extendedAnnotationInfo.getDeclaringClass().getName();
+            MethodInfo declaringMethod = extendedAnnotationInfo.getDeclaringMethod();
+            String declaringMethodName = declaringMethod.getName();
+//            String modulePath = ModuleManager.computeJoinedModulePath(declaringClassName);
+
+            MethodParameterInfo[] parameterInfo = declaringMethod.getParameterInfo();
+            if (parameterInfo.length != 1) {
+                throw new IllegalArgumentException("Expecting exactly one parameter in method annotated with @EventHandler annotation.");
+            }
+
+            String resultType = declaringMethod.getTypeDescriptor().getResultType().toString();
+            if (!resultType.equals("void")) {
+                throw new IllegalArgumentException("The type of return value in method annotated with @EventHandler annotation must be 'void'.");
+            }
+
+            if (!declaringMethod.isStatic()) {
+                throw new IllegalArgumentException("The method annotated with @EventHandler annotation must be 'static'.");
+            }
+
+            String eventName = parameterInfo[0].getTypeDescriptor().toString();
+            if (!eventGraph.getProducers().containsKey(eventName)) {
+                throw new IllegalArgumentException("There is no event producer for the event type: " + eventName);
+            }
+
+
+
+            EventConsumerInfo eventConsumerInfo = new EventConsumerInfo(declaringClassName, declaringMethodName);
+            eventGraph
+                .getConsumers()
+                .computeIfAbsent(eventName, k -> new EventConsumerInfoList())
+                .add(eventConsumerInfo);
+        });
+    }
+
 
     @SneakyThrows(IOException.class)
     private static void generateModuleInitializerGraphFile(ScanResult scanResult) {
