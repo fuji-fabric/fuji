@@ -1,15 +1,31 @@
 {
   "producers": {
+    "io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyPlayerDisplayNameEvent": {
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyPlayerDisplayNameEventMixin",
+      "declaring_method_name": "handlePlayerListName"
+    },
     "io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyPlayerListNameEvent": {
       "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyPlayerListNameEventMixin",
       "declaring_method_name": "handlePlayerListName"
     },
-    "io.github.sakurawald.fuji.core.event.impl.on_demand.QueryServerMetadataEvent": {
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ServerQueryNetworkHandlerMixin",
+    "io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyServerMetadataEvent": {
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyServerMetadataEventMixin",
       "declaring_method_name": "handleQueryRequest"
     }
   },
   "consumers": {
+    "io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyPlayerDisplayNameEvent": [
+      {
+        "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_toolbox.nickname.NicknameInitializer",
+        "declaring_method_name": "modifyPlayerDisplayName",
+        "priority": 1000
+      },
+      {
+        "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.jail.JailInitializer",
+        "declaring_method_name": "modifyPlayerDisplayName",
+        "priority": 2000
+      }
+    ],
     "io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyPlayerListNameEvent": [
       {
         "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.tab.TabListInitializer",
@@ -27,7 +43,7 @@
         "priority": 3000
       }
     ],
-    "io.github.sakurawald.fuji.core.event.impl.on_demand.QueryServerMetadataEvent": [
+    "io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyServerMetadataEvent": [
       {
         "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.motd.MotdInitializer",
         "declaring_method_name": "onRequestServerMetadataHandler",

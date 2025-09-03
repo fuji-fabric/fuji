@@ -10,10 +10,14 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyPlayerDisplayNameEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_toolbox.nickname.config.model.NicknameConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_toolbox.nickname.config.model.NicknameDataModel;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 @CommandNode("nickname")
@@ -56,5 +60,16 @@ public class NicknameInitializer extends ModuleInitializer {
 
         TextHelper.sendTextByKey(player, "nickname.unset");
         return CommandHelper.Return.SUCCESS;
+    }
+
+    @EventConsumer
+    private static void modifyPlayerDisplayName(ModifyPlayerDisplayNameEvent event) {
+        PlayerEntity player = event.getPlayer();
+        String playerName = PlayerHelper.getPlayerName(player);
+        String preferredNicknameFormat = NicknameInitializer.data.model().format.player2format.get(playerName);
+        if (preferredNicknameFormat != null) {
+            Text newValue = TextHelper.getTextByValue(null, preferredNicknameFormat);
+            event.setText(newValue);
+        }
     }
 }
