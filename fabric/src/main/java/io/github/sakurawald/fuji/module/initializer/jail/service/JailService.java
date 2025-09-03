@@ -20,6 +20,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class JailService {
 
@@ -181,7 +182,7 @@ public class JailService {
         return TextHelper.getTextByValue(null, value);
     }
 
-    public static @NotNull Text modifyDisplayName(@NotNull Text original, @NotNull PlayerEntity player) {
+    public static @Nullable Text modifyDisplayName(@Nullable Text original, @NotNull PlayerEntity player) {
         String playerName = PlayerHelper.getPlayerName(player);
         return getActiveJailRecord(playerName)
             .map(it -> TextHelper.getTextByValue(player, JailInitializer.config.model().getJailedPlayerTabListText()))

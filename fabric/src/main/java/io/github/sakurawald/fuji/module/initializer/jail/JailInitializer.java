@@ -6,6 +6,8 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyPlayerListNameEvent;
 import io.github.sakurawald.fuji.core.service.duration_parser.command.argument.wrapper.Duration;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlayerName;
@@ -28,6 +30,7 @@ import io.github.sakurawald.fuji.module.initializer.jail.structure.JailDescripto
 import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 
 @Document(id = 1753681022357L, value = """
     This module allows you to define a `jail`.
@@ -322,5 +325,13 @@ public class JailInitializer extends ModuleInitializer {
         JailPlaceholders.registerJailZPlaceholder();
         JailPlaceholders.registerJailYawPlaceholder();
         JailPlaceholders.registerJailPitchPlaceholder();
+    }
+
+    @EventConsumer(priority = 1000 + 1000)
+    private static void modifyPlayerListName(ModifyPlayerListNameEvent event) {
+        ServerPlayerEntity player = event.getPlayer();
+        Text original = event.getText();
+        Text newValue = JailService.modifyDisplayName(original, player);
+        event.setText(newValue);
     }
 }

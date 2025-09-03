@@ -3,6 +3,10 @@
     "io.github.sakurawald.fuji.core.event.impl.on_demand.QueryServerMetadataEvent": {
       "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ServerQueryNetworkHandlerMixin",
       "declaring_method_name": "handleQueryRequest"
+    },
+    "io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyPlayerListNameEvent": {
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyPlayerListNameEventMixin",
+      "declaring_method_name": "handlePlayerListName"
     }
   },
   "consumers": {
@@ -15,6 +19,23 @@
       {
         "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.motd.MotdInitializer",
         "declaring_method_name": "onRequestServerMetadataHandler",
+        "priority": 1000
+      }
+    ],
+    "io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyPlayerListNameEvent": [
+      {
+        "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.afk.AfkInitializer",
+        "declaring_method_name": "modifyPlayerListName",
+        "priority": 3000
+      },
+      {
+        "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.jail.JailInitializer",
+        "declaring_method_name": "modifyPlayerListName",
+        "priority": 2000
+      },
+      {
+        "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.tab.TabListInitializer",
+        "declaring_method_name": "modifyPlayerListName",
         "priority": 1000
       }
     ]

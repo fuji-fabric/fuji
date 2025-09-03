@@ -1,15 +1,22 @@
 package io.github.sakurawald.fuji.module.initializer.tab;
 
+import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyPlayerListNameEvent;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.tab.config.model.TabListConfigModel;
 import io.github.sakurawald.fuji.module.initializer.tab.job.RenderHeaderAndFooterJob;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
+import org.jetbrains.annotations.Nullable;
 
 @Document(id = 1751826913154L, value = """
     Customize the TAB list.
@@ -37,6 +44,18 @@ public class TabListInitializer extends ModuleInitializer {
     @Override
     protected void onReload() {
         PlayerHelper.updateDisplayNames();
+    }
+
+
+    @EventConsumer
+    private static void modifyPlayerListName(ModifyPlayerListNameEvent event) {
+        // Respect other's modification.
+        @Nullable Text original = event.getText();
+        if (original == null) {
+            ServerPlayerEntity player = event.getPlayer();
+            Text newValue = TextHelper.getTextByValue(player, RandomUtil.drawList(TabListInitializer.config.model().getStyle().getBody()));
+            event.setText(newValue);
+        }
     }
 
 }
