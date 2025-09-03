@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.event.inject;
+package io.github.sakurawald.fuji.core.event.inject.structure;
 
 import java.util.HashMap;
 import java.util.Map;
