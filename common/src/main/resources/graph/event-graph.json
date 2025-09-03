@@ -10,7 +10,6 @@
   "consumers": {
     "io.github.sakurawald.fuji.core.event.impl.on_demand.QueryServerMetadataEvent": [
       {
-        "module_path": "motd",
         "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.motd.MotdInitializer",
         "declaring_method_name": "onRequestServerMetadataHandler"
       }
