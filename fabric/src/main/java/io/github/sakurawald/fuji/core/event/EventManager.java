@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.core.event;
 
 import io.github.sakurawald.fuji.core.event.abst.BaseEvent;
 import io.github.sakurawald.fuji.core.event.abst.BaseEventConsumer;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.inject.EventInjector;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import java.util.Comparator;
@@ -28,9 +29,15 @@ public class EventManager extends BaseManager {
                 .sort(Comparator.comparing(it -> it.getEventConsumerInfo().getConsumerPriority()));
     }
 
-    @SuppressWarnings("unchecked")
     public static <T extends BaseEvent> void dispatchEvent(@NotNull Class<T> eventType, @NotNull T event) {
+        dispatchEvent(eventType, event, EventConsumer.DEFAULT);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends BaseEvent> void dispatchEvent(@NotNull Class<T> eventType, @NotNull T event, int eventInjectorPriority) {
         getEventConsumerList(eventType)
+            .stream()
+            .filter(it -> it.getEventConsumerInfo().getInjectorPriority() == eventInjectorPriority)
             .forEach(it -> {
                 BaseEventConsumer<T> eventConsumers = (BaseEventConsumer<T>) it;
                 eventConsumers.handleEvent(event);

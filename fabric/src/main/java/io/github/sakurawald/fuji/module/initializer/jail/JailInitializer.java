@@ -329,7 +329,7 @@ public class JailInitializer extends ModuleInitializer {
         JailPlaceholders.registerJailPitchPlaceholder();
     }
 
-    @EventConsumer(consumerPriority = 1000 + 1000)
+    @EventConsumer(injectorPriority = EventConsumer.HIGHEST)
     private static void modifyPlayerListName(ModifyPlayerListNameEvent event) {
         ServerPlayerEntity player = event.getPlayer();
         Text original = event.getText();
@@ -337,7 +337,7 @@ public class JailInitializer extends ModuleInitializer {
         event.setText(newValue);
     }
 
-    @EventConsumer(consumerPriority = 1000 + 1000)
+    @EventConsumer(injectorPriority = EventConsumer.HIGHEST)
     private static void modifyPlayerDisplayName(ModifyPlayerDisplayNameEvent event) {
         PlayerEntity player = event.getPlayer();
         Text original = event.getText();
