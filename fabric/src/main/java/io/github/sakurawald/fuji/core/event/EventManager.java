@@ -26,7 +26,10 @@ public class EventManager extends BaseManager {
             .add(eventConsumer);
 
         getEventConsumerList(eventType)
-                .sort(Comparator.comparing(it -> it.getEventConsumerInfo().getConsumerPriority()));
+            .sort(Comparator
+                .comparing((BaseEventConsumer<?> it) -> it.getEventConsumerInfo().getInjectorPriority())
+                .thenComparing(it -> it.getEventConsumerInfo().getConsumerPriority())
+            );
     }
 
     public static <T extends BaseEvent> void dispatchEvent(@NotNull Class<T> eventType, @NotNull T event) {
