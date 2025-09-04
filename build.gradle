@@ -75,6 +75,10 @@ javaProjects.each { projectName ->
             testCompileOnly "org.projectlombok:lombok:${project.lombok_version}"
             testAnnotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
 
+            /* For code weaver: custom annotation processor. */
+            annotationProcessor project(":weaver")
+            compileOnly project(":weaver")
+
             /* For testing: JUnit */
             testImplementation(platform("org.junit:junit-bom:${project.junit_version}"))
             testImplementation("org.junit.jupiter:junit-jupiter")

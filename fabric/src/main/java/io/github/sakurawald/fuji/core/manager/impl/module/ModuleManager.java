@@ -204,13 +204,18 @@ public class ModuleManager extends BaseManager {
         return shouldLoadModule(computeSplitModulePath(className));
     }
 
+    @SuppressWarnings("CodeBlock2Expr")
     private static Optional<String> findEventTypeClassName(@NotNull String eventMixinClassName) {
         return ReflectionUtil.CompileTimeGraph
             .getEventGraph()
             .getProducers()
             .entrySet()
             .stream()
-            .filter(entry -> entry.getValue().getDeclaringClassName().equals(eventMixinClassName))
+            .filter(entry -> {
+                return entry.getValue().stream().anyMatch(eventProducerInfo -> {
+                    return eventProducerInfo.getDeclaringClassName().equals(eventMixinClassName);
+                });
+            })
             .findFirst()
             .map(Map.Entry::getKey);
     }
