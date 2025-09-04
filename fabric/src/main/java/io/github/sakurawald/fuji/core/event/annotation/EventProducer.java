@@ -7,4 +7,6 @@ import io.github.sakurawald.fuji.core.event.abst.BaseEvent;
 public @interface EventProducer {
 
     Class<? extends BaseEvent> value();
+
+    int injectorPriority() default EventConsumer.DEFAULT;
 }

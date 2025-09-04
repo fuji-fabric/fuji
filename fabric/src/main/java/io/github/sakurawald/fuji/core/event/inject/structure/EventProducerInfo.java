@@ -12,5 +12,6 @@ public class EventProducerInfo {
 
     @NotNull String declaringClassName;
     @NotNull String declaringMethodName;
+    int injectorPriority;
 
 }

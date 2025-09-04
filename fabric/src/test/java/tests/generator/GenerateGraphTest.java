@@ -172,10 +172,15 @@ public class GenerateGraphTest {
             String declaringClassName = extendedAnnotationInfo.getDeclaringClass().getName();
             MethodInfo declaringMethod = extendedAnnotationInfo.getDeclaringMethod();
             String declaringMethodName = declaringMethod.getName();
-            AnnotationClassRef annotationClassRef = (AnnotationClassRef) extendedAnnotationInfo.getAnnotationInfo().getParameterValues().getValue("value");
+
+            AnnotationParameterValueList parameterValues = extendedAnnotationInfo.getAnnotationInfo().getParameterValues();
+
+            AnnotationClassRef annotationClassRef = (AnnotationClassRef) parameterValues.getValue("value");
             String eventName = annotationClassRef.getClassInfo().getName();
 
-            EventProducerInfo eventProducerInfo = new EventProducerInfo(declaringClassName, declaringMethodName);
+            int injectorPriority = (int) parameterValues.getValue("injectorPriority");
+
+            EventProducerInfo eventProducerInfo = new EventProducerInfo(declaringClassName, declaringMethodName, injectorPriority);
 
             eventGraph
                 .getProducers()
