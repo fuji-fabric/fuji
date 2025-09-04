@@ -76,8 +76,10 @@ javaProjects.each { projectName ->
             testAnnotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
 
             /* For code weaver: custom annotation processor. */
-            annotationProcessor project(":weaver")
-            compileOnly project(":weaver")
+            if (p.name == "fabric") {
+                annotationProcessor project(":weaver")
+                compileOnly project(":weaver")
+            }
 
             /* For testing: JUnit */
             testImplementation(platform("org.junit:junit-bom:${project.junit_version}"))
@@ -88,7 +90,7 @@ javaProjects.each { projectName ->
             testImplementation "io.github.classgraph:classgraph:${project.classgraph_version}"
 
             /* For error prone gradle plugin. */
-            if (p.name == "fabric") {
+            if (p.name != "checker") {
                 errorprone("com.google.errorprone:error_prone_core:${project.errorprone_version}")
                 errorprone(project(':checker'))
                 compileOnly("com.google.errorprone:error_prone_annotations:${project.errorprone_annotations_version}")

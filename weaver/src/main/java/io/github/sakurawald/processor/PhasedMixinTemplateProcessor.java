@@ -94,7 +94,7 @@ public class PhasedMixinTemplateProcessor extends AbstractProcessor {
             }
             cu.defs = defs.toList();
         }
-        return true;
+        return false;
     }
 
 
