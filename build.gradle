@@ -88,7 +88,7 @@ javaProjects.each { projectName ->
             testImplementation "io.github.classgraph:classgraph:${project.classgraph_version}"
 
             /* For error prone gradle plugin. */
-            if (p.name != "checker") {
+            if (p.name == "fabric") {
                 errorprone("com.google.errorprone:error_prone_core:${project.errorprone_version}")
                 errorprone(project(':checker'))
                 compileOnly("com.google.errorprone:error_prone_annotations:${project.errorprone_annotations_version}")
