@@ -21,10 +21,11 @@ import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.annotation.EventProducer;
-import io.github.sakurawald.fuji.core.event.inject.structure.EventGraph;
 import io.github.sakurawald.fuji.core.event.inject.structure.EventConsumerInfo;
 import io.github.sakurawald.fuji.core.event.inject.structure.EventConsumerInfoList;
+import io.github.sakurawald.fuji.core.event.inject.structure.EventGraph;
 import io.github.sakurawald.fuji.core.event.inject.structure.EventProducerInfo;
+import io.github.sakurawald.fuji.core.event.inject.structure.EventProducerInfoList;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import java.io.File;
@@ -154,7 +155,13 @@ public class GenerateGraphTest {
     }
 
     private void sortEventGraph(EventGraph eventGraph) {
-        eventGraph.getConsumers().values().forEach(consumer -> consumer.sort(Comparator.comparing(EventConsumerInfo::getPriority)));
+        eventGraph
+            .getConsumers()
+            .values()
+            .forEach(consumer -> consumer.sort(
+                Comparator
+                    .comparing(EventConsumerInfo::getInjectorPriority)
+                    .thenComparing(EventConsumerInfo::getConsumerPriority)));
     }
 
     @SuppressWarnings("unused")
@@ -172,7 +179,8 @@ public class GenerateGraphTest {
 
             eventGraph
                 .getProducers()
-                .computeIfAbsent(eventName, k -> eventProducerInfo);
+                .computeIfAbsent(eventName, k -> new EventProducerInfoList())
+                .add(eventProducerInfo);
         });
     }
 
@@ -203,9 +211,10 @@ public class GenerateGraphTest {
                 throw new IllegalArgumentException("There is no event producer for the event type: " + eventName);
             }
 
-            int priority = (int) extendedAnnotationInfo.getAnnotationInfo().getParameterValues().getValue("priority");
+            int injectorPriority = (int) extendedAnnotationInfo.getAnnotationInfo().getParameterValues().getValue("injectorPriority");
+            int consumerPriority = (int) extendedAnnotationInfo.getAnnotationInfo().getParameterValues().getValue("consumerPriority");
 
-            EventConsumerInfo eventConsumerInfo = new EventConsumerInfo(declaringClassName, declaringMethodName, priority);
+            EventConsumerInfo eventConsumerInfo = new EventConsumerInfo(declaringClassName, declaringMethodName, injectorPriority, consumerPriority);
             eventGraph
                 .getConsumers()
                 .computeIfAbsent(eventName, k -> new EventConsumerInfoList())

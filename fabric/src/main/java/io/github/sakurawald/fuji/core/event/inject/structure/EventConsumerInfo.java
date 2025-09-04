@@ -14,7 +14,9 @@ public class EventConsumerInfo {
     @NotNull String declaringClassName;
     @NotNull String declaringMethodName;
 
+    int injectorPriority;
+
     @ReflectiveAccess
-    int priority;
+    int consumerPriority;
 
 }

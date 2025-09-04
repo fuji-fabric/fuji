@@ -69,7 +69,7 @@ public class MaintenanceModuleInitializer extends ModuleInitializer {
         PlayerEvents.ON_PLAYER_JOINED.register(MaintenanceService::processMaintenanceModeOnPlayerJoined);
     }
 
-    @EventConsumer(priority = 2000)
+    @EventConsumer(consumerPriority = 2000)
     private static void modifyMaintenanceMotd(ModifyServerMetadataEvent event) {
         if (!MaintenanceService.getMaintenanceModeStatus()) {
             return;

@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 @NoArgsConstructor
 public class EventGraph {
 
-    @NotNull TreeMap<String, EventProducerInfo> producers = new TreeMap<>();
+    @NotNull TreeMap<String, EventProducerInfoList> producers = new TreeMap<>();
     @NotNull TreeMap<String, EventConsumerInfoList> consumers = new TreeMap<>();
 
 }

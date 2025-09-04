@@ -48,7 +48,8 @@ public class EventsInspectionGui extends PagedGui<BaseEventConsumer<?>> {
                 TextHelper.getTextByKey(player, "event.type", entity.getEventType().getName()),
                 TextHelper.getTextByKey(player, "event.consumer.name", entity.getEventConsumerInfo().getDeclaringMethodName()),
                 TextHelper.getTextByKey(player, "event.consumer.lambda.name", declaringClassName),
-                TextHelper.getTextByKey(player, "event.priority", entity.getEventConsumerInfo().getPriority())
+                TextHelper.getTextByKey(player, "event.priority.injector", entity.getEventConsumerInfo().getInjectorPriority()),
+                TextHelper.getTextByKey(player, "event.priority.consumer", entity.getEventConsumerInfo().getConsumerPriority())
             ));
 
         return builder.build();

@@ -117,7 +117,7 @@ public class AfkInitializer extends ModuleInitializer {
     }
 
     @TestCase(action = "Issue `/afk` and see the player list.", targets = "The display name of an afk player should be modified.")
-    @EventConsumer(priority = 1000 + 2000)
+    @EventConsumer(consumerPriority = 1000 + 2000)
     private static void modifyPlayerListName(ModifyPlayerListNameEvent event) {
         ServerPlayerEntity player = event.getPlayer();
         if (AfkInitializer.isAfk(player)) {

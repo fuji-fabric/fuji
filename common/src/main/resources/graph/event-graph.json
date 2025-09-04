@@ -1,58 +1,87 @@
 {
   "producers": {
-    "io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyPlayerDisplayNameEvent": {
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyPlayerDisplayNameEventMixin",
-      "declaring_method_name": "handlePlayerListName"
-    },
-    "io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyPlayerListNameEvent": {
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyPlayerListNameEventMixin",
-      "declaring_method_name": "handlePlayerListName"
-    },
-    "io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyServerMetadataEvent": {
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyServerMetadataEventMixin",
-      "declaring_method_name": "handleQueryRequest"
-    }
+    "io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyPlayerDisplayNameEvent": [
+      {
+        "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyPlayerDisplayNameEventMixin",
+        "declaring_method_name": "handlePlayerListName"
+      }
+    ],
+    "io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyPlayerListNameEvent": [
+      {
+        "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyPlayerListNameEventMixin_DEFAULT",
+        "declaring_method_name": "handlePlayerListName"
+      },
+      {
+        "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyPlayerListNameEventMixin_HIGHER",
+        "declaring_method_name": "handlePlayerListName"
+      },
+      {
+        "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyPlayerListNameEventMixin_HIGHEST",
+        "declaring_method_name": "handlePlayerListName"
+      },
+      {
+        "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyPlayerListNameEventMixin_LOWER",
+        "declaring_method_name": "handlePlayerListName"
+      },
+      {
+        "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyPlayerListNameEventMixin_LOWEST",
+        "declaring_method_name": "handlePlayerListName"
+      }
+    ],
+    "io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyServerMetadataEvent": [
+      {
+        "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyServerMetadataEventMixin",
+        "declaring_method_name": "handleQueryRequest"
+      }
+    ]
   },
   "consumers": {
     "io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyPlayerDisplayNameEvent": [
       {
         "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_toolbox.nickname.NicknameInitializer",
         "declaring_method_name": "modifyPlayerDisplayName",
-        "priority": 1000
+        "injector_priority": 1000,
+        "consumer_priority": 1000
       },
       {
         "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.jail.JailInitializer",
         "declaring_method_name": "modifyPlayerDisplayName",
-        "priority": 2000
+        "injector_priority": 1000,
+        "consumer_priority": 2000
       }
     ],
     "io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyPlayerListNameEvent": [
       {
         "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.tab.TabListInitializer",
         "declaring_method_name": "modifyPlayerListName",
-        "priority": 1000
+        "injector_priority": 1000,
+        "consumer_priority": 1000
       },
       {
         "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.jail.JailInitializer",
         "declaring_method_name": "modifyPlayerListName",
-        "priority": 2000
+        "injector_priority": 1000,
+        "consumer_priority": 2000
       },
       {
         "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.afk.AfkInitializer",
         "declaring_method_name": "modifyPlayerListName",
-        "priority": 3000
+        "injector_priority": 1000,
+        "consumer_priority": 3000
       }
     ],
     "io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyServerMetadataEvent": [
       {
         "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.motd.MotdInitializer",
         "declaring_method_name": "onRequestServerMetadataHandler",
-        "priority": 1000
+        "injector_priority": 1000,
+        "consumer_priority": 1000
       },
       {
         "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.maintenance.MaintenanceModuleInitializer",
         "declaring_method_name": "modifyMaintenanceMotd",
-        "priority": 2000
+        "injector_priority": 1000,
+        "consumer_priority": 2000
       }
     ]
   }

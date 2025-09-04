@@ -25,7 +25,7 @@ public class EventManager extends BaseManager {
             .add(eventConsumer);
 
         getEventConsumerList(eventType)
-                .sort(Comparator.comparing(it -> it.getEventConsumerInfo().getPriority()));
+                .sort(Comparator.comparing(it -> it.getEventConsumerInfo().getConsumerPriority()));
     }
 
     @SuppressWarnings("unchecked")
