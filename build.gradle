@@ -49,7 +49,7 @@ writeBuildGradlePredefine(rootProject.mcVers, rootProject.mcIndex)
 group = project.maven_group
 
 /* Configure shared parts for each sub project. */
-def javaProjects = ["fabric", "checker"]
+def javaProjects = ["fabric", "checker", "weaver"]
 javaProjects.each { projectName ->
     project(projectName) { p ->
 
