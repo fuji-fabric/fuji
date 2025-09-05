@@ -1,5 +1,6 @@
 package auxiliary;
 
+import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import java.nio.file.Path;
 import lombok.experimental.UtilityClass;
 
@@ -14,6 +15,8 @@ public class TestUtil {
 
     public static final Path ROOT_PROJECT_ROOT_PATH = Path.of("../");
     public static final Path COMMON_PROJECT_ROOT_PATH = ROOT_PROJECT_ROOT_PATH.resolve("common");
+    public static final Path COMPILE_TIME_COMMON_PROJECT_RESOURCE_PATH = COMMON_PROJECT_ROOT_PATH.resolve("src/main/resources/");
+    public static final Path COMPILE_TIME_GRAPH_PATH = COMPILE_TIME_COMMON_PROJECT_RESOURCE_PATH.resolve(ReflectionUtil.CompileTimeGraph.GRAPH_DIRECTORY_NAME);
     public static final Path FABRIC_PROJECT_ROOT_PATH = ROOT_PROJECT_ROOT_PATH.resolve("fabric");
 
     @SuppressWarnings("SameParameterValue")

@@ -43,10 +43,8 @@ import org.junit.jupiter.api.Test;
 
 public class GenerateGraphTest {
 
-    public static final Path COMPILE_TIME_COMMON_PROJECT_RESOURCE_PATH = TestUtil.COMMON_PROJECT_ROOT_PATH.resolve("src/main/resources/");
-    public static final Path COMPILE_TIME_GRAPH_PATH = COMPILE_TIME_COMMON_PROJECT_RESOURCE_PATH.resolve(ReflectionUtil.CompileTimeGraph.GRAPH_DIRECTORY_NAME);
-    public static final Path COMPILE_TIME_CITE_FILE_PATH = TestUtil.ROOT_PROJECT_ROOT_PATH.resolve("CITE.md");
-    public static final Path COMPILE_TIME_TEST_CASE_FILE_PATH = TestUtil.ROOT_PROJECT_ROOT_PATH.resolve("TEST-CASE.md");
+    private static final Path COMPILE_TIME_CITE_FILE_PATH = TestUtil.ROOT_PROJECT_ROOT_PATH.resolve("CITE.md");
+    private static final Path COMPILE_TIME_TEST_CASE_FILE_PATH = TestUtil.ROOT_PROJECT_ROOT_PATH.resolve("TEST-CASE.md");
 
     @Test
     @SneakyThrows(IOException.class)
@@ -57,7 +55,7 @@ public class GenerateGraphTest {
             .enableAllInfo()
             .scan()) {
 
-            Files.createDirectories(COMPILE_TIME_GRAPH_PATH);
+            Files.createDirectories(TestUtil.COMPILE_TIME_GRAPH_PATH);
 
             /* Generate module-initializer-graph.txt file. */
             generateModuleInitializerGraphFile(scanResult);
@@ -130,7 +128,7 @@ public class GenerateGraphTest {
 
     @SneakyThrows(IOException.class)
     private static void generateArgumentTypeAdapterGraphFile(ScanResult scanResult) {
-        File argumentAdapterGraphFile = COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.CompileTimeGraph.ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME).toFile();
+        File argumentAdapterGraphFile = TestUtil.COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.CompileTimeGraph.ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME).toFile();
         try (PrintWriter writer = new PrintWriter(argumentAdapterGraphFile, StandardCharsets.UTF_8)) {
             scanResult
                 .getSubclasses(BaseArgumentTypeAdapter.class)
@@ -142,7 +140,7 @@ public class GenerateGraphTest {
     }
 
     private void generateEventGraphFile(ScanResult scanResult) {
-        Path graphFilePath = COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.CompileTimeGraph.EVENT_GRAPH_FILE_NAME);
+        Path graphFilePath = TestUtil.COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.CompileTimeGraph.EVENT_GRAPH_FILE_NAME);
 
         EventGraph eventGraph = new EventGraph();
 
@@ -230,7 +228,7 @@ public class GenerateGraphTest {
 
     @SneakyThrows(IOException.class)
     private static void generateModuleInitializerGraphFile(ScanResult scanResult) {
-        File moduleInitializerGraphFile = COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.CompileTimeGraph.MODULE_INITIALIZER_GRAPH_FILE_NAME).toFile();
+        File moduleInitializerGraphFile = TestUtil.COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.CompileTimeGraph.MODULE_INITIALIZER_GRAPH_FILE_NAME).toFile();
         try (PrintWriter writer = new PrintWriter(moduleInitializerGraphFile, StandardCharsets.UTF_8)) {
             scanResult
                 .getSubclasses(ModuleInitializer.class)
@@ -265,7 +263,7 @@ public class GenerateGraphTest {
         searchDefinedModules(modules, "", result);
         result.sort(String::compareTo);
 
-        Path moduleGraphFile = COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.CompileTimeGraph.MODULE_GRAPH_FILE_NAME);
+        Path moduleGraphFile = TestUtil.COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.CompileTimeGraph.MODULE_GRAPH_FILE_NAME);
         Files.createDirectories(moduleGraphFile.getParent());
         try (PrintWriter writer = new PrintWriter(moduleGraphFile.toFile(), StandardCharsets.UTF_8)) {
             result.forEach(writer::println);

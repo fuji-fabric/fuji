@@ -42,7 +42,7 @@ public class GenerateDocStringTest {
     @SneakyThrows(IOException.class)
     public void generateLanguageGraphFile() {
         /* Generate language-graph.txt file. */
-        File languageGraphFile = GenerateGraphTest.COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.CompileTimeGraph.LANGUAGE_GRAPH_FILE_NAME).toFile();
+        File languageGraphFile = TestUtil.COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.CompileTimeGraph.LANGUAGE_GRAPH_FILE_NAME).toFile();
         try (PrintWriter writer = new PrintWriter(languageGraphFile, StandardCharsets.UTF_8)) {
             File languageFilesPath = GenerateDocStringTest.COMPILE_TIME_PULL_FROM_CROWDIN_LANGUAGE_PATH.toFile();
             Arrays
