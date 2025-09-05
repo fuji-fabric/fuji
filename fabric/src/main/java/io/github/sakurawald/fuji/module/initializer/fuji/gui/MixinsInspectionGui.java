@@ -27,7 +27,7 @@ public class MixinsInspectionGui extends PagedGui<MixinApplicationInfo> {
     }
 
     public static MixinsInspectionGui inspectAll(@NotNull ServerPlayerEntity player) {
-        List<MixinApplicationInfo> entities = GlobalMixinConfigPlugin.mixinApplicationInfoList;
+        List<MixinApplicationInfo> entities = GlobalMixinConfigPlugin.mixinApplicationInfoMap.values().stream().toList();
         return new MixinsInspectionGui(null, player, entities, 0);
     }
 
@@ -42,7 +42,9 @@ public class MixinsInspectionGui extends PagedGui<MixinApplicationInfo> {
                 TextHelper.getTextByKey(player, "from_module", ModuleManager.computeJoinedModulePath(entity.getMixinClassName())),
                 TextHelper.getTextByKey(player, "mixin.target_class_name", entity.getTargetClassName()),
                 TextHelper.getTextByKey(player, "mixin.mixin_class_name", entity.getMixinClassName()),
-                TextHelper.getTextByKey(player, "mixin.applied", entity.isApplied())
+                TextHelper.getTextByKey(player, "mixin.phase", entity.getPhase()),
+                TextHelper.getTextByKey(player, "mixin.applied", entity.isApplied()),
+                TextHelper.getTextByKey(player, "mixin.priority", entity.getPriority())
             ));
 
         return builder.build();
