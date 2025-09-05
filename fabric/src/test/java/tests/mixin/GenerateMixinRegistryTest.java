@@ -1,5 +1,6 @@
 package tests.mixin;
 
+import auxiliary.TestUtil;
 import auxiliary.classgraph.ClassGraphUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -19,7 +20,7 @@ public class GenerateMixinRegistryTest {
     public void ensureAllMixinClassIsRegisteredInMixinJsonFile() {
 
         /* Read the fuji.mixins.json file, to get the registered mixins. */
-        Path mixinJsonFilePath = Path.of("src/main/resources/fuji.mixins.json");
+        Path mixinJsonFilePath = TestUtil.FABRIC_PROJECT_ROOT_PATH.resolve("src/main/resources/fuji.mixins.json");
         JsonElement mixinJsonFileJson = JsonUtil.readJsonFile(mixinJsonFilePath);
 
         /* Scan the codebase, to collect declared mixin classes. */

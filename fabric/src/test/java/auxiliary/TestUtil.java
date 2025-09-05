@@ -13,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 public class TestUtil {
 
     public static final Path ROOT_PROJECT_ROOT_PATH = Path.of("../");
+    public static final Path COMMON_PROJECT_ROOT_PATH = ROOT_PROJECT_ROOT_PATH.resolve("common");
+    public static final Path FABRIC_PROJECT_ROOT_PATH = ROOT_PROJECT_ROOT_PATH.resolve("fabric");
 
     @SuppressWarnings("SameParameterValue")
     public static List<String> collectAllMatches(@NotNull Pattern pattern, @NotNull String inputString, int groupIndex) {

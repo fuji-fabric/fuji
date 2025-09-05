@@ -43,8 +43,8 @@ import org.junit.jupiter.api.Test;
 
 public class GenerateGraphTest {
 
-    public static final Path COMPILE_TIME_RESOURCE_PATH = TestUtil.ROOT_PROJECT_ROOT_PATH.resolve("common/src/main/resources/");
-    public static final Path COMPILE_TIME_GRAPH_PATH = COMPILE_TIME_RESOURCE_PATH.resolve(ReflectionUtil.CompileTimeGraph.GRAPH_DIRECTORY_NAME);
+    public static final Path COMPILE_TIME_COMMON_PROJECT_RESOURCE_PATH = TestUtil.COMMON_PROJECT_ROOT_PATH.resolve("src/main/resources/");
+    public static final Path COMPILE_TIME_GRAPH_PATH = COMPILE_TIME_COMMON_PROJECT_RESOURCE_PATH.resolve(ReflectionUtil.CompileTimeGraph.GRAPH_DIRECTORY_NAME);
     public static final Path COMPILE_TIME_CITE_FILE_PATH = TestUtil.ROOT_PROJECT_ROOT_PATH.resolve("CITE.md");
     public static final Path COMPILE_TIME_TEST_CASE_FILE_PATH = TestUtil.ROOT_PROJECT_ROOT_PATH.resolve("TEST-CASE.md");
 
