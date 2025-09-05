@@ -1,8 +1,8 @@
 package tests.generator;
 
-import auxiliary.ClassGraphUtil;
+import auxiliary.classgraph.ClassGraphUtil;
 import auxiliary.TestUtil;
-import auxiliary.structure.ExtendedAnnotationInfo;
+import auxiliary.classgraph.structure.ExtendedAnnotationInfo;
 import com.google.gson.JsonObject;
 import io.github.classgraph.AnnotationParameterValueList;
 import io.github.classgraph.ScanResult;

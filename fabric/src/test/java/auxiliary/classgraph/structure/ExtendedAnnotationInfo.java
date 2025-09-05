@@ -1,4 +1,4 @@
-package auxiliary.structure;
+package auxiliary.classgraph.structure;
 
 import io.github.classgraph.AnnotationInfo;
 import io.github.classgraph.ClassInfo;

@@ -1,7 +1,7 @@
 package tests.mixin;
 
-import auxiliary.ClassGraphUtil;
-import auxiliary.structure.ExtendedAnnotationInfo;
+import auxiliary.classgraph.ClassGraphUtil;
+import auxiliary.classgraph.structure.ExtendedAnnotationInfo;
 import com.google.errorprone.annotations.Keep;
 import io.github.classgraph.MethodInfo;
 import io.github.classgraph.ScanResult;

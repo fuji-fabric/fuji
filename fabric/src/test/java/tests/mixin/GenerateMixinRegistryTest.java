@@ -1,13 +1,12 @@
 package tests.mixin;
 
-import auxiliary.ClassGraphUtil;
+import auxiliary.classgraph.ClassGraphUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;

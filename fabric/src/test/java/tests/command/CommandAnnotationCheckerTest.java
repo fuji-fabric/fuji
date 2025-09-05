@@ -1,6 +1,6 @@
 package tests.command;
 
-import auxiliary.ClassGraphUtil;
+import auxiliary.classgraph.ClassGraphUtil;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.MethodInfo;
 import io.github.classgraph.ScanResult;

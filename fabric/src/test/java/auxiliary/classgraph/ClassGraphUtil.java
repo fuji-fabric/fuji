@@ -1,6 +1,6 @@
-package auxiliary;
+package auxiliary.classgraph;
 
-import auxiliary.structure.ExtendedAnnotationInfo;
+import auxiliary.classgraph.structure.ExtendedAnnotationInfo;
 import io.github.classgraph.AnnotationInfoList;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
