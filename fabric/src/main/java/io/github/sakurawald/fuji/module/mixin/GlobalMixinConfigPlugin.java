@@ -18,7 +18,7 @@ public class GlobalMixinConfigPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        boolean applied = ModuleManager.shouldWeLoadThis(mixinClassName);
+        boolean applied = ModuleManager.shouldLoadThis(mixinClassName);
         mixinApplicationInfoMap
             .computeIfAbsent(mixinClassName, key -> new MixinApplicationInfo(targetClassName, mixinClassName, applied, null, null));
         return applied;

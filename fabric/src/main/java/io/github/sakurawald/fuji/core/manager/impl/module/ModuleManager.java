@@ -135,7 +135,7 @@ public class ModuleManager extends BaseManager {
                     ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING.put(modulePathString, clazz);
 
                     /* Initialize the module initializer. */
-                    boolean enable = ModuleManager.shouldWeLoadThis(className);
+                    boolean enable = ModuleManager.shouldLoadThis(className);
                     if (!enable) return;
                     this.initializeModuleInitializer(clazz);
                 } catch (Exception e) {
@@ -147,7 +147,7 @@ public class ModuleManager extends BaseManager {
     public <T extends ModuleInitializer> void initializeModuleInitializer(@NotNull Class<T> clazz) {
         if (!MODULE_INITIALIZER_BY_CLASS.containsKey(clazz)) {
             String className = clazz.getName();
-            if (shouldWeLoadThis(className)) {
+            if (shouldLoadThis(className)) {
                 try {
                     ModuleInitializer moduleInitializer = clazz.getDeclaredConstructor().newInstance();
                     moduleInitializer.doInitialize();
@@ -196,7 +196,7 @@ public class ModuleManager extends BaseManager {
         }
     }
 
-    public static boolean shouldWeLoadThis(@NotNull String className) {
+    public static boolean shouldLoadThis(@NotNull String className) {
         if (className.contains(".on_demand.")) {
             return shouldLoadOnDemandEventMixin(className);
         }
@@ -230,7 +230,7 @@ public class ModuleManager extends BaseManager {
                     .getConsumers()
                     .get(eventTypeClassName)
                     .stream()
-                    .anyMatch(it -> ModuleManager.shouldWeLoadThis(it.getDeclaringClassName()));
+                    .anyMatch(it -> ModuleManager.shouldLoadThis(it.getDeclaringClassName()));
             })
             .orElseThrow(() -> new IllegalStateException("Can't find the event type class name for event mixin class " + eventMixinClassName));
     }

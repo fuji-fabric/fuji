@@ -28,7 +28,7 @@ public class EventInjector {
         Class<? extends BaseEvent> eventTypeClass = (Class<? extends BaseEvent>) Class.forName(eventTypeClassName);
         eventConsumerInfoList
             .stream()
-            .filter(eventConsumerInfo -> ModuleManager.shouldWeLoadThis(eventConsumerInfo.getDeclaringClassName()))
+            .filter(eventConsumerInfo -> ModuleManager.shouldLoadThis(eventConsumerInfo.getDeclaringClassName()))
             .forEach(eventConsumerInfo -> inject(eventTypeClass, eventConsumerInfo));
     }
 

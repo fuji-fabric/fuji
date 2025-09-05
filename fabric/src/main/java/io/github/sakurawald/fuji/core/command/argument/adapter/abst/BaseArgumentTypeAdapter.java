@@ -53,7 +53,7 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
 
             ReflectionUtil.CompileTimeGraph.getCompileTimeTxtGraph(ReflectionUtil.CompileTimeGraph.ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME)
                 .stream()
-                .filter(className -> Managers.getModuleManager().shouldWeLoadThis(className))
+                .filter(className -> Managers.getModuleManager().shouldLoadThis(className))
                 .forEach(className -> {
                     try {
                         /* Make the instance of type adapter */
