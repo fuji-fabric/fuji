@@ -2,9 +2,29 @@
   "producers": {
     "io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyPlayerDisplayNameEvent": [
       {
-        "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyPlayerDisplayNameEventMixin",
+        "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyPlayerDisplayNameEventMixin_DEFAULT",
         "declaring_method_name": "handlePlayerListName",
         "injector_priority": 1000
+      },
+      {
+        "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyPlayerDisplayNameEventMixin_HIGHER",
+        "declaring_method_name": "handlePlayerListName",
+        "injector_priority": 1001
+      },
+      {
+        "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyPlayerDisplayNameEventMixin_HIGHEST",
+        "declaring_method_name": "handlePlayerListName",
+        "injector_priority": 2000
+      },
+      {
+        "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyPlayerDisplayNameEventMixin_LOWER",
+        "declaring_method_name": "handlePlayerListName",
+        "injector_priority": 999
+      },
+      {
+        "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyPlayerDisplayNameEventMixin_LOWEST",
+        "declaring_method_name": "handlePlayerListName",
+        "injector_priority": 0
       }
     ],
     "io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyPlayerListNameEvent": [
@@ -36,9 +56,29 @@
     ],
     "io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyServerMetadataEvent": [
       {
-        "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyServerMetadataEventMixin",
+        "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyServerMetadataEventMixin_DEFAULT",
         "declaring_method_name": "handleQueryRequest",
         "injector_priority": 1000
+      },
+      {
+        "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyServerMetadataEventMixin_HIGHER",
+        "declaring_method_name": "handleQueryRequest",
+        "injector_priority": 1001
+      },
+      {
+        "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyServerMetadataEventMixin_HIGHEST",
+        "declaring_method_name": "handleQueryRequest",
+        "injector_priority": 2000
+      },
+      {
+        "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyServerMetadataEventMixin_LOWER",
+        "declaring_method_name": "handleQueryRequest",
+        "injector_priority": 999
+      },
+      {
+        "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyServerMetadataEventMixin_LOWEST",
+        "declaring_method_name": "handleQueryRequest",
+        "injector_priority": 0
       }
     ]
   },

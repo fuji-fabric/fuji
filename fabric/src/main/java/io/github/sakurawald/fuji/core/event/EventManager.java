@@ -2,7 +2,6 @@ package io.github.sakurawald.fuji.core.event;
 
 import io.github.sakurawald.fuji.core.event.abst.BaseEvent;
 import io.github.sakurawald.fuji.core.event.abst.BaseEventConsumer;
-import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.inject.EventInjector;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import java.util.Comparator;
@@ -30,10 +29,6 @@ public class EventManager extends BaseManager {
                 .comparing((BaseEventConsumer<?> it) -> it.getEventConsumerInfo().getInjectorPriority())
                 .thenComparing(it -> it.getEventConsumerInfo().getConsumerPriority())
             );
-    }
-
-    public static <T extends BaseEvent> void dispatchEvent(@NotNull Class<T> eventType, @NotNull T event) {
-        dispatchEvent(eventType, event, EventConsumer.DEFAULT);
     }
 
     @SuppressWarnings("unchecked")
