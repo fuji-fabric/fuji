@@ -11,14 +11,14 @@ import java.lang.reflect.Method;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
-public class EventInjector {
+public class EventConsumerInjector {
 
     public static void injectAll() {
         EventGraph eventGraph = ReflectionUtil.CompileTimeGraph.getEventGraph();
 
         eventGraph
             .getConsumers()
-            .forEach(EventInjector::inject);
+            .forEach(EventConsumerInjector::inject);
     }
 
     @SuppressWarnings("unchecked")
