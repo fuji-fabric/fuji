@@ -58,7 +58,11 @@ public class GenerateEventGraphTest {
                 String eventTypeClassName = it.getEventTypeClassName();
 
                 /* Ensure there are producers for required event type. */
-                List<EventProducerInfo> eventProducerInfoList = eventGraph.ofEventProducerInfoList(eventTypeClassName);
+                List<EventProducerInfo> eventProducerInfoList = eventGraph
+                    .getProducers()
+                    .stream()
+                    .filter(eventProducerInfo -> eventProducerInfo.getEventTypeClassName().equals(eventTypeClassName))
+                    .toList();
 
                 if (eventProducerInfoList.isEmpty()) {
                     throw new IllegalStateException("There is no any producer to satisfy a consumer: eventType = %s".formatted(eventTypeClassName));

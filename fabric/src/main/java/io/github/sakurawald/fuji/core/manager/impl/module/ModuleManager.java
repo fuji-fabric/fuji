@@ -5,7 +5,6 @@ import io.github.sakurawald.fuji.core.auxiliary.ExceptionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.config.Configs;
-import io.github.sakurawald.fuji.core.event.inject.structure.EventGraph;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.mixin.GlobalMixinConfigPlugin;
@@ -15,7 +14,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import lombok.Getter;
 import net.fabricmc.loader.api.FabricLoader;
@@ -28,14 +26,15 @@ public class ModuleManager extends BaseManager {
     public static final String ENABLE_SUPPLIER_KEY = "enable";
     public static final String CORE_MODULE_PATH = "core";
 
-    private static final Set<String> MODULE_PATHS = new HashSet<>(ReflectionUtil.CompileTimeGraph.getCompileTimeTxtGraph(ReflectionUtil.CompileTimeGraph.MODULE_GRAPH_FILE_NAME));
+    private static final Set<String> MODULE_PATHS = new HashSet<>(ReflectionUtil.CompileTimeGraph
+        .getCompileTimeTxtGraph(ReflectionUtil.CompileTimeGraph.MODULE_GRAPH_FILE_NAME));
 
     public static final Map<List<String>, Boolean> MODULE_ENABLE_STATUS = new HashMap<>();
     private static final Map<String, String> CLASS_NAME_2_MODULE_PATH_STRING = new HashMap<>();
     public static final Map<Class<? extends ModuleInitializer>, ModuleInitializer> MODULE_INITIALIZER_BY_CLASS = new HashMap<>();
     public static final Map<String, Class<? extends ModuleInitializer>> MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING = new HashMap<>();
 
-    public static String computeJoinedModulePath(@NotNull String className) {
+    public static @NotNull String computeJoinedModulePath(@NotNull String className) {
         /* This function wrap the computeModulePathAsList function, and providing a cache layer. */
         String modulePathString = CLASS_NAME_2_MODULE_PATH_STRING.get(className);
         if (modulePathString != null) {
@@ -204,37 +203,15 @@ public class ModuleManager extends BaseManager {
         return shouldLoadModule(computeSplitModulePath(className));
     }
 
-    @SuppressWarnings("CodeBlock2Expr")
-    private static Optional<String> findEventTypeClassName(@NotNull String eventMixinClassName) {
-        return ReflectionUtil.CompileTimeGraph
-            .getEventGraph()
-            .getProducers()
-            .entrySet()
-            .stream()
-            .filter(entry -> {
-                return entry.getValue().stream().anyMatch(eventProducerInfo -> {
-                    return eventProducerInfo.getDeclaringClassName().equals(eventMixinClassName);
-                });
-            })
-            .findFirst()
-            .map(Map.Entry::getKey);
-    }
 
     private static boolean shouldLoadOnDemandEventMixin(@NotNull String eventMixinClassName) {
         /* Apply the event mixin, if there is any event consumer requires it.*/
-        EventGraph eventGraph = ReflectionUtil.CompileTimeGraph.getEventGraph();
-
-        return findEventTypeClassName(eventMixinClassName)
-            .map(eventTypeClassName -> {
-                return eventGraph
-                    .getConsumers()
-                    .get(eventTypeClassName)
-                    .stream()
-                    .anyMatch(it -> ModuleManager.shouldLoadThis(it.getDeclaringClassName()));
-            })
-            .orElseThrow(() -> new IllegalStateException("Can't find the event type class name for event mixin class " + eventMixinClassName));
+        return ReflectionUtil.CompileTimeGraph
+            .getEventGraph()
+            .resolveConsumers(eventMixinClassName)
+            .stream()
+            .anyMatch(eventConsumerInfo -> ModuleManager.shouldLoadThis(eventConsumerInfo.getDeclaringClassName()));
     }
-
 
     @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
     private static boolean shouldLoadModule(@NotNull List<String> modulePath) {

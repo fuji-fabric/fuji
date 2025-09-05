@@ -5,7 +5,6 @@ import io.github.sakurawald.fuji.core.event.EventManager;
 import io.github.sakurawald.fuji.core.event.abst.BaseEvent;
 import io.github.sakurawald.fuji.core.event.abst.BaseEventConsumer;
 import io.github.sakurawald.fuji.core.event.inject.structure.EventConsumerInfo;
-import io.github.sakurawald.fuji.core.event.inject.structure.EventConsumerInfoList;
 import io.github.sakurawald.fuji.core.event.inject.structure.EventGraph;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import java.lang.reflect.Method;
@@ -24,12 +23,16 @@ public class EventInjector {
 
     @SuppressWarnings("unchecked")
     @SneakyThrows(ClassNotFoundException.class)
-    private static void inject(@NotNull String eventTypeClassName, @NotNull EventConsumerInfoList eventConsumerInfoList) {
+    private static void inject(@NotNull EventConsumerInfo eventConsumerInfo) {
+        /* Ignore this event consumer, if its declaring class should not be loaded. */
+        if (!ModuleManager.shouldLoadThis(eventConsumerInfo.getDeclaringClassName())) {
+            return;
+        }
+
+        /* Inject this event consumer. */
+        String eventTypeClassName = eventConsumerInfo.getEventTypeClassName();
         Class<? extends BaseEvent> eventTypeClass = (Class<? extends BaseEvent>) Class.forName(eventTypeClassName);
-        eventConsumerInfoList
-            .stream()
-            .filter(eventConsumerInfo -> ModuleManager.shouldLoadThis(eventConsumerInfo.getDeclaringClassName()))
-            .forEach(eventConsumerInfo -> inject(eventTypeClass, eventConsumerInfo));
+        inject(eventTypeClass, eventConsumerInfo);
     }
 
     @SneakyThrows({ClassNotFoundException.class, NoSuchMethodException.class})
