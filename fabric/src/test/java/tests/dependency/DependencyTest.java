@@ -73,6 +73,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.dimension.DimensionTypes;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import tests.dependency.structure.DependencyNode;
 import tests.dependency.structure.FileDependencyChecker;
@@ -230,7 +231,7 @@ public class DependencyTest {
     }
 
     @Test
-//    @Disabled("Enable this test to see the detailed result of dependency nodes.")
+    @Disabled("Enable this test to see the detailed result of dependency nodes.")
     public void listFileDependencies() {
         new FileDependencyChecker()
             .makeDependencyNodes(COMPILE_TIME_JAVA_SOURCE_PATH)

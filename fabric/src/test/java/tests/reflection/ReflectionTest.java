@@ -16,6 +16,8 @@ public class ReflectionTest {
     public static final Set<String> REQUIRED_TYPE_DECLARATIONS = new HashSet<>() {
         {
             this.add("io.github.sakurawald.fuji.core.command.annotation.CommandNode");
+            this.add("io.github.sakurawald.fuji.core.event.annotation.EventConsumer");
+            this.add("io.github.sakurawald.fuji.core.event.annotation.EventProducer");
         }
     };
 
