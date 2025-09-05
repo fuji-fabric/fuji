@@ -5,6 +5,7 @@ import io.github.sakurawald.fuji.core.auxiliary.ExceptionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.config.Configs;
+import io.github.sakurawald.fuji.core.event.inject.structure.EventConsumerInfo;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.mixin.GlobalMixinConfigPlugin;
@@ -203,14 +204,22 @@ public class ModuleManager extends BaseManager {
         return shouldLoadModule(computeSplitModulePath(className));
     }
 
-
-    private static boolean shouldLoadOnDemandEventMixin(@NotNull String eventMixinClassName) {
+    private static boolean shouldLoadOnDemandEventMixin(@NotNull String mixinClassName) {
         /* Apply the event mixin, if there is any event consumer requires it.*/
-        return ReflectionUtil.CompileTimeGraph
+        List<EventConsumerInfo> validConsumers = ReflectionUtil.CompileTimeGraph
             .getEventGraph()
-            .resolveConsumers(eventMixinClassName)
+            .resolveConsumers(mixinClassName)
             .stream()
-            .anyMatch(eventConsumerInfo -> ModuleManager.shouldLoadThis(eventConsumerInfo.getDeclaringClassName()));
+            .filter(eventConsumerInfo -> ModuleManager.shouldLoadThis(eventConsumerInfo.getDeclaringClassName()))
+            .toList();
+
+        if (validConsumers.isEmpty()) {
+            LogUtil.debug("Skip applying the on-demand event mixin '{}', there are no consumers.", mixinClassName);
+            return false;
+        } else {
+            LogUtil.debug("Apply the on-demand event mixin '{}', to satisfy the consumers: {}", mixinClassName, validConsumers);
+            return true;
+        }
     }
 
     @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
