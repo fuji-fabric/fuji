@@ -21,13 +21,6 @@ public abstract class ServerPlayerEntityMixin {
     @NotNull
     final ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
 
-    @Inject(method = "onDeath", at = @At("HEAD"))
-    public void saveLocationOnDeath(DamageSource damageSource, CallbackInfo ci) {
-        if (BackInitializer.config.model().enable_back_on_death) {
-            BackInitializer.trySaveCurrentLocation(player);
-        }
-    }
-
     #if MC_VER <= MC_1_21
     @Inject(method = "teleport(Lnet/minecraft/server/world/ServerWorld;DDDFF)V", at = @At("HEAD"))
     public void saveLocationOnTeleport(ServerWorld serverWorld, double d, double e, double f, float g, float h, CallbackInfo ci)

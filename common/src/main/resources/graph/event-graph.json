@@ -89,13 +89,64 @@
       "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.ModifyServerMetadataEventMixin_LOWEST",
       "declaring_method_name": "handleQueryRequest",
       "injector_priority": 0
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.impl.on_demand.OnPlayerDeathEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.OnPlayerDeathEventMixin_DEFAULT",
+      "declaring_method_name": "onPlayerDeath",
+      "injector_priority": 1000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.impl.on_demand.OnPlayerDeathEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.OnPlayerDeathEventMixin_HIGHER",
+      "declaring_method_name": "onPlayerDeath",
+      "injector_priority": 1001
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.impl.on_demand.OnPlayerDeathEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.OnPlayerDeathEventMixin_HIGHEST",
+      "declaring_method_name": "onPlayerDeath",
+      "injector_priority": 2000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.impl.on_demand.OnPlayerDeathEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.OnPlayerDeathEventMixin_LOWER",
+      "declaring_method_name": "onPlayerDeath",
+      "injector_priority": 999
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.impl.on_demand.OnPlayerDeathEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.OnPlayerDeathEventMixin_LOWEST",
+      "declaring_method_name": "onPlayerDeath",
+      "injector_priority": 0
     }
   ],
   "consumers": [
     {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.impl.on_demand.OnPlayerDeathEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.back.BackInitializer",
+      "declaring_method_name": "handleOnPlayerDeathEvent",
+      "injector_priority": 1000,
+      "consumer_priority": 1000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.impl.on_demand.OnPlayerDeathEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_event.CommandEventInitializer",
+      "declaring_method_name": "handleOnPlayerDeathEvent",
+      "injector_priority": 1000,
+      "consumer_priority": 1000
+    },
+    {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.impl.on_demand.ModifyPlayerDisplayNameEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_toolbox.nickname.NicknameInitializer",
       "declaring_method_name": "modifyPlayerDisplayName",
+      "injector_priority": 1000,
+      "consumer_priority": 1000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.impl.on_demand.OnPlayerDeathEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.deathlog.DeathLogInitializer",
+      "declaring_method_name": "handleOnPlayerDeathEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000
     },

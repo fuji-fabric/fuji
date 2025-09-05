@@ -12,15 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerPlayerEntity.class)
 public class ServerPlayerEntityMixin {
 
-    @Inject(method = "onDeath", at = @At("HEAD"))
-    public void onPlayerDeath(DamageSource damageSource, CallbackInfo ci) {
-        var config = CommandEventInitializer.config.model().event.on_player_death;
-        if (config.enable) {
-            ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-            CommandEventInitializer.executeCommandOnEvent(player, config.command_list);
-        }
-    }
-
     @Inject(method = "worldChanged(Lnet/minecraft/server/world/ServerWorld;)V", at = @At("TAIL"))
     private void afterWorldChanged(ServerWorld origin, CallbackInfo ci) {
         var config = CommandEventInitializer.config.model().event.after_player_change_world;

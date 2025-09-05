@@ -6,7 +6,9 @@ import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.impl.PlayerEvents;
+import io.github.sakurawald.fuji.core.event.impl.on_demand.OnPlayerDeathEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_event.config.model.CommandEventConfigModel;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -70,6 +72,15 @@ public class CommandEventInitializer extends ModuleInitializer {
         var config = CommandEventInitializer.config.model().event.on_player_left;
         if (config.enable) {
             executeCommandOnEvent(player, config.command_list);
+        }
+    }
+
+    @EventConsumer
+    private static void handleOnPlayerDeathEvent(OnPlayerDeathEvent event) {
+        var config = CommandEventInitializer.config.model().event.on_player_death;
+        if (config.enable) {
+            ServerPlayerEntity player = event.getPlayer();
+            CommandEventInitializer.executeCommandOnEvent(player, config.command_list);
         }
     }
 
