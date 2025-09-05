@@ -21,23 +21,29 @@ public class CheckMixinTreeTest {
             .scan()) {
 
             List<ExtendedAnnotationInfo> mixinClasses = ClassGraphUtil.findTargetAnnotationInstancesAnywhere(scanResult, Mixin.class, false);
-//            checkMixinClassNamingConvention(mixinClasses);
+            checkMixinClassNamingConvention(mixinClasses);
             checkMixinMethodNamingConvention(mixinClasses);
         }
+    }
+
+    private @NotNull String toEffectiveMixinName(@NotNull String mixinClassName) {
+        int index = mixinClassName.lastIndexOf("_");
+        return index == -1 ? mixinClassName : mixinClassName.substring(0,index);
     }
 
     @SuppressWarnings("unused")
     private void checkMixinClassNamingConvention(@NotNull List<ExtendedAnnotationInfo> mixinClasses) {
         List<ExtendedAnnotationInfo> violationList = mixinClasses
             .stream()
-            .filter(it ->
-                !it.getDeclaringClass().getSimpleName().endsWith("Mixin")
-                && !it.getDeclaringClass().getSimpleName().endsWith("Template")
+            .filter(it -> {
+                    String effectiveMixinName = toEffectiveMixinName(it.getDeclaringClass().getSimpleName());
+                    return !effectiveMixinName.endsWith("Mixin");
+                }
             )
             .toList();
 
         if (!violationList.isEmpty()) {
-            LogUtil.error("The name of a mixin class should ends with 'Mixin' or 'Template': violationList = {}", violationList.stream().map(it -> it.getDeclaringClass().getName()).toList());
+            LogUtil.error("The name of a mixin class should ends with 'Mixin': violationList = {}", violationList.stream().map(it -> it.getDeclaringClass().getName()).toList());
             throw new RuntimeException();
         }
 
