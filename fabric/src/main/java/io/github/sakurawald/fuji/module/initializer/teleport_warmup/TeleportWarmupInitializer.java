@@ -119,13 +119,13 @@ public class TeleportWarmupInitializer extends ModuleInitializer {
                 , event.getPositionFlags()
             );
             Managers.getBossBarManager().addTicket(teleportTicket);
-            event.getCallbackInfoReturnable().cancel();
+            event.getCallbackInfo().cancel();
             return;
         }
 
         if (!existingTeleportTicket.get().isCompleted()) {
             TextHelper.sendTextByKey(player, "teleport_warmup.another_teleportation_in_progress");
-            event.getCallbackInfoReturnable().cancel();
+            event.getCallbackInfo().cancel();
             return;
         }
 

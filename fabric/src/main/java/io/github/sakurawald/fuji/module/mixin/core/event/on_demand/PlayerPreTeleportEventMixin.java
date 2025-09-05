@@ -15,6 +15,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+#if MC_VER <= MC_1_21
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+#endif
+
 @PhasedMixinTemplate
 @Mixin(value = ServerPlayerEntity.class)
 public abstract class PlayerPreTeleportEventMixin {
@@ -23,12 +27,12 @@ public abstract class PlayerPreTeleportEventMixin {
     @Inject(method = "teleport(Lnet/minecraft/server/world/ServerWorld;DDDFF)V", at = @At("HEAD"))
     private void dispatchPlayerPreTeleportEvent(ServerWorld serverWorld, double d, double e, double f, float g, float h, CallbackInfo ci)
     {
-        dispatchEvent(serverWorld, d, e, f, Set.of(), g, h, cir);
+        dispatchEvent(serverWorld, d, e, f, g, h, Set.of(), ci);
     }
 
     @Inject(method = "teleport(Lnet/minecraft/server/world/ServerWorld;DDDLjava/util/Set;FF)Z", at = @At("HEAD"))
     private void dispatchPlayerPreTeleportEvent(ServerWorld serverWorld, double d, double e, double f, Set<PositionFlag> set, float g, float h, CallbackInfoReturnable<Boolean> cir) {
-        dispatchEvent(serverWorld, d, e, f, set, g, h, cir);
+        dispatchEvent(serverWorld, d, e, f, g, h, Set.of(), cir);
     }
 
     #elif MC_VER > MC_1_21
@@ -41,9 +45,9 @@ public abstract class PlayerPreTeleportEventMixin {
 
     @EventProducer(PlayerPreTeleportEvent.class)
     @Unique
-    private void dispatchEvent(ServerWorld serverWorld, double d, double e, double f, float g, float h, Set<PositionFlag> set, CallbackInfoReturnable<Boolean> cir) {
+    private void dispatchEvent(ServerWorld serverWorld, double d, double e, double f, float g, float h, Set<PositionFlag> set, CallbackInfo ci) {
         final ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-        PlayerPreTeleportEvent event = new PlayerPreTeleportEvent(cir, player, serverWorld, d, e, f, g, h, set);
+        PlayerPreTeleportEvent event = new PlayerPreTeleportEvent(ci, player, serverWorld, d, e, f, g, h, set);
         EventManager.dispatchEvent(PlayerPreTeleportEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
     }
 

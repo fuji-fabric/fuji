@@ -9,13 +9,13 @@ import net.minecraft.network.packet.s2c.play.PositionFlag;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 public class PlayerPreTeleportEvent extends BaseEvent {
-    @NotNull CallbackInfoReturnable<Boolean> callbackInfoReturnable;
+    @NotNull CallbackInfo callbackInfo;
     @NotNull ServerPlayerEntity player;
     @NotNull ServerWorld destinationDimension;
     double destinationX;
