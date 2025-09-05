@@ -17,6 +17,7 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.impl.on_demand.OnPlayerDeathEvent;
+import io.github.sakurawald.fuji.core.event.impl.on_demand.PlayerPreTeleportEvent;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -198,16 +199,17 @@ public class BackInitializer extends ModuleInitializer {
         locationHistory.trimEntries(getMaxBackLocationEntriesToSave(player));
     }
 
-    public static void trySaveCurrentLocationOnTeleport(ServerPlayerEntity player) {
-        if (config.model().enable_back_on_teleport) {
-            trySaveCurrentLocation(player);
+    @EventConsumer
+    private static void handleOnPlayerDeathEvent(OnPlayerDeathEvent event) {
+        if (config.model().enable_back_on_death) {
+            trySaveCurrentLocation(event.getPlayer());
         }
     }
 
     @EventConsumer
-    private static void handleOnPlayerDeathEvent(OnPlayerDeathEvent event) {
-        if (BackInitializer.config.model().enable_back_on_death) {
-            BackInitializer.trySaveCurrentLocation(event.getPlayer());
+    private static void handlePlayerPreTeleportEvent(PlayerPreTeleportEvent event) {
+        if (config.model().enable_back_on_teleport) {
+            trySaveCurrentLocation(event.getPlayer());
         }
     }
 }

@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.teleport_warmup;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
@@ -10,8 +11,11 @@ import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.impl.on_demand.PlayerPreTeleportEvent;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarTicket;
+import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.core.structure.TeleportTicket;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.teleport_warmup.config.model.TeleportWarmupConfigModel;
@@ -87,5 +91,44 @@ public class TeleportWarmupInitializer extends ModuleInitializer {
         Optional<Double> warmupSecondsSpecifiedByMeta = LuckpermsHelper.getMeta(player.getUuid(), TELEPORT_WARMUP_TIME_META);
         return warmupSecondsSpecifiedByMeta
             .orElse(config.model().warmup_second);
+    }
+
+    @EventConsumer(injectorPriority = EventConsumer.LOWEST)
+    @SuppressWarnings("UnnecessaryReturnStatement")
+    private static void handlePlayerPreTeleportEvent(PlayerPreTeleportEvent event) {
+        ServerPlayerEntity player = event.getPlayer();
+        ServerWorld destinationDimension = event.getDestinationDimension();
+
+        if (!TeleportWarmupInitializer.shouldApplyTeleportWarmup(destinationDimension, player)) {
+            return;
+        }
+
+        /* Add a new ticket if none exists. */
+        Optional<BossBarTicket> existingTeleportTicket = TeleportWarmupInitializer.getExistingTeleportTicket(player);
+        if (existingTeleportTicket.isEmpty()) {
+
+            //set warmup seconds to LP permission seconds or default config seconds
+            int warmupDurationMs = (int) (TeleportWarmupInitializer.getWarmupSeconds(player) * 1000);
+
+            TeleportTicket teleportTicket = TeleportTicket.make(
+                player
+                , GlobalPos.of(player)
+                , new GlobalPos(destinationDimension, event.getDestinationX(), event.getDestinationY(), event.getDestinationZ(), event.getDestinationYaw(), event.getDestinationPitch())
+                , warmupDurationMs
+                , TeleportWarmupInitializer.config.model().interruptible
+                , event.getPositionFlags()
+            );
+            Managers.getBossBarManager().addTicket(teleportTicket);
+            event.getCallbackInfoReturnable().cancel();
+            return;
+        }
+
+        if (!existingTeleportTicket.get().isCompleted()) {
+            TextHelper.sendTextByKey(player, "teleport_warmup.another_teleportation_in_progress");
+            event.getCallbackInfoReturnable().cancel();
+            return;
+        }
+
+        // Let this teleport proceed.
     }
 }
