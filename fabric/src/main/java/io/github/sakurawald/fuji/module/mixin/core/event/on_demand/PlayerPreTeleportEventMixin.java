@@ -14,10 +14,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-#if MC_VER <= MC_1_21
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-#endif
 
 @PhasedMixinTemplate
 @Mixin(value = ServerPlayerEntity.class)
