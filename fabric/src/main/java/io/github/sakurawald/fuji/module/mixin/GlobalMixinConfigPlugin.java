@@ -46,16 +46,16 @@ public class GlobalMixinConfigPlugin implements IMixinConfigPlugin {
 
     @Override
     public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
-        // no-op
-    }
-
-    @Override
-    public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
         Optional
             .ofNullable(mixinApplicationInfoMap.get(mixinClassName))
             .ifPresent(it -> {
                 it.setPhase(mixinInfo.getPhase());
                 it.setPriority(mixinInfo.getPriority());
             });
+    }
+
+    @Override
+    public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
+        // no-op
     }
 }

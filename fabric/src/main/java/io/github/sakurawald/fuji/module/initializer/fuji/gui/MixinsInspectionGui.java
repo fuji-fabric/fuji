@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.structure.MixinApplicationInfo;
 import io.github.sakurawald.fuji.module.mixin.GlobalMixinConfigPlugin;
+import java.util.Comparator;
 import java.util.List;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -27,7 +28,14 @@ public class MixinsInspectionGui extends PagedGui<MixinApplicationInfo> {
     }
 
     public static MixinsInspectionGui inspectAll(@NotNull ServerPlayerEntity player) {
-        List<MixinApplicationInfo> entities = GlobalMixinConfigPlugin.mixinApplicationInfoMap.values().stream().toList();
+        List<MixinApplicationInfo> entities = GlobalMixinConfigPlugin.mixinApplicationInfoMap.values()
+            .stream()
+            .sorted(Comparator
+                .comparing(MixinApplicationInfo::getTargetClassName)
+                .thenComparing(MixinApplicationInfo::getMixinClassName)
+                .thenComparing(MixinApplicationInfo::isApplied)
+                .thenComparing(MixinApplicationInfo::getPriority))
+            .toList();
         return new MixinsInspectionGui(null, player, entities, 0);
     }
 
