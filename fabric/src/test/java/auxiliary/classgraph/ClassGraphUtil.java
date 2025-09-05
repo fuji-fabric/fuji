@@ -23,6 +23,13 @@ public class ClassGraphUtil {
             .acceptPackages(ROOT_PACKAGE_NAME);
     }
 
+    public static ScanResult makeScanResult() {
+        return makeBaseClassGraph()
+            .enableAllInfo()
+            .scan();
+    }
+
+
     @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
     public static List<ExtendedAnnotationInfo> findTargetAnnotationInstancesAnywhere(@NotNull ScanResult scanResult, @NotNull Class<? extends Annotation> targetAnnotation, boolean isRepeatableAnnotation) {
         List<ExtendedAnnotationInfo> targetAnnotationInstanceAnywhere = new ArrayList<>();
