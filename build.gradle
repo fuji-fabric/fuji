@@ -182,6 +182,9 @@ javaProjects.each { projectName ->
 
                 /* Fail the compiling if there is any warning. */
                 options.compilerArgs << "-Werror"
+
+                /* Print the AP processing rounds. */
+                options.compilerArgs << "-XprintRounds"
             }
         }
 
