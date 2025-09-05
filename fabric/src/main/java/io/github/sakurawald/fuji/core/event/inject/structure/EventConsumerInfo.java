@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 @AllArgsConstructor
 public class EventConsumerInfo {
 
+    @NotNull String eventTypeClassName;
     @NotNull String declaringClassName;
     @NotNull String declaringMethodName;
 

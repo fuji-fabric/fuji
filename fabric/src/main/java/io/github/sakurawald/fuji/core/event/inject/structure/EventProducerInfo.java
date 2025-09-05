@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 @AllArgsConstructor
 public class EventProducerInfo {
 
+    @NotNull String eventTypeClassName;
     @NotNull String declaringClassName;
     @NotNull String declaringMethodName;
     int injectorPriority;
