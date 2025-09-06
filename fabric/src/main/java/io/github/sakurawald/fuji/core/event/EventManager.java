@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.core.event;
 
 import io.github.sakurawald.fuji.core.event.message.abst.BaseEvent;
 import io.github.sakurawald.fuji.core.event.message.abst.BaseEventConsumer;
-import io.github.sakurawald.fuji.core.event.inject.EventConsumerInjector;
+import io.github.sakurawald.fuji.core.event.inject.StaticEventConsumerInjector;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import java.util.Comparator;
 import java.util.List;
@@ -17,7 +17,7 @@ public class EventManager extends BaseManager {
 
     @Override
     public void onInitialize() {
-        EventConsumerInjector.injectAll();
+        StaticEventConsumerInjector.injectAll();
     }
 
     public static <T extends BaseEvent> void registerEventConsumer(@NotNull Class<T> eventType, @NotNull BaseEventConsumer<T> eventConsumer) {
