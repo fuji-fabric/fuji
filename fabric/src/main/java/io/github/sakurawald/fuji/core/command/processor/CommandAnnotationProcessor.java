@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.core.command.processor;
 
 import com.mojang.brigadier.CommandDispatcher;
 import io.github.sakurawald.fuji.Fuji;
+import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -19,7 +20,9 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.impl.CommandEvents;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.command.OnCommandRegistrationEvent;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -55,30 +58,35 @@ public class CommandAnnotationProcessor {
     public static CommandDispatcher<ServerCommandSource> COMMAND_DISPATCHER;
     public static CommandRegistryAccess COMMAND_REGISTRY_ACCESS;
 
+    @EventConsumer(injectorPriority = EventConsumer.LOWEST)
+    private static void setupCommandManagerReferences(OnCommandRegistrationEvent event) {
+        /* Capture the variables. */
+        CommandAnnotationProcessor.COMMAND_DISPATCHER = event.getDispatcher();
+        CommandAnnotationProcessor.COMMAND_REGISTRY_ACCESS = event.getRegistryAccess();
+    }
+
+    @EventConsumer
+    private static void onCommandRegistrationEvent(@Unused OnCommandRegistrationEvent event) {
+        // NOTE: The `/reload` command will clear all registered commands, and trigger the `REGISTRATION` event.
+        /* Register argument type adapters. */
+        BaseArgumentTypeAdapter.Registry.registerTypeAdapters();
+
+        /* Read the latest permission file. */
+        permission.readStorage();
+
+        /* Register commands. */
+        REGISTERED_COMMAND_DESCRIPTORS.clear();
+        LOADED_COMMAND_PATHS.clear();
+        PUBLIC_COMMAND_PATHS.clear();
+        processClasses();
+
+        /* Write the permission file back. */
+        removePermissionMapOfUnloadedCommandPath();
+        permission.writeStorage();
+    }
+
     @SuppressWarnings("CodeBlock2Expr")
     public static void process() {
-        // NOTE: The `/reload` command will clear all registered commands, and trigger the `REGISTRATION` event.
-        CommandEvents.REGISTRATION.register((dispatcher, registryAccess, environment) -> {
-            /* Capture the variables. */
-            CommandAnnotationProcessor.COMMAND_DISPATCHER = dispatcher;
-            CommandAnnotationProcessor.COMMAND_REGISTRY_ACCESS = registryAccess;
-
-            /* Register argument type adapters. */
-            BaseArgumentTypeAdapter.Registry.registerTypeAdapters();
-
-            /* Read the latest permission file. */
-            permission.readStorage();
-
-            /* Register commands. */
-            REGISTERED_COMMAND_DESCRIPTORS.clear();
-            LOADED_COMMAND_PATHS.clear();
-            PUBLIC_COMMAND_PATHS.clear();
-            processClasses();
-
-            /* Write the permission file back. */
-            removePermissionMapOfUnloadedCommandPath();
-            permission.writeStorage();
-        });
         CommandEvents.AFTER_REGISTRATION.register((m, d, r, e) -> {
             // NOTE: The `/reload` command invalidates the old CommandManager reference, here we have to capture the new reference to CommandManager.
             CommandHelper.updateCommandTree(m);

@@ -132,6 +132,10 @@ public class GenerateEventGraphTest {
                     throw new IllegalArgumentException("The type of return value in method annotated with @EventHandler annotation must be 'void'.");
                 }
 
+                if (!declaringMethod.isStatic()) {
+                    throw new IllegalArgumentException("Expecting a static-method, or specify the `isDynamic` to `true`. (Class = %s, Method = %s)".formatted(declaringClassName, declaringMethodName));
+                }
+
                 MethodParameterInfo[] parameterInfo = declaringMethod.getParameterInfo();
                 if (parameterInfo.length != 1) {
                     throw new IllegalArgumentException("Expecting exactly one parameter in method annotated with @EventHandler annotation. Or specify the event type explicitly.");

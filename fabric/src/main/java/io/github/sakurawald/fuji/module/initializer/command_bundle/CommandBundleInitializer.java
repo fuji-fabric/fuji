@@ -2,29 +2,29 @@ package io.github.sakurawald.fuji.module.initializer.command_bundle;
 
 import com.mojang.brigadier.context.CommandContext;
 import io.github.sakurawald.fuji.core.annotation.Unused;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
-import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
-import io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor;
 import io.github.sakurawald.fuji.core.command.descriptor.CommandDescriptor;
+import io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
-import io.github.sakurawald.fuji.core.document.annotation.TestCase;
-import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.impl.CommandEvents;
-import io.github.sakurawald.fuji.core.document.gui.CommandsInspectionGui;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
+import io.github.sakurawald.fuji.core.document.gui.CommandsInspectionGui;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.command.OnCommandRegistrationEvent;
 import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_bundle.config.model.CommandBundleConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_bundle.structure.BundleCommandDescriptor;
 import java.util.List;
 import net.minecraft.server.command.ServerCommandSource;
-
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826356909L, value = """
@@ -157,7 +157,6 @@ import org.jetbrains.annotations.NotNull;
     """)
 
 
-
 @CommandNode("command-bundle")
 @CommandRequirement(level = 4)
 public class CommandBundleInitializer extends ModuleInitializer {
@@ -219,12 +218,16 @@ public class CommandBundleInitializer extends ModuleInitializer {
 
     @EventConsumer
     private static void registerAllBundleCommands(@Unused ServerStartedEvent event) {
-        // register in server started.
         $registerAllBundleCommands(CommandHelper.Source.getConsoleCommandSource());
-
-        // to register bundle-commands automatically after `/reload` command.
-        CommandEvents.REGISTRATION.register((a, b, c) -> $registerAllBundleCommands(CommandHelper.Source.getConsoleCommandSource()));
     }
+
+    @EventConsumer
+    private static void onCommandRegistrationEvent(@Unused OnCommandRegistrationEvent event) {
+        ServerHelper.withServerInstantiated(() -> {
+            $registerAllBundleCommands(CommandHelper.Source.getConsoleCommandSource());
+        });
+    }
+
 
     @TestCase(action = "Issue `/reload`, `/fuji reload`, `/fuji inspect fuji-commands` and `/command-bundle list`", targets = "The bundle commands should be able to register and un-register on the fly.")
     @Override
