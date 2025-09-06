@@ -1,8 +1,8 @@
 package io.github.sakurawald.fuji.core.manager.impl.bossbar;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
-import io.github.sakurawald.fuji.core.event.impl.PlayerEvents;
-import io.github.sakurawald.fuji.core.event.impl.ServerTickEvents;
+import io.github.sakurawald.fuji.core.event.message.impl.PlayerEvents;
+import io.github.sakurawald.fuji.core.event.message.impl.ServerTickEvents;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.structure.InterruptibleTicket;
 import net.minecraft.server.MinecraftServer;

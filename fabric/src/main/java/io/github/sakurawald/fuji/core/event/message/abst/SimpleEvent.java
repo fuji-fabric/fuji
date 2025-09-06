@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.event.abst;
+package io.github.sakurawald.fuji.core.event.message.abst;
 
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;

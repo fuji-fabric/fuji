@@ -8,7 +8,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.impl.on_demand.OnPlayerDeathEvent;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.OnPlayerDeathEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.deathlog.gui.DeathDataListGui;
 import io.github.sakurawald.fuji.module.initializer.deathlog.structure.DeathNode;

@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.core.manager.impl.task;
 
-import io.github.sakurawald.fuji.core.event.impl.ServerTickEvents;
+import io.github.sakurawald.fuji.core.event.message.impl.ServerTickEvents;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import io.github.sakurawald.fuji.core.manager.impl.task.structure.GameTask;
 import java.util.Collection;

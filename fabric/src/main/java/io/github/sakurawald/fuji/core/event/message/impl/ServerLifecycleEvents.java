@@ -1,6 +1,6 @@
-package io.github.sakurawald.fuji.core.event.impl;
+package io.github.sakurawald.fuji.core.event.message.impl;
 
-import io.github.sakurawald.fuji.core.event.abst.SimpleEvent;
+import io.github.sakurawald.fuji.core.event.message.abst.SimpleEvent;
 import net.minecraft.server.MinecraftServer;
 
 public class ServerLifecycleEvents {

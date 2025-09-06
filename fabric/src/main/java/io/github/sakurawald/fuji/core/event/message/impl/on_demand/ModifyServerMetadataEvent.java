@@ -1,6 +1,6 @@
-package io.github.sakurawald.fuji.core.event.impl.on_demand;
+package io.github.sakurawald.fuji.core.event.message.impl.on_demand;
 
-import io.github.sakurawald.fuji.core.event.abst.BaseEvent;
+import io.github.sakurawald.fuji.core.event.message.abst.BaseEvent;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.minecraft.server.ServerMetadata;

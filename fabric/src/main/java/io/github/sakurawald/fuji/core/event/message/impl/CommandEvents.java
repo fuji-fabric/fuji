@@ -1,8 +1,8 @@
-package io.github.sakurawald.fuji.core.event.impl;
+package io.github.sakurawald.fuji.core.event.message.impl;
 
 import com.mojang.brigadier.CommandDispatcher;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
-import io.github.sakurawald.fuji.core.event.abst.SimpleEvent;
+import io.github.sakurawald.fuji.core.event.message.abst.SimpleEvent;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;

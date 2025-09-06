@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.module.mixin.core.event;
 
 import com.mojang.brigadier.CommandDispatcher;
-import io.github.sakurawald.fuji.core.event.impl.CommandEvents;
+import io.github.sakurawald.fuji.core.event.message.impl.CommandEvents;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;

@@ -9,8 +9,8 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.gui.CommandsInspectionGui;
-import io.github.sakurawald.fuji.core.event.impl.CommandEvents;
-import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.event.message.impl.CommandEvents;
+import io.github.sakurawald.fuji.core.event.message.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_alias.config.model.CommandAliasConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_alias.service.CommandAliasService;

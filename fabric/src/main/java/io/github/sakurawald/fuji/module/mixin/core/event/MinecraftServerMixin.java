@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.module.mixin.core.event;
 
-import io.github.sakurawald.fuji.core.event.impl.ServerLifecycleEvents;
-import io.github.sakurawald.fuji.core.event.impl.ServerTickEvents;
+import io.github.sakurawald.fuji.core.event.message.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.event.message.impl.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

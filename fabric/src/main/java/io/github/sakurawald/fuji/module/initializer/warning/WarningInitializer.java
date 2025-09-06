@@ -17,7 +17,7 @@ import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
-import io.github.sakurawald.fuji.core.event.impl.PlayerEvents;
+import io.github.sakurawald.fuji.core.event.message.impl.PlayerEvents;
 import io.github.sakurawald.fuji.core.service.duration_parser.DurationParser;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.warning.config.model.WarningConfigModel;

@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.mixin.core.event;
 
-import io.github.sakurawald.fuji.core.event.impl.PlayerEvents;
+import io.github.sakurawald.fuji.core.event.message.impl.PlayerEvents;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;

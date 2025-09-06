@@ -10,7 +10,7 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.impl.on_demand.OnPlayerChatMessageEvent;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.OnPlayerChatMessageEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.chat.trigger.config.model.ChatTriggerConfigModel;
 import java.util.List;

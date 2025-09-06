@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.core.event;
 
-import io.github.sakurawald.fuji.core.event.abst.BaseEvent;
-import io.github.sakurawald.fuji.core.event.abst.BaseEventConsumer;
+import io.github.sakurawald.fuji.core.event.message.abst.BaseEvent;
+import io.github.sakurawald.fuji.core.event.message.abst.BaseEventConsumer;
 import io.github.sakurawald.fuji.core.event.inject.EventConsumerInjector;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import java.util.Comparator;
