@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.command_alias;
 
 import com.mojang.brigadier.context.CommandContext;
+import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -9,8 +10,9 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.gui.CommandsInspectionGui;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.impl.CommandEvents;
-import io.github.sakurawald.fuji.core.event.message.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_alias.config.model.CommandAliasConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_alias.service.CommandAliasService;
@@ -50,12 +52,10 @@ public class CommandAliasInitializer extends ModuleInitializer {
             .inspectCommandDescriptors(ctx, it -> it instanceof AliasCommandDescriptor);
     }
 
-    @Override
-    protected void onInitialize() {
-        ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
-            CommandAliasService.registerAllAliasCommands();
-            CommandEvents.REGISTRATION.register((a, b, c) -> CommandAliasService.registerAllAliasCommands());
-        });
+    @EventConsumer
+    private static void registerAllAliasCommands(@Unused ServerStartedEvent event) {
+        CommandAliasService.registerAllAliasCommands();
+        CommandEvents.REGISTRATION.register((a, b, c) -> CommandAliasService.registerAllAliasCommands());
     }
 
     @Override
