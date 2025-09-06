@@ -33,13 +33,14 @@ public class EventManager extends BaseManager {
 
     @SuppressWarnings("unchecked")
     public static <T extends BaseEvent> void dispatchEvent(@NotNull Class<T> eventType, @NotNull T event, int eventInjectorPriority) {
-        getEventConsumerList(eventType)
-            .stream()
-            .filter(it -> it.getEventConsumerInfo().getInjectorPriority() == eventInjectorPriority)
-            .forEach(it -> {
-                BaseEventConsumer<T> eventConsumers = (BaseEventConsumer<T>) it;
-                eventConsumers.consumeEvent(event);
-            });
+        for (BaseEventConsumer<?> eventConsumer : getEventConsumerList(eventType)) {
+            if (eventConsumer.getEventConsumerInfo().getInjectorPriority() != eventInjectorPriority) {
+                continue;
+            }
+
+            BaseEventConsumer<T> $eventConsumer = (BaseEventConsumer<T>) eventConsumer;
+            $eventConsumer.consumeEvent(event);
+        }
     }
 
     private static @NotNull List<BaseEventConsumer<?>> getEventConsumerList(@NotNull Class<? extends BaseEvent> eventType) {
