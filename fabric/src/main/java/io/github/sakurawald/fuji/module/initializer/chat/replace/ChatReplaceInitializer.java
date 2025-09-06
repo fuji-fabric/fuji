@@ -40,11 +40,12 @@ public class ChatReplaceInitializer extends ModuleInitializer {
     private static final BaseConfigurationHandler<ChatReplaceConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatReplaceConfigModel.class);
 
     @TestCase(action = "Test the `chat replace` and `chat trigger` module.", targets = {
-         "Case: `inv`"
-        , "Case: `prefix inv`"
-        , "Case: `prefix inv `"
-        , "Case: `prefix inv item ender suffix inv suffix`"
-        , "Case: `prefix prefix item`"
+         "Input `inv`"
+        , "Input `prefix inv`"
+        , "Input `prefix inv<space>`"
+        , "Input `inv suffix`"
+        , "Input `prefix inv item ender suffix inv suffix`"
+        , "Input `prefix prefix item`"
     })
     public static Text replaceChatText(@NotNull PlayerEntity player, @NotNull Text oldText) {
         MutableText newText = oldText.copy();

@@ -21,11 +21,12 @@
 [Test Case]
 - Module: chat.replace
 - Action: **Test the `chat replace` and `chat trigger` module.**
-- Target: Case: `inv`
-- Target: Case: `prefix inv`
-- Target: Case: `prefix inv `
-- Target: Case: `prefix inv item ender suffix inv suffix`
-- Target: Case: `prefix prefix item`
+- Target: Input `inv`
+- Target: Input `prefix inv`
+- Target: Input `prefix inv<space>`
+- Target: Input `inv suffix`
+- Target: Input `prefix inv item ender suffix inv suffix`
+- Target: Input `prefix prefix item`
 
 [Test Case]
 - Module: color.sign
@@ -157,7 +158,7 @@
 
 [Test Case]
 - Module: core
-- Action: **Issue `/when-online ...` and `/json put ...` commands.**
+- Action: **Issue `/when-online ...` and `/json put 1 2 3 ...` commands.**
 - Target: The command suggestion optimizer should work fine.
 
 [Test Case]
