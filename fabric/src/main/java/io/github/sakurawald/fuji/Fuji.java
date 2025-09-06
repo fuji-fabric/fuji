@@ -24,12 +24,12 @@ public class Fuji implements ModInitializer {
     @Override
     public void onInitialize() {
         Managers.getPrimaryBackupManager().onInitialize();
+        Managers.getEventManager().onInitialize();
         Managers.getBossBarManager().onInitialize();
-        Managers.getModuleManager().onInitialize();
-        Managers.getCallbackManager().onInitialize();
-        Managers.getScheduleManager().onInitialize();
         Managers.getGameTaskManager().onInitialize();
         Managers.getCacheManager().onInitialize();
-        Managers.getEventManager().onInitialize();
+        Managers.getCallbackManager().onInitialize();
+        Managers.getModuleManager().onInitialize();
+        Managers.getScheduleManager().onInitialize();
     }
 }

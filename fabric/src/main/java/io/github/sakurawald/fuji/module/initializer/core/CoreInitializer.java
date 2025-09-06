@@ -120,7 +120,7 @@ public class CoreInitializer extends ModuleInitializer {
         }
     }
 
-    @EventConsumer
+    @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.HIGHEST)
     private static void printModuleStatusReportOnServerStarted(@Unused ServerStartedEvent event) {
         /* Report enabled/disabled modules. */
         List<String> enabledModuleList = ModuleManager.getEnabledModulePaths();
