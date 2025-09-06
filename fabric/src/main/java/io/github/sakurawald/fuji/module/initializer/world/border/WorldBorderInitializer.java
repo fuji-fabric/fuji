@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.world.border;
 
+import io.github.sakurawald.fuji.core.annotation.HotPath;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
@@ -55,12 +56,15 @@ public class WorldBorderInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<WorldBorderConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, WorldBorderConfigModel.class);
 
+    @HotPath("Many game logics will check the game border.")
     public static Optional<BorderDescriptor> getEffectiveBorderDescriptor(String dimensionId) {
-        return config.model().borders
-            .stream()
-            .filter(it -> it.enable
-                && it.dimensionId.equals(dimensionId))
-            .findFirst();
+        for (BorderDescriptor borderDescriptor : config.model().borders) {
+            if (borderDescriptor.enable && borderDescriptor.dimensionId.equals(dimensionId)) {
+                return Optional.of(borderDescriptor);
+            }
+        }
+
+        return Optional.empty();
     }
 
     @Override

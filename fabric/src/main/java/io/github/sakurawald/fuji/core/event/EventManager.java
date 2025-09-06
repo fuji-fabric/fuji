@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.core.event;
 
+import io.github.sakurawald.fuji.core.annotation.HotPath;
 import io.github.sakurawald.fuji.core.event.message.abst.BaseEvent;
 import io.github.sakurawald.fuji.core.event.message.abst.BaseEventConsumer;
 import io.github.sakurawald.fuji.core.event.inject.StaticEventConsumerInjector;
@@ -34,6 +35,7 @@ public class EventManager extends BaseManager {
     }
 
     @SuppressWarnings("unchecked")
+    @HotPath("This is the generic event dispatcher method.")
     public static <T extends BaseEvent> void dispatchEvent(@NotNull Class<T> eventType, @NotNull T event, int eventInjectorPriority) {
         for (BaseEventConsumer<?> eventConsumer : getEventConsumerList(eventType)) {
             if (eventConsumer.getEventConsumerInfo().getInjectorPriority() != eventInjectorPriority) {
