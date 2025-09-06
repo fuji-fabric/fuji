@@ -8,6 +8,8 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerJoinedEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.chat.history.config.model.ChatHistoryConfigModel;
 import java.util.Queue;
@@ -132,7 +134,10 @@ public class ChatHistoryInitializer extends ModuleInitializer {
         chatHistory.add(text);
     }
 
-    public static void replayChatHistory(@NotNull ServerPlayerEntity player) {
+    @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority = EventConsumer.LOWEST)
+    private static void replayChatHistory(OnPlayerJoinedEvent event) {
+        // NOTE: Use a lower priority, to ensure the chat history is re-played before other welcome messages.
+        ServerPlayerEntity player = event.getPlayer();
         chatHistory.forEach(text -> TextHelper.sendMessageByText(player, text));
     }
 
