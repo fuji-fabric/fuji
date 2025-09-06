@@ -16,8 +16,8 @@ import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionExc
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.OnPlayerDeathEvent;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.PlayerPreTeleportEvent;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerDeathEvent;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.PlayerPreTeleportEvent;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;

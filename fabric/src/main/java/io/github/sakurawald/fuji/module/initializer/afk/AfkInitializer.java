@@ -12,7 +12,7 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.impl.ServerLifecycleEvents;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.ModifyPlayerListNameEvent;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.ModifyPlayerListNameEvent;
 import io.github.sakurawald.fuji.core.extension.PlayerCombatExtension;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.manager.Managers;

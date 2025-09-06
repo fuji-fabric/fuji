@@ -8,7 +8,7 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.impl.PlayerEvents;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.OnPlayerDeathEvent;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerDeathEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_event.config.model.CommandEventConfigModel;
 import net.minecraft.server.network.ServerPlayerEntity;
