@@ -29,17 +29,12 @@ public class TesterInitializer extends ModuleInitializer {
     @CommandNode("run")
     private static int $run(@CommandSource ServerCommandSource source) {
 
-
-
+//        registerHelloEvent();
 
 
 
         return CommandHelper.Return.SUCCESS;
     }
-
-
-
-
 
     @CommandNode("split")
     private static int $split(@CommandSource ServerCommandSource source, @CommandTarget ServerPlayerEntity target, String string) {

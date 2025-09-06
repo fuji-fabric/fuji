@@ -121,6 +121,36 @@
       "injector_priority": 0
     },
     {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerDamagedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.OnPlayerDamagedEventMixin_DEFAULT",
+      "declaring_method_name": "produceOnPlayerDamagedEvent",
+      "injector_priority": 1000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerDamagedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.OnPlayerDamagedEventMixin_HIGHER",
+      "declaring_method_name": "produceOnPlayerDamagedEvent",
+      "injector_priority": 1001
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerDamagedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.OnPlayerDamagedEventMixin_HIGHEST",
+      "declaring_method_name": "produceOnPlayerDamagedEvent",
+      "injector_priority": 2000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerDamagedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.OnPlayerDamagedEventMixin_LOWER",
+      "declaring_method_name": "produceOnPlayerDamagedEvent",
+      "injector_priority": 999
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerDamagedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.OnPlayerDamagedEventMixin_LOWEST",
+      "declaring_method_name": "produceOnPlayerDamagedEvent",
+      "injector_priority": 0
+    },
+    {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerDeathEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.on_demand.OnPlayerDeathEventMixin_DEFAULT",
       "declaring_method_name": "produceOnPlayerDeathEvent",
@@ -417,9 +447,25 @@
       "is_dynamic": true
     },
     {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerDamagedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarManager",
+      "declaring_method_name": "processOnPlayerDamagedEvent",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.tick.ServerTickStartEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarManager",
       "declaring_method_name": "tickBossBarTickets",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerJoinedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.core.manager.impl.cache.CacheManager",
+      "declaring_method_name": "updateGameProfileCache",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
@@ -513,6 +559,14 @@
       "is_dynamic": false
     },
     {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerJoinedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_event.CommandEventInitializer",
+      "declaring_method_name": "processOnPlayerJoinedEvent",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerLeftEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_event.CommandEventInitializer",
       "declaring_method_name": "processOnPlayerLeaveEvent",
@@ -540,6 +594,14 @@
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStoppingEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_meta.delay.DelayInitializer",
       "declaring_method_name": "shutdownDelaySchedulerExecutor",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerJoinedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_meta.when_online.WhenOnlineInitializer",
+      "declaring_method_name": "processWhenOnlineTickets",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
@@ -585,9 +647,25 @@
       "is_dynamic": false
     },
     {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerJoinedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.leaderboard.LeaderBoardInitializer",
+      "declaring_method_name": "updateLeaderBoardOnPlayerJoined",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerLeftEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.leaderboard.LeaderBoardInitializer",
       "declaring_method_name": "updateLeaderBoardOnPlayerLeft",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerJoinedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.maintenance.service.MaintenanceService",
+      "declaring_method_name": "processMaintenanceModeOnPlayerJoined",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
@@ -644,6 +722,14 @@
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.ModifyPlayerListNameEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.tab.TabListInitializer",
       "declaring_method_name": "modifyPlayerListName",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerJoinedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.warning.WarningInitializer",
+      "declaring_method_name": "notifyOnPlayerJoined",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false

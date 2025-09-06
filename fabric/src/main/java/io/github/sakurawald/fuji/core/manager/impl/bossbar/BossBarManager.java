@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.core.manager.impl.bossbar;
 import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.impl.PlayerEvents;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerDamagedEvent;
 import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.tick.ServerTickStartEvent;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.structure.InterruptibleTicket;
@@ -21,16 +21,18 @@ public class BossBarManager extends BaseManager {
     private static final List<BossBarTicket> tickets = new CopyOnWriteArrayList<>();
     private static final List<BossBarTicket> addedTickets = new CopyOnWriteArrayList<>();
 
-    @Override
-    public void onInitialize() {
-        PlayerEvents.ON_DAMAGED.register((player, damageSource, amount) -> tickets.stream()
+    @EventConsumer
+    private static void processOnPlayerDamagedEvent(OnPlayerDamagedEvent event) {
+        ServerPlayerEntity player = event.getPlayer();
+        tickets
+            .stream()
             .filter(it -> it instanceof InterruptibleTicket interruptibleTicket
                 && interruptibleTicket.getInterruptible().isEnable()
                 && interruptibleTicket.getInterruptible().isInterruptOnDamaged()
                 // the spawn mechanism of fake-player is different, they are spawned in overworld, and then teleport to target position.
                 && PlayerHelper.isRealPlayer(player)
                 && it.getPlayers().stream().anyMatch(p -> p.equals(player)))
-            .forEach(it -> it.setAborted(true)));
+            .forEach(it -> it.setAborted(true));
     }
 
 
@@ -112,4 +114,6 @@ public class BossBarManager extends BaseManager {
         abortedTickets.forEach(BossBarManager::abortTicket);
     }
 
+    @Override
+    public void onInitialize() {}
 }
