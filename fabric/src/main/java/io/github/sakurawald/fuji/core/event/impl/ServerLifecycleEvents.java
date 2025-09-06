@@ -1,17 +1,17 @@
 package io.github.sakurawald.fuji.core.event.impl;
 
-import io.github.sakurawald.fuji.core.event.abst.Event;
+import io.github.sakurawald.fuji.core.event.abst.SimpleEvent;
 import net.minecraft.server.MinecraftServer;
 
 public class ServerLifecycleEvents {
 
-    public static Event<ServerStartingCallback> SERVER_STARTING = new Event<>((listeners) -> (server) -> listeners.forEach(listener -> listener.fire(server)));
+    public static SimpleEvent<ServerStartingCallback> SERVER_STARTING = new SimpleEvent<>((listeners) -> (server) -> listeners.forEach(listener -> listener.fire(server)));
 
-    public static Event<ServerStartedCallback> SERVER_STARTED = new Event<>((listeners) -> (server) -> listeners.forEach(listener -> listener.fire(server)));
+    public static SimpleEvent<ServerStartedCallback> SERVER_STARTED = new SimpleEvent<>((listeners) -> (server) -> listeners.forEach(listener -> listener.fire(server)));
 
-    public static Event<ServerStoppedCallback> SERVER_STOPPED = new Event<>((listeners) -> (server) -> listeners.forEach(listener -> listener.fire(server)));
+    public static SimpleEvent<ServerStoppedCallback> SERVER_STOPPED = new SimpleEvent<>((listeners) -> (server) -> listeners.forEach(listener -> listener.fire(server)));
 
-    public static Event<ServerStoppingCallback> SERVER_STOPPING = new Event<>((listeners) -> (server) -> listeners.forEach(listener -> listener.fire(server)));
+    public static SimpleEvent<ServerStoppingCallback> SERVER_STOPPING = new SimpleEvent<>((listeners) -> (server) -> listeners.forEach(listener -> listener.fire(server)));
 
     public interface ServerStartingCallback {
         void fire(MinecraftServer server);

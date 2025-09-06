@@ -34,7 +34,6 @@ public class PlayerManagerMixin {
 
     @ModifyArg(method = "setMainWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/border/WorldBorder;addListener(Lnet/minecraft/world/border/WorldBorderListener;)V", ordinal = 0))
     WorldBorderListener registerPerDimensionWorldBorderListener(WorldBorderListener original, @Local(argsOnly = true) ServerWorld serverWorld) {
-        PlayerManager playerManager = (PlayerManager) (Object) this;
         return new PerDimensionWorldBorderListener();
     }
 

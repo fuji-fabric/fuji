@@ -30,13 +30,13 @@ import java.util.function.Function;
     For some convenient and stable event, you can use mixin to create abstraction for them.
     For example, the `player joined event`...
     """)
-public class Event<T> {
+public class SimpleEvent<T> {
 
     private final List<T> handlers = new ArrayList<>();
     private final Function<List<T>, T> invokerFactory;
     private T invoker;
 
-    public Event(Function<List<T>, T> invokerFactory) {
+    public SimpleEvent(Function<List<T>, T> invokerFactory) {
         this.invokerFactory = invokerFactory;
         this.makeNewInvoker();
     }
