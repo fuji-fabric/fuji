@@ -1,11 +1,12 @@
 package io.github.sakurawald.fuji.core.manager.impl.bossbar;
 
+import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.impl.PlayerEvents;
-import io.github.sakurawald.fuji.core.event.message.impl.ServerTickEvents;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.ServerTickStartEvent;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.structure.InterruptibleTicket;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,13 +18,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class BossBarManager extends BaseManager {
 
-    private final List<BossBarTicket> tickets = new CopyOnWriteArrayList<>();
-    private final List<BossBarTicket> addedTickets = new CopyOnWriteArrayList<>();
+    private static final List<BossBarTicket> tickets = new CopyOnWriteArrayList<>();
+    private static final List<BossBarTicket> addedTickets = new CopyOnWriteArrayList<>();
 
     @Override
     public void onInitialize() {
-        ServerTickEvents.START_SERVER_TICK.register(this::onServerTick);
-
         PlayerEvents.ON_DAMAGED.register((player, damageSource, amount) -> tickets.stream()
             .filter(it -> it instanceof InterruptibleTicket interruptibleTicket
                 && interruptibleTicket.getInterruptible().isEnable()
@@ -34,22 +33,24 @@ public class BossBarManager extends BaseManager {
             .forEach(it -> it.setAborted(true)));
     }
 
-    public Collection<BossBarTicket> getTickets() {
-        return Collections.unmodifiableCollection(this.tickets);
+
+    public static Collection<BossBarTicket> getTickets() {
+        return Collections.unmodifiableCollection(tickets);
     }
 
-    public void addTicket(BossBarTicket ticket) {
-        this.addedTickets.add(ticket);
+    public static void addTicket(BossBarTicket ticket) {
+        addedTickets.add(ticket);
     }
 
-    private void abortTicket(@NotNull BossBarTicket ticket) {
+    private static void abortTicket(@NotNull BossBarTicket ticket) {
         ticket.clearPlayers();
-        this.tickets.remove(ticket);
+        tickets.remove(ticket);
     }
 
-    private void onServerTick(MinecraftServer server) {
+    @EventConsumer
+    private static void tickBossBarTickets(@Unused ServerTickStartEvent event) {
         /* add tickets */
-        this.tickets.addAll(addedTickets);
+        tickets.addAll(addedTickets);
         addedTickets.clear();
 
         /* iterate tickets */
@@ -108,7 +109,7 @@ public class BossBarManager extends BaseManager {
 
         /* process tickets */
         completedTickets.forEach(BossBarTicket::onComplete);
-        abortedTickets.forEach(this::abortTicket);
+        abortedTickets.forEach(BossBarManager::abortTicket);
     }
 
 }

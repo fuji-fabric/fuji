@@ -1,36 +1,36 @@
 package io.github.sakurawald.fuji.core.manager.impl.task;
 
-import io.github.sakurawald.fuji.core.event.message.impl.ServerTickEvents;
+import io.github.sakurawald.fuji.core.annotation.Unused;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.ServerTickStartEvent;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import io.github.sakurawald.fuji.core.manager.impl.task.structure.GameTask;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
-import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.NotNull;
 
 public class GameTaskManager extends BaseManager {
 
-    private final CopyOnWriteArrayList<GameTask> tasks = new CopyOnWriteArrayList<>();
+    private static final CopyOnWriteArrayList<GameTask> TASK_QUEUE = new CopyOnWriteArrayList<>();
 
     @Override
-    public void onInitialize() {
-        ServerTickEvents.START_SERVER_TICK.register(this::onGameTick);
-    }
+    public void onInitialize() {}
 
-    private void onGameTick(@NotNull MinecraftServer server) {
+    @EventConsumer
+    private static void tickGameTasks(@Unused ServerTickStartEvent event) {
         /* Run tasks in server thread. */
-        tasks.forEach(GameTask::onTick);
+        TASK_QUEUE.forEach(GameTask::onTick);
 
         /* Remove completed tasks. */
-        tasks.removeIf(GameTask::isCompleted);
+        TASK_QUEUE.removeIf(GameTask::isCompleted);
     }
 
-    public void submitTask(@NotNull GameTask task) {
-        this.tasks.add(task);
+    public static void submitTask(@NotNull GameTask task) {
+        TASK_QUEUE.add(task);
     }
 
-    public void submitTasks(@NotNull Collection<GameTask> tasks) {
-        this.tasks.addAll(tasks);
+    public static void submitTasks(@NotNull Collection<GameTask> tasks) {
+        TASK_QUEUE.addAll(tasks);
     }
 
 

@@ -65,7 +65,7 @@ public class GenerateEventGraphTest {
                     .toList();
 
                 if (eventProducerInfoList.isEmpty()) {
-                    throw new IllegalStateException("There is no any producer to satisfy a consumer: eventType = %s".formatted(eventTypeClassName));
+                    throw new IllegalStateException("There is no any producer to satisfy a consumer: eventType = %s (Class = %s, Method = %s)".formatted(eventTypeClassName, it.getDeclaringClassName(), it.getDeclaringMethodName()));
                 }
 
                 /* Ensure there are producers for required injector point. */
@@ -133,7 +133,7 @@ public class GenerateEventGraphTest {
             }
 
             if (!declaringMethod.isStatic()) {
-                throw new IllegalArgumentException("The method annotated with @EventHandler annotation must be 'static'.");
+                throw new IllegalArgumentException("The method annotated with @EventHandler annotation must be 'static'. (Class = %s, Method = %s)".formatted(declaringClassName, declaringMethodName));
             }
 
             EventConsumerInfo eventConsumerInfo = makeEventConsumerInfo(extendedAnnotationInfo, parameterInfo[0].getTypeDescriptor().toString(), declaringClassName, declaringMethodName);

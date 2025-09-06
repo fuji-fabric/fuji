@@ -1,11 +1,13 @@
 package io.github.sakurawald.fuji.module.initializer.world.manager.service;
 
+import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
-import io.github.sakurawald.fuji.core.event.message.impl.ServerTickEvents;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.ServerTickStartEvent;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.core.structure.Pair;
@@ -38,11 +40,8 @@ public class WorldService {
     private static final Set<DimensionCreationTicket> dimensionCreationQueue = new ReferenceOpenHashSet<>();
     private static final Set<DimensionDeletionTicket> dimensionDeletionTicketQueue = new ReferenceOpenHashSet<>();
 
-    static {
-        ServerTickEvents.START_SERVER_TICK.register(server -> processDimensionCreationAndDeletionQueue());
-    }
-
-    private static void processDimensionCreationAndDeletionQueue() {
+    @EventConsumer
+    private static void processDimensionCreationAndDeletionQueue(@Unused ServerTickStartEvent event) {
         dimensionDeletionTicketQueue.removeIf(WorldService::tryConsumeDimensionDeletionTicket);
         dimensionCreationQueue.removeIf(WorldService::tryConsumeDimensionCreationTicket);
     }
