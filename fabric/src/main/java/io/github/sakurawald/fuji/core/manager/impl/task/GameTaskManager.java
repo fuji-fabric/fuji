@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.core.manager.impl.task;
 
 import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.ServerTickStartEvent;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.tick.ServerTickStartEvent;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import io.github.sakurawald.fuji.core.manager.impl.task.structure.GameTask;
 import java.util.Collection;

@@ -4,7 +4,7 @@ import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.impl.PlayerEvents;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.ServerTickStartEvent;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.tick.ServerTickStartEvent;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.structure.InterruptibleTicket;
 import net.minecraft.server.network.ServerPlayerEntity;
