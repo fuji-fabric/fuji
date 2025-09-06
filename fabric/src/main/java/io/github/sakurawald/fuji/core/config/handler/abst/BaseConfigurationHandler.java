@@ -6,11 +6,15 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.config.job.ConfigurationHandlerWriteStorageJob;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
-import io.github.sakurawald.fuji.core.config.migrator.version.VersionPropertyInjector;
 import io.github.sakurawald.fuji.core.config.migrator.transformer.abst.ConfigurationTransformer;
+import io.github.sakurawald.fuji.core.config.migrator.version.VersionPropertyInjector;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
-import io.github.sakurawald.fuji.core.event.message.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.event.EventManager;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.abst.BaseEventConsumer;
+import io.github.sakurawald.fuji.core.event.message.abst.DynamicEventConsumer;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStoppingEvent;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
@@ -143,13 +147,13 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         LogUtil.error("""
 
 
-        [{}]
-        Failed to read configuration file '{}' from storage.
+            [{}]
+            Failed to read configuration file '{}' from storage.
 
-        ◉ Module: {}
-        ◉ File Path: {}
-        ◉ Message: {}
-        """, title, this.filePath, modulePath, this.filePath, e.getMessage());
+            ◉ Module: {}
+            ◉ File Path: {}
+            ◉ Message: {}
+            """, title, this.filePath, modulePath, this.filePath, e.getMessage());
         throw ExceptionUtil.makeReThrownException(e);
     }
 
@@ -208,6 +212,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         return enableAutoSaveFeature(ScheduleManager.CRON_EVERY_TEN_SECONDS);
     }
 
+    @EventConsumer(eventType = ServerStoppingEvent.class, isDynamic = true)
     @SneakyThrows(IOException.class)
     public BaseConfigurationHandler<T> enableAutoSaveFeature(@NotNull String cron) {
         /* Make and schedule the job. */
@@ -225,10 +230,11 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         Managers.getScheduleManager().scheduleJob(writeStorageJob);
 
         /* Write storage on server stopping. */
-        ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
+        BaseEventConsumer<ServerStoppingEvent> dynamicEventConsumer = DynamicEventConsumer.makeDynamic(ServerStoppingEvent.class, EventConsumer.DEFAULT, EventConsumer.DEFAULT, (server) -> {
             LogUtil.debug("Write storage on server stopping: {}", this.filePath);
             this.writeStorage();
         });
+        EventManager.registerEventConsumer(ServerStoppingEvent.class, dynamicEventConsumer);
 
         return this;
     }

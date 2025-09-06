@@ -122,15 +122,16 @@ public class GenerateEventGraphTest {
             MethodInfo declaringMethod = extendedAnnotationInfo.getDeclaringMethod();
             String declaringMethodName = declaringMethod.getName();
 
-            String resultType = declaringMethod.getTypeDescriptor().getResultType().toString();
-            if (!resultType.equals("void")) {
-                throw new IllegalArgumentException("The type of return value in method annotated with @EventHandler annotation must be 'void'.");
-            }
 
             AnnotationClassRef specifiedEventTypeClassRef = (AnnotationClassRef) extendedAnnotationInfo.getAnnotationInfo().getParameterValues().getValue("eventType");
             String eventTypeClassName;
             String specifiedEventTypeClassRefName = specifiedEventTypeClassRef.getName();
             if (specifiedEventTypeClassRefName.equals(Void.class.getName())) {
+                String resultType = declaringMethod.getTypeDescriptor().getResultType().toString();
+                if (!resultType.equals("void")) {
+                    throw new IllegalArgumentException("The type of return value in method annotated with @EventHandler annotation must be 'void'.");
+                }
+
                 MethodParameterInfo[] parameterInfo = declaringMethod.getParameterInfo();
                 if (parameterInfo.length != 1) {
                     throw new IllegalArgumentException("Expecting exactly one parameter in method annotated with @EventHandler annotation. Or specify the event type explicitly.");

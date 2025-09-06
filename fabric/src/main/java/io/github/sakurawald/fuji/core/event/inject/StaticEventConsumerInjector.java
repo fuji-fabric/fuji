@@ -25,12 +25,12 @@ public class StaticEventConsumerInjector {
     @SuppressWarnings("unchecked")
     @SneakyThrows({ClassNotFoundException.class, NoSuchMethodException.class})
     private static <T extends BaseEvent> void injectOne(@NotNull EventConsumerInfo eventConsumerInfo) {
-        /* Ignore this event consumer, if its declaring class should not be loaded. */
+        /* Skip injecting, if its declaring class should not be loaded. */
         if (!ModuleManager.shouldLoadThis(eventConsumerInfo.getDeclaringClassName())) {
             return;
         }
 
-        /* Ignore non-static event consumer. */
+        /* Skip injecting, if it's a dynamic event consumer. */
         if (eventConsumerInfo.isDynamic()) {
             return;
         }
