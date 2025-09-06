@@ -31,6 +31,16 @@ public class ServerHelper {
         getServer().executeSync(runnable);
     }
 
+    public static boolean isServerInstantiated() {
+        return server != null;
+    }
+
+    public static void withServerInstantiated(Runnable runnable) {
+        if (isServerInstantiated()) {
+            runnable.run();
+        }
+    }
+
     @ForDeveloper("""
         If a method is called both in client-side and server-side. Then it will be called twice if the mod is installed in the client-side.
         One for the client, one for the client integrated server.
