@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ServerPlayerEntityMixin {
 
     @Inject(method = "increaseStat(Lnet/minecraft/stat/Stat;I)V", at = @At("HEAD"))
-    public void syncSumUpPlaceholderInMemory(@NotNull Stat<?> stat, int i, CallbackInfo ci) {
+    void syncSumUpPlaceholderInMemory(@NotNull Stat<?> stat, int i, CallbackInfo ci) {
         PlayerEntity player = (PlayerEntity) (Object) this;
 
         if (Stats.KILLED.equals(stat.getType())) {

@@ -23,7 +23,7 @@ public class PlayerManagerMixin {
     private List<ServerPlayerEntity> players;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void patchCopyOnWriteArrayListForServerPlayerList(CallbackInfo ci) {
+    void patchCopyOnWriteArrayListForServerPlayerList(CallbackInfo ci) {
         players = new CopyOnWriteArrayList<>() {
             {
                 LogUtil.debug("Patch CopyOnWriteArrayList for `players` field in PlayerManager");

@@ -18,7 +18,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Mixin(ServerWorld.class)
 public class ServerWorldMixin {
 
-    @SuppressWarnings("ShadowModifiers")
     @Mutable
     @Final
     @Shadow
