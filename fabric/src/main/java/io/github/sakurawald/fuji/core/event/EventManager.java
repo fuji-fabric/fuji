@@ -20,7 +20,7 @@ public class EventManager extends BaseManager {
         EventConsumerInjector.injectAll();
     }
 
-    public static <T extends BaseEvent> void registerEventConsumer(@NotNull Class<? extends BaseEvent> eventType, @NotNull BaseEventConsumer<T> eventConsumer) {
+    public static <T extends BaseEvent> void registerEventConsumer(@NotNull Class<T> eventType, @NotNull BaseEventConsumer<T> eventConsumer) {
         getEventConsumerList(eventType)
             .add(eventConsumer);
 
@@ -38,7 +38,7 @@ public class EventManager extends BaseManager {
             .filter(it -> it.getEventConsumerInfo().getInjectorPriority() == eventInjectorPriority)
             .forEach(it -> {
                 BaseEventConsumer<T> eventConsumers = (BaseEventConsumer<T>) it;
-                eventConsumers.handleEvent(event);
+                eventConsumers.consumeEvent(event);
             });
     }
 

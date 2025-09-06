@@ -5,12 +5,6 @@ import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.event.inject.structure.EventGraph;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
-import java.nio.charset.StandardCharsets;
-import lombok.Cleanup;
-import lombok.Getter;
-import lombok.SneakyThrows;
-import org.jetbrains.annotations.NotNull;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,17 +12,22 @@ import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import lombok.Cleanup;
+import lombok.Getter;
+import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
 public class ReflectionUtil {
 
     public static class CompileTimeGraph {
 
         /* Compile-time generated graphs. */
-        public static final  String GRAPH_DIRECTORY_NAME = "graph";
+        public static final String GRAPH_DIRECTORY_NAME = "graph";
         private static final String GRAPH_CLASSPATH_PREFIX = "/" + GRAPH_DIRECTORY_NAME + "/";
         public static final String MODULE_INITIALIZER_GRAPH_FILE_NAME = "module-initializer-graph.txt";
         public static final String ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME = "argument-type-adapter-graph.txt";
@@ -158,5 +157,15 @@ public class ReflectionUtil {
                 .map(ModuleManager::computeJoinedModulePath)
                 .toList();
         }
+
+        public static StackTraceElement getCallerMethod() {
+            StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+            // [0] = Thread.getStackTrace
+            // [1] = this method (getCallerMethod)
+            // [2] = the method that called getCallerMethod
+            // [3] = the method that called THAT (the actual target caller)
+            return stackTrace[3];
+        }
     }
+
 }

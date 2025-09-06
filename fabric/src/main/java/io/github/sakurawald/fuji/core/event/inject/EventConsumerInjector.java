@@ -6,6 +6,7 @@ import io.github.sakurawald.fuji.core.event.message.abst.BaseEvent;
 import io.github.sakurawald.fuji.core.event.message.abst.BaseEventConsumer;
 import io.github.sakurawald.fuji.core.event.inject.structure.EventConsumerInfo;
 import io.github.sakurawald.fuji.core.event.inject.structure.EventGraph;
+import io.github.sakurawald.fuji.core.event.message.abst.StaticEventConsumer;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import java.lang.reflect.Method;
 import lombok.SneakyThrows;
@@ -40,7 +41,7 @@ public class EventConsumerInjector {
         Class<?> eventConsumerDeclaringClass = Class.forName(eventConsumerInfo.getDeclaringClassName());
         Method eventConsumerDeclaringMethod = eventConsumerDeclaringClass.getDeclaredMethod(eventConsumerInfo.getDeclaringMethodName(), eventTypeClass);
 
-        BaseEventConsumer<T> baseEventConsumer = new BaseEventConsumer<>(eventConsumerInfo, eventTypeClass, eventConsumerDeclaringMethod);
+        BaseEventConsumer<T> baseEventConsumer = StaticEventConsumer.makeStatic(eventConsumerInfo, eventTypeClass, eventConsumerDeclaringMethod);
         EventManager.registerEventConsumer(eventTypeClass, baseEventConsumer);
     }
 
