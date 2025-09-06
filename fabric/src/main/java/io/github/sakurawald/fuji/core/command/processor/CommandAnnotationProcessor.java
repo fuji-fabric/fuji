@@ -21,7 +21,6 @@ import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.impl.CommandEvents;
 import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.command.OnCommandRegistrationEvent;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import java.lang.reflect.Method;
@@ -39,6 +38,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.NotNull;
 
@@ -58,11 +58,18 @@ public class CommandAnnotationProcessor {
     public static CommandDispatcher<ServerCommandSource> COMMAND_DISPATCHER;
     public static CommandRegistryAccess COMMAND_REGISTRY_ACCESS;
 
-    @EventConsumer(injectorPriority = EventConsumer.LOWEST)
+    @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority = EventConsumer.LOWEST)
     private static void setupCommandManagerReferences(OnCommandRegistrationEvent event) {
         /* Capture the variables. */
         CommandAnnotationProcessor.COMMAND_DISPATCHER = event.getDispatcher();
         CommandAnnotationProcessor.COMMAND_REGISTRY_ACCESS = event.getRegistryAccess();
+    }
+
+    @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.HIGHEST)
+    private static void updateCommandTree(OnCommandRegistrationEvent event) {
+        // NOTE: The `/reload` command invalidates the old CommandManager reference, here we have to capture the new reference to CommandManager.
+        CommandManager commandManager = event.getCommandManager();
+        CommandHelper.updateCommandTree(commandManager);
     }
 
     @EventConsumer
@@ -83,14 +90,6 @@ public class CommandAnnotationProcessor {
         /* Write the permission file back. */
         removePermissionMapOfUnloadedCommandPath();
         permission.writeStorage();
-    }
-
-    @SuppressWarnings("CodeBlock2Expr")
-    public static void process() {
-        CommandEvents.AFTER_REGISTRATION.register((m, d, r, e) -> {
-            // NOTE: The `/reload` command invalidates the old CommandManager reference, here we have to capture the new reference to CommandManager.
-            CommandHelper.updateCommandTree(m);
-        });
     }
 
     private static void removePermissionMapOfUnloadedCommandPath() {

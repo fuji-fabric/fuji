@@ -8,7 +8,6 @@ import io.github.sakurawald.fuji.core.manager.impl.backup.PrimaryBackupManager;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarManager;
 import io.github.sakurawald.fuji.core.manager.impl.cache.CacheManager;
 import io.github.sakurawald.fuji.core.manager.impl.callback.CallbackManager;
-import io.github.sakurawald.fuji.core.manager.impl.command.CommandManager;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
 import io.github.sakurawald.fuji.core.manager.impl.task.GameTaskManager;
@@ -34,9 +33,6 @@ public class Managers {
 
     @Getter(lazy = true)
     private static final AttachmentManager attachmentManager = new AttachmentManager();
-
-    @Getter(lazy = true)
-    private static final CommandManager commandManager = new CommandManager();
 
     @Getter(lazy = true)
     private static final CallbackManager callbackManager = new CallbackManager();

@@ -4,6 +4,7 @@ import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
@@ -18,7 +19,8 @@ import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
-import io.github.sakurawald.fuji.core.event.message.impl.CommandEvents;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.command.OnCommandRegistrationEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_permission.config.model.CommandPermissionConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_permission.gui.CommandPermissionGui;
@@ -258,10 +260,8 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         "The `command_permission` module should warp the newly registered commands."
         , "The client-side command tree should be updated."
     })
-    @Override
-    protected void onInitialize() {
-        CommandEvents.AFTER_REGISTRATION.register((m, d, r, e) -> {
-            CommandPermissionService.ensureCommandNodeRequirementIsWrapped();
-        });
+    @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.LOWEST)
+    private static void onCommandRegistrationEvent(@Unused OnCommandRegistrationEvent event) {
+        CommandPermissionService.ensureCommandNodeRequirementIsWrapped();
     }
 }

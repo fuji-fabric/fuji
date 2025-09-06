@@ -43,7 +43,6 @@
     "core.command.CommandContextBuilderMixin",
     "core.command.CommandDispatcherMixin",
     "core.command.CommandNodeMixin",
-    "core.event.CommandManagerMixin",
     "core.event.on_demand.CommandManagerEventMixin_DEFAULT",
     "core.event.on_demand.CommandManagerEventMixin_HIGHER",
     "core.event.on_demand.CommandManagerEventMixin_HIGHEST",
