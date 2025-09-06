@@ -38,16 +38,17 @@ public class EventsInspectionGui extends PagedGui<BaseEventConsumer<?>> {
     @Override
     protected @NotNull GuiElementInterface toGuiElement(@NotNull BaseEventConsumer<?> entity) {
         GuiElementBuilder builder = new GuiElementBuilder();
-        String declaringClassName = entity.getCompiledEventConsumerMethod().getClass().getName();
+        String eventConsumerDeclaringClassName = entity.getEventConsumerMethod().getClass().getName();
 
         builder
             .setItem(Items.OBSERVER)
             .setName(TextHelper.getTextByKey(player, "event"))
             .setLore(List.of(
-                TextHelper.getTextByKey(player, "from_module", ModuleManager.computeJoinedModulePath(declaringClassName)),
+                TextHelper.getTextByKey(player, "from_module", ModuleManager.computeJoinedModulePath(eventConsumerDeclaringClassName)),
                 TextHelper.getTextByKey(player, "event.type", entity.getEventType().getName()),
-                TextHelper.getTextByKey(player, "event.consumer.name", entity.getEventConsumerInfo().getDeclaringMethodName()),
-                TextHelper.getTextByKey(player, "event.consumer.lambda.name", declaringClassName),
+                TextHelper.getTextByKey(player, "event.consumer.class", entity.getClass().getName()),
+                TextHelper.getTextByKey(player, "event.consumer.declaring_class", eventConsumerDeclaringClassName),
+                TextHelper.getTextByKey(player, "event.consumer.declaring_method", entity.getEventConsumerInfo().getDeclaringMethodName()),
                 TextHelper.getTextByKey(player, "event.priority.injector", entity.getEventConsumerInfo().getInjectorPriority()),
                 TextHelper.getTextByKey(player, "event.priority.consumer", entity.getEventConsumerInfo().getConsumerPriority())
             ));

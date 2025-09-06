@@ -417,6 +417,20 @@
       "consumer_priority": 1000
     },
     {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_alias.CommandAliasInitializer",
+      "declaring_method_name": "registerAllAliasCommands",
+      "injector_priority": 1000,
+      "consumer_priority": 1000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_bundle.CommandBundleInitializer",
+      "declaring_method_name": "registerAllBundleCommands",
+      "injector_priority": 1000,
+      "consumer_priority": 1000
+    },
+    {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerDeathEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_event.CommandEventInitializer",
       "declaring_method_name": "handleOnPlayerDeathEvent",
