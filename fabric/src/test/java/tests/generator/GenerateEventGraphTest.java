@@ -122,21 +122,26 @@ public class GenerateEventGraphTest {
             MethodInfo declaringMethod = extendedAnnotationInfo.getDeclaringMethod();
             String declaringMethodName = declaringMethod.getName();
 
-            MethodParameterInfo[] parameterInfo = declaringMethod.getParameterInfo();
-            if (parameterInfo.length != 1) {
-                throw new IllegalArgumentException("Expecting exactly one parameter in method annotated with @EventHandler annotation.");
-            }
-
             String resultType = declaringMethod.getTypeDescriptor().getResultType().toString();
             if (!resultType.equals("void")) {
                 throw new IllegalArgumentException("The type of return value in method annotated with @EventHandler annotation must be 'void'.");
             }
 
-            if (!declaringMethod.isStatic()) {
-                throw new IllegalArgumentException("The method annotated with @EventHandler annotation must be 'static'. (Class = %s, Method = %s)".formatted(declaringClassName, declaringMethodName));
+            AnnotationClassRef specifiedEventTypeClassRef = (AnnotationClassRef) extendedAnnotationInfo.getAnnotationInfo().getParameterValues().getValue("eventType");
+            String eventTypeClassName;
+            String specifiedEventTypeClassRefName = specifiedEventTypeClassRef.getName();
+            if (specifiedEventTypeClassRefName.equals(Void.class.getName())) {
+                MethodParameterInfo[] parameterInfo = declaringMethod.getParameterInfo();
+                if (parameterInfo.length != 1) {
+                    throw new IllegalArgumentException("Expecting exactly one parameter in method annotated with @EventHandler annotation. Or specify the event type explicitly.");
+                }
+
+                eventTypeClassName = parameterInfo[0].getTypeDescriptor().toString();
+            } else {
+                eventTypeClassName = specifiedEventTypeClassRefName;
             }
 
-            EventConsumerInfo eventConsumerInfo = makeEventConsumerInfo(extendedAnnotationInfo, parameterInfo[0].getTypeDescriptor().toString(), declaringClassName, declaringMethodName);
+            EventConsumerInfo eventConsumerInfo = makeEventConsumerInfo(extendedAnnotationInfo, eventTypeClassName, declaringClassName, declaringMethodName);
             eventGraph
                 .getConsumers()
                 .add(eventConsumerInfo);

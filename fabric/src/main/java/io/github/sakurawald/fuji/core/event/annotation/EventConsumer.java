@@ -19,6 +19,11 @@ public @interface EventConsumer {
     int HIGHER = 1001;
     int HIGHEST = 2000;
 
+    @ForDeveloper("""
+        If the value is specified to Void.class, then the event graph maker will use the first method parameter as the event type.
+        """)
+    Class<?> eventType() default Void.class;
+
     @ForDeveloper("The mixin priority for mixin injector, matched exactly.")
     int injectorPriority() default DEFAULT;
 
