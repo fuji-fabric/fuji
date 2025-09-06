@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.jetbrains.annotations.Nullable;
 
 @Document(id = 1751827033037L, value = """
     This module provides the `information management` for `staffs`.
@@ -114,7 +115,9 @@ public class WarningInitializer extends ModuleInitializer {
         String targetPlayerName = targetPlayer.getValue();
         String warningDescription = warning.getValue();
 
-        Long expirationTimestamp = DurationParser.parseIntoExpirationTimestamp(duration.getValue()).orElseThrow();
+        @Nullable Long expirationTimestamp = DurationParser
+            .parseIntoExpirationTimestamp(duration.getValue())
+            .orElse(null);
         String expirationDate = ChronosUtil.Formatter.formatDate(expirationTimestamp);
 
         WarningService.createWarning(creatorName, targetPlayerName, warningDescription, expirationTimestamp);
