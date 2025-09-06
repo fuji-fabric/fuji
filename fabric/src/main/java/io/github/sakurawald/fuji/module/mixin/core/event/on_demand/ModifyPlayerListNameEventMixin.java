@@ -22,7 +22,7 @@ public abstract class ModifyPlayerListNameEventMixin {
 
     @EventProducer(ModifyPlayerListNameEvent.class)
     @ModifyReturnValue(method = "getPlayerListName", at = @At("RETURN"))
-    public Text handlePlayerListName(@Nullable Text original) {
+    public Text produceModifyPlayerListNameEvent(@Nullable Text original) {
         ModifyPlayerListNameEvent event = new ModifyPlayerListNameEvent(player, original);
         EventManager.dispatchEvent(ModifyPlayerListNameEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
         return event.getText();

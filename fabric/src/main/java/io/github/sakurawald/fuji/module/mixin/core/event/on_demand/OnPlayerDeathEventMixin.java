@@ -18,7 +18,7 @@ public class OnPlayerDeathEventMixin {
 
     @EventProducer(OnPlayerDeathEvent.class)
     @Inject(method = "onDeath", at = @At("HEAD"))
-    public void onPlayerDeath(DamageSource damageSource, CallbackInfo ci) {
+    public void produceOnPlayerDeathEvent(DamageSource damageSource, CallbackInfo ci) {
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
         OnPlayerDeathEvent event = new OnPlayerDeathEvent(player);
         EventManager.dispatchEvent(OnPlayerDeathEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);

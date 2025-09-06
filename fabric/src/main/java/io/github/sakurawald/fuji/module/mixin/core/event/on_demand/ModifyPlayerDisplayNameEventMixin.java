@@ -24,7 +24,7 @@ public class ModifyPlayerDisplayNameEventMixin {
 
     @EventProducer(ModifyPlayerDisplayNameEvent.class)
     @ModifyReturnValue(method = "getDisplayName", at = @At("RETURN"))
-    public Text handlePlayerListName(@Nullable Text original) {
+    public Text produceModifyPlayerDisplayNameEvent(@Nullable Text original) {
         ModifyPlayerDisplayNameEvent event = new ModifyPlayerDisplayNameEvent(player, original);
         EventManager.dispatchEvent(ModifyPlayerDisplayNameEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
         return event.getText();

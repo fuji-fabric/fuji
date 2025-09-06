@@ -36,13 +36,13 @@ public abstract class PlayerPreTeleportEventMixin {
 
     @Inject(method = "teleport", at = @At("HEAD"), cancellable = true)
     private void dispatchPlayerPreTeleportEvent(ServerWorld serverWorld, double d, double e, double f, Set<PositionFlag> set, float g, float h, boolean bl, CallbackInfoReturnable<Boolean> cir) {
-        dispatchEvent(serverWorld, d, e, f, g, h, set, cir);
+        producePlayerPreTeleportEvent(serverWorld, d, e, f, g, h, set, cir);
     }
     #endif
 
     @EventProducer(PlayerPreTeleportEvent.class)
     @Unique
-    private void dispatchEvent(ServerWorld serverWorld, double d, double e, double f, float g, float h, Set<PositionFlag> set, CallbackInfo ci) {
+    private void producePlayerPreTeleportEvent(ServerWorld serverWorld, double d, double e, double f, float g, float h, Set<PositionFlag> set, CallbackInfo ci) {
         final ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
         PlayerPreTeleportEvent event = new PlayerPreTeleportEvent(ci, player, serverWorld, d, e, f, g, h, set);
         EventManager.dispatchEvent(PlayerPreTeleportEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);

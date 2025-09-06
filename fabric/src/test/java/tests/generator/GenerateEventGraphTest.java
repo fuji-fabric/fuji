@@ -89,6 +89,11 @@ public class GenerateEventGraphTest {
             MethodInfo declaringMethod = extendedAnnotationInfo.getDeclaringMethod();
             String declaringMethodName = declaringMethod.getName();
 
+            final String EVENT_PRODUCER_METHOD_PREFIX = "produce";
+            if (!declaringMethodName.startsWith(EVENT_PRODUCER_METHOD_PREFIX)) {
+                throw new IllegalStateException("The event producer method should start with %s. (class = %s, method = %s)".formatted(EVENT_PRODUCER_METHOD_PREFIX, declaringClassName, declaringMethodName));
+            }
+
             EventProducerInfo eventProducerInfo = makeEventProducerInfo(extendedAnnotationInfo, declaringClassName, declaringMethodName);
 
             eventGraph

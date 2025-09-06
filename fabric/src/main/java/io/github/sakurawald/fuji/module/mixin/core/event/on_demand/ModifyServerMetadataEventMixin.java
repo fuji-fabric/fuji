@@ -18,7 +18,7 @@ public abstract class ModifyServerMetadataEventMixin {
 
     @EventProducer(ModifyServerMetadataEvent.class)
     @ModifyArg(method = "onRequest", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/s2c/query/QueryResponseS2CPacket;<init>(Lnet/minecraft/server/ServerMetadata;)V"))
-    public @NotNull ServerMetadata handleQueryRequest(ServerMetadata original) {
+    public @NotNull ServerMetadata produceModifyServerMetadataEvent(ServerMetadata original) {
         ModifyServerMetadataEvent event = new ModifyServerMetadataEvent(original);
         EventManager.dispatchEvent(ModifyServerMetadataEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
         return event.getServerMetadata();
