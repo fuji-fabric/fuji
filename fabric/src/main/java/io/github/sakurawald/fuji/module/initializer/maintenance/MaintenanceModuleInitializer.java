@@ -64,11 +64,6 @@ public class MaintenanceModuleInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Override
-    protected void onInitialize() {
-        PlayerEvents.ON_PLAYER_JOINED.register(MaintenanceService::processMaintenanceModeOnPlayerJoined);
-    }
-
     @EventConsumer(consumerPriority = 2000)
     private static void modifyMaintenanceMotd(ModifyServerMetadataEvent event) {
         if (!MaintenanceService.getMaintenanceModeStatus()) {

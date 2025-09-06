@@ -15,13 +15,4 @@ public class PlayerEvents {
         void fire(ServerPlayerEntity player, DamageSource damageSource, float amount);
     }
 
-    public static final SimpleEvent<PlayerJoinedEvent> ON_PLAYER_JOINED = new SimpleEvent<>((listeners) -> (p) -> listeners.forEach(listener -> listener.fire(p)));
-    public interface PlayerJoinedEvent {
-        void fire(ServerPlayerEntity player);
-    }
-
-    public static final SimpleEvent<PlayerLeaveEvent> ON_PLAYER_LEAVE = new SimpleEvent<>((listeners) -> (p) -> listeners.forEach(listener -> listener.fire(p)));
-    public interface PlayerLeaveEvent {
-        void fire(ServerPlayerEntity player);
-    }
 }

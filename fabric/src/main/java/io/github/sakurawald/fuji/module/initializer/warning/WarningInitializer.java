@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerJoinedEvent;
 import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerLeftEvent;
 import io.github.sakurawald.fuji.core.service.duration_parser.command.argument.wrapper.Duration;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
@@ -166,11 +167,11 @@ public class WarningInitializer extends ModuleInitializer {
         });
     }
 
-    @Override
-    protected void onInitialize() {
-        PlayerEvents.ON_PLAYER_JOINED.register(player -> WarningService.processNotify(player, true));
-
-        PlayerEvents.ON_PLAYER_JOINED.register(WarningService::processWarningReminder);
+    @EventConsumer
+    private static void notifyOnPlayerJoined(OnPlayerJoinedEvent event) {
+        ServerPlayerEntity player = event.getPlayer();
+        WarningService.processNotify(player, true);
+        WarningService.processWarningReminder(player);
     }
 
     @EventConsumer

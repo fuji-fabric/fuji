@@ -8,7 +8,7 @@ import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.impl.PlayerEvents;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerJoinedEvent;
 import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
@@ -31,9 +31,9 @@ public class CacheManager extends BaseManager {
     private static final Path CACHE_DIRECTORY = Fuji.MOD_CONFIG_PATH.resolve("cache");
     private static final Map<String, GenericCacheModel<?>> CACHE_FILES = new ConcurrentHashMap<>();
 
-    @Override
-    public void onInitialize() {
-        PlayerEvents.ON_PLAYER_JOINED.register(GameProfileCacheService::setGameProfileCache);
+    @EventConsumer
+    private static void updateGameProfileCache(OnPlayerJoinedEvent event) {
+        GameProfileCacheService.setGameProfileCache(event.getPlayer());
     }
 
     @EventConsumer
@@ -101,4 +101,7 @@ public class CacheManager extends BaseManager {
             JsonUtil.writeJsonObject(jsonTree.getAsJsonObject(), cacheFilePath);
         }
     }
+
+    @Override
+    public void onInitialize() {}
 }

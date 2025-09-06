@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_meta.when_online;
 
+import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
@@ -13,7 +14,8 @@ import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommand
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
-import io.github.sakurawald.fuji.core.event.message.impl.PlayerEvents;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerJoinedEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_meta.when_online.config.model.WhenOnlineDataModel;
 import io.github.sakurawald.fuji.module.initializer.command_meta.when_online.gui.ListWhenOnlineTicketsGui;
@@ -73,9 +75,9 @@ public class WhenOnlineInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Override
-    protected void onInitialize() {
-        PlayerEvents.ON_PLAYER_JOINED.register(p -> processWhenOnlineTickets());
+    @EventConsumer
+    private static void processWhenOnlineTickets(@Unused OnPlayerJoinedEvent event) {
+        processWhenOnlineTickets();
     }
 
     private static void processWhenOnlineTickets() {

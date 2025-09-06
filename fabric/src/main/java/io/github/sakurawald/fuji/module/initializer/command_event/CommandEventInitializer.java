@@ -7,8 +7,8 @@ import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommand
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.impl.PlayerEvents;
 import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerDeathEvent;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerJoinedEvent;
 import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerLeftEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_event.config.model.CommandEventConfigModel;
@@ -42,17 +42,14 @@ public class CommandEventInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<CommandEventConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandEventConfigModel.class);
 
-    @Override
-    protected void onInitialize() {
-        PlayerEvents.ON_PLAYER_JOINED.register(CommandEventInitializer::processOnPlayerJoinedEvent);
-    }
-
-
     public static void executeCommandOnEvent(ServerPlayerEntity player, List<String> commands) {
         CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(player.getCommandSource()), commands);
     }
 
-    private static void processOnPlayerJoinedEvent(ServerPlayerEntity player) {
+    @EventConsumer
+    private static void processOnPlayerJoinedEvent(OnPlayerJoinedEvent event) {
+        ServerPlayerEntity player = event.getPlayer();
+
         var onPlayerJoinedConfig = CommandEventInitializer.config.model().event.on_player_joined;
         if (onPlayerJoinedConfig.enable) {
             CommandEventInitializer.executeCommandOnEvent(player, onPlayerJoinedConfig.command_list);
