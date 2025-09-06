@@ -4,6 +4,7 @@ import eu.pb4.placeholders.api.parsers.NodeParser;
 
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
@@ -15,6 +16,8 @@ import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.impl.on_demand.OnPlayerChatMessageEvent;
 import io.github.sakurawald.fuji.core.service.style_striper.StyleStriper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -23,6 +26,7 @@ import io.github.sakurawald.fuji.module.initializer.chat.style.model.ChatStyleCo
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.message.MessageType;
+import net.minecraft.network.message.SignedMessage;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -160,6 +164,24 @@ public class ChatStyleInitializer extends ModuleInitializer {
         contentString = stripeStyleTags(player, contentString);
 
         return TextHelper.Parsers.parseString(CHAT_STYLE_PARSER, contentString);
+    }
+
+    @EventConsumer(injectorPriority = EventConsumer.HIGHER)
+    private static void handleOnPlayerChatEvent(OnPlayerChatMessageEvent event) {
+        /* Get signed message. */
+        SignedMessage signedMessage = event.getSignedMessage();
+
+        /* Make sender text. */
+        ServerPlayerEntity player = event.getPlayer();
+        Text senderText = ChatStyleInitializer.parseSenderText(player);
+        MessageType.Parameters newParameters = MessageType.params(ChatStyleInitializer.MESSAGE_TYPE_KEY, ServerHelper.getServer().getRegistryManager(), senderText);
+        event.setParameters(newParameters);
+
+        /* Make content text. */
+        String contentString = TextHelper.Operators.getString(signedMessage.getContent());
+        Text contentText = ChatStyleInitializer.parseContentText(player, contentString);
+        SignedMessage newSignedMessage = signedMessage.withUnsignedContent(contentText);
+        event.setSignedMessage(newSignedMessage);
     }
 
 }

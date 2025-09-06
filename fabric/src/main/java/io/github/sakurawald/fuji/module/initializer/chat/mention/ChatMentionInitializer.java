@@ -7,12 +7,15 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.impl.on_demand.OnPlayerChatMessageEvent;
 import io.github.sakurawald.fuji.core.job.impl.PlaySoundJob;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.chat.mention.config.model.ChatMentionConfigModel;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import net.minecraft.network.message.SignedMessage;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -73,4 +76,17 @@ public class ChatMentionInitializer extends ModuleInitializer {
 
         return text;
     }
+
+    @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.LOWER)
+    private static void handleOnPlayerChatEvent(OnPlayerChatMessageEvent event) {
+        /* Get signed message. */
+        SignedMessage signedMessage = event.getSignedMessage();
+
+        /* Replace the text. */
+        Text oldValue = signedMessage.getContent();
+        Text newValue = ChatMentionInitializer.replaceMentionText(oldValue);
+        SignedMessage newSignedMessage = signedMessage.withUnsignedContent(newValue);
+        event.setSignedMessage(newSignedMessage);
+    }
+
 }

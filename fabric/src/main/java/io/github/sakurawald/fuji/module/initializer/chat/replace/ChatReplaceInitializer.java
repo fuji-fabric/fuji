@@ -7,12 +7,15 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.impl.on_demand.OnPlayerChatMessageEvent;
 import io.github.sakurawald.fuji.core.structure.RegexRewriteNode;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.chat.replace.model.ChatReplaceConfigModel;
 import java.util.regex.Pattern;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.message.SignedMessage;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -60,6 +63,18 @@ public class ChatReplaceInitializer extends ModuleInitializer {
 
         LogUtil.debug("Replace chat text: old = {}, new = {}", oldText, newText);
         return newText;
+    }
+
+    @EventConsumer(injectorPriority = EventConsumer.HIGHEST)
+    private static void handleOnPlayerChatEvent(OnPlayerChatMessageEvent event) {
+        /* Get signed message. */
+        SignedMessage signedMessage = event.getSignedMessage();
+
+        /* Replace the text. */
+        Text oldValue = signedMessage.getContent();
+        Text newValue = ChatReplaceInitializer.replaceChatText(event.getPlayer(), oldValue);
+        SignedMessage newSignedMessage = signedMessage.withUnsignedContent(newValue);
+        event.setSignedMessage(newSignedMessage);
     }
 
 }

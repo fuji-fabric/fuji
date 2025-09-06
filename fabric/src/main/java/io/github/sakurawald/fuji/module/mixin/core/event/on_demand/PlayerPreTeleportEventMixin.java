@@ -22,20 +22,20 @@ public abstract class PlayerPreTeleportEventMixin {
 
     #if MC_VER <= MC_1_21
     @Inject(method = "teleport(Lnet/minecraft/server/world/ServerWorld;DDDFF)V", at = @At("HEAD"))
-    private void dispatchPlayerPreTeleportEvent(ServerWorld serverWorld, double d, double e, double f, float g, float h, CallbackInfo ci)
+    private void $producePlayerPreTeleportEvent(ServerWorld serverWorld, double d, double e, double f, float g, float h, CallbackInfo ci)
     {
         dispatchEvent(serverWorld, d, e, f, g, h, Set.of(), ci);
     }
 
     @Inject(method = "teleport(Lnet/minecraft/server/world/ServerWorld;DDDLjava/util/Set;FF)Z", at = @At("HEAD"))
-    private void dispatchPlayerPreTeleportEvent(ServerWorld serverWorld, double d, double e, double f, Set<PositionFlag> set, float g, float h, CallbackInfoReturnable<Boolean> cir) {
+    private void $producePlayerPreTeleportEvent(ServerWorld serverWorld, double d, double e, double f, Set<PositionFlag> set, float g, float h, CallbackInfoReturnable<Boolean> cir) {
         dispatchEvent(serverWorld, d, e, f, g, h, Set.of(), cir);
     }
 
     #elif MC_VER > MC_1_21
 
     @Inject(method = "teleport", at = @At("HEAD"), cancellable = true)
-    private void dispatchPlayerPreTeleportEvent(ServerWorld serverWorld, double d, double e, double f, Set<PositionFlag> set, float g, float h, boolean bl, CallbackInfoReturnable<Boolean> cir) {
+    private void $producePlayerPreTeleportEvent(ServerWorld serverWorld, double d, double e, double f, Set<PositionFlag> set, float g, float h, boolean bl, CallbackInfoReturnable<Boolean> cir) {
         producePlayerPreTeleportEvent(serverWorld, d, e, f, g, h, set, cir);
     }
     #endif

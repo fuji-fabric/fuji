@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.mixin.chat.style.message_type;
+package io.github.sakurawald.fuji.module.mixin.chat.style;
 
 import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.module.initializer.chat.style.ChatStyleInitializer;
@@ -9,16 +9,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryLoader;
-#if MC_VER < MC_1_20_4
-import net.minecraft.resource.ResourceManager;
-#elif MC_VER >= MC_1_20_4
-import net.minecraft.resource.ResourceManager;
-#endif
-
-#if MC_VER > MC_1_20_4
 import org.spongepowered.asm.mixin.injection.Coerce;
-#endif
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -30,6 +21,7 @@ import java.util.Map;
 
 #if MC_VER <= MC_1_20_4
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.resource.ResourceManager;
 #elif MC_VER > MC_1_20_4 && MC_VER <= MC_1_21
 import org.spongepowered.asm.mixin.injection.Coerce;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -38,8 +30,6 @@ import org.jetbrains.annotations.NotNull;
 #elif MC_VER > MC_1_21
 import net.minecraft.registry.RegistryOps;
 import net.minecraft.registry.RegistryWrapper;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-import java.util.Map;
 #endif
 
 @SuppressWarnings({"unchecked"})

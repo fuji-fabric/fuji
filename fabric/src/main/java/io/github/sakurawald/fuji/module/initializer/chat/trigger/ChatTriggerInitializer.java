@@ -2,16 +2,20 @@ package io.github.sakurawald.fuji.module.initializer.chat.trigger;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.impl.on_demand.OnPlayerChatMessageEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.chat.trigger.config.model.ChatTriggerConfigModel;
 import java.util.List;
 import java.util.regex.Matcher;
+import net.minecraft.network.message.SignedMessage;
 import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,6 +71,14 @@ public class ChatTriggerInitializer extends ModuleInitializer {
                 /* Execute commands. */
                 CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(source), commands);
             });
+    }
+
+    @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority = EventConsumer.LOWEST)
+    private static void handleOnPlayerChatEvent(OnPlayerChatMessageEvent event) {
+        SignedMessage signedMessage = event.getSignedMessage();
+        String chatString = TextHelper.Operators.getString(signedMessage.getContent());
+
+        ChatTriggerInitializer.processChatTriggers(event.getPlayer().getCommandSource(), chatString);
     }
 
 }
