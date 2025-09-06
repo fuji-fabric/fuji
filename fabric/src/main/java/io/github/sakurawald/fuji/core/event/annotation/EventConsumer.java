@@ -29,4 +29,7 @@ public @interface EventConsumer {
 
     @ForDeveloper("Event consumers are sorted by natural order.")
     int consumerPriority() default DEFAULT;
+
+    @ForDeveloper("Is this a static or dynamic event consumer?")
+    boolean isDynamic() default false;
 }

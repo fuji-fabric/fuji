@@ -19,7 +19,7 @@ public class DynamicEventConsumer<T> extends BaseEventConsumer<T> {
         String declaringClassName = callerMethod.getClassName();
         String declaringMethodName = callerMethod.getMethodName();
 
-        EventConsumerInfo eventConsumerInfo = new EventConsumerInfo(eventTypeClassName, declaringClassName, declaringMethodName, injectorPriority, consumerPriority);
+        EventConsumerInfo eventConsumerInfo = new EventConsumerInfo(eventTypeClassName, declaringClassName, declaringMethodName, injectorPriority, consumerPriority, true);
         return new DynamicEventConsumer<>(eventConsumerInfo, eventTypeClass, eventConsumer);
     }
 

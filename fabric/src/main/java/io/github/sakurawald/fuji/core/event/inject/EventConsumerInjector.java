@@ -38,11 +38,13 @@ public class EventConsumerInjector {
 
     @SneakyThrows({ClassNotFoundException.class, NoSuchMethodException.class})
     private static <T extends BaseEvent> void inject(@NotNull Class<T> eventTypeClass, @NotNull EventConsumerInfo eventConsumerInfo) {
-        Class<?> eventConsumerDeclaringClass = Class.forName(eventConsumerInfo.getDeclaringClassName());
-        Method eventConsumerDeclaringMethod = eventConsumerDeclaringClass.getDeclaredMethod(eventConsumerInfo.getDeclaringMethodName(), eventTypeClass);
+        if (eventConsumerInfo.isStatic()) {
+            Class<?> eventConsumerDeclaringClass = Class.forName(eventConsumerInfo.getDeclaringClassName());
+            Method eventConsumerDeclaringMethod = eventConsumerDeclaringClass.getDeclaredMethod(eventConsumerInfo.getDeclaringMethodName(), eventTypeClass);
 
-        BaseEventConsumer<T> baseEventConsumer = StaticEventConsumer.makeStatic(eventConsumerInfo, eventTypeClass, eventConsumerDeclaringMethod);
-        EventManager.registerEventConsumer(eventTypeClass, baseEventConsumer);
+            BaseEventConsumer<T> baseEventConsumer = StaticEventConsumer.makeStatic(eventConsumerInfo, eventTypeClass, eventConsumerDeclaringMethod);
+            EventManager.registerEventConsumer(eventTypeClass, baseEventConsumer);
+        }
     }
 
 }

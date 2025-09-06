@@ -149,10 +149,12 @@ public class GenerateEventGraphTest {
     }
 
     private static @NotNull EventConsumerInfo makeEventConsumerInfo(ExtendedAnnotationInfo extendedAnnotationInfo, String eventTypeClassName, String declaringClassName, String declaringMethodName) {
-        int injectorPriority = (int) extendedAnnotationInfo.getAnnotationInfo().getParameterValues().getValue("injectorPriority");
-        int consumerPriority = (int) extendedAnnotationInfo.getAnnotationInfo().getParameterValues().getValue("consumerPriority");
+        AnnotationParameterValueList parameterValues = extendedAnnotationInfo.getAnnotationInfo().getParameterValues();
+        int injectorPriority = (int) parameterValues.getValue("injectorPriority");
+        int consumerPriority = (int) parameterValues.getValue("consumerPriority");
+        boolean isDynamic = (boolean) parameterValues.getValue("isDynamic");
 
-        return new EventConsumerInfo(eventTypeClassName, declaringClassName, declaringMethodName, injectorPriority, consumerPriority);
+        return new EventConsumerInfo(eventTypeClassName, declaringClassName, declaringMethodName, injectorPriority, consumerPriority, isDynamic);
     }
 
 

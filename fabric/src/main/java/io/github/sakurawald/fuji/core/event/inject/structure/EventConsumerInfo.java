@@ -20,4 +20,10 @@ public class EventConsumerInfo {
     @ReflectiveAccess
     int consumerPriority;
 
+    boolean isDynamic;
+
+    public boolean isStatic() {
+        return !this.isDynamic;
+    }
+
 }
