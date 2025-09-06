@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.event.message.impl.on_demand;
+package io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.metadata;
 
 import io.github.sakurawald.fuji.core.event.message.abst.BaseEvent;
 import lombok.Data;
