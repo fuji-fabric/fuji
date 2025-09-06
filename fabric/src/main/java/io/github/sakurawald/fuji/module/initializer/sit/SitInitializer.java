@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.sit;
 
+import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -12,7 +13,8 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
-import io.github.sakurawald.fuji.core.event.message.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStoppingEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.sit.config.model.SitConfigModel;
 import net.minecraft.block.Block;
@@ -212,14 +214,13 @@ public class SitInitializer extends ModuleInitializer {
         return chairEntity;
     }
 
-    @Override
-    protected void onInitialize() {
-        /* Kill all sit entities on server stopping. */
-        ServerLifecycleEvents.SERVER_STOPPING.register((server) ->
-            SPAWNED_CHAIR_ENTITY_LIST.forEach(entity -> {
+    @EventConsumer
+    private static void killSpawnedSitEntities(@Unused ServerStoppingEvent event) {
+        SPAWNED_CHAIR_ENTITY_LIST.forEach(entity -> {
             if (entity.isAlive()) {
                 EntityHelper.killEntity(entity);
             }
-        }));
+        });
     }
+
 }

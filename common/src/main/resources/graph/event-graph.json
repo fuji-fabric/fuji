@@ -354,6 +354,20 @@
       "consumer_priority": 1000
     },
     {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager",
+      "declaring_method_name": "startScheduler",
+      "injector_priority": 1000,
+      "consumer_priority": 1000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStoppingEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager",
+      "declaring_method_name": "shutdownScheduler",
+      "injector_priority": 1000,
+      "consumer_priority": 1000
+    },
+    {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.tick.ServerTickStartEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.core.manager.impl.task.GameTaskManager",
       "declaring_method_name": "tickGameTasks",
@@ -382,6 +396,20 @@
       "consumer_priority": 1000
     },
     {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_meta.delay.DelayInitializer",
+      "declaring_method_name": "resetDelaySchedulerExecutor",
+      "injector_priority": 1000,
+      "consumer_priority": 1000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStoppingEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_meta.delay.DelayInitializer",
+      "declaring_method_name": "shutdownDelaySchedulerExecutor",
+      "injector_priority": 1000,
+      "consumer_priority": 1000
+    },
+    {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.ModifyPlayerDisplayNameEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_toolbox.nickname.NicknameInitializer",
       "declaring_method_name": "modifyPlayerDisplayName",
@@ -399,6 +427,13 @@
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.ModifyServerMetadataEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.motd.MotdInitializer",
       "declaring_method_name": "onRequestServerMetadataHandler",
+      "injector_priority": 1000,
+      "consumer_priority": 1000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStoppingEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.sit.SitInitializer",
+      "declaring_method_name": "killSpawnedSitEntities",
       "injector_priority": 1000,
       "consumer_priority": 1000
     },

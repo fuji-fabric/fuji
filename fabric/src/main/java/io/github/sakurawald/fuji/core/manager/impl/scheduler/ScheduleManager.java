@@ -1,14 +1,16 @@
 package io.github.sakurawald.fuji.core.manager.impl.scheduler;
 
 
+import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.ExceptionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
-import io.github.sakurawald.fuji.core.event.message.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStoppingEvent;
 import io.github.sakurawald.fuji.core.job.abst.BaseJob;
-import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import lombok.Getter;
 import org.apache.logging.log4j.Level;
@@ -30,7 +32,6 @@ import java.util.List;
 import java.util.Set;
 
 @TestCase(action = "Issue `/stop` in the production environment.", targets = "The program should be terminated.")
-@SuppressWarnings("LombokGetterMayBeUsed")
 public class ScheduleManager extends BaseManager {
 
     public static final String CRON_EVERY_SECOND = "* * * ? * *";
@@ -44,21 +45,15 @@ public class ScheduleManager extends BaseManager {
     private static final Set<BaseJob> RESCHEDULABLE_JOBS = new HashSet<>();
 
     @Getter
-    private Scheduler scheduler;
+    private static Scheduler scheduler;
 
-    {
+    static {
         /* Set logger level for quartz. */
         Level level = Level.getLevel(Configs.MAIN_CONTROL_CONFIG.model().core.scheduler.logger_level);
         Configurator.setAllLevels("org.quartz", level);
 
         // NOTE: Reset the scheduler for client-side, to prevent NPE.
         resetScheduler();
-    }
-
-    @Override
-    public void onInitialize() {
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> Managers.getScheduleManager().startScheduler());
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> Managers.getScheduleManager().shutdownScheduler());
     }
 
     public void scheduleJob(BaseJob baseJob) {
@@ -74,7 +69,7 @@ public class ScheduleManager extends BaseManager {
             }
 
             // Scheduler the job.
-            this.scheduler.scheduleJob(jobDetail, trigger);
+            scheduler.scheduleJob(jobDetail, trigger);
         } catch (SchedulerException e) {
             LogUtil.error("Failed to schedule job: jobDetail = {}, trigger = {}",  jobDetail, trigger, e);
         }
@@ -86,7 +81,7 @@ public class ScheduleManager extends BaseManager {
 
         try {
             LogUtil.debug("Re-schedule job: triggerKey = {}, newTrigger = {}", triggerKey, newTrigger);
-            this.scheduler.rescheduleJob(triggerKey, newTrigger);
+            scheduler.rescheduleJob(triggerKey, newTrigger);
         } catch (SchedulerException e) {
             LogUtil.error("Failed to reschedule job: triggerKey = {}, newTrigger = {}",  triggerKey, newTrigger, e);
         }
@@ -105,7 +100,7 @@ public class ScheduleManager extends BaseManager {
     private void deleteJobs(List<JobKey> jobKeys) {
         try {
             LogUtil.debug("Delete job keys: {}", jobKeys);
-            this.scheduler.deleteJobs(jobKeys);
+            scheduler.deleteJobs(jobKeys);
         } catch (SchedulerException e) {
             LogUtil.error("Failed to delete jobs: jobKeys = {}", jobKeys, e);
         }
@@ -132,7 +127,7 @@ public class ScheduleManager extends BaseManager {
             });
     }
 
-    private void resetScheduler() {
+    private static void resetScheduler() {
         try {
             StdSchedulerFactory stdSchedulerFactory = new StdSchedulerFactory();
             scheduler = stdSchedulerFactory.getScheduler();
@@ -141,7 +136,9 @@ public class ScheduleManager extends BaseManager {
         }
     }
 
-    private void startScheduler() {
+
+    @EventConsumer
+    private static void startScheduler(@Unused ServerStartedEvent event) {
         /* Make a new scheduler. */
         resetScheduler();
 
@@ -153,7 +150,8 @@ public class ScheduleManager extends BaseManager {
         }
     }
 
-    private void shutdownScheduler() {
+    @EventConsumer
+    private static void shutdownScheduler(@Unused ServerStoppingEvent event) {
         try {
             scheduler.shutdown(false);
 
@@ -166,4 +164,7 @@ public class ScheduleManager extends BaseManager {
             LogUtil.error("Failed to shutdown the scheduler", e);
         }
     }
+
+    @Override
+    public void onInitialize() {}
 }

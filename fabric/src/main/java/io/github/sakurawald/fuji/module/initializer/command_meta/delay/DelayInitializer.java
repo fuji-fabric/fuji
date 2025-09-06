@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_meta.delay;
 
+import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
@@ -9,8 +10,10 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
-import io.github.sakurawald.fuji.core.event.message.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStoppingEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import net.minecraft.server.command.ServerCommandSource;
 
@@ -56,19 +59,17 @@ public class DelayInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    private static void resetDelaySchedulerExecutor() {
+
+    @EventConsumer
+    private static void resetDelaySchedulerExecutor(@Unused ServerStartedEvent event) {
         DELAY_COMMAND_EXECUTOR = Executors.newSingleThreadScheduledExecutor();
     }
 
-    private static void shutdownDelaySchedulerExecutor() {
+    @EventConsumer
+    private static void shutdownDelaySchedulerExecutor(@Unused ServerStoppingEvent event) {
         if (DELAY_COMMAND_EXECUTOR != null) {
             DELAY_COMMAND_EXECUTOR.shutdown();
         }
     }
 
-    @Override
-    protected void onInitialize() {
-        ServerLifecycleEvents.SERVER_STARTED.register((server) -> resetDelaySchedulerExecutor());
-        ServerLifecycleEvents.SERVER_STOPPING.register((server) -> shutdownDelaySchedulerExecutor());
-    }
 }
