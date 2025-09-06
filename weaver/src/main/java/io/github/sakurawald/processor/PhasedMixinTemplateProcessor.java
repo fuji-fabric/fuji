@@ -1,7 +1,6 @@
 package io.github.sakurawald.processor;
 
 import com.google.auto.service.AutoService;
-import com.google.errorprone.annotations.Keep;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
@@ -28,6 +27,7 @@ public class PhasedMixinTemplateProcessor extends AbstractProcessor {
 
     public static final String EVENT_PRODUCER_LITERAL = "EventProducer";
     public static final String EVENT_PRODUCER_INJECTOR_PRIORITY_PARAMETER_NAME = "injectorPriority";
+    public static final String DISPATCH_EVENT_METHOD_NAME = "EventManager.dispatchEvent";
 
     private JavacTrees javacTrees;
     private TreeMaker treeMaker;
@@ -87,7 +87,6 @@ public class PhasedMixinTemplateProcessor extends AbstractProcessor {
 
 
     @SuppressWarnings({"JdkObsolete", "unused"})
-    @Keep
     private JCClassDecl generatePhasedMixinClassTree(@NotNull JCCompilationUnit cu,
                                                      @NotNull JCClassDecl originalClassTree,
                                                      @NotNull String generatedClassNameSuffix,
@@ -111,7 +110,7 @@ public class PhasedMixinTemplateProcessor extends AbstractProcessor {
         WeaverUtil.patchAnnotationTreeRecursively(treeMaker, names, copyClassTree, EVENT_PRODUCER_LITERAL, EVENT_PRODUCER_INJECTOR_PRIORITY_PARAMETER_NAME, injectorPriorityValue);
 
         /* Patch the injector priority placeholder. */
-        WeaverUtil.patchMethodInvocationTree(treeMaker, copyClassTree, "EventManager.dispatchEvent", 3, 2, injectorPriorityValue);
+        WeaverUtil.patchMethodInvocationTree(treeMaker, copyClassTree, DISPATCH_EVENT_METHOD_NAME, 3, 2, injectorPriorityValue);
 
         return copyClassTree;
     }
