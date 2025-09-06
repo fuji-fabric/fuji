@@ -4,10 +4,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import io.github.sakurawald.fuji.Fuji;
+import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.impl.PlayerEvents;
-import io.github.sakurawald.fuji.core.event.message.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import io.github.sakurawald.fuji.core.manager.impl.cache.config.model.GenericCacheModel;
@@ -31,11 +33,12 @@ public class CacheManager extends BaseManager {
 
     @Override
     public void onInitialize() {
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            Managers.getScheduleManager().scheduleJob(new FlushCacheJob());
-        });
-
         PlayerEvents.ON_PLAYER_JOINED.register(GameProfileCacheService::setGameProfileCache);
+    }
+
+    @EventConsumer
+    private static void scheduleFlushCacheJob(@Unused ServerStartedEvent event) {
+        Managers.getScheduleManager().scheduleJob(new FlushCacheJob());
     }
 
     @SneakyThrows(IOException.class)

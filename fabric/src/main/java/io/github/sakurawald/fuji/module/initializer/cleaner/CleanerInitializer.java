@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.cleaner;
 
+import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
@@ -8,7 +9,8 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
-import io.github.sakurawald.fuji.core.event.message.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.cleaner.config.model.CleanerConfigModel;
@@ -85,12 +87,10 @@ public class CleanerInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Override
-    protected void onInitialize() {
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            CleanerJob cleanerJob = new CleanerJob();
-            Managers.getScheduleManager().scheduleJob(cleanerJob);
-        });
+    @EventConsumer
+    private static void scheduleCleanerJob(@Unused ServerStartedEvent event) {
+        CleanerJob cleanerJob = new CleanerJob();
+        Managers.getScheduleManager().scheduleJob(cleanerJob);
     }
 
 }

@@ -1,9 +1,11 @@
 package io.github.sakurawald.fuji.module.initializer.core;
 
+import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.config.Configs;
-import io.github.sakurawald.fuji.core.event.message.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -88,11 +90,6 @@ import org.jetbrains.annotations.NotNull;
     """)
 public class CoreInitializer extends ModuleInitializer {
 
-    @Override
-    protected void onInitialize() {
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> CoreInitializer.onServerStartSuccess());
-    }
-
     public static void printUserGuide() {
         // NOTE: The generator is https://rebane2001.com/discord-colored-text-generator/
         String userGuide = """
@@ -123,7 +120,8 @@ public class CoreInitializer extends ModuleInitializer {
         }
     }
 
-    private static void onServerStartSuccess() {
+    @EventConsumer
+    private static void printModuleStatusReportOnServerStarted(@Unused ServerStartedEvent event) {
         /* Report enabled/disabled modules. */
         List<String> enabledModuleList = ModuleManager.getEnabledModulePaths();
         LogUtil.info("Enabled {}/{} modules -> {}", enabledModuleList.size(), ModuleManager.MODULE_ENABLE_STATUS.size(), enabledModuleList);

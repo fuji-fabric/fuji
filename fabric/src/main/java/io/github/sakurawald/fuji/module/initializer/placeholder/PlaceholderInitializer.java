@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.placeholder;
 import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
 import io.github.sakurawald.fuji.Fuji;
+import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
@@ -18,10 +19,11 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.impl.PlayerEvents;
-import io.github.sakurawald.fuji.core.event.message.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.core.document.descriptor.PlaceholderDescriptor;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
@@ -289,12 +291,13 @@ public class PlaceholderInitializer extends ModuleInitializer {
         registerSuffixPlaceholder();
 
         registerPosPlaceholder();
+    }
 
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            SumUpPlaceholder.ofServer();
-            UpdateSumUpPlaceholderJob updateSumUpPlaceholderJob = new UpdateSumUpPlaceholderJob();
-            Managers.getScheduleManager().scheduleJob(updateSumUpPlaceholderJob);
-        });
+    @EventConsumer
+    private static void scheduleSumUpPlaceholderUpdaterJob(@Unused ServerStartedEvent event) {
+        SumUpPlaceholder.ofServer();
+        UpdateSumUpPlaceholderJob updateSumUpPlaceholderJob = new UpdateSumUpPlaceholderJob();
+        Managers.getScheduleManager().scheduleJob(updateSumUpPlaceholderJob);
     }
 
     @DocStringProvider(id = 1752000061565L, value = """

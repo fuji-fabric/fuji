@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.jail;
 
+import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
@@ -9,6 +10,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.ModifyPlayerDisplayNameEvent;
 import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.ModifyPlayerListNameEvent;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.core.service.duration_parser.command.argument.wrapper.Duration;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlayerName;
@@ -16,7 +18,6 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
-import io.github.sakurawald.fuji.core.event.message.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -298,12 +299,13 @@ public class JailInitializer extends ModuleInitializer {
 
     @Override
     protected void onInitialize() {
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            UpdateJailRecordsJob updateJailRecordsJob = new UpdateJailRecordsJob();
-            Managers.getScheduleManager().scheduleJob(updateJailRecordsJob);
-        });
-
         PatrolJailJob.reloadPatrolJobs();
+    }
+
+    @EventConsumer
+    private static void scheduleUpdateJailRecordsJob(@Unused ServerStartedEvent event) {
+        UpdateJailRecordsJob updateJailRecordsJob = new UpdateJailRecordsJob();
+        Managers.getScheduleManager().scheduleJob(updateJailRecordsJob);
     }
 
     @Override

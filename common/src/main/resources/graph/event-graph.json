@@ -355,6 +355,20 @@
     },
     {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.core.manager.impl.cache.CacheManager",
+      "declaring_method_name": "scheduleFlushCacheJob",
+      "injector_priority": 1000,
+      "consumer_priority": 1000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.core.manager.impl.callback.CallbackManager",
+      "declaring_method_name": "resetCallbackMap",
+      "injector_priority": 1000,
+      "consumer_priority": 1000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager",
       "declaring_method_name": "startScheduler",
       "injector_priority": 1000,
@@ -375,6 +389,13 @@
       "consumer_priority": 1000
     },
     {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.afk.AfkInitializer",
+      "declaring_method_name": "scheduleAfkMarkerJob",
+      "injector_priority": 1000,
+      "consumer_priority": 1000
+    },
+    {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerDeathEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.back.BackInitializer",
       "declaring_method_name": "handleOnPlayerDeathEvent",
@@ -385,6 +406,13 @@
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.PlayerPreTeleportEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.back.BackInitializer",
       "declaring_method_name": "handlePlayerPreTeleportEvent",
+      "injector_priority": 1000,
+      "consumer_priority": 1000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.cleaner.CleanerInitializer",
+      "declaring_method_name": "scheduleCleanerJob",
       "injector_priority": 1000,
       "consumer_priority": 1000
     },
@@ -417,9 +445,30 @@
       "consumer_priority": 1000
     },
     {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.core.CoreInitializer",
+      "declaring_method_name": "printModuleStatusReportOnServerStarted",
+      "injector_priority": 1000,
+      "consumer_priority": 1000
+    },
+    {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerDeathEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.deathlog.DeathLogInitializer",
       "declaring_method_name": "handleOnPlayerDeathEvent",
+      "injector_priority": 1000,
+      "consumer_priority": 1000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.gameplay.carpet.fake_player_manager.FakePlayerManagerInitializer",
+      "declaring_method_name": "scheduleFakePlayerJob",
+      "injector_priority": 1000,
+      "consumer_priority": 1000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.jail.JailInitializer",
+      "declaring_method_name": "scheduleUpdateJailRecordsJob",
       "injector_priority": 1000,
       "consumer_priority": 1000
     },
@@ -431,9 +480,30 @@
       "consumer_priority": 1000
     },
     {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.nametag.NametagInitializer",
+      "declaring_method_name": "scheduleUpdateNametagJob",
+      "injector_priority": 1000,
+      "consumer_priority": 1000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.placeholder.PlaceholderInitializer",
+      "declaring_method_name": "scheduleSumUpPlaceholderUpdaterJob",
+      "injector_priority": 1000,
+      "consumer_priority": 1000
+    },
+    {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStoppingEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.sit.SitInitializer",
       "declaring_method_name": "killSpawnedSitEntities",
+      "injector_priority": 1000,
+      "consumer_priority": 1000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.tab.TabListInitializer",
+      "declaring_method_name": "scheduleTabListRenderJob",
       "injector_priority": 1000,
       "consumer_priority": 1000
     },
@@ -445,9 +515,23 @@
       "consumer_priority": 1000
     },
     {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.works.WorksInitializer",
+      "declaring_method_name": "scheduleWorksOnScheduleDispatcherJob",
+      "injector_priority": 1000,
+      "consumer_priority": 1000
+    },
+    {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.tick.ServerTickStartEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.world.manager.service.WorldService",
       "declaring_method_name": "processDimensionCreationAndDeletionQueue",
+      "injector_priority": 1000,
+      "consumer_priority": 1000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.world.manager.service.WorldService",
+      "declaring_method_name": "loadRuntimeDimensions",
       "injector_priority": 1000,
       "consumer_priority": 1000
     },

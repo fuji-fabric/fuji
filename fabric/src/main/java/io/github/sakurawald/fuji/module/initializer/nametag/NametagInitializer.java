@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.nametag;
 
+import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PacketHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
@@ -10,7 +11,8 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
-import io.github.sakurawald.fuji.core.event.message.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.nametag.config.model.NametagConfigModel;
@@ -223,10 +225,12 @@ public class NametagInitializer extends ModuleInitializer {
     @Override
     protected void onInitialize() {
         player2nametag = new ConcurrentHashMap<>();
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            UpdateNametagJob updateNametagJob = new UpdateNametagJob();
-            Managers.getScheduleManager().scheduleJob(updateNametagJob);
-        });
+    }
+
+    @EventConsumer
+    private static void scheduleUpdateNametagJob(@Unused ServerStartedEvent event) {
+        UpdateNametagJob updateNametagJob = new UpdateNametagJob();
+        Managers.getScheduleManager().scheduleJob(updateNametagJob);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.afk;
 
+import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -11,8 +12,8 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.impl.ServerLifecycleEvents;
 import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.ModifyPlayerListNameEvent;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.core.extension.PlayerCombatExtension;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.manager.Managers;
@@ -108,12 +109,10 @@ public class AfkInitializer extends ModuleInitializer {
         return false;
     }
 
-    @Override
-    protected void onInitialize() {
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            AfkMarkerJob afkMarkerJob = new AfkMarkerJob();
-            Managers.getScheduleManager().scheduleJob(afkMarkerJob);
-        });
+    @EventConsumer
+    private static void scheduleAfkMarkerJob(@Unused ServerStartedEvent event) {
+        AfkMarkerJob afkMarkerJob = new AfkMarkerJob();
+        Managers.getScheduleManager().scheduleJob(afkMarkerJob);
     }
 
     @TestCase(action = "Issue `/afk` and see the player list.", targets = "The display name of an afk player should be modified.")

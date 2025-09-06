@@ -7,6 +7,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.tick.ServerTickStartEvent;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
@@ -214,7 +215,8 @@ public class WorldService {
         return WorldInitializer.world.model().dimension_list;
     }
 
-    public static void loadRuntimeDimensions() {
+    @EventConsumer
+    private static void loadRuntimeDimensions(@Unused ServerStartedEvent event) {
         WorldInitializer.world.model().dimension_list
             .stream()
             .filter(RuntimeDimensionDescriptor::isAuto_load_on_server_startup)

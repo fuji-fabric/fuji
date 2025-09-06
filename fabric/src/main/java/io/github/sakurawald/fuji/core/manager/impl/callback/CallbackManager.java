@@ -2,12 +2,14 @@ package io.github.sakurawald.fuji.core.manager.impl.callback;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.impl.CommandEvents;
-import io.github.sakurawald.fuji.core.event.message.impl.ServerLifecycleEvents;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import io.github.sakurawald.fuji.core.manager.impl.callback.structure.TTLMap;
 import net.minecraft.server.command.ServerCommandSource;
@@ -24,12 +26,16 @@ public class CallbackManager extends BaseManager {
     private static final String COMMAND_CALLBACK_LITERAL = "command-callback";
     private static final String COMMAND_CALLBACK_UUID_ARGUMENT_NAME = "uuid";
 
-    private TTLMap<String, Consumer<ServerPlayerEntity>> uuid2consumer;
+    private static TTLMap<String, Consumer<ServerPlayerEntity>> uuid2consumer;
 
     @Override
     public void onInitialize() {
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> uuid2consumer = new TTLMap<>());
         this.registerUserCommand();
+    }
+
+    @EventConsumer
+    private static void resetCallbackMap(@Unused ServerStartedEvent event) {
+        uuid2consumer = new TTLMap<>();
     }
 
     private void registerUserCommand() {
@@ -48,7 +54,7 @@ public class CallbackManager extends BaseManager {
     }
 
     private void executeCallbackCommand(String uuid, ServerPlayerEntity player) {
-        Consumer<ServerPlayerEntity> consumer = this.uuid2consumer.get(uuid);
+        Consumer<ServerPlayerEntity> consumer = uuid2consumer.get(uuid);
         if (consumer == null) {
             TextHelper.sendTextByKey(player, "callback.invalid");
             return;
@@ -59,7 +65,7 @@ public class CallbackManager extends BaseManager {
 
     private String makeCallbackCommand(String uuid, Consumer<ServerPlayerEntity> callback, long ttl, TimeUnit timeUnit) {
         LogUtil.debug("Make callback command: uuid = {}", uuid);
-        this.uuid2consumer.put(uuid, callback, ttl, timeUnit);
+        uuid2consumer.put(uuid, callback, ttl, timeUnit);
         return "/" + COMMAND_CALLBACK_LITERAL + " " + uuid;
     }
 
