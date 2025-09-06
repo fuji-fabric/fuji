@@ -8,6 +8,8 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerLeftEvent;
 import io.github.sakurawald.fuji.core.service.duration_parser.command.argument.wrapper.Duration;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlayerName;
@@ -167,9 +169,13 @@ public class WarningInitializer extends ModuleInitializer {
     @Override
     protected void onInitialize() {
         PlayerEvents.ON_PLAYER_JOINED.register(player -> WarningService.processNotify(player, true));
-        PlayerEvents.ON_PLAYER_LEAVE.register(player -> WarningService.processNotify(player, false));
 
         PlayerEvents.ON_PLAYER_JOINED.register(WarningService::processWarningReminder);
+    }
+
+    @EventConsumer
+    private static void notifyOnPlayerLeft(OnPlayerLeftEvent event) {
+        WarningService.processNotify(event.getPlayer(), false);
     }
 
     @Override

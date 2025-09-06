@@ -20,9 +20,9 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.impl.PlayerEvents;
 import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.core.document.descriptor.PlaceholderDescriptor;
+import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerLeftEvent;
 import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -252,14 +252,13 @@ public class PlaceholderInitializer extends ModuleInitializer {
         });
     }
 
-    private static void removeSumUpPlaceholderOnPlayerLeft(ServerPlayerEntity player) {
-        SumUpPlaceholder.uuid2stats.remove(player.getUuidAsString());
+    @EventConsumer
+    private static void removeSumUpPlaceholderOnPlayerLeft(OnPlayerLeftEvent event) {
+        SumUpPlaceholder.uuid2stats.remove(event.getPlayer().getUuidAsString());
     }
 
     @Override
     protected void onInitialize() {
-        PlayerEvents.ON_PLAYER_LEAVE.register(PlaceholderInitializer::removeSumUpPlaceholderOnPlayerLeft);
-
         /* register placeholders */
         registerPlayerMinedPlaceholder();
         registerServerMinedPlaceholder();
