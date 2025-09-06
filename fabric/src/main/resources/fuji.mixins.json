@@ -44,7 +44,6 @@
     "core.command.CommandDispatcherMixin",
     "core.command.CommandNodeMixin",
     "core.event.CommandManagerMixin",
-    "core.event.MinecraftServerMixin",
     "core.event.PlayerManagerMixin",
     "core.event.ServerPlayerEntityMixin",
     "core.event.on_demand.ModifyPlayerDisplayNameEventMixin_DEFAULT",
