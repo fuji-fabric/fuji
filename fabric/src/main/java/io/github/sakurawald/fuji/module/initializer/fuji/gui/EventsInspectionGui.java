@@ -28,7 +28,7 @@ public class EventsInspectionGui extends PagedGui<BaseEventConsumer<?>> {
     }
 
     public static EventsInspectionGui inspectAll(@NotNull ServerPlayerEntity player) {
-        List<BaseEventConsumer<?>> entities = EventManager.events.values()
+        List<BaseEventConsumer<?>> entities = EventManager.getEvents().values()
             .stream()
             .flatMap(Collection::stream)
             .toList();

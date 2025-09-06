@@ -4,16 +4,18 @@ import io.github.sakurawald.fuji.core.event.message.abst.BaseEvent;
 import io.github.sakurawald.fuji.core.event.message.abst.BaseEventConsumer;
 import io.github.sakurawald.fuji.core.event.inject.StaticEventConsumerInjector;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 
 public class EventManager extends BaseManager {
 
-    public static Map<Class<? extends BaseEvent>, List<BaseEventConsumer<?>>> events = new ConcurrentHashMap<>();
+    private static final Map<Class<? extends BaseEvent>, List<BaseEventConsumer<?>>> events = new ConcurrentHashMap<>();
 
     @Override
     public void onInitialize() {
@@ -46,6 +48,10 @@ public class EventManager extends BaseManager {
     private static @NotNull List<BaseEventConsumer<?>> getEventConsumerList(@NotNull Class<? extends BaseEvent> eventType) {
         return events
             .computeIfAbsent(eventType, k -> new CopyOnWriteArrayList<>());
+    }
+
+    public static @Unmodifiable Map<Class<? extends BaseEvent>, List<BaseEventConsumer<?>>> getEvents() {
+        return Collections.unmodifiableMap(events);
     }
 
 }
