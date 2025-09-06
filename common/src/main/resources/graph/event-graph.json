@@ -229,14 +229,14 @@
     {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.ServerTickStartEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarManager",
-      "declaring_method_name": "onServerTick",
+      "declaring_method_name": "tickBossBarTickets",
       "injector_priority": 1000,
       "consumer_priority": 1000
     },
     {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.impl.on_demand.ServerTickStartEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.core.manager.impl.task.GameTaskManager",
-      "declaring_method_name": "handleServerTickStartEvent",
+      "declaring_method_name": "tickGameTasks",
       "injector_priority": 1000,
       "consumer_priority": 1000
     },
