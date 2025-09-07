@@ -10,7 +10,7 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent;
+import io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.cleaner.config.model.CleanerConfigModel;

@@ -4,7 +4,7 @@ import io.github.sakurawald.annotation.PhasedMixinTemplate;
 import io.github.sakurawald.auxiliary.WeaverUtil;
 import io.github.sakurawald.fuji.core.event.EventManager;
 import io.github.sakurawald.fuji.core.event.annotation.EventProducer;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerDeathEvent;
+import io.github.sakurawald.fuji.core.event.message.player.OnPlayerDeathEvent;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;

@@ -5,7 +5,7 @@ import io.github.sakurawald.annotation.PhasedMixinTemplate;
 import io.github.sakurawald.auxiliary.WeaverUtil;
 import io.github.sakurawald.fuji.core.event.EventManager;
 import io.github.sakurawald.fuji.core.event.annotation.EventProducer;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.tick.ServerTickStartEvent;
+import io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickStartEvent;
 import java.util.function.BooleanSupplier;
 import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;

@@ -4,7 +4,7 @@ import io.github.sakurawald.annotation.PhasedMixinTemplate;
 import io.github.sakurawald.auxiliary.WeaverUtil;
 import io.github.sakurawald.fuji.core.event.EventManager;
 import io.github.sakurawald.fuji.core.event.annotation.EventProducer;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerDamagedEvent;
+import io.github.sakurawald.fuji.core.event.message.player.OnPlayerDamagedEvent;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;

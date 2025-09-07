@@ -4,7 +4,7 @@ import io.github.sakurawald.annotation.PhasedMixinTemplate;
 import io.github.sakurawald.auxiliary.WeaverUtil;
 import io.github.sakurawald.fuji.core.event.EventManager;
 import io.github.sakurawald.fuji.core.event.annotation.EventProducer;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.metadata.ModifyServerMetadataEvent;
+import io.github.sakurawald.fuji.core.event.message.server.metadata.ModifyServerMetadataEvent;
 import net.minecraft.server.ServerMetadata;
 import net.minecraft.server.network.ServerQueryNetworkHandler;
 import org.jetbrains.annotations.NotNull;

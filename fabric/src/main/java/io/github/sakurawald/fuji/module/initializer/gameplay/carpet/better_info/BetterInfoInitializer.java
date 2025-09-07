@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.gameplay.carpet.better_info
 import com.mojang.brigadier.CommandDispatcher;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.command.OnCommandRegistrationEvent;
+import io.github.sakurawald.fuji.core.event.message.server.command.OnCommandRegistrationEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import net.minecraft.server.command.CommandManager;
 

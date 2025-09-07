@@ -5,7 +5,7 @@ import io.github.sakurawald.annotation.PhasedMixinTemplate;
 import io.github.sakurawald.auxiliary.WeaverUtil;
 import io.github.sakurawald.fuji.core.event.EventManager;
 import io.github.sakurawald.fuji.core.event.annotation.EventProducer;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.command.OnCommandRegistrationEvent;
+import io.github.sakurawald.fuji.core.event.message.server.command.OnCommandRegistrationEvent;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;

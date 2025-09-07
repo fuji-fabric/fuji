@@ -5,7 +5,7 @@ import io.github.sakurawald.fuji.core.event.EventManager;
 import io.github.sakurawald.fuji.core.event.injector.structure.EventConsumerInfo;
 import io.github.sakurawald.fuji.core.event.injector.structure.EventGraph;
 import io.github.sakurawald.fuji.core.event.injector.structure.EventProducerInfo;
-import io.github.sakurawald.fuji.core.event.message.abst.BaseEvent;
+import io.github.sakurawald.fuji.core.event.message.BaseEvent;
 import io.github.sakurawald.fuji.core.event.consumer.BaseEventConsumer;
 import io.github.sakurawald.fuji.core.event.consumer.StaticEventConsumer;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleLoadDeterminer;

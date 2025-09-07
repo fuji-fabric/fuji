@@ -15,7 +15,7 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerJoinedEvent;
+import io.github.sakurawald.fuji.core.event.message.player.OnPlayerJoinedEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_meta.when_online.config.model.WhenOnlineDataModel;
 import io.github.sakurawald.fuji.module.initializer.command_meta.when_online.gui.ListWhenOnlineTicketsGui;

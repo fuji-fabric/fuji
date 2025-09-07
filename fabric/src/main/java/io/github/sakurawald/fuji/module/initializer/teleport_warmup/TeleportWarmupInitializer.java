@@ -12,7 +12,7 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.PlayerPreTeleportEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerPreTeleportEvent;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarTicket;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;

@@ -12,8 +12,8 @@ import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStoppingEvent;
+import io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
+import io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStoppingEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import net.minecraft.server.command.ServerCommandSource;
 

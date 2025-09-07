@@ -5,7 +5,7 @@ import io.github.sakurawald.annotation.PhasedMixinTemplate;
 import io.github.sakurawald.auxiliary.WeaverUtil;
 import io.github.sakurawald.fuji.core.event.EventManager;
 import io.github.sakurawald.fuji.core.event.annotation.EventProducer;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerChatMessageEvent;
+import io.github.sakurawald.fuji.core.event.message.player.OnPlayerChatMessageEvent;
 import net.minecraft.network.message.MessageType;
 import net.minecraft.network.message.SignedMessage;
 import net.minecraft.server.network.ServerPlayNetworkHandler;

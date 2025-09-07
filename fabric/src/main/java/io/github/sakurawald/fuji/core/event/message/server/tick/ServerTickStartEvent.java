@@ -1,8 +1,8 @@
-package io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.tick;
+package io.github.sakurawald.fuji.core.event.message.server.tick;
 
 
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.AbstractServerEvent;
+import io.github.sakurawald.fuji.core.event.message.server.AbstractServerEvent;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.NotNull;
 

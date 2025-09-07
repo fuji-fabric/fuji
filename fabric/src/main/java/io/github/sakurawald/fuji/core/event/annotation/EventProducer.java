@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.core.event.annotation;
 
 import com.google.errorprone.annotations.Keep;
-import io.github.sakurawald.fuji.core.event.message.abst.BaseEvent;
+import io.github.sakurawald.fuji.core.event.message.BaseEvent;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

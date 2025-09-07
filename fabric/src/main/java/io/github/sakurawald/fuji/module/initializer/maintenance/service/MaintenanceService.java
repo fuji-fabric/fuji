@@ -9,7 +9,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.player.OnPlayerJoinedEvent;
+import io.github.sakurawald.fuji.core.event.message.player.OnPlayerJoinedEvent;
 import io.github.sakurawald.fuji.module.initializer.maintenance.MaintenanceModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.maintenance.config.model.MaintenanceConfigModel;
 import java.util.List;

@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.event.message.impl.on_demand.player;
+package io.github.sakurawald.fuji.core.event.message.player;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;

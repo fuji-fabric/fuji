@@ -14,7 +14,7 @@ import io.github.sakurawald.fuji.core.event.EventManager;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.consumer.BaseEventConsumer;
 import io.github.sakurawald.fuji.core.event.consumer.DynamicEventConsumer;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStoppingEvent;
+import io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStoppingEvent;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;

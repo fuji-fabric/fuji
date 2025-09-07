@@ -20,7 +20,7 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.command.OnCommandRegistrationEvent;
+import io.github.sakurawald.fuji.core.event.message.server.command.OnCommandRegistrationEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_permission.config.model.CommandPermissionConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_permission.gui.CommandPermissionGui;

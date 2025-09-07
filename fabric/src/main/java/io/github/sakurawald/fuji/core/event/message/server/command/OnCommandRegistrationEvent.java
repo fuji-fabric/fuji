@@ -1,8 +1,8 @@
-package io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.command;
+package io.github.sakurawald.fuji.core.event.message.server.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
-import io.github.sakurawald.fuji.core.event.message.abst.BaseEvent;
+import io.github.sakurawald.fuji.core.event.message.BaseEvent;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.minecraft.command.CommandRegistryAccess;

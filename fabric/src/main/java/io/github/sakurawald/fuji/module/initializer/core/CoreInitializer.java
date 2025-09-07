@@ -5,7 +5,7 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent;
+import io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleLoadDeterminer;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
