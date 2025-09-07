@@ -9,8 +9,11 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerDamageEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.pvp.config.model.PvPDataModel;
+import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -81,6 +84,31 @@ public class PvpInitializer extends ModuleInitializer {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isPvpEnabled(String name) {
         return data.model().whitelist.contains(name);
+    }
+
+    @EventConsumer
+    private static void processPvpDamage(PlayerDamageEvent event) {
+        Entity damageSourceEntity = event.getDamageSource().getSource();
+        if (damageSourceEntity instanceof ServerPlayerEntity damageSourcePlayer) {
+            /* Don't flint a TNT to kill yourself. */
+            if (damageSourceEntity.equals(event.getPlayer())) return;
+
+            /* Okay, the damage source player should enable pvp first. */
+            String damageSourcePlayerName = PlayerHelper.getPlayerName(damageSourcePlayer);
+            if (!PvpInitializer.isPvpEnabled(damageSourcePlayerName)) {
+                TextHelper.sendTextByKey(damageSourcePlayer, "pvp.check.off.me");
+                event.setDamage(0);
+                return;
+            }
+
+            /* Then, the damage target player should enable pvp. */
+            String damageTargetPlayerName = PlayerHelper.getPlayerName(event.getPlayer());
+            if (!PvpInitializer.isPvpEnabled(damageTargetPlayerName)) {
+                TextHelper.sendTextByKey(damageSourcePlayer, "pvp.check.off.others", damageTargetPlayerName);
+                event.setDamage(0);
+            }
+        }
+
     }
 
 }

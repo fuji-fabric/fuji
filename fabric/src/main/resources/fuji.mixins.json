@@ -120,7 +120,6 @@
     "multiplier.ServerPlayerMixin",
     "nametag.EntityMixin",
     "placeholder.ServerPlayerEntityMixin",
-    "pvp.ServerPlayerEntityMixin",
     "sit.InteractModifierMixin",
     "skin.ServerLoginNetworkHandlerMixin",
     "system_message.ServerPlayerEntityMixin",
