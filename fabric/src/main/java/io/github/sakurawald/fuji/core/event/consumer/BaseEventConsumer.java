@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.event.message.abst;
+package io.github.sakurawald.fuji.core.event.consumer;
 
 import io.github.sakurawald.fuji.core.event.injector.structure.EventConsumerInfo;
 import java.util.function.Consumer;

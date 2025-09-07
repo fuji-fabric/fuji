@@ -1,8 +1,9 @@
-package io.github.sakurawald.fuji.core.event.message.abst;
+package io.github.sakurawald.fuji.core.event.consumer;
 
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.event.injector.structure.EventConsumerInfo;
+import io.github.sakurawald.fuji.core.event.message.abst.BaseEvent;
 import java.util.function.Consumer;
 import org.jetbrains.annotations.NotNull;
 

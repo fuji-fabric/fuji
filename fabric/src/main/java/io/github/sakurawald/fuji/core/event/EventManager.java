@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.core.event;
 
 import io.github.sakurawald.fuji.core.annotation.HotPath;
 import io.github.sakurawald.fuji.core.event.message.abst.BaseEvent;
-import io.github.sakurawald.fuji.core.event.message.abst.BaseEventConsumer;
+import io.github.sakurawald.fuji.core.event.consumer.BaseEventConsumer;
 import io.github.sakurawald.fuji.core.event.injector.StaticEventConsumerInjector;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import java.util.Collections;
