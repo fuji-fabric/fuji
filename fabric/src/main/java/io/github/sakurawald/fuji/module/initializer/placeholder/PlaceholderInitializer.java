@@ -22,7 +22,7 @@ import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.core.document.descriptor.PlaceholderDescriptor;
-import io.github.sakurawald.fuji.core.event.message.player.OnPlayerLeftEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerLeftEvent;
 import io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -253,7 +253,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
     }
 
     @EventConsumer
-    private static void removeSumUpPlaceholderOnPlayerLeft(OnPlayerLeftEvent event) {
+    private static void removeSumUpPlaceholderOnPlayerLeft(PlayerLeftEvent event) {
         SumUpPlaceholder.uuid2stats.remove(event.getPlayer().getUuidAsString());
     }
 

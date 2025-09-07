@@ -8,7 +8,7 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.player.OnPlayerChatMessageEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageEvent;
 import io.github.sakurawald.fuji.core.structure.RegexRewriteNode;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -67,7 +67,7 @@ public class ChatReplaceInitializer extends ModuleInitializer {
     }
 
     @EventConsumer(injectorPriority = EventConsumer.HIGHEST)
-    private static void handleOnPlayerChatEvent(OnPlayerChatMessageEvent event) {
+    private static void handleOnPlayerChatEvent(PlayerChatMessageEvent event) {
         /* Get signed message. */
         SignedMessage signedMessage = event.getSignedMessage();
 

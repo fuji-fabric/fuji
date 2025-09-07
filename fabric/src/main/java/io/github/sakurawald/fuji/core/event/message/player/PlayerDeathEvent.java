@@ -8,6 +8,6 @@ import org.jetbrains.annotations.NotNull;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class OnPlayerDeathEvent extends BaseEvent {
+public class PlayerDeathEvent extends BaseEvent {
     @NotNull ServerPlayerEntity player;
 }

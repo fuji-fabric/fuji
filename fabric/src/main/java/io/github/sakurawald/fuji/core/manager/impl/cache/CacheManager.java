@@ -8,7 +8,7 @@ import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.JsonUtil;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.player.OnPlayerJoinedEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerJoinedEvent;
 import io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
@@ -32,7 +32,7 @@ public class CacheManager extends BaseManager {
     private static final Map<String, GenericCacheModel<?>> CACHE_FILES = new ConcurrentHashMap<>();
 
     @EventConsumer
-    private static void updateGameProfileCache(OnPlayerJoinedEvent event) {
+    private static void updateGameProfileCache(PlayerJoinedEvent event) {
         GameProfileCacheService.setGameProfileCache(event.getPlayer());
     }
 

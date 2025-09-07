@@ -12,7 +12,7 @@ import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlaye
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.player.OnPlayerLeftEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerLeftEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_toolbox.seen.config.model.SeenDataModel;
 import lombok.Getter;
@@ -39,7 +39,7 @@ public class SeenInitializer extends ModuleInitializer {
     }
 
     @EventConsumer
-    private static void onPlayerLeft(OnPlayerLeftEvent event) {
+    private static void onPlayerLeft(PlayerLeftEvent event) {
         String playerName = PlayerHelper.getPlayerName(event.getPlayer());
         SeenInitializer.getData().model().player2seen.put(playerName, System.currentTimeMillis());
         SeenInitializer.getData().writeStorage();

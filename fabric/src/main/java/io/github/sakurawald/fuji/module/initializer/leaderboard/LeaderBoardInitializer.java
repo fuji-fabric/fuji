@@ -10,8 +10,8 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.player.OnPlayerJoinedEvent;
-import io.github.sakurawald.fuji.core.event.message.player.OnPlayerLeftEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerJoinedEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerLeftEvent;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.service.paged_text.PagedMessageText;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -159,12 +159,12 @@ public class LeaderBoardInitializer extends ModuleInitializer {
     }
 
     @EventConsumer
-    private static void updateLeaderBoardOnPlayerJoined(OnPlayerJoinedEvent event) {
+    private static void updateLeaderBoardOnPlayerJoined(PlayerJoinedEvent event) {
         LeaderBoardService.updateLeaderBoard(event.getPlayer());
     }
 
     @EventConsumer
-    private static void updateLeaderBoardOnPlayerLeft(OnPlayerLeftEvent event) {
+    private static void updateLeaderBoardOnPlayerLeft(PlayerLeftEvent event) {
         LeaderBoardService.updateLeaderBoard(event.getPlayer());
     }
 

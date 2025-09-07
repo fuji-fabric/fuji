@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class OnPlayerChatMessageEvent extends BaseEvent {
+public class PlayerChatMessageEvent extends BaseEvent {
 
     @NotNull ServerPlayerEntity player;
     @NotNull SignedMessage signedMessage;

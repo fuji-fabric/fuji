@@ -4,7 +4,7 @@ import io.github.sakurawald.annotation.PhasedMixinTemplate;
 import io.github.sakurawald.auxiliary.WeaverUtil;
 import io.github.sakurawald.fuji.core.event.EventManager;
 import io.github.sakurawald.fuji.core.event.annotation.EventProducer;
-import io.github.sakurawald.fuji.core.event.message.player.OnPlayerDeathEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerDeathEvent;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,11 +16,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerPlayerEntity.class)
 public class OnPlayerDeathEventMixin {
 
-    @EventProducer(OnPlayerDeathEvent.class)
+    @EventProducer(PlayerDeathEvent.class)
     @Inject(method = "onDeath", at = @At("HEAD"))
     public void produceOnPlayerDeathEvent(DamageSource damageSource, CallbackInfo ci) {
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-        OnPlayerDeathEvent event = new OnPlayerDeathEvent(player);
-        EventManager.dispatchEvent(OnPlayerDeathEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
+        PlayerDeathEvent event = new PlayerDeathEvent(player);
+        EventManager.dispatchEvent(PlayerDeathEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
     }
 }

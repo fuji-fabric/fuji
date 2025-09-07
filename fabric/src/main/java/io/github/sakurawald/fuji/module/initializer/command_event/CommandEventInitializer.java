@@ -7,9 +7,9 @@ import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommand
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.player.OnPlayerDeathEvent;
-import io.github.sakurawald.fuji.core.event.message.player.OnPlayerJoinedEvent;
-import io.github.sakurawald.fuji.core.event.message.player.OnPlayerLeftEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerDeathEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerJoinedEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerLeftEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_event.config.model.CommandEventConfigModel;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -47,7 +47,7 @@ public class CommandEventInitializer extends ModuleInitializer {
     }
 
     @EventConsumer
-    private static void processOnPlayerJoinedEvent(OnPlayerJoinedEvent event) {
+    private static void processOnPlayerJoinedEvent(PlayerJoinedEvent event) {
         ServerPlayerEntity player = event.getPlayer();
 
         var onPlayerJoinedConfig = CommandEventInitializer.config.model().event.on_player_joined;
@@ -67,7 +67,7 @@ public class CommandEventInitializer extends ModuleInitializer {
     }
 
     @EventConsumer
-    private static void processOnPlayerLeaveEvent(OnPlayerLeftEvent event) {
+    private static void processOnPlayerLeaveEvent(PlayerLeftEvent event) {
         var config = CommandEventInitializer.config.model().event.on_player_left;
         if (config.enable) {
             executeCommandOnEvent(event.getPlayer(), config.command_list);
@@ -75,7 +75,7 @@ public class CommandEventInitializer extends ModuleInitializer {
     }
 
     @EventConsumer
-    private static void handleOnPlayerDeathEvent(OnPlayerDeathEvent event) {
+    private static void handleOnPlayerDeathEvent(PlayerDeathEvent event) {
         var config = CommandEventInitializer.config.model().event.on_player_death;
         if (config.enable) {
             ServerPlayerEntity player = event.getPlayer();
