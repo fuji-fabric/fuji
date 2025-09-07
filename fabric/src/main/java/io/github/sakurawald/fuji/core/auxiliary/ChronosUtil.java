@@ -80,10 +80,14 @@ public class ChronosUtil {
         }
 
         public static @NotNull String getFormattedCurrentDate(DateTimeFormatter formatter) {
-            return formatDate(System.currentTimeMillis());
+            return formatDate(formatter, System.currentTimeMillis());
         }
 
         public static @NotNull String formatDate(@Nullable Long timeMillis) {
+            return formatDate(getEffectiveDateFormatter(), timeMillis);
+        }
+
+        public static @NotNull String formatDate(@NotNull DateTimeFormatter formatter, @Nullable Long timeMillis) {
             if (timeMillis == null) {
                 return "NONE";
             }
@@ -91,7 +95,6 @@ public class ChronosUtil {
             ZonedDateTime zonedDateTime = Instant.ofEpochMilli(timeMillis)
                 .atZone(ZoneId.systemDefault());
 
-            DateTimeFormatter formatter = getEffectiveDateFormatter();
             return zonedDateTime.format(formatter);
         }
     }

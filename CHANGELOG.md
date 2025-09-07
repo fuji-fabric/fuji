@@ -8,5 +8,6 @@
 
 - feature: improve the compatibility between `afk` and `jail` module. Now the `afk` state will be displayed in `tab list` for `jailed player`.
 - fix: the `/warning create` command didn't work.
+- fix: the custom formatter in `%fuji:date [custom format]%` placeholder didn't work.
 - fix: bossbar tickets should be cancelled `on player damaged` if specified.
 - feature: optimize the performance of `world.border` and `world.gamerule` module.
