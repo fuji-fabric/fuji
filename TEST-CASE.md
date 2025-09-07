@@ -186,6 +186,13 @@
 
 [Test Case]
 - Module: core
+- Action: **Test the `optional argument` functionality.**
+- Target: Issue `/send-title @s --mainTitle "main"`
+- Target: Issue `/send-title @s --mainTitle "main" --subTitle "sub"`
+- Target: Issue `/send-title @s --subTitle "sub" --mainTitle "main"`
+
+[Test Case]
+- Module: core
 - Action: **Test the `search` button in paged GUI.**
 - Target: Issue `/fuji`, and search with keyword `a` twice, then close the GUI. The same GUI should not be linked.
 - Target: Issue `/fuji`, and search with keyword `afk`, then close the GUI. The different GUI should be linked.

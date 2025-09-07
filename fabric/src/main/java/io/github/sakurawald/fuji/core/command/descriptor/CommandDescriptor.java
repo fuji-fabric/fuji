@@ -197,6 +197,11 @@ public class CommandDescriptor implements SourceModuleGetter {
         return this.commandArguments;
     }
 
+    @TestCase(action = "Test the `optional argument` functionality.", targets = {
+        "Issue `/send-title @s --mainTitle \"main\"`",
+        "Issue `/send-title @s --mainTitle \"main\" --subTitle \"sub\"`",
+        "Issue `/send-title @s --subTitle \"sub\" --mainTitle \"main\"`"
+    })
     protected @NotNull List<Object> makeMethodParameterValues(@NotNull CommandContext<ServerCommandSource> ctx) {
         List<Object> parameterValues = new ArrayList<>();
 
