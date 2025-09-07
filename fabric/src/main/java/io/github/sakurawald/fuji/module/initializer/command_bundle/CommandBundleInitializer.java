@@ -18,7 +18,7 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.document.gui.CommandsInspectionGui;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.server.command.OnCommandRegistrationEvent;
+import io.github.sakurawald.fuji.core.event.message.server.command.CommandRegistrationEvent;
 import io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_bundle.config.model.CommandBundleConfigModel;
@@ -222,7 +222,7 @@ public class CommandBundleInitializer extends ModuleInitializer {
     }
 
     @EventConsumer
-    private static void onCommandRegistrationEvent(@Unused OnCommandRegistrationEvent event) {
+    private static void onCommandRegistrationEvent(@Unused CommandRegistrationEvent event) {
         ServerHelper.withServerInstantiated(() -> {
             $registerAllBundleCommands(CommandHelper.Source.getConsoleCommandSource());
         });

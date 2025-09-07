@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @PhasedMixinTemplate
 @Mixin(ServerPlayerEntity.class)
-public class OnPlayerDeathEventMixin {
+public class PlayerDeathEventMixin {
 
     @EventProducer(PlayerDeathEvent.class)
     @Inject(method = "onDeath", at = @At("HEAD"))

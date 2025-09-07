@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
     """)
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class OnCommandRegistrationEvent extends BaseEvent {
+public class CommandRegistrationEvent extends BaseEvent {
     @NotNull CommandManager commandManager;
     @NotNull CommandDispatcher<ServerCommandSource> dispatcher;
     @NotNull CommandRegistryAccess registryAccess;

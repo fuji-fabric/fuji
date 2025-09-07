@@ -9,7 +9,7 @@ import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.server.command.OnCommandRegistrationEvent;
+import io.github.sakurawald.fuji.core.event.message.server.command.CommandRegistrationEvent;
 import io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import io.github.sakurawald.fuji.core.manager.impl.callback.structure.TTLMap;
@@ -36,7 +36,7 @@ public class CallbackManager extends BaseManager {
     }
 
     @EventConsumer
-    private static void registerCommandCallbackCommand(OnCommandRegistrationEvent event) {
+    private static void registerCommandCallbackCommand(CommandRegistrationEvent event) {
         CommandDispatcher<ServerCommandSource> dispatcher = event.getDispatcher();
         dispatcher
             .register(

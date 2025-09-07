@@ -5,7 +5,7 @@ import io.github.sakurawald.annotation.PhasedMixinTemplate;
 import io.github.sakurawald.auxiliary.WeaverUtil;
 import io.github.sakurawald.fuji.core.event.EventManager;
 import io.github.sakurawald.fuji.core.event.annotation.EventProducer;
-import io.github.sakurawald.fuji.core.event.message.server.command.OnCommandRegistrationEvent;
+import io.github.sakurawald.fuji.core.event.message.server.command.CommandRegistrationEvent;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -24,12 +24,12 @@ public class CommandManagerEventMixin {
     @Final
     private CommandDispatcher<ServerCommandSource> dispatcher;
 
-    @EventProducer(OnCommandRegistrationEvent.class)
+    @EventProducer(CommandRegistrationEvent.class)
     @Inject(at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/CommandDispatcher;setConsumer(Lcom/mojang/brigadier/ResultConsumer;)V", remap = false), method = "<init>")
     void produceOnCommandRegistrationEvent(CommandManager.RegistrationEnvironment environment, CommandRegistryAccess registryAccess, CallbackInfo ci) {
         CommandManager commandManager = (CommandManager) (Object) this;
-        OnCommandRegistrationEvent event = new OnCommandRegistrationEvent(commandManager, this.dispatcher, registryAccess, environment);
-        EventManager.dispatchEvent(OnCommandRegistrationEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
+        CommandRegistrationEvent event = new CommandRegistrationEvent(commandManager, this.dispatcher, registryAccess, environment);
+        EventManager.dispatchEvent(CommandRegistrationEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
     }
 
 }

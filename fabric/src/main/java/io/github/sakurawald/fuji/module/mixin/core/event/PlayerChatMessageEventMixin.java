@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @PhasedMixinTemplate
 @Mixin(value = ServerPlayNetworkHandler.class)
-public class OnPlayerChatMessageEventMixin {
+public class PlayerChatMessageEventMixin {
 
     @Shadow
     public ServerPlayerEntity player;

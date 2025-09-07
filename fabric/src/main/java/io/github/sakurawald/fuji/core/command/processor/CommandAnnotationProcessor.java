@@ -21,7 +21,7 @@ import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.server.command.OnCommandRegistrationEvent;
+import io.github.sakurawald.fuji.core.event.message.server.command.CommandRegistrationEvent;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -59,21 +59,21 @@ public class CommandAnnotationProcessor {
     public static CommandRegistryAccess COMMAND_REGISTRY_ACCESS;
 
     @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority = EventConsumer.LOWEST)
-    private static void setupCommandManagerReferences(OnCommandRegistrationEvent event) {
+    private static void setupCommandManagerReferences(CommandRegistrationEvent event) {
         /* Capture the variables. */
         CommandAnnotationProcessor.COMMAND_DISPATCHER = event.getDispatcher();
         CommandAnnotationProcessor.COMMAND_REGISTRY_ACCESS = event.getRegistryAccess();
     }
 
     @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.HIGHEST)
-    private static void updateCommandTree(OnCommandRegistrationEvent event) {
+    private static void updateCommandTree(CommandRegistrationEvent event) {
         // NOTE: The `/reload` command invalidates the old CommandManager reference, here we have to capture the new reference to CommandManager.
         CommandManager commandManager = event.getCommandManager();
         CommandHelper.updateCommandTree(commandManager);
     }
 
     @EventConsumer
-    private static void onCommandRegistrationEvent(@Unused OnCommandRegistrationEvent event) {
+    private static void onCommandRegistrationEvent(@Unused CommandRegistrationEvent event) {
         // NOTE: The `/reload` command will clear all registered commands, and trigger the `REGISTRATION` event.
         /* Register argument type adapters. */
         BaseArgumentTypeAdapter.Registry.registerTypeAdapters();

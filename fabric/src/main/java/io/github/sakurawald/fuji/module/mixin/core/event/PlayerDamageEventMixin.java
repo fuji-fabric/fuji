@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @PhasedMixinTemplate
 @Mixin(value = ServerPlayerEntity.class)
-public class OnPlayerDamagedEventMixin {
+public class PlayerDamageEventMixin {
 
     @EventProducer(PlayerDamageEvent.class)
     @Inject(method = "damage", at = @At("RETURN"))
