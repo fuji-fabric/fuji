@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.core.manager.impl.bossbar;
 import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.player.OnPlayerDamagedEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerDamageEvent;
 import io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickStartEvent;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.structure.InterruptibleTicket;
@@ -22,7 +22,7 @@ public class BossBarManager extends BaseManager {
     private static final List<BossBarTicket> addedTickets = new CopyOnWriteArrayList<>();
 
     @EventConsumer
-    private static void processOnPlayerDamagedEvent(OnPlayerDamagedEvent event) {
+    private static void processOnPlayerDamagedEvent(PlayerDamageEvent event) {
         ServerPlayerEntity player = event.getPlayer();
         tickets
             .stream()

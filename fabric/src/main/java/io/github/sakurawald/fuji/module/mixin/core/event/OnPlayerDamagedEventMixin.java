@@ -4,7 +4,7 @@ import io.github.sakurawald.annotation.PhasedMixinTemplate;
 import io.github.sakurawald.auxiliary.WeaverUtil;
 import io.github.sakurawald.fuji.core.event.EventManager;
 import io.github.sakurawald.fuji.core.event.annotation.EventProducer;
-import io.github.sakurawald.fuji.core.event.message.player.OnPlayerDamagedEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerDamageEvent;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = ServerPlayerEntity.class)
 public class OnPlayerDamagedEventMixin {
 
-    @EventProducer(OnPlayerDamagedEvent.class)
+    @EventProducer(PlayerDamageEvent.class)
     @Inject(method = "damage", at = @At("RETURN"))
     public void produceOnPlayerDamagedEvent(
         #if MC_VER <= MC_1_21
@@ -27,7 +27,7 @@ public class OnPlayerDamagedEventMixin {
         DamageSource damageSource, float f, CallbackInfoReturnable<Boolean> cir) {
 
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-        OnPlayerDamagedEvent event = new OnPlayerDamagedEvent(player);
-        EventManager.dispatchEvent(OnPlayerDamagedEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
+        PlayerDamageEvent event = new PlayerDamageEvent(player);
+        EventManager.dispatchEvent(PlayerDamageEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
     }
 }
