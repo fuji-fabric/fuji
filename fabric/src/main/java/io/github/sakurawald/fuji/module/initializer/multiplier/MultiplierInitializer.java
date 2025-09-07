@@ -1,16 +1,19 @@
 package io.github.sakurawald.fuji.module.initializer.multiplier;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerDamageEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
+import java.util.Optional;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Optional;
 
 @Document(id = 1751978330624L, value = """
     This module allows you to `multiply` some `numeric values` in vanilla Minecraft.
@@ -35,7 +38,7 @@ import java.util.Optional;
     ◉ Double all experience a player gained.
     Issue: `/lp group default meta set fuji.multiplier.experience.all 2`
     """)
-public class MultiplierInitializer extends ModuleInitializer{
+public class MultiplierInitializer extends ModuleInitializer {
 
     @DocStringProvider(id = 1752000356004L, value = """
         Specify the `multiply factor` for a specified `type` for this player.
@@ -46,5 +49,18 @@ public class MultiplierInitializer extends ModuleInitializer{
     public static float transform(@NotNull ServerPlayerEntity player, String type, String key, float f) {
         Optional<Float> meta = LuckpermsHelper.getMeta(player.getUuid(), MULTIPLIER_META, type, key);
         return meta.map(factor -> f * factor).orElse(f);
+    }
+
+    @EventConsumer
+    private static void multiplyDamageValue(PlayerDamageEvent event) {
+        ServerPlayerEntity player = event.getPlayer();
+
+        float damage = event.getDamage();
+        damage = MultiplierInitializer.transform(player, "damage", "all", damage);
+
+        DamageSource damageSource = event.getDamageSource();
+        damage = MultiplierInitializer.transform(player, "damage", RegistryHelper.getIdAsString(damageSource.getTypeRegistryEntry()), damage);
+
+        event.setDamage(damage);
     }
 }

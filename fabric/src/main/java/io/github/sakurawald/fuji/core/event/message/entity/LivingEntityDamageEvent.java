@@ -1,19 +1,19 @@
-package io.github.sakurawald.fuji.core.event.message.player;
+package io.github.sakurawald.fuji.core.event.message.entity;
 
 import io.github.sakurawald.fuji.core.event.message.BaseEvent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
-@Data
 @EqualsAndHashCode(callSuper = true)
+@Data
 @AllArgsConstructor
-public class PlayerDamageEvent extends BaseEvent {
+public class LivingEntityDamageEvent extends BaseEvent {
 
-    @NotNull ServerPlayerEntity player;
+    @NotNull LivingEntity livingEntity;
     @NotNull DamageSource damageSource;
     float damage;
 

@@ -6,12 +6,8 @@ import io.github.sakurawald.fuji.module.initializer.afk.AfkInitializer;
 import io.github.sakurawald.fuji.module.initializer.afk.accessor.AfkStateAccessor;
 import io.github.sakurawald.fuji.module.initializer.afk.effect.AfkEffectInitializer;
 import net.minecraft.entity.MovementType;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
-#if MC_VER > MC_1_21
-import net.minecraft.server.world.ServerWorld;
-#endif
 
 #if MC_VER < MC_1_21_6
 import net.minecraft.util.math.BlockPos;
@@ -20,9 +16,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 // NOTE: Handle events later to ensure `moveable` option works.
 @Mixin(value = ServerPlayerEntity.class, priority = 1000 + 500)
@@ -41,19 +34,6 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
         super(world, gameProfile);
     }
     #endif
-
-    @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
-    public void handleInvulnerableEffect(
-        #if MC_VER <= MC_1_21
-        #elif MC_VER > MC_1_21
-            ServerWorld serverWorld,
-        #endif
-            DamageSource damageSource, float f, CallbackInfoReturnable<Boolean> cir) {
-        if (AfkEffectInitializer.config.model().invulnerable
-            && AfkInitializer.isAfk(player)) {
-            cir.setReturnValue(false);
-        }
-    }
 
     // NOTE: function move() in 'afk.effect module' will override that one in 'afk module', since the latter Mixin will override the original one.
     @Override

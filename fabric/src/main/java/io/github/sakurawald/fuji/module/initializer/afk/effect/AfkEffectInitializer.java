@@ -3,7 +3,10 @@ package io.github.sakurawald.fuji.module.initializer.afk.effect;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.entity.LivingEntityDamageEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
+import io.github.sakurawald.fuji.module.initializer.afk.AfkInitializer;
 import io.github.sakurawald.fuji.module.initializer.afk.effect.config.model.AfkEffectConfigModel;
 
 @Document(id = 1751826206965L, value = """
@@ -15,4 +18,12 @@ import io.github.sakurawald.fuji.module.initializer.afk.effect.config.model.AfkE
 public class AfkEffectInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<AfkEffectConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, AfkEffectConfigModel.class);
+
+    @EventConsumer
+    private static void handleInvulnerableEffect(LivingEntityDamageEvent event) {
+        if (AfkEffectInitializer.config.model().invulnerable
+            && AfkInitializer.isAfk(event.getLivingEntity())) {
+            event.setDamage(0);
+        }
+    }
 }

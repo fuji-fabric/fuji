@@ -7,10 +7,14 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.EntityCollection;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.entity.LivingEntityDamageEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import java.util.HashSet;
 import java.util.Set;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
@@ -107,6 +111,28 @@ public class LauncherInitializer extends ModuleInitializer {
                 launchEntityAt(entity, at, angle, power);
             });
         return CommandHelper.Return.SUCCESS;
+    }
+
+    @EventConsumer
+    private static void safelyLanding(LivingEntityDamageEvent event) {
+        Entity entity = event.getLivingEntity();
+        if (!LauncherInitializer.LAUNCHED_ENTITIES.contains(entity)) {
+            return;
+        }
+
+        /* Compute the boolean value. */
+        DamageSource damageSource = event.getDamageSource();
+        boolean immuneToThisDamageType = damageSource
+            .getTypeRegistryEntry()
+            .getKey()
+            .map(key -> key.equals(DamageTypes.FALL))
+            .orElse(false);
+
+        /* Cancel the damage by flag. */
+        if (immuneToThisDamageType) {
+            LauncherInitializer.LAUNCHED_ENTITIES.remove(entity);
+            event.setDamage(0);
+        }
     }
 
 
