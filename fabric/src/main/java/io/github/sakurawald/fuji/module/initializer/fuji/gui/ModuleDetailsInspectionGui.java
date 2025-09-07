@@ -35,7 +35,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
 
     public static void attachThingsForCore(ServerPlayerEntity player, ModuleDetailsInspectionGui gui, List<GuiElementInterface> entities, String modulePathString) {
         /* Only attach things for core module. */
-        if (!modulePathString.equals(ModulePathResolver.CORE_MODULE_PATH)) return;
+        if (!modulePathString.equals(ModulePathResolver.CORE_MODULE_PATH_STRING)) return;
 
         /* Place about button. */
         GuiElementBuilder aboutButton = GuiHelper.Button

@@ -136,7 +136,7 @@ public class ReflectionUtil {
             String result = "unknown";
             for (String splitModulePath : joinedModulePathList) {
                 result = splitModulePath;
-                if (!result.equals(ModulePathResolver.CORE_MODULE_PATH)) {
+                if (!result.equals(ModulePathResolver.CORE_MODULE_PATH_STRING)) {
                     return result;
                 }
             }

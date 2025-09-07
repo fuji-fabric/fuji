@@ -59,7 +59,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
             .collect(Collectors.toList());
 
         /* Insert the core module as a dummy module. */
-        entities.add(0, new Pair<>(ModulePathResolver.CORE_MODULE_PATH, true));
+        entities.add(0, new Pair<>(ModulePathResolver.CORE_MODULE_PATH_STRING, true));
 
         return new ModulesInspectionGui(parent, player, entities, 0);
     }
@@ -107,7 +107,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
 
     private static Item getItemMaterial(Pair<String, Boolean> entity) {
         String modulePathString = entity.getKey();
-        if (modulePathString.equals(ModulePathResolver.CORE_MODULE_PATH)) {
+        if (modulePathString.equals(ModulePathResolver.CORE_MODULE_PATH_STRING)) {
             return Items.TINTED_GLASS;
         }
 

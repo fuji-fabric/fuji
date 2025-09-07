@@ -20,7 +20,7 @@ public class ModuleDependencyChecker extends FileDependencyChecker {
             String referenceModulePath = ModulePathResolver.computeModulePathString(referenceClassName);
 
             /* Allow to reference symbols from core module. */
-            if (referenceModulePath.equals(ModulePathResolver.CORE_MODULE_PATH)) continue;
+            if (referenceModulePath.equals(ModulePathResolver.CORE_MODULE_PATH_STRING)) continue;
 
             /* Allow to reference symbols from self-module or parent-module. */
             if (definitionModulePath.startsWith(referenceModulePath)) continue;

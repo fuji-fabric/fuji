@@ -143,7 +143,7 @@ public class ModuleManager extends BaseManager {
     @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
     private static boolean shouldLoadModule(@NotNull List<String> modulePath) {
         if (Configs.MAIN_CONTROL_CONFIG.model().core.debug.disable_all_modules) return false;
-        if (modulePath.get(0).equals(ModulePathResolver.CORE_MODULE_PATH)) return true;
+        if (modulePath.get(0).equals(ModulePathResolver.CORE_MODULE_PATH_STRING)) return true;
 
         // cache
         if (MODULE_ENABLE_STATUS.containsKey(modulePath)) {
