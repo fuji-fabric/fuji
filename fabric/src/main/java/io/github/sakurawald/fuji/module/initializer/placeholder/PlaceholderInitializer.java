@@ -302,6 +302,11 @@ public class PlaceholderInitializer extends ModuleInitializer {
     @DocStringProvider(id = 1752000061565L, value = """
         Returns current `date`.
         Accept an optional argument to specify the `date format`.
+
+        For example:
+        - `%fuji:date yyyy MM dd%`
+
+        See details in https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html
         """)
     private void registerDatePlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("date", 1752000061565L);
