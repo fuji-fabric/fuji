@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.mixin.core.event.on_demand;
+package io.github.sakurawald.fuji.module.mixin.core.event;
 
 
 import io.github.sakurawald.annotation.PhasedMixinTemplate;
