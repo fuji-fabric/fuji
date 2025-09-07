@@ -201,7 +201,7 @@ public class CommandDescriptor implements SourceModuleGetter {
         List<Object> parameterValues = new ArrayList<>();
 
         for (CommandArgument commandArgument : this.getMethodParameterSpecifiers()) {
-            /* inject the value into a required argument. */
+            /* Inject the value into a required argument. */
             try {
                 Object parameterValue = BaseArgumentTypeAdapter.Registry
                     .getTypeAdapter(commandArgument.getArgumentType())
@@ -209,8 +209,19 @@ public class CommandDescriptor implements SourceModuleGetter {
                 parameterValues.add(parameterValue);
             } catch (Exception e) {
                 if (CommandException.isOptionalArgumentNotSpecifiedException(e)) {
-                    parameterValues.add(Optional.empty());
-                    continue;
+                    if (commandArgument.isOptional()) {
+                        parameterValues.add(Optional.empty());
+                        continue;
+                    } else {
+                        LogUtil.error("""
+                            [Lose argument values after command redirect]
+                            The `argument values` are lost after a command redirect.
+                            Related issue: https://github.com/Sinytra/Connector/issues/214
+
+                            You should open an issue in https://github.com/sakurawald/fuji if you see this.
+                            """);
+                        throw new IllegalArgumentException("Lose argument values after command redirect.");
+                    }
                 }
 
                 // Throw other exceptions to upper-level handler.
@@ -554,7 +565,7 @@ public class CommandDescriptor implements SourceModuleGetter {
 
             """.formatted(
                 ModulePathResolver.computeModulePathString(method.getDeclaringClass().getName())
-                , context.getInput()
+                , TextHelper.Parsers.escapeTags(context.getInput())
                 , source.getName()
                 , throwable);
             LogUtil.error(nonCommandSyntaxErrorString, throwable);
