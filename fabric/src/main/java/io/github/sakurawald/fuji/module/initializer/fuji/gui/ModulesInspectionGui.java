@@ -8,6 +8,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModuleLoadDeterminer;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import io.github.sakurawald.fuji.core.structure.Pair;
@@ -31,8 +32,8 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
     public ModulesInspectionGui(SimpleGui parent, ServerPlayerEntity player, @NotNull List<Pair<String, Boolean>> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "fuji.inspect.modules.gui.title"), entities, pageIndex);
 
-        int enabledModules = ModuleManager.getEnabledModulePaths().size();
-        int allModules = ModuleManager.MODULE_ENABLE_STATUS.size();
+        int enabledModules = ModuleLoadDeterminer.getEnabledModulePaths().size();
+        int allModules = ModuleLoadDeterminer.MODULE_ENABLE_STATUS.size();
         List<Text> lore = List.of(
             TextHelper.getTextByKey(player, "fuji.inspect.modules.gui.reimu.lore", enabledModules, allModules)
         );
@@ -51,7 +52,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
 
     @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
     public static ModulesInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
-        List<Pair<String, Boolean>> entities = ModuleManager.MODULE_ENABLE_STATUS
+        List<Pair<String, Boolean>> entities = ModuleLoadDeterminer.MODULE_ENABLE_STATUS
             .entrySet()
             .stream()
             .map(it -> new Pair<>(ModulePathResolver.toModulePathString(it.getKey()), it.getValue()))

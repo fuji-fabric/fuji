@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.core.document.descriptor;
 
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
-import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModuleLoadDeterminer;
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import lombok.Data;
@@ -55,7 +55,7 @@ public abstract class StringDescriptor implements SourceModuleGetter {
 
         /* Should only register it when the module is enabled. */
         List<String> modulePathList = ModulePathResolver.toModulePathList(sourceModule);
-        Boolean moduleEnableStatus = ModuleManager.MODULE_ENABLE_STATUS.getOrDefault(modulePathList, false);
+        Boolean moduleEnableStatus = ModuleLoadDeterminer.MODULE_ENABLE_STATUS.getOrDefault(modulePathList, false);
         if (moduleEnableStatus) {
             REGISTERED_STRING_DESCRIPTORS.add(this);
         }

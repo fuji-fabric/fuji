@@ -20,7 +20,7 @@ public class ModulePathResolver {
     private static final Set<String> DECLARED_MODULE_PATH_STRINGS = new HashSet<>(ReflectionUtil.CompileTimeGraph
         .getCompileTimeTxtGraph(ReflectionUtil.CompileTimeGraph.MODULE_GRAPH_FILE_NAME));
 
-    public static final List<Class<?>> MODULE_PACKAGE_PREFIXES = List.of(ModuleInitializer.class, GlobalMixinConfigPlugin.class);
+    private static final List<Class<?>> MODULE_PACKAGE_PREFIXES = List.of(ModuleInitializer.class, GlobalMixinConfigPlugin.class);
 
     private static final Map<String, String> CLASS_NAME_2_MODULE_PATH_STRING = new HashMap<>();
 
@@ -59,7 +59,7 @@ public class ModulePathResolver {
         2. For simplicity, returned `core` module should not contain any sub-module.
         3. This method only returns a declared `module path list` or `[core]`.
         """)
-    public static @NotNull List<String> computeModulePathList(@NotNull String className) {
+    private static @NotNull List<String> computeModulePathList(@NotNull String className) {
         if (DECLARED_MODULE_PATH_STRINGS.isEmpty()) {
             System.out.println("This is the first time to generate the module path graph file.");
         }

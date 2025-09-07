@@ -15,7 +15,7 @@ import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.config.model.MainControlConfigModel;
 import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
-import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModuleLoadDeterminer;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import java.io.File;
@@ -145,7 +145,7 @@ public class GenerateGraphTest {
             .forEach(key -> searchDefinedModules(parent.getAsJsonObject(key), StringUtil.trimPathString(level + "." + key), result));
 
         /* Go up. */
-        if (parent.has(ModuleManager.ENABLE_SUPPLIER_KEY)) {
+        if (parent.has(ModuleLoadDeterminer.ENABLE_JSON_KEY)) {
             result.add(level);
         }
     }

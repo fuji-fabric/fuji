@@ -12,7 +12,7 @@ import io.github.sakurawald.fuji.core.command.suggestion.structure.ComposedComma
 import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
-import io.github.sakurawald.fuji.core.manager.Managers;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModuleLoadDeterminer;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
 
             ReflectionUtil.CompileTimeGraph.getCompileTimeTxtGraph(ReflectionUtil.CompileTimeGraph.ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME)
                 .stream()
-                .filter(className -> Managers.getModuleManager().shouldLoadThis(className))
+                .filter(className -> ModuleLoadDeterminer.shouldLoadThis(className))
                 .forEach(className -> {
                     try {
                         /* Make the instance of type adapter */

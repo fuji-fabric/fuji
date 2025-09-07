@@ -6,7 +6,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStartedEvent;
-import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModuleLoadDeterminer;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 
@@ -123,8 +123,8 @@ public class CoreInitializer extends ModuleInitializer {
     @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.HIGHEST)
     private static void printModuleStatusReportOnServerStarted(@Unused ServerStartedEvent event) {
         /* Report enabled/disabled modules. */
-        List<String> enabledModuleList = ModuleManager.getEnabledModulePaths();
-        LogUtil.info("Enabled {}/{} modules -> {}", enabledModuleList.size(), ModuleManager.MODULE_ENABLE_STATUS.size(), enabledModuleList);
+        List<String> enabledModuleList = ModuleLoadDeterminer.getEnabledModulePaths();
+        LogUtil.info("Enabled {}/{} modules -> {}", enabledModuleList.size(), ModuleLoadDeterminer.MODULE_ENABLE_STATUS.size(), enabledModuleList);
 
         /* Print the user guide for new users. */
         tryPrintUserGuide();

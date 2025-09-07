@@ -7,7 +7,7 @@ import io.github.sakurawald.fuji.core.event.inject.structure.EventGraph;
 import io.github.sakurawald.fuji.core.event.message.abst.BaseEvent;
 import io.github.sakurawald.fuji.core.event.message.abst.BaseEventConsumer;
 import io.github.sakurawald.fuji.core.event.message.abst.StaticEventConsumer;
-import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModuleLoadDeterminer;
 import java.lang.reflect.Method;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +26,7 @@ public class StaticEventConsumerInjector {
     @SneakyThrows({ClassNotFoundException.class, NoSuchMethodException.class})
     private static <T extends BaseEvent> void injectOne(@NotNull EventConsumerInfo eventConsumerInfo) {
         /* Skip injecting, if its declaring class should not be loaded. */
-        if (!ModuleManager.shouldLoadThis(eventConsumerInfo.getDeclaringClassName())) {
+        if (!ModuleLoadDeterminer.shouldLoadThis(eventConsumerInfo.getDeclaringClassName())) {
             return;
         }
 
