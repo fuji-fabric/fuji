@@ -6,6 +6,7 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
+import io.github.sakurawald.fuji.core.event.inject.StaticEventConsumerInjector;
 import io.github.sakurawald.fuji.core.event.inject.structure.EventConsumerInfo;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +41,7 @@ public class ModuleLoadDeterminer {
         See details in ModulePathResolver.
         """)
     public static boolean shouldLoadThis(@NotNull String className) {
-        if (className.contains(".on_demand.")) {
+        if (StaticEventConsumerInjector.getEventProducerMixinClassNames().contains(className)) {
             return shouldLoadOnDemandEventMixin(className);
         }
 

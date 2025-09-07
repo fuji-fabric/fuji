@@ -4,15 +4,22 @@ import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.event.EventManager;
 import io.github.sakurawald.fuji.core.event.inject.structure.EventConsumerInfo;
 import io.github.sakurawald.fuji.core.event.inject.structure.EventGraph;
+import io.github.sakurawald.fuji.core.event.inject.structure.EventProducerInfo;
 import io.github.sakurawald.fuji.core.event.message.abst.BaseEvent;
 import io.github.sakurawald.fuji.core.event.message.abst.BaseEventConsumer;
 import io.github.sakurawald.fuji.core.event.message.abst.StaticEventConsumer;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleLoadDeterminer;
 import java.lang.reflect.Method;
+import java.util.Set;
+import java.util.stream.Collectors;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 public class StaticEventConsumerInjector {
+
+    @Getter(lazy = true)
+    private static final Set<String> eventProducerMixinClassNames = collectEventProducerMixinClassNames();
 
     public static void injectAll() {
         EventGraph eventGraph = ReflectionUtil.CompileTimeGraph.getEventGraph();
@@ -20,6 +27,15 @@ public class StaticEventConsumerInjector {
         eventGraph
             .getConsumers()
             .forEach(StaticEventConsumerInjector::injectOne);
+    }
+
+    public static @NotNull Set<String> collectEventProducerMixinClassNames() {
+        EventGraph eventGraph = ReflectionUtil.CompileTimeGraph.getEventGraph();
+        return eventGraph
+            .getProducers()
+            .stream()
+            .map(EventProducerInfo::getDeclaringClassName)
+            .collect(Collectors.toSet());
     }
 
     @SuppressWarnings("unchecked")
