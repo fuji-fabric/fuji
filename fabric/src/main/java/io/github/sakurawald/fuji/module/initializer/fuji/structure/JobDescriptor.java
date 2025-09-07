@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.fuji.structure;
 
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
-import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.quartz.Job;
@@ -28,7 +28,7 @@ public class JobDescriptor implements SourceModuleGetter {
 
         /* No source module is specified, try to compute it from the job class. */
         Class<? extends Job> jobClass = jobDetail.getJobClass();
-        return ModuleManager.computeJoinedModulePath(jobClass.getName());
+        return ModulePathResolver.computeModulePathString(jobClass.getName());
     }
 
 }

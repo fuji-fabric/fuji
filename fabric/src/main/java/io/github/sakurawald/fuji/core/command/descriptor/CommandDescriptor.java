@@ -27,7 +27,7 @@ import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
-import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import io.github.sakurawald.fuji.core.structure.Pair;
 import io.github.sakurawald.fuji.core.structure.SpecialVariable;
 import java.lang.reflect.InvocationTargetException;
@@ -553,7 +553,7 @@ public class CommandDescriptor implements SourceModuleGetter {
             - Message: %s
 
             """.formatted(
-                ModuleManager.computeJoinedModulePath(method.getDeclaringClass().getName())
+                ModulePathResolver.computeModulePathString(method.getDeclaringClass().getName())
                 , context.getInput()
                 , source.getName()
                 , throwable);
@@ -727,7 +727,7 @@ public class CommandDescriptor implements SourceModuleGetter {
 
     @Override
     public String getSourceModule() {
-        return ModuleManager.computeJoinedModulePath(this.method.getDeclaringClass().getName());
+        return ModulePathResolver.computeModulePathString(this.method.getDeclaringClass().getName());
     }
 
 }

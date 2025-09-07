@@ -1,7 +1,7 @@
 package tests.dependency.structure;
 
 import io.github.sakurawald.fuji.Fuji;
-import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
@@ -14,13 +14,13 @@ public class ModuleDependencyChecker extends FileDependencyChecker {
     private @NotNull DependencyNode groupReferencesByModulePath(DependencyNode node) {
         /* Detect cross modules references. */
         String definitionClassName = node.definition;
-        String definitionModulePath = ModuleManager.computeJoinedModulePath(definitionClassName);
+        String definitionModulePath = ModulePathResolver.computeModulePathString(definitionClassName);
         List<String> bannedReferenceNames = new ArrayList<>();
         for (String referenceClassName : node.getReference()) {
-            String referenceModulePath = ModuleManager.computeJoinedModulePath(referenceClassName);
+            String referenceModulePath = ModulePathResolver.computeModulePathString(referenceClassName);
 
             /* Allow to reference symbols from core module. */
-            if (referenceModulePath.equals(ModuleManager.CORE_MODULE_PATH)) continue;
+            if (referenceModulePath.equals(ModulePathResolver.CORE_MODULE_PATH)) continue;
 
             /* Allow to reference symbols from self-module or parent-module. */
             if (definitionModulePath.startsWith(referenceModulePath)) continue;

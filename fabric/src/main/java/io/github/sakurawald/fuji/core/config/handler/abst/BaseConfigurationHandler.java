@@ -16,7 +16,7 @@ import io.github.sakurawald.fuji.core.event.message.abst.BaseEventConsumer;
 import io.github.sakurawald.fuji.core.event.message.abst.DynamicEventConsumer;
 import io.github.sakurawald.fuji.core.event.message.impl.on_demand.server.lifecycle.ServerStoppingEvent;
 import io.github.sakurawald.fuji.core.manager.Managers;
-import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -143,7 +143,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     }
 
     private void handleConfigurationHandlerException(@NotNull String title, @NotNull Exception e) {
-        String modulePath = ModuleManager.computeJoinedModulePath(this.makeDefaultModel().getClass().getName());
+        String modulePath = ModulePathResolver.computeModulePathString(this.makeDefaultModel().getClass().getName());
         LogUtil.error("""
 
 
@@ -205,7 +205,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
 
     @Override
     public String getSourceModule() {
-        return ModuleManager.computeJoinedModulePath(this.model().getClass().getName());
+        return ModulePathResolver.computeModulePathString(this.model().getClass().getName());
     }
 
     public BaseConfigurationHandler<T> enableAutoSaveFeature() {

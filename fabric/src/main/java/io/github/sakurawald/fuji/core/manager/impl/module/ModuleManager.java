@@ -8,14 +8,10 @@ import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.event.inject.structure.EventConsumerInfo;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
-import io.github.sakurawald.fuji.module.mixin.GlobalMixinConfigPlugin;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import lombok.Getter;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.NotNull;
@@ -25,94 +21,16 @@ import org.spongepowered.asm.service.MixinService;
 public class ModuleManager extends BaseManager {
 
     public static final String ENABLE_SUPPLIER_KEY = "enable";
-    public static final String CORE_MODULE_PATH = "core";
-
-    private static final Set<String> MODULE_PATHS = new HashSet<>(ReflectionUtil.CompileTimeGraph
-        .getCompileTimeTxtGraph(ReflectionUtil.CompileTimeGraph.MODULE_GRAPH_FILE_NAME));
+    private static final String MODULES_LITERAL = "modules";
 
     public static final Map<List<String>, Boolean> MODULE_ENABLE_STATUS = new HashMap<>();
-    private static final Map<String, String> CLASS_NAME_2_MODULE_PATH_STRING = new HashMap<>();
     public static final Map<Class<? extends ModuleInitializer>, ModuleInitializer> MODULE_INITIALIZER_BY_CLASS = new HashMap<>();
     public static final Map<String, Class<? extends ModuleInitializer>> MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING = new HashMap<>();
-
-    public static @NotNull String computeJoinedModulePath(@NotNull String className) {
-        /* This function wrap the computeModulePathAsList function, and providing a cache layer. */
-        String modulePathString = CLASS_NAME_2_MODULE_PATH_STRING.get(className);
-        if (modulePathString != null) {
-            return modulePathString;
-        }
-
-        String result = joinModulePath(ModuleManager.computeSplitModulePath(className));
-        CLASS_NAME_2_MODULE_PATH_STRING.put(className, result);
-        return result;
-    }
-
-    public static @NotNull List<String> computeSplitModulePath(@NotNull String className) {
-        if (MODULE_PATHS.isEmpty()) {
-            LogUtil.warn("This is the first time we generating the module graph file, we just ");
-        }
-
-        /* remove leading directories */
-        int left = -1;
-        List<Class<?>> modulePackagePrefixes = List.of(ModuleInitializer.class, GlobalMixinConfigPlugin.class);
-        for (Class<?> modulePackagePrefix : modulePackagePrefixes) {
-            String prefix = modulePackagePrefix.getPackageName();
-            if (className.startsWith(prefix)) {
-
-                // skip self
-                if (className.equals(modulePackagePrefix.getName())) continue;
-
-                left = prefix.length() + 1;
-                break;
-            }
-        }
-
-        if (left == -1) {
-            return List.of(CORE_MODULE_PATH);
-        }
-
-        String str = className.substring(left);
-
-        /* remove trailing directories */
-        int right = str.lastIndexOf(".");
-        str = str.substring(0, right);
-
-        List<String> modulePath = new ArrayList<>(List.of(str.split("\\.")));
-
-        if (modulePath.get(0).equals(CORE_MODULE_PATH)) {
-            return List.of(CORE_MODULE_PATH);
-        }
-
-        /* remove the trailing directories until the string is a module path string */
-        String modulePathString = String.join(".", modulePath);
-        while (!MODULE_PATHS.contains(modulePathString)) {
-            // remove last!
-            if (modulePath.isEmpty()) {
-                throw new RuntimeException("Can't find the module enable-supplier in `config.json` for class name %s. Did you forget to add the enable-supplier key in ConfigModel ?".formatted(className));
-            }
-            modulePath.remove(modulePath.size() - 1);
-
-            // compute it
-            modulePathString = String.join(".", modulePath);
-        }
-
-        return modulePath;
-    }
-
-    public static String joinModulePath(List<String> modulePath) {
-        return String.join(".", modulePath);
-    }
-
-    public static List<String> splitModulePath(String modulePath) {
-        return Arrays
-            .stream(modulePath.split("\\."))
-            .toList();
-    }
 
     public static @NotNull List<String> getEnabledModulePaths() {
         List<String> enabledModuleList = new ArrayList<>();
         MODULE_ENABLE_STATUS.forEach((module, enable) -> {
-            if (enable) enabledModuleList.add(joinModulePath(module));
+            if (enable) enabledModuleList.add(ModulePathResolver.toModulePathString(module));
         });
 
         enabledModuleList.sort(String::compareTo);
@@ -131,7 +49,7 @@ public class ModuleManager extends BaseManager {
                 try {
                     /* Track the module initializer class. */
                     Class<? extends ModuleInitializer> clazz = (Class<? extends ModuleInitializer>) MixinService.getService().getClassProvider().findClass(className, false);
-                    String modulePathString = computeJoinedModulePath(className);
+                    String modulePathString = ModulePathResolver.computeModulePathString(className);
                     ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING.put(modulePathString, clazz);
 
                     /* Initialize the module initializer. */
@@ -153,7 +71,7 @@ public class ModuleManager extends BaseManager {
                     moduleInitializer.doInitialize();
                     MODULE_INITIALIZER_BY_CLASS.put(clazz, moduleInitializer);
                 } catch (Exception e) {
-                    String modulePath = ModuleManager.computeJoinedModulePath(className);
+                    String modulePath = ModulePathResolver.computeModulePathString(className);
                     LogUtil.error("""
 
 
@@ -189,7 +107,7 @@ public class ModuleManager extends BaseManager {
         try {
             initializer.doReload();
         } catch (Exception originalException) {
-            String modulePath = ModuleManager.computeJoinedModulePath(initializer.getClass().getName());
+            String modulePath = ModulePathResolver.computeModulePathString(initializer.getClass().getName());
             LogUtil.error("Failed to re-load the module '{}'.", modulePath);
             // NOTE: Throw the original exception to surrounding exception handler.
             throw ExceptionUtil.makeReThrownException(originalException);
@@ -201,7 +119,7 @@ public class ModuleManager extends BaseManager {
             return shouldLoadOnDemandEventMixin(className);
         }
 
-        return shouldLoadModule(computeSplitModulePath(className));
+        return shouldLoadModule(ModulePathResolver.computeModulePathList(className));
     }
 
     private static boolean shouldLoadOnDemandEventMixin(@NotNull String mixinClassName) {
@@ -225,7 +143,7 @@ public class ModuleManager extends BaseManager {
     @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
     private static boolean shouldLoadModule(@NotNull List<String> modulePath) {
         if (Configs.MAIN_CONTROL_CONFIG.model().core.debug.disable_all_modules) return false;
-        if (modulePath.get(0).equals(CORE_MODULE_PATH)) return true;
+        if (modulePath.get(0).equals(ModulePathResolver.CORE_MODULE_PATH)) return true;
 
         // cache
         if (MODULE_ENABLE_STATUS.containsKey(modulePath)) {
@@ -234,7 +152,7 @@ public class ModuleManager extends BaseManager {
 
         // check enable-supplier
         boolean enable = true;
-        JsonObject parent = Configs.MAIN_CONTROL_CONFIG.getModelAsJsonTree().get("modules").getAsJsonObject();
+        JsonObject parent = Configs.MAIN_CONTROL_CONFIG.getModelAsJsonTree().get(MODULES_LITERAL).getAsJsonObject();
         for (String node : modulePath) {
             parent = parent.getAsJsonObject(node);
 

@@ -13,7 +13,7 @@ import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
 import io.github.sakurawald.fuji.core.manager.Managers;
-import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -164,7 +164,7 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
 
     @Override
     public @NotNull String getSourceModule() {
-        return ModuleManager.computeJoinedModulePath(this.getClass().getName());
+        return ModulePathResolver.computeModulePathString(this.getClass().getName());
     }
 
 }

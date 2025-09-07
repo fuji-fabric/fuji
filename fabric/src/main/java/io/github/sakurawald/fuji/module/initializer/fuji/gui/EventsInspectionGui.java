@@ -7,7 +7,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.event.EventManager;
 import io.github.sakurawald.fuji.core.event.message.abst.BaseEventConsumer;
 import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
-import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import java.util.Collection;
 import java.util.List;
 import net.minecraft.item.Items;
@@ -44,7 +44,7 @@ public class EventsInspectionGui extends PagedGui<BaseEventConsumer<?>> {
             .setItem(Items.OBSERVER)
             .setName(TextHelper.getTextByKey(player, "event"))
             .setLore(List.of(
-                TextHelper.getTextByKey(player, "from_module", ModuleManager.computeJoinedModulePath(eventConsumerDeclaringClassName)),
+                TextHelper.getTextByKey(player, "from_module", ModulePathResolver.computeModulePathString(eventConsumerDeclaringClassName)),
                 TextHelper.getTextByKey(player, "event.type", entity.getEventType().getName()),
                 TextHelper.getTextByKey(player, "event.consumer.class", entity.getClass().getName()),
                 TextHelper.getTextByKey(player, "event.consumer.declaring_class", eventConsumerDeclaringClassName),

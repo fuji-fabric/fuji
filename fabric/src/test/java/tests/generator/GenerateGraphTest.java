@@ -16,6 +16,7 @@ import io.github.sakurawald.fuji.core.config.model.MainControlConfigModel;
 import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import java.io.File;
 import java.io.IOException;
@@ -84,7 +85,7 @@ public class GenerateGraphTest {
                 .map(extendedAnnotationInfo -> {
                     AnnotationInfo annotationInfo = extendedAnnotationInfo.getAnnotationInfo();
                     ClassInfo declaringClassInfo = extendedAnnotationInfo.getDeclaringClass();
-                    String module = ModuleManager.computeJoinedModulePath(declaringClassInfo.getName());
+                    String module = ModulePathResolver.computeModulePathString(declaringClassInfo.getName());
 
                     AnnotationParameterValueList parameterValues = annotationInfo.getParameterValues();
                     String action = (String) parameterValues.get("action").getValue();

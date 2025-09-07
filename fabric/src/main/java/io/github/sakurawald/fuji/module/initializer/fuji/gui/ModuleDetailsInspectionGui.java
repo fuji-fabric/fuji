@@ -11,6 +11,7 @@ import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
 import io.github.sakurawald.fuji.core.document.gui.CommandsInspectionGui;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.fuji.FujiInitializer;
 
@@ -34,7 +35,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
 
     public static void attachThingsForCore(ServerPlayerEntity player, ModuleDetailsInspectionGui gui, List<GuiElementInterface> entities, String modulePathString) {
         /* Only attach things for core module. */
-        if (!modulePathString.equals(ModuleManager.CORE_MODULE_PATH)) return;
+        if (!modulePathString.equals(ModulePathResolver.CORE_MODULE_PATH)) return;
 
         /* Place about button. */
         GuiElementBuilder aboutButton = GuiHelper.Button

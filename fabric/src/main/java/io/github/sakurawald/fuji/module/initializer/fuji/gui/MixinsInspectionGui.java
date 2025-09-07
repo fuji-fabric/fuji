@@ -6,7 +6,7 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
-import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import io.github.sakurawald.fuji.core.structure.MixinApplicationInfo;
 import io.github.sakurawald.fuji.module.mixin.GlobalMixinConfigPlugin;
 import java.util.Comparator;
@@ -47,7 +47,7 @@ public class MixinsInspectionGui extends PagedGui<MixinApplicationInfo> {
             .setItem(GuiHelper.Material.fromBooleanValue(entity.isApplied()))
             .setName(TextHelper.getTextByKey(player, "mixin"))
             .setLore(List.of(
-                TextHelper.getTextByKey(player, "from_module", ModuleManager.computeJoinedModulePath(entity.getMixinClassName())),
+                TextHelper.getTextByKey(player, "from_module", ModulePathResolver.computeModulePathString(entity.getMixinClassName())),
                 TextHelper.getTextByKey(player, "mixin.target_class_name", entity.getTargetClassName()),
                 TextHelper.getTextByKey(player, "mixin.mixin_class_name", entity.getMixinClassName()),
                 TextHelper.getTextByKey(player, "mixin.phase", entity.getPhase()),

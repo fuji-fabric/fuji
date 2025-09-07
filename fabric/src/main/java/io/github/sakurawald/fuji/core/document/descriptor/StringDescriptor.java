@@ -4,6 +4,7 @@ import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import lombok.Data;
 import net.minecraft.item.Item;
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +54,7 @@ public abstract class StringDescriptor implements SourceModuleGetter {
         if (temporary) return;
 
         /* Should only register it when the module is enabled. */
-        List<String> modulePathList = ModuleManager.splitModulePath(sourceModule);
+        List<String> modulePathList = ModulePathResolver.toModulePathList(sourceModule);
         Boolean moduleEnableStatus = ModuleManager.MODULE_ENABLE_STATUS.getOrDefault(modulePathList, false);
         if (moduleEnableStatus) {
             REGISTERED_STRING_DESCRIPTORS.add(this);

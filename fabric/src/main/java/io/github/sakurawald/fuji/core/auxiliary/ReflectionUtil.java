@@ -4,7 +4,7 @@ import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.event.inject.structure.EventGraph;
-import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -85,7 +85,7 @@ public class ReflectionUtil {
     }
 
     public static Path computeModuleConfigPath(Class<?> clazz) {
-        String modulePath = ModuleManager.computeJoinedModulePath(clazz.getName());
+        String modulePath = ModulePathResolver.computeModulePathString(clazz.getName());
         return computeModuleConfigPath(modulePath);
     }
 
@@ -136,7 +136,7 @@ public class ReflectionUtil {
             String result = "unknown";
             for (String splitModulePath : joinedModulePathList) {
                 result = splitModulePath;
-                if (!result.equals(ModuleManager.CORE_MODULE_PATH)) {
+                if (!result.equals(ModulePathResolver.CORE_MODULE_PATH)) {
                     return result;
                 }
             }
@@ -154,7 +154,7 @@ public class ReflectionUtil {
         private static List<String> getCurrentStackTraceAsModuleName() {
             return getCurrentStackTraceAsClassNames()
                 .stream()
-                .map(ModuleManager::computeJoinedModulePath)
+                .map(ModulePathResolver::computeModulePathString)
                 .toList();
         }
 

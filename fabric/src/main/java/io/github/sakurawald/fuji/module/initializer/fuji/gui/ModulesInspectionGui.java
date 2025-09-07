@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import io.github.sakurawald.fuji.core.structure.Pair;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -53,12 +54,12 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
         List<Pair<String, Boolean>> entities = ModuleManager.MODULE_ENABLE_STATUS
             .entrySet()
             .stream()
-            .map(it -> new Pair<>(ModuleManager.joinModulePath(it.getKey()), it.getValue()))
+            .map(it -> new Pair<>(ModulePathResolver.toModulePathString(it.getKey()), it.getValue()))
             .sorted(Comparator.comparing(Pair::getKey))
             .collect(Collectors.toList());
 
         /* Insert the core module as a dummy module. */
-        entities.add(0, new Pair<>(ModuleManager.CORE_MODULE_PATH, true));
+        entities.add(0, new Pair<>(ModulePathResolver.CORE_MODULE_PATH, true));
 
         return new ModulesInspectionGui(parent, player, entities, 0);
     }
@@ -106,7 +107,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
 
     private static Item getItemMaterial(Pair<String, Boolean> entity) {
         String modulePathString = entity.getKey();
-        if (modulePathString.equals(ModuleManager.CORE_MODULE_PATH)) {
+        if (modulePathString.equals(ModulePathResolver.CORE_MODULE_PATH)) {
             return Items.TINTED_GLASS;
         }
 
