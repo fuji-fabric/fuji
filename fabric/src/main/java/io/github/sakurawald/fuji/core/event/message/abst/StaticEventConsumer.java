@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.core.event.message.abst;
 
-import io.github.sakurawald.fuji.core.event.inject.structure.EventConsumerInfo;
+import io.github.sakurawald.fuji.core.event.injector.structure.EventConsumerInfo;
 import java.lang.invoke.CallSite;
 import java.lang.invoke.LambdaMetafactory;
 import java.lang.invoke.MethodHandle;

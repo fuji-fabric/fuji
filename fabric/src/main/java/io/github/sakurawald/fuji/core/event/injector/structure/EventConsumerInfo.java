@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.event.inject.structure;
+package io.github.sakurawald.fuji.core.event.injector.structure;
 
 import io.github.sakurawald.fuji.core.annotation.ReflectiveAccess;
 import lombok.AllArgsConstructor;

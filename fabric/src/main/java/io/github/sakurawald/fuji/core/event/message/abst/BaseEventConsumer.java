@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.core.event.message.abst;
 
-import io.github.sakurawald.fuji.core.event.inject.structure.EventConsumerInfo;
+import io.github.sakurawald.fuji.core.event.injector.structure.EventConsumerInfo;
 import java.util.function.Consumer;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;

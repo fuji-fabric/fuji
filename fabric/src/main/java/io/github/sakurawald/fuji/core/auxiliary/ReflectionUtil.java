@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.core.auxiliary;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
-import io.github.sakurawald.fuji.core.event.inject.structure.EventGraph;
+import io.github.sakurawald.fuji.core.event.injector.structure.EventGraph;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import java.io.BufferedReader;
 import java.io.IOException;

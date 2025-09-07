@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.event.inject.structure;
+package io.github.sakurawald.fuji.core.event.injector.structure;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
