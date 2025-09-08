@@ -135,7 +135,7 @@ public class WeaverUtil {
         cu.defs = defs.toList();
     }
 
-    public static @NotNull JCTree.JCAnnotation patchAnnotationTree(@NotNull TreeMaker treeMaker, @NotNull Names names, @NotNull JCTree.JCAnnotation annotationTree, @NotNull String annotationParameterName, @NotNull Object annotationParameterValue) {
+    public static @NotNull JCTree.JCAnnotation setAnnotationParameterValue(@NotNull TreeMaker treeMaker, @NotNull Names names, @NotNull JCTree.JCAnnotation annotationTree, @NotNull String annotationParameterName, @NotNull Object annotationParameterValue) {
         /* Make the assigned tree. */
         JCTree.JCAssign assignTree = treeMaker.Assign(
             treeMaker.Ident(names.fromString(annotationParameterName)),
@@ -165,19 +165,19 @@ public class WeaverUtil {
         return treeMaker.Annotation(annotationTree.annotationType, annotationArgs);
     }
 
-    public static @NotNull JCTree.JCModifiers patchModifiersTree(@NotNull TreeMaker treeMaker,
-                                                                 @NotNull Names names,
-                                                                 @NotNull JCTree.JCModifiers modifiersTree,
-                                                                 @NotNull String annotationFqcn,
-                                                                 @NotNull String annotationParameterName,
-                                                                 @NotNull Object annotationParameterValue) {
+    public static @NotNull JCTree.JCModifiers setAnnotationParameterValue(@NotNull TreeMaker treeMaker,
+                                                                          @NotNull Names names,
+                                                                          @NotNull JCTree.JCModifiers modifiersTree,
+                                                                          @NotNull String annotationFqcn,
+                                                                          @NotNull String annotationParameterName,
+                                                                          @NotNull Object annotationParameterValue) {
 
         List<JCTree.JCAnnotation> annotations = modifiersTree.annotations;
 
         List<JCTree.JCAnnotation> patchedAnnotations = List.nil();
         for (JCTree.JCAnnotation annotation : annotations) {
             if (matchAnnotationTreeByName(annotation, annotationFqcn)) {
-                JCTree.JCAnnotation patchedAnnotationTree = patchAnnotationTree(treeMaker, names, annotation, annotationParameterName, annotationParameterValue);
+                JCTree.JCAnnotation patchedAnnotationTree = setAnnotationParameterValue(treeMaker, names, annotation, annotationParameterName, annotationParameterValue);
                 patchedAnnotations = patchedAnnotations.append(patchedAnnotationTree);
             } else {
                 patchedAnnotations = patchedAnnotations.append(annotation);
@@ -192,31 +192,31 @@ public class WeaverUtil {
         return (JCTree.JCCompilationUnit) treePath.getCompilationUnit();
     }
 
-    public static void patchAnnotationTree(@NotNull TreeMaker treeMaker,
-                                           @NotNull Names names,
-                                           @NotNull JCTree.JCClassDecl classTree,
-                                           @NotNull String annotationFqcn,
-                                           @NotNull String annotationParameterName,
-                                           @NotNull Object annotationParameterValue) {
+    public static void setAnnotationParameterValue(@NotNull TreeMaker treeMaker,
+                                                   @NotNull Names names,
+                                                   @NotNull JCTree.JCClassDecl classTree,
+                                                   @NotNull String annotationFqcn,
+                                                   @NotNull String annotationParameterName,
+                                                   @NotNull Object annotationParameterValue) {
         classTree.accept(new TreeScanner() {
 
             @Override
             public void visitClassDef(JCTree.JCClassDecl clazz) {
-                clazz.mods = patchModifiersTree(treeMaker, names, clazz.mods,
+                clazz.mods = setAnnotationParameterValue(treeMaker, names, clazz.mods,
                     annotationFqcn, annotationParameterName, annotationParameterValue);
                 super.visitClassDef(clazz);
             }
 
             @Override
             public void visitMethodDef(JCTree.JCMethodDecl method) {
-                method.mods = patchModifiersTree(treeMaker, names, method.mods,
+                method.mods = setAnnotationParameterValue(treeMaker, names, method.mods,
                     annotationFqcn, annotationParameterName, annotationParameterValue);
                 super.visitMethodDef(method);
             }
 
             @Override
             public void visitVarDef(JCTree.JCVariableDecl var) {
-                var.mods = patchModifiersTree(treeMaker, names, var.mods,
+                var.mods = setAnnotationParameterValue(treeMaker, names, var.mods,
                     annotationFqcn, annotationParameterName, annotationParameterValue);
                 super.visitVarDef(var);
             }
@@ -227,12 +227,12 @@ public class WeaverUtil {
         return methodInvocationTree.meth.toString();
     }
 
-    public static void patchMethodInvocationTree(@NotNull TreeMaker maker,
-                                                 @NotNull JCTree.JCClassDecl classTree,
-                                                 @NotNull String methodQualifiedName,
-                                                 int methodArity,
-                                                 int methodArgumentIndex,
-                                                 @NotNull Object methodArgumentValue) {
+    public static void setMethodInvocationArgumentValue(@NotNull TreeMaker maker,
+                                                        @NotNull JCTree.JCClassDecl classTree,
+                                                        @NotNull String methodQualifiedName,
+                                                        int methodArity,
+                                                        int methodArgumentIndex,
+                                                        @NotNull Object methodArgumentValue) {
 
         PatchValidator.withMinimalPatchCount(1, globalPatchCount -> {
             classTree.accept(new TreeScanner() {

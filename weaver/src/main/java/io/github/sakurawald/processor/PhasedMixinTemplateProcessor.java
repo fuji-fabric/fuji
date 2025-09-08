@@ -104,13 +104,13 @@ public class PhasedMixinTemplateProcessor extends AbstractProcessor {
         copyClassTree.mods = WeaverUtil.removeAnnotation(this.treeMaker, copyClassTree.mods, PhasedMixinTemplate.class);
 
         /* Patch @Mixin annotation. */
-        copyClassTree.mods = WeaverUtil.patchModifiersTree(treeMaker, names, copyClassTree.mods, WeaverUtil.MIXIN_CLASS_FQCN, WeaverUtil.MIXIN_PRIORITY_PARAMETER_NAME, injectorPriorityValue);
+        copyClassTree.mods = WeaverUtil.setAnnotationParameterValue(treeMaker, names, copyClassTree.mods, WeaverUtil.MIXIN_CLASS_FQCN, WeaverUtil.MIXIN_PRIORITY_PARAMETER_NAME, injectorPriorityValue);
 
         /* Patch @EventProducer annotations. */
-        WeaverUtil.patchAnnotationTree(treeMaker, names, copyClassTree, EVENT_PRODUCER_LITERAL, EVENT_PRODUCER_INJECTOR_PRIORITY_PARAMETER_NAME, injectorPriorityValue);
+        WeaverUtil.setAnnotationParameterValue(treeMaker, names, copyClassTree, EVENT_PRODUCER_LITERAL, EVENT_PRODUCER_INJECTOR_PRIORITY_PARAMETER_NAME, injectorPriorityValue);
 
         /* Patch the injector priority placeholder. */
-        WeaverUtil.patchMethodInvocationTree(treeMaker, copyClassTree, DISPATCH_EVENT_METHOD_NAME, 3, 2, injectorPriorityValue);
+        WeaverUtil.setMethodInvocationArgumentValue(treeMaker, copyClassTree, DISPATCH_EVENT_METHOD_NAME, 3, 2, injectorPriorityValue);
 
         return copyClassTree;
     }
