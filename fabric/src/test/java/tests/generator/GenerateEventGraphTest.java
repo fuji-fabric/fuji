@@ -20,7 +20,9 @@ import io.github.sakurawald.fuji.core.event.injector.structure.EventProducerInfo
 import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 public class GenerateEventGraphTest {
@@ -86,11 +88,14 @@ public class GenerateEventGraphTest {
         extendedAnnotationInfoList.forEach(extendedAnnotationInfo -> {
 
             String declaringClassName = extendedAnnotationInfo.getDeclaringClass().getName();
-            MethodInfo declaringMethod = extendedAnnotationInfo.getDeclaringMethod();
-            String declaringMethodName = declaringMethod.getName();
+            @Nullable String declaringMethodName = Optional
+                .ofNullable(extendedAnnotationInfo.getDeclaringMethod())
+                .map(MethodInfo::getName)
+                .orElse(null);
 
             final String EVENT_PRODUCER_METHOD_PREFIX = "produce";
-            if (!declaringMethodName.startsWith(EVENT_PRODUCER_METHOD_PREFIX)) {
+            if (declaringMethodName != null
+                && !declaringMethodName.startsWith(EVENT_PRODUCER_METHOD_PREFIX)) {
                 throw new IllegalStateException("The event producer method should start with %s. (class = %s, method = %s)".formatted(EVENT_PRODUCER_METHOD_PREFIX, declaringClassName, declaringMethodName));
             }
 

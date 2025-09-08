@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Data
 @NoArgsConstructor
@@ -12,7 +13,7 @@ public class EventProducerInfo {
 
     @NotNull String eventTypeClassName;
     @NotNull String declaringClassName;
-    @NotNull String declaringMethodName;
+    @Nullable String declaringMethodName;
     int injectorPriority;
 
 }

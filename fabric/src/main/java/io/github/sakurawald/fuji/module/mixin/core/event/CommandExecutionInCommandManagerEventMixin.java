@@ -32,6 +32,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
     In MC <= 1.20.2, the CommandManager#execute calls the CommandDispatcher#execute directly.
     In MC > 1.20.2, Mojang introduce the command execution control for game commands, so the CommandManager#execute will not call the CommandDispatcher#execute directly.
     """)
+@EventProducer(BeforeCommandExecutionEvent.class)
+@EventProducer(AfterCommandExecutionEvent.class)
 @PhasedMixinTemplate
 @Mixin(value = CommandManager.class)
 public class CommandExecutionInCommandManagerEventMixin {
@@ -39,7 +41,6 @@ public class CommandExecutionInCommandManagerEventMixin {
     #if MC_VER <= MC_1_20_2
     // NO-OP Delegates to CommandDispatcher directly.
     #elif MC_VER > MC_1_20_2
-    @EventProducer(BeforeCommandExecutionEvent.class)
     @Inject(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/command/CommandManager;callWithContext(Lnet/minecraft/server/command/ServerCommandSource;Ljava/util/function/Consumer;)V"), cancellable = true)
     void produceBeforeCommandExecutionInCommandManagerEvent(@NotNull ParseResults<ServerCommandSource> parseResults, String string, CallbackInfo ci) {
         ServerCommandSource commandSource = parseResults.getContext().getSource();
@@ -55,7 +56,6 @@ public class CommandExecutionInCommandManagerEventMixin {
     #if MC_VER <= MC_1_20_2
     // NO-OP Delegates to CommandDispatcher directly.
     #elif MC_VER > MC_1_20_2
-    @EventProducer(AfterCommandExecutionEvent.class)
     @SuppressWarnings("CodeBlock2Expr")
     @WrapOperation(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/command/CommandManager;callWithContext(Lnet/minecraft/server/command/ServerCommandSource;Ljava/util/function/Consumer;)V"))
     void produceAfterCommandExecutionInCommandManagerEvent(ServerCommandSource serverCommandSource, Consumer<CommandExecutionContext<ServerCommandSource>> consumer, Operation<Void> original, @Local(argsOnly = true) ParseResults<ServerCommandSource> parseResults, @Local(argsOnly = true) String string, @Local ContextChain<ServerCommandSource> contextChain) {
