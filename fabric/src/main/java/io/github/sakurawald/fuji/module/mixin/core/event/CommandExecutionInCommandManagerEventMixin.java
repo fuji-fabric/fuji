@@ -36,10 +36,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 @Mixin(value = CommandManager.class)
 public class CommandExecutionInCommandManagerEventMixin {
 
-    @EventProducer(BeforeCommandExecutionEvent.class)
     #if MC_VER <= MC_1_20_2
     // NO-OP Delegates to CommandDispatcher directly.
     #elif MC_VER > MC_1_20_2
+    @EventProducer(BeforeCommandExecutionEvent.class)
     @Inject(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/command/CommandManager;callWithContext(Lnet/minecraft/server/command/ServerCommandSource;Ljava/util/function/Consumer;)V"), cancellable = true)
     void produceBeforeCommandExecutionInCommandManagerEvent(@NotNull ParseResults<ServerCommandSource> parseResults, String string, CallbackInfo ci) {
         ServerCommandSource commandSource = parseResults.getContext().getSource();
@@ -52,10 +52,10 @@ public class CommandExecutionInCommandManagerEventMixin {
     }
     #endif
 
-    @EventProducer(AfterCommandExecutionEvent.class)
     #if MC_VER <= MC_1_20_2
     // NO-OP Delegates to CommandDispatcher directly.
     #elif MC_VER > MC_1_20_2
+    @EventProducer(AfterCommandExecutionEvent.class)
     @SuppressWarnings("CodeBlock2Expr")
     @WrapOperation(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/command/CommandManager;callWithContext(Lnet/minecraft/server/command/ServerCommandSource;Ljava/util/function/Consumer;)V"))
     void produceAfterCommandExecutionInCommandManagerEvent(ServerCommandSource serverCommandSource, Consumer<CommandExecutionContext<ServerCommandSource>> consumer, Operation<Void> original, @Local(argsOnly = true) ParseResults<ServerCommandSource> parseResults, @Local(argsOnly = true) String string, @Local ContextChain<ServerCommandSource> contextChain) {
@@ -83,4 +83,5 @@ public class CommandExecutionInCommandManagerEventMixin {
     }
 
     #endif
+
 }
