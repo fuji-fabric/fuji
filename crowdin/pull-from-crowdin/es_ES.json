@@ -100,6 +100,7 @@
   "command_permission.list.gui.title": "<pink>Permisos del comando",
   "command_permission.verbose.off": "<green>The verbose-mode is off now.",
   "command_permission.verbose.on": "<green>You have turn on the verbose-mode. Now you can issue commands, and see how command_permission module works in the console.",
+  "command_spy.notify": "<yellow>The `%s` issued the command `%s`",
   "command_state.info.gui.title": "<blue>Player %s's States",
   "command_state.list": "<yellow>Defined command states: `%s`",
   "command_state.state.no_value": "<red>The state value is null.",
@@ -961,10 +962,7 @@
   "docstring.1751826785758": "The `warmup seconds` for `all` teleports.\n",
   "docstring.1751826788564": "Define the `effective dimensions` for `teleport warmup`.\n",
   "docstring.1751826791752": "Adds a warmup cooldown before player teleportation.\n",
-  "docstring.1751826793929": "Ignore and never spy on these commands.\n",
-  "docstring.1751826795935": "The `only spy on these commands mode`.\n",
-  "docstring.1751826797690": "Should we `only` spy on these commands?\n",
-  "docstring.1751826800901": "This module logs the `issued commands` into the console.\n",
+  "docstring.1751826800901": "This module allows you to spy `command execution`.\n",
   "docstring.1751826804319": "The defined `default skins` for this server.\n",
   "docstring.1751826807167": "This module provides the `skin` management for players.\n",
   "docstring.1751826809279": "Set skin to a random default skin.",
@@ -1508,5 +1506,6 @@
   "docstring.1756789894197": "◉ Supported `cleanup methods`\n- `KILL`: Remove the entity as if it had `died`, triggering the `entity death event`. (Loot will be dropped.)\n- `DISCARD`: Remove the entity by `discarding` it, without triggering any events. (No loot will be dropped.)\n\nNOTE: For `item entity`, there is no significant difference between the available cleanup methods.\n",
   "docstring.1756790951617": "◉ What is a `translatable key`?\nA `translatable key` is an identifier used internally by Minecraft to reference `items`, `block-based items`, and other `entities`.\nIt corresponds to the keys defined in Minecraft's `translation files`.\nAn example translation file can be found here:\nhttps://github.com/sakurawald/fuji/blob/dev/.github/files/en_us.json\n\nCommon key formats include:\n- `item.minecraft.*`\n- `block.minecraft.*`\n- `entity.minecraft.*`\n",
   "docstring.1756906211441": "Inspect applied mixins by fuji.",
-  "docstring.1756910112078": "Inspect registered events by fuji."
+  "docstring.1756910112078": "Inspect registered events by fuji.",
+  "docstring.1757360673310": "◉ How it works?\n1. Match the defined `rules` in top-down order.\n2. Find the `first matched rule`.\n3. Apply the `first matched rule`, if it exists.\n"
 }
