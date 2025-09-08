@@ -11,21 +11,21 @@ import net.minecraft.server.command.CommandManager;
 import org.spongepowered.asm.mixin.Mixin;
 #if MC_VER <= MC_1_20_2
 #elif MC_VER > MC_1_20_2
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import java.util.Optional;
 import java.util.function.Consumer;
-import net.minecraft.command.CommandExecutionContext;
 import net.minecraft.command.ReturnValueConsumer;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.brigadier.context.ContextChain;
+import net.minecraft.command.CommandExecutionContext;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.server.command.ServerCommandSource;
 import com.mojang.brigadier.ParseResults;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 #endif
 
 @ForDeveloper("""
@@ -57,16 +57,20 @@ public class CommandExecutionInCommandManagerEventMixin {
     // NO-OP Delegates to CommandDispatcher directly.
     #elif MC_VER > MC_1_20_2
     @SuppressWarnings("CodeBlock2Expr")
-    @WrapOperation(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/command/CommandManager;callWithContext(Lnet/minecraft/server/command/ServerCommandSource;Ljava/util/function/Consumer;)V"))
-    void produceAfterCommandExecutionInCommandManagerEvent(ServerCommandSource serverCommandSource, Consumer<CommandExecutionContext<ServerCommandSource>> consumer, Operation<Void> original, @Local(argsOnly = true) ParseResults<ServerCommandSource> parseResults, @Local(argsOnly = true) String string, @Local ContextChain<ServerCommandSource> contextChain) {
+    @ModifyArgs(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/command/CommandManager;callWithContext(Lnet/minecraft/server/command/ServerCommandSource;Ljava/util/function/Consumer;)V"))
+    void produceAfterCommandExecutionInCommandManagerEvent(Args args, @Local(argsOnly = true) ParseResults<ServerCommandSource> parseResults, @Local(argsOnly = true) String string, @Local ContextChain<ServerCommandSource> contextChain) {
         /* Merge a new return value consumer to capture the target command return value. */
-        final ServerCommandSource finalServerCommandSource = serverCommandSource.withReturnValueConsumer(makeReturnValueConsumer(parseResults));
+        ServerCommandSource serverCommandSource = args.get(0);
+        ReturnValueConsumer returnValueConsumer = makeReturnValueConsumer(parseResults);
+        serverCommandSource = serverCommandSource.withReturnValueConsumer(returnValueConsumer);
+        args.set(0, serverCommandSource);
 
-        /* Replace the original call with new arguments. */
+        /* Re-capture the latest version of server command source for Consumer<?>. */
+        final ServerCommandSource finalServerCommandSource = serverCommandSource;
         final Consumer<CommandExecutionContext<ServerCommandSource>> finalConsumer = commandExecutionContext -> {
             CommandExecutionContext.enqueueCommand(commandExecutionContext, string, contextChain, finalServerCommandSource, ReturnValueConsumer.EMPTY);
         };
-        original.call(finalServerCommandSource, finalConsumer);
+        args.set(1, finalConsumer);
     }
 
     @Unique
