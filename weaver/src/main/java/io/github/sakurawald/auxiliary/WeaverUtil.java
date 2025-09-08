@@ -192,13 +192,12 @@ public class WeaverUtil {
         return (JCTree.JCCompilationUnit) treePath.getCompilationUnit();
     }
 
-    public static void patchAnnotationTreeRecursively(@NotNull TreeMaker treeMaker,
-                                                      @NotNull Names names,
-                                                      @NotNull JCTree.JCClassDecl classTree,
-                                                      @NotNull String annotationFqcn,
-                                                      @NotNull String annotationParameterName,
-                                                      @NotNull Object annotationParameterValue) {
-
+    public static void patchAnnotationTree(@NotNull TreeMaker treeMaker,
+                                           @NotNull Names names,
+                                           @NotNull JCTree.JCClassDecl classTree,
+                                           @NotNull String annotationFqcn,
+                                           @NotNull String annotationParameterName,
+                                           @NotNull Object annotationParameterValue) {
         classTree.accept(new TreeScanner() {
 
             @Override
@@ -234,26 +233,39 @@ public class WeaverUtil {
                                                  int methodArity,
                                                  int methodArgumentIndex,
                                                  @NotNull Object methodArgumentValue) {
-        classTree.accept(new TreeScanner() {
-            @Override
-            public void visitApply(JCTree.JCMethodInvocation methodInvocationTree) {
-                String callee = getMethodName(methodInvocationTree);
-                if (callee.equals(methodQualifiedName) && methodInvocationTree.args.size() == methodArity) {
-                    ListBuffer<JCTree.JCExpression> newArgs = new ListBuffer<>();
-                    int index = 0;
-                    for (JCTree.JCExpression arg : methodInvocationTree.args) {
-                        if (index == methodArgumentIndex) {
-                            newArgs.add(maker.Literal(methodArgumentValue));
-                        } else {
-                            newArgs.add(arg);
-                        }
-                        index++;
+
+        PatchValidator.withMinimalPatchCount(1, globalPatchCount -> {
+            classTree.accept(new TreeScanner() {
+                @Override
+                public void visitApply(JCTree.JCMethodInvocation methodInvocationTree) {
+                    String callee = getMethodName(methodInvocationTree);
+                    if (callee.equals(methodQualifiedName) && methodInvocationTree.args.size() == methodArity) {
+
+                        PatchValidator.withMinimalPatchCount(1, localPatchCount -> {
+                            ListBuffer<JCTree.JCExpression> newArgs = new ListBuffer<>();
+                            int index = 0;
+                            for (JCTree.JCExpression arg : methodInvocationTree.args) {
+                                if (index == methodArgumentIndex) {
+                                    newArgs.add(maker.Literal(methodArgumentValue));
+
+                                    localPatchCount.getAndIncrement();
+                                    globalPatchCount.getAndIncrement();
+                                } else {
+                                    newArgs.add(arg);
+                                }
+                                index++;
+                            }
+                            methodInvocationTree.args = newArgs.toList();
+                        });
+
                     }
-                    methodInvocationTree.args = newArgs.toList();
+                    super.visitApply(methodInvocationTree);
                 }
-                super.visitApply(methodInvocationTree);
-            }
+            });
+
         });
+
     }
+
 
 }
