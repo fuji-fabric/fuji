@@ -2,11 +2,6 @@ package io.github.sakurawald.fuji.module.mixin.core.event;
 
 #if MC_VER <= MC_1_20_2
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.mojang.brigadier.Command;
-import com.mojang.brigadier.context.CommandContext;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 #elif MC_VER > MC_1_20_2
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 #endif
@@ -53,7 +48,7 @@ public class CommandExecutionInCommandDispatcherEventMixin {
     @EventProducer(AfterCommandExecutionEvent.class)
     #if MC_VER <= MC_1_20_2
     @ModifyExpressionValue(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/Command;run(Lcom/mojang/brigadier/context/CommandContext;)I"))
-    int afterExecuteInCommandDispatcher(int original, @Local(argsOnly = true) ParseResults<ServerCommandSource> parseResults)
+    int produceAfterCommandExecutionInCommandDispatcherEvent(int original, @Local(argsOnly = true) ParseResults<ServerCommandSource> parseResults)
     #elif MC_VER > MC_1_20_2
     @ModifyReturnValue(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At("RETURN"))
     int produceAfterCommandExecutionInCommandDispatcherEvent(int original, @Local(argsOnly = true) ParseResults<ServerCommandSource> parseResults)

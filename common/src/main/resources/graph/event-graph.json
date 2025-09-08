@@ -61,66 +61,6 @@
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.BeforeCommandExecutionEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_DEFAULT",
-      "declaring_method_name": "produceBeforeCommandExecutionInCommandManagerEvent",
-      "injector_priority": 1000
-    },
-    {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.AfterCommandExecutionEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_DEFAULT",
-      "declaring_method_name": "produceAfterCommandExecutionInCommandManagerEvent",
-      "injector_priority": 1000
-    },
-    {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.BeforeCommandExecutionEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_HIGHER",
-      "declaring_method_name": "produceBeforeCommandExecutionInCommandManagerEvent",
-      "injector_priority": 1001
-    },
-    {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.AfterCommandExecutionEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_HIGHER",
-      "declaring_method_name": "produceAfterCommandExecutionInCommandManagerEvent",
-      "injector_priority": 1001
-    },
-    {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.BeforeCommandExecutionEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_HIGHEST",
-      "declaring_method_name": "produceBeforeCommandExecutionInCommandManagerEvent",
-      "injector_priority": 2000
-    },
-    {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.AfterCommandExecutionEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_HIGHEST",
-      "declaring_method_name": "produceAfterCommandExecutionInCommandManagerEvent",
-      "injector_priority": 2000
-    },
-    {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.BeforeCommandExecutionEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_LOWER",
-      "declaring_method_name": "produceBeforeCommandExecutionInCommandManagerEvent",
-      "injector_priority": 999
-    },
-    {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.AfterCommandExecutionEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_LOWER",
-      "declaring_method_name": "produceAfterCommandExecutionInCommandManagerEvent",
-      "injector_priority": 999
-    },
-    {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.BeforeCommandExecutionEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_LOWEST",
-      "declaring_method_name": "produceBeforeCommandExecutionInCommandManagerEvent",
-      "injector_priority": 0
-    },
-    {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.AfterCommandExecutionEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_LOWEST",
-      "declaring_method_name": "produceAfterCommandExecutionInCommandManagerEvent",
-      "injector_priority": 0
-    },
-    {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.command.CommandRegistrationEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandRegistrationEventMixin_DEFAULT",
       "declaring_method_name": "produceOnCommandRegistrationEvent",
