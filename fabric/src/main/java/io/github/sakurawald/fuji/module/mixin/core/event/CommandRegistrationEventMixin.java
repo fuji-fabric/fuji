@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @PhasedMixinTemplate
 @Mixin(CommandManager.class)
-public class CommandManagerEventMixin {
+public class CommandRegistrationEventMixin {
 
     @Shadow
     @Final

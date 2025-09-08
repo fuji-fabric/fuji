@@ -1,5 +1,4 @@
-package io.github.sakurawald.fuji.module.mixin.command_advice;
-
+package io.github.sakurawald.fuji.module.mixin.core.event;
 
 #if MC_VER <= MC_1_20_2
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
@@ -15,53 +14,58 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
+import io.github.sakurawald.annotation.PhasedMixinTemplate;
+import io.github.sakurawald.auxiliary.WeaverUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
-import io.github.sakurawald.fuji.module.initializer.command_advice.CommandAdviceInitializer;
-import io.github.sakurawald.fuji.module.initializer.command_advice.structure.CommandAdviceType;
+import io.github.sakurawald.fuji.core.event.EventManager;
+import io.github.sakurawald.fuji.core.event.annotation.EventProducer;
+import io.github.sakurawald.fuji.core.event.message.command.AfterCommandExecutionEvent;
+import io.github.sakurawald.fuji.core.event.message.command.BeforeCommandExecutionEvent;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 import net.minecraft.server.command.ServerCommandSource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(value = CommandDispatcher.class, remap = false, priority = 1000 + 1000)
-public class CommandDispatcherMixin {
 
+@PhasedMixinTemplate
+@Mixin(value = CommandDispatcher.class, remap = false)
+public class CommandExecutionInCommandDispatcherEventMixin {
+
+    @EventProducer(BeforeCommandExecutionEvent.class)
     #if MC_VER <= MC_1_20_2
     @Inject(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/Command;run(Lcom/mojang/brigadier/context/CommandContext;)I"), cancellable = true)
     #elif MC_VER > MC_1_20_2
     @Inject(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/context/ContextChain;executeAll(Ljava/lang/Object;Lcom/mojang/brigadier/ResultConsumer;)I"), cancellable = true)
     #endif
-    void beforeExecuteInCommandDispatcher(ParseResults<?> parseResults, CallbackInfoReturnable<Integer> cir) {
+    void produceBeforeCommandExecutionInCommandDispatcherEvent(ParseResults<?> parseResults, CallbackInfoReturnable<Integer> cir) {
         CommandHelper.Source.withServerCommandSource(parseResults.getContext(), (serverCommandSource) -> {
-            CommandAdviceInitializer.processCommandAdvice(this, serverCommandSource, parseResults.getReader().getString(), CommandAdviceType.BEFORE_EXECUTION, Optional.of(cir), Optional.empty());
+            String commandString = parseResults.getReader().getString();
+            Optional<CallbackInfo> callbackInfo = Optional.of(cir);
+            Optional<Integer> commandReturnValue = Optional.empty();
+            BeforeCommandExecutionEvent event = new BeforeCommandExecutionEvent(this, serverCommandSource, commandString, callbackInfo, commandReturnValue);
+            EventManager.dispatchEvent(BeforeCommandExecutionEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
         });
     }
 
+    @EventProducer(AfterCommandExecutionEvent.class)
     #if MC_VER <= MC_1_20_2
     @ModifyExpressionValue(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/Command;run(Lcom/mojang/brigadier/context/CommandContext;)I"))
     int afterExecuteInCommandDispatcher(int original, @Local(argsOnly = true) ParseResults<ServerCommandSource> parseResults)
     #elif MC_VER > MC_1_20_2
     @ModifyReturnValue(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At("RETURN"))
-    int afterExecuteInCommandDispatcher(int original, @Local(argsOnly = true) ParseResults<ServerCommandSource> parseResults)
+    int produceAfterCommandExecutionInCommandDispatcherEvent(int original, @Local(argsOnly = true) ParseResults<ServerCommandSource> parseResults)
     #endif
     {
-        AtomicInteger logicalReturnValue = new AtomicInteger(original);
-        CommandHelper.Source.withServerCommandSource(parseResults.getContext(), (serverCommandSource)  -> {
-
-            #if MC_VER <= MC_1_20_2
-            logicalReturnValue.set(original);
-            boolean logicalSuccess = CommandHelper.Return.isSuccess(logicalReturnValue.get());
-            CommandAdviceType adviceType = logicalSuccess ? CommandAdviceType.ON_EXECUTION_SUCCESS : CommandAdviceType.ON_EXECUTION_FAILURE;
-            CommandAdviceInitializer.processCommandAdvice(this, serverCommandSource, parseResults.getReader().getString(), adviceType, Optional.empty(), Optional.of(logicalReturnValue.get()));
-            #elif MC_VER > MC_1_20_2
-            logicalReturnValue.set(original);
-            #endif
-
-            CommandAdviceInitializer.processCommandAdvice(this, serverCommandSource, parseResults.getReader().getString(), CommandAdviceType.AFTER_EXECUTION, Optional.empty(), Optional.of(logicalReturnValue.get()));
+        CommandHelper.Source.withServerCommandSource(parseResults.getContext(), (serverCommandSource) -> {
+            String commandString = parseResults.getReader().getString();
+            Optional<CallbackInfo> callbackInfo = Optional.empty();
+            AfterCommandExecutionEvent event = new AfterCommandExecutionEvent(this, serverCommandSource, commandString, callbackInfo, Optional.of(original));
+            EventManager.dispatchEvent(AfterCommandExecutionEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
         });
-        return logicalReturnValue.get();
+
+        return original;
     }
 }
