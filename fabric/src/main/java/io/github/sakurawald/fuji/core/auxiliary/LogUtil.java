@@ -79,4 +79,9 @@ public class LogUtil {
         // This logging method is a dummy method used for disabled logs.
     }
 
+    @SuppressWarnings("unused")
+    public static void stdout(String message, Object ... args) {
+        System.out.printf(message, args);
+    }
+
 }

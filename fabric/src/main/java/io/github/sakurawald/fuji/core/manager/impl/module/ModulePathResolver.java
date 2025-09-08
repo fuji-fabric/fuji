@@ -89,6 +89,12 @@ public class ModulePathResolver {
         /* Remove trailing directories. */
         String classNameSubstring = className.substring(beginIndex);
         int endIndex = classNameSubstring.lastIndexOf(".");
+
+        // Handle the inner class naming: GlobalMixinConfigPlugin$1
+        if (endIndex == -1) {
+            return CORE_MODULE_PATH_LIST;
+        }
+
         classNameSubstring = classNameSubstring.substring(0, endIndex);
 
         List<String> modulePathList = new ArrayList<>(List.of(classNameSubstring.split("\\.")));
