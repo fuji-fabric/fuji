@@ -261,7 +261,7 @@ public class CommandHelper {
         }
 
         public static boolean isSilent(@NotNull ServerCommandSource commandSource) {
-            return commandSource.isSilent();
+            return commandSource.silent;
         }
 
         private static boolean isServerCommandSource(@NotNull Object object) {

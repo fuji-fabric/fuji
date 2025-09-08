@@ -4,6 +4,7 @@ accessWidener v2 named
 accessible class net/minecraft/util/UserCache$Entry
 accessible method net/minecraft/util/UserCache$Entry getProfile ()Lcom/mojang/authlib/GameProfile;
 accessible field net/minecraft/util/UserCache byName Ljava/util/Map;
+accessible field net/minecraft/server/command/ServerCommandSource silent Z
 
 # world module
 accessible field net/minecraft/registry/entry/RegistryEntry$Reference value Ljava/lang/Object;

@@ -843,14 +843,6 @@
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.BeforeCommandExecutionEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_spy.CommandSpyInitializer",
-      "declaring_method_name": "consumeBeforeCommandExecutionEvent",
-      "injector_priority": 1000,
-      "consumer_priority": 1000,
-      "is_dynamic": false
-    },
-    {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerDisplayNameEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_toolbox.nickname.NicknameInitializer",
       "declaring_method_name": "modifyPlayerDisplayName",
@@ -1048,6 +1040,14 @@
       "declaring_method_name": "modifyMaintenanceMotd",
       "injector_priority": 1000,
       "consumer_priority": 2000,
+      "is_dynamic": false
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.BeforeCommandExecutionEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_spy.CommandSpyInitializer",
+      "declaring_method_name": "consumeBeforeCommandExecutionEvent",
+      "injector_priority": 1001,
+      "consumer_priority": 0,
       "is_dynamic": false
     },
     {
