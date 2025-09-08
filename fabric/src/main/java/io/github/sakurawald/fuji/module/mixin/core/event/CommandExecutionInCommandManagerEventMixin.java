@@ -64,15 +64,6 @@ public class CommandExecutionInCommandManagerEventMixin {
             CommandExecutionContext.enqueueCommand(commandExecutionContext, string, contextChain, finalServerCommandSource, ReturnValueConsumer.EMPTY);
         };
         original.call(finalServerCommandSource, finalConsumer);
-
-        /* Process the advices. */
-        ServerCommandSource commandSource = parseResults.getContext().getSource();
-        String commandString = parseResults.getReader().getString();
-        Optional<CallbackInfo> callbackInfo = Optional.empty();
-        Optional<Integer> commandReturnValue = Optional.empty();
-
-        AfterCommandExecutionEvent event = new AfterCommandExecutionEvent(this, commandSource, commandString, callbackInfo, commandReturnValue);
-        EventManager.dispatchEvent(AfterCommandExecutionEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
     }
 
     @Unique

@@ -10,6 +10,9 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.command.AfterCommandExecutionEvent;
+import io.github.sakurawald.fuji.core.event.message.command.BeforeCommandExecutionEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_advice.config.model.CommandAdviceConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_advice.config.transformer.CommandAdviceV1SchemaTransformer;
@@ -232,4 +235,25 @@ public class CommandAdviceInitializer extends ModuleInitializer {
         LogUtil.debug("Get advice command return values {}. (advice = {})", adviceCommandReturnValues, commandAdvice);
         return adviceCommandReturnValues;
     }
+
+    @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.HIGHEST)
+    private static void consumeBeforeCommandExecutionEvent(BeforeCommandExecutionEvent event) {
+        CommandAdviceInitializer.processCommandAdvice(event.getCommandExecutor(), event.getCommandSource(), event.getCommandString(), CommandAdviceType.BEFORE_EXECUTION, event.getCallback(), event.getCommandReturnValue());
+    }
+
+    @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.HIGHEST)
+    private static void consumeAfterCommandExecutionEvent(AfterCommandExecutionEvent event) {
+        event
+            .getCommandReturnValue()
+            .ifPresent(commandReturnValue -> {
+                // NOTE: Use the returnValue to determinate the SUCCESS or FAILURE. In some case, the ReturnValueConsumer#onResult may get input like (true, 0).
+                boolean logicalSuccess = CommandHelper.Return.isSuccess(commandReturnValue);
+                CommandAdviceType adviceType = logicalSuccess ? CommandAdviceType.ON_EXECUTION_SUCCESS : CommandAdviceType.ON_EXECUTION_FAILURE;
+
+                CommandAdviceInitializer.processCommandAdvice(event.getCommandExecutor(), event.getCommandSource(), event.getCommandString(), adviceType, event.getCallback(), event.getCommandReturnValue());
+        });
+
+        CommandAdviceInitializer.processCommandAdvice(event.getCommandExecutor(), event.getCommandSource(), event.getCommandString(), CommandAdviceType.AFTER_EXECUTION, event.getCallback(), event.getCommandReturnValue());
+    }
+
 }
