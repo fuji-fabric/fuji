@@ -1,10 +1,5 @@
 package io.github.sakurawald.fuji.module.mixin.core.event;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
-import com.mojang.brigadier.ParseResults;
-import com.mojang.brigadier.context.ContextChain;
 import io.github.sakurawald.annotation.PhasedMixinTemplate;
 import io.github.sakurawald.auxiliary.WeaverUtil;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
@@ -12,18 +7,26 @@ import io.github.sakurawald.fuji.core.event.EventManager;
 import io.github.sakurawald.fuji.core.event.annotation.EventProducer;
 import io.github.sakurawald.fuji.core.event.message.command.AfterCommandExecutionEvent;
 import io.github.sakurawald.fuji.core.event.message.command.BeforeCommandExecutionEvent;
+import net.minecraft.server.command.CommandManager;
+import org.spongepowered.asm.mixin.Mixin;
+#if MC_VER <= MC_1_20_2
+#elif MC_VER > MC_1_20_2
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import java.util.Optional;
 import java.util.function.Consumer;
 import net.minecraft.command.CommandExecutionContext;
 import net.minecraft.command.ReturnValueConsumer;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.Mixin;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.mojang.brigadier.context.ContextChain;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.server.command.ServerCommandSource;
+import com.mojang.brigadier.ParseResults;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+#endif
 
 @ForDeveloper("""
     In MC <= 1.20.2, the CommandManager#execute calls the CommandDispatcher#execute directly.
