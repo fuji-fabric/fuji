@@ -23,10 +23,10 @@ public class PlayerListManagerMixin {
     private void afterRespawn(ServerPlayerEntity oldPlayer, boolean alive, Entity.RemovalReason removalReason, CallbackInfoReturnable<ServerPlayerEntity> cir)
     #endif
     {
-        var config = CommandEventInitializer.config.model().event.after_player_respawn;
-        if (config.enable) {
+        var config = CommandEventInitializer.config.model().getEvent().getAfterPlayerRespawn();
+        if (config.isEnable()) {
             ServerPlayerEntity newPlayer = cir.getReturnValue();
-            CommandEventInitializer.executeCommandOnEvent(newPlayer, config.command_list);
+            CommandEventInitializer.executeCommandOnEvent(newPlayer, config.getCommands());
         }
     }
 

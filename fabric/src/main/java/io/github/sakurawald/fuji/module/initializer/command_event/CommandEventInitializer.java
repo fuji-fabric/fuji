@@ -50,36 +50,36 @@ public class CommandEventInitializer extends ModuleInitializer {
     private static void processOnPlayerJoinedEvent(PlayerJoinedEvent event) {
         ServerPlayerEntity player = event.getPlayer();
 
-        var onPlayerJoinedConfig = CommandEventInitializer.config.model().event.on_player_joined;
-        if (onPlayerJoinedConfig.enable) {
-            CommandEventInitializer.executeCommandOnEvent(player, onPlayerJoinedConfig.command_list);
+        var onPlayerJoinedConfig = CommandEventInitializer.config.model().getEvent().getOnPlayerJoined();
+        if (onPlayerJoinedConfig.isEnable()) {
+            CommandEventInitializer.executeCommandOnEvent(player, onPlayerJoinedConfig.getCommands());
         }
 
-        var onPlayerFirstJoinedConfig = CommandEventInitializer.config.model().event.on_player_first_joined;
-        if (onPlayerFirstJoinedConfig.enable) {
+        var onPlayerFirstJoinedConfig = CommandEventInitializer.config.model().getEvent().getOnPlayerFirstJoined();
+        if (onPlayerFirstJoinedConfig.isEnable()) {
             // NOTE: If you use `Stats.LEAVE_GAME < 1` as the stat value, then it will not get saved when the server is stopped by `/stop`.
             // The vanilla Minecraft thinks the `dis-connect` by the server is not identical to `leave the game` by the player.
             int stat = player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.TOTAL_WORLD_TIME));
             if (stat == 0) {
-                CommandEventInitializer.executeCommandOnEvent(player, onPlayerFirstJoinedConfig.command_list);
+                CommandEventInitializer.executeCommandOnEvent(player, onPlayerFirstJoinedConfig.getCommands());
             }
         }
     }
 
     @EventConsumer
     private static void processOnPlayerLeaveEvent(PlayerLeftEvent event) {
-        var config = CommandEventInitializer.config.model().event.on_player_left;
-        if (config.enable) {
-            executeCommandOnEvent(event.getPlayer(), config.command_list);
+        var config = CommandEventInitializer.config.model().getEvent().getOnPlayerLeft();
+        if (config.isEnable()) {
+            executeCommandOnEvent(event.getPlayer(), config.getCommands());
         }
     }
 
     @EventConsumer
     private static void handleOnPlayerDeathEvent(PlayerDeathEvent event) {
-        var config = CommandEventInitializer.config.model().event.on_player_death;
-        if (config.enable) {
+        var config = CommandEventInitializer.config.model().getEvent().getOnPlayerDeath();
+        if (config.isEnable()) {
             ServerPlayerEntity player = event.getPlayer();
-            CommandEventInitializer.executeCommandOnEvent(player, config.command_list);
+            CommandEventInitializer.executeCommandOnEvent(player, config.getCommands());
         }
     }
 

@@ -26,10 +26,10 @@ public class BlockMixin {
 
     @Inject(method = "onPlaced", at = @At("TAIL"))
     void onBlockPlaced(World world, BlockPos blockPos, BlockState blockState, LivingEntity livingEntity, ItemStack itemStack, CallbackInfo ci) {
-        var config = CommandEventInitializer.config.model().event.after_player_place_block;
-        if (config.enable) {
+        var config = CommandEventInitializer.config.model().getEvent().getAfterPlayerPlaceBlock();
+        if (config.isEnable()) {
             if (livingEntity instanceof ServerPlayerEntity player) {
-                CommandEventInitializer.executeCommandOnEvent(player, config.command_list);
+                CommandEventInitializer.executeCommandOnEvent(player, config.getCommands());
             }
         }
     }
@@ -41,10 +41,10 @@ public class BlockMixin {
     void onBlockBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity playerEntity, CallbackInfoReturnable<BlockState> cir)
     #endif
     {
-        var config = CommandEventInitializer.config.model().event.after_player_break_block;
-        if (config.enable) {
+        var config = CommandEventInitializer.config.model().getEvent().getAfterPlayerBreakBlock();
+        if (config.isEnable()) {
             if (playerEntity instanceof ServerPlayerEntity player) {
-                CommandEventInitializer.executeCommandOnEvent(player, config.command_list);
+                CommandEventInitializer.executeCommandOnEvent(player, config.getCommands());
             }
         }
     }

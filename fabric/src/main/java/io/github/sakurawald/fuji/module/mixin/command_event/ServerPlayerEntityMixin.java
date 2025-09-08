@@ -1,7 +1,6 @@
 package io.github.sakurawald.fuji.module.mixin.command_event;
 
 import io.github.sakurawald.fuji.module.initializer.command_event.CommandEventInitializer;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,10 +13,10 @@ public class ServerPlayerEntityMixin {
 
     @Inject(method = "worldChanged(Lnet/minecraft/server/world/ServerWorld;)V", at = @At("TAIL"))
     private void afterWorldChanged(ServerWorld origin, CallbackInfo ci) {
-        var config = CommandEventInitializer.config.model().event.after_player_change_world;
-        if (config.enable) {
+        var config = CommandEventInitializer.config.model().getEvent().getAfterPlayerChangeWorld();
+        if (config.isEnable()) {
             ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-            CommandEventInitializer.executeCommandOnEvent(player, config.command_list);
+            CommandEventInitializer.executeCommandOnEvent(player, config.getCommands());
         }
     }
 }
