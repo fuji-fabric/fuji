@@ -234,36 +234,33 @@ public class WeaverUtil {
                                                         int methodArgumentIndex,
                                                         @NotNull Object methodArgumentValue) {
 
-        PatchValidator.withMinimalPatchCount(1, globalPatchCount -> {
-            classTree.accept(new TreeScanner() {
-                @Override
-                public void visitApply(JCTree.JCMethodInvocation methodInvocationTree) {
-                    String callee = getMethodName(methodInvocationTree);
-                    if (callee.equals(methodQualifiedName) && methodInvocationTree.args.size() == methodArity) {
+        classTree.accept(new TreeScanner() {
+            @Override
+            public void visitApply(JCTree.JCMethodInvocation methodInvocationTree) {
+                String callee = getMethodName(methodInvocationTree);
+                if (callee.equals(methodQualifiedName) && methodInvocationTree.args.size() == methodArity) {
 
-                        PatchValidator.withMinimalPatchCount(1, localPatchCount -> {
-                            ListBuffer<JCTree.JCExpression> newArgs = new ListBuffer<>();
-                            int index = 0;
-                            for (JCTree.JCExpression arg : methodInvocationTree.args) {
-                                if (index == methodArgumentIndex) {
-                                    newArgs.add(maker.Literal(methodArgumentValue));
+                    PatchValidator.withMinimalPatchCount(1, localPatchCount -> {
+                        ListBuffer<JCTree.JCExpression> newArgs = new ListBuffer<>();
+                        int index = 0;
+                        for (JCTree.JCExpression arg : methodInvocationTree.args) {
+                            if (index == methodArgumentIndex) {
+                                newArgs.add(maker.Literal(methodArgumentValue));
 
-                                    localPatchCount.getAndIncrement();
-                                    globalPatchCount.getAndIncrement();
-                                } else {
-                                    newArgs.add(arg);
-                                }
-                                index++;
+                                localPatchCount.getAndIncrement();
+                            } else {
+                                newArgs.add(arg);
                             }
-                            methodInvocationTree.args = newArgs.toList();
-                        });
+                            index++;
+                        }
+                        methodInvocationTree.args = newArgs.toList();
+                    });
 
-                    }
-                    super.visitApply(methodInvocationTree);
                 }
-            });
-
+                super.visitApply(methodInvocationTree);
+            }
         });
+
 
     }
 
