@@ -6,6 +6,7 @@ import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeCopier;
 import com.sun.tools.javac.tree.TreeMaker;
+import com.sun.tools.javac.tree.TreeScanner;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Names;
@@ -25,6 +26,7 @@ public class WeaverUtil {
     public static final String MIXIN_CLASS_FQCN = "org.spongepowered.asm.mixin.Mixin";
     public static final String MIXIN_PRIORITY_PARAMETER_NAME = "priority";
 
+    // Magic Value: 61553
     public static final int TOKEN_PLACEHOLDER = 0xF071;
 
     public static @NotNull String toSimpleName(@NotNull String FQCN) {
@@ -229,10 +231,18 @@ public class WeaverUtil {
         if (statementTree instanceof JCTree.JCExpressionStatement expressionStatementTree) {
             JCTree.JCExpression expressionTree = expressionStatementTree.expr;
             if (expressionTree instanceof JCTree.JCMethodInvocation methodInvocationTree) {
-                String methodName = methodInvocationTree.meth.toString();
+                String methodName = getMethodName(methodInvocationTree);
                 int methodArgsSize = methodInvocationTree.args.size();
-                if (methodName.endsWith(methodQualifiedName) && methodArgsSize == methodArity) {
 
+                /* If the method argument is a lambda tree, go inside. */
+                for (JCTree.JCExpression arg : methodInvocationTree.args) {
+                    if (arg instanceof JCTree.JCLambda lambdaTree) {
+                        patchMethodInvocationTree(maker, lambdaTree, methodQualifiedName, methodArity, methodArgumentIndex, methodArgumentValue);
+                    }
+                }
+
+                /* Re-build current method invocation tree. */
+                if (methodName.endsWith(methodQualifiedName) && methodArgsSize == methodArity) {
                     /* Re-build the method invocation arguments. */
                     ListBuffer<JCTree.JCExpression> expressionTreeBuffer = new ListBuffer<>();
                     for (int i = 0; i < methodArgsSize; i++) {
@@ -247,9 +257,14 @@ public class WeaverUtil {
                     return maker.Exec(patchedMethodInvocationTree);
                 }
             }
+
             return statementTree;
         }
         return statementTree;
+    }
+
+    private static String getMethodName(@NotNull JCTree.JCMethodInvocation methodInvocationTree) {
+        return methodInvocationTree.meth.toString();
     }
 
     public static void patchMethodInvocationTree(@NotNull TreeMaker maker,
@@ -260,6 +275,7 @@ public class WeaverUtil {
                                                  @NotNull Object methodArgumentValue) {
         for (JCTree def : classTree.defs) {
             if (def instanceof JCTree.JCMethodDecl method && method.body != null) {
+                /* Re-build the top-level statements in method. */
                 List<JCTree.JCStatement> newStats = List.nil();
                 for (JCTree.JCStatement stmt : method.body.stats) {
                     JCTree.JCStatement patchedStatementTree = patchStatementTree(maker, stmt, methodQualifiedName, methodArity, methodArgumentIndex, methodArgumentValue);
@@ -269,4 +285,33 @@ public class WeaverUtil {
             }
         }
     }
+
+    public static void patchMethodInvocationTree(@NotNull TreeMaker maker,
+                                                 @NotNull JCTree.JCLambda lambdaTree,
+                                                 @NotNull String methodQualifiedName,
+                                                 int methodArity,
+                                                 int methodArgumentIndex,
+                                                 @NotNull Object methodArgumentValue) {
+        lambdaTree.accept(new TreeScanner() {
+            @Override
+            public void visitApply(JCTree.JCMethodInvocation invocation) {
+                String callee = getMethodName(invocation);
+                if (callee.equals(methodQualifiedName) && invocation.args.size() == methodArity) {
+                    ListBuffer<JCTree.JCExpression> newArgs = new ListBuffer<>();
+                    int idx = 0;
+                    for (JCTree.JCExpression arg : invocation.args) {
+                        if (idx == methodArgumentIndex) {
+                            newArgs.add(maker.Literal(methodArgumentValue));
+                        } else {
+                            newArgs.add(arg);
+                        }
+                        idx++;
+                    }
+                    invocation.args = newArgs.toList();
+                }
+                super.visitApply(invocation);
+            }
+        });
+    }
+
 }
