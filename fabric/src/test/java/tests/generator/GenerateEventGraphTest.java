@@ -124,7 +124,10 @@ public class GenerateEventGraphTest {
         extendedAnnotationInfoList.forEach(extendedAnnotationInfo -> {
 
             String declaringClassName = extendedAnnotationInfo.getDeclaringClass().getName();
-            MethodInfo declaringMethod = extendedAnnotationInfo.getDeclaringMethod();
+            MethodInfo declaringMethod = Optional
+                .ofNullable(extendedAnnotationInfo.getDeclaringMethod())
+                .orElseThrow(() -> new IllegalStateException("The @EventConsumer annotation must be annotated at a method."));
+
             String declaringMethodName = declaringMethod.getName();
 
 
