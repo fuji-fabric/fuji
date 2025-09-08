@@ -247,8 +247,21 @@ public class CommandHelper {
             return isServerCommandSource(indicator);
         }
 
+
         public static boolean isExecutedByConsole(@NotNull CommandContext<ServerCommandSource> commandContext) {
-            return commandContext.getSource().getPlayer() == null;
+            return isExecutedByConsole(commandContext.getSource());
+        }
+
+        public static boolean isExecutedByConsole(@NotNull ServerCommandSource commandSource) {
+            return !isExecutedByPlayer(commandSource);
+        }
+
+        public static boolean isExecutedByPlayer(@NotNull ServerCommandSource commandSource) {
+            return commandSource.getPlayer() != null;
+        }
+
+        public static boolean isSilent(@NotNull ServerCommandSource commandSource) {
+            return commandSource.isSilent();
         }
 
         private static boolean isServerCommandSource(@NotNull Object object) {

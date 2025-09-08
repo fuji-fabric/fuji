@@ -30,8 +30,6 @@
     "command_menu.ServerPlayNetworkHandlerMixin",
     "command_permission.CommandNodeMixin",
     "command_rewrite.ServerPlayNetworkHandlerMixin",
-    "command_spy.CommandDispatcherMixin",
-    "command_spy.CommandManagerMixin",
     "command_toolbox.hat.LivingEntityMixin",
     "command_toolbox.hat.PlayerScreenHandlerMixin",
     "command_toolbox.reply.MsgCommandMixin",
