@@ -82,7 +82,7 @@ public class GenerateEventGraphTest {
 
     @SuppressWarnings("unused")
     private static void collectEventProducers(ScanResult scanResult, EventGraph eventGraph) {
-        List<ExtendedAnnotationInfo> extendedAnnotationInfoList = ClassGraphUtil.findTargetAnnotationInstancesAnywhere(scanResult, EventProducer.class, false);
+        List<ExtendedAnnotationInfo> extendedAnnotationInfoList = ClassGraphUtil.findTargetAnnotationInstancesAnywhere(scanResult, EventProducer.class, true);
         extendedAnnotationInfoList.forEach(extendedAnnotationInfo -> {
 
             String declaringClassName = extendedAnnotationInfo.getDeclaringClass().getName();
