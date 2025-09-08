@@ -192,75 +192,36 @@ public class WeaverUtil {
         return (JCTree.JCCompilationUnit) treePath.getCompilationUnit();
     }
 
-    @SuppressWarnings("IfCanBeSwitch")
     public static void patchAnnotationTreeRecursively(@NotNull TreeMaker treeMaker,
                                                       @NotNull Names names,
                                                       @NotNull JCTree.JCClassDecl classTree,
                                                       @NotNull String annotationFqcn,
                                                       @NotNull String annotationParameterName,
                                                       @NotNull Object annotationParameterValue) {
-        /* Patch class-level annotations */
-        classTree.mods = patchModifiersTree(treeMaker, names, classTree.mods, annotationFqcn, annotationParameterName, annotationParameterValue);
 
-        /* Patch class member annotations. */
-        List<JCTree> newDefs = List.nil();
-        for (JCTree def : classTree.defs) {
-            if (def instanceof JCTree.JCMethodDecl methodTree) {
-                methodTree.mods = patchModifiersTree(treeMaker, names, methodTree.mods, annotationFqcn, annotationParameterName, annotationParameterValue);
-                newDefs = newDefs.append(methodTree);
-            } else if (def instanceof JCTree.JCVariableDecl variableTree) {
-                variableTree.mods = patchModifiersTree(treeMaker, names, variableTree.mods, annotationFqcn, annotationParameterName, annotationParameterValue);
-                newDefs = newDefs.append(variableTree);
-            } else if (def instanceof JCTree.JCClassDecl innerClassTree) {
-                patchAnnotationTreeRecursively(treeMaker, names, innerClassTree, annotationFqcn, annotationParameterName, annotationParameterValue);
-                newDefs = newDefs.append(innerClassTree);
-            } else {
-                newDefs = newDefs.append(def);
-            }
-        }
-        classTree.defs = newDefs;
-    }
+        classTree.accept(new TreeScanner() {
 
-    public static @NotNull JCTree.JCStatement patchStatementTree(@NotNull TreeMaker maker,
-                                                                 @NotNull JCTree.JCStatement statementTree,
-                                                                 @NotNull String methodQualifiedName,
-                                                                 int methodArity,
-                                                                 int methodArgumentIndex,
-                                                                 @NotNull Object methodArgumentValue) {
-        /* Match target method invocation tree. */
-        if (statementTree instanceof JCTree.JCExpressionStatement expressionStatementTree) {
-            JCTree.JCExpression expressionTree = expressionStatementTree.expr;
-            if (expressionTree instanceof JCTree.JCMethodInvocation methodInvocationTree) {
-                String methodName = getMethodName(methodInvocationTree);
-                int methodArgsSize = methodInvocationTree.args.size();
-
-                /* If the method argument is a lambda tree, go inside. */
-                for (JCTree.JCExpression arg : methodInvocationTree.args) {
-                    if (arg instanceof JCTree.JCLambda lambdaTree) {
-                        patchMethodInvocationTree(maker, lambdaTree, methodQualifiedName, methodArity, methodArgumentIndex, methodArgumentValue);
-                    }
-                }
-
-                /* Re-build current method invocation tree. */
-                if (methodName.endsWith(methodQualifiedName) && methodArgsSize == methodArity) {
-                    /* Re-build the method invocation arguments. */
-                    ListBuffer<JCTree.JCExpression> expressionTreeBuffer = new ListBuffer<>();
-                    for (int i = 0; i < methodArgsSize; i++) {
-                        if (i != methodArgumentIndex) {
-                            expressionTreeBuffer.add(methodInvocationTree.args.get(i));
-                        } else {
-                            expressionTreeBuffer.add(maker.Literal(methodArgumentValue));
-                        }
-                    }
-
-                    JCTree.JCMethodInvocation patchedMethodInvocationTree = maker.Apply(methodInvocationTree.typeargs, methodInvocationTree.meth, expressionTreeBuffer.toList());
-                    return maker.Exec(patchedMethodInvocationTree);
-                }
+            @Override
+            public void visitClassDef(JCTree.JCClassDecl clazz) {
+                clazz.mods = patchModifiersTree(treeMaker, names, clazz.mods,
+                    annotationFqcn, annotationParameterName, annotationParameterValue);
+                super.visitClassDef(clazz);
             }
 
-            return statementTree;
-        }
-        return statementTree;
+            @Override
+            public void visitMethodDef(JCTree.JCMethodDecl method) {
+                method.mods = patchModifiersTree(treeMaker, names, method.mods,
+                    annotationFqcn, annotationParameterName, annotationParameterValue);
+                super.visitMethodDef(method);
+            }
+
+            @Override
+            public void visitVarDef(JCTree.JCVariableDecl var) {
+                var.mods = patchModifiersTree(treeMaker, names, var.mods,
+                    annotationFqcn, annotationParameterName, annotationParameterValue);
+                super.visitVarDef(var);
+            }
+        });
     }
 
     private static String getMethodName(@NotNull JCTree.JCMethodInvocation methodInvocationTree) {
@@ -273,43 +234,24 @@ public class WeaverUtil {
                                                  int methodArity,
                                                  int methodArgumentIndex,
                                                  @NotNull Object methodArgumentValue) {
-        for (JCTree def : classTree.defs) {
-            if (def instanceof JCTree.JCMethodDecl method && method.body != null) {
-                /* Re-build the top-level statements in method. */
-                List<JCTree.JCStatement> newStats = List.nil();
-                for (JCTree.JCStatement stmt : method.body.stats) {
-                    JCTree.JCStatement patchedStatementTree = patchStatementTree(maker, stmt, methodQualifiedName, methodArity, methodArgumentIndex, methodArgumentValue);
-                    newStats = newStats.append(patchedStatementTree);
-                }
-                method.body.stats = newStats;
-            }
-        }
-    }
-
-    public static void patchMethodInvocationTree(@NotNull TreeMaker maker,
-                                                 @NotNull JCTree.JCLambda lambdaTree,
-                                                 @NotNull String methodQualifiedName,
-                                                 int methodArity,
-                                                 int methodArgumentIndex,
-                                                 @NotNull Object methodArgumentValue) {
-        lambdaTree.accept(new TreeScanner() {
+        classTree.accept(new TreeScanner() {
             @Override
-            public void visitApply(JCTree.JCMethodInvocation invocation) {
-                String callee = getMethodName(invocation);
-                if (callee.equals(methodQualifiedName) && invocation.args.size() == methodArity) {
+            public void visitApply(JCTree.JCMethodInvocation methodInvocationTree) {
+                String callee = getMethodName(methodInvocationTree);
+                if (callee.equals(methodQualifiedName) && methodInvocationTree.args.size() == methodArity) {
                     ListBuffer<JCTree.JCExpression> newArgs = new ListBuffer<>();
-                    int idx = 0;
-                    for (JCTree.JCExpression arg : invocation.args) {
-                        if (idx == methodArgumentIndex) {
+                    int index = 0;
+                    for (JCTree.JCExpression arg : methodInvocationTree.args) {
+                        if (index == methodArgumentIndex) {
                             newArgs.add(maker.Literal(methodArgumentValue));
                         } else {
                             newArgs.add(arg);
                         }
-                        idx++;
+                        index++;
                     }
-                    invocation.args = newArgs.toList();
+                    methodInvocationTree.args = newArgs.toList();
                 }
-                super.visitApply(invocation);
+                super.visitApply(methodInvocationTree);
             }
         });
     }
