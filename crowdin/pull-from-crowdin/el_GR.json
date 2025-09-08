@@ -1221,7 +1221,7 @@
   "docstring.1751999986462": "Returns the `luckperms prefix` of the player.\n",
   "docstring.1751999997365": "Returns the `luckperms suffix` of the player.\n",
   "docstring.1752000048133": "Returns the `location` of the player.\n",
-  "docstring.1752000061565": "Returns current `date`.\nAccept an optional argument to specify the `date format`.\n",
+  "docstring.1752000061565": "Returns current `date`.\nAccept an optional argument to specify the `date format`.\n\nFor example:\n- `%fuji:date yyyy MM dd%`\n\nSee details in https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html\n",
   "docstring.1752000074625": "To escape the `placeholder` from the `text parser`.\nThe `first argument` is the literal string of the `target placeholder`.\nThe `second argument` is the integer for `escape levels`, by default is 1.\n",
   "docstring.1752000094346": "Accept one `required string argument`, and returns the `literal text` of that.\n",
   "docstring.1752000110013": "The `first string argument` is the `permission` to check.\nReturns whether the `player` has that permission, in boolean.\n",
