@@ -50,7 +50,7 @@ public class DoctorInitializer extends ModuleInitializer {
             ◉ Diagnosis
             {}
 
-            ----- Server Program Terminated -----
+            ----- Server Program Terminated Here -----
             """;
         formatString = LogUtil.AnsiColor.wrapAnsiColorCode(formatString, LogUtil.AnsiColor.GREEN);
 
