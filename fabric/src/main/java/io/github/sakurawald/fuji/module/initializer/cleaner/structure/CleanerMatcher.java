@@ -10,13 +10,13 @@ import org.jetbrains.annotations.NotNull;
 @AllArgsConstructor
 public class CleanerMatcher {
 
-    boolean enable;
+    boolean enable = false;
 
     String translatableKey;
 
-    int livesLongerThanAge;
+    int livesLongerThanAge = Integer.MAX_VALUE;
 
-    CleanupMethod cleanupMethod;
+    CleanupMethod cleanupMethod = CleanupMethod.KILL;
 
     public boolean isMatch(@NotNull String entityTranslatableKey, int entityAge) {
         return this.translatableKey.equals(entityTranslatableKey)

@@ -10,7 +10,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
 import com.mojang.authlib.properties.PropertyMap;
-import io.github.sakurawald.fuji.core.config.annotation.NonNullEnumType;
+import io.github.sakurawald.fuji.core.config.annotation.NotNullEnumType;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.config.mapper.adapter.BiMapTypeAdapterFactory;
@@ -104,7 +104,7 @@ public class GsonMapper {
     public static boolean isNullableType(@NotNull Class<?> typeClass) {
         return TYPE_NULLABILITY_MAP.computeIfAbsent(typeClass, k -> {
             boolean nullable = Optional
-                .ofNullable(typeClass.getAnnotation(NonNullEnumType.class))
+                .ofNullable(typeClass.getAnnotation(NotNullEnumType.class))
                 .isEmpty();
             return nullable;
         });

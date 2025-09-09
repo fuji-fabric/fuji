@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.head.structure;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.InventoryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
+import io.github.sakurawald.fuji.core.config.annotation.NotNullEnumType;
 import io.github.sakurawald.fuji.module.initializer.head.HeadInitializer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -11,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
 
+@NotNullEnumType
 public enum EconomyType {
     ITEM,
     FREE;

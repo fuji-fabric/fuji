@@ -55,7 +55,7 @@ public class ModuleManager extends BaseManager {
                     LogUtil.error("""
 
 
-                        [Fuji Module Initialization Failed]
+                        [Module Initialization Failed]
                         ◉ What happened?
                         Unfortunately, the module `{}` could not be initialized.
                         To prevent potential data loss or further issues, the server will now shut down.

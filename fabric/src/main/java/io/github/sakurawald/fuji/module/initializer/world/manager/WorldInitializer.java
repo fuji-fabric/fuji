@@ -626,6 +626,6 @@ public class WorldInitializer extends ModuleInitializer {
 
     @Override
     protected void registerGsonTypeAdapters() {
-        GsonMapper.registerNotNullType(Difficulty.class);
+        GsonMapper.setTypeNullability(Difficulty.class, false);
     }
 }

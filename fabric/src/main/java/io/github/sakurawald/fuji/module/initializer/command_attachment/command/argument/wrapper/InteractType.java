@@ -1,7 +1,9 @@
 package io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper;
 
 import com.google.gson.annotations.SerializedName;
+import io.github.sakurawald.fuji.core.config.annotation.NotNullEnumType;
 
+@NotNullEnumType
 public enum InteractType {
     @SerializedName(value = "LEFT_CLICK", alternate = "LEFT")
     LEFT_CLICK,

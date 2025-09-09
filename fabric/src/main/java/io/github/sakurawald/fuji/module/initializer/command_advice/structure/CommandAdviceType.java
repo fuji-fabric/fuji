@@ -2,8 +2,10 @@ package io.github.sakurawald.fuji.module.initializer.command_advice.structure;
 
 import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.config.annotation.NotNullEnumType;
 import lombok.Getter;
 
+@NotNullEnumType
 @Getter
 public enum CommandAdviceType {
     @SerializedName(value = "BEFORE_EXECUTION", alternate = "BEFORE_EXECUTING")
