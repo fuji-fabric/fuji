@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.Data;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -240,11 +239,7 @@ public class InspectingObject {
     private void addPossibleValuesForEnumType(ServerPlayerEntity player, List<Text> lore) {
         if (!this.getObjectType().isEnum()) return;
 
-        Object[] enumConstants = this.getObjectType().getEnumConstants();
-        String possibleValues = Arrays.stream(enumConstants)
-            .map(Object::toString)
-            .collect(Collectors.joining(", "));
-
+        String possibleValues = ReflectionUtil.getEnumValuesCompactString(this.getObjectType());
         lore.add(TextHelper.getTextByKey(player, "object.value.possible_values", possibleValues));
     }
 

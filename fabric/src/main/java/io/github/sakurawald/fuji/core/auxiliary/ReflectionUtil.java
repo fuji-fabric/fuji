@@ -17,12 +17,20 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 public class ReflectionUtil {
+
+    public static @NotNull String getEnumValuesCompactString(@NotNull Class<?> enumClass) {
+        Object[] enumConstants = enumClass.getEnumConstants();
+        return Arrays.stream(enumConstants)
+            .map(Object::toString)
+            .collect(Collectors.joining(", "));
+    }
 
     public static class CompileTimeGraph {
 
