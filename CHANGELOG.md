@@ -4,28 +4,7 @@
  
 ## Changelog
 
----
-
-### [command_cooldown]
-
-- **Feature:** The `/run as {player|fake-op} @s <cmd>` command now respects the command cooldown system.
-- **Feature:** Improved event injection point for enhanced compatibility with other mods.
-
----
-
-### [command_spy]
-
-- **Feature:** Improved event injection point for enhanced compatibility with other mods.
-
----
-
-### [chat.history]
-
-- **Feature:** Improved event injection point for enhanced compatibility with other mods.
-
----
-
-### [chat.spy]
-
-- **Feature:** Improved event injection point for enhanced compatibility with other mods.
+- [doctor] feature: new `doctor` module, to provide `server crash analyzer`.
+  - It can be used to analyze the server crash report, and provide a user-friendly view.
+- [core] feature: use `Java 17` for `MC [1.20, 1.20.4]` versions.
 
