@@ -4,4 +4,8 @@
  
 ## Changelog
 
-- [core] Added a `config validator` to verify `enum values` and suggest corrective actions when invalid entries are detected.
+- [command_cooldown] Enhance this module.
+  - feature: now the `/run as {player|fake-op} @s <cmd>` will also perform `command cooldown`.
+  - feature: fine-tune the event injection point, for better compatibility with other mods.
+- [command_spy] Enhance this module.
+  - feature: fine-tune the event injection point, for better compatibility with other mods.

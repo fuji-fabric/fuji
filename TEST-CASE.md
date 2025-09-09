@@ -59,6 +59,12 @@
 - Target: The bundle commands should be able to register and un-register on the fly.
 
 [Test Case]
+- Module: command_cooldown
+- Action: **Test the compatibility with other modules.**
+- Target: Issue `/heal` command twice, the `command warmup` should be performed first, then the `command cooldown`
+- Target: Issue `/run as player @s heal` command twice, the command cooldown should be performed.
+
+[Test Case]
 - Module: command_interactive
 - Action: **Enable `command_warmup` module, issue `/back` command.**
 - Target: It should work with un-signed argument type.

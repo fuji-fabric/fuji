@@ -78,7 +78,7 @@ public class CommandSpyInitializer extends ModuleInitializer {
             });
     }
 
-    @EventConsumer(injectorPriority = EventConsumer.HIGHER, consumerPriority = EventConsumer.LOWEST)
+    @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority = EventConsumer.LOWEST)
     private static void consumeBeforeCommandExecutionEvent(BeforeCommandExecutionEvent event) {
         CommandSpyInitializer.processCommandSpy(
             event.getCommandSource(),

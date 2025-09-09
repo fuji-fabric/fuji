@@ -21,7 +21,6 @@
     "command_attachment.ServerPlayerEntityMixin",
     "command_attachment.ServerPlayerInteractionManagerMixin",
     "command_bundle.CommandContextMixin",
-    "command_cooldown.CommandManagerMixin",
     "command_event.BlockMixin",
     "command_event.PlayerListManagerMixin",
     "command_event.ServerPlayerEntityMixin",

@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_cooldown;
 
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
@@ -11,6 +12,9 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.command.BeforeCommandExecutionEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.config.model.CommandCooldownConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.config.model.NamedCooldownDataModel;
@@ -24,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Document(id = 1751826375815L, value = """
     This module allows you to define a `cooldown` for a specified `command`.
@@ -194,6 +199,30 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         CommandCooldownPlaceholders.registerCommandCooldownLeftTimePlaceholder();
         CommandCooldownPlaceholders.registerCommandCooldownLeftTimeDatePlaceholder();
         CommandCooldownPlaceholders.registerCommandCooldownLeftUsagePlaceholder();
+    }
+
+    @TestCase(action = "Test the compatibility with other modules.", targets = {
+        "Issue `/heal` command twice, the `command warmup` should be performed first, then the `command cooldown`",
+        "Issue `/run as player @s heal` command twice, the command cooldown should be performed."
+    })
+    @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority = EventConsumer.LOWER)
+    private static void consumeBeforeCommandExecutionEvent(BeforeCommandExecutionEvent event) {
+        ServerCommandSource commandSource = event.getCommandSource();
+        ServerPlayerEntity player = commandSource.getPlayer();
+        if (player == null) return;
+
+        /* Compute the cooldown for specified command. */
+        String commandString = event.getCommandString();
+        long remainingDuration = UnnamedCooldownService.computeRemainingUnnamedCooldownDuration(player, commandString);
+        if (remainingDuration > 0) {
+            // NOTE: For unnamed cooldown type, the `second unit` is sufficient for use.
+            long remainingDurationInSecond = remainingDuration / 1000;
+            TextHelper.sendTextByKey(player, "command_cooldown.cooldown", remainingDurationInSecond);
+            event
+                .getCallback()
+                .ifPresentOrElse(CallbackInfo::cancel, () -> LogUtil.warn("Failed to cancel the command execution, the Optional<CallbackInfo> is empty. (Command Source = {}, Command String = {})", commandSource.getName(), commandString));
+        }
+
     }
 
 }
