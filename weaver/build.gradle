@@ -7,6 +7,12 @@ repositories {
     mavenCentral()
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(rootProject.java_version as Integer)
+    }
+}
+
 /* Expose the JDK internal packages. */
 tasks.named('compileJava') {
     options.release.set(null)
