@@ -1507,5 +1507,6 @@
   "docstring.1756790951617": "◉ What is a `translatable key`?\nA `translatable key` is an identifier used internally by Minecraft to reference `items`, `block-based items`, and other `entities`.\nIt corresponds to the keys defined in Minecraft's `translation files`.\nAn example translation file can be found here:\nhttps://github.com/sakurawald/fuji/blob/dev/.github/files/en_us.json\n\nCommon key formats include:\n- `item.minecraft.*`\n- `block.minecraft.*`\n- `entity.minecraft.*`\n",
   "docstring.1756906211441": "Inspect applied mixins by fuji.",
   "docstring.1756910112078": "Inspect registered events by fuji.",
-  "docstring.1757360673310": "◉ How it works?\n1. Match the defined `rules` in top-down order.\n2. Find the `first matched rule`.\n3. Apply the `first matched rule`, if it exists.\n"
+  "docstring.1757360673310": "◉ How it works?\n1. Match the defined `rules` in top-down order.\n2. Find the `first matched rule`.\n3. Apply the `first matched rule`, if it exists.\n",
+  "docstring.1757426112765": "This module provides the `server crash analyzer` when the `server crashed`.\n"
 }
