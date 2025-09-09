@@ -4,12 +4,28 @@
  
 ## Changelog
 
-- [command_cooldown] Enhance this module.
-  - feature: now the `/run as {player|fake-op} @s <cmd>` will also perform `command cooldown`.
-  - feature: fine-tune the event injection point, for better compatibility with other mods.
-- [command_spy] Enhance this module.
-  - feature: fine-tune the event injection point, for better compatibility with other mods.
+---
 
-- [chat] Enhance chat modules.
-  - [chat.history] feature: fine-tune the event injection point, for better compatibility with other mods.
-  - [chat.spy] feature: fine-tune the event injection point, for better compatibility with other mods.
+### [command_cooldown]
+
+- **Feature:** The `/run as {player|fake-op} @s <cmd>` command now respects the command cooldown system.
+- **Feature:** Improved event injection point for enhanced compatibility with other mods.
+
+---
+
+### [command_spy]
+
+- **Feature:** Improved event injection point for enhanced compatibility with other mods.
+
+---
+
+### [chat.history]
+
+- **Feature:** Improved event injection point for enhanced compatibility with other mods.
+
+---
+
+### [chat.spy]
+
+- **Feature:** Improved event injection point for enhanced compatibility with other mods.
+
