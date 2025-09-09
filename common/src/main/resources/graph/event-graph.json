@@ -301,6 +301,36 @@
       "injector_priority": 0
     },
     {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageSentEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageSentEventMixin_DEFAULT",
+      "declaring_method_name": "producePlayerChatMessageSentEvent",
+      "injector_priority": 1000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageSentEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageSentEventMixin_HIGHER",
+      "declaring_method_name": "producePlayerChatMessageSentEvent",
+      "injector_priority": 1001
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageSentEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageSentEventMixin_HIGHEST",
+      "declaring_method_name": "producePlayerChatMessageSentEvent",
+      "injector_priority": 2000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageSentEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageSentEventMixin_LOWER",
+      "declaring_method_name": "producePlayerChatMessageSentEvent",
+      "injector_priority": 999
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageSentEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageSentEventMixin_LOWEST",
+      "declaring_method_name": "producePlayerChatMessageSentEvent",
+      "injector_priority": 0
+    },
+    {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerDamageEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerDamageEventMixin_DEFAULT",
       "declaring_method_name": "producePlayerDamageEvent",
@@ -766,6 +796,14 @@
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerPreTeleportEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.back.BackInitializer",
       "declaring_method_name": "handlePlayerPreTeleportEvent",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageSentEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.chat.history.ChatHistoryInitializer",
+      "declaring_method_name": "consumePlayerChatMessageSentEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false

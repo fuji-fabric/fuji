@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageSentEvent;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerJoinedEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.chat.history.config.model.ChatHistoryConfigModel;
@@ -31,7 +32,6 @@ public class ChatHistoryInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<ChatHistoryConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatHistoryConfigModel.class);
 
-    private static final Queue<Long> DUPLICATED_SENT_TEXT_FILTER = EvictingQueue.create(10);
     private static Queue<Text> chatHistory;
 
     @SuppressWarnings("RedundantIfStatement")
@@ -85,20 +85,7 @@ public class ChatHistoryInitializer extends ModuleInitializer {
         return rejectedMessage;
     }
 
-    private static long getUniqueKey(@NotNull SignedMessage signedMessage) {
-        // NOTE: The SignedMessage#getSalt method only works in online-mode server. In offline-mode server, it always returns 0.
-        // NOTE: The hashCode() is used as the distinguish key, because the SentMessage#send is called inside a loop, and will not be modified.
-        return signedMessage.hashCode();
-    }
-
-    public static void processChatHistory(@NotNull SignedMessage signedMessage, @NotNull MessageType.Parameters parameters) {
-        /* Filter duplicated messages. */
-        long uniqueKey = getUniqueKey(signedMessage);
-        if (DUPLICATED_SENT_TEXT_FILTER.contains(uniqueKey)) {
-            return;
-        }
-        DUPLICATED_SENT_TEXT_FILTER.add(uniqueKey);
-
+    private static void processChatHistory(@NotNull SignedMessage signedMessage, @NotNull MessageType.Parameters parameters) {
         /* Filter the message by message type. */
         String messageTypeString = RegistryHelper.getIdAsString(parameters);
         if (!isMessageTypeAccepted(messageTypeString)) {
@@ -139,6 +126,11 @@ public class ChatHistoryInitializer extends ModuleInitializer {
         // NOTE: Use a lower priority, to ensure the chat history is re-played before other welcome messages.
         ServerPlayerEntity player = event.getPlayer();
         chatHistory.forEach(text -> TextHelper.sendMessageByText(player, text));
+    }
+
+    @EventConsumer
+    private static void consumePlayerChatMessageSentEvent(PlayerChatMessageSentEvent event) {
+        processChatHistory(event.getSignedMessage(), event.getParameters());
     }
 
 }
