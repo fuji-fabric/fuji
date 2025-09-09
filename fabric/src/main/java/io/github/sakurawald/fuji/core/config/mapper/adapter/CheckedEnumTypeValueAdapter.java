@@ -31,7 +31,7 @@ public class CheckedEnumTypeValueAdapter<T> extends TypeAdapter<T> {
         Class<? super T> concreteEnumClass = typeToken.getRawType();
 
         /* Validate the non-null java type constraint. */
-        if (GsonMapper.isNonNullType(concreteEnumClass) && in.peek() == JsonToken.NULL) {
+        if (!GsonMapper.isNullableType(concreteEnumClass) && in.peek() == JsonToken.NULL) {
             throw handleInvalidEnumValueException(in, concreteEnumClass, null);
         }
 

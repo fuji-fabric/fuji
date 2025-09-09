@@ -10,6 +10,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
 import com.mojang.authlib.properties.PropertyMap;
+import io.github.sakurawald.fuji.core.config.annotation.NonNullEnumType;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.config.mapper.adapter.BiMapTypeAdapterFactory;
@@ -25,8 +26,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -55,7 +57,7 @@ public class GsonMapper {
         // Let's create it.
         .create();
 
-    private static final Set<Class<?>> NON_NULL_TYPES = new HashSet<>();
+    private static final Map<Class<?>, Boolean> TYPE_NULLABILITY_MAP = new ConcurrentHashMap<>();
 
     private static @NotNull Gson getFallbackGson() {
         GsonBuilder fallbackGsonBuilder = gson.newBuilder();
@@ -94,13 +96,18 @@ public class GsonMapper {
             .create();
     }
 
-    public static void registerNotNullType(@NotNull Class<?> typeClass) {
-        NON_NULL_TYPES.add(typeClass);
+    public static void setTypeNullability(@NotNull Class<?> typeClass, boolean nullable) {
+        TYPE_NULLABILITY_MAP.put(typeClass, nullable);
     }
 
-
-    public static boolean isNonNullType(@NotNull Class<?> typeClass) {
-        return NON_NULL_TYPES.contains(typeClass);
+    @SuppressWarnings("UnnecessaryLocalVariable")
+    public static boolean isNullableType(@NotNull Class<?> typeClass) {
+        return TYPE_NULLABILITY_MAP.computeIfAbsent(typeClass, k -> {
+            boolean nullable = Optional
+                .ofNullable(typeClass.getAnnotation(NonNullEnumType.class))
+                .isEmpty();
+            return nullable;
+        });
     }
 
     @SneakyThrows(IOException.class)
