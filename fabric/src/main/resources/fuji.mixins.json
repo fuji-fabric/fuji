@@ -118,6 +118,7 @@
     "disabler.max_player_disabler.DedicatedPlayerManagerMixin",
     "disabler.move_speed_disabler.ServerGamePacketListenerImplMixin",
     "disabler.move_wrongly_disabler.ServerPlayNetworkHandlerMixin",
+    "doctor.MainMixin",
     "functional.enchantment.EnchantmentScreenHandlerMixin",
     "gameplay.carpet.better_info.InfoCommandMixin",
     "gameplay.carpet.fake_player_manager.PlayerCommandMixin",

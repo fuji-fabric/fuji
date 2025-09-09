@@ -20,6 +20,12 @@ public class LogUtil {
         public static final String MAGENTA = "\033[35m";
         public static final String CYAN    = "\033[36m";
         public static final String WHITE   = "\033[37m";
+
+        @SuppressWarnings("SameParameterValue")
+        public static @NotNull String wrapAnsiColorCode(@NotNull String contentString, @NotNull String ansiColorCode) {
+            contentString = ansiColorCode + contentString + RESET;
+            return contentString;
+        }
     }
 
     private static final @NotNull Logger MOD_LOGGER = makeLogger(StringUtils.capitalize(Fuji.MOD_ID));

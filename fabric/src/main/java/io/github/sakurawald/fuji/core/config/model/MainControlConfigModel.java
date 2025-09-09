@@ -248,6 +248,7 @@ public class MainControlConfigModel {
         public Disabler disabler = new Disabler();
         public Launcher launcher = new Launcher();
         public Gameplay gameplay = new Gameplay();
+        public Doctor doctor = new Doctor();
         public Tester tester = new Tester();
 
         public static class World {
@@ -947,6 +948,10 @@ public class MainControlConfigModel {
 
         public static class Launcher {
             public boolean enable = false;
+        }
+
+        public static class Doctor {
+            public boolean enable = true;
         }
     }
 

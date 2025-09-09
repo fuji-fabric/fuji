@@ -7,12 +7,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import lombok.Getter;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 
 public class GlobalMixinConfigPlugin implements IMixinConfigPlugin {
+
+    @Getter
+    private static String mixinRootPackage;
 
     public static Map<String, MixinApplicationInfo> mixinApplicationInfoMap = new HashMap<>();
 
@@ -26,7 +30,7 @@ public class GlobalMixinConfigPlugin implements IMixinConfigPlugin {
 
     @Override
     public void onLoad(String mixinPackage) {
-        // no-op
+        mixinRootPackage = mixinPackage;
     }
 
     @Override

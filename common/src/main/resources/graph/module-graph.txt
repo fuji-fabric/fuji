@@ -82,6 +82,7 @@ disabler.chat_speed_disabler
 disabler.max_player_disabler
 disabler.move_speed_disabler
 disabler.move_wrongly_disabler
+doctor
 echo
 echo.send_actionbar
 echo.send_bossbar
