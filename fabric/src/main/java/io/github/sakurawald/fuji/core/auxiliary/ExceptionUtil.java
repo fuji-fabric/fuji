@@ -4,6 +4,8 @@ import com.google.errorprone.annotations.CheckReturnValue;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.exception.FujiException;
+import java.util.ArrayList;
+import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
 public class ExceptionUtil {
@@ -44,5 +46,15 @@ public class ExceptionUtil {
         }
 
         return new FujiException(message, exception);
+    }
+
+    public static @NotNull List<Throwable> getThrowableChain(@NotNull Throwable throwable) {
+        List<Throwable> chain = new ArrayList<>();
+        Throwable current = throwable;
+        while (current != null) {
+            chain.add(current);
+            current = current.getCause();
+        }
+        return chain;
     }
 }
