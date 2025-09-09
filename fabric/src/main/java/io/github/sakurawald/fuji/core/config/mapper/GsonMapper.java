@@ -6,11 +6,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.TypeAdapter;
+import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
 import com.mojang.authlib.properties.PropertyMap;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.config.mapper.adapter.BiMapTypeAdapterFactory;
+import io.github.sakurawald.fuji.core.config.mapper.adapter.CheckedEnumTypeValueAdapterFactory;
 import io.github.sakurawald.fuji.core.config.migrator.version.IgnoreModVersionStrategy;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import java.io.BufferedReader;
@@ -22,6 +25,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -45,9 +50,12 @@ public class GsonMapper {
         .disableInnerClassSerialization()
         // Register type adapters.
         .registerTypeAdapterFactory(new BiMapTypeAdapterFactory())
+        .registerTypeAdapterFactory(new CheckedEnumTypeValueAdapterFactory())
         .registerTypeAdapter(PropertyMap.class, new PropertyMap.Serializer())
         // Let's create it.
         .create();
+
+    private static final Set<Class<?>> NON_NULL_TYPES = new HashSet<>();
 
     private static @NotNull Gson getFallbackGson() {
         GsonBuilder fallbackGsonBuilder = gson.newBuilder();
@@ -71,6 +79,10 @@ public class GsonMapper {
         return gson;
     }
 
+    public static <T> TypeAdapter<T> getDelegateAdapter(TypeAdapterFactory skipPast, TypeToken<T> type) {
+        return gson.getDelegateAdapter(skipPast, type);
+    }
+
     @ForDeveloper("""
         The Gson library has already register a bunch of pre-defined type adapters.
         See: TypeAdapters
@@ -80,6 +92,15 @@ public class GsonMapper {
             .newBuilder()
             .registerTypeAdapter(type, typeAdapter)
             .create();
+    }
+
+    public static void registerNotNullType(@NotNull Class<?> typeClass) {
+        NON_NULL_TYPES.add(typeClass);
+    }
+
+
+    public static boolean isNonNullType(@NotNull Class<?> typeClass) {
+        return NON_NULL_TYPES.contains(typeClass);
     }
 
     @SneakyThrows(IOException.class)
