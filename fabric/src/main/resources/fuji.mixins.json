@@ -10,7 +10,6 @@
     "anti_build.EntityMixin",
     "anti_build.ServerPlayerEntityMixin",
     "anti_build.ServerPlayerInteractionManagerMixin",
-    "chat.spy.ServerPlayNetworkHandlerMixin",
     "chat.style.RegistryLoaderMixin",
     "color.anvil.AnvilScreenHandlerMixin",
     "color.sign.ServerPlayerEntityMixin",

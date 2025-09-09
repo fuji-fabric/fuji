@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.chat.spy;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
@@ -11,10 +12,14 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageSentEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.chat.spy.config.model.ChatSpyConfigModel;
 import io.github.sakurawald.fuji.module.initializer.chat.spy.config.model.ChatSpyDataModel;
 import java.util.function.Function;
+import net.minecraft.network.message.MessageType;
+import net.minecraft.network.message.SignedMessage;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -38,8 +43,10 @@ import org.jetbrains.annotations.NotNull;
 public class ChatSpyInitializer extends ModuleInitializer {
 
     private static String lastContentString = "";
-    public static final BaseConfigurationHandler<ChatSpyConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatSpyConfigModel.class);
-    public static final BaseConfigurationHandler<ChatSpyDataModel> data = ObjectConfigurationHandler.ofModule("data.json", ChatSpyDataModel.class);
+    private static final BaseConfigurationHandler<ChatSpyConfigModel> config = ObjectConfigurationHandler
+        .ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatSpyConfigModel.class);
+    private static final BaseConfigurationHandler<ChatSpyDataModel> data = ObjectConfigurationHandler
+        .ofModule("data.json", ChatSpyDataModel.class);
 
     @Document(id = 1751826711342L, value = "Enable/disable the chat spy mode for you.")
     @CommandNode("toggle")
@@ -63,7 +70,7 @@ public class ChatSpyInitializer extends ModuleInitializer {
         return apply;
     }
 
-    public static void processChatSpy(@NotNull String messageTypeString, @NotNull ServerPlayerEntity receiverPlayer, @NotNull Text contentText) {
+    private static void processChatSpy(@NotNull String messageTypeString, @NotNull ServerPlayerEntity receiverPlayer, @NotNull Text contentText) {
         String contentString = TextHelper.Operators.getString(contentText);
         LogUtil.debug("Process chat spy: message type = {}, content string = {}", messageTypeString, contentString);
 
@@ -102,4 +109,18 @@ public class ChatSpyInitializer extends ModuleInitializer {
             .filter(it -> withPlayerOptions(it, false, ChatSpyDataModel.PerPlayerOptions::isEnabled))
             .forEach(it -> TextHelper.sendMessageByText(it, notificationText));
     }
+
+    @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.LOWER)
+    private static void consumePlayerChatMessageSentEvent(PlayerChatMessageSentEvent event) {
+        /* Extract the message type string. */
+        MessageType.Parameters parameters = event.getParameters();
+        String messageTypeString = RegistryHelper.getIdAsString(parameters);
+
+        /* Process it. */
+        SignedMessage signedMessage = event.getSignedMessage();
+        Text contentText = parameters.applyChatDecoration(signedMessage.getContent());
+        ChatSpyInitializer.processChatSpy(messageTypeString, event.getReceiverPlayer(), contentText);
+    }
+
+
 }

@@ -128,7 +128,7 @@ public class ChatHistoryInitializer extends ModuleInitializer {
         chatHistory.forEach(text -> TextHelper.sendMessageByText(player, text));
     }
 
-    @EventConsumer
+    @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.HIGHEST)
     private static void consumePlayerChatMessageSentEvent(PlayerChatMessageSentEvent event) {
         processChatHistory(event.getSignedMessage(), event.getParameters());
     }
