@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jetbrains.annotations.NotNull;
 
-public class GenericModMixinApplicationExceptionAnalyzer extends ExceptionAnalyzer{
+public class GenericModMixinApplicationExceptionAnalyzer extends ExceptionAnalyzer {
 
     @Override
     protected @NotNull Pattern makePattern() {

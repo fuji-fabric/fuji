@@ -1,8 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.doctor.analyzer;
 
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
-import io.github.sakurawald.fuji.module.initializer.doctor.DoctorInitializer;
 import io.github.sakurawald.fuji.module.mixin.GlobalMixinConfigPlugin;
 import java.util.HashSet;
 import java.util.List;
