@@ -15,7 +15,7 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.config.mapper.adapter.BiMapTypeAdapterFactory;
 import io.github.sakurawald.fuji.core.config.mapper.adapter.CheckedEnumTypeValueAdapterFactory;
-import io.github.sakurawald.fuji.core.config.migrator.version.IgnoreModVersionStrategy;
+import io.github.sakurawald.fuji.core.config.migrator.version.IgnoreModVersionFieldStrategy;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -45,7 +45,7 @@ public class GsonMapper {
         // Null-value is legal value, we should serialize it.
         .serializeNulls()
         // Exclude the mod version property in both serialization and de-serialization.
-        .setExclusionStrategies(new IgnoreModVersionStrategy())
+        .setExclusionStrategies(new IgnoreModVersionFieldStrategy())
         // If the Gson can't find a no-args-constructor, then it will try to create an instance using Unsafe, and ignore all the declared field initializers.
         .disableJdkUnsafe()
         // Note that non-static inner class always holds a reference to its enclosing outer class. (Makes the no args constructor failed)

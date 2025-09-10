@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.core.config.migrator.version;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 
-public class IgnoreModVersionStrategy implements ExclusionStrategy {
+public class IgnoreModVersionFieldStrategy implements ExclusionStrategy {
 
     @Override
     public boolean shouldSkipField(FieldAttributes fieldAttributes) {
