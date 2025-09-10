@@ -4,20 +4,4 @@
  
 ## Changelog
 
-**Main Change: This version fine-tunes multiple event injection points, improving compatibility with other mods.**
-
-### [command_cooldown]
-- **Feature:** Players with `level permission 4` can now bypass the *unnamed command cooldown*.
-- **Feature:** Added support for `/run as fake-op <player> <cmd>` to bypass the cooldown if needed.
-
----
-
-### [anti_build]
-- **Feature:** Introduced an `enable` option for each *anti type*, allowing easier control of functionality.
-- **Feature:** Fine-tuned the event injection point for improved compatibility with other mods.
-
----
-
-### [command_warmup]
-- **Feature:** Players with `level permission 4` can now bypass the *command warmup*.
-- **Feature:** Improved the event injection point for better compatibility with other mods.  
+- [language] feature: now the `multi-language` feature supports `MC 1.20` and `MC 1.20.1`.
