@@ -1,9 +1,7 @@
 package io.github.sakurawald.fuji.module.mixin.whitelist;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.network.ClientConnection;
 import net.minecraft.server.Whitelist;
-import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Whitelist.class)
-
 public class UserWhiteListMixin {
 
     /**
@@ -27,7 +24,6 @@ public class UserWhiteListMixin {
      *
      * @see Whitelist#isAllowed(GameProfile)
      * @see Whitelist#toString(GameProfile)
-     * @see net.minecraft.server.PlayerManager#onPlayerConnect(ClientConnection, ServerPlayerEntity, ConnectedClientData)
      * @see net.minecraft.util.UserCache#add(GameProfile)
      **/
     @Inject(method = "toString*", at = @At("HEAD"), cancellable = true)

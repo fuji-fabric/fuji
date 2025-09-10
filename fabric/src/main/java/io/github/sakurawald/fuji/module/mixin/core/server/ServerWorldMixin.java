@@ -23,7 +23,7 @@ public class ServerWorldMixin {
     @Shadow
     List<ServerPlayerEntity> players;
 
-    @Inject(method = "<init>", at = @At("TAIL"))
+    @Inject(method = "<init>", at = @At("RETURN"))
     private void patchCopyOnWriteArrayListForPlayersInServerWorld(CallbackInfo ci) {
         ServerWorld thiz = (ServerWorld) (Object) this;
         players = new CopyOnWriteArrayList<>() {

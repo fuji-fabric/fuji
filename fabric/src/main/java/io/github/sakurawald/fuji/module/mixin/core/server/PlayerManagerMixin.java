@@ -22,7 +22,7 @@ public class PlayerManagerMixin {
     @Shadow
     private List<ServerPlayerEntity> players;
 
-    @Inject(method = "<init>", at = @At("TAIL"))
+    @Inject(method = "<init>", at = @At("RETURN"))
     void patchCopyOnWriteArrayListForServerPlayerList(CallbackInfo ci) {
         players = new CopyOnWriteArrayList<>() {
             {

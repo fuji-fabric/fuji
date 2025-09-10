@@ -49,7 +49,6 @@ public class WorldGenSettingsMixin {
         return new DimensionOptionsRegistryHolder(saveDimensions);
     }
 
-    // fix: failed to save world on `/save-all` for `fuji:1` dimension.
     @ModifyArg(method = "encode(Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/world/gen/GeneratorOptions;Lnet/minecraft/registry/DynamicRegistryManager;)Lcom/mojang/serialization/DataResult;"
         , at = @At(value = "INVOKE", target = "Lnet/minecraft/world/dimension/DimensionOptionsRegistryHolder;<init>(Lnet/minecraft/registry/Registry;)V"), index = 0)
     private static Registry<DimensionOptions> $wrapWorldGenSettings(Registry<DimensionOptions> registry) {
