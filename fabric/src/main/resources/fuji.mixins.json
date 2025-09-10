@@ -147,7 +147,6 @@
     "multiplier.ServerPlayerMixin",
     "nametag.EntityMixin",
     "placeholder.ServerPlayerEntityMixin",
-    "sit.InteractModifierMixin",
     "skin.ServerLoginNetworkHandlerMixin",
     "system_message.ServerPlayerEntityMixin",
     "system_message.TextMixin",
