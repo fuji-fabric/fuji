@@ -4,6 +4,8 @@
  
 ## Changelog
 
+**Main Change: This version fine-tunes multiple event injection points, improving compatibility with other mods.**
+
 ### [command_cooldown]
 - **Feature:** Players with `level permission 4` can now bypass the *unnamed command cooldown*.
 - **Feature:** Added support for `/run as fake-op <player> <cmd>` to bypass the cooldown if needed.
