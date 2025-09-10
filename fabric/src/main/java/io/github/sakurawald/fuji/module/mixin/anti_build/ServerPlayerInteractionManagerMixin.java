@@ -34,7 +34,7 @@ public class ServerPlayerInteractionManagerMixin {
     void handleInteractItem(ServerPlayerEntity serverPlayerEntity, World world, @NotNull ItemStack itemStack, Hand hand, @NotNull CallbackInfoReturnable<ActionResult> cir) {
         String id = RegistryHelper.getIdAsString(itemStack);
 
-        AntiBuildInitializer.processAntiBuild(player, "interact_item", AntiBuildInitializer.config.model().anti.interact_item.id, id, cir, ActionResult.FAIL, () -> true);
+        AntiBuildInitializer.processAntiBuild(player, "interact_item", AntiBuildInitializer.config.model().getAnti().getInteractItem().getId(), id, cir, ActionResult.FAIL, () -> true);
     }
 
     @Inject(method = "interactBlock", at = @At("HEAD"), cancellable = true)
@@ -43,7 +43,7 @@ public class ServerPlayerInteractionManagerMixin {
         BlockState blockState = world.getBlockState(blockPos);
         String id = RegistryHelper.getIdAsString(blockState);
 
-        AntiBuildInitializer.processAntiBuild(player, "interact_block", AntiBuildInitializer.config.model().anti.interact_block.id, id, cir, ActionResult.FAIL, () -> true);
+        AntiBuildInitializer.processAntiBuild(player, "interact_block", AntiBuildInitializer.config.model().getAnti().getInteractBlock().getId(), id, cir, ActionResult.FAIL, () -> true);
     }
 
 }

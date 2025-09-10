@@ -2,53 +2,70 @@ package io.github.sakurawald.fuji.module.initializer.anti_build.config.model;
 
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 public class AntiBuildConfigModel {
 
-    public Anti anti = new Anti();
+    Anti anti = new Anti();
+
+    @Data
+    @NoArgsConstructor
     public static class Anti {
 
-        public BreakBlock break_block = new BreakBlock();
-        public PlaceBlock place_block = new PlaceBlock();
-        public InteractItem interact_item = new InteractItem();
-        public InteractBlock interact_block = new InteractBlock();
-        public InteractEntity interact_entity = new InteractEntity();
-        public AttackEntity attack_entity = new AttackEntity();
+        BreakBlock breakBlock = new BreakBlock();
+        PlaceBlock placeBlock = new PlaceBlock();
+        InteractItem interactItem = new InteractItem();
+        InteractBlock interactBlock = new InteractBlock();
+        InteractEntity interactEntity = new InteractEntity();
+        AttackEntity attackEntity = new AttackEntity();
 
+        @Data
+        @NoArgsConstructor
         public static class BreakBlock {
-            public Set<String> id = new HashSet<>() {
+            Set<String> id = new HashSet<>() {
                 {
                     this.add("minecraft:gold_block");
                 }
             };
         }
 
+        @Data
+        @NoArgsConstructor
         public static class PlaceBlock {
-            public Set<String> id = new HashSet<>() {
+            Set<String> id = new HashSet<>() {
                 {
                     this.add("minecraft:tnt");
                 }
             };
         }
 
+        @Data
+        @NoArgsConstructor
         public static class InteractItem {
-            public Set<String> id = new HashSet<>() {
+            Set<String> id = new HashSet<>() {
                 {
                     this.add("minecraft:lava_bucket");
                 }
             };
         }
 
+        @Data
+        @NoArgsConstructor
         public static class InteractBlock {
-            public Set<String> id = new HashSet<>() {
+            Set<String> id = new HashSet<>() {
                 {
                     this.add("minecraft:lever");
                 }
             };
         }
 
+        @Data
+        @NoArgsConstructor
         public static class InteractEntity {
-            public Set<String> id = new HashSet<>() {
+            Set<String> id = new HashSet<>() {
                 {
                     this.add("minecraft:villager");
                 }
@@ -56,8 +73,10 @@ public class AntiBuildConfigModel {
 
         }
 
+        @Data
+        @NoArgsConstructor
         public static class AttackEntity {
-            public Set<String> id = new HashSet<>() {
+            Set<String> id = new HashSet<>() {
                 {
                     this.add("minecraft:villager");
                 }

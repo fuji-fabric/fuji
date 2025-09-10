@@ -16,7 +16,7 @@ public class ServerPlayerEntityMixin {
     void handleAttackEntity(Entity entity, CallbackInfo ci) {
         ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) (Object) this;
         String id = RegistryHelper.getIdAsString(entity);
-        AntiBuildInitializer.processAntiBuild(serverPlayerEntity, "attack_entity", AntiBuildInitializer.config.model().anti.attack_entity.id, id, ci::cancel, () -> true);
+        AntiBuildInitializer.processAntiBuild(serverPlayerEntity, "attack_entity", AntiBuildInitializer.config.model().getAnti().getAttackEntity().getId(), id, ci::cancel, () -> true);
     }
 
 }
