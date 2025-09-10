@@ -271,6 +271,36 @@
       "injector_priority": 0
     },
     {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerActionEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerActionEventMixin_DEFAULT",
+      "declaring_method_name": "producePlayerActionEvent",
+      "injector_priority": 1000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerActionEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerActionEventMixin_HIGHER",
+      "declaring_method_name": "producePlayerActionEvent",
+      "injector_priority": 1001
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerActionEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerActionEventMixin_HIGHEST",
+      "declaring_method_name": "producePlayerActionEvent",
+      "injector_priority": 2000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerActionEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerActionEventMixin_LOWER",
+      "declaring_method_name": "producePlayerActionEvent",
+      "injector_priority": 999
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerActionEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerActionEventMixin_LOWEST",
+      "declaring_method_name": "producePlayerActionEvent",
+      "injector_priority": 0
+    },
+    {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_DEFAULT",
       "declaring_method_name": "produceOnPlayerChatEvent",
@@ -825,6 +855,14 @@
       "is_dynamic": false
     },
     {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerActionEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_attachment.CommandAttachmentInitializer",
+      "declaring_method_name": "consumePlayerActionEvent",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_bundle.CommandBundleInitializer",
       "declaring_method_name": "registerAllBundleCommands",
@@ -860,6 +898,14 @@
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerDeathEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_event.CommandEventInitializer",
       "declaring_method_name": "handleOnPlayerDeathEvent",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerActionEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_menu.CommandMenuInitializer",
+      "declaring_method_name": "consumePlayerActionEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false

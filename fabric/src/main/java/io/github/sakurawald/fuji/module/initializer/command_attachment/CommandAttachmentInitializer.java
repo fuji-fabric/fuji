@@ -1,38 +1,43 @@
 package io.github.sakurawald.fuji.module.initializer.command_attachment;
 
-import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
-import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
-import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.UuidHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerActionEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.ExecuteAsType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.config.adapter.CommandAttachmentEntryAdapter;
+import io.github.sakurawald.fuji.module.initializer.command_attachment.config.model.CommandAttachmentConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.config.model.CommandAttachmentDataModel;
-import io.github.sakurawald.fuji.module.initializer.command_attachment.gui.CommandAttachmentEditorGui;
-import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.CommandAttachments;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.config.transformer.CommandAttachmentV1SchemaTransformer;
+import io.github.sakurawald.fuji.module.initializer.command_attachment.gui.CommandAttachmentEditorGui;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.job.TestSteppingOnBlockJob;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.service.CommandAttachmentService;
-import io.github.sakurawald.fuji.module.initializer.command_attachment.config.model.CommandAttachmentConfigModel;
-import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.BlockCommandAttachmentEntry;
+import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.CommandAttachments;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.BaseCommandAttachmentEntry;
+import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.BlockCommandAttachmentEntry;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.EntityCommandAttachmentEntry;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.structure.attachment_entry.ItemStackCommandAttachmentEntry;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
-
-import java.util.Optional;
 
 @Document(id = 1751826430284L, value = """
     This module allows you to attach commands into things:
@@ -204,7 +209,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @Document(id = 1751826478770L, value = "Detach all attached commands in the entity.")
     @CommandNode("detach-entity-all")
     private static int $detachEntityAll(@CommandSource ServerPlayerEntity player, Entity entity, Optional<Boolean> confirm) {
-        return CommandHelper.Pattern.withCommandConfirmed(player,confirm, () -> {
+        return CommandHelper.Pattern.withCommandConfirmed(player, confirm, () -> {
             String uuid = UuidHelper.getAttachedUuid(entity);
             CommandAttachmentService.removeAttachmentDataNode(uuid);
             return CommandHelper.Return.SUCCESS;
@@ -266,5 +271,21 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @Override
     protected void registerGsonTypeAdapters() {
         GsonMapper.registerGsonTypeAdapter(BaseCommandAttachmentEntry.class, new CommandAttachmentEntryAdapter());
+    }
+
+    @EventConsumer
+    private static void consumePlayerActionEvent(PlayerActionEvent event) {
+        PlayerActionC2SPacket packet = event.getPacket();
+        if (packet.getAction() == PlayerActionC2SPacket.Action.SWAP_ITEM_WITH_OFFHAND) {
+            ServerPlayerEntity player = event.getPlayer();
+            ItemStack itemStack = player.getMainHandStack();
+            UuidHelper
+                .getAttachedUuid(ItemStackHelper.CustomData.getCustomDataNbt(itemStack))
+                .ifPresent($uuid -> {
+                    CommandAttachmentService.tryTriggerAttachmentDataNode($uuid, player, List.of(InteractType.SWAP_HAND), () -> event.getCallbackInfo().cancel());
+                });
+
+        }
+
     }
 }

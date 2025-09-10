@@ -11,11 +11,14 @@ import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommand
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerActionEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_menu.command.argument.wrapper.MenuName;
 import io.github.sakurawald.fuji.module.initializer.command_menu.config.CommandMenuConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_menu.config.CommandMenuMenusModel;
 import io.github.sakurawald.fuji.module.initializer.command_menu.structure.MenuDescriptor;
+import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -117,6 +120,18 @@ public class CommandMenuInitializer extends ModuleInitializer {
 
     public static void executeOnSneakingAndSwapHandsCommands(ServerPlayerEntity player) {
         CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(player.getCommandSource()), config.model().onSneakingAndSwapHandsEvent.commands);
+    }
+
+    @EventConsumer
+    private static void consumePlayerActionEvent(PlayerActionEvent event) {
+        if (!CommandMenuInitializer.config.model().onSneakingAndSwapHandsEvent.enable) return;
+
+        PlayerActionC2SPacket packet = event.getPacket();
+        ServerPlayerEntity player = event.getPlayer();
+        if (packet.getAction() == PlayerActionC2SPacket.Action.SWAP_ITEM_WITH_OFFHAND && player.isSneaking()) {
+            CommandMenuInitializer.executeOnSneakingAndSwapHandsCommands(player);
+            event.getCallbackInfo().cancel();
+        }
     }
 
 }
