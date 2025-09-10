@@ -30,6 +30,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @ColorBox(id = 1751870580067L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     The `command_warmup` module is `before` the command execution.
     The `command_cooldown` module is `after` the command execution.
+
+    <blue>NOTE: Players with level permission 4 can bypass the command warmup.
     """)
 @ColorBox(id = 1751974763151L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Set up the warmup for all commands.
