@@ -13,9 +13,7 @@ import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerPreTeleportEvent;
-import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarManager;
-import io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarTicket;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.core.structure.TeleportTicket;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -23,7 +21,6 @@ import io.github.sakurawald.fuji.module.initializer.teleport_warmup.config.model
 import java.util.Optional;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826791752L, value = """
     Adds a warmup cooldown before player teleportation.
@@ -57,15 +54,6 @@ public class TeleportWarmupInitializer extends ModuleInitializer {
     public static final MetaDescriptor<Double> TELEPORT_WARMUP_TIME_META = new MetaDescriptor<>("fuji.teleport_warmup.warmup", Double::valueOf, 1752000334206L);
 
     public static final BaseConfigurationHandler<TeleportWarmupConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, TeleportWarmupConfigModel.class);
-
-    public static Optional<BossBarTicket> getExistingTeleportTicket(@NotNull ServerPlayerEntity player) {
-        return Managers.getBossBarManager()
-            .getTickets()
-            .stream()
-            .filter(it -> it instanceof TeleportTicket teleportTicket
-                    && teleportTicket.getPlayer().equals(player))
-            .findFirst();
-    }
 
     public static boolean shouldApplyTeleportWarmup(ServerWorld destinationDimension, ServerPlayerEntity player) {
         /* Skip the teleport warmup if target dimension is not in the list of effective dimensions */
@@ -107,7 +95,7 @@ public class TeleportWarmupInitializer extends ModuleInitializer {
         }
 
         /* Add a new ticket if none exists. */
-        Optional<BossBarTicket> existingTeleportTicket = TeleportWarmupInitializer.getExistingTeleportTicket(player);
+        Optional<TeleportTicket> existingTeleportTicket = BossBarManager.findBossbarTicket(TeleportTicket.class, player);
         if (existingTeleportTicket.isEmpty()) {
 
             //set warmup seconds to LP permission seconds or default config seconds

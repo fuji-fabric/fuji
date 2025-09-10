@@ -7,6 +7,7 @@ import io.github.sakurawald.fuji.core.event.message.player.PlayerDamageEvent;
 import io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickStartEvent;
 import io.github.sakurawald.fuji.core.manager.abst.BaseManager;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.structure.InterruptibleTicket;
+import java.util.Optional;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -112,6 +113,18 @@ public class BossBarManager extends BaseManager {
         /* process tickets */
         completedTickets.forEach(BossBarTicket::onComplete);
         abortedTickets.forEach(BossBarManager::abortTicket);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends BossBarTicket> Optional<T> findBossbarTicket(@NotNull Class<T> ticketType, @NotNull ServerPlayerEntity player) {
+        return getTickets()
+            .stream()
+            .filter(it -> {
+                return it.getPlayers().stream().anyMatch(p -> p.equals(player))
+                    && ticketType.isInstance(it);
+            })
+            .map(it -> (T) it)
+            .findFirst();
     }
 
     @Override
