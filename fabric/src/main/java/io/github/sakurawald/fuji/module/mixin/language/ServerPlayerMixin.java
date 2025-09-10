@@ -22,7 +22,7 @@ public abstract class ServerPlayerMixin {
     }
     #elif MC_VER > MC_1_20_1
     @Inject(method = "setClientOptions", at = @At("HEAD"))
-    void putClientSideLanguage(@NotNull net.minecraft.network.packet.c2s.common.SyncedClientOptions clientInformation, CallbackInfo ci) {
+    void putClientSideLanguage(net.minecraft.network.packet.c2s.common.SyncedClientOptions clientInformation, CallbackInfo ci) {
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
         String playerName = PlayerHelper.getPlayerName(player);
         String languageCode =  clientInformation.comp_1951();
