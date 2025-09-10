@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.anti_build.config.model;
 
+import com.google.gson.annotations.SerializedName;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Data;
@@ -9,11 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AntiBuildConfigModel {
 
-    Anti anti = new Anti();
+    @SerializedName(value = "anti_types", alternate = "anti")
+    AntiTypes antiTypes = new AntiTypes();
 
     @Data
     @NoArgsConstructor
-    public static class Anti {
+    public static class AntiTypes {
 
         BreakBlock breakBlock = new BreakBlock();
         PlaceBlock placeBlock = new PlaceBlock();

@@ -145,7 +145,7 @@ public class AntiBuildInitializer extends ModuleInitializer {
     @EventConsumer(injectorPriority = EventConsumer.LOWEST)
     private static void consumePlayerBlockBreakPreEvent(PlayerBlockBreakPreEvent event) {
         if (event.getCallbackInfoReturnable().isCancelled()) return;
-        var config = AntiBuildInitializer.config.model().getAnti().getBreakBlock();
+        var config = AntiBuildInitializer.config.model().getAntiTypes().getBreakBlock();
         if (!config.isEnable()) return;
 
         BlockState blockState = event.getWorld().getBlockState(event.getBlockPos());
@@ -157,7 +157,7 @@ public class AntiBuildInitializer extends ModuleInitializer {
     @EventConsumer(injectorPriority = EventConsumer.LOWEST)
     private static void consumePlayerInteractItemPreEvent(PlayerInteractItemPreEvent event) {
         if (event.getCallbackInfoReturnable().isCancelled()) return;
-        var config = AntiBuildInitializer.config.model().getAnti().getInteractItem();
+        var config = AntiBuildInitializer.config.model().getAntiTypes().getInteractItem();
         if (!config.isEnable()) return;
 
         String id = RegistryHelper.getIdAsString(event.getItemStack());
@@ -166,7 +166,7 @@ public class AntiBuildInitializer extends ModuleInitializer {
 
     @EventConsumer(injectorPriority = EventConsumer.LOWEST)
     private static void consumePlayerInteractBlockPreEvent(PlayerInteractBlockPreEvent event) {
-        var config = AntiBuildInitializer.config.model().getAnti().getInteractBlock();
+        var config = AntiBuildInitializer.config.model().getAntiTypes().getInteractBlock();
         if (!config.isEnable()) return;
 
         BlockPos blockPos = event.getBlockHitResult().getBlockPos();

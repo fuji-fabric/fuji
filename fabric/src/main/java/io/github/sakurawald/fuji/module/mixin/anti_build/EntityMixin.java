@@ -18,7 +18,7 @@ public abstract class EntityMixin {
 
     @Inject(method = "interact", at = @At("HEAD"), cancellable = true)
     void handleInteractEntity(@NotNull PlayerEntity player, Hand hand, @NotNull CallbackInfoReturnable<ActionResult> cir) {
-        var config = AntiBuildInitializer.config.model().getAnti().getInteractEntity();
+        var config = AntiBuildInitializer.config.model().getAntiTypes().getInteractEntity();
         if (!config.isEnable()) return;
 
         Entity entity = (Entity) (Object) this;
