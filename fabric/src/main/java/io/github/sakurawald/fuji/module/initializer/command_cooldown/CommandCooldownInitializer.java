@@ -14,7 +14,7 @@ import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.command.BeforeCommandExecutionEvent;
+import io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPreEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.config.model.CommandCooldownConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.config.model.NamedCooldownDataModel;
@@ -209,7 +209,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         "Issue `/run as player @s heal` command twice, the command cooldown should be performed."
     })
     @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority = EventConsumer.LOWER)
-    private static void consumeBeforeCommandExecutionEvent(BeforeCommandExecutionEvent event) {
+    private static void consumeBeforeCommandExecutionEvent(CommandExecutionPreEvent event) {
         Boolean cancelled = event.getCallback().map(CallbackInfo::isCancelled).orElse(false);
         if (cancelled) return;
 

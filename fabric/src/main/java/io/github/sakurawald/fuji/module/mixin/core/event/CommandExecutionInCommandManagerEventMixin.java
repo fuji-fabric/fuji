@@ -5,8 +5,8 @@ import io.github.sakurawald.auxiliary.WeaverUtil;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.event.EventManager;
 import io.github.sakurawald.fuji.core.event.annotation.EventProducer;
-import io.github.sakurawald.fuji.core.event.message.command.AfterCommandExecutionEvent;
-import io.github.sakurawald.fuji.core.event.message.command.BeforeCommandExecutionEvent;
+import io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPostEvent;
+import io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPreEvent;
 import net.minecraft.server.command.CommandManager;
 import org.spongepowered.asm.mixin.Mixin;
 #if MC_VER <= MC_1_20_2
@@ -32,8 +32,8 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
     In MC <= 1.20.2, the CommandManager#execute calls the CommandDispatcher#execute directly.
     In MC > 1.20.2, Mojang introduce the command execution control for game commands, so the CommandManager#execute will not call the CommandDispatcher#execute directly.
     """)
-@EventProducer(BeforeCommandExecutionEvent.class)
-@EventProducer(AfterCommandExecutionEvent.class)
+@EventProducer(CommandExecutionPreEvent.class)
+@EventProducer(CommandExecutionPostEvent.class)
 @PhasedMixinTemplate
 @Mixin(value = CommandManager.class)
 public class CommandExecutionInCommandManagerEventMixin {
@@ -48,8 +48,8 @@ public class CommandExecutionInCommandManagerEventMixin {
         Optional<CallbackInfo> callbackInfo = Optional.of(ci);
         Optional<Integer> commandReturnValue = Optional.empty();
 
-        BeforeCommandExecutionEvent event = new BeforeCommandExecutionEvent(this, commandSource, commandString, callbackInfo, commandReturnValue);
-        EventManager.dispatchEvent(BeforeCommandExecutionEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
+        CommandExecutionPreEvent event = new CommandExecutionPreEvent(this, commandSource, commandString, callbackInfo, commandReturnValue);
+        EventManager.dispatchEvent(CommandExecutionPreEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
     }
     #endif
 
@@ -81,8 +81,8 @@ public class CommandExecutionInCommandManagerEventMixin {
             Optional<CallbackInfo> callbackInfo = Optional.empty();
             Optional<Integer> commandReturnValue = Optional.of(returnValue);
 
-            AfterCommandExecutionEvent event = new AfterCommandExecutionEvent(this, commandSource, commandString, callbackInfo, commandReturnValue);
-            EventManager.dispatchEvent(AfterCommandExecutionEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
+            CommandExecutionPostEvent event = new CommandExecutionPostEvent(this, commandSource, commandString, callbackInfo, commandReturnValue);
+            EventManager.dispatchEvent(CommandExecutionPostEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
         };
     }
 

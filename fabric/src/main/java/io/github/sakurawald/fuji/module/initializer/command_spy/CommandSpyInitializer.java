@@ -9,7 +9,7 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.command.BeforeCommandExecutionEvent;
+import io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPreEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_spy.config.model.CommandSpyConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_spy.config.transformer.CommandSpySchemaV1Transformer;
@@ -79,7 +79,7 @@ public class CommandSpyInitializer extends ModuleInitializer {
     }
 
     @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority = EventConsumer.LOWEST)
-    private static void consumeBeforeCommandExecutionEvent(BeforeCommandExecutionEvent event) {
+    private static void consumeBeforeCommandExecutionEvent(CommandExecutionPreEvent event) {
         CommandSpyInitializer.processCommandSpy(
             event.getCommandSource(),
             event.getCommandString()

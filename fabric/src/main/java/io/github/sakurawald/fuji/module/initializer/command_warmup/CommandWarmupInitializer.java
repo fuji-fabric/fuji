@@ -9,7 +9,7 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.command.BeforeCommandExecutionEvent;
+import io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPreEvent;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarManager;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarTicket;
 import io.github.sakurawald.fuji.core.structure.Tags;
@@ -105,7 +105,7 @@ public class CommandWarmupInitializer extends ModuleInitializer {
     }
 
     @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority = EventConsumer.LOWEST)
-    private static void consumeCommandExecutionPreEvent(BeforeCommandExecutionEvent event) {
+    private static void consumeCommandExecutionPreEvent(CommandExecutionPreEvent event) {
         event
             .getCallback()
             .ifPresentOrElse(callbackInfo -> {

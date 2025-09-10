@@ -7,9 +7,9 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @ToString(callSuper = true)
-public class BeforeCommandExecutionEvent extends AbstractCommandExecutionEvent {
+public class CommandExecutionPreEvent extends AbstractCommandExecutionEvent {
 
-    public BeforeCommandExecutionEvent(@NotNull Object commandExecutor, @NotNull ServerCommandSource commandSource, @NotNull String commandString, @NotNull Optional<CallbackInfo> callback, @NotNull Optional<Integer> commandReturnValue) {
+    public CommandExecutionPreEvent(@NotNull Object commandExecutor, @NotNull ServerCommandSource commandSource, @NotNull String commandString, @NotNull Optional<CallbackInfo> callback, @NotNull Optional<Integer> commandReturnValue) {
         super(commandExecutor, commandSource, commandString, callback, commandReturnValue);
     }
 }

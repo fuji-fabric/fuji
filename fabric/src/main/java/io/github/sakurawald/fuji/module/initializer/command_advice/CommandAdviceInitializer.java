@@ -11,8 +11,8 @@ import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.command.AfterCommandExecutionEvent;
-import io.github.sakurawald.fuji.core.event.message.command.BeforeCommandExecutionEvent;
+import io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPostEvent;
+import io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPreEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_advice.config.model.CommandAdviceConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_advice.config.transformer.CommandAdviceV1SchemaTransformer;
@@ -237,12 +237,12 @@ public class CommandAdviceInitializer extends ModuleInitializer {
     }
 
     @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.HIGHEST)
-    private static void consumeBeforeCommandExecutionEvent(BeforeCommandExecutionEvent event) {
+    private static void consumeBeforeCommandExecutionEvent(CommandExecutionPreEvent event) {
         CommandAdviceInitializer.processCommandAdvice(event.getCommandExecutor(), event.getCommandSource(), event.getCommandString(), CommandAdviceType.BEFORE_EXECUTION, event.getCallback(), event.getCommandReturnValue());
     }
 
     @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.HIGHEST)
-    private static void consumeAfterCommandExecutionEvent(AfterCommandExecutionEvent event) {
+    private static void consumeAfterCommandExecutionEvent(CommandExecutionPostEvent event) {
         event
             .getCommandReturnValue()
             .ifPresent(commandReturnValue -> {

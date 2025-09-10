@@ -14,8 +14,8 @@ import io.github.sakurawald.auxiliary.WeaverUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.event.EventManager;
 import io.github.sakurawald.fuji.core.event.annotation.EventProducer;
-import io.github.sakurawald.fuji.core.event.message.command.AfterCommandExecutionEvent;
-import io.github.sakurawald.fuji.core.event.message.command.BeforeCommandExecutionEvent;
+import io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPostEvent;
+import io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPreEvent;
 import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,7 +29,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = CommandDispatcher.class, remap = false)
 public class CommandExecutionInCommandDispatcherEventMixin {
 
-    @EventProducer(BeforeCommandExecutionEvent.class)
+    @EventProducer(CommandExecutionPreEvent.class)
     #if MC_VER <= MC_1_20_2
     @Inject(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/Command;run(Lcom/mojang/brigadier/context/CommandContext;)I"), cancellable = true)
     #elif MC_VER > MC_1_20_2
@@ -40,12 +40,12 @@ public class CommandExecutionInCommandDispatcherEventMixin {
             String commandString = parseResults.getReader().getString();
             Optional<CallbackInfo> callbackInfo = Optional.of(cir);
             Optional<Integer> commandReturnValue = Optional.empty();
-            BeforeCommandExecutionEvent event = new BeforeCommandExecutionEvent(this, serverCommandSource, commandString, callbackInfo, commandReturnValue);
-            EventManager.dispatchEvent(BeforeCommandExecutionEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
+            CommandExecutionPreEvent event = new CommandExecutionPreEvent(this, serverCommandSource, commandString, callbackInfo, commandReturnValue);
+            EventManager.dispatchEvent(CommandExecutionPreEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
         });
     }
 
-    @EventProducer(AfterCommandExecutionEvent.class)
+    @EventProducer(CommandExecutionPostEvent.class)
     #if MC_VER <= MC_1_20_2
     @ModifyExpressionValue(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/Command;run(Lcom/mojang/brigadier/context/CommandContext;)I"))
     int produceAfterCommandExecutionInCommandDispatcherEvent(int original, @Local(argsOnly = true) ParseResults<ServerCommandSource> parseResults)
@@ -57,8 +57,8 @@ public class CommandExecutionInCommandDispatcherEventMixin {
         CommandHelper.Source.withServerCommandSource(parseResults.getContext(), (serverCommandSource) -> {
             String commandString = parseResults.getReader().getString();
             Optional<CallbackInfo> callbackInfo = Optional.empty();
-            AfterCommandExecutionEvent event = new AfterCommandExecutionEvent(this, serverCommandSource, commandString, callbackInfo, Optional.of(original));
-            EventManager.dispatchEvent(AfterCommandExecutionEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
+            CommandExecutionPostEvent event = new CommandExecutionPostEvent(this, serverCommandSource, commandString, callbackInfo, Optional.of(original));
+            EventManager.dispatchEvent(CommandExecutionPostEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
         });
 
         return original;
