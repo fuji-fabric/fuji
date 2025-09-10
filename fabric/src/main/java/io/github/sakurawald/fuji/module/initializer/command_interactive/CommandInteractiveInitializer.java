@@ -1,22 +1,29 @@
 package io.github.sakurawald.fuji.module.initializer.command_interactive;
 
-import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
+import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerInteractBlockPreEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import net.minecraft.block.AbstractSignBlock;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.SignBlockEntity;
+import net.minecraft.block.entity.SignText;
 import net.minecraft.server.network.ServerPlayerEntity;
-
-#if MC_VER <= MC_1_20_4
-import java.time.Instant;
-import java.util.BitSet;
-import net.minecraft.network.message.ArgumentSignatureDataMap;
-import net.minecraft.network.message.LastSeenMessageList;
-#endif
-
-import java.util.HashSet;
-import java.util.Set;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751824965598L, value = """
     This module allows you to write commands in `sign` block.
@@ -44,40 +51,60 @@ import java.util.Set;
 @TestCase(action = "Enable `command_warmup` module, issue `/say hi` command.", targets = "It should work with signed argument type.")
 public class CommandInteractiveInitializer extends ModuleInitializer {
 
-    // NOTE: It's annoy, see https://gist.github.com/kennytv/ed783dd244ca0321bbd882c347892874
-    private static final Set<Packet<?>> TRUSTED_PACKETS = new HashSet<>();
+    private static final String COMMAND_STRING_SPLIT_CHARACTER = "/";
 
-    public static void addTrustedPacket(Packet<?> packet) {
-        TRUSTED_PACKETS.add(packet);
+    private static @NotNull String mapSignTextIntoString(@NotNull SignText signText) {
+        return Arrays.stream(signText.getMessages(false))
+            .map(Text::getString)
+            .reduce("", String::concat);
     }
 
-    public static void removeTrustedPacket(Packet<?> packet) {
-        TRUSTED_PACKETS.remove(packet);
+    private static @NotNull List<String> splitCommands(@NotNull String string) {
+        /* Remove leading comment string. */
+        int left = string.indexOf(COMMAND_STRING_SPLIT_CHARACTER);
+        string = string.substring(left + 1);
+
+        /* Split commands. */
+        String[] split = string.split(COMMAND_STRING_SPLIT_CHARACTER);
+        return Arrays.stream(split).map(String::trim).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public static boolean isTrustedPacket(Packet<?> packet) {
-        return TRUSTED_PACKETS.contains(packet);
+    private static boolean canUseInteractiveCommand(@NotNull ServerPlayerEntity player) {
+        return player.isSneaking();
     }
 
-    @SuppressWarnings("UnnecessaryLocalVariable")
-    private static CommandExecutionC2SPacket makeCommandExecutionPacket(String commandString) {
-        #if MC_VER <= MC_1_20_4
-        var ack = new LastSeenMessageList.Acknowledgment(0, new BitSet());
-        CommandExecutionC2SPacket packet = new CommandExecutionC2SPacket(commandString, Instant.now(), 0L, ArgumentSignatureDataMap.EMPTY, ack);
-        #elif MC_VER > MC_1_20_4
-        CommandExecutionC2SPacket packet = new CommandExecutionC2SPacket(commandString);
-        #endif
-        return packet;
+    @EventConsumer(injectorPriority = EventConsumer.LOWER, consumerPriority = EventConsumer.LOWER)
+    private static void consumePlayerInteractBlockPreEvent(PlayerInteractBlockPreEvent event) {
+        if (event.getCallbackInfoReturnable().isCancelled()) return;
+
+        World world = event.getWorld();
+        BlockPos blockPos = event.getBlockHitResult().getBlockPos();
+        BlockState blockState = world.getBlockState(blockPos);
+        if (!(blockState.getBlock() instanceof AbstractSignBlock)) return;
+
+        /* Check if the player can use interactive command now. */
+        ServerPlayerEntity player = event.getPlayer();
+        if (CommandInteractiveInitializer.canUseInteractiveCommand(player)) return;
+
+        /* Extract the sign lines from the sign block. */
+        BlockEntity interactingBlockEntity = world.getBlockEntity(blockPos);
+        if (interactingBlockEntity instanceof SignBlockEntity signBlockEntity) {
+            SignText facingSignText = signBlockEntity.getText(signBlockEntity.isPlayerFacingFront(player));
+            String facingSignLines = CommandInteractiveInitializer.mapSignTextIntoString(facingSignText);
+            if (facingSignLines.contains(CommandInteractiveInitializer.COMMAND_STRING_SPLIT_CHARACTER)) {
+                /* Consume this interaction. */
+                event.getCallbackInfoReturnable().setReturnValue(ActionResult.CONSUME);
+
+                /* Execute commands as the player. */
+                List<String> commands = CommandInteractiveInitializer.splitCommands(facingSignLines)
+                    .stream()
+                    .map(str -> TextHelper.Parsers.parsePlaceholderString(player, str))
+                    .toList();
+                commands.forEach(commandString -> {
+                    CommandExecutor.executeSingle(ExtendedCommandSource.asPlayer(player.getCommandSource(), player), commandString);
+                });
+            }
+        }
     }
 
-    public static void mimicCommandExecutionPacket(ServerPlayerEntity player, String commandString) {
-        /* Make command execution packet. */
-        CommandExecutionC2SPacket packet = makeCommandExecutionPacket(commandString);
-
-        /* Trust the packet. */
-        addTrustedPacket(packet);
-
-        // NOTE: Call the method directly to simulate a c2s packet.
-        player.networkHandler.onCommandExecution(packet);
-    }
 }

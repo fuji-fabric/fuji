@@ -321,7 +321,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
             });
     }
 
-    @EventConsumer
+    @EventConsumer(injectorPriority = EventConsumer.LOWER, consumerPriority = EventConsumer.LOWEST)
     private static void consumePlayerInteractBlockPreEvent(PlayerInteractBlockPreEvent event) {
         if (event.getCallbackInfoReturnable().isCancelled()) return;
 

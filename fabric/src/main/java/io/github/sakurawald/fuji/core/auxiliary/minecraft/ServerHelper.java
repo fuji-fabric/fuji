@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
+import java.util.function.Consumer;
 import lombok.Getter;
 import lombok.Setter;
 import net.fabricmc.api.EnvType;
@@ -10,6 +11,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,10 +64,14 @@ public class ServerHelper {
         Then some functions will be called twice.
         One for ClientPlayerEntity, one for ServerPlayerEntity.
         """)
-    public static void withServerPlayerEntity(@Nullable PlayerEntity player, @NotNull Runnable runnable) {
+    public static void withServerPlayerEntity(@Nullable PlayerEntity player, @NotNull Consumer<ServerPlayerEntity> consumer) {
         if (player == null) return;
         if (!PlayerHelper.isServerPlayer(player)) return;
-        runnable.run();
+        consumer.accept((ServerPlayerEntity) player);
+    }
+
+    public static void withServerPlayerEntity(@Nullable PlayerEntity player, @NotNull Runnable runnable) {
+        withServerPlayerEntity(player, (serverPlayerEntity) -> runnable.run());
     }
 
     public static @NotNull ModContainer getSelfModContainer() {

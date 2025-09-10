@@ -20,8 +20,6 @@
     "command_event.BlockMixin",
     "command_event.PlayerListManagerMixin",
     "command_event.ServerPlayerEntityMixin",
-    "command_interactive.AbstractSignBlockMixin",
-    "command_interactive.ServerPlayNetworkHandlerMixin",
     "command_permission.CommandNodeMixin",
     "command_toolbox.hat.LivingEntityMixin",
     "command_toolbox.hat.PlayerScreenHandlerMixin",
