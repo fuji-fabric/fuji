@@ -14,7 +14,7 @@ public class UnnamedCooldownService {
     private static final Map<String, Cooldown<String>> playerName2UnnamedCooldown = new HashMap<>();
 
     public static Map<String, Long> listUnnamedCooldowns() {
-        return CommandCooldownInitializer.config.model().unnamed_cooldown;
+        return CommandCooldownInitializer.config.model().getUnnamedCooldown();
     }
 
     public static long computeRemainingUnnamedCooldownDuration(@NotNull ServerPlayerEntity player, @NotNull String commandLine) {

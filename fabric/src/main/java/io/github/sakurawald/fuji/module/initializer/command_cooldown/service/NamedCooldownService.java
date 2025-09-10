@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 public class NamedCooldownService {
 
     public static Map<String, NamedCooldownDescriptor> getNamedCooldownDescriptors() {
-        return CommandCooldownInitializer.config.model().namedCooldown.list;
+        return CommandCooldownInitializer.config.model().getNamedCooldown().getList();
     }
 
     public static Optional<NamedCooldownDescriptor> findNamedCooldownDescriptor(@NotNull String id) {

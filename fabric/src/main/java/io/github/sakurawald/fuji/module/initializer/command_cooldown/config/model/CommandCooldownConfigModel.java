@@ -6,7 +6,11 @@ import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.N
 
 import java.util.HashMap;
 import java.util.Map;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 public class CommandCooldownConfigModel {
 
     @Document(id = 1751826371102L, value = """
@@ -16,7 +20,7 @@ public class CommandCooldownConfigModel {
         And the `cooldown ms` for that `target command`.
         """)
     @SerializedName(value = "unnamed_cooldown", alternate = "regex2ms")
-    public Map<String, Long> unnamed_cooldown = new HashMap<>() {
+    Map<String, Long> unnamedCooldown = new HashMap<>() {
         {
             this.put("chunks.*", 60 * 1000L);
             this.put("rtp.*", 60 * 1000L);
@@ -27,8 +31,11 @@ public class CommandCooldownConfigModel {
     @Document(id = 1751826373554L, value = """
         The `named cooldown` is created by `/command-cooldown create` command.
         """)
-    public NamedCooldown namedCooldown = new NamedCooldown();
+    NamedCooldown namedCooldown = new NamedCooldown();
+
+    @Data
+    @NoArgsConstructor
     public static class NamedCooldown {
-        public Map<String, NamedCooldownDescriptor> list = new HashMap<>();
+        Map<String, NamedCooldownDescriptor> list = new HashMap<>();
     }
 }

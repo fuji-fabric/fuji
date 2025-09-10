@@ -36,7 +36,7 @@ public class DoctorInitializer extends ModuleInitializer {
             .forEach(diagnosisBuilder::append);
         String diagnosis = diagnosisBuilder.toString();
         if (diagnosis.isBlank()) {
-            diagnosis = "None";
+            diagnosis = "None, see logs above for details.";
         }
 
         String formatString = """
