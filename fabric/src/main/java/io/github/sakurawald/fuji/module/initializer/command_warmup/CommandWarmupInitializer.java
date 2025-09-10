@@ -1,21 +1,27 @@
 package io.github.sakurawald.fuji.module.initializer.command_warmup;
 
-import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
-import io.github.sakurawald.fuji.core.manager.Managers;
-import io.github.sakurawald.fuji.core.structure.Tags;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.command.BeforeCommandExecutionEvent;
+import io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarManager;
+import io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarTicket;
+import io.github.sakurawald.fuji.core.structure.Tags;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_warmup.config.model.CommandWarmupConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_warmup.config.transformer.CommandWarmupV1SchemaTransformer;
 import io.github.sakurawald.fuji.module.initializer.command_warmup.structure.CommandWarmupNode;
 import io.github.sakurawald.fuji.module.initializer.command_warmup.structure.CommandWarmupTicket;
+import java.util.Optional;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Document(id = 1751826885335L, value = """
@@ -55,7 +61,7 @@ public class CommandWarmupInitializer extends ModuleInitializer {
         .ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandWarmupConfigModel.class)
         .installTransformer(new CommandWarmupV1SchemaTransformer());
 
-    public static void processCommandWarmup(ServerPlayerEntity player, String commandString, CallbackInfo ci) {
+    private static void processCommandWarmup(@NotNull ServerPlayerEntity player, @NotNull String commandString, @NotNull CallbackInfo callbackInfo) {
         LogUtil.debug("Process command warmup: player = {}, command = {}", PlayerHelper.getPlayerName(player), commandString);
 
         /* Iterate the node entries. */
@@ -63,7 +69,7 @@ public class CommandWarmupInitializer extends ModuleInitializer {
         for (CommandWarmupNode entry : config.rules) {
 
             /* Test if we should bypass this warmup entry. */
-            if (Tags.hasAnyTagPermission(player,"command_warmup.bypass", entry.getTags())) {
+            if (Tags.hasAnyTagPermission(player, "command_warmup.bypass", entry.getTags())) {
                 continue;
             }
 
@@ -74,18 +80,43 @@ public class CommandWarmupInitializer extends ModuleInitializer {
                     break;
                 }
 
-                // Submit the command warmup ticket.
-                Managers.getBossBarManager().addTicket(CommandWarmupTicket.make(player, commandString, entry));
+                Optional<CommandWarmupTicket> commandWarmupTicket = BossBarManager.findBossbarTicket(CommandWarmupTicket.class, player);
+                commandWarmupTicket
+                    .filter(BossBarTicket::isCompleted)
+                    .ifPresentOrElse(it -> {
+                        // Now do the command execution.
+                    }, () -> {
+                        // Submit the command warmup ticket.
+                        BossBarManager.addTicket(CommandWarmupTicket.make(player, commandString, entry));
 
-                // Send warning for movement.
-                if (config.warn_for_move) {
-                    TextHelper.sendTextByKey(player, "command_warmup.warn_for_move", entry.getInterruptible().getInterruptDistance());
-                }
+                        // Send warning for movement.
+                        if (config.warn_for_move) {
+                            TextHelper.sendTextByKey(player, "command_warmup.warn_for_move", entry.getInterruptible().getInterruptDistance());
+                        }
 
-                // Cancel the issue of command string.
-                ci.cancel();
+                        // Cancel the issue of command string.
+                        callbackInfo.cancel();
+                    });
+
+                /* Apply the first matched rule. */
                 break;
             }
         }
+    }
+
+    @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority = EventConsumer.LOWEST)
+    private static void consumeCommandExecutionPreEvent(BeforeCommandExecutionEvent event) {
+        event
+            .getCallback()
+            .ifPresentOrElse(callbackInfo -> {
+                if (callbackInfo.isCancelled()) return;
+                ServerCommandSource commandSource = event.getCommandSource();
+                if (CommandHelper.Requirement.isAdmin(commandSource)) return;
+
+                CommandHelper.Source.withServerPlayerEntity(commandSource, player -> {
+                    processCommandWarmup(player, event.getCommandString(), callbackInfo);
+                });
+            }, () -> LogUtil.warn("Failed to perform the command warmup, the Callback instance is null. (event = {})", event));
+
     }
 }
