@@ -25,6 +25,7 @@ public class AntiBuildConfigModel {
         @Data
         @NoArgsConstructor
         public static class BreakBlock {
+            boolean enable = true;
             Set<String> id = new HashSet<>() {
                 {
                     this.add("minecraft:gold_block");
@@ -35,6 +36,7 @@ public class AntiBuildConfigModel {
         @Data
         @NoArgsConstructor
         public static class PlaceBlock {
+            boolean enable = true;
             Set<String> id = new HashSet<>() {
                 {
                     this.add("minecraft:tnt");
@@ -45,6 +47,7 @@ public class AntiBuildConfigModel {
         @Data
         @NoArgsConstructor
         public static class InteractItem {
+            boolean enable = true;
             Set<String> id = new HashSet<>() {
                 {
                     this.add("minecraft:lava_bucket");
@@ -55,6 +58,7 @@ public class AntiBuildConfigModel {
         @Data
         @NoArgsConstructor
         public static class InteractBlock {
+            boolean enable = true;
             Set<String> id = new HashSet<>() {
                 {
                     this.add("minecraft:lever");
@@ -65,6 +69,7 @@ public class AntiBuildConfigModel {
         @Data
         @NoArgsConstructor
         public static class InteractEntity {
+            boolean enable = true;
             Set<String> id = new HashSet<>() {
                 {
                     this.add("minecraft:villager");
@@ -76,6 +81,7 @@ public class AntiBuildConfigModel {
         @Data
         @NoArgsConstructor
         public static class AttackEntity {
+            boolean enable = true;
             Set<String> id = new HashSet<>() {
                 {
                     this.add("minecraft:villager");

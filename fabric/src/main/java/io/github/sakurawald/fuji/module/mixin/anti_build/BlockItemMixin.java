@@ -19,10 +19,13 @@ public class BlockItemMixin {
 
     @Inject(method = "canPlace", at = @At("RETURN"), cancellable = true)
     void handlePlaceBlock(@NotNull ItemPlacementContext itemPlacementContext, BlockState blockState, @NotNull CallbackInfoReturnable<Boolean> cir) {
+        var config = AntiBuildInitializer.config.model().getAnti().getPlaceBlock();
+        if (!config.isEnable()) return;
+
         @Nullable PlayerEntity player = itemPlacementContext.getPlayer();
         String id = RegistryHelper.getIdAsString(itemPlacementContext.getStack());
         Hand hand = itemPlacementContext.getHand();
 
-        AntiBuildInitializer.processAntiBuild(player, "place_block", AntiBuildInitializer.config.model().getAnti().getPlaceBlock().getId(), id, cir, false, () -> hand == Hand.MAIN_HAND);
+        AntiBuildInitializer.processAntiBuild(player, "place_block", config.getId(), id, cir, false, () -> hand == Hand.MAIN_HAND);
     }
 }

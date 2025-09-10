@@ -141,10 +141,12 @@ public class AntiBuildInitializer extends ModuleInitializer {
     @EventConsumer
     private static void consumePlayerBlockBreakPreEvent(PlayerBlockBreakPreEvent event) {
         if (event.getCallbackInfoReturnable().isCancelled()) return;
+        var config = AntiBuildInitializer.config.model().getAnti().getBreakBlock();
+        if (!config.isEnable()) return;
 
         BlockState blockState = event.getWorld().getBlockState(event.getBlockPos());
         String id = RegistryHelper.getIdAsString(blockState);
 
-        AntiBuildInitializer.processAntiBuild(event.getPlayer(), "break_block", AntiBuildInitializer.config.model().getAnti().getBreakBlock().getId(), id, event.getCallbackInfoReturnable(), false, () -> true);
+        AntiBuildInitializer.processAntiBuild(event.getPlayer(), "break_block", config.getId(), id, event.getCallbackInfoReturnable(), false, () -> true);
     }
 }

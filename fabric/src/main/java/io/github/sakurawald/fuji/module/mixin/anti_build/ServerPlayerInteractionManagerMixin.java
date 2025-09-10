@@ -32,18 +32,24 @@ public class ServerPlayerInteractionManagerMixin {
 
     @Inject(method = "interactItem", at = @At("HEAD"), cancellable = true)
     void handleInteractItem(ServerPlayerEntity serverPlayerEntity, World world, @NotNull ItemStack itemStack, Hand hand, @NotNull CallbackInfoReturnable<ActionResult> cir) {
+        var config = AntiBuildInitializer.config.model().getAnti().getInteractItem();
+        if (!config.isEnable()) return;
+
         String id = RegistryHelper.getIdAsString(itemStack);
 
-        AntiBuildInitializer.processAntiBuild(player, "interact_item", AntiBuildInitializer.config.model().getAnti().getInteractItem().getId(), id, cir, ActionResult.FAIL, () -> true);
+        AntiBuildInitializer.processAntiBuild(player, "interact_item", config.getId(), id, cir, ActionResult.FAIL, () -> true);
     }
 
     @Inject(method = "interactBlock", at = @At("HEAD"), cancellable = true)
     void handleInteractBlock(ServerPlayerEntity serverPlayerEntity, @NotNull World world, ItemStack itemStack, Hand hand, @NotNull BlockHitResult blockHitResult, @NotNull CallbackInfoReturnable<ActionResult> cir) {
+        var config = AntiBuildInitializer.config.model().getAnti().getInteractBlock();
+        if (!config.isEnable()) return;
+
         BlockPos blockPos = blockHitResult.getBlockPos();
         BlockState blockState = world.getBlockState(blockPos);
         String id = RegistryHelper.getIdAsString(blockState);
 
-        AntiBuildInitializer.processAntiBuild(player, "interact_block", AntiBuildInitializer.config.model().getAnti().getInteractBlock().getId(), id, cir, ActionResult.FAIL, () -> true);
+        AntiBuildInitializer.processAntiBuild(player, "interact_block", config.getId(), id, cir, ActionResult.FAIL, () -> true);
     }
 
 }

@@ -14,9 +14,12 @@ public class ServerPlayerEntityMixin {
 
     @Inject(method = "attack", at = @At("HEAD"), cancellable = true)
     void handleAttackEntity(Entity entity, CallbackInfo ci) {
+        var config = AntiBuildInitializer.config.model().getAnti().getAttackEntity();
+        if (!config.isEnable()) return;
+
         ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) (Object) this;
         String id = RegistryHelper.getIdAsString(entity);
-        AntiBuildInitializer.processAntiBuild(serverPlayerEntity, "attack_entity", AntiBuildInitializer.config.model().getAnti().getAttackEntity().getId(), id, ci::cancel, () -> true);
+        AntiBuildInitializer.processAntiBuild(serverPlayerEntity, "attack_entity", config.getId(), id, ci::cancel, () -> true);
     }
 
 }
