@@ -11,12 +11,14 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerBlockBreakPreEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerInteractItemPreEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.anti_build.config.model.AntiBuildConfigModel;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import net.luckperms.api.util.Tristate;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ActionResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -148,5 +150,15 @@ public class AntiBuildInitializer extends ModuleInitializer {
         String id = RegistryHelper.getIdAsString(blockState);
 
         AntiBuildInitializer.processAntiBuild(event.getPlayer(), "break_block", config.getId(), id, event.getCallbackInfoReturnable(), false, () -> true);
+    }
+
+    @EventConsumer
+    private static void consumePlayerInteractItemPreEvent(PlayerInteractItemPreEvent event) {
+        if (event.getCallbackInfoReturnable().isCancelled()) return;
+        var config = AntiBuildInitializer.config.model().getAnti().getInteractItem();
+        if (!config.isEnable()) return;
+
+        String id = RegistryHelper.getIdAsString(event.getItemStack());
+        AntiBuildInitializer.processAntiBuild(event.getPlayer(), "interact_item", config.getId(), id, event.getCallbackInfoReturnable(), ActionResult.FAIL, () -> true);
     }
 }

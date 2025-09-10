@@ -30,16 +30,6 @@ public class ServerPlayerInteractionManagerMixin {
     @Final
     protected ServerPlayerEntity player;
 
-    @Inject(method = "interactItem", at = @At("HEAD"), cancellable = true)
-    void handleInteractItem(ServerPlayerEntity serverPlayerEntity, World world, @NotNull ItemStack itemStack, Hand hand, @NotNull CallbackInfoReturnable<ActionResult> cir) {
-        var config = AntiBuildInitializer.config.model().getAnti().getInteractItem();
-        if (!config.isEnable()) return;
-
-        String id = RegistryHelper.getIdAsString(itemStack);
-
-        AntiBuildInitializer.processAntiBuild(player, "interact_item", config.getId(), id, cir, ActionResult.FAIL, () -> true);
-    }
-
     @Inject(method = "interactBlock", at = @At("HEAD"), cancellable = true)
     void handleInteractBlock(ServerPlayerEntity serverPlayerEntity, @NotNull World world, ItemStack itemStack, Hand hand, @NotNull BlockHitResult blockHitResult, @NotNull CallbackInfoReturnable<ActionResult> cir) {
         var config = AntiBuildInitializer.config.model().getAnti().getInteractBlock();

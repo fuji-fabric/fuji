@@ -17,6 +17,7 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerActionEvent;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerBlockBreakPreEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerInteractItemPreEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.ExecuteAsType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
@@ -303,6 +304,17 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
             .ifPresent(it -> {
                 event.getCallbackInfoReturnable().setReturnValue(false);
                 TextHelper.sendTextByKey(player, "command_attachment.protect");
+            });
+    }
+
+    @EventConsumer
+    private static void consumePlayerInteractItemPreEvent(PlayerInteractItemPreEvent event) {
+        if (event.getCallbackInfoReturnable().isCancelled()) return;
+
+        UuidHelper
+            .getAttachedUuid(ItemStackHelper.CustomData.getCustomDataNbt(event.getItemStack()))
+            .ifPresent($uuid -> {
+                CommandAttachmentService.tryTriggerAttachmentDataNode($uuid, event.getPlayer(), List.of(InteractType.RIGHT_CLICK, InteractType.ANY_CLICK), () -> {});
             });
     }
 }

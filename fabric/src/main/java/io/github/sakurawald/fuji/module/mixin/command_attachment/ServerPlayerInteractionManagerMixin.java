@@ -1,7 +1,6 @@
 package io.github.sakurawald.fuji.module.mixin.command_attachment;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.UuidHelper;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.service.CommandAttachmentService;
@@ -29,15 +28,6 @@ public class ServerPlayerInteractionManagerMixin {
     @Shadow
     @Final
     protected ServerPlayerEntity player;
-
-    @Inject(method = "interactItem", at = @At("HEAD"))
-    void onPlayerRightClick(ServerPlayerEntity serverPlayerEntity, World world, @NotNull ItemStack itemStack, Hand hand, @NotNull CallbackInfoReturnable<ActionResult> cir) {
-        UuidHelper
-            .getAttachedUuid(ItemStackHelper.CustomData.getCustomDataNbt(itemStack))
-            .ifPresent($uuid -> {
-                CommandAttachmentService.tryTriggerAttachmentDataNode($uuid, player, List.of(InteractType.RIGHT_CLICK, InteractType.ANY_CLICK), () -> {});
-            });
-    }
 
     #if MC_VER <= MC_1_20_4
     @Inject(method = "method_41250", at = @At("HEAD"))
