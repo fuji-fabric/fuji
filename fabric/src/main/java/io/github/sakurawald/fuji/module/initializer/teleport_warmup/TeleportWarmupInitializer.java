@@ -14,6 +14,7 @@ import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerPreTeleportEvent;
 import io.github.sakurawald.fuji.core.manager.Managers;
+import io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarManager;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarTicket;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.core.structure.TeleportTicket;
@@ -93,9 +94,11 @@ public class TeleportWarmupInitializer extends ModuleInitializer {
             .orElse(config.model().warmup_second);
     }
 
-    @EventConsumer(injectorPriority = EventConsumer.LOWEST)
+    @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority =EventConsumer.LOWEST)
     @SuppressWarnings("UnnecessaryReturnStatement")
     private static void handlePlayerPreTeleportEvent(PlayerPreTeleportEvent event) {
+        if (event.getCallbackInfo().isCancelled()) return;
+
         ServerPlayerEntity player = event.getPlayer();
         ServerWorld destinationDimension = event.getDestinationDimension();
 
@@ -118,7 +121,7 @@ public class TeleportWarmupInitializer extends ModuleInitializer {
                 , TeleportWarmupInitializer.config.model().interruptible
                 , event.getPositionFlags()
             );
-            Managers.getBossBarManager().addTicket(teleportTicket);
+            BossBarManager.addTicket(teleportTicket);
             event.getCallbackInfo().cancel();
             return;
         }

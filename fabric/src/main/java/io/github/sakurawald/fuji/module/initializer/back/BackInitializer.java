@@ -208,6 +208,8 @@ public class BackInitializer extends ModuleInitializer {
 
     @EventConsumer
     private static void handlePlayerPreTeleportEvent(PlayerPreTeleportEvent event) {
+        if (event.getCallbackInfo().isCancelled()) return;
+
         if (config.model().enable_back_on_teleport) {
             trySaveCurrentLocation(event.getPlayer());
         }

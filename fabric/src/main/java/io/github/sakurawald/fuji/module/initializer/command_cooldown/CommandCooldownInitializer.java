@@ -210,6 +210,9 @@ public class CommandCooldownInitializer extends ModuleInitializer {
     })
     @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority = EventConsumer.LOWER)
     private static void consumeBeforeCommandExecutionEvent(BeforeCommandExecutionEvent event) {
+        Boolean cancelled = event.getCallback().map(CallbackInfo::isCancelled).orElse(false);
+        if (cancelled) return;
+
         ServerCommandSource commandSource = event.getCommandSource();
         if (CommandHelper.Source.isExecutedByConsole(commandSource)) return;
         if (CommandHelper.Requirement.isAdmin(commandSource)) return;
