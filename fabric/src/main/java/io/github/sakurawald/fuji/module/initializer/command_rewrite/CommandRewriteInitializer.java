@@ -6,6 +6,8 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerCommandIssuePreEvent;
 import io.github.sakurawald.fuji.core.structure.RegexRewriteNode;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_rewrite.config.model.CommandRewriteConfigModel;
@@ -42,9 +44,9 @@ import org.jetbrains.annotations.NotNull;
     """)
 @TestCase(action = "Issue `/home` command.", targets = "It should be rewrite to `/home tp default` command.")
 public class CommandRewriteInitializer extends ModuleInitializer {
-    public static final BaseConfigurationHandler<CommandRewriteConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandRewriteConfigModel.class);
+    private static final BaseConfigurationHandler<CommandRewriteConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandRewriteConfigModel.class);
 
-    public static @NotNull String processCommandRewrite(@NotNull String oldString) {
+    private static @NotNull String processCommandRewrite(@NotNull String oldString) {
         /* Compute effective rewrite rules. */
         List<RegexRewriteNode> effectiveRewriteRules = CommandRewriteInitializer.config.model().rules
             .stream()
@@ -67,5 +69,14 @@ public class CommandRewriteInitializer extends ModuleInitializer {
         }
 
         return oldString;
+    }
+
+    @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority = EventConsumer.LOWEST)
+    private static void consumePlayerCommandIssuePreEvent(PlayerCommandIssuePreEvent event) {
+        if (event.getCallbackInfo().isCancelled()) return;
+
+        String oldValue = event.getCommandString();
+        String newValue = CommandRewriteInitializer.processCommandRewrite(oldValue);
+        event.setCommandString(newValue);
     }
 }

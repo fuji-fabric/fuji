@@ -1,0 +1,37 @@
+package io.github.sakurawald.fuji.module.mixin.core.event;
+
+import com.llamalad7.mixinextras.sugar.Cancellable;
+import io.github.sakurawald.annotation.PhasedMixinTemplate;
+import io.github.sakurawald.auxiliary.WeaverUtil;
+import io.github.sakurawald.fuji.core.event.EventManager;
+import io.github.sakurawald.fuji.core.event.annotation.EventProducer;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerCommandIssuePreEvent;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
+import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@PhasedMixinTemplate
+@Mixin(value = ServerPlayNetworkHandler.class)
+public class PlayerCommandIssuePreEventMixin {
+
+    @Shadow
+    public ServerPlayerEntity player;
+
+    @EventProducer(PlayerCommandIssuePreEvent.class)
+    #if MC_VER <= MC_1_20_4
+       @ModifyExpressionValue(method = "handleCommandExecution", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/c2s/play/CommandExecutionC2SPacket;comp_808()Ljava/lang/String;"))
+       #elif MC_VER > MC_1_20_4
+    @ModifyVariable(method = "executeCommand", at = @At(value = "HEAD"), ordinal = 0, argsOnly = true)
+    #endif
+    String producePlayerCommandIssuePreEvent(@NotNull String commandString, @Cancellable CallbackInfo callbackInfo) {
+        PlayerCommandIssuePreEvent event = new PlayerCommandIssuePreEvent(player, commandString, callbackInfo);
+        EventManager.dispatchEvent(PlayerCommandIssuePreEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
+        return event.getCommandString();
+    }
+
+}
