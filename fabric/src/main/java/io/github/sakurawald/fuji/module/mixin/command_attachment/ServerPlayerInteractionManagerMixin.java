@@ -5,22 +5,15 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.UuidHelper;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.service.CommandAttachmentService;
 import java.util.List;
-import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ServerPlayerInteractionManager.class)
 public class ServerPlayerInteractionManagerMixin {
@@ -38,17 +31,6 @@ public class ServerPlayerInteractionManagerMixin {
         if (string.equals("actual start of destroying")) {
             String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
             CommandAttachmentService.tryTriggerAttachmentDataNode(uuid, player, List.of(InteractType.LEFT_CLICK, InteractType.ANY_CLICK), () -> {});
-        }
-    }
-
-    @Inject(method = "interactBlock", at = @At("HEAD"), cancellable = true)
-    void onPlayerRightClickBlock(ServerPlayerEntity serverPlayerEntity, @NotNull World world, ItemStack itemStack, Hand hand, @NotNull BlockHitResult blockHitResult, @NotNull CallbackInfoReturnable<ActionResult> cir) {
-        if (hand == Hand.MAIN_HAND) {
-            String uuid = UuidHelper.getAttachedUuid(world, blockHitResult.getBlockPos());
-            CommandAttachmentService.tryTriggerAttachmentDataNode(uuid, player, List.of(InteractType.RIGHT_CLICK, InteractType.ANY_CLICK), () -> {
-                // Cancel the action if the target block contains attached commands.
-                cir.setReturnValue(ActionResult.FAIL);
-            });
         }
     }
 

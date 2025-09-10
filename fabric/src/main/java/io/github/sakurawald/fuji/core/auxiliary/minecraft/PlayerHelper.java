@@ -96,6 +96,11 @@ public class PlayerHelper {
         target.networkHandler.disconnect(reasonText);
     }
 
+    public static void dismountRidingEntity(@NotNull ServerPlayerEntity player) {
+        player.setSneaking(true);
+        player.tickRiding();
+    }
+
     public static class Loader {
 
         private static final String DIMENSION_NBT_KEY = "Dimension";

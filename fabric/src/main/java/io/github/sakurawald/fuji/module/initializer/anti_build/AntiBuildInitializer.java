@@ -11,6 +11,7 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerBlockBreakPreEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerInteractBlockPreEvent;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerInteractItemPreEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.anti_build.config.model.AntiBuildConfigModel;
@@ -19,6 +20,7 @@ import net.luckperms.api.util.Tristate;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -140,7 +142,7 @@ public class AntiBuildInitializer extends ModuleInitializer {
             .orElse(false);
     }
 
-    @EventConsumer
+    @EventConsumer(injectorPriority = EventConsumer.LOWEST)
     private static void consumePlayerBlockBreakPreEvent(PlayerBlockBreakPreEvent event) {
         if (event.getCallbackInfoReturnable().isCancelled()) return;
         var config = AntiBuildInitializer.config.model().getAnti().getBreakBlock();
@@ -152,7 +154,7 @@ public class AntiBuildInitializer extends ModuleInitializer {
         AntiBuildInitializer.processAntiBuild(event.getPlayer(), "break_block", config.getId(), id, event.getCallbackInfoReturnable(), false, () -> true);
     }
 
-    @EventConsumer
+    @EventConsumer(injectorPriority = EventConsumer.LOWEST)
     private static void consumePlayerInteractItemPreEvent(PlayerInteractItemPreEvent event) {
         if (event.getCallbackInfoReturnable().isCancelled()) return;
         var config = AntiBuildInitializer.config.model().getAnti().getInteractItem();
@@ -160,5 +162,17 @@ public class AntiBuildInitializer extends ModuleInitializer {
 
         String id = RegistryHelper.getIdAsString(event.getItemStack());
         AntiBuildInitializer.processAntiBuild(event.getPlayer(), "interact_item", config.getId(), id, event.getCallbackInfoReturnable(), ActionResult.FAIL, () -> true);
+    }
+
+    @EventConsumer(injectorPriority = EventConsumer.LOWEST)
+    private static void consumePlayerInteractBlockPreEvent(PlayerInteractBlockPreEvent event) {
+        var config = AntiBuildInitializer.config.model().getAnti().getInteractBlock();
+        if (!config.isEnable()) return;
+
+        BlockPos blockPos = event.getBlockHitResult().getBlockPos();
+        BlockState blockState = event.getWorld().getBlockState(blockPos);
+        String id = RegistryHelper.getIdAsString(blockState);
+
+        AntiBuildInitializer.processAntiBuild(event.getPlayer(), "interact_block", config.getId(), id, event.getCallbackInfoReturnable(), ActionResult.FAIL, () -> true);
     }
 }

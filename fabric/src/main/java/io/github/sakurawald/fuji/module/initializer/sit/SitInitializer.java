@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.sit;
 
 import io.github.sakurawald.fuji.core.annotation.Unused;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Cite;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -14,17 +15,23 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerInteractBlockPreEvent;
 import io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStoppingEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.sit.config.model.SitConfigModel;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.SideShapeType;
+import net.minecraft.block.SlabBlock;
+import net.minecraft.block.StairsBlock;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -221,6 +228,52 @@ public class SitInitializer extends ModuleInitializer {
                 EntityHelper.killEntity(entity);
             }
         });
+    }
+
+    @EventConsumer
+    private static void consumePlayerInteractBlockPreEvent(PlayerInteractBlockPreEvent event) {
+        if (event.getCallbackInfoReturnable().isCancelled()) return;
+        ServerPlayerEntity player = event.getPlayer();
+
+        /* Verify. */
+        var config = SitInitializer.config.model();
+        if (!config.right_click_to_sit.enable) return;
+        if (!config.right_click_to_sit.allow_sneaking_to_sit && player.isSneaking()) return;
+        if (!SitInitializer.canSitNow(player)) return;
+        if (config.right_click_to_sit.require_empty_hand_to_sit && !player.getMainHandStack().isEmpty()) return;
+
+        // Verify surrounding blocks.
+        World world = event.getWorld();
+        BlockHitResult blockHitResult = event.getBlockHitResult();
+        BlockPos hitBlockPos = blockHitResult.getBlockPos();
+        BlockState hitBlockState = world.getBlockState(hitBlockPos);
+        Block hitBlock = hitBlockState.getBlock();
+        if (config.right_click_to_sit.require_no_opaque_block_above_to_sit && world.getBlockState(hitBlockPos.add(0, 1, 0)).isOpaque()) return;
+
+        // Only allow to right-click to sit on stair block or slab block.
+        if (!(hitBlock instanceof StairsBlock) && !(hitBlock instanceof SlabBlock)) return;
+
+        // The face of chair must be up.
+        if (hitBlockState.isSideSolid(world, hitBlockPos, Direction.UP, SideShapeType.RIGID)) return;
+
+        // Verify max distance to sit.
+        final double maxDistanceToSit = config.right_click_to_sit.max_distance_to_sit;
+        double givenDist = hitBlockPos.getSquaredDistance(player.getBlockPos());
+        if (maxDistanceToSit > 0 && givenDist > maxDistanceToSit * maxDistanceToSit) return;
+
+        /* Spawn the chair entity and ride it. */
+        Vec3d lookingTarget = player.getPos().add(0.5, 0, 0.5);
+        Entity chairEntity = SitInitializer.spawnChairEntity(world, hitBlockPos, lookingTarget);
+
+        // Dismount the player if there is another vehicle.
+        Entity currentVehicleEntity = player.getVehicle();
+        if (currentVehicleEntity != null) {
+            PlayerHelper.dismountRidingEntity(player);
+        }
+
+        // Ride the chair entity.
+        player.startRiding(chairEntity, true);
+        event.getCallbackInfoReturnable().setReturnValue(ActionResult.SUCCESS);
     }
 
 }
