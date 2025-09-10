@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Block.class)
 public class BlockMixin {
 
-    @Inject(method = "onPlaced", at = @At("TAIL"))
+    @Inject(method = "onPlaced", at = @At("RETURN"))
     void onBlockPlaced(World world, BlockPos blockPos, BlockState blockState, LivingEntity livingEntity, ItemStack itemStack, CallbackInfo ci) {
         var config = CommandEventInitializer.config.model().getEvent().getAfterPlayerPlaceBlock();
         if (config.isEnable()) {
@@ -34,7 +34,7 @@ public class BlockMixin {
         }
     }
 
-    @Inject(method = "onBreak", at = @At("TAIL"))
+    @Inject(method = "onBreak", at = @At("RETURN"))
     #if MC_VER <= MC_1_20_2
     void onBlockBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity playerEntity, CallbackInfo ci)
     #elif MC_VER > MC_1_20_2

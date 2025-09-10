@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(PlayerManager.class)
 public class PlayerListManagerMixin {
 
-    @Inject(method = "respawnPlayer", at = @At("TAIL"))
+    @Inject(method = "respawnPlayer", at = @At("RETURN"))
     #if MC_VER <= MC_1_20_6
     private void afterRespawn(ServerPlayerEntity oldPlayer, boolean alive, CallbackInfoReturnable<ServerPlayerEntity> cir)
     #elif MC_VER > MC_1_20_6
