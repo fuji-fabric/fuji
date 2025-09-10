@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.anti_build;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
@@ -8,10 +9,13 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerBlockBreakPreEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.anti_build.config.model.AntiBuildConfigModel;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import net.luckperms.api.util.Tristate;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -132,5 +136,15 @@ public class AntiBuildInitializer extends ModuleInitializer {
         return Optional.ofNullable(player)
             .map(p -> LuckpermsHelper.hasPermission(player.getUuid(), ANTI_BUILD_BYPASS_PERMISSION, antiType, id))
             .orElse(false);
+    }
+
+    @EventConsumer
+    private static void consumePlayerBlockBreakPreEvent(PlayerBlockBreakPreEvent event) {
+        if (event.getCallbackInfoReturnable().isCancelled()) return;
+
+        BlockState blockState = event.getWorld().getBlockState(event.getBlockPos());
+        String id = RegistryHelper.getIdAsString(blockState);
+
+        AntiBuildInitializer.processAntiBuild(event.getPlayer(), "break_block", AntiBuildInitializer.config.model().anti.break_block.id, id, event.getCallbackInfoReturnable(), false, () -> true);
     }
 }

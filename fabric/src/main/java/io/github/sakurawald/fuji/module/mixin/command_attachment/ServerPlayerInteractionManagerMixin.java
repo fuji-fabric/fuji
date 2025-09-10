@@ -2,7 +2,6 @@ package io.github.sakurawald.fuji.module.mixin.command_attachment;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.UuidHelper;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.service.CommandAttachmentService;
@@ -10,7 +9,6 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -62,18 +60,6 @@ public class ServerPlayerInteractionManagerMixin {
                 cir.setReturnValue(ActionResult.FAIL);
             });
         }
-    }
-
-    @Inject(method = "tryBreakBlock", at = @At("HEAD"), cancellable = true)
-    void handleBreakBlock(BlockPos blockPos, @NotNull CallbackInfoReturnable<Boolean> cir) {
-        ServerWorld world = EntityHelper.getServerWorld(player);
-        String uuid = UuidHelper.getAttachedUuid(world, blockPos);
-        CommandAttachmentService
-            .findAttachmentDataNode(uuid)
-            .ifPresent(it -> {
-                cir.setReturnValue(false);
-                TextHelper.sendTextByKey(player, "command_attachment.protect");
-            });
     }
 
 }

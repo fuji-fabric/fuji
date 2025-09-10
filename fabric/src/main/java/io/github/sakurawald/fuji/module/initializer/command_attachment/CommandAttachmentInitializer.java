@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.command_attachment;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.UuidHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
@@ -15,6 +16,7 @@ import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerActionEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerBlockBreakPreEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.ExecuteAsType;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
@@ -37,6 +39,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 
 @Document(id = 1751826430284L, value = """
@@ -286,6 +289,20 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
                 });
 
         }
+    }
 
+    @EventConsumer
+    private static void consumePlayerBlockBreakPreEvent(PlayerBlockBreakPreEvent event) {
+        if (event.getCallbackInfoReturnable().isCancelled()) return;
+
+        ServerPlayerEntity player = event.getPlayer();
+        ServerWorld world = EntityHelper.getServerWorld(player);
+        String uuid = UuidHelper.getAttachedUuid(world, event.getBlockPos());
+        CommandAttachmentService
+            .findAttachmentDataNode(uuid)
+            .ifPresent(it -> {
+                event.getCallbackInfoReturnable().setReturnValue(false);
+                TextHelper.sendTextByKey(player, "command_attachment.protect");
+            });
     }
 }

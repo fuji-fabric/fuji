@@ -30,14 +30,6 @@ public class ServerPlayerInteractionManagerMixin {
     @Final
     protected ServerPlayerEntity player;
 
-    @Inject(method = "tryBreakBlock", at = @At("HEAD"), cancellable = true)
-    void handleBreakBlock(BlockPos blockPos, @NotNull CallbackInfoReturnable<Boolean> cir) {
-        BlockState blockState = this.world.getBlockState(blockPos);
-        String id = RegistryHelper.getIdAsString(blockState);
-
-        AntiBuildInitializer.processAntiBuild(player, "break_block", AntiBuildInitializer.config.model().anti.break_block.id, id, cir, false, () -> true);
-    }
-
     @Inject(method = "interactItem", at = @At("HEAD"), cancellable = true)
     void handleInteractItem(ServerPlayerEntity serverPlayerEntity, World world, @NotNull ItemStack itemStack, Hand hand, @NotNull CallbackInfoReturnable<ActionResult> cir) {
         String id = RegistryHelper.getIdAsString(itemStack);
