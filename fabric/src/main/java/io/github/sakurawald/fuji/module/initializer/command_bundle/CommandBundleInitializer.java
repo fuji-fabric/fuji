@@ -172,7 +172,7 @@ public class CommandBundleInitializer extends ModuleInitializer {
         }
 
         LogUtil.info("Register bundle commands.");
-        config.model().getEntries().stream()
+        config.model().getBundleCommands().stream()
             .map(BundleCommandDescriptor.Maker::from)
             .forEach(it -> {
                 LogUtil.info("Register bundle command: {}", it.getCommandSyntax());

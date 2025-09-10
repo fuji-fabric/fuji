@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.command_bundle.config.model;
 
+import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.command.structure.CommandRequirementDescriptor;
 import io.github.sakurawald.fuji.module.initializer.command_bundle.structure.BundleCommandNode;
@@ -16,7 +17,8 @@ public class CommandBundleConfigModel {
     @Document(id = 1751826342919L, value = """
         Defined `bundle commands`.
         """)
-    public List<BundleCommandNode> entries = new ArrayList<>() {
+    @SerializedName(value = "bundle_commands", alternate = "entries")
+    List<BundleCommandNode> bundleCommands = new ArrayList<>() {
         {
             /* Register `/my-command` commands. */
             this.add(new BundleCommandNode("This command is used to test the `optional argument`.", new CommandRequirementDescriptor(4, null), "my-command a-command-with-optional-arg <int int-arg-name> [str str-arg-name this is the default value]", List.of("say hello %player:name%", "say int is $int-arg-name", "say str is $str-arg-name")));
