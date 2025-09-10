@@ -4,11 +4,18 @@
  
 ## Changelog
 
-- [command_cooldown] feature: now the `players with level permission 4` can bypass the `unnmaed command cooldown`.
-  - Make it possible to use `/run as fake-op <player> <cmd>` to bypass the cooldown if needed.
-- [anti_build] Enhance this module
-  - feature: add `enable` option for each `anti type`, making it easier to switch the functionality.
-  - feature: fine-tune the event injection point, for better compatibility with other mods.
-- [command_warmup] Enhance this module
-  - feature: now the `players with level permission 4` can bypass the `command warmup`.
-  - feature: improve the event injection point, for better compatibility with other mods.
+### [command_cooldown]
+- **Feature:** Players with `level permission 4` can now bypass the *unnamed command cooldown*.
+- **Feature:** Added support for `/run as fake-op <player> <cmd>` to bypass the cooldown if needed.
+
+---
+
+### [anti_build]
+- **Feature:** Introduced an `enable` option for each *anti type*, allowing easier control of functionality.
+- **Feature:** Fine-tuned the event injection point for improved compatibility with other mods.
+
+---
+
+### [command_warmup]
+- **Feature:** Players with `level permission 4` can now bypass the *command warmup*.
+- **Feature:** Improved the event injection point for better compatibility with other mods.  
