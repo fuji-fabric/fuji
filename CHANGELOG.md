@@ -4,7 +4,6 @@
  
 ## Changelog
 
-- [doctor] feature: new `doctor` module, to provide `server crash analyzer`.
-  - It can be used to analyze the server crash report, and provide a user-friendly view.
-- [core] feature: use `Java 17` for `MC [1.20, 1.20.4]` versions.
+- [command_cooldown] feature: now the `players with level permission 4` can bypass the `unnmaed command cooldown`.
+  - Make it possible to use `/run as fake-op <player> <cmd>` to bypass the cooldown if needed.
 

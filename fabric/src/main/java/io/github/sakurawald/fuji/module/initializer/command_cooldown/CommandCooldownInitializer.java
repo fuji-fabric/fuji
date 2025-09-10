@@ -25,9 +25,11 @@ import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.N
 import io.github.sakurawald.fuji.module.initializer.command_cooldown.structure.NamedCooldownDescriptor;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Document(id = 1751826375815L, value = """
@@ -42,6 +44,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
     And a `unnamed cooldown` will be `tested` <green>automatically</green> when a player executes a command.
     For example: define a `3 seconds` cooling duration for `/back` command.
     To define a `unnamed cooldown`, you need to modify the config file, and issue `/fuji reload` command to apply it.
+    <blue>NOTE: The `console` and `players with level permission 4` can `bypass` the `unnamed cooldown`.
 
     2. `Named Cooldown`
     You have to use commands to create a `named cooldown`, and use commands to `test` it.
@@ -208,8 +211,10 @@ public class CommandCooldownInitializer extends ModuleInitializer {
     @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority = EventConsumer.LOWER)
     private static void consumeBeforeCommandExecutionEvent(BeforeCommandExecutionEvent event) {
         ServerCommandSource commandSource = event.getCommandSource();
-        ServerPlayerEntity player = commandSource.getPlayer();
-        if (player == null) return;
+        if (CommandHelper.Source.isExecutedByConsole(commandSource)) return;
+        if (CommandHelper.Requirement.isAdmin(commandSource)) return;
+
+        @NotNull ServerPlayerEntity player = Objects.requireNonNull(commandSource.getPlayer());
 
         /* Compute the cooldown for specified command. */
         String commandString = event.getCommandString();
