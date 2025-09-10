@@ -85,8 +85,14 @@ import org.jetbrains.annotations.NotNull;
     ◉ List all `fuji jobs`
     Issue: `/fuji inspect jobs`
 
+    ◉ List all `fuji languages`
+    Issue: `/fuji inspect languages`
+
     ◉ List all `fuji argument types`
     Issue: `/fuji inspect argument-types`
+
+    ◉ List all `fuji events`
+    Issue: `/fuji inspect events`
     """)
 public class CoreInitializer extends ModuleInitializer {
 
