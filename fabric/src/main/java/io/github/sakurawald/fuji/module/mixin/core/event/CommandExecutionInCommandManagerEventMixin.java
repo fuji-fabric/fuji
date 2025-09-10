@@ -45,10 +45,9 @@ public class CommandExecutionInCommandManagerEventMixin {
     void produceBeforeCommandExecutionInCommandManagerEvent(@NotNull ParseResults<ServerCommandSource> parseResults, String string, CallbackInfo ci) {
         ServerCommandSource commandSource = parseResults.getContext().getSource();
         String commandString = parseResults.getReader().getString();
-        Optional<CallbackInfo> callbackInfo = Optional.of(ci);
         Optional<Integer> commandReturnValue = Optional.empty();
 
-        CommandExecutionPreEvent event = new CommandExecutionPreEvent(this, commandSource, commandString, callbackInfo, commandReturnValue);
+        CommandExecutionPreEvent event = new CommandExecutionPreEvent(this, commandSource, commandString, ci, commandReturnValue);
         EventManager.dispatchEvent(CommandExecutionPreEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
     }
     #endif

@@ -106,17 +106,13 @@ public class CommandWarmupInitializer extends ModuleInitializer {
 
     @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority = EventConsumer.LOWEST)
     private static void consumeCommandExecutionPreEvent(CommandExecutionPreEvent event) {
-        event
-            .getCallback()
-            .ifPresentOrElse(callbackInfo -> {
-                if (callbackInfo.isCancelled()) return;
-                ServerCommandSource commandSource = event.getCommandSource();
-                if (CommandHelper.Requirement.isAdmin(commandSource)) return;
+        CallbackInfo callback = event.getCallback();
+        if (callback.isCancelled()) return;
+        ServerCommandSource commandSource = event.getCommandSource();
+        if (CommandHelper.Requirement.isAdmin(commandSource)) return;
 
-                CommandHelper.Source.withServerPlayerEntity(commandSource, player -> {
-                    processCommandWarmup(player, event.getCommandString(), callbackInfo);
-                });
-            }, () -> LogUtil.warn("Failed to perform the command warmup, the Callback instance is null. (event = {})", event));
-
+        CommandHelper.Source.withServerPlayerEntity(commandSource, player -> {
+            processCommandWarmup(player, event.getCommandString(), callback);
+        });
     }
 }

@@ -238,7 +238,8 @@ public class CommandAdviceInitializer extends ModuleInitializer {
 
     @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.HIGHEST)
     private static void consumeBeforeCommandExecutionEvent(CommandExecutionPreEvent event) {
-        CommandAdviceInitializer.processCommandAdvice(event.getCommandExecutor(), event.getCommandSource(), event.getCommandString(), CommandAdviceType.BEFORE_EXECUTION, event.getCallback(), event.getCommandReturnValue());
+        if (event.getCallback().isCancelled()) return;
+        CommandAdviceInitializer.processCommandAdvice(event.getCommandExecutor(), event.getCommandSource(), event.getCommandString(), CommandAdviceType.BEFORE_EXECUTION, Optional.of(event.getCallback()), event.getCommandReturnValue());
     }
 
     @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.HIGHEST)

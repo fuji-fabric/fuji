@@ -210,9 +210,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
     })
     @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority = EventConsumer.LOWER)
     private static void consumeBeforeCommandExecutionEvent(CommandExecutionPreEvent event) {
-        Boolean cancelled = event.getCallback().map(CallbackInfo::isCancelled).orElse(false);
-        if (cancelled) return;
-
+        if (event.getCallback().isCancelled()) return;
         ServerCommandSource commandSource = event.getCommandSource();
         if (CommandHelper.Source.isExecutedByConsole(commandSource)) return;
         if (CommandHelper.Requirement.isAdmin(commandSource)) return;
@@ -226,9 +224,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
             // NOTE: For unnamed cooldown type, the `second unit` is sufficient for use.
             long remainingDurationInSecond = remainingDuration / 1000;
             TextHelper.sendTextByKey(player, "command_cooldown.cooldown", remainingDurationInSecond);
-            event
-                .getCallback()
-                .ifPresentOrElse(CallbackInfo::cancel, () -> LogUtil.warn("Failed to cancel the command execution, the Optional<CallbackInfo> is empty. (Command Source = {}, Command String = {})", commandSource.getName(), commandString));
+            event.getCallback().cancel();
         }
 
     }

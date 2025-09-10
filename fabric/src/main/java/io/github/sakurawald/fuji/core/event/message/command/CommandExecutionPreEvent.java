@@ -16,7 +16,7 @@ public class CommandExecutionPreEvent extends BaseEvent {
     @NotNull Object commandExecutor;
     @NotNull ServerCommandSource commandSource;
     @NotNull String commandString;
-    @NotNull Optional<CallbackInfo> callback;
+    @NotNull CallbackInfo callback;
     @NotNull Optional<Integer> commandReturnValue;
 
 }
