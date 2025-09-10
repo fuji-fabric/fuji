@@ -16,8 +16,8 @@ public class CommandAliasConfigModel {
     @Document(id = 1751826293492L, value = """
         Defined `alias` for `existing commands`.
         """)
-    @SerializedName(value = "aliases", alternate = "alias")
-    List<CommandAliasEntry> aliases = new ArrayList<>() {
+    @SerializedName(value = "alias_commands", alternate = {"alias", "aliases"})
+    List<CommandAliasEntry> aliasCommands = new ArrayList<>() {
         {
             /* Level 0 commands. */
             this.add(new CommandAliasEntry(true, "Create an alias command from `/r` into `/reply` command.", new CommandRequirementDescriptor(0, null), List.of("r"), List.of("reply")));

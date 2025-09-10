@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 public class CommandAliasService {
     public static void registerAllAliasCommands() {
         CommandAliasInitializer.config.model()
-            .getAliases()
+            .getAliasCommands()
             .stream()
             .filter(CommandAliasEntry::isEnable)
             .map(CommandAliasService::makeRedirectCommandDescriptor)
