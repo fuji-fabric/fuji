@@ -12,6 +12,7 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerBlockBreakPreEvent;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerInteractBlockPreEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerInteractEntityPreEvent;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerInteractItemPreEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.anti_build.config.model.AntiBuildConfigModel;
@@ -20,6 +21,7 @@ import net.luckperms.api.util.Tristate;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -174,5 +176,15 @@ public class AntiBuildInitializer extends ModuleInitializer {
         String id = RegistryHelper.getIdAsString(blockState);
 
         AntiBuildInitializer.processAntiBuild(event.getPlayer(), "interact_block", config.getId(), id, event.getCallbackInfoReturnable(), ActionResult.FAIL, () -> true);
+    }
+
+    @EventConsumer(injectorPriority = EventConsumer.LOWEST)
+    private static void consumePlayerInteractEntityPreEvent(PlayerInteractEntityPreEvent event) {
+        if (event.getCallbackInfoReturnable().isCancelled()) return;
+        var config = AntiBuildInitializer.config.model().getAntiTypes().getInteractEntity();
+        if (!config.isEnable()) return;
+
+        String id = RegistryHelper.getIdAsString(event.getEntity());
+        AntiBuildInitializer.processAntiBuild(event.getPlayer(), "interact_entity", config.getId(), id, event.getCallbackInfoReturnable(), ActionResult.FAIL, () -> event.getHand() == Hand.MAIN_HAND);
     }
 }

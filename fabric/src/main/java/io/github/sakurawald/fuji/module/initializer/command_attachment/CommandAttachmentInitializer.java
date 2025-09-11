@@ -18,6 +18,7 @@ import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerActionEvent;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerBlockBreakPreEvent;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerInteractBlockPreEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerInteractEntityPreEvent;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerInteractItemPreEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_attachment.command.argument.wrapper.ExecuteAsType;
@@ -331,6 +332,16 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
                 // Cancel the action if the target block contains attached commands.
                 event.getCallbackInfoReturnable().setReturnValue(ActionResult.FAIL);
             });
+        }
+    }
+
+    @EventConsumer(injectorPriority = EventConsumer.LOWER, consumerPriority = EventConsumer.LOWEST)
+    private static void consumePlayerInteractEntityPreEvent(PlayerInteractEntityPreEvent event) {
+        if (event.getCallbackInfoReturnable().isCancelled()) return;
+
+        if (event.getHand() == Hand.MAIN_HAND) {
+            String uuid = event.getEntity().getUuidAsString();
+            CommandAttachmentService.tryTriggerAttachmentDataNode(uuid, event.getPlayer(), List.of(InteractType.RIGHT_CLICK, InteractType.ANY_CLICK), () -> {});
         }
     }
 

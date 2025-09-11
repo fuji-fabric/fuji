@@ -28,7 +28,6 @@ public abstract class ServerPlayerEntityMixin {
                 .ifPresent($uuid -> {
                     CommandAttachmentService.tryTriggerAttachmentDataNode($uuid, player, List.of(InteractType.LEFT_CLICK, InteractType.ANY_CLICK), () -> {});
                 });
-
         }
 
     }
