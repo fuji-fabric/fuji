@@ -105,17 +105,14 @@ public class NametagInitializer extends ModuleInitializer {
 
         // Update
         PlayerHelper.Lookup.getOnlinePlayers().forEach(player -> {
-            // Should we create the nametag for this player?
+            // Skip making the nametag entity for the player, if a discard reason is present.
             if (NametagEntity.getNametagDiscardReason(player).isPresent()) return;
 
             // Make the nametag if not exists.
-            if (!player2nametag.containsKey(player)) {
-                player2nametag.put(player, makeNametag(player));
-            }
+            NametagEntity nametagEntity = player2nametag.computeIfAbsent(player, key -> makeNametag(player));
 
             // Render the nametag.
-            NametagEntity nametag = player2nametag.get(player);
-            nametag.renderNametag(player);
+            nametagEntity.update();
         });
     }
 

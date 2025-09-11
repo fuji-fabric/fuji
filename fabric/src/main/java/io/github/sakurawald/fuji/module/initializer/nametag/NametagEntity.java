@@ -57,14 +57,30 @@ public class NametagEntity extends DisplayEntity.TextDisplayEntity {
         dataTracker.set(DisplayEntity.TextDisplayEntity.TEXT_DISPLAY_FLAGS, newValue);
     }
 
-    public void renderNametag(ServerPlayerEntity player) {
-        /* Update props of nametag entity */
+    private void discardNametag() {
+        PacketHelper.sendPacketToAll(new EntitiesDestroyS2CPacket(this.getId()));
+        this.remove(Entity.RemovalReason.DISCARDED);
+    }
+
+    public static Optional<String> getNametagDiscardReason(@NotNull LivingEntity entity) {
+        if (entity.isDead()) return Optional.of("The entity is dead.");
+        if (entity.isSneaking()) return Optional.of("The entity is sneaking.");
+
+        // NOTE: when the player jumps into the ender portal in the end, its world is minecraft:overworld, its removal reason is `CHANGED_DIMENSION`
+        if (entity.getRemovalReason() != null) return Optional.of("The entity is removed.");
+        if (entity.isInvisible()) return Optional.of("The entity is invisible.");
+
+        return Optional.empty();
+    }
+
+    public void update() {
+        /* Update properties of the nametag entity. */
         var config = NametagInitializer.config.model();
 
         setBillboardMode(BillboardMode.CENTER);
 
-        Text text = TextHelper.getTextByValue(player, config.style.text);
-        setText(text);
+        Text text = TextHelper.getTextByValue(this.ownerPlayer, config.style.text);
+        this.setText(text);
 
         getDataTracker().set(TRANSLATION, new Vector3f(config.style.offset.x, config.style.offset.y, config.style.offset.z));
 
@@ -87,7 +103,7 @@ public class NametagEntity extends DisplayEntity.TextDisplayEntity {
             setBrightness(new Brightness(config.style.brightness.block, config.style.brightness.sky));
         }
 
-        /* Send update props packet */
+        /* Send update properties packet. */
         if (getDataTracker().isDirty()) {
             var dirty = getDataTracker().getDirtyEntries();
             if (dirty != null) {
@@ -95,22 +111,6 @@ public class NametagEntity extends DisplayEntity.TextDisplayEntity {
                 PacketHelper.sendPacketToAll(new EntityTrackerUpdateS2CPacket(entityId, dirty));
             }
         }
-    }
-
-    private void discardNametag() {
-        PacketHelper.sendPacketToAll(new EntitiesDestroyS2CPacket(this.getId()));
-        this.remove(Entity.RemovalReason.DISCARDED);
-    }
-
-    public static Optional<String> getNametagDiscardReason(@NotNull LivingEntity entity) {
-        if (entity.isDead()) return Optional.of("The entity is dead.");
-        if (entity.isSneaking()) return Optional.of("The entity is sneaking.");
-
-        // NOTE: when the player jumps into the ender portal in the end, its world is minecraft:overworld, its removal reason is `CHANGED_DIMENSION`
-        if (entity.getRemovalReason() != null) return Optional.of("The entity is removed.");
-        if (entity.isInvisible()) return Optional.of("The entity is invisible.");
-
-        return Optional.empty();
     }
 
     @Override
