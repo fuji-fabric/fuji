@@ -1,10 +1,13 @@
-package io.github.sakurawald.fuji.module.initializer.nametag;
+package io.github.sakurawald.fuji.module.initializer.nametag.structure;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PacketHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.module.initializer.nametag.NametagInitializer;
 import java.util.Optional;
+import lombok.Getter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -19,8 +22,10 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
+@SuppressWarnings("LombokGetterMayBeUsed")
 public class NametagEntity extends DisplayEntity.TextDisplayEntity {
 
+    @Getter
     final ServerPlayerEntity ownerPlayer;
 
     private NametagEntity(@NotNull EntityType<?> entityType, @NotNull World world, @NotNull ServerPlayerEntity ownerPlayer) {
@@ -29,6 +34,8 @@ public class NametagEntity extends DisplayEntity.TextDisplayEntity {
     }
 
     public static @NotNull NametagEntity make(@NotNull ServerPlayerEntity player) {
+        LogUtil.debug("Make nametag for player: {}", PlayerHelper.getPlayerName(player));
+
         /* Subclassing the display entity to make nametag entity. */
         NametagEntity nametagEntity = new NametagEntity(EntityType.TEXT_DISPLAY, EntityHelper.getServerWorld(player), player);
 
@@ -132,4 +139,5 @@ public class NametagEntity extends DisplayEntity.TextDisplayEntity {
                 this.discardNametag();
             });
     }
+
 }
