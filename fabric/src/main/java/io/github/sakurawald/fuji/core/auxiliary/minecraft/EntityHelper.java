@@ -102,4 +102,8 @@ public class EntityHelper {
             return 1;
         }
     }
+
+    public static byte withFlagValue(int base, int flag, boolean value) {
+        return (byte) (value ? base | flag : base & ~flag);
+    }
 }
