@@ -1538,7 +1538,7 @@
     },
     {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerListNameEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.afk.AfkInitializer",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.afk.service.AfkService",
       "declaring_method_name": "modifyPlayerListName",
       "injector_priority": 2000,
       "consumer_priority": 2000,

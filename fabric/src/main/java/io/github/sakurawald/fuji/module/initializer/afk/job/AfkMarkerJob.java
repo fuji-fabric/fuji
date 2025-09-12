@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.job.abst.CronJob;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.afk.AfkInitializer;
 import io.github.sakurawald.fuji.module.initializer.afk.accessor.AfkStateAccessor;
+import io.github.sakurawald.fuji.module.initializer.afk.service.AfkService;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
@@ -37,10 +38,10 @@ public class AfkMarkerJob extends CronJob {
                 /* update input counter */
                 String key = it.getGameProfile().getName();
 
-                long prevInputCounter = AfkInitializer.player2prevInputCounter.computeIfAbsent(key, k -> -1L);
+                long prevInputCounter = AfkService.player2prevInputCounter.computeIfAbsent(key, k -> -1L);
                 long curInputCounter = ((AfkStateAccessor) it).fuji$getInputCounter();
 
-                AfkInitializer.player2prevInputCounter.put(key, curInputCounter);
+                AfkService.player2prevInputCounter.put(key, curInputCounter);
 
                 /* process */
                 AfkStateAccessor afkPlayer = (AfkStateAccessor) it;

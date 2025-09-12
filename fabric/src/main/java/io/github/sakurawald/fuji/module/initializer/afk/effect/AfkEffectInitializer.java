@@ -6,8 +6,8 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.entity.LivingEntityDamageEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
-import io.github.sakurawald.fuji.module.initializer.afk.AfkInitializer;
 import io.github.sakurawald.fuji.module.initializer.afk.effect.config.model.AfkEffectConfigModel;
+import io.github.sakurawald.fuji.module.initializer.afk.service.AfkService;
 
 @Document(id = 1751826206965L, value = """
     This module provides special effects for afk player:
@@ -22,7 +22,7 @@ public class AfkEffectInitializer extends ModuleInitializer {
     @EventConsumer
     private static void handleInvulnerableEffect(LivingEntityDamageEvent event) {
         if (AfkEffectInitializer.config.model().invulnerable
-            && AfkInitializer.isAfk(event.getLivingEntity())) {
+            && AfkService.isAfk(event.getLivingEntity())) {
             event.setDamage(0);
         }
     }

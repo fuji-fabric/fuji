@@ -9,23 +9,14 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
-import io.github.sakurawald.fuji.core.document.annotation.TestCase;
-import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerListNameEvent;
 import io.github.sakurawald.fuji.core.extension.PlayerCombatExtension;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.afk.accessor.AfkStateAccessor;
 import io.github.sakurawald.fuji.module.initializer.afk.config.model.AfkConfigModel;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.MovementType;
+import io.github.sakurawald.fuji.module.initializer.afk.service.AfkService;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec3d;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 @Document(id = 1751826238005L, value = """
@@ -48,12 +39,10 @@ public class AfkInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<AfkConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, AfkConfigModel.class);
 
-    public static final Map<String, Long> player2prevInputCounter = new HashMap<>();
-
-    // NOTE: Issue a command will update the lastLastActionTime, so it's impossible to use /afk to disable afk
     @CommandNode("afk")
     @Document(id = 1751826266551L, value = "Enter afk state.")
     private static int $afk(@CommandSource @CommandTarget ServerPlayerEntity player) {
+        // NOTE: Issue a command will update the lastLastActionTime, so it's impossible to use /afk to disable afk
         if (!player.isOnGround()
             || player.isOnFire()
             || player.inPowderSnow
@@ -72,47 +61,8 @@ public class AfkInitializer extends ModuleInitializer {
     @CommandNode("test-afk")
     @CommandRequirement(level = 4)
     private static int $testAfk(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {
-        boolean value = isAfk(player);
+        boolean value = AfkService.isAfk(player);
         return CommandHelper.Return.returnBoolean(source, value);
-    }
-
-    public static boolean isAfk(Entity entity) {
-        if (entity instanceof ServerPlayerEntity) {
-            AfkStateAccessor afkStateAccessor = (AfkStateAccessor) entity;
-            return afkStateAccessor.fuji$isAfk();
-        }
-        return false;
-    }
-
-    public static void countAction(ServerPlayerEntity player) {
-        AfkStateAccessor ex = (AfkStateAccessor) player;
-        ex.fuji$incrInputCounter();
-    }
-
-    public static Text getAfkText(ServerPlayerEntity player) {
-        return TextHelper.getTextByValue(player, AfkInitializer.config.model().afk_display_name_format);
-    }
-
-    public static boolean isPlayerVelocityNotZero(MovementType movementType, Vec3d vec3d) {
-        // if a player itself moved.
-        if (movementType == MovementType.PLAYER) {
-            // filter zero movement: Vec3d.ZERO
-            return Double.compare(vec3d.x, 0) != 0
-                || Double.compare(vec3d.y, 0) != 0
-                || Double.compare(vec3d.z, 0) != 0;
-        }
-
-        return false;
-    }
-
-    @TestCase(action = "Issue `/afk` and see the player list.", targets = "The display name of an afk player should be modified.")
-    @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.HIGHEST)
-    private static void modifyPlayerListName(ModifyPlayerListNameEvent event) {
-        ServerPlayerEntity player = event.getPlayer();
-        if (AfkInitializer.isAfk(player)) {
-            Text newValue = AfkInitializer.getAfkText(player);
-            event.setText(newValue);
-        }
     }
 
 }

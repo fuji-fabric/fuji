@@ -2,9 +2,9 @@ package io.github.sakurawald.fuji.module.mixin.afk.effect;
 
 import com.google.errorprone.annotations.Keep;
 import com.mojang.authlib.GameProfile;
-import io.github.sakurawald.fuji.module.initializer.afk.AfkInitializer;
 import io.github.sakurawald.fuji.module.initializer.afk.accessor.AfkStateAccessor;
 import io.github.sakurawald.fuji.module.initializer.afk.effect.AfkEffectInitializer;
+import io.github.sakurawald.fuji.module.initializer.afk.service.AfkService;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -42,12 +42,12 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
         AfkStateAccessor afkEx = (AfkStateAccessor) player;
 
         /* Count input on move. */
-        if (AfkInitializer.isPlayerVelocityNotZero(movementType, vec3d)) {
-            AfkInitializer.countAction(player);
+        if (AfkService.isPlayerVelocityNotZero(movementType, vec3d)) {
+            AfkService.countAction(player);
         }
 
         /* Handle moveable option. */
-        if (!AfkEffectInitializer.config.model().moveable && AfkInitializer.isAfk(player)) {
+        if (!AfkEffectInitializer.config.model().moveable && AfkService.isAfk(player)) {
 
             /* Store the originalX before the call to move() */
             double originalX = player.getX();
@@ -57,9 +57,9 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
             /* If a player moved itself... */
             if (movementType == MovementType.PLAYER) {
 
-                if (AfkInitializer.isPlayerVelocityNotZero(movementType, vec3d)) {
+                if (AfkService.isPlayerVelocityNotZero(movementType, vec3d)) {
                     // Flag the afk state to false, if this movement comes from the player itself.
-                    AfkInitializer.countAction(player);
+                    AfkService.countAction(player);
 
                     // Call super to sync the position of player between client and server.
                     super.move(movementType, vec3d);

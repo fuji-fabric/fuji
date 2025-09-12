@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.module.initializer.afk.AfkInitializer;
 import io.github.sakurawald.fuji.module.initializer.afk.accessor.AfkStateAccessor;
 import io.github.sakurawald.fuji.module.initializer.afk.config.model.AfkConfigModel;
+import io.github.sakurawald.fuji.module.initializer.afk.service.AfkService;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
@@ -52,7 +53,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Af
 
     @Inject(method = "updateLastActionTime", at = @At("TAIL"))
     public void $updateLastActionTime(CallbackInfo ci) {
-        AfkInitializer.countAction(player);
+        AfkService.countAction(player);
     }
 
     @Override
@@ -96,8 +97,8 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Af
     @Override
     public void move(MovementType movementType, Vec3d vec3d) {
         /* Count input on move. */
-        if (AfkInitializer.isPlayerVelocityNotZero(movementType, vec3d)) {
-            AfkInitializer.countAction(player);
+        if (AfkService.isPlayerVelocityNotZero(movementType, vec3d)) {
+            AfkService.countAction(player);
         }
 
         /* Not interested event, call super to handle the default logic. */
