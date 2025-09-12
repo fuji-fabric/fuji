@@ -17,11 +17,9 @@ import net.minecraft.entity.decoration.Brightness;
 import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.entity.player.PlayerPosition;
 import net.minecraft.network.packet.s2c.play.EntitiesDestroyS2CPacket;
-import net.minecraft.network.packet.s2c.play.EntityPositionSyncS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityTrackerUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
@@ -109,41 +107,17 @@ public class NametagEntity extends DisplayEntity.TextDisplayEntity {
         if (config.style.brightness.override_brightness) {
             setBrightness(new Brightness(config.style.brightness.block, config.style.brightness.sky));
         }
-    }
-
-    @Override
-    public void tick() {
-        /* Call super to tick the default logic of nametag entity. */
-        super.tick();
-
-        ServerPlayerEntity ownerPlayer = this.getOwnerPlayer();
-        if (ownerPlayer == null) return;
-
-        /* Calculate the position relative to the player. */
-        Vec3d playerPos = ownerPlayer.getPos();
-        NametagConfigModel config = NametagInitializer.config.model();
-
-        /* Tick interpolator. */
-        if (getInterpolator() == null) {
-            LogUtil.warn("Failed to interpolate the nametag entity, the return value of getInterpolator() is null.");
-            return;
-        }
-        getInterpolator().refreshPositionAndAngles(playerPos, this.ownerPlayer.getYaw(), this.ownerPlayer.getPitch());
-        getDataTracker().set(DisplayEntity.START_INTERPOLATION, 0);
-        getDataTracker().set(DisplayEntity.TELEPORT_DURATION, config.interpolator.duration.interpolate_duration);
 
         /* Send entity tracker update packet. */
-        PlayerPosition playerPosition = new PlayerPosition(playerPos, Vec3d.ZERO, ownerPlayer.getYaw(), ownerPlayer.getPitch());
         List<DataTracker.SerializedEntry<?>> dirtyEntries = this.getDataTracker().getDirtyEntries();
         if (dirtyEntries != null) {
             EntityTrackerUpdateS2CPacket entityTrackerUpdateS2CPacket = new EntityTrackerUpdateS2CPacket(this.getId(), dirtyEntries);
             PacketHelper.sendPacketToAll(entityTrackerUpdateS2CPacket);
         }
+    }
 
-        /* Send entity position update packet. */
-        EntityPositionSyncS2CPacket positionSyncS2CPacket = new EntityPositionSyncS2CPacket(this.getId(), playerPosition, false);
-        PacketHelper.sendPacketToAll(positionSyncS2CPacket);
-
+    @Override
+    public void tick() {
         /* Discard nametag if the vehicle is sneaking */
         getNametagDiscardReason(this.ownerPlayer)
             .ifPresent(reason -> {
