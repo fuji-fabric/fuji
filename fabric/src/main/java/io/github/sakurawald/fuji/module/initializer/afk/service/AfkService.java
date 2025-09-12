@@ -64,9 +64,17 @@ public class AfkService {
         return false;
     }
 
-    public static @NotNull PlayerAfkState getPlayerAfkState(@NotNull ServerPlayerEntity player) {
+    private static @NotNull PlayerAfkState getPlayerAfkState(@NotNull ServerPlayerEntity player) {
         String playerName = PlayerHelper.getPlayerName(player);
         return playerPreviousInputCounterMap.computeIfAbsent(playerName, k -> new PlayerAfkState());
+    }
+
+    public static long getPreviousInputCounter(@NotNull ServerPlayerEntity player) {
+        return getPlayerAfkState(player).getPreviousInputCounter();
+    }
+
+    public static void setPreviousInputCounter(@NotNull ServerPlayerEntity player, long value) {
+        getPlayerAfkState(player).setPreviousInputCounter(value);
     }
 
     public static void changeAfk(@NotNull ServerPlayerEntity player, boolean flag) {
