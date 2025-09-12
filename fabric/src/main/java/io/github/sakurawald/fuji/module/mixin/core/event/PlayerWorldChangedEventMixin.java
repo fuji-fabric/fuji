@@ -2,6 +2,8 @@ package io.github.sakurawald.fuji.module.mixin.core.event;
 
 import io.github.sakurawald.annotation.PhasedMixinTemplate;
 import io.github.sakurawald.auxiliary.WeaverUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.event.EventManager;
 import io.github.sakurawald.fuji.core.event.annotation.EventProducer;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerWorldChangedEvent;
@@ -20,7 +22,7 @@ public class PlayerWorldChangedEventMixin {
     @Inject(method = "worldChanged(Lnet/minecraft/server/world/ServerWorld;)V", at = @At("TAIL"))
     void producePlayerWorldChangedEvent(ServerWorld srcWorld, CallbackInfo ci) {
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-        ServerWorld destWorld = player.getWorld();
+        ServerWorld destWorld = PlayerHelper.getServerWorld(player);
         PlayerWorldChangedEvent event = new PlayerWorldChangedEvent(player, srcWorld, destWorld);
         EventManager.dispatchEvent(PlayerWorldChangedEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
     }
