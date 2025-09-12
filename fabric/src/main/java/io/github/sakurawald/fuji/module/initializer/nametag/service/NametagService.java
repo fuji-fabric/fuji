@@ -28,21 +28,25 @@ public class NametagService {
         return nametagEntity;
     }
 
-    public static void processNametagsForOnlinePlayers() {
+    public static void processNametagEntities() {
         /* Remove invalid nametag entities. */
         nametagEntityMap.values().removeIf(NametagEntity::shouldRemove);
 
         /* Update the nametag entities. */
-        PlayerHelper.Lookup.getOnlinePlayers().forEach(player -> {
-            // Skip making the nametag entity for the player, if a discard reason is present.
-            if (getNametagEntityRemovedReason(player).isPresent()) return;
+        PlayerHelper.Lookup
+            .getOnlinePlayers()
+            .forEach(NametagService::processNametagEntity);
+    }
 
-            // Make the nametag if not exists.
-            NametagEntity nametagEntity = nametagEntityMap.computeIfAbsent(player, key -> setupNametagEntity(player));
+    private static void processNametagEntity(@NotNull ServerPlayerEntity player) {
+        // Skip making the nametag entity for the player, if a discard reason is present.
+        if (getNametagEntityRemovedReason(player).isPresent()) return;
 
-            // Render the nametag.
-            nametagEntity.update();
-        });
+        // Make the nametag if not exists.
+        NametagEntity nametagEntity = nametagEntityMap.computeIfAbsent(player, key -> setupNametagEntity(player));
+
+        // Render the nametag.
+        nametagEntity.updateTrackedData();
     }
 
     @EventConsumer

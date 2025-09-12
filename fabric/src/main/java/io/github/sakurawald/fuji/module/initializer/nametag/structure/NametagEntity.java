@@ -65,7 +65,7 @@ public class NametagEntity extends DisplayEntity.TextDisplayEntity {
         dataTracker.set(DisplayEntity.TextDisplayEntity.TEXT_DISPLAY_FLAGS, newValue);
     }
 
-    public void update() {
+    public void updateTrackedData() {
         /* Update properties of the nametag entity. */
         var config = NametagInitializer.config.model();
 

@@ -21,7 +21,7 @@ public class UpdateNametagJob extends CronJob {
 
     @Override
     public void execute(JobExecutionContext context) {
-        NametagService.processNametagsForOnlinePlayers();
+        NametagService.processNametagEntities();
     }
 
     @EventConsumer
