@@ -22,5 +22,4 @@ It's good to have a checklist, to avoid forgetting something.
 ## Painful things
 - Don't use star import. 
 - Don't use static import in mixin class (Or better just don't use it in the project).
-- Try not use @Redirect and @Override in mixin class.
 - Be careful with the `TAIL injection point`, because Mojang may change the last exit point in a method. (If possible, use `RETURN injection point`.)
