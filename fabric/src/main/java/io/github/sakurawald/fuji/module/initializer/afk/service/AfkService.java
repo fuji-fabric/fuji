@@ -11,6 +11,7 @@ import net.minecraft.entity.MovementType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.NotNull;
 
 public class AfkService {
 
@@ -32,19 +33,18 @@ public class AfkService {
         return false;
     }
 
-    public static void countAction(ServerPlayerEntity player) {
-        AfkStateAccessor ex = (AfkStateAccessor) player;
-        ex.fuji$incrInputCounter();
+    public static void countAction(@NotNull ServerPlayerEntity player) {
+        AfkStateAccessor playerEx = (AfkStateAccessor) player;
+        playerEx.fuji$incrInputCounter();
     }
 
-    public static Text getAfkText(ServerPlayerEntity player) {
+    public static @NotNull Text getAfkText(@NotNull ServerPlayerEntity player) {
         return TextHelper.getTextByValue(player, AfkInitializer.config.model().afk_display_name_format);
     }
 
-    public static boolean isPlayerVelocityNotZero(MovementType movementType, Vec3d vec3d) {
-        // if a player itself moved.
+    public static boolean isPlayerMovedBySelf(MovementType movementType, Vec3d vec3d) {
         if (movementType == MovementType.PLAYER) {
-            // filter zero movement: Vec3d.ZERO
+            // NOTE: In Minecraft's protocol, the client will send the velocity update packet even for (0, 0, 0)
             return Double.compare(vec3d.x, 0) != 0
                 || Double.compare(vec3d.y, 0) != 0
                 || Double.compare(vec3d.z, 0) != 0;

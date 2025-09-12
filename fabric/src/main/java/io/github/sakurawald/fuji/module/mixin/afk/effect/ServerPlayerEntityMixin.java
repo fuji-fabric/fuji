@@ -42,7 +42,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
         AfkStateAccessor afkEx = (AfkStateAccessor) player;
 
         /* Count input on move. */
-        if (AfkService.isPlayerVelocityNotZero(movementType, vec3d)) {
+        if (AfkService.isPlayerMovedBySelf(movementType, vec3d)) {
             AfkService.countAction(player);
         }
 
@@ -57,7 +57,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
             /* If a player moved itself... */
             if (movementType == MovementType.PLAYER) {
 
-                if (AfkService.isPlayerVelocityNotZero(movementType, vec3d)) {
+                if (AfkService.isPlayerMovedBySelf(movementType, vec3d)) {
                     // Flag the afk state to false, if this movement comes from the player itself.
                     AfkService.countAction(player);
 

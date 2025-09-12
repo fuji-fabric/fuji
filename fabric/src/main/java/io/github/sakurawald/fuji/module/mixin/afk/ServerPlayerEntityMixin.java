@@ -97,7 +97,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Af
     @Override
     public void move(MovementType movementType, Vec3d vec3d) {
         /* Count input on move. */
-        if (AfkService.isPlayerVelocityNotZero(movementType, vec3d)) {
+        if (AfkService.isPlayerMovedBySelf(movementType, vec3d)) {
             AfkService.countAction(player);
         }
 
