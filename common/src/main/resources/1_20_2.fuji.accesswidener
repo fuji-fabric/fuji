@@ -59,7 +59,7 @@ accessible method net/minecraft/entity/decoration/DisplayEntity setShadowStrengt
 accessible method net/minecraft/entity/decoration/DisplayEntity setViewRange (F)V
 accessible method net/minecraft/entity/decoration/DisplayEntity setBrightness (Lnet/minecraft/entity/decoration/Brightness;)V
 
-accessible field net/minecraft/network/packet/s2c/play/EntityPassengersSetS2CPacket entityId I
+accessible field net/minecraft/network/packet/s2c/play/EntityPassengersSetS2CPacket id I
 accessible field net/minecraft/network/packet/s2c/play/EntityPassengersSetS2CPacket passengerIds [I
 accessible method net/minecraft/network/packet/s2c/play/EntityPassengersSetS2CPacket <init> (Lnet/minecraft/network/PacketByteBuf;)V
 
