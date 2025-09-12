@@ -37,8 +37,14 @@ import org.jetbrains.annotations.NotNull;
     Set the `x`, `y`, and `z` in `scale` to `2.0`.
     """)
 @TestCase(action = "Pass through a nether portal.", targets = {
-    "The nametag entity should be discarded in the old dimension."
+    "The nametag entity should be removed in the old dimension."
     , "A new nametag entity should be created in the new dimension."
+    , "A new nametag entity should be created after the use of `nether portal`"
+    , "A new nametag entity should be created after the use of `ender portal`"
+    , "A new nametag entity should be created after the use of `/player Steve spawn`"
+    , "A new nametag entity should be removed after the use of `/kill Steve`"
+    , "A new nametag entity should be seen after mounting a `pig` entity."
+    , "A new nametag entity should be seen after dis-mounting a `pig` entity."
 })
 public class NametagInitializer extends ModuleInitializer {
 
