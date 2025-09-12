@@ -1,10 +1,14 @@
 package io.github.sakurawald.fuji.module.initializer.gameplay.carpet.fake_player_manager.job;
 
+import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.core.job.abst.CronJob;
+import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
 import io.github.sakurawald.fuji.module.initializer.gameplay.carpet.fake_player_manager.service.FakePlayerManagerService;
 import java.util.List;
@@ -21,6 +25,12 @@ public class ManageFakePlayersJob extends CronJob {
 
     public ManageFakePlayersJob() {
         super(() -> ScheduleManager.CRON_EVERY_MINUTE);
+    }
+
+    @EventConsumer
+    private static void scheduleFakePlayerJob(@Unused ServerStartedEvent event) {
+        ManageFakePlayersJob manageFakePlayersJob = new ManageFakePlayersJob();
+        Managers.getScheduleManager().scheduleJob(manageFakePlayersJob);
     }
 
     @Override

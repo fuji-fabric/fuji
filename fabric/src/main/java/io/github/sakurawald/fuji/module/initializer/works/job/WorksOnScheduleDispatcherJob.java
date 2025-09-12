@@ -1,8 +1,12 @@
 package io.github.sakurawald.fuji.module.initializer.works.job;
 
+import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.core.job.abst.CronJob;
 import io.github.sakurawald.fuji.core.job.interfaces.Schedulable;
+import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
 import io.github.sakurawald.fuji.module.initializer.works.structure.WorksBinding;
 import io.github.sakurawald.fuji.module.initializer.works.structure.work.abst.Work;
@@ -30,6 +34,12 @@ public class WorksOnScheduleDispatcherJob extends CronJob {
 
     public static WorksOnScheduleDispatcherJob makeInstance() {
         return new WorksOnScheduleDispatcherJob(() -> ScheduleManager.CRON_EVERY_FIVE_SECONDS);
+    }
+
+    @EventConsumer
+    private static void scheduleWorksOnScheduleDispatcherJob(@Unused ServerStartedEvent event) {
+        WorksOnScheduleDispatcherJob job = makeInstance();
+        Managers.getScheduleManager().scheduleJob(job);
     }
 
     @Override

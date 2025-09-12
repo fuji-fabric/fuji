@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.module.initializer.works;
 
-import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
@@ -9,14 +8,10 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
-import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
-import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.works.config.model.WorksConfigModel;
 import io.github.sakurawald.fuji.module.initializer.works.config.model.WorksDataModel;
 import io.github.sakurawald.fuji.module.initializer.works.gui.ListWorksGui;
-import io.github.sakurawald.fuji.module.initializer.works.job.WorksOnScheduleDispatcherJob;
 import io.github.sakurawald.fuji.module.initializer.works.config.adapter.WorkTypeAdapter;
 import io.github.sakurawald.fuji.module.initializer.works.structure.work.abst.Work;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -59,12 +54,6 @@ public class WorksInitializer extends ModuleInitializer {
     @Override
     protected void registerGsonTypeAdapters() {
         GsonMapper.registerGsonTypeAdapter(Work.class, new WorkTypeAdapter());
-    }
-
-    @EventConsumer
-    private static void scheduleWorksOnScheduleDispatcherJob(@Unused ServerStartedEvent event) {
-        WorksOnScheduleDispatcherJob job = WorksOnScheduleDispatcherJob.makeInstance();
-        Managers.getScheduleManager().scheduleJob(job);
     }
 
 }

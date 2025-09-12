@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.module.initializer.tab;
 
-import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -10,11 +9,8 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerListNameEvent;
-import io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
-import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.tab.config.model.TabListConfigModel;
-import io.github.sakurawald.fuji.module.initializer.tab.job.RenderHeaderAndFooterJob;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
@@ -33,12 +29,6 @@ import org.jetbrains.annotations.Nullable;
 public class TabListInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<TabListConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, TabListConfigModel.class);
-
-    @EventConsumer
-    private static void scheduleTabListRenderJob(@Unused ServerStartedEvent event) {
-        RenderHeaderAndFooterJob renderHeaderAndFooterJob = new RenderHeaderAndFooterJob();
-        Managers.getScheduleManager().scheduleJob(renderHeaderAndFooterJob);
-    }
 
     @Override
     protected void onReload() {

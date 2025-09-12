@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.module.initializer.gameplay.carpet.fake_player_manager;
 
-import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -9,12 +8,8 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
-import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
-import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.gameplay.carpet.fake_player_manager.config.model.FakePlayerManagerConfigModel;
-import io.github.sakurawald.fuji.module.initializer.gameplay.carpet.fake_player_manager.job.ManageFakePlayersJob;
 import io.github.sakurawald.fuji.module.initializer.gameplay.carpet.fake_player_manager.service.FakePlayerManagerService;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -57,12 +52,6 @@ public class FakePlayerManagerInitializer extends ModuleInitializer {
         TextHelper.sendTextByKey(source, "fake_player_manager.who.header");
         TextHelper.sendMessageByText(source, TextHelper.Formatter.formatMapMultiLine(FakePlayerManagerService.player2fakePlayers));
         return CommandHelper.Return.SUCCESS;
-    }
-
-    @EventConsumer
-    private static void scheduleFakePlayerJob(@Unused ServerStartedEvent event) {
-        ManageFakePlayersJob manageFakePlayersJob = new ManageFakePlayersJob();
-        Managers.getScheduleManager().scheduleJob(manageFakePlayersJob);
     }
 
 }

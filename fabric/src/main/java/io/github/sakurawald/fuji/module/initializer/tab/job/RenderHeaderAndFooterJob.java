@@ -1,10 +1,14 @@
 package io.github.sakurawald.fuji.module.initializer.tab.job;
 
+import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.core.job.abst.CronJob;
+import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.tab.TabListInitializer;
 import net.minecraft.network.packet.s2c.play.PlayerListHeaderS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -42,6 +46,12 @@ public class RenderHeaderAndFooterJob extends CronJob {
             player.networkHandler.sendPacket(new PlayerListHeaderS2CPacket(header, footer));
         }
 
+    }
+
+    @EventConsumer
+    private static void scheduleTabListRenderJob(@Unused ServerStartedEvent event) {
+        RenderHeaderAndFooterJob renderHeaderAndFooterJob = new RenderHeaderAndFooterJob();
+        Managers.getScheduleManager().scheduleJob(renderHeaderAndFooterJob);
     }
 
     @Override

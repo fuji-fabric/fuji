@@ -1,6 +1,9 @@
 package io.github.sakurawald.fuji.core.manager.impl.cache.job;
 
+import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.core.job.abst.CronJob;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
@@ -16,6 +19,11 @@ public class FlushCacheJob extends CronJob {
 
     public FlushCacheJob() {
         super(() -> ScheduleManager.CRON_EVERY_MINUTE);
+    }
+
+    @EventConsumer
+    private static void scheduleFlushCacheJob(@Unused ServerStartedEvent event) {
+        Managers.getScheduleManager().scheduleJob(new FlushCacheJob());
     }
 
     @Override

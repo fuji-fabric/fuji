@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.module.initializer.jail;
 
-import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
@@ -10,7 +9,6 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerDisplayNameEvent;
 import io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerListNameEvent;
-import io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.core.service.duration_parser.command.argument.wrapper.Duration;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlayerName;
@@ -18,7 +16,6 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
-import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.jail.command.argument.wrapper.JailedPlayerName;
@@ -26,7 +23,6 @@ import io.github.sakurawald.fuji.module.initializer.jail.config.model.JailConfig
 import io.github.sakurawald.fuji.module.initializer.jail.config.model.JailDataModel;
 import io.github.sakurawald.fuji.module.initializer.jail.gui.JailListGui;
 import io.github.sakurawald.fuji.module.initializer.jail.job.PatrolJailJob;
-import io.github.sakurawald.fuji.module.initializer.jail.job.UpdateJailRecordsJob;
 import io.github.sakurawald.fuji.module.initializer.jail.service.JailService;
 import io.github.sakurawald.fuji.module.initializer.jail.structure.JailDescriptor;
 import java.util.Optional;
@@ -300,12 +296,6 @@ public class JailInitializer extends ModuleInitializer {
     @Override
     protected void onInitialize() {
         PatrolJailJob.reloadPatrolJobs();
-    }
-
-    @EventConsumer
-    private static void scheduleUpdateJailRecordsJob(@Unused ServerStartedEvent event) {
-        UpdateJailRecordsJob updateJailRecordsJob = new UpdateJailRecordsJob();
-        Managers.getScheduleManager().scheduleJob(updateJailRecordsJob);
     }
 
     @Override

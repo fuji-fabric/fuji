@@ -3,7 +3,6 @@ package io.github.sakurawald.fuji.module.initializer.placeholder;
 import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
 import io.github.sakurawald.fuji.Fuji;
-import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
@@ -23,12 +22,9 @@ import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.core.document.descriptor.PlaceholderDescriptor;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerLeftEvent;
-import io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
-import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.module.initializer.placeholder.gui.PlaceholderGui;
-import io.github.sakurawald.fuji.module.initializer.placeholder.job.UpdateSumUpPlaceholderJob;
 import io.github.sakurawald.fuji.module.initializer.placeholder.structure.SumUpPlaceholder;
 import java.time.format.DateTimeFormatter;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -290,13 +286,6 @@ public class PlaceholderInitializer extends ModuleInitializer {
         registerSuffixPlaceholder();
 
         registerPosPlaceholder();
-    }
-
-    @EventConsumer
-    private static void scheduleSumUpPlaceholderUpdaterJob(@Unused ServerStartedEvent event) {
-        SumUpPlaceholder.ofServer();
-        UpdateSumUpPlaceholderJob updateSumUpPlaceholderJob = new UpdateSumUpPlaceholderJob();
-        Managers.getScheduleManager().scheduleJob(updateSumUpPlaceholderJob);
     }
 
     @DocStringProvider(id = 1752000061565L, value = """
