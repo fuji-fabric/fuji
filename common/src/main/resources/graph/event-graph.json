@@ -1083,7 +1083,7 @@
     {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.entity.LivingEntityDamageEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.afk.effect.AfkEffectInitializer",
-      "declaring_method_name": "handleInvulnerableEffect",
+      "declaring_method_name": "processInvulnerableEffect",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false

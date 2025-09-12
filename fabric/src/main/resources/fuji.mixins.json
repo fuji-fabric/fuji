@@ -3,9 +3,10 @@
   "package": "io.github.sakurawald.fuji.module.mixin",
   "plugin": "io.github.sakurawald.fuji.module.mixin.GlobalMixinConfigPlugin",
   "mixins": [
+    "afk.EntityMixin",
     "afk.ServerPlayerEntityMixin",
+    "afk.effect.EntityMixin",
     "afk.effect.LivingEntityMixin",
-    "afk.effect.ServerPlayerEntityMixin",
     "anti_build.BlockItemMixin",
     "anti_build.ServerPlayerEntityMixin",
     "chat.style.RegistryLoaderMixin",
