@@ -123,7 +123,6 @@ public class NametagEntity extends DisplayEntity.TextDisplayEntity {
 
     @Override
     public void tick() {
-        /* Discard nametag if the vehicle is sneaking */
         getNametagDiscardReason(this.ownerPlayer)
             .ifPresent(reason -> {
                 LogUtil.debug("Discard nametag entity {}: {}", this, reason);

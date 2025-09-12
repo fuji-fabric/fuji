@@ -9,11 +9,13 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerTeleportPreEvent;
 import io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickEndEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.nametag.config.model.NametagConfigModel;
 import io.github.sakurawald.fuji.module.initializer.nametag.structure.NametagEntity;
 import io.github.sakurawald.fuji.module.initializer.nametag.structure.NametagEntitySyncer;
+import java.util.Optional;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.Map;
@@ -47,7 +49,8 @@ public class NametagInitializer extends ModuleInitializer {
         /* Make the nametag entity. */
         NametagEntity nametagEntity = NametagEntity.make(player);
 
-        NametagEntitySyncer.syncNametagEntity(nametagEntity);
+        /* Sync the nametag entity to client world. */
+        NametagEntitySyncer.syncNametagEntityToClientWorld(nametagEntity);
         return nametagEntity;
     }
 
@@ -82,6 +85,14 @@ public class NametagInitializer extends ModuleInitializer {
     protected void onReload() {
         LogUtil.debug("Remove all the created nametag entities. (Reason: module reloaded)");
         nametagEntityMap.values().forEach(NametagEntity::setRemoved);
+    }
+
+    @EventConsumer(injectorPriority = EventConsumer.HIGHEST)
+    private static void consumePlayerTeleportPreEvent(PlayerTeleportPreEvent event) {
+        if (event.getCallbackInfo().isCancelled()) return;
+        Optional
+            .ofNullable(nametagEntityMap.get(event.getPlayer()))
+            .ifPresent(NametagEntity::setRemoved);
     }
 
 }

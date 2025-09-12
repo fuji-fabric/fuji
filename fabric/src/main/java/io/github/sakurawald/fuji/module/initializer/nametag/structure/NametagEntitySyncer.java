@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class NametagEntitySyncer {
 
-    public static void syncNametagEntity(@NotNull NametagEntity nametagEntity) {
+    public static void syncNametagEntityToClientWorld(@NotNull NametagEntity nametagEntity) {
         syncExistingNametagEntities(nametagEntity.getOwnerPlayer());
         broadcastNewlyNametagEntityToAllPlayers(nametagEntity);
     }
