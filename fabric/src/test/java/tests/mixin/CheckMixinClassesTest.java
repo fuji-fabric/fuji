@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.spongepowered.asm.mixin.Mixin;
 
-public class CheckMixinTreeTest {
+public class CheckMixinClassesTest {
 
     @Test
     void checkMixinNamingConvention() {

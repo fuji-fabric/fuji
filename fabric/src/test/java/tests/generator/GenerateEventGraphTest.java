@@ -29,7 +29,7 @@ public class GenerateEventGraphTest {
 
     @Test
     public void generateEventGraphFile() {
-        try (ScanResult scanResult = ClassGraphUtil.makeScanResult()) {
+        ClassGraphUtil.withScanResult(scanResult -> {
             /* Generate event-graph.json file. */
             Path graphFilePath = TestUtil.COMPILE_TIME_GRAPH_PATH.resolve(ReflectionUtil.CompileTimeGraph.EVENT_GRAPH_FILE_NAME);
 
@@ -42,7 +42,7 @@ public class GenerateEventGraphTest {
 
             JsonObject eventGraphJsonObject = GsonMapper.toJsonTree(eventGraph).getAsJsonObject();
             JsonUtil.writeJsonObject(eventGraphJsonObject, graphFilePath);
-        }
+        });
     }
 
     private void sortEventGraph(EventGraph eventGraph) {

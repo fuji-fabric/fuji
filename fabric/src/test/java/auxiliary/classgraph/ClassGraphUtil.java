@@ -12,6 +12,7 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,6 +30,11 @@ public class ClassGraphUtil {
             .scan();
     }
 
+    public static void withScanResult(@NotNull Consumer<ScanResult> consumer) {
+        try (ScanResult scanResult = makeScanResult()) {
+            consumer.accept(scanResult);
+        }
+    }
 
     @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
     public static List<ExtendedAnnotationInfo> findTargetAnnotationInstancesAnywhere(@NotNull ScanResult scanResult, @NotNull Class<? extends Annotation> targetAnnotation, boolean isRepeatableAnnotation) {
