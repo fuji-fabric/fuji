@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-@Disabled
 public class ReflectionTest {
 
     public static final Set<String> REQUIRED_TYPE_DECLARATIONS = new HashSet<>() {
@@ -35,6 +34,7 @@ public class ReflectionTest {
                 .collect(Collectors.toSet());
 
             REQUIRED_TYPE_DECLARATIONS.removeAll(allDeclaredTypeQualifiedNames);
+            System.out.println(REQUIRED_TYPE_DECLARATIONS);
             if (!REQUIRED_TYPE_DECLARATIONS.isEmpty()) {
                 LogUtil.error("""
                 The following types should be declared: {}
