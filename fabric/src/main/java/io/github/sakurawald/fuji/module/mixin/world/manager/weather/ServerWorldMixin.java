@@ -1,5 +1,7 @@
 package io.github.sakurawald.fuji.module.mixin.world.manager.weather;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.PlayerManager;
@@ -9,7 +11,6 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ServerWorld.class)
 public abstract class ServerWorldMixin {
@@ -17,7 +18,7 @@ public abstract class ServerWorldMixin {
     @Shadow
     public abstract ServerChunkManager getChunkManager();
 
-    @Redirect(
+    @WrapOperation(
         method = "tickWeather",
         at = @At(
             value = "INVOKE",
@@ -26,7 +27,7 @@ public abstract class ServerWorldMixin {
         // This mixin will fail to mixin in neoforge platform.
         , require = 0
     )
-    private void dontSendWeatherPacketsToAllWorlds(PlayerManager instance, Packet<?> packet) {
+    private void dontSendWeatherPacketsToAllWorlds(PlayerManager instance, Packet<?> packet, Operation<Void> original) {
         // Vanilla sends rain packets to all players when rain starts in a world,
         // even if they are not in it, meaning that if it is possible to rain in the world they are in
         // the rain effect will remain until the player changes dimension or reconnects.
