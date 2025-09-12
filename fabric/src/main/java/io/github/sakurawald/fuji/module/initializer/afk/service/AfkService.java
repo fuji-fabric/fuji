@@ -8,6 +8,7 @@ import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommand
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerListNameEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerJoinedEvent;
 import io.github.sakurawald.fuji.core.extension.PlayerCombatExtension;
 import io.github.sakurawald.fuji.module.initializer.afk.AfkInitializer;
 import io.github.sakurawald.fuji.module.initializer.afk.config.model.AfkConfigModel;
@@ -53,7 +54,7 @@ public class AfkService {
         return TextHelper.getTextByValue(player, AfkInitializer.config.model().afk_display_name_format);
     }
 
-    public static boolean isPlayerMovedBySelf(MovementType movementType, Vec3d vec3d) {
+    public static boolean isPlayerMovedBySelf(@NotNull MovementType movementType, @NotNull Vec3d vec3d) {
         if (movementType == MovementType.PLAYER) {
             // NOTE: In Minecraft's protocol, the client will send the velocity update packet even for (0, 0, 0)
             return Double.compare(vec3d.x, 0) != 0
@@ -69,6 +70,11 @@ public class AfkService {
         return playerPreviousInputCounterMap.computeIfAbsent(playerName, k -> new PlayerAfkState());
     }
 
+    private static void resetPlayerAfkState(@NotNull ServerPlayerEntity player) {
+        String playerName = PlayerHelper.getPlayerName(player);
+        playerPreviousInputCounterMap.put(playerName, new PlayerAfkState());
+    }
+
     public static long getPreviousInputCounter(@NotNull ServerPlayerEntity player) {
         return getPlayerAfkState(player).getPreviousInputCounter();
     }
@@ -79,7 +85,7 @@ public class AfkService {
 
     public static void changeAfk(@NotNull ServerPlayerEntity player, boolean flag) {
         // Check if the player can enter afk.
-        if (!canAfk(player)) {
+        if (flag && !canEnterAfk(player)) {
             return;
         }
 
@@ -97,11 +103,16 @@ public class AfkService {
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public static boolean canAfk(@NotNull ServerPlayerEntity player) {
+    public static boolean canEnterAfk(@NotNull ServerPlayerEntity player) {
         return player.isOnGround()
             && PlayerHelper.isRealPlayer(player)
             && !player.isOnFire()
             && !player.inPowderSnow
             && !((PlayerCombatExtension) player).fuji$inCombat();
+    }
+
+    @EventConsumer
+    private static void consumePlayerJoinedEvent(PlayerJoinedEvent event) {
+        resetPlayerAfkState(event.getPlayer());
     }
 }

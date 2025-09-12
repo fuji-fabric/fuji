@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.mixin.afk;
 
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.module.initializer.afk.service.AfkService;
 import net.minecraft.entity.Entity;

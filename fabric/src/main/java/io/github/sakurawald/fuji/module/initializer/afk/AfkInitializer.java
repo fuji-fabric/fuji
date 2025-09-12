@@ -41,7 +41,7 @@ public class AfkInitializer extends ModuleInitializer {
     @Document(id = 1751826266551L, value = "Enter afk state.")
     private static int $afk(@CommandSource @CommandTarget ServerPlayerEntity player) {
         // NOTE: Issue a command will update the lastLastActionTime, so it's impossible to use /afk to disable afk
-        if (!AfkService.canAfk(player)) {
+        if (!AfkService.canEnterAfk(player)) {
             TextHelper.sendTextByKey(player, "afk.on.failed");
             return CommandHelper.Return.FAILURE;
         }
