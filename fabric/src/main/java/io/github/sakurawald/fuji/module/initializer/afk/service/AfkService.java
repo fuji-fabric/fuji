@@ -8,6 +8,7 @@ import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommand
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerListNameEvent;
+import io.github.sakurawald.fuji.core.extension.PlayerCombatExtension;
 import io.github.sakurawald.fuji.module.initializer.afk.AfkInitializer;
 import io.github.sakurawald.fuji.module.initializer.afk.config.model.AfkConfigModel;
 import io.github.sakurawald.fuji.module.initializer.afk.structure.PlayerAfkState;
@@ -80,5 +81,12 @@ public class AfkService {
         AfkConfigModel.AfkEvent afkEvent = AfkInitializer.config.model().afk_event;
         List<String> commandList = playerAfkState.isAfk() ? afkEvent.on_enter_afk : afkEvent.on_leave_afk;
         CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(player.getCommandSource()), commandList);
+    }
+
+    public static boolean canAfk(@NotNull ServerPlayerEntity player) {
+        return !player.isOnGround()
+            || player.isOnFire()
+            || player.inPowderSnow
+            || ((PlayerCombatExtension) player).fuji$inCombat();
     }
 }

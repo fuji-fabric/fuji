@@ -14,3 +14,4 @@
   - feature: new `/nametag toggle` command, to toggle between `fuji nametag` and `vanilla nametag`.
     - Example: `/nametag toggle @s`
     - Example: `/nametag toggle others @a false`
+  - refactor: command `/test-afk` is changed to `/is-afk?`
