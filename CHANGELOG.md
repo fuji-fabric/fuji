@@ -15,3 +15,4 @@
     - Example: `/nametag toggle @s`
     - Example: `/nametag toggle others @a false`
   - refactor: command `/test-afk` is changed to `/is-afk?`
+  - feature: now `fake players` from `carpet` mod are ignored and will not enter `afk state`.

@@ -78,6 +78,11 @@ public class AfkService {
     }
 
     public static void changeAfk(@NotNull ServerPlayerEntity player, boolean flag) {
+        // Check if the player can enter afk.
+        if (!canAfk(player)) {
+            return;
+        }
+
         // Change afk flag.
         PlayerAfkState playerAfkState = getPlayerAfkState(player);
         playerAfkState.setAfk(flag);
@@ -91,10 +96,12 @@ public class AfkService {
         CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(player.getCommandSource()), commandList);
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean canAfk(@NotNull ServerPlayerEntity player) {
-        return !player.isOnGround()
-            || player.isOnFire()
-            || player.inPowderSnow
-            || ((PlayerCombatExtension) player).fuji$inCombat();
+        return player.isOnGround()
+            && PlayerHelper.isRealPlayer(player)
+            && !player.isOnFire()
+            && !player.inPowderSnow
+            && !((PlayerCombatExtension) player).fuji$inCombat();
     }
 }
