@@ -52,6 +52,9 @@ public class CommandAdviceConfigModel {
                 "send-message %player:name% The `/repair` command execution result is `FAILURE`, I will do nothing."
             )));
 
+            /* Guard the dangerous commands. */
+            this.add(new CommandAdviceEntry(true, "Cancel the dangerous `/kill @e` command.", new CommandAdviceEntry.Matcher("kill @e", true), CommandAdviceType.CANCEL_AS_FAILURE, List.of(
+                "send-message %player:name% <red>The `/kill @e` command should be used with a filter.")));
         }
     };
 }
