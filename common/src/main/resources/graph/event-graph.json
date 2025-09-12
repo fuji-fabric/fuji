@@ -781,6 +781,36 @@
       "injector_priority": 0
     },
     {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickEndEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerTickEndEventMixin_DEFAULT",
+      "declaring_method_name": "produceServerTickEndEvent",
+      "injector_priority": 1000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickEndEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerTickEndEventMixin_HIGHER",
+      "declaring_method_name": "produceServerTickEndEvent",
+      "injector_priority": 1001
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickEndEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerTickEndEventMixin_HIGHEST",
+      "declaring_method_name": "produceServerTickEndEvent",
+      "injector_priority": 2000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickEndEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerTickEndEventMixin_LOWER",
+      "declaring_method_name": "produceServerTickEndEvent",
+      "injector_priority": 999
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickEndEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerTickEndEventMixin_LOWEST",
+      "declaring_method_name": "produceServerTickEndEvent",
+      "injector_priority": 0
+    },
+    {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickStartEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerTickStartEventMixin_DEFAULT",
       "declaring_method_name": "produceServerTickStartEvent",
@@ -1269,7 +1299,7 @@
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickStartEvent",
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickEndEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.nametag.NametagInitializer",
       "declaring_method_name": "tickNametagEntities",
       "injector_priority": 1000,

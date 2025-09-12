@@ -4,15 +4,6 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 
 public class NametagConfigModel {
 
-    public Interpolator interpolator = new Interpolator();
-    public static class Interpolator {
-        public Duration duration = new Duration();
-        public static class Duration {
-            public int interpolate_duration = 1;
-        }
-
-    }
-
     @Document(id = 1751824986864L, value = """
         The `cron` expression used to `update` nametags.
         """)
@@ -81,4 +72,14 @@ public class NametagConfigModel {
         public boolean see_through_blocks = false;
         public float view_range = 1.0f;
     }
+
+    public Interpolator interpolator = new Interpolator();
+    public static class Interpolator {
+        public Duration duration = new Duration();
+        public static class Duration {
+            public int interpolate_duration = 1;
+        }
+
+    }
+
 }

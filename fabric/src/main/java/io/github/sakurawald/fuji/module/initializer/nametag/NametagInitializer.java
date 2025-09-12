@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickEndEvent;
 import io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickStartEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.nametag.config.model.NametagConfigModel;
@@ -69,7 +70,7 @@ public class NametagInitializer extends ModuleInitializer {
     }
 
     @EventConsumer
-    private static void tickNametagEntities(@Unused ServerTickStartEvent event) {
+    private static void tickNametagEntities(@Unused ServerTickEndEvent event) {
         player2nametag.values().forEach(NametagEntity::tick);
     }
 
