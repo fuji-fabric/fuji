@@ -6,8 +6,6 @@ import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerListNameEvent;
 import io.github.sakurawald.fuji.module.initializer.afk.AfkInitializer;
 import io.github.sakurawald.fuji.module.initializer.afk.accessor.AfkStateAccessor;
-import java.util.HashMap;
-import java.util.Map;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MovementType;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -15,7 +13,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 
 public class AfkService {
-    public static final Map<String, Long> player2prevInputCounter = new HashMap<>();
 
     @TestCase(action = "Issue `/afk` and see the player list.", targets = "The display name of an afk player should be modified.")
     @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.HIGHEST)

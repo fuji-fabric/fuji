@@ -9,7 +9,8 @@ import io.github.sakurawald.fuji.core.job.abst.CronJob;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.afk.AfkInitializer;
 import io.github.sakurawald.fuji.module.initializer.afk.accessor.AfkStateAccessor;
-import io.github.sakurawald.fuji.module.initializer.afk.service.AfkService;
+import java.util.HashMap;
+import java.util.Map;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
@@ -17,6 +18,8 @@ import org.quartz.JobExecutionException;
     This `job` is used to check the last action time for each player.
     """)
 public class AfkMarkerJob extends CronJob {
+
+    private static final Map<String, Long> playerPreviousInputCounterMap = new HashMap<>();
 
     public AfkMarkerJob() {
         super(() -> AfkInitializer.config.model().afk_checker.cron);
@@ -38,10 +41,10 @@ public class AfkMarkerJob extends CronJob {
                 /* update input counter */
                 String key = it.getGameProfile().getName();
 
-                long prevInputCounter = AfkService.player2prevInputCounter.computeIfAbsent(key, k -> -1L);
+                long prevInputCounter = playerPreviousInputCounterMap.computeIfAbsent(key, k -> -1L);
                 long curInputCounter = ((AfkStateAccessor) it).fuji$getInputCounter();
 
-                AfkService.player2prevInputCounter.put(key, curInputCounter);
+                playerPreviousInputCounterMap.put(key, curInputCounter);
 
                 /* process */
                 AfkStateAccessor afkPlayer = (AfkStateAccessor) it;
