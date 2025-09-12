@@ -1,19 +1,28 @@
 package io.github.sakurawald.fuji.module.initializer.afk.service;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PacketHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
+import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerListNameEvent;
 import io.github.sakurawald.fuji.module.initializer.afk.AfkInitializer;
-import io.github.sakurawald.fuji.module.initializer.afk.accessor.AfkStateAccessor;
-import net.minecraft.entity.Entity;
+import io.github.sakurawald.fuji.module.initializer.afk.config.model.AfkConfigModel;
+import io.github.sakurawald.fuji.module.initializer.afk.structure.PlayerAfkState;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.entity.MovementType;
+import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 
 public class AfkService {
+
+    private static final ConcurrentHashMap<String, PlayerAfkState> playerPreviousInputCounterMap = new ConcurrentHashMap<>();
 
     @TestCase(action = "Issue `/afk` and see the player list.", targets = "The display name of an afk player should be modified.")
     @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.HIGHEST)
@@ -25,17 +34,18 @@ public class AfkService {
         }
     }
 
-    public static boolean isAfk(Entity entity) {
-        if (entity instanceof ServerPlayerEntity) {
-            AfkStateAccessor afkStateAccessor = (AfkStateAccessor) entity;
-            return afkStateAccessor.fuji$isAfk();
-        }
-        return false;
+    public static boolean isAfk(@NotNull ServerPlayerEntity player) {
+        return getPlayerAfkState(player)
+            .isAfk();
     }
 
     public static void countAction(@NotNull ServerPlayerEntity player) {
-        AfkStateAccessor playerEx = (AfkStateAccessor) player;
-        playerEx.fuji$incrInputCounter();
+        PlayerAfkState playerAfkState = getPlayerAfkState(player);
+
+        /* Set afk flag to false, once receive any input action. */
+        if (playerAfkState.isAfk()) {
+            changeAfk(player, false);
+        }
     }
 
     public static @NotNull Text getAfkText(@NotNull ServerPlayerEntity player) {
@@ -51,5 +61,24 @@ public class AfkService {
         }
 
         return false;
+    }
+
+    public static @NotNull PlayerAfkState getPlayerAfkState(@NotNull ServerPlayerEntity player) {
+        String playerName = PlayerHelper.getPlayerName(player);
+        return playerPreviousInputCounterMap.computeIfAbsent(playerName, k -> new PlayerAfkState());
+    }
+
+    public static void changeAfk(@NotNull ServerPlayerEntity player, boolean flag) {
+        // Change afk flag.
+        PlayerAfkState playerAfkState = getPlayerAfkState(player);
+        playerAfkState.setAfk(flag);
+
+        // Update tab list name.
+        PacketHelper.sendPacketToAll(new PlayerListS2CPacket(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME, player));
+
+        // Trigger afk events.
+        AfkConfigModel.AfkEvent afkEvent = AfkInitializer.config.model().afk_event;
+        List<String> commandList = playerAfkState.isAfk() ? afkEvent.on_enter_afk : afkEvent.on_leave_afk;
+        CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(player.getCommandSource()), commandList);
     }
 }

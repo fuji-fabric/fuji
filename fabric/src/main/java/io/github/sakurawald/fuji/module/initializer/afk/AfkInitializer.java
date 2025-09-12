@@ -12,7 +12,6 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.core.extension.PlayerCombatExtension;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
-import io.github.sakurawald.fuji.module.initializer.afk.accessor.AfkStateAccessor;
 import io.github.sakurawald.fuji.module.initializer.afk.config.model.AfkConfigModel;
 import io.github.sakurawald.fuji.module.initializer.afk.service.AfkService;
 import net.minecraft.server.command.ServerCommandSource;
@@ -52,7 +51,7 @@ public class AfkInitializer extends ModuleInitializer {
             return CommandHelper.Return.FAILURE;
         }
 
-        ((AfkStateAccessor) player).fuji$changeAfk(true);
+        AfkService.changeAfk(player, true);
         TextHelper.sendTextByKey(player, "afk.on");
         return CommandHelper.Return.SUCCESS;
     }

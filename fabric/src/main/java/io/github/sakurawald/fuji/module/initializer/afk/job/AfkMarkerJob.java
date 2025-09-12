@@ -8,9 +8,8 @@ import io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStart
 import io.github.sakurawald.fuji.core.job.abst.CronJob;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.afk.AfkInitializer;
-import io.github.sakurawald.fuji.module.initializer.afk.accessor.AfkStateAccessor;
-import java.util.HashMap;
-import java.util.Map;
+import io.github.sakurawald.fuji.module.initializer.afk.service.AfkService;
+import io.github.sakurawald.fuji.module.initializer.afk.structure.PlayerAfkState;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
@@ -18,8 +17,6 @@ import org.quartz.JobExecutionException;
     This `job` is used to check the last action time for each player.
     """)
 public class AfkMarkerJob extends CronJob {
-
-    private static final Map<String, Long> playerPreviousInputCounterMap = new HashMap<>();
 
     public AfkMarkerJob() {
         super(() -> AfkInitializer.config.model().afk_checker.cron);
@@ -38,19 +35,16 @@ public class AfkMarkerJob extends CronJob {
             .filter(it -> !it.isRemoved())
             .forEach(it -> {
 
-                /* update input counter */
-                String key = it.getGameProfile().getName();
-
-                long prevInputCounter = playerPreviousInputCounterMap.computeIfAbsent(key, k -> -1L);
-                long curInputCounter = ((AfkStateAccessor) it).fuji$getInputCounter();
-
-                playerPreviousInputCounterMap.put(key, curInputCounter);
+                /* Update previous input counter. */
+                PlayerAfkState playerAfkState = AfkService.getPlayerAfkState(it);
+                long prevInputCounter = playerAfkState
+                    .getPreviousInputCounter();
+                long curInputCounter = it.getLastActionTime();
+                playerAfkState.setPreviousInputCounter(curInputCounter);
 
                 /* process */
-                AfkStateAccessor afkPlayer = (AfkStateAccessor) it;
-                if (prevInputCounter == curInputCounter
-                    && !afkPlayer.fuji$isAfk()) {
-                    afkPlayer.fuji$changeAfk(true);
+                if (prevInputCounter == curInputCounter && !playerAfkState.isAfk()) {
+                    AfkService.changeAfk(it, true);
                 }
 
             });
