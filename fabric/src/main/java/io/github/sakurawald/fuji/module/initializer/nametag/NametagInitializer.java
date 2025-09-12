@@ -10,6 +10,7 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerTeleportPreEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerWorldChangedEvent;
 import io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickEndEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.nametag.config.model.NametagConfigModel;
@@ -87,12 +88,20 @@ public class NametagInitializer extends ModuleInitializer {
         nametagEntityMap.values().forEach(NametagEntity::setRemoved);
     }
 
-    @EventConsumer(injectorPriority = EventConsumer.HIGHEST)
-    private static void consumePlayerTeleportPreEvent(PlayerTeleportPreEvent event) {
-        if (event.getCallbackInfo().isCancelled()) return;
+    private static void removeNametagEntity(ServerPlayerEntity player) {
         Optional
-            .ofNullable(nametagEntityMap.get(event.getPlayer()))
+            .ofNullable(nametagEntityMap.get(player))
             .ifPresent(NametagEntity::setRemoved);
     }
 
+    @EventConsumer(injectorPriority = EventConsumer.HIGHEST)
+    private static void consumePlayerTeleportPreEvent(PlayerTeleportPreEvent event) {
+        if (event.getCallbackInfo().isCancelled()) return;
+        removeNametagEntity(event.getPlayer());
+    }
+
+    @EventConsumer
+    private static void consumePlayerWorldChangedEvent(PlayerWorldChangedEvent event) {
+        removeNametagEntity(event.getPlayer());
+    }
 }
