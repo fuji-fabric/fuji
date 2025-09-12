@@ -6,7 +6,6 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.PacketHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.module.initializer.nametag.NametagInitializer;
-import io.github.sakurawald.fuji.module.initializer.nametag.config.model.NametagConfigModel;
 import java.util.List;
 import java.util.Optional;
 import lombok.Getter;
@@ -15,7 +14,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.decoration.Brightness;
 import net.minecraft.entity.decoration.DisplayEntity;
-import net.minecraft.entity.player.PlayerPosition;
 import net.minecraft.network.packet.s2c.play.EntitiesDestroyS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityTrackerUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -48,14 +46,14 @@ public class NametagEntity extends DisplayEntity.TextDisplayEntity {
     }
 
     @SuppressWarnings("RedundantIfStatement")
-    public boolean isInvalid() {
+    public boolean shouldRemove() {
         if (this.ownerPlayer.isRemoved()) return true;
         if (this.isRemoved()) return true;
 
         return false;
     }
 
-    public void removeNametag() {
+    public void setRemoved() {
         PacketHelper.sendPacketToAll(new EntitiesDestroyS2CPacket(this.getId()));
         this.remove(Entity.RemovalReason.DISCARDED);
     }
@@ -82,31 +80,38 @@ public class NametagEntity extends DisplayEntity.TextDisplayEntity {
         /* Update properties of the nametag entity. */
         var config = NametagInitializer.config.model();
 
+        // Set billboard mode.
         setBillboardMode(BillboardMode.CENTER);
 
+        // Set text.
         Text text = TextHelper.getTextByValue(this.ownerPlayer, config.style.text);
         this.setText(text);
 
+        // Set translation.
         getDataTracker().set(TRANSLATION, new Vector3f(config.style.offset.x, config.style.offset.y, config.style.offset.z));
 
+        // Set extension.
         setDisplayWidth(config.style.size.width);
         setDisplayHeight(config.style.size.height);
 
+        // Set color.
         setBackground(config.style.color.background);
         setTextOpacity(config.style.color.text_opacity);
+        if (config.style.brightness.override_brightness) {
+            setBrightness(new Brightness(config.style.brightness.block, config.style.brightness.sky));
+        }
 
+        // Set scale.
         getDataTracker().set(SCALE, new Vector3f(config.style.scale.x, config.style.scale.y, config.style.scale.z));
 
+        // Set shadow.
         setDisplayFlag(SHADOW_FLAG, config.style.shadow.shadow);
         setShadowRadius(config.style.shadow.shadow_radius);
         setShadowStrength(config.style.shadow.shadow_strength);
 
+        // Set view distance.
         setDisplayFlag(SEE_THROUGH_FLAG, config.render.see_through_blocks);
         setViewRange(config.render.view_range);
-
-        if (config.style.brightness.override_brightness) {
-            setBrightness(new Brightness(config.style.brightness.block, config.style.brightness.sky));
-        }
 
         /* Send entity tracker update packet. */
         List<DataTracker.SerializedEntry<?>> dirtyEntries = this.getDataTracker().getDirtyEntries();
@@ -122,7 +127,7 @@ public class NametagEntity extends DisplayEntity.TextDisplayEntity {
         getNametagDiscardReason(this.ownerPlayer)
             .ifPresent(reason -> {
                 LogUtil.debug("Discard nametag entity {}: {}", this, reason);
-                this.removeNametag();
+                this.setRemoved();
             });
     }
 

@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.module.initializer.nametag.structure;
 
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PacketHelper;
 import io.github.sakurawald.fuji.module.initializer.nametag.NametagInitializer;
 import io.netty.buffer.Unpooled;
@@ -18,7 +17,7 @@ public class NametagEntitySyncer {
 
     public static void syncNametagEntity(@NotNull NametagEntity nametagEntity) {
         syncExistingNametagEntities(nametagEntity.getOwnerPlayer());
-        broadcastNewNametagEntityToAllPlayers(nametagEntity);
+        broadcastNewlyNametagEntityToAllPlayers(nametagEntity);
     }
 
     private static @NotNull EntityPassengersSetS2CPacket makeEntityPassengerSetPacket(@NotNull NametagEntity nametagEntity) {
@@ -34,14 +33,12 @@ public class NametagEntitySyncer {
         PacketByteBuf packetByteBuf = new PacketByteBuf(Unpooled.buffer());
         packetByteBuf.writeVarInt(entityId);
         packetByteBuf.writeIntArray(passengerIds);
-        EntityPassengersSetS2CPacket packet = new EntityPassengersSetS2CPacket(packetByteBuf);
-        return packet;
+        return new EntityPassengersSetS2CPacket(packetByteBuf);
     }
 
     private static void syncExistingNametagEntities(@NotNull ServerPlayerEntity audience) {
-        NametagInitializer.player2nametag.forEach((key, value) -> {
-            BlockPos blockPos = computeNametagEntitySpawnBlockPos(key);
-            EntitySpawnS2CPacket entitySpawnS2CPacket = new EntitySpawnS2CPacket(value, 0, blockPos);
+        NametagInitializer.nametagEntityMap.forEach((key, value) -> {
+            EntitySpawnS2CPacket entitySpawnS2CPacket = makeNametagEntitySpawnPacket(value);
             audience.networkHandler.sendPacket(entitySpawnS2CPacket);
 
             EntityPassengersSetS2CPacket entityPassengersSetS2CPacket = makeEntityPassengerSetPacket(value);
@@ -52,11 +49,17 @@ public class NametagEntitySyncer {
         });
     }
 
-    private static void broadcastNewNametagEntityToAllPlayers(@NotNull NametagEntity nametagEntity) {
+    private static @NotNull EntitySpawnS2CPacket makeNametagEntitySpawnPacket(@NotNull NametagEntity nametagEntity) {
+        /* Spawn the nametag over the player's head, so that the player won't see the nametag ride animation. */
+        BlockPos blockPos = nametagEntity.getOwnerPlayer().getBlockPos().add(0, 3, 0);
+
+        /* Make entity spawn packet. */
+        return new EntitySpawnS2CPacket(nametagEntity, 0, blockPos);
+    }
+
+    private static void broadcastNewlyNametagEntityToAllPlayers(@NotNull NametagEntity nametagEntity) {
         /* Spawn entity packet */
-        ServerPlayerEntity ownerPlayer = nametagEntity.getOwnerPlayer();
-        BlockPos blockPos = computeNametagEntitySpawnBlockPos(ownerPlayer);
-        EntitySpawnS2CPacket entitySpawnS2CPacket = new EntitySpawnS2CPacket(nametagEntity, 0, blockPos);
+        EntitySpawnS2CPacket entitySpawnS2CPacket = makeNametagEntitySpawnPacket(nametagEntity);
         PacketHelper.sendPacketToAll(entitySpawnS2CPacket);
 
         /* Ride entity packet */
@@ -64,8 +67,4 @@ public class NametagEntitySyncer {
         PacketHelper.sendPacketToAll(entityPassengersSetS2CPacket);
     }
 
-    private static @NotNull BlockPos computeNametagEntitySpawnBlockPos(@NotNull ServerPlayerEntity ownerPlayer) {
-        // Spawn the nametag over the player's head, so that the player won't see the nametag ride animation.
-        return ownerPlayer.getBlockPos().add(0, 3, 0);
-    }
 }

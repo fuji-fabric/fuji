@@ -73,13 +73,4 @@ public class NametagConfigModel {
         public float view_range = 1.0f;
     }
 
-    public Interpolator interpolator = new Interpolator();
-    public static class Interpolator {
-        public Duration duration = new Duration();
-        public static class Duration {
-            public int interpolate_duration = 1;
-        }
-
-    }
-
 }

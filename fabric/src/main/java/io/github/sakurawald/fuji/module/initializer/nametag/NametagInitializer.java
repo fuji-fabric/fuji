@@ -10,7 +10,6 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickEndEvent;
-import io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickStartEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.nametag.config.model.NametagConfigModel;
 import io.github.sakurawald.fuji.module.initializer.nametag.structure.NametagEntity;
@@ -42,7 +41,7 @@ public class NametagInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<NametagConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, NametagConfigModel.class);
 
-    public static Map<ServerPlayerEntity, NametagEntity> player2nametag;
+    public static Map<ServerPlayerEntity, NametagEntity> nametagEntityMap;
 
     private static @NotNull NametagEntity setupNametagEntity(@NotNull ServerPlayerEntity player) {
         /* Make the nametag entity. */
@@ -54,7 +53,7 @@ public class NametagInitializer extends ModuleInitializer {
 
     public static void processNametagsForOnlinePlayers() {
         /* Remove invalid nametag entities. */
-        player2nametag.values().removeIf(NametagEntity::isInvalid);
+        nametagEntityMap.values().removeIf(NametagEntity::shouldRemove);
 
         /* Update the nametag entities. */
         PlayerHelper.Lookup.getOnlinePlayers().forEach(player -> {
@@ -62,7 +61,7 @@ public class NametagInitializer extends ModuleInitializer {
             if (NametagEntity.getNametagDiscardReason(player).isPresent()) return;
 
             // Make the nametag if not exists.
-            NametagEntity nametagEntity = player2nametag.computeIfAbsent(player, key -> setupNametagEntity(player));
+            NametagEntity nametagEntity = nametagEntityMap.computeIfAbsent(player, key -> setupNametagEntity(player));
 
             // Render the nametag.
             nametagEntity.update();
@@ -71,18 +70,18 @@ public class NametagInitializer extends ModuleInitializer {
 
     @EventConsumer
     private static void tickNametagEntities(@Unused ServerTickEndEvent event) {
-        player2nametag.values().forEach(NametagEntity::tick);
+        nametagEntityMap.values().forEach(NametagEntity::tick);
     }
 
     @Override
     protected void onInitialize() {
-        player2nametag = new ConcurrentHashMap<>();
+        nametagEntityMap = new ConcurrentHashMap<>();
     }
 
     @Override
     protected void onReload() {
-        LogUtil.debug("Invalidate all the created nametag entities. (Reason: module reloaded)");
-        player2nametag.values().forEach(NametagEntity::removeNametag);
+        LogUtil.debug("Remove all the created nametag entities. (Reason: module reloaded)");
+        nametagEntityMap.values().forEach(NametagEntity::setRemoved);
     }
 
 }
