@@ -1269,6 +1269,14 @@
       "is_dynamic": false
     },
     {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickStartEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.nametag.NametagInitializer",
+      "declaring_method_name": "tickNametagEntities",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.nametag.job.UpdateNametagJob",
       "declaring_method_name": "scheduleUpdateNametagJob",

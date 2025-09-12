@@ -4,6 +4,15 @@ import io.github.sakurawald.fuji.core.document.annotation.Document;
 
 public class NametagConfigModel {
 
+    public Interpolator interpolator = new Interpolator();
+    public static class Interpolator {
+        public Duration duration = new Duration();
+        public static class Duration {
+            public int interpolate_duration = 1;
+        }
+
+    }
+
     @Document(id = 1751824986864L, value = """
         The `cron` expression used to `update` nametags.
         """)
@@ -16,7 +25,7 @@ public class NametagConfigModel {
     public static class Style {
         public String text = "<#B1B2FF>%fuji:player_playtime%\uD83D\uDD25 %fuji:player_mined%⛏ %fuji:player_placed%\uD83D\uDD33 %fuji:player_killed%\uD83D\uDDE1 %fuji:player_moved%\uD83C\uDF0D\n<dark_green>%player:displayname_visual%"; // escape Unicode
 
-        public Offset offset = new Offset();
+        public Style.Offset offset = new Style.Offset();
         public Size size = new Size();
         public Scale scale = new Scale();
         public Brightness brightness = new Brightness();

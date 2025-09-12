@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.nametag;
 
+import io.github.sakurawald.fuji.core.annotation.Unused;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
@@ -7,11 +8,12 @@ import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
+import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
+import io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickStartEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.nametag.config.model.NametagConfigModel;
 import io.github.sakurawald.fuji.module.initializer.nametag.structure.NametagEntity;
 import io.github.sakurawald.fuji.module.initializer.nametag.structure.NametagEntitySyncer;
-import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.Map;
@@ -50,13 +52,10 @@ public class NametagInitializer extends ModuleInitializer {
     }
 
     public static void processNametagsForOnlinePlayers() {
-        // Since the virtual entity is not added into the server, so we should call tick() ourselves.
-        player2nametag.values().forEach(DisplayEntity::tick);
-
         /* Remove invalid nametag entities. */
         player2nametag.values().removeIf(NametagEntity::isInvalid);
 
-        // Update
+        /* Update the nametag entities. */
         PlayerHelper.Lookup.getOnlinePlayers().forEach(player -> {
             // Skip making the nametag entity for the player, if a discard reason is present.
             if (NametagEntity.getNametagDiscardReason(player).isPresent()) return;
@@ -69,8 +68,10 @@ public class NametagInitializer extends ModuleInitializer {
         });
     }
 
-
-
+    @EventConsumer
+    private static void tickNametagEntities(@Unused ServerTickStartEvent event) {
+        player2nametag.values().forEach(NametagEntity::tick);
+    }
 
     @Override
     protected void onInitialize() {
@@ -80,7 +81,7 @@ public class NametagInitializer extends ModuleInitializer {
     @Override
     protected void onReload() {
         LogUtil.debug("Invalidate all the created nametag entities. (Reason: module reloaded)");
-        player2nametag.values().forEach(NametagEntity::invalidate);
+        player2nametag.values().forEach(NametagEntity::removeNametag);
     }
 
 }
