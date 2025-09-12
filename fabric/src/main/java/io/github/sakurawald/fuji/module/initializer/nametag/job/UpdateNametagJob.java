@@ -7,6 +7,7 @@ import io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStart
 import io.github.sakurawald.fuji.core.job.abst.CronJob;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.module.initializer.nametag.NametagInitializer;
+import io.github.sakurawald.fuji.module.initializer.nametag.service.NametagService;
 import org.quartz.JobExecutionContext;
 
 @Document(id = 1751825006787L, value = """
@@ -20,7 +21,7 @@ public class UpdateNametagJob extends CronJob {
 
     @Override
     public void execute(JobExecutionContext context) {
-        NametagInitializer.processNametagsForOnlinePlayers();
+        NametagService.processNametagsForOnlinePlayers();
     }
 
     @EventConsumer

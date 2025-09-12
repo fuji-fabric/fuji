@@ -1,7 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.nametag.structure;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PacketHelper;
-import io.github.sakurawald.fuji.module.initializer.nametag.NametagInitializer;
+import io.github.sakurawald.fuji.module.initializer.nametag.service.NametagService;
 import io.netty.buffer.Unpooled;
 import java.util.List;
 import net.minecraft.entity.Entity;
@@ -37,7 +37,7 @@ public class NametagEntitySyncer {
     }
 
     private static void syncExistingNametagEntities(@NotNull ServerPlayerEntity audience) {
-        NametagInitializer.nametagEntityMap.forEach((key, value) -> {
+        NametagService.nametagEntityMap.forEach((key, value) -> {
             EntitySpawnS2CPacket entitySpawnS2CPacket = makeNametagEntitySpawnPacket(value);
             audience.networkHandler.sendPacket(entitySpawnS2CPacket);
 
