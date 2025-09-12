@@ -10,6 +10,7 @@ import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerDeathEvent;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerJoinedEvent;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerLeftEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerWorldChangedEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_event.config.model.CommandEventConfigModel;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -47,7 +48,7 @@ public class CommandEventInitializer extends ModuleInitializer {
     }
 
     @EventConsumer
-    private static void processOnPlayerJoinedEvent(PlayerJoinedEvent event) {
+    private static void consumePlayerJoinedEvent(PlayerJoinedEvent event) {
         ServerPlayerEntity player = event.getPlayer();
 
         var onPlayerJoinedConfig = CommandEventInitializer.config.model().getEvent().getOnPlayerJoined();
@@ -67,7 +68,7 @@ public class CommandEventInitializer extends ModuleInitializer {
     }
 
     @EventConsumer
-    private static void processOnPlayerLeaveEvent(PlayerLeftEvent event) {
+    private static void consumePlayerLeftEvent(PlayerLeftEvent event) {
         var config = CommandEventInitializer.config.model().getEvent().getOnPlayerLeft();
         if (config.isEnable()) {
             executeCommandOnEvent(event.getPlayer(), config.getCommands());
@@ -75,11 +76,19 @@ public class CommandEventInitializer extends ModuleInitializer {
     }
 
     @EventConsumer
-    private static void handleOnPlayerDeathEvent(PlayerDeathEvent event) {
+    private static void consumePlayerDeathEvent(PlayerDeathEvent event) {
         var config = CommandEventInitializer.config.model().getEvent().getOnPlayerDeath();
         if (config.isEnable()) {
             ServerPlayerEntity player = event.getPlayer();
             CommandEventInitializer.executeCommandOnEvent(player, config.getCommands());
+        }
+    }
+
+    @EventConsumer
+    private static void consumePlayerWorldChangedEvent(PlayerWorldChangedEvent event) {
+        var config = CommandEventInitializer.config.model().getEvent().getAfterPlayerChangeWorld();
+        if (config.isEnable()) {
+            CommandEventInitializer.executeCommandOnEvent(event.getPlayer(), config.getCommands());
         }
     }
 
