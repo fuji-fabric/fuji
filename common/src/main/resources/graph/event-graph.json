@@ -631,32 +631,32 @@
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerPreTeleportEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerPreTeleportEventMixin_DEFAULT",
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerTeleportPreEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerTeleportPreEventMixin_DEFAULT",
       "declaring_method_name": "producePlayerPreTeleportEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerPreTeleportEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerPreTeleportEventMixin_HIGHER",
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerTeleportPreEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerTeleportPreEventMixin_HIGHER",
       "declaring_method_name": "producePlayerPreTeleportEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerPreTeleportEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerPreTeleportEventMixin_HIGHEST",
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerTeleportPreEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerTeleportPreEventMixin_HIGHEST",
       "declaring_method_name": "producePlayerPreTeleportEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerPreTeleportEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerPreTeleportEventMixin_LOWER",
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerTeleportPreEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerTeleportPreEventMixin_LOWER",
       "declaring_method_name": "producePlayerPreTeleportEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerPreTeleportEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerPreTeleportEventMixin_LOWEST",
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerTeleportPreEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerTeleportPreEventMixin_LOWEST",
       "declaring_method_name": "producePlayerPreTeleportEvent",
       "injector_priority": 0
     },
@@ -891,7 +891,7 @@
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerPreTeleportEvent",
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerTeleportPreEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.teleport_warmup.TeleportWarmupInitializer",
       "declaring_method_name": "handlePlayerPreTeleportEvent",
       "injector_priority": 0,
@@ -1075,7 +1075,7 @@
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerPreTeleportEvent",
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerTeleportPreEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.back.BackInitializer",
       "declaring_method_name": "handlePlayerPreTeleportEvent",
       "injector_priority": 1000,
@@ -1470,6 +1470,14 @@
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerDisplayNameEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.jail.JailInitializer",
       "declaring_method_name": "modifyPlayerDisplayName",
+      "injector_priority": 2000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerTeleportPreEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.nametag.NametagInitializer",
+      "declaring_method_name": "consumePlayerTeleportPreEvent",
       "injector_priority": 2000,
       "consumer_priority": 1000,
       "is_dynamic": false

@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
-public class PlayerPreTeleportEvent extends BaseEvent {
+public class PlayerTeleportPreEvent extends BaseEvent {
     @NotNull CallbackInfo callbackInfo;
     @NotNull ServerPlayerEntity player;
     @NotNull ServerWorld destinationDimension;

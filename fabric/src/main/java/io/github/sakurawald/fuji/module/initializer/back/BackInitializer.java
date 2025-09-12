@@ -17,7 +17,7 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerDeathEvent;
-import io.github.sakurawald.fuji.core.event.message.player.PlayerPreTeleportEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerTeleportPreEvent;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.core.document.descriptor.MetaDescriptor;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -207,7 +207,7 @@ public class BackInitializer extends ModuleInitializer {
     }
 
     @EventConsumer
-    private static void handlePlayerPreTeleportEvent(PlayerPreTeleportEvent event) {
+    private static void handlePlayerPreTeleportEvent(PlayerTeleportPreEvent event) {
         if (event.getCallbackInfo().isCancelled()) return;
 
         if (config.model().enable_back_on_teleport) {

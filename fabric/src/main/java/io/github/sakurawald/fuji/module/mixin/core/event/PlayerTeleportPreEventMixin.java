@@ -4,7 +4,7 @@ import io.github.sakurawald.annotation.PhasedMixinTemplate;
 import io.github.sakurawald.auxiliary.WeaverUtil;
 import io.github.sakurawald.fuji.core.event.EventManager;
 import io.github.sakurawald.fuji.core.event.annotation.EventProducer;
-import io.github.sakurawald.fuji.core.event.message.player.PlayerPreTeleportEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerTeleportPreEvent;
 import java.util.Set;
 import net.minecraft.network.packet.s2c.play.PositionFlag;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @PhasedMixinTemplate
 @Mixin(value = ServerPlayerEntity.class)
-public abstract class PlayerPreTeleportEventMixin {
+public abstract class PlayerTeleportPreEventMixin {
 
     #if MC_VER <= MC_1_21
     @Inject(method = "teleport(Lnet/minecraft/server/world/ServerWorld;DDDFF)V", at = @At("HEAD"), cancellable = true)
@@ -40,12 +40,12 @@ public abstract class PlayerPreTeleportEventMixin {
     }
     #endif
 
-    @EventProducer(PlayerPreTeleportEvent.class)
+    @EventProducer(PlayerTeleportPreEvent.class)
     @Unique
     private void producePlayerPreTeleportEvent(ServerWorld serverWorld, double d, double e, double f, float g, float h, Set<PositionFlag> set, CallbackInfo ci) {
         final ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-        PlayerPreTeleportEvent event = new PlayerPreTeleportEvent(ci, player, serverWorld, d, e, f, g, h, set);
-        EventManager.dispatchEvent(PlayerPreTeleportEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
+        PlayerTeleportPreEvent event = new PlayerTeleportPreEvent(ci, player, serverWorld, d, e, f, g, h, set);
+        EventManager.dispatchEvent(PlayerTeleportPreEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
     }
 
 
