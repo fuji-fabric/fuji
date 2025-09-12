@@ -6,8 +6,10 @@ import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerTeleportPreEvent;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerWorldChangedEvent;
 import io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickEndEvent;
+import io.github.sakurawald.fuji.module.initializer.nametag.NametagInitializer;
 import io.github.sakurawald.fuji.module.initializer.nametag.structure.NametagEntity;
 import io.github.sakurawald.fuji.module.initializer.nametag.structure.NametagEntitySyncer;
+import io.github.sakurawald.fuji.module.initializer.nametag.structure.NametagPlayerPreferences;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,7 +35,7 @@ public class NametagService {
         /* Update the nametag entities. */
         PlayerHelper.Lookup.getOnlinePlayers().forEach(player -> {
             // Skip making the nametag entity for the player, if a discard reason is present.
-            if (NametagEntity.getNametagDiscardReason(player).isPresent()) return;
+            if (getNametagEntityRemovedReason(player).isPresent()) return;
 
             // Make the nametag if not exists.
             NametagEntity nametagEntity = nametagEntityMap.computeIfAbsent(player, key -> setupNametagEntity(player));
@@ -67,5 +69,24 @@ public class NametagService {
 
     public static void removeAllNametagEntities() {
         nametagEntityMap.values().forEach(NametagEntity::setRemoved);
+    }
+
+    public static @NotNull NametagPlayerPreferences getOrCreateNametagPlayerPreferences(@NotNull ServerPlayerEntity player) {
+        String playerName = PlayerHelper.getPlayerName(player);
+        return NametagInitializer.data.model()
+            .getPreferences()
+            .computeIfAbsent(playerName, key -> new NametagPlayerPreferences());
+    }
+
+    public static Optional<String> getNametagEntityRemovedReason(@NotNull ServerPlayerEntity ownerPlayer) {
+        if (ownerPlayer.isDead()) return Optional.of("The entity is dead.");
+        if (ownerPlayer.isSneaking()) return Optional.of("The entity is sneaking.");
+
+        // NOTE: when the player jumps into the ender portal in the end, its world is minecraft:overworld, its removal reason is `CHANGED_DIMENSION`
+        if (ownerPlayer.getRemovalReason() != null) return Optional.of("The entity is removed.");
+        if (ownerPlayer.isInvisible()) return Optional.of("The entity is invisible.");
+        if (!getOrCreateNametagPlayerPreferences(ownerPlayer).isEnableNametagEntity()) return Optional.of("The player has turn off the nametag entity.");
+
+        return Optional.empty();
     }
 }

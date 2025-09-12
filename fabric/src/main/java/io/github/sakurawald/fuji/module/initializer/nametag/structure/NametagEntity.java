@@ -6,8 +6,8 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.PacketHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.module.initializer.nametag.NametagInitializer;
+import io.github.sakurawald.fuji.module.initializer.nametag.service.NametagService;
 import java.util.List;
-import java.util.Optional;
 import lombok.Getter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -65,17 +65,6 @@ public class NametagEntity extends DisplayEntity.TextDisplayEntity {
         dataTracker.set(DisplayEntity.TextDisplayEntity.TEXT_DISPLAY_FLAGS, newValue);
     }
 
-    public static Optional<String> getNametagDiscardReason(@NotNull ServerPlayerEntity ownerPlayer) {
-        if (ownerPlayer.isDead()) return Optional.of("The entity is dead.");
-        if (ownerPlayer.isSneaking()) return Optional.of("The entity is sneaking.");
-
-        // NOTE: when the player jumps into the ender portal in the end, its world is minecraft:overworld, its removal reason is `CHANGED_DIMENSION`
-        if (ownerPlayer.getRemovalReason() != null) return Optional.of("The entity is removed.");
-        if (ownerPlayer.isInvisible()) return Optional.of("The entity is invisible.");
-
-        return Optional.empty();
-    }
-
     public void update() {
         /* Update properties of the nametag entity. */
         var config = NametagInitializer.config.model();
@@ -123,7 +112,7 @@ public class NametagEntity extends DisplayEntity.TextDisplayEntity {
 
     @Override
     public void tick() {
-        getNametagDiscardReason(this.ownerPlayer)
+        NametagService.getNametagEntityRemovedReason(this.ownerPlayer)
             .ifPresent(reason -> {
                 LogUtil.debug("Discard nametag entity {}: {}", this, reason);
                 this.setRemoved();
