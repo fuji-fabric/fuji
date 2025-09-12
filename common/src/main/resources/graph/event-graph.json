@@ -1098,7 +1098,7 @@
     },
     {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerDeathEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.back.BackInitializer",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.back.service.BackService",
       "declaring_method_name": "handleOnPlayerDeathEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
@@ -1106,7 +1106,7 @@
     },
     {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerTeleportPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.back.BackInitializer",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.back.service.BackService",
       "declaring_method_name": "handlePlayerPreTeleportEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
