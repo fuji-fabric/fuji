@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.core.service.random_teleport.structure;
 import io.github.sakurawald.fuji.core.service.random_teleport.PositionYSearcher;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.dimension.DimensionTypes;
@@ -11,8 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public enum HeightFindingStrategy implements HeightFinder {
-    SKY_TO_SURFACE__FIRST_SOLID(PositionYSearcher::findYTopBottom),
-    BOTTOM_TO_SKY__FIRST_SAFE_AIR(PositionYSearcher::findYBottomUp);
+    TOP_DOWN((chunk, blockPosX, blockPosZ) -> PositionYSearcher.findYTopBottom(chunk, blockPosX, blockPosZ, Direction.DOWN)),
+    DOWN_TOP((chunk, blockPosX, blockPosZ) -> PositionYSearcher.findYTopBottom(chunk, blockPosX, blockPosZ, Direction.UP));
 
     @SuppressWarnings("ImmutableEnumChecker")
     private final HeightFinder heightFinder;
@@ -26,14 +27,14 @@ public enum HeightFindingStrategy implements HeightFinder {
         return dimensionTypeRegistryKey
             .map(it -> {
                 if (it == DimensionTypes.OVERWORLD || it == DimensionTypes.THE_END) {
-                    return HeightFindingStrategy.SKY_TO_SURFACE__FIRST_SOLID;
+                    return HeightFindingStrategy.TOP_DOWN;
                 }
                 if (it == DimensionTypes.THE_NETHER) {
-                    return HeightFindingStrategy.BOTTOM_TO_SKY__FIRST_SAFE_AIR;
+                    return HeightFindingStrategy.DOWN_TOP;
                 }
                 return null;
             })
-            .orElse(HeightFindingStrategy.SKY_TO_SURFACE__FIRST_SOLID);
+            .orElse(HeightFindingStrategy.TOP_DOWN);
     }
 
     @Override

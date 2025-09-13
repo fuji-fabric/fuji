@@ -1,14 +1,12 @@
 package io.github.sakurawald.fuji.core.service.random_teleport;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.service.random_teleport.structure.HeightFinder;
 import io.github.sakurawald.fuji.core.service.random_teleport.structure.HeightFindingStrategy;
 import io.github.sakurawald.fuji.core.service.random_teleport.structure.RandomTeleportSettings;
 import java.util.Optional;
-import net.minecraft.server.world.ChunkHolder;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
