@@ -21,11 +21,11 @@ public class ChunkCandidateBlocksGenerator {
             public BlockPos.Mutable next() {
                 i++;
                 return switch (i) {
-                    case 0 -> currentValue.set(chunkPos.getStartX(), 0, chunkPos.getStartZ());
-                    case 1 -> currentValue.set(chunkPos.getStartX(), 0, chunkPos.getEndZ());
-                    case 2 -> currentValue.set(chunkPos.getEndX(), 0, chunkPos.getStartZ());
-                    case 3 -> currentValue.set(chunkPos.getEndX(), 0, chunkPos.getEndZ());
-                    case 4 -> currentValue.set(chunkPos.getCenterX(), 0, chunkPos.getCenterZ());
+                    case 0 -> currentValue.set(chunkPos.getCenterX(), 0, chunkPos.getCenterZ());
+                    case 1 -> currentValue.set(chunkPos.getStartX(), 0, chunkPos.getStartZ());
+                    case 2 -> currentValue.set(chunkPos.getStartX(), 0, chunkPos.getEndZ());
+                    case 3 -> currentValue.set(chunkPos.getEndX(), 0, chunkPos.getStartZ());
+                    case 4 -> currentValue.set(chunkPos.getEndX(), 0, chunkPos.getEndZ());
                     default -> throw new IllegalStateException("Unexpected value: " + i);
                 };
             }
