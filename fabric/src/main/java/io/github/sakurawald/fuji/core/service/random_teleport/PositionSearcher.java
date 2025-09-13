@@ -1,11 +1,12 @@
 package io.github.sakurawald.fuji.core.service.random_teleport;
 
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
+import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.service.random_teleport.structure.HeightFinder;
 import io.github.sakurawald.fuji.core.service.random_teleport.structure.HeightFindingStrategy;
 import io.github.sakurawald.fuji.core.service.random_teleport.structure.RandomTeleportSettings;
 import java.util.Optional;
-import java.util.OptionalInt;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
@@ -13,28 +14,33 @@ import org.jetbrains.annotations.NotNull;
 
 public class PositionSearcher {
 
+    @ForDeveloper("Search once, and return empty if there is no good result.")
     public static @NotNull Optional<BlockPos> search(@NotNull RandomTeleportSettings settings) {
-        final BlockPos posXZ = PositionXZGenerator.getRandomXZ(settings);
+        final BlockPos blockPosInChunk = PositionXZGenerator.getRandomXZ(settings);
 
         final ServerWorld serverWorld = WorldHelper.getWorldOrThrow(settings.getDimension());
-        final Chunk chunk = serverWorld.getChunk(posXZ);
+        final Chunk chunk = serverWorld.getChunk(blockPosInChunk);
+        LogUtil.debug("Select chunk as the rtp candidate chunk: {}", chunk.getPos());
 
-        for (BlockPos.Mutable candidateBlock : ChunkCandidateBlocksGenerator.getChunkCandidateBlocks(chunk.getPos())) {
-            final int x = candidateBlock.getX();
-            final int z = candidateBlock.getZ();
+        for (BlockPos.Mutable candidateBlockPos : ChunkCandidateBlocksGenerator.getChunkCandidateBlocks(chunk.getPos())) {
+            final int blockPosX = candidateBlockPos.getX();
+            final int blockPosZ = candidateBlockPos.getZ();
 
+            /* Search a good Y in given XZ position. */
             HeightFinder heightFinder = HeightFindingStrategy.forWorld(serverWorld);
-            final OptionalInt yOpt = heightFinder.getY(chunk, x, z);
-            if (yOpt.isEmpty()) {
+            final Optional<Integer> blockPosY = heightFinder.getY(chunk, blockPosX, blockPosZ);
+            if (blockPosY.isEmpty()) {
                 continue;
             }
-            final int y = yOpt.getAsInt();
+            final int $blockPosY = blockPosY.get();
 
-            if (BlockPosFilter.isSatisfied(settings, chunk, new BlockPos(x, y - 2, z))) {
-                return Optional.of(new BlockPos(x, y, z));
+            /* Apply the filters. */
+            if (BlockPosFilter.isSatisfied(settings, chunk, new BlockPos(blockPosX, $blockPosY - 2, blockPosZ))) {
+                return Optional.of(new BlockPos(blockPosX, $blockPosY, blockPosZ));
             }
         }
 
+        /* Failed to find a good result in this search. */
         return Optional.empty();
     }
 }

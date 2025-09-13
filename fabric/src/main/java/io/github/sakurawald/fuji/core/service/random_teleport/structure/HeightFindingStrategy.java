@@ -55,11 +55,11 @@ public enum HeightFindingStrategy implements HeightFinder {
         return HeightFindingStrategy.SKY_TO_SURFACE__FIRST_SOLID;
     }
 
-    public static @NotNull OptionalInt findYTopBottom(@NotNull Chunk chunk, int x, int z) {
+    public static @NotNull Optional<Integer> findYTopBottom(@NotNull Chunk chunk, int x, int z) {
         final int maxY = computeMaxY(chunk);
         final int bottomY = chunk.getBottomY();
         if (maxY <= bottomY) {
-            return OptionalInt.empty();
+            return Optional.empty();
         }
 
         final BlockPos.Mutable mutablePos = new BlockPos.Mutable(x, maxY, z);
@@ -70,22 +70,22 @@ public enum HeightFindingStrategy implements HeightFinder {
         while (mutablePos.getY() > bottomY) {
             isAir3 = chunk.getBlockState(mutablePos.move(Direction.DOWN)).isAir();
             if (!isAir3 && isAir2 && isAir1) { // If there is a floor block and space for player body+head
-                return OptionalInt.of(mutablePos.getY() + 1);
+                return Optional.of(mutablePos.getY() + 1);
             }
 
             isAir1 = isAir2;
             isAir2 = isAir3;
         }
 
-        return OptionalInt.empty();
+        return Optional.empty();
     }
 
     @SuppressWarnings("deprecation")
-    private static @NotNull OptionalInt findYBottomUp(@NotNull Chunk chunk, int x, int z) {
+    private static @NotNull Optional<Integer> findYBottomUp(@NotNull Chunk chunk, int x, int z) {
         final int topY = getChunkHighestNonEmptySectionYOffsetOrTopY(chunk);
         final int bottomY = chunk.getBottomY();
         if (topY <= bottomY) {
-            return OptionalInt.empty();
+            return Optional.empty();
         }
 
         final BlockPos.Mutable mutablePos = new BlockPos.Mutable(x, bottomY, z);
@@ -96,14 +96,14 @@ public enum HeightFindingStrategy implements HeightFinder {
         while (mutablePos.getY() < topY) {
             bsHead3 = chunk.getBlockState(mutablePos.move(Direction.UP));
             if (bsFeet1.isSolid() && bsBody2.isAir() && bsHead3.isAir()) { // If there is a floor block and space for player body+head
-                return OptionalInt.of(mutablePos.getY() - 1);
+                return Optional.of(mutablePos.getY() - 1);
             }
 
             bsFeet1 = bsBody2;
             bsBody2 = bsHead3;
         }
 
-        return OptionalInt.empty();
+        return Optional.empty();
     }
 
     public static int getChunkHighestNonEmptySectionYOffsetOrTopY(@NotNull Chunk chunk) {
@@ -112,7 +112,7 @@ public enum HeightFindingStrategy implements HeightFinder {
     }
 
     @Override
-    public OptionalInt getY(Chunk chunk, int x, int z) {
+    public Optional<Integer> getY(Chunk chunk, int x, int z) {
         return heightFinder.getY(chunk, x, z);
     }
 }

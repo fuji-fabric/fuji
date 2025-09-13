@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ChunkCandidateBlocksGenerator {
 
-    static @NotNull Iterable<BlockPos.Mutable> getChunkCandidateBlocks(@NotNull ChunkPos chunkPos) {
+    public static @NotNull Iterable<BlockPos.Mutable> getChunkCandidateBlocks(@NotNull ChunkPos chunkPos) {
         return () -> new Iterator<>() {
             private final BlockPos.Mutable currentValue = new BlockPos.Mutable();
             private int i = -1;
