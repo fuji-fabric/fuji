@@ -9,14 +9,14 @@ import net.minecraft.world.chunk.Chunk;
 import org.jetbrains.annotations.NotNull;
 
 public class BlockPosFilter {
-    static boolean isSatisfied(@NotNull RandomTeleportSettings setup, @NotNull Chunk chunk, @NotNull BlockPos pos) {
-        BlockState blockState = chunk.getBlockState(pos);
-        return pos.getY() >= setup.getMinY()
-            && pos.getY() <= setup.getMaxY()
+    static boolean isSatisfied(@NotNull RandomTeleportSettings settings, @NotNull Chunk chunk, @NotNull BlockPos blockPos) {
+        BlockState blockState = chunk.getBlockState(blockPos);
+        return blockPos.getY() >= settings.getMinY()
+            && blockPos.getY() <= settings.getMaxY()
             && blockState.getFluidState().isEmpty()
             && blockState.getBlock() != Blocks.POWDER_SNOW
             && blockState.getBlock() != Blocks.FIRE
-            && pos.getY() >= chunk.getBottomY()
-            && pos.getY() <= WorldHelper.getTopY(chunk);
+            && blockPos.getY() >= chunk.getBottomY()
+            && blockPos.getY() <= WorldHelper.getTopY(chunk);
     }
 }
