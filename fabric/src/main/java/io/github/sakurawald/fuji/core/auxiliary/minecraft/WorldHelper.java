@@ -35,6 +35,10 @@ public class WorldHelper {
         #endif
     }
 
+    public static int getBottomYInclusive(@NotNull Chunk chunk) {
+        return chunk.getBottomY();
+    }
+
     public static int getTopY(@NotNull World world) {
         #if MC_VER <= MC_1_21
         return world.getTopY();

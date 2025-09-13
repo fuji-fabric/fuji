@@ -14,21 +14,21 @@ public class PositionYSearcher {
     public static @NotNull Optional<Integer> findYTopBottom(@NotNull Chunk chunk, int blockPosX, int blockPosZ) {
         /* Initialize Y range. */
         final int maxY = WorldHelper.getMaxBlockY(chunk);
-        final int minY = chunk.getBottomY();
+        final int minY = WorldHelper.getBottomYInclusive(chunk);
         if (maxY <= minY) {
             return Optional.empty();
         }
 
         /* Initialize candidate block pos. */
-        final BlockPos.Mutable mutablePos = new BlockPos.Mutable(blockPosX, maxY, blockPosZ);
-        boolean isAir1 = chunk.getBlockState(mutablePos).isAir(); // Block at head level
-        boolean isAir2 = chunk.getBlockState(mutablePos.move(Direction.DOWN)).isAir(); // Block at feet level
+        final BlockPos.Mutable mutableBlockPos = new BlockPos.Mutable(blockPosX, maxY + 2, blockPosZ);
+        boolean isAir1 = chunk.getBlockState(mutableBlockPos).isAir(); // Block at head level
+        boolean isAir2 = chunk.getBlockState(mutableBlockPos.move(Direction.DOWN)).isAir(); // Block at feet level
         boolean isAir3; // Block below feet
 
-        while (mutablePos.getY() > minY) {
-            isAir3 = chunk.getBlockState(mutablePos.move(Direction.DOWN)).isAir();
+        while (mutableBlockPos.getY() > minY) {
+            isAir3 = chunk.getBlockState(mutableBlockPos.move(Direction.DOWN)).isAir();
             if (!isAir3 && isAir2 && isAir1) { // If there is a floor block and space for player body+head
-                return Optional.of(mutablePos.getY() + 1);
+                return Optional.of(mutableBlockPos.getY() + 1);
             }
 
             isAir1 = isAir2;
