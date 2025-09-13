@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.Data;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 @Data
 public class LocationSearchContext {
 
+    @NotNull ServerPlayerEntity player;
     @NotNull RandomTeleportSettings settings;
     @NotNull List<ChunkPos> chunkPosQueue;
     @NotNull List<BlockPos> blockPosQueue;
@@ -31,8 +33,8 @@ public class LocationSearchContext {
     }
 
     @SuppressWarnings("UnnecessaryLocalVariable")
-    public static @NotNull LocationSearchContext of(@NotNull RandomTeleportSettings settings) {
-        LocationSearchContext locationSearchContext = new LocationSearchContext(settings, new ArrayList<>(), new ArrayList<>(), Optional.empty());
+    public static @NotNull LocationSearchContext of(@NotNull ServerPlayerEntity player, @NotNull RandomTeleportSettings settings) {
+        LocationSearchContext locationSearchContext = new LocationSearchContext(player, settings, new ArrayList<>(), new ArrayList<>(), Optional.empty());
         return locationSearchContext;
     }
 

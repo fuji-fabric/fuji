@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.core.service.random_teleport;
 
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.service.random_teleport.structure.RandomTeleportSettings;
@@ -16,10 +17,11 @@ public class PositionSearcher {
     public static void search(@NotNull LocationSearchContext context) {
         final RandomTeleportSettings settings = context.getSettings();
         final BlockPos blockPosInChunk = PositionXZGenerator.getRandomXZ(settings);
+        TextHelper.sendTextByKey(context.getPlayer(), "rtp.progress.checking_chunk", blockPosInChunk.getX(), blockPosInChunk.getZ());
 
         final ServerWorld serverWorld = WorldHelper.getWorldOrThrow(settings.getDimension());
         final Chunk chunk = serverWorld.getChunk(blockPosInChunk);
-        LogUtil.debug("Select the RTP candidate chunk: chunk pos = {}", chunk.getPos());
+        LogUtil.debug("RTP: Select the candidate chunk: chunk pos = {}", chunk.getPos());
 
         for (BlockPos.Mutable candidateBlockPos : ChunkCandidateBlocksGenerator.getChunkCandidateBlocks(chunk.getPos())) {
             final int blockPosX = candidateBlockPos.getX();
@@ -39,6 +41,7 @@ public class PositionSearcher {
             LogUtil.debug("RTP: Biome at block pos {} is {}", value, biomeId);
             if (settings.getBiomes().getSkip().contains(biomeId)) {
                 LogUtil.debug("RTP: Skip the biome {} at block pos {}", biomeId, value);
+                TextHelper.sendTextByKey(context.getPlayer(), "rtp.progress.skip_biome", biomeId);
                 return;
             }
 

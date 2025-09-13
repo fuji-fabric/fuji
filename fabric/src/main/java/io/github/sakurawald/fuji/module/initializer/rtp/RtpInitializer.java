@@ -70,8 +70,7 @@ public class RtpInitializer extends ModuleInitializer {
                 return new AbortCommandExecutionException();
             });
 
-        TextHelper.sendTextByKey(player, "rtp.tip");
-        RandomTeleporter.request(player, setup, (position) -> TextHelper.sendTextByKey(player, "rtp.success"));
+        RandomTeleporter.request(player, setup, null);
         return CommandHelper.Return.SUCCESS;
     }
 }

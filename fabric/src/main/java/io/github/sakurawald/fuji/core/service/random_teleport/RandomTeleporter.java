@@ -11,6 +11,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.core.service.random_teleport.structure.RandomTeleportSettings;
+import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -26,8 +27,9 @@ public class RandomTeleporter {
         AsyncUtil.runAsyncAndHandleExceptions(() -> {
             /* Start the timer. */
             String playerName = PlayerHelper.getPlayerName(player);
-            LogUtil.info("Request rtp: {}", playerName);
             Stopwatch timer = Stopwatch.createStarted();
+            LogUtil.info("Request rtp: {}", playerName);
+            TextHelper.sendTextByKey(player, "rtp.progress.started");
 
             /* Initialize world variable. */
             Optional<ServerWorld> world = WorldHelper.getWorld(settings.getDimension());
@@ -39,7 +41,7 @@ public class RandomTeleporter {
             ServerWorld $world = world.get();
 
             /* Do search. */
-            final LocationSearchContext context = LocationSearchContext.of(settings);
+            final LocationSearchContext context = LocationSearchContext.of(player, settings);
             do {
                 TextHelper.sendTextByKey(player, "rtp.progress.searching", context.getAttempts(), context.getMaxAttempts());
                 context.incrementAttempts();
@@ -56,6 +58,7 @@ public class RandomTeleporter {
             /* Consume the search result. */
             BlockPos $result = result.get();
             GlobalPos globalPos = new GlobalPos($world, $result.getX() + 0.5, $result.getY(), $result.getZ() + 0.5, 0, 0);
+            TextHelper.sendTextByKey(player,"rtp.progress.teleporting");
             ServerHelper.executeSync(() -> globalPos.teleport(player));
 
             /* Call hooks. */
