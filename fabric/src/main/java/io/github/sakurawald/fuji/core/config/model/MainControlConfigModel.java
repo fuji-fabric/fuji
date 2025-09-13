@@ -738,6 +738,7 @@ public class MainControlConfigModel {
             public Seen seen = new Seen();
             public Suicide suicide = new Suicide();
             public Top top = new Top();
+            public Down down = new Down();
             public TrashCan trashcan = new TrashCan();
             public Tppos tppos = new Tppos();
             public Tphere tphere = new Tphere();
@@ -828,6 +829,10 @@ public class MainControlConfigModel {
             }
 
             public static class Top {
+                public boolean enable = false;
+            }
+
+            public static class Down {
                 public boolean enable = false;
             }
 

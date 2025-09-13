@@ -164,6 +164,7 @@
   "display.inventory.text": "<#D2E0FB>[Inventory Display]",
   "display.item.broadcast": "<#FFA1F5>Player %player:name% just share an item display: <#D2E0FB>${display}",
   "display.item.text": "<#D2E0FB>[${item}]",
+  "down": "<gold>Down!",
   "duration.invalid": "<red>Invalid duration: `%s`",
   "echo.send_bossbar.notify": "<green>The bossbar sent to `%s` with command list `%s` is completed.",
   "echo.send_custom.custom_text.invalid_page": "<red>Invalid page.",
@@ -1515,5 +1516,6 @@
   "docstring.1757696964602": "◉ How it works?\n1. A `nametag entity` is a `text display entity`.\n2. A `nametag entity` is a `virtual entity`.\n2.a. The `entity` is not actually presented in the `server-side world`\n2.b. The `server` simulates the existence of `the nametag entity` on the `client-side world`, allowing the client to perceive it as if it were a real entity.\n\nRead the semantics of each field:\n- https://minecraft.wiki/w/Display\n",
   "docstring.1757698545173": "◉ Toggle the `nametag entity` for self.\nIssue: `/nametag toggle @s`\n\n◉ Turn on the `nametag entity` for online players.\nIssue: `/nametag toggle others @a true`\n\n◉ Turn off the `nametag entity` for online players.\nIssue: `/nametag toggle others @a false`\n",
   "docstring.1757757045008": "This module provides customization of join queue.\n",
-  "docstring.1757757163621": "To bypass the `player limit`.\n"
+  "docstring.1757757163621": "To bypass the `player limit`.\n",
+  "docstring.1757792247065": "Teleport to the lowest of your current position."
 }
