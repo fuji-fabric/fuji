@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ChunkHolder;
 import net.minecraft.server.world.ServerWorld;
@@ -18,6 +19,7 @@ import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.DimensionTypes;
 import org.jetbrains.annotations.NotNull;
@@ -115,6 +117,14 @@ public class WorldHelper {
         // Returns the max Y in the chunk where the highest block is in.
         int blockCoord = ChunkSectionPos.getBlockCoord(chunk.sectionIndexToCoord(i));
         return blockCoord + 15;
+    }
+
+    public static @NotNull String getBiomeId(@NotNull ServerWorld world, @NotNull BlockPos blockPos) {
+        RegistryEntry<Biome> biome = world.getBiome(blockPos);
+        return biome
+            .getKey()
+            .map(RegistryHelper::getIdAsString)
+            .orElse("[UnknownBiome]");
     }
 
     public static class Formatter {

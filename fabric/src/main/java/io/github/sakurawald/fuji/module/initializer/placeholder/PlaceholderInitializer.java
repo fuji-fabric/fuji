@@ -5,6 +5,7 @@ import eu.pb4.placeholders.api.Placeholders;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
@@ -27,14 +28,12 @@ import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import io.github.sakurawald.fuji.module.initializer.placeholder.gui.PlaceholderGui;
 import io.github.sakurawald.fuji.module.initializer.placeholder.structure.SumUpPlaceholder;
 import java.time.format.DateTimeFormatter;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.biome.Biome;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
@@ -204,8 +203,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
             int blockZ = player.getBlockZ();
             String dimensionName = RegistryHelper.getIdAsString(player.getWorld());
             String dimensionDisplayName = TextHelper.Translator.getLanguageValueByKey(player, dimensionName);
-            RegistryEntry<Biome> biome = player.getWorld().getBiome(player.getBlockPos());
-            String biomeName = biome.getKey().map(RegistryHelper::getIdAsString).orElse("Unknown");
+            String biomeName = WorldHelper.getBiomeId(player.getWorld(), player.getBlockPos());
             Text positionText = TextHelper.getTextByKey(player, "placeholder.position", dimensionDisplayName, blockX, blockY, blockZ, biomeName);
 
             /* Attach the position of current dimension. */
