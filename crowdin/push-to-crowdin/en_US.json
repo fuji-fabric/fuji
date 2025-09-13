@@ -1513,6 +1513,5 @@
   "docstring.1757696964602": "◉ How it works?\n1. A `nametag entity` is a `text display entity`.\n2. A `nametag entity` is a `virtual entity`.\n2.a. The `entity` is not actually presented in the `server-side world`\n2.b. The `server` simulates the existence of `the nametag entity` on the `client-side world`, allowing the client to perceive it as if it were a real entity.\n\nRead the semantics of each field:\n- https://minecraft.wiki/w/Display\n",
   "docstring.1757698545173": "◉ Toggle the `nametag entity` for self.\nIssue: `/nametag toggle @s`\n\n◉ Turn on the `nametag entity` for online players.\nIssue: `/nametag toggle others @a true`\n\n◉ Turn off the `nametag entity` for online players.\nIssue: `/nametag toggle others @a false`\n",
   "docstring.1757757045008": "This module provides customization of join queue.\n",
-  "docstring.1757757163621": "To bypass the `player limit`.\n",
-  "docstring.1757757515472": "◉ Allow a player to bypass the `player limit`.\nIssue:\n\n"
+  "docstring.1757757163621": "To bypass the `player limit`.\n"
 }

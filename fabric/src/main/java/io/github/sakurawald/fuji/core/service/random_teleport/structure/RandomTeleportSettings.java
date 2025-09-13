@@ -1,11 +1,9 @@
 package io.github.sakurawald.fuji.core.service.random_teleport.structure;
 
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minecraft.server.world.ServerWorld;
 
 @Data
 @NoArgsConstructor
@@ -55,10 +53,6 @@ public class RandomTeleportSettings {
         Max try times before aborting a `rtp` request.
         """)
     int maxTryTimes;
-
-    public ServerWorld toDimension() {
-        return WorldHelper.getWorldOrThrow(this.dimension);
-    }
 
 }
 
