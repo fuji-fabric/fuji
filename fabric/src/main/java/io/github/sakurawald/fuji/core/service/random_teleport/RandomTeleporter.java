@@ -40,12 +40,12 @@ public class RandomTeleporter {
 
             /* Do search. */
             final LocationSearchContext context = LocationSearchContext.of(settings);
-            Optional<BlockPos> result;
             do {
                 context.incrementAttempts();
-                result = PositionSearcher.search(context);
-            } while (result.isEmpty() && context.getAttempts() <= settings.getMaxTryTimes());
+                PositionSearcher.search(context);
+            } while (context.getResult().isEmpty() && context.getAttempts() <= settings.getMaxTryTimes());
 
+            Optional<BlockPos> result = context.getResult();
             if (result.isEmpty()) {
                 LogUtil.debug("Abort rtp for {}, run out attempts.", player);
                 TextHelper.sendTextByKey(player, "rtp.fail");

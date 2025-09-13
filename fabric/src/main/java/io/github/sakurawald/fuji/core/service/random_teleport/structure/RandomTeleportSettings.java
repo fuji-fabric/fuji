@@ -1,6 +1,8 @@
 package io.github.sakurawald.fuji.core.service.random_teleport.structure;
 
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -53,6 +55,25 @@ public class RandomTeleportSettings {
         Max try times before aborting a `rtp` request.
         """)
     int maxTryTimes;
+
+    Biomes biomes = new Biomes();
+    @Data
+    @NoArgsConstructor
+    public static class Biomes {
+        Set<String> skip = new HashSet<>() {
+            {
+                this.add("minecraft:ocean");
+                this.add("minecraft:deep_ocean");
+                this.add("minecraft:warm_ocean");
+                this.add("minecraft:lukewarm_ocean");
+                this.add("minecraft:deep_lukewarm_ocean");
+                this.add("minecraft:cold_ocean");
+                this.add("minecraft:deep_cold_ocean");
+                this.add("minecraft:frozen_ocean");
+                this.add("minecraft:deep_frozen_ocean");
+            }
+        };
+    }
 
 }
 
