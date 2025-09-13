@@ -16,7 +16,7 @@ import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlaye
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.service.random_teleport.RandomTeleporter;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
-import io.github.sakurawald.fuji.core.structure.TeleportSetup;
+import io.github.sakurawald.fuji.core.service.random_teleport.structure.RandomTeleportSettings;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import java.util.Collection;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -85,10 +85,10 @@ public class TpposInitializer extends ModuleInitializer {
         int $maxY = maxY.orElse(WorldHelper.getTopY(world));
         int $maxTryTimes = maxTryTimes.orElse(8);
 
-        TeleportSetup teleportSetup = new TeleportSetup(RegistryHelper.getIdAsString(world), $centerX, $centerZ, $circle, $minRange, $maxRange, $minY
+        RandomTeleportSettings randomTeleportSettings = new RandomTeleportSettings(RegistryHelper.getIdAsString(world), $centerX, $centerZ, $circle, $minRange, $maxRange, $minY
             , $maxY, $maxTryTimes);
 
-        RandomTeleporter.request(player, teleportSetup, null);
+        RandomTeleporter.request(player, randomTeleportSettings, null);
         return CommandHelper.Return.SUCCESS;
     }
 

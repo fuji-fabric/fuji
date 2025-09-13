@@ -10,7 +10,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.service.random_teleport.structure.HeightFinder;
 import io.github.sakurawald.fuji.core.service.random_teleport.structure.HeightFindingStrategy;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
-import io.github.sakurawald.fuji.core.structure.TeleportSetup;
+import io.github.sakurawald.fuji.core.service.random_teleport.structure.RandomTeleportSettings;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -29,7 +29,7 @@ import java.util.OptionalInt;
 @Cite("https://github.com/John-Paul-R/Essential-Commands")
 public class RandomTeleporter {
 
-    public static void request(@NotNull ServerPlayerEntity player, @NotNull TeleportSetup setup, @Nullable Consumer<GlobalPos> postConsumer) {
+    public static void request(@NotNull ServerPlayerEntity player, @NotNull RandomTeleportSettings setup, @Nullable Consumer<GlobalPos> postConsumer) {
         AsyncUtil.runAsyncAndHandleExceptions(() -> {
             LogUtil.info("Request rtp: {}", player.getGameProfile().getName());
             Stopwatch timer = Stopwatch.createStarted();
@@ -74,7 +74,7 @@ public class RandomTeleporter {
         });
     }
 
-    private static @NotNull Optional<BlockPos> searchPosition(@NotNull TeleportSetup setup) {
+    private static @NotNull Optional<BlockPos> searchPosition(@NotNull RandomTeleportSettings setup) {
         // Search for a valid y-level (not in a block, underwater, out of the world, etc.)
         final BlockPos targetXZ = getRandomXZ(setup);
 
@@ -100,11 +100,11 @@ public class RandomTeleporter {
         return Optional.empty();
     }
 
-    private static @NotNull BlockPos getRandomXZ(@NotNull TeleportSetup setup) {
+    private static @NotNull BlockPos getRandomXZ(@NotNull RandomTeleportSettings setup) {
         return setup.isCircle() ? getRandomXZWithCircle(setup) : getRandomXZWithRect(setup);
     }
 
-    private static @NotNull BlockPos getRandomXZWithCircle(@NotNull TeleportSetup setup) {
+    private static @NotNull BlockPos getRandomXZWithCircle(@NotNull RandomTeleportSettings setup) {
         var rand = new Random();
 
         int r_min = setup.getMinRange();
@@ -120,7 +120,7 @@ public class RandomTeleporter {
         return new BlockPos(x, 0, z);
     }
 
-    private static @NotNull BlockPos getRandomXZWithRect(@NotNull TeleportSetup setup) {
+    private static @NotNull BlockPos getRandomXZWithRect(@NotNull RandomTeleportSettings setup) {
         var rand = new Random();
         int r_min = setup.getMinRange();
         int r_max = setup.getMaxRange();
@@ -130,7 +130,7 @@ public class RandomTeleporter {
         return new BlockPos(x, 0, z);
     }
 
-    private static boolean isSatisfied(@NotNull TeleportSetup setup, @NotNull Chunk chunk, @NotNull BlockPos pos) {
+    private static boolean isSatisfied(@NotNull RandomTeleportSettings setup, @NotNull Chunk chunk, @NotNull BlockPos pos) {
         BlockState blockState = chunk.getBlockState(pos);
         return pos.getY() >= setup.getMinY()
             && pos.getY() <= setup.getMaxY()

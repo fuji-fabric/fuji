@@ -14,7 +14,7 @@ import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionExc
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.service.random_teleport.RandomTeleporter;
-import io.github.sakurawald.fuji.core.structure.TeleportSetup;
+import io.github.sakurawald.fuji.core.service.random_teleport.structure.RandomTeleportSettings;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.rtp.config.model.RtpConfigModel;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -49,24 +49,26 @@ public class RtpInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<RtpConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, RtpConfigModel.class);
 
-    private static @NotNull TeleportSetup withTeleportSetup(@NotNull ServerPlayerEntity player, @NotNull ServerWorld world) {
-        List<TeleportSetup> list = config.model().setup.dimension;
+    private static Optional<RandomTeleportSettings> getRandomTeleportSettings(@NotNull ServerWorld world) {
+        List<RandomTeleportSettings> list = config.model().getSetup().getDimension();
         String dimension = RegistryHelper.getIdAsString(world);
-
-        Optional<TeleportSetup> first = list.stream().filter(o -> o.getDimension().equals(dimension)).findFirst();
-        if (first.isEmpty()) {
-            TextHelper.sendTextByKey(player, "rtp.dimension.disallow", RegistryHelper.getIdAsString(world));
-            throw new AbortCommandExecutionException();
-        }
-
-        return first.get();
+        return list.stream()
+            .filter(o -> o.getDimension().equals(dimension))
+            .findFirst();
     }
 
     @Document(id = 1751826340406L, value = "Random rtp in specified dimension.")
     @CommandNode("rtp")
     private static int $rtp(@CommandSource @CommandTarget ServerPlayerEntity player, Optional<Dimension> dimension) {
-        ServerWorld serverWorld = dimension.isPresent() ? dimension.get().getValue() : EntityHelper.getServerWorld(player);
-        TeleportSetup setup = withTeleportSetup(player, serverWorld);
+        ServerWorld serverWorld = dimension
+            .map(Dimension::getValue)
+            .orElseGet(() -> EntityHelper.getServerWorld(player));
+
+        RandomTeleportSettings setup = getRandomTeleportSettings(serverWorld)
+            .orElseThrow(() -> {
+                TextHelper.sendTextByKey(player, "rtp.dimension.disallow", RegistryHelper.getIdAsString(serverWorld));
+                return new AbortCommandExecutionException();
+            });
 
         TextHelper.sendTextByKey(player, "rtp.tip");
         RandomTeleporter.request(player, setup, (position) -> TextHelper.sendTextByKey(player, "rtp.success"));

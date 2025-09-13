@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.structure;
+package io.github.sakurawald.fuji.core.service.random_teleport.structure;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
@@ -10,7 +10,7 @@ import net.minecraft.server.world.ServerWorld;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TeleportSetup {
+public class RandomTeleportSettings {
     @Document(id = 1751823841574L, value = """
         The `target dimension` of this setup.
         """)
