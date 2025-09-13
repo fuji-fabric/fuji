@@ -5,7 +5,7 @@ import java.util.Random;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
-public class LocationXZGenerator {
+public class PositionXZGenerator {
 
     public static @NotNull BlockPos getRandomXZ(@NotNull RandomTeleportSettings setup) {
         return setup.isCircle() ? getRandomXZWithCircle(setup) : getRandomXZWithRect(setup);

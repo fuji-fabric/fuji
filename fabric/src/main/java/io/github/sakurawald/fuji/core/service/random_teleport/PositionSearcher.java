@@ -11,13 +11,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
 import org.jetbrains.annotations.NotNull;
 
-public class LocationSearcher {
+public class PositionSearcher {
 
-    static @NotNull Optional<BlockPos> searchPosition(@NotNull RandomTeleportSettings settings) {
-        final BlockPos targetXZ = LocationXZGenerator.getRandomXZ(settings);
+    public static @NotNull Optional<BlockPos> search(@NotNull RandomTeleportSettings settings) {
+        final BlockPos posXZ = PositionXZGenerator.getRandomXZ(settings);
 
         final ServerWorld serverWorld = WorldHelper.getWorldOrThrow(settings.getDimension());
-        final Chunk chunk = serverWorld.getChunk(targetXZ);
+        final Chunk chunk = serverWorld.getChunk(posXZ);
 
         for (BlockPos.Mutable candidateBlock : ChunkCandidateBlocksGenerator.getChunkCandidateBlocks(chunk.getPos())) {
             final int x = candidateBlock.getX();

@@ -43,7 +43,7 @@ public class RandomTeleporter {
             int triedTimes = 0;
             do {
                 triedTimes++;
-                result = LocationSearcher.searchPosition(setup);
+                result = PositionSearcher.search(setup);
             } while (result.isEmpty() && triedTimes <= setup.getMaxTryTimes());
 
             if (result.isEmpty()) {
