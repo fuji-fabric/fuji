@@ -22,7 +22,7 @@ import java.util.Optional;
 @Cite("https://github.com/John-Paul-R/Essential-Commands")
 public class RandomTeleporter {
 
-    public static void request(@NotNull ServerPlayerEntity player, @NotNull RandomTeleportSettings setup, @Nullable Consumer<GlobalPos> onCompleteHook) {
+    public static void request(@NotNull ServerPlayerEntity player, @NotNull RandomTeleportSettings settings, @Nullable Consumer<GlobalPos> onCompleteHook) {
         AsyncUtil.runAsyncAndHandleExceptions(() -> {
             /* Start the timer. */
             String playerName = PlayerHelper.getPlayerName(player);
@@ -30,7 +30,7 @@ public class RandomTeleporter {
             Stopwatch timer = Stopwatch.createStarted();
 
             /* Initialize world variable. */
-            Optional<ServerWorld> world = WorldHelper.getWorld(setup.getDimension());
+            Optional<ServerWorld> world = WorldHelper.getWorld(settings.getDimension());
             if (world.isEmpty()) {
                 LogUtil.warn("Abort rtp for {} (Target dimension not found in server)", player);
                 TextHelper.sendTextByKey(player, "world.dimension.not_found");
@@ -39,12 +39,12 @@ public class RandomTeleporter {
             ServerWorld $world = world.get();
 
             /* Do search. */
+            final LocationSearchContext context = LocationSearchContext.of(settings);
             Optional<BlockPos> result;
-            int triedTimes = 0;
             do {
-                triedTimes++;
-                result = PositionSearcher.search(setup);
-            } while (result.isEmpty() && triedTimes <= setup.getMaxTryTimes());
+                context.incrementAttempts();
+                result = PositionSearcher.search(context);
+            } while (result.isEmpty() && context.getAttempts() <= settings.getMaxTryTimes());
 
             if (result.isEmpty()) {
                 LogUtil.debug("Abort rtp for {}, run out attempts.", player);

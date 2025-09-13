@@ -14,6 +14,7 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
@@ -24,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class WorldHelper {
 
-    public static int getTopY(Chunk chunk) {
+    public static int getTopY(@NotNull Chunk chunk) {
         #if MC_VER <= MC_1_21
         return chunk.getTopY();
         #elif MC_VER > MC_1_21
@@ -32,7 +33,7 @@ public class WorldHelper {
         #endif
     }
 
-    public static int getTopY(World world) {
+    public static int getTopY(@NotNull World world) {
         #if MC_VER <= MC_1_21
         return world.getTopY();
         #elif MC_VER > MC_1_21
@@ -103,6 +104,17 @@ public class WorldHelper {
     public static Iterable<ChunkHolder> getChunks(ServerWorld world) {
         Iterable<ChunkHolder> chunkHolders = getChunkStorage(world).entryIterator();
         return chunkHolders;
+    }
+
+    public static int getMaxBlockY(@NotNull Chunk chunk) {
+        int i = chunk.getHighestNonEmptySection();
+        if (i == -1) {
+            return getTopY(chunk);
+        }
+
+        // Returns the max Y in the chunk where the highest block is in.
+        int blockCoord = ChunkSectionPos.getBlockCoord(chunk.sectionIndexToCoord(i));
+        return blockCoord + 15;
     }
 
     public static class Formatter {

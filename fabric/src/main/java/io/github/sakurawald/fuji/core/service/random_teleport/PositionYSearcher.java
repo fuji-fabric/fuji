@@ -7,38 +7,25 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkSection;
 import org.jetbrains.annotations.NotNull;
 
 public class PositionYSearcher {
 
-    private static int computeMaxY(@NotNull Chunk chunk) {
-        final int maxY = WorldHelper.getTopY(chunk);
-        ChunkSection[] sections = chunk.getSectionArray();
-        int maxSectionIndex = Math.min(sections.length - 1, maxY >> 4);
-
-        for (int index = maxSectionIndex; index >= 0; --index) {
-            if (!sections[index].isEmpty()) {
-                return Math.min(index << 4 + 15, maxY);
-            }
-        }
-
-        return Integer.MAX_VALUE;
-    }
-
-    public static @NotNull Optional<Integer> findYTopBottom(@NotNull Chunk chunk, int x, int z) {
-        final int maxY = computeMaxY(chunk);
-        final int bottomY = chunk.getBottomY();
-        if (maxY <= bottomY) {
+    public static @NotNull Optional<Integer> findYTopBottom(@NotNull Chunk chunk, int blockPosX, int blockPosZ) {
+        /* Initialize Y range. */
+        final int maxY = WorldHelper.getMaxBlockY(chunk);
+        final int minY = chunk.getBottomY();
+        if (maxY <= minY) {
             return Optional.empty();
         }
 
-        final BlockPos.Mutable mutablePos = new BlockPos.Mutable(x, maxY, z);
+        /* Initialize candidate block pos. */
+        final BlockPos.Mutable mutablePos = new BlockPos.Mutable(blockPosX, maxY, blockPosZ);
         boolean isAir1 = chunk.getBlockState(mutablePos).isAir(); // Block at head level
         boolean isAir2 = chunk.getBlockState(mutablePos.move(Direction.DOWN)).isAir(); // Block at feet level
         boolean isAir3; // Block below feet
 
-        while (mutablePos.getY() > bottomY) {
+        while (mutablePos.getY() > minY) {
             isAir3 = chunk.getBlockState(mutablePos.move(Direction.DOWN)).isAir();
             if (!isAir3 && isAir2 && isAir1) { // If there is a floor block and space for player body+head
                 return Optional.of(mutablePos.getY() + 1);
@@ -49,6 +36,11 @@ public class PositionYSearcher {
         }
 
         return Optional.empty();
+    }
+
+    private static int getChunkHighestNonEmptySectionYOffsetOrTopY(@NotNull Chunk chunk) {
+        int i = chunk.getHighestNonEmptySection();
+        return i == WorldHelper.getTopY(chunk) ? chunk.getBottomY() : ChunkSectionPos.getBlockCoord(chunk.sectionIndexToCoord(i));
     }
 
     @SuppressWarnings("deprecation")
@@ -77,8 +69,4 @@ public class PositionYSearcher {
         return Optional.empty();
     }
 
-    private static int getChunkHighestNonEmptySectionYOffsetOrTopY(@NotNull Chunk chunk) {
-        int i = chunk.getHighestNonEmptySection();
-        return i == WorldHelper.getTopY(chunk) ? chunk.getBottomY() : ChunkSectionPos.getBlockCoord(chunk.sectionIndexToCoord(i));
-    }
 }
