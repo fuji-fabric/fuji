@@ -61,6 +61,36 @@
       "injector_priority": 0
     },
     {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.BypassPlayerLimitEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.BypassPlayerLimitEventMixin_DEFAULT",
+      "declaring_method_name": "produceBypassPlayerLimitEvent",
+      "injector_priority": 1000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.BypassPlayerLimitEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.BypassPlayerLimitEventMixin_HIGHER",
+      "declaring_method_name": "produceBypassPlayerLimitEvent",
+      "injector_priority": 1001
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.BypassPlayerLimitEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.BypassPlayerLimitEventMixin_HIGHEST",
+      "declaring_method_name": "produceBypassPlayerLimitEvent",
+      "injector_priority": 2000
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.BypassPlayerLimitEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.BypassPlayerLimitEventMixin_LOWER",
+      "declaring_method_name": "produceBypassPlayerLimitEvent",
+      "injector_priority": 999
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.BypassPlayerLimitEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.BypassPlayerLimitEventMixin_LOWEST",
+      "declaring_method_name": "produceBypassPlayerLimitEvent",
+      "injector_priority": 0
+    },
+    {
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPreEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandDispatcherEventMixin_DEFAULT",
       "declaring_method_name": "produceBeforeCommandExecutionInCommandDispatcherEvent",
@@ -1268,6 +1298,14 @@
       "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerDeathEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.deathlog.DeathLogInitializer",
       "declaring_method_name": "handleOnPlayerDeathEvent",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.BypassPlayerLimitEvent",
+      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.disabler.max_player_disabler.MaxPlayerDisablerInitializer",
+      "declaring_method_name": "disableMaxPlayerLimit",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
