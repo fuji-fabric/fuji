@@ -1,16 +1,16 @@
 package io.github.sakurawald.fuji.core.service.random_teleport;
 
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.service.random_teleport.structure.RandomTeleportSettings;
 import java.util.Set;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.chunk.Chunk;
 import org.jetbrains.annotations.NotNull;
 
-public class BlockPosFilter {
+public class LocationFilter {
 
     public static final Set<Block> KNOWN_DANGEROUS_BLOCKS = Set.of(
         Blocks.POWDER_SNOW,
@@ -22,13 +22,19 @@ public class BlockPosFilter {
         Blocks.CAMPFIRE
     );
 
-    public static boolean isSatisfied(@NotNull RandomTeleportSettings settings, @NotNull Chunk chunk, @NotNull BlockPos blockPos) {
-        BlockState blockState = chunk.getBlockState(blockPos);
+    public static boolean isYInRange(@NotNull RandomTeleportSettings settings, @NotNull BlockPos blockPos) {
         return blockPos.getY() >= settings.getMinY()
-            && blockPos.getY() <= settings.getMaxY()
-            && isSafeBlock(blockState)
-            && blockPos.getY() >= chunk.getBottomY()
-            && blockPos.getY() <= WorldHelper.getTopY(chunk);
+            && blockPos.getY() <= settings.getMaxY();
+    }
+
+    public static boolean isInsideWorldBorder(@NotNull ServerWorld world, @NotNull BlockPos blockPos) {
+        return world.getWorldBorder().contains(blockPos);
+    }
+
+    public static boolean isSafeBlock(@NotNull RandomTeleportSettings settings, @NotNull BlockState blockState) {
+        String blockId = RegistryHelper.getIdAsString(blockState);
+        return isSafeBlock(blockState)
+            && !settings.getBlocks().getSkip().contains(blockId);
     }
 
     public static boolean isSafeBlock(@NotNull BlockState blockState) {

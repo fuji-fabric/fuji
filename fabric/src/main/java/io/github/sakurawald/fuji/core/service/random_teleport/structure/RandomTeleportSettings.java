@@ -1,6 +1,8 @@
 package io.github.sakurawald.fuji.core.service.random_teleport.structure;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.service.random_teleport.LocationFilter;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -73,6 +75,21 @@ public class RandomTeleportSettings {
                 this.add("minecraft:deep_cold_ocean");
                 this.add("minecraft:frozen_ocean");
                 this.add("minecraft:deep_frozen_ocean");
+            }
+        };
+    }
+
+    Blocks blocks = new Blocks();
+
+    @Data
+    @NoArgsConstructor
+    public static class Blocks {
+        Set<String> skip = new HashSet<>() {
+            {
+                LocationFilter.KNOWN_DANGEROUS_BLOCKS
+                    .stream()
+                    .map(RegistryHelper::getIdAsString)
+                    .forEach(this::add);
             }
         };
     }

@@ -11,7 +11,6 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.core.service.random_teleport.structure.RandomTeleportSettings;
-import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -57,16 +56,17 @@ public class RandomTeleporter {
 
             /* Consume the search result. */
             BlockPos $result = result.get();
+            TextHelper.sendTextByKey(player, "rtp.progress.location_found", $result.getX(), $result.getY(), $result.getZ());
+
             GlobalPos globalPos = new GlobalPos($world, $result.getX() + 0.5, $result.getY(), $result.getZ() + 0.5, 0, 0);
             TextHelper.sendTextByKey(player,"rtp.progress.teleporting");
+
             ServerHelper.executeSync(() -> globalPos.teleport(player));
 
             /* Call hooks. */
             if (onCompleteHook != null) {
                 onCompleteHook.accept(globalPos);
             }
-
-            TextHelper.sendTextByKey(player, "rtp.progress.location_found");
 
             /* Stop the timer. */
             var cost = timer.stop();
