@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.core.service.random_teleport;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import java.util.Optional;
+import net.minecraft.block.BlockState;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -45,26 +46,26 @@ public abstract class PositionYSearcher {
         final BlockPos.Mutable mutableBlockPos = new BlockPos.Mutable(blockPosX, initialBlockY, blockPosZ);
 
         /* Iterate the block stream. */
-        boolean isAir1 = chunk.getBlockState(mutableBlockPos).isAir();
-        boolean isAir2 = chunk.getBlockState(mutableBlockPos.move(direction)).isAir();
-        boolean isAir3;
+        BlockState blockState1 = chunk.getBlockState(mutableBlockPos);
+        BlockState blockState2 = chunk.getBlockState(mutableBlockPos.move(direction));
+        BlockState blockState3;
         if (direction == Direction.DOWN) {
             while (mutableBlockPos.getY() > minY) {
-                isAir3 = chunk.getBlockState(mutableBlockPos.move(direction)).isAir();
-                if (!isAir3 && isAir2 && isAir1) {
+                blockState3 = chunk.getBlockState(mutableBlockPos.move(direction));
+                if (!blockState3.isAir() && blockState2.isAir() && blockState1.isAir() && BlockPosFilter.isSafeBlock(blockState3)) {
                     return Optional.of(mutableBlockPos.getY() + 1);
                 }
-                isAir1 = isAir2;
-                isAir2 = isAir3;
+                blockState1 = blockState2;
+                blockState2 = blockState3;
             }
         } else {
             while (mutableBlockPos.getY() < maxY) {
-                isAir3 = chunk.getBlockState(mutableBlockPos.move(direction)).isAir();
-                if (!isAir1 && isAir2 && isAir3) {
+                blockState3 = chunk.getBlockState(mutableBlockPos.move(direction));
+                if (!blockState1.isAir() && blockState2.isAir() && blockState3.isAir() && BlockPosFilter.isSafeBlock(blockState1)) {
                     return Optional.of(mutableBlockPos.getY() - 1);
                 }
-                isAir1 = isAir2;
-                isAir2 = isAir3;
+                blockState1 = blockState2;
+                blockState2 = blockState3;
             }
         }
 

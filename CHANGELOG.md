@@ -4,4 +4,4 @@
  
 ## Changelog
 
-
+- [command_toolbox.top] feature: now `/top` command will skip `dangerous blocks`.

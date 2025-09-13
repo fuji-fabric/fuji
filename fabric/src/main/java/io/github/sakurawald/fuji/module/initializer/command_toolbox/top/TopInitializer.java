@@ -23,13 +23,13 @@ public class TopInitializer extends ModuleInitializer {
         World world = player.getWorld();
         BlockPos blockPos = player.getBlockPos();
         Chunk chunk = world.getChunk(blockPos);
-        int topY = new PositionYTopDownSearcher()
+        int resultY = new PositionYTopDownSearcher()
             .search(chunk, blockPos.getX(), blockPos.getZ())
             .orElseGet(blockPos::getY);
 
         GlobalPos globalPos = GlobalPos
             .of(player)
-            .withY(topY);
+            .withY(resultY);
         globalPos.teleport(player);
 
         TextHelper.sendTextByKey(player, "top");
