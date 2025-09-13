@@ -3,8 +3,6 @@ package io.github.sakurawald.fuji.core.service.random_teleport;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
-import io.github.sakurawald.fuji.core.service.random_teleport.structure.HeightFinder;
-import io.github.sakurawald.fuji.core.service.random_teleport.structure.HeightFindingStrategy;
 import io.github.sakurawald.fuji.core.service.random_teleport.structure.RandomTeleportSettings;
 import java.util.Optional;
 import net.minecraft.server.world.ServerWorld;
@@ -29,8 +27,8 @@ public class PositionSearcher {
             final int blockPosZ = candidateBlockPos.getZ();
 
             /* Search a good Y in given XZ position. */
-            HeightFinder heightFinder = HeightFindingStrategy.forWorld(serverWorld);
-            final Optional<Integer> blockPosY = heightFinder.getY(chunk, blockPosX, blockPosZ);
+            PositionYSearcher positionYSearcher = PositionYSearcher.forWorld(serverWorld);
+            final Optional<Integer> blockPosY = positionYSearcher.search(chunk, blockPosX, blockPosZ);
             if (blockPosY.isEmpty()) {
                 continue;
             }

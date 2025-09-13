@@ -2,14 +2,36 @@ package io.github.sakurawald.fuji.core.service.random_teleport;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import java.util.Optional;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.dimension.DimensionTypes;
 import org.jetbrains.annotations.NotNull;
 
-public class PositionYSearcher {
+public abstract class PositionYSearcher {
 
-    public static @NotNull Optional<Integer> findYTopBottom(@NotNull Chunk chunk, int blockPosX, int blockPosZ, @NotNull Direction direction) {
+    @NotNull
+    abstract Optional<Integer> search(@NotNull Chunk chunk, int blockPosX, int blockPosZ);
+
+    public static @NotNull PositionYSearcher forWorld(@NotNull ServerWorld world) {
+        Optional<RegistryKey<DimensionType>> dimensionTypeRegistryKey = world.getDimensionEntry().getKey();
+        return dimensionTypeRegistryKey
+            .map(it -> {
+                if (it == DimensionTypes.OVERWORLD || it == DimensionTypes.THE_END) {
+                    return new PositionYTopDownSearcher();
+                }
+                if (it == DimensionTypes.THE_NETHER) {
+                    return new PositionYDownTopSearcher();
+                }
+                return null;
+            })
+            .orElseGet(PositionYTopDownSearcher::new);
+    }
+
+    public static @NotNull Optional<Integer> search(@NotNull Chunk chunk, int blockPosX, int blockPosZ, @NotNull Direction direction) {
         /* Initialize Y range. */
         final int minY = WorldHelper.getBottomYInclusive(chunk);
         final int maxY = WorldHelper.getMaxBlockY(chunk);
