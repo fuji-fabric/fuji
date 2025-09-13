@@ -86,7 +86,7 @@ public class TpposInitializer extends ModuleInitializer {
         int $maxTryTimes = maxTryTimes.orElse(8);
 
         RandomTeleportSettings randomTeleportSettings = new RandomTeleportSettings(RegistryHelper.getIdAsString(world), $centerX, $centerZ, $circle, $minRange, $maxRange, $minY
-            , $maxY, $maxTryTimes, new RandomTeleportSettings.Biomes());
+            , $maxY, $maxTryTimes, Integer.MAX_VALUE, new RandomTeleportSettings.Biomes());
 
         RandomTeleporter.request(player, randomTeleportSettings, null);
         return CommandHelper.Return.SUCCESS;

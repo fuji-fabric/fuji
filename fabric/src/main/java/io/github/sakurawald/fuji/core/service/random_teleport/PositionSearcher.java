@@ -23,6 +23,12 @@ public class PositionSearcher {
         final Chunk chunk = serverWorld.getChunk(blockPosInChunk);
         LogUtil.debug("RTP: Select the candidate chunk: chunk pos = {}", chunk.getPos());
 
+        if (chunk.getInhabitedTime() >= context.getSettings().getChunkInhabitedTimeLowerThan()) {
+            LogUtil.debug("RTP: Skip the chunk, it's too old.");
+            TextHelper.sendTextByKey(context.getPlayer(), "rtp.progress.skip_old_chunk");
+            return;
+        }
+
         for (BlockPos.Mutable candidateBlockPos : ChunkCandidateBlocksGenerator.getChunkCandidateBlocks(chunk.getPos())) {
             final int blockPosX = candidateBlockPos.getX();
             final int blockPosZ = candidateBlockPos.getZ();
