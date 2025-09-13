@@ -19,7 +19,6 @@ public class PositionSearcher {
 
         final ServerWorld serverWorld = WorldHelper.getWorldOrThrow(settings.getDimension());
         final Chunk chunk = serverWorld.getChunk(blockPosInChunk);
-
         LogUtil.debug("Select the RTP candidate chunk: chunk pos = {}", chunk.getPos());
 
         for (BlockPos.Mutable candidateBlockPos : ChunkCandidateBlocksGenerator.getChunkCandidateBlocks(chunk.getPos())) {

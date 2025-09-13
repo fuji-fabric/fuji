@@ -18,8 +18,16 @@ public class LocationSearchContext {
     int attempts = 0;
     @NotNull Optional<BlockPos> result;
 
+    boolean hasRemainingAttempts() {
+        return getAttempts() < getMaxAttempts();
+    }
+
     public void incrementAttempts() {
         this.attempts++;
+    }
+
+    public int getMaxAttempts() {
+        return this.settings.getMaxTryTimes();
     }
 
     @SuppressWarnings("UnnecessaryLocalVariable")

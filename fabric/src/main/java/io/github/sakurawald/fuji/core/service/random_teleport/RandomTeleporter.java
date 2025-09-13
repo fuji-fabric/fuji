@@ -41,14 +41,15 @@ public class RandomTeleporter {
             /* Do search. */
             final LocationSearchContext context = LocationSearchContext.of(settings);
             do {
+                TextHelper.sendTextByKey(player, "rtp.progress.searching", context.getAttempts(), context.getMaxAttempts());
                 context.incrementAttempts();
                 PositionSearcher.search(context);
-            } while (context.getResult().isEmpty() && context.getAttempts() <= settings.getMaxTryTimes());
+            } while (context.getResult().isEmpty() && context.hasRemainingAttempts());
 
             Optional<BlockPos> result = context.getResult();
             if (result.isEmpty()) {
                 LogUtil.debug("Abort rtp for {}, run out attempts.", player);
-                TextHelper.sendTextByKey(player, "rtp.fail");
+                TextHelper.sendTextByKey(player, "rtp.progress.run_out_attempts");
                 return;
             }
 
@@ -61,6 +62,8 @@ public class RandomTeleporter {
             if (onCompleteHook != null) {
                 onCompleteHook.accept(globalPos);
             }
+
+            TextHelper.sendTextByKey(player, "rtp.progress.location_found");
 
             /* Stop the timer. */
             var cost = timer.stop();
