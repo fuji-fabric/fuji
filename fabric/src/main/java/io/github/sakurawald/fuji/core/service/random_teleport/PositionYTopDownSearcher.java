@@ -7,7 +7,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class PositionYTopDownSearcher extends PositionYSearcher {
     @Override
-    @NotNull Optional<Integer> search(@NotNull Chunk chunk, int blockPosX, int blockPosZ) {
+    @NotNull
+    public Optional<Integer> search(@NotNull Chunk chunk, int blockPosX, int blockPosZ) {
         return PositionYSearcher.search(chunk, blockPosX,blockPosZ, Direction.DOWN);
     }
 }

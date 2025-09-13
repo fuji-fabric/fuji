@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract class PositionYSearcher {
 
     @NotNull
-    abstract Optional<Integer> search(@NotNull Chunk chunk, int blockPosX, int blockPosZ);
+    public abstract Optional<Integer> search(@NotNull Chunk chunk, int blockPosX, int blockPosZ);
 
     public static @NotNull PositionYSearcher forWorld(@NotNull ServerWorld world) {
         Optional<RegistryKey<DimensionType>> dimensionTypeRegistryKey = world.getDimensionEntry().getKey();
