@@ -126,6 +126,7 @@ placeholder
 predicate
 profiler
 pvp
+queue
 rank
 rtp
 sit

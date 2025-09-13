@@ -10,7 +10,7 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
     """)
 public class MaxPlayerDisablerInitializer extends ModuleInitializer {
 
-    @EventConsumer
+    @EventConsumer(injectorPriority = EventConsumer.LOWEST)
     private static void disableMaxPlayerLimit(BypassPlayerLimitEvent event) {
         event.setCanBypass(true);
     }

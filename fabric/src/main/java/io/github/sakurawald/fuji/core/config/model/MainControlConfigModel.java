@@ -244,9 +244,10 @@ public class MainControlConfigModel {
         public WorldDownloader world_downloader = new WorldDownloader();
         public Whitelist whitelist = new Whitelist();
         public Profiler profiler = new Profiler();
+        public Launcher launcher = new Launcher();
         public Multiplier multiplier = new Multiplier();
         public Disabler disabler = new Disabler();
-        public Launcher launcher = new Launcher();
+        public Queue queue = new Queue();
         public Gameplay gameplay = new Gameplay();
         public Doctor doctor = new Doctor();
         public Tester tester = new Tester();
@@ -952,6 +953,10 @@ public class MainControlConfigModel {
 
         public static class Doctor {
             public boolean enable = true;
+        }
+
+        public static class Queue {
+            public boolean enable = false;
         }
     }
 
