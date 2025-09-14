@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.rtp.config.model;
 
+import com.google.gson.annotations.SerializedName;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.service.random_teleport.structure.RandomTeleportSettings;
 import java.util.ArrayList;
@@ -14,12 +15,14 @@ public class RtpConfigModel {
     @Document(id = 1751826332128L, value = """
         Define `rtp` setup for each `dimension`.
         """)
-    Setup setup = new Setup();
+    @SerializedName(value = "dimensions", alternate = "setup")
+    Dimensions dimensions = new Dimensions();
 
     @Data
     @NoArgsConstructor
-    public static class Setup {
-        List<RandomTeleportSettings> dimension = new ArrayList<>() {
+    public static class Dimensions {
+        @SerializedName(value = "settings", alternate = "dimension")
+        List<RandomTeleportSettings> settings = new ArrayList<>() {
 
             {
                 this.add(new RandomTeleportSettings(true, "minecraft:overworld", 0, 0, false, 1000, 5000, -64, 320, 16, Integer.MAX_VALUE, new RandomTeleportSettings.Biomes(), new RandomTeleportSettings.Blocks()));

@@ -50,7 +50,7 @@ public class RtpInitializer extends ModuleInitializer {
     private static final BaseConfigurationHandler<RtpConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, RtpConfigModel.class);
 
     private static Optional<RandomTeleportSettings> getRandomTeleportSettings(@NotNull ServerWorld world) {
-        List<RandomTeleportSettings> list = config.model().getSetup().getDimension();
+        List<RandomTeleportSettings> list = config.model().getDimensions().getSettings();
         String dimension = RegistryHelper.getIdAsString(world);
         return list.stream()
             .filter(RandomTeleportSettings::isEnable)
