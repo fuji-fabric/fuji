@@ -6,7 +6,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
-import io.github.sakurawald.fuji.core.service.random_teleport.PositionYTopDownSearcher;
+import io.github.sakurawald.fuji.core.service.random_teleport.searcher.PositionYTopDownSearcher;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import net.minecraft.server.network.ServerPlayerEntity;

@@ -1,6 +1,7 @@
-package io.github.sakurawald.fuji.core.service.random_teleport;
+package io.github.sakurawald.fuji.core.service.random_teleport.searcher;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
+import io.github.sakurawald.fuji.core.service.random_teleport.filter.PositionFilter;
 import java.util.Optional;
 import net.minecraft.block.BlockState;
 import net.minecraft.registry.RegistryKey;

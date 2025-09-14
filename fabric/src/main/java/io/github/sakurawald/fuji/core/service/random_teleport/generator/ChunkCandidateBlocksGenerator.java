@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.core.service.random_teleport;
+package io.github.sakurawald.fuji.core.service.random_teleport.generator;
 
 import java.util.Iterator;
 import net.minecraft.util.math.BlockPos;
