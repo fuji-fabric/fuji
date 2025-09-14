@@ -6,7 +6,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.service.random_teleport.generator.ChunkCandidateBlocksGenerator;
 import io.github.sakurawald.fuji.core.service.random_teleport.generator.PositionXZGenerator;
-import io.github.sakurawald.fuji.core.service.random_teleport.structure.LocationSearchContext;
+import io.github.sakurawald.fuji.core.service.random_teleport.structure.PositionSearchContext;
 import io.github.sakurawald.fuji.core.service.random_teleport.structure.RandomTeleportSettings;
 import io.github.sakurawald.fuji.core.service.random_teleport.filter.PositionFilter;
 import java.util.Optional;
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 public class PositionSearcher {
 
     @ForDeveloper("Search once, and return empty if there is no good result.")
-    public static void search(@NotNull LocationSearchContext context) {
+    public static void search(@NotNull PositionSearchContext context) {
         final RandomTeleportSettings settings = context.getSettings();
         final BlockPos blockPosInChunk = PositionXZGenerator.getRandomXZ(settings);
         TextHelper.sendTextByKey(context.getPlayer(), "rtp.progress.checking_chunk", blockPosInChunk.getX(), blockPosInChunk.getZ(), context.getAttempts(), context.getMaxAttempts());
@@ -47,7 +47,7 @@ public class PositionSearcher {
             PositionYSearcher positionYSearcher = PositionYSearcher.forWorld(serverWorld);
             final Optional<Integer> blockPosY = positionYSearcher.search(chunk, blockPosX, blockPosZ);
             if (blockPosY.isEmpty()) {
-                TextHelper.sendTextByKey(context.getPlayer(), "rtp.progress.skip_suffocating_space");
+                TextHelper.sendTextByKey(context.getPlayer(), "rtp.progress.skip_no_standing_space");
                 continue;
             }
             final int $blockPosY = blockPosY.get();

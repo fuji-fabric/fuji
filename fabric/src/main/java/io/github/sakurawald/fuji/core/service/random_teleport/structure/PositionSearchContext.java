@@ -10,7 +10,7 @@ import net.minecraft.util.math.ChunkPos;
 import org.jetbrains.annotations.NotNull;
 
 @Data
-public class LocationSearchContext {
+public class PositionSearchContext {
 
     @NotNull ServerPlayerEntity player;
     @NotNull RandomTeleportSettings settings;
@@ -32,9 +32,9 @@ public class LocationSearchContext {
     }
 
     @SuppressWarnings("UnnecessaryLocalVariable")
-    public static @NotNull LocationSearchContext of(@NotNull ServerPlayerEntity player, @NotNull RandomTeleportSettings settings) {
-        LocationSearchContext locationSearchContext = new LocationSearchContext(player, settings, new ArrayList<>(), new ArrayList<>(), Optional.empty());
-        return locationSearchContext;
+    public static @NotNull PositionSearchContext of(@NotNull ServerPlayerEntity player, @NotNull RandomTeleportSettings settings) {
+        PositionSearchContext positionSearchContext = new PositionSearchContext(player, settings, new ArrayList<>(), new ArrayList<>(), Optional.empty());
+        return positionSearchContext;
     }
 
 }
