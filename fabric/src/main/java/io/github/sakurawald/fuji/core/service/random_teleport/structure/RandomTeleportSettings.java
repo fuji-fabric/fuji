@@ -61,7 +61,7 @@ public class RandomTeleportSettings {
         """)
     int maxTryTimes;
 
-    int chunkInhabitedTimeLowerThan = Integer.MAX_VALUE;
+    int chunkInhabitedTimeLowerThanTicks = Integer.MAX_VALUE;
 
     Biomes biomes = new Biomes();
 

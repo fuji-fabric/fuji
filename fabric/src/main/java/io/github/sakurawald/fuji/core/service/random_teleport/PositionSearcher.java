@@ -29,7 +29,7 @@ public class PositionSearcher {
 
         final Chunk chunk = serverWorld.getChunk(blockPosInChunk);
 
-        if (chunk.getInhabitedTime() >= context.getSettings().getChunkInhabitedTimeLowerThan()) {
+        if (chunk.getInhabitedTime() >= context.getSettings().getChunkInhabitedTimeLowerThanTicks()) {
             TextHelper.sendTextByKey(context.getPlayer(), "rtp.progress.skip_old_chunk");
             return;
         }
