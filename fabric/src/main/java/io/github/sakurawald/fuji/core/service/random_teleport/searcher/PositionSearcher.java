@@ -31,13 +31,14 @@ public class PositionSearcher {
             return;
         }
 
+        /* Filter by inhabited time. */
         final Chunk chunk = serverWorld.getChunk(blockPosInChunk);
-
         if (chunk.getInhabitedTime() >= context.getSettings().getChunkInhabitedTimeLowerThanTicks()) {
             TextHelper.sendTextByKey(context.getPlayer(), "rtp.progress.skip_inhabited_chunk");
             return;
         }
 
+        /* Iterate the candidate block pos. */
         for (BlockPos.Mutable candidateBlockPos : ChunkCandidateBlocksGenerator.getChunkCandidateBlocks(chunk.getPos())) {
             final int blockPosX = candidateBlockPos.getX();
             final int blockPosZ = candidateBlockPos.getZ();
@@ -46,6 +47,7 @@ public class PositionSearcher {
             PositionYSearcher positionYSearcher = PositionYSearcher.forWorld(serverWorld);
             final Optional<Integer> blockPosY = positionYSearcher.search(chunk, blockPosX, blockPosZ);
             if (blockPosY.isEmpty()) {
+                TextHelper.sendTextByKey(context.getPlayer(), "rtp.progress.skip_suffocating_space");
                 continue;
             }
             final int $blockPosY = blockPosY.get();
@@ -66,7 +68,7 @@ public class PositionSearcher {
                 continue;
             }
 
-            /* Filter by Y bound. */
+            /* Filter by Y boundary. */
             if (!PositionFilter.isYInRange(settings, blockPos)) {
                 TextHelper.sendTextByKey(context.getPlayer(), "rtp.progress.skip_out_of_range_y", blockPos.getY());
                 continue;

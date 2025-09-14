@@ -27,10 +27,19 @@ import java.util.Optional;
 @Document(id = 1751826337744L, value = """
     Provides random teleportation.
     """)
-@ColorBox(id = 1751978911201L, color = ColorBox.ColorBoxTypes.NOTE, value = """
-    ◉ The feature of this module
-    1. Per-dimension configurable
-    2. Ignore unsafe blocks. (e.g. fluid blocks, powered snow)
+@ColorBox(id = 1757810706176L, color = ColorBox.ColorBoxTypes.NOTE, value = """
+    ◉ Features
+    - Per-dimension settings
+    - Real-time searching feedback.
+    - Customization of `center x` and `center z`
+    - Customization of `min range` and `max range`
+    - Supported `circle` and `rectangle` shape.
+    - Respect `world border`.
+    - Skip any `liquid block`.
+    - Filter the result by `min Y` and `max Y`
+    - Filter the result by `specified blocks`
+    - Filter the result by `specified biomes`
+    - Filter the result by `chunk inhabited time`
     """)
 @ColorBox(id = 1751978954547L, color = ColorBox.ColorBoxTypes.TIPS, value = """
     ◉ Improve the performance of rtp.
