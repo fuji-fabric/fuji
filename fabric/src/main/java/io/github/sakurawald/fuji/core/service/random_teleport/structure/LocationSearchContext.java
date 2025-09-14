@@ -1,6 +1,5 @@
-package io.github.sakurawald.fuji.core.service.random_teleport;
+package io.github.sakurawald.fuji.core.service.random_teleport.structure;
 
-import io.github.sakurawald.fuji.core.service.random_teleport.structure.RandomTeleportSettings;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +19,7 @@ public class LocationSearchContext {
     int attempts = 0;
     @NotNull Optional<BlockPos> result;
 
-    boolean hasRemainingAttempts() {
+    public boolean hasRemainingAttempts() {
         return getAttempts() < getMaxAttempts();
     }
 

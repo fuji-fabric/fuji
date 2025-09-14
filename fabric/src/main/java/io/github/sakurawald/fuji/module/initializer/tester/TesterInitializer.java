@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.tester;
 
 
+import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -14,6 +15,8 @@ import lombok.SneakyThrows;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.world.Heightmap;
+import net.minecraft.world.chunk.Chunk;
 
 @Document(id = 1751980891153L, value = """
     This module is only used for `development`.
@@ -25,13 +28,26 @@ import net.minecraft.text.Text;
 @CommandRequirement(level = 4)
 public class TesterInitializer extends ModuleInitializer {
 
+    @SuppressWarnings("removal")
     @SneakyThrows(Throwable.class)
     @CommandNode("run")
-    private static int $run(@CommandSource ServerCommandSource source) {
+    private static int $run(@CommandSource ServerPlayerEntity player) {
 
+        Chunk chunk = player.getWorld().getChunk(player.getBlockPos());
+        LogUtil.warn("chunk height = {}", chunk.getHeight());
+        LogUtil.warn("chunk inhabited time = {}", chunk.getInhabitedTime());
+        LogUtil.warn("chunk section array length = {}", chunk.getSectionArray().length);
+        LogUtil.warn("chunk bottom y = {}", chunk.getBottomY());
+        LogUtil.warn("chunk top y = {}", chunk.getTopYInclusive());
+        LogUtil.warn("chunk highest non empty section y offset = {}", chunk.getHighestNonEmptySectionYOffset());
+        LogUtil.warn("chunk highest non empty section = {}", chunk.getHighestNonEmptySection());
 
-//        registerHelloEvent();
+        LogUtil.warn("chunk height maps = {}", chunk.getHeightmaps());
+        LogUtil.warn("chunk bottom section coord = {}", chunk.getBottomSectionCoord());
+        LogUtil.warn("chunk top section coord = {}", chunk.getTopSectionCoord());
 
+        Heightmap heightmap = chunk.getHeightmap(Heightmap.Type.MOTION_BLOCKING);
+        LogUtil.warn("chunk get height map -> motion blocking", heightmap);
 
 
         return CommandHelper.Return.SUCCESS;

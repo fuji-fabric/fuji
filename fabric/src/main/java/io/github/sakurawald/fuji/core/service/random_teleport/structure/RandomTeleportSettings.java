@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.core.service.random_teleport.structure;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
-import io.github.sakurawald.fuji.core.service.random_teleport.LocationFilter;
+import io.github.sakurawald.fuji.core.service.random_teleport.PositionFilter;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -90,7 +90,7 @@ public class RandomTeleportSettings {
     public static class Blocks {
         Set<String> skip = new HashSet<>() {
             {
-                LocationFilter.KNOWN_DANGEROUS_BLOCKS
+                PositionFilter.KNOWN_DANGEROUS_BLOCKS
                     .stream()
                     .map(RegistryHelper::getIdAsString)
                     .forEach(this::add);

@@ -4,6 +4,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
+import io.github.sakurawald.fuji.core.service.random_teleport.structure.LocationSearchContext;
 import io.github.sakurawald.fuji.core.service.random_teleport.structure.RandomTeleportSettings;
 import java.util.Optional;
 import net.minecraft.block.BlockState;
@@ -22,7 +23,7 @@ public class PositionSearcher {
 
         /* Filter by world border. */
         final ServerWorld serverWorld = WorldHelper.getWorldOrThrow(settings.getDimension());
-        if (!LocationFilter.isInsideWorldBorder(serverWorld, blockPosInChunk)) {
+        if (!PositionFilter.isInsideWorldBorder(serverWorld, blockPosInChunk)) {
             TextHelper.sendTextByKey(context.getPlayer(), "rtp.progress.skip_out_of_border");
             return;
         }
@@ -30,7 +31,7 @@ public class PositionSearcher {
         final Chunk chunk = serverWorld.getChunk(blockPosInChunk);
 
         if (chunk.getInhabitedTime() >= context.getSettings().getChunkInhabitedTimeLowerThanTicks()) {
-            TextHelper.sendTextByKey(context.getPlayer(), "rtp.progress.skip_old_chunk");
+            TextHelper.sendTextByKey(context.getPlayer(), "rtp.progress.skip_inhabited_chunk");
             return;
         }
 
@@ -57,13 +58,13 @@ public class PositionSearcher {
             /* Filter by block. */
             BlockPos blockPos = new BlockPos(blockPosX, $blockPosY - 1, blockPosZ);
             BlockState blockState = chunk.getBlockState(blockPos);
-            if (!LocationFilter.isSafeBlock(settings, blockState)) {
+            if (!PositionFilter.isSafeBlock(settings, blockState)) {
                 TextHelper.sendTextByKey(context.getPlayer(), "rtp.progress.skip_block", RegistryHelper.getIdAsString(blockState));
                 continue;
             }
 
             /* Filter by Y bound. */
-            if (!LocationFilter.isYInRange(settings, blockPos)) {
+            if (!PositionFilter.isYInRange(settings, blockPos)) {
                 TextHelper.sendTextByKey(context.getPlayer(), "rtp.progress.skip_out_of_range_y", blockPos.getY());
                 continue;
             }

@@ -52,7 +52,7 @@ public abstract class PositionYSearcher {
         if (direction == Direction.DOWN) {
             while (mutableBlockPos.getY() > minY) {
                 blockState3 = chunk.getBlockState(mutableBlockPos.move(direction));
-                if (!blockState3.isAir() && blockState2.isAir() && blockState1.isAir() && LocationFilter.isSafeBlock(blockState3)) {
+                if (!blockState3.isAir() && blockState2.isAir() && blockState1.isAir() && PositionFilter.isSafeBlock(blockState3)) {
                     return Optional.of(mutableBlockPos.getY() + 1);
                 }
                 blockState1 = blockState2;
@@ -61,7 +61,7 @@ public abstract class PositionYSearcher {
         } else {
             while (mutableBlockPos.getY() < maxY) {
                 blockState3 = chunk.getBlockState(mutableBlockPos.move(direction));
-                if (!blockState1.isAir() && blockState2.isAir() && blockState3.isAir() && LocationFilter.isSafeBlock(blockState1)) {
+                if (!blockState1.isAir() && blockState2.isAir() && blockState3.isAir() && PositionFilter.isSafeBlock(blockState1)) {
                     return Optional.of(mutableBlockPos.getY() - 1);
                 }
                 blockState1 = blockState2;

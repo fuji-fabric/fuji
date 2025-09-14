@@ -10,7 +10,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
-public class LocationFilter {
+public class PositionFilter {
 
     public static final Set<Block> KNOWN_DANGEROUS_BLOCKS = Set.of(
         Blocks.POWDER_SNOW,
