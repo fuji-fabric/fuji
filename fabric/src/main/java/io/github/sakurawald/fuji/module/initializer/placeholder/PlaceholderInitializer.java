@@ -30,6 +30,7 @@ import io.github.sakurawald.fuji.module.initializer.placeholder.structure.SumUpP
 import java.time.format.DateTimeFormatter;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -201,9 +202,10 @@ public class PlaceholderInitializer extends ModuleInitializer {
             int blockX = player.getBlockX();
             int blockY = player.getBlockY();
             int blockZ = player.getBlockZ();
-            String dimensionName = RegistryHelper.getIdAsString(player.getWorld());
+            ServerWorld world = PlayerHelper.getServerWorld(player);
+            String dimensionName = RegistryHelper.getIdAsString(world);
             String dimensionDisplayName = TextHelper.Translator.getLanguageValueByKey(player, dimensionName);
-            String biomeName = WorldHelper.getBiomeId(player.getWorld(), player.getBlockPos());
+            String biomeName = WorldHelper.getBiomeId(world, player.getBlockPos());
             Text positionText = TextHelper.getTextByKey(player, "placeholder.position", dimensionDisplayName, blockX, blockY, blockZ, biomeName);
 
             /* Attach the position of current dimension. */
@@ -233,7 +235,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
             // For example: `/xaero-waypoint:{WayPointName}:{SingleCharacter}:{x}:{y}:{z}:11:false:0:Internal-{overworld/the_nether/the_end}-waypoints`
             String waypointName = TextHelper.Translator.getLanguageValueByKey(player, "placeholder.position.waypoint.name");
             String waypointSingularCharacterName = String.valueOf(waypointName.charAt(0));
-            String nameOfDimension = RegistryHelper.makeIdentifierOrThrow(RegistryHelper.getIdAsString(player.getWorld())).getPath();
+            String nameOfDimension = RegistryHelper.makeIdentifierOrThrow(RegistryHelper.getIdAsString(world)).getPath();
             String xaeroCommand = "xaero-waypoint:%s:%s:%d:%d:%d:11:false:0:Internal-%s-waypoints".formatted(waypointName, waypointSingularCharacterName, blockX, blockY, blockZ, nameOfDimension);
             hoverText.append(TextHelper.TEXT_NEWLINE);
             hoverText.append(TextHelper.getTextByKey(player, "placeholder.prompt.xaero_waypoint_add"));
