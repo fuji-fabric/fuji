@@ -53,6 +53,7 @@ public class RtpInitializer extends ModuleInitializer {
         List<RandomTeleportSettings> list = config.model().getSetup().getDimension();
         String dimension = RegistryHelper.getIdAsString(world);
         return list.stream()
+            .filter(RandomTeleportSettings::isEnable)
             .filter(o -> o.getDimension().equals(dimension))
             .findFirst();
     }

@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RandomTeleportSettings {
+
+    boolean enable = true;
+
     @Document(id = 1751823841574L, value = """
         The `target dimension` of this setup.
         """)
@@ -61,6 +64,7 @@ public class RandomTeleportSettings {
     int chunkInhabitedTimeLowerThan = Integer.MAX_VALUE;
 
     Biomes biomes = new Biomes();
+
     @Data
     @NoArgsConstructor
     public static class Biomes {

@@ -85,7 +85,7 @@ public class TpposInitializer extends ModuleInitializer {
         int $maxY = maxY.orElse(WorldHelper.getTopY(world));
         int $maxTryTimes = maxTryTimes.orElse(8);
 
-        RandomTeleportSettings randomTeleportSettings = new RandomTeleportSettings(RegistryHelper.getIdAsString(world), $centerX, $centerZ, $circle, $minRange, $maxRange, $minY
+        RandomTeleportSettings randomTeleportSettings = new RandomTeleportSettings(true, RegistryHelper.getIdAsString(world), $centerX, $centerZ, $circle, $minRange, $maxRange, $minY
             , $maxY, $maxTryTimes, Integer.MAX_VALUE, new RandomTeleportSettings.Biomes(), new RandomTeleportSettings.Blocks());
 
         RandomTeleporter.request(player, randomTeleportSettings, null);
