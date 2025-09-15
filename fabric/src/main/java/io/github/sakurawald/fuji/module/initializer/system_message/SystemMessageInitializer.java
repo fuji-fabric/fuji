@@ -7,6 +7,7 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.system_message.config.model.SystemMessageConfigModel;
 import io.github.sakurawald.fuji.module.initializer.system_message.config.transformer.SystemMessageV1SchemaTransformer;
@@ -95,19 +96,20 @@ import org.jetbrains.annotations.Nullable;
     Key: `multiplayer.disconnect.banned.reason`
     Value: `\\<red\\>You are banned from this server\\<newline\\>\\<yellow\\>Reason: %s`
     """)
+@TestCase(action = "Test the functionality of this module.", targets = {
+    "The player joined text should be modified, with custom color.",
+    "The player left text sending should be cancelled",
+    "The chest title text should be modified",
+    "Issue `/gamerule showDeathMessages` command, you should see the command feedback.",
+    "Issue `/seed` command, you should see the modified command feedback.",
+    "Issue `/ban` command, you should see the modified ban screen.",
+    "Fell from a high place, you should see the modified death message."
+})
 public class SystemMessageInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<SystemMessageConfigModel> config = ObjectConfigurationHandler
         .ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, SystemMessageConfigModel.class)
         .installTransformer(new SystemMessageV1SchemaTransformer());
-
-    public static @NotNull MutableText modifyTranslatableText(@Nullable ServerPlayerEntity receiverPlayer, @NotNull MutableText fallbackText, @NotNull String translatableKey, Object... args) {
-        Optional<SystemMessageRule> applicableRule = findApplicableRule(translatableKey);
-        return applicableRule
-            .filter(SystemMessageRule::isScreenText)
-            .flatMap(it -> modifyTranslatableText(it, receiverPlayer, fallbackText, translatableKey, args))
-            .orElse(fallbackText);
-    }
 
     public static Optional<MutableText> modifyTranslatableText(@NotNull SystemMessageRule rule, @Nullable ServerPlayerEntity receiverPlayer, @NotNull MutableText originalText, @NotNull String translatableKey, Object... args) {
         /* Return the new value. */

@@ -301,6 +301,17 @@
 - Target: It should work in both `online-mode` and `offline-mode` servers.
 
 [Test Case]
+- Module: system_message
+- Action: **Test the functionality of this module.**
+- Target: The player joined text should be modified, with custom color
+- Target: The player left text sending should be cancelled
+- Target: The chest title text should be modified
+- Target: Issue `/gamerule showDeathMessages` command, you should see the command feedback.
+- Target: Issue `/seed` command, you should see the modified command feedback.
+- Target: Issue `/ban` command, you should see the modified ban screen.
+- Target: Fell from a high place, you should see the modified death message.
+
+[Test Case]
 - Module: view
 - Action: **Issue the `/view {inv/ender}` command on a fake-player.**
 - Target: You should be able to modify the slots on the fly.
