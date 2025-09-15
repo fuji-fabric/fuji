@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.system_message.config.model.SystemMessageConfigModel;
+import io.github.sakurawald.fuji.module.initializer.system_message.config.transformer.SystemMessageV1SchemaTransformer;
 import io.github.sakurawald.fuji.module.initializer.system_message.structure.SystemMessageRule;
 import java.util.Optional;
 import net.minecraft.text.MutableText;
@@ -96,7 +97,9 @@ import org.jetbrains.annotations.Nullable;
     """)
 public class SystemMessageInitializer extends ModuleInitializer {
 
-    private static final BaseConfigurationHandler<SystemMessageConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, SystemMessageConfigModel.class);
+    private static final BaseConfigurationHandler<SystemMessageConfigModel> config = ObjectConfigurationHandler
+        .ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, SystemMessageConfigModel.class)
+        .installTransformer(new SystemMessageV1SchemaTransformer());
 
     public static Optional<Text> modifyTranslatableText(@NotNull Text original, @NotNull String translatableKey, Object... args) {
         /* Return the new value. */
