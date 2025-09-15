@@ -12,8 +12,8 @@ import io.github.sakurawald.fuji.module.initializer.system_message.config.model.
 import io.github.sakurawald.fuji.module.initializer.system_message.config.transformer.SystemMessageV1SchemaTransformer;
 import io.github.sakurawald.fuji.module.initializer.system_message.structure.SystemMessageRule;
 import java.util.Optional;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -101,19 +101,22 @@ public class SystemMessageInitializer extends ModuleInitializer {
         .ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, SystemMessageConfigModel.class)
         .installTransformer(new SystemMessageV1SchemaTransformer());
 
-    public static Optional<Text> modifyTranslatableText(@NotNull Text original, @NotNull String translatableKey, Object... args) {
+    public static Optional<MutableText> modifyTranslatableText(@Nullable ServerPlayerEntity player, @NotNull String translatableKey, Object... args) {
         /* Return the new value. */
         return findApplicableRule(translatableKey)
             .map(rule -> {
+                LogUtil.debug("Process system message: translatable key = {}, player = {}", translatableKey, player);
+
                 /* Prevent hijack too early. */
                 if (ServerHelper.getServer() == null) {
-                    LogUtil.warn("Server is null currently, cannot hijack the translatable text with the key: {}", translatableKey);
-                    return original;
+                    LogUtil.warn("Server is null currently, cannot modify the translatable text with the key: {} (NOTE: Please delete this translatable key in your config file)", translatableKey);
+                    return null;
                 }
 
                 /* If the value is defined to `null`, then we ignore the modification at this point. And process it at sentMessageToClient(). */
                 @Nullable String value = rule.getTranslatableTextValue();
                 if (value == null) {
+                    LogUtil.debug("Cancel sending message {} to audience {}.", translatableKey, player);
                     return null;
                 }
 
@@ -123,7 +126,7 @@ public class SystemMessageInitializer extends ModuleInitializer {
                     .of(forceFallbackToSpecifiedValue)
                     .getString();
 
-                MutableText newText = TextHelper.getTextByValue(null, resolveArgumentsAsString).copy();
+                MutableText newText = TextHelper.getTextByValue(player, resolveArgumentsAsString).copy();
                 LogUtil.debug("Replace the translatable text {} with new value.", translatableKey);
                 return newText;
             });

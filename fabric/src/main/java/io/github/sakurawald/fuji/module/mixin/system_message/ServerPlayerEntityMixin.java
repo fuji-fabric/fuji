@@ -2,12 +2,11 @@ package io.github.sakurawald.fuji.module.mixin.system_message;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.module.initializer.system_message.SystemMessageInitializer;
 import java.util.Optional;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,12 +27,11 @@ public abstract class ServerPlayerEntityMixin {
             String translatableKey = translatableTextContent.getKey();
             Object[] translatableArgs = translatableTextContent.getArgs();
 
-            Optional<Text> newValue = SystemMessageInitializer.modifyTranslatableText(text, translatableKey, translatableArgs);
-
             ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
+            Optional<MutableText> newValue = SystemMessageInitializer.modifyTranslatableText(player, translatableKey, translatableArgs);
+
             if (newValue.isEmpty()) {
                 // NOTE: If the value is specified to null, then it means we should cancel the sending of it.
-                LogUtil.debug("Cancel sending message {} to player {}.", translatableKey, PlayerHelper.getPlayerName(player));
                 ci.cancel();
             } else {
                 textRef.set(newValue.get());
