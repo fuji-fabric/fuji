@@ -26,6 +26,7 @@ public class CommandAliasConfigModel {
             /* Level 4 commands. */
             this.add(new CommandAliasEntry(true, "Create an alias command from `/sudo` into `/run as fake-op` command.", new CommandRequirementDescriptor(4, null), List.of("sudo"), List.of("run", "as", "fake-op")));
             this.add(new CommandAliasEntry(true, "Create an alias command from `/wb` into `/workbench` command.", new CommandRequirementDescriptor(4, null), List.of("wb"), List.of("workbench")));
+            this.add(new CommandAliasEntry(true, "Create an alias command from `/ec` into `/enderchest` command.", new CommandRequirementDescriptor(4, null), List.of("ec"), List.of("enderchest")));
             this.add(new CommandAliasEntry(true, "Create an alias command from `/invsee` into `/view inv` command.", new CommandRequirementDescriptor(4, null), List.of("invsee"), List.of("view", "inv")));
             this.add(new CommandAliasEntry(true, "Create an alias command from `/endersee` into `/view ender` command.", new CommandRequirementDescriptor(4, null), List.of("endersee"), List.of("view", "ender")));
         }
