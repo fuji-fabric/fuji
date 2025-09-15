@@ -717,7 +717,6 @@
   "docstring.1751824900662": "Open the specified `menu` for the player.",
   "docstring.1751824905935": "Close the currently `opened GUI` for the player.",
   "docstring.1751824913807": "Customize the `translatable text`, like most of `system messages`.\n\nFor example, you can customize the `translatable texts` like:\n1. Player joined and left message.\n2. Player death message. (Like get killed by a zombie)\n3. Player whitelist message. (Used in the GUI)\n4. Player advancement message.\n5. Player command feedback. (The command feedback for a specified command)\n6. Server close message.\n7. Player banned screen message.\n8. ... (There are many translatable texts in server-side)\n",
-  "docstring.1751824921414": "The defined `translatable text` override.\n\nThe `key` is `translatable key`.\nThe `value` is `the overridden text`.\n\nIf the `value` is `null`, then it means `cancel` the sending of this message.\n\n",
   "docstring.1751824926635": "By default, any player can use `all style tags`.\nEnable this option requires the player to has `corresponding permission` to use that `style tag`.\n\nFor example, to use `<red>` tag, requires `fuji.style.sign.red` permission.\n",
   "docstring.1751824932882": "This module allows you to use color tags in `sign` blocks.\n",
   "docstring.1751824937869": "By default, any player can use `all style tags`.\nEnable this option requires the player to has `corresponding permission` to use that `style tag`.\n\nFor example, to use `<red>` tag, requires `fuji.style.anvil.red` permission.\n",
