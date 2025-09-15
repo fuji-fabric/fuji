@@ -8,6 +8,8 @@ import io.github.sakurawald.fuji.core.config.migrator.version.SemVerComparator;
 import io.github.sakurawald.fuji.core.config.migrator.version.VersionPropertyInjector;
 import java.nio.file.Files;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiConsumer;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class JsonConfigurationTransformer extends ConfigurationTransformer {
@@ -55,5 +57,19 @@ public abstract class JsonConfigurationTransformer extends ConfigurationTransfor
     protected void writeTargetJsonFile(@NotNull JsonObject rootJsonObject) {
         logOperation("Transformer {} applied, now override the original file.", this.getClass().getName());
         JsonUtil.writeJsonObject(rootJsonObject, this.targetFilePath);
+    }
+
+    protected void withTargetJsonFile(BiConsumer<JsonObject, AtomicBoolean> consumer) {
+        readTargetJsonFile()
+            .ifPresent(jsonObject -> {
+                AtomicBoolean overrideTargetFile = new AtomicBoolean(false);
+
+                consumer.accept(jsonObject, overrideTargetFile);
+
+                if (overrideTargetFile.get()) {
+                    writeTargetJsonFile(jsonObject);
+                }
+            });
+
     }
 }

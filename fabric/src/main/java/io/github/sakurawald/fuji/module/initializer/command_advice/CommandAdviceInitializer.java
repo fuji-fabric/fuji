@@ -16,6 +16,7 @@ import io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPreE
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_advice.config.model.CommandAdviceConfigModel;
 import io.github.sakurawald.fuji.module.initializer.command_advice.config.transformer.CommandAdviceV1SchemaTransformer;
+import io.github.sakurawald.fuji.module.initializer.command_advice.config.transformer.CommandAdviceV2SchemaTransformer;
 import io.github.sakurawald.fuji.module.initializer.command_advice.structure.CommandAdviceEntry;
 import io.github.sakurawald.fuji.module.initializer.command_advice.structure.CommandAdviceType;
 import java.util.ArrayList;
@@ -79,7 +80,8 @@ public class CommandAdviceInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<CommandAdviceConfigModel> config = ObjectConfigurationHandler
         .ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandAdviceConfigModel.class)
-        .installTransformer(new CommandAdviceV1SchemaTransformer());
+        .installTransformer(new CommandAdviceV1SchemaTransformer())
+        .installTransformer(new CommandAdviceV2SchemaTransformer());
 
 
     @TestCase(action = "Test the basic use-case of command advice.", targets = {
