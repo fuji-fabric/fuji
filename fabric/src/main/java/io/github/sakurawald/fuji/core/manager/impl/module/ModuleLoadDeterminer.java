@@ -69,15 +69,15 @@ public class ModuleLoadDeterminer {
 
     @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
     private static boolean shouldLoadModulePathList(@NotNull List<String> modulePathList) {
-        if (Configs.MAIN_CONTROL_CONFIG.model().core.debug.disable_all_modules) return false;
         if (modulePathList.get(0).equals(ModulePathResolver.CORE_MODULE_PATH_STRING)) return true;
+        if (Configs.MAIN_CONTROL_CONFIG.model().core.debug.disable_all_modules) return false;
 
         /* Use cached value if cache hit. */
         if (MODULE_ENABLE_STATUS.containsKey(modulePathList)) {
             return MODULE_ENABLE_STATUS.get(modulePathList);
         }
 
-        // check enable-supplier
+        /* Check the enable value in config file. */
         boolean enable = true;
         JsonObject parent = Configs.MAIN_CONTROL_CONFIG
             .getModelAsJsonTree()
