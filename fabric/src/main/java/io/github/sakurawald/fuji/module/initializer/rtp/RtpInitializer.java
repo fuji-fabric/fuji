@@ -74,13 +74,13 @@ public class RtpInitializer extends ModuleInitializer {
             .map(Dimension::getValue)
             .orElseGet(() -> EntityHelper.getServerWorld(player));
 
-        RandomTeleportSettings setup = getRandomTeleportSettings(serverWorld)
+        RandomTeleportSettings settings = getRandomTeleportSettings(serverWorld)
             .orElseThrow(() -> {
                 TextHelper.sendTextByKey(player, "rtp.dimension.disallow", RegistryHelper.getIdAsString(serverWorld));
                 return new AbortCommandExecutionException();
             });
 
-        RandomTeleporter.request(player, setup, null);
+        RandomTeleporter.request(player, settings, null);
         return CommandHelper.Return.SUCCESS;
     }
 }

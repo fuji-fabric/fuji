@@ -119,6 +119,7 @@ public class WorldHelper {
         }
 
         // Returns the max Y in the chunk where the highest block is in.
+        // NOTE: The returned Y is an upper bound, you can simply iterate it, it's cache friendly.
         int blockCoord = ChunkSectionPos.getBlockCoord(chunk.sectionIndexToCoord(i));
         return blockCoord + 15;
     }
