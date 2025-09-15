@@ -1,13 +1,12 @@
 package io.github.sakurawald.fuji.module.initializer.command_bundle.config.model;
 
 import com.google.gson.annotations.SerializedName;
-import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.command.structure.CommandRequirementDescriptor;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.command_bundle.structure.BundleCommandNode;
-import lombok.Data;
-
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
@@ -50,8 +49,8 @@ public class CommandBundleConfigModel {
 
             /* Register easter eggs commands. */
             this.add(new BundleCommandNode("This command is an easter egg for `/plugins` in Bukkit.", new CommandRequirementDescriptor(0, null), "plugins", List.of("send-message %player:name% Server Plugins (0): ")));
-            this.add(new BundleCommandNode("This command is an easter egg for `/icanhasbukkit` in Bukkit.", new CommandRequirementDescriptor(0, null), "icanhasbukkit",
-                List.of("send-message %player:name% <i>Checking version, please wait..."
+            this.add(new BundleCommandNode("This command is an easter egg for `/icanhasbukkit` in Bukkit.", new CommandRequirementDescriptor(0, null), "icanhasbukkit", List.of(
+                "send-message %player:name% <i>Checking version, please wait..."
                 , "delay 2 send-message %player:name% This server is running Bukkit version (MC: %server:version%)"
                 , "delay 3 send-message %player:name% <green>You are running the latest version")));
 
@@ -64,6 +63,8 @@ public class CommandBundleConfigModel {
             this.add(new BundleCommandNode("This command will introduce yourself to others.", new CommandRequirementDescriptor(4, null), "introduce-me", List.of("run as fake-op %player:name% me i am %player:name%")));
             this.add(new BundleCommandNode("This command will roll a random dice.", new CommandRequirementDescriptor(4, null), "dice", List.of("say %player:name% just roll out %fuji:random 1 6% points.")));
             this.add(new BundleCommandNode("This command will give `all` recipes to the player.", new CommandRequirementDescriptor(4, null), "obtain-all-recipes", List.of("run as fake-op %player:name% recipe give %player:name% *")));
+            this.add(new BundleCommandNode("This command will give the skull of specified player.", new CommandRequirementDescriptor(4, null),
+                "skull <offline-player offline-player-arg>", List.of("give %player:name% minecraft:player_head[minecraft:profile=$offline-player-arg]")));
 
         }
     };
