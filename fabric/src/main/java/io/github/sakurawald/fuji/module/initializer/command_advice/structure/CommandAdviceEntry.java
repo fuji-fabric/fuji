@@ -34,11 +34,13 @@ public class CommandAdviceEntry {
         @Document(id = 1751826318098L, value = """
         Is this `advice` only valid, when the target command is executed by a player?
         """)
-        boolean executedByPlayerOnly;
+        boolean acceptPlayerCommandSource = true;
+        boolean acceptConsoleCommandSource;
 
-        public Matcher(String commandStringRegex, boolean executedByPlayerOnly) {
+        public Matcher(String commandStringRegex, boolean acceptPlayerCommandSource, boolean acceptConsoleCommandSource) {
             this.commandStringRegex = commandStringRegex;
-            this.executedByPlayerOnly = executedByPlayerOnly;
+            this.acceptPlayerCommandSource = acceptPlayerCommandSource;
+            this.acceptConsoleCommandSource = acceptConsoleCommandSource;
         }
 
         @ToString.Exclude

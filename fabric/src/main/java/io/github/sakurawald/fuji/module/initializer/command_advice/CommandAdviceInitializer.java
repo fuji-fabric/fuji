@@ -113,7 +113,9 @@ public class CommandAdviceInitializer extends ModuleInitializer {
 
         /* Filter by command source type. */
         filterCommandAdvices = filterCommandAdvices
-            .filter(it -> !it.getMatcher().isExecutedByPlayerOnly() || source.isExecutedByPlayer());
+            .filter(it -> (it.getMatcher().isAcceptPlayerCommandSource() && CommandHelper.Source.isExecutedByPlayer(source))
+                || (it.getMatcher().isAcceptConsoleCommandSource() && CommandHelper.Source.isExecutedByConsole(source))
+            );
 
         /* Filter by command string regex. */
         filterCommandAdvices = filterCommandAdvices
@@ -252,7 +254,7 @@ public class CommandAdviceInitializer extends ModuleInitializer {
                 CommandAdviceType adviceType = logicalSuccess ? CommandAdviceType.ON_EXECUTION_SUCCESS : CommandAdviceType.ON_EXECUTION_FAILURE;
 
                 CommandAdviceInitializer.processCommandAdvice(event.getCommandExecutor(), event.getCommandSource(), event.getCommandString(), adviceType, event.getCallback(), event.getCommandReturnValue());
-        });
+            });
 
         CommandAdviceInitializer.processCommandAdvice(event.getCommandExecutor(), event.getCommandSource(), event.getCommandString(), CommandAdviceType.AFTER_EXECUTION, event.getCallback(), event.getCommandReturnValue());
     }
