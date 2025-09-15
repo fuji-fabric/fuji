@@ -18,11 +18,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ServerPlayerEntityMixin {
 
     @Inject(method = "sendMessageToClient", at = @At("HEAD"), cancellable = true)
-    void cancelTextSendingToClient(Text text, boolean bl, CallbackInfo ci, @Local(argsOnly = true) LocalRef<Text> textRef) {
+    void modifyTranslatableText(Text text, boolean bl, CallbackInfo ci, @Local(argsOnly = true) LocalRef<Text> textRef) {
         // NOTE: The MutableText made from Text.translatable() has no siblings.
         if (!text.getSiblings().isEmpty()) return;
 
-        /* Cancel the sending of specified translatable text to players. */
         if (text.getContent() instanceof TranslatableTextContent translatableTextContent) {
             String translatableKey = translatableTextContent.getKey();
 
