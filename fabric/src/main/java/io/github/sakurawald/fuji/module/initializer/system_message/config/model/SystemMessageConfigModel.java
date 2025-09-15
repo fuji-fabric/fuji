@@ -1,25 +1,20 @@
 package io.github.sakurawald.fuji.module.initializer.system_message.config.model;
 
-import com.google.gson.annotations.SerializedName;
-import io.github.sakurawald.fuji.core.document.annotation.Document;
 
-import java.util.HashMap;
-import java.util.Map;
+import io.github.sakurawald.fuji.module.initializer.system_message.structure.SystemMessageRule;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 public class SystemMessageConfigModel {
-    @Document(id = 1751824921414L, value = """
-        The defined `translatable text` override.
 
-        The `key` is `translatable key`.
-        The `value` is `the overridden text`.
-
-        If the `value` is `null`, then it means `cancel` the sending of this message.
-
-        """)
-    @SerializedName(value = "rules", alternate = "key2value")
-    public Map<String, String> rules = new HashMap<>() {
+    List<SystemMessageRule> rules = new ArrayList<>() {
         {
-            this.put("commands.seed.success", "<rainbow>Seeeeeeeeeeed: %s");
+            this.add(new SystemMessageRule(true, "Modify the style of `/seed` command feedback.", "commands.seed.success", "<rainbow>Seeeeeeeeeeed: %s"));
         }
     };
+
 }

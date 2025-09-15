@@ -9,11 +9,13 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.system_message.config.model.SystemMessageConfigModel;
+import io.github.sakurawald.fuji.module.initializer.system_message.structure.SystemMessageRule;
+import java.util.Optional;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Map;
 
 @Document(id = 1751824913807L, value = """
     Customize the `translatable text`, like most of `system messages`.
@@ -94,34 +96,42 @@ import java.util.Map;
     """)
 public class SystemMessageInitializer extends ModuleInitializer {
 
-    public static final BaseConfigurationHandler<SystemMessageConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, SystemMessageConfigModel.class);
+    private static final BaseConfigurationHandler<SystemMessageConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, SystemMessageConfigModel.class);
 
-    public static @Nullable MutableText modifyTranslatableText(String translatableKey, Object... args) {
-        Map<String, String> key2value = config.model().rules;
-        if (key2value.containsKey(translatableKey)) {
-            /* Prevent hijack too early. */
-            if (ServerHelper.getServer() == null) {
-                LogUtil.warn("Server is null currently, cannot hijack the translatable text with the key: {}", translatableKey);
-                return null;
-            }
+    public static Optional<Text> modifyTranslatableText(@NotNull Text original, @NotNull String translatableKey, Object... args) {
+        /* Return the new value. */
+        return findApplicableRule(translatableKey)
+            .map(rule -> {
+                /* Prevent hijack too early. */
+                if (ServerHelper.getServer() == null) {
+                    LogUtil.warn("Server is null currently, cannot hijack the translatable text with the key: {}", translatableKey);
+                    return original;
+                }
 
-            /* If the value is defined to `null`, then we ignore the modification at this point. And process it at sentMessageToClient(). */
-            String value = key2value.get(translatableKey);
-            if (value == null) {
-                return null;
-            }
+                /* If the value is defined to `null`, then we ignore the modification at this point. And process it at sentMessageToClient(). */
+                @Nullable String value = rule.getTranslatableTextValue();
+                if (value == null) {
+                    return null;
+                }
 
-            /* Replace with a new value. */
-            TranslatableTextContent forceFallbackToSpecifiedValue = new TranslatableTextContent("force_fallback", value, args);
-            String resolveArgumentsAsString = MutableText
-                .of(forceFallbackToSpecifiedValue)
-                .getString();
-            MutableText newText = TextHelper.getTextByValue(null, resolveArgumentsAsString).copy();
-            LogUtil.debug("Replace the translatable text {} with new value.", translatableKey);
-            return newText;
-        }
+                /* Replace with a new value. */
+                TranslatableTextContent forceFallbackToSpecifiedValue = new TranslatableTextContent("fuji_system_message_module$force_fallback", value, args);
+                String resolveArgumentsAsString = MutableText
+                    .of(forceFallbackToSpecifiedValue)
+                    .getString();
 
-        // Return null, that means we will use the original value.
-        return null;
+                MutableText newText = TextHelper.getTextByValue(null, resolveArgumentsAsString).copy();
+                LogUtil.debug("Replace the translatable text {} with new value.", translatableKey);
+                return newText;
+            });
+    }
+
+    private static @NotNull Optional<SystemMessageRule> findApplicableRule(@NotNull String translatableKey) {
+        return config.model()
+            .getRules()
+            .stream()
+            .filter(SystemMessageRule::isEnable)
+            .filter(rule -> rule.getTranslatableTextKey().equals(translatableKey))
+            .findFirst();
     }
 }

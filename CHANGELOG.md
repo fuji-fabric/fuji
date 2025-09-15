@@ -4,6 +4,6 @@
 
 ## Changelog
 
-### [chat.trigger]
-- **Fix**
-    - Adjusted the command execution point: commands are now executed **after** the chat message is sent, rather than **before**.
+- [system_message] Enhance
+  - feature: fine-tune the mixin to improve the `compatibility` with `other mods`.
+  

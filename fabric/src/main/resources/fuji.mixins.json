@@ -165,7 +165,6 @@
     "placeholder.ServerPlayerEntityMixin",
     "skin.ServerLoginNetworkHandlerMixin",
     "system_message.ServerPlayerEntityMixin",
-    "system_message.TextMixin",
     "temp_ban.PlayerManagerMixin",
     "whitelist.UserWhiteListMixin",
     "works.HopperBlockEntityMixin",
