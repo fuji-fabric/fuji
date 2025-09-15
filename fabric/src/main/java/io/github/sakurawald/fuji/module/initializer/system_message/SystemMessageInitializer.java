@@ -1,12 +1,12 @@
 package io.github.sakurawald.fuji.module.initializer.system_message;
 
-import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
-import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.system_message.config.model.SystemMessageConfigModel;
 import io.github.sakurawald.fuji.module.initializer.system_message.config.transformer.SystemMessageV1SchemaTransformer;
@@ -101,38 +101,43 @@ public class SystemMessageInitializer extends ModuleInitializer {
         .ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, SystemMessageConfigModel.class)
         .installTransformer(new SystemMessageV1SchemaTransformer());
 
-    public static Optional<MutableText> modifyTranslatableText(@Nullable ServerPlayerEntity player, @NotNull String translatableKey, Object... args) {
-        /* Return the new value. */
-        return findApplicableRule(translatableKey)
-            .map(rule -> {
-                LogUtil.debug("Process system message: translatable key = {}, player = {}", translatableKey, player);
-
-                /* Prevent hijack too early. */
-                if (ServerHelper.getServer() == null) {
-                    LogUtil.warn("Server is null currently, cannot modify the translatable text with the key: {} (NOTE: Please delete this translatable key in your config file)", translatableKey);
-                    return null;
-                }
-
-                /* If the value is defined to `null`, then we ignore the modification at this point. And process it at sentMessageToClient(). */
-                @Nullable String value = rule.getTranslatableTextValue();
-                if (value == null) {
-                    LogUtil.debug("Cancel sending message {} to audience {}.", translatableKey, player);
-                    return null;
-                }
-
-                /* Replace with a new value. */
-                TranslatableTextContent forceFallbackToSpecifiedValue = new TranslatableTextContent("fuji_system_message_module$force_fallback", value, args);
-                String resolveArgumentsAsString = MutableText
-                    .of(forceFallbackToSpecifiedValue)
-                    .getString();
-
-                MutableText newText = TextHelper.getTextByValue(player, resolveArgumentsAsString).copy();
-                LogUtil.debug("Replace the translatable text {} with new value.", translatableKey);
-                return newText;
-            });
+    public static @NotNull MutableText modifyTranslatableText(@Nullable ServerPlayerEntity receiverPlayer, @NotNull MutableText fallbackText, @NotNull String translatableKey, Object... args) {
+        Optional<SystemMessageRule> applicableRule = findApplicableRule(translatableKey);
+        return applicableRule
+            .filter(SystemMessageRule::isScreenText)
+            .flatMap(it -> modifyTranslatableText(it, receiverPlayer, fallbackText, translatableKey, args))
+            .orElse(fallbackText);
     }
 
-    private static @NotNull Optional<SystemMessageRule> findApplicableRule(@NotNull String translatableKey) {
+    public static Optional<MutableText> modifyTranslatableText(@NotNull SystemMessageRule rule, @Nullable ServerPlayerEntity receiverPlayer, @NotNull MutableText originalText, @NotNull String translatableKey, Object... args) {
+        /* Return the new value. */
+        LogUtil.debug("Process system message: translatable key = {}, player = {}", translatableKey, receiverPlayer);
+
+        /* Prevent hijack too early. */
+        if (ServerHelper.getServer() == null) {
+            LogUtil.warn("Server is null currently, cannot modify the translatable text with the key: {} (NOTE: Please delete this translatable key in your config file)", translatableKey);
+            return Optional.of(originalText);
+        }
+
+        /* If the value is defined to `null`, then we ignore the modification at this point. And process it at sentMessageToClient(). */
+        @Nullable String value = rule.getTranslatableTextValue();
+        if (value == null) {
+            LogUtil.debug("Cancel sending message {} to audience {}.", translatableKey, receiverPlayer);
+            return Optional.empty();
+        }
+
+        /* Replace with a new value. */
+        TranslatableTextContent forceFallbackToSpecifiedValue = new TranslatableTextContent("fuji_system_message_module$force_fallback", value, args);
+        String resolveArgumentsAsString = MutableText
+            .of(forceFallbackToSpecifiedValue)
+            .getString();
+
+        MutableText newText = TextHelper.getTextByValue(receiverPlayer, resolveArgumentsAsString).copy();
+        LogUtil.debug("Replace the translatable text {} with new value {}.", translatableKey, newText);
+        return Optional.of(newText);
+    }
+
+    public static @NotNull Optional<SystemMessageRule> findApplicableRule(@NotNull String translatableKey) {
         return config.model()
             .getRules()
             .stream()

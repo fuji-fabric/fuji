@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ServerPlayerEntityMixin {
 
     @Inject(method = "sendMessageToClient", at = @At("HEAD"), cancellable = true)
-    void cancelText(Text text, boolean bl, CallbackInfo ci, @Local(argsOnly = true)LocalRef<Text> textRef) {
+    void cancelTextSendingToClient(Text text, boolean bl, CallbackInfo ci, @Local(argsOnly = true) LocalRef<Text> textRef) {
         // NOTE: The MutableText made from Text.translatable() has no siblings.
         if (!text.getSiblings().isEmpty()) return;
 
@@ -27,15 +27,20 @@ public abstract class ServerPlayerEntityMixin {
             String translatableKey = translatableTextContent.getKey();
             Object[] translatableArgs = translatableTextContent.getArgs();
 
-            ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-            Optional<MutableText> newValue = SystemMessageInitializer.modifyTranslatableText(player, translatableKey, translatableArgs);
+            SystemMessageInitializer
+                .findApplicableRule(translatableKey)
+                .ifPresent(rule -> {
+                    ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
+                    Optional<MutableText> newValue = SystemMessageInitializer.modifyTranslatableText(rule, player, text.copy(), translatableKey, translatableArgs);
 
-            if (newValue.isEmpty()) {
-                // NOTE: If the value is specified to null, then it means we should cancel the sending of it.
-                ci.cancel();
-            } else {
-                textRef.set(newValue.get());
-            }
+                    if (newValue.isEmpty()) {
+                        // NOTE: If the value is specified to null, then it means we should cancel the sending of it.
+                        ci.cancel();
+                    } else {
+                        textRef.set(newValue.get());
+                    }
+                });
+
         }
     }
 

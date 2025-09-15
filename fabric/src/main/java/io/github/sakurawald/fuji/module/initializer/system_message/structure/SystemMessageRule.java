@@ -13,6 +13,7 @@ public class SystemMessageRule {
 
     boolean enable = true;
     @Nullable String document;
+    boolean isScreenText = false;
     @NotNull String translatableTextKey;
     @Nullable String translatableTextValue;
 
