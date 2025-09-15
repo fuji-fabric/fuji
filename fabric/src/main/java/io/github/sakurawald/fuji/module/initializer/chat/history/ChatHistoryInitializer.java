@@ -64,16 +64,16 @@ public class ChatHistoryInitializer extends ModuleInitializer {
         boolean rejectedMessage = false;
 
         /* Reject message by content. */
-        if (config.model().getMessageRejectors().getContentRejector().getRules()
+        if (config.model().getMessageRejectors().getContentRejector().getMatches()
             .stream()
-            .anyMatch(contentString::contains)) {
+            .anyMatch(contentString::matches)) {
             rejectedMessage = true;
         }
 
         /* Reject message by parameters. */
-        if (config.model().getMessageRejectors().getParameterRejector().getRules()
+        if (config.model().getMessageRejectors().getParameterRejector().getMatches()
             .stream()
-            .anyMatch(parametersString::contains)) {
+            .anyMatch(parametersString::matches)) {
             rejectedMessage = true;
         }
 

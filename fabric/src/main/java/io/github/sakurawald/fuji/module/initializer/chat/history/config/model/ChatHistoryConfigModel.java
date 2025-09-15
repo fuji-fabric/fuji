@@ -52,7 +52,7 @@ public class ChatHistoryConfigModel {
             @Document(id = 1751826699229L, value = """
                 Define `regex` expression to match `message content`
                 """)
-            List<String> rules = new ArrayList<>() {};
+            List<String> matches = new ArrayList<>() {};
         }
 
         @Document(id = 1751826702393L, value = """
@@ -68,10 +68,9 @@ public class ChatHistoryConfigModel {
 
                 Issue `/fuji debug` to see the `parameter` of a message.
                 """)
-
-            List<String> rules = new ArrayList<>() {
+            List<String> matches = new ArrayList<>() {
                 {
-                    this.add("literal{PM}");
+                    this.add(".*literal\\{PM\\}.*");
                 }
             };
         }
