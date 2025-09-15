@@ -303,7 +303,7 @@
 [Test Case]
 - Module: system_message
 - Action: **Test the functionality of this module.**
-- Target: The player joined text should be modified, with custom color
+- Target: The player joined text should be modified, with custom color.
 - Target: The player left text sending should be cancelled
 - Target: The chest title text should be modified
 - Target: Issue `/gamerule showDeathMessages` command, you should see the command feedback.
