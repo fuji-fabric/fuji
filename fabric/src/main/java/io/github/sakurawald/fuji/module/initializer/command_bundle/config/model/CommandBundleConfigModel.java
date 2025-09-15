@@ -65,6 +65,8 @@ public class CommandBundleConfigModel {
             this.add(new BundleCommandNode("This command will give `all` recipes to the player.", new CommandRequirementDescriptor(4, null), "obtain-all-recipes", List.of("run as fake-op %player:name% recipe give %player:name% *")));
             this.add(new BundleCommandNode("This command will give the skull of specified player.", new CommandRequirementDescriptor(4, null),
                 "skull <offline-player offline-player-arg>", List.of("give %player:name% minecraft:player_head[minecraft:profile=$offline-player-arg]")));
+            this.add(new BundleCommandNode("This command will print the UUID of specified player.", new CommandRequirementDescriptor(4, null),
+                "uuid <player target>", List.of("run as fake-op $target send-message %player:name% <yellow>The UUID of player $target is %fuji:escape player:uuid 2%")));
 
         }
     };
