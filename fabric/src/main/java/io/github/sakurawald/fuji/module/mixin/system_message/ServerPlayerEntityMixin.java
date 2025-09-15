@@ -25,16 +25,16 @@ public abstract class ServerPlayerEntityMixin {
         /* Cancel the sending of specified translatable text to players. */
         if (text.getContent() instanceof TranslatableTextContent translatableTextContent) {
             String translatableKey = translatableTextContent.getKey();
-            Object[] translatableArgs = translatableTextContent.getArgs();
 
             SystemMessageInitializer
                 .findApplicableRule(translatableKey)
                 .ifPresent(rule -> {
                     ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-                    Optional<MutableText> newValue = SystemMessageInitializer.modifyTranslatableText(rule, player, text.copy(), translatableKey, translatableArgs);
+                    Object[] translatableArgs = translatableTextContent.getArgs();
+
+                    Optional<MutableText> newValue = SystemMessageInitializer.computeTranslatableTextResult(rule, player, translatableKey, translatableArgs);
 
                     if (newValue.isEmpty()) {
-                        // NOTE: If the value is specified to null, then it means we should cancel the sending of it.
                         ci.cancel();
                     } else {
                         textRef.set(newValue.get());

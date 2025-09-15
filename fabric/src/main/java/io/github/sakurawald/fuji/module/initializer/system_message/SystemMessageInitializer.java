@@ -111,14 +111,14 @@ public class SystemMessageInitializer extends ModuleInitializer {
         .ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, SystemMessageConfigModel.class)
         .installTransformer(new SystemMessageV1SchemaTransformer());
 
-    public static Optional<MutableText> modifyTranslatableText(@NotNull SystemMessageRule rule, @Nullable ServerPlayerEntity receiverPlayer, @NotNull MutableText originalText, @NotNull String translatableKey, Object... args) {
+    public static Optional<MutableText> computeTranslatableTextResult(@NotNull SystemMessageRule rule, @Nullable ServerPlayerEntity receiverPlayer, @NotNull String translatableKey, Object... args) {
         /* Return the new value. */
         LogUtil.debug("Process system message: translatable key = {}, player = {}", translatableKey, receiverPlayer);
 
         /* Prevent hijack too early. */
         if (ServerHelper.getServer() == null) {
             LogUtil.warn("Server is null currently, cannot modify the translatable text with the key: {} (NOTE: Please delete this translatable key in your config file)", translatableKey);
-            return Optional.of(originalText);
+            return Optional.empty();
         }
 
         /* If the value is defined to `null`, then we ignore the modification at this point. And process it at sentMessageToClient(). */
