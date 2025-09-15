@@ -1,8 +1,11 @@
 package io.github.sakurawald.fuji.module.initializer.predicate;
 
+import com.mojang.authlib.GameProfile;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.InventoryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflineGameProfile;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -13,6 +16,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.Dimension;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
+import io.github.sakurawald.fuji.core.document.structure.DocString;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
 import java.util.Objects;
@@ -67,15 +71,17 @@ import java.util.Optional;
 public class PredicateInitializer extends ModuleInitializer {
 
     @CommandNode("has-perm?")
-    private static int $hasPerm(@CommandSource ServerCommandSource source, ServerPlayerEntity player, GreedyString stringPermission) {
-        boolean value = LuckpermsHelper.hasPermission(player.getUuid(), new PermissionDescriptor(true, stringPermission.getValue(), 0));
+    private static int $hasPerm(@CommandSource ServerCommandSource source, OfflineGameProfile player, GreedyString stringPermission) {
+        GameProfile gameProfile = player.getValue();
+        boolean value = LuckpermsHelper.hasPermission(gameProfile.getId(), new PermissionDescriptor(true, stringPermission.getValue(), DocString.DUMMY_DOC_STRING_ID));
         return CommandHelper.Return.returnBoolean(source, value);
     }
 
     @Document(id = 1751826502598L, value = "Predicate to test if the player has the level-perm?")
     @CommandNode("has-level?")
-    private static int $hasLevel(@CommandSource ServerCommandSource source, ServerPlayerEntity player, int levelPermission) {
-        boolean value = player.hasPermissionLevel(levelPermission);
+    private static int $hasLevel(@CommandSource ServerCommandSource source, OfflineGameProfile player, int levelPermission) {
+        GameProfile gameProfile = player.getValue();
+        boolean value = ServerHelper.getServer().getPermissionLevel(gameProfile) >= levelPermission;
         return CommandHelper.Return.returnBoolean(source, value);
     }
 

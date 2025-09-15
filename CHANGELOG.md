@@ -6,3 +6,4 @@
 
 - [command_advice] Enhance
   - feature: introduce `accept_player_command_source` and `accept_console_command_source` fields for `matcher`, making it easier to filter the `command source`.
+- [predicate] feature: now `/has-perm?` and `/has-level?` commands support `offline player` as its target.

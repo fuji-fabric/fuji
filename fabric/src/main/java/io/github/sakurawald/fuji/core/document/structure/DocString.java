@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 @Value
 public class DocString implements DocStringLike {
     public static final String DOC_STRING_KEY_PREFIX = "docstring.";
+    public static final int DUMMY_DOC_STRING_ID = 0;
 
     long id;
     String value;
