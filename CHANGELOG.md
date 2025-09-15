@@ -6,4 +6,5 @@
 
 - [command_advice] Enhance
   - feature: introduce `accept_player_command_source` and `accept_console_command_source` fields for `matcher`, making it easier to filter the `command source`.
+  - docs: add an example in `default config` to describe how to `add the exempt permission for a specified command with a specified target`.
 - [predicate] feature: now `/has-perm?` and `/has-level?` commands support `offline player` as its target.
