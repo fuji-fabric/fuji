@@ -361,33 +361,33 @@
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageEvent",
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePreEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_DEFAULT",
-      "declaring_method_name": "produceOnPlayerChatEvent",
+      "declaring_method_name": "produceOnPlayerChatPreEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageEvent",
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePreEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_HIGHER",
-      "declaring_method_name": "produceOnPlayerChatEvent",
+      "declaring_method_name": "produceOnPlayerChatPreEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageEvent",
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePreEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_HIGHEST",
-      "declaring_method_name": "produceOnPlayerChatEvent",
+      "declaring_method_name": "produceOnPlayerChatPreEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageEvent",
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePreEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_LOWER",
-      "declaring_method_name": "produceOnPlayerChatEvent",
+      "declaring_method_name": "produceOnPlayerChatPreEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageEvent",
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePreEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_LOWEST",
-      "declaring_method_name": "produceOnPlayerChatEvent",
+      "declaring_method_name": "produceOnPlayerChatPreEvent",
       "injector_priority": 0
     },
     {
@@ -919,7 +919,7 @@
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageEvent",
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePreEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.chat.trigger.ChatTriggerInitializer",
       "declaring_method_name": "handleOnPlayerChatEvent",
       "injector_priority": 0,
@@ -1511,7 +1511,7 @@
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageEvent",
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePreEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.chat.style.ChatStyleInitializer",
       "declaring_method_name": "handleOnPlayerChatEvent",
       "injector_priority": 1001,
@@ -1527,7 +1527,7 @@
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageEvent",
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePreEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.chat.mention.ChatMentionInitializer",
       "declaring_method_name": "handleOnPlayerChatEvent",
       "injector_priority": 2000,
@@ -1543,7 +1543,7 @@
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageEvent",
+      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePreEvent",
       "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.chat.replace.ChatReplaceInitializer",
       "declaring_method_name": "handleOnPlayerChatEvent",
       "injector_priority": 2000,

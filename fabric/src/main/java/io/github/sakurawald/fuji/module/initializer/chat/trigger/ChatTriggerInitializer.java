@@ -10,7 +10,7 @@ import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHan
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePreEvent;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.chat.trigger.config.model.ChatTriggerConfigModel;
 import java.util.List;
@@ -74,7 +74,7 @@ public class ChatTriggerInitializer extends ModuleInitializer {
     }
 
     @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority = EventConsumer.LOWEST)
-    private static void handleOnPlayerChatEvent(PlayerChatMessageEvent event) {
+    private static void handleOnPlayerChatEvent(PlayerChatMessagePreEvent event) {
         SignedMessage signedMessage = event.getSignedMessage();
         String chatString = TextHelper.Operators.getString(signedMessage.getContent());
 

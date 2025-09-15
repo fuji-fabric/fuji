@@ -5,7 +5,7 @@ import io.github.sakurawald.annotation.PhasedMixinTemplate;
 import io.github.sakurawald.auxiliary.WeaverUtil;
 import io.github.sakurawald.fuji.core.event.EventManager;
 import io.github.sakurawald.fuji.core.event.annotation.EventProducer;
-import io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePreEvent;
 import net.minecraft.network.message.MessageType;
 import net.minecraft.network.message.SignedMessage;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -23,14 +23,14 @@ public class PlayerChatMessageEventMixin {
     @Shadow
     public ServerPlayerEntity player;
 
-    @EventProducer(PlayerChatMessageEvent.class)
+    @EventProducer(PlayerChatMessagePreEvent.class)
     @ModifyArgs(method = "handleDecoratedMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;broadcast(Lnet/minecraft/network/message/SignedMessage;Lnet/minecraft/server/network/ServerPlayerEntity;Lnet/minecraft/network/message/MessageType$Parameters;)V"))
-    public void produceOnPlayerChatEvent(Args args) {
+    public void produceOnPlayerChatPreEvent(Args args) {
         SignedMessage signedMessage = args.get(0);
         MessageType.Parameters parameters = args.get(2);
 
-        PlayerChatMessageEvent event = new PlayerChatMessageEvent(player, signedMessage, parameters);
-        EventManager.dispatchEvent(PlayerChatMessageEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
+        PlayerChatMessagePreEvent event = new PlayerChatMessagePreEvent(player, signedMessage, parameters);
+        EventManager.dispatchEvent(PlayerChatMessagePreEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
 
         args.set(0, event.getSignedMessage());
         args.set(2, event.getParameters());

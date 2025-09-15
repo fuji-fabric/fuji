@@ -17,7 +17,7 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
-import io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageEvent;
+import io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePreEvent;
 import io.github.sakurawald.fuji.core.service.style_striper.StyleStriper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
@@ -167,7 +167,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
     }
 
     @EventConsumer(injectorPriority = EventConsumer.HIGHER)
-    private static void handleOnPlayerChatEvent(PlayerChatMessageEvent event) {
+    private static void handleOnPlayerChatEvent(PlayerChatMessagePreEvent event) {
         /* Get signed message. */
         SignedMessage signedMessage = event.getSignedMessage();
 
