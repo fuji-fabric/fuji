@@ -3,7 +3,6 @@
 > For historical change logs, refer to: https://github.com/sakurawald/fuji/releases
 
 
-
 ## Changelog
 
 ### [rtp] 
