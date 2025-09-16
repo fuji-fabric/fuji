@@ -12,7 +12,15 @@
     /execute as @a run rtp
     ```
 - **Introduced `async_chunk_loading_timeout_ticks`, allowing configuration of the maximum wait time (in ticks) before aborting an asynchronous loading attempt.**
+- **Support for `biome whitelist mode`, the player can `rtp` to specified `biomes`.**
 - The RTP process will now automatically cancel if the associated player is removed (e.g., if the player disconnects during RTP).
+
+### [tppos]
+- feature: add optional argument `--asyncChunkLoadingTimeoutTicks`
+- feature: add optional argument `--chunkInhabitedTimeLowerThanTicks`
+- feature: add optional argument `--targetBiome`
+  - Example: `/tppos --targetBiome minecraft:taiga`
+
 
 ### [command_menu] Enhancement for `nested menus`
 - Improved `/command-menu open`: the target menu now opens **1 tick later**, simplifying the handling of nested menu opening and closing.
