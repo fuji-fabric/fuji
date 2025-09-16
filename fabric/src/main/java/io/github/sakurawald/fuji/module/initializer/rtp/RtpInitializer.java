@@ -31,6 +31,7 @@ import java.util.Optional;
     ◉ Features
     - Per-dimension settings
     - Real-time searching feedback.
+    - Full async `chunk loading` and `chunk generation`. (Lag-free)
     - Customization of `center x` and `center z`
     - Customization of `min range` and `max range`
     - Supported `circle` and `rectangle` shape.
