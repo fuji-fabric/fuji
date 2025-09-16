@@ -47,11 +47,15 @@ public class RandomTeleporter {
                 TextHelper.sendTextByKey(player, "rtp.progress.searching", context.getAttempts(), context.getMaxAttempts());
                 context.incrementAttempts();
                 PositionSearcher.search(context);
+
+                if (player.isRemoved()) {
+                    LogUtil.info("Abort RTP: The player {} has been removed.", playerName);
+                    return;
+                }
             } while (context.getResult().isEmpty() && context.hasRemainingAttempts());
 
             Optional<BlockPos> result = context.getResult();
             if (result.isEmpty()) {
-                LogUtil.debug("Abort rtp for {}, run out attempts.", player);
                 TextHelper.sendTextByKey(player, "rtp.progress.run_out_attempts");
                 return;
             }

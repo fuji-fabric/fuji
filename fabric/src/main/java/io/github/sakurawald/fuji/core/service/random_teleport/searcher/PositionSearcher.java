@@ -37,7 +37,8 @@ public class PositionSearcher {
 
         /* Load the chunk async and waiting off-thread. */
         ChunkPos chunkPos = WorldHelper.makeChunkPos(blockPosInChunk);
-        CompletableFuture<Void> voidCompletableFuture = AsyncChunkLoader.loadChunkAsync(serverWorld, chunkPos, context.getSettings().getAsyncChunkLoadingTimeoutTicks(), getChunkConsumer(context, serverWorld), getOnFailedHook(context));
+        int asyncChunkLoadingTimeoutTicks = Math.min(20 * 60, context.getSettings().getAsyncChunkLoadingTimeoutTicks());
+        CompletableFuture<Void> voidCompletableFuture = AsyncChunkLoader.loadChunkAsync(serverWorld, chunkPos, asyncChunkLoadingTimeoutTicks, getChunkConsumer(context, serverWorld), getOnFailedHook(context));
         voidCompletableFuture.join();
     }
 
