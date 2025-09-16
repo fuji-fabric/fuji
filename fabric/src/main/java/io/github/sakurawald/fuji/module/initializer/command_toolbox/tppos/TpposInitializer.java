@@ -94,7 +94,7 @@ public class TpposInitializer extends ModuleInitializer {
         int $asyncChunkLoadingTimeoutTicks = asyncChunkLoadingTimeoutTicks.orElse(20 * 10);
         int $chunkInhabitedTimeLowerThanTicks = chunkInhabitedTimeLowerThanTicks.orElse(Integer.MAX_VALUE);
         RandomTeleportSettings.Biomes biomes = biome
-            .map($targetBiome -> {
+            .map($biome -> {
                 RandomTeleportSettings.Biomes result = new RandomTeleportSettings.Biomes();
 
                 /* Clear skipped biomes. */
@@ -102,7 +102,7 @@ public class TpposInitializer extends ModuleInitializer {
 
                 /* Enable biome whitelist mode. */
                 result.getOnlyAcceptBiomesMode().setEnable(true);
-                Identifier biomeId = $targetBiome.getValue();
+                Identifier biomeId = $biome.getValue();
                 result.getOnlyAcceptBiomesMode().setAccept(Set.of(RegistryHelper.getIdAsString(biomeId)));
                 return result;
             })

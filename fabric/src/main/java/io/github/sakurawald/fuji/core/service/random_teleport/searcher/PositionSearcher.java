@@ -34,6 +34,9 @@ public class PositionSearcher {
         /* Adjust the selected block pos for biomes whitelist mode. */
         final ServerWorld serverWorld = WorldHelper.getWorldOrThrow(settings.getDimension());
         if (settings.getBiomes().getOnlyAcceptBiomesMode().isEnable()) {
+            // NOTE: Use the player's Y as the initial Y value for locateBiome()
+            blockPosInChunk = blockPosInChunk.withY(context.getPlayer().getBlockY());
+
             Pair<BlockPos, RegistryEntry<Biome>> pair = serverWorld.locateBiome(it -> it.getKey()
                 .map(biome -> {
                     String idAsString = RegistryHelper.getIdAsString(biome);
@@ -42,6 +45,7 @@ public class PositionSearcher {
                         .anyMatch(acceptBiome -> acceptBiome.equals(idAsString));
                 })
                 .orElse(false), blockPosInChunk, 6400, 32, 64);
+
             if (pair == null) {
                 TextHelper.sendTextByKey(context.getPlayer(), "rtp.progress.biome_locate_failed");
             } else {
