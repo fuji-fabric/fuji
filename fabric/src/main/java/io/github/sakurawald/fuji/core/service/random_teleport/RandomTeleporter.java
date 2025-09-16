@@ -44,8 +44,9 @@ public class RandomTeleporter {
             /* Do search. */
             final PositionSearchContext context = PositionSearchContext.of(player, settings);
             do {
-                TextHelper.sendTextByKey(player, "rtp.progress.searching", context.getAttempts(), context.getMaxAttempts());
                 context.incrementAttempts();
+                TextHelper.sendTextByKey(player, "rtp.progress.searching", context.getAttempts(), context.getMaxAttempts());
+
                 PositionSearcher.search(context);
 
                 if (player.isRemoved()) {
