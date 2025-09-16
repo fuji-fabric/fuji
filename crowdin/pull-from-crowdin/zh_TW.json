@@ -490,6 +490,7 @@
   "reply.no_target": "<red>沒有可回覆的目標",
   "rtp.dimension.disallow": "<red>不允許在 %s 維度進行隨機傳送",
   "rtp.progress.async_chunk_loading_timeout": "<red>◉ Async chunk loading timeout.",
+  "rtp.progress.biome_locate_failed": "<red>◉ Failed to locate the target biomes.",
   "rtp.progress.checking_chunk": "<orange>◉ Checking chunk at %d, %d... (%d/%d)",
   "rtp.progress.location_found": "<green>◉ Safe location found at (%d, %d, %d)",
   "rtp.progress.run_out_attempts": "[send-main-title]<red>Run out attempts, try again later!",
