@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.module.initializer.command_menu;
 
-import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
@@ -11,8 +10,10 @@ import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommand
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerActionEvent;
+import io.github.sakurawald.fuji.core.manager.impl.task.GameTaskManager;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_menu.command.argument.wrapper.MenuName;
 import io.github.sakurawald.fuji.module.initializer.command_menu.config.CommandMenuConfigModel;
@@ -81,7 +82,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
     """)
 
 
-
 @CommandNode("command-menu")
 @CommandRequirement(level = 4)
 public class CommandMenuInitializer extends ModuleInitializer {
@@ -101,9 +101,11 @@ public class CommandMenuInitializer extends ModuleInitializer {
 
         /* Make the menu GUI and open it. */
         MenuDescriptor menuDescriptor = menus.model().getMenus().get($menuName);
-        menuDescriptor.build(player)
-            .open();
-
+        // NOTE: Schedule this task at next tick, making the opening and closing of nested menus easier.
+        GameTaskManager.runInTicks(1, () -> {
+            menuDescriptor.build(player)
+                .open();
+        });
         return CommandHelper.Return.SUCCESS;
     }
 

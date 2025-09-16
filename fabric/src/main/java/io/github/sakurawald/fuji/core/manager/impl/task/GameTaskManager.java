@@ -13,6 +13,14 @@ public class GameTaskManager extends BaseManager {
 
     private static final CopyOnWriteArrayList<GameTask> TASK_QUEUE = new CopyOnWriteArrayList<>();
 
+    public static void runInTicks(int inTicks, @NotNull Runnable runnable) {
+        GameTask gameTask = new GameTask(inTicks,
+            () -> {},
+            () -> {},
+            runnable);
+        submitTask(gameTask);
+    }
+
     @Override
     public void onInitialize() {}
 
