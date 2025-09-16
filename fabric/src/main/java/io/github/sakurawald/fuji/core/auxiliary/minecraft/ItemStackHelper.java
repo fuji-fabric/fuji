@@ -35,6 +35,14 @@ public class ItemStackHelper {
 
     public static class CustomName {
 
+        public static void removeCustomName(@NotNull ItemStack stack) {
+            #if MC_VER <= MC_1_20_4
+            stack.removeCustomName();
+            #elif MC_VER > MC_1_20_4
+            stack.remove(DataComponentTypes.CUSTOM_NAME);
+            #endif
+        }
+
         public static void setCustomName(@NotNull ItemStack stack, @NotNull Text customName) {
             #if MC_VER <= MC_1_20_4
             stack.setCustomName(customName);
@@ -60,7 +68,7 @@ public class ItemStackHelper {
         @SuppressWarnings("unused")
         private static final String LORE_NBT_KEY = "Lore";
 
-        public static List<Text> getLore(@NotNull ItemStack stack) {
+        public static @NotNull List<Text> getLore(@NotNull ItemStack stack) {
             #if MC_VER <= MC_1_20_4
             return stack
                 .getOrCreateSubNbt(DISPLAY_NBT_KEY)

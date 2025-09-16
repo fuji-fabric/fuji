@@ -55,6 +55,7 @@ io.github.sakurawald.fuji.module.initializer.command_toolbox.god.GodInitializer
 io.github.sakurawald.fuji.module.initializer.command_toolbox.hat.HatInitializer
 io.github.sakurawald.fuji.module.initializer.command_toolbox.heal.HealInitializer
 io.github.sakurawald.fuji.module.initializer.command_toolbox.help_op.HelpOpInitializer
+io.github.sakurawald.fuji.module.initializer.command_toolbox.itemname.ItemNameInitializer
 io.github.sakurawald.fuji.module.initializer.command_toolbox.jump.JumpInitializer
 io.github.sakurawald.fuji.module.initializer.command_toolbox.lore.LoreInitializer
 io.github.sakurawald.fuji.module.initializer.command_toolbox.more.MoreInitializer

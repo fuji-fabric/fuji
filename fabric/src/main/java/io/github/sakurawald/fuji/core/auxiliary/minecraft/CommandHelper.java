@@ -340,6 +340,13 @@ public class CommandHelper {
             return function.apply(player);
         }
 
+        public static int withItemInMainHand(@NotNull ServerPlayerEntity source, @NotNull Function<ItemStack, Integer> consumer) {
+            ServerCommandSource commandSource = Source.getCommandSource(source);
+            return withItemInMainHand(commandSource, (player, item) -> {
+                return consumer.apply(item);
+            });
+        }
+
         public static int withItemInMainHand(@NotNull ServerCommandSource source, @NotNull BiFunction<ServerPlayerEntity, ItemStack, Integer> consumer) {
             return withContextPlayer(source, player -> {
                 ItemStack mainHandStack = player.getMainHandStack();

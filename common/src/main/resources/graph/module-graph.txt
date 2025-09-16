@@ -58,6 +58,7 @@ command_toolbox.god
 command_toolbox.hat
 command_toolbox.heal
 command_toolbox.help_op
+command_toolbox.itemname
 command_toolbox.jump
 command_toolbox.lore
 command_toolbox.more

@@ -6,3 +6,4 @@
 ## Changelog
 
 - [command_menu] feature: now `/command-menu open` command will open the `target menu` in `1 tick later`. (Making it easier to handle the `opening and closing` of `nested menus`)
+- [command_toolbox.itemname] feature: new `/itemname {set|reset}` command, to modify the `custom name` of item in hand.

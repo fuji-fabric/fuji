@@ -728,6 +728,7 @@ public class MainControlConfigModel {
             public God god = new God();
             public Hat hat = new Hat();
             public Heal heal = new Heal();
+            public ItemName itemname = new ItemName();
             public Lore lore = new Lore();
             public More more = new More();
             public Ping ping = new Ping();
@@ -787,6 +788,10 @@ public class MainControlConfigModel {
             }
 
             public static class Heal {
+                public boolean enable = false;
+            }
+
+            public static class ItemName {
                 public boolean enable = false;
             }
 
