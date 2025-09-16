@@ -8,11 +8,17 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
+@ColorBox(id = 1758033790822L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
+    ◉ Dis-connect a player.
+    - `/dis-connect Steve \\<red\\>Kicked.`
+    - `/dis-connect Steve \\<red\\>First Line\\<newline\\>Second Line`
+    """)
 public class DisconnectModuleInitializer extends ModuleInitializer {
 
     @CommandNode("dis-connect")

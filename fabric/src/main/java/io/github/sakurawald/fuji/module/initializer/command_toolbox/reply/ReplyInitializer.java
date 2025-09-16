@@ -41,11 +41,11 @@ public class ReplyInitializer extends ModuleInitializer {
             CommandHelper
                 .getCommandDispatcher()
                 .execute("msg %s %s".formatted(targetPlayerName, message.getValue()), player.getCommandSource());
+            return CommandHelper.Return.SUCCESS;
         } catch (CommandSyntaxException e) {
             TextHelper.sendTextByKey(player, "reply.no_target");
+            return CommandHelper.Return.FAILURE;
         }
-
-        return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1756134707146L, value = "Set the reply target player.")

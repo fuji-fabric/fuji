@@ -12,7 +12,7 @@ import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.stat.Stats;
+import net.minecraft.text.Text;
 
 public class TrashCanInitializer extends ModuleInitializer {
 
@@ -22,8 +22,8 @@ public class TrashCanInitializer extends ModuleInitializer {
         int rows = 3;
         SimpleInventory simpleInventory = new SimpleInventory(rows * 9);
 
-        player.openHandledScreen(new SimpleNamedScreenHandlerFactory((i, inventory, p) -> new GenericContainerScreenHandler(ScreenHandlerType.GENERIC_9X3, i, inventory, simpleInventory, rows), TextHelper.getTextByKey(player, "trashcan.gui.title")));
-        player.incrementStat(Stats.INTERACT_WITH_CRAFTING_TABLE);
+        Text titleText = TextHelper.getTextByKey(player, "trashcan.gui.title");
+        player.openHandledScreen(new SimpleNamedScreenHandlerFactory((i, inventory, p) -> new GenericContainerScreenHandler(ScreenHandlerType.GENERIC_9X3, i, inventory, simpleInventory, rows), titleText));
         return CommandHelper.Return.SUCCESS;
     }
 }

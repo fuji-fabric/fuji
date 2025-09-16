@@ -32,10 +32,11 @@ public class SeenInitializer extends ModuleInitializer {
         if (data.model().player2seen.containsKey(target)) {
             Long time = data.model().player2seen.get(target);
             TextHelper.sendTextByKey(source, "seen.success", target, ChronosUtil.Formatter.formatDate(time));
+            return CommandHelper.Return.SUCCESS;
         } else {
             TextHelper.sendTextByKey(source, "seen.fail");
+            return CommandHelper.Return.FAILURE;
         }
-        return CommandHelper.Return.SUCCESS;
     }
 
     @EventConsumer

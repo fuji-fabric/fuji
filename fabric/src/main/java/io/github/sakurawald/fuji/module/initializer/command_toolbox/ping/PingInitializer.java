@@ -18,10 +18,9 @@ public class PingInitializer extends ModuleInitializer {
     @CommandNode("ping")
     @CommandRequirement(level = 4)
     private static int $ping(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
-        String name = target.getGameProfile().getName();
-
+        String targetPlayerName = PlayerHelper.getPlayerName(target);
         int latency = PlayerHelper.getPing(target);
-        TextHelper.sendTextByKey(source, "ping.player", name, latency);
+        TextHelper.sendTextByKey(source, "ping.player", targetPlayerName, latency);
 
         return CommandHelper.Return.SUCCESS;
     }
