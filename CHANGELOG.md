@@ -21,8 +21,8 @@ Now support `async chunk loading & generation`, in a `lag-free` style.
 ### [tppos]
 - feature: add optional argument `--asyncChunkLoadingTimeoutTicks`
 - feature: add optional argument `--chunkInhabitedTimeLowerThanTicks`
-- feature: add optional argument `--targetBiome`
-  - Example: `/tppos --targetBiome minecraft:taiga`
+- feature: add optional argument `--biome`
+  - Example: `/tppos --biome minecraft:taiga`
 
 
 ### [command_menu] 
