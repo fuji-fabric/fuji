@@ -18,6 +18,11 @@ import net.minecraft.server.network.ServerPlayerEntity;
     1. Modify the `walk speed`.
     2. Modify the `fly speed`.
     """)
+@ColorBox(id = 1758036383834L, color = ColorBox.ColorBoxTypes.NOTE, value = """
+    ◉ Re-join the server to fix the client-side camera broken.
+    When a new `speed` is set, the client's `camera` will be broken.
+    You have to re-join the server, to fix the client-side camera settings.
+    """)
 @ColorBox(id = 1754400656952L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Double the `walk speed`
     The default value is `0.1`
