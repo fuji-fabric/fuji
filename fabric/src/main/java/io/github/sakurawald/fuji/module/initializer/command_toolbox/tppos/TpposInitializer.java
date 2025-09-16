@@ -1,7 +1,5 @@
 package io.github.sakurawald.fuji.module.initializer.command_toolbox.tppos;
 
-import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.PlayerCollection;
-import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
@@ -13,15 +11,18 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.Dimension;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlayerName;
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.PlayerCollection;
+import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.service.random_teleport.RandomTeleporter;
-import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.core.service.random_teleport.structure.RandomTeleportSettings;
+import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import java.util.Collection;
+import java.util.Optional;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import java.util.Optional;
+import net.minecraft.util.Identifier;
 
 
 @Document(id = 1751825242047L, value = """
@@ -58,6 +59,9 @@ public class TpposInitializer extends ModuleInitializer {
         , @Document(id = 1751825335795L, value = "min y for rtp") Optional<Integer> minY
         , @Document(id = 1751825340303L, value = "max y for rtp") Optional<Integer> maxY
         , @Document(id = 1751825344683L, value = "max try times for rtp") Optional<Integer> maxTryTimes
+        , Optional<Integer> asyncChunkLoadingTimeoutTicks
+        , Optional<Integer> chunkInhabitedTimeLowerThanTicks
+        , Optional<Identifier> targetBiome
     ) {
         /* Specify the dimension */
         ServerWorld world = dimension.isPresent() ? dimension.get().getValue() : EntityHelper.getServerWorld(player);
@@ -84,8 +88,20 @@ public class TpposInitializer extends ModuleInitializer {
         int $minY = minY.orElse(world.getBottomY());
         int $maxY = maxY.orElse(WorldHelper.getTopY(world));
         int $maxTryTimes = maxTryTimes.orElse(8);
+        String worldId = RegistryHelper.getIdAsString(world);
+        int $asyncChunkLoadingTimeoutTicks = asyncChunkLoadingTimeoutTicks.orElse(20 * 10);
+        int $chunkInhabitedTimeLowerThanTicks = chunkInhabitedTimeLowerThanTicks.orElse(Integer.MAX_VALUE);
+        RandomTeleportSettings.Biomes biomes = targetBiome
+            .map($targetBiome -> {
+                RandomTeleportSettings.Biomes result = new RandomTeleportSettings.Biomes();
+                result.getOnlyAcceptBiomesMode().setEnable(true);
+                result.getOnlyAcceptBiomesMode().getAccept().clear();
+                result.getOnlyAcceptBiomesMode().getAccept().add(RegistryHelper.getIdAsString($targetBiome));
+                return result;
+            })
+            .orElseGet(RandomTeleportSettings.Biomes::new);
 
-        RandomTeleportSettings randomTeleportSettings = new RandomTeleportSettings(true, RegistryHelper.getIdAsString(world), $centerX, $centerZ, $circle, $minRange, $maxRange, $minY, $maxY, $maxTryTimes, 20 * 10, Integer.MAX_VALUE, new RandomTeleportSettings.Biomes(), new RandomTeleportSettings.Blocks());
+        RandomTeleportSettings randomTeleportSettings = new RandomTeleportSettings(true, worldId, $centerX, $centerZ, $circle, $minRange, $maxRange, $minY, $maxY, $maxTryTimes, $asyncChunkLoadingTimeoutTicks, $chunkInhabitedTimeLowerThanTicks, biomes, new RandomTeleportSettings.Blocks());
 
         RandomTeleporter.request(player, randomTeleportSettings, null);
         return CommandHelper.Return.SUCCESS;
