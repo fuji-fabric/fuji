@@ -6,7 +6,9 @@
 
 ## Changelog
 
-### [rtp] Now support `async chunk loading & generation`, in a `lag-free` style.
+### [rtp] 
+Now support `async chunk loading & generation`, in a `lag-free` style.
+
 - **Added support for fully asynchronous chunk loading and generation, ensuring a lag-free experience.**
   - Example: execute a batch RTP without performance issues:
     ```mcfunction
@@ -23,8 +25,10 @@
   - Example: `/tppos --targetBiome minecraft:taiga`
 
 
-### [command_menu] Enhancement for `nested menus`
+### [command_menu] 
+Enhancement for `nested menus`
 - Improved `/command-menu open`: the target menu now opens **1 tick later**, simplifying the handling of nested menu opening and closing.
 
 ### [command_toolbox.itemname]
 - Added `/itemname {set|reset}` command to set or reset the custom name of the item currently held in hand.
+
