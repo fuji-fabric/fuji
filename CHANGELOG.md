@@ -5,8 +5,17 @@
 
 ## Changelog
 
-- [rtp] Enhance
-  - feature: new `async_chunk_loading_timeout_ticks`, to specify the `waiting ticks before aborting this attempt`.
-  - feature: support full `async chunk loading` and `async chunk generation`, making it `lag free`.
-- [command_menu] feature: now `/command-menu open` command will open the `target menu` in `1 tick later`. (Making it easier to handle the `opening and closing` of `nested menus`)
-- [command_toolbox.itemname] feature: new `/itemname {set|reset}` command, to modify the `custom name` of item in hand.
+### [rtp] Now support `async chunk loading & generation`, in a `lag-free` style.
+- **Added support for fully asynchronous chunk loading and generation, ensuring a lag-free experience.**
+  - Example: execute a batch RTP without performance issues:
+    ```mcfunction
+    /execute as @a run rtp
+    ```
+- **Introduced `async_chunk_loading_timeout_ticks`, allowing configuration of the maximum wait time (in ticks) before aborting an asynchronous loading attempt.**
+- The RTP process will now automatically cancel if the associated player is removed (e.g., if the player disconnects during RTP).
+
+### [command_menu] Enhancement for `nested menus`
+- Improved `/command-menu open`: the target menu now opens **1 tick later**, simplifying the handling of nested menu opening and closing.
+
+### [command_toolbox.itemname]
+- Added `/itemname {set|reset}` command to set or reset the custom name of the item currently held in hand.
