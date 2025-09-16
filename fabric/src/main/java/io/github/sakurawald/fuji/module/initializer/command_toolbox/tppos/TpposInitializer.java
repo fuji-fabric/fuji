@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.command.annotation.CommandTarget;
+import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.BiomeId;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.Dimension;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflinePlayerName;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.PlayerCollection;
@@ -20,6 +21,7 @@ import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
@@ -61,7 +63,7 @@ public class TpposInitializer extends ModuleInitializer {
         , @Document(id = 1751825344683L, value = "max try times for rtp") Optional<Integer> maxTryTimes
         , Optional<Integer> asyncChunkLoadingTimeoutTicks
         , Optional<Integer> chunkInhabitedTimeLowerThanTicks
-        , Optional<Identifier> targetBiome
+        , Optional<BiomeId> targetBiome
     ) {
         /* Specify the dimension */
         ServerWorld world = dimension.isPresent() ? dimension.get().getValue() : EntityHelper.getServerWorld(player);
@@ -94,9 +96,14 @@ public class TpposInitializer extends ModuleInitializer {
         RandomTeleportSettings.Biomes biomes = targetBiome
             .map($targetBiome -> {
                 RandomTeleportSettings.Biomes result = new RandomTeleportSettings.Biomes();
+
+                /* Clear skipped biomes. */
+                result.getSkip().clear();
+
+                /* Enable biome whitelist mode. */
                 result.getOnlyAcceptBiomesMode().setEnable(true);
-                result.getOnlyAcceptBiomesMode().getAccept().clear();
-                result.getOnlyAcceptBiomesMode().getAccept().add(RegistryHelper.getIdAsString($targetBiome));
+                Identifier biomeId = $targetBiome.getValue();
+                result.getOnlyAcceptBiomesMode().setAccept(Set.of(RegistryHelper.getIdAsString(biomeId)));
                 return result;
             })
             .orElseGet(RandomTeleportSettings.Biomes::new);

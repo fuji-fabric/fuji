@@ -1,3 +1,4 @@
+io.github.sakurawald.fuji.core.command.argument.adapter.impl.BiomeIdArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.BlockPosArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.BlockStateArgumentTypeAdapter
 io.github.sakurawald.fuji.core.command.argument.adapter.impl.BooleanArgumentTypeAdapter
