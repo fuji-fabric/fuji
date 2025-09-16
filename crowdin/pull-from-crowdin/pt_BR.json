@@ -489,6 +489,7 @@
   "repair.no_damage": "<red>There is no damage to your item.",
   "reply.no_target": "<red>Sem alvo de resposta",
   "rtp.dimension.disallow": "<red>Not allowed to rtp in dimension %s",
+  "rtp.progress.async_chunk_loading_timeout": "<red>◉ Async chunk loading timeout.",
   "rtp.progress.checking_chunk": "<orange>◉ Checking chunk at %d, %d... (%d/%d)",
   "rtp.progress.location_found": "<green>◉ Safe location found at (%d, %d, %d)",
   "rtp.progress.run_out_attempts": "[send-main-title]<red>Run out attempts, try again later!",
@@ -1523,5 +1524,9 @@
   "docstring.1757757045008": "This module provides customization of join queue.\n",
   "docstring.1757757163621": "To bypass the `player limit`.\n",
   "docstring.1757792247065": "Teleport to the lowest of your current position.",
-  "docstring.1757810706176": "◉ Features\n- Per-dimension settings\n- Real-time searching feedback.\n- Customization of `center x` and `center z`\n- Customization of `min range` and `max range`\n- Supported `circle` and `rectangle` shape.\n- Respect `world border`.\n- Skip any `liquid block`.\n- Filter the result by `min Y` and `max Y`\n- Filter the result by `specified blocks`\n- Filter the result by `specified biomes`\n- Filter the result by `chunk inhabited time`\n"
+  "docstring.1757810706176": "◉ Features\n- Per-dimension settings\n- Real-time searching feedback.\n- Full async `chunk loading` and `chunk generation`. (Lag-free)\n- Customization of `center x` and `center z`\n- Customization of `min range` and `max range`\n- Supported `circle` and `rectangle` shape.\n- Respect `world border`.\n- Skip any `liquid block`.\n- Filter the result by `min Y` and `max Y`\n- Filter the result by `specified blocks`\n- Filter the result by `specified biomes`\n- Filter the result by `chunk inhabited time`\n",
+  "docstring.1758032261807": "Allows you to customize the `display name` of players.\n",
+  "docstring.1758032281065": "◉ Using the `nickname` module with `Styled Chat` mod.\nSee: https://github.com/sakurawald/fuji/issues/489\n",
+  "docstring.1758033790822": "◉ Dis-connect a player.\n- `/dis-connect Steve \\<red\\>Kicked.`\n- `/dis-connect Steve \\<red\\>First Line\\<newline\\>Second Line`\n",
+  "docstring.1758036383834": "◉ Re-join the server to fix the client-side camera broken.\nWhen a new `speed` is set, the client's `camera` will be broken.\nYou have to re-join the server, to fix the client-side camera settings.\n"
 }
