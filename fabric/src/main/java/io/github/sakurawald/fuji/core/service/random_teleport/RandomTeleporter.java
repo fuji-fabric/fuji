@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.core.service.random_teleport;
 
 import com.google.common.base.Stopwatch;
+import io.github.sakurawald.fuji.core.auxiliary.AsyncUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
@@ -24,53 +25,55 @@ import org.jetbrains.annotations.Nullable;
 public class RandomTeleporter {
 
     public static void request(@NotNull ServerPlayerEntity player, @NotNull RandomTeleportSettings settings, @Nullable Consumer<GlobalPos> onCompleteHook) {
-        /* Start the timer. */
-        String playerName = PlayerHelper.getPlayerName(player);
-        Stopwatch timer = Stopwatch.createStarted();
-        LogUtil.info("Request rtp: {}", playerName);
-        TextHelper.sendTextByKey(player, "rtp.progress.started");
+        AsyncUtil.runAsyncAndHandleExceptions(() -> {
+            /* Start the timer. */
+            String playerName = PlayerHelper.getPlayerName(player);
+            Stopwatch timer = Stopwatch.createStarted();
+            LogUtil.info("Request rtp: {}", playerName);
+            TextHelper.sendTextByKey(player, "rtp.progress.started");
 
-        /* Initialize world variable. */
-        Optional<ServerWorld> world = WorldHelper.getWorld(settings.getDimension());
-        if (world.isEmpty()) {
-            LogUtil.warn("Abort rtp for {} (Target dimension not found in server)", player);
-            TextHelper.sendTextByKey(player, "world.dimension.not_found");
-            return;
-        }
-        ServerWorld $world = world.get();
+            /* Initialize world variable. */
+            Optional<ServerWorld> world = WorldHelper.getWorld(settings.getDimension());
+            if (world.isEmpty()) {
+                LogUtil.warn("Abort rtp for {} (Target dimension not found in server)", player);
+                TextHelper.sendTextByKey(player, "world.dimension.not_found");
+                return;
+            }
+            ServerWorld $world = world.get();
 
-        /* Do search. */
-        final PositionSearchContext context = PositionSearchContext.of(player, settings);
-        do {
-            TextHelper.sendTextByKey(player, "rtp.progress.searching", context.getAttempts(), context.getMaxAttempts());
-            context.incrementAttempts();
-            PositionSearcher.search(context);
-        } while (context.getResult().isEmpty() && context.hasRemainingAttempts());
+            /* Do search. */
+            final PositionSearchContext context = PositionSearchContext.of(player, settings);
+            do {
+                TextHelper.sendTextByKey(player, "rtp.progress.searching", context.getAttempts(), context.getMaxAttempts());
+                context.incrementAttempts();
+                PositionSearcher.search(context);
+            } while (context.getResult().isEmpty() && context.hasRemainingAttempts());
 
-        Optional<BlockPos> result = context.getResult();
-        if (result.isEmpty()) {
-            LogUtil.debug("Abort rtp for {}, run out attempts.", player);
-            TextHelper.sendTextByKey(player, "rtp.progress.run_out_attempts");
-            return;
-        }
+            Optional<BlockPos> result = context.getResult();
+            if (result.isEmpty()) {
+                LogUtil.debug("Abort rtp for {}, run out attempts.", player);
+                TextHelper.sendTextByKey(player, "rtp.progress.run_out_attempts");
+                return;
+            }
 
-        /* Consume the search result. */
-        BlockPos $result = result.get();
-        TextHelper.sendTextByKey(player, "rtp.progress.location_found", $result.getX(), $result.getY(), $result.getZ());
+            /* Consume the search result. */
+            BlockPos $result = result.get();
+            TextHelper.sendTextByKey(player, "rtp.progress.location_found", $result.getX(), $result.getY(), $result.getZ());
 
-        GlobalPos globalPos = new GlobalPos($world, $result.getX() + 0.5, $result.getY(), $result.getZ() + 0.5, 0, 0);
-        TextHelper.sendTextByKey(player, "rtp.progress.teleporting");
+            GlobalPos globalPos = new GlobalPos($world, $result.getX() + 0.5, $result.getY(), $result.getZ() + 0.5, 0, 0);
+            TextHelper.sendTextByKey(player, "rtp.progress.teleporting");
 
-        ServerHelper.executeSync(() -> globalPos.teleport(player));
+            ServerHelper.executeSync(() -> globalPos.teleport(player));
 
-        /* Call hooks. */
-        if (onCompleteHook != null) {
-            onCompleteHook.accept(globalPos);
-        }
+            /* Call hooks. */
+            if (onCompleteHook != null) {
+                onCompleteHook.accept(globalPos);
+            }
 
-        /* Stop the timer. */
-        var cost = timer.stop();
-        LogUtil.info("Response rtp: {} has been teleported to ({} {} {} {}) (cost = {})", playerName, RegistryHelper.getIdAsString($world), $result.getX(), $result.getY(), $result.getZ(), cost);
+            /* Stop the timer. */
+            var cost = timer.stop();
+            LogUtil.info("Response rtp: {} has been teleported to ({} {} {} {}) (cost = {})", playerName, RegistryHelper.getIdAsString($world), $result.getX(), $result.getY(), $result.getZ(), cost);
+        });
     }
 
 }

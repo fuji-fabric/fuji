@@ -9,6 +9,11 @@ public class GameTask {
     Runnable onTick;
     Runnable onEnd;
     boolean started = false;
+    boolean completed = false;
+
+    public GameTask(int remainingRunTicks) {
+        this(remainingRunTicks, () -> {}, () -> {}, () -> {});
+    }
 
     public GameTask(int remainingRunTicks, Runnable onTick) {
         this(remainingRunTicks, onTick, () -> {}, () -> {});
@@ -33,15 +38,12 @@ public class GameTask {
 
         if (this.remainingRunTicks <= 0) {
             this.onEnd.run();
+            this.completed = true;
         }
     }
 
     public void decreaseRemainingRunTicks() {
         this.remainingRunTicks--;
-    }
-
-    public boolean isCompleted() {
-        return this.remainingRunTicks == 0;
     }
 
 }

@@ -61,6 +61,8 @@ public class RandomTeleportSettings {
         """)
     int maxTryTimes;
 
+    int asyncChunkLoadingTimeoutTicks = 20 * 10;
+
     int chunkInhabitedTimeLowerThanTicks = Integer.MAX_VALUE;
 
     Biomes biomes = new Biomes();

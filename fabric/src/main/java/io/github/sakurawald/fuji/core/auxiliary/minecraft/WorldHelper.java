@@ -15,6 +15,7 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
@@ -104,6 +105,15 @@ public class WorldHelper {
         #elif MC_VER > MC_1_20_6
         return world.getChunkManager().chunkLoadingManager;
         #endif
+    }
+
+
+    public static @NotNull ChunkPos makeChunkPos(@NotNull BlockPos blockPos) {
+        return makeChunkPos(blockPos.getX(), blockPos.getZ());
+    }
+
+    public static @NotNull ChunkPos makeChunkPos(int blockPosX, int blockPosZ) {
+        return new ChunkPos(blockPosX >> 4, blockPosZ >> 4);
     }
 
     @SuppressWarnings("UnnecessaryLocalVariable")
