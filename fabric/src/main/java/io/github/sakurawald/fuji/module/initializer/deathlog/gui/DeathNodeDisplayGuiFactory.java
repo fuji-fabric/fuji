@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.deathlog.gui;
 
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
+import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
@@ -61,7 +62,9 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
                 .build();
 
             for (int i = 0; i < LINE_SIZE * 6; i++) {
-                if (displayGui.getSlot(i).getItemStack().isEmpty()) {
+                GuiElementInterface slot = displayGui.getSlot(i);
+                if (slot == null) continue;
+                if (slot.getItemStack().isEmpty()) {
                     displayGui.setSlot(i, errorNotification);
                 }
             }
