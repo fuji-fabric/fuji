@@ -1523,5 +1523,7 @@
   "docstring.1757757045008": "This module provides customization of join queue.\n",
   "docstring.1757757163621": "To bypass the `player limit`.\n",
   "docstring.1757792247065": "Teleport to the lowest of your current position.",
-  "docstring.1757810706176": "◉ Features\n- Per-dimension settings\n- Real-time searching feedback.\n- Customization of `center x` and `center z`\n- Customization of `min range` and `max range`\n- Supported `circle` and `rectangle` shape.\n- Respect `world border`.\n- Skip any `liquid block`.\n- Filter the result by `min Y` and `max Y`\n- Filter the result by `specified blocks`\n- Filter the result by `specified biomes`\n- Filter the result by `chunk inhabited time`\n"
+  "docstring.1757810706176": "◉ Features\n- Per-dimension settings\n- Real-time searching feedback.\n- Customization of `center x` and `center z`\n- Customization of `min range` and `max range`\n- Supported `circle` and `rectangle` shape.\n- Respect `world border`.\n- Skip any `liquid block`.\n- Filter the result by `min Y` and `max Y`\n- Filter the result by `specified blocks`\n- Filter the result by `specified biomes`\n- Filter the result by `chunk inhabited time`\n",
+  "docstring.1758032261807": "Allows you to customize the `display name` of players.\n",
+  "docstring.1758032281065": "◉ Using the `nickname` module with `Styled Chat` mod.\nSee: https://github.com/sakurawald/fuji/issues/489\n"
 }

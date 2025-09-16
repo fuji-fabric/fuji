@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.command_toolbox.nickname;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
+import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -20,6 +21,13 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
+@Document(id = 1758032261807L, value = """
+    Allows you to customize the `display name` of players.
+    """)
+@ColorBox(id = 1758032281065L, color = ColorBox.ColorBoxTypes.NOTE, value = """
+    ◉ Using the `nickname` module with `Styled Chat` mod.
+    See: https://github.com/sakurawald/fuji/issues/489
+    """)
 @CommandNode("nickname")
 public class NicknameInitializer extends ModuleInitializer {
 
