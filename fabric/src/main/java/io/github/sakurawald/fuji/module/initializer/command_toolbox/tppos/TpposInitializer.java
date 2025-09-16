@@ -63,7 +63,7 @@ public class TpposInitializer extends ModuleInitializer {
         , @Document(id = 1751825344683L, value = "max try times for rtp") Optional<Integer> maxTryTimes
         , Optional<Integer> asyncChunkLoadingTimeoutTicks
         , Optional<Integer> chunkInhabitedTimeLowerThanTicks
-        , Optional<BiomeId> targetBiome
+        , Optional<BiomeId> biome
     ) {
         /* Specify the dimension */
         ServerWorld world = dimension.isPresent() ? dimension.get().getValue() : EntityHelper.getServerWorld(player);
@@ -93,7 +93,7 @@ public class TpposInitializer extends ModuleInitializer {
         String worldId = RegistryHelper.getIdAsString(world);
         int $asyncChunkLoadingTimeoutTicks = asyncChunkLoadingTimeoutTicks.orElse(20 * 10);
         int $chunkInhabitedTimeLowerThanTicks = chunkInhabitedTimeLowerThanTicks.orElse(Integer.MAX_VALUE);
-        RandomTeleportSettings.Biomes biomes = targetBiome
+        RandomTeleportSettings.Biomes biomes = biome
             .map($targetBiome -> {
                 RandomTeleportSettings.Biomes result = new RandomTeleportSettings.Biomes();
 
