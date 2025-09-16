@@ -108,8 +108,10 @@ public class TpposInitializer extends ModuleInitializer {
             })
             .orElseGet(RandomTeleportSettings.Biomes::new);
 
+        /* Make the parameters object. */
         RandomTeleportSettings randomTeleportSettings = new RandomTeleportSettings(true, worldId, $centerX, $centerZ, $circle, $minRange, $maxRange, $minY, $maxY, $maxTryTimes, $asyncChunkLoadingTimeoutTicks, $chunkInhabitedTimeLowerThanTicks, biomes, new RandomTeleportSettings.Blocks());
 
+        /* Submit the RTP request. */
         RandomTeleporter.request(player, randomTeleportSettings, null);
         return CommandHelper.Return.SUCCESS;
     }
