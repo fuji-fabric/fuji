@@ -1,22 +1,25 @@
 package io.github.sakurawald.fuji.core.service.random_teleport.searcher;
 
+import com.mojang.datafixers.util.Pair;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.service.async_chunk_loader.AsyncChunkLoader;
+import io.github.sakurawald.fuji.core.service.random_teleport.filter.PositionFilter;
 import io.github.sakurawald.fuji.core.service.random_teleport.generator.ChunkCandidateBlocksGenerator;
 import io.github.sakurawald.fuji.core.service.random_teleport.generator.PositionXZGenerator;
 import io.github.sakurawald.fuji.core.service.random_teleport.structure.PositionSearchContext;
 import io.github.sakurawald.fuji.core.service.random_teleport.structure.RandomTeleportSettings;
-import io.github.sakurawald.fuji.core.service.random_teleport.filter.PositionFilter;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import net.minecraft.block.BlockState;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,11 +28,28 @@ public class PositionSearcher {
     @ForDeveloper("Search once, and return empty if there is no good result.")
     public static void search(@NotNull PositionSearchContext context) {
         final RandomTeleportSettings settings = context.getSettings();
-        final BlockPos blockPosInChunk = PositionXZGenerator.getRandomXZ(settings);
+        BlockPos blockPosInChunk = PositionXZGenerator.getRandomXZ(settings);
         TextHelper.sendTextByKey(context.getPlayer(), "rtp.progress.checking_chunk", blockPosInChunk.getX(), blockPosInChunk.getZ(), context.getAttempts(), context.getMaxAttempts());
 
-        /* Filter by world border. */
+        /* Adjust the selected block pos for biomes whitelist mode. */
         final ServerWorld serverWorld = WorldHelper.getWorldOrThrow(settings.getDimension());
+        if (settings.getBiomes().getOnlyAcceptBiomesMode().isEnable()) {
+            Pair<BlockPos, RegistryEntry<Biome>> pair = serverWorld.locateBiome(it -> it.getKey()
+                .map(biome -> {
+                    String idAsString = RegistryHelper.getIdAsString(biome);
+                    return settings.getBiomes().getOnlyAcceptBiomesMode().getAccept()
+                        .stream()
+                        .anyMatch(acceptBiome -> acceptBiome.equals(idAsString));
+                })
+                .orElse(false), blockPosInChunk, 6400, 32, 64);
+            if (pair == null) {
+                TextHelper.sendTextByKey(context.getPlayer(), "rtp.progress.biome_locate_failed");
+            } else {
+                blockPosInChunk = pair.getFirst();
+            }
+        }
+
+        /* Filter by world border. */
         if (!PositionFilter.isInsideWorldBorder(serverWorld, blockPosInChunk)) {
             TextHelper.sendTextByKey(context.getPlayer(), "rtp.progress.skip_out_of_border");
             return;

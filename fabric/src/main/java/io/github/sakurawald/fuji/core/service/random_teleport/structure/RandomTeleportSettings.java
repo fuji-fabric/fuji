@@ -70,6 +70,7 @@ public class RandomTeleportSettings {
     @Data
     @NoArgsConstructor
     public static class Biomes {
+
         Set<String> skip = new HashSet<>() {
             {
                 this.add("minecraft:ocean");
@@ -83,6 +84,19 @@ public class RandomTeleportSettings {
                 this.add("minecraft:deep_frozen_ocean");
             }
         };
+
+        OnlyAcceptBiomesMode onlyAcceptBiomesMode = new OnlyAcceptBiomesMode();
+        @Data
+        @NoArgsConstructor
+        public static class OnlyAcceptBiomesMode {
+            boolean enable = false;
+            Set<String> accept = new HashSet<>() {
+                {
+                    this.add("minecraft:mushroom_fields");
+                    this.add("minecraft:plains");
+                }
+            };
+        }
     }
 
     Blocks blocks = new Blocks();
