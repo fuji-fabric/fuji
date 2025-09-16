@@ -234,6 +234,14 @@
 
 [Test Case]
 - Module: core
+- Action: **Test the functionality of async chunk loading.**
+- Target: The RTP process should not block the game-playing. (Ticking entities, selecting target blocks...)
+- Target: Throwing item entities during RTP process, the game should be ticked normally.
+- Target: Start 3 RTP processes at the same time, it should be processed normally.
+- Target: Run `/execute as @a run rtp` command, it should be processed normally.
+
+[Test Case]
+- Module: core
 - Action: **Test the parsers in Sign block and Anvil block.**
 - Target: The `color.sign` and `color.anvil` should work in single-player world, when installed client-side.
 
