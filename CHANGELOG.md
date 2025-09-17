@@ -11,6 +11,10 @@
 
 ### [command_cooldown]
 - docs: document the `bypass mechanism`
-- 
+ 
 ### [command_warmup]
 - docs: document the `bypass mechanism`
+
+### [command_spy]
+- feature: add `document` property for each rule.
+- feature: optimize the `default config`, adding the `ignore` example.

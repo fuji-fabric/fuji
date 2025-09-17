@@ -15,6 +15,21 @@ public class CommandSpyConfigModel {
             this.add(
                 new CommandSpyRule()
                     .setEnable(true)
+                    .setDocument("Match the `/login ...` command, and ignore it.")
+                    .setMatcher(
+                        new CommandSpyRule.Matcher()
+                            .setCommandStringRegex("login .+")
+                            .setAcceptPlayerCommandSource(true)
+                            .setAcceptServerCommandSource(false))
+                    .setIfMatched(
+                        new CommandSpyRule.IfMatched()
+                            .setLogToConsole(false)
+                            .setNotifyPlayersWithLevelPermission(5)));
+
+            this.add(
+                new CommandSpyRule()
+                    .setEnable(true)
+                    .setDocument("Match all commands, and log it.")
                     .setMatcher(
                         new CommandSpyRule.Matcher()
                             .setCommandStringRegex(".+")

@@ -5,12 +5,15 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.Nullable;
 
 @Data
 @NoArgsConstructor
 public class CommandSpyRule {
 
     boolean enable;
+
+    @Nullable String document;
 
     Matcher matcher = new Matcher();
 
