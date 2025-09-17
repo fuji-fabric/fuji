@@ -12,7 +12,7 @@ public class ModuleHeaderDocumentBuilder extends DocumentBuilder {
         /* Append the title. */
         documentBuilderContext.getDocumentBuilder()
             .append("# Module: %s".formatted(documentBuilderContext.getModulePathString()))
-            .append(System.lineSeparator());
+            .append(System.lineSeparator()).append(System.lineSeparator());
 
         /* Append the module class document. */
         Optional
@@ -21,7 +21,7 @@ public class ModuleHeaderDocumentBuilder extends DocumentBuilder {
                 .getClassDocumentString(null, moduleInitializerClass)).ifPresent(moduleClassDocument -> {
                 documentBuilderContext.getDocumentBuilder()
                     .append("## Module Intro")
-                    .append(System.lineSeparator())
+                    .append(System.lineSeparator()).append(System.lineSeparator())
                     .append(moduleClassDocument);
             });
 

@@ -37,16 +37,20 @@ public class ModuleJobDocumentBuilder extends DocumentBuilder {
         String jobSimpleClassName = ReflectionUtil.getSimpleClassName(jobClass);
         documentBuilderContext
             .getDocumentBuilder()
-            .append("### Job: `%s`".formatted(jobSimpleClassName))
-            .append(System.lineSeparator());
+            .append(":::info[Job]").append(System.lineSeparator())
+            .append("- Job Name: %s".formatted(jobSimpleClassName)).append(System.lineSeparator());
 
         DocumentUtil
             .getClassDocumentString(null, jobClass)
             .ifPresent(jobDocument -> {
                 documentBuilderContext
                     .getDocumentBuilder()
-                    .append("Document: %s".formatted(jobDocument));
+                    .append("- Document: %s".formatted(jobDocument));
             });
+
+        documentBuilderContext
+            .getDocumentBuilder()
+            .append(":::").append(System.lineSeparator());
 
     }
 }

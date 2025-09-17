@@ -14,7 +14,7 @@ public class ModuleColorBoxDocumentBuilder extends DocumentBuilder {
             StringBuilder documentBuilder = documentBuilderContext.getDocumentBuilder();
             documentBuilder
                 .append("## Color Boxes")
-                .append(System.lineSeparator());
+                .append(System.lineSeparator()).append(System.lineSeparator());
 
             colorBoxes.forEach(it -> buildColorBox(documentBuilderContext, it));
         }
@@ -23,9 +23,9 @@ public class ModuleColorBoxDocumentBuilder extends DocumentBuilder {
     private void buildColorBox(@NotNull DocumentBuilderContext documentBuilderContext, @NotNull ColorBox colorBox) {
         documentBuilderContext
             .getDocumentBuilder()
-            .append(":::%s".formatted(toAdmonitionName(colorBox))).append(System.lineSeparator())
-            .append(colorBox.value())
-            .append(":::").append(System.lineSeparator());
+            .append(":::%s".formatted(toAdmonitionName(colorBox))).append(System.lineSeparator()).append(System.lineSeparator())
+            .append(DocumentUtil.duplicateLineSeparatorCharacter(colorBox.value()))
+            .append(":::").append(System.lineSeparator()).append(System.lineSeparator());
     }
 
     private @NotNull String toAdmonitionName(@NotNull ColorBox colorBox) {
