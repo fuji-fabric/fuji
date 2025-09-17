@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.teleport_warmup;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
@@ -57,9 +58,15 @@ public class TeleportWarmupInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<TeleportWarmupConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, TeleportWarmupConfigModel.class);
 
+    @SuppressWarnings("RedundantIfStatement")
     public static boolean shouldApplyTeleportWarmup(ServerWorld destinationDimension, ServerPlayerEntity player) {
         /* Skip the teleport warmup if target dimension is not in the list of effective dimensions */
         if (!config.model().dimension.effective_dimensions.contains(RegistryHelper.getIdAsString(destinationDimension))) {
+            return false;
+        }
+
+        // NOTE: Make it friendly for respawn teleport. (For an immediate respawn teleport, the age == 0)
+        if (EntityHelper.getAge(player) <= 3) {
             return false;
         }
 

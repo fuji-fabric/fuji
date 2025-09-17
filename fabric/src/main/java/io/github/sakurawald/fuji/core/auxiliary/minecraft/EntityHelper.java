@@ -106,4 +106,8 @@ public class EntityHelper {
     public static byte withFlagValue(int base, int flag, boolean value) {
         return (byte) (value ? base | flag : base & ~flag);
     }
+
+    public static int getAge(Entity entity) {
+        return entity.age;
+    }
 }
