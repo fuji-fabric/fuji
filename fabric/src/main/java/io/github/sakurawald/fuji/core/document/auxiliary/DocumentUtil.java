@@ -7,16 +7,26 @@ import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.structure.DocString;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
+import io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager;
 import io.github.sakurawald.fuji.core.service.url_highlighter.UrlHighlighter;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
+import io.github.sakurawald.fuji.core.document.structure.JobDescriptor;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.quartz.JobDetail;
+import org.quartz.JobKey;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.Trigger;
+import org.quartz.impl.matchers.GroupMatcher;
 
 public class DocumentUtil {
 
@@ -153,5 +163,24 @@ public class DocumentUtil {
             .filter(it -> it instanceof ObjectConfigurationHandler<?>)
             .sorted(Comparator.comparing(BaseConfigurationHandler::getFilePath))
             .toList();
+    }
+
+    public static @NotNull List<JobDescriptor> getJobDescriptors() throws SchedulerException {
+        List<JobDescriptor> entities = new ArrayList<>();
+
+        /* Get all jobs. */
+        Scheduler scheduler = ScheduleManager.getScheduler();
+
+        // NOTE: Match all jobs, including `CronJob` and `FixedIntervalJob`.
+        GroupMatcher<JobKey> jobKeyGroupMatcher = GroupMatcher.anyJobGroup();
+        Set<JobKey> jobKeys = scheduler.getJobKeys(jobKeyGroupMatcher);
+        for (JobKey jobKey : jobKeys) {
+            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+            List<? extends Trigger> triggersOfJob = scheduler.getTriggersOfJob(jobKey);
+            entities.add(new JobDescriptor(jobDetail, triggersOfJob));
+        }
+
+        entities.sort(Comparator.comparing(it -> it.getJobDetail().getKey().getGroup()));
+        return entities;
     }
 }

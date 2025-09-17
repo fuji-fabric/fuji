@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.initializer.fuji.structure;
+package io.github.sakurawald.fuji.core.document.structure;
 
 import io.github.sakurawald.fuji.core.document.interfaces.SourceModuleGetter;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;

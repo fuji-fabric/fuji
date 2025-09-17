@@ -7,8 +7,7 @@ import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
-import io.github.sakurawald.fuji.core.manager.Managers;
-import io.github.sakurawald.fuji.module.initializer.fuji.structure.JobDescriptor;
+import io.github.sakurawald.fuji.core.document.structure.JobDescriptor;
 import lombok.SneakyThrows;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -18,16 +17,12 @@ import org.jetbrains.annotations.Nullable;
 import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
-import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
-import org.quartz.impl.matchers.GroupMatcher;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 public class JobsInspectionGui extends PagedGui<JobDescriptor> {
 
@@ -42,21 +37,7 @@ public class JobsInspectionGui extends PagedGui<JobDescriptor> {
 
     @SneakyThrows(SchedulerException.class)
     public static JobsInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
-        List<JobDescriptor> entities = new ArrayList<>();
-
-        /* Get all jobs. */
-        Scheduler scheduler = Managers.getScheduleManager().getScheduler();
-
-        // NOTE: Match all jobs, including `CronJob` and `FixedIntervalJob`.
-        GroupMatcher<JobKey> jobKeyGroupMatcher = GroupMatcher.anyJobGroup();
-        Set<JobKey> jobKeys = scheduler.getJobKeys(jobKeyGroupMatcher);
-        for (JobKey jobKey : jobKeys) {
-            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-            List<? extends Trigger> triggersOfJob = scheduler.getTriggersOfJob(jobKey);
-            entities.add(new JobDescriptor(jobDetail, triggersOfJob));
-        }
-
-        entities.sort(Comparator.comparing(it -> it.getJobDetail().getKey().getGroup()));
+        List<JobDescriptor> entities = DocumentUtil.getJobDescriptors();
 
         /* Make the GUI. */
         return new JobsInspectionGui(parent, player, entities, 0);
