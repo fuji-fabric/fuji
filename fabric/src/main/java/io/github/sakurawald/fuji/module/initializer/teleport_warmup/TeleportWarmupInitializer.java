@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.teleport_warmup;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
@@ -40,6 +41,7 @@ import net.minecraft.server.world.ServerWorld;
     ◉ What's the purpose of teleport warmup.
     The main purpose is to prevent the `abuse` of `teleport commands` in vanilla Minecraft.
     Like, use teleport commands to escape death.
+    <green>NOTE: The `admin players` can bypass the teleport warmup.
     """)
 public class TeleportWarmupInitializer extends ModuleInitializer {
 
@@ -58,6 +60,11 @@ public class TeleportWarmupInitializer extends ModuleInitializer {
     public static boolean shouldApplyTeleportWarmup(ServerWorld destinationDimension, ServerPlayerEntity player) {
         /* Skip the teleport warmup if target dimension is not in the list of effective dimensions */
         if (!config.model().dimension.effective_dimensions.contains(RegistryHelper.getIdAsString(destinationDimension))) {
+            return false;
+        }
+
+        /* Skip the teleport warmup for admin players. */
+        if (CommandHelper.Requirement.isAdmin(player)) {
             return false;
         }
 

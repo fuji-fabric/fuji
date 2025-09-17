@@ -178,6 +178,11 @@ public class CommandHelper {
                 .isOperator(player.getGameProfile());
         }
 
+        public static boolean isAdmin(@NotNull ServerPlayerEntity player) {
+            ServerCommandSource commandSource = Source.getCommandSource(player);
+            return isAdmin(commandSource);
+        }
+
         @ForDeveloper("""
             By default, an `operator` has the permission level `4`.
             However, it can be configured via `op-permission-level=4` option.
