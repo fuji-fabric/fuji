@@ -83,11 +83,10 @@ public class InspectingObject {
         return String.valueOf(value);
     }
 
-    @SuppressWarnings("UnnecessaryLocalVariable")
     public Optional<String> getDocumentString(ServerPlayerEntity player) {
         /* Extract @Document from a field in class. */
         if (this.object instanceof Field field) {
-            return Optional.ofNullable(DocumentUtil.getFieldDocumentString(player, field));
+            return DocumentUtil.getFieldDocumentString(player, field);
         }
 
         /* Extract @Document from collection and map. */

@@ -75,9 +75,9 @@ public class DocumentUtil {
         return Optional.ofNullable(getDocumentString(audience, annotation));
     }
 
-    public static @Nullable String getFieldDocumentString(@Nullable Object audience, @NotNull Field field) {
+    public static Optional<String> getFieldDocumentString(@Nullable Object audience, @NotNull Field field) {
         Document annotation = field.getAnnotation(Document.class);
-        return getDocumentString(audience, annotation);
+        return Optional.ofNullable(getDocumentString(audience, annotation));
     }
 
     public static @NotNull String compileDocumentString(@NotNull String documentString) {
@@ -192,5 +192,9 @@ public class DocumentUtil {
             .stream()
             .sorted(Comparator.comparing(CommandDescriptor::getCommandNodePath))
             .toList();
+    }
+
+    public static @NotNull String duplicateLineSeparatorCharacter(@NotNull String line) {
+        return line.replaceAll("\n", "\n\n");
     }
 }
