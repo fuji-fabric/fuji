@@ -86,11 +86,12 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
         /* Attach @Document information above module initializer. */
         Class<? extends ModuleInitializer> moduleInitializerClass = ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING.getOrDefault(modulePathString, null);
         if (moduleInitializerClass != null) {
-            String classDocument = DocumentUtil.getClassDocumentString(getPlayer(), moduleInitializerClass);
-            if (classDocument != null) {
-                lore.add(TextHelper.TEXT_EMPTY);
-                lore.addAll(TextHelper.getDocumentTextList(getPlayer(), classDocument ));
-            }
+            DocumentUtil
+                .getClassDocumentString(getPlayer(), moduleInitializerClass)
+                .ifPresent(moduleClassDocument -> {
+                    lore.add(TextHelper.TEXT_EMPTY);
+                    lore.addAll(TextHelper.getDocumentTextList(getPlayer(), moduleClassDocument ));
+                });
         }
 
         /* Make the element. */

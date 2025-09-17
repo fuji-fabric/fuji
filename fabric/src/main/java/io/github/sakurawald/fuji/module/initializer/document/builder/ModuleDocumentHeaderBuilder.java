@@ -17,8 +17,8 @@ public class ModuleDocumentHeaderBuilder extends DocumentBuilder {
         /* Append the module class document. */
         Optional
             .ofNullable(ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING.get(documentBuilderContext.modulePathString()))
-            .ifPresent(moduleInitializerClass -> {
-                String moduleClassDocument = DocumentUtil.getClassDocumentString(null, moduleInitializerClass);
+            .flatMap(moduleInitializerClass -> DocumentUtil
+                .getClassDocumentString(null, moduleInitializerClass)).ifPresent(moduleClassDocument -> {
                 documentBuilderContext.documentBuilder()
                     .append("## Module Summary")
                     .append(System.lineSeparator())

@@ -27,7 +27,8 @@ public class DocumentBuilderDriver {
 
         /* Generate the document content. */
         StringBuilder documentBuilder = new StringBuilder();
-        new ModuleDocumentHeaderBuilder().build(new DocumentBuilderContext(modulePathString, documentBuilder));
+        DocumentBuilderContext documentBuilderContext = new DocumentBuilderContext(modulePathString, documentBuilder);
+        new ModuleDocumentHeaderBuilder().build(documentBuilderContext);
 
         /* Write the document file. */
         String moduleDocumentFileName = getModuleDocumentFileName(modulePathString);

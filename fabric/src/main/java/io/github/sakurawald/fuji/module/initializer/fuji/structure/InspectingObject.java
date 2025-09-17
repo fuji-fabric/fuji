@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import lombok.Data;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -83,17 +84,15 @@ public class InspectingObject {
     }
 
     @SuppressWarnings("UnnecessaryLocalVariable")
-    public @Nullable String getDocumentString(ServerPlayerEntity player) {
+    public Optional<String> getDocumentString(ServerPlayerEntity player) {
         /* Extract @Document from a field in class. */
         if (this.object instanceof Field field) {
-            return DocumentUtil.getFieldDocumentString(player, field);
+            return Optional.ofNullable(DocumentUtil.getFieldDocumentString(player, field));
         }
 
         /* Extract @Document from collection and map. */
         Class<?> objectType = this.getObjectType();
-        String classDocument = DocumentUtil.getClassDocumentString(player, objectType);
-
-        return classDocument;
+        return DocumentUtil.getClassDocumentString(player, objectType);
     }
 
     public Object getObjectValue() {
@@ -263,11 +262,11 @@ public class InspectingObject {
         }
 
         /* Add @Document text. */
-        String documentString = this.getDocumentString(player);
-        if (documentString != null) {
-            lore.add(TextHelper.TEXT_EMPTY);
-            lore.addAll(TextHelper.getDocumentTextList(player, documentString));
-        }
+        this.getDocumentString(player)
+            .ifPresent(documentString -> {
+                lore.add(TextHelper.TEXT_EMPTY);
+                lore.addAll(TextHelper.getDocumentTextList(player, documentString));
+            });
 
         return lore;
     }

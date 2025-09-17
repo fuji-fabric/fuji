@@ -7,6 +7,7 @@ import io.github.sakurawald.fuji.core.document.structure.DocString;
 import io.github.sakurawald.fuji.core.service.url_highlighter.UrlHighlighter;
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,9 +52,9 @@ public class DocumentUtil {
         return getDocString(audience, annotation.id());
     }
 
-    public static @Nullable String getClassDocumentString(@Nullable Object audience, @NotNull Class<?> clazz) {
+    public static Optional<String> getClassDocumentString(@Nullable Object audience, @NotNull Class<?> clazz) {
         Document annotation = clazz.getAnnotation(Document.class);
-        return getDocumentString(audience, annotation);
+        return Optional.ofNullable(getDocumentString(audience, annotation));
     }
 
     public static @Nullable String getFieldDocumentString(@Nullable Object audience, @NotNull Field field) {

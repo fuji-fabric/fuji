@@ -63,11 +63,12 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
 
         /* Attach document. */
         Class<?> configModelClass = entity.model().getClass();
-        String configModelClassDocumentString = DocumentUtil.getClassDocumentString(getPlayer(), configModelClass);
-        if (configModelClassDocumentString != null) {
-            lore.add(TextHelper.TEXT_EMPTY);
-            lore.addAll(TextHelper.getDocumentTextList(getPlayer(), configModelClassDocumentString));
-        }
+        DocumentUtil
+            .getClassDocumentString(getPlayer(), configModelClass)
+            .ifPresent(configModelClassDocumentString -> {
+                lore.add(TextHelper.TEXT_EMPTY);
+                lore.addAll(TextHelper.getDocumentTextList(getPlayer(), configModelClassDocumentString));
+            });
 
         // NOTE: The parent may be different, due to the parent of ConfigurationsInspectionGui may be null or non-null (If it's created and open from ModuleDetailsInspectionGui).
         SimpleGui trueParentGui = this.getParent() != null ? this.getParent() : this.getBackendGui();

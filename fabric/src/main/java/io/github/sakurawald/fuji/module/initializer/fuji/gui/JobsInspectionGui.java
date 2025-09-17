@@ -100,11 +100,12 @@ public class JobsInspectionGui extends PagedGui<JobDescriptor> {
                 });
 
         /* Attach document string. */
-        String jobDocument = DocumentUtil.getClassDocumentString(getPlayer(), jobClass);
-        if (jobDocument != null) {
-            lore.add(TextHelper.TEXT_EMPTY);
-            lore.addAll(TextHelper.getDocumentTextList(getPlayer(), jobDocument));
-        }
+        DocumentUtil
+            .getClassDocumentString(getPlayer(), jobClass)
+            .ifPresent(jobDocument -> {
+                lore.add(TextHelper.TEXT_EMPTY);
+                lore.addAll(TextHelper.getDocumentTextList(getPlayer(), jobDocument));
+            });
 
         /* Make the GUI element. */
         GuiElementBuilder guiElementBuilder = new GuiElementBuilder()
