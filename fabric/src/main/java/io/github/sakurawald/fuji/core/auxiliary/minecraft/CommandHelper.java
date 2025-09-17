@@ -26,7 +26,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registry;
@@ -199,16 +198,9 @@ public class CommandHelper {
         }
 
         public static @NotNull ServerCommandSource getCommandSource(@NotNull ServerPlayerEntity player) {
+            // NOTE: For Entity#getCommandSource(ServerWorld), the level permission is always 0
+            // You should use ServerPlayerEntity#getCommandSource, which uses the proper level permission from the player.
             return player.getCommandSource();
-        }
-
-        public static @NotNull ServerCommandSource getCommandSource(@NotNull Entity entity) {
-            // NOTE: For Entity type, the getCommandSource() only uses level permission 0.
-            #if MC_VER <= MC_1_21
-            return entity.getCommandSource();
-            #elif MC_VER > MC_1_21
-            return entity.getCommandSource((net.minecraft.server.world.ServerWorld) entity.getWorld());
-            #endif
         }
 
         public static void withServerPlayerEntity(@NotNull CommandContextBuilder<ServerCommandSource> contextBuilder, @NotNull Consumer<ServerPlayerEntity> consumer) {

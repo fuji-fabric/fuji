@@ -55,7 +55,7 @@ public class CommandAttachmentService {
     }
 
     private static void tryTriggerCommandAttachments(@NotNull CommandAttachments attachments, @NotNull PlayerEntity player, @NotNull List<InteractType> inputInteractTypes, @NotNull Runnable triggeredHook) {
-        ServerHelper.withServerPlayerEntity(player, () -> {
+        ServerHelper.withServerPlayerEntity(player, (serverPlayer) -> {
             /* Process attachment nodes. */
             for (BaseCommandAttachmentEntry entry : attachments.getEntries()) {
                 /* Filtered by interaction type. */
@@ -69,7 +69,7 @@ public class CommandAttachmentService {
 
                 /* Switch by execute-as-type. */
                 ExecuteAsType executeAsType = entry.getExecuteAsType();
-                ServerCommandSource initialingCommandSource = CommandHelper.Source.getCommandSource(player);
+                ServerCommandSource initialingCommandSource = CommandHelper.Source.getCommandSource(serverPlayer);
                 switch (executeAsType) {
                     case CONSOLE ->
                         CommandExecutor.executeSingle(ExtendedCommandSource.asConsole(initialingCommandSource), entry.getCommand());
