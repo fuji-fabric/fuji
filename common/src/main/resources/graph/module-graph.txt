@@ -85,6 +85,7 @@ disabler.max_player_disabler
 disabler.move_speed_disabler
 disabler.move_wrongly_disabler
 doctor
+document
 echo
 echo.send_actionbar
 echo.send_bossbar

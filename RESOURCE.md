@@ -16,6 +16,7 @@
 - https://learn.microsoft.com/en-us/minecraft/creator/reference/content/molangreference/?view=minecraft-bedrock-stable
 - https://github.com/Patbox/PredicateAPI/blob/1.21.2/BUILTIN.md
 - https://jenkins.liteloader.com/view/Other/job/Mixin/javadoc/overview-summary.html
+- https://errorprone.info/docs/refaster
 
 # Server-side only.
 - https://vanillatweaks.net/picker/datapacks/

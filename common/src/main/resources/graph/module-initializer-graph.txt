@@ -82,6 +82,7 @@ io.github.sakurawald.fuji.module.initializer.disabler.max_player_disabler.MaxPla
 io.github.sakurawald.fuji.module.initializer.disabler.move_speed_disabler.MoveSpeedDisablerInitializer
 io.github.sakurawald.fuji.module.initializer.disabler.move_wrongly_disabler.MoveWronglyDisablerInitializer
 io.github.sakurawald.fuji.module.initializer.doctor.DoctorInitializer
+io.github.sakurawald.fuji.module.initializer.document.DocumentInitializer
 io.github.sakurawald.fuji.module.initializer.echo.send_actionbar.SendActionbarInitializer
 io.github.sakurawald.fuji.module.initializer.echo.send_bossbar.SendBossbarInitializer
 io.github.sakurawald.fuji.module.initializer.echo.send_broadcast.SendBroadcastInitializer

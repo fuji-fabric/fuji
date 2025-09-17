@@ -7,7 +7,6 @@ import io.github.sakurawald.fuji.module.mixin.GlobalMixinConfigPlugin;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,7 +16,7 @@ public class ModulePathResolver {
 
     public static final String CORE_MODULE_PATH_STRING = "core";
     private static final List<String> CORE_MODULE_PATH_LIST = List.of(CORE_MODULE_PATH_STRING);
-    private static final Set<String> DECLARED_MODULE_PATH_STRINGS = new HashSet<>(ReflectionUtil.CompileTimeGraph
+    public static final Set<String> DECLARED_MODULE_PATH_STRINGS = Set.copyOf(ReflectionUtil.CompileTimeGraph
         .getCompileTimeTxtGraph(ReflectionUtil.CompileTimeGraph.MODULE_GRAPH_FILE_NAME));
 
     private static final List<Class<?>> MODULE_PACKAGE_PREFIXES = List.of(ModuleInitializer.class, GlobalMixinConfigPlugin.class);
@@ -120,4 +119,5 @@ public class ModulePathResolver {
         /* Return the declared module path list. */
         return modulePathList;
     }
+
 }

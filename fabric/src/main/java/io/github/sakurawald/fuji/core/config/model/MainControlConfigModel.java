@@ -251,6 +251,7 @@ public class MainControlConfigModel {
         public Gameplay gameplay = new Gameplay();
         public Doctor doctor = new Doctor();
         public Tester tester = new Tester();
+        public Modules.Document document = new Modules.Document();
 
         public static class World {
             public boolean enable = false;
@@ -966,6 +967,10 @@ public class MainControlConfigModel {
         }
 
         public static class Queue {
+            public boolean enable = false;
+        }
+
+        public static class Document {
             public boolean enable = false;
         }
     }
