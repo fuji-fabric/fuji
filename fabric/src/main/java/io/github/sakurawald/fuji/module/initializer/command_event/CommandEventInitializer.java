@@ -39,6 +39,11 @@ import net.minecraft.stat.Stats;
     4. `run as fake-op %player:name% rtp`
     5. `delay 10 spawnpoint %player:name%"`
     """)
+@ColorBox(id = 1758083275998L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
+    ◉ Teleport the dead player to specified position.
+    YOu can use the player death event.
+    1. `run as fake-op %player:name% tppos --dimension minecraft:overworld --x 32 --y 64 --z 128`
+    """)
 public class CommandEventInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<CommandEventConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandEventConfigModel.class);

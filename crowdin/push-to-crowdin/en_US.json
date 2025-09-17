@@ -1529,5 +1529,6 @@
   "docstring.1758032261807": "Allows you to customize the `display name` of players.\n",
   "docstring.1758032281065": "◉ Using the `nickname` module with `Styled Chat` mod.\nSee: https://github.com/sakurawald/fuji/issues/489\n",
   "docstring.1758033790822": "◉ Dis-connect a player.\n- `/dis-connect Steve \\<red\\>Kicked.`\n- `/dis-connect Steve \\<red\\>First Line\\<newline\\>Second Line`\n",
-  "docstring.1758036383834": "◉ Re-join the server to fix the client-side camera broken.\nWhen a new `speed` is set, the client's `camera` will be broken.\nYou have to re-join the server, to fix the client-side camera settings.\n"
+  "docstring.1758036383834": "◉ Re-join the server to fix the client-side camera broken.\nWhen a new `speed` is set, the client's `camera` will be broken.\nYou have to re-join the server, to fix the client-side camera settings.\n",
+  "docstring.1758083275998": "◉ Teleport the died player to specified position.\nYOu can use the player death event.\n1. `run as fake-op %player:name% tppos --dimension minecraft:overworld --x 32 --y 64 --z 128`\n"
 }
