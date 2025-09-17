@@ -9,3 +9,8 @@
 - feature: now the admin players can bypass the teleport warmup.
 - feature: now the entity with `age <= 3` can bypass the teleport warmup. (Making it friendly for `a teleport after respawn`)
 
+### [command_cooldown]
+- docs: document the `bypass mechanism`
+- 
+### [command_warmup]
+- docs: document the `bypass mechanism`

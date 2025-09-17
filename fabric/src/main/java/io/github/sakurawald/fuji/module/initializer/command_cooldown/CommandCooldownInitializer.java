@@ -98,6 +98,11 @@ import org.jetbrains.annotations.NotNull;
     Issue: `/command-cooldown create kitfood 999999999999 --persistent false`
     This cooldown says that, it can be used only once after each server re-start.
     """)
+@ColorBox(id = 1758083659552L, color = ColorBox.ColorBoxTypes.NOTE, value = """
+    ◉ The `command cooldown` will NOT be applied if...
+    1. The command source is `the console`.
+    2. The command source is `admin` (level permission >= 4)
+    """)
 
 
 @CommandNode("command-cooldown")
