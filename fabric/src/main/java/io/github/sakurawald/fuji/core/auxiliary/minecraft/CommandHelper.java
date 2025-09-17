@@ -198,7 +198,12 @@ public class CommandHelper {
             return ServerHelper.getServer().getCommandSource();
         }
 
+        public static @NotNull ServerCommandSource getCommandSource(@NotNull ServerPlayerEntity player) {
+            return player.getCommandSource();
+        }
+
         public static @NotNull ServerCommandSource getCommandSource(@NotNull Entity entity) {
+            // NOTE: For Entity type, the getCommandSource() only uses level permission 0.
             #if MC_VER <= MC_1_21
             return entity.getCommandSource();
             #elif MC_VER > MC_1_21
