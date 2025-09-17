@@ -23,8 +23,17 @@ public class ModuleColorBoxDocumentBuilder extends DocumentBuilder {
     private void buildColorBox(@NotNull DocumentBuilderContext documentBuilderContext, @NotNull ColorBox colorBox) {
         documentBuilderContext
             .getDocumentBuilder()
-            .append("### %s".formatted(colorBox.color().name()))
-            .append(System.lineSeparator())
-            .append(colorBox.value());
+            .append(":::%s".formatted(toAdmonitionName(colorBox))).append(System.lineSeparator())
+            .append(colorBox.value())
+            .append(":::").append(System.lineSeparator());
+    }
+
+    private @NotNull String toAdmonitionName(@NotNull ColorBox colorBox) {
+        if (colorBox.color() == ColorBox.ColorBoxTypes.DANGER) return "danger[Danger]";
+        if (colorBox.color() == ColorBox.ColorBoxTypes.WARNING) return "warning[Warning]";
+        if (colorBox.color() == ColorBox.ColorBoxTypes.NOTE) return "info[Note]";
+        if (colorBox.color() == ColorBox.ColorBoxTypes.TIPS) return "tip[Tips]";
+        if (colorBox.color() == ColorBox.ColorBoxTypes.EXAMPLE) return "note[Example]";
+        throw new IllegalArgumentException("Unknown color: " + colorBox.color());
     }
 }
