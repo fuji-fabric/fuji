@@ -5,22 +5,22 @@ import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
-public class ModuleDocumentHeaderBuilder extends DocumentBuilder {
+public class ModuleHeaderDocumentBuilder extends DocumentBuilder {
 
     @Override
     public void build(@NotNull DocumentBuilderContext documentBuilderContext) {
         /* Append the title. */
-        documentBuilderContext.documentBuilder()
-            .append("# Module: %s".formatted(documentBuilderContext.modulePathString()))
+        documentBuilderContext.getDocumentBuilder()
+            .append("# Module: %s".formatted(documentBuilderContext.getModulePathString()))
             .append(System.lineSeparator());
 
         /* Append the module class document. */
         Optional
-            .ofNullable(ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING.get(documentBuilderContext.modulePathString()))
+            .ofNullable(ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING.get(documentBuilderContext.getModulePathString()))
             .flatMap(moduleInitializerClass -> DocumentUtil
                 .getClassDocumentString(null, moduleInitializerClass)).ifPresent(moduleClassDocument -> {
-                documentBuilderContext.documentBuilder()
-                    .append("## Module Summary")
+                documentBuilderContext.getDocumentBuilder()
+                    .append("## Module Intro")
                     .append(System.lineSeparator())
                     .append(moduleClassDocument);
             });

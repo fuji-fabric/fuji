@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.core.config.handler.abst;
 
 import com.google.gson.JsonObject;
 import io.github.sakurawald.fuji.core.auxiliary.ExceptionUtil;
+import io.github.sakurawald.fuji.core.auxiliary.IOUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.config.job.ConfigurationHandlerWriteStorageJob;
@@ -237,6 +238,10 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         EventManager.registerEventConsumer(ServerStoppingEvent.class, dynamicEventConsumer);
 
         return this;
+    }
+
+    public @NotNull String computeRelativePathBasedOnGameDir() {
+        return IOUtil.computeRelativePathBasedOnGameDir(this.getFilePath().toFile());
     }
 
 }

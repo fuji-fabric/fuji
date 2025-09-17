@@ -1,12 +1,18 @@
 package io.github.sakurawald.fuji.core.document.auxiliary;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.structure.DocString;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.service.url_highlighter.UrlHighlighter;
+import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
@@ -118,5 +124,34 @@ public class DocumentUtil {
 
         line = TextHelper.Fixer.fixParserInput(line);
         return "<#FFA1F5>" + line;
+    }
+
+    @SuppressWarnings("UnnecessaryLocalVariable")
+    public static @NotNull List<ColorBox> getColorBoxes(@NotNull String modulePathString) {
+        /* Get the module initializer class. */
+        Class<? extends ModuleInitializer> moduleInitializerClass = ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING
+            .get(modulePathString);
+        if (moduleInitializerClass == null) return List.of();
+
+        /* Iterate the color boxes. */
+        ColorBox[] boxes = moduleInitializerClass
+            .getDeclaredAnnotationsByType(ColorBox.class);
+
+        /* Sort the color box by its colors. */
+        List<ColorBox> colorBoxes = Arrays
+            .stream(boxes)
+            .sorted(Comparator.comparing(ColorBox::color)
+                .reversed())
+            .toList();
+
+        return colorBoxes;
+    }
+
+    public static @NotNull List<BaseConfigurationHandler<?>> getObjectConfigurationHandlers() {
+        return BaseConfigurationHandler.REGISTERED_CONFIGURATION_HANDLERS
+            .stream()
+            .filter(it -> it instanceof ObjectConfigurationHandler<?>)
+            .sorted(Comparator.comparing(BaseConfigurationHandler::getFilePath))
+            .toList();
     }
 }

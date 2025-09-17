@@ -3,12 +3,10 @@ package io.github.sakurawald.fuji.module.initializer.fuji.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import io.github.sakurawald.fuji.core.auxiliary.IOUtil;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
-import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
@@ -20,7 +18,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @TestCase(action = "Inspect the configurations of `command_menu` module.", targets = "It should be able to inspect complex data structures.")
@@ -31,12 +28,7 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
     }
 
     public static ConfigurationsInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
-        List<BaseConfigurationHandler<?>> entities = BaseConfigurationHandler.REGISTERED_CONFIGURATION_HANDLERS
-            .stream()
-            .filter(it -> it instanceof ObjectConfigurationHandler<?>)
-            .sorted(Comparator.comparing(BaseConfigurationHandler::getFilePath))
-            .toList();
-
+        List<BaseConfigurationHandler<?>> entities = DocumentUtil.getObjectConfigurationHandlers();
         return new ConfigurationsInspectionGui(parent, player, entities, 0);
     }
 
@@ -50,7 +42,7 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
     protected @NotNull GuiElementInterface toGuiElement(@NotNull BaseConfigurationHandler<?> entity) {
         Class<?> configHandlerClass = entity.getClass();
         String configHandlerClassName = ReflectionUtil.getSimpleClassName(configHandlerClass);
-        String configRelativePath = IOUtil.computeRelativePathBasedOnGameDir(entity.getFilePath().toFile());
+        String configRelativePath = entity.computeRelativePathBasedOnGameDir();
         String fromModule = entity.getSourceModule();
 
         List<Text> lore = new ArrayList<>();

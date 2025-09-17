@@ -3,7 +3,10 @@ package io.github.sakurawald.fuji.module.initializer.document.structure;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import io.github.sakurawald.fuji.module.initializer.document.builder.DocumentBuilderContext;
-import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleDocumentHeaderBuilder;
+import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleColorBoxDocumentBuilder;
+import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleConfigurationDocumentBuilder;
+import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleHeaderDocumentBuilder;
+import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleJobDocumentBuilder;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,12 +26,13 @@ public class DocumentBuilderDriver {
 
     @SneakyThrows(IOException.class)
     private static void build(@NotNull String modulePathString) {
-//        List<String> modulePathList = ModulePathResolver.toModulePathList(modulePathString);
-
         /* Generate the document content. */
         StringBuilder documentBuilder = new StringBuilder();
         DocumentBuilderContext documentBuilderContext = new DocumentBuilderContext(modulePathString, documentBuilder);
-        new ModuleDocumentHeaderBuilder().build(documentBuilderContext);
+        new ModuleHeaderDocumentBuilder().build(documentBuilderContext);
+        new ModuleColorBoxDocumentBuilder().build(documentBuilderContext);
+        new ModuleConfigurationDocumentBuilder().build(documentBuilderContext);
+        new ModuleJobDocumentBuilder().build(documentBuilderContext);
 
         /* Write the document file. */
         String moduleDocumentFileName = getModuleDocumentFileName(modulePathString);

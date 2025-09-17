@@ -75,7 +75,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
 
         /* Attach color boxes amount. */
         String modulePathString = entity.getKey();
-        List<ColorBox> colorBoxes = ModuleDetailsInspectionGui.getColorBoxes(modulePathString);
+        List<ColorBox> colorBoxes = DocumentUtil.getColorBoxes(modulePathString);
 
         /* Attach click prompt. */
         if (moduleEnableStatus

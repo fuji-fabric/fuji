@@ -9,13 +9,10 @@ import io.github.sakurawald.fuji.core.config.Configs;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
 import io.github.sakurawald.fuji.core.document.gui.CommandsInspectionGui;
-import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
-import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.fuji.FujiInitializer;
 
-import java.util.Comparator;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -23,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
@@ -152,7 +148,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
    }
 
     private static void attachColorBoxes(ServerPlayerEntity player, List<GuiElementInterface> entities, String modulePathString) {
-        getColorBoxes(modulePathString)
+        DocumentUtil.getColorBoxes(modulePathString)
             .forEach(colorBox -> {
                 GuiElementBuilder colorboxElementBuilder = new GuiElementBuilder();
 
@@ -170,27 +166,6 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
                 entities.add(colorboxElementBuilder.build());
 
             });
-    }
-
-    @SuppressWarnings("UnnecessaryLocalVariable")
-    public static @NotNull List<ColorBox> getColorBoxes(String modulePathString) {
-        /* Get the module initializer class. */
-        Class<? extends ModuleInitializer> moduleInitializerClass = ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING
-            .get(modulePathString);
-        if (moduleInitializerClass == null) return List.of();
-
-        /* Iterate the color boxes. */
-        ColorBox[] boxes = moduleInitializerClass
-            .getDeclaredAnnotationsByType(ColorBox.class);
-
-        /* Sort the color box by its colors. */
-        List<ColorBox> colorBoxes = Arrays
-            .stream(boxes)
-            .sorted(Comparator.comparing(ColorBox::color)
-                .reversed())
-            .toList();
-
-        return colorBoxes;
     }
 
     private static void sendColorBoxMessage(ServerPlayerEntity player, Text colorBoxName, List<Text> colorBoxTestList) {
