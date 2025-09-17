@@ -1,0 +1,45 @@
+package io.github.sakurawald.fuji.module.initializer.document.builder;
+
+import io.github.sakurawald.fuji.core.command.descriptor.CommandDescriptor;
+import io.github.sakurawald.fuji.core.command.structure.CommandRequirementDescriptor;
+import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
+import java.util.List;
+import org.jetbrains.annotations.NotNull;
+
+public class ModuleCommandDocumentBuilder extends DocumentBuilder {
+
+    @Override
+    public void build(@NotNull DocumentBuilderContext documentBuilderContext) {
+        List<CommandDescriptor> commands = DocumentUtil
+            .getCommandDescriptors()
+            .stream()
+            .filter(it -> it.getSourceModule().equals(documentBuilderContext.getModulePathString()))
+            .toList();
+
+        if (!commands.isEmpty()) {
+
+            documentBuilderContext
+                .getDocumentBuilder()
+                    .append("## Commands")
+                        .append(System.lineSeparator());
+
+
+            commands.forEach(it -> build(documentBuilderContext, it));
+        }
+
+    }
+
+    private void build(@NotNull DocumentBuilderContext documentBuilderContext, @NotNull CommandDescriptor commandDescriptor) {
+        CommandRequirementDescriptor commandRequirement = CommandDescriptor.CommandRequirement.computeCommandRequirement(commandDescriptor);
+
+        documentBuilderContext
+            .getDocumentBuilder()
+            .append("### Command").append(System.lineSeparator())
+            .append("Command Syntax: `%s`".formatted(commandDescriptor.getCommandSyntax())).append(System.lineSeparator())
+            .append("Can be executed by console: %s".formatted(commandDescriptor.canBeExecutedByConsole())).append(System.lineSeparator())
+            .append("Descriptor: %s".formatted(commandDescriptor.getClass().getSimpleName())).append(System.lineSeparator())
+            .append("Required Level Permission: %s".formatted(commandRequirement.getLevel())).append(System.lineSeparator())
+            .append("Required String Permission: %s".formatted(commandRequirement.getString())).append(System.lineSeparator());
+    }
+
+}

@@ -1,6 +1,8 @@
 package io.github.sakurawald.fuji.core.document.auxiliary;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.command.descriptor.CommandDescriptor;
+import io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
@@ -182,5 +184,13 @@ public class DocumentUtil {
 
         entities.sort(Comparator.comparing(it -> it.getJobDetail().getKey().getGroup()));
         return entities;
+    }
+
+    public static @NotNull List<CommandDescriptor> getCommandDescriptors() {
+        return CommandAnnotationProcessor
+            .REGISTERED_COMMAND_DESCRIPTORS
+            .stream()
+            .sorted(Comparator.comparing(CommandDescriptor::getCommandNodePath))
+            .toList();
     }
 }

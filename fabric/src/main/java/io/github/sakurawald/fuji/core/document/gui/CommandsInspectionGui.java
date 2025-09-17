@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor;
 import io.github.sakurawald.fuji.core.command.descriptor.CommandDescriptor;
 import io.github.sakurawald.fuji.core.command.structure.CommandRequirementDescriptor;
+import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -21,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
@@ -31,11 +31,7 @@ public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
     }
 
     public static CommandsInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
-        List<CommandDescriptor> entities = CommandAnnotationProcessor
-            .REGISTERED_COMMAND_DESCRIPTORS
-            .stream()
-            .sorted(Comparator.comparing(CommandDescriptor::getCommandNodePath))
-            .toList();
+        List<CommandDescriptor> entities = DocumentUtil.getCommandDescriptors();
 
         return new CommandsInspectionGui(parent, player, entities, 0);
     }
