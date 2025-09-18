@@ -164,6 +164,7 @@
   "display.inventory.text": "<#D2E0FB>[Inventaranzeigen]",
   "display.item.broadcast": "<#FFA1F5>Player %player:name% just share an item display: <#D2E0FB>${display}",
   "display.item.text": "<#D2E0FB>[${item}]",
+  "document.build": "<green>Document files are built at `%s`",
   "down": "<gold>Down!",
   "duration.invalid": "<red>Invalid duration: `%s`",
   "echo.send_bossbar.notify": "<green>The bossbar sent to `%s` with command list `%s` is completed.",
@@ -1191,7 +1192,7 @@
   "docstring.1751980039595": "◉ Customize the text used in screen.\nKey: `multiplayer.disconnect.server_shutdown`\nValue: `Server closeeeeeeeed`\n\nKey: `multiplayer.disconnect.not_whitelisted`\nValue: `\\<rainbow\\>Please apply a whitelist first!`\n\nKey: `container.chest`\nValue: `\\<rb\\>I see you opening the chest!`\n",
   "docstring.1751980149228": "◉ Cancel the sending of a specific message.\nKey: `multiplayer.player.left`\nValue: `null`\n\n<green>NOTE: If you leave the `value` to `null`, then it means let's `cancel` the sending of this translatable text.\n",
   "docstring.1751980365809": "◉ I want a complex `tab` list.\nIf you want to design a complex and advanced `tab` list.\nI would recommend to use https://github.com/NEZNAMY/TAB\n\n◉ I want to customize the `scoreboard`.\nUse the mod mentioned above. It works perfect.\n",
-  "docstring.1751980526151": "◉ How it works?\nInside the vanilla Minecraft, there is a teleport function for teleportation.\nWe listen on this teleport function, and wrap it with a warmup cooldown.\n\n◉ How can I specify different cooldown time for different commands?\nYou need to use `command_warmup` module.\nThe `command_cooldown` module will simply treats `all` the teleportation request the same.\nThat's because we only know there is a teleport request.\nBut we didn't even know who creates this teleport request.\nSo we have to treat `all` teleportation the same.\n\n◉ What's the purpose of teleport warmup.\nThe main purpose is to prevent the `abuse` of `teleport commands` in vanilla Minecraft.\nLike, use teleport commands to escape death.\n",
+  "docstring.1751980526151": "◉ How it works?\nInside the vanilla Minecraft, there is a teleport function for teleportation.\nWe listen on this teleport function, and wrap it with a warmup cooldown.\n\n◉ How can I specify different cooldown time for different commands?\nYou need to use `command_warmup` module.\nThe `command_cooldown` module will simply treats `all` the teleportation request the same.\nThat's because we only know there is a teleport request.\nBut we didn't even know who creates this teleport request.\nSo we have to treat `all` teleportation the same.\n\n◉ What's the purpose of teleport warmup.\nThe main purpose is to prevent the `abuse` of `teleport commands` in vanilla Minecraft.\nLike, use teleport commands to escape death.\n<green>NOTE: The `admin players` can bypass the teleport warmup.\n",
   "docstring.1751980813637": "This module provides the `/temp-ban` command.\nSo that you can specify `the duration` for `/ban` command.\n",
   "docstring.1751980845082": "◉ All in one example\nIssue: `/temp-ban player Alice 1s2m3h4d5w6M7y bad boy`\n",
   "docstring.1751980891153": "This module is only used for `development`.\nIf you are a developer, you can try new things here.\nYou don't need to enable this module in production environment.\nIt does not harm, but also not useful.\n",
@@ -1529,5 +1530,10 @@
   "docstring.1758032261807": "Allows you to customize the `display name` of players.\n",
   "docstring.1758032281065": "◉ Using the `nickname` module with `Styled Chat` mod.\nSee: https://github.com/sakurawald/fuji/issues/489\n",
   "docstring.1758033790822": "◉ Dis-connect a player.\n- `/dis-connect Steve \\<red\\>Kicked.`\n- `/dis-connect Steve \\<red\\>First Line\\<newline\\>Second Line`\n",
-  "docstring.1758036383834": "◉ Re-join the server to fix the client-side camera broken.\nWhen a new `speed` is set, the client's `camera` will be broken.\nYou have to re-join the server, to fix the client-side camera settings.\n"
+  "docstring.1758036383834": "◉ Re-join the server to fix the client-side camera broken.\nWhen a new `speed` is set, the client's `camera` will be broken.\nYou have to re-join the server, to fix the client-side camera settings.\n",
+  "docstring.1758083275998": "◉ Teleport the dead player to specified position.\nYOu can use the player death event.\n1. `run as fake-op %player:name% tppos --dimension minecraft:overworld --x 32 --y 64 --z 128`\n",
+  "docstring.1758083431300": "◉ The `teleport warmup` will NOT be applied if...\n1. The target dimension is not defined in the `effective dimensions` list.\n2. The target player's `age` <= `3`\n3. The target player is admin. (level permission >= 4)\n4. The target player is a `fake player`.\n5. The target player has the `warmup bypass permission`.\n",
+  "docstring.1758083597322": "◉ The `command warmup` will NOT be applied if...\n1. The command source is `the console`.\n2. The command source is `admin` (level permission >= 4)\n3. The command source has the `warmup bypass permission` for that command.\n",
+  "docstring.1758083659552": "◉ The `command cooldown` will NOT be applied if...\n1. The command source is `the console`.\n2. The command source is `admin` (level permission >= 4)\n",
+  "docstring.1758088953109": "This module provides the tools to `generate mod document`.\n<green>NOTE: This module is typically used by developers, to generate the user manual.\n"
 }
