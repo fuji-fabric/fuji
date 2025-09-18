@@ -1,11 +1,19 @@
 package io.github.sakurawald.fuji.module.initializer.document.builder;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
+import io.github.sakurawald.fuji.module.initializer.document.config.adapter.DocumentedTypeAdapterFactory;
 import java.util.List;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-public class ModuleConfigurationDocumentBuilder extends DocumentBuilder{
+public class ModuleConfigurationDocumentBuilder extends DocumentBuilder {
+
+    @Getter(lazy = true)
+    private static final Gson documentGson = makeDocumentGson();
 
     @Override
     public void build(@NotNull DocumentBuilderContext documentBuilderContext) {
@@ -18,7 +26,7 @@ public class ModuleConfigurationDocumentBuilder extends DocumentBuilder{
         if (!moduleConfigurationHandlers.isEmpty()) {
             documentBuilderContext
                 .getDocumentBuilder()
-                .append("## Configuration")
+                .append("## Configurations")
                 .append(System.lineSeparator());
 
             moduleConfigurationHandlers
@@ -30,10 +38,9 @@ public class ModuleConfigurationDocumentBuilder extends DocumentBuilder{
 
         documentBuilderContext
             .getDocumentBuilder()
-            .append("### Config File: %s".formatted(baseConfigurationHandler.getFilePath().getFileName()))
-            .append(System.lineSeparator())
-            .append("File Path: `%s`".formatted(baseConfigurationHandler.computeRelativePathBasedOnGameDir()))
-            .append(System.lineSeparator());
+            .append(":::info[File]").append(System.lineSeparator())
+            .append("- File Name: `%s`".formatted(baseConfigurationHandler.getFilePath().getFileName())).append(System.lineSeparator())
+            .append("- File Path: `%s`".formatted(baseConfigurationHandler.computeRelativePathBasedOnGameDir())).append(System.lineSeparator());
 
         Class<?> configModelClass = baseConfigurationHandler.model().getClass();
         DocumentUtil
@@ -41,9 +48,30 @@ public class ModuleConfigurationDocumentBuilder extends DocumentBuilder{
             .ifPresent(configModelClassDocumentString -> {
                 documentBuilderContext
                     .getDocumentBuilder()
-                    .append("Document: %s".formatted(configModelClassDocumentString));
+                    .append("- Document: %s".formatted(configModelClassDocumentString));
             });
 
+        String jsonString = getDocumentGson().toJson(baseConfigurationHandler.getDefaultModel());
+
+        documentBuilderContext
+            .getDocumentBuilder()
+            .append("- File Content: ").append(System.lineSeparator())
+            .append("```json showLineNumbers").append(System.lineSeparator())
+            .append("%s".formatted(jsonString)).append(System.lineSeparator())
+            .append("```").append(System.lineSeparator());
+
+        documentBuilderContext
+            .getDocumentBuilder()
+            .append(":::").append(System.lineSeparator());
+
+    }
+
+    private static @NotNull Gson makeDocumentGson() {
+        GsonBuilder gsonBuilder = GsonMapper
+            .__GetInternalGsonReferenceWithoutTheUseOfWrappedFunctions()
+            .newBuilder()
+            .registerTypeAdapterFactory(new DocumentedTypeAdapterFactory());
+        return gsonBuilder.create();
     }
 
 }

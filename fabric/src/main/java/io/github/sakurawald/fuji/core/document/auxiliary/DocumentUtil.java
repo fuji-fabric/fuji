@@ -5,6 +5,7 @@ import io.github.sakurawald.fuji.core.command.descriptor.CommandDescriptor;
 import io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.structure.DocString;
@@ -17,7 +18,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -196,5 +199,37 @@ public class DocumentUtil {
 
     public static @NotNull String duplicateLineSeparatorCharacter(@NotNull String line) {
         return line.replaceAll("\n", "\n\n");
+    }
+
+    public static @NotNull Map<String, String> getDeclaredDocumentStringMap(@NotNull Class<?> rawTypeClass) {
+        Map<String, String> declaredDocumentStringMap = new HashMap<>();
+        for (Field field : rawTypeClass.getDeclaredFields()) {
+            getFieldDocumentString(null, field)
+                .ifPresent(fieldDocumentString -> {
+                    String translatedFieldName = GsonMapper.getFieldNamingStrategy().translateName(field);
+                    declaredDocumentStringMap.put(translatedFieldName, fieldDocumentString);
+                });
+        }
+        return declaredDocumentStringMap;
+    }
+
+    public static class Indenter {
+        public static @NotNull String indentExceptFirstLine(@NotNull String input, @NotNull String indent) {
+        if (input.isEmpty()) {
+            return input;
+        }
+
+        // Split on the line breaks, preserve them later
+        String[] lines = input.split("\n", -1);
+
+        // NOTE: Preserve the first line.
+        StringBuilder result = new StringBuilder(lines[0]);
+        for (int i = 1; i < lines.length; i++) {
+            result.append("\n").append(indent).append(lines[i]);
+        }
+
+        return result.toString();
+    }
+
     }
 }

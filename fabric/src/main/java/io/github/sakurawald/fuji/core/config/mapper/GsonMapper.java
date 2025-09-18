@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.core.config.mapper;
 
 import com.google.gson.FieldNamingPolicy;
+import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -79,6 +80,10 @@ public class GsonMapper {
     @ForDeveloper("I want a friend class, the package visibility is hard to use.")
     public static @NotNull Gson __GetInternalGsonReferenceWithoutTheUseOfWrappedFunctions() {
         return gson;
+    }
+
+    public static @NotNull FieldNamingStrategy getFieldNamingStrategy() {
+        return gson.fieldNamingStrategy();
     }
 
     public static <T> TypeAdapter<T> getDelegateAdapter(TypeAdapterFactory skipPast, TypeToken<T> type) {
