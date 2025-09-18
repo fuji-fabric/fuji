@@ -7,6 +7,7 @@
 
 
 ## Changelog
+**NOTE: This is the `re-publish` of `v12.51.0`.**
 
 ### [document]
 - **Feature:** Introduced a new online documentation site at [https://fuji-fabric.github.io](https://fuji-fabric.github.io).
