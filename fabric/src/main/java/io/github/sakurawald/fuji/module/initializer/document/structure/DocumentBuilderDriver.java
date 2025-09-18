@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.document.structure;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import io.github.sakurawald.fuji.module.initializer.document.builder.DocumentBuilderContext;
+import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleArgumentTypeAdaptersDocumentBuilder;
 import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleColorBoxesDocumentBuilder;
 import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleCommandsDocumentBuilder;
 import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleConfigurationsDocumentBuilder;
@@ -22,6 +23,10 @@ public class DocumentBuilderDriver {
         .resolve("document");
 
     public static void buildAll() {
+        /* Build the document for `core` module. */
+        build(ModulePathResolver.CORE_MODULE_PATH_STRING);
+
+        /* Build the document for non-`core` module. */
         ModulePathResolver
             .DECLARED_MODULE_PATH_STRINGS
             .forEach(DocumentBuilderDriver::build);
@@ -38,6 +43,8 @@ public class DocumentBuilderDriver {
         new ModuleJobsDocumentBuilder().build(documentBuilderContext);
         new ModuleCommandsDocumentBuilder().build(documentBuilderContext);
         new ModulePlaceholdersDocumentBuilder().build(documentBuilderContext);
+        new ModuleArgumentTypeAdaptersDocumentBuilder().build(documentBuilderContext);
+
 
         /* Parse the document content. */
         String documentFileString = DocumentCompiler.compile(documentBuilder.toString());
