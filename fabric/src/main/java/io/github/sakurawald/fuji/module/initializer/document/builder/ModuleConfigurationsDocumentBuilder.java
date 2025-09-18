@@ -6,7 +6,7 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.module.initializer.document.config.adapter.DocumentedTypeAdapterFactory;
-import io.github.sakurawald.fuji.module.initializer.document.parser.DocumentCompiler;
+import io.github.sakurawald.fuji.module.initializer.document.compiler.DocumentCompiler;
 import java.util.List;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;

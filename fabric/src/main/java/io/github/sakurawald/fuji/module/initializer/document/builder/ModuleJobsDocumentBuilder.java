@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.document.builder;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.document.structure.JobDescriptor;
-import io.github.sakurawald.fuji.module.initializer.document.parser.DocumentCompiler;
+import io.github.sakurawald.fuji.module.initializer.document.compiler.DocumentCompiler;
 import java.util.List;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;

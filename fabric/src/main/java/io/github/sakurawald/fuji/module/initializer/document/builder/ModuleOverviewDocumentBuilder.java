@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.document.builder;
 
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
-import io.github.sakurawald.fuji.module.initializer.document.parser.DocumentCompiler;
+import io.github.sakurawald.fuji.module.initializer.document.compiler.DocumentCompiler;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 

@@ -10,7 +10,6 @@ import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleConfi
 import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleOverviewDocumentBuilder;
 import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleJobsDocumentBuilder;
 import io.github.sakurawald.fuji.module.initializer.document.builder.ModulePlaceholdersDocumentBuilder;
-import io.github.sakurawald.fuji.module.initializer.document.parser.DocumentCompiler;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
