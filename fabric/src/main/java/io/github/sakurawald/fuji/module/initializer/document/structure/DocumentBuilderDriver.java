@@ -16,7 +16,7 @@ import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 public class DocumentBuilderDriver {
-    private static final Path DOCUMENT_GENERATION_DESTINATION_DIR = Fuji
+    public static final Path DOCUMENT_BUILD_DIR = Fuji
         .MOD_CONFIG_PATH
         .resolve("document");
 
@@ -42,7 +42,7 @@ public class DocumentBuilderDriver {
 
         /* Write the document file. */
         String moduleDocumentFileName = getModuleDocumentFileName(modulePathString);
-        Path documentFilePath = DOCUMENT_GENERATION_DESTINATION_DIR.resolve(moduleDocumentFileName);
+        Path documentFilePath = DOCUMENT_BUILD_DIR.resolve(moduleDocumentFileName);
         Files.createDirectories(documentFilePath.getParent());
         Files.writeString(documentFilePath, documentFileString);
     }
