@@ -17,12 +17,9 @@ public class ModuleCommandDocumentBuilder extends DocumentBuilder {
             .toList();
 
         if (!commands.isEmpty()) {
-
             documentBuilderContext
                 .getDocumentBuilder()
-                    .append("## Commands")
-                        .append(System.lineSeparator());
-
+                .append("## Commands").append(System.lineSeparator());
 
             commands.forEach(it -> build(documentBuilderContext, it));
         }
@@ -30,16 +27,18 @@ public class ModuleCommandDocumentBuilder extends DocumentBuilder {
     }
 
     private void build(@NotNull DocumentBuilderContext documentBuilderContext, @NotNull CommandDescriptor commandDescriptor) {
+        String commandSyntax = commandDescriptor.getCommandSyntax();
+        boolean canBeExecutedByConsole = commandDescriptor.canBeExecutedByConsole();
         CommandRequirementDescriptor commandRequirement = CommandDescriptor.CommandRequirement.computeCommandRequirement(commandDescriptor);
 
         documentBuilderContext
             .getDocumentBuilder()
-            .append("### Command").append(System.lineSeparator())
-            .append("Command Syntax: `%s`".formatted(commandDescriptor.getCommandSyntax())).append(System.lineSeparator())
-            .append("Can be executed by console: %s".formatted(commandDescriptor.canBeExecutedByConsole())).append(System.lineSeparator())
-            .append("Descriptor: %s".formatted(commandDescriptor.getClass().getSimpleName())).append(System.lineSeparator())
-            .append("Required Level Permission: %s".formatted(commandRequirement.getLevel())).append(System.lineSeparator())
-            .append("Required String Permission: %s".formatted(commandRequirement.getString())).append(System.lineSeparator());
+            .append(":::info[Command]").append(System.lineSeparator())
+            .append("- Command Syntax: `%s`".formatted(commandSyntax)).append(System.lineSeparator())
+            .append("- Can be executed by console: `%s`".formatted(canBeExecutedByConsole)).append(System.lineSeparator())
+            .append("- Required Level Permission: `%s`".formatted(commandRequirement.getLevel())).append(System.lineSeparator())
+            .append("- Required String Permission: `%s`".formatted(commandRequirement.getString())).append(System.lineSeparator())
+            .append(":::").append(System.lineSeparator());
     }
 
 }
