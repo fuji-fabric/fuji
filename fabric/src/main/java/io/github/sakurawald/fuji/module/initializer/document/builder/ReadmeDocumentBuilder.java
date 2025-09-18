@@ -2,12 +2,16 @@ package io.github.sakurawald.fuji.module.initializer.document.builder;
 
 import org.jetbrains.annotations.NotNull;
 
-public class ReadmeDocumentBuilder extends DocumentBuilder{
+public class ReadmeDocumentBuilder extends DocumentBuilder {
     @Override
     public void build(@NotNull DocumentBuilderContext documentBuilderContext) {
         documentBuilderContext
             .getDocumentBuilder()
             .append("""
+                ---
+                slug: /
+                ---
+
                 # README
 
                 :::tip
