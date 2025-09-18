@@ -59,6 +59,8 @@ public class ModuleConfigurationsDocumentBuilder extends DocumentBuilder {
             .getClassDocumentString(null, configModelClass)
             .ifPresent(configModelClassDocumentString -> {
                 configModelClassDocumentString = DocumentCompiler.compile(configModelClassDocumentString);
+                configModelClassDocumentString = DocumentUtil.duplicateLineSeparatorCharacter(configModelClassDocumentString);
+
                 documentBuilderContext
                     .getDocumentBuilder()
                     .append("- Document: %s".formatted(configModelClassDocumentString));

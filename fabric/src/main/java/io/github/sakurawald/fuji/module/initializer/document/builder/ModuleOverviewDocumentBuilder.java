@@ -11,13 +11,18 @@ public class ModuleOverviewDocumentBuilder extends DocumentBuilder {
     @Override
     public void build(@NotNull DocumentBuilderContext documentBuilderContext) {
         /* Append the title. */
+        String modulePathString = documentBuilderContext.getModulePathString();
         documentBuilderContext.getDocumentBuilder()
-            .append("# Module: %s".formatted(documentBuilderContext.getModulePathString()))
-            .append(System.lineSeparator()).append(System.lineSeparator());
+            .append("""
+                ---
+                title: %s
+                ---
+                """.formatted(modulePathString)).append(System.lineSeparator()).append(System.lineSeparator())
+            .append("# Module: %s".formatted(modulePathString)).append(System.lineSeparator()).append(System.lineSeparator());
 
         /* Append the module class document. */
         Optional
-            .ofNullable(ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING.get(documentBuilderContext.getModulePathString()))
+            .ofNullable(ModuleManager.MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING.get(modulePathString))
             .flatMap(moduleInitializerClass -> DocumentUtil
                 .getClassDocumentString(null, moduleInitializerClass)).ifPresent(moduleClassDocument -> {
 

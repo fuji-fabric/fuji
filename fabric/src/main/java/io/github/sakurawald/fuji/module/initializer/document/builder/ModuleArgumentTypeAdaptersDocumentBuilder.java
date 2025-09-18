@@ -27,7 +27,7 @@ public class ModuleArgumentTypeAdaptersDocumentBuilder extends DocumentBuilder{
             .getDocumentBuilder()
             .append(":::argument-type").append(System.lineSeparator())
             .append("- Argument Type Name: `%s`".formatted(it.getTypeNames())).append(System.lineSeparator())
-            .append("- Argument Type Class: `%s`".formatted(it.getTypeClasses())).append(System.lineSeparator())
+            .append("- Argument Type Class: `%s`".formatted(it.getTypeClasses().stream().map(Class::getSimpleName).toList())).append(System.lineSeparator())
             .append(":::").append(System.lineSeparator());
     }
 }
