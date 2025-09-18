@@ -48,7 +48,7 @@ public class ModuleConfigurationDocumentBuilder extends DocumentBuilder {
 
         documentBuilderContext
             .getDocumentBuilder()
-            .append(":::info[File]").append(System.lineSeparator())
+            .append(":::config").append(System.lineSeparator())
             .append("- File Name: `%s`".formatted(baseConfigurationHandler.getFilePath().getFileName())).append(System.lineSeparator())
             .append("- File Path: `%s`".formatted(baseConfigurationHandler.computeRelativePathBasedOnGameDir())).append(System.lineSeparator());
 

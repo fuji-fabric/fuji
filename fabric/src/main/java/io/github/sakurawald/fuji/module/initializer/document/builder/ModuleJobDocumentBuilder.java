@@ -37,8 +37,8 @@ public class ModuleJobDocumentBuilder extends DocumentBuilder {
         String jobSimpleClassName = ReflectionUtil.getSimpleClassName(jobClass);
         documentBuilderContext
             .getDocumentBuilder()
-            .append(":::info[Job]").append(System.lineSeparator())
-            .append("- Job Name: %s".formatted(jobSimpleClassName)).append(System.lineSeparator());
+            .append(":::job").append(System.lineSeparator())
+            .append("- Job Name: `%s`".formatted(jobSimpleClassName)).append(System.lineSeparator());
 
         DocumentUtil
             .getClassDocumentString(null, jobClass)

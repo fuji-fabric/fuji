@@ -6,7 +6,7 @@ import io.github.sakurawald.fuji.module.initializer.document.builder.DocumentBui
 import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleColorBoxDocumentBuilder;
 import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleCommandDocumentBuilder;
 import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleConfigurationDocumentBuilder;
-import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleHeaderDocumentBuilder;
+import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleOverviewDocumentBuilder;
 import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleJobDocumentBuilder;
 import io.github.sakurawald.fuji.module.initializer.document.parser.DocumentCompiler;
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class DocumentBuilderDriver {
         /* Generate the document content. */
         StringBuilder documentBuilder = new StringBuilder();
         DocumentBuilderContext documentBuilderContext = new DocumentBuilderContext(modulePathString, documentBuilder);
-        new ModuleHeaderDocumentBuilder().build(documentBuilderContext);
+        new ModuleOverviewDocumentBuilder().build(documentBuilderContext);
         new ModuleColorBoxDocumentBuilder().build(documentBuilderContext);
         new ModuleConfigurationDocumentBuilder().build(documentBuilderContext);
         new ModuleJobDocumentBuilder().build(documentBuilderContext);

@@ -29,11 +29,11 @@ public class ModuleColorBoxDocumentBuilder extends DocumentBuilder {
     }
 
     private @NotNull String toAdmonitionName(@NotNull ColorBox colorBox) {
-        if (colorBox.color() == ColorBox.ColorBoxTypes.DANGER) return "danger[Danger]";
-        if (colorBox.color() == ColorBox.ColorBoxTypes.WARNING) return "warning[Warning]";
-        if (colorBox.color() == ColorBox.ColorBoxTypes.NOTE) return "info[Note]";
-        if (colorBox.color() == ColorBox.ColorBoxTypes.TIPS) return "tip[Tips]";
-        if (colorBox.color() == ColorBox.ColorBoxTypes.EXAMPLE) return "note[Example]";
+        if (colorBox.color() == ColorBox.ColorBoxTypes.DANGER) return "colorbox-danger";
+        if (colorBox.color() == ColorBox.ColorBoxTypes.WARNING) return "colorbox-warning";
+        if (colorBox.color() == ColorBox.ColorBoxTypes.NOTE) return "colorbox-note";
+        if (colorBox.color() == ColorBox.ColorBoxTypes.TIPS) return "colorbox-tip";
+        if (colorBox.color() == ColorBox.ColorBoxTypes.EXAMPLE) return "colorbox-example";
         throw new IllegalArgumentException("Unknown color: " + colorBox.color());
     }
 }

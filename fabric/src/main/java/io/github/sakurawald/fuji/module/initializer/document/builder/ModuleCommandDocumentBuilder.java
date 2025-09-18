@@ -33,7 +33,7 @@ public class ModuleCommandDocumentBuilder extends DocumentBuilder {
 
         documentBuilderContext
             .getDocumentBuilder()
-            .append(":::info[Command]").append(System.lineSeparator())
+            .append(":::command").append(System.lineSeparator())
             .append("- Command Syntax: `%s`".formatted(commandSyntax)).append(System.lineSeparator())
             .append("- Can be executed by console: `%s`".formatted(canBeExecutedByConsole)).append(System.lineSeparator())
             .append("- Required Level Permission: `%s`".formatted(commandRequirement.getLevel())).append(System.lineSeparator())

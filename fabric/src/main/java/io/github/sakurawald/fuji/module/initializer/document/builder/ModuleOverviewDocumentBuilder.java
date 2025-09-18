@@ -5,7 +5,7 @@ import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
-public class ModuleHeaderDocumentBuilder extends DocumentBuilder {
+public class ModuleOverviewDocumentBuilder extends DocumentBuilder {
 
     @Override
     public void build(@NotNull DocumentBuilderContext documentBuilderContext) {
@@ -20,9 +20,10 @@ public class ModuleHeaderDocumentBuilder extends DocumentBuilder {
             .flatMap(moduleInitializerClass -> DocumentUtil
                 .getClassDocumentString(null, moduleInitializerClass)).ifPresent(moduleClassDocument -> {
                 documentBuilderContext.getDocumentBuilder()
-                    .append("## Overview")
-                    .append(System.lineSeparator()).append(System.lineSeparator())
-                    .append(moduleClassDocument);
+                    .append("## Overview").append(System.lineSeparator())
+                    .append(":::module").append(System.lineSeparator())
+                    .append(moduleClassDocument).append(System.lineSeparator())
+                    .append(":::").append(System.lineSeparator());
             });
 
     }
