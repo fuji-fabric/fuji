@@ -39,6 +39,6 @@ public class PermissionsAndMetasInspectionGui extends StringDescriptorInspection
 
     @Override
     protected Text toNameText(StringDescriptor entity) {
-        return TextHelper.getTextByKey(getPlayer(), "fuji.inspect.permissions_and_metas.gui.item.name", entity.getPattern());
+        return TextHelper.getTextByKey(getPlayer(), "fuji.inspect.permissions_and_metas.gui.item.name", entity.toNameString());
     }
 }

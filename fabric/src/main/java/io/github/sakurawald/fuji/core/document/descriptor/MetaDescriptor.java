@@ -27,6 +27,11 @@ public class MetaDescriptor<T> extends StringDescriptor {
     }
 
     @Override
+    public @NotNull String toNameString() {
+        return this.getPattern();
+    }
+
+    @Override
     public int sortPriority() {
         return +1;
     }

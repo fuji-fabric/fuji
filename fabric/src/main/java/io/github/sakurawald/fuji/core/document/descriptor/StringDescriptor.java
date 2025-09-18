@@ -78,7 +78,9 @@ public abstract class StringDescriptor implements SourceModuleGetter {
     }
 
     @Override
-    public String getSourceModule() {
+    public @NotNull String getSourceModule() {
         return this.fromModule;
     }
+
+    public abstract @NotNull String toNameString();
 }

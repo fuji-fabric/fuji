@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.core.document.descriptor;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import org.jetbrains.annotations.NotNull;
 
 public class PermissionDescriptor extends StringDescriptor {
 
@@ -16,6 +17,11 @@ public class PermissionDescriptor extends StringDescriptor {
     @Override
     public Item toItem() {
         return Items.CHERRY_DOOR;
+    }
+
+    @Override
+    public @NotNull String toNameString() {
+        return this.getPattern();
     }
 
     @Override

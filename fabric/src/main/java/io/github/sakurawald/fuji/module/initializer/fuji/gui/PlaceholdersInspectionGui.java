@@ -1,33 +1,30 @@
 package io.github.sakurawald.fuji.module.initializer.fuji.gui;
 
 import eu.pb4.sgui.api.gui.SimpleGui;
-import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
-import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
 import io.github.sakurawald.fuji.core.document.descriptor.PlaceholderDescriptor;
 import io.github.sakurawald.fuji.core.document.descriptor.StringDescriptor;
+import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
+import java.util.Comparator;
+import java.util.List;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Comparator;
-import java.util.List;
-
-public class PlaceholdersInspectionGui extends StringDescriptorInspectionGui{
+public class PlaceholdersInspectionGui extends StringDescriptorInspectionGui {
 
     public PlaceholdersInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, @NotNull List<StringDescriptor> entities, int pageIndex) {
-        super(parent, player, TextHelper.getTextByKey(player,"fuji.inspect.placeholders.gui.title"), entities, pageIndex);
+        super(parent, player, TextHelper.getTextByKey(player, "fuji.inspect.placeholders.gui.title"), entities, pageIndex);
     }
 
     public static PlaceholdersInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
-        List<StringDescriptor> entities = StringDescriptor.REGISTERED_STRING_DESCRIPTORS
+        List<StringDescriptor> entities = PlaceholderDescriptor.getPlaceholderDescriptors()
             .stream()
-            .filter(it -> it instanceof PlaceholderDescriptor)
             .sorted(Comparator.comparing(StringDescriptor::getFromModule))
             .toList();
 
-        return new PlaceholdersInspectionGui(parent, player, entities,0);
+        return new PlaceholdersInspectionGui(parent, player, entities, 0);
     }
 
     @Override
@@ -37,7 +34,7 @@ public class PlaceholdersInspectionGui extends StringDescriptorInspectionGui{
 
     @Override
     protected Text toNameText(StringDescriptor entity) {
-        String string = Fuji.MOD_ID + ":" + entity.getString();
+        String string = entity.toNameString();
         return TextHelper.getTextByKey(getPlayer(), "fuji.inspect.placeholders.gui.item.name", string);
     }
 }
