@@ -67,9 +67,11 @@ public class ModuleConfigurationsDocumentBuilder extends DocumentBuilder {
         documentBuilderContext
             .getDocumentBuilder()
             .append("- File Content: ").append(System.lineSeparator())
+            .append("<details><summary>Click to expand...</summary>")
             .append("```json showLineNumbers title=\"%s\"".formatted(configFilePath)).append(System.lineSeparator())
             .append("%s".formatted(jsonString)).append(System.lineSeparator())
-            .append("```").append(System.lineSeparator());
+            .append("```").append(System.lineSeparator())
+            .append("</details>").append(System.lineSeparator());
 
         documentBuilderContext
             .getDocumentBuilder()
