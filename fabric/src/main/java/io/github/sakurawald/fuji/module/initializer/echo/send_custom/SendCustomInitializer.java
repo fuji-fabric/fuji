@@ -43,7 +43,7 @@ import java.util.Optional;
     ◉ Send a custom text as a message.
     Issue: `/send-custom as-message Alice guide`
     """)
-@ColorBox(id = 1753331827763L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1753331827763L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Ensure the players are allowed to use `/command-callback` command.
     The `/command-callback` command is a fuji command, used for `click event`.
     In vanilla Minecraft, if a player has `no permission` to use that command, the client will says `Unknown Command` error.

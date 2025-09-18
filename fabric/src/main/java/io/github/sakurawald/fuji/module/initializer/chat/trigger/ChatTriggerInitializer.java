@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 @Document(id = 1751826730890L, value = """
     This module allows you to define magic spells in chat, to execute commands.
     """)
-@ColorBox(id = 1754612494551L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1754612494551L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Use `chat.trigger` to create `chat commands`.
     The `regex` in `chat.replace` is used to `find` the target pattern in `the given string`.
     The `regex` in `chat.trigger` is used to `match` the target pattern against `the given string`.

@@ -42,12 +42,12 @@ import net.minecraft.world.border.WorldBorder;
     ◉ Can I use this module in vanilla dimensions?
     Yes, you can.
     """)
-@ColorBox(id = 1752460350802L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1752460350802L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ The logic of `/worldborder` command.
     The `/worldborder` command only sets the `World Border` of `minecraft:overworld`.
     But the `minecraft:the_nether` and `minecraft:the_end` dimensions will `sync` the `world border` of `minecraft:overworld`.
     """)
-@ColorBox(id = 1752569349615L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1752569349615L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ The semantics of options for `world border`.
     See: https://minecraft.wiki/w/World_border
     """)

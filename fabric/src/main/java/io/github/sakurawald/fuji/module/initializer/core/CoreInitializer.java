@@ -13,7 +13,7 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
-@ColorBox(id = 1751870436910L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751870436910L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ How to use fuji?
 
     All `modules` are `disabled` by default.
@@ -34,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
     2. If any other mods conflicts with `a module`, you can just `disable that module`.
     3. You only enable the `interested modules`, and there is no performance paying for `disabled module`.
     """)
-@ColorBox(id = 1752891903903L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1752891903903L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Adjust the `lore` text font size.
     If the `lore` text is too large in your UI.
     You can configure it in `Esc` - `Options` - `Video Settings` - `GUI Scale`
@@ -45,7 +45,7 @@ import org.jetbrains.annotations.NotNull;
     - https://modrinth.com/mod/tooltipfix
     - https://www.curseforge.com/minecraft/mc-mods/tooltipfix
     """)
-@ColorBox(id = 1753331128791L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1753331128791L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Use a `modern` text editor.
     The most of `config files` are written in `json language`, and contains lots of lines.
     A `modern` text editor can `highlight` the structure of the file, and check the `syntax errors` for you.
@@ -56,7 +56,7 @@ import org.jetbrains.annotations.NotNull;
     2. Vim: https://neovim.io/
     3. Emacs: https://www.gnu.org/software/emacs/
     """)
-@ColorBox(id = 1753331405512L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1753331405512L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Setup a `test server` in your `local machine`.
     You may have a `remote machine` (Typically named `production server`) that is `running` and `hosting` your `Minecraft network`.
     However, it's strongly recommended to setup a `test server` in your `local machine`.

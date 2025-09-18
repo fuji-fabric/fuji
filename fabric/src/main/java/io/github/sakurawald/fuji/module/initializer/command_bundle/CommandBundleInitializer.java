@@ -79,7 +79,7 @@ import org.jetbrains.annotations.NotNull;
     Commands are executed `as console`.
     You can use `/run as player` or `/run as fake-op` to switch the command execution context, if it is needed.
     """)
-@ColorBox(id = 1751870458514L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751870458514L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Generate powerful commands using a generator.
     You can use command generator to get powerful commands:
     https://www.gamergeeks.net/apps/minecraft/particle-command-generator

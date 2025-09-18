@@ -46,7 +46,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
     - `CANCEL_IF_ALL_SUCCESS`
     - ...
     """)
-@ColorBox(id = 1756196951881L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1756196951881L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Compare between `command_advice` and `command_bundle` module.
     The `command_advice` module is used to `decorate` an `existing target command`.
     The `command_bundle` module is used to `create` a `new command`.

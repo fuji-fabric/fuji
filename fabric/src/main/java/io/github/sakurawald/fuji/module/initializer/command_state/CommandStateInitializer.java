@@ -28,7 +28,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     - Check whether a player is in the `state`.
     - Use `placeholders` related to the `state`.
     """)
-@ColorBox(id = 1756707949343L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1756707949343L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Define a `state` using `predicate commands`.
     A `state` is composed by `predicate commands`.
 

@@ -10,7 +10,7 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
     For other `chat-related` mods, you can try and test the compatibility.
     It's likely it will work.
     """)
-@ColorBox(id = 1751870566083L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751870566083L, color = ColorBox.ColorBoxTypes.TIP, value = """
     The `placeholder` module provides many `extra placeholders` for `Text Placeholder API`.
     You can enable that module to get more placeholders.
 
@@ -18,7 +18,7 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
     https://placeholders.pb4.eu/user/default-placeholders/
 
     """)
-@ColorBox(id = 1751870567628L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751870567628L, color = ColorBox.ColorBoxTypes.TIP, value = """
     The `luckperms` mod provides the `prefix` and `suffix` for players.
     Which can be used as the `player title`.
 

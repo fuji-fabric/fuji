@@ -40,15 +40,15 @@ import net.minecraft.server.network.ServerPlayerEntity;
     To test the cooldown, and give the kit if the cooldown is satisfied.
     Issue: `/command-cooldown test example-kit-cooldown Alice --onFailed "send-message %player:name% wait a moment" kit give %player:name% example-kit|send-message %player:name% kit received.`
     """)
-@ColorBox(id = 1751977848415L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751977848415L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Claim a specific kit automatically for online players.
     You can use `command_scheduler` module, to execute the `kit claim command` for online players automatically every minute.
     """)
-@ColorBox(id = 1751977880532L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751977880532L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Give the new-bie player a kit.
     You can use `command_event` module, to give a kit to the new-bie player.
     """)
-@ColorBox(id = 1756110650928L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1756110650928L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Make a GUI to display all available kits.
     You can integrate with the `command_menu` module.
     To create a `menu` to `display` available kits, making it easier to `claim` a `kit`.

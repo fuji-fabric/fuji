@@ -42,10 +42,10 @@ import java.util.function.Supplier;
     5. Interact with a specified entity.
     6. Attack a specified entity.
     """)
-@ColorBox(id = 1751896813134L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751896813134L, color = ColorBox.ColorBoxTypes.TIP, value = """
     Read the document to see the definition of `identifier` in Minecraft.
     """)
-@ColorBox(id = 1751896904529L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751896904529L, color = ColorBox.ColorBoxTypes.TIP, value = """
     Use the `command suggestion` from `luckperms` mod to see the supported types by this module.
     """)
 @ColorBox(id = 1751897087633L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """

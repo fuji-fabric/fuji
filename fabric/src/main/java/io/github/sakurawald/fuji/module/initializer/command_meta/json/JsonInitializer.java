@@ -38,7 +38,7 @@ import java.util.function.BiFunction;
     ◉ Set the value of a json key.
     Issue: `/json write "config/fuji/config.json" "$.core.debug.log_debug_messages" BOOLEAN true`
     """)
-@ColorBox(id = 1751970168900L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751970168900L, color = ColorBox.ColorBoxTypes.TIP, value = """
     Read the detailed document for `Json Path`:
     See https://goessner.net/articles/JsonPath/
     """)

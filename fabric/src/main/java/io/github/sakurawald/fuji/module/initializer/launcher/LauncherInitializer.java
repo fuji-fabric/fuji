@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 @Document(id = 1756347408511L, value = """
     Launch a target `entity` in specified `direction` and `power`.
     """)
-@ColorBox(id = 1757527645811L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1757527645811L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Create a `jump pad` that launches players when stepped on.
     You can integrate with `command_attachment` module.
     Issue: `/command-attachment attach-block-one ~ ~ ~ --interactType STEP_ON \\\\<command\\\\>`

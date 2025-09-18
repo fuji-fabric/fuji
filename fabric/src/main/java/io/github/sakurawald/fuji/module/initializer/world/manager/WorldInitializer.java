@@ -164,11 +164,11 @@ import org.jetbrains.annotations.Nullable;
     1. `/world create my_nether --seed 1234567890 minecraft:the_nether`
     2. `/world reset fuji:my_nether --useTheSameSeed true --confirm true`
     """)
-@ColorBox(id = 1751982158414L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751982158414L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Make a resource world that reset automatically every day.
     You can use `command_scheduler` module, to execute `/world reset` command automatically.
     """)
-@ColorBox(id = 1752261661452L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1752261661452L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ The logic of `passed ticks` is per-dimension.
     Each fuji runtime dimension will save its own `time_of_day` (The equivalent to `DayTime` in `level.dat`).
 
@@ -191,7 +191,7 @@ import org.jetbrains.annotations.Nullable;
     ◉ The logic of `/time {set/add} ...` command.
     For command `/time {set/add}`, it operates on `all dimensions` in the server.
     """)
-@ColorBox(id = 1752287089199L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1752287089199L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ The `weather system` of the `world`.
     There are 3 types of `weather`: `clear`, `rain` and `thunder`.
     If `clear`, then both `rain` and `thunder` is false.
@@ -207,13 +207,13 @@ import org.jetbrains.annotations.Nullable;
     ◉ Set the weather per-dimension.
     You can modify the weather directly in config file, and issue `/fuji reload` to apply it.
     """)
-@ColorBox(id = 1752429441664L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1752429441664L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Does the `runtime dimension` support `datapack`?
     It depends on how the `datapack` interfaces with the `world`.
     Most of datapack should work.
     Anyway, always backup your world data before install a new datapack.
     """)
-@ColorBox(id = 1752431019812L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1752431019812L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ The logic of `nether portal` and `ender portal`.
     In vanilla Minecraft, there are only 3 dimensions.
     They are `minecraft:overworld`, `minecraft:the_nether` and `minecraft:the_end`.

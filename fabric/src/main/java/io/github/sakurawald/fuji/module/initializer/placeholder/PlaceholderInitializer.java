@@ -48,7 +48,7 @@ import java.util.regex.Pattern;
 @Document(id = 1751826512394L, value = """
     Provides extra placeholders for `Text Placeholder API` mod.
     """)
-@ColorBox(id = 1751978623242L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751978623242L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Use `placeholder` in `language file`
     Actually, you can write the `placeholder` in the `language file`.
     The `contextual player` will be used to parse the placeholders.

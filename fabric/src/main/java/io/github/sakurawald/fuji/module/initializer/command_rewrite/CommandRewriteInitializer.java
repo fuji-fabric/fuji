@@ -37,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
     2. The `command bundle` module allows you to define `new command`, and define the argument and body of the new command.
     3. The `command rewrite` module didn't define any new command. It just works in `network packet` level, and modifies the `issued command string` from the command source player.
     """)
-@ColorBox(id = 1751971914915L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751971914915L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ You can use this module to shorten the command string.
     Like, rewrite the command string `/home` into `/home tp default`.
     And provide a shortcut, for `/home tp default` command.

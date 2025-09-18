@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.module.initializer.world.gamerule;
 
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
@@ -15,7 +14,6 @@ import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import java.util.Optional;
 import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
 
 @Document(id = 1752577892546L, value = """
     This module allows you to customize the `per-dimension gamerule`.
@@ -34,7 +32,7 @@ import net.minecraft.world.World;
     ◉ Can I use this module in vanilla dimensions?
     Yes, you can.
     """)
-@ColorBox(id = 1752292508145L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1752292508145L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ The logic of `/gamerule` command.
     The `/gamerule` command `only` operates on `minecraft:overworld` dimension.
 

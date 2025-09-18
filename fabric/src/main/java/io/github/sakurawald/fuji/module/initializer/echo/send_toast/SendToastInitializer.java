@@ -27,7 +27,7 @@ import net.minecraft.text.Text;
     ◉ Send a toast to a player.
     Issue: `/send-toast Alice --icon minecraft:golden_carrot \\<rb\\>eat this carrot`
     """)
-@ColorBox(id = 1755692848834L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1755692848834L, color = ColorBox.ColorBoxTypes.TIP, value = """
     You can send a toast with a custom icon.
     The syntax is the same as `/give` command.
 

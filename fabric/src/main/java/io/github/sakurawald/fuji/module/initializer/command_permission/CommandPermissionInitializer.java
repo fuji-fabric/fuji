@@ -138,7 +138,7 @@ import org.jetbrains.annotations.Nullable;
     You can `unset` the assigned permission before.
     Issue `/lp group default permission unset fuji.permission.seed` command, to unset the assign permission.
     """)
-@ColorBox(id = 1751990466823L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751990466823L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Advanced Usage
     The `luckperms` mod have a feature named `permission context`.
     Which allows you to specify the `per-dimension permission` and `temporary permission`.

@@ -48,7 +48,7 @@ import org.jetbrains.annotations.NotNull;
     3.a. You can use `placeholders` to display the `leaderboard`.
     3.b. You can use `commands` to display the `leaderboard`.
     """)
-@ColorBox(id = 1753498010821L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1753498010821L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ You can use a `placeholder` to fetch data from `statistics`.
     For example:
     1. `%player:statistic_raw minecraft:deaths%`

@@ -29,19 +29,19 @@ import org.jetbrains.annotations.NotNull;
     This module allows you to write commands in `sign` block.
     And then click to execute commands.
     """)
-@ColorBox(id = 1751870448041L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751870448041L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ How it works?
 
     If a player `right click` a `sign block`.
     We will check if the `facing texts` contains the `/` character.
     If contains, we will treat as the player issue the command.
     """)
-@ColorBox(id = 1751968326784L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751968326784L, color = ColorBox.ColorBoxTypes.TIP, value = """
     A `sign block` that contains the `character /` is called an `interactive sign block`.
     You can use `right click` to execute the commands written on the interactive sign block.
     You can use `shift + right click` to edit an `interactive sign block`.
     """)
-@ColorBox(id = 1751968409125L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751968409125L, color = ColorBox.ColorBoxTypes.TIP, value = """
     You can write some comment text before the first `character /`.
     All 4 lines will be joined and treated as one single big line.
     So be careful with the `space character`, and ignore the `linefeed character`.

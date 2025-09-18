@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
     This module provides the `/reply` command.
     To reply the player who recently `/msg` or `/tell` you.
     """)
-@ColorBox(id = 1751972495394L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751972495394L, color = ColorBox.ColorBoxTypes.TIP, value = """
     You can use `command_alias` module, to create a new command `/r` as the alias to `/reply` command.
     """)
 public class ReplyInitializer extends ModuleInitializer {

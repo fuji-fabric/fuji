@@ -22,7 +22,7 @@ public @interface ColorBox {
 
     enum ColorBoxTypes {
         EXAMPLE("colorbox.example.name", Items.LIGHT_GRAY_CANDLE)
-        , TIPS("colorbox.tips.name", Items.LIME_CANDLE)
+        , TIP("colorbox.tips.name", Items.LIME_CANDLE)
         , NOTE("colorbox.note.name", Items.BLUE_CANDLE)
         , WARNING("colorbox.warning.name", Items.YELLOW_CANDLE)
         , DANGER("colorbox.danger.name", Items.RED_CANDLE);

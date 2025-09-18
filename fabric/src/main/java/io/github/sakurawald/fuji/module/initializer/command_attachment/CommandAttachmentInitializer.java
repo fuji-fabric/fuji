@@ -65,7 +65,7 @@ import net.minecraft.util.math.BlockPos;
     - `block`: `LEFT_CLICK`, `RIGHT_CLICK`, `ANY_CLICK`, `STEP_ON`
     - `entity`: `RIGHT_CLICK`, `ANY_CLICK`
     """)
-@ColorBox(id = 1751870464919L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751870464919L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Give the `attached item` to players.
     You can use `kit` module.
     The kit module will save the item NBT.
@@ -73,7 +73,7 @@ import net.minecraft.util.math.BlockPos;
     Then give the kit to a player.
     The player will get the magic item.
     """)
-@ColorBox(id = 1756460500752L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1756460500752L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Integrate with `command_cooldown` module.
     You can use `command_cooldown` module to create a `named cooldown`.
     The `named cooldown` can restrict the `use interval` and `use times` of a specified command.

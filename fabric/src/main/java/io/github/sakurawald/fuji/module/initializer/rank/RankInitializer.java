@@ -47,7 +47,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     3.c. A player can use `/rank down <rank>` to `rank down` to a previously `earned rank`.
     3.d. The admin can use `/rank remove <player>` to set a player's rank to `none`.
     """)
-@ColorBox(id = 1754466653435L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1754466653435L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Automatic rank up to the only available next rank.
     You can use `command_schedule` module to define a job.
     To execute the `/rank try-up %player:name%` command for each online player.

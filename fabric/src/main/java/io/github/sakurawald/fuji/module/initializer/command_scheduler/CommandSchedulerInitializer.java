@@ -43,7 +43,7 @@ import java.util.List;
     3.c. Otherwise, it decreases the `remaining runs` property by 1, and pick a random `command group` to execute.
     4. You can `trigger` a `job` using `/command-scheduler trigger \\<job\\>` manually.
     """)
-@ColorBox(id = 1751972254866L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751972254866L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ You can use `cron expression` generator, to specify when a `job` should be `triggered`.
     See
     1. https://www.freeformatter.com/cron-expression-generator-quartz.html

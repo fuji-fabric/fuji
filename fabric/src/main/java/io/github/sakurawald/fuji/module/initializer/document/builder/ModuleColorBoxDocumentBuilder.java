@@ -32,7 +32,7 @@ public class ModuleColorBoxDocumentBuilder extends DocumentBuilder {
         if (colorBox.color() == ColorBox.ColorBoxTypes.DANGER) return "colorbox-danger";
         if (colorBox.color() == ColorBox.ColorBoxTypes.WARNING) return "colorbox-warning";
         if (colorBox.color() == ColorBox.ColorBoxTypes.NOTE) return "colorbox-note";
-        if (colorBox.color() == ColorBox.ColorBoxTypes.TIPS) return "colorbox-tip";
+        if (colorBox.color() == ColorBox.ColorBoxTypes.TIP) return "colorbox-tip";
         if (colorBox.color() == ColorBox.ColorBoxTypes.EXAMPLE) return "colorbox-example";
         throw new IllegalArgumentException("Unknown color: " + colorBox.color());
     }

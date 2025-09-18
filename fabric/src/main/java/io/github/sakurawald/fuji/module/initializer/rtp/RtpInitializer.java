@@ -42,7 +42,7 @@ import java.util.Optional;
     - Filter the result by `specified biomes`
     - Filter the result by `chunk inhabited time`
     """)
-@ColorBox(id = 1751978954547L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751978954547L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Improve the performance of rtp.
     It's highly recommended to pre generate the world chunks using `chunky` mod.
     If the `target chunk` is not generated, then we have to generate it while doing the random teleport.
@@ -50,7 +50,7 @@ import java.util.Optional;
     Which will slow down the process of `/rtp`.
     If you pre generates the world chunks, then it will be fast.
     """)
-@ColorBox(id = 1751979061910L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751979061910L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Limit the usage of `/rtp` command
     You can use `command_cooldown` module, to setup a `cooldown` for `/rtp` command.
     To prevent abuse.

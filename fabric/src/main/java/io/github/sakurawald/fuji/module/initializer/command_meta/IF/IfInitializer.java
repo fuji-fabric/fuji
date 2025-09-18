@@ -63,7 +63,7 @@ import net.minecraft.server.command.ServerCommandSource;
     4. It supports the `placeholders`.
     5. Still, You can leverage the `/execute if` command as the `condition-command` of `/IF` command.
     """)
-@ColorBox(id = 1753594904128L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1753594904128L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Useful commands.
     1. https://minecraft.fandom.com/wiki/Commands/execute
     2. https://minecraft.wiki/w/Commands/return
@@ -71,7 +71,7 @@ import net.minecraft.server.command.ServerCommandSource;
     4. https://minecraft.fandom.com/wiki/Commands/tag
     5. https://minecraft.fandom.com/wiki/Commands/data
     """)
-@ColorBox(id = 1753668342721L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1753668342721L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Write the `IF ... THEN ... ELSE ...` logic conveniently.
     You can use `command_bundle` module to create a `template command` to help you write `conditional logic`.
     For example, you can create a new command `/try-give-item <item> <required-balance>`.

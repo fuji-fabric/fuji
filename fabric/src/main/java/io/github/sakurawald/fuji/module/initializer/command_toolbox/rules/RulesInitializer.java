@@ -13,7 +13,7 @@ import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.command_toolbox.rules.config.RulesConfigModel;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-@ColorBox(id = 1753331899534L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1753331899534L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Ensure the players are allowed to use `/command-callback` command.
     The `/command-callback` command is a fuji command, used for `click event`.
     In vanilla Minecraft, if a player has `no permission` to use that command, the client will says `Unknown Command` error.

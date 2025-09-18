@@ -40,7 +40,7 @@ import net.minecraft.util.Identifier;
     One `player` can have many `accounts`.
     One `account` holds one type of `currency`.
     """)
-@ColorBox(id = 1751870587446L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751870587446L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Make the `Admin Shops` and `Player Shops`.
     You can use this module with `Universal Shops` mod.
     This mod provides the `Admin Shops` and `Player Shops`.

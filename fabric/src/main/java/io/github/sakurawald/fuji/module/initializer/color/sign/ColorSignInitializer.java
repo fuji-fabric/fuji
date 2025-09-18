@@ -24,7 +24,7 @@ import java.io.IOException;
 @Document(id = 1751824932882L, value = """
     This module allows you to use color tags in `sign` blocks.
     """)
-@ColorBox(id = 1751900015107L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1751900015107L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ You can write `style tags` on the sign.
     Foe example: `\\<red\\>`, `\\<rb\\>`, `\\<bold\\>` and `\\<i\\>`.
     """)

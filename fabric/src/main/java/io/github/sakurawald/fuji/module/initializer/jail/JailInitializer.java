@@ -83,7 +83,7 @@ import net.minecraft.text.Text;
     <green>NOTE: To disable the `vanilla Minecraft command feedbacks`, you can issue:
     1. `/gamerule sendCommandFeedback false`
     """)
-@ColorBox(id = 1753750852480L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1753750852480L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Understand the `execution time` of a `command`.
     Some commands require the `target player` online to work.
     For example, the `/send-message %player:name% You are jailed.` didn't work if the target player is `off-line`.
@@ -106,7 +106,7 @@ import net.minecraft.text.Text;
     5. `/lp group jailed permission set fuji.anti_build.interact_block.override.* false`
     <green>NOTE: You need to enable the `wildcard permission` feature in `luckperms` mod config.
     """)
-@ColorBox(id = 1754329012853L, color = ColorBox.ColorBoxTypes.TIPS, value = """
+@ColorBox(id = 1754329012853L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Restrict `jailed players` to using only allowed commands.
     You can integrate with `command_permission` module.
     Issue:
