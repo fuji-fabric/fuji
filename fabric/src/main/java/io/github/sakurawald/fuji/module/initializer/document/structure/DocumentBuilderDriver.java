@@ -34,7 +34,7 @@ public class DocumentBuilderDriver {
 
     @SneakyThrows(IOException.class)
     private static void build(@NotNull String modulePathString) {
-        /* Generate the document content. */
+        /* Build the document. */
         StringBuilder documentBuilder = new StringBuilder();
         DocumentBuilderContext documentBuilderContext = new DocumentBuilderContext(modulePathString, documentBuilder);
         new ModuleOverviewDocumentBuilder().build(documentBuilderContext);
@@ -45,9 +45,8 @@ public class DocumentBuilderDriver {
         new ModulePlaceholdersDocumentBuilder().build(documentBuilderContext);
         new ModuleArgumentTypeAdaptersDocumentBuilder().build(documentBuilderContext);
 
-
-        /* Parse the document content. */
-        String documentFileString = DocumentCompiler.compile(documentBuilder.toString());
+        /* Make the document file string. */
+        String documentFileString = documentBuilder.toString();
 
         /* Write the document file. */
         String moduleDocumentFileName = getModuleDocumentFileName(modulePathString);

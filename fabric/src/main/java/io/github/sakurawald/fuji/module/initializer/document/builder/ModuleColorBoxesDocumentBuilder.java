@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.document.builder;
 
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
+import io.github.sakurawald.fuji.module.initializer.document.parser.DocumentCompiler;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,10 +22,11 @@ public class ModuleColorBoxesDocumentBuilder extends DocumentBuilder {
     }
 
     private void buildColorBox(@NotNull DocumentBuilderContext documentBuilderContext, @NotNull ColorBox colorBox) {
+        String colorBoxDocumentString = DocumentCompiler.compile(colorBox.value());
         documentBuilderContext
             .getDocumentBuilder()
             .append(":::%s".formatted(toAdmonitionName(colorBox))).append(System.lineSeparator()).append(System.lineSeparator())
-            .append(DocumentUtil.duplicateLineSeparatorCharacter(colorBox.value()))
+            .append(DocumentUtil.duplicateLineSeparatorCharacter(colorBoxDocumentString)).append(System.lineSeparator())
             .append(":::").append(System.lineSeparator()).append(System.lineSeparator());
     }
 

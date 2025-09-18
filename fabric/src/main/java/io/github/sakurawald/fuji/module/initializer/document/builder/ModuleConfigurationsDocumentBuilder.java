@@ -6,6 +6,7 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.module.initializer.document.config.adapter.DocumentedTypeAdapterFactory;
+import io.github.sakurawald.fuji.module.initializer.document.parser.DocumentCompiler;
 import java.util.List;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -57,6 +58,7 @@ public class ModuleConfigurationsDocumentBuilder extends DocumentBuilder {
         DocumentUtil
             .getClassDocumentString(null, configModelClass)
             .ifPresent(configModelClassDocumentString -> {
+                configModelClassDocumentString = DocumentCompiler.compile(configModelClassDocumentString);
                 documentBuilderContext
                     .getDocumentBuilder()
                     .append("- Document: %s".formatted(configModelClassDocumentString));
@@ -67,7 +69,11 @@ public class ModuleConfigurationsDocumentBuilder extends DocumentBuilder {
         documentBuilderContext
             .getDocumentBuilder()
             .append("- File Content: ").append(System.lineSeparator())
-            .append("<details><summary>Click to expand...</summary>")
+            .append("""
+                <details>
+
+                <summary>Click to expand...</summary>
+                """).append(System.lineSeparator())
             .append("```json showLineNumbers title=\"%s\"".formatted(configFilePath)).append(System.lineSeparator())
             .append("%s".formatted(jsonString)).append(System.lineSeparator())
             .append("```").append(System.lineSeparator())

@@ -3,8 +3,11 @@ package io.github.sakurawald.fuji.module.initializer.document.builder;
 import io.github.sakurawald.fuji.core.command.descriptor.CommandDescriptor;
 import io.github.sakurawald.fuji.core.command.structure.CommandRequirementDescriptor;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
+import io.github.sakurawald.fuji.module.initializer.document.parser.DocumentCompiler;
 import java.util.List;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ModuleCommandsDocumentBuilder extends DocumentBuilder {
 
@@ -31,10 +34,16 @@ public class ModuleCommandsDocumentBuilder extends DocumentBuilder {
         boolean canBeExecutedByConsole = commandDescriptor.canBeExecutedByConsole();
         CommandRequirementDescriptor commandRequirement = CommandDescriptor.CommandRequirement.computeCommandRequirement(commandDescriptor);
 
+        @Nullable String commandDocumentString = Optional
+            .ofNullable(commandDescriptor.document)
+            .map(DocumentCompiler::compile)
+            .orElse(null);
+
         documentBuilderContext
             .getDocumentBuilder()
             .append(":::command").append(System.lineSeparator())
             .append("- Command Syntax: `%s`".formatted(commandSyntax)).append(System.lineSeparator())
+            .append("- Document: %s".formatted(commandDocumentString)).append(System.lineSeparator())
             .append("- Can be executed by console: `%s`".formatted(canBeExecutedByConsole)).append(System.lineSeparator())
             .append("- Required Level Permission: `%s`".formatted(commandRequirement.getLevel())).append(System.lineSeparator())
             .append("- Required String Permission: `%s`".formatted(commandRequirement.getString())).append(System.lineSeparator())

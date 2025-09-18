@@ -2,6 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.document.builder;
 
 import io.github.sakurawald.fuji.core.document.descriptor.PlaceholderDescriptor;
 import io.github.sakurawald.fuji.core.document.descriptor.StringDescriptor;
+import io.github.sakurawald.fuji.module.initializer.document.parser.DocumentCompiler;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,13 +25,14 @@ public class ModulePlaceholdersDocumentBuilder extends DocumentBuilder{
     }
 
     private void build(@NotNull DocumentBuilderContext documentBuilderContext, StringDescriptor placeholder) {
-        String documentString = placeholder.getDocumentString(null).trim();
+        String placeholderDocumentString = placeholder.getDocumentString(null).trim();
+        placeholderDocumentString = DocumentCompiler.compile(placeholderDocumentString);
 
         documentBuilderContext
             .getDocumentBuilder()
             .append(":::placeholder").append(System.lineSeparator())
             .append("- Placeholder Name: `%s`".formatted(placeholder.toNameString())).append(System.lineSeparator())
-            .append("- Document: %s".formatted(documentString)).append(System.lineSeparator())
+            .append("- Document: %s".formatted(placeholderDocumentString)).append(System.lineSeparator())
             .append(":::").append(System.lineSeparator());
     }
 

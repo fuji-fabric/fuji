@@ -23,7 +23,7 @@ import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
-import io.github.sakurawald.fuji.core.manager.Managers;
+import io.github.sakurawald.fuji.core.manager.impl.task.GameTaskManager;
 import io.github.sakurawald.fuji.core.manager.impl.task.structure.GameTask;
 import io.github.sakurawald.fuji.core.service.toast_sender.ToastSender;
 import io.github.sakurawald.fuji.core.structure.Pair;
@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
@@ -739,15 +740,17 @@ public class TextHelper {
 
                     /* Send the toast, if this GUI is still alive in ticks. */
                     GameTask gameTask = new GameTask(3,
-                        () -> {},
-                        () -> {},
                         () -> {
-                        if (pagedGui.isOpen() && serverPlayerEntity.currentScreenHandler != null) {
-                            ItemStack itemStack = GuiHelper.Button.makeLetterIButton().build().getItemStack();
-                            TextHelper.sendToastByText(serverPlayerEntity, itemStack, text);
-                        }
-                    });
-                    Managers.getGameTaskManager().submitTask(gameTask);
+                        },
+                        () -> {
+                        },
+                        () -> {
+                            if (pagedGui.isOpen() && serverPlayerEntity.currentScreenHandler != null) {
+                                ItemStack itemStack = GuiHelper.Button.makeLetterIButton().build().getItemStack();
+                                TextHelper.sendToastByText(serverPlayerEntity, itemStack, text);
+                            }
+                        });
+                    GameTaskManager.submitTask(gameTask);
                 }
             }
         }
@@ -933,6 +936,28 @@ public class TextHelper {
     }
 
     public static class Formatter {
+
+        public static final Set<String> NAMED_STYLE_TAGS = Set.of(
+            "yellow",
+            "dark_blue",
+            "dark_purple",
+            "gold",
+            "red",
+            "aqua",
+            "gray",
+            "light_purple",
+            "white",
+            "dark_gray",
+            "green",
+            "dark_green",
+            "blue",
+            "dark_aqua",
+            "black",
+            "pink",
+            "b",
+            "i",
+            "bold"
+        );
 
         public static <K, V> MutableText formatMapMultiLine(Map<K, V> map) {
             return formatMap(map, "", "", "\n");
