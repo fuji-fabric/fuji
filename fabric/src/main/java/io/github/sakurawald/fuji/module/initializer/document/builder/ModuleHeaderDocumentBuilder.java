@@ -20,7 +20,7 @@ public class ModuleHeaderDocumentBuilder extends DocumentBuilder {
             .flatMap(moduleInitializerClass -> DocumentUtil
                 .getClassDocumentString(null, moduleInitializerClass)).ifPresent(moduleClassDocument -> {
                 documentBuilderContext.getDocumentBuilder()
-                    .append("## Module Intro")
+                    .append("## Overview")
                     .append(System.lineSeparator()).append(System.lineSeparator())
                     .append(moduleClassDocument);
             });

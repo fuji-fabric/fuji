@@ -29,6 +29,16 @@ public class ModuleConfigurationDocumentBuilder extends DocumentBuilder {
                 .append("## Configurations")
                 .append(System.lineSeparator());
 
+            documentBuilderContext
+                .getDocumentBuilder()
+                .append("""
+                    :::warning
+                    The JSON content is provided for documentation purposes only.
+
+                    It should not be copied directly into your configuration folder, as the document format is not valid JSON syntax.
+                    :::
+                    """);
+
             moduleConfigurationHandlers
                 .forEach(it -> build(documentBuilderContext, it));
         }
