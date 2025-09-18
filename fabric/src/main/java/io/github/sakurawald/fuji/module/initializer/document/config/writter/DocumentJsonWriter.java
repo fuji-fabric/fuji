@@ -23,7 +23,7 @@ public class DocumentJsonWriter extends JsonWriter {
         setPrettyFormatting();
     }
 
-    private static void setPrettyFormatting() {
+    private void setPrettyFormatting() {
         #if MC_VER >= MC_1_21_4
         this.setFormattingStyle(com.google.gson.FormattingStyle.PRETTY);
         #endif
@@ -40,7 +40,7 @@ public class DocumentJsonWriter extends JsonWriter {
             formattedDocumentString = DocumentUtil.Indenter.indentExceptFirstLine(formattedDocumentString, getIndent());
 
             underlyingWriter
-                .append(getLineSeperator())
+                .append(getLineSeparator())
                 .append(getIndent()).append("/* ").append(formattedDocumentString).append(" */");
         }
 
@@ -62,12 +62,12 @@ public class DocumentJsonWriter extends JsonWriter {
     }
 
 
-    private @NotNull String getLineSeperator() {
+    private @NotNull String getLineSeparator() {
         #if MC_VER < MC_1_21_4
         return ReflectionUtil.Reflection.getInstanceFieldValue(this, "separator", String.class);
         #elif MC_VER >= MC_1_21_4
         com.google.gson.FormattingStyle formattingStyle = getFormattingStyle();
-        return formattingStyle.getNewLine();
+        return formattingStyle.getNewline();
         #endif
     }
 
