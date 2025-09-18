@@ -6,7 +6,6 @@ import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -147,29 +146,6 @@ public class InspectingObject {
     }
 
 
-    private static List<Field> gatherDeclaredFieldsRecursively(List<Field> result, Class<?> clazz) {
-
-        /* Print this node. */
-        Field[] declaredFields = clazz.getDeclaredFields();
-        result.addAll(Arrays.asList(declaredFields));
-
-        /* Go down. */
-        Class<?> superclass = clazz.getSuperclass();
-        if (superclass != Object.class) {
-            gatherDeclaredFieldsRecursively(result, superclass);
-        }
-
-        /* Go up. */
-        return result;
-    }
-
-    private static List<Field> gatherDeclaredFields(Class<?> clazz) {
-        List<Field> allDeclaredFields = new ArrayList<>();
-        gatherDeclaredFieldsRecursively(allDeclaredFields, clazz);
-
-        return allDeclaredFields;
-    }
-
     public static List<InspectingObject> inspectJavaObject(@NotNull Object object) {
         /* Ensure the object is unboxed value. */
         if (object instanceof InspectingObject) {
@@ -179,7 +155,7 @@ public class InspectingObject {
         /* Inspect the structure of object. */
         Object fieldInstance = object;
         Class<?> inspectingObjectClass = object.getClass();
-        return gatherDeclaredFields(inspectingObjectClass)
+        return ReflectionUtil.Reflection.gatherDeclaredFields(inspectingObjectClass)
             .stream()
             .filter(field -> {
                 /* Ignore some fields that is not interested. */

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
@@ -130,6 +131,59 @@ public class ReflectionUtil {
             simpleClassName = "ANONYMOUS-CLASS";
         }
         return simpleClassName;
+    }
+
+    public static class Reflection {
+
+        public static @NotNull Field getInstanceField(@NotNull Object instance, @NotNull String fieldName) {
+            Field field = gatherDeclaredFields(instance.getClass())
+                .stream()
+                .filter(it -> it.getName().equals(fieldName))
+                .findFirst()
+                .orElseThrow();
+            field.setAccessible(true);
+            return field;
+        }
+
+        @SneakyThrows(IllegalAccessException.class)
+        public static @NotNull <T> T getInstanceFieldValue(@NotNull Object instance, @NotNull String fieldName, @NotNull Class<T> clazz) {
+            Field field = getInstanceField(instance, fieldName);
+            Object fieldValue = field.get(instance);
+
+            if (!clazz.isInstance(fieldValue)) {
+                throw new IllegalArgumentException("The returned instance field value can't be casted to the expected type %s. (instance = %s, declaredFieldName = %s)".formatted(clazz.getName(), instance, fieldName));
+            }
+
+            return clazz.cast(fieldValue);
+        }
+
+        @SneakyThrows(IllegalAccessException.class)
+        public static void setInstanceFieldValue(@NotNull Object instance, @NotNull String declaredFieldName, @NotNull Object fieldValue) {
+            Field field = getInstanceField(instance, declaredFieldName);
+            field.set(instance,fieldValue);
+        }
+
+        private static void gatherDeclaredFieldsRecursively(List<Field> result, Class<?> clazz) {
+
+            /* Print this node. */
+            Field[] declaredFields = clazz.getDeclaredFields();
+            result.addAll(Arrays.asList(declaredFields));
+
+            /* Go down. */
+            Class<?> superclass = clazz.getSuperclass();
+            if (superclass != Object.class) {
+                gatherDeclaredFieldsRecursively(result, superclass);
+            }
+
+            /* Go up. */
+        }
+
+        public static List<Field> gatherDeclaredFields(Class<?> clazz) {
+            List<Field> allDeclaredFields = new ArrayList<>();
+            gatherDeclaredFieldsRecursively(allDeclaredFields, clazz);
+
+            return allDeclaredFields;
+        }
     }
 
     public static class Stacktrace {
