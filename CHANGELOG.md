@@ -2,7 +2,7 @@
 > 
 > For historical change logs, refer to: https://github.com/sakurawald/fuji/releases
 > 
-> For User Manual, refer to: https://fuji-fabric.github.io
+> For user manual, refer to: https://fuji-fabric.github.io
 >
 
 

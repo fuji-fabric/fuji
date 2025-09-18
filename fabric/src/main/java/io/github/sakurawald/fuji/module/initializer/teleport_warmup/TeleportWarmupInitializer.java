@@ -47,7 +47,7 @@ import net.minecraft.server.world.ServerWorld;
 @ColorBox(id = 1758083431300L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ The `teleport warmup` will NOT be applied if...
     1. The target dimension is not defined in the `effective dimensions` list.
-    2. The target player's `age` <= `3`
+    2. The target player's `age <= 3`
     3. The target player is admin. (level permission >= 4)
     4. The target player is a `fake player`.
     5. The target player has the `warmup bypass permission`.

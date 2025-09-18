@@ -30,7 +30,6 @@ public class DocumentCompiler {
         /* Un-escape the escaped tags inside code-fence. */
         output = unescapeTagsWithinInlineCodeFence(output);
 
-        output = output.replaceAll("<=", "\\\\<=");
         return output;
     }
 
