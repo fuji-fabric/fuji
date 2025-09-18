@@ -10,6 +10,7 @@ import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleConfi
 import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleOverviewDocumentBuilder;
 import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleJobsDocumentBuilder;
 import io.github.sakurawald.fuji.module.initializer.document.builder.ModulePlaceholdersDocumentBuilder;
+import io.github.sakurawald.fuji.module.initializer.document.builder.ReadmeDocumentBuilder;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,17 +23,38 @@ public class DocumentBuilderDriver {
         .resolve("document");
 
     public static void buildAll() {
+        buildReadme();
+        buildModules();
+    }
+
+    @SneakyThrows(IOException.class)
+    private static void buildReadme() {
+        /* Build the readme file. */
+        StringBuilder documentBuilder = new StringBuilder();
+        DocumentBuilderContext documentBuilderContext = new DocumentBuilderContext(ModulePathResolver.CORE_MODULE_PATH_STRING, documentBuilder);
+        new ReadmeDocumentBuilder().build(documentBuilderContext);
+
+        /* Make the readme file string. */
+        String readmeFileString = documentBuilder.toString();
+
+        /* Write the readme file. */
+        Path readmeFilePath = DOCUMENT_BUILD_DIR.resolve("01-README.md");
+        Files.createDirectories(readmeFilePath.getParent());
+        Files.writeString(readmeFilePath, readmeFileString);
+    }
+
+    private static void buildModules() {
         /* Build the document for `core` module. */
-        build(ModulePathResolver.CORE_MODULE_PATH_STRING);
+        buildModule(ModulePathResolver.CORE_MODULE_PATH_STRING);
 
         /* Build the document for non-`core` module. */
         ModulePathResolver
             .DECLARED_MODULE_PATH_STRINGS
-            .forEach(DocumentBuilderDriver::build);
+            .forEach(DocumentBuilderDriver::buildModule);
     }
 
     @SneakyThrows(IOException.class)
-    private static void build(@NotNull String modulePathString) {
+    private static void buildModule(@NotNull String modulePathString) {
         /* Build the document. */
         StringBuilder documentBuilder = new StringBuilder();
         DocumentBuilderContext documentBuilderContext = new DocumentBuilderContext(modulePathString, documentBuilder);
@@ -49,7 +71,7 @@ public class DocumentBuilderDriver {
 
         /* Write the document file. */
         String moduleDocumentFileName = getModuleDocumentFileName(modulePathString);
-        Path documentFilePath = DOCUMENT_BUILD_DIR.resolve(moduleDocumentFileName);
+        Path documentFilePath = DOCUMENT_BUILD_DIR.resolve("02-Modules").resolve(moduleDocumentFileName);
         Files.createDirectories(documentFilePath.getParent());
         Files.writeString(documentFilePath, documentFileString);
     }
