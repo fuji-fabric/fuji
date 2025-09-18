@@ -8,6 +8,7 @@ import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleComma
 import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleConfigurationsDocumentBuilder;
 import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleOverviewDocumentBuilder;
 import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleJobsDocumentBuilder;
+import io.github.sakurawald.fuji.module.initializer.document.builder.ModulePlaceholdersDocumentBuilder;
 import io.github.sakurawald.fuji.module.initializer.document.parser.DocumentCompiler;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -36,6 +37,7 @@ public class DocumentBuilderDriver {
         new ModuleConfigurationsDocumentBuilder().build(documentBuilderContext);
         new ModuleJobsDocumentBuilder().build(documentBuilderContext);
         new ModuleCommandsDocumentBuilder().build(documentBuilderContext);
+        new ModulePlaceholdersDocumentBuilder().build(documentBuilderContext);
 
         /* Parse the document content. */
         String documentFileString = DocumentCompiler.compile(documentBuilder.toString());

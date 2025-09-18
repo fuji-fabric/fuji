@@ -45,12 +45,13 @@ public class ModuleConfigurationsDocumentBuilder extends DocumentBuilder {
     }
 
     public void build(@NotNull DocumentBuilderContext documentBuilderContext, @NotNull BaseConfigurationHandler<?> baseConfigurationHandler) {
+        String configFileName = baseConfigurationHandler.getFilePath().getFileName().toString();
+        String configFilePath = baseConfigurationHandler.computeRelativePathBasedOnGameDir();
 
         documentBuilderContext
             .getDocumentBuilder()
             .append(":::config").append(System.lineSeparator())
-            .append("- File Name: `%s`".formatted(baseConfigurationHandler.getFilePath().getFileName())).append(System.lineSeparator())
-            .append("- File Path: `%s`".formatted(baseConfigurationHandler.computeRelativePathBasedOnGameDir())).append(System.lineSeparator());
+            .append("- File Name: `%s`".formatted(configFileName)).append(System.lineSeparator());
 
         Class<?> configModelClass = baseConfigurationHandler.model().getClass();
         DocumentUtil
@@ -66,7 +67,7 @@ public class ModuleConfigurationsDocumentBuilder extends DocumentBuilder {
         documentBuilderContext
             .getDocumentBuilder()
             .append("- File Content: ").append(System.lineSeparator())
-            .append("```json showLineNumbers").append(System.lineSeparator())
+            .append("```json showLineNumbers title=\"%s\"".formatted(configFilePath)).append(System.lineSeparator())
             .append("%s".formatted(jsonString)).append(System.lineSeparator())
             .append("```").append(System.lineSeparator());
 
