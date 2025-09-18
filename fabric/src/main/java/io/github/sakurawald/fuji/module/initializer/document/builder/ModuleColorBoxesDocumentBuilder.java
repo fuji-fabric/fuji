@@ -5,7 +5,7 @@ import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
-public class ModuleColorBoxDocumentBuilder extends DocumentBuilder {
+public class ModuleColorBoxesDocumentBuilder extends DocumentBuilder {
 
     @Override
     public void build(@NotNull DocumentBuilderContext documentBuilderContext) {

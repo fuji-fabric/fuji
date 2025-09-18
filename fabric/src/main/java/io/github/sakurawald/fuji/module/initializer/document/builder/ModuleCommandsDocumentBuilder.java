@@ -6,7 +6,7 @@ import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
-public class ModuleCommandDocumentBuilder extends DocumentBuilder {
+public class ModuleCommandsDocumentBuilder extends DocumentBuilder {
 
     @Override
     public void build(@NotNull DocumentBuilderContext documentBuilderContext) {

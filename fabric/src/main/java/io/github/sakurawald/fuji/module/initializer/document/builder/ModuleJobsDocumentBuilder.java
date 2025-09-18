@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.quartz.Job;
 import org.quartz.SchedulerException;
 
-public class ModuleJobDocumentBuilder extends DocumentBuilder {
+public class ModuleJobsDocumentBuilder extends DocumentBuilder {
 
     @SneakyThrows(SchedulerException.class)
     @Override

@@ -3,11 +3,11 @@ package io.github.sakurawald.fuji.module.initializer.document.structure;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import io.github.sakurawald.fuji.module.initializer.document.builder.DocumentBuilderContext;
-import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleColorBoxDocumentBuilder;
-import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleCommandDocumentBuilder;
-import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleConfigurationDocumentBuilder;
+import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleColorBoxesDocumentBuilder;
+import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleCommandsDocumentBuilder;
+import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleConfigurationsDocumentBuilder;
 import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleOverviewDocumentBuilder;
-import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleJobDocumentBuilder;
+import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleJobsDocumentBuilder;
 import io.github.sakurawald.fuji.module.initializer.document.parser.DocumentCompiler;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,10 +32,10 @@ public class DocumentBuilderDriver {
         StringBuilder documentBuilder = new StringBuilder();
         DocumentBuilderContext documentBuilderContext = new DocumentBuilderContext(modulePathString, documentBuilder);
         new ModuleOverviewDocumentBuilder().build(documentBuilderContext);
-        new ModuleColorBoxDocumentBuilder().build(documentBuilderContext);
-        new ModuleConfigurationDocumentBuilder().build(documentBuilderContext);
-        new ModuleJobDocumentBuilder().build(documentBuilderContext);
-        new ModuleCommandDocumentBuilder().build(documentBuilderContext);
+        new ModuleColorBoxesDocumentBuilder().build(documentBuilderContext);
+        new ModuleConfigurationsDocumentBuilder().build(documentBuilderContext);
+        new ModuleJobsDocumentBuilder().build(documentBuilderContext);
+        new ModuleCommandsDocumentBuilder().build(documentBuilderContext);
 
         /* Parse the document content. */
         String documentFileString = DocumentCompiler.compile(documentBuilder.toString());

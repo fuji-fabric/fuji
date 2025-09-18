@@ -10,7 +10,7 @@ import java.util.List;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-public class ModuleConfigurationDocumentBuilder extends DocumentBuilder {
+public class ModuleConfigurationsDocumentBuilder extends DocumentBuilder {
 
     @Getter(lazy = true)
     private static final Gson documentGson = makeDocumentGson();
