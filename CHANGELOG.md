@@ -1,20 +1,30 @@
 > For detailed change logs, please visit: https://github.com/sakurawald/fuji/commits/dev/
 > 
 > For historical change logs, refer to: https://github.com/sakurawald/fuji/releases
+> 
+> For User Manual, refer to: https://fuji-fabric.github.io
+>
 
 
 ## Changelog
 
-### [teleport_warmup] 
-- feature: now the admin players can bypass the teleport warmup.
-- feature: now the entity with `age <= 3` can bypass the teleport warmup. (Making it friendly for `a teleport after respawn`)
+### [document]
+- **Feature:** Introduced a new online documentation site at [https://fuji-fabric.github.io](https://fuji-fabric.github.io).
+- **Feature:** Added the `/document build` command to compile Markdown document files.
+
+### [teleport_warmup]
+- **Feature:** Admin players can now bypass the teleport warmup.
+- **Feature:** Entities with `age <= 3` can now bypass the teleport warmup, improving usability for teleporting immediately after respawn.
 
 ### [command_cooldown]
-- docs: document the `bypass mechanism`
- 
+- **Documentation:** Added information regarding the `bypass mechanism`.
+
 ### [command_warmup]
-- docs: document the `bypass mechanism`
+- **Documentation:** Added information regarding the `bypass mechanism`.
 
 ### [command_spy]
-- feature: add `document` property for each rule.
-- feature: optimize the `default config`, adding the `ignore` example.
+- **Feature:** Added a `document` property for each rule.
+- **Feature:** Optimized the default configuration by including an example for the `ignore` property.
+
+### [rto]
+- **Fix:** The displaying of `current attempts count`. (Should start with `1` instead of `0`)
