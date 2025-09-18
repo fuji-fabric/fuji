@@ -1,9 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.document.config.writter;
 
-import com.google.gson.FormattingStyle;
 import com.google.gson.stream.JsonWriter;
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
-import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import java.io.IOException;
 import java.io.Writer;
@@ -22,7 +20,13 @@ public class DocumentJsonWriter extends JsonWriter {
         this.documentStringMap = documentStringMap;
 
         /* Tweak the variables initialized in the constructor function. */
-        this.setFormattingStyle(FormattingStyle.PRETTY);
+        setPrettyFormatting();
+    }
+
+    private static void setPrettyFormatting() {
+        #if MC_VER >= MC_1_21_4
+        this.setFormattingStyle(com.google.gson.FormattingStyle.PRETTY);
+        #endif
     }
 
     @Override
@@ -31,14 +35,13 @@ public class DocumentJsonWriter extends JsonWriter {
         Optional<String> documentString = Optional.ofNullable(documentStringMap.get(name));
         if (documentString.isPresent()) {
             Writer underlyingWriter = getBackendWriter(delegate);
-            FormattingStyle formattingStyle = getFormattingStyle();
 
             String formattedDocumentString = documentString.get().trim();
-            formattedDocumentString = DocumentUtil.Indenter.indentExceptFirstLine(formattedDocumentString, formattingStyle.getIndent());
+            formattedDocumentString = DocumentUtil.Indenter.indentExceptFirstLine(formattedDocumentString, getIndent());
 
             underlyingWriter
-                .append(formattingStyle.getNewline())
-                .append(formattingStyle.getIndent()).append("/* ").append(formattedDocumentString).append(" */");
+                .append(getLineSeperator())
+                .append(getIndent()).append("/* ").append(formattedDocumentString).append(" */");
         }
 
         /* Call super to handle default logics. */
@@ -47,6 +50,25 @@ public class DocumentJsonWriter extends JsonWriter {
 
     private static @NotNull Writer getBackendWriter(@NotNull JsonWriter jsonWriter) {
         return ReflectionUtil.Reflection.getInstanceFieldValue(jsonWriter, "out", Writer.class);
+    }
+
+    private @NotNull String getIndent() {
+        #if MC_VER < MC_1_21_4
+        return ReflectionUtil.Reflection.getInstanceFieldValue(this, "indent", String.class);
+        #elif MC_VER >= MC_1_21_4
+        com.google.gson.FormattingStyle formattingStyle = getFormattingStyle();
+        return formattingStyle.getIndent();
+        #endif
+    }
+
+
+    private @NotNull String getLineSeperator() {
+        #if MC_VER < MC_1_21_4
+        return ReflectionUtil.Reflection.getInstanceFieldValue(this, "separator", String.class);
+        #elif MC_VER >= MC_1_21_4
+        com.google.gson.FormattingStyle formattingStyle = getFormattingStyle();
+        return formattingStyle.getNewLine();
+        #endif
     }
 
 }
