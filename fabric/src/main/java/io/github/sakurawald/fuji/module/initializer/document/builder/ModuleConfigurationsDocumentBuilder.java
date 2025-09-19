@@ -74,7 +74,7 @@ public class ModuleConfigurationsDocumentBuilder extends DocumentBuilder {
             .append("""
                 <details>
 
-                <summary>Click to expand...</summary>
+                <summary>_Click to see the `default` content..._</summary>
                 """).append(System.lineSeparator())
             .append("```json showLineNumbers title=\"%s\"".formatted(configFilePath)).append(System.lineSeparator())
             .append("%s".formatted(jsonString)).append(System.lineSeparator())
