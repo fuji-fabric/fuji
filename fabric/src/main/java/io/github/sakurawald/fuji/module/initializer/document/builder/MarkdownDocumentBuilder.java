@@ -1,23 +1,23 @@
-package io.github.sakurawald.fuji.module.initializer.document.structure;
+package io.github.sakurawald.fuji.module.initializer.document.builder;
 
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
-import io.github.sakurawald.fuji.module.initializer.document.builder.DocumentBuilderContext;
-import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleArgumentTypeAdaptersDocumentBuilder;
-import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleColorBoxesDocumentBuilder;
-import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleCommandsDocumentBuilder;
-import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleConfigurationsDocumentBuilder;
-import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleOverviewDocumentBuilder;
-import io.github.sakurawald.fuji.module.initializer.document.builder.ModuleJobsDocumentBuilder;
-import io.github.sakurawald.fuji.module.initializer.document.builder.ModulePlaceholdersDocumentBuilder;
-import io.github.sakurawald.fuji.module.initializer.document.builder.ReadmeDocumentBuilder;
+import io.github.sakurawald.fuji.module.initializer.document.builder.component.ModuleArgumentTypeAdaptersDocumentBuilder;
+import io.github.sakurawald.fuji.module.initializer.document.builder.component.ModuleColorBoxesDocumentBuilder;
+import io.github.sakurawald.fuji.module.initializer.document.builder.component.ModuleCommandsDocumentBuilder;
+import io.github.sakurawald.fuji.module.initializer.document.builder.component.ModuleConfigurationsDocumentBuilder;
+import io.github.sakurawald.fuji.module.initializer.document.builder.component.ModuleJobsDocumentBuilder;
+import io.github.sakurawald.fuji.module.initializer.document.builder.component.ModuleOverviewDocumentBuilder;
+import io.github.sakurawald.fuji.module.initializer.document.builder.component.ModulePlaceholdersDocumentBuilder;
+import io.github.sakurawald.fuji.module.initializer.document.builder.component.ReadmeDocumentBuilder;
+import io.github.sakurawald.fuji.module.initializer.document.builder.context.DocumentBuilderContext;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
-public class DocumentBuilderDriver {
+public class MarkdownDocumentBuilder {
     public static final Path DOCUMENT_BUILD_DIR = Fuji
         .MOD_CONFIG_PATH
         .resolve("document");
@@ -50,7 +50,7 @@ public class DocumentBuilderDriver {
         /* Build the document for non-`core` module. */
         ModulePathResolver
             .DECLARED_MODULE_PATH_STRINGS
-            .forEach(DocumentBuilderDriver::buildModule);
+            .forEach(MarkdownDocumentBuilder::buildModule);
     }
 
     @SneakyThrows(IOException.class)

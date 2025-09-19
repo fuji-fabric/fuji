@@ -1,8 +1,9 @@
-package io.github.sakurawald.fuji.module.initializer.document.builder;
+package io.github.sakurawald.fuji.module.initializer.document.builder.component;
 
 import io.github.sakurawald.fuji.core.command.descriptor.CommandDescriptor;
 import io.github.sakurawald.fuji.core.command.structure.CommandRequirementDescriptor;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
+import io.github.sakurawald.fuji.module.initializer.document.builder.context.DocumentBuilderContext;
 import io.github.sakurawald.fuji.module.initializer.document.compiler.DocumentCompiler;
 import java.util.List;
 import java.util.Optional;

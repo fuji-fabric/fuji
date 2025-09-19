@@ -1,5 +1,6 @@
-package io.github.sakurawald.fuji.module.initializer.document.builder;
+package io.github.sakurawald.fuji.module.initializer.document.builder.component;
 
+import io.github.sakurawald.fuji.module.initializer.document.builder.context.DocumentBuilderContext;
 import org.jetbrains.annotations.NotNull;
 
 public class ReadmeDocumentBuilder extends DocumentBuilder {

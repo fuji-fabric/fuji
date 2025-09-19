@@ -1,10 +1,11 @@
-package io.github.sakurawald.fuji.module.initializer.document.builder;
+package io.github.sakurawald.fuji.module.initializer.document.builder.component;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
+import io.github.sakurawald.fuji.module.initializer.document.builder.context.DocumentBuilderContext;
 import io.github.sakurawald.fuji.module.initializer.document.compiler.DocumentCompiler;
 import io.github.sakurawald.fuji.module.initializer.document.config.adapter.DocumentedTypeAdapterFactory;
 import java.util.List;

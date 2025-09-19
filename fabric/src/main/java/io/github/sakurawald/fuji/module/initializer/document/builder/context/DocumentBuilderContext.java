@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.initializer.document.builder;
+package io.github.sakurawald.fuji.module.initializer.document.builder.context;
 
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;

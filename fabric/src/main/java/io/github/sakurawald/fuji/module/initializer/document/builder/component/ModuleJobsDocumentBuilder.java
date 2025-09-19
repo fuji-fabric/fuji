@@ -1,8 +1,9 @@
-package io.github.sakurawald.fuji.module.initializer.document.builder;
+package io.github.sakurawald.fuji.module.initializer.document.builder.component;
 
 import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.document.structure.JobDescriptor;
+import io.github.sakurawald.fuji.module.initializer.document.builder.context.DocumentBuilderContext;
 import io.github.sakurawald.fuji.module.initializer.document.compiler.DocumentCompiler;
 import java.util.List;
 import lombok.SneakyThrows;
