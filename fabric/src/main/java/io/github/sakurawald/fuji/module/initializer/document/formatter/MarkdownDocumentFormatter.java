@@ -9,7 +9,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class MarkdownDocumentFormatter {
 
-    public static @NotNull String parseTags(@NotNull String input) {
+    public static @NotNull String parseDocumentString(@NotNull String documentString) {
+        String result = parseTags(documentString);
+        result = MarkdownDocumentFormatter.parseMarkdownSeparator(result);
+        return result;
+    }
+
+    private static @NotNull String parseTags(@NotNull String input) {
         return Arrays
             .stream(input.split("\n"))
             .map(MarkdownDocumentFormatter::parseTagsInline)
@@ -52,4 +58,7 @@ public class MarkdownDocumentFormatter {
         return result.toString();
     }
 
+    private static @NotNull String parseMarkdownSeparator(@NotNull String input) {
+        return input.replaceAll("\n", "\n\n");
+    }
 }

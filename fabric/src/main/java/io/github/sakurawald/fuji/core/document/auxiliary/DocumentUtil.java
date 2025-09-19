@@ -197,10 +197,6 @@ public class DocumentUtil {
             .toList();
     }
 
-    public static @NotNull String duplicateLineSeparatorCharacter(@NotNull String line) {
-        return line.replaceAll("\n", "\n\n");
-    }
-
     public static @NotNull Map<String, String> getDeclaredDocumentStringMap(@NotNull Class<?> rawTypeClass) {
         Map<String, String> declaredDocumentStringMap = new HashMap<>();
         for (Field field : rawTypeClass.getDeclaredFields()) {

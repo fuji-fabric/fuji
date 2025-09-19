@@ -27,7 +27,7 @@ public class ModuleOverviewDocumentBuilder extends DocumentBuilder {
             .flatMap(moduleInitializerClass -> DocumentUtil
                 .getClassDocumentString(null, moduleInitializerClass)).ifPresent(moduleClassDocument -> {
 
-                String moduleDocumentString = MarkdownDocumentFormatter.parseTags(moduleClassDocument);
+                String moduleDocumentString = MarkdownDocumentFormatter.parseDocumentString(moduleClassDocument);
                 documentBuilderContext.getDocumentBuilder()
                     .append("## Overview").append(System.lineSeparator())
                     .append(":::module").append(System.lineSeparator())

@@ -37,7 +37,7 @@ public class ModuleCommandsDocumentBuilder extends DocumentBuilder {
 
         @Nullable String commandDocumentString = Optional
             .ofNullable(commandDescriptor.document)
-            .map(MarkdownDocumentFormatter::parseTags)
+            .map(MarkdownDocumentFormatter::parseDocumentString)
             .orElse(null);
 
         documentBuilderContext

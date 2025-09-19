@@ -45,7 +45,7 @@ public class ModuleJobsDocumentBuilder extends DocumentBuilder {
         DocumentUtil
             .getClassDocumentString(null, jobClass)
             .ifPresent(jobDocumentString -> {
-                jobDocumentString = MarkdownDocumentFormatter.parseTags(jobDocumentString);
+                jobDocumentString = MarkdownDocumentFormatter.parseDocumentString(jobDocumentString);
 
                 documentBuilderContext
                     .getDocumentBuilder()
