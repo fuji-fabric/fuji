@@ -5,8 +5,8 @@ import com.google.gson.GsonBuilder;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
-import io.github.sakurawald.fuji.module.initializer.document.config.adapter.DocumentedTypeAdapterFactory;
 import io.github.sakurawald.fuji.module.initializer.document.compiler.DocumentCompiler;
+import io.github.sakurawald.fuji.module.initializer.document.config.adapter.DocumentedTypeAdapterFactory;
 import java.util.List;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -33,11 +33,11 @@ public class ModuleConfigurationsDocumentBuilder extends DocumentBuilder {
             documentBuilderContext
                 .getDocumentBuilder()
                 .append("""
-                    :::warning
-                    The JSON content is provided for documentation purposes only.
+                    <Admonition type="warning" icon="" title="">
+                    **The JSON content is provided for documentation purposes only.**
 
-                    It should not be copied directly into your configuration folder, as the document format is not valid JSON syntax.
-                    :::
+                    It should NOT be copied directly into your configuration folder, as the document format is not valid JSON syntax.
+                    </Admonition>
                     """);
 
             moduleConfigurationHandlers
