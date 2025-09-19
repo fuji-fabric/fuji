@@ -27,7 +27,7 @@ public class ModulePlaceholdersDocumentBuilder extends DocumentBuilder{
 
     private void build(@NotNull DocumentBuilderContext documentBuilderContext, StringDescriptor placeholder) {
         String placeholderDocumentString = placeholder.getDocumentString(null).trim();
-        placeholderDocumentString = MarkdownDocumentFormatter.compile(placeholderDocumentString);
+        placeholderDocumentString = MarkdownDocumentFormatter.parseTags(placeholderDocumentString);
 
         documentBuilderContext
             .getDocumentBuilder()

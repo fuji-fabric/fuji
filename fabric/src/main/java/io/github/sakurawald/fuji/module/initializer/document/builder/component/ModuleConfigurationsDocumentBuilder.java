@@ -59,7 +59,7 @@ public class ModuleConfigurationsDocumentBuilder extends DocumentBuilder {
         DocumentUtil
             .getClassDocumentString(null, configModelClass)
             .ifPresent(configModelClassDocumentString -> {
-                configModelClassDocumentString = MarkdownDocumentFormatter.compile(configModelClassDocumentString);
+                configModelClassDocumentString = MarkdownDocumentFormatter.parseTags(configModelClassDocumentString);
                 configModelClassDocumentString = DocumentUtil.duplicateLineSeparatorCharacter(configModelClassDocumentString);
 
                 documentBuilderContext

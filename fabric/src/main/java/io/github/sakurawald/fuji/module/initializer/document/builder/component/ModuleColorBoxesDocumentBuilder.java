@@ -23,7 +23,7 @@ public class ModuleColorBoxesDocumentBuilder extends DocumentBuilder {
     }
 
     private void buildColorBox(@NotNull DocumentBuilderContext documentBuilderContext, @NotNull ColorBox colorBox) {
-        String colorBoxDocumentString = MarkdownDocumentFormatter.compile(colorBox.value());
+        String colorBoxDocumentString = MarkdownDocumentFormatter.parseTags(colorBox.value());
         documentBuilderContext
             .getDocumentBuilder()
             .append(":::%s".formatted(toAdmonitionName(colorBox))).append(System.lineSeparator()).append(System.lineSeparator())

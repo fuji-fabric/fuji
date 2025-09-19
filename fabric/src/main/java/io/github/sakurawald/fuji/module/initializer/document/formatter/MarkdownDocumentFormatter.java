@@ -9,14 +9,14 @@ import org.jetbrains.annotations.NotNull;
 
 public class MarkdownDocumentFormatter {
 
-    public static @NotNull String compile(@NotNull String input) {
+    public static @NotNull String parseTags(@NotNull String input) {
         return Arrays
             .stream(input.split("\n"))
-            .map(MarkdownDocumentFormatter::compileLine)
+            .map(MarkdownDocumentFormatter::parseTagsInline)
             .collect(Collectors.joining("\n"));
     }
 
-    private static @NotNull String compileLine(@NotNull String input) {
+    private static @NotNull String parseTagsInline(@NotNull String input) {
         String output = input;
 
         /* Stripe the named color tags. */
