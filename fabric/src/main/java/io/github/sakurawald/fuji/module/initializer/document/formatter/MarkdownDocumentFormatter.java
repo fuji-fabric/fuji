@@ -13,6 +13,7 @@ public class MarkdownDocumentFormatter {
         String result = parseTags(documentString);
         result = MarkdownDocumentFormatter.parseMarkdownSeparator(result);
         result = indentTwoSpacesPerLine(result);
+        result = result + "\n\n";
         return result;
     }
 
