@@ -17,6 +17,7 @@
 - https://github.com/Patbox/PredicateAPI/blob/1.21.2/BUILTIN.md
 - https://jenkins.liteloader.com/view/Other/job/Mixin/javadoc/overview-summary.html
 - https://errorprone.info/docs/refaster
+- https://docusaurus.community/knowledge
 
 # Server-side only.
 - https://vanillatweaks.net/picker/datapacks/
