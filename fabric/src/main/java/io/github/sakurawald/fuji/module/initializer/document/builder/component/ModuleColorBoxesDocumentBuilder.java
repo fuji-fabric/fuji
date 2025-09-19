@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.document.builder.component;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.module.initializer.document.builder.context.DocumentBuilderContext;
-import io.github.sakurawald.fuji.module.initializer.document.compiler.DocumentCompiler;
+import io.github.sakurawald.fuji.module.initializer.document.formatter.MarkdownDocumentFormatter;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +23,7 @@ public class ModuleColorBoxesDocumentBuilder extends DocumentBuilder {
     }
 
     private void buildColorBox(@NotNull DocumentBuilderContext documentBuilderContext, @NotNull ColorBox colorBox) {
-        String colorBoxDocumentString = DocumentCompiler.compile(colorBox.value());
+        String colorBoxDocumentString = MarkdownDocumentFormatter.compile(colorBox.value());
         documentBuilderContext
             .getDocumentBuilder()
             .append(":::%s".formatted(toAdmonitionName(colorBox))).append(System.lineSeparator()).append(System.lineSeparator())

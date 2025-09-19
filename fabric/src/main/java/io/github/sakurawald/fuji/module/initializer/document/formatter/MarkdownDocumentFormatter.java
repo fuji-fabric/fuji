@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.initializer.document.compiler;
+package io.github.sakurawald.fuji.module.initializer.document.formatter;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import java.util.Arrays;
@@ -7,12 +7,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 
-public class DocumentCompiler {
+public class MarkdownDocumentFormatter {
 
     public static @NotNull String compile(@NotNull String input) {
         return Arrays
             .stream(input.split("\n"))
-            .map(DocumentCompiler::compileLine)
+            .map(MarkdownDocumentFormatter::compileLine)
             .collect(Collectors.joining("\n"));
     }
 

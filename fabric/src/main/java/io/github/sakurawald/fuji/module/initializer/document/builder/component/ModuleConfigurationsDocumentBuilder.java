@@ -6,7 +6,7 @@ import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandl
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.module.initializer.document.builder.context.DocumentBuilderContext;
-import io.github.sakurawald.fuji.module.initializer.document.compiler.DocumentCompiler;
+import io.github.sakurawald.fuji.module.initializer.document.formatter.MarkdownDocumentFormatter;
 import io.github.sakurawald.fuji.module.initializer.document.config.adapter.DocumentedTypeAdapterFactory;
 import java.util.List;
 import lombok.Getter;
@@ -59,7 +59,7 @@ public class ModuleConfigurationsDocumentBuilder extends DocumentBuilder {
         DocumentUtil
             .getClassDocumentString(null, configModelClass)
             .ifPresent(configModelClassDocumentString -> {
-                configModelClassDocumentString = DocumentCompiler.compile(configModelClassDocumentString);
+                configModelClassDocumentString = MarkdownDocumentFormatter.compile(configModelClassDocumentString);
                 configModelClassDocumentString = DocumentUtil.duplicateLineSeparatorCharacter(configModelClassDocumentString);
 
                 documentBuilderContext

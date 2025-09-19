@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.document.builder.component;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModuleManager;
 import io.github.sakurawald.fuji.module.initializer.document.builder.context.DocumentBuilderContext;
-import io.github.sakurawald.fuji.module.initializer.document.compiler.DocumentCompiler;
+import io.github.sakurawald.fuji.module.initializer.document.formatter.MarkdownDocumentFormatter;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +27,7 @@ public class ModuleOverviewDocumentBuilder extends DocumentBuilder {
             .flatMap(moduleInitializerClass -> DocumentUtil
                 .getClassDocumentString(null, moduleInitializerClass)).ifPresent(moduleClassDocument -> {
 
-                String moduleDocumentString = DocumentCompiler.compile(moduleClassDocument);
+                String moduleDocumentString = MarkdownDocumentFormatter.compile(moduleClassDocument);
                 documentBuilderContext.getDocumentBuilder()
                     .append("## Overview").append(System.lineSeparator())
                     .append(":::module").append(System.lineSeparator())

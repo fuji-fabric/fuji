@@ -18,6 +18,7 @@ import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 public class MarkdownDocumentBuilder {
+
     public static final Path DOCUMENT_BUILD_DIR = Fuji
         .MOD_CONFIG_PATH
         .resolve("document");

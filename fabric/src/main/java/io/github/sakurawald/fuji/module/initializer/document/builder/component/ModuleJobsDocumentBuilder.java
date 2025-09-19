@@ -4,7 +4,7 @@ import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
 import io.github.sakurawald.fuji.core.document.auxiliary.DocumentUtil;
 import io.github.sakurawald.fuji.core.document.structure.JobDescriptor;
 import io.github.sakurawald.fuji.module.initializer.document.builder.context.DocumentBuilderContext;
-import io.github.sakurawald.fuji.module.initializer.document.compiler.DocumentCompiler;
+import io.github.sakurawald.fuji.module.initializer.document.formatter.MarkdownDocumentFormatter;
 import java.util.List;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -45,7 +45,7 @@ public class ModuleJobsDocumentBuilder extends DocumentBuilder {
         DocumentUtil
             .getClassDocumentString(null, jobClass)
             .ifPresent(jobDocumentString -> {
-                jobDocumentString = DocumentCompiler.compile(jobDocumentString);
+                jobDocumentString = MarkdownDocumentFormatter.compile(jobDocumentString);
 
                 documentBuilderContext
                     .getDocumentBuilder()

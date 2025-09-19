@@ -3,7 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.document.builder.component;
 import io.github.sakurawald.fuji.core.document.descriptor.PlaceholderDescriptor;
 import io.github.sakurawald.fuji.core.document.descriptor.StringDescriptor;
 import io.github.sakurawald.fuji.module.initializer.document.builder.context.DocumentBuilderContext;
-import io.github.sakurawald.fuji.module.initializer.document.compiler.DocumentCompiler;
+import io.github.sakurawald.fuji.module.initializer.document.formatter.MarkdownDocumentFormatter;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +27,7 @@ public class ModulePlaceholdersDocumentBuilder extends DocumentBuilder{
 
     private void build(@NotNull DocumentBuilderContext documentBuilderContext, StringDescriptor placeholder) {
         String placeholderDocumentString = placeholder.getDocumentString(null).trim();
-        placeholderDocumentString = DocumentCompiler.compile(placeholderDocumentString);
+        placeholderDocumentString = MarkdownDocumentFormatter.compile(placeholderDocumentString);
 
         documentBuilderContext
             .getDocumentBuilder()
