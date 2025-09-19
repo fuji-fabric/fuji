@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.document.builder;
 
 import io.github.sakurawald.fuji.Fuji;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import io.github.sakurawald.fuji.module.initializer.document.builder.component.ModuleArgumentTypeAdaptersDocumentBuilder;
 import io.github.sakurawald.fuji.module.initializer.document.builder.component.ModuleColorBoxesDocumentBuilder;
@@ -17,6 +18,16 @@ import java.nio.file.Path;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
+@TestCase(action = "Test the generated document files.", targets = {
+    "Check the heading levels, ensure the TOC is generated properly.",
+    "Check the `newline` and `indent`.",
+    "Check simple files: `afk.effect.md`.",
+    "Check the search function: `command_advice.md`",
+    "Check `ordered list` and `un-ordered list`: `rank.md`, `rtp.md`",
+    "Check the `indent` for a `multi-line list item`: `core.md`",
+    "Check complex files: `command_bundle.md`, `command_meta.IF.md`",
+    "Check tags escaping: `predicate.md`, `placeholder.md`"
+})
 public class MarkdownDocumentBuilder {
 
     public static final Path DOCUMENT_BUILD_DIR = Fuji
