@@ -12,6 +12,7 @@ public class MarkdownDocumentFormatter {
     public static @NotNull String parseDocumentString(@NotNull String documentString) {
         String result = parseTags(documentString);
         result = MarkdownDocumentFormatter.parseMarkdownSeparator(result);
+        result = indentTwoSpacesPerLine(result);
         return result;
     }
 
@@ -60,5 +61,17 @@ public class MarkdownDocumentFormatter {
 
     private static @NotNull String parseMarkdownSeparator(@NotNull String input) {
         return input.replaceAll("\n", "\n\n");
+    }
+
+    private static String indentTwoSpacesPerLine(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        }
+
+        // NOTE: Insert 2 leading space characters, to treat the continuation lines as a big line in one `tab item`.
+        return Arrays
+            .stream(input.split("\n", -1)) // Keep trailing empty lines
+            .map(line -> "  " + line)
+            .collect(Collectors.joining("\n"));
     }
 }
