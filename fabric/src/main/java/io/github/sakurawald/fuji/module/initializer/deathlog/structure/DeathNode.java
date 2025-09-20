@@ -103,7 +103,7 @@ public class DeathNode {
     private static void writeRemarkNode(@NotNull NbtCompound parent, @NotNull ServerPlayerEntity player) {
         String time = ChronosUtil.Formatter.getFormattedCurrentDate();
         String reason = player.getDamageTracker().getDeathMessage().getString();
-        String dimension = player.getWorld().getRegistryKey().getValue().toString();
+        String dimension = PlayerHelper.getServerWorld(player).getRegistryKey().getValue().toString();
         Vec3d position = player.getPos();
 
         NbtCompound remarkTag = new NbtCompound();

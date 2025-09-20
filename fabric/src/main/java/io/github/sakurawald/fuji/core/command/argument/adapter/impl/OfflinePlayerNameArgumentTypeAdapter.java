@@ -4,6 +4,7 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -36,7 +37,7 @@ public class OfflinePlayerNameArgumentTypeAdapter extends BaseArgumentTypeAdapte
 
         return PlayerHelper.Cache
             .getOfflineGameProfileByName(offlinePlayerName)
-            .map($gameProfile -> new OfflinePlayerName($gameProfile.getName()))
+            .map($gameProfile -> new OfflinePlayerName(AuthlibHelper.getName($gameProfile)))
             .orElseThrow(() -> {
                 TextHelper.sendTextByKey(context.getSource(), "player.unknown_player");
                 return new AbortCommandExecutionException();

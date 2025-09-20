@@ -1,5 +1,7 @@
 package io.github.sakurawald.fuji.core.structure;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
@@ -55,13 +57,15 @@ public class GlobalPos {
     }
 
     public static @NotNull GlobalPos of(@NotNull ServerPlayerEntity player) {
-        return new GlobalPos(RegistryHelper.getIdAsString(player.getWorld()), player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
+        ServerWorld serverWorld = PlayerHelper.getServerWorld(player);
+        return new GlobalPos(RegistryHelper.getIdAsString(serverWorld), player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
     }
 
     public static @NotNull GlobalPos of(@NotNull ServerCommandSource source) {
         Entity entity = source.getEntity();
         if (entity != null) {
-            return new GlobalPos(RegistryHelper.getIdAsString(entity.getWorld()), entity.getX(), entity.getY(), entity.getZ(), entity.getYaw(), entity.getPitch());
+            ServerWorld serverWorld = EntityHelper.getServerWorld(entity);
+            return new GlobalPos(RegistryHelper.getIdAsString(serverWorld), entity.getX(), entity.getY(), entity.getZ(), entity.getYaw(), entity.getPitch());
         }
 
         return new GlobalPos(RegistryHelper.getIdAsString(source.getWorld()), source.getPosition().getX(), source.getPosition().getY(), source.getPosition().getZ(), source.getRotation().x, source.getRotation().y);

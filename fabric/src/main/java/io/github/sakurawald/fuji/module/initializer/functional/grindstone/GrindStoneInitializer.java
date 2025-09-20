@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.functional.grindstone;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -19,7 +20,7 @@ public class GrindStoneInitializer extends ModuleInitializer {
     @CommandNode("grindstone")
     @CommandRequirement(level = 4)
     private static int $grindstone(@CommandSource @CommandTarget ServerPlayerEntity player) {
-        player.openHandledScreen(new SimpleNamedScreenHandlerFactory((i, inventory, p) -> new GrindstoneScreenHandler(i, inventory, ScreenHandlerContext.create(p.getWorld(), p.getBlockPos())) {
+        player.openHandledScreen(new SimpleNamedScreenHandlerFactory((i, inventory, p) -> new GrindstoneScreenHandler(i, inventory, ScreenHandlerContext.create(PlayerHelper.getServerWorld(p), p.getBlockPos())) {
             @Override
             public boolean canUse(PlayerEntity player) {
                 return true;

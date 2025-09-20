@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.view;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -28,7 +29,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 public class ViewInitializer extends ModuleInitializer {
 
     private static void checkSelfView(ServerPlayerEntity source, OfflinePlayerName target) {
-        if (source.getGameProfile().getName().equals(target.getValue())) {
+        String sourcePlayerName = PlayerHelper.getPlayerName(source);
+        String targetPlayerName = target.getValue();
+        if (sourcePlayerName.equals(targetPlayerName)) {
             TextHelper.sendTextByKey(source, "view.failed.self_view");
             throw new AbortCommandExecutionException();
         }

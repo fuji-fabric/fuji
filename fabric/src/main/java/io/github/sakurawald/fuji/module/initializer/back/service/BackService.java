@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.back.service;
 import io.github.sakurawald.fuji.core.auxiliary.ChronosUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.Dimension;
 import io.github.sakurawald.fuji.core.command.exception.AbortCommandExecutionException;
@@ -23,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 public class BackService {
 
     public static <R> R withLocationHistory(@NotNull ServerPlayerEntity player, Function<LocationHistory, R> function) {
-        String playerName = player.getGameProfile().getName();
+        String playerName = PlayerHelper.getPlayerName(player);
         BackInitializer.savedPositionConfig.model().player2history.computeIfAbsent(playerName, k -> new LocationHistory());
         LocationHistory locationHistory = BackInitializer.savedPositionConfig.model().player2history.get(playerName);
         return function.apply(locationHistory);
@@ -32,7 +33,7 @@ public class BackService {
     public static Integer listBackLocations(ServerCommandSource source, ServerPlayerEntity player) {
         return withLocationHistory(player, locationHistory -> {
             // Print header.
-            String targetPlayerName = player.getGameProfile().getName();
+            String targetPlayerName = PlayerHelper.getPlayerName(player);
             TextHelper.sendTextByKey(source, "back.list", targetPlayerName);
 
             // Print body.
@@ -85,7 +86,7 @@ public class BackService {
             // Should not save location inside ignore distance.
             GlobalPos latestLocation = latestEntry.getLocation();
             double ignoreDistance = BackInitializer.config.model().ignore_distance;
-            if (latestLocation.sameLevel(player.getWorld())
+            if (latestLocation.sameLevel(PlayerHelper.getServerWorld(player))
                 && player.getPos().squaredDistanceTo(latestLocation.getX(), latestLocation.getY(), latestLocation.getZ()) <= ignoreDistance * ignoreDistance
             ) {
                 return false;

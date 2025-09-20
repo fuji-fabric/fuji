@@ -381,7 +381,8 @@ public class PlaceholderInitializer extends ModuleInitializer {
         PlaceholderHelper.registerServerPlaceholder(descriptor, (server, args) -> {
             List<ServerPlayerEntity> playerList = PlayerHelper.Lookup.getOnlinePlayers();
             ServerPlayerEntity serverPlayerEntity = RandomUtil.drawList(playerList);
-            return Text.literal(serverPlayerEntity.getGameProfile().getName());
+            String playerName = PlayerHelper.getPlayerName(serverPlayerEntity);
+            return Text.literal(playerName);
         });
     }
 
@@ -428,7 +429,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
         Placeholders.register(Identifier.of(Fuji.MOD_ID, "rotate"), (ctx, args) -> {
             String namespace = "default";
             if (ctx.player() != null) {
-                namespace = ctx.player().getGameProfile().getName();
+                namespace = PlayerHelper.getPlayerName(ctx.player());
             }
 
             ROTATE_CACHE.putIfAbsent(namespace, new HashMap<>());

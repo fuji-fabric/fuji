@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.mixin.whitelist;
 
 import com.mojang.authlib.GameProfile;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import net.minecraft.server.Whitelist;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,7 +29,7 @@ public class UserWhiteListMixin {
      **/
     @Inject(method = "toString*", at = @At("HEAD"), cancellable = true)
     void ignoreUUIDAndOnlyComparePlayerName(@NotNull GameProfile gameProfile, @NotNull CallbackInfoReturnable<String> ci) {
-        String ret = gameProfile.getName();
+        String ret = AuthlibHelper.getName(gameProfile);
         ci.setReturnValue(ret);
     }
 }

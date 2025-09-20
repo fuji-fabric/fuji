@@ -5,6 +5,7 @@ import eu.pb4.common.economy.api.EconomyAccount;
 import eu.pb4.common.economy.api.EconomyCurrency;
 import eu.pb4.common.economy.api.EconomyProvider;
 import eu.pb4.common.economy.api.EconomyTransaction;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.module.initializer.economy.EconomyInitializer;
@@ -16,10 +17,11 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class CustomEconomyAccount implements EconomyAccount {
 
-    private final @NotNull GameProfile gameProfile;
+    private final @Nullable GameProfile gameProfile;
     private final @NotNull CustomEconomyCurrencyDescriptor currencyDescriptor;
 
     public CustomEconomyAccount(@NotNull GameProfile gameProfile, @NotNull CustomEconomyCurrencyDescriptor currencyDescriptor) {
@@ -35,7 +37,7 @@ public class CustomEconomyAccount implements EconomyAccount {
     @Override
     public UUID owner() {
         if (this.gameProfile != null) {
-            return this.gameProfile.getId();
+            return AuthlibHelper.getId(this.gameProfile);
         }
 
         // NOTE: This is a server/console account.

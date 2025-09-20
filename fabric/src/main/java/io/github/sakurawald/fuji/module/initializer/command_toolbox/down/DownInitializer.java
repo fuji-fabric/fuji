@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.command_toolbox.down;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -20,7 +21,7 @@ public class DownInitializer extends ModuleInitializer {
     @Document(id = 1757792247065L, value = "Teleport to the lowest of your current position.")
     @CommandNode("down")
     private static int $down(@CommandSource @CommandTarget ServerPlayerEntity player) {
-        World world = player.getWorld();
+        World world = PlayerHelper.getServerWorld(player);
         BlockPos blockPos = player.getBlockPos();
         Chunk chunk = world.getChunk(blockPos);
         int resultY = new PositionYDownTopSearcher()

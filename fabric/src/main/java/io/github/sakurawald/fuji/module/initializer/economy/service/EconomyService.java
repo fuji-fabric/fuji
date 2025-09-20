@@ -6,6 +6,7 @@ import eu.pb4.common.economy.api.EconomyAccount;
 import eu.pb4.common.economy.api.EconomyCurrency;
 import eu.pb4.common.economy.api.EconomyProvider;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -95,7 +96,7 @@ public class EconomyService {
             Optional<CustomEconomyAccountNode> customEconomyAccountNode = customEconomyCurrencyNode
                 .accounts
                 .stream()
-                .filter(it -> it.ownerName.equals(gameProfile.getName()))
+                .filter(it -> it.ownerName.equals(AuthlibHelper.getName(gameProfile)))
                 .findFirst();
 
             /* Make a new account node. */
@@ -163,7 +164,7 @@ public class EconomyService {
     public static @NotNull EconomyAccount tryGetEconomyAccount(@NotNull ServerCommandSource source, @NotNull GameProfile gameProfile, @NotNull Identifier currencyId) {
         Optional<EconomyAccount> economyAccount = getUserAccount(gameProfile, currencyId);
         if (economyAccount.isEmpty()) {
-            TextHelper.sendTextByKey(source, "economy.account.not_found", gameProfile.getName(), currencyId);
+            TextHelper.sendTextByKey(source, "economy.account.not_found", AuthlibHelper.getName(gameProfile), currencyId);
             throw new AbortCommandExecutionException();
         }
 

@@ -172,7 +172,8 @@ public class InspectingObject {
         Class<?> type = this.getObjectType();
 
         if (Map.class.isAssignableFrom(type)) return Items.MAP;
-        if (Iterable.class.isAssignableFrom(type)) return Items.CHAIN;
+        if (Iterable.class.isAssignableFrom(type)) return getIronChainItem();
+
         if (Boolean.class.isAssignableFrom(type)
             || boolean.class.isAssignableFrom(type)) {
             /* If the type of field is boolean, try to get its value. */
@@ -208,6 +209,14 @@ public class InspectingObject {
         }
 
         return Items.PINK_SHULKER_BOX;
+    }
+
+    private static @NotNull Item getIronChainItem() {
+        #if MC_VER < MC_1_21_9
+        return Items.CHAIN;
+        #elif MC_VER >= MC_1_21_9
+        return Items.IRON_CHAIN;
+        #endif
     }
 
     private void addPossibleValuesForEnumType(ServerPlayerEntity player, List<Text> lore) {

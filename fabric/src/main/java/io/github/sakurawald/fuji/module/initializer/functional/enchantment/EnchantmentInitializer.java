@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.functional.enchantment;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -22,7 +23,7 @@ public class EnchantmentInitializer extends ModuleInitializer {
     @CommandNode("enchantment")
     @CommandRequirement(level = 4)
     private static int $enchantment(@CommandSource @CommandTarget ServerPlayerEntity player) {
-        player.openHandledScreen(new SimpleNamedScreenHandlerFactory((i, inventory, p) -> new MyEnchantmentScreenHandler(i, inventory, ScreenHandlerContext.create(p.getWorld(), p.getBlockPos())) {
+        player.openHandledScreen(new SimpleNamedScreenHandlerFactory((i, inventory, p) -> new MyEnchantmentScreenHandler(i, inventory, ScreenHandlerContext.create(PlayerHelper.getServerWorld(p), p.getBlockPos())) {
         }, Text.translatable("container.enchant")));
         return CommandHelper.Return.SUCCESS;
     }

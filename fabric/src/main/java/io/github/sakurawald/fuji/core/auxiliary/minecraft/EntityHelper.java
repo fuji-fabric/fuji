@@ -5,7 +5,6 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,16 +14,16 @@ public class EntityHelper {
         #if MC_VER <= MC_1_21
         entity.kill();
         #elif MC_VER > MC_1_21
-        entity.kill((ServerWorld) entity.getWorld());
+        entity.kill(EntityHelper.getServerWorld(entity));
         #endif
     }
 
-    public static ServerWorld getServerWorld(Entity entity) {
+    public static ServerWorld getServerWorld(@NotNull Entity entity) {
+        #if MC_VER < MC_1_21_9
         return (ServerWorld) entity.getWorld();
-    }
-
-    public static MinecraftServer getMinecraftServer(Entity entity) {
-        return entity.getServer();
+        #elif MC_VER >= MC_1_21_9
+        return (ServerWorld) entity.getEntityWorld();
+        #endif
     }
 
     public static boolean isLeashed(Entity entity) {
@@ -109,5 +108,13 @@ public class EntityHelper {
 
     public static int getAge(Entity entity) {
         return entity.age;
+    }
+
+    public static void rideEntity(@NotNull Entity passengerEntity, @NotNull Entity vehicleEntity) {
+        #if MC_VER < MC_1_21_9
+        passengerEntity.startRiding(vehicleEntity, true);
+        #elif MC_VER >= MC_1_21_9
+        passengerEntity.startRiding(vehicleEntity, true, false);
+        #endif
     }
 }

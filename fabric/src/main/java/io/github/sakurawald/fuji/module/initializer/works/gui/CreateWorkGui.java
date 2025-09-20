@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.works.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.gui.component.gui.InputSignGui;
@@ -21,6 +22,7 @@ public class CreateWorkGui extends InputSignGui {
         super(player, TextHelper.getTextByKey(player, "works.work.add.prompt.input.name"));
     }
 
+    @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
     @Override
     public void onClose() {
         /* input name */
@@ -40,7 +42,7 @@ public class CreateWorkGui extends InputSignGui {
             // add
             worksHandler.model().works.add(0, new NonProductionWork(player, name));
             TextHelper.sendTextByKey(player, "works.work.add.done");
-            TextHelper.sendBroadcastByKey("works.work.add.broadcast", player.getGameProfile().getName(), name);
+            TextHelper.sendBroadcastByKey("works.work.add.broadcast", PlayerHelper.getPlayerName(player), name);
             selectWorkTypeGui.close();
         }));
 
@@ -49,7 +51,7 @@ public class CreateWorkGui extends InputSignGui {
             ProductionWork work = new ProductionWork(player, name);
             worksHandler.model().works.add(0, work);
             TextHelper.sendTextByKey(player, "works.work.add.done");
-            TextHelper.sendBroadcastByKey("works.work.add.broadcast", player.getGameProfile().getName(), name);
+            TextHelper.sendBroadcastByKey("works.work.add.broadcast", PlayerHelper.getPlayerName(player), name);
             selectWorkTypeGui.close();
 
             // input sample distance

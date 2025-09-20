@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.economy.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.gui.component.gui.PagedGui;
@@ -40,9 +41,10 @@ public class BalanceTopGui extends PagedGui<GameProfileAndEconomyAccount> {
         List<Text> lore = new ArrayList<>();
         lore.add(TextHelper.getTextByKey(getPlayer(), "economy.balance", TextHelper.Operators.getString(entity.economyAccount.formattedBalance())));
 
+        String name = AuthlibHelper.getName(entity.gameProfile);
         GuiElementBuilder builder = GuiHelper.Button
             .makeLuckyBlockButton()
-            .setName(Text.literal(entity.gameProfile.getName()))
+            .setName(Text.literal(name))
             .setLore(lore);
 
         return builder.build();

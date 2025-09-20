@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.queue;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.document.descriptor.PermissionDescriptor;
@@ -22,7 +23,7 @@ public class QueueInitializer extends ModuleInitializer {
 
     @EventConsumer(injectorPriority = EventConsumer.HIGHEST)
     private static void consumeBypassPlayerLimitEvent(BypassPlayerLimitEvent event) {
-        UUID id = event.getGameProfile().getId();
+        @NotNull UUID id = AuthlibHelper.getId(event.getGameProfile());
         @NotNull Tristate permissionResult = LuckpermsHelper.getPermission(id, BYPASS_PLAYER_LIMIT_PERMISSION);
         if (!permissionResult.equals(Tristate.UNDEFINED)) {
             event.setCanBypass(permissionResult.asBoolean());

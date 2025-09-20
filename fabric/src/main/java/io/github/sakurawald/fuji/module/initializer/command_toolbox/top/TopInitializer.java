@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.command_toolbox.top;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
@@ -20,7 +21,7 @@ public class TopInitializer extends ModuleInitializer {
     @Document(id = 1751825123433L, value = "Teleport to the top of your current position.")
     @CommandNode("top")
     private static int $top(@CommandSource @CommandTarget ServerPlayerEntity player) {
-        World world = player.getWorld();
+        World world = PlayerHelper.getServerWorld(player);
         BlockPos blockPos = player.getBlockPos();
         Chunk chunk = world.getChunk(blockPos);
         int resultY = new PositionYTopDownSearcher()

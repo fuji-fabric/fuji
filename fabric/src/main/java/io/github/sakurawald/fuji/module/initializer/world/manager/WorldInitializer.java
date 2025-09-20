@@ -544,7 +544,8 @@ public class WorldInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     private static int $who(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {
         String playerName = PlayerHelper.getPlayerName(player);
-        String locationDimensionId = RegistryHelper.getIdAsString(player.getWorld());
+        ServerWorld serverWorld = PlayerHelper.getServerWorld(player);
+        String locationDimensionId = RegistryHelper.getIdAsString(serverWorld);
         TextHelper.sendTextByKey(source, "world.who.player", playerName, locationDimensionId);
         return CommandHelper.Return.SUCCESS;
     }

@@ -34,7 +34,10 @@ public class ListWorksGui extends CrudPagedGui<Work> {
             GuiHelper.Placer.setSlotInLastLine(this, 5, GuiHelper.Button
                 .makeLetterAButton()
                 .setName(TextHelper.getTextByKey(player, "works.list.my_works"))
-                .setCallback(() -> linkCurrentGuiAndSearch(player.getGameProfile().getName()).open())
+                .setCallback(() -> {
+                    String keyword = PlayerHelper.getPlayerName(player);
+                    linkCurrentGuiAndSearch(keyword).open();
+                })
             );
         } else {
             GuiHelper.Placer.setSlotInLastLine(this, 5, GuiHelper.Button

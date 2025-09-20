@@ -72,7 +72,7 @@ public class TpaService {
             ServerPlayerEntity who = request.getTeleportWho();
             ServerPlayerEntity to = request.getTeleportTo();
             PlaySoundJob.scheduleJob(TpaInitializer.config.model().getMentionPlayer(), request.isTpahere() ? to : who);
-            new GlobalPos(to.getWorld(), to.getX(), to.getY(), to.getZ(), to.getYaw(), to.getPitch())
+            new GlobalPos(PlayerHelper.getServerWorld(to), to.getX(), to.getY(), to.getZ(), to.getYaw(), to.getPitch())
                 .teleport(who);
 
             TextHelper.sendText(request.getSender(), TpaMessenger.toSenderText$Accepted(request), TextHelper.Sender.TextLocation.ACTION_BAR);

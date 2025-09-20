@@ -7,6 +7,7 @@ import eu.pb4.common.economy.api.EconomyCurrency;
 import eu.pb4.common.economy.api.EconomyProvider;
 import io.github.sakurawald.fuji.Fuji;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -89,7 +90,7 @@ public class CustomEconomyProvider implements EconomyProvider {
                 .findFirst();
 
         if (first.isEmpty()) {
-            LogUtil.error("getAccount(): gameProfile = {}, pathOfCurrencyId = {}", gameProfile.getName(), pathOfCurrencyId);
+            LogUtil.error("getAccount(): gameProfile = {}, pathOfCurrencyId = {}", AuthlibHelper.getName(gameProfile), pathOfCurrencyId);
             throw new IllegalArgumentException("Failed to get account for specified account ID.");
         }
 

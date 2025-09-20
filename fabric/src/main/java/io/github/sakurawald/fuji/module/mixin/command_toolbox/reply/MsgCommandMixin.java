@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.mixin.command_toolbox.reply;
 
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.module.initializer.command_toolbox.reply.ReplyInitializer;
 import net.minecraft.network.message.SignedMessage;
 import net.minecraft.server.command.MessageCommand;
@@ -21,6 +22,10 @@ public class MsgCommandMixin {
         ServerPlayerEntity source = commandSourceStack.getPlayer();
         if (source == null) return;
 
-        collection.forEach(target -> ReplyInitializer.setReplyTarget(target.getGameProfile().getName(), source.getGameProfile().getName()));
+        collection.forEach(target -> {
+            String targetPlayerName = PlayerHelper.getPlayerName(target);
+            String sourcePlayerName = PlayerHelper.getPlayerName(source);
+            ReplyInitializer.setReplyTarget(targetPlayerName, sourcePlayerName);
+        });
     }
 }

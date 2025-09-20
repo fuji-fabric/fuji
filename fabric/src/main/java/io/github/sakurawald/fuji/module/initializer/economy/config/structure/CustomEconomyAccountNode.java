@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.economy.config.structure;
 
 import com.mojang.authlib.GameProfile;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ public class CustomEconomyAccountNode {
 
     public static CustomEconomyAccountNode make(GameProfile gameProfile, long balance) {
         CustomEconomyAccountNode customEconomyAccountNode = new CustomEconomyAccountNode();
-        customEconomyAccountNode.ownerName = gameProfile.getName();
+        customEconomyAccountNode.ownerName = AuthlibHelper.getName(gameProfile);
         customEconomyAccountNode.balance = balance;
         return customEconomyAccountNode;
     }

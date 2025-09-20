@@ -4,6 +4,7 @@ import eu.pb4.common.economy.api.EconomyAccount;
 import eu.pb4.common.economy.api.EconomyCurrency;
 import eu.pb4.common.economy.api.EconomyProvider;
 import eu.pb4.common.economy.api.EconomyTransaction;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
@@ -184,7 +185,7 @@ public class EconomyInitializer extends ModuleInitializer {
         List<GameProfileAndEconomyAccount> entities = EconomyService.makeBalanceTopEntities(player, currencyId.getValue());
         PagedMessageText pagedMessageText = PagedMessageText.makePagedMessageText(player, entities, EconomyService.getBalanceTopPageSize(), (entity, index, pageBuilder) -> {
             int numbering = index + 1;
-            String playerName = entity.getGameProfile().getName();
+            String playerName = AuthlibHelper.getName(entity.getGameProfile());
             String balanceString = TextHelper.Operators.getString(entity.economyAccount.formattedBalance());
             pageBuilder.append(TextHelper.getTextByKey(player, "economy.balance.top.entry", numbering, playerName, balanceString));
         });

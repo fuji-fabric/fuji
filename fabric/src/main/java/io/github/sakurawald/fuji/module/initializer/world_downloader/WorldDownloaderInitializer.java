@@ -4,6 +4,7 @@ import com.google.common.collect.EvictingQueue;
 import com.sun.net.httpserver.HttpServer;
 import io.github.sakurawald.fuji.core.auxiliary.ExceptionUtil;
 import io.github.sakurawald.fuji.core.auxiliary.RandomUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.IOUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
@@ -96,7 +97,7 @@ public class WorldDownloaderInitializer extends ModuleInitializer {
 
         /* Make a new download context. */
         File file = compressRegionFile(player);
-        TextHelper.sendBroadcastByKey("world_downloader.request", player.getGameProfile().getName(), file.length() / BYTE_TO_MEGABYTE);
+        TextHelper.sendBroadcastByKey("world_downloader.request", PlayerHelper.getPlayerName(player), file.length() / BYTE_TO_MEGABYTE);
 
         httpServer.createContext(path, new FileDownloadHandler(file, config.model().bytes_per_second_limit));
         TextHelper.sendTextByKey(player, "world_downloader.response", url);

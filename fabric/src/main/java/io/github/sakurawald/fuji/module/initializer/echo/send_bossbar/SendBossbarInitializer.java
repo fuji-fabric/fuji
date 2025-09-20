@@ -1,10 +1,12 @@
 package io.github.sakurawald.fuji.module.initializer.echo.send_bossbar;
 
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
+import io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarManager;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.command.argument.wrapper.StepType;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.StringList;
@@ -12,7 +14,6 @@ import io.github.sakurawald.fuji.core.command.executor.CommandExecutor;
 import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommandSource;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
-import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarTicket;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.echo.send_bossbar.structure.SendBossbarTicket;
@@ -62,12 +63,12 @@ public class SendBossbarInitializer extends ModuleInitializer {
             CommandExecutor.executeBatch(extendedCommandSource, $commandList.getValue());
 
             if ($notifyMeOnComplete) {
-                TextHelper.sendTextByKey(source, "echo.send_bossbar.notify", player.getGameProfile().getName(), $commandList.getValue());
+                TextHelper.sendTextByKey(source, "echo.send_bossbar.notify", PlayerHelper.getPlayerName(player), $commandList.getValue());
             }
         });
 
         /* Submit the ticket. */
-        Managers.getBossBarManager().addTicket(bossBarTicket);
+        BossBarManager.addTicket(bossBarTicket);
 
         return CommandHelper.Return.SUCCESS;
     }

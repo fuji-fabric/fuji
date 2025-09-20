@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.back;
 
 import com.mojang.brigadier.context.CommandContext;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.document.annotation.DocStringProvider;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -56,7 +57,8 @@ public class BackInitializer extends ModuleInitializer {
     private static int $clear(@CommandSource CommandContext<ServerCommandSource> source, @CommandTarget ServerPlayerEntity player) {
         return BackService.withLocationHistory(player, locationHistory -> {
             locationHistory.clearEntries();
-            TextHelper.sendTextByKey(source, "back.clear", player.getGameProfile().getName());
+            String playerName = PlayerHelper.getPlayerName(player);
+            TextHelper.sendTextByKey(source, "back.clear", playerName);
             return CommandHelper.Return.SUCCESS;
         });
     }

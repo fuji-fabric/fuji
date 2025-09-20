@@ -13,6 +13,7 @@ public class EndPortalBlockMixin {
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.module.initializer.gameplay.multi_obsidian_platform.MultiObsidianPlatformInitializer;
 import net.minecraft.block.EndPortalBlock;
 import net.minecraft.entity.Entity;
@@ -34,7 +35,7 @@ public class EndPortalBlockMixin {
 
     @Unique
     World getEntityCurrentDimension(@NotNull Entity entity) {
-        return entity.getWorld();
+        return EntityHelper.getServerWorld(entity);
     }
 
     @WrapOperation(method = "createTeleportTarget", at = @At(value = "FIELD", target = "Lnet/minecraft/server/world/ServerWorld;END_SPAWN_POS:Lnet/minecraft/util/math/BlockPos;"))

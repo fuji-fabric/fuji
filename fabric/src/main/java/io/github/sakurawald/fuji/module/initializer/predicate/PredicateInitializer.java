@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.predicate;
 
 import com.mojang.authlib.GameProfile;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.InventoryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
@@ -73,7 +74,7 @@ public class PredicateInitializer extends ModuleInitializer {
     @CommandNode("has-perm?")
     private static int $hasPerm(@CommandSource ServerCommandSource source, OfflineGameProfile player, GreedyString stringPermission) {
         GameProfile gameProfile = player.getValue();
-        boolean value = LuckpermsHelper.hasPermission(gameProfile.getId(), new PermissionDescriptor(true, stringPermission.getValue(), DocString.DUMMY_DOC_STRING_ID));
+        boolean value = LuckpermsHelper.hasPermission(AuthlibHelper.getId(gameProfile), new PermissionDescriptor(true, stringPermission.getValue(), DocString.DUMMY_DOC_STRING_ID));
         return CommandHelper.Return.returnBoolean(source, value);
     }
 

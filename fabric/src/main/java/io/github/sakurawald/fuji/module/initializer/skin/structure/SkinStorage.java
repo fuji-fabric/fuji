@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.skin.structure;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import io.github.sakurawald.fuji.module.initializer.skin.SkinInitializer;
 import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangSkinProvider;
 import io.github.sakurawald.fuji.module.initializer.skin.service.SkinService;
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 public class SkinStorage {
 
     private static SkinDataNode getDefaultSkinDataNode(@NotNull GameProfile gameProfile) {
-        String playerName = gameProfile.getName();
+        String playerName = AuthlibHelper.getName(gameProfile);
         LogUtil.info("There is not skin data for player {}. Creating new data now.", playerName);
 
         if (SkinInitializer.config.model().getDefaultSkin().isApplyDefaultSkinIfNoData()) {
@@ -38,7 +39,7 @@ public class SkinStorage {
     public static <T> T withSkinData(@NotNull GameProfile profile, @NotNull Function<SkinDataNode, T> function) {
         Optional<SkinDataNode> first = getSkinDataNodeList()
             .stream()
-            .filter(it -> it.getPlayerName().equals(profile.getName()))
+            .filter(it -> it.getPlayerName().equals(AuthlibHelper.getName(profile)))
             .findFirst();
 
         SkinDataNode $skinDataNode = first.orElseGet(() -> {

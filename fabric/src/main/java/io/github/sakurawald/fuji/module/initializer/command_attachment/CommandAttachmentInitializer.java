@@ -3,6 +3,7 @@ package io.github.sakurawald.fuji.module.initializer.command_attachment;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.UuidHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
@@ -192,7 +193,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
             InteractType $interactType = interactType.orElse(InteractType.ANY_CLICK);
             ExecuteAsType $executeAsType = executeAsType.orElse(ExecuteAsType.FAKE_OP);
             Integer $maxUseTimes = maxUseTimes.orElse(Integer.MAX_VALUE);
-            String createdIn = UuidHelper.toString(player.getWorld(), blockPos);
+            String createdIn = UuidHelper.toString(PlayerHelper.getServerWorld(player), blockPos);
             BlockCommandAttachmentEntry newEntry = new BlockCommandAttachmentEntry(createdIn, $command, $interactType, $executeAsType, $maxUseTimes, 0, false);
 
             // Add the entry.

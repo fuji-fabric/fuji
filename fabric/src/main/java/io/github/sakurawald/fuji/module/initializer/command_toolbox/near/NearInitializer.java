@@ -31,7 +31,7 @@ public class NearInitializer extends ModuleInitializer {
         List<String> result = PlayerHelper.Lookup.getOnlinePlayers()
             .stream()
             .filter(p -> !p.equals(player) && distance(player, p) <= sd)
-            .map(p -> p.getGameProfile().getName())
+            .map(PlayerHelper::getPlayerName)
             .toList();
 
         TextHelper.sendTextByKey(player, "near.format", result);

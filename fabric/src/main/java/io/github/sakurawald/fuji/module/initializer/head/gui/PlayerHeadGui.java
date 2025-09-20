@@ -4,9 +4,9 @@ import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.AnvilInputGui;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import io.github.sakurawald.fuji.core.auxiliary.AsyncUtil;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.EntityHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.GuiHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
 import io.github.sakurawald.fuji.module.initializer.head.HeadInitializer;
@@ -64,7 +64,7 @@ public class PlayerHeadGui extends AnvilInputGui {
                 /* Set skull textures if online game profile is valid. */
                 MojangProfileFetcher
                     .fetchOnlineGameProfile(this.getInput())
-                    .ifPresent(gameProfile -> builder.setSkullOwner(gameProfile, EntityHelper.getMinecraftServer(player)));
+                    .ifPresent(gameProfile -> builder.setSkullOwner(gameProfile, ServerHelper.getServer()));
 
                 /* Make head stack. */
                 if (HeadInitializer.config.model().economy_type != EconomyType.FREE) {

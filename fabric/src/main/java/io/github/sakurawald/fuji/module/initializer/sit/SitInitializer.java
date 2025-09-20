@@ -29,6 +29,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
@@ -77,7 +78,8 @@ public class SitInitializer extends ModuleInitializer {
         /* Check if we can sit at player's position. */
         // NOTE: Use the stepping block pos, so that we can always get the proper height, even if the player is standing on top of a slab/stair block.
         BlockPos steppingBlockPos = player.getSteppingPos();
-        BlockState steppingBlockState = player.getWorld().getBlockState(steppingBlockPos);
+        ServerWorld serverWorld = PlayerHelper.getServerWorld(player);
+        BlockState steppingBlockState = serverWorld.getBlockState(steppingBlockPos);
         if (!canSitNow(player)
             || steppingBlockState.isAir()
             || steppingBlockState.isLiquid()) {
@@ -87,9 +89,9 @@ public class SitInitializer extends ModuleInitializer {
 
         /* Spawn the chair entity, and let the player ride it. */
         Vec3d lookTarget = player.getPos().add(0.5, 0, 0.5);
-        Entity chairEntity = spawnChairEntity(player.getWorld(), steppingBlockPos, lookTarget);
+        Entity chairEntity = spawnChairEntity(serverWorld, steppingBlockPos, lookTarget);
         SPAWNED_CHAIR_ENTITY_LIST.add(chairEntity);
-        player.startRiding(chairEntity, true);
+        EntityHelper.rideEntity(player, chairEntity);
 
         return CommandHelper.Return.SUCCESS;
     }
@@ -272,7 +274,7 @@ public class SitInitializer extends ModuleInitializer {
         }
 
         // Ride the chair entity.
-        player.startRiding(chairEntity, true);
+        EntityHelper.rideEntity(player, chairEntity);
         event.getCallbackInfoReturnable().setReturnValue(ActionResult.SUCCESS);
     }
 
