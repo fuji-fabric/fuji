@@ -26,8 +26,9 @@ accessible method net/minecraft/server/network/ServerPlayNetworkHandler handleDe
 
 # view module
 accessible field net/minecraft/server/MinecraftServer saveHandler Lnet/minecraft/world/PlayerSaveHandler;
+accessible method net/minecraft/server/PlayerManager savePlayerData (Lnet/minecraft/server/network/ServerPlayerEntity;)V
 
-# works module + top chunks module
+# world helper
 accessible field net/minecraft/server/world/ServerChunkLoadingManager chunkHolders Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
 
 # nametag
@@ -61,7 +62,6 @@ accessible method net/minecraft/network/packet/s2c/play/EntityPassengersSetS2CPa
 
 # player
 accessible field net/minecraft/entity/LivingEntity equipment Lnet/minecraft/entity/EntityEquipment;
-accessible method net/minecraft/server/PlayerManager savePlayerData (Lnet/minecraft/server/network/ServerPlayerEntity;)V
 
 # common economy api
 accessible field net/minecraft/server/network/ServerPlayerEntity server Lnet/minecraft/server/MinecraftServer;

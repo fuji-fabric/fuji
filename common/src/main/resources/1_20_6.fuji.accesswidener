@@ -26,8 +26,9 @@ accessible method net/minecraft/server/network/ServerPlayNetworkHandler handleDe
 
 # view module
 accessible field net/minecraft/server/MinecraftServer saveHandler Lnet/minecraft/world/WorldSaveHandler;
+accessible method net/minecraft/server/PlayerManager savePlayerData (Lnet/minecraft/server/network/ServerPlayerEntity;)V
 
-# works module + top chunks module
+# world helper
 accessible field net/minecraft/server/world/ThreadedAnvilChunkStorage chunkHolders Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
 
 # nametag
@@ -58,9 +59,6 @@ accessible method net/minecraft/entity/decoration/DisplayEntity setBrightness (L
 accessible field net/minecraft/network/packet/s2c/play/EntityPassengersSetS2CPacket id I
 accessible field net/minecraft/network/packet/s2c/play/EntityPassengersSetS2CPacket passengerIds [I
 accessible method net/minecraft/network/packet/s2c/play/EntityPassengersSetS2CPacket <init> (Lnet/minecraft/network/PacketByteBuf;)V
-
-#player
-accessible method net/minecraft/server/PlayerManager savePlayerData (Lnet/minecraft/server/network/ServerPlayerEntity;)V
 
 # common economy api
 accessible field net/minecraft/server/network/ServerPlayerEntity server Lnet/minecraft/server/MinecraftServer;
