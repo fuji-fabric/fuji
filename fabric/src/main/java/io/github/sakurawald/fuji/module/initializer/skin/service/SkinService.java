@@ -12,7 +12,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.mapper.GsonMapper;
 import io.github.sakurawald.fuji.module.initializer.skin.SkinInitializer;
-import io.github.sakurawald.fuji.module.initializer.skin.structure.PropertyWrapper;
+import io.github.sakurawald.fuji.core.config.mapper.wrapper.PropertyWrapper;
 import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinDataNode;
 import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinDescriptor;
 import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinStorage;
@@ -129,7 +129,7 @@ public class SkinService {
 
             /* Update the skin data. */
             SkinStorage.withSkinData(target, node -> {
-                node.setSkinProperty(PropertyWrapper.from(skinProperty));
+                node.setSkinProperty(PropertyWrapper.fromVanillaType(skinProperty));
                 return null;
             });
 

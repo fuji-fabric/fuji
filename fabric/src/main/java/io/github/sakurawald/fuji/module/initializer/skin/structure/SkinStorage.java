@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
+import io.github.sakurawald.fuji.core.config.mapper.wrapper.PropertyWrapper;
 import io.github.sakurawald.fuji.module.initializer.skin.SkinInitializer;
 import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangSkinProvider;
 import io.github.sakurawald.fuji.module.initializer.skin.service.SkinService;
@@ -21,17 +22,17 @@ public class SkinStorage {
 
         if (SkinInitializer.config.model().getDefaultSkin().isApplyDefaultSkinIfNoData()) {
             LogUtil.info("Create the new skin data for player {}. (Skin = specified default skin)", playerName);
-            return new SkinDataNode(playerName, PropertyWrapper.from(SkinService.getPreferredDefaultSkin()));
+            return new SkinDataNode(playerName, PropertyWrapper.fromVanillaType(SkinService.getPreferredDefaultSkin()));
         } else {
             Optional<Property> mojangSkinProperty = MojangSkinProvider.fetchSkin(playerName);
             return mojangSkinProperty
                 .map($mojangSkinProperty -> {
                     LogUtil.info("Create the new skin data for player {}. (Skin = Mojang online skin)", playerName);
-                    return new SkinDataNode(playerName, PropertyWrapper.from($mojangSkinProperty));
+                    return new SkinDataNode(playerName, PropertyWrapper.fromVanillaType($mojangSkinProperty));
                 })
                 .orElseGet(() -> {
                     LogUtil.info("Create the new skin data for player {}. (Skin = Failed to fetch Mojang online skin, fallback to the default skin.)", playerName);
-                    return new SkinDataNode(playerName, PropertyWrapper.from(SkinService.getPreferredDefaultSkin()));
+                    return new SkinDataNode(playerName, PropertyWrapper.fromVanillaType(SkinService.getPreferredDefaultSkin()));
                 });
         }
     }

@@ -1,6 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.skin.structure;
 
-import com.mojang.authlib.properties.Property;
+import io.github.sakurawald.fuji.core.config.mapper.wrapper.PropertyWrapper;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import lombok.AllArgsConstructor;
 import lombok.Data;

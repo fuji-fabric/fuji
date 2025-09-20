@@ -1,15 +1,12 @@
 package io.github.sakurawald.fuji.core.manager.impl.cache.service;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.PropertyMap;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
 import io.github.sakurawald.fuji.core.config.mapper.wrapper.GameProfileWrapper;
 import io.github.sakurawald.fuji.core.manager.Managers;
 import io.github.sakurawald.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
 import java.time.Duration;
-import java.util.UUID;
 import java.util.function.Supplier;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
@@ -52,14 +49,9 @@ public class GameProfileCacheService {
                 return MojangProfileFetcher
                     .fetchOnlineGameProfile(onlinePlayerName)
                     .map(GameProfileWrapper::fromVanillaType)
-                    .orElseGet(() -> {
-                        UUID id = AuthlibHelper.getId(gameProfile);
-                        String name = AuthlibHelper.getName(gameProfile);
-                        PropertyMap properties = AuthlibHelper.getProperties(gameProfile);
-                        return new GameProfileWrapper(id, name, properties);
-                    });
+                    .orElseGet(() -> GameProfileWrapper.fromVanillaType(gameProfile));
             })
-            .orElseGet(() -> new GameProfileWrapper(null, onlinePlayerName));
+            .orElseGet(() -> GameProfileWrapper.of(null, onlinePlayerName));
     }
 
 }

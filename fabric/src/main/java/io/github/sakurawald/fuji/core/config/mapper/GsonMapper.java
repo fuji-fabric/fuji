@@ -10,12 +10,12 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
-import com.mojang.authlib.properties.PropertyMap;
 import io.github.sakurawald.fuji.core.config.annotation.NotNullEnumType;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.StringUtil;
 import io.github.sakurawald.fuji.core.config.mapper.adapter.BiMapTypeAdapterFactory;
 import io.github.sakurawald.fuji.core.config.mapper.adapter.CheckedEnumTypeValueAdapterFactory;
+import io.github.sakurawald.fuji.core.config.mapper.wrapper.PropertyMapWrapper;
 import io.github.sakurawald.fuji.core.config.migrator.version.IgnoreModVersionFieldStrategy;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import java.io.BufferedReader;
@@ -54,7 +54,7 @@ public class GsonMapper {
         // Register type adapters.
         .registerTypeAdapterFactory(new BiMapTypeAdapterFactory())
         .registerTypeAdapterFactory(new CheckedEnumTypeValueAdapterFactory())
-        .registerTypeAdapter(PropertyMap.class, new PropertyMap.Serializer())
+        .registerTypeAdapter(PropertyMapWrapper.class, new PropertyMapWrapper.PropertyMapWrapperAdapter())
         // Let's create it.
         .create();
 

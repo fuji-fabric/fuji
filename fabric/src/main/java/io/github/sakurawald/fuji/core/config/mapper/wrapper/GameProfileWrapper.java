@@ -17,27 +17,58 @@ import org.jetbrains.annotations.Nullable;
 public class GameProfileWrapper {
     @Nullable("For an invalid online player name, the UUID is null.") UUID id;
     @NotNull String name;
-    @NotNull PropertyMap properties = AuthlibHelper.makePropertyMap();
+    @NotNull PropertyMapWrapper properties;
 
-    public GameProfileWrapper(@Nullable UUID id, @NotNull String name) {
-        this.id = id;
-        this.name = name;
+    public static @NotNull GameProfileWrapper of(@Nullable UUID id, @NotNull String name) {
+        return new GameProfileWrapper(id, name, PropertyMapWrapper.fromVanillaType(AuthlibHelper.makePropertyMap()));
     }
 
-    public static @NotNull GameProfileWrapper fromVanillaType(@NotNull GameProfile gameProfile) {
-        GameProfileWrapper gameProfileWrapper = new GameProfileWrapper(AuthlibHelper.getId(gameProfile), AuthlibHelper.getName(gameProfile));
-        gameProfileWrapper.properties.putAll(AuthlibHelper.getProperties(gameProfile));
-        return gameProfileWrapper;
+    public static @NotNull GameProfileWrapper of(@Nullable UUID id, @NotNull String name, @NotNull PropertyMap properties) {
+        return new GameProfileWrapper(id, name, PropertyMapWrapper.fromVanillaType(properties));
     }
 
-    public Optional<GameProfile> toVanillaType() {
+    public Optional<GameProfile> toGameProfile() {
         if (this.id == null) {
             return Optional.empty();
         }
 
-        GameProfile gameProfile = new GameProfile(this.id, this.name);
-        PropertyMap properties = AuthlibHelper.getProperties(gameProfile);
-        properties.putAll(this.properties);
+        GameProfile gameProfile = makeGameProfile(this.id, this.name, this.properties.toVanillaType());
         return Optional.of(gameProfile);
     }
+
+    private static @NotNull GameProfile makeGameProfile(@NotNull UUID id, @NotNull String name, @NotNull PropertyMap properties) {
+        #if MC_VER < MC_1_21_9
+        GameProfile gameProfile = new GameProfile(id, name);
+        properties.putAll(properties);
+        return gameProfile;
+        #elif MC_VER >= MC_1_21_9
+        // NOTE: After MC 1.21.9, the PropertyMap becomes an immutable collection.
+        return new GameProfile(id, name, properties);
+        #endif
+    }
+
+    public static @NotNull GameProfileWrapper fromVanillaType(@NotNull GameProfile gameProfile) {
+        UUID id = AuthlibHelper.getId(gameProfile);
+        String name = AuthlibHelper.getName(gameProfile);
+        PropertyMap properties = AuthlibHelper.getProperties(gameProfile);
+        return GameProfileWrapper.of(id, name, properties);
+    }
+
+    #if MC_VER >= MC_1_21_9
+    public static @NotNull GameProfileWrapper fromVanillaType(@NotNull net.minecraft.server.PlayerConfigEntry playerConfigEntry) {
+        return GameProfileWrapper.of(playerConfigEntry.comp_4422(), playerConfigEntry.comp_4423());
+    }
+    #endif
+
+    #if MC_VER < MC_1_21_9
+    public Optional<GameProfile> toVanillaType() {
+        return toGameProfile();
+    }
+    #elif MC_VER >= MC_1_21_9
+    public Optional<net.minecraft.server.PlayerConfigEntry> toVanillaType() {
+        return toGameProfile()
+            .map(net.minecraft.server.PlayerConfigEntry::new);
+    }
+    #endif
+
 }

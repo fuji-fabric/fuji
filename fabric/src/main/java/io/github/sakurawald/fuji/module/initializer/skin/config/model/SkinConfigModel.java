@@ -2,7 +2,7 @@ package io.github.sakurawald.fuji.module.initializer.skin.config.model;
 
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 
-import io.github.sakurawald.fuji.module.initializer.skin.structure.PropertyWrapper;
+import io.github.sakurawald.fuji.core.config.mapper.wrapper.PropertyWrapper;
 import io.github.sakurawald.fuji.module.initializer.skin.structure.SkinDescriptor;
 import java.util.ArrayList;
 import java.util.List;

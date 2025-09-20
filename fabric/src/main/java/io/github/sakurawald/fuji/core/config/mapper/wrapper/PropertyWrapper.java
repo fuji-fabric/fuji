@@ -1,4 +1,4 @@
-package io.github.sakurawald.fuji.module.initializer.skin.structure;
+package io.github.sakurawald.fuji.core.config.mapper.wrapper;
 
 import com.mojang.authlib.properties.Property;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
@@ -15,7 +15,7 @@ public class PropertyWrapper {
     String value;
     String signature;
 
-    public static @NotNull PropertyWrapper from(@NotNull Property property) {
+    public static @NotNull PropertyWrapper fromVanillaType(@NotNull Property property) {
         String name = AuthlibHelper.getPropertyName(property);
         String value = AuthlibHelper.getPropertyValue(property);
         String signature = AuthlibHelper.getPropertySignature(property);
