@@ -32,6 +32,7 @@ accessible field net/minecraft/server/MinecraftServer saveHandler Lnet/minecraft
 
 # works module + top chunks module
 accessible method net/minecraft/server/world/ServerChunkLoadingManager entryIterator ()Ljava/lang/Iterable;
+accessible field net/minecraft/server/world/ServerChunkLoadingManager chunkHolders Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
 
 # nametag
 accessible field net/minecraft/entity/Entity vehicle Lnet/minecraft/entity/Entity;

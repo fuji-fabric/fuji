@@ -2,7 +2,6 @@ accessWidener v2 named
 
 # core
 accessible class net/minecraft/util/UserCache$Entry
-accessible method net/minecraft/util/UserCache$Entry getProfile ()Lcom/mojang/authlib/GameProfile;
 accessible field net/minecraft/util/UserCache byName Ljava/util/Map;
 accessible field net/minecraft/server/command/ServerCommandSource silent Z
 
@@ -10,14 +9,16 @@ accessible field net/minecraft/server/command/ServerCommandSource silent Z
 accessible field net/minecraft/registry/entry/RegistryEntry$Reference value Ljava/lang/Object;
 accessible field net/minecraft/server/MinecraftServer worlds Ljava/util/Map;
 accessible field net/minecraft/server/MinecraftServer session Lnet/minecraft/world/level/storage/LevelStorage$Session;
-accessible field net/minecraft/world/dimension/DimensionOptionsRegistryHolder comp_1014 Lnet/minecraft/registry/Registry;
 accessible field net/minecraft/world/GameRules$IntRule value I
 accessible field net/minecraft/world/GameRules RULE_TYPES Ljava/util/Map;
 accessible field net/minecraft/world/GameRules rules Ljava/util/Map;
 accessible method net/minecraft/world/border/WorldBorder$Properties <init> (DDDDIIDJD)V
 
+# chat module
+accessible class net/minecraft/registry/RegistryLoader$Loader
+
 # command warmup module
-#accessible method net/minecraft/server/network/ServerPlayNetworkHandler executeCommand (Ljava/lang/String;)V
+accessible method net/minecraft/server/network/ServerPlayNetworkHandler executeCommand (Ljava/lang/String;)V
 
 # temp ban module
 accessible method net/minecraft/server/ServerConfigList removeInvalidEntries ()V
@@ -26,10 +27,9 @@ accessible method net/minecraft/server/ServerConfigList removeInvalidEntries ()V
 accessible method net/minecraft/server/network/ServerPlayNetworkHandler handleDecoratedMessage (Lnet/minecraft/network/message/SignedMessage;)V
 
 # view module
-accessible field net/minecraft/server/MinecraftServer saveHandler Lnet/minecraft/world/WorldSaveHandler;
+accessible field net/minecraft/server/MinecraftServer saveHandler Lnet/minecraft/world/PlayerSaveHandler;
 
 # works module + top chunks module
-accessible method net/minecraft/server/world/ThreadedAnvilChunkStorage entryIterator ()Ljava/lang/Iterable;
 accessible field net/minecraft/server/world/ServerChunkLoadingManager chunkHolders Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
 
 # nametag
@@ -60,28 +60,23 @@ accessible method net/minecraft/entity/decoration/DisplayEntity setShadowStrengt
 accessible method net/minecraft/entity/decoration/DisplayEntity setViewRange (F)V
 accessible method net/minecraft/entity/decoration/DisplayEntity setBrightness (Lnet/minecraft/entity/decoration/Brightness;)V
 
-accessible field net/minecraft/network/packet/s2c/play/EntityPassengersSetS2CPacket id I
+accessible field net/minecraft/network/packet/s2c/play/EntityPassengersSetS2CPacket entityId I
 accessible field net/minecraft/network/packet/s2c/play/EntityPassengersSetS2CPacket passengerIds [I
 accessible method net/minecraft/network/packet/s2c/play/EntityPassengersSetS2CPacket <init> (Lnet/minecraft/network/PacketByteBuf;)V
 
 # command attachment module
 accessible class net/minecraft/server/network/ServerPlayNetworkHandler$Interaction
 
-# head module
-accessible field net/minecraft/entity/player/PlayerInventory combinedInventory Ljava/util/List;
-
-#player
+# player
+accessible field net/minecraft/entity/LivingEntity equipment Lnet/minecraft/entity/EntityEquipment;
 accessible method net/minecraft/server/PlayerManager savePlayerData (Lnet/minecraft/server/network/ServerPlayerEntity;)V
-
-# InventoryHelper
-accessible field net/minecraft/inventory/SimpleInventory stacks Lnet/minecraft/util/collection/DefaultedList;
 
 # common economy api
 accessible field net/minecraft/server/network/ServerPlayerEntity server Lnet/minecraft/server/MinecraftServer;
 
 # skin
-accessible field net/minecraft/server/world/ThreadedAnvilChunkStorage entityTrackers Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
-accessible class net/minecraft/server/world/ThreadedAnvilChunkStorage$EntityTracker
+accessible field net/minecraft/server/world/ServerChunkLoadingManager entityTrackers Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+accessible class net/minecraft/server/world/ServerChunkLoadingManager$EntityTracker
 
 # rtp
 accessible method net/minecraft/server/world/ServerChunkManager getChunkFuture (IILnet/minecraft/world/chunk/ChunkStatus;Z)Ljava/util/concurrent/CompletableFuture;
