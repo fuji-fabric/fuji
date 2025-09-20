@@ -31,10 +31,6 @@ import net.minecraft.advancement.AdvancementRequirements;
 #endif
 
 
-#if MC_VER >= MC_1_21_5
-import net.minecraft.util.AssetInfo;
-#endif
-
 public class ToastSender {
     private static final String IMPOSSIBLE = "impossible";
     private static final String DUMMY_RESOURCE_IMAGE_IDENTIFIER = "minecraft:textures/gui/advancements/backgrounds/end.png";
@@ -82,15 +78,15 @@ public class ToastSender {
 
     private static
     #if MC_VER < MC_1_21_9
-    AssetInfo
+    net.minecraft.util.AssetInfo
     #elif MC_VER >= MC_1_21_9
-    AssetInfo.TextureAssetInfo
+    net.minecraft.util.AssetInfo.TextureAssetInfo
     #endif
     makeDummyAssetInfo() {
         #if MC_VER < MC_1_21_9
-        return new AssetInfo(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER));
+        return new net.minecraft.util.AssetInfo(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER));
         #elif MC_VER >= MC_1_21_9
-        return new AssetInfo.TextureAssetInfo(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER));
+        return new net.minecraft.util.AssetInfo.TextureAssetInfo(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER));
         #endif
     }
 
