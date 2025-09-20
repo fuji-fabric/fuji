@@ -1,8 +1,8 @@
 package io.github.sakurawald.fuji.module.initializer.motd;
 
 import com.google.common.base.Preconditions;
-import com.mojang.authlib.GameProfile;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
+import io.github.sakurawald.fuji.core.config.mapper.wrapper.GameProfileWrapper;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
@@ -108,20 +108,28 @@ public class MotdInitializer extends ModuleInitializer {
         int deltaOnline = RandomUtil.getRandomNumber(configSection.getOnlinePlayers().getDeltaMin(), configSection.getOnlinePlayers().getDeltaMax());
         int online = original.online() + deltaOnline;
 
-        List<GameProfile> sample;
+        List<GameProfileWrapper> sample;
         if (configSection.getHoverText().isEnable()) {
             sample = configSection
                     .getHoverText()
                     .getLines()
                     .stream()
                     .map(line -> TextHelper.Parsers.parsePlaceholderString(null, line))
-                    .map(line -> new GameProfile(UUID.randomUUID(), line))
+                    .map(line -> GameProfileWrapper.of(UUID.randomUUID(), line))
                     .toList();
         } else {
-            sample = original.sample();
+            sample = original.sample()
+                .stream()
+                .map(GameProfileWrapper::fromVanillaType)
+                .toList();
         }
 
-        return new ServerMetadata.Players(max, online, sample);
+        var $sample = sample.stream()
+            .map(GameProfileWrapper::toVanillaType)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .toList();
+        return new ServerMetadata.Players(max, online, $sample);
     }
 
     public static @NotNull ServerMetadata.Version getEffectiveVersion(ServerMetadata.Version original) {
