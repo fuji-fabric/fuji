@@ -11,11 +11,11 @@ plugins {
 repositories {
     mavenCentral()
 
+    // For fabric-carpet mod.
+    maven {url 'https://masa.dy.fi/maven'}
+
     // For text-placeholder and sgui mod.
     maven { url "https://maven.nucleoid.xyz" }
-
-    // For fabric-carpet mod.
-    maven { url 'https://api.modrinth.com/maven' }
 }
 
 /* Configure fabric-loom plugin. */
@@ -61,7 +61,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
 
     /* For fabric-carpet mod */
-    modImplementation("maven.modrinth:carpet:${project.carpet_core_version}")
+    modImplementation("carpet:fabric-carpet:${project.carpet_core_version}")
 
     /* For json parser: gson */
     implementation "com.google.code.gson:gson:${project.gson_version}"
