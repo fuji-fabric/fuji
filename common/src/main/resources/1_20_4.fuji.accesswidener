@@ -16,9 +16,6 @@ accessible field net/minecraft/world/GameRules RULE_TYPES Ljava/util/Map;
 accessible field net/minecraft/world/GameRules rules Ljava/util/Map;
 accessible method net/minecraft/world/border/WorldBorder$Properties <init> (DDDDIIDJD)V
 
-# command warmup module
-#accessible method net/minecraft/server/network/ServerPlayNetworkHandler executeCommand (Ljava/lang/String;)V
-
 # temp ban module
 accessible method net/minecraft/server/ServerConfigList removeInvalidEntries ()V
 

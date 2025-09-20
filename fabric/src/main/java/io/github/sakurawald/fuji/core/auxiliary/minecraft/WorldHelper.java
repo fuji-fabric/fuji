@@ -24,7 +24,6 @@ import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldProperties;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.DimensionTypes;
@@ -214,7 +213,7 @@ public class WorldHelper {
             return Optional
                 .ofNullable(player.getRespawn())
                 .map(respawn -> {
-                    WorldProperties.SpawnPoint spawnPoint = respawn.comp_4913();
+                    net.minecraft.world.WorldProperties.SpawnPoint spawnPoint = respawn.comp_4913();
                     RegistryKey<World> dimension = spawnPoint.getDimension();
                     BlockPos blockPos = spawnPoint.getPos();
                     return Optional.of(GlobalPos.of(dimension, blockPos));

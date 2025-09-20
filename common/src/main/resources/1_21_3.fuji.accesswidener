@@ -18,9 +18,6 @@ accessible method net/minecraft/world/border/WorldBorder$Properties <init> (DDDD
 # chat module
 accessible class net/minecraft/registry/RegistryLoader$Loader
 
-# command warmup module
-accessible method net/minecraft/server/network/ServerPlayNetworkHandler executeCommand (Ljava/lang/String;)V
-
 # temp ban module
 accessible method net/minecraft/server/ServerConfigList removeInvalidEntries ()V
 
