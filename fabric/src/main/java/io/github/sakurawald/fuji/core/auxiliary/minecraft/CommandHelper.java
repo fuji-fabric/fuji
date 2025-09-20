@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.context.CommandContext;
@@ -189,6 +190,15 @@ public class CommandHelper {
             """)
         public static boolean isAdmin(@NotNull ServerCommandSource source) {
             return source.hasPermissionLevel(4);
+        }
+
+        public static int getPermissionLevel(@NotNull GameProfile gameProfile) {
+            #if MC_VER < MC_1_21_9
+            return ServerHelper.getServer().getPermissionLevel(gameProfile);
+            #elif MC_VER >= MC_1_21_9
+            var playerConfigEntry = AuthlibHelper.fromGameProfile(gameProfile);
+            return ServerHelper.getServer().getPermissionLevel(playerConfigEntry);
+            #endif
         }
     }
 

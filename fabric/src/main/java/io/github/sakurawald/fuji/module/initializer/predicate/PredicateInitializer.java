@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.InventoryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.OfflineGameProfile;
 import io.github.sakurawald.fuji.core.document.annotation.ColorBox;
@@ -82,7 +81,7 @@ public class PredicateInitializer extends ModuleInitializer {
     @CommandNode("has-level?")
     private static int $hasLevel(@CommandSource ServerCommandSource source, OfflineGameProfile player, int levelPermission) {
         GameProfile gameProfile = player.getValue();
-        boolean value = ServerHelper.getServer().getPermissionLevel(gameProfile) >= levelPermission;
+        boolean value = CommandHelper.Requirement.getPermissionLevel(gameProfile) >= levelPermission;
         return CommandHelper.Return.returnBoolean(source, value);
     }
 

@@ -76,6 +76,9 @@ public class AuthlibHelper {
         #endif
     }
 
+
+
+
     #if MC_VER >= MC_1_21_9
     public static @NotNull GameProfile toGameProfile(net.minecraft.server.PlayerConfigEntry playerConfigEntry) {
         String name = playerConfigEntry.comp_4423();
@@ -91,7 +94,6 @@ public class AuthlibHelper {
     public static @NotNull GameProfile toGameProfile(GameProfile gameProfile) {
         return gameProfile;
     }
-
 
     public static @NotNull GameProfile getGameProfile(@NotNull UserCache.Entry entry) {
         #if MC_VER < MC_1_21_9
