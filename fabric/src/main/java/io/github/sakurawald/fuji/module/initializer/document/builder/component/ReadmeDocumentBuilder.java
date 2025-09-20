@@ -15,7 +15,7 @@ public class ReadmeDocumentBuilder extends DocumentBuilder {
 
                 # README
 
-                :::tip
+                :::tip[Tip]
                 ## How to Use This Document
 
                 This document is divided into two main sections:

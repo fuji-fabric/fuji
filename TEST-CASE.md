@@ -259,8 +259,8 @@
 - Target: Check the search function: `command_advice.md`
 - Target: Check `ordered list` and `un-ordered list`: `rank.md`, `rtp.md`
 - Target: Check the `indent` for a `multi-line list item`: `core.md`
-- Target: Check `tags escaping`: `predicate.md`, `placeholder.md`
 - Target: Check complex files: `command_bundle.md`, `command_meta.IF.md`
+- Target: Check tags escaping: `predicate.md`, `placeholder.md`
 
 [Test Case]
 - Module: echo.send_title
