@@ -16,6 +16,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import java.util.Set;
@@ -25,15 +26,15 @@ import java.util.EnumSet;
 @NoArgsConstructor
 @With
 public class GlobalPos {
-    String level;
+    @NotNull String level;
     double x;
     double y;
     double z;
     float yaw;
     float pitch;
 
-    public GlobalPos(String level, double x, double y, double z, float yaw, float pitch) {
-        this.level = level;
+    public GlobalPos(@NotNull String world, double x, double y, double z, float yaw, float pitch) {
+        this.level = world;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -41,8 +42,8 @@ public class GlobalPos {
         this.pitch = pitch;
     }
 
-    public GlobalPos(@NotNull World level, double x, double y, double z, float yaw, float pitch) {
-        this(RegistryHelper.getIdAsString(level), x, y, z, yaw, pitch);
+    public GlobalPos(@NotNull World world, double x, double y, double z, float yaw, float pitch) {
+        this(RegistryHelper.getIdAsString(world), x, y, z, yaw, pitch);
     }
 
     public List<Text> asLore(@NotNull ServerPlayerEntity player) {
@@ -54,6 +55,10 @@ public class GlobalPos {
             TextHelper.getTextByKey(player, "yaw", this.yaw),
             TextHelper.getTextByKey(player, "pitch", this.pitch)
         );
+    }
+
+    public static @NotNull GlobalPos of(@NotNull World world, @NotNull BlockPos blockPos) {
+        return new GlobalPos(RegistryHelper.getIdAsString(world), blockPos.getX(), blockPos.getY(), blockPos.getZ(), 0, 0);
     }
 
     public static @NotNull GlobalPos of(@NotNull ServerPlayerEntity player) {
@@ -69,6 +74,10 @@ public class GlobalPos {
         }
 
         return new GlobalPos(RegistryHelper.getIdAsString(source.getWorld()), source.getPosition().getX(), source.getPosition().getY(), source.getPosition().getZ(), source.getRotation().x, source.getRotation().y);
+    }
+
+    public @NotNull BlockPos toBlockPos() {
+        return new BlockPos((int) this.x, (int) this.y, (int) this.z);
     }
 
     public boolean sameLevel(@NotNull World level) {

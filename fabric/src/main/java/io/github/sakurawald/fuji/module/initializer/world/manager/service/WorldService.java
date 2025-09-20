@@ -9,7 +9,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.WorldHelper;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickStartEvent;
-import io.github.sakurawald.fuji.core.manager.Managers;
+import io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarManager;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.core.structure.Pair;
 import io.github.sakurawald.fuji.core.structure.TeleportTicket;
@@ -30,8 +30,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionOptions;
 import org.jetbrains.annotations.NotNull;
@@ -125,21 +123,16 @@ public class WorldService {
     }
 
     private static void evacuatePlayers(@NotNull ServerWorld dimension) {
-        ServerWorld safeDimension = dimension.getServer().getOverworld();
-        BlockPos safeBlockPos = safeDimension.getSpawnPos();
-
         List<ServerPlayerEntity> players = new ArrayList<>(dimension.getPlayers());
         for (ServerPlayerEntity player : players) {
             GlobalPos from = GlobalPos.of(player);
-            GlobalPos to = new GlobalPos(safeDimension, safeBlockPos.getX() + 0.5, safeBlockPos.getY() + 0.5, safeBlockPos.getZ() + 0.5, 0, 0);
+            GlobalPos to = WorldHelper.SpawnPos.getSafeServerSpawnPos();
 
-            BlockPos topPosition = safeDimension.getTopPosition(Heightmap.Type.MOTION_BLOCKING, player.getBlockPos());
-            to = to.withY(topPosition.getY());
-
-            TeleportTicket teleportTicket = TeleportTicket.makeVipTicket(player, from, to);
-            Managers.getBossBarManager().addTicket(teleportTicket);
+            TeleportTicket ticket = TeleportTicket.makeVipTicket(player, from, to);
+            BossBarManager.addTicket(ticket);
         }
     }
+
 
     private static void consumeDimensionDeletionTicket(@NotNull DimensionDeletionTicket ticket) {
         ServerWorld world = ticket.getWorld();

@@ -1,6 +1,8 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import com.google.common.collect.Iterables;
+import io.github.sakurawald.fuji.core.service.random_teleport.searcher.PositionYTopDownSearcher;
+import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import java.util.Collection;
 import java.util.Optional;
 import net.minecraft.entity.Entity;
@@ -141,6 +143,47 @@ public class WorldHelper {
             .getKey()
             .map(RegistryHelper::getIdAsString)
             .orElse("[UnknownBiome]");
+    }
+
+    public static @NotNull GlobalPos findSafeTopY(@NotNull World world, @NotNull BlockPos blockPos) {
+        Chunk chunk = world.getChunk(blockPos);
+        int resultY = new PositionYTopDownSearcher()
+            .search(chunk, blockPos.getX(), blockPos.getZ())
+            .orElseGet(blockPos::getY);
+
+        return GlobalPos
+            .of(world, blockPos)
+            .withY(resultY);
+    }
+
+    public static class SpawnPos {
+
+        public static @NotNull GlobalPos getServerSpawnPos() {
+            @NotNull ServerWorld overworld = ServerHelper.getServer().getOverworld();
+            @NotNull BlockPos spawnPos;
+
+            #if MC_VER < MC_1_21_9
+            spawnPos = overworld.getSpawnPos();
+            #elif MC_VER >= MC_1_21_9
+            spawnPos = overworld.getSpawnPoint().getPos();
+            #endif
+
+            return GlobalPos.of(overworld, spawnPos);
+        }
+
+        public static @NotNull GlobalPos getSafeServerSpawnPos() {
+            /* Get server spawn pos from properties file. */
+            GlobalPos serverSpawnPos = getServerSpawnPos();
+
+            /* Adjust the alignment. */
+            GlobalPos safeSpawnPos = new GlobalPos(serverSpawnPos.getLevel(), serverSpawnPos.getX() + 0.5, serverSpawnPos.getY() + 0.5, serverSpawnPos.getZ() + 0.5, 0, 0);
+
+            /* Find the top Y. */
+            @NotNull ServerWorld serverWorld = getWorldOrThrow(safeSpawnPos.getLevel());
+            @NotNull BlockPos blockPos = safeSpawnPos.toBlockPos();
+            safeSpawnPos = findSafeTopY(serverWorld, blockPos);
+            return safeSpawnPos;
+        }
     }
 
     public static class Formatter {
