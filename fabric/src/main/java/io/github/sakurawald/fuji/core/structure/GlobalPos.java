@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.With;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.s2c.play.PositionFlag;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -58,6 +59,10 @@ public class GlobalPos {
     }
 
     public static @NotNull GlobalPos of(@NotNull World world, @NotNull BlockPos blockPos) {
+        return new GlobalPos(RegistryHelper.getIdAsString(world), blockPos.getX(), blockPos.getY(), blockPos.getZ(), 0, 0);
+    }
+
+    public static @NotNull GlobalPos of(@NotNull RegistryKey<World> world, @NotNull BlockPos blockPos) {
         return new GlobalPos(RegistryHelper.getIdAsString(world), blockPos.getX(), blockPos.getY(), blockPos.getZ(), 0, 0);
     }
 
