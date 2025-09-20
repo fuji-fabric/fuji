@@ -299,13 +299,13 @@
 
 [Test Case]
 - Module: nametag
-- Action: **Pass through a nether portal.**
+- Action: **Test the functionality of `nametag` module.**
 - Target: The nametag entity should be removed in the old dimension.
 - Target: A new nametag entity should be created in the new dimension.
 - Target: A new nametag entity should be created after the use of `nether portal`
 - Target: A new nametag entity should be created after the use of `ender portal`
 - Target: A new nametag entity should be created after the use of `/player Steve spawn`
-- Target: A new nametag entity should be removed after the use of `/kill Steve`
+- Target: The old nametag entity should be removed after the use of `/kill Steve`
 - Target: A new nametag entity should be seen after mounting a `pig` entity.
 - Target: A new nametag entity should be seen after dis-mounting a `pig` entity.
 

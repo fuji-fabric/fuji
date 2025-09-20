@@ -76,7 +76,9 @@ public class AuthlibHelper {
 
     public static @NotNull PropertyMap makePropertyMap(@NotNull Multimap<String, Property> properties) {
         #if MC_VER < MC_1_21_9
-        return new PropertyMap();
+        PropertyMap propertyMap =  new PropertyMap();
+        propertyMap.putAll(properties);
+        return propertyMap;
         #elif MC_VER >= MC_1_21_9
         return new PropertyMap(properties);
         #endif
@@ -84,7 +86,7 @@ public class AuthlibHelper {
 
     public static @NotNull GameProfile getGameProfile(@NotNull UserCache.Entry entry) {
         #if MC_VER < MC_1_21_9
-        return entry.getProfile()
+        return entry.getProfile();
         #elif MC_VER >= MC_1_21_9
         return GameProfileWrapper.toGameProfile(entry.getPlayer());
         #endif

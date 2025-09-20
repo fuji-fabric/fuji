@@ -12,6 +12,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -48,7 +49,7 @@ public class PropertyMapWrapper {
             }
         }
 
-        return new PropertyMap(map);
+        return AuthlibHelper.makePropertyMap(map);
     }
 
 

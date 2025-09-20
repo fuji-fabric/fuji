@@ -21,7 +21,7 @@ public class PropertyMapMixin {
     private Multimap<String, Property> properties;
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    void makePropertyMapMutable(Multimap<String, Property> properties, CallbackInfo ci) {
+    void makePropertyMapMutable(CallbackInfo ci) {
         // NOTE: The PropertyMap becomes an immutable collection since MC 1.21.9
         this.properties = LinkedHashMultimap.create(properties);
     }

@@ -142,7 +142,11 @@ public class PlayerHelper {
                 String dimensionId = NbtHelper.Primitives.getString(playerData, DIMENSION_NBT_KEY).get();
                 setServerWorld(player, dimensionId);
             }
-            #elif MC_VER >= MC_1_21_6
+            #elif MC_VER >= MC_1_21_6 && MC_VER < MC_1_21_9
+            playerData
+                .getOptionalString(DIMENSION_NBT_KEY)
+                .ifPresent(dimensionId -> setServerWorld(player, dimensionId));
+            #elif MC_VER >= MC_1_21_9
             NbtHelper.Primitives
                 .getString(playerData, DIMENSION_NBT_KEY)
                 .ifPresent(dimensionId -> setServerWorld(player, dimensionId));

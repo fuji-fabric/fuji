@@ -22,7 +22,7 @@ public class BypassPlayerLimitEventMixin {
         method = "canBypassPlayerLimit",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/server/OperatorList;canBypassPlayerLimit(Lcom/mojang/authlib/GameProfile;)Z")
     )
-    boolean produceBypassPlayerLimitEvent(boolean original, GameProfile vanillaType)
+    boolean produceBypassPlayerLimitEvent(boolean original, com.mojang.authlib.GameProfile vanillaType)
     #elif MC_VER >= MC_1_21_9
     @ModifyExpressionValue(
         method = "canBypassPlayerLimit",

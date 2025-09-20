@@ -56,6 +56,10 @@ public class GameProfileWrapper {
     }
     #endif
 
+    public static @NotNull GameProfile toGameProfile(@NotNull GameProfile gameProfile) {
+        return gameProfile;
+    }
+
     public static @NotNull GameProfileWrapper fromVanillaType(@NotNull GameProfile gameProfile) {
         UUID id = AuthlibHelper.getId(gameProfile);
         String name = AuthlibHelper.getName(gameProfile);
