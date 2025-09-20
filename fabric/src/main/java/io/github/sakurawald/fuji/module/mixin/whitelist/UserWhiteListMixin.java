@@ -1,13 +1,13 @@
 package io.github.sakurawald.fuji.module.mixin.whitelist;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.authlib.GameProfile;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
+import io.github.sakurawald.fuji.core.config.mapper.wrapper.GameProfileWrapper;
 import net.minecraft.server.Whitelist;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Whitelist.class)
 public class UserWhiteListMixin {
@@ -27,9 +27,18 @@ public class UserWhiteListMixin {
      * @see Whitelist#toString(GameProfile)
      * @see net.minecraft.util.UserCache#add(GameProfile)
      **/
-    @Inject(method = "toString*", at = @At("HEAD"), cancellable = true)
-    void ignoreUUIDAndOnlyComparePlayerName(@NotNull GameProfile gameProfile, @NotNull CallbackInfoReturnable<String> ci) {
-        String ret = AuthlibHelper.getName(gameProfile);
-        ci.setReturnValue(ret);
+    #if MC_VER < MC_1_21_9
+    @ModifyReturnValue(method = "toString*", at = @At("RETURN"))
+    String ignoreUUIDAndOnlyComparePlayerName(String original, @Local(argsOnly = true) GameProfile vanillaType)
+    #elif MC_VER >= MC_1_21_9
+    @ModifyReturnValue(method = "toString*", at = @At("RETURN"))
+    String ignoreUUIDAndOnlyComparePlayerName(String original, @Local(argsOnly = true) net.minecraft.server.PlayerConfigEntry vanillaType)
+    #endif
+    {
+        return GameProfileWrapper
+            .fromVanillaType(vanillaType)
+            .toGameProfile()
+            .map(AuthlibHelper::getName)
+            .orElse(original);
     }
 }

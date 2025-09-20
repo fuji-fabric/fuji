@@ -36,6 +36,7 @@ public class GameProfileWrapper {
         return Optional.of(gameProfile);
     }
 
+
     private static @NotNull GameProfile makeGameProfile(@NotNull UUID id, @NotNull String name, @NotNull PropertyMap properties) {
         #if MC_VER < MC_1_21_9
         GameProfile gameProfile = new GameProfile(id, name);
@@ -46,6 +47,14 @@ public class GameProfileWrapper {
         return new GameProfile(id, name, properties);
         #endif
     }
+
+    #if MC_VER >= MC_1_21_9
+    public static @NotNull GameProfile toGameProfile(net.minecraft.server.PlayerConfigEntry playerConfigEntry) {
+        String name = playerConfigEntry.comp_4423();
+        UUID id = playerConfigEntry.comp_4422();
+        return new GameProfile(id, name);
+    }
+    #endif
 
     public static @NotNull GameProfileWrapper fromVanillaType(@NotNull GameProfile gameProfile) {
         UUID id = AuthlibHelper.getId(gameProfile);

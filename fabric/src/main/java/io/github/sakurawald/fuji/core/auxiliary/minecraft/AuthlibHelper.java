@@ -1,10 +1,12 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
 import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import io.github.sakurawald.fuji.core.config.mapper.wrapper.GameProfileWrapper;
 import java.util.UUID;
 import net.minecraft.util.UserCache;
 import org.jetbrains.annotations.NotNull;
@@ -69,37 +71,22 @@ public class AuthlibHelper {
     }
 
     public static @NotNull PropertyMap makePropertyMap() {
+        return makePropertyMap(LinkedHashMultimap.create());
+    }
+
+    public static @NotNull PropertyMap makePropertyMap(@NotNull Multimap<String, Property> properties) {
         #if MC_VER < MC_1_21_9
         return new PropertyMap();
         #elif MC_VER >= MC_1_21_9
-        return new PropertyMap(LinkedHashMultimap.create());
+        return new PropertyMap(properties);
         #endif
-    }
-
-
-
-
-    #if MC_VER >= MC_1_21_9
-    public static @NotNull GameProfile toGameProfile(net.minecraft.server.PlayerConfigEntry playerConfigEntry) {
-        String name = playerConfigEntry.comp_4423();
-        UUID id = playerConfigEntry.comp_4422();
-        return new GameProfile(id, name);
-    }
-
-    public static @NotNull net.minecraft.server.PlayerConfigEntry fromGameProfile(GameProfile gameProfile) {
-        return new net.minecraft.server.PlayerConfigEntry(gameProfile);
-    }
-    #endif
-
-    public static @NotNull GameProfile toGameProfile(GameProfile gameProfile) {
-        return gameProfile;
     }
 
     public static @NotNull GameProfile getGameProfile(@NotNull UserCache.Entry entry) {
         #if MC_VER < MC_1_21_9
         return entry.getProfile()
         #elif MC_VER >= MC_1_21_9
-        return AuthlibHelper.toGameProfile(entry.getPlayer());
+        return GameProfileWrapper.toGameProfile(entry.getPlayer());
         #endif
     }
 

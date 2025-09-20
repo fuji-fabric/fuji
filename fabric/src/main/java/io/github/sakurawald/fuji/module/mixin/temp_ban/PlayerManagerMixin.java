@@ -1,6 +1,5 @@
 package io.github.sakurawald.fuji.module.mixin.temp_ban;
 
-import com.mojang.authlib.GameProfile;
 import net.minecraft.server.BannedIpList;
 import net.minecraft.server.BannedPlayerList;
 import net.minecraft.server.PlayerManager;
@@ -10,8 +9,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.net.SocketAddress;
 
 @Mixin(PlayerManager.class)
 public abstract class PlayerManagerMixin {
@@ -24,7 +21,8 @@ public abstract class PlayerManagerMixin {
 
     // NOTE: The code is used to fix a bug that mojang didn't notice.
     @Inject(method = "checkCanJoin", at = @At(value = "HEAD"))
-    void removeInvalidTempBanEntries(SocketAddress socketAddress, GameProfile gameProfile, CallbackInfoReturnable<Text> cir) {
+    void removeInvalidTempBanEntries(CallbackInfoReturnable<Text> cir)
+    {
         getBannedProfiles().removeInvalidEntries();
         getBannedIps().removeInvalidEntries();
     }

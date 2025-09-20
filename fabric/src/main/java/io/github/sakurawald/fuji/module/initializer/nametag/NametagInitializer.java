@@ -52,13 +52,13 @@ import net.minecraft.server.network.ServerPlayerEntity;
     ◉ Turn off the `nametag entity` for online players.
     Issue: `/nametag toggle others @a false`
     """)
-@TestCase(action = "Pass through a nether portal.", targets = {
+@TestCase(action = "Test the functionality of `nametag` module.", targets = {
     "The nametag entity should be removed in the old dimension."
     , "A new nametag entity should be created in the new dimension."
     , "A new nametag entity should be created after the use of `nether portal`"
     , "A new nametag entity should be created after the use of `ender portal`"
     , "A new nametag entity should be created after the use of `/player Steve spawn`"
-    , "A new nametag entity should be removed after the use of `/kill Steve`"
+    , "The old nametag entity should be removed after the use of `/kill Steve`"
     , "A new nametag entity should be seen after mounting a `pig` entity."
     , "A new nametag entity should be seen after dis-mounting a `pig` entity."
 })

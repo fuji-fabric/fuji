@@ -28,7 +28,7 @@ public abstract class ServerLoginNetworkHandlerMixin {
     #if MC_VER <= MC_1_20_1
     @Inject(method = "acceptPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;checkCanJoin(Ljava/net/SocketAddress;Lcom/mojang/authlib/GameProfile;)Lnet/minecraft/text/Text;"), cancellable = true)
     #elif MC_VER > MC_1_20_1
-    @Inject(method = "tickVerify", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;checkCanJoin(Ljava/net/SocketAddress;Lcom/mojang/authlib/GameProfile;)Lnet/minecraft/text/Text;"), cancellable = true)
+    @Inject(method = "tickVerify", at = @At("HEAD"), cancellable = true)
     #endif
     public void postponeTheLoginUntilTheSkinFetchingIsComplete(@NotNull CallbackInfo ci) {
         // NOTE: A fake-player will not trigger this mixin function. Actually, a fake-player will not even trigger the login process.

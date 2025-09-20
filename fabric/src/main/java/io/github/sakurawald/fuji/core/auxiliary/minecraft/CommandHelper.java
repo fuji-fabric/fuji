@@ -15,6 +15,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor;
 import io.github.sakurawald.fuji.core.command.suggestion.CommandSuggestionOptimizer;
+import io.github.sakurawald.fuji.core.config.mapper.wrapper.GameProfileWrapper;
 import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -193,12 +194,11 @@ public class CommandHelper {
         }
 
         public static int getPermissionLevel(@NotNull GameProfile gameProfile) {
-            #if MC_VER < MC_1_21_9
-            return ServerHelper.getServer().getPermissionLevel(gameProfile);
-            #elif MC_VER >= MC_1_21_9
-            var playerConfigEntry = AuthlibHelper.fromGameProfile(gameProfile);
-            return ServerHelper.getServer().getPermissionLevel(playerConfigEntry);
-            #endif
+            var vanillaType = GameProfileWrapper
+                .fromVanillaType(gameProfile)
+                .toVanillaType()
+                .orElseThrow();
+            return ServerHelper.getServer().getPermissionLevel(vanillaType);
         }
     }
 

@@ -4,10 +4,12 @@ import com.google.common.net.InetAddresses;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.CommandHelper;
 import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
+import io.github.sakurawald.fuji.core.config.mapper.wrapper.GameProfileWrapper;
 import io.github.sakurawald.fuji.core.service.duration_parser.command.argument.wrapper.Duration;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GameProfileCollection;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
@@ -75,14 +77,16 @@ public class TempBanInitializer extends ModuleInitializer {
         PlayerManager playerManager = server.getPlayerManager();
         Date expire = DurationParser.parseIntoExpirationDate(expiry.getValue()).orElseThrow();
 
-        for (GameProfile gameProfile : collection.getValue()) {
+        for (GameProfile gameProfile : collection.getValue().stream().map(GameProfileWrapper::toGameProfile).toList()) {
             // Add.
-            BannedPlayerEntry bannedPlayerEntry = new BannedPlayerEntry(gameProfile, null, source.getName(), expire, reason.getValue());
+            GameProfileWrapper gameProfileWrapper = GameProfileWrapper.fromVanillaType(gameProfile);
+
+            BannedPlayerEntry bannedPlayerEntry = new BannedPlayerEntry(gameProfileWrapper.toVanillaType().orElseThrow(), null, source.getName(), expire, reason.getValue());
             playerManager.getUserBanList().add(bannedPlayerEntry);
-            source.sendFeedback(() -> Text.translatable("commands.ban.success", Text.literal(gameProfile.getName()), bannedPlayerEntry.getReason()), true);
+            source.sendFeedback(() -> Text.translatable("commands.ban.success", Text.literal(AuthlibHelper.getName(gameProfile)), bannedPlayerEntry.getReason()), true);
 
             // Kick.
-            ServerPlayerEntity serverPlayerEntity = playerManager.getPlayer(gameProfile.getId());
+            ServerPlayerEntity serverPlayerEntity = playerManager.getPlayer(AuthlibHelper.getId(gameProfile));
             if (serverPlayerEntity != null) {
                 serverPlayerEntity.networkHandler.disconnect(Text.translatable("multiplayer.disconnect.banned"));
             }
