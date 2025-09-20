@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.module.initializer.world.manager.structure.util;
 
+#if MC_VER < MC_1_21_9
 import net.minecraft.server.WorldGenerationProgressListener;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.ChunkStatus;
@@ -29,3 +30,8 @@ public class VoidWorldGenerationProgressListener implements WorldGenerationProgr
         // no-op
     }
 }
+#elif MC_VER >= MC_1_21_9
+@Deprecated
+public class VoidWorldGenerationProgressListener {}
+#endif
+

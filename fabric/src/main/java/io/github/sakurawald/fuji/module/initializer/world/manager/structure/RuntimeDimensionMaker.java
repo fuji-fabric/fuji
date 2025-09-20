@@ -44,7 +44,7 @@ public class RuntimeDimensionMaker {
 
         /* Make the dimension properties. */
         // NOTE: Here we just mirror the `SaveProperties` from `minecraft:overworld`.
-        RuntimeDimensionProperties worldProperties = new RuntimeDimensionProperties(server.getSaveProperties(), runtimeDimensionDescriptor);
+        RuntimeDimensionProperties worldProperties = makeWorldProperties(runtimeDimensionDescriptor);
 
         /* Make the dimension options. */
         @Nullable DimensionOptions dimensionOptions = makeDimensionOptions(runtimeDimensionDescriptor);
@@ -55,13 +55,20 @@ public class RuntimeDimensionMaker {
         /* Make the dimension instance. */
         Identifier dimensionIdentifier = RegistryHelper.makeIdentifierOrThrow(runtimeDimensionDescriptor.dimension);
         RegistryKey<World> worldRegistryKey = RegistryKey.of(RegistryKeys.WORLD, dimensionIdentifier);
+
         ServerWorld dimension = new RuntimeDimension(server,
             Util.getMainWorkerExecutor(),
             server.session,
             worldProperties,
             worldRegistryKey,
             dimensionOptions,
+
+            #if MC_VER < MC_1_21_9
             VoidWorldGenerationProgressListener.INSTANCE,
+            #elif MC_VER >= MC_1_21_9
+            // The parameter is removed.
+            #endif
+
             runtimeDimensionDescriptor.isDebugWorld(),
             BiomeAccess.hashSeed(runtimeDimensionDescriptor.seed),
             ImmutableList.of(),
@@ -73,6 +80,11 @@ public class RuntimeDimensionMaker {
 
         /* Return the dimension instance with the dimension options. */
         return new Pair<>(dimension, dimensionOptions);
+    }
+
+    private static @NotNull RuntimeDimensionProperties makeWorldProperties(@NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
+        MinecraftServer server = ServerHelper.getServer();
+        return new RuntimeDimensionProperties(server.getSaveProperties(), runtimeDimensionDescriptor);
     }
 
     private static @NotNull RandomSequencesState makeRandomSequenceState(@NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
