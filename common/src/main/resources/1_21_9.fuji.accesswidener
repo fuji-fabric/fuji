@@ -20,9 +20,6 @@ accessible class net/minecraft/registry/RegistryLoader$Loader
 # temp ban module
 accessible method net/minecraft/server/ServerConfigList removeInvalidEntries ()V
 
-# send-chat module
-accessible method net/minecraft/server/network/ServerPlayNetworkHandler handleDecoratedMessage (Lnet/minecraft/network/message/SignedMessage;)V
-
 # view module
 accessible field net/minecraft/server/MinecraftServer saveHandler Lnet/minecraft/world/PlayerSaveHandler;
 
