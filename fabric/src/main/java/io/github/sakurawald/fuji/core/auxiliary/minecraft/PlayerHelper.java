@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
@@ -30,7 +31,8 @@ public class PlayerHelper {
 
     @ForDeveloper("It's possible to generate invalid player name using `/player abc++ spawn` command.")
     public static String getPlayerName(@NotNull PlayerEntity player) {
-        return player.getGameProfile().getName();
+        @NotNull GameProfile gameProfile = player.getGameProfile();
+        return AuthlibHelper.getName(gameProfile);
     }
 
     public static void playSound(@NotNull ServerPlayerEntity player, @NotNull SoundEvent soundEvent, @NotNull SoundCategory soundCategory, float volume, float pitch) {
@@ -67,9 +69,15 @@ public class PlayerHelper {
     public static @NotNull ServerWorld getServerWorld(@NotNull ServerPlayerEntity player) {
         #if MC_VER <= MC_1_21_5
         return (ServerWorld) player.getWorld();
-        #elif MC_VER > MC_1_21_5
+        #elif MC_VER > MC_1_21_5 && MC_VER < MC_1_21_9
         return player.getWorld();
+        #elif MC_VER >= MC_1_21_9
+        return player.getEntityWorld();
         #endif
+    }
+
+    public static @NotNull ServerWorld getServerWorld(@NotNull PlayerEntity player) {
+        return getServerWorld((ServerPlayerEntity) player);
     }
 
     public static PlayerManager getPlayerManager() {
@@ -119,8 +127,10 @@ public class PlayerHelper {
         private static void applyPlayerData(
             #if MC_VER < MC_1_21_6
             @NotNull ServerPlayerEntity player, @Nullable net.minecraft.nbt.NbtCompound playerData
-            #elif MC_VER >= MC_1_21_6
+            #elif MC_VER >= MC_1_21_6 && MC_VER < MC_1_21_9
             @NotNull ServerPlayerEntity player, @Nullable net.minecraft.storage.ReadView playerData
+            #elif MC_VER >= MC_1_21_9
+            @NotNull ServerPlayerEntity player, @Nullable net.minecraft.nbt.NbtCompound playerData
             #endif
         ) {
             /* Do nothing if player data is null. */
@@ -133,10 +143,11 @@ public class PlayerHelper {
                 setServerWorld(player, dimensionId);
             }
             #elif MC_VER >= MC_1_21_6
-            playerData
-                .getOptionalString(DIMENSION_NBT_KEY)
+            NbtHelper.Primitives
+                .getString(playerData, DIMENSION_NBT_KEY)
                 .ifPresent(dimensionId -> setServerWorld(player, dimensionId));
             #endif
+
         }
 
         private static void setServerWorld(@NotNull ServerPlayerEntity player, @Nullable String dimensionId) {
@@ -166,8 +177,11 @@ public class PlayerHelper {
             #elif MC_VER > MC_1_20_4 && MC_VER < MC_1_21_6
             Optional<net.minecraft.nbt.NbtCompound> playerData = getPlayerManager().loadPlayerData($player);
             applyPlayerData($player, playerData.orElse(null));
-            #elif MC_VER >= MC_1_21_6
+            #elif MC_VER >= MC_1_21_6 && MC_VER < MC_1_21_9
             Optional<net.minecraft.storage.ReadView> playerData = getPlayerManager().loadPlayerData($player, net.minecraft.util.ErrorReporter.Impl.EMPTY);
+            applyPlayerData($player, playerData.orElse(null));
+            #elif MC_VER >= MC_1_21_9
+            Optional<NbtCompound> playerData = getPlayerManager().loadPlayerData($player.getPlayerConfigEntry());
             applyPlayerData($player, playerData.orElse(null));
             #endif
 
@@ -213,22 +227,31 @@ public class PlayerHelper {
 
     public static class Cache {
 
-        public static List<GameProfile> getOfflineGameProfiles() {
+        public static @NotNull List<GameProfile> getOfflineGameProfiles() {
             /* Get the user cache. */
-            UserCache userCache = ServerHelper.getServer().getUserCache();
-            if (userCache == null) return List.of();
+            return getUserCache()
+                .map($userCache -> {
+                    /* Make the list from user cache. */
+                    return $userCache.byName.values()
+                        .stream()
+                        .map(AuthlibHelper::getGameProfile)
+                        .toList();
+                })
+                .orElseGet(List::of);
+        }
 
-            /* Make the list from user cache. */
-            return userCache.byName.values()
-                .stream()
-                .map(UserCache.Entry::getProfile)
-                .toList();
+        public static Optional<UserCache> getUserCache() {
+            #if MC_VER < MC_1_21_9
+            return Optional.ofNullable(ServerHelper.getServer().getUserCache());
+            #elif MC_VER >= MC_1_21_9
+            return Optional.ofNullable((UserCache) ServerHelper.getServer().getApiServices().comp_4407());
+            #endif
         }
 
         public static @NotNull List<String> getOfflinePlayerNames() {
             return getOfflineGameProfiles()
                 .stream()
-                .map(GameProfile::getName)
+                .map(AuthlibHelper::getName)
                 .toList();
         }
 
@@ -236,7 +259,7 @@ public class PlayerHelper {
             // NOTE: Only find the game profile from existing cache, don't compute the value from Mojang server.
             return getOfflineGameProfiles()
                 .stream()
-                .filter(it -> it.getName().equals(playerName))
+                .filter(it -> AuthlibHelper.getName(it).equals(playerName))
                 .findFirst();
         }
     }

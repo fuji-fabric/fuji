@@ -52,7 +52,7 @@ public class ToastSender {
                 #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_21_4
                     Optional.of(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER))
                 #elif MC_VER >= MC_1_21_5
-            Optional.of(new AssetInfo(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
+                    Optional.of(makeDummyAssetInfo())
                 #endif
 
             , advancementFrame // Type of display frame.
@@ -78,6 +78,20 @@ public class ToastSender {
         /* Send packets. */
         player.networkHandler.sendPacket(makeGrantPacket(advancementEntry, SEND_TOAST_IDENTIFIER));
         player.networkHandler.sendPacket(makeRevokePacket(SEND_TOAST_IDENTIFIER));
+    }
+
+    private static
+    #if MC_VER < MC_1_21_9
+    AssetInfo
+    #elif MC_VER >= MC_1_21_9
+    AssetInfo.TextureAssetInfo
+    #endif
+    makeDummyAssetInfo() {
+        #if MC_VER < MC_1_21_9
+        return new AssetInfo(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER));
+        #elif MC_VER >= MC_1_21_9
+        return new AssetInfo.TextureAssetInfo(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER));
+        #endif
     }
 
     @SuppressWarnings("UnnecessaryLocalVariable")

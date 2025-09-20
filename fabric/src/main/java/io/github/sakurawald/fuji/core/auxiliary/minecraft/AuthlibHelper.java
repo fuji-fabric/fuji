@@ -1,8 +1,12 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
+import com.google.common.collect.LinkedHashMultimap;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import com.mojang.authlib.properties.PropertyMap;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import java.util.UUID;
+import net.minecraft.util.UserCache;
 import org.jetbrains.annotations.NotNull;
 
 public class AuthlibHelper {
@@ -32,8 +36,70 @@ public class AuthlibHelper {
     }
 
     public static void modifyGameProfile(@NotNull GameProfile gameProfile, @NotNull Property skin) {
-        LogUtil.debug("Modify the skin property for player {}. (skin = {})", gameProfile.getName(), skin);
-        gameProfile.getProperties().removeAll("textures");
-        gameProfile.getProperties().put("textures", skin);
+        String name = AuthlibHelper.getName(gameProfile);
+        LogUtil.debug("Modify the skin property for player {}. (skin = {})", name, skin);
+
+        PropertyMap properties = AuthlibHelper.getProperties(gameProfile);
+        properties.removeAll("textures");
+        properties.put("textures", skin);
     }
+
+    public static @NotNull String getName(@NotNull GameProfile gameProfile) {
+        #if MC_VER < MC_1_21_9
+        return gameProfile.getName();
+        #elif MC_VER >= MC_1_21_9
+        return gameProfile.name();
+        #endif
+    }
+
+    public static @NotNull UUID getId(@NotNull GameProfile gameProfile) {
+        #if MC_VER < MC_1_21_9
+        return gameProfile.getId();
+        #elif MC_VER >= MC_1_21_9
+        return gameProfile.id();
+        #endif
+    }
+
+    public static @NotNull PropertyMap getProperties(@NotNull GameProfile gameProfile) {
+        #if MC_VER < MC_1_21_9
+        return gameProfile.getProperties();
+        #elif MC_VER >= MC_1_21_9
+        return gameProfile.properties();
+        #endif
+    }
+
+    public static @NotNull PropertyMap makePropertyMap() {
+        #if MC_VER < MC_1_21_9
+        return new PropertyMap();
+        #elif MC_VER >= MC_1_21_9
+        return new PropertyMap(LinkedHashMultimap.create());
+        #endif
+    }
+
+    #if MC_VER >= MC_1_21_9
+    public static @NotNull GameProfile toGameProfile(net.minecraft.server.PlayerConfigEntry playerConfigEntry) {
+        String name = playerConfigEntry.comp_4423();
+        UUID id = playerConfigEntry.comp_4422();
+        return new GameProfile(id, name);
+    }
+
+    public static @NotNull net.minecraft.server.PlayerConfigEntry fromGameProfile(GameProfile gameProfile) {
+        return new net.minecraft.server.PlayerConfigEntry(gameProfile);
+    }
+    #endif
+
+    public static @NotNull GameProfile toGameProfile(GameProfile gameProfile) {
+        return gameProfile;
+    }
+
+
+    public static @NotNull GameProfile getGameProfile(@NotNull UserCache.Entry entry) {
+        #if MC_VER < MC_1_21_9
+        return entry.getProfile()
+        #elif MC_VER >= MC_1_21_9
+        return AuthlibHelper.toGameProfile(entry.getPlayer());
+        #endif
+    }
+
+
 }

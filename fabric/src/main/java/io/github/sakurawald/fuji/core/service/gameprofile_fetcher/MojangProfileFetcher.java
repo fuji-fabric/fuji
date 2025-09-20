@@ -6,12 +6,10 @@ import io.github.sakurawald.fuji.core.auxiliary.HttpUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.PlayerHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
-import net.minecraft.util.UserCache;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -32,19 +30,19 @@ public class MojangProfileFetcher {
     }
 
     public static Optional<UUID> fetchOnlinePlayerUUID(@NotNull String playerName) {
-        UserCache userCache = ServerHelper.getServer().getUserCache();
-        if (userCache == null) {
-            return fetchOnlinePlayerUUID$Fallback(playerName);
-        }
-
-        try {
-            return PlayerHelper.Cache
-                .getOfflineGameProfileByName(playerName)
-                .map(GameProfile::getId)
-                .or(() -> fetchOnlinePlayerUUID$Fallback(playerName));
-        } catch (Exception e) {
-            return fetchOnlinePlayerUUID$Fallback(playerName);
-        }
+        return PlayerHelper.Cache
+            .getUserCache()
+            .map($userCache -> {
+                try {
+                    return PlayerHelper.Cache
+                        .getOfflineGameProfileByName(playerName)
+                        .map(AuthlibHelper::getId)
+                        .or(() -> fetchOnlinePlayerUUID$Fallback(playerName));
+                } catch (Exception e) {
+                    return fetchOnlinePlayerUUID$Fallback(playerName);
+                }
+            })
+            .orElseGet(() -> fetchOnlinePlayerUUID$Fallback(playerName));
     }
 
     private static Optional<UUID> fetchOnlinePlayerUUID$Fallback(@NotNull String playerName) {

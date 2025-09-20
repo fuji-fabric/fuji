@@ -1,5 +1,6 @@
 package io.github.sakurawald.fuji.core.auxiliary.minecraft;
 
+import com.google.common.collect.Iterables;
 import java.util.Collection;
 import java.util.Optional;
 import net.minecraft.entity.Entity;
@@ -116,10 +117,10 @@ public class WorldHelper {
         return new ChunkPos(blockPosX >> 4, blockPosZ >> 4);
     }
 
-    @SuppressWarnings("UnnecessaryLocalVariable")
-    public static Iterable<ChunkHolder> getChunks(ServerWorld world) {
-        Iterable<ChunkHolder> chunkHolders = getChunkStorage(world).entryIterator();
-        return chunkHolders;
+    public static @NotNull Iterable<ChunkHolder> getChunks(@NotNull ServerWorld world) {
+        var chunkLoadingManager = getChunkStorage(world);
+        Iterable<ChunkHolder> iterable = chunkLoadingManager.chunkHolders.values();
+        return Iterables.unmodifiableIterable(iterable);
     }
 
     public static int getMaxBlockY(@NotNull Chunk chunk) {
@@ -162,7 +163,8 @@ public class WorldHelper {
             Vec3d lookVec = player.getRotationVec(1.0F);
             Vec3d reachVec = eyePos.add(lookVec.multiply(maxDistance));
 
-            BlockHitResult blockHitResult = player.getWorld().raycast(new RaycastContext(
+            ServerWorld serverWorld = PlayerHelper.getServerWorld(player);
+            BlockHitResult blockHitResult = serverWorld.raycast(new RaycastContext(
                 eyePos,
                 reachVec,
                 RaycastContext.ShapeType.OUTLINE,

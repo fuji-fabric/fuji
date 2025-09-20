@@ -171,10 +171,11 @@ public class CommandHelper {
         }
 
         public static boolean isOperator(@NotNull PlayerEntity player) {
-            return ServerHelper
-                .getServer()
-                .getPlayerManager()
-                .isOperator(player.getGameProfile());
+            #if MC_VER < MC_1_21_9
+            return PlayerHelper.getPlayerManager().isOperator(player.getGameProfile());
+            #elif MC_VER >= MC_1_21_9
+            return PlayerHelper.getPlayerManager().isOperator(player.getPlayerConfigEntry());
+            #endif
         }
 
         public static boolean isAdmin(@NotNull ServerPlayerEntity player) {
