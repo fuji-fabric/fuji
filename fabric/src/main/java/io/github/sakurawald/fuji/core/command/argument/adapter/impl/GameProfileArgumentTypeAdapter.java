@@ -6,11 +6,10 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.sakurawald.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
 import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GameProfileCollection;
+import java.util.List;
 import lombok.SneakyThrows;
 import net.minecraft.command.argument.GameProfileArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
-
-import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
 public class GameProfileArgumentTypeAdapter extends BaseArgumentTypeAdapter {
