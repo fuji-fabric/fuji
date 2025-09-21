@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.world.manager.service;
 
 import io.github.sakurawald.fuji.core.annotation.Unused;
+import io.github.sakurawald.fuji.core.auxiliary.IOUtil;
 import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.ServerHelper;
@@ -156,22 +157,7 @@ public class WorldService {
 
         /* Delete world files. */
         File worldDirectory = server.session.getWorldDirectory(dimensionKey).toFile();
-        deleteFiles(worldDirectory);
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    private static void deleteFiles(@NotNull File file) {
-        if (file.exists() && file.isDirectory()) {
-            File[] files = file.listFiles();
-            if (files == null) return;
-            for (File child : files) {
-                if (child.isDirectory()) {
-                    deleteFiles(child);
-                } else {
-                    child.delete();
-                }
-            }
-        }
+        IOUtil.deleteFilesAndPreserveDirs(worldDirectory);
     }
 
     public static boolean existsDimension(Identifier dimensionId) {

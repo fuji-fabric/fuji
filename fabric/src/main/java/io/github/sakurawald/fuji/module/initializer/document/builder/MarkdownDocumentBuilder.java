@@ -1,6 +1,7 @@
 package io.github.sakurawald.fuji.module.initializer.document.builder;
 
 import io.github.sakurawald.fuji.Fuji;
+import io.github.sakurawald.fuji.core.auxiliary.IOUtil;
 import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
 import io.github.sakurawald.fuji.module.initializer.document.builder.component.ModuleArgumentTypeAdaptersDocumentBuilder;
@@ -35,6 +36,7 @@ public class MarkdownDocumentBuilder {
         .resolve("document");
 
     public static void buildAll() {
+        IOUtil.deleteFilesAndPreserveDirs(DOCUMENT_BUILD_DIR.toFile());
         buildReadme();
         buildModules();
     }

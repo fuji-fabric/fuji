@@ -68,6 +68,21 @@ public class IOUtil {
         }
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static void deleteFilesAndPreserveDirs(@NotNull File file) {
+        if (file.exists() && file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files == null) return;
+            for (File child : files) {
+                if (child.isDirectory()) {
+                    deleteFilesAndPreserveDirs(child);
+                } else {
+                    child.delete();
+                }
+            }
+        }
+    }
+
     public static class Compressor {
 
         @SneakyThrows(IOException.class)
