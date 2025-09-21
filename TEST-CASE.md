@@ -9,6 +9,11 @@
 - Target: The `moveable` option should work.
 
 [Test Case]
+- Module: anti_build
+- Action: **Test the functionality of this module.**
+- Target: Check if the anti type hooks remains the identical semantics.
+
+[Test Case]
 - Module: chat
 - Action: **Enable the `online-mode` in server.properties**
 - Target: All of chat-related modules should not break the Mojang's chat signature.

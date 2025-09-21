@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper;
 import io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import io.github.sakurawald.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import io.github.sakurawald.fuji.core.document.annotation.TestCase;
 import io.github.sakurawald.fuji.core.event.annotation.EventConsumer;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerBlockBreakPreEvent;
 import io.github.sakurawald.fuji.core.event.message.player.PlayerInteractBlockPreEvent;
@@ -68,6 +69,9 @@ import java.util.function.Supplier;
     1. `/lp group default permission set fuji.anti_build.place_block.override.minecraft:red_mushroom false world=the_end`
     2. `/lp group default permission set fuji.anti_build.place_block.override.minecraft:brown_mushroom false world=the_end`
     """)
+@TestCase(action = "Test the functionality of this module.", targets = {
+    "Check if the anti type hooks remains the identical semantics."
+})
 public class AntiBuildInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<AntiBuildConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, AntiBuildConfigModel.class);
 
