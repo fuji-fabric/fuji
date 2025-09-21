@@ -38,7 +38,7 @@ import java.util.Optional;
     """)
 @ColorBox(id = 1751976733551L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Send a custom text as a book.
-    Issue: `/send-custom as-book Alice guide --author "alice" --title "<rb>The Guide" --giveBook true --openBook true`
+    Issue: `/send-custom as-book Alice guide --author "alice" --title "\\<rb\\>The Guide" --giveBook true --openBook true`
 
     ◉ Send a custom text as a message.
     Issue: `/send-custom as-message Alice guide`
