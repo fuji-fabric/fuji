@@ -31,7 +31,7 @@ public class PropertyMapWrapper {
      public static @NotNull PropertyMapWrapper fromVanillaType(@NotNull PropertyMap vanilla) {
         Multimap<String, PropertyWrapper> map = HashMultimap.create();
 
-        for (String key : vanilla.keySet()) {
+        for (String key : vanilla.keySet().stream().toList()) {
             for (Property property : vanilla.get(key)) {
                 map.put(key, PropertyWrapper.fromVanillaType(property));
             }
