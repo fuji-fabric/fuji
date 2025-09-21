@@ -983,7 +983,7 @@
     {
       "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPreEvent",
       "declaring_class_name": "mod.fuji.module.initializer.command_cooldown.CommandCooldownInitializer",
-      "declaring_method_name": "consumeBeforeCommandExecutionEvent",
+      "declaring_method_name": "consumeCommandExecutionPreEvent",
       "injector_priority": 0,
       "consumer_priority": 999,
       "is_dynamic": false

@@ -20,7 +20,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826730890L, value = """
-    This module allows you to define magic spells in chat, to execute commands.
+    This module allows defining `magic spells` in chat that `execute commands`.
     """)
 @ColorBox(id = 1754612494551L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Use `chat.trigger` to create `chat commands`.

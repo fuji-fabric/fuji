@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826656743L, value = """
     This module allows you to replace `chat string` with a given `chat text`. (Including placeholder parsing)
+    This module allows replacing `chat strings` with `specified text`, including `placeholder` parsing.
     """)
 @ColorBox(id = 1751870539707L, color = ColorBox.ColorBoxTypes.WARNING, value = """
     ◉ This module didn't work with `Styled Chat` mod.

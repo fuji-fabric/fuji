@@ -31,9 +31,9 @@ import net.minecraft.world.GameMode;
 import java.util.Optional;
 
 @Document(id = 1751826497994L, value = """
-    Provides `predicate` commands, which suffix with `?`.
+    This module provides a collection of `predicate commands`.
+    They can be used to test the `conditions`.
     """)
-
 @ColorBox(id = 1751978705157L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
     A `predicate command` will return an `integer value` to represent the `SUCCESS` or `FAILED` test result.

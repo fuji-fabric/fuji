@@ -23,9 +23,9 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 @Document(id = 1751825568845L, value = """
-    THis module allows the player to teleport back to:
-    1. His last teleport point.
-    2. His death point.
+    This module allows players to `teleport back` to:
+    - Their last teleport point.
+    - Their death location.
     """)
 public class BackInitializer extends ModuleInitializer {
 

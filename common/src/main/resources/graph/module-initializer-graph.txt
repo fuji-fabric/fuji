@@ -41,6 +41,7 @@ mod.fuji.module.initializer.command_rewrite.CommandRewriteInitializer
 mod.fuji.module.initializer.command_scheduler.CommandSchedulerInitializer
 mod.fuji.module.initializer.command_spy.CommandSpyInitializer
 mod.fuji.module.initializer.command_state.CommandStateInitializer
+mod.fuji.module.initializer.command_toolbox.CommandToolboxInitializer
 mod.fuji.module.initializer.command_toolbox.bed.BedInitializer
 mod.fuji.module.initializer.command_toolbox.burn.BurnInitializer
 mod.fuji.module.initializer.command_toolbox.compass.CompassInitializer
@@ -83,6 +84,7 @@ mod.fuji.module.initializer.disabler.move_speed_disabler.MoveSpeedDisablerInitia
 mod.fuji.module.initializer.disabler.move_wrongly_disabler.MoveWronglyDisablerInitializer
 mod.fuji.module.initializer.doctor.DoctorInitializer
 mod.fuji.module.initializer.document.DocumentInitializer
+mod.fuji.module.initializer.echo.EchoInitializer
 mod.fuji.module.initializer.echo.send_actionbar.SendActionbarInitializer
 mod.fuji.module.initializer.echo.send_bossbar.SendBossbarInitializer
 mod.fuji.module.initializer.echo.send_broadcast.SendBroadcastInitializer

@@ -26,9 +26,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 @Document(id = 1754411151804L, value = """
     This module provides the rank up system.
-    You can define a `rank` with `requirements` and `award`.
+    It allows defining a `rank` with `requirements` and `award`.
     """)
-
 @ColorBox(id = 1754450877863L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
     1. A `rank node` is used to define a `rank`.

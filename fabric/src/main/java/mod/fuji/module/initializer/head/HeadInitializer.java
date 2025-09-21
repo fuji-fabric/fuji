@@ -22,7 +22,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 @Cite("https://github.com/PotatoPresident/HeadIndex")
 @Document(id = 1751826596329L, value = """
-    This module allows player to buy decorative heads from a head shop.
+    This module allows players to purchase decorative heads from a `head shop`.
     """)
 @TestCase(action = "Buy a new head in `/head`.", targets = "See if the structure of skin is changed by Mojang.")
 

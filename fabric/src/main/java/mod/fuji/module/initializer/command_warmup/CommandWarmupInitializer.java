@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Document(id = 1751826885335L, value = """
-    This module allows you to define a `cooldown` before command execution.
+    This module allows defining a `cooldown` before command execution.
     """)
 @ColorBox(id = 1751870580067L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     The `command_warmup` module is `before` the command execution.

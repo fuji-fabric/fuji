@@ -18,13 +18,12 @@ import java.util.Arrays;
 import java.util.List;
 
 @Document(id = 1751824713488L, value = """
-    Provides `/one-of` command, to pick a random command from commands, and execute it.
+    Provides `/one-of` command, to pick a random command from specified commands, and execute it.
     """)
 @ColorBox(id = 1751968881805L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Pick a lucky command from specified command list, and then execute it.
     Issue: `/one-of say 1 one-of say 2 one-of say lucky %player:name%`
     """)
-
 public class OneOfInitializer extends ModuleInitializer {
 
     @Document(id = 1751824718640L, value = "One-of command randomly pick one of commands and execute it as console.")

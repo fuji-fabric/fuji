@@ -20,7 +20,7 @@ import net.minecraft.text.Text;
 import java.io.IOException;
 
 @Document(id = 1751824793427L, value = """
-    Provides a unified attachment facility, to attach any data to any object.
+    Provides a unified attachment facility, to attach data to any object.
     """)
 @ColorBox(id = 1751970220438L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Set a attachment.

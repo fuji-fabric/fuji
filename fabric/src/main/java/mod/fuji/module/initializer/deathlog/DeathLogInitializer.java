@@ -24,7 +24,7 @@ import java.util.List;
 
 
 @Document(id = 1751826834086L, value = """
-    This module stores the `inventory` as death log on player death.
+    This module stores a player's inventory as a `death log` upon death.
     """)
 public class DeathLogInitializer extends ModuleInitializer {
 

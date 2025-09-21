@@ -21,8 +21,9 @@ import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826684077L, value = """
-    This module will store chat message as history.
-    And send them to the player joined the server.
+    This module does:
+    1. Stores chat messages as history.
+    2. Delivers them to players when they join the server.
     """)
 @ColorBox(id = 1751870560992L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ This module works with `Styled Chat` mod.

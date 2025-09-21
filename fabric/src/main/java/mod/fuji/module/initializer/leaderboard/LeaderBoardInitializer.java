@@ -32,7 +32,7 @@ import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1753466282781L, value = """
-    This module allows you to define a `leaderboard`.
+    This module defining a `leaderboard`.
     The `score provider` of a `leaderboard` can be a `placeholder`, `statistics` or `objective`.
     The `time window` of a `leaderboard` can be `hourly`, `daily`, `weekly`, `monthly`, `yearly` and `all_time`.
     You can display the `leaderboard` using `placeholders` or `commands`.

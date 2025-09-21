@@ -10,7 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751824946979L, value = """
-    This module allows you to use color tags in `anvil` screen.
+    This module enables the use of `color tags` in the `anvil screen`.
     """)
 public class ColorAnvilInitializer extends ModuleInitializer {
 

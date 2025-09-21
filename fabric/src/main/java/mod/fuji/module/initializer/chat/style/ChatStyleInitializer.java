@@ -36,8 +36,8 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826676414L, value = """
-    This module allows you to customize global chat style.
-    Besides, players can use `/chat style` to set per-player chat style.
+    This module allows customization of the `global chat style`.
+    In addition, players can use the `/chat style` command to configure their `personal chat style`.
     """)
 @ColorBox(id = 1756283844217L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ Advanced Chat Style features.

@@ -19,9 +19,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 @Document(id = 1751826238005L, value = """
     This module provides:
-    1. Afk detection: If a player idle too long, we will mark it as afk state.
-    2. Afk event: Execute commands when a player enters or leaves afk state.
-    3. Afk name customization: For a afk player, we can customize its display name in tab list.
+    1. Afk Detection: When a player remains `idle` beyond a specified threshold, they are marked as being in `the AFK state`.
+    2. Afk Event: Execute configured commands when a player `enters` or `leaves` the afk state.
+    3. Afk Name Customization: Allows customization of the `display name` of AFK players.
     """)
 @ColorBox(id = 1751870451351L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?

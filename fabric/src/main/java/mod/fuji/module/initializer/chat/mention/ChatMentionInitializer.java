@@ -24,9 +24,9 @@ import java.util.Comparator;
 import java.util.List;
 
 @Document(id = 1751826738578L, value = """
-    This module allows you to mention another online player in chat:
-    1. The target player name will be highlighted.
-    2. The target player will be sound notified.
+    This module allows players to `mention` other online players in chat:
+    1. Name Highlighting: the mentioned player's name is visually highlighted.
+    2. Sound Notification: the mentioned player receives an audible notification.
     """)
 @ColorBox(id = 1751870571897L, color = ColorBox.ColorBoxTypes.WARNING, value = """
     ◉ This module work partially with `Styled Chat` mod.

@@ -22,7 +22,7 @@ import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1758032261807L, value = """
-    Allows you to customize the `display name` of players.
+    This module allows customization of the `display name` of a player.
     """)
 @ColorBox(id = 1758032281065L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ Using the `nickname` module with `Styled Chat` mod.

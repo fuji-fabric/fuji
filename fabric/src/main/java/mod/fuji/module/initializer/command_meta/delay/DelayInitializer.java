@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 @Document(id = 1751969384267L, value = """
     This module provides the `/delay` command.
-    To allow you `delay` the `execution time` of a specified command.
+    To `delay` the `execution` of a specified command.
     """)
 @ColorBox(id = 1751870419626L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ Only use `/delay` to perform short-term job.
@@ -39,7 +39,6 @@ import java.util.concurrent.TimeUnit;
     ◉ A fine-grained delay.
     Issue: `/delay 3.1415926 say pi seconds passed`
     """)
-
 public class DelayInitializer extends ModuleInitializer {
 
     private static ScheduledExecutorService DELAY_COMMAND_EXECUTOR;

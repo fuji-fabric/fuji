@@ -14,7 +14,7 @@ import net.minecraft.util.Hand;
 
 @Document(id = 1751972399779L, value = """
     This module provides the `/hat` command.
-    And allows a player to put `any item` in the `head slot`.
+    It allows a player to put `any item` in the `head equipment slot`.
     """)
 public class HatInitializer extends ModuleInitializer {
 

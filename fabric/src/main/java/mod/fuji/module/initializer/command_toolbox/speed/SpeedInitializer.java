@@ -7,17 +7,11 @@ import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.document.annotation.ColorBox;
-import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.ModuleInitializer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 
-@Document(id = 1754399924653L, value = """
-    Provides `/speed` command, to:
-    1. Modify the `walk speed`.
-    2. Modify the `fly speed`.
-    """)
 @ColorBox(id = 1758036383834L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ Re-join the server to fix the client-side camera broken.
     When a new `speed` is set, the client's `camera` will be broken.

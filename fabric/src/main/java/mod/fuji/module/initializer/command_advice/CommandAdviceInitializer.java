@@ -32,9 +32,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Document(id = 1751826306321L, value = """
-    This module allows you to define `advices` to decorate `an existing target command`.
+    This module allows defining `advices` to decorate `an existing target command`.
 
-    The command advice types can be:
+    The command `advice types` include:
     - `BEFORE_EXECUTION`
     - `AFTER_EXECUTION`
     - `ON_EXECUTION_SUCCESS`

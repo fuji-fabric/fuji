@@ -26,8 +26,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751824965598L, value = """
-    This module allows you to write commands in `sign` block.
-    And then click to execute commands.
+    This module allows `writing` commands on `sign blocks`, which can then be executed by `clicking` the sign.
     """)
 @ColorBox(id = 1751870448041L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ How it works?

@@ -12,7 +12,7 @@ import mod.fuji.module.initializer.document.builder.MarkdownDocumentBuilder;
 import net.minecraft.server.command.ServerCommandSource;
 
 @Document(id = 1758088953109L, value = """
-    This module provides the tools to `generate mod document`.
+    This module provides the tools to `build document files`.
     <green>NOTE: This module is typically used by developers, to generate the user manual.
     """)
 public class DocumentInitializer extends ModuleInitializer {

@@ -13,8 +13,8 @@ import mod.fuji.module.initializer.ModuleInitializer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 @Document(id = 1751823973159L, value = """
-    Provides `/foreach` command.
-    If a command only targets a single player, you can use `/foreach` to apply it to each online player.
+    This module provides the `/foreach` command.
+    It allows applying a command that normally targets a single player `to each` online player.
     """)
 @ColorBox(id = 1751968810100L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Say hello to online players.

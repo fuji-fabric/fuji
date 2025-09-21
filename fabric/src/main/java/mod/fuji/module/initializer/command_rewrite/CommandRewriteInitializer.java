@@ -15,7 +15,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826288031L, value = """
-    This module allows you to define `regex` to rewrite the command line a player issued.
+    This module allows defining `regex` to `rewrite` the command line `issued` by a player.
     """)
 @ColorBox(id = 1756047806466L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?

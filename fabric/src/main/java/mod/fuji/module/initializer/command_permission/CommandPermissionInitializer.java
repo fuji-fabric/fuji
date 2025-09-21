@@ -37,6 +37,7 @@ import org.jetbrains.annotations.Nullable;
 @Cite("https://github.com/DrexHD/VanillaPermissions")
 @Document(id = 1751826772214L, value = """
     This module provides the `luckperms permissions` for `all commands`.
+    The `target command` can be a command from the `vanilla Minecraft`, or any other `mods`.
     """)
 @ColorBox(id = 1751970566759L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?

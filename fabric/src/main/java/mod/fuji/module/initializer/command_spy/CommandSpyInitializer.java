@@ -19,7 +19,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826800901L, value = """
-    This module allows you to spy `command execution`.
+    This module allows `spying` on command execution.
     """)
 @ColorBox(id = 1757360673310L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?

@@ -17,7 +17,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 @Document(id = 1751824812720L, value = """
-    Make a set of `item stacks` as a `kit`, and give the kit to players.
+    This module allows creating a set of item stacks as a `kit` and distributing the kit to players.
     """)
 @ColorBox(id = 1751977591928L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Create a kit.

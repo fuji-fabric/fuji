@@ -22,11 +22,11 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 @Document(id = 1756692824395L, value = """
-    This module lets you define a `state` using `predicate commands`.
-    With it, you can:
+    This module allows defining a `state` using `predicate commands`.
+    Using this defined `state`, you can:
     - Define commands to be executed when a player `enters` or `leaves` this `state`.
-    - Check whether a player is in the `state`.
-    - Use `placeholders` related to the `state`.
+    - Check whether a player is currently in the `state`.
+    - Display `placeholders` relevant to the `state`.
     """)
 @ColorBox(id = 1756707949343L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Define a `state` using `predicate commands`.

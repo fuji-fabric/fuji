@@ -32,8 +32,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
 @Document(id = 1753681022357L, value = """
-    This module allows you to define a `jail`.
-    It can be used to `punish` a player with bad behaviour, without `banning` it.
+    This module allows defining a `jail`.
+    It can be used to `punish` players for misbehavior without `banning` them.
     """)
 @ColorBox(id = 1753757093710L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?

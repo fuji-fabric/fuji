@@ -26,7 +26,7 @@ import java.util.Optional;
 
 @Document(id = 1751976322975L, value = """
     This module provides `/send-bossbar` command.
-    To send a `text` as the `bossbar` to a specified player.
+    To send the `text` as the `bossbar` to a specified player.
     """)
 @ColorBox(id = 1751976574472L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ A simple example.

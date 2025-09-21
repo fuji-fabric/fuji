@@ -35,11 +35,11 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 @Document(id = 1751826915564L, value = """
-    This module allows you to enable the `economy gameplay`.
-    And define your `custom currency types`.
+    This module enables the `economy gameplay`.
+    It allows defining `custom currency types`.
 
-    One `player` can have many `accounts`.
-    One `account` holds one type of `currency`.
+    A `player` can have multiple `accounts`.
+    Each `account` holds one type of `currency`.
     """)
 @ColorBox(id = 1751870587446L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Make the `Admin Shops` and `Player Shops`.

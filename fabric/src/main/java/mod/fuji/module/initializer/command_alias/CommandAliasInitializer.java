@@ -21,8 +21,8 @@ import mod.fuji.module.initializer.command_alias.structure.AliasCommandDescripto
 import net.minecraft.server.command.ServerCommandSource;
 
 @Document(id = 1751826302190L, value = """
-    This module allows you to define alias for existing commands.
-    The defined alies command will redirect to the existing command node.
+    This module allows defining `aliases` for `an existing target command`.
+    The defined `alias command` redirects to the corresponding existing command node.
     """)
 @ColorBox(id = 1751900420030L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Define a `new shortcut command` as an alias to `an existing command`.

@@ -24,7 +24,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 @Document(id = 1751824895470L, value = """
-    This module allows you to define `menu` GUI, to execute commands.
+    This module allows defining `menu GUIs` that can execute commands.
     """)
 @ColorBox(id = 1752900650332L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ The definition of `menu` and `slot`.

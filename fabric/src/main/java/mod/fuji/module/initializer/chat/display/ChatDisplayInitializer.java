@@ -20,16 +20,14 @@ import net.minecraft.text.Text;
 
 @Document(id = 1751826642157L, value = """
     This module allows players to show things to others:
-    1. Show their item in main hand.
+    1. Show their main-hand item.
     2. Show their inventory.
     3. Show their ender chest.
     """)
-
 @ColorBox(id = 1751870533687L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ This module is designed to work with other `chat-related` mods.
     For example, you use this with `Styled Chat` mod.
     """)
-
 @ColorBox(id = 1751870535947L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Define a `chat shortcut` to create a display
     You can use `chat.replace` module, to define chat shortcut.
@@ -37,7 +35,6 @@ import net.minecraft.text.Text;
     Then you can type `"item"` in chat.
     To create a display directly using chat, without the commands.
     """)
-
 public class ChatDisplayInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<ChatDisplayConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatDisplayConfigModel.class);

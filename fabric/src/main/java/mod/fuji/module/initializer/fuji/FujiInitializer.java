@@ -29,9 +29,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 @Document(id = 1751826545831L, value = """
     Provides `/fuji` command.
-    To reload the configs of fuji.
-    To inspect states of fuji.
-    To discover things of fuji.
+    To `reload` the configs of fuji.
+    To `inspect` states of fuji.
+    To `discover` things of fuji.
     """)
 @CommandNode("fuji")
 @CommandRequirement(level = 4)

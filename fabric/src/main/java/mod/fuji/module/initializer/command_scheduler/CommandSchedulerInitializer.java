@@ -24,11 +24,10 @@ import java.util.List;
 
 
 @Document(id = 1755407283186L, value = """
-    This module allows you to execute commands on a schedule.
+    This module allows executing commands on a `schedule`.
 
-    Typical use cases:
-    1. Send broadcast messages at scheduled times.
-    2. Execute a specified group of commands at scheduled times.
+    Its typical use case is executing `broadcast commands` on a schedule.
+    However, it can also be used to execute any specified commands.
     """)
 @ColorBox(id = 1755407830073L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?

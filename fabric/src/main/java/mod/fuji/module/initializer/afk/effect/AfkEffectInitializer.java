@@ -11,10 +11,10 @@ import mod.fuji.module.initializer.afk.service.AfkService;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 @Document(id = 1751826206965L, value = """
-    This module provides special effects for afk player:
-    1. Invulnerable: the afk player is immune to all damage.
-    2. Targetable: the afk player can not be targeted by a hostile entity.
-    3. Moveable: the afk player can not be moved.
+    This module provides special `effects` for `afk player`:
+    1. `Invulnerable`: the afk player is immune to all damage.
+    2. `Targetable`: the afk player cannot be selected as a target by hostile entities.
+    3. `Moveable`: the position of afk player can not be moved by `external cause`. (Piston, gravity...)
     """)
 public class AfkEffectInitializer extends ModuleInitializer {
 

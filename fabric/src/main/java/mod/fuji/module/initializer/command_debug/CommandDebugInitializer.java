@@ -13,7 +13,7 @@ import mod.fuji.module.initializer.ModuleInitializer;
 import net.minecraft.server.command.ServerCommandSource;
 
 @Document(id = 1751827007525L, value = """
-    This module provides debug tools for executing commands.
+    This module provides debug tools for the executing command.
     """)
 @ColorBox(id = 1751903540774L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Execute a specified command, and sees the debug info.

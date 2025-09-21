@@ -31,7 +31,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826375815L, value = """
-    This module allows you to define a `cooldown` for a specified `command`.
+    This module allows defining a `cooldown` after command execution.
     """)
 @ColorBox(id = 1751902763633L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ There are 2 types of `cooldown`.
@@ -212,7 +212,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         "Issue `/run as player @s heal` command twice, the command cooldown should be performed."
     })
     @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority = EventConsumer.LOWER)
-    private static void consumeBeforeCommandExecutionEvent(CommandExecutionPreEvent event) {
+    private static void consumeCommandExecutionPreEvent(CommandExecutionPreEvent event) {
         if (event.getCallback().isCancelled()) return;
         ServerCommandSource commandSource = event.getCommandSource();
         if (CommandHelper.Source.isExecutedByConsole(commandSource)) return;

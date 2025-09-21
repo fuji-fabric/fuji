@@ -15,8 +15,8 @@ import mod.fuji.module.initializer.cleaner.service.CleanerService;
 import net.minecraft.server.command.ServerCommandSource;
 
 @Document(id = 1751826898176L, value = """
-    This module provides the `entity` cleaner.
-    It monitors defined `conditions` and removes `entities` accordingly.
+    This module provides an `entity cleaner`.
+    It monitors specified conditions and `clean` entities that `match defined rules`.
     """)
 @ColorBox(id = 1751870582940L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ The vanilla Minecraft `Item Entity` de-spawning.

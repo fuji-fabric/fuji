@@ -16,10 +16,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Document(id = 1751824730196L, value = """
-    Provides `/chain` command.
-    It allows you to run another 2 commands.
-    The first command is `any command`.
-    The second command is `the chain command`.
+    This module provides the `/chain` command, which allows executing `two commands` sequentially:
+    1. The first command, is `any command`. (Required)
+    2. The second command, is `/chain` command. (Optionally)
     """)
 @ColorBox(id = 1751870431402L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ What is the purpose of `/chain` command?

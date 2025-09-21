@@ -18,7 +18,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
 @Document(id = 1751826984411L, value = """
-    Send text using the `dialog GUI`.
+    Send the `text` using the `dialog GUI`.
 
     For example:
     1. `/send-dialog Steve \\<blue\\>Hello`

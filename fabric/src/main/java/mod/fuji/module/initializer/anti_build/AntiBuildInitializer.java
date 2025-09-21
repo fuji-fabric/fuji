@@ -33,9 +33,9 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 @Document(id = 1751825625507L, value = """
-    This module allows you to ban `types of actions` for players.
+    This module allows restricting specific player `actions`.
 
-    Currently supported types are:
+    Currently supported `action types` include:
     1. Break a specified block.
     2. Place a specified block.
     3. Interact with a specified item.

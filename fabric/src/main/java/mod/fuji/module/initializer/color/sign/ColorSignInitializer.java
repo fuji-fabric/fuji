@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 
 @Document(id = 1751824932882L, value = """
-    This module allows you to use color tags in `sign` blocks.
+    This module allows you to use `color tags` in `sign blocks`.
     """)
 @ColorBox(id = 1751900015107L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ You can write `style tags` on the sign.

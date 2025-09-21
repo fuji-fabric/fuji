@@ -19,7 +19,7 @@ import java.util.List;
 import net.minecraft.stat.Stats;
 
 @Document(id = 1751826634816L, value = """
-    This module allows you to execute commands on specified events.
+    This module allows executing `defined commands` in response to various `events`.
     """)
 @ColorBox(id = 1751904334639L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?

@@ -25,10 +25,6 @@ import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-@Document(id = 1751825390723L, value = """
-    Provides `/warp` command.
-    As a public teleport point.
-    """)
 @ColorBox(id = 1751972643858L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Set a display name for a warp.
     Issue: `/warp set-name \\<warp\\> \\<blue\\>This is the display name`

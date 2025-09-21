@@ -49,10 +49,11 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 
 @Document(id = 1751826430284L, value = """
-    This module allows you to attach commands into things:
-    1. Attach commands into an item stack.
-    2. Attach commands into a block.
-    3. Attach commands into an entity.
+    This module allows `attaching` commands to various `objects`:
+    - Item Stacks
+    - Blocks
+    - Entities
+    - ...
     """)
 @ColorBox(id = 1751870462624L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?

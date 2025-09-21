@@ -28,9 +28,12 @@ import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826356909L, value = """
-    This module allows you to create new command:
-    1. The new command can accept arguments.
-    2. The body of the new command, can be a list of commands.
+    This module allows `creating` a new command (Called `template command` or `bundle command`):
+    - `User-Defined Arguments`: the new command can accept user-defined arguments.
+    - `Command Body`: the body of a new command can consist of a list of existing commands.
+    - `Placeholders`: the body can support placeholder parsing.
+
+    It can be used as a generic `command template` system.
     """)
 @ColorBox(id = 1751870454656L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ The features of this module:
