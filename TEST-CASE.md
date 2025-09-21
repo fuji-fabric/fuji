@@ -354,6 +354,12 @@
 - Target: The runtime dimensions should be saved.
 
 [Test Case]
+- Module: world
+- Action: **Test the chunk generator types and parameters**
+- Target: Issue `/world create flat minecraft:overworld --chunkGeneratorType FLAT`
+- Target: Issue `/world create void minecraft:overworld --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:air;minecraft:the_void"`
+
+[Test Case]
 - Module: world.border
 - Action: **Issue `/tp` and `/world tp` between dimensions.**
 - Target: The per-dimension border should be synced on the client-side.

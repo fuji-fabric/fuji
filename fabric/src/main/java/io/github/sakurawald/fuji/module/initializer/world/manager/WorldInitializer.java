@@ -235,10 +235,10 @@ import org.jetbrains.annotations.Nullable;
     Issue: `/world create my_flat_world minecraft:overworld --chunkGeneratorType FLAT`
 
     ◉ Create a `flat dimension` with `overworld` dimension type and `customized preset`.
-    Issue: `/world create 3 minecraft:overworld --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:bedrock,3*minecraft:stone,116*minecraft:sandstone;minecraft:desert"`
+    Issue: `/world create my_desert_world minecraft:overworld --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:bedrock,3*minecraft:stone,116*minecraft:sandstone;minecraft:desert"`
 
     ◉ Create a `void dimension`.
-    Issue: `/world create 4 minecraft:overworld --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:air;minecraft:the_void"`
+    Issue: `/world create my_void_world minecraft:overworld --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:air;minecraft:the_void"`
     <green>NOTE: The `secret` is, a `void dimension` is just a `flat dimension` with customized `minecraft:air layers` with the `minecraft:the_void` biome.
 
     ◉ Generate the `parameters` using a `generator`.
@@ -310,7 +310,10 @@ import org.jetbrains.annotations.Nullable;
     "Goto `/tp @s 14665 ~ 345`. (You should get `emerald * 7`, `gold ingot * 3`, `iron ingot * 11`, `tnt * 2`, `heart of the sea * 1`, `cooked cod * 8` and `potion of water breathing * 1`.)"
     , "Goto `/tp @s 0 128 0`, you should in `minecraft:ocean`, and there is a `minecraft:dark_forest` in front of you, also there is a `lava source` flowing down."
 })
-
+@TestCase(action = "Test the chunk generator types and parameters", targets = {
+    "Issue `/world create flat minecraft:overworld --chunkGeneratorType FLAT`",
+    "Issue `/world create void minecraft:overworld --chunkGeneratorType FLAT --chunkGeneratorParameters \"minecraft:air;minecraft:the_void\"`"
+})
 
 
 @CommandNode("world")

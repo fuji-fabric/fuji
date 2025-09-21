@@ -57,7 +57,7 @@ public class CommandAdviceConfigModel {
                 "send-message %player:name% <red>The `/kill @e` command should be used with a filter.")));
 
             /* Add `exempt` feature for specified command and target. */
-            this.add(new CommandAdviceEntry(true, "Add a `exempt` feature for `/view inv <player>` command.", new CommandAdviceEntry.Matcher("view inv (.+)", true, false), CommandAdviceType.CANCEL_IF_ALL_SUCCESS, List.of(
+            this.add(new CommandAdviceEntry(true, "Add a `exempt` feature for `/view inv <player>` command.", new CommandAdviceEntry.Matcher("view inv (.+)", true, false), CommandAdviceType.CANCEL_IF_ANY_SUCCESS, List.of(
                 "has-perm? $1 your.custom.permission")));
             this.add(new CommandAdviceEntry(true, "Add a `exempt` feature for `/view inv <player>` command.", new CommandAdviceEntry.Matcher("view inv (.+)", true, false), CommandAdviceType.ON_EXECUTION_CANCELLED, List.of(
                 "send-message %player:name% <red>You can't view the inventory of $1 player, it's exempted.")));

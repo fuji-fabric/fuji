@@ -56,6 +56,7 @@ public class GameProfileWrapper {
     }
     #endif
 
+    @SuppressWarnings("unused")
     public static @NotNull GameProfile toGameProfile(@NotNull GameProfile gameProfile) {
         return gameProfile;
     }
