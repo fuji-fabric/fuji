@@ -165,6 +165,7 @@
   "display.item.broadcast": "<#FFA1F5>Player %player:name% just share an item display: <#D2E0FB>${display}",
   "display.item.text": "<#D2E0FB>[${item}]",
   "document.build": "<green>Document files are built at `%s`",
+  "document.modules": "<green>◉ The document files are built from modules `%s`/`%s`",
   "down": "<gold>Down!",
   "duration.invalid": "<red>Invalid duration: `%s`",
   "echo.send_bossbar.notify": "<green>The bossbar sent to `%s` with command list `%s` is completed.",

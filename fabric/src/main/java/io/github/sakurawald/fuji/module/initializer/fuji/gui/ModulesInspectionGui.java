@@ -33,7 +33,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
         super(parent, player, TextHelper.getTextByKey(player, "fuji.inspect.modules.gui.title"), entities, pageIndex);
 
         int enabledModules = ModuleLoadDeterminer.getEnabledModulePaths().size();
-        int allModules = ModuleLoadDeterminer.MODULE_ENABLE_STATUS.size();
+        int allModules = ModuleLoadDeterminer.getDeclaredModulePaths().size();
         List<Text> lore = List.of(
             TextHelper.getTextByKey(player, "fuji.inspect.modules.gui.reimu.lore", enabledModules, allModules)
         );

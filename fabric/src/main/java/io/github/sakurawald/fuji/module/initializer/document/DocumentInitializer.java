@@ -6,6 +6,7 @@ import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
 import io.github.sakurawald.fuji.core.command.annotation.CommandRequirement;
 import io.github.sakurawald.fuji.core.command.annotation.CommandSource;
 import io.github.sakurawald.fuji.core.document.annotation.Document;
+import io.github.sakurawald.fuji.core.manager.impl.module.ModuleLoadDeterminer;
 import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
 import io.github.sakurawald.fuji.module.initializer.document.builder.MarkdownDocumentBuilder;
 import net.minecraft.server.command.ServerCommandSource;
@@ -21,6 +22,10 @@ public class DocumentInitializer extends ModuleInitializer {
     private static int $build(@CommandSource ServerCommandSource source) {
         MarkdownDocumentBuilder.buildAll();
         TextHelper.sendTextByKey(source, "document.build", MarkdownDocumentBuilder.DOCUMENT_BUILD_DIR);
+
+        int enabledModules = ModuleLoadDeterminer.getEnabledModulePaths().size();
+        int declaredModules = ModuleLoadDeterminer.getDeclaredModulePaths().size();
+        TextHelper.sendTextByKey(source, "document.modules", enabledModules, declaredModules);
         return CommandHelper.Return.SUCCESS;
     }
 

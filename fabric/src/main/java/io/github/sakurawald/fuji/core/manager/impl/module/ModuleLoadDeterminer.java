@@ -35,6 +35,14 @@ public class ModuleLoadDeterminer {
         return enabledModulePathStrings;
     }
 
+    public static @NotNull List<String> getDeclaredModulePaths() {
+        return MODULE_ENABLE_STATUS
+            .keySet()
+            .stream()
+            .map(ModulePathResolver::toModulePathString)
+            .toList();
+    }
+
     @ForDeveloper("""
         This method is used to determinate whether to load the given class or not.
         The given class name can be any class name.
