@@ -1,5 +1,6 @@
 package mod.fuji.module.initializer.document.builder;
 
+import java.util.TreeSet;
 import mod.fuji.Fuji;
 import mod.fuji.core.auxiliary.IOUtil;
 import mod.fuji.core.document.annotation.TestCase;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import lombok.SneakyThrows;
+import mod.fuji.module.initializer.document.formatter.FileNameFormatter;
 import org.jetbrains.annotations.NotNull;
 
 @TestCase(action = "Test the generated document files.", targets = {
@@ -35,7 +37,10 @@ public class MarkdownDocumentBuilder {
         .MOD_CONFIG_PATH
         .resolve("document");
 
+    private static final FileNameFormatter FILE_NAME_FORMATTER = new FileNameFormatter();
+
     public static void buildAll() {
+        FILE_NAME_FORMATTER.resetFileIndex();
         IOUtil.deleteFilesAndPreserveDirs(DOCUMENT_BUILD_DIR.toFile());
         buildReadme();
         buildModules();
@@ -52,23 +57,25 @@ public class MarkdownDocumentBuilder {
         String readmeFileString = documentBuilder.toString();
 
         /* Write the readme file. */
-        Path readmeFilePath = DOCUMENT_BUILD_DIR.resolve("01-README.md");
+        Path readmeFilePath = DOCUMENT_BUILD_DIR.resolve(FILE_NAME_FORMATTER.formatFileName("README.md"));
         Files.createDirectories(readmeFilePath.getParent());
         Files.writeString(readmeFilePath, readmeFileString);
     }
 
     private static void buildModules() {
+        /* Resolve the modules path. */
+        Path modulesPath = DOCUMENT_BUILD_DIR.resolve(FILE_NAME_FORMATTER.formatFileName("Modules"));
+
         /* Build the document for `core` module. */
-        buildModule(ModulePathResolver.CORE_MODULE_PATH_STRING);
+        buildModule(modulesPath, ModulePathResolver.CORE_MODULE_PATH_STRING);
 
         /* Build the document for non-`core` module. */
-        ModulePathResolver
-            .DECLARED_MODULE_PATH_STRINGS
-            .forEach(MarkdownDocumentBuilder::buildModule);
+        new TreeSet<>(ModulePathResolver.DECLARED_MODULE_PATH_STRINGS)
+            .forEach(modulePathString -> buildModule(modulesPath, modulePathString));
     }
 
     @SneakyThrows(IOException.class)
-    private static void buildModule(@NotNull String modulePathString) {
+    private static void buildModule(@NotNull Path modulesPath, @NotNull String modulePathString) {
         /* Build the document. */
         StringBuilder documentBuilder = new StringBuilder();
         DocumentBuilderContext documentBuilderContext = new DocumentBuilderContext(modulePathString, documentBuilder);
@@ -85,13 +92,13 @@ public class MarkdownDocumentBuilder {
 
         /* Write the document file. */
         String moduleDocumentFileName = getModuleDocumentFileName(modulePathString);
-        Path documentFilePath = DOCUMENT_BUILD_DIR.resolve("02-Modules").resolve(moduleDocumentFileName);
+        Path documentFilePath = modulesPath.resolve(moduleDocumentFileName);
         Files.createDirectories(documentFilePath.getParent());
         Files.writeString(documentFilePath, documentFileString);
     }
 
     private static String getModuleDocumentFileName(@NotNull String modulePathString) {
-        return modulePathString + ".md";
+        return FILE_NAME_FORMATTER.formatFileName(modulePathString + ".md");
     }
 
 }
