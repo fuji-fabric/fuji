@@ -1,13 +1,18 @@
 # --- The following contents are common AW entries ---
 # You should write the AW entries directly, and ignore the AW file headers.
 
+# core
+accessible class net/minecraft/util/UserCache$Entry
+accessible field net/minecraft/util/UserCache byName Ljava/util/Map;
+accessible field net/minecraft/server/command/ServerCommandSource silent Z
+
 # common economy api
 accessible field net/minecraft/server/network/ServerPlayerEntity server Lnet/minecraft/server/MinecraftServer;
 
 # rtp
 accessible method net/minecraft/server/world/ServerChunkManager getChunkFuture (IILnet/minecraft/world/chunk/ChunkStatus;Z)Ljava/util/concurrent/CompletableFuture;
 
-# temp ban module
+# temp ban
 accessible method net/minecraft/server/ServerConfigList removeInvalidEntries ()V
 
 # nametag
@@ -37,3 +42,10 @@ accessible method net/minecraft/entity/decoration/DisplayEntity setBrightness (L
 
 accessible field net/minecraft/network/packet/s2c/play/EntityPassengersSetS2CPacket passengerIds [I
 accessible method net/minecraft/network/packet/s2c/play/EntityPassengersSetS2CPacket <init> (Lnet/minecraft/network/PacketByteBuf;)V
+
+# view
+accessible method net/minecraft/server/PlayerManager savePlayerData (Lnet/minecraft/server/network/ServerPlayerEntity;)V
+
+# send-chat
+accessible method net/minecraft/server/network/ServerPlayNetworkHandler handleDecoratedMessage (Lnet/minecraft/network/message/SignedMessage;)V
+

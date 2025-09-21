@@ -1,10 +1,7 @@
 accessWidener v2 named
 
 # core
-accessible class net/minecraft/util/UserCache$Entry
 accessible method net/minecraft/util/UserCache$Entry getProfile ()Lcom/mojang/authlib/GameProfile;
-accessible field net/minecraft/util/UserCache byName Ljava/util/Map;
-accessible field net/minecraft/server/command/ServerCommandSource silent Z
 
 # world module
 accessible field net/minecraft/registry/entry/RegistryEntry$Reference value Ljava/lang/Object;
@@ -18,12 +15,8 @@ accessible method net/minecraft/world/border/WorldBorder$Properties <init> (DDDD
 # chat module
 accessible class net/minecraft/registry/RegistryLoader$Loader
 
-# send-chat module
-accessible method net/minecraft/server/network/ServerPlayNetworkHandler handleDecoratedMessage (Lnet/minecraft/network/message/SignedMessage;)V
-
 # view module
 accessible field net/minecraft/server/MinecraftServer saveHandler Lnet/minecraft/world/PlayerSaveHandler;
-accessible method net/minecraft/server/PlayerManager savePlayerData (Lnet/minecraft/server/network/ServerPlayerEntity;)V
 
 # world helper
 accessible field net/minecraft/server/world/ServerChunkLoadingManager chunkHolders Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
