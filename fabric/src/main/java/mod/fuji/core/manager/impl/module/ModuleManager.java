@@ -67,7 +67,7 @@ public class ModuleManager extends BaseManager {
                         1. Verify that there are no `JSON syntax errors` in the module's configuration files.
                         2. Check if any `other mods` are conflicting with `{}` module.
                         3. If you do not require the `{}` module, you may disable it in the `config/fuji/config.json` file, then restart your server.
-                        4. If the issue persists, please open an issue at: https://github.com/sakurawald/fuji/issues
+                        4. If the issue persists, please open an issue at: https://github.com/fuji-fabric/fuji/issues
 
                         """, modulePath, modulePath, modulePath, modulePath);
                     throw ExceptionUtil.makeReThrownException(e);

@@ -39,7 +39,7 @@ import org.jetbrains.annotations.Nullable;
     Things are similar in server-side.
     There are `language files for different languages` in the `server side`.
 
-    You can see the example `language file` in https://github.com/sakurawald/fuji/blob/dev/.github/files/en_us.json
+    You can see the example `language file` in https://github.com/fuji-fabric/fuji/blob/dev/.github/files/en_us.json
 
     ◉ How this module works?
     When the `server` tries to sends a `translatable text` to the `client` side.

@@ -36,7 +36,7 @@ public class FileDependencyChecker extends BaseDependencyChecker {
     }
 
     private static @NotNull String mapFilePathToClassName(Path file) {
-        // NOTE: An example path is `/home/username/Workspace/github/fuji/fabric/src/main/java/io/github/sakurawald/fuji/Fuji.java`
+        // NOTE: An example path is `/home/username/Workspace/github/fuji/fabric/src/main/java/mod/fuji/Fuji.java`
         return file.toString()
             .replace("/", ".")
             .replace("src.main.java.", "")

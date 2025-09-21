@@ -44,7 +44,7 @@ import net.minecraft.server.command.ServerCommandSource;
     A `translatable key` is an identifier used internally by Minecraft to reference `items`, `block-based items`, and other `entities`.
     It corresponds to the keys defined in Minecraft's `translation files`.
     An example translation file can be found here:
-    https://github.com/sakurawald/fuji/blob/dev/.github/files/en_us.json
+    https://github.com/fuji-fabric/fuji/blob/dev/.github/files/en_us.json
 
     Common key formats include:
     - `item.minecraft.*`

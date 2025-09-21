@@ -7,16 +7,15 @@
   "description": "A mod that ports EssentialsX / CMI from bukkit to fabric.",
   "license": "GPL-3.0",
   "contact": {
-    "homepage": "https://github.com/sakurawald",
-    "sources": "https://github.com/sakurawald/fuji/",
-    "issues": "https://github.com/sakurawald/fuji/issues"
+    "homepage": "https://fuji-fabric.github.io/",
+    "sources": "https://github.com/fuji-fabric/fuji/",
+    "issues": "https://github.com/fuji-fabric/fuji/issues"
   },
   "authors": [
     {
       "name": "sakurawald",
       "contact": {
         "role": "developer",
-        "bio": "yeah, this is just a bio.",
         "email": "sakurawald@gmail.com"
       }
     }

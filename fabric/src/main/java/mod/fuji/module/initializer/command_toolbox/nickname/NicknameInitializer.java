@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
     """)
 @ColorBox(id = 1758032281065L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ Using the `nickname` module with `Styled Chat` mod.
-    See: https://github.com/sakurawald/fuji/issues/489
+    See: https://github.com/fuji-fabric/fuji/issues/489
     """)
 @CommandNode("nickname")
 public class NicknameInitializer extends ModuleInitializer {

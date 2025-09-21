@@ -223,7 +223,7 @@ public class CommandDescriptor implements SourceModuleGetter {
                             The `argument values` are lost after a command redirect.
                             Related issue: https://github.com/Sinytra/Connector/issues/214
 
-                            You should open an issue in https://github.com/sakurawald/fuji if you see this.
+                            You should open an issue in https://github.com/fuji-fabric/fuji if you see this.
                             """);
                         throw new IllegalArgumentException("Lose argument values after command redirect.");
                     }

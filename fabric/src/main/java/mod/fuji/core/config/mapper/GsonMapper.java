@@ -162,7 +162,7 @@ public class GsonMapper {
 
             [JDK Unsafe feature is used to create a Java Object instance]
             ◉ Problem: Failed to create instance of {} using vanilla Java NoArgsConstructor, now falling back to use JDK Unsafe to create the instance.
-            ◉ Solution: If you see this, you should create an issue in https://github.com/sakurawald/fuji/issues
+            ◉ Solution: If you see this, you should create an issue in https://github.com/fuji-fabric/fuji/issues
             """, type);
     }
 
