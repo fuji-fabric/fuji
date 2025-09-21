@@ -1,8 +1,8 @@
 package tests.dsl;
 
-import io.github.sakurawald.fuji.core.command.argument.structure.CommandArgument;
-import io.github.sakurawald.fuji.module.initializer.command_bundle.structure.BundleCommandDescriptor;
-import io.github.sakurawald.fuji.module.initializer.command_bundle.structure.BundleCommandNode;
+import mod.fuji.core.command.argument.structure.CommandArgument;
+import mod.fuji.module.initializer.command_bundle.structure.BundleCommandDescriptor;
+import mod.fuji.module.initializer.command_bundle.structure.BundleCommandNode;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

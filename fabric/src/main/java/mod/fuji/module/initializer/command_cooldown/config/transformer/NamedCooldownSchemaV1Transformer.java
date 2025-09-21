@@ -1,0 +1,64 @@
+package mod.fuji.module.initializer.command_cooldown.config.transformer;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import mod.fuji.core.auxiliary.JsonUtil;
+import mod.fuji.core.config.migrator.transformer.abst.JsonConfigurationTransformer;
+import mod.fuji.core.config.migrator.version.VersionPropertyInjector;
+import mod.fuji.module.initializer.command_cooldown.CommandCooldownInitializer;
+
+public class NamedCooldownSchemaV1Transformer extends JsonConfigurationTransformer {
+
+    @SuppressWarnings({"UnnecessaryLocalVariable", "SizeReplaceableByIsEmpty"})
+    @Override
+    protected void apply() {
+        readTargetJsonFile().ifPresent(jsonObject -> {
+            int arraySize = JsonUtil
+                .<JsonArray>readJsonPath(jsonObject, "$.named_cooldown.list.*.timestamp")
+                .map(JsonArray::size)
+                .orElse(-1);
+            if (arraySize == 0) {
+                return;
+            }
+
+            /* Make the output json object. */
+            JsonObject input$list = JsonUtil.<JsonObject>readJsonPath(jsonObject,"$.named_cooldown.list").get();
+            JsonObject outputRoot = new JsonObject();
+            JsonArray output$nodes = new JsonArray();
+            outputRoot.add("nodes", output$nodes);
+
+            input$list
+                .keySet()
+                .forEach(key -> {
+                    String namedCooldownId = key;
+                    JsonObject namedCooldownDescriptor = input$list.get(namedCooldownId).getAsJsonObject();
+                    JsonObject outputObject = new JsonObject();
+
+                    /* Migrate the id field. */
+                    outputObject.addProperty("id", namedCooldownId);
+
+                    /* Migrate the timestamp field. */
+                    JsonElement cooldownObject = namedCooldownDescriptor.get("timestamp");
+                    JsonObject cooldownField = new JsonObject();
+                    cooldownField.add("timestamp", cooldownObject);
+                    outputObject.add("cooldown", cooldownField);
+
+                    /* Migrate the uses field. */
+                    JsonElement usesField = namedCooldownDescriptor.get("uses");
+                    outputObject.add("uses", usesField);
+
+                    output$nodes.add(outputObject);
+                });
+
+            /* Write it. */
+            JsonUtil.writeJsonObject(outputRoot, CommandCooldownInitializer.namedCooldownData.getFilePath());
+        });
+
+    }
+
+    @Override
+    public String sinceVersion() {
+        return VersionPropertyInjector.FUTURE_MOD_VERSION;
+    }
+}

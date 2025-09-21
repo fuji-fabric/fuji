@@ -2,7 +2,7 @@ package tests.mixin;
 
 import auxiliary.classgraph.ClassGraphUtil;
 import auxiliary.classgraph.structure.ExtendedAnnotationInfo;
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import mod.fuji.core.auxiliary.LogUtil;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.spongepowered.asm.mixin.injection.Redirect;

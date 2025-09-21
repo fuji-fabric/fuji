@@ -1,0 +1,46 @@
+package mod.fuji.module.initializer.command_meta.attachment.command.argument.adapter;
+
+import com.mojang.brigadier.arguments.ArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
+import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
+import mod.fuji.core.command.argument.structure.CommandArgument;
+import mod.fuji.core.manager.Managers;
+import mod.fuji.module.initializer.command_meta.attachment.command.argument.wrapper.SubjectName;
+import net.minecraft.server.command.ServerCommandSource;
+
+import java.util.List;
+import org.jetbrains.annotations.NotNull;
+
+public class SubjectNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
+
+    @Override
+    protected ArgumentType<?> makeArgumentType() {
+        return StringArgumentType.string();
+    }
+
+    @Override
+    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+        return new SubjectName(StringArgumentType.getString(context, commandArgument.getArgumentName()));
+    }
+
+    @Override
+    public List<Class<?>> getTypeClasses() {
+        return List.of(SubjectName.class);
+    }
+
+    @Override
+    public List<String> getTypeNames() {
+        return List.of("subject-name");
+    }
+
+    @Override
+    @NotNull
+    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+        return super.makeRequiredArgumentBuilder(argumentName).suggests((ctx, builder) -> {
+            Managers.getAttachmentManager().listSubjectName().forEach(builder::suggest);
+            return builder.buildFuture();
+        });
+    }
+}

@@ -4,8 +4,8 @@ import auxiliary.classgraph.ClassGraphUtil;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.MethodInfo;
 import io.github.classgraph.ScanResult;
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
-import io.github.sakurawald.fuji.core.command.annotation.CommandNode;
+import mod.fuji.core.auxiliary.LogUtil;
+import mod.fuji.core.command.annotation.CommandNode;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 

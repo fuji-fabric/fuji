@@ -1,0 +1,76 @@
+package mod.fuji.module.initializer.maintenance.service;
+
+import mod.fuji.core.auxiliary.RandomUtil;
+import mod.fuji.core.auxiliary.minecraft.CommandHelper;
+import mod.fuji.core.auxiliary.minecraft.LuckpermsHelper;
+import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
+import mod.fuji.core.auxiliary.minecraft.ServerHelper;
+import mod.fuji.core.auxiliary.minecraft.TextHelper;
+import mod.fuji.core.command.executor.CommandExecutor;
+import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
+import mod.fuji.core.event.annotation.EventConsumer;
+import mod.fuji.core.event.message.player.PlayerJoinedEvent;
+import mod.fuji.module.initializer.maintenance.MaintenanceModuleInitializer;
+import mod.fuji.module.initializer.maintenance.config.model.MaintenanceConfigModel;
+import java.util.List;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
+import org.jetbrains.annotations.NotNull;
+
+public class MaintenanceService {
+
+    public static boolean getMaintenanceModeStatus() {
+        return MaintenanceModuleInitializer.config.model().isMaintenanceModeStatus();
+    }
+
+    @SuppressWarnings({"RedundantIfStatement", "BooleanMethodIsAlwaysInverted"})
+    public static boolean canJoinNow(@NotNull ServerPlayerEntity player) {
+        if (!getMaintenanceModeStatus()) return true;
+        if (CommandHelper.Requirement.isOperator(player)) return true;
+        if (CommandHelper.Requirement.isAdmin(player.getCommandSource())) return true;
+        if (LuckpermsHelper.hasPermission(player.getUuid(), MaintenanceModuleInitializer.MAINTENANCE_BYPASS_PERMISSION)) return true;
+
+        return false;
+    }
+
+    @EventConsumer
+    public static void processMaintenanceModeOnPlayerJoined(PlayerJoinedEvent event) {
+        ServerPlayerEntity player = event.getPlayer();
+        if (!canJoinNow(player)) {
+            kickPlayer(player);
+        }
+    }
+
+    public static void kickPlayer(@NotNull ServerPlayerEntity player) {
+        Text reasonText = TextHelper.getTextByKey(player, "maintenance.disconnect");
+        PlayerHelper.disconnectPlayer(player, reasonText);
+    }
+
+    public static void setMaintenanceModeStatus(boolean status) {
+        MaintenanceModuleInitializer.config.model().setMaintenanceModeStatus(status);
+        MaintenanceModuleInitializer.config.writeStorage();
+        processMaintenanceModeEvents();
+    }
+
+    private static void processMaintenanceModeEvents() {
+        /* Compute commands. */
+        boolean currentStatus = getMaintenanceModeStatus();
+        MaintenanceConfigModel.Events events = MaintenanceModuleInitializer.config.model().getEvents();
+        List<String> commands;
+        if (currentStatus) {
+            commands = events.getOnEnterMaintenanceModeCommands();
+        } else {
+            commands = events.getOnLeaveMaintenanceModeCommands();
+        }
+
+        /* Execute commands. */
+        ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(ServerHelper.getServer().getCommandSource());
+        CommandExecutor.executeBatch(extendedCommandSource, commands);
+    }
+
+    public static Text getEffectiveMaintenanceMessageText() {
+        String message = RandomUtil.drawList(MaintenanceModuleInitializer.config.model().getMaintenanceMessages());
+        return TextHelper.getTextByValue(null, message);
+    }
+
+}

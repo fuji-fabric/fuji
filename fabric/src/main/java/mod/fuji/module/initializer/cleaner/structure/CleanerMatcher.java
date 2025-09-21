@@ -1,0 +1,26 @@
+package mod.fuji.module.initializer.cleaner.structure;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class CleanerMatcher {
+
+    boolean enable = false;
+
+    String translatableKey;
+
+    int livesLongerThanAge = Integer.MAX_VALUE;
+
+    CleanupMethod cleanupMethod = CleanupMethod.KILL;
+
+    public boolean isMatch(@NotNull String entityTranslatableKey, int entityAge) {
+        return this.translatableKey.equals(entityTranslatableKey)
+            && entityAge > livesLongerThanAge;
+    }
+
+}

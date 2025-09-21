@@ -1,6 +1,6 @@
 package auxiliary;
 
-import io.github.sakurawald.fuji.core.auxiliary.ReflectionUtil;
+import mod.fuji.core.auxiliary.ReflectionUtil;
 import java.nio.file.Path;
 import lombok.experimental.UtilityClass;
 

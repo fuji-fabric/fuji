@@ -1,0 +1,29 @@
+package mod.fuji.core.event.injector.structure;
+
+import mod.fuji.core.annotation.ReflectiveAccess;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class EventConsumerInfo {
+
+    @NotNull String eventTypeClassName;
+    @NotNull String declaringClassName;
+    @NotNull String declaringMethodName;
+
+    int injectorPriority;
+
+    @ReflectiveAccess
+    int consumerPriority;
+
+    boolean isDynamic;
+
+    public boolean isStatic() {
+        return !this.isDynamic;
+    }
+
+}

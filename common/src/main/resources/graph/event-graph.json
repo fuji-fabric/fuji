@@ -1,1660 +1,1660 @@
 {
   "producers": [
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPostEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPostEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_DEFAULT",
       "declaring_method_name": null,
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_DEFAULT",
       "declaring_method_name": null,
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPostEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPostEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_HIGHER",
       "declaring_method_name": null,
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_HIGHER",
       "declaring_method_name": null,
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPostEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPostEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_HIGHEST",
       "declaring_method_name": null,
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_HIGHEST",
       "declaring_method_name": null,
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPostEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPostEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_LOWER",
       "declaring_method_name": null,
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_LOWER",
       "declaring_method_name": null,
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPostEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPostEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_LOWEST",
       "declaring_method_name": null,
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandExecutionInCommandManagerEventMixin_LOWEST",
       "declaring_method_name": null,
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.BypassPlayerLimitEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.BypassPlayerLimitEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.server.BypassPlayerLimitEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.BypassPlayerLimitEventMixin_DEFAULT",
       "declaring_method_name": "produceBypassPlayerLimitEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.BypassPlayerLimitEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.BypassPlayerLimitEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.server.BypassPlayerLimitEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.BypassPlayerLimitEventMixin_HIGHER",
       "declaring_method_name": "produceBypassPlayerLimitEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.BypassPlayerLimitEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.BypassPlayerLimitEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.server.BypassPlayerLimitEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.BypassPlayerLimitEventMixin_HIGHEST",
       "declaring_method_name": "produceBypassPlayerLimitEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.BypassPlayerLimitEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.BypassPlayerLimitEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.server.BypassPlayerLimitEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.BypassPlayerLimitEventMixin_LOWER",
       "declaring_method_name": "produceBypassPlayerLimitEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.BypassPlayerLimitEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.BypassPlayerLimitEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.server.BypassPlayerLimitEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.BypassPlayerLimitEventMixin_LOWEST",
       "declaring_method_name": "produceBypassPlayerLimitEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandDispatcherEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandExecutionInCommandDispatcherEventMixin_DEFAULT",
       "declaring_method_name": "produceBeforeCommandExecutionInCommandDispatcherEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPostEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandDispatcherEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPostEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandExecutionInCommandDispatcherEventMixin_DEFAULT",
       "declaring_method_name": "produceAfterCommandExecutionInCommandDispatcherEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandDispatcherEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandExecutionInCommandDispatcherEventMixin_HIGHER",
       "declaring_method_name": "produceBeforeCommandExecutionInCommandDispatcherEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPostEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandDispatcherEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPostEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandExecutionInCommandDispatcherEventMixin_HIGHER",
       "declaring_method_name": "produceAfterCommandExecutionInCommandDispatcherEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandDispatcherEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandExecutionInCommandDispatcherEventMixin_HIGHEST",
       "declaring_method_name": "produceBeforeCommandExecutionInCommandDispatcherEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPostEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandDispatcherEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPostEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandExecutionInCommandDispatcherEventMixin_HIGHEST",
       "declaring_method_name": "produceAfterCommandExecutionInCommandDispatcherEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandDispatcherEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandExecutionInCommandDispatcherEventMixin_LOWER",
       "declaring_method_name": "produceBeforeCommandExecutionInCommandDispatcherEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPostEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandDispatcherEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPostEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandExecutionInCommandDispatcherEventMixin_LOWER",
       "declaring_method_name": "produceAfterCommandExecutionInCommandDispatcherEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandDispatcherEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandExecutionInCommandDispatcherEventMixin_LOWEST",
       "declaring_method_name": "produceBeforeCommandExecutionInCommandDispatcherEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPostEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandExecutionInCommandDispatcherEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPostEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandExecutionInCommandDispatcherEventMixin_LOWEST",
       "declaring_method_name": "produceAfterCommandExecutionInCommandDispatcherEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.command.CommandRegistrationEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandRegistrationEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.server.command.CommandRegistrationEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandRegistrationEventMixin_DEFAULT",
       "declaring_method_name": "produceOnCommandRegistrationEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.command.CommandRegistrationEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandRegistrationEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.server.command.CommandRegistrationEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandRegistrationEventMixin_HIGHER",
       "declaring_method_name": "produceOnCommandRegistrationEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.command.CommandRegistrationEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandRegistrationEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.server.command.CommandRegistrationEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandRegistrationEventMixin_HIGHEST",
       "declaring_method_name": "produceOnCommandRegistrationEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.command.CommandRegistrationEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandRegistrationEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.server.command.CommandRegistrationEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandRegistrationEventMixin_LOWER",
       "declaring_method_name": "produceOnCommandRegistrationEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.command.CommandRegistrationEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.CommandRegistrationEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.server.command.CommandRegistrationEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.CommandRegistrationEventMixin_LOWEST",
       "declaring_method_name": "produceOnCommandRegistrationEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.entity.LivingEntityDamageEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.LivingEntityDamageEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.entity.LivingEntityDamageEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.LivingEntityDamageEventMixin_DEFAULT",
       "declaring_method_name": "produceLivingEntityDamageEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.entity.LivingEntityDamageEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.LivingEntityDamageEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.entity.LivingEntityDamageEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.LivingEntityDamageEventMixin_HIGHER",
       "declaring_method_name": "produceLivingEntityDamageEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.entity.LivingEntityDamageEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.LivingEntityDamageEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.entity.LivingEntityDamageEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.LivingEntityDamageEventMixin_HIGHEST",
       "declaring_method_name": "produceLivingEntityDamageEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.entity.LivingEntityDamageEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.LivingEntityDamageEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.entity.LivingEntityDamageEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.LivingEntityDamageEventMixin_LOWER",
       "declaring_method_name": "produceLivingEntityDamageEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.entity.LivingEntityDamageEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.LivingEntityDamageEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.entity.LivingEntityDamageEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.LivingEntityDamageEventMixin_LOWEST",
       "declaring_method_name": "produceLivingEntityDamageEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerDisplayNameEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ModifyPlayerDisplayNameEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.player.ModifyPlayerDisplayNameEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ModifyPlayerDisplayNameEventMixin_DEFAULT",
       "declaring_method_name": "produceModifyPlayerDisplayNameEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerDisplayNameEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ModifyPlayerDisplayNameEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.ModifyPlayerDisplayNameEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ModifyPlayerDisplayNameEventMixin_HIGHER",
       "declaring_method_name": "produceModifyPlayerDisplayNameEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerDisplayNameEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ModifyPlayerDisplayNameEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.ModifyPlayerDisplayNameEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ModifyPlayerDisplayNameEventMixin_HIGHEST",
       "declaring_method_name": "produceModifyPlayerDisplayNameEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerDisplayNameEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ModifyPlayerDisplayNameEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.ModifyPlayerDisplayNameEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ModifyPlayerDisplayNameEventMixin_LOWER",
       "declaring_method_name": "produceModifyPlayerDisplayNameEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerDisplayNameEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ModifyPlayerDisplayNameEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.ModifyPlayerDisplayNameEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ModifyPlayerDisplayNameEventMixin_LOWEST",
       "declaring_method_name": "produceModifyPlayerDisplayNameEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerListNameEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ModifyPlayerListNameEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.player.ModifyPlayerListNameEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ModifyPlayerListNameEventMixin_DEFAULT",
       "declaring_method_name": "produceModifyPlayerListNameEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerListNameEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ModifyPlayerListNameEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.ModifyPlayerListNameEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ModifyPlayerListNameEventMixin_HIGHER",
       "declaring_method_name": "produceModifyPlayerListNameEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerListNameEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ModifyPlayerListNameEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.ModifyPlayerListNameEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ModifyPlayerListNameEventMixin_HIGHEST",
       "declaring_method_name": "produceModifyPlayerListNameEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerListNameEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ModifyPlayerListNameEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.ModifyPlayerListNameEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ModifyPlayerListNameEventMixin_LOWER",
       "declaring_method_name": "produceModifyPlayerListNameEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerListNameEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ModifyPlayerListNameEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.ModifyPlayerListNameEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ModifyPlayerListNameEventMixin_LOWEST",
       "declaring_method_name": "produceModifyPlayerListNameEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.metadata.ModifyServerMetadataEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ModifyServerMetadataEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.server.metadata.ModifyServerMetadataEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ModifyServerMetadataEventMixin_DEFAULT",
       "declaring_method_name": "produceModifyServerMetadataEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.metadata.ModifyServerMetadataEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ModifyServerMetadataEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.server.metadata.ModifyServerMetadataEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ModifyServerMetadataEventMixin_HIGHER",
       "declaring_method_name": "produceModifyServerMetadataEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.metadata.ModifyServerMetadataEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ModifyServerMetadataEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.server.metadata.ModifyServerMetadataEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ModifyServerMetadataEventMixin_HIGHEST",
       "declaring_method_name": "produceModifyServerMetadataEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.metadata.ModifyServerMetadataEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ModifyServerMetadataEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.server.metadata.ModifyServerMetadataEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ModifyServerMetadataEventMixin_LOWER",
       "declaring_method_name": "produceModifyServerMetadataEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.metadata.ModifyServerMetadataEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ModifyServerMetadataEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.server.metadata.ModifyServerMetadataEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ModifyServerMetadataEventMixin_LOWEST",
       "declaring_method_name": "produceModifyServerMetadataEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerActionEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerActionEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerActionEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerActionEventMixin_DEFAULT",
       "declaring_method_name": "producePlayerActionEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerActionEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerActionEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerActionEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerActionEventMixin_HIGHER",
       "declaring_method_name": "producePlayerActionEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerActionEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerActionEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerActionEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerActionEventMixin_HIGHEST",
       "declaring_method_name": "producePlayerActionEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerActionEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerActionEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerActionEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerActionEventMixin_LOWER",
       "declaring_method_name": "producePlayerActionEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerActionEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerActionEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerActionEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerActionEventMixin_LOWEST",
       "declaring_method_name": "producePlayerActionEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerBlockBreakPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerBlockBreakPreEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerBlockBreakPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerBlockBreakPreEventMixin_DEFAULT",
       "declaring_method_name": "producePlayerBlockBreakPreEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerBlockBreakPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerBlockBreakPreEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerBlockBreakPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerBlockBreakPreEventMixin_HIGHER",
       "declaring_method_name": "producePlayerBlockBreakPreEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerBlockBreakPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerBlockBreakPreEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerBlockBreakPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerBlockBreakPreEventMixin_HIGHEST",
       "declaring_method_name": "producePlayerBlockBreakPreEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerBlockBreakPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerBlockBreakPreEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerBlockBreakPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerBlockBreakPreEventMixin_LOWER",
       "declaring_method_name": "producePlayerBlockBreakPreEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerBlockBreakPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerBlockBreakPreEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerBlockBreakPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerBlockBreakPreEventMixin_LOWEST",
       "declaring_method_name": "producePlayerBlockBreakPreEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerChatMessagePreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_DEFAULT",
       "declaring_method_name": "produceOnPlayerChatPreEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePostEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerChatMessagePostEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_DEFAULT",
       "declaring_method_name": "produceOnPlayerChatPostEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerChatMessagePreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_HIGHER",
       "declaring_method_name": "produceOnPlayerChatPreEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePostEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerChatMessagePostEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_HIGHER",
       "declaring_method_name": "produceOnPlayerChatPostEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerChatMessagePreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_HIGHEST",
       "declaring_method_name": "produceOnPlayerChatPreEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePostEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerChatMessagePostEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_HIGHEST",
       "declaring_method_name": "produceOnPlayerChatPostEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerChatMessagePreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_LOWER",
       "declaring_method_name": "produceOnPlayerChatPreEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePostEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerChatMessagePostEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_LOWER",
       "declaring_method_name": "produceOnPlayerChatPostEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerChatMessagePreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_LOWEST",
       "declaring_method_name": "produceOnPlayerChatPreEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePostEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerChatMessagePostEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerChatMessageEventMixin_LOWEST",
       "declaring_method_name": "produceOnPlayerChatPostEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageSentEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageSentEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerChatMessageSentEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerChatMessageSentEventMixin_DEFAULT",
       "declaring_method_name": "producePlayerChatMessageSentEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageSentEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageSentEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerChatMessageSentEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerChatMessageSentEventMixin_HIGHER",
       "declaring_method_name": "producePlayerChatMessageSentEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageSentEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageSentEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerChatMessageSentEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerChatMessageSentEventMixin_HIGHEST",
       "declaring_method_name": "producePlayerChatMessageSentEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageSentEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageSentEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerChatMessageSentEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerChatMessageSentEventMixin_LOWER",
       "declaring_method_name": "producePlayerChatMessageSentEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageSentEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerChatMessageSentEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerChatMessageSentEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerChatMessageSentEventMixin_LOWEST",
       "declaring_method_name": "producePlayerChatMessageSentEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerCommandIssuePreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerCommandIssuePreEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerCommandIssuePreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerCommandIssuePreEventMixin_DEFAULT",
       "declaring_method_name": "producePlayerCommandIssuePreEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerCommandIssuePreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerCommandIssuePreEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerCommandIssuePreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerCommandIssuePreEventMixin_HIGHER",
       "declaring_method_name": "producePlayerCommandIssuePreEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerCommandIssuePreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerCommandIssuePreEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerCommandIssuePreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerCommandIssuePreEventMixin_HIGHEST",
       "declaring_method_name": "producePlayerCommandIssuePreEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerCommandIssuePreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerCommandIssuePreEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerCommandIssuePreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerCommandIssuePreEventMixin_LOWER",
       "declaring_method_name": "producePlayerCommandIssuePreEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerCommandIssuePreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerCommandIssuePreEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerCommandIssuePreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerCommandIssuePreEventMixin_LOWEST",
       "declaring_method_name": "producePlayerCommandIssuePreEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerDamageEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerDamageEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerDamageEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerDamageEventMixin_DEFAULT",
       "declaring_method_name": "producePlayerDamageEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerDamageEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerDamageEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerDamageEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerDamageEventMixin_HIGHER",
       "declaring_method_name": "producePlayerDamageEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerDamageEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerDamageEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerDamageEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerDamageEventMixin_HIGHEST",
       "declaring_method_name": "producePlayerDamageEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerDamageEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerDamageEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerDamageEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerDamageEventMixin_LOWER",
       "declaring_method_name": "producePlayerDamageEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerDamageEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerDamageEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerDamageEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerDamageEventMixin_LOWEST",
       "declaring_method_name": "producePlayerDamageEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerDeathEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerDeathEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerDeathEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerDeathEventMixin_DEFAULT",
       "declaring_method_name": "produceOnPlayerDeathEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerDeathEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerDeathEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerDeathEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerDeathEventMixin_HIGHER",
       "declaring_method_name": "produceOnPlayerDeathEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerDeathEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerDeathEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerDeathEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerDeathEventMixin_HIGHEST",
       "declaring_method_name": "produceOnPlayerDeathEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerDeathEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerDeathEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerDeathEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerDeathEventMixin_LOWER",
       "declaring_method_name": "produceOnPlayerDeathEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerDeathEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerDeathEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerDeathEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerDeathEventMixin_LOWEST",
       "declaring_method_name": "produceOnPlayerDeathEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractBlockPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerInteractBlockPreEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractBlockPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerInteractBlockPreEventMixin_DEFAULT",
       "declaring_method_name": "producePlayerInteractBlockPreEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractBlockPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerInteractBlockPreEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractBlockPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerInteractBlockPreEventMixin_HIGHER",
       "declaring_method_name": "producePlayerInteractBlockPreEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractBlockPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerInteractBlockPreEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractBlockPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerInteractBlockPreEventMixin_HIGHEST",
       "declaring_method_name": "producePlayerInteractBlockPreEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractBlockPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerInteractBlockPreEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractBlockPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerInteractBlockPreEventMixin_LOWER",
       "declaring_method_name": "producePlayerInteractBlockPreEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractBlockPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerInteractBlockPreEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractBlockPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerInteractBlockPreEventMixin_LOWEST",
       "declaring_method_name": "producePlayerInteractBlockPreEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractEntityPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerInteractEntityPreEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractEntityPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerInteractEntityPreEventMixin_DEFAULT",
       "declaring_method_name": "producePlayerInteractEntityPreEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractEntityPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerInteractEntityPreEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractEntityPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerInteractEntityPreEventMixin_HIGHER",
       "declaring_method_name": "producePlayerInteractEntityPreEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractEntityPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerInteractEntityPreEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractEntityPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerInteractEntityPreEventMixin_HIGHEST",
       "declaring_method_name": "producePlayerInteractEntityPreEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractEntityPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerInteractEntityPreEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractEntityPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerInteractEntityPreEventMixin_LOWER",
       "declaring_method_name": "producePlayerInteractEntityPreEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractEntityPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerInteractEntityPreEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractEntityPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerInteractEntityPreEventMixin_LOWEST",
       "declaring_method_name": "producePlayerInteractEntityPreEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractItemPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerInteractItemPreEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractItemPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerInteractItemPreEventMixin_DEFAULT",
       "declaring_method_name": "producePlayerInteractItemPreEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractItemPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerInteractItemPreEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractItemPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerInteractItemPreEventMixin_HIGHER",
       "declaring_method_name": "producePlayerInteractItemPreEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractItemPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerInteractItemPreEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractItemPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerInteractItemPreEventMixin_HIGHEST",
       "declaring_method_name": "producePlayerInteractItemPreEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractItemPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerInteractItemPreEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractItemPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerInteractItemPreEventMixin_LOWER",
       "declaring_method_name": "producePlayerInteractItemPreEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractItemPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerInteractItemPreEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractItemPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerInteractItemPreEventMixin_LOWEST",
       "declaring_method_name": "producePlayerInteractItemPreEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerJoinedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerManagerEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerJoinedEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerManagerEventMixin_DEFAULT",
       "declaring_method_name": "produceOnPlayerJoinedEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerLeftEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerManagerEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerLeftEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerManagerEventMixin_DEFAULT",
       "declaring_method_name": "produceOnPlayerLeaveEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerJoinedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerManagerEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerJoinedEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerManagerEventMixin_HIGHER",
       "declaring_method_name": "produceOnPlayerJoinedEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerLeftEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerManagerEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerLeftEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerManagerEventMixin_HIGHER",
       "declaring_method_name": "produceOnPlayerLeaveEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerJoinedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerManagerEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerJoinedEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerManagerEventMixin_HIGHEST",
       "declaring_method_name": "produceOnPlayerJoinedEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerLeftEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerManagerEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerLeftEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerManagerEventMixin_HIGHEST",
       "declaring_method_name": "produceOnPlayerLeaveEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerJoinedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerManagerEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerJoinedEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerManagerEventMixin_LOWER",
       "declaring_method_name": "produceOnPlayerJoinedEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerLeftEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerManagerEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerLeftEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerManagerEventMixin_LOWER",
       "declaring_method_name": "produceOnPlayerLeaveEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerJoinedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerManagerEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerJoinedEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerManagerEventMixin_LOWEST",
       "declaring_method_name": "produceOnPlayerJoinedEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerLeftEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerManagerEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerLeftEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerManagerEventMixin_LOWEST",
       "declaring_method_name": "produceOnPlayerLeaveEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerTeleportPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerTeleportPreEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerTeleportPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerTeleportPreEventMixin_DEFAULT",
       "declaring_method_name": "producePlayerPreTeleportEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerTeleportPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerTeleportPreEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerTeleportPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerTeleportPreEventMixin_HIGHER",
       "declaring_method_name": "producePlayerPreTeleportEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerTeleportPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerTeleportPreEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerTeleportPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerTeleportPreEventMixin_HIGHEST",
       "declaring_method_name": "producePlayerPreTeleportEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerTeleportPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerTeleportPreEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerTeleportPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerTeleportPreEventMixin_LOWER",
       "declaring_method_name": "producePlayerPreTeleportEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerTeleportPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerTeleportPreEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerTeleportPreEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerTeleportPreEventMixin_LOWEST",
       "declaring_method_name": "producePlayerPreTeleportEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerWorldChangedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerWorldChangedEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerWorldChangedEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerWorldChangedEventMixin_DEFAULT",
       "declaring_method_name": "producePlayerWorldChangedEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerWorldChangedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerWorldChangedEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerWorldChangedEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerWorldChangedEventMixin_HIGHER",
       "declaring_method_name": "producePlayerWorldChangedEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerWorldChangedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerWorldChangedEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerWorldChangedEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerWorldChangedEventMixin_HIGHEST",
       "declaring_method_name": "producePlayerWorldChangedEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerWorldChangedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerWorldChangedEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerWorldChangedEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerWorldChangedEventMixin_LOWER",
       "declaring_method_name": "producePlayerWorldChangedEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerWorldChangedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.PlayerWorldChangedEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerWorldChangedEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.PlayerWorldChangedEventMixin_LOWEST",
       "declaring_method_name": "producePlayerWorldChangedEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartingEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerLifecycleEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartingEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerLifecycleEventMixin_DEFAULT",
       "declaring_method_name": "produceServerStartingEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerLifecycleEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerLifecycleEventMixin_DEFAULT",
       "declaring_method_name": "produceServerStartedEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStoppingEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerLifecycleEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStoppingEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerLifecycleEventMixin_DEFAULT",
       "declaring_method_name": "produceServerStoppingEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStoppedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerLifecycleEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStoppedEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerLifecycleEventMixin_DEFAULT",
       "declaring_method_name": "produceServerStoppedEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartingEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerLifecycleEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartingEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerLifecycleEventMixin_HIGHER",
       "declaring_method_name": "produceServerStartingEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerLifecycleEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerLifecycleEventMixin_HIGHER",
       "declaring_method_name": "produceServerStartedEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStoppingEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerLifecycleEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStoppingEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerLifecycleEventMixin_HIGHER",
       "declaring_method_name": "produceServerStoppingEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStoppedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerLifecycleEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStoppedEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerLifecycleEventMixin_HIGHER",
       "declaring_method_name": "produceServerStoppedEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartingEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerLifecycleEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartingEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerLifecycleEventMixin_HIGHEST",
       "declaring_method_name": "produceServerStartingEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerLifecycleEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerLifecycleEventMixin_HIGHEST",
       "declaring_method_name": "produceServerStartedEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStoppingEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerLifecycleEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStoppingEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerLifecycleEventMixin_HIGHEST",
       "declaring_method_name": "produceServerStoppingEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStoppedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerLifecycleEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStoppedEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerLifecycleEventMixin_HIGHEST",
       "declaring_method_name": "produceServerStoppedEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartingEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerLifecycleEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartingEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerLifecycleEventMixin_LOWER",
       "declaring_method_name": "produceServerStartingEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerLifecycleEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerLifecycleEventMixin_LOWER",
       "declaring_method_name": "produceServerStartedEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStoppingEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerLifecycleEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStoppingEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerLifecycleEventMixin_LOWER",
       "declaring_method_name": "produceServerStoppingEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStoppedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerLifecycleEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStoppedEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerLifecycleEventMixin_LOWER",
       "declaring_method_name": "produceServerStoppedEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartingEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerLifecycleEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartingEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerLifecycleEventMixin_LOWEST",
       "declaring_method_name": "produceServerStartingEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerLifecycleEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerLifecycleEventMixin_LOWEST",
       "declaring_method_name": "produceServerStartedEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStoppingEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerLifecycleEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStoppingEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerLifecycleEventMixin_LOWEST",
       "declaring_method_name": "produceServerStoppingEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStoppedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerLifecycleEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStoppedEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerLifecycleEventMixin_LOWEST",
       "declaring_method_name": "produceServerStoppedEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickEndEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerTickEndEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.server.tick.ServerTickEndEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerTickEndEventMixin_DEFAULT",
       "declaring_method_name": "produceServerTickEndEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickEndEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerTickEndEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.server.tick.ServerTickEndEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerTickEndEventMixin_HIGHER",
       "declaring_method_name": "produceServerTickEndEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickEndEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerTickEndEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.server.tick.ServerTickEndEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerTickEndEventMixin_HIGHEST",
       "declaring_method_name": "produceServerTickEndEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickEndEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerTickEndEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.server.tick.ServerTickEndEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerTickEndEventMixin_LOWER",
       "declaring_method_name": "produceServerTickEndEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickEndEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerTickEndEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.server.tick.ServerTickEndEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerTickEndEventMixin_LOWEST",
       "declaring_method_name": "produceServerTickEndEvent",
       "injector_priority": 0
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickStartEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerTickStartEventMixin_DEFAULT",
+      "event_type_class_name": "mod.fuji.core.event.message.server.tick.ServerTickStartEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerTickStartEventMixin_DEFAULT",
       "declaring_method_name": "produceServerTickStartEvent",
       "injector_priority": 1000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickStartEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerTickStartEventMixin_HIGHER",
+      "event_type_class_name": "mod.fuji.core.event.message.server.tick.ServerTickStartEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerTickStartEventMixin_HIGHER",
       "declaring_method_name": "produceServerTickStartEvent",
       "injector_priority": 1001
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickStartEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerTickStartEventMixin_HIGHEST",
+      "event_type_class_name": "mod.fuji.core.event.message.server.tick.ServerTickStartEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerTickStartEventMixin_HIGHEST",
       "declaring_method_name": "produceServerTickStartEvent",
       "injector_priority": 2000
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickStartEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerTickStartEventMixin_LOWER",
+      "event_type_class_name": "mod.fuji.core.event.message.server.tick.ServerTickStartEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerTickStartEventMixin_LOWER",
       "declaring_method_name": "produceServerTickStartEvent",
       "injector_priority": 999
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickStartEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.mixin.core.event.ServerTickStartEventMixin_LOWEST",
+      "event_type_class_name": "mod.fuji.core.event.message.server.tick.ServerTickStartEvent",
+      "declaring_class_name": "mod.fuji.module.mixin.core.event.ServerTickStartEventMixin_LOWEST",
       "declaring_method_name": "produceServerTickStartEvent",
       "injector_priority": 0
     }
   ],
   "consumers": [
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.command.CommandRegistrationEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor",
+      "event_type_class_name": "mod.fuji.core.event.message.server.command.CommandRegistrationEvent",
+      "declaring_class_name": "mod.fuji.core.command.processor.CommandAnnotationProcessor",
       "declaring_method_name": "setupCommandManagerReferences",
       "injector_priority": 0,
       "consumer_priority": 0,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerJoinedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.chat.history.ChatHistoryInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerJoinedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.chat.history.ChatHistoryInitializer",
       "declaring_method_name": "replayChatHistory",
       "injector_priority": 0,
       "consumer_priority": 0,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerCommandIssuePreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_rewrite.CommandRewriteInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerCommandIssuePreEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_rewrite.CommandRewriteInitializer",
       "declaring_method_name": "consumePlayerCommandIssuePreEvent",
       "injector_priority": 0,
       "consumer_priority": 0,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_spy.CommandSpyInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPreEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_spy.CommandSpyInitializer",
       "declaring_method_name": "consumeBeforeCommandExecutionEvent",
       "injector_priority": 0,
       "consumer_priority": 0,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_warmup.CommandWarmupInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPreEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_warmup.CommandWarmupInitializer",
       "declaring_method_name": "consumeCommandExecutionPreEvent",
       "injector_priority": 0,
       "consumer_priority": 0,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerTeleportPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.teleport_warmup.TeleportWarmupInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerTeleportPreEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.teleport_warmup.TeleportWarmupInitializer",
       "declaring_method_name": "handlePlayerPreTeleportEvent",
       "injector_priority": 0,
       "consumer_priority": 0,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_cooldown.CommandCooldownInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPreEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_cooldown.CommandCooldownInitializer",
       "declaring_method_name": "consumeBeforeCommandExecutionEvent",
       "injector_priority": 0,
       "consumer_priority": 999,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerBlockBreakPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.anti_build.AntiBuildInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerBlockBreakPreEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.anti_build.AntiBuildInitializer",
       "declaring_method_name": "consumePlayerBlockBreakPreEvent",
       "injector_priority": 0,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractItemPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.anti_build.AntiBuildInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractItemPreEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.anti_build.AntiBuildInitializer",
       "declaring_method_name": "consumePlayerInteractItemPreEvent",
       "injector_priority": 0,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractBlockPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.anti_build.AntiBuildInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractBlockPreEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.anti_build.AntiBuildInitializer",
       "declaring_method_name": "consumePlayerInteractBlockPreEvent",
       "injector_priority": 0,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractEntityPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.anti_build.AntiBuildInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractEntityPreEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.anti_build.AntiBuildInitializer",
       "declaring_method_name": "consumePlayerInteractEntityPreEvent",
       "injector_priority": 0,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.BypassPlayerLimitEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.disabler.max_player_disabler.MaxPlayerDisablerInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.server.BypassPlayerLimitEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.disabler.max_player_disabler.MaxPlayerDisablerInitializer",
       "declaring_method_name": "disableMaxPlayerLimit",
       "injector_priority": 0,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractBlockPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_attachment.CommandAttachmentInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractBlockPreEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_attachment.CommandAttachmentInitializer",
       "declaring_method_name": "consumePlayerInteractBlockPreEvent",
       "injector_priority": 999,
       "consumer_priority": 0,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractEntityPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_attachment.CommandAttachmentInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractEntityPreEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_attachment.CommandAttachmentInitializer",
       "declaring_method_name": "consumePlayerInteractEntityPreEvent",
       "injector_priority": 999,
       "consumer_priority": 0,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractBlockPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_interactive.CommandInteractiveInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractBlockPreEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_interactive.CommandInteractiveInitializer",
       "declaring_method_name": "consumePlayerInteractBlockPreEvent",
       "injector_priority": 999,
       "consumer_priority": 999,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.command.CommandRegistrationEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor",
+      "event_type_class_name": "mod.fuji.core.event.message.server.command.CommandRegistrationEvent",
+      "declaring_class_name": "mod.fuji.core.command.processor.CommandAnnotationProcessor",
       "declaring_method_name": "onCommandRegistrationEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStoppingEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.core.config.handler.abst.BaseConfigurationHandler",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStoppingEvent",
+      "declaring_class_name": "mod.fuji.core.config.handler.abst.BaseConfigurationHandler",
       "declaring_method_name": "enableAutoSaveFeature",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": true
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerDamageEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarManager",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerDamageEvent",
+      "declaring_class_name": "mod.fuji.core.manager.impl.bossbar.BossBarManager",
       "declaring_method_name": "processOnPlayerDamagedEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickStartEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.core.manager.impl.bossbar.BossBarManager",
+      "event_type_class_name": "mod.fuji.core.event.message.server.tick.ServerTickStartEvent",
+      "declaring_class_name": "mod.fuji.core.manager.impl.bossbar.BossBarManager",
       "declaring_method_name": "tickBossBarTickets",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerJoinedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.core.manager.impl.cache.CacheManager",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerJoinedEvent",
+      "declaring_class_name": "mod.fuji.core.manager.impl.cache.CacheManager",
       "declaring_method_name": "updateGameProfileCache",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.core.manager.impl.cache.job.FlushCacheJob",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.core.manager.impl.cache.job.FlushCacheJob",
       "declaring_method_name": "scheduleFlushCacheJob",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.core.manager.impl.callback.CallbackManager",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.core.manager.impl.callback.CallbackManager",
       "declaring_method_name": "resetCallbackMap",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.command.CommandRegistrationEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.core.manager.impl.callback.CallbackManager",
+      "event_type_class_name": "mod.fuji.core.event.message.server.command.CommandRegistrationEvent",
+      "declaring_class_name": "mod.fuji.core.manager.impl.callback.CallbackManager",
       "declaring_method_name": "registerCommandCallbackCommand",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.core.manager.impl.scheduler.ScheduleManager",
       "declaring_method_name": "startScheduler",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStoppingEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.core.manager.impl.scheduler.ScheduleManager",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStoppingEvent",
+      "declaring_class_name": "mod.fuji.core.manager.impl.scheduler.ScheduleManager",
       "declaring_method_name": "shutdownScheduler",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickStartEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.core.manager.impl.task.GameTaskManager",
+      "event_type_class_name": "mod.fuji.core.event.message.server.tick.ServerTickStartEvent",
+      "declaring_class_name": "mod.fuji.core.manager.impl.task.GameTaskManager",
       "declaring_method_name": "tickGameTasks",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.entity.LivingEntityDamageEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.afk.effect.AfkEffectInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.entity.LivingEntityDamageEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.afk.effect.AfkEffectInitializer",
       "declaring_method_name": "processInvulnerableEffect",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.afk.job.AfkMarkerJob",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.afk.job.AfkMarkerJob",
       "declaring_method_name": "scheduleAfkMarkerJob",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerJoinedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.afk.service.AfkService",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerJoinedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.afk.service.AfkService",
       "declaring_method_name": "consumePlayerJoinedEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerDeathEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.back.service.BackService",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerDeathEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.back.service.BackService",
       "declaring_method_name": "handleOnPlayerDeathEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerTeleportPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.back.service.BackService",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerTeleportPreEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.back.service.BackService",
       "declaring_method_name": "handlePlayerPreTeleportEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.cleaner.job.CleanerJob",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.cleaner.job.CleanerJob",
       "declaring_method_name": "scheduleCleanerJob",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_alias.CommandAliasInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_alias.CommandAliasInitializer",
       "declaring_method_name": "registerAllAliasCommands",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.command.CommandRegistrationEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_alias.CommandAliasInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.server.command.CommandRegistrationEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_alias.CommandAliasInitializer",
       "declaring_method_name": "onCommandRegistrationEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerActionEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_attachment.CommandAttachmentInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerActionEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_attachment.CommandAttachmentInitializer",
       "declaring_method_name": "consumePlayerActionEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerBlockBreakPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_attachment.CommandAttachmentInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerBlockBreakPreEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_attachment.CommandAttachmentInitializer",
       "declaring_method_name": "consumePlayerBlockBreakPreEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractItemPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_attachment.CommandAttachmentInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractItemPreEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_attachment.CommandAttachmentInitializer",
       "declaring_method_name": "consumePlayerInteractItemPreEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_bundle.CommandBundleInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_bundle.CommandBundleInitializer",
       "declaring_method_name": "registerAllBundleCommands",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.command.CommandRegistrationEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_bundle.CommandBundleInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.server.command.CommandRegistrationEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_bundle.CommandBundleInitializer",
       "declaring_method_name": "onCommandRegistrationEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerJoinedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_event.CommandEventInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerJoinedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_event.CommandEventInitializer",
       "declaring_method_name": "consumePlayerJoinedEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerLeftEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_event.CommandEventInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerLeftEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_event.CommandEventInitializer",
       "declaring_method_name": "consumePlayerLeftEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerDeathEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_event.CommandEventInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerDeathEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_event.CommandEventInitializer",
       "declaring_method_name": "consumePlayerDeathEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerWorldChangedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_event.CommandEventInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerWorldChangedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_event.CommandEventInitializer",
       "declaring_method_name": "consumePlayerWorldChangedEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerActionEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_menu.CommandMenuInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerActionEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_menu.CommandMenuInitializer",
       "declaring_method_name": "consumePlayerActionEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_meta.delay.DelayInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_meta.delay.DelayInitializer",
       "declaring_method_name": "resetDelaySchedulerExecutor",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStoppingEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_meta.delay.DelayInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStoppingEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_meta.delay.DelayInitializer",
       "declaring_method_name": "shutdownDelaySchedulerExecutor",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerJoinedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_meta.when_online.WhenOnlineInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerJoinedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_meta.when_online.WhenOnlineInitializer",
       "declaring_method_name": "processWhenOnlineTickets",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerDisplayNameEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_toolbox.nickname.NicknameInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.ModifyPlayerDisplayNameEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_toolbox.nickname.NicknameInitializer",
       "declaring_method_name": "modifyPlayerDisplayName",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerLeftEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_toolbox.seen.SeenInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerLeftEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_toolbox.seen.SeenInitializer",
       "declaring_method_name": "onPlayerLeft",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerDeathEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.deathlog.DeathLogInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerDeathEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.deathlog.DeathLogInitializer",
       "declaring_method_name": "handleOnPlayerDeathEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.command.CommandRegistrationEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.gameplay.carpet.better_info.BetterInfoInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.server.command.CommandRegistrationEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.gameplay.carpet.better_info.BetterInfoInitializer",
       "declaring_method_name": "onCommandRegistrationEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.gameplay.carpet.fake_player_manager.job.ManageFakePlayersJob",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.gameplay.carpet.fake_player_manager.job.ManageFakePlayersJob",
       "declaring_method_name": "scheduleFakePlayerJob",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.jail.job.UpdateJailRecordsJob",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.jail.job.UpdateJailRecordsJob",
       "declaring_method_name": "scheduleUpdateJailRecordsJob",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.entity.LivingEntityDamageEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.launcher.LauncherInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.entity.LivingEntityDamageEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.launcher.LauncherInitializer",
       "declaring_method_name": "safelyLanding",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerJoinedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.leaderboard.LeaderBoardInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerJoinedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.leaderboard.LeaderBoardInitializer",
       "declaring_method_name": "updateLeaderBoardOnPlayerJoined",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerLeftEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.leaderboard.LeaderBoardInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerLeftEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.leaderboard.LeaderBoardInitializer",
       "declaring_method_name": "updateLeaderBoardOnPlayerLeft",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerJoinedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.maintenance.service.MaintenanceService",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerJoinedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.maintenance.service.MaintenanceService",
       "declaring_method_name": "processMaintenanceModeOnPlayerJoined",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.metadata.ModifyServerMetadataEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.motd.MotdInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.server.metadata.ModifyServerMetadataEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.motd.MotdInitializer",
       "declaring_method_name": "onRequestServerMetadataHandler",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerDamageEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.multiplier.MultiplierInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerDamageEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.multiplier.MultiplierInitializer",
       "declaring_method_name": "multiplyDamageValue",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.nametag.job.UpdateNametagJob",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.nametag.job.UpdateNametagJob",
       "declaring_method_name": "scheduleUpdateNametagJob",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickEndEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.nametag.service.NametagService",
+      "event_type_class_name": "mod.fuji.core.event.message.server.tick.ServerTickEndEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.nametag.service.NametagService",
       "declaring_method_name": "tickNametagEntities",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerWorldChangedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.nametag.service.NametagService",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerWorldChangedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.nametag.service.NametagService",
       "declaring_method_name": "consumePlayerWorldChangedEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerLeftEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.placeholder.PlaceholderInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerLeftEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.placeholder.PlaceholderInitializer",
       "declaring_method_name": "removeSumUpPlaceholderOnPlayerLeft",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.placeholder.job.UpdateSumUpPlaceholderJob",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.placeholder.job.UpdateSumUpPlaceholderJob",
       "declaring_method_name": "scheduleSumUpPlaceholderUpdaterJob",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerDamageEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.pvp.PvpInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerDamageEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.pvp.PvpInitializer",
       "declaring_method_name": "processPvpDamage",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStoppingEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.sit.SitInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStoppingEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.sit.SitInitializer",
       "declaring_method_name": "killSpawnedSitEntities",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerInteractBlockPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.sit.SitInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerInteractBlockPreEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.sit.SitInitializer",
       "declaring_method_name": "consumePlayerInteractBlockPreEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerListNameEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.tab.TabListInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.ModifyPlayerListNameEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.tab.TabListInitializer",
       "declaring_method_name": "modifyPlayerListName",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.tab.job.RenderHeaderAndFooterJob",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.tab.job.RenderHeaderAndFooterJob",
       "declaring_method_name": "scheduleTabListRenderJob",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerJoinedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.warning.WarningInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerJoinedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.warning.WarningInitializer",
       "declaring_method_name": "notifyOnPlayerJoined",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerLeftEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.warning.WarningInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerLeftEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.warning.WarningInitializer",
       "declaring_method_name": "notifyOnPlayerLeft",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.works.job.WorksOnScheduleDispatcherJob",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.works.job.WorksOnScheduleDispatcherJob",
       "declaring_method_name": "scheduleWorksOnScheduleDispatcherJob",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.tick.ServerTickStartEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.world.manager.service.WorldService",
+      "event_type_class_name": "mod.fuji.core.event.message.server.tick.ServerTickStartEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.world.manager.service.WorldService",
       "declaring_method_name": "processDimensionCreationAndDeletionQueue",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.world.manager.service.WorldService",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.world.manager.service.WorldService",
       "declaring_method_name": "loadRuntimeDimensions",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.metadata.ModifyServerMetadataEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.maintenance.MaintenanceModuleInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.server.metadata.ModifyServerMetadataEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.maintenance.MaintenanceModuleInitializer",
       "declaring_method_name": "modifyMaintenanceMotd",
       "injector_priority": 1000,
       "consumer_priority": 2000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.chat.style.ChatStyleInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerChatMessagePreEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.chat.style.ChatStyleInitializer",
       "declaring_method_name": "handleOnPlayerChatEvent",
       "injector_priority": 1001,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.command.CommandRegistrationEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_permission.CommandPermissionInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.server.command.CommandRegistrationEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_permission.CommandPermissionInitializer",
       "declaring_method_name": "onCommandRegistrationEvent",
       "injector_priority": 2000,
       "consumer_priority": 0,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.chat.mention.ChatMentionInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerChatMessagePreEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.chat.mention.ChatMentionInitializer",
       "declaring_method_name": "handleOnPlayerChatEvent",
       "injector_priority": 2000,
       "consumer_priority": 999,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageSentEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.chat.spy.ChatSpyInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerChatMessageSentEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.chat.spy.ChatSpyInitializer",
       "declaring_method_name": "consumePlayerChatMessageSentEvent",
       "injector_priority": 2000,
       "consumer_priority": 999,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.chat.replace.ChatReplaceInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerChatMessagePreEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.chat.replace.ChatReplaceInitializer",
       "declaring_method_name": "handleOnPlayerChatEvent",
       "injector_priority": 2000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerListNameEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.jail.JailInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.ModifyPlayerListNameEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.jail.JailInitializer",
       "declaring_method_name": "modifyPlayerListName",
       "injector_priority": 2000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerDisplayNameEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.jail.JailInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.ModifyPlayerDisplayNameEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.jail.JailInitializer",
       "declaring_method_name": "modifyPlayerDisplayName",
       "injector_priority": 2000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerTeleportPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.nametag.service.NametagService",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerTeleportPreEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.nametag.service.NametagService",
       "declaring_method_name": "consumePlayerTeleportPreEvent",
       "injector_priority": 2000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.BypassPlayerLimitEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.queue.QueueInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.server.BypassPlayerLimitEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.queue.QueueInitializer",
       "declaring_method_name": "consumeBypassPlayerLimitEvent",
       "injector_priority": 2000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.command.CommandRegistrationEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.core.command.processor.CommandAnnotationProcessor",
+      "event_type_class_name": "mod.fuji.core.event.message.server.command.CommandRegistrationEvent",
+      "declaring_class_name": "mod.fuji.core.command.processor.CommandAnnotationProcessor",
       "declaring_method_name": "updateCommandTree",
       "injector_priority": 2000,
       "consumer_priority": 2000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.ModifyPlayerListNameEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.afk.service.AfkService",
+      "event_type_class_name": "mod.fuji.core.event.message.player.ModifyPlayerListNameEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.afk.service.AfkService",
       "declaring_method_name": "modifyPlayerListName",
       "injector_priority": 2000,
       "consumer_priority": 2000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessageSentEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.chat.history.ChatHistoryInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerChatMessageSentEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.chat.history.ChatHistoryInitializer",
       "declaring_method_name": "consumePlayerChatMessageSentEvent",
       "injector_priority": 2000,
       "consumer_priority": 2000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.player.PlayerChatMessagePostEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.chat.trigger.ChatTriggerInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerChatMessagePostEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.chat.trigger.ChatTriggerInitializer",
       "declaring_method_name": "handleOnPlayerChatEvent",
       "injector_priority": 2000,
       "consumer_priority": 2000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPreEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_advice.CommandAdviceInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPreEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_advice.CommandAdviceInitializer",
       "declaring_method_name": "consumeBeforeCommandExecutionEvent",
       "injector_priority": 2000,
       "consumer_priority": 2000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.command.CommandExecutionPostEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.command_advice.CommandAdviceInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.command.CommandExecutionPostEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_advice.CommandAdviceInitializer",
       "declaring_method_name": "consumeAfterCommandExecutionEvent",
       "injector_priority": 2000,
       "consumer_priority": 2000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "io.github.sakurawald.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "io.github.sakurawald.fuji.module.initializer.core.CoreInitializer",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.core.CoreInitializer",
       "declaring_method_name": "printModuleStatusReportOnServerStarted",
       "injector_priority": 2000,
       "consumer_priority": 2000,

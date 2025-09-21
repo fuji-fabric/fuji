@@ -74,7 +74,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "io.github.sakurawald.fuji.Fuji"
+      "mod.fuji.Fuji"
     ]
   },
   "accessWidener": "fuji.accesswidener",

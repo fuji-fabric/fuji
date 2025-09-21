@@ -25,10 +25,10 @@ public class BanDirectSendMessageMethodCall extends BanMethodCall {
 
     @Override
     public List<String> ignoreClassQualifiedNamePrefixes() {
-        return List.of("io.github.sakurawald.fuji.module.initializer.tester.TesterInitializer"
-                , "io.github.sakurawald.fuji.module.initializer.tester.functions.TestFunctions"
-                , "io.github.sakurawald.fuji.core.auxiliary.minecraft.TextHelper"
-                , "io.github.sakurawald.fuji.core.command.descriptor.CommandDescriptor"
-                , "io.github.sakurawald.fuji.core.command.assistant.CommandAssistant");
+        return List.of("mod.fuji.module.initializer.tester.TesterInitializer"
+                , "mod.fuji.module.initializer.tester.functions.TestFunctions"
+                , "mod.fuji.core.auxiliary.minecraft.TextHelper"
+                , "mod.fuji.core.command.descriptor.CommandDescriptor"
+                , "mod.fuji.core.command.assistant.CommandAssistant");
     }
 }

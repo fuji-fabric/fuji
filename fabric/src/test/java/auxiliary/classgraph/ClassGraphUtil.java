@@ -7,7 +7,7 @@ import io.github.classgraph.ClassInfo;
 import io.github.classgraph.MethodInfo;
 import io.github.classgraph.MethodParameterInfo;
 import io.github.classgraph.ScanResult;
-import io.github.sakurawald.fuji.Fuji;
+import mod.fuji.Fuji;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,13 +1,13 @@
 package tests.dependency;
 
 import com.google.gson.annotations.SerializedName;
-import io.github.sakurawald.fuji.Fuji;
-import io.github.sakurawald.fuji.core.config.model.MainControlConfigModel;
-import io.github.sakurawald.fuji.core.document.annotation.Document;
-import io.github.sakurawald.fuji.core.document.annotation.ForDeveloper;
-import io.github.sakurawald.fuji.module.initializer.ModuleInitializer;
-import io.github.sakurawald.fuji.module.initializer.core.CoreInitializer;
-import io.github.sakurawald.fuji.module.mixin.GlobalMixinConfigPlugin;
+import mod.fuji.Fuji;
+import mod.fuji.core.config.model.MainControlConfigModel;
+import mod.fuji.core.document.annotation.Document;
+import mod.fuji.core.document.annotation.ForDeveloper;
+import mod.fuji.module.initializer.ModuleInitializer;
+import mod.fuji.module.initializer.core.CoreInitializer;
+import mod.fuji.module.mixin.GlobalMixinConfigPlugin;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;

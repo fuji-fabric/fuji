@@ -1,0 +1,10 @@
+package mod.fuji.module.initializer.document.builder.context;
+
+import lombok.Data;
+import org.jetbrains.annotations.NotNull;
+
+@Data
+public class DocumentBuilderContext {
+    @NotNull final String modulePathString;
+    @NotNull final StringBuilder documentBuilder;
+}

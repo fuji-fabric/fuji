@@ -3,20 +3,19 @@ package tests.reflection;
 import auxiliary.classgraph.ClassGraphUtil;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import mod.fuji.core.auxiliary.LogUtil;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class ReflectionTest {
 
     public static final Set<String> REQUIRED_TYPE_DECLARATIONS = new HashSet<>() {
         {
-            this.add("io.github.sakurawald.fuji.core.command.annotation.CommandNode");
-            this.add("io.github.sakurawald.fuji.core.event.annotation.EventConsumer");
-            this.add("io.github.sakurawald.fuji.core.event.annotation.EventProducer");
+            this.add("mod.fuji.core.command.annotation.CommandNode");
+            this.add("mod.fuji.core.event.annotation.EventConsumer");
+            this.add("mod.fuji.core.event.annotation.EventProducer");
         }
     };
 

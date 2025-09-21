@@ -1,6 +1,6 @@
 package tests.dependency.structure;
 
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import mod.fuji.core.auxiliary.LogUtil;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;

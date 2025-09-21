@@ -1,7 +1,7 @@
 package tests.dependency.structure;
 
-import io.github.sakurawald.fuji.Fuji;
-import io.github.sakurawald.fuji.core.manager.impl.module.ModulePathResolver;
+import mod.fuji.Fuji;
+import mod.fuji.core.manager.impl.module.ModulePathResolver;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;

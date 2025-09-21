@@ -1,0 +1,34 @@
+package mod.fuji.core.service.random_teleport.generator;
+
+import java.util.Iterator;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
+import org.jetbrains.annotations.NotNull;
+
+public class ChunkCandidateBlocksGenerator {
+
+    public static @NotNull Iterable<BlockPos.Mutable> getChunkCandidateBlocks(@NotNull ChunkPos chunkPos) {
+        return () -> new Iterator<>() {
+            private final BlockPos.Mutable currentValue = new BlockPos.Mutable();
+            private int i = -1;
+
+            @Override
+            public boolean hasNext() {
+                return i < 4;
+            }
+
+            @Override
+            public BlockPos.Mutable next() {
+                i++;
+                return switch (i) {
+                    case 0 -> currentValue.set(chunkPos.getCenterX(), 0, chunkPos.getCenterZ());
+                    case 1 -> currentValue.set(chunkPos.getStartX(), 0, chunkPos.getStartZ());
+                    case 2 -> currentValue.set(chunkPos.getStartX(), 0, chunkPos.getEndZ());
+                    case 3 -> currentValue.set(chunkPos.getEndX(), 0, chunkPos.getStartZ());
+                    case 4 -> currentValue.set(chunkPos.getEndX(), 0, chunkPos.getEndZ());
+                    default -> throw new IllegalStateException("Unexpected value: " + i);
+                };
+            }
+        };
+    }
+}

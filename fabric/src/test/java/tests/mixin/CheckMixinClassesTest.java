@@ -5,7 +5,7 @@ import auxiliary.classgraph.structure.ExtendedAnnotationInfo;
 import com.google.errorprone.annotations.Keep;
 import io.github.classgraph.MethodInfo;
 import io.github.classgraph.ScanResult;
-import io.github.sakurawald.fuji.core.auxiliary.LogUtil;
+import mod.fuji.core.auxiliary.LogUtil;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
