@@ -11,8 +11,8 @@ import mod.fuji.core.command.argument.wrapper.impl.Dimension;
 import mod.fuji.module.initializer.ModuleInitializer;
 #if MC_VER <= MC_1_20_4
 import net.minecraft.nbt.NbtCompound;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
-import io.github.sakurawald.fuji.core.auxiliary.minecraft.ItemStackHelper;
+import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
+import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
 #elif MC_VER > MC_1_20_4
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LodestoneTrackerComponent;

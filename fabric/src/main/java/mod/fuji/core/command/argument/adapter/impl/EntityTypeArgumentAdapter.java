@@ -8,7 +8,7 @@ import mod.fuji.core.command.argument.wrapper.impl.NotSupportedType;
 import lombok.SneakyThrows;
 #if MC_VER <= MC_1_20_4
 import com.mojang.brigadier.arguments.StringArgumentType;
-import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
+import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
 #elif MC_VER > MC_1_20_4
 import mod.fuji.core.command.processor.CommandAnnotationProcessor;
 import net.minecraft.command.argument.RegistryEntryReferenceArgumentType;

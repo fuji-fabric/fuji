@@ -6,7 +6,7 @@ import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 #if MC_VER <= MC_1_20_4
 import com.mojang.brigadier.arguments.StringArgumentType;
-import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
+import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
 #elif MC_VER > MC_1_20_4
 import net.minecraft.command.argument.SlotRangeArgumentType;
 import net.minecraft.inventory.SlotRange;
@@ -38,7 +38,7 @@ public class SlotRangeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     public List<Class<?>> getTypeClasses() {
         #if MC_VER <= MC_1_20_4
-            return List.of(io.github.sakurawald.fuji.core.command.argument.wrapper.impl.NotSupportedType.class);
+            return List.of(mod.fuji.core.command.argument.wrapper.impl.NotSupportedType.class);
         #elif MC_VER > MC_1_20_4
             return List.of(SlotRange.class);
         #endif

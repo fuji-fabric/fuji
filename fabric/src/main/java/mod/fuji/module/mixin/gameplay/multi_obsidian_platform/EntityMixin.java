@@ -4,7 +4,7 @@ package mod.fuji.module.mixin.gameplay.multi_obsidian_platform;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import io.github.sakurawald.fuji.module.initializer.gameplay.multi_obsidian_platform.MultiObsidianPlatformInitializer;
+import mod.fuji.module.initializer.gameplay.multi_obsidian_platform.MultiObsidianPlatformInitializer;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.world.ServerWorld;

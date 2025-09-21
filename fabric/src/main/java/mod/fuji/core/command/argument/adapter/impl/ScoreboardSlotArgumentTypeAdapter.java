@@ -6,8 +6,8 @@ import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 #if MC_VER <= MC_1_20_1
 import com.mojang.brigadier.arguments.StringArgumentType;
-import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
-import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.NotSupportedType;
+import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
+import mod.fuji.core.command.argument.wrapper.impl.NotSupportedType;
 #elif MC_VER > MC_1_20_1
 import net.minecraft.command.argument.ScoreboardSlotArgumentType;
 import net.minecraft.scoreboard.ScoreboardDisplaySlot;

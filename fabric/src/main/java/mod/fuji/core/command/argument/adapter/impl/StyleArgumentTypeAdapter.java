@@ -5,7 +5,7 @@ import com.mojang.brigadier.context.CommandContext;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 #if MC_VER <= MC_1_20_2
-import io.github.sakurawald.fuji.core.command.argument.wrapper.impl.GreedyString;
+import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
 import com.mojang.brigadier.arguments.StringArgumentType;
 #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_20_4
 import net.minecraft.command.argument.StyleArgumentType;
