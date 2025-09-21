@@ -1,0 +1,5 @@
+# --- The following contents are common AW entries ---
+# You should write the AW entries directly, and ignore the AW file headers.
+
+# rtp
+accessible method net/minecraft/server/world/ServerChunkManager getChunkFuture (IILnet/minecraft/world/chunk/ChunkStatus;Z)Ljava/util/concurrent/CompletableFuture;

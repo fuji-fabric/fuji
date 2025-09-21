@@ -66,6 +66,3 @@ accessible field net/minecraft/server/network/ServerPlayerEntity server Lnet/min
 # skin
 accessible field net/minecraft/server/world/ServerChunkLoadingManager entityTrackers Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
 accessible class net/minecraft/server/world/ServerChunkLoadingManager$EntityTracker
-
-# rtp
-accessible method net/minecraft/server/world/ServerChunkManager getChunkFuture (IILnet/minecraft/world/chunk/ChunkStatus;Z)Ljava/util/concurrent/CompletableFuture;

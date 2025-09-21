@@ -18,9 +18,22 @@ repositories {
     maven { url "https://maven.nucleoid.xyz" }
 }
 
+/* Define AW files merge function. */
+ext.mergedAw = project(":common").file("build/resources/main/merged.fuji.accesswidener")
+def mergeAccessWidenerFiles() {
+    def commonAw = project(":common").file("src/main/resources/common.fuji.accesswidener")
+    def versionAw = project(":common").file("src/main/resources/${access_widener_version}.fuji.accesswidener")
+
+    mergedAw.parentFile.mkdirs()
+    def versionContent = versionAw.text
+    def commonContent = commonAw.text
+    mergedAw.text = versionContent + "\n" + commonContent + "\n"
+}
+
 /* Configure fabric-loom plugin. */
 loom {
-    accessWidenerPath = project(":common").file("src/main/resources/${access_widener_version}.fuji.accesswidener")
+    mergeAccessWidenerFiles()
+    accessWidenerPath = mergedAw
 
     mods {
         "${project.mod_id}" {
