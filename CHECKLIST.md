@@ -6,6 +6,8 @@ It's good to have a checklist, to avoid forgetting something.
 
 - Read the change log of Minecraft version.
   - https://fabricmc.net/blog/
+- Read the bug tracker of Minecraft version.
+  - https://bugs.mojang.com/browse/MC
 - Update the version of fabric loader.
 - Update the version of mappings.
 - Update the version of dependent mods.
