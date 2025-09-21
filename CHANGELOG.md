@@ -8,8 +8,4 @@
 
 ## Changelog
 
-### [document]
-- **Feature:** Improved the layout of generated documentation files produced by the `/document build` command.
-- **Feature:** Enhanced the user experience of the [online documentation site](https://fuji-fabric.github.io):
-    - Refined newline and indentation formatting for improved readability.
-    - Optimized the search engine to support queries across all default configuration files.  
+- chore: new supported MC version `1.21.9`.
