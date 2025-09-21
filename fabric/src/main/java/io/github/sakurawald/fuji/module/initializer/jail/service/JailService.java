@@ -9,6 +9,7 @@ import io.github.sakurawald.fuji.core.command.executor.structure.ExtendedCommand
 import io.github.sakurawald.fuji.core.service.duration_parser.DurationParser;
 import io.github.sakurawald.fuji.core.structure.GlobalPos;
 import io.github.sakurawald.fuji.module.initializer.jail.JailInitializer;
+import io.github.sakurawald.fuji.module.initializer.jail.job.PatrolJailJob;
 import io.github.sakurawald.fuji.module.initializer.jail.structure.JailDataNode;
 import io.github.sakurawald.fuji.module.initializer.jail.structure.JailDescriptor;
 import io.github.sakurawald.fuji.module.initializer.jail.structure.JailRecord;
@@ -106,6 +107,8 @@ public class JailService {
         JailDescriptor newValue = JailDescriptor.make(jailId, globalPos);
         JailInitializer.config.model().getJailDescriptors().add(newValue);
         JailInitializer.config.writeStorage();
+
+        PatrolJailJob.scheduleJob(newValue);
     }
 
     public static void deleteJailDescriptor(@NotNull JailDescriptor jailDescriptor) {
