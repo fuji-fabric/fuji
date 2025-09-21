@@ -63,7 +63,7 @@ public class RuntimeDimensionMaker {
             dimensionOptions,
 
             #if MC_VER < MC_1_21_9
-            VoidWorldGenerationProgressListener.INSTANCE,
+            mod.fuji.module.initializer.world.manager.structure.util.VoidWorldGenerationProgressListener.INSTANCE,
             #elif MC_VER >= MC_1_21_9
             // The parameter is removed.
             #endif
