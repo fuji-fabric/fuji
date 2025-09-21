@@ -1,4 +1,4 @@
-package io.github.sakurawald.processor;
+package mod.fuji.processor;
 
 import com.google.auto.service.AutoService;
 import com.sun.tools.javac.api.JavacTrees;
@@ -9,8 +9,8 @@ import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
-import io.github.sakurawald.annotation.PhasedMixinTemplate;
-import io.github.sakurawald.auxiliary.WeaverUtil;
+import mod.fuji.annotation.PhasedMixinTemplate;
+import mod.fuji.auxiliary.WeaverUtil;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;

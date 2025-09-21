@@ -1,4 +1,4 @@
-package io.github.sakurawald.auxiliary;
+package mod.fuji.auxiliary;
 
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.sun.source.util.TreePath;

@@ -1,4 +1,4 @@
-package io.github.sakurawald.auxiliary;
+package mod.fuji.auxiliary;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;

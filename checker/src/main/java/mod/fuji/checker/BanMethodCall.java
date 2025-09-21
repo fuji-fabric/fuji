@@ -1,4 +1,4 @@
-package io.github.sakurawald.checker;
+package mod.fuji.checker;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -6,7 +6,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol;
-import io.github.sakurawald.auxiliary.CheckerUtil;
+import mod.fuji.auxiliary.CheckerUtil;
 import java.util.List;
 import lombok.Getter;
 

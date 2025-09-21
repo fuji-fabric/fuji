@@ -1,8 +1,8 @@
 package io.github.sakurawald.fuji.module.mixin.core.event;
 
 import com.google.common.collect.EvictingQueue;
-import io.github.sakurawald.annotation.PhasedMixinTemplate;
-import io.github.sakurawald.auxiliary.WeaverUtil;
+import mod.fuji.annotation.PhasedMixinTemplate;
+import mod.fuji.auxiliary.WeaverUtil;
 import io.github.sakurawald.fuji.core.auxiliary.minecraft.RegistryHelper;
 import io.github.sakurawald.fuji.core.event.EventManager;
 import io.github.sakurawald.fuji.core.event.annotation.EventProducer;

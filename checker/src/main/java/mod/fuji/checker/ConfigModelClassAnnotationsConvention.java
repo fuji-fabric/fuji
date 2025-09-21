@@ -1,4 +1,4 @@
-package io.github.sakurawald.checker;
+package mod.fuji.checker;
 
 import com.google.auto.service.AutoService;
 import com.google.errorprone.BugPattern;
@@ -7,7 +7,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ClassTree;
 
-import io.github.sakurawald.auxiliary.CheckerUtil;
+import mod.fuji.auxiliary.CheckerUtil;
 import java.util.List;
 
 @AutoService(BugChecker.class)
