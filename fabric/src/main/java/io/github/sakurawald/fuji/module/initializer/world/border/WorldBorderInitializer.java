@@ -28,6 +28,11 @@ import net.minecraft.world.border.WorldBorder;
 @Document(id = 1752561532728L, value = """
     This module allows you to customize the `per-dimension border`.
     """)
+@ColorBox(id = 1758445255938L, color = ColorBox.ColorBoxTypes.WARNING, value = """
+    ◉ The `per-dimension worldborder` since `MC 1.21.9`
+    Since `MC 1.21.9`, the `/worldborder` command is `dimension specific`.
+    You should only use `world.border` module when your MC version is lower than `MC 1.21.9`.
+    """)
 @ColorBox(id = 1753064857726L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
     In internal Minecraft, each `dimension` has a function named `getWorldBorder()`.

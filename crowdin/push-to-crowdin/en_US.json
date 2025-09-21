@@ -1535,5 +1535,6 @@
   "docstring.1758083431300": "◉ The `teleport warmup` will NOT be applied if...\n1. The target dimension is not defined in the `effective dimensions` list.\n2. The target player's `age <= 3`\n3. The target player is admin. (level permission >= 4)\n4. The target player is a `fake player`.\n5. The target player has the `warmup bypass permission`.\n",
   "docstring.1758083597322": "◉ The `command warmup` will NOT be applied if...\n1. The command source is `the console`.\n2. The command source is `admin` (level permission >= 4)\n3. The command source has the `warmup bypass permission` for that command.\n",
   "docstring.1758083659552": "◉ The `command cooldown` will NOT be applied if...\n1. The command source is `the console`.\n2. The command source is `admin` (level permission >= 4)\n",
-  "docstring.1758088953109": "This module provides the tools to `generate mod document`.\n<green>NOTE: This module is typically used by developers, to generate the user manual.\n"
+  "docstring.1758088953109": "This module provides the tools to `generate mod document`.\n<green>NOTE: This module is typically used by developers, to generate the user manual.\n",
+  "docstring.1758445255938": "◉ The `per-dimension worldborder` since `MC 1.21.9`\nSince `MC 1.21.9`, the `/worldborder` command is `dimension specific`.\nYou should only use `world.border` module when your MC version is lower than `MC 1.21.9`.\n"
 }
