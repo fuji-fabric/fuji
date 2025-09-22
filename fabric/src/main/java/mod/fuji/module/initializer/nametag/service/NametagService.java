@@ -91,13 +91,20 @@ public class NametagService {
             .computeIfAbsent(playerName, key -> new NametagPlayerPreferences());
     }
 
+    @SuppressWarnings("RedundantIfStatement")
+    public static boolean shouldRenderNametagEntity(@NotNull NametagEntity nametagEntity) {
+        ServerPlayerEntity ownerPlayer = nametagEntity.getOwnerPlayer();
+        if (ownerPlayer.isSneaking()) return false;
+        if (ownerPlayer.isInvisible()) return false;
+
+        return true;
+    }
+
     public static Optional<String> getNametagEntityRemovedReason(@NotNull ServerPlayerEntity ownerPlayer) {
         if (ownerPlayer.isDead()) return Optional.of("The entity is dead.");
-        if (ownerPlayer.isSneaking()) return Optional.of("The entity is sneaking.");
 
         // NOTE: when the player jumps into the ender portal in the end, its world is minecraft:overworld, its removal reason is `CHANGED_DIMENSION`
         if (ownerPlayer.getRemovalReason() != null) return Optional.of("The entity is removed.");
-        if (ownerPlayer.isInvisible()) return Optional.of("The entity is invisible.");
         if (!getOrCreateNametagPlayerPreferences(ownerPlayer).isEnableNametagEntity()) return Optional.of("The player has turn off the nametag entity.");
 
         return Optional.empty();

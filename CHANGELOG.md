@@ -14,3 +14,6 @@
 - [nametag] Improves
   - feature: a better implementation to handle the `virtual nametag entity` sync.
   - fix: the `nametag entity` de-sync after the `/skin` command.
+  - feature: improve the `nametag hiding` mechanism.
+    - Before: switch from `virtual nametag entity` to `vanilla nametag` when a player is `sneaking` or `invisible`.
+    - Now: hide the `virtual nametag entity` when a player is `sneaking` or `invisible`.

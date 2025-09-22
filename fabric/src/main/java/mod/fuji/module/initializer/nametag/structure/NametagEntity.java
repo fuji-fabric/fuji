@@ -91,7 +91,11 @@ public class NametagEntity extends DisplayEntity.TextDisplayEntity {
         }
 
         // Set scale.
-        getDataTracker().set(SCALE, new Vector3f(config.style.scale.x, config.style.scale.y, config.style.scale.z));
+        if (NametagService.shouldRenderNametagEntity(this)) {
+            getDataTracker().set(SCALE, new Vector3f(config.style.scale.x, config.style.scale.y, config.style.scale.z));
+        } else {
+            getDataTracker().set(SCALE, new Vector3f(0, 0, 0));
+        }
 
         // Set shadow.
         setDisplayFlag(SHADOW_FLAG, config.style.shadow.shadow);
