@@ -5,16 +5,21 @@
 > For user manual, refer to: https://fuji-fabric.github.io
 >
 
+# Changelog
 
-## Changelog
+## Added
+- **[home]** Introduced the `/home` root command, allowing players to teleport to any of their homes.
+- **[command_rewrite]** Pre-compilation of `regex` patterns for improved performance.
+- **[nametag]**
+  - **Implemented a more robust synchronization mechanism for `virtual nametag entities`.**
+  - Enhanced the `nametag hiding` system:
+    - **Before:** Switched from `virtual nametag entity` to the `vanilla nametag` when a player was `sneaking` or `invisible`.
+    - **Now:** Directly hides the `virtual nametag entity` when a player is `sneaking` or `invisible`.
+  - Improved responsiveness when hiding and showing nametags.
+- **[document]** Sidebar entries are now displayed in alphabetical order.
 
-- [home] feature: new `/home` root command, to teleport to any of the player's homes.
-- [command_rewrite] feature: pre-compile the `regex` for better performance.
-- [cleaner] fix: a possible deadlock while iterating the entities in a world.
-- [nametag] Improves
-  - feature: a better implementation to handle the `virtual nametag entity` sync.
-  - fix: the `nametag entity` de-sync after the `/skin` command.
-  - feature: improve the `nametag hiding` mechanism.
-    - Before: switch from `virtual nametag entity` to `vanilla nametag` when a player is `sneaking` or `invisible`.
-    - Now: hide the `virtual nametag entity` when a player is `sneaking` or `invisible`.
-  - feature: improve the `responsiveness` of `nametag hiding and showing`.
+## Fixed
+- **[cleaner]** Resolved a potential deadlock occurring while iterating over entities in a world.
+- **[nametag]**
+  - Addressed `nametag entity` desynchronization after executing the `/skin` command.
+- **[jail]** Ensured that a new jail patrol job is scheduled immediately after a jail is created via the `/jail create` command.
