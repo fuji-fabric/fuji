@@ -272,6 +272,7 @@
   "home.list": "<gold>Your homes: %s",
   "home.list.gui.help.lore": "<blue>Left Click -> Teleport\n<blue>Right Click -> Delete",
   "home.list.gui.title": "<dark_green>%s's homes.",
+  "home.no_homes": "<red>You have not set any homes yet.",
   "home.not_found": "<red>Home %s not found.",
   "home.rename.fail.exists": "<red>The home `%s` already exists.",
   "home.rename.success": "<gold>Home `%s` has been renamed to `%s`",
@@ -1537,5 +1538,6 @@
   "docstring.1758088953109": "This module provides the tools to `build document files`.\n<green>NOTE: This module is typically used by developers, to generate the user manual.\n",
   "docstring.1758445255938": "◉ The `per-dimension worldborder` since `MC 1.21.9`\nSince `MC 1.21.9`, the `/worldborder` command is `dimension specific`.\nYou should only use `world.border` module when your MC version is lower than `MC 1.21.9`.\n",
   "docstring.1758491031770": "This module provides a collection of `tool commands`.\nThese commands are `simple` yet `convenient`.\n",
-  "docstring.1758491504173": "This module provides a collection of `echo commands`.\nThey can be used to send `feedback texts`.\n"
+  "docstring.1758491504173": "This module provides a collection of `echo commands`.\nThey can be used to send `feedback texts`.\n",
+  "docstring.1758555773741": "Teleport to any of your homes."
 }

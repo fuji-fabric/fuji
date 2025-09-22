@@ -6,7 +6,6 @@
 >
 
 
-
 ## Changelog
 
-- chore: new supported MC version `1.21.9`.
+- [home] feature: new `/home` root command, to teleport to any of the player's homes.

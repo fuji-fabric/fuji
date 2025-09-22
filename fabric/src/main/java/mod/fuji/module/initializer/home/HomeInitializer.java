@@ -37,6 +37,22 @@ public class HomeInitializer extends ModuleInitializer {
         .ofModule("home.json", HomeDataModel.class)
         .enableAutoSaveFeature();
 
+    @CommandNode("home")
+    @Document(id = 1758555773741L, value = "Teleport to any of your homes.")
+    private static int $root(@CommandSource ServerPlayerEntity player) {
+        return HomeService.withHomeMap(player).entrySet()
+            .stream()
+            .findAny()
+            .map(it -> {
+                it.getValue().teleport(player);
+                return CommandHelper.Return.SUCCESS;
+            })
+            .orElseGet(() -> {
+                TextHelper.sendTextByKey(player, "home.no_homes");
+                return CommandHelper.Return.FAILURE;
+            });
+    }
+
     @CommandNode("home tp")
     private static int $tp(@CommandSource ServerPlayerEntity player, HomeName home) {
         HomeService.ensureHomeNameExisting(player, home);
