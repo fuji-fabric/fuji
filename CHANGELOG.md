@@ -5,7 +5,6 @@
 > For user manual, refer to: https://fuji-fabric.github.io
 >
 
-
 # Changelog
 
 ## Added
