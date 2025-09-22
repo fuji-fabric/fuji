@@ -56,12 +56,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
     - `/run as fake-op %player:name% \\<cmd\\>`
     """)
 @ColorBox(id = 1751968513281L, color = ColorBox.ColorBoxTypes.TIP, value = """
-    ◉ Create a `nested` menus.
-    If you want to create a `nested menu`:
-    Click a `slot` in `menu A`, it will opens the `menu B`.
-    Then you need to disable the `close_menu_on_clicked` option for `menu A`.
-    To prevent the `menu B` being `opened` and `closed instantly`.
-
     ◉ Handle the `menu closing` manually.
     You can use `/run as fake-op %player:name% command-menu close %player:name%` command.
     To `close` the `opened GUI` for a `player`.
