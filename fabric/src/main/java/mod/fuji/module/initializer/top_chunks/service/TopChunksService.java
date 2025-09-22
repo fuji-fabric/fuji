@@ -37,7 +37,7 @@ public class TopChunksService {
             Map<ChunkPos, ChunkScore> topChunkReport = new HashMap<>();
 
             /* Enumerate entities in this world. */
-            for (Entity entity : world.iterateEntities()) {
+            for (Entity entity : WorldHelper.getEntities(world)) {
                 ChunkPos pos = entity.getChunkPos();
                 topChunkReport.putIfAbsent(pos, new ChunkScore(world, pos));
                 topChunkReport.get(pos).plusEntity(entity);

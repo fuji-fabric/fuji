@@ -72,7 +72,7 @@ public class CleanerService {
         Map<String, Integer> cleanedEntities = new HashMap<>();
 
         for (ServerWorld world : WorldHelper.getWorlds()) {
-            for (Entity entity : world.iterateEntities()) {
+            for (Entity entity : WorldHelper.getEntities(world)) {
                 if (shouldIgnoreEntity(entity)) continue;
 
                 String entityKey = EntityHelper.toTranslatableKey(entity);

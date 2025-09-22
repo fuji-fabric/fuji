@@ -205,7 +205,7 @@ public class ProductionWork extends Work implements Schedulable {
                 }
             }
         }
-        for (Entity entity : world.iterateEntities()) {
+        for (Entity entity : WorldHelper.getEntities(world)) {
             if (entity instanceof HopperMinecartEntity) {
                 if (insideSampleDistance(player.getBlockPos(), entity.getBlockPos())) {
                     WorksBinding.bind(entity.getId(), this);

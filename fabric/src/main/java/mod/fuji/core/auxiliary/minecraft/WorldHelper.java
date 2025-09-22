@@ -1,6 +1,9 @@
 package mod.fuji.core.auxiliary.minecraft;
 
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.List;
 import mod.fuji.core.service.random_teleport.searcher.PositionYTopDownSearcher;
 import mod.fuji.core.structure.GlobalPos;
 import java.util.Collection;
@@ -129,6 +132,12 @@ public class WorldHelper {
         var chunkLoadingManager = getChunkStorage(world);
         Iterable<ChunkHolder> iterable = chunkLoadingManager.chunkHolders.values();
         return Iterables.unmodifiableIterable(iterable);
+    }
+
+    @SuppressWarnings("UnnecessaryLocalVariable")
+    public static @NotNull List<Entity> getEntities(@NotNull ServerWorld world) {
+        ArrayList<Entity> snapshot = Lists.newArrayList(world.iterateEntities());
+        return snapshot;
     }
 
     public static int getMaxBlockY(@NotNull Chunk chunk) {
