@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     permissions:
       contents: write
-      pull-requests: write
+      pull_requests: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
