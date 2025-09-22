@@ -22,6 +22,7 @@ public class EntityPassengerSetS2CPacketMixin {
     public int[] passengerIds;
 
     @Inject(method = "<init>(Lnet/minecraft/entity/Entity;)V", at = @At("RETURN"))
+    @SuppressWarnings("UnnecessaryLocalVariable")
     void appendNametagEntityAsPassenger(Entity entity, CallbackInfo ci) {
         if (entity instanceof ServerPlayerEntity player) {
             NametagService

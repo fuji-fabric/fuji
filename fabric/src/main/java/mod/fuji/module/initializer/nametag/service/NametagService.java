@@ -19,6 +19,29 @@ import org.jetbrains.annotations.NotNull;
 public class NametagService {
     public static Map<ServerPlayerEntity, NametagEntity> nametagEntityMap = new ConcurrentHashMap<>();
 
+    public static void refreshNametagEntities() {
+        /* Remove invalid nametag entities. */
+        nametagEntityMap.values().removeIf(NametagEntity::shouldRemove);
+
+        /* Update the nametag entities. */
+        PlayerHelper.Lookup
+            .getOnlinePlayers()
+            .forEach(NametagService::refreshNametagEntity);
+    }
+
+    private static void refreshNametagEntity(@NotNull ServerPlayerEntity player) {
+        /* Skip making the nametag entity for the player, if a discard reason is present. */
+        if (getNametagEntityRemovalReason(player).isPresent()) return;
+
+        /* Make the nametag if not exists. */
+        NametagEntity nametagEntity = Optional
+            .ofNullable(nametagEntityMap.get(player))
+            .orElseGet(() -> setupNametagEntity(player));
+
+        /* Render the nametag. */
+        nametagEntity.updateTrackedData();
+    }
+
     private static @NotNull NametagEntity setupNametagEntity(@NotNull ServerPlayerEntity player) {
         /* Make the nametag entity. */
         NametagEntity nametagEntity = NametagEntity.make(player);
@@ -29,29 +52,6 @@ public class NametagService {
         /* Sync the nametag entity to client world. */
         NametagEntitySyncer.syncNametagEntityToClientWorld(nametagEntity);
         return nametagEntity;
-    }
-
-    public static void processNametagEntities() {
-        /* Remove invalid nametag entities. */
-        nametagEntityMap.values().removeIf(NametagEntity::shouldRemove);
-
-        /* Update the nametag entities. */
-        PlayerHelper.Lookup
-            .getOnlinePlayers()
-            .forEach(NametagService::processNametagEntity);
-    }
-
-    private static void processNametagEntity(@NotNull ServerPlayerEntity player) {
-        // Skip making the nametag entity for the player, if a discard reason is present.
-        if (getNametagEntityRemovedReason(player).isPresent()) return;
-
-        // Make the nametag if not exists.
-        NametagEntity nametagEntity = Optional
-            .ofNullable(nametagEntityMap.get(player))
-            .orElseGet(() -> setupNametagEntity(player));
-
-        // Render the nametag.
-        nametagEntity.updateTrackedData();
     }
 
     public static Optional<NametagEntity> getNametagEntity(@NotNull ServerPlayerEntity player) {
@@ -100,7 +100,7 @@ public class NametagService {
         return true;
     }
 
-    public static Optional<String> getNametagEntityRemovedReason(@NotNull ServerPlayerEntity ownerPlayer) {
+    public static Optional<String> getNametagEntityRemovalReason(@NotNull ServerPlayerEntity ownerPlayer) {
         if (ownerPlayer.isDead()) return Optional.of("The entity is dead.");
 
         // NOTE: when the player jumps into the ender portal in the end, its world is minecraft:overworld, its removal reason is `CHANGED_DIMENSION`

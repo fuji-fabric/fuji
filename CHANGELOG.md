@@ -17,3 +17,4 @@
   - feature: improve the `nametag hiding` mechanism.
     - Before: switch from `virtual nametag entity` to `vanilla nametag` when a player is `sneaking` or `invisible`.
     - Now: hide the `virtual nametag entity` when a player is `sneaking` or `invisible`.
+  - feature: improve the `responsiveness` of `nametag hiding and showing`.

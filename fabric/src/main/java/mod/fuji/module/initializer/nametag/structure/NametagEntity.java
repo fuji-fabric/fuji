@@ -22,11 +22,12 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
-@SuppressWarnings("LombokGetterMayBeUsed")
 public class NametagEntity extends DisplayEntity.TextDisplayEntity {
 
     @Getter
     final ServerPlayerEntity ownerPlayer;
+
+    boolean shouldRenderPreviousValue = false;
 
     private NametagEntity(@NotNull EntityType<?> entityType, @NotNull World world, @NotNull ServerPlayerEntity ownerPlayer) {
         super(entityType, world);
@@ -54,8 +55,8 @@ public class NametagEntity extends DisplayEntity.TextDisplayEntity {
     }
 
     public void setRemoved() {
-        PacketHelper.sendPacketToAll(new EntitiesDestroyS2CPacket(this.getId()));
         this.remove(Entity.RemovalReason.DISCARDED);
+        PacketHelper.sendPacketToAll(new EntitiesDestroyS2CPacket(this.getId()));
     }
 
     private void setDisplayFlag(byte flag, boolean value) {
@@ -117,12 +118,20 @@ public class NametagEntity extends DisplayEntity.TextDisplayEntity {
 
     @Override
     public void tick() {
-        NametagService.getNametagEntityRemovedReason(this.ownerPlayer)
+        /* Remove self if removal reason is present.*/
+        NametagService
+            .getNametagEntityRemovalReason(this.ownerPlayer)
             .ifPresent(reason -> {
                 LogUtil.debug("Discard nametag entity {}: {}", this, reason);
                 this.setRemoved();
             });
-    }
 
+        /* Improve the responsiveness of nametag hiding and showing. */
+        boolean shouldRenderCurrentValue = NametagService.shouldRenderNametagEntity(this);
+        if (shouldRenderCurrentValue != this.shouldRenderPreviousValue) {
+            this.shouldRenderPreviousValue = shouldRenderCurrentValue;
+            this.updateTrackedData();
+        }
+    }
 
 }
