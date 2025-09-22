@@ -282,7 +282,7 @@ allprojects { p ->
     tasks.register('copyAccessWidenerResources', Copy) {
         from project(":common").file("build/resources/main/merged.fuji.accesswidener")
         into(file(p.file("build/resources/main")))
-        rename "${access_widener_version}.fuji.accesswidener", "fuji.accesswidener"
+        rename "merged.fuji.accesswidener", "fuji.accesswidener"
 
         doFirst {
             println("Copy accesswidener file for specified MC version.")
