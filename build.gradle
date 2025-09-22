@@ -286,6 +286,7 @@ allprojects { p ->
 
         doFirst {
             println("Copy accesswidener file for specified MC version.")
+            mergeAccessWidenerFiles()
         }
     }
 
