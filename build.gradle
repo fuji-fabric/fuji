@@ -280,7 +280,7 @@ allprojects { p ->
     }
 
     tasks.register('copyAccessWidenerResources', Copy) {
-        from project(":common").file("src/main/resources/${access_widener_version}.fuji.accesswidener")
+        from project(":common").file("build/resources/main/merged.fuji.accesswidener")
         into(file(p.file("build/resources/main")))
         rename "${access_widener_version}.fuji.accesswidener", "fuji.accesswidener"
 
