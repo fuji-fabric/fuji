@@ -23,6 +23,9 @@ public class NametagService {
         /* Make the nametag entity. */
         NametagEntity nametagEntity = NametagEntity.make(player);
 
+        /* Update the mapping as soon as possible. */
+        nametagEntityMap.put(player, nametagEntity);
+
         /* Sync the nametag entity to client world. */
         NametagEntitySyncer.syncNametagEntityToClientWorld(nametagEntity);
         return nametagEntity;
@@ -43,10 +46,16 @@ public class NametagService {
         if (getNametagEntityRemovedReason(player).isPresent()) return;
 
         // Make the nametag if not exists.
-        NametagEntity nametagEntity = nametagEntityMap.computeIfAbsent(player, key -> setupNametagEntity(player));
+        NametagEntity nametagEntity = Optional
+            .ofNullable(nametagEntityMap.get(player))
+            .orElseGet(() -> setupNametagEntity(player));
 
         // Render the nametag.
         nametagEntity.updateTrackedData();
+    }
+
+    public static Optional<NametagEntity> getNametagEntity(@NotNull ServerPlayerEntity player) {
+        return Optional.ofNullable(nametagEntityMap.get(player));
     }
 
     @EventConsumer

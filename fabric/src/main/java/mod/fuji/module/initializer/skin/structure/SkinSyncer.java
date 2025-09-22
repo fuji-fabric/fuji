@@ -30,12 +30,12 @@ public class SkinSyncer {
     public static void broadcastGameProfileChange(@NotNull ServerPlayerEntity player) {
         PlayerHelper.Lookup.getOnlinePlayers()
             .forEach(observer -> {
-                sendPacketsToOnlinePlayers(player, observer);
+                sendPacketsToOnlinePlayers(observer, player);
 
                 if (observer.equals(player)) {
                     sendPacketsToSelfPlayer(player);
                 } else {
-                    sendPacketsToObservingPlayers(player, observer);
+                    sendPacketsToObservingPlayers(observer, player);
                 }
             });
     }
@@ -89,11 +89,7 @@ public class SkinSyncer {
         player.networkHandler.sendPacket(new ExperienceBarUpdateS2CPacket(player.experienceProgress, player.totalExperience, player.experienceLevel));
 
         /* Restore the previous vehicle and passengers of the player. */
-        Entity vehicle = player.getVehicle();
-        if (vehicle != null) {
-            player.networkHandler.sendPacket(new EntityPassengersSetS2CPacket(vehicle));
-        }
-        player.networkHandler.sendPacket(new EntityPassengersSetS2CPacket(player));
+        syncVehicleAndPassengers(player, player);
 
         /* Send the dimension info to the client to prevent it from getting stuck on the dimension loading screen. */
         PlayerHelper.getPlayerManager().sendWorldInfo(player, PlayerHelper.getServerWorld(player));
@@ -102,7 +98,15 @@ public class SkinSyncer {
         player.networkHandler.sendPacket(new EntityTrackerUpdateS2CPacket(player.getId(), player.getDataTracker().getChangedEntries()));
     }
 
-    private static void sendPacketsToObservingPlayers(@NotNull ServerPlayerEntity player, @NotNull ServerPlayerEntity observer) {
+    private static void syncVehicleAndPassengers(@NotNull ServerPlayerEntity observer, @NotNull ServerPlayerEntity player) {
+        Entity vehicle = player.getVehicle();
+        if (vehicle != null) {
+            observer.networkHandler.sendPacket(new EntityPassengersSetS2CPacket(vehicle));
+        }
+        observer.networkHandler.sendPacket(new EntityPassengersSetS2CPacket(player));
+    }
+
+    private static void sendPacketsToObservingPlayers(@NotNull ServerPlayerEntity observer, @NotNull ServerPlayerEntity player) {
         /* Re-bind the observer.networkHandler to the player entity. */
         ServerWorld playerServerWorld = PlayerHelper.getServerWorld(player);
         var trackedPlayer = WorldHelper.getChunkStorage(playerServerWorld).entityTrackers.get(player.getId());
@@ -110,9 +114,12 @@ public class SkinSyncer {
             trackedPlayer.stopTracking(observer);
             trackedPlayer.updateTrackedStatus(observer);
         }
+
+        /* Sync the passengers. */
+        observer.networkHandler.sendPacket(new EntityPassengersSetS2CPacket(player));
     }
 
-    private static void sendPacketsToOnlinePlayers(@NotNull ServerPlayerEntity player, @NotNull ServerPlayerEntity observer) {
+    private static void sendPacketsToOnlinePlayers(@NotNull ServerPlayerEntity observer, @NotNull ServerPlayerEntity player) {
         /* Update the game profile in player list. */
         observer.networkHandler.sendPacket(new PlayerRemoveS2CPacket(Collections.singletonList(player.getUuid())));
         observer.networkHandler.sendPacket(new PlayerListS2CPacket(PlayerListS2CPacket.Action.ADD_PLAYER, player));

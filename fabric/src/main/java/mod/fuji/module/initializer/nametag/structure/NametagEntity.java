@@ -1,5 +1,6 @@
 package mod.fuji.module.initializer.nametag.structure;
 
+import java.util.Optional;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.EntityHelper;
 import mod.fuji.core.auxiliary.minecraft.PacketHelper;
@@ -7,7 +8,6 @@ import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.module.initializer.nametag.NametagInitializer;
 import mod.fuji.module.initializer.nametag.service.NametagService;
-import java.util.List;
 import lombok.Getter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -103,11 +103,12 @@ public class NametagEntity extends DisplayEntity.TextDisplayEntity {
         setViewRange(config.render.view_range);
 
         /* Send entity tracker update packet. */
-        List<DataTracker.SerializedEntry<?>> dirtyEntries = this.getDataTracker().getDirtyEntries();
-        if (dirtyEntries != null) {
-            EntityTrackerUpdateS2CPacket entityTrackerUpdateS2CPacket = new EntityTrackerUpdateS2CPacket(this.getId(), dirtyEntries);
-            PacketHelper.sendPacketToAll(entityTrackerUpdateS2CPacket);
-        }
+        Optional
+            .ofNullable(this.getDataTracker().getDirtyEntries())
+            .ifPresent(dirtyEntries -> {
+                EntityTrackerUpdateS2CPacket entityTrackerUpdateS2CPacket = new EntityTrackerUpdateS2CPacket(this.getId(), dirtyEntries);
+                PacketHelper.sendPacketToAll(entityTrackerUpdateS2CPacket);
+            });
     }
 
     @Override

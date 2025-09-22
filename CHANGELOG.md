@@ -11,3 +11,6 @@
 - [home] feature: new `/home` root command, to teleport to any of the player's homes.
 - [command_rewrite] feature: pre-compile the `regex` for better performance.
 - [cleaner] fix: a possible deadlock while iterating the entities in a world.
+- [nametag] Improves
+  - feature: a better implementation to handle the `virtual nametag entity` sync.
+  - fix: the `nametag entity` de-sync after the `/skin` command.

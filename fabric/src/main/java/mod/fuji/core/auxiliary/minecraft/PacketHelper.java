@@ -23,4 +23,15 @@ public class PacketHelper {
             .filter(it -> !it.equals(player))
             .forEach(p -> sendPacket(packet, player));
     }
+
+    public static int[] makeAppendedArray(int[] array, int value) {
+        if (array == null) {
+            return new int[] { value };
+        }
+
+        int[] result = new int[array.length + 1];
+        System.arraycopy(array, 0, result, 0, array.length);
+        result[result.length - 1] = value;
+        return result;
+    }
 }

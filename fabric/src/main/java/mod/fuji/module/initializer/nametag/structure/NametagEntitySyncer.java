@@ -1,11 +1,9 @@
 package mod.fuji.module.initializer.nametag.structure;
 
+import com.google.errorprone.annotations.Keep;
+import java.util.Optional;
 import mod.fuji.core.auxiliary.minecraft.PacketHelper;
 import mod.fuji.module.initializer.nametag.service.NametagService;
-import io.netty.buffer.Unpooled;
-import java.util.List;
-import net.minecraft.entity.Entity;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.EntityPassengersSetS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityTrackerUpdateS2CPacket;
@@ -22,20 +20,10 @@ public class NametagEntitySyncer {
 
     private static @NotNull EntityPassengersSetS2CPacket makeEntityPassengerSetPacket(@NotNull NametagEntity nametagEntity) {
         ServerPlayerEntity ownerPlayer = nametagEntity.getOwnerPlayer();
-        int entityId = ownerPlayer.getId();
-        List<Entity> list = ownerPlayer.getPassengerList();
-        int[] passengerIds = new int[list.size() + 1];
-        for (int i = 0; i < list.size(); ++i) {
-            passengerIds[i] = list.get(i).getId();
-        }
-        passengerIds[passengerIds.length - 1] = nametagEntity.getId();
-
-        PacketByteBuf packetByteBuf = new PacketByteBuf(Unpooled.buffer());
-        packetByteBuf.writeVarInt(entityId);
-        packetByteBuf.writeIntArray(passengerIds);
-        return new EntityPassengersSetS2CPacket(packetByteBuf);
+        return new EntityPassengersSetS2CPacket(ownerPlayer);
     }
 
+    @Keep
     private static void syncExistingNametagEntities(@NotNull ServerPlayerEntity audience) {
         NametagService.nametagEntityMap.forEach((key, value) -> {
             EntitySpawnS2CPacket entitySpawnS2CPacket = makeNametagEntitySpawnPacket(value);
@@ -44,8 +32,12 @@ public class NametagEntitySyncer {
             EntityPassengersSetS2CPacket entityPassengersSetS2CPacket = makeEntityPassengerSetPacket(value);
             audience.networkHandler.sendPacket(entityPassengersSetS2CPacket);
 
-            EntityTrackerUpdateS2CPacket entityTrackerUpdateS2CPacket = new EntityTrackerUpdateS2CPacket(value.getId(), value.getDataTracker().getChangedEntries());
-            audience.networkHandler.sendPacket(entityTrackerUpdateS2CPacket);
+            Optional
+                .ofNullable(value.getDataTracker().getChangedEntries())
+                .ifPresent(changedEntries -> {
+                    EntityTrackerUpdateS2CPacket entityTrackerUpdateS2CPacket = new EntityTrackerUpdateS2CPacket(value.getId(), changedEntries);
+                    audience.networkHandler.sendPacket(entityTrackerUpdateS2CPacket);
+                });
         });
     }
 

@@ -163,6 +163,7 @@
     "gameplay.multi_obsidian_platform.EntityMixin",
     "language.ServerPlayerMixin",
     "multiplier.ServerPlayerMixin",
+    "nametag.EntityPassengerSetS2CPacketMixin",
     "placeholder.ServerPlayerEntityMixin",
     "skin.ServerLoginNetworkHandlerMixin",
     "system_message.ServerPlayerEntityMixin",
