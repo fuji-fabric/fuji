@@ -61,7 +61,7 @@ public class CommandRewriteInitializer extends ModuleInitializer {
 
         /* Applied the rewrite rules. */
         for (RegexRewriteNode rewriteRule : effectiveRewriteRules) {
-            if (oldString.matches(rewriteRule.getRegex())) {
+            if (rewriteRule.getCachedPattern().matcher(oldString).matches()) {
                 String newString = oldString.replaceAll(rewriteRule.getRegex(), rewriteRule.getReplacement());
                 LogUtil.debug("Rewrite the command string: old = {}, new = {}", oldString, newString);
                 oldString = newString;

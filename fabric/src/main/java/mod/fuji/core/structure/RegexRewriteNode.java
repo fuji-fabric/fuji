@@ -1,5 +1,6 @@
 package mod.fuji.core.structure;
 
+import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.document.annotation.Document;
 import java.util.regex.Pattern;
 import lombok.AccessLevel;
@@ -7,6 +8,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -30,9 +32,13 @@ public class RegexRewriteNode {
         this.replacement = replacement;
     }
 
-    public Pattern getCachedPattern() {
+    public @NotNull Pattern getCachedPattern() {
         if (this.pattern == null) {
-            this.pattern = Pattern.compile(this.regex);
+            try {
+                this.pattern = Pattern.compile(this.regex);
+            } catch (Exception e) {
+                LogUtil.error("Failed to compile the regex string '{}'. (Regex Syntax Error)", this.regex, e);
+            }
         }
 
         return this.pattern;

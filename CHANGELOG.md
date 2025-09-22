@@ -9,3 +9,4 @@
 ## Changelog
 
 - [home] feature: new `/home` root command, to teleport to any of the player's homes.
+- [command_rewrite] feature: pre-compile the `regex` for better performance.
