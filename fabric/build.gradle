@@ -29,6 +29,12 @@ def mergeAccessWidenerFiles() {
     def commonContent = commonAw.text
     mergedAw.text = versionContent + "\n" + commonContent + "\n"
 }
+tasks.register("mergeAccessWidener") {
+    doLast {
+        mergeAccessWidenerFiles()
+    }
+}
+tasks.copyAccessWidenerResources.dependsOn(mergeAccessWidener)
 
 /* Configure fabric-loom plugin. */
 loom {
