@@ -12,9 +12,6 @@ accessible field net/minecraft/server/MinecraftServer saveHandler Lnet/minecraft
 # world helper
 accessible field net/minecraft/server/world/ServerChunkLoadingManager chunkHolders Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
 
-# nametag
-accessible field net/minecraft/network/packet/s2c/play/EntityPassengersSetS2CPacket entityId I
-
 # skin
 accessible field net/minecraft/server/world/ServerChunkLoadingManager entityTrackers Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
 accessible class net/minecraft/server/world/ServerChunkLoadingManager$EntityTracker
