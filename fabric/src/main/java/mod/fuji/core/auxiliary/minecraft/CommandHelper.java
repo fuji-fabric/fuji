@@ -55,9 +55,9 @@ public class CommandHelper {
     public static class Path {
 
         @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
-        public static Optional<List<String>> toUniqueCommandPath(@NotNull CommandNode<ServerCommandSource> node) {
+        public static Optional<List<String>> toUniqueCommandPathList(@NotNull CommandNode<ServerCommandSource> rootNode) {
             List<String> names = new ArrayList<>();
-            CommandNode<ServerCommandSource> current = node;
+            CommandNode<ServerCommandSource> current = rootNode;
 
             while (true) {
                 /* Visit. */
@@ -78,12 +78,16 @@ public class CommandHelper {
             return Optional.of(names);
         }
 
-        public static @NotNull String toCommandNodePathString(@NotNull List<ParsedCommandNode<ServerCommandSource>> nodes) {
+        public static @NotNull String toUniqueCommandPathString(@NotNull List<CommandNode<ServerCommandSource>> nodes) {
             // Compute the `command node path` from the only one possible path.
             return nodes
                 .stream()
-                .map(it -> it.getNode().getName())
+                .map(CommandNode::getName)
                 .collect(Collectors.joining("."));
+        }
+
+        public static @NotNull String joinCommandPath(@NotNull List<String> nodes) {
+            return String.join(".", nodes);
         }
 
         public static @NotNull String trimCommandPathString(@NotNull String path) {
@@ -220,14 +224,16 @@ public class CommandHelper {
             return findCommandNode(splitCommandPath);
         }
 
-        public static @NotNull String findCommandNodePath(@NotNull CommandNode<ServerCommandSource> node) {
+        public static @NotNull String findCommandNodePathString(@NotNull CommandNode<ServerCommandSource> leafNode) {
+            List<String> nodes = findCommandNodePathList(leafNode);
+            return Path.joinCommandPath(nodes);
+        }
+
+        private static @NotNull List<String> findCommandNodePathList(@NotNull CommandNode<ServerCommandSource> leafNode) {
             CommandDispatcher<ServerCommandSource> dispatcher = getCommandDispatcher();
 
             /* Find the first encountered path in root tree, ignore other paths if there are `forks` or `redirects`. */
-            String[] nodeNames = dispatcher
-                .getPath(node)
-                .toArray(new String[]{});
-            return String.join(".", nodeNames);
+            return new ArrayList<>(dispatcher.getPath(leafNode));
         }
 
         public static List<CommandNode<ServerCommandSource>> getAllCommandNodes() {

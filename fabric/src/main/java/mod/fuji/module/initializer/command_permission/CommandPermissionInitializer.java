@@ -5,6 +5,7 @@ import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import mod.fuji.core.annotation.Unused;
+import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.annotation.CommandNode;
@@ -241,7 +242,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         });
 
         /* Describe the command path. */
-        String commandPath = CommandHelper.Path.toCommandNodePathString(context.getNodes());
+        String commandPath = CommandHelper.Path.toUniqueCommandPathString(context.getNodes().stream().map(ParsedCommandNode::getNode).toList());
         TextHelper.sendTextByKey(source, "command_permission.describe.command_path", commandPath);
 
         /* Describe the command permissions. */

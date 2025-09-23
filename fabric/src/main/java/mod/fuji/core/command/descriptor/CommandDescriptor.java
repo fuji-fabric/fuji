@@ -336,7 +336,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
     private boolean isCommandNodeRegistered(@NotNull LiteralCommandNode<ServerCommandSource> literalCommandNode) {
         return CommandHelper.Path
-            .toUniqueCommandPath(literalCommandNode)
+            .toUniqueCommandPathList(literalCommandNode)
             .map(names -> {
                 LogUtil.warn("names = {}", names);
                 boolean isRegistered = false;
