@@ -166,7 +166,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
     @CommandNode("gui")
     @Document(id = 1751826777672L, value = "Open the command permission gui.")
     public static int $gui(@CommandSource ServerPlayerEntity player) {
-        List<CommandNodePermissionWrapper> entities = CommandHelper.Node.getAllCommandNodes().stream()
+        List<CommandNodePermissionWrapper> entities = CommandHelper.Tree.getAllCommandNodes().stream()
             .map(CommandNodePermissionWrapper::new)
             .sorted(Comparator.comparing(CommandNodePermissionWrapper::getPath))
             .toList();
@@ -235,18 +235,18 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         nodes.forEach(it -> {
             var node = it.getNode();
             String nodeName = node.getName();
-            String nodeType = CommandHelper.Node.getCommandNodeType(node);
+            String nodeType = CommandHelper.Node.toCommandNodeTypeString(node);
             boolean nodeWrapped = CommandPermissionService.isCommandNodeWrapped(node);
             TextHelper.sendTextByKey(source, "command_permission.describe.command_node.node", nodeName, nodeType, nodeWrapped);
         });
 
         /* Describe the command path. */
-        String commandPath = CommandHelper.Node.joinCommandNodePath(context.getNodes());
+        String commandPath = CommandHelper.Path.toCommandNodePathString(context.getNodes());
         TextHelper.sendTextByKey(source, "command_permission.describe.command_path", commandPath);
 
         /* Describe the command permissions. */
         TextHelper.sendTextByKey(source, "command_permission.describe.command_permissions");
-        List<String> commandPathPrefixes = CommandHelper.Node.getPrefixesOfCommandPath(nodes);
+        List<String> commandPathPrefixes = CommandHelper.Path.getPrefixesOfCommandPath(nodes);
         commandPathPrefixes.forEach(path -> {
             String requiredPermission = COMMAND_PERMISSION_UNIFIED_PERMISSION.withArguments(path);
             TextHelper.sendTextByKey(source, "command_permission.describe.command_permission", requiredPermission);

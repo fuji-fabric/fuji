@@ -28,7 +28,7 @@ public class WrappedPredicate<T> implements Predicate<T> {
 
     public String getCachedCommandPath() {
         if (this.commandPath == null) {
-            this.commandPath = CommandHelper.Node.findCommandNodePath(this.commandNode);
+            this.commandPath = CommandHelper.Tree.findCommandNodePath(this.commandNode);
         }
 
         return this.commandPath;

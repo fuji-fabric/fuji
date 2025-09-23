@@ -13,7 +13,7 @@ public class CommandNodeWithPath {
 
     public CommandNodeWithPath(CommandNode<ServerCommandSource> node) {
         this.node = node;
-        this.path = CommandHelper.Node.findCommandNodePath(node);
+        this.path = CommandHelper.Tree.findCommandNodePath(node);
     }
 
 }

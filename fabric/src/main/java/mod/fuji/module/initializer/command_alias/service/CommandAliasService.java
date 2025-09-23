@@ -49,7 +49,7 @@ public class CommandAliasService {
 
     private static Optional<AliasCommandDescriptor> makeRedirectCommandDescriptor(@NotNull CommandAliasEntry entry) {
         /* Find the redirect target command node in server command tree. */
-        return CommandHelper.Node.findCommandNode(entry.getTo())
+        return CommandHelper.Tree.findCommandNode(entry.getTo())
             .map(redirectTargetCommandNode -> {
                 CommandRequirementDescriptor requirement = entry.getRequirement();
                 List<CommandArgument> commandArguments = entry.getFrom()

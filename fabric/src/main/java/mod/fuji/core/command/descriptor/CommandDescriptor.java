@@ -122,7 +122,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
             .ifPresentOrElse($registerReturnValue -> {
                 /* Find the registered command tree. */
                 LiteralCommandNode<ServerCommandSource> navigationNode = $registerReturnValue.build();
-                List<List<RegisteredCommandNode>> registeredCommandTree = CommandHelper.Tree.findRegisteredCommandTree(navigationNode);
+                List<List<RegisteredCommandNode>> registeredCommandTree = CommandHelper.Tree.findCommandTree(navigationNode);
                 if (registeredCommandTree.isEmpty()) {
                     LogUtil.warn("The command '{}' not found in server command tree, ignoring its un-registration.", this.getUserFriendlyCommandSyntax());
                     return;
@@ -131,7 +131,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
                 /* Cut-down the registered command tree. */
                 LogUtil.debug("Un-register the command tree: {}", registeredCommandTree);
                 registeredCommandTree
-                    .forEach(branch -> branch.forEach(CommandHelper.Tree::removeInCommandTree));
+                    .forEach(branch -> branch.forEach(CommandHelper.Tree::removeCommandTree));
 
             }, () -> LogUtil.warn("Failed to remove the registered command node from the server command tree, due to the register return value being null. (descriptor = {}) ", this));
 
@@ -325,7 +325,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
         /* Register the assembled argument builder as the child of the global root argument builder. */
         LiteralCommandNode<ServerCommandSource> literalCommandNode = assembledArgumentBuilder.build();
-        RootCommandNode<ServerCommandSource> rootCommandNode = CommandHelper.Node.getRootCommandNode();
+        RootCommandNode<ServerCommandSource> rootCommandNode = CommandHelper.Tree.getRootCommandNode();
         if (isCommandNodeRegistered(literalCommandNode)) {
             LogUtil.warn("The command '{}' already registered in the server command tree, now overriding it.", this.getUserFriendlyCommandSyntax());
         }
@@ -335,12 +335,12 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
     }
 
     private boolean isCommandNodeRegistered(@NotNull LiteralCommandNode<ServerCommandSource> literalCommandNode) {
-        return CommandHelper.Node
-            .toUniqueCommandNodeNameList(literalCommandNode)
+        return CommandHelper.Path
+            .toUniqueCommandPath(literalCommandNode)
             .map(names -> {
                 LogUtil.warn("names = {}", names);
                 boolean isRegistered = false;
-                CommandNode<ServerCommandSource> parent = CommandHelper.Node.getRootCommandNode();
+                CommandNode<ServerCommandSource> parent = CommandHelper.Tree.getRootCommandNode();
                 for (int i = 0; i < names.size(); i++) {
                     String name = names.get(i);
 
@@ -471,7 +471,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
                 /* Update the walking path. */
                 walkingCommandPath = walkingCommandPath + "." + commandArgument.getArgumentName();
-                walkingCommandPath = CommandHelper.Node.trimCommandPathString(walkingCommandPath);
+                walkingCommandPath = CommandHelper.Path.trimCommandPathString(walkingCommandPath);
 
                 /* Track the public command prefix path. */
                 if (!seenAnyNonNullRequiremnt && CommandRequirementDescriptor.isEmptyRequirement(commandArgument.getRequirement())) {
@@ -480,7 +480,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
                         CommandAnnotationProcessor.PUBLIC_COMMAND_PATHS.add(walkingCommandPath);
 
                         // NOTE: Update the existing command nodes in the path, if they are registered before by some non-public commands.
-                        CommandHelper.Node
+                        CommandHelper.Tree
                             .findCommandNode(walkingCommandPath)
                             .ifPresent(registeredCommandNode -> {
                                 @SuppressWarnings("unchecked")

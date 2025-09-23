@@ -59,7 +59,7 @@ public class CommandPermissionService {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void ensureCommandNodeRequirementIsWrapped() {
         // Enumerate all registered commands, to ensure the getRequirement() is triggered. (For luckperms permission cache)
-        CommandHelper.Node
+        CommandHelper.Tree
             .getAllCommandNodes()
             .forEach(com.mojang.brigadier.tree.CommandNode::getRequirement);
     }
