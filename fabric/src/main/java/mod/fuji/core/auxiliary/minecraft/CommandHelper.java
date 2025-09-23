@@ -13,7 +13,10 @@ import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
+import java.util.Collection;
+import mod.fuji.core.command.extension.CommandNodeExtension;
 import mod.fuji.core.command.processor.CommandAnnotationProcessor;
+import mod.fuji.core.command.structure.RegisteredCommandNode;
 import mod.fuji.core.command.suggestion.CommandSuggestionOptimizer;
 import mod.fuji.core.config.mapper.wrapper.GameProfileWrapper;
 import mod.fuji.core.document.annotation.ForDeveloper;
@@ -440,5 +443,60 @@ public class CommandHelper {
             }
         }
 
+    }
+
+    public static class Tree {
+
+        public static @NotNull List<List<RegisteredCommandNode>> findRegisteredCommandTree(@NotNull CommandNode<ServerCommandSource> navigationNode) {
+            /* Set up the primary branch. */
+            List<List<RegisteredCommandNode>> treeCollector = new ArrayList<>();
+            List<RegisteredCommandNode> branchCollector = new ArrayList<>();
+            treeCollector.add(branchCollector);
+
+            /* Find recursively. */
+            RootCommandNode<ServerCommandSource> root = Node.getRootCommandNode();
+            findRegisteredCommandTreeRecursively(treeCollector, branchCollector, navigationNode, root);
+            return treeCollector;
+        }
+
+        @ForDeveloper("Returns a chain of registered command nodes.")
+        @SuppressWarnings("UnnecessaryLocalVariable")
+        private static void findRegisteredCommandTreeRecursively(@NotNull List<List<RegisteredCommandNode>> treeCollector, @NotNull List<RegisteredCommandNode> branchCollector, @NotNull CommandNode<ServerCommandSource> navigationNode, @NotNull CommandNode<ServerCommandSource> walkingNode) {
+            CommandNode<ServerCommandSource> parent = walkingNode;
+
+            Optional
+                .ofNullable(parent.getChild(navigationNode.getName()))
+                .ifPresent(child -> {
+                    /* Walk the path. */
+                    RegisteredCommandNode found = new RegisteredCommandNode(parent, child);
+                    branchCollector.add(found);
+
+                    /* Go down. */
+                    Collection<CommandNode<ServerCommandSource>> children = navigationNode.getChildren();
+                    children
+                        .forEach(newNavigationNode -> {
+                            if (children.size() == 1) {
+                                /* Only 1 branch, continuing it. */
+                                findRegisteredCommandTreeRecursively(treeCollector, branchCollector, newNavigationNode, child);
+                            } else {
+                                /* More than 1 branch, forking it. */
+                                ArrayList<RegisteredCommandNode> forkedCollector = new ArrayList<>(branchCollector);
+                                treeCollector.add(forkedCollector);
+                                findRegisteredCommandTreeRecursively(treeCollector, forkedCollector, newNavigationNode, child);
+                            }
+                        });
+                });
+
+        }
+
+        public static void removeSelfInCommandTree(@NotNull RegisteredCommandNode registeredCommandNode) {
+            // NODE: Identify the `command node` by node name.
+            @SuppressWarnings("unchecked")
+            CommandNodeExtension<ServerCommandSource> parentNode = (CommandNodeExtension<ServerCommandSource>) registeredCommandNode.getParent();
+            CommandNode<ServerCommandSource> childNode = registeredCommandNode.getNode();
+            parentNode.fuji$getChildren().values().removeIf(it -> it.getName().equals(childNode.getName()));
+            parentNode.fuji$getLiterals().values().removeIf(it -> it.getName().equals(childNode.getName()));
+            parentNode.fuji$getArguments().values().removeIf(it -> it.getName().equals(childNode.getName()));
+        }
     }
 }

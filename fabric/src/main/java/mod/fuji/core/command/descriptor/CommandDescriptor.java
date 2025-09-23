@@ -13,7 +13,6 @@ import com.mojang.brigadier.tree.RootCommandNode;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -123,7 +122,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
             .ifPresentOrElse($registerReturnValue -> {
                 /* Find the registered command tree. */
                 LiteralCommandNode<ServerCommandSource> navigationNode = $registerReturnValue.build();
-                List<List<RegisteredCommandNode>> registeredCommandTree = CommandTree.findRegisteredCommandTree(navigationNode);
+                List<List<RegisteredCommandNode>> registeredCommandTree = CommandHelper.Tree.findRegisteredCommandTree(navigationNode);
                 if (registeredCommandTree.isEmpty()) {
                     LogUtil.warn("The command '{}' not found in server command tree, ignoring its un-registration.", this.getUserFriendlyCommandSyntax());
                     return;
@@ -132,7 +131,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
                 /* Cut-down the registered command tree. */
                 LogUtil.debug("Un-register the command tree: {}", registeredCommandTree);
                 registeredCommandTree
-                    .forEach(branch -> branch.forEach(CommandTree::removeSelfInCommandTree));
+                    .forEach(branch -> branch.forEach(CommandHelper.Tree::removeSelfInCommandTree));
 
             }, () -> LogUtil.warn("Failed to remove the registered command node from the server command tree, due to the register return value being null. (descriptor = {}) ", this));
 
@@ -755,61 +754,6 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
                 .verifyCommandSource(commandContext);
         }
 
-    }
-
-    public static class CommandTree {
-
-        private static @NotNull List<List<RegisteredCommandNode>> findRegisteredCommandTree(@NotNull CommandNode<ServerCommandSource> navigationNode) {
-            /* Set up the primary branch. */
-            List<List<RegisteredCommandNode>> treeCollector = new ArrayList<>();
-            List<RegisteredCommandNode> branchCollector = new ArrayList<>();
-            treeCollector.add(branchCollector);
-
-            /* Find recursively. */
-            RootCommandNode<ServerCommandSource> root = CommandHelper.Node.getRootCommandNode();
-            findRegisteredCommandTreeRecursively(treeCollector, branchCollector, navigationNode, root);
-            return treeCollector;
-        }
-
-        @ForDeveloper("Returns a chain of registered command nodes.")
-        @SuppressWarnings("UnnecessaryLocalVariable")
-        private static void findRegisteredCommandTreeRecursively(@NotNull List<List<RegisteredCommandNode>> treeCollector, @NotNull List<RegisteredCommandNode> branchCollector, @NotNull CommandNode<ServerCommandSource> navigationNode, @NotNull CommandNode<ServerCommandSource> walkingNode) {
-            CommandNode<ServerCommandSource> parent = walkingNode;
-
-            Optional
-                .ofNullable(parent.getChild(navigationNode.getName()))
-                .ifPresent(child -> {
-                    /* Walk the path. */
-                    RegisteredCommandNode found = new RegisteredCommandNode(parent, child);
-                    branchCollector.add(found);
-
-                    /* Go down. */
-                    Collection<CommandNode<ServerCommandSource>> children = navigationNode.getChildren();
-                    children
-                        .forEach(newNavigationNode -> {
-                            if (children.size() == 1) {
-                                /* Only 1 branch, continuing it. */
-                                findRegisteredCommandTreeRecursively(treeCollector, branchCollector, newNavigationNode, child);
-                            } else {
-                                /* More than 1 branch, forking it. */
-                                ArrayList<RegisteredCommandNode> forkedCollector = new ArrayList<>(branchCollector);
-                                treeCollector.add(forkedCollector);
-                                findRegisteredCommandTreeRecursively(treeCollector, forkedCollector, newNavigationNode, child);
-                            }
-                        });
-                });
-
-        }
-
-        private static void removeSelfInCommandTree(@NotNull RegisteredCommandNode registeredCommandNode) {
-            // NODE: Identify the `command node` by node name.
-            @SuppressWarnings("unchecked")
-            CommandNodeExtension<ServerCommandSource> parentNode = (CommandNodeExtension<ServerCommandSource>) registeredCommandNode.getParent();
-            CommandNode<ServerCommandSource> childNode = registeredCommandNode.getNode();
-            parentNode.fuji$getChildren().values().removeIf(it -> it.getName().equals(childNode.getName()));
-            parentNode.fuji$getLiterals().values().removeIf(it -> it.getName().equals(childNode.getName()));
-            parentNode.fuji$getArguments().values().removeIf(it -> it.getName().equals(childNode.getName()));
-        }
     }
 
     public boolean canBeExecutedByConsole() {
