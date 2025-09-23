@@ -332,7 +332,7 @@ public class TextHelper {
                 player = (PlayerEntity) audience;
             } else if (audience instanceof ServerCommandSource) {
                 ServerCommandSource commandSource = (ServerCommandSource) audience;
-                if (commandSource.getPlayer() != null) {
+                if (CommandHelper.Source.isExecutedByPlayer(commandSource)) {
                     player = commandSource.getPlayer();
                 }
             }
@@ -791,8 +791,9 @@ public class TextHelper {
             }
 
             if (audience instanceof ServerCommandSource serverCommandSource) {
-                if (serverCommandSource.getPlayer() != null) {
+                if (CommandHelper.Source.isExecutedByPlayer(serverCommandSource)) {
                     ServerPlayerEntity player = serverCommandSource.getPlayer();
+                    assert player != null;
                     sendMessageToServerPlayerEntity(player, text);
                     return;
                 }

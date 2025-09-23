@@ -46,11 +46,11 @@ public class ExtendedCommandSource {
     }
 
     public static ExtendedCommandSource asPlayer(@NotNull ServerCommandSource initiatingSource, ServerPlayerEntity executingPlayer) {
-        return new ExtendedCommandSource(initiatingSource, executingPlayer.getCommandSource(), true);
+        return new ExtendedCommandSource(initiatingSource, CommandHelper.Source.getCommandSource(executingPlayer), true);
     }
 
     public static ExtendedCommandSource asFakeOp(@NotNull ServerCommandSource initiatingSource, ServerPlayerEntity executingPlayer) {
-        return new ExtendedCommandSource(initiatingSource, executingPlayer.getCommandSource().withLevel(4), true);
+        return new ExtendedCommandSource(initiatingSource, CommandHelper.Source.getCommandSource(executingPlayer).withLevel(4), true);
     }
 
     public boolean sameSource() {

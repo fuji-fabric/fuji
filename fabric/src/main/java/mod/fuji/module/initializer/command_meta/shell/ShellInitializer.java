@@ -66,7 +66,7 @@ public class ShellInitializer extends ModuleInitializer {
             throw new AbortCommandExecutionException();
         }
 
-        if (config.security.only_allow_console && ctx.getSource().getPlayer() != null) {
+        if (config.security.only_allow_console && CommandHelper.Source.isExecutedByPlayer(ctx.getSource())) {
             TextHelper.sendTextByKey(ctx.getSource(), "command.console_only");
             throw new AbortCommandExecutionException();
         }

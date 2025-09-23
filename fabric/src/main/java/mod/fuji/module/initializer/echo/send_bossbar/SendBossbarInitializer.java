@@ -59,7 +59,7 @@ public class SendBossbarInitializer extends ModuleInitializer {
 
         /* Make the bossbar ticket. */
         BossBarTicket bossBarTicket = new SendBossbarTicket(title.getValue(), $color, $style, $totalMs, $stepType, player, () -> {
-            ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(player.getCommandSource());
+            ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(CommandHelper.Source.getCommandSource(player));
             CommandExecutor.executeBatch(extendedCommandSource, $commandList.getValue());
 
             if ($notifyMeOnComplete) {

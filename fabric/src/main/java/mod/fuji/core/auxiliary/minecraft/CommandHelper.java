@@ -251,7 +251,7 @@ public class CommandHelper {
 
         public static boolean canUseThisCommand(ServerPlayerEntity player, String commandString) {
             /* Parse the command string into command nodes. */
-            ServerCommandSource commandSource = player.getCommandSource();
+            ServerCommandSource commandSource = Source.getCommandSource(player);
             ParseResults<ServerCommandSource> parseResults = getCommandDispatcher()
                 .parse(commandString, commandSource);
             CommandContextBuilder<ServerCommandSource> context = parseResults.getContext();
@@ -315,12 +315,15 @@ public class CommandHelper {
         }
 
         public static void withServerPlayerEntity(@NotNull CommandContextBuilder<ServerCommandSource> contextBuilder, @NotNull Consumer<ServerPlayerEntity> consumer) {
-            withServerPlayerEntity(contextBuilder.getSource(), consumer);
+            @NotNull ServerCommandSource source = contextBuilder.getSource();
+            withServerPlayerEntity(source, consumer);
         }
 
         @SuppressWarnings("UnnecessaryReturnStatement")
         public static void withServerPlayerEntity(@NotNull CommandContext<?> context, @NotNull Consumer<ServerPlayerEntity> consumer) {
-            Object source = context.getSource();
+            @NotNull Object source = context.getSource();
+
+            /* Filter out the ClientCommandSource. */
             if (source instanceof ServerCommandSource serverCommandSource) {
                 withServerPlayerEntity(serverCommandSource, consumer);
                 return;
@@ -328,7 +331,7 @@ public class CommandHelper {
         }
 
         public static void withServerPlayerEntity(@NotNull ServerCommandSource serverCommandSource, @NotNull Consumer<ServerPlayerEntity> consumer) {
-            if (serverCommandSource.getPlayer() != null) {
+            if (isExecutedByPlayer(serverCommandSource)) {
                 consumer.accept(serverCommandSource.getPlayer());
             }
         }
@@ -340,6 +343,7 @@ public class CommandHelper {
             """)
         public static void withServerCommandSource(@NotNull Object indicator, @NotNull Consumer<ServerCommandSource> consumer) {
             indicator = extractCommandSource(indicator);
+
             if (isServerCommandSource(indicator)) {
                 @NotNull ServerCommandSource serverCommandSource = (ServerCommandSource) indicator;
                 consumer.accept(serverCommandSource);
@@ -352,7 +356,8 @@ public class CommandHelper {
 
         public static <S> boolean isExecutedOnServerSide(@NotNull CommandContextBuilder<S> context) {
             // NOTE: in client-side, the S is not guarantee to be ServerCommandSource. (Can be ClientCommandSource)
-            return isExecutedOnServerSide(context.getSource());
+            S source = context.getSource();
+            return isExecutedOnServerSide(source);
         }
 
         public static boolean isExecutedOnServerSide(@NotNull Object indicator) {
@@ -360,9 +365,9 @@ public class CommandHelper {
             return isServerCommandSource(indicator);
         }
 
-
         public static boolean isExecutedByConsole(@NotNull CommandContext<ServerCommandSource> commandContext) {
-            return isExecutedByConsole(commandContext.getSource());
+            @NotNull ServerCommandSource source = commandContext.getSource();
+            return isExecutedByConsole(source);
         }
 
         public static boolean isExecutedByConsole(@NotNull ServerCommandSource commandSource) {
@@ -471,7 +476,7 @@ public class CommandHelper {
         }
 
         public static int withCommandConfirmed(ServerPlayerEntity player, Optional<Boolean> confirm, Supplier<Integer> supplier) {
-            return withCommandConfirmed(player.getCommandSource(), confirm, supplier);
+            return withCommandConfirmed(Source.getCommandSource(player), confirm, supplier);
         }
 
         @SuppressWarnings({"BooleanMethodIsAlwaysInverted", "UnnecessaryLocalVariable"})

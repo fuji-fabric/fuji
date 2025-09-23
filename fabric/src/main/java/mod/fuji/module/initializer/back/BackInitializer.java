@@ -73,7 +73,7 @@ public class BackInitializer extends ModuleInitializer {
     @Document(id = 1751825593993L, value = "List the back location history.")
     @CommandNode("back list")
     private static int $list(@CommandSource ServerPlayerEntity source) {
-        return BackService.listBackLocations(source.getCommandSource(), source);
+        return BackService.listBackLocations(CommandHelper.Source.getCommandSource(source), source);
     }
 
     @Document(id = 1751825598230L, value = "Back to the specified location.")

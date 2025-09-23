@@ -2,6 +2,7 @@ package mod.fuji.module.initializer.echo.send_dialog.structure;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.command.executor.CommandExecutor;
 import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
@@ -73,7 +74,7 @@ public class DialogGui extends SimpleGui {
         close();
 
         if (!noButtonCommand.isBlank()) {
-            CommandExecutor.executeSingle(ExtendedCommandSource.asConsole(player.getCommandSource()), noButtonCommand);
+            CommandExecutor.executeSingle(ExtendedCommandSource.asConsole(CommandHelper.Source.getCommandSource(player)), noButtonCommand);
         }
     }
 
@@ -82,7 +83,7 @@ public class DialogGui extends SimpleGui {
         close();
 
         if (!yesButtonCommand.isBlank()) {
-            CommandExecutor.executeSingle(ExtendedCommandSource.asConsole(player.getCommandSource()), yesButtonCommand);
+            CommandExecutor.executeSingle(ExtendedCommandSource.asConsole(CommandHelper.Source.getCommandSource(player)), yesButtonCommand);
         }
     }
 

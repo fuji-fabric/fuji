@@ -2,6 +2,7 @@ package mod.fuji.module.initializer.chat.trigger;
 
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.StringUtil;
+import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.executor.CommandExecutor;
 import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
@@ -78,7 +79,7 @@ public class ChatTriggerInitializer extends ModuleInitializer {
         SignedMessage signedMessage = event.getSignedMessage();
         String chatString = TextHelper.Operators.getString(signedMessage.getContent());
 
-        ChatTriggerInitializer.processChatTriggers(event.getPlayer().getCommandSource(), chatString);
+        ChatTriggerInitializer.processChatTriggers(CommandHelper.Source.getCommandSource(event.getPlayer()), chatString);
     }
 
 }
