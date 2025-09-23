@@ -25,7 +25,9 @@ public class AliasCommandDescriptor extends CommandDescriptor {
 
     @TestCase(action = "Test the redirect functionality.", targets = {
         "The redirect target command is a non-leaf command: `/invsee` -> `/view inv`",
-        "The redirect target command is a leaf command: `/wb` -> `/workbench`"
+        "The redirect target command is a leaf command: `/wb` -> `/workbench`",
+        "The redirect target command already registered (no args): `/help` -> `/warp`",
+        "The redirect target command already registered (with args): `/workbench` -> `/say`"
     })
     @Override
     protected @NotNull ArgumentBuilder<ServerCommandSource, ?> terminalArgumentDecorator(@NotNull ArgumentBuilder<ServerCommandSource, ?> terminalArgumentBuilder) {

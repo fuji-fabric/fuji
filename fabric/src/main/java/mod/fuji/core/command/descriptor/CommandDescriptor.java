@@ -338,13 +338,14 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
         return CommandHelper.Path
             .toUniqueCommandPathList(literalCommandNode)
             .map(names -> {
-                LogUtil.warn("names = {}", names);
                 boolean isRegistered = false;
                 CommandNode<ServerCommandSource> parent = CommandHelper.Tree.getRootCommandNode();
                 for (int i = 0; i < names.size(); i++) {
                     String name = names.get(i);
 
                     @Nullable CommandNode<ServerCommandSource> child = parent.getChild(name);
+                    parent = child;
+
                     if (child == null || !CommandHelper.Node.isExecutableOrRedirectCommandNode(child)) {
                         return false;
                     }

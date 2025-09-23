@@ -57,6 +57,8 @@
 - Action: **Test the redirect functionality.**
 - Target: The redirect target command is a non-leaf command: `/invsee` -> `/view inv`
 - Target: The redirect target command is a leaf command: `/wb` -> `/workbench`
+- Target: The redirect target command already registered (no args): `/help` -> `/warp`
+- Target: The redirect target command already registered (with args): `/workbench` -> `/say`
 
 [Test Case]
 - Module: command_bundle
