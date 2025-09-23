@@ -250,7 +250,7 @@ public class CommandHelper {
                 .getChildren()
                 .forEach(it -> collectCommandNodes(collector, it));
 
-            if (Node.isRootCommandNode(parent)) {
+            if (!Node.isRootCommandNode(parent)) {
                 collector.add(parent);
             }
         }
@@ -298,6 +298,27 @@ public class CommandHelper {
                 parentLiterals.put(node.getName(), (LiteralCommandNode<ServerCommandSource>) node);
             } else if (node instanceof ArgumentCommandNode) {
                 parentArguments.put(node.getName(), (ArgumentCommandNode<ServerCommandSource, ?>) node);
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        @Keep
+        public static void addRedirect(final CommandNode<ServerCommandSource> parent, final CommandNode<ServerCommandSource> node) {
+            if (node instanceof RootCommandNode) {
+                throw new UnsupportedOperationException("Cannot add a RootCommandNode as a child to any other CommandNode");
+            }
+
+            CommandNodeExtension<ServerCommandSource> parentExtension = (CommandNodeExtension<ServerCommandSource>) parent;
+            var parentChildren = parentExtension.fuji$getChildren();
+            final CommandNode<ServerCommandSource> child = parentChildren.get(node.getName());
+            if (child != null) {
+                CommandNodeExtension<ServerCommandSource> childExtension = (CommandNodeExtension<ServerCommandSource>) child;
+                if (node.getRedirect() != null) {
+                    childExtension.fuji$setRedirect(node.getRedirect());
+                }
+                for (final CommandNode<ServerCommandSource> grandchild : node.getChildren()) {
+                    addRedirect(child, grandchild);
+                }
             }
         }
     }
