@@ -55,7 +55,7 @@ import org.jetbrains.annotations.Nullable;
 @ForDeveloper("""
     A command descriptor is used to describe a command instance.
     """)
-public class CommandDescriptor implements SourceModuleGetter {
+public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
     public static final SpecialVariable<Boolean> stdoutSpecialVariable = new SpecialVariable<>(false);
     public static final SpecialVariable<Boolean> silentSpecialVariable = new SpecialVariable<>(false);
@@ -81,6 +81,7 @@ public class CommandDescriptor implements SourceModuleGetter {
     }
 
     public void register() {
+        trySpamConsole(() -> LogUtil.info("Register {} command: {}", this.getClass().getSimpleName(), this.getCommandSyntax()));
         LogUtil.debug("Register command: {}", this);
 
         /* First pass: build the non-optional arguments. */
@@ -94,6 +95,7 @@ public class CommandDescriptor implements SourceModuleGetter {
     }
 
     public void unregister() {
+        trySpamConsole(() -> LogUtil.info("Un-Register {} command: {}", this.getClass().getSimpleName(), this.getCommandSyntax()));
         LogUtil.debug("Un-register command: {}", this);
 
         RootCommandNode<ServerCommandSource> root = CommandAnnotationProcessor.COMMAND_DISPATCHER.getRoot();
@@ -376,6 +378,11 @@ public class CommandDescriptor implements SourceModuleGetter {
 
     protected static @NotNull String getOptionalArgumentLeadingArgumentName(@NotNull String argumentName) {
         return "--" + argumentName;
+    }
+
+    @Override
+    public boolean isConsoleSpammer() {
+        return true;
     }
 
     public static class CommandRequirement {
