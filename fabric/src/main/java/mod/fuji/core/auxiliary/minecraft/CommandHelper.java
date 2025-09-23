@@ -118,7 +118,8 @@ public class CommandHelper {
     public static class Node {
 
         private static boolean isRootCommandNode(@NotNull CommandNode<ServerCommandSource> node) {
-            return node instanceof RootCommandNode<ServerCommandSource>;
+            return node.getName().isEmpty()
+                || node instanceof RootCommandNode<ServerCommandSource>;
         }
 
         @SuppressWarnings("IfCanBeSwitch")
