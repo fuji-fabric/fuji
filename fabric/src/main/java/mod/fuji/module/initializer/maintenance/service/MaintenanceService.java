@@ -64,7 +64,7 @@ public class MaintenanceService {
         }
 
         /* Execute commands. */
-        ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(ServerHelper.getServer().getCommandSource());
+        ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(CommandHelper.Source.getConsoleCommandSource());
         CommandExecutor.executeBatch(extendedCommandSource, commands);
     }
 

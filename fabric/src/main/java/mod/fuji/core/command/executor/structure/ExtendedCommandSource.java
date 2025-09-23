@@ -1,5 +1,6 @@
 package mod.fuji.core.command.executor.structure;
 
+import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.descriptor.CommandDescriptor;
@@ -41,7 +42,7 @@ public class ExtendedCommandSource {
     }
 
     public static ExtendedCommandSource asConsole(@NotNull ServerCommandSource initiatingSource) {
-        return new ExtendedCommandSource(initiatingSource, ServerHelper.getServer().getCommandSource(), true);
+        return new ExtendedCommandSource(initiatingSource, CommandHelper.Source.getConsoleCommandSource(), true);
     }
 
     public static ExtendedCommandSource asPlayer(@NotNull ServerCommandSource initiatingSource, ServerPlayerEntity executingPlayer) {

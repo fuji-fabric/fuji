@@ -3,6 +3,7 @@ package mod.fuji.module.initializer.world.manager.service;
 import mod.fuji.core.annotation.Unused;
 import mod.fuji.core.auxiliary.IOUtil;
 import mod.fuji.core.auxiliary.LogUtil;
+import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
@@ -201,7 +202,7 @@ public class WorldService {
             .filter(RuntimeDimensionDescriptor::isAuto_load_on_server_startup)
             .forEach(it -> {
                 try {
-                    DimensionCreationTicket ticket = new DimensionCreationTicket(ServerHelper.getServer().getCommandSource(), it);
+                    DimensionCreationTicket ticket = new DimensionCreationTicket(CommandHelper.Source.getConsoleCommandSource(), it);
                     submitDimensionCreationTicket(ticket);
                     LogUtil.info("Load dimension {} into the server.", it.getDimension());
                 } catch (Exception e) {

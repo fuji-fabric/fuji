@@ -2,6 +2,7 @@ package mod.fuji.module.initializer.command_scheduler.structure;
 
 import com.google.gson.annotations.SerializedName;
 import mod.fuji.core.auxiliary.RandomUtil;
+import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
@@ -66,6 +67,6 @@ public class CommandSchedulerJobDescriptor {
         /* Execute specified commands. */
         List<String> commands = RandomUtil.drawList(this.command_groups);
         LogUtil.info("Execute commands in job `{}`: {}", this.getName(), commands);
-        ServerHelper.executeSync(() -> CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(ServerHelper.getServer().getCommandSource()), commands));
+        ServerHelper.executeSync(() -> CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(CommandHelper.Source.getConsoleCommandSource()), commands));
     }
 }

@@ -14,6 +14,7 @@ import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import java.util.Collection;
+import mod.fuji.core.annotation.Unused;
 import mod.fuji.core.command.extension.CommandNodeExtension;
 import mod.fuji.core.command.processor.CommandAnnotationProcessor;
 import mod.fuji.core.command.structure.RegisteredCommandNode;
@@ -177,6 +178,75 @@ public class CommandHelper {
         }
     }
 
+    public static class Tree {
+
+        public static @NotNull List<List<RegisteredCommandNode>> findRegisteredCommandTree(@NotNull CommandNode<ServerCommandSource> navigationNode) {
+            /* Set up the primary branch. */
+            List<List<RegisteredCommandNode>> treeCollector = new ArrayList<>();
+            List<RegisteredCommandNode> branchCollector = new ArrayList<>();
+            treeCollector.add(branchCollector);
+
+            /* Find recursively. */
+            RootCommandNode<ServerCommandSource> root = Node.getRootCommandNode();
+            findRegisteredCommandTreeRecursively(treeCollector, branchCollector, navigationNode, root);
+            return treeCollector;
+        }
+
+        @ForDeveloper("Returns a chain of registered command nodes.")
+        @SuppressWarnings("UnnecessaryLocalVariable")
+        private static void findRegisteredCommandTreeRecursively(@NotNull List<List<RegisteredCommandNode>> treeCollector, @NotNull List<RegisteredCommandNode> branchCollector, @NotNull CommandNode<ServerCommandSource> navigationNode, @NotNull CommandNode<ServerCommandSource> walkingNode) {
+            CommandNode<ServerCommandSource> parent = walkingNode;
+
+            Optional
+                .ofNullable(parent.getChild(navigationNode.getName()))
+                .ifPresent(child -> {
+                    /* Walk the path. */
+                    RegisteredCommandNode found = new RegisteredCommandNode(parent, child);
+                    branchCollector.add(found);
+
+                    /* Go down. */
+                    Collection<CommandNode<ServerCommandSource>> children = navigationNode.getChildren();
+                    children
+                        .forEach(newNavigationNode -> {
+                            if (children.size() == 1) {
+                                /* Only 1 branch, continuing it. */
+                                findRegisteredCommandTreeRecursively(treeCollector, branchCollector, newNavigationNode, child);
+                            } else {
+                                /* More than 1 branch, forking it. */
+                                ArrayList<RegisteredCommandNode> forkedCollector = new ArrayList<>(branchCollector);
+                                treeCollector.add(forkedCollector);
+                                findRegisteredCommandTreeRecursively(treeCollector, forkedCollector, newNavigationNode, child);
+                            }
+                        });
+                });
+
+        }
+
+        public static void removeInCommandTree(@NotNull RegisteredCommandNode registeredCommandNode) {
+            // NODE: Identify the `command node` by node name.
+            @SuppressWarnings("unchecked")
+            CommandNodeExtension<ServerCommandSource> parentNode = (CommandNodeExtension<ServerCommandSource>) registeredCommandNode.getParent();
+            CommandNode<ServerCommandSource> childNode = registeredCommandNode.getNode();
+            parentNode.fuji$getChildren().values().removeIf(it -> it.getName().equals(childNode.getName()));
+            parentNode.fuji$getLiterals().values().removeIf(it -> it.getName().equals(childNode.getName()));
+            parentNode.fuji$getArguments().values().removeIf(it -> it.getName().equals(childNode.getName()));
+        }
+
+        public static void updateCommandTree() {
+            updateCommandTree(ServerHelper.getServer().getCommandManager());
+        }
+
+        public static void updateCommandTree(@NotNull CommandManager commandManager) {
+            // NOTE: No need to update if the command manager is not initialized.
+            if (ServerHelper.getServer() == null) {
+                return;
+            }
+            PlayerHelper.Lookup
+                .getOnlinePlayers()
+                .forEach(commandManager::sendCommandTree);
+        }
+    }
+
     public static class Requirement {
 
         public static boolean canUseThisCommand(ServerPlayerEntity player, String commandString) {
@@ -333,7 +403,7 @@ public class CommandHelper {
             return value ? SUCCESS : FAILURE;
         }
 
-        public static int returnBoolean(ServerCommandSource source, boolean value) {
+        public static int returnBoolean(@Unused ServerCommandSource source, boolean value) {
             return fromBoolean(value);
         }
 
@@ -351,6 +421,7 @@ public class CommandHelper {
                 .optimize(iterable, builder.getRemaining())
                 .forEach(builder::suggest);
 
+            /* Build the command suggestion feature. */
             return builder.buildFuture();
         }
 
@@ -373,7 +444,7 @@ public class CommandHelper {
 
     public static class Pattern {
 
-        public static int withContextPlayer(@NotNull ServerCommandSource source, @NotNull Function<ServerPlayerEntity, Integer> function) {
+        public static int withServerPlayer(@NotNull ServerCommandSource source, @NotNull Function<ServerPlayerEntity, Integer> function) {
             ServerPlayerEntity player = source.getPlayer();
             if (player == null) {
                 TextHelper.sendTextByKey(source, "command.player_only");
@@ -385,13 +456,11 @@ public class CommandHelper {
 
         public static int withItemInMainHand(@NotNull ServerPlayerEntity source, @NotNull Function<ItemStack, Integer> consumer) {
             ServerCommandSource commandSource = Source.getCommandSource(source);
-            return withItemInMainHand(commandSource, (player, item) -> {
-                return consumer.apply(item);
-            });
+            return withItemInMainHand(commandSource, (player, item) -> consumer.apply(item));
         }
 
         public static int withItemInMainHand(@NotNull ServerCommandSource source, @NotNull BiFunction<ServerPlayerEntity, ItemStack, Integer> consumer) {
-            return withContextPlayer(source, player -> {
+            return withServerPlayer(source, player -> {
                 ItemStack mainHandStack = player.getMainHandStack();
                 if (mainHandStack.isEmpty()) {
                     TextHelper.sendTextByKey(player, "item.empty.not_allow");
@@ -429,72 +498,4 @@ public class CommandHelper {
 
     }
 
-    public static class Tree {
-
-        public static @NotNull List<List<RegisteredCommandNode>> findRegisteredCommandTree(@NotNull CommandNode<ServerCommandSource> navigationNode) {
-            /* Set up the primary branch. */
-            List<List<RegisteredCommandNode>> treeCollector = new ArrayList<>();
-            List<RegisteredCommandNode> branchCollector = new ArrayList<>();
-            treeCollector.add(branchCollector);
-
-            /* Find recursively. */
-            RootCommandNode<ServerCommandSource> root = Node.getRootCommandNode();
-            findRegisteredCommandTreeRecursively(treeCollector, branchCollector, navigationNode, root);
-            return treeCollector;
-        }
-
-        @ForDeveloper("Returns a chain of registered command nodes.")
-        @SuppressWarnings("UnnecessaryLocalVariable")
-        private static void findRegisteredCommandTreeRecursively(@NotNull List<List<RegisteredCommandNode>> treeCollector, @NotNull List<RegisteredCommandNode> branchCollector, @NotNull CommandNode<ServerCommandSource> navigationNode, @NotNull CommandNode<ServerCommandSource> walkingNode) {
-            CommandNode<ServerCommandSource> parent = walkingNode;
-
-            Optional
-                .ofNullable(parent.getChild(navigationNode.getName()))
-                .ifPresent(child -> {
-                    /* Walk the path. */
-                    RegisteredCommandNode found = new RegisteredCommandNode(parent, child);
-                    branchCollector.add(found);
-
-                    /* Go down. */
-                    Collection<CommandNode<ServerCommandSource>> children = navigationNode.getChildren();
-                    children
-                        .forEach(newNavigationNode -> {
-                            if (children.size() == 1) {
-                                /* Only 1 branch, continuing it. */
-                                findRegisteredCommandTreeRecursively(treeCollector, branchCollector, newNavigationNode, child);
-                            } else {
-                                /* More than 1 branch, forking it. */
-                                ArrayList<RegisteredCommandNode> forkedCollector = new ArrayList<>(branchCollector);
-                                treeCollector.add(forkedCollector);
-                                findRegisteredCommandTreeRecursively(treeCollector, forkedCollector, newNavigationNode, child);
-                            }
-                        });
-                });
-
-        }
-
-        public static void removeInCommandTree(@NotNull RegisteredCommandNode registeredCommandNode) {
-            // NODE: Identify the `command node` by node name.
-            @SuppressWarnings("unchecked")
-            CommandNodeExtension<ServerCommandSource> parentNode = (CommandNodeExtension<ServerCommandSource>) registeredCommandNode.getParent();
-            CommandNode<ServerCommandSource> childNode = registeredCommandNode.getNode();
-            parentNode.fuji$getChildren().values().removeIf(it -> it.getName().equals(childNode.getName()));
-            parentNode.fuji$getLiterals().values().removeIf(it -> it.getName().equals(childNode.getName()));
-            parentNode.fuji$getArguments().values().removeIf(it -> it.getName().equals(childNode.getName()));
-        }
-
-        public static void updateCommandTree() {
-            updateCommandTree(ServerHelper.getServer().getCommandManager());
-        }
-
-        public static void updateCommandTree(@NotNull CommandManager commandManager) {
-            // NOTE: No need to update if the command manager is not initialized.
-            if (ServerHelper.getServer() == null) {
-                return;
-            }
-            PlayerHelper.Lookup
-                .getOnlinePlayers()
-                .forEach(commandManager::sendCommandTree);
-        }
-    }
 }
