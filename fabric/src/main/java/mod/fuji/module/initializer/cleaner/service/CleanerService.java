@@ -34,13 +34,13 @@ public class CleanerService {
 
         /* Ignore entities by config. */
         var config = CleanerInitializer.config.model().getIgnore();
-        if (config.isIgnoreItemEntity() && EntityHelper.isItemEntity(entity)) return true;
-        if (config.isIgnoreLivingEntity() && EntityHelper.isLivingEntity(entity)) return true;
-        if (config.isIgnoreNamedEntity() && EntityHelper.hasCustomName(entity)) return true;
-        if (config.isIgnoreEntityWithVehicle() && EntityHelper.hasVehicle(entity)) return true;
-        if (config.isIgnoreEntityWithPassengers() && EntityHelper.hasPassengers(entity)) return true;
-        if (config.isIgnoreLeashedEntity() && EntityHelper.isLeashed(entity)) return true;
-        if (config.isIgnoreGlowingEntity() && EntityHelper.isGlowing(entity)) return true;
+        if (config.isIgnoreItemEntity() && EntityHelper.Predicates.isItemEntity(entity)) return true;
+        if (config.isIgnoreLivingEntity() && EntityHelper.Predicates.isLivingEntity(entity)) return true;
+        if (config.isIgnoreNamedEntity() && EntityHelper.Predicates.hasCustomName(entity)) return true;
+        if (config.isIgnoreEntityWithVehicle() && EntityHelper.Predicates.hasVehicle(entity)) return true;
+        if (config.isIgnoreEntityWithPassengers() && EntityHelper.Predicates.hasPassengers(entity)) return true;
+        if (config.isIgnoreLeashedEntity() && EntityHelper.Predicates.isLeashed(entity)) return true;
+        if (config.isIgnoreGlowingEntity() && EntityHelper.Predicates.isGlowing(entity)) return true;
 
         /* Should not ignore this entity. */
         return false;
