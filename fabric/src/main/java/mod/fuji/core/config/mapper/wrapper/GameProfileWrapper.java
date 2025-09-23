@@ -8,6 +8,7 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.minecraft.entity.player.PlayerEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,6 +26,10 @@ public class GameProfileWrapper {
 
     public static @NotNull GameProfileWrapper of(@Nullable UUID id, @NotNull String name, @NotNull PropertyMap properties) {
         return new GameProfileWrapper(id, name, PropertyMapWrapper.fromVanillaType(properties));
+    }
+
+    public static @NotNull GameProfileWrapper of(@NotNull PlayerEntity player) {
+        return fromVanillaType(player.getGameProfile());
     }
 
     public Optional<GameProfile> toGameProfile() {
@@ -61,6 +66,7 @@ public class GameProfileWrapper {
         return gameProfile;
     }
 
+
     public static @NotNull GameProfileWrapper fromVanillaType(@NotNull GameProfile gameProfile) {
         UUID id = AuthlibHelper.getId(gameProfile);
         String name = AuthlibHelper.getName(gameProfile);
@@ -84,5 +90,4 @@ public class GameProfileWrapper {
             .map(net.minecraft.server.PlayerConfigEntry::new);
     }
     #endif
-
 }

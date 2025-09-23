@@ -249,7 +249,7 @@ public class CommandHelper {
 
     public static class Requirement {
 
-        public static boolean canUseThisCommand(ServerPlayerEntity player, String commandString) {
+        public static boolean canUseCommandString(@NotNull ServerPlayerEntity player, @NotNull String commandString) {
             /* Parse the command string into command nodes. */
             ServerCommandSource commandSource = Source.getCommandSource(player);
             ParseResults<ServerCommandSource> parseResults = getCommandDispatcher()
@@ -273,11 +273,11 @@ public class CommandHelper {
         }
 
         public static boolean isOperator(@NotNull PlayerEntity player) {
-            #if MC_VER < MC_1_21_9
-            return PlayerHelper.getPlayerManager().isOperator(player.getGameProfile());
-            #elif MC_VER >= MC_1_21_9
-            return PlayerHelper.getPlayerManager().isOperator(player.getPlayerConfigEntry());
-            #endif
+            var profile = GameProfileWrapper
+                .of(player)
+                .toVanillaType()
+                .orElseThrow();
+            return PlayerHelper.getPlayerManager().isOperator(profile);
         }
 
         public static boolean isAdmin(@NotNull ServerPlayerEntity player) {
