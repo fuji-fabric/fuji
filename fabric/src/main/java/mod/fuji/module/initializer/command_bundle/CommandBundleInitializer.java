@@ -2,15 +2,11 @@ package mod.fuji.module.initializer.command_bundle;
 
 import com.mojang.brigadier.context.CommandContext;
 import mod.fuji.core.annotation.Unused;
-import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
-import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
-import mod.fuji.core.command.descriptor.CommandDescriptor;
-import mod.fuji.core.command.processor.CommandAnnotationProcessor;
 import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.core.document.annotation.ColorBox;
@@ -22,11 +18,9 @@ import mod.fuji.core.event.message.server.command.CommandRegistrationEvent;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.command_bundle.config.model.CommandBundleConfigModel;
+import mod.fuji.module.initializer.command_bundle.service.CommandBundleService;
 import mod.fuji.module.initializer.command_bundle.structure.BundleCommandDescriptor;
-import java.util.List;
-import mod.fuji.module.initializer.command_bundle.structure.BundleCommandNode;
 import net.minecraft.server.command.ServerCommandSource;
-import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826356909L, value = """
     This module allows `creating` a new command (Called `template command` or `bundle command`):
@@ -170,74 +164,39 @@ public class CommandBundleInitializer extends ModuleInitializer {
     @Document(id = 1751826359683L, value = "Register all commands defined in bundle-command configuration file.")
     @CommandNode("register")
     private static int $registerAllBundleCommands(@CommandSource ServerCommandSource source) {
-        if (!listRegisteredBundleCommandDescriptors().isEmpty()) {
-            TextHelper.sendTextByKey(source, "command_bundle.register.already_registered");
-            return CommandHelper.Return.FAILURE;
-        }
-
-        listDeclaredBundleCommandDescriptors().stream()
-            .map(BundleCommandDescriptor.Maker::from)
-            .forEach(CommandDescriptor::register);
-        CommandHelper.updateCommandTree();
-        TextHelper.sendTextByKey(source, "command_bundle.register");
+        CommandBundleService.registerAllBundleCommands();
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1751826362252L, value = "Un-register all bundle-commands registered in server.")
     @CommandNode("un-register")
     private static int $unregisterAllBundleCommands(@CommandSource ServerCommandSource source) {
-        List<CommandDescriptor> registeredBundleCommandDescriptors = listRegisteredBundleCommandDescriptors();
-        if (registeredBundleCommandDescriptors.isEmpty()) {
-            TextHelper.sendTextByKey(source, "command_bundle.un-register.none_registered");
-            return CommandHelper.Return.FAILURE;
-        }
-
-        registeredBundleCommandDescriptors
-            .forEach(CommandDescriptor::unregister);
-        CommandHelper.updateCommandTree();
-        TextHelper.sendTextByKey(source, "command_bundle.un-register");
+        CommandBundleService.unregisterAllBundleCommands();
         return CommandHelper.Return.SUCCESS;
     }
-
-    private static @NotNull List<CommandDescriptor> listRegisteredBundleCommandDescriptors() {
-        return CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS
-            .stream()
-            .filter(it -> it instanceof BundleCommandDescriptor)
-            .toList();
-    }
-
-    private static @NotNull List<BundleCommandNode> listDeclaredBundleCommandDescriptors() {
-        return config.model().getBundleCommands()
-            .stream()
-            .filter(BundleCommandNode::isEnable)
-            .toList();
-    }
-
 
     @Document(id = 1751826364625L, value = "List all registered bundle-commands in server.")
     @CommandNode("list")
     private static int $list(@CommandSource CommandContext<ServerCommandSource> ctx) {
-        return CommandsInspectionGui.inspectCommandDescriptors(ctx, it -> it instanceof BundleCommandDescriptor);
+        return CommandsInspectionGui
+            .inspectCommandDescriptors(ctx, it -> it instanceof BundleCommandDescriptor);
     }
 
     @EventConsumer
     private static void registerAllBundleCommands(@Unused ServerStartedEvent event) {
-        $registerAllBundleCommands(CommandHelper.Source.getConsoleCommandSource());
+        CommandBundleService.registerAllBundleCommands();
     }
 
     @EventConsumer
     private static void onCommandRegistrationEvent(@Unused CommandRegistrationEvent event) {
-        ServerHelper.withServerInstantiated(() -> {
-            $registerAllBundleCommands(CommandHelper.Source.getConsoleCommandSource());
-        });
+        ServerHelper.withServerInstantiated(CommandBundleService::registerAllBundleCommands);
     }
-
 
     @TestCase(action = "Issue `/reload`, `/fuji reload`, `/fuji inspect fuji-commands` and `/command-bundle list`", targets = "The bundle commands should be able to register and un-register on the fly.")
     @Override
     protected void onReload() {
-        $unregisterAllBundleCommands(CommandHelper.Source.getConsoleCommandSource());
-        $registerAllBundleCommands(CommandHelper.Source.getConsoleCommandSource());
+        CommandBundleService.unregisterAllBundleCommands();
+        CommandBundleService.registerAllBundleCommands();
     }
 
 }

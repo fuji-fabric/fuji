@@ -60,9 +60,7 @@ public class CommandAliasInitializer extends ModuleInitializer {
 
     @EventConsumer
     private static void onCommandRegistrationEvent(@Unused CommandRegistrationEvent event) {
-        ServerHelper.withServerInstantiated(() -> {
-            CommandAliasService.registerAllAliasCommands();
-        });
+        ServerHelper.withServerInstantiated(CommandAliasService::registerAllAliasCommands);
     }
 
     @Override
