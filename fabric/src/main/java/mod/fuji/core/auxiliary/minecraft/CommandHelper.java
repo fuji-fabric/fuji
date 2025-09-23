@@ -122,6 +122,10 @@ public class CommandHelper {
             List<String> list = Arrays.asList(nodeNames);
             return list;
         }
+
+        public static Optional<CommandNode<ServerCommandSource>> findCommandNode(@NotNull List<String> commandNodePath) {
+            return Optional.ofNullable(getCommandDispatcher().findNode(commandNodePath));
+        }
     }
 
     public static void updateCommandTree() {

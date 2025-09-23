@@ -1,6 +1,5 @@
 package mod.fuji.module.initializer.command_alias.service;
 
-import com.mojang.brigadier.CommandDispatcher;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.command.argument.structure.CommandArgument;
@@ -12,7 +11,6 @@ import mod.fuji.module.initializer.command_alias.structure.AliasCommandDescripto
 import mod.fuji.module.initializer.command_alias.structure.CommandAliasEntry;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.NotNull;
 
 public class CommandAliasService {
@@ -51,9 +49,7 @@ public class CommandAliasService {
 
     private static Optional<AliasCommandDescriptor> makeRedirectCommandDescriptor(@NotNull CommandAliasEntry entry) {
         /* Find the redirect target command node in server command tree. */
-        CommandDispatcher<ServerCommandSource> dispatcher = CommandHelper.getCommandDispatcher();
-        return Optional
-            .ofNullable(dispatcher.findNode(entry.getTo()))
+        return CommandHelper.Node.findCommandNode(entry.getTo())
             .map(redirectTargetCommandNode -> {
                 CommandRequirementDescriptor requirement = entry.getRequirement();
                 List<CommandArgument> commandArguments = entry.getFrom()
@@ -70,4 +66,5 @@ public class CommandAliasService {
                 return Optional.empty();
             });
     }
+
 }
