@@ -17,15 +17,21 @@ import org.jetbrains.annotations.NotNull;
 
 public class CommandAliasService {
     public static void registerAllAliasCommands() {
-        CommandAliasInitializer.config.model()
-            .getAliasCommands()
+        getDeclaredAliasCommandDescriptors()
             .stream()
-            .filter(CommandAliasEntry::isEnable)
             .map(CommandAliasService::makeRedirectCommandDescriptor)
             .filter(Optional::isPresent)
             .map(Optional::get)
             .forEach(CommandDescriptor::register);
         CommandHelper.updateCommandTree();
+    }
+
+    private static List<CommandAliasEntry> getDeclaredAliasCommandDescriptors() {
+        return CommandAliasInitializer.config.model()
+            .getAliasCommands()
+            .stream()
+            .filter(CommandAliasEntry::isEnable)
+            .toList();
     }
 
     public static void unregisterAllAliasCommands() {
@@ -46,7 +52,8 @@ public class CommandAliasService {
     private static Optional<AliasCommandDescriptor> makeRedirectCommandDescriptor(@NotNull CommandAliasEntry entry) {
         /* Find the redirect target command node in server command tree. */
         CommandDispatcher<ServerCommandSource> dispatcher = CommandHelper.getCommandDispatcher();
-        return Optional.ofNullable(dispatcher.findNode(entry.getTo()))
+        return Optional
+            .ofNullable(dispatcher.findNode(entry.getTo()))
             .map(redirectTargetCommandNode -> {
                 CommandRequirementDescriptor requirement = entry.getRequirement();
                 List<CommandArgument> commandArguments = entry.getFrom()
@@ -56,11 +63,10 @@ public class CommandAliasService {
 
                 AliasCommandDescriptor descriptor = new AliasCommandDescriptor(commandArguments, redirectTargetCommandNode);
                 descriptor.fillDocument(entry.getDocument());
-
                 return Optional.of(descriptor);
             })
             .orElseGet(() -> {
-                LogUtil.warn("Failed to find the target command node {} in server command tree. Ignoring the command alias entry: {}", entry.getTo(), entry);
+                LogUtil.warn("Failed to find the target command node {} in server command tree, ignoring the command alias entry: {}", entry.getTo(), entry);
                 return Optional.empty();
             });
     }

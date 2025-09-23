@@ -10,6 +10,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
+import java.util.Collection;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.ReflectionUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -21,6 +22,7 @@ import mod.fuji.core.command.exception.AbortCommandExecutionException;
 import mod.fuji.core.command.extension.CommandNodeExtension;
 import mod.fuji.core.command.processor.CommandAnnotationProcessor;
 import mod.fuji.core.command.structure.CommandRequirementDescriptor;
+import mod.fuji.core.command.structure.RegisteredCommandNode;
 import mod.fuji.core.config.Configs;
 import mod.fuji.core.document.annotation.DocStringProvider;
 import mod.fuji.core.document.annotation.Document;
@@ -98,10 +100,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
     public void register() {
         trySpamConsole(() -> LogUtil.info("Register {} command: {}", this.getClass().getSimpleName(), this.getUserFriendlyCommandSyntax()));
-        LogUtil.debug("""
-            Register command: {}
-            Env: {}
-            """, this, CommandTree.getCommandTreeEnvironment());
+        LogUtil.debug("Register command: {}", this);
 
         /* First pass: build the non-optional arguments. */
         registerNonOptionalArguments();
@@ -113,61 +112,32 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
         CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS.add(this);
     }
 
-    public void unregister() {
-        trySpamConsole(() -> LogUtil.info("Un-Register {} command: {}", this.getClass().getSimpleName(), this.getUserFriendlyCommandSyntax()));
-        LogUtil.debug("""
-            Un-register command: {}
-            Env: {}
-            """, this, CommandTree.getCommandTreeEnvironment());
-
-        this.registerReturnValue
-            .ifPresentOrElse($registerReturnValue -> {
-                RootCommandNode<ServerCommandSource> root = CommandAnnotationProcessor.COMMAND_DISPATCHER.getRoot();
-                LiteralCommandNode<ServerCommandSource> navigationNode = $registerReturnValue.build();
-                CommandNode<ServerCommandSource> startNode = root.getChild(navigationNode.getName());
-                if (startNode != null) {
-                    /* Remove the leaf node. */
-                    if (CommandDescriptor.unregisterRecursively(startNode, navigationNode)) {
-                        root.getChildren()
-                            .removeIf(commandNode -> commandNode.getName().equals(navigationNode.getName()));
-                    }
-                }
-            }, () -> LogUtil.warn("Failed to remove the registered command node from the server command tree, due to the register return value being null. (descriptor = {}) ",this));
-
-        /* Sync the registry. */
-        CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS.remove(this);
-    }
-
     @TestCase(action = "Modify the `my-command` into `my-command-v2`, and issue `/fuji reload`.", targets = {
         "The command descriptor should be able to un-register the old command node in the command tree, even the new command node has different structure compared to the old one."
     })
-    private static boolean unregisterRecursively(@Nullable CommandNode<ServerCommandSource> targetNode, @NotNull CommandNode<ServerCommandSource> navigationNode) {
-        /* If there is no target node in the server command tree, return true to report empty. */
-        if (targetNode == null) {
-            return true;
-        }
+    public void unregister() {
+        trySpamConsole(() -> LogUtil.info("Un-Register {} command: {}", this.getClass().getSimpleName(), this.getUserFriendlyCommandSyntax()));
+        LogUtil.debug("Un-register command: {}", this);
 
-        /* Go down with the navigation node. */
-        navigationNode.getChildren()
-            .stream()
-            .toList()
-            .forEach(child -> {
-                /* Remove the leaf node. */
-                if (unregisterRecursively(targetNode.getChild(child.getName()), child)) {
-                    // NODE: Identify the `command node` by its name, should not use `equals` method.
-                    targetNode
-                        .getChildren()
-                        .removeIf(it -> it.getName().equals(child.getName()));
+        this.registerReturnValue
+            .ifPresentOrElse($registerReturnValue -> {
+                /* Find the registered command tree. */
+                LiteralCommandNode<ServerCommandSource> navigationNode = $registerReturnValue.build();
+                List<List<RegisteredCommandNode>> registeredCommandTree = CommandTree.findRegisteredCommandTree(navigationNode);
+                if (registeredCommandTree.isEmpty()) {
+                    LogUtil.warn("The command '{}' not found in server command tree, ignoring its un-registration.", this.getUserFriendlyCommandSyntax());
+                    return;
                 }
-            });
 
-        /* Remove global optional arguments. */
-        targetNode.getChildren().removeIf(commandNode -> commandNode.getName().equals(getOptionalArgumentLeadingArgumentName(SILENT_LITERAL)));
-        targetNode.getChildren().removeIf(commandNode -> commandNode.getName().equals(getOptionalArgumentLeadingArgumentName(STDOUT_LITERAL)));
+                /* Cut-down the registered command tree. */
+                LogUtil.debug("Un-register the command tree: {}", registeredCommandTree);
+                registeredCommandTree
+                    .forEach(branch -> branch.forEach(CommandTree::removeSelfInCommandTree));
 
-        /* Return if target node is empty. */
-        return targetNode.getChildren() == null
-            || targetNode.getChildren().isEmpty();
+            }, () -> LogUtil.warn("Failed to remove the registered command node from the server command tree, due to the register return value being null. (descriptor = {}) ", this));
+
+        /* Sync the registry. */
+        CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS.remove(this);
     }
 
     @ForDeveloper("Test the equality using physical memory address.")
@@ -213,7 +183,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
             .map(CommandArgument::getArgumentName)
             .toList();
 
-        return CommandAnnotationProcessor.COMMAND_DISPATCHER.findNode(commandPath);
+        return CommandHelper.getCommandDispatcher().findNode(commandPath);
     }
 
     protected @NotNull List<CommandArgument> getMethodParameterSpecifiers() {
@@ -355,7 +325,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
         LiteralArgumentBuilder<ServerCommandSource> assembledArgumentBuilder = ArgumentBuilderMaker.assembleArgumentBuilders(argumentBuilders, this::terminalArgumentDecorator);
 
         /* Register the assembled argument builder as the child of the global root argument builder. */
-        CommandAnnotationProcessor.COMMAND_DISPATCHER.register(assembledArgumentBuilder);
+        CommandHelper.getCommandDispatcher().register(assembledArgumentBuilder);
         this.registerReturnValue = Optional.of(assembledArgumentBuilder);
     }
 
@@ -754,9 +724,57 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
     }
 
     public static class CommandTree {
-        private static @NotNull String getCommandTreeEnvironment() {
-            int commandDispatcherHash = System.identityHashCode(CommandAnnotationProcessor.COMMAND_DISPATCHER);
-            return "command dispatcher = %s".formatted(commandDispatcherHash);
+
+        private static @NotNull List<List<RegisteredCommandNode>> findRegisteredCommandTree(@NotNull CommandNode<ServerCommandSource> navigationNode) {
+            /* Set up the primary branch. */
+            List<List<RegisteredCommandNode>> treeCollector = new ArrayList<>();
+            List<RegisteredCommandNode> branchCollector = new ArrayList<>();
+            treeCollector.add(branchCollector);
+
+            /* Find recursively. */
+            RootCommandNode<ServerCommandSource> root = CommandHelper.getCommandDispatcher().getRoot();
+            findRegisteredCommandTreeRecursively(treeCollector, branchCollector, navigationNode, root);
+            return treeCollector;
+        }
+
+        @ForDeveloper("Returns a chain of registered command nodes.")
+        @SuppressWarnings("UnnecessaryLocalVariable")
+        private static void findRegisteredCommandTreeRecursively(@NotNull List<List<RegisteredCommandNode>> treeCollector, @NotNull List<RegisteredCommandNode> branchCollector, @NotNull CommandNode<ServerCommandSource> navigationNode, @NotNull CommandNode<ServerCommandSource> walkingNode) {
+            CommandNode<ServerCommandSource> parent = walkingNode;
+
+            Optional
+                .ofNullable(parent.getChild(navigationNode.getName()))
+                .ifPresent(child -> {
+                    /* Walk the path. */
+                    RegisteredCommandNode found = new RegisteredCommandNode(parent, child);
+                    branchCollector.add(found);
+
+                    /* Go down. */
+                    Collection<CommandNode<ServerCommandSource>> children = navigationNode.getChildren();
+                    children
+                        .forEach(newNavigationNode -> {
+                            if (children.size() == 1) {
+                                /* Only 1 branch, continuing it. */
+                                findRegisteredCommandTreeRecursively(treeCollector, branchCollector, newNavigationNode, child);
+                            } else {
+                                /* More than 1 branch, forking it. */
+                                ArrayList<RegisteredCommandNode> forkedCollector = new ArrayList<>(branchCollector);
+                                treeCollector.add(forkedCollector);
+                                findRegisteredCommandTreeRecursively(treeCollector, forkedCollector, newNavigationNode, child);
+                            }
+                        });
+                });
+
+        }
+
+        private static void removeSelfInCommandTree(@NotNull RegisteredCommandNode registeredCommandNode) {
+            // NODE: Identify the `command node` by node name.
+            @SuppressWarnings("unchecked")
+            CommandNodeExtension<ServerCommandSource> parentNode = (CommandNodeExtension<ServerCommandSource>) registeredCommandNode.getParent();
+            CommandNode<ServerCommandSource> childNode = registeredCommandNode.getNode();
+            parentNode.fuji$getChildren().values().removeIf(it -> it.getName().equals(childNode.getName()));
+            parentNode.fuji$getLiterals().values().removeIf(it -> it.getName().equals(childNode.getName()));
+            parentNode.fuji$getArguments().values().removeIf(it -> it.getName().equals(childNode.getName()));
         }
     }
 
