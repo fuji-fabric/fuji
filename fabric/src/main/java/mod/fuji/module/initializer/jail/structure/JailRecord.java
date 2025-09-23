@@ -60,7 +60,7 @@ public class JailRecord {
         if (this.getOwnerJailDescriptor().isCountRemainingJailSecondsWhenPrisonersOffline()) {
             countRemainingJailSeconds(passedTimeInMillSeconds);
         } else {
-            if (PlayerHelper.isPlayerOnline(this.prisonerName)) {
+            if (PlayerHelper.Lookup.isPlayerOnline(this.prisonerName)) {
                 countRemainingJailSeconds(passedTimeInMillSeconds);
             }
         }

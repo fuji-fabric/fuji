@@ -1,6 +1,7 @@
 package mod.fuji.core.auxiliary.minecraft;
 
 import com.mojang.authlib.GameProfile;
+import java.util.function.Consumer;
 import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.core.document.annotation.TestCase;
 import java.util.List;
@@ -51,21 +52,6 @@ public class PlayerHelper {
         #endif
     }
 
-    @ForDeveloper("The carpet mod sub-classing the ServerPlayerEntity.")
-    public static boolean isRealPlayer(@NotNull ServerPlayerEntity player) {
-        return player.getClass() == ServerPlayerEntity.class;
-    }
-
-    @ForDeveloper("""
-        If a method is called both from client and client integrated server.
-        Then it will be called twice, one for ClientPlayerEntity, one for ServerPlayerEntity.
-        This happens when you install this mod in the client side, and plays in the single-player world.
-        """)
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public static boolean isServerPlayer(@NotNull PlayerEntity player) {
-        return player instanceof ServerPlayerEntity;
-    }
-
     public static @NotNull ServerWorld getServerWorld(@NotNull ServerPlayerEntity player) {
         #if MC_VER <= MC_1_21_5
         return (ServerWorld) player.getWorld();
@@ -82,12 +68,6 @@ public class PlayerHelper {
 
     public static PlayerManager getPlayerManager() {
         return ServerHelper.getServer().getPlayerManager();
-    }
-
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public static boolean isPlayerOnline(@NotNull String playerName) {
-        return Lookup.getOnlinePlayerByName(playerName)
-            .isPresent();
     }
 
     public static void updateDisplayName(@NotNull ServerPlayerEntity player) {
@@ -226,6 +206,46 @@ public class PlayerHelper {
                 .stream()
                 .filter(player -> player.getUuid().equals(playerUUID))
                 .findFirst();
+        }
+
+        @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+        public static boolean isPlayerOnline(@NotNull String playerName) {
+            return getOnlinePlayerByName(playerName)
+                .isPresent();
+        }
+    }
+
+    public static class Kind {
+
+        @ForDeveloper("The carpet mod sub-classing the ServerPlayerEntity.")
+        public static boolean isRealPlayer(@NotNull ServerPlayerEntity player) {
+            return player.getClass() == ServerPlayerEntity.class;
+        }
+
+        @ForDeveloper("""
+            If a method is called both from client and client integrated server.
+            Then it will be called twice, one for ClientPlayerEntity, one for ServerPlayerEntity.
+            This happens when you install this mod in the client side, and plays in the single-player world.
+            """)
+        @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+        public static boolean isServerPlayer(@NotNull PlayerEntity player) {
+            return player instanceof ServerPlayerEntity;
+        }
+
+
+        @ForDeveloper("""
+            If your mod is installed on the client-side, and run the single-player world.
+            Then some functions will be called twice.
+            One for ClientPlayerEntity, one for ServerPlayerEntity.
+            """)
+        public static void withServerPlayerEntity(@Nullable PlayerEntity player, @NotNull Consumer<ServerPlayerEntity> consumer) {
+            if (player == null) return;
+            if (!isServerPlayer(player)) return;
+            consumer.accept((ServerPlayerEntity) player);
+        }
+
+        public static void withServerPlayerEntity(@Nullable PlayerEntity player, @NotNull Runnable runnable) {
+            withServerPlayerEntity(player, (serverPlayerEntity) -> runnable.run());
         }
     }
 

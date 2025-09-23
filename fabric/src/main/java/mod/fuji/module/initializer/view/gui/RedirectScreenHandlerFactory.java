@@ -35,7 +35,7 @@ public abstract class RedirectScreenHandlerFactory {
     }
 
     private void loadTargetPlayer() {
-        ServerPlayerEntity player = ServerHelper.getServer().getPlayerManager().getPlayer(targetPlayerName);
+        ServerPlayerEntity player = PlayerHelper.getPlayerManager().getPlayer(targetPlayerName);
         if (player != null) {
             onlineEditMode = true;
             targetPlayer = player;
@@ -49,7 +49,7 @@ public abstract class RedirectScreenHandlerFactory {
         if (onlineEditMode) {
             return !targetPlayer.isRemoved();
         }
-        return !PlayerHelper.isPlayerOnline(targetPlayerName);
+        return !PlayerHelper.Lookup.isPlayerOnline(targetPlayerName);
     }
 
     protected abstract Inventory makeTargetInventoryRedirectScreen();

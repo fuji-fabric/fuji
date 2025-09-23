@@ -1,6 +1,6 @@
 package mod.fuji.module.mixin.color.anvil;
 
-import mod.fuji.core.auxiliary.minecraft.ServerHelper;
+import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.module.initializer.color.anvil.ColorAnvilInitializer;
 import java.util.concurrent.atomic.AtomicReference;
@@ -42,7 +42,7 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
     @Unique
     private @NotNull Text parseInputNewItemName() {
         AtomicReference<Text> modifiedText = new AtomicReference<>();
-        ServerHelper.withServerPlayerEntity(player, () -> {
+        PlayerHelper.Kind.withServerPlayerEntity(player, () -> {
             /* Stripe style tags. */
             if (ColorAnvilInitializer.config.model().requires_corresponding_permission_to_use_style_tag) {
                 PlayerEntity player = super.player;

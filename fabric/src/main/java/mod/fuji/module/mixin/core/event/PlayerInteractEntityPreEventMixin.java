@@ -2,7 +2,7 @@ package mod.fuji.module.mixin.core.event;
 
 import mod.fuji.annotation.PhasedMixinTemplate;
 import mod.fuji.auxiliary.WeaverUtil;
-import mod.fuji.core.auxiliary.minecraft.ServerHelper;
+import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.event.EventManager;
 import mod.fuji.core.event.annotation.EventProducer;
 import mod.fuji.core.event.message.player.PlayerInteractEntityPreEvent;
@@ -22,7 +22,7 @@ public class PlayerInteractEntityPreEventMixin {
     @EventProducer(PlayerInteractEntityPreEvent.class)
     @Inject(method = "interact", at = @At("HEAD"), cancellable = true)
     void producePlayerInteractEntityPreEvent(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        ServerHelper.withServerPlayerEntity(player, serverPlayer -> {
+        PlayerHelper.Kind.withServerPlayerEntity(player, serverPlayer -> {
             Entity entity = (Entity) (Object) this;
             PlayerInteractEntityPreEvent event = new PlayerInteractEntityPreEvent(serverPlayer, entity, hand, cir);
             EventManager.dispatchEvent(PlayerInteractEntityPreEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);

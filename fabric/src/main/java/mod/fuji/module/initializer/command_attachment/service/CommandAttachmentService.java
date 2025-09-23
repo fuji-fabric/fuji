@@ -1,7 +1,7 @@
 package mod.fuji.module.initializer.command_attachment.service;
 
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
-import mod.fuji.core.auxiliary.minecraft.ServerHelper;
+import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.exception.AbortCommandExecutionException;
 import mod.fuji.core.command.executor.CommandExecutor;
@@ -55,7 +55,7 @@ public class CommandAttachmentService {
     }
 
     private static void tryTriggerCommandAttachments(@NotNull CommandAttachments attachments, @NotNull PlayerEntity player, @NotNull List<InteractType> inputInteractTypes, @NotNull Runnable triggeredHook) {
-        ServerHelper.withServerPlayerEntity(player, (serverPlayer) -> {
+        PlayerHelper.Kind.withServerPlayerEntity(player, (serverPlayer) -> {
             /* Process attachment nodes. */
             for (BaseCommandAttachmentEntry entry : attachments.getEntries()) {
                 /* Filtered by interaction type. */

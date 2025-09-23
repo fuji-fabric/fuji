@@ -86,7 +86,7 @@ public class TeleportWarmupInitializer extends ModuleInitializer {
         /* Skip the teleport warmup if the player is a fake-player. */
         // NOTE: For carpet mod, if you use `/player Alice spawn` to spawn a fake-player. It will initially be spawned in minecraft:overworld.
         // And then it will be teleported to the target dimension.
-        if (!PlayerHelper.isRealPlayer(player)) {
+        if (!PlayerHelper.Kind.isRealPlayer(player)) {
             return false;
         }
 

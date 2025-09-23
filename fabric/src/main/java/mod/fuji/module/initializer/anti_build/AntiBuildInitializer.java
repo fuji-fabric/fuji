@@ -1,7 +1,7 @@
 package mod.fuji.module.initializer.anti_build;
 
+import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
-import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.DocStringProvider;
 import mod.fuji.core.document.annotation.Document;
@@ -92,7 +92,7 @@ public class AntiBuildInitializer extends ModuleInitializer {
     private static final PermissionDescriptor ANTI_BUILD_OVERRIDE_PERMISSION = new PermissionDescriptor("fuji.anti_build.<anti-type>.override.<id>", 1752994843864L);
 
     public static void processAntiBuild(@Nullable PlayerEntity player, @NotNull String antiType, @NotNull Set<String> ids, @NotNull String id, @NotNull Runnable canceller, @NotNull Supplier<Boolean> feedbackTrigger) {
-        ServerHelper.withServerPlayerEntity(player,() -> {
+        PlayerHelper.Kind.withServerPlayerEntity(player,() -> {
             // NOTE: This method will NOT be called for a dispenser block.
             if (isThisActionAllowed(player, antiType, ids, id)) {
                 return;

@@ -31,7 +31,7 @@ public class BossBarManager extends BaseManager {
                 && interruptibleTicket.getInterruptible().isEnable()
                 && interruptibleTicket.getInterruptible().isInterruptOnDamaged()
                 // the spawn mechanism of fake-player is different, they are spawned in overworld, and then teleport to target position.
-                && PlayerHelper.isRealPlayer(player)
+                && PlayerHelper.Kind.isRealPlayer(player)
                 && it.getPlayers().stream().anyMatch(p -> p.equals(player)))
             .forEach(it -> it.setAborted(true));
     }

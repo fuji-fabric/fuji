@@ -104,7 +104,7 @@ public class AfkService {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean canEnterAfk(@NotNull ServerPlayerEntity player) {
-        return PlayerHelper.isRealPlayer(player)
+        return PlayerHelper.Kind.isRealPlayer(player)
             && !player.isOnFire()
             && !player.inPowderSnow
             && !((PlayerCombatExtension) player).fuji$inCombat();

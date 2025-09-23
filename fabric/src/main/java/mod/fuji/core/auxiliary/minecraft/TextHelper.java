@@ -197,7 +197,7 @@ public class TextHelper {
             PlaceholderContext placeholderContext;
             if (audience instanceof PlayerEntity playerEntity) {
                 // NOTE: Prevent the class cast exception in client side.
-                if (!PlayerHelper.isServerPlayer(playerEntity)) {
+                if (!PlayerHelper.Kind.isServerPlayer(playerEntity)) {
                     LogUtil.debug("PlayerEntity {} is a client-side player entity, we can't use it to make the context for placeholder parser. (I will just fallback to the server context).");
                     return PlaceholderContext.of(ServerHelper.getServer());
                 }
