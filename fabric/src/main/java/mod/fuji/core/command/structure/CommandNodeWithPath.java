@@ -6,12 +6,12 @@ import lombok.Data;
 import net.minecraft.server.command.ServerCommandSource;
 
 @Data
-public class CommandNodeWrapper {
+public class CommandNodeWithPath {
 
     public final CommandNode<ServerCommandSource> node;
     public final String path;
 
-    public CommandNodeWrapper(CommandNode<ServerCommandSource> node) {
+    public CommandNodeWithPath(CommandNode<ServerCommandSource> node) {
         this.node = node;
         this.path = CommandHelper.Node.findCommandNodePath(node);
     }

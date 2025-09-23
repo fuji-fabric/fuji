@@ -2,10 +2,10 @@ package mod.fuji.module.initializer.fuji.structure;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.tree.CommandNode;
-import mod.fuji.core.command.structure.CommandNodeWrapper;
+import mod.fuji.core.command.structure.CommandNodeWithPath;
 import net.minecraft.server.command.ServerCommandSource;
 
-public class ServerCommandNodeWrapper extends CommandNodeWrapper {
+public class ServerCommandNodeWrapper extends CommandNodeWithPath {
 
     private static final String UNKNOWN_PACKAGE = "unknown";
 
