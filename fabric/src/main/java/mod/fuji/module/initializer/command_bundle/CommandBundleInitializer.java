@@ -24,6 +24,7 @@ import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.command_bundle.config.model.CommandBundleConfigModel;
 import mod.fuji.module.initializer.command_bundle.structure.BundleCommandDescriptor;
 import java.util.List;
+import mod.fuji.module.initializer.command_bundle.structure.BundleCommandNode;
 import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.NotNull;
 
@@ -175,7 +176,7 @@ public class CommandBundleInitializer extends ModuleInitializer {
         }
 
         LogUtil.info("Register bundle commands.");
-        config.model().getBundleCommands().stream()
+        listBundleCommandDescriptors().stream()
             .map(BundleCommandDescriptor.Maker::from)
             .forEach(it -> {
                 LogUtil.info("Register bundle command: {}", it.getCommandSyntax());
@@ -212,6 +213,14 @@ public class CommandBundleInitializer extends ModuleInitializer {
             .filter(it -> it instanceof BundleCommandDescriptor)
             .toList();
     }
+
+    private static @NotNull List<BundleCommandNode> listBundleCommandDescriptors() {
+        return config.model().getBundleCommands()
+            .stream()
+            .filter(BundleCommandNode::isEnable)
+            .toList();
+    }
+
 
     @Document(id = 1751826364625L, value = "List all registered bundle-commands in server.")
     @CommandNode("list")

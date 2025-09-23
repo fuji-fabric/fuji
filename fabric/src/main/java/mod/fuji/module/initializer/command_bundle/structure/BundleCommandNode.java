@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class BundleCommandNode {
 
+    boolean enable = true;
+
     @Document(id = 1753076962665L, value = """
         The `document` for this `bundle command`. This field can be `null`.
         """)
