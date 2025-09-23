@@ -14,6 +14,7 @@ import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.config.model.PermissionModel;
 import mod.fuji.core.command.descriptor.CommandDescriptor;
 import mod.fuji.core.command.descriptor.RetargetCommandDescriptor;
+import mod.fuji.core.command.descriptor.StandardCommandDescriptor;
 import mod.fuji.core.command.structure.CommandRequirementDescriptor;
 import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
@@ -210,7 +211,7 @@ public class CommandAnnotationProcessor {
         verifyCommandDescriptor(clazz, method, commandArgumentList);
 
         /* Make the command descriptor. */
-        CommandDescriptor commandDescriptor = new CommandDescriptor(method, commandArgumentList)
+        CommandDescriptor commandDescriptor = new StandardCommandDescriptor(method, commandArgumentList)
             .fillDocument(method.getAnnotation(Document.class));
 
         /* Apply the effective default command requirement. */

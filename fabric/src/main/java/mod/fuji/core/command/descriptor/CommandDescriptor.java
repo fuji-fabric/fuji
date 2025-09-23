@@ -51,7 +51,6 @@ import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@RequiredArgsConstructor
 @ForDeveloper("""
     A command descriptor is used to describe a command instance.
     """)
@@ -68,6 +67,11 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
     public @Nullable String document;
 
     private @Nullable LiteralArgumentBuilder<ServerCommandSource> registerReturnValue;
+
+    protected CommandDescriptor(@NotNull Method method, @NotNull List<CommandArgument> commandArguments) {
+        this.method = method;
+        this.commandArguments = commandArguments;
+    }
 
     public @NotNull CommandDescriptor fillDocument(@Nullable Document document) {
         if (document == null) return this;
