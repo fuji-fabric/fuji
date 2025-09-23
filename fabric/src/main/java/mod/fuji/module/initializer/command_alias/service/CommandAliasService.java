@@ -24,22 +24,15 @@ public class CommandAliasService {
             .map(CommandAliasService::makeRedirectCommandDescriptor)
             .filter(Optional::isPresent)
             .map(Optional::get)
-            .forEach(it -> {
-                LogUtil.info("Register alias command: {}", it.getCommandSyntax());
-                it.register();
-            });
+            .forEach(CommandDescriptor::register);
         CommandHelper.updateCommandTree();
     }
 
     public static void unregisterAllAliasCommands() {
         List<CommandDescriptor> registeredCommandDescriptors = getRegisteredAliasCommandDescriptors();
 
-        LogUtil.info("Un-register alias commands.");
         registeredCommandDescriptors
-            .forEach(it -> {
-                LogUtil.info("Un-register alias command: {}", it.getCommandSyntax());
-                it.unregister();
-            });
+            .forEach(CommandDescriptor::unregister);
         CommandHelper.updateCommandTree();
     }
 

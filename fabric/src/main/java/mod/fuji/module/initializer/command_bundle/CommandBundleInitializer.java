@@ -175,7 +175,6 @@ public class CommandBundleInitializer extends ModuleInitializer {
             return CommandHelper.Return.FAILURE;
         }
 
-        LogUtil.info("Register bundle commands.");
         listDeclaredBundleCommandDescriptors().stream()
             .map(BundleCommandDescriptor.Maker::from)
             .forEach(CommandDescriptor::register);
@@ -193,7 +192,6 @@ public class CommandBundleInitializer extends ModuleInitializer {
             return CommandHelper.Return.FAILURE;
         }
 
-        LogUtil.info("Un-register bundle commands.");
         registeredBundleCommandDescriptors
             .forEach(CommandDescriptor::unregister);
         CommandHelper.updateCommandTree();

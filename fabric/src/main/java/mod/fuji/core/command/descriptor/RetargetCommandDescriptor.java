@@ -138,4 +138,8 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
         });
     }
 
+    @Override
+    public boolean isConsoleSpammer() {
+        return false;
+    }
 }
