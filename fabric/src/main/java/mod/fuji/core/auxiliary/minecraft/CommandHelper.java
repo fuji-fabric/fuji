@@ -69,7 +69,6 @@ public class CommandHelper {
         public static List<CommandNode<ServerCommandSource>> getAllCommandNodes() {
             List<CommandNode<ServerCommandSource>> result = new ArrayList<>();
             CommandDispatcher<ServerCommandSource> commandDispatcher = getCommandDispatcher();
-            assert commandDispatcher != null;
             RootCommandNode<ServerCommandSource> root = commandDispatcher.getRoot();
             collectCommandNodes(result, root);
             return result;

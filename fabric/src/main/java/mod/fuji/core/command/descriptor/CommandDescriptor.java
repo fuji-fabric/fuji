@@ -1,5 +1,6 @@
 package mod.fuji.core.command.descriptor;
 
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -52,6 +53,8 @@ import org.jetbrains.annotations.Nullable;
 
 @ForDeveloper("""
     A command descriptor is used to describe a command instance.
+
+    To be simple: A command descriptor = command action method + command argument list
     """)
 public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
@@ -73,16 +76,20 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
         this.commandArguments = commandArguments;
     }
 
+    @CanIgnoreReturnValue
     public @NotNull CommandDescriptor fillDocument(@NotNull Optional<String> document) {
+        if (document.isEmpty()) return this;
         this.document = document;
         return this;
     }
 
+    @CanIgnoreReturnValue
     public @NotNull CommandDescriptor fillDocument(@Nullable Document document) {
         if (document == null) return this;
         return this.fillDocument(document.value());
     }
 
+    @CanIgnoreReturnValue
     public @NotNull CommandDescriptor fillDocument(@Nullable String document) {
         if (document == null) return this;
         this.document = Optional.of(document);
@@ -91,7 +98,10 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
     public void register() {
         trySpamConsole(() -> LogUtil.info("Register {} command: {}", this.getClass().getSimpleName(), this.getUserFriendlyCommandSyntax()));
-        LogUtil.debug("Register command: {}", this);
+        LogUtil.debug("""
+            Register command: {}
+            Env: {}
+            """, this, CommandTree.getCommandTreeEnvironment());
 
         /* First pass: build the non-optional arguments. */
         registerNonOptionalArguments();
@@ -105,7 +115,10 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
     public void unregister() {
         trySpamConsole(() -> LogUtil.info("Un-Register {} command: {}", this.getClass().getSimpleName(), this.getUserFriendlyCommandSyntax()));
-        LogUtil.debug("Un-register command: {}", this);
+        LogUtil.debug("""
+            Un-register command: {}
+            Env: {}
+            """, this, CommandTree.getCommandTreeEnvironment());
 
         this.registerReturnValue
             .ifPresentOrElse($registerReturnValue -> {
@@ -738,6 +751,13 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
                 .verifyCommandSource(commandContext);
         }
 
+    }
+
+    public static class CommandTree {
+        private static @NotNull String getCommandTreeEnvironment() {
+            int commandDispatcherHash = System.identityHashCode(CommandAnnotationProcessor.COMMAND_DISPATCHER);
+            return "command dispatcher = %s".formatted(commandDispatcherHash);
+        }
     }
 
     public boolean canBeExecutedByConsole() {
