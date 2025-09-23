@@ -21,7 +21,7 @@ public class CommandAliasService {
             .filter(Optional::isPresent)
             .map(Optional::get)
             .forEach(CommandDescriptor::register);
-        CommandHelper.updateCommandTree();
+        CommandHelper.Tree.updateCommandTree();
     }
 
     private static List<CommandAliasEntry> getDeclaredAliasCommandDescriptors() {
@@ -37,7 +37,7 @@ public class CommandAliasService {
 
         registeredCommandDescriptors
             .forEach(CommandDescriptor::unregister);
-        CommandHelper.updateCommandTree();
+        CommandHelper.Tree.updateCommandTree();
     }
 
     private static List<CommandDescriptor> getRegisteredAliasCommandDescriptors() {

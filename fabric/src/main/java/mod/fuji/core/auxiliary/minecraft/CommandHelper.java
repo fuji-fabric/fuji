@@ -43,7 +43,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class CommandHelper {
 
-    public static final int COMMAND_EXCEPTION_COLOR_INT = 16736000;
+    public static @NotNull CommandDispatcher<ServerCommandSource> getCommandDispatcher() {
+        return CommandAnnotationProcessor.COMMAND_DISPATCHER;
+    }
+
+    public static @NotNull CommandRegistryAccess getCommandRegistryAccess() {
+        return CommandAnnotationProcessor.COMMAND_REGISTRY_ACCESS;
+    }
 
     public static class Node {
 
@@ -169,28 +175,6 @@ public class CommandHelper {
         public static boolean isExecutableOrRedirectCommandNode(@NotNull CommandNode<ServerCommandSource> node) {
             return isExecutableCommandNode(node) || isRedirectCommandNode(node);
         }
-    }
-
-    public static void updateCommandTree() {
-        updateCommandTree(ServerHelper.getServer().getCommandManager());
-    }
-
-    public static void updateCommandTree(@NotNull CommandManager commandManager) {
-        // NOTE: No need to update if the command manager is not initialized.
-        if (ServerHelper.getServer() == null) {
-            return;
-        }
-        PlayerHelper.Lookup
-            .getOnlinePlayers()
-            .forEach(commandManager::sendCommandTree);
-    }
-
-    public static @NotNull CommandDispatcher<ServerCommandSource> getCommandDispatcher() {
-        return CommandAnnotationProcessor.COMMAND_DISPATCHER;
-    }
-
-    public static @NotNull CommandRegistryAccess getCommandRegistryAccess() {
-        return CommandAnnotationProcessor.COMMAND_REGISTRY_ACCESS;
     }
 
     public static class Requirement {
@@ -489,7 +473,7 @@ public class CommandHelper {
 
         }
 
-        public static void removeSelfInCommandTree(@NotNull RegisteredCommandNode registeredCommandNode) {
+        public static void removeInCommandTree(@NotNull RegisteredCommandNode registeredCommandNode) {
             // NODE: Identify the `command node` by node name.
             @SuppressWarnings("unchecked")
             CommandNodeExtension<ServerCommandSource> parentNode = (CommandNodeExtension<ServerCommandSource>) registeredCommandNode.getParent();
@@ -497,6 +481,20 @@ public class CommandHelper {
             parentNode.fuji$getChildren().values().removeIf(it -> it.getName().equals(childNode.getName()));
             parentNode.fuji$getLiterals().values().removeIf(it -> it.getName().equals(childNode.getName()));
             parentNode.fuji$getArguments().values().removeIf(it -> it.getName().equals(childNode.getName()));
+        }
+
+        public static void updateCommandTree() {
+            updateCommandTree(ServerHelper.getServer().getCommandManager());
+        }
+
+        public static void updateCommandTree(@NotNull CommandManager commandManager) {
+            // NOTE: No need to update if the command manager is not initialized.
+            if (ServerHelper.getServer() == null) {
+                return;
+            }
+            PlayerHelper.Lookup
+                .getOnlinePlayers()
+                .forEach(commandManager::sendCommandTree);
         }
     }
 }

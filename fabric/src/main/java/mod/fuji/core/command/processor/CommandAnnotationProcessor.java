@@ -70,7 +70,7 @@ public class CommandAnnotationProcessor {
     private static void updateCommandTree(CommandRegistrationEvent event) {
         // NOTE: The `/reload` command invalidates the old CommandManager reference, here we have to capture the new reference to CommandManager.
         CommandManager commandManager = event.getCommandManager();
-        CommandHelper.updateCommandTree(commandManager);
+        CommandHelper.Tree.updateCommandTree(commandManager);
     }
 
     @EventConsumer

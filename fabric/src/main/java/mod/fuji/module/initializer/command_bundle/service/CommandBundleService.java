@@ -30,13 +30,13 @@ public class CommandBundleService {
             .stream()
             .map(BundleCommandDescriptor.Maker::from)
             .forEach(CommandDescriptor::register);
-        CommandHelper.updateCommandTree();
+        CommandHelper.Tree.updateCommandTree();
     }
 
     public static void unregisterAllBundleCommands() {
         List<CommandDescriptor> registeredBundleCommandDescriptors = listRegisteredBundleCommandDescriptors();
         registeredBundleCommandDescriptors
             .forEach(CommandDescriptor::unregister);
-        CommandHelper.updateCommandTree();
+        CommandHelper.Tree.updateCommandTree();
     }
 }

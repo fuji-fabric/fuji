@@ -131,7 +131,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
                 /* Cut-down the registered command tree. */
                 LogUtil.debug("Un-register the command tree: {}", registeredCommandTree);
                 registeredCommandTree
-                    .forEach(branch -> branch.forEach(CommandHelper.Tree::removeSelfInCommandTree));
+                    .forEach(branch -> branch.forEach(CommandHelper.Tree::removeInCommandTree));
 
             }, () -> LogUtil.warn("Failed to remove the registered command node from the server command tree, due to the register return value being null. (descriptor = {}) ", this));
 
@@ -571,6 +571,8 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
     public static class CommandException {
 
+        public static final int COMMAND_EXCEPTION_COLOR_INT = 16736000;
+
         @SuppressWarnings("SameReturnValue")
         @SneakyThrows(Throwable.class)
         public static int handleCommandExecutionException(@NotNull CommandContext<ServerCommandSource> context, @NotNull Method method, @NotNull Throwable throwable) {
@@ -616,7 +618,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
             /* Send error text to the command source. */
             Style errorTextStyle = Style.EMPTY
-                .withColor(CommandHelper.COMMAND_EXCEPTION_COLOR_INT);
+                .withColor(COMMAND_EXCEPTION_COLOR_INT);
 
             // NOTE: Only send the stack trace if the command source is admin.
             if (CommandHelper.Requirement.isAdmin(source)) {
