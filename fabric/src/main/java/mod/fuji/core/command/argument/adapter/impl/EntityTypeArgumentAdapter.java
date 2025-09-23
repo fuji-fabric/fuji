@@ -2,7 +2,7 @@ package mod.fuji.core.command.argument.adapter.impl;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
+import mod.fuji.core.auxiliary.minecraft.CommandHelper;import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.argument.wrapper.impl.NotSupportedType;
 import lombok.SneakyThrows;
@@ -25,7 +25,7 @@ public class EntityTypeArgumentAdapter extends BaseArgumentTypeAdapter {
         #if MC_VER <= MC_1_20_4
             return StringArgumentType.greedyString();
         #elif MC_VER > MC_1_20_4
-            return RegistryEntryReferenceArgumentType.registryEntry(CommandAnnotationProcessor.COMMAND_REGISTRY_ACCESS, RegistryKeys.ENTITY_TYPE);
+            return RegistryEntryReferenceArgumentType.registryEntry(CommandHelper.getCommandRegistryAccess(), RegistryKeys.ENTITY_TYPE);
         #endif
     }
 

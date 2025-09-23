@@ -3,7 +3,7 @@ package mod.fuji.core.command.argument.adapter.impl;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
+import mod.fuji.core.auxiliary.minecraft.CommandHelper;import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.argument.wrapper.impl.ItemStackWrapper;
@@ -21,7 +21,7 @@ public class ItemStackArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return ItemStackArgumentType.itemStack(CommandAnnotationProcessor.COMMAND_REGISTRY_ACCESS);
+        return ItemStackArgumentType.itemStack(CommandHelper.getCommandRegistryAccess());
     }
 
     @SneakyThrows(CommandSyntaxException.class)
