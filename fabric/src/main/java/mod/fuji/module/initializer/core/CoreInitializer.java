@@ -137,7 +137,7 @@ public class CoreInitializer extends ModuleInitializer {
     }
 
     public static @NotNull String getModVersion() {
-        return ServerHelper.getSelfModContainer().getMetadata().getVersion().getFriendlyString();
+        return ServerHelper.ModInfo.getSelfModContainer().getMetadata().getVersion().getFriendlyString();
     }
 
 }

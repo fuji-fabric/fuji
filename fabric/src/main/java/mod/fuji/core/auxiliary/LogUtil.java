@@ -37,7 +37,7 @@ public class LogUtil {
     private static final boolean IS_CONSOLE_SUPPORTS_ANSI_COLOR = isConsoleSupportAnsiColor();
 
     private static boolean isConsoleSupportAnsiColor() {
-        return ServerHelper.isServerSideDedicatedServer();
+        return ServerHelper.Environment.isServerSideDedicatedServer();
     }
 
     private static String attachSourceModulePrefix(String message) {

@@ -449,7 +449,7 @@ public class CommandHelper {
 
     public static class Pattern {
 
-        public static int withServerPlayer(@NotNull ServerCommandSource source, @NotNull Function<ServerPlayerEntity, Integer> function) {
+        public static int withServerPlayerCommand(@NotNull ServerCommandSource source, @NotNull Function<ServerPlayerEntity, Integer> function) {
             ServerPlayerEntity player = source.getPlayer();
             if (player == null) {
                 TextHelper.sendTextByKey(source, "command.player_only");
@@ -459,13 +459,13 @@ public class CommandHelper {
             return function.apply(player);
         }
 
-        public static int withItemInMainHand(@NotNull ServerPlayerEntity source, @NotNull Function<ItemStack, Integer> consumer) {
+        public static int withItemInMainHandCommand(@NotNull ServerPlayerEntity source, @NotNull Function<ItemStack, Integer> consumer) {
             ServerCommandSource commandSource = Source.getCommandSource(source);
-            return withItemInMainHand(commandSource, (player, item) -> consumer.apply(item));
+            return withItemInMainHandCommand(commandSource, (player, item) -> consumer.apply(item));
         }
 
-        public static int withItemInMainHand(@NotNull ServerCommandSource source, @NotNull BiFunction<ServerPlayerEntity, ItemStack, Integer> consumer) {
-            return withServerPlayer(source, player -> {
+        public static int withItemInMainHandCommand(@NotNull ServerCommandSource source, @NotNull BiFunction<ServerPlayerEntity, ItemStack, Integer> consumer) {
+            return withServerPlayerCommand(source, player -> {
                 ItemStack mainHandStack = player.getMainHandStack();
                 if (mainHandStack.isEmpty()) {
                     TextHelper.sendTextByKey(player, "item.empty.not_allow");

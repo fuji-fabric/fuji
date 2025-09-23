@@ -156,7 +156,7 @@ public class ScheduleManager extends BaseManager {
             scheduler.shutdown(false);
 
             // NOTE: Make a new scheduler at once, after shutdown the old one. To prevent NPE in client-side environment.
-            if (ServerHelper.isClientSideIntegratedServer()) {
+            if (ServerHelper.Environment.isClientSideIntegratedServer()) {
                 resetScheduler();
             }
 

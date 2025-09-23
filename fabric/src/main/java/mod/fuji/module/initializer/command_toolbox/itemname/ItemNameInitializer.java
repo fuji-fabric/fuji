@@ -16,7 +16,7 @@ public class ItemNameInitializer extends ModuleInitializer {
     @CommandNode("itemname set")
     @CommandRequirement(level = 4)
     private static int $set(@CommandSource ServerPlayerEntity player, GreedyString name) {
-        return CommandHelper.Pattern.withItemInMainHand(player, (item) -> {
+        return CommandHelper.Pattern.withItemInMainHandCommand(player, (item) -> {
             Text nameText = TextHelper.getTextByValue(player, name.getValue());
             ItemStackHelper.CustomName.setCustomName(item,nameText);
             return CommandHelper.Return.SUCCESS;
@@ -26,7 +26,7 @@ public class ItemNameInitializer extends ModuleInitializer {
     @CommandNode("itemname reset")
     @CommandRequirement(level = 4)
     private static int $reset(@CommandSource ServerPlayerEntity player) {
-        return CommandHelper.Pattern.withItemInMainHand(player, (item) -> {
+        return CommandHelper.Pattern.withItemInMainHandCommand(player, (item) -> {
             ItemStackHelper.CustomName.removeCustomName(item);
             return CommandHelper.Return.SUCCESS;
         });

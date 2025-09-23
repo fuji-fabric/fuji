@@ -130,7 +130,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         , Optional<Boolean> destroyItem
         , GreedyString command
     ) {
-        return CommandHelper.Pattern.withItemInMainHand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
+        return CommandHelper.Pattern.withItemInMainHandCommand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
             String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
             return CommandAttachmentService.withAttachmentDataNode(uuid, it -> {
                 CommandAttachments model = it.getAttachments();
@@ -208,7 +208,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @CommandNode("detach-item-all")
     private static int $detachItemAll(@CommandSource ServerPlayerEntity player, Optional<Boolean> confirm) {
         return CommandHelper.Pattern.withCommandConfirmed(player, confirm, () -> {
-            return CommandHelper.Pattern.withItemInMainHand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
+            return CommandHelper.Pattern.withItemInMainHandCommand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
                 String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
                 CommandAttachmentService.removeAttachmentDataNode(uuid);
                 return CommandHelper.Return.SUCCESS;
@@ -239,7 +239,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @Document(id = 1751826486559L, value = "Query all attached commands in the item.")
     @CommandNode("query-item")
     private static int $queryItem(@CommandSource ServerPlayerEntity player) {
-        return CommandHelper.Pattern.withItemInMainHand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
+        return CommandHelper.Pattern.withItemInMainHandCommand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
             Optional<String> uuid = UuidHelper.getAttachedUuid(mainHandStack);
             return CommandAttachmentService.printAttachmentDataNode(player.getCommandSource(), uuid);
         });

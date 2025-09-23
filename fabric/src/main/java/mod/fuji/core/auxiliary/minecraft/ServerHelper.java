@@ -33,30 +33,43 @@ public class ServerHelper {
         getServer().executeSync(runnable);
     }
 
-    public static boolean isServerInstantiated() {
-        return server != null;
-    }
+    public static class Lifecycle {
 
-    public static void withServerInstantiated(Runnable runnable) {
-        if (isServerInstantiated()) {
-            runnable.run();
+        @ForDeveloper("Returns if the server instance is instantiated.")
+        public static boolean isServerInstantiated() {
+            return server != null;
+        }
+
+        public static void withServerInstantiated(Runnable runnable) {
+            if (isServerInstantiated()) {
+                runnable.run();
+            }
         }
     }
 
-    @ForDeveloper("""
-        If a method is called both in client-side and server-side. Then it will be called twice if the mod is installed in the client-side.
-        One for the client, one for the client integrated server.
-        """)
-    public static boolean isClientSideIntegratedServer() {
-        return getEnvironmentType() == EnvType.CLIENT;
-    }
+    public static class Environment {
 
-    public static boolean isServerSideDedicatedServer() {
-        return getEnvironmentType() == EnvType.SERVER;
-    }
+        public static boolean isClientSideIntegratedServer() {
+            return getPhysicalEnvironmentType() == EnvType.CLIENT;
+        }
 
-    public static @NotNull EnvType getEnvironmentType() {
-        return FabricLoader.getInstance().getEnvironmentType();
+        public static boolean isServerSideDedicatedServer() {
+            return getPhysicalEnvironmentType() == EnvType.SERVER;
+        }
+
+        @ForDeveloper("""
+            If a method is called both in client-side and server-side. Then it will be called twice if the mod is installed in the client-side.
+            One for the client, one for the client integrated server.
+            """)
+        public static @NotNull EnvType getPhysicalEnvironmentType() {
+            return FabricLoader.getInstance().getEnvironmentType();
+        }
+
+        public static void withDevelopmentEnvironment(@NotNull Runnable runnable) {
+            if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+                runnable.run();
+            }
+        }
     }
 
     @ForDeveloper("""
@@ -74,15 +87,12 @@ public class ServerHelper {
         withServerPlayerEntity(player, (serverPlayerEntity) -> runnable.run());
     }
 
-    public static @NotNull ModContainer getSelfModContainer() {
-        return FabricLoader.getInstance()
-            .getModContainer(Fuji.MOD_ID)
-            .orElseThrow(() -> new IllegalStateException("Failed to get 'fuji' mod container."));
-    }
+    public static class ModInfo {
 
-    public static void withDevelopmentEnvironment(@NotNull Runnable runnable) {
-        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-            runnable.run();
+        public static @NotNull ModContainer getSelfModContainer() {
+            return FabricLoader.getInstance()
+                .getModContainer(Fuji.MOD_ID)
+                .orElseThrow(() -> new IllegalStateException("Failed to get 'fuji' mod container."));
         }
     }
 

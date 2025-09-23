@@ -16,7 +16,7 @@ public class MoreInitializer extends ModuleInitializer {
     @CommandNode("more")
     @CommandRequirement(level = 4)
     private static int $more(@CommandSource ServerCommandSource source, Optional<Boolean> oversize) {
-        return CommandHelper.Pattern.withItemInMainHand(source, (player, itemStack) -> {
+        return CommandHelper.Pattern.withItemInMainHandCommand(source, (player, itemStack) -> {
             int newCount = oversize
                 .filter(it -> it)
                 .map(it -> 64)
