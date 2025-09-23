@@ -62,8 +62,8 @@ public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
         List<Text> lore = new ArrayList<>();
 
         /* Attach method document. */
-        if (entity.document != null) {
-            List<Text> methodDocumentTextList = TextHelper.getDocumentTextList(getPlayer(), entity.document);
+        if (entity.document.isPresent()) {
+            List<Text> methodDocumentTextList = TextHelper.getDocumentTextList(getPlayer(), entity.document.get());
             lore.addAll(methodDocumentTextList);
         }
 

@@ -35,8 +35,8 @@ public class ModuleCommandsDocumentBuilder extends DocumentBuilder {
         boolean canBeExecutedByConsole = commandDescriptor.canBeExecutedByConsole();
         CommandRequirementDescriptor commandRequirement = CommandDescriptor.CommandRequirement.computeCommandRequirement(commandDescriptor);
 
-        @Nullable String commandDocumentString = Optional
-            .ofNullable(commandDescriptor.document)
+        @Nullable String commandDocumentString = commandDescriptor
+            .document
             .map(MarkdownDocumentFormatter::parseDocumentString)
             .orElse(null);
 

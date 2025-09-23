@@ -64,13 +64,18 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
     public final @NotNull List<CommandArgument> commandArguments;
 
-    public @Nullable String document;
+    public Optional<String> document = Optional.empty();
 
     private @Nullable LiteralArgumentBuilder<ServerCommandSource> registerReturnValue;
 
     protected CommandDescriptor(@NotNull Method method, @NotNull List<CommandArgument> commandArguments) {
         this.method = method;
         this.commandArguments = commandArguments;
+    }
+
+    public @NotNull CommandDescriptor fillDocument(@NotNull Optional<String> document) {
+        this.document = document;
+        return this;
     }
 
     public @NotNull CommandDescriptor fillDocument(@Nullable Document document) {
@@ -80,7 +85,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
     public @NotNull CommandDescriptor fillDocument(@Nullable String document) {
         if (document == null) return this;
-        this.document = document;
+        this.document = Optional.of(document);
         return this;
     }
 
@@ -150,6 +155,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
             || targetNode.getChildren().isEmpty();
     }
 
+    @ForDeveloper("Test the equality using physical memory address.")
     @Override
     public final boolean equals(Object obj) {
         return this == obj;
