@@ -170,18 +170,15 @@ public class CommandBundleInitializer extends ModuleInitializer {
     @Document(id = 1751826359683L, value = "Register all commands defined in bundle-command configuration file.")
     @CommandNode("register")
     private static int $registerAllBundleCommands(@CommandSource ServerCommandSource source) {
-        if (!getRegisteredBundleCommandDescriptors().isEmpty()) {
+        if (!listRegisteredBundleCommandDescriptors().isEmpty()) {
             TextHelper.sendTextByKey(source, "command_bundle.register.already_registered");
             return CommandHelper.Return.FAILURE;
         }
 
         LogUtil.info("Register bundle commands.");
-        listBundleCommandDescriptors().stream()
+        listDeclaredBundleCommandDescriptors().stream()
             .map(BundleCommandDescriptor.Maker::from)
-            .forEach(it -> {
-                LogUtil.info("Register bundle command: {}", it.getCommandSyntax());
-                it.register();
-            });
+            .forEach(CommandDescriptor::register);
         CommandHelper.updateCommandTree();
         TextHelper.sendTextByKey(source, "command_bundle.register");
         return CommandHelper.Return.SUCCESS;
@@ -190,7 +187,7 @@ public class CommandBundleInitializer extends ModuleInitializer {
     @Document(id = 1751826362252L, value = "Un-register all bundle-commands registered in server.")
     @CommandNode("un-register")
     private static int $unregisterAllBundleCommands(@CommandSource ServerCommandSource source) {
-        List<CommandDescriptor> registeredBundleCommandDescriptors = getRegisteredBundleCommandDescriptors();
+        List<CommandDescriptor> registeredBundleCommandDescriptors = listRegisteredBundleCommandDescriptors();
         if (registeredBundleCommandDescriptors.isEmpty()) {
             TextHelper.sendTextByKey(source, "command_bundle.un-register.none_registered");
             return CommandHelper.Return.FAILURE;
@@ -198,23 +195,20 @@ public class CommandBundleInitializer extends ModuleInitializer {
 
         LogUtil.info("Un-register bundle commands.");
         registeredBundleCommandDescriptors
-            .forEach(it -> {
-                LogUtil.info("Un-register bundle command: {}", it.getCommandSyntax());
-                it.unregister();
-            });
+            .forEach(CommandDescriptor::unregister);
         CommandHelper.updateCommandTree();
         TextHelper.sendTextByKey(source, "command_bundle.un-register");
         return CommandHelper.Return.SUCCESS;
     }
 
-    private static @NotNull List<CommandDescriptor> getRegisteredBundleCommandDescriptors() {
+    private static @NotNull List<CommandDescriptor> listRegisteredBundleCommandDescriptors() {
         return CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS
             .stream()
             .filter(it -> it instanceof BundleCommandDescriptor)
             .toList();
     }
 
-    private static @NotNull List<BundleCommandNode> listBundleCommandDescriptors() {
+    private static @NotNull List<BundleCommandNode> listDeclaredBundleCommandDescriptors() {
         return config.model().getBundleCommands()
             .stream()
             .filter(BundleCommandNode::isEnable)
