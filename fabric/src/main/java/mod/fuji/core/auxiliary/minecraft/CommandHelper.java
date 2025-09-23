@@ -1,5 +1,6 @@
 package mod.fuji.core.auxiliary.minecraft;
 
+import com.google.errorprone.annotations.Keep;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
@@ -251,6 +252,52 @@ public class CommandHelper {
 
             if (Node.isRootCommandNode(parent)) {
                 collector.add(parent);
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        @Keep
+        private static void addChild(final CommandNode<ServerCommandSource> parent, final CommandNode<ServerCommandSource> node) {
+            if (node instanceof RootCommandNode) {
+                throw new UnsupportedOperationException("Cannot add a RootCommandNode as a child to any other CommandNode");
+            }
+
+            CommandNodeExtension<ServerCommandSource> parentExtension = (CommandNodeExtension<ServerCommandSource>) parent;
+            var parentChildren = parentExtension.fuji$getChildren();
+
+            final CommandNode<ServerCommandSource> child = parentChildren.get(node.getName());
+            if (child != null) {
+                // We've found something to merge onto
+                CommandNodeExtension<ServerCommandSource> childExtension = (CommandNodeExtension<ServerCommandSource>) child;
+                if (node.getCommand() != null) {
+                    childExtension.fuji$setCommand(node.getCommand());
+                }
+                // NOTE: Set redirect target, if specified.
+                if (node.getRedirect() != null) {
+                    childExtension.fuji$setRedirect(node.getRedirect());
+                }
+                for (final CommandNode<ServerCommandSource> grandchild : node.getChildren()) {
+                    addChild(child, grandchild);
+                }
+            } else {
+                setMappings(parent, node);
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        private static void setMappings(@NotNull CommandNode<ServerCommandSource> parent, @NotNull CommandNode<ServerCommandSource> node) {
+            /* Get mappings. */
+            CommandNodeExtension<ServerCommandSource> parentExtension = (CommandNodeExtension<ServerCommandSource>) parent;
+            var parentChildren = parentExtension.fuji$getChildren();
+            var parentLiterals = parentExtension.fuji$getLiterals();
+            var parentArguments = parentExtension.fuji$getArguments();
+
+            /* Update the mappings. */
+            parentChildren.put(node.getName(), node);
+            if (node instanceof LiteralCommandNode) {
+                parentLiterals.put(node.getName(), (LiteralCommandNode<ServerCommandSource>) node);
+            } else if (node instanceof ArgumentCommandNode) {
+                parentArguments.put(node.getName(), (ArgumentCommandNode<ServerCommandSource, ?>) node);
             }
         }
     }

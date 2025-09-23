@@ -334,9 +334,9 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
         this.registerReturnValue = Optional.of(assembledArgumentBuilder);
     }
 
-    private boolean isCommandNodeRegistered(@NotNull LiteralCommandNode<ServerCommandSource> literalCommandNode) {
+    private boolean isCommandNodeRegistered(@NotNull LiteralCommandNode<ServerCommandSource> rootNode) {
         return CommandHelper.Path
-            .toUniqueCommandPathList(literalCommandNode)
+            .toUniqueCommandPathList(rootNode)
             .map(names -> {
                 boolean isRegistered = false;
                 CommandNode<ServerCommandSource> parent = CommandHelper.Tree.getRootCommandNode();

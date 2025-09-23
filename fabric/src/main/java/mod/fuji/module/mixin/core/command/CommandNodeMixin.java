@@ -1,5 +1,6 @@
 package mod.fuji.module.mixin.core.command;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -32,6 +33,14 @@ public class CommandNodeMixin<S> implements CommandNodeExtension<S> {
     @Final
     private Map<String, ArgumentCommandNode<S, ?>> arguments;
 
+    @Shadow
+    private Command<S> command;
+
+    @Mutable
+    @Shadow
+    @Final
+    private CommandNode<S> redirect;
+
     @Override
     public Predicate<S> fuji$getRequirement() {
         return this.requirement;
@@ -40,6 +49,16 @@ public class CommandNodeMixin<S> implements CommandNodeExtension<S> {
     @Override
     public void fuji$setRequirement(@NotNull Predicate<S> requirement) {
         this.requirement = requirement;
+    }
+
+    @Override
+    public void fuji$setCommand(Command<S> command) {
+        this.command = command;
+    }
+
+    @Override
+    public void fuji$setRedirect(CommandNode<S> command) {
+        this.redirect = command;
     }
 
     @Override
