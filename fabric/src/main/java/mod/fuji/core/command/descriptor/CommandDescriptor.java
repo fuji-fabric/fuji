@@ -66,7 +66,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
     public Optional<String> document = Optional.empty();
 
-    private @Nullable LiteralArgumentBuilder<ServerCommandSource> registerReturnValue;
+    private Optional<LiteralArgumentBuilder<ServerCommandSource>> registerReturnValue = Optional.empty();
 
     protected CommandDescriptor(@NotNull Method method, @NotNull List<CommandArgument> commandArguments) {
         this.method = method;
@@ -107,17 +107,19 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
         trySpamConsole(() -> LogUtil.info("Un-Register {} command: {}", this.getClass().getSimpleName(), this.getUserFriendlyCommandSyntax()));
         LogUtil.debug("Un-register command: {}", this);
 
-        RootCommandNode<ServerCommandSource> root = CommandAnnotationProcessor.COMMAND_DISPATCHER.getRoot();
-        assert this.registerReturnValue != null;
-        LiteralCommandNode<ServerCommandSource> navigationNode = this.registerReturnValue.build();
-        CommandNode<ServerCommandSource> startNode = root.getChild(navigationNode.getName());
-        if (startNode != null) {
-            /* Remove the leaf node. */
-            if (CommandDescriptor.unregisterRecursively(startNode, navigationNode)) {
-                root.getChildren()
-                    .removeIf(commandNode -> commandNode.getName().equals(navigationNode.getName()));
-            }
-        }
+        this.registerReturnValue
+            .ifPresentOrElse($registerReturnValue -> {
+                RootCommandNode<ServerCommandSource> root = CommandAnnotationProcessor.COMMAND_DISPATCHER.getRoot();
+                LiteralCommandNode<ServerCommandSource> navigationNode = $registerReturnValue.build();
+                CommandNode<ServerCommandSource> startNode = root.getChild(navigationNode.getName());
+                if (startNode != null) {
+                    /* Remove the leaf node. */
+                    if (CommandDescriptor.unregisterRecursively(startNode, navigationNode)) {
+                        root.getChildren()
+                            .removeIf(commandNode -> commandNode.getName().equals(navigationNode.getName()));
+                    }
+                }
+            }, () -> LogUtil.warn("Failed to remove the registered command node from the server command tree, due to the register return value being null. (descriptor = {}) ",this));
 
         /* Sync the registry. */
         CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS.remove(this);
@@ -168,8 +170,12 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
     @ForDeveloper("Returns the only possible path to the command node.")
     public @NotNull String getCommandNodePath() {
-        assert this.registerReturnValue != null;
-        return getCommandNodePathRecursively(this.registerReturnValue.build());
+        return this.registerReturnValue
+            .map($registerReturnValue -> getCommandNodePathRecursively($registerReturnValue.build()))
+            .orElseGet(() -> {
+                LogUtil.warn("Failed to get the command node path, due to the register return value being null currently. (descriptor = {})", this);
+                return "[FAILED TO FIND PATH, COMMAND NODE UNREGISTERED]";
+            });
     }
 
     private static @NotNull String getCommandNodePathRecursively(@NotNull CommandNode<ServerCommandSource> registeredRootNode) {
@@ -337,7 +343,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
         /* Register the assembled argument builder as the child of the global root argument builder. */
         CommandAnnotationProcessor.COMMAND_DISPATCHER.register(assembledArgumentBuilder);
-        this.registerReturnValue = assembledArgumentBuilder;
+        this.registerReturnValue = Optional.of(assembledArgumentBuilder);
     }
 
     protected @NotNull ArgumentBuilder<ServerCommandSource, ?> terminalArgumentDecorator(@NotNull ArgumentBuilder<ServerCommandSource, ?> terminalArgumentBuilder) {
