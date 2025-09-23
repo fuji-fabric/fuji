@@ -105,7 +105,7 @@ public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
 
         /* Make the GUI. */
         return new GuiElementBuilder()
-            .setName(Text.literal(entity.getCommandSyntax()))
+            .setName(Text.literal(entity.getUserFriendlyCommandSyntax()))
             .setItem(Items.REPEATING_COMMAND_BLOCK)
             .setLore(lore)
             .build();

@@ -40,7 +40,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -58,8 +57,9 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
     public static final SpecialVariable<Boolean> stdoutSpecialVariable = new SpecialVariable<>(false);
     public static final SpecialVariable<Boolean> silentSpecialVariable = new SpecialVariable<>(false);
-    public static final String SILENT_LITERAL = "silent";
-    public static final String STDOUT_LITERAL = "stdout";
+    private static final String SILENT_LITERAL = "silent";
+    private static final String STDOUT_LITERAL = "stdout";
+
     public final @NotNull Method method;
 
     public final @NotNull List<CommandArgument> commandArguments;
@@ -85,7 +85,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
     }
 
     public void register() {
-        trySpamConsole(() -> LogUtil.info("Register {} command: {}", this.getClass().getSimpleName(), this.getCommandSyntax()));
+        trySpamConsole(() -> LogUtil.info("Register {} command: {}", this.getClass().getSimpleName(), this.getUserFriendlyCommandSyntax()));
         LogUtil.debug("Register command: {}", this);
 
         /* First pass: build the non-optional arguments. */
@@ -99,7 +99,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
     }
 
     public void unregister() {
-        trySpamConsole(() -> LogUtil.info("Un-Register {} command: {}", this.getClass().getSimpleName(), this.getCommandSyntax()));
+        trySpamConsole(() -> LogUtil.info("Un-Register {} command: {}", this.getClass().getSimpleName(), this.getUserFriendlyCommandSyntax()));
         LogUtil.debug("Un-register command: {}", this);
 
         RootCommandNode<ServerCommandSource> root = CommandAnnotationProcessor.COMMAND_DISPATCHER.getRoot();
@@ -706,7 +706,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
     public static class CommandSource {
 
-        @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+        @SuppressWarnings({"BooleanMethodIsAlwaysInverted", "SequencedCollectionMethodCanBeUsed"})
         protected static boolean verifyCommandSource(@NotNull CommandContext<ServerCommandSource> commandContext, @NotNull CommandDescriptor descriptor) {
             List<CommandArgument> expectedCommandSources = descriptor.commandArguments
                 .stream()
@@ -714,10 +714,11 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
                 .toList();
 
             // Yeah, any type of source can use it.
-            if (expectedCommandSources.isEmpty()) return true;
+            if (expectedCommandSources.isEmpty())
+                return true;
             // Oh no, specify too many command sources.
             if (expectedCommandSources.size() > 1)
-                throw new IllegalArgumentException("Expected only one argument as the command source: " + descriptor);
+                throw new IllegalArgumentException("Expected ZERO or ONE argument as the command source: " + descriptor);
 
             // Verify the expected command source.
             return BaseArgumentTypeAdapter.Registry
@@ -738,13 +739,17 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
     @Override
     public String toString() {
+        return getDetailedCommandSyntax();
+    }
+
+    private @NotNull String getDetailedCommandSyntax() {
         return "/" + this.commandArguments
             .stream()
             .map(CommandArgument::toString)
             .collect(Collectors.joining(" "));
     }
 
-    public String getCommandSyntax() {
+    public @NotNull String getUserFriendlyCommandSyntax() {
         return "/" + this.commandArguments
             .stream()
             .filter(CommandArgument::isCommandArgumentSpecifier)

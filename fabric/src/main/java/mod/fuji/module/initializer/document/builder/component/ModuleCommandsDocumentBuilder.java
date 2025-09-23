@@ -31,7 +31,7 @@ public class ModuleCommandsDocumentBuilder extends DocumentBuilder {
     }
 
     private void build(@NotNull DocumentBuilderContext documentBuilderContext, @NotNull CommandDescriptor commandDescriptor) {
-        String commandSyntax = commandDescriptor.getCommandSyntax();
+        String commandSyntax = commandDescriptor.getUserFriendlyCommandSyntax();
         boolean canBeExecutedByConsole = commandDescriptor.canBeExecutedByConsole();
         CommandRequirementDescriptor commandRequirement = CommandDescriptor.CommandRequirement.computeCommandRequirement(commandDescriptor);
 
