@@ -44,6 +44,30 @@ public class CommandHelper {
 
     public static class Node {
 
+        @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
+        public static Optional<List<String>> toUniqueCommandNodeNameList(@NotNull LiteralCommandNode<ServerCommandSource> node) {
+            List<String> names = new ArrayList<>();
+            CommandNode<ServerCommandSource> current = node;
+
+            while (true) {
+                /* Visit. */
+                names.add(current.getName());
+
+                /* Go down. */
+                List<CommandNode<ServerCommandSource>> children = new ArrayList<>(current.getChildren());
+                if (children.isEmpty()) {
+                    break;
+                } else if (children.size() == 1) {
+                    // NOTE: There should only be 1 child.
+                    current = children.get(0);
+                } else {
+                    return Optional.empty();
+                }
+            }
+
+            return Optional.of(names);
+        }
+
         public static @NotNull String findCommandNodePath(@NotNull CommandNode<ServerCommandSource> node) {
             CommandDispatcher<ServerCommandSource> dispatcher = getCommandDispatcher();
 
@@ -125,6 +149,22 @@ public class CommandHelper {
 
         public static Optional<CommandNode<ServerCommandSource>> findCommandNode(@NotNull List<String> commandNodePath) {
             return Optional.ofNullable(getCommandDispatcher().findNode(commandNodePath));
+        }
+
+        public static RootCommandNode<ServerCommandSource> getRootCommandNode() {
+            return getCommandDispatcher().getRoot();
+        }
+
+        public static boolean isExecutableCommandNode(@NotNull CommandNode<ServerCommandSource> node) {
+            return node.getCommand() != null;
+        }
+
+        public static boolean isRedirectCommandNode(@NotNull CommandNode<ServerCommandSource> node) {
+            return node.getRedirect() != null;
+        }
+
+        public static boolean isExecutableOrRedirectCommandNode(@NotNull CommandNode<ServerCommandSource> node) {
+            return isExecutableCommandNode(node) || isRedirectCommandNode(node);
         }
     }
 

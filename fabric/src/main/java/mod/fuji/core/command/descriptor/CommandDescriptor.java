@@ -10,7 +10,18 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import lombok.SneakyThrows;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.ReflectionUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -33,17 +44,6 @@ import mod.fuji.core.document.interfaces.SourceModuleGetter;
 import mod.fuji.core.manager.impl.module.ModulePathResolver;
 import mod.fuji.core.structure.Pair;
 import mod.fuji.core.structure.SpecialVariable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import lombok.SneakyThrows;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -178,8 +178,8 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
             .stream()
             .filter(CommandArgument::isCommandArgumentSpecifier)
             .takeWhile(commandArgument -> !commandArgument.isOptional()
-                // NOTE: Should not redirect to the greedy string argument type, or the greedy string will eat all the remaining input characters.
-                && !commandArgument.isGreedyArgumentType())
+                                          // NOTE: Should not redirect to the greedy string argument type, or the greedy string will eat all the remaining input characters.
+                                          && !commandArgument.isGreedyArgumentType())
             .map(CommandArgument::getArgumentName)
             .toList();
 
@@ -325,8 +325,42 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
         LiteralArgumentBuilder<ServerCommandSource> assembledArgumentBuilder = ArgumentBuilderMaker.assembleArgumentBuilders(argumentBuilders, this::terminalArgumentDecorator);
 
         /* Register the assembled argument builder as the child of the global root argument builder. */
-        CommandHelper.getCommandDispatcher().register(assembledArgumentBuilder);
+        LiteralCommandNode<ServerCommandSource> literalCommandNode = assembledArgumentBuilder.build();
+        RootCommandNode<ServerCommandSource> rootCommandNode = CommandHelper.Node.getRootCommandNode();
+        if (isCommandNodeRegistered(literalCommandNode)) {
+            LogUtil.warn("The command '{}' already registered in the server command tree, now overriding it.", this.getUserFriendlyCommandSyntax());
+        }
+
+        rootCommandNode.addChild(literalCommandNode);
         this.registerReturnValue = Optional.of(assembledArgumentBuilder);
+    }
+
+    private boolean isCommandNodeRegistered(@NotNull LiteralCommandNode<ServerCommandSource> literalCommandNode) {
+        return CommandHelper.Node
+            .toUniqueCommandNodeNameList(literalCommandNode)
+            .map(names -> {
+                LogUtil.warn("names = {}", names);
+                boolean isRegistered = false;
+                CommandNode<ServerCommandSource> parent = CommandHelper.Node.getRootCommandNode();
+                for (int i = 0; i < names.size(); i++) {
+                    String name = names.get(i);
+
+                    @Nullable CommandNode<ServerCommandSource> child = parent.getChild(name);
+                    if (child == null || !CommandHelper.Node.isExecutableOrRedirectCommandNode(child)) {
+                        return false;
+                    }
+
+                    if (i == names.size() - 1) {
+                        return true;
+                    }
+                }
+
+                return isRegistered;
+            })
+            .orElseGet(() -> {
+                LogUtil.warn("There are forks in given literal command node: {}", this.getUserFriendlyCommandSyntax());
+                return false;
+            });
     }
 
     protected @NotNull ArgumentBuilder<ServerCommandSource, ?> terminalArgumentDecorator(@NotNull ArgumentBuilder<ServerCommandSource, ?> terminalArgumentBuilder) {
@@ -568,13 +602,13 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
             /* Log error string to the console. */
             String nonCommandSyntaxErrorString = """
-            [Command Execution Failed]
-            - From Module: %s
-            - Command String: /%s
-            - Command Source: %s
-            - Message: %s
+                [Command Execution Failed]
+                - From Module: %s
+                - Command String: /%s
+                - Command Source: %s
+                - Message: %s
 
-            """.formatted(
+                """.formatted(
                 ModulePathResolver.computeModulePathString(method.getDeclaringClass().getName())
                 , TextHelper.Parsers.escapeTags(context.getInput())
                 , source.getName()
@@ -678,7 +712,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
                     it ->
                         // Ignore the optional arguments, since we will process them in the second pass.
                         !it.isOptional()
-                            && it.isCommandArgumentSpecifier())
+                        && it.isCommandArgumentSpecifier())
                 .forEach(argument -> {
                     /* Make the argument builder. */
                     ArgumentBuilder<ServerCommandSource, ?> builder = makeArgumentBuilder(argument);
@@ -732,7 +766,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
             treeCollector.add(branchCollector);
 
             /* Find recursively. */
-            RootCommandNode<ServerCommandSource> root = CommandHelper.getCommandDispatcher().getRoot();
+            RootCommandNode<ServerCommandSource> root = CommandHelper.Node.getRootCommandNode();
             findRegisteredCommandTreeRecursively(treeCollector, branchCollector, navigationNode, root);
             return treeCollector;
         }
@@ -784,7 +818,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
             .filter(CommandArgument::isCommandSource)
             .allMatch(commandArgument ->
                 commandArgument.getArgumentType().equals(CommandContext.class)
-                    || commandArgument.getArgumentType().equals(ServerCommandSource.class));
+                || commandArgument.getArgumentType().equals(ServerCommandSource.class));
     }
 
     @Override

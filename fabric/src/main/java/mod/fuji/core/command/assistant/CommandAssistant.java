@@ -170,7 +170,7 @@ public class CommandAssistant {
         });
 
         /* Debounce and send the completed command path. */
-        if (isCommandNodeExecutable(targetCommandNode)) {
+        if (CommandHelper.Node.isExecutableCommandNode(targetCommandNode)) {
             String currentCompletedCommandPath = getParsedCommandPath(rootCommandContext);
             DEBOUNCE_COMPLETED_COMMAND_PATH.compute(commandSource.getName(), (key, previousValue) -> {
                 /* Debounce and send. */
@@ -193,10 +193,6 @@ public class CommandAssistant {
             Text headerText = TextHelper.getTextByKey(commandSource, "command.assistant.header");
             commandSource.sendMessage(headerText);
         }
-    }
-
-    private static boolean isCommandNodeExecutable(@NotNull CommandNode<ServerCommandSource> targetCommandNode) {
-        return targetCommandNode.getCommand() != null;
     }
 
     @TestCase(action = "Test the command assistant.", targets = {
