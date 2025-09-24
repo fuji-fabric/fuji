@@ -1,6 +1,5 @@
 package mod.fuji.core.auxiliary.minecraft;
 
-import com.google.errorprone.annotations.Keep;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
@@ -265,9 +264,7 @@ public class CommandHelper {
         }
 
         @SuppressWarnings("unchecked")
-        @Deprecated
-        @Keep
-        private static void addChild(final CommandNode<ServerCommandSource> parent, final CommandNode<ServerCommandSource> node) {
+        public static void replaceChild(final CommandNode<ServerCommandSource> parent, final CommandNode<ServerCommandSource> node) {
             if (node instanceof RootCommandNode) {
                 throw new UnsupportedOperationException("Cannot add a RootCommandNode as a child to any other CommandNode");
             }
@@ -282,34 +279,16 @@ public class CommandHelper {
                 if (node.getCommand() != null) {
                     childExtension.fuji$setCommand(node.getCommand());
                 }
-                // NOTE: Set redirect target, if specified.
+                // NOTE: Set redirect, if specified.
                 if (node.getRedirect() != null) {
                     childExtension.fuji$setRedirect(node.getRedirect());
                 }
-                for (final CommandNode<ServerCommandSource> grandchild : node.getChildren()) {
-                    addChild(child, grandchild);
-                }
-            } else {
-                setMappings(parent, node);
-            }
-        }
-
-        @SuppressWarnings("unchecked")
-        public static void addRedirect(final CommandNode<ServerCommandSource> parent, final CommandNode<ServerCommandSource> node) {
-            if (node instanceof RootCommandNode) {
-                throw new UnsupportedOperationException("Cannot add a RootCommandNode as a child to any other CommandNode");
-            }
-
-            CommandNodeExtension<ServerCommandSource> parentExtension = (CommandNodeExtension<ServerCommandSource>) parent;
-            var parentChildren = parentExtension.fuji$getChildren();
-            final CommandNode<ServerCommandSource> child = parentChildren.get(node.getName());
-            if (child != null) {
-                CommandNodeExtension<ServerCommandSource> childExtension = (CommandNodeExtension<ServerCommandSource>) child;
-                if (node.getRedirect() != null) {
-                    childExtension.fuji$setRedirect(node.getRedirect());
+                // NOTE: Set requirement, if specified.
+                if (node.getRequirement() != null) {
+                    childExtension.fuji$setRequirement(node.getRequirement());
                 }
                 for (final CommandNode<ServerCommandSource> grandchild : node.getChildren()) {
-                    addRedirect(child, grandchild);
+                    replaceChild(child, grandchild);
                 }
             } else {
                 setMappings(parent, node);

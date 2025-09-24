@@ -211,8 +211,8 @@ public class CommandAnnotationProcessor {
         verifyCommandDescriptor(clazz, method, commandArgumentList);
 
         /* Make the command descriptor. */
-        CommandDescriptor commandDescriptor = new StandardCommandDescriptor(method, commandArgumentList)
-            .fillDocument(method.getAnnotation(Document.class));
+        StandardCommandDescriptor commandDescriptor = new StandardCommandDescriptor(method, commandArgumentList);
+        commandDescriptor.fillDocument(method.getAnnotation(Document.class));
 
         /* Apply the effective default command requirement. */
         CommandDescriptor.CommandRequirement.setEffectiveDefaultCommandRequirement(commandDescriptor);

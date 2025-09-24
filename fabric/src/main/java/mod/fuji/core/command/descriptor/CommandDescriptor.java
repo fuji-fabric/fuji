@@ -13,9 +13,11 @@ import com.mojang.brigadier.tree.RootCommandNode;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -71,6 +73,9 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
     public Optional<String> document = Optional.empty();
 
     private Optional<LiteralArgumentBuilder<ServerCommandSource>> registerReturnValue = Optional.empty();
+
+    public Optional<String> methodArgumentsDerivedCommandPath = Optional.empty();
+    public Set<String> contributedPublicCommandPath = new HashSet<>();
 
     protected CommandDescriptor(@NotNull Method method, @NotNull List<CommandArgument> commandArguments) {
         this.method = method;
@@ -134,6 +139,11 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
                     .forEach(branch -> branch.forEach(CommandHelper.Tree::removeCommandTree));
 
             }, () -> LogUtil.warn("Failed to remove the registered command node from the server command tree, due to the register return value being null. (descriptor = {}) ", this));
+
+        boolean removeAny = CommandAnnotationProcessor.PUBLIC_COMMAND_PATHS.removeAll(this.contributedPublicCommandPath);
+        if (removeAny) {
+            LogUtil.debug("Remove the command paths '{}' from public command paths.", this.contributedPublicCommandPath);
+        }
 
         /* Sync the registry. */
         CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS.remove(this);
@@ -329,10 +339,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
         if (CommandHelper.Tree.isCommandNodeRegistered(literalCommandNode)) {
             LogUtil.warn("The command '{}' already registered in the server command tree, now overriding it.", this.getUserFriendlyCommandSyntax());
         }
-        rootCommandNode.addChild(literalCommandNode);
-
-        /* Add redirect commands if needed. */
-        CommandHelper.Tree.addRedirect(rootCommandNode, literalCommandNode);
+        CommandHelper.Tree.replaceChild(rootCommandNode, literalCommandNode);
 
         /* Set register return value. */
         this.registerReturnValue = Optional.of(assembledArgumentBuilder);
@@ -452,8 +459,10 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
                 /* Track the public command prefix path. */
                 if (!seenAnyNonNullRequiremnt && CommandRequirementDescriptor.isEmptyRequirement(commandArgument.getRequirement())) {
                     if (!CommandAnnotationProcessor.PUBLIC_COMMAND_PATHS.contains(walkingCommandPath)) {
+                        /* Remember added public command paths. */
                         LogUtil.debug("Add command path '{}' as the path of public command.", walkingCommandPath);
                         CommandAnnotationProcessor.PUBLIC_COMMAND_PATHS.add(walkingCommandPath);
+                        descriptor.contributedPublicCommandPath.add(walkingCommandPath);
 
                         // NOTE: Update the existing command nodes in the path, if they are registered before by some non-public commands.
                         CommandHelper.Tree
@@ -513,7 +522,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
             };
         }
 
-        public static void setEffectiveDefaultCommandRequirement(@NotNull CommandDescriptor descriptor) {
+        public static void setEffectiveDefaultCommandRequirement(@NotNull StandardCommandDescriptor descriptor) {
             /* Compute the effective default command requirement for the full command path. */
             String fullCommandPath = descriptor.commandArguments
                 .stream()
@@ -523,6 +532,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
             /* Remember this command path. */
             CommandAnnotationProcessor.LOADED_COMMAND_PATHS.add(fullCommandPath);
+            descriptor.methodArgumentsDerivedCommandPath = Optional.of(fullCommandPath);
 
             /* Get the default command requirement from permission.json file. */
             CommandRequirementDescriptor defaultCommandRequirement = computeCommandRequirement(descriptor);
