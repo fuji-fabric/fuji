@@ -26,12 +26,14 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import mod.fuji.core.annotation.Unused;
+import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.command.extension.CommandNodeExtension;
 import mod.fuji.core.command.processor.CommandAnnotationProcessor;
 import mod.fuji.core.command.structure.RegisteredCommandNode;
 import mod.fuji.core.command.suggestion.CommandSuggestionOptimizer;
 import mod.fuji.core.config.mapper.wrapper.GameProfileWrapper;
 import mod.fuji.core.document.annotation.ForDeveloper;
+import mod.fuji.core.document.annotation.TestCase;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -42,6 +44,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class CommandHelper {
 
@@ -55,10 +58,15 @@ public class CommandHelper {
 
     public static class Path {
 
+        public static boolean isUniqueCommandPathList(@NotNull CommandNode<ServerCommandSource> navigationNode) {
+            return toUniqueCommandPathList(navigationNode)
+                .isPresent();
+        }
+
         @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
-        public static Optional<List<String>> toUniqueCommandPathList(@NotNull CommandNode<ServerCommandSource> rootNode) {
+        public static Optional<List<String>> toUniqueCommandPathList(@NotNull CommandNode<ServerCommandSource> navigationNode) {
             List<String> names = new ArrayList<>();
-            CommandNode<ServerCommandSource> current = rootNode;
+            CommandNode<ServerCommandSource> current = navigationNode;
 
             while (true) {
                 /* Visit. */
@@ -257,6 +265,7 @@ public class CommandHelper {
         }
 
         @SuppressWarnings("unchecked")
+        @Deprecated
         @Keep
         private static void addChild(final CommandNode<ServerCommandSource> parent, final CommandNode<ServerCommandSource> node) {
             if (node instanceof RootCommandNode) {
@@ -286,24 +295,6 @@ public class CommandHelper {
         }
 
         @SuppressWarnings("unchecked")
-        private static void setMappings(@NotNull CommandNode<ServerCommandSource> parent, @NotNull CommandNode<ServerCommandSource> node) {
-            /* Get mappings. */
-            CommandNodeExtension<ServerCommandSource> parentExtension = (CommandNodeExtension<ServerCommandSource>) parent;
-            var parentChildren = parentExtension.fuji$getChildren();
-            var parentLiterals = parentExtension.fuji$getLiterals();
-            var parentArguments = parentExtension.fuji$getArguments();
-
-            /* Update the mappings. */
-            parentChildren.put(node.getName(), node);
-            if (node instanceof LiteralCommandNode) {
-                parentLiterals.put(node.getName(), (LiteralCommandNode<ServerCommandSource>) node);
-            } else if (node instanceof ArgumentCommandNode) {
-                parentArguments.put(node.getName(), (ArgumentCommandNode<ServerCommandSource, ?>) node);
-            }
-        }
-
-        @SuppressWarnings("unchecked")
-        @Keep
         public static void addRedirect(final CommandNode<ServerCommandSource> parent, final CommandNode<ServerCommandSource> node) {
             if (node instanceof RootCommandNode) {
                 throw new UnsupportedOperationException("Cannot add a RootCommandNode as a child to any other CommandNode");
@@ -320,6 +311,89 @@ public class CommandHelper {
                 for (final CommandNode<ServerCommandSource> grandchild : node.getChildren()) {
                     addRedirect(child, grandchild);
                 }
+            } else {
+                setMappings(parent, node);
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        private static void setMappings(@NotNull CommandNode<ServerCommandSource> parent, @NotNull CommandNode<ServerCommandSource> node) {
+            /* Get mappings. */
+            CommandNodeExtension<ServerCommandSource> parentExtension = (CommandNodeExtension<ServerCommandSource>) parent;
+            var parentChildren = parentExtension.fuji$getChildren();
+            var parentLiterals = parentExtension.fuji$getLiterals();
+            var parentArguments = parentExtension.fuji$getArguments();
+
+            /* Update the mappings. */
+            parentChildren.put(node.getName(), node);
+            if (node instanceof LiteralCommandNode) {
+                parentLiterals.put(node.getName(), (LiteralCommandNode<ServerCommandSource>) node);
+            } else if (node instanceof ArgumentCommandNode) {
+                parentArguments.put(node.getName(), (ArgumentCommandNode<ServerCommandSource, ?>) node);
+            }
+        }
+
+        @ForDeveloper("""
+            Check if the given navigation command will override an existing command path in the server command tree.
+            """)
+        public static boolean isCommandNodeRegistered(@NotNull CommandNode<ServerCommandSource> navigationNode) {
+            if (!Path.isUniqueCommandPathList(navigationNode)) {
+                LogUtil.warn("There are forks in the given command node: {}", Path.toUniqueCommandPathList(navigationNode));
+                return false;
+            }
+
+            // FIXME: `/home tp -> /say` can't be detected, needs more enhancement for command redirect.
+            CommandNode<ServerCommandSource> rootNode = getRootCommandNode();
+            @Nullable CommandNode<ServerCommandSource> walkingNode = rootNode.getChild(navigationNode.getName());
+            if (walkingNode == null) {
+                return false;
+            }
+
+            return isCommandNodeRegisteredRecursively(navigationNode, walkingNode);
+        }
+
+        @SuppressWarnings("RedundantIfStatement")
+        @TestCase(action = "Test the functionality of command override detection.", targets = {
+            "Create the new command `/home tp -> /say with redirect` using `command_alias` module, you should see the override warning.",
+            "Create the new command `/home tp -> /say without redirect` using `command_bundle` module, you should NOT see the override warning.",
+            "Create the new command `/workbench -> /say not nested` using `command_alias` module, you should see the override warning."
+        })
+        private static boolean isCommandNodeRegisteredRecursively(@NotNull CommandNode<ServerCommandSource> navigationNode, @Nullable CommandNode<ServerCommandSource> walkingNode) {
+            /* Check pre-conditions. */
+            if (walkingNode == null) {
+                return false;
+            }
+
+            /* Walk down. */
+            Collection<CommandNode<ServerCommandSource>> navigationNodeChildren = navigationNode.getChildren();
+            if (navigationNodeChildren.isEmpty()) {
+                /* Case: the length of paths are the same. */
+                if (Node.isExecutableOrRedirectCommandNode(walkingNode)) {
+                    return true;
+                }
+
+                /* Case: the navigation path is shorter than the walking path by 1. */
+                if (navigationNode.getRedirect() != null) {
+                    return true;
+                }
+
+                /* All requirements are met, now let's go up. */
+                return false;
+            } else {
+                boolean treeValue = false;
+
+                // NOTE: The navigation path must be unique, with no forks.
+                for (CommandNode<ServerCommandSource> navigationNodeChild : navigationNodeChildren) {
+                    @Nullable CommandNode<ServerCommandSource> walkingNodeChild = walkingNode.getChild(navigationNodeChild.getName());
+                    boolean branchValue = isCommandNodeRegisteredRecursively(navigationNodeChild, walkingNodeChild);
+                    if (branchValue) {
+                        /* Pass the true value up. */
+                        treeValue = true;
+                        return treeValue;
+                    }
+                }
+
+                return treeValue;
             }
         }
     }
