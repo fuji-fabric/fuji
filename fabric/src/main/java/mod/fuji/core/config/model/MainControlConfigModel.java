@@ -489,7 +489,7 @@ public class MainControlConfigModel {
         }
 
         public static class Language {
-            public boolean enable = false;
+            public boolean enable = true;
         }
 
         public static class Afk {
