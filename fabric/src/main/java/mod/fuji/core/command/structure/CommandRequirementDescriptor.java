@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 @NoArgsConstructor
 public class CommandRequirementDescriptor {
 
-    int level;
+    int level = 4;
     @Nullable String string;
 
     public CommandRequirementDescriptor(int level, @Nullable String string) {
