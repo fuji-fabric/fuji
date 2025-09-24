@@ -75,7 +75,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
     private Optional<LiteralArgumentBuilder<ServerCommandSource>> registerReturnValue = Optional.empty();
 
-    public Set<String> contributedPublicCommandPath = new HashSet<>();
+    public Set<String> contributedPublicCommandPaths = new HashSet<>();
 
     protected CommandDescriptor(@NotNull Method method, @NotNull List<CommandArgument> commandArguments) {
         this.method = method;
@@ -140,9 +140,9 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
             }, () -> LogUtil.warn("Failed to remove the registered command node from the server command tree, due to the register return value being null. (descriptor = {}) ", this));
 
-        boolean removeAny = PUBLIC_COMMAND_PATHS.removeAll(this.contributedPublicCommandPath);
+        boolean removeAny = PUBLIC_COMMAND_PATHS.removeAll(this.contributedPublicCommandPaths);
         if (removeAny) {
-            LogUtil.debug("Remove the command paths '{}' from public command paths.", this.contributedPublicCommandPath);
+            LogUtil.debug("Remove the command paths '{}' from public command paths.", this.contributedPublicCommandPaths);
         }
 
         /* Sync the registry. */
@@ -462,7 +462,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
                         /* Remember added public command paths. */
                         LogUtil.debug("Add command path '{}' as the path of public command.", walkingCommandPath);
                         PUBLIC_COMMAND_PATHS.add(walkingCommandPath);
-                        descriptor.contributedPublicCommandPath.add(walkingCommandPath);
+                        descriptor.contributedPublicCommandPaths.add(walkingCommandPath);
 
                         // NOTE: Update the existing command nodes in the path, if they are registered before by some non-public commands.
                         CommandHelper.Tree
