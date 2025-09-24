@@ -1,8 +1,9 @@
 package mod.fuji.core.command.structure;
 
-import mod.fuji.core.command.annotation.CommandRequirement;
+import java.util.Optional;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mod.fuji.core.command.annotation.CommandRequirement;
 import org.jetbrains.annotations.Nullable;
 
 @Data
@@ -14,10 +15,10 @@ public class CommandRequirementDescriptor {
 
     public CommandRequirementDescriptor(int level, @Nullable String string) {
         this.level = level;
-
-        if (string != null && string.isBlank()) {
-            this.string = null;
-        } else this.string = string;
+        this.string = Optional
+            .ofNullable(string)
+            .filter(it -> !it.isBlank())
+            .orElse(null);
     }
 
     public static @Nullable CommandRequirementDescriptor from(@Nullable CommandRequirement annotation) {
