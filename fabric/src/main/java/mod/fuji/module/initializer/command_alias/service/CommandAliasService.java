@@ -4,7 +4,6 @@ import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.descriptor.CommandDescriptor;
-import mod.fuji.core.command.processor.CommandAnnotationProcessor;
 import mod.fuji.core.command.structure.CommandRequirementDescriptor;
 import mod.fuji.module.initializer.command_alias.CommandAliasInitializer;
 import mod.fuji.module.initializer.command_alias.structure.AliasCommandDescriptor;
@@ -41,7 +40,7 @@ public class CommandAliasService {
     }
 
     private static List<CommandDescriptor> getRegisteredAliasCommandDescriptors() {
-        return CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS
+        return CommandDescriptor.REGISTERED_COMMAND_DESCRIPTORS
             .stream()
             .filter(it -> it instanceof AliasCommandDescriptor)
             .toList();

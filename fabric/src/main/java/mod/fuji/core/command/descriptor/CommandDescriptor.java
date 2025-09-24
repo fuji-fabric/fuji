@@ -15,9 +15,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -32,10 +32,8 @@ import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.exception.AbortCommandExecutionException;
 import mod.fuji.core.command.extension.CommandNodeExtension;
-import mod.fuji.core.command.processor.CommandAnnotationProcessor;
 import mod.fuji.core.command.structure.CommandRequirementDescriptor;
 import mod.fuji.core.command.structure.RegisteredCommandNode;
-import mod.fuji.core.config.Configs;
 import mod.fuji.core.document.annotation.DocStringProvider;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.document.annotation.ForDeveloper;
@@ -61,10 +59,13 @@ import org.jetbrains.annotations.Nullable;
     """)
 public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
-    public static final SpecialVariable<Boolean> stdoutSpecialVariable = new SpecialVariable<>(false);
-    public static final SpecialVariable<Boolean> silentSpecialVariable = new SpecialVariable<>(false);
+    public static final Set<CommandDescriptor> REGISTERED_COMMAND_DESCRIPTORS = ConcurrentHashMap.newKeySet();
+    public static final Set<String> PUBLIC_COMMAND_PATHS = new HashSet<>();
+
     private static final String SILENT_LITERAL = "silent";
     private static final String STDOUT_LITERAL = "stdout";
+    public static final SpecialVariable<Boolean> stdoutSpecialVariable = new SpecialVariable<>(false);
+    public static final SpecialVariable<Boolean> silentSpecialVariable = new SpecialVariable<>(false);
 
     public final @NotNull Method method;
 
@@ -74,7 +75,6 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
     private Optional<LiteralArgumentBuilder<ServerCommandSource>> registerReturnValue = Optional.empty();
 
-    public Optional<String> methodArgumentsDerivedCommandPath = Optional.empty();
     public Set<String> contributedPublicCommandPath = new HashSet<>();
 
     protected CommandDescriptor(@NotNull Method method, @NotNull List<CommandArgument> commandArguments) {
@@ -113,7 +113,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
         registerOptionalArguments();
 
         /* Sync the registry. */
-        CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS.add(this);
+        REGISTERED_COMMAND_DESCRIPTORS.add(this);
     }
 
     @TestCase(action = "Modify the `my-command` into `my-command-v2`, and issue `/fuji reload`.", targets = {
@@ -140,13 +140,13 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
             }, () -> LogUtil.warn("Failed to remove the registered command node from the server command tree, due to the register return value being null. (descriptor = {}) ", this));
 
-        boolean removeAny = CommandAnnotationProcessor.PUBLIC_COMMAND_PATHS.removeAll(this.contributedPublicCommandPath);
+        boolean removeAny = PUBLIC_COMMAND_PATHS.removeAll(this.contributedPublicCommandPath);
         if (removeAny) {
             LogUtil.debug("Remove the command paths '{}' from public command paths.", this.contributedPublicCommandPath);
         }
 
         /* Sync the registry. */
-        CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS.remove(this);
+        REGISTERED_COMMAND_DESCRIPTORS.remove(this);
     }
 
     @ForDeveloper("Test the equality using physical memory address.")
@@ -458,10 +458,10 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
                 /* Track the public command prefix path. */
                 if (!seenAnyNonNullRequiremnt && CommandRequirementDescriptor.isEmptyRequirement(commandArgument.getRequirement())) {
-                    if (!CommandAnnotationProcessor.PUBLIC_COMMAND_PATHS.contains(walkingCommandPath)) {
+                    if (!PUBLIC_COMMAND_PATHS.contains(walkingCommandPath)) {
                         /* Remember added public command paths. */
                         LogUtil.debug("Add command path '{}' as the path of public command.", walkingCommandPath);
-                        CommandAnnotationProcessor.PUBLIC_COMMAND_PATHS.add(walkingCommandPath);
+                        PUBLIC_COMMAND_PATHS.add(walkingCommandPath);
                         descriptor.contributedPublicCommandPath.add(walkingCommandPath);
 
                         // NOTE: Update the existing command nodes in the path, if they are registered before by some non-public commands.
@@ -481,7 +481,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
                 /* Stop tracking the public command prefix path, since we have seen a specified requirement. */
                 seenAnyNonNullRequiremnt = true;
 
-                if (CommandAnnotationProcessor.PUBLIC_COMMAND_PATHS.contains(walkingCommandPath)) {
+                if (PUBLIC_COMMAND_PATHS.contains(walkingCommandPath)) {
                     LogUtil.debug("Skip setting the requirement for the path of public command: {}", walkingCommandPath);
                 } else {
                     /* Resolve the command requirement from the command descriptor. */
@@ -522,37 +522,6 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
             };
         }
 
-        public static void setEffectiveDefaultCommandRequirement(@NotNull StandardCommandDescriptor descriptor) {
-            /* Compute the effective default command requirement for the full command path. */
-            String fullCommandPath = descriptor.commandArguments
-                .stream()
-                .filter(CommandArgument::isCommandArgumentSpecifier)
-                .map(CommandArgument::getArgumentName)
-                .collect(Collectors.joining("."));
-
-            /* Remember this command path. */
-            CommandAnnotationProcessor.LOADED_COMMAND_PATHS.add(fullCommandPath);
-            descriptor.methodArgumentsDerivedCommandPath = Optional.of(fullCommandPath);
-
-            /* Get the default command requirement from permission.json file. */
-            CommandRequirementDescriptor defaultCommandRequirement = computeCommandRequirement(descriptor);
-            Map<String, Integer> permissionMap = CommandAnnotationProcessor.permission.model()
-                .getDefaultLevelPermission()
-                .getCommands();
-            int effectiveDefaultLevelPermission = permissionMap.computeIfAbsent(fullCommandPath, k -> defaultCommandRequirement.getLevel());
-
-            /* Make the effective command requirement. */
-            CommandRequirementDescriptor effectiveDefaultCommandRequirement;
-            if (Configs.MAIN_CONTROL_CONFIG.model().core.permission.all_commands_require_level_4_permission_to_use_by_default) {
-                effectiveDefaultCommandRequirement = new CommandRequirementDescriptor(4, null);
-            } else {
-                effectiveDefaultCommandRequirement = new CommandRequirementDescriptor(effectiveDefaultLevelPermission, null);
-            }
-
-            /* Apply the requirement for the command arguments. */
-            descriptor.commandArguments
-                .forEach(it -> it.setRequirement(effectiveDefaultCommandRequirement));
-        }
     }
 
     public static class CommandException {

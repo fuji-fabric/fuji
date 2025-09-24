@@ -2,7 +2,6 @@ package mod.fuji.core.document.auxiliary;
 
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.descriptor.CommandDescriptor;
-import mod.fuji.core.command.processor.CommandAnnotationProcessor;
 import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.core.config.mapper.GsonMapper;
@@ -190,7 +189,7 @@ public class DocumentUtil {
     }
 
     public static @NotNull List<CommandDescriptor> getCommandDescriptors() {
-        return CommandAnnotationProcessor
+        return CommandDescriptor
             .REGISTERED_COMMAND_DESCRIPTORS
             .stream()
             .sorted(Comparator.comparing(CommandDescriptor::getCommandNodePath))

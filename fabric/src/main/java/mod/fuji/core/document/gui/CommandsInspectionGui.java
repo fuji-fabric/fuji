@@ -6,7 +6,6 @@ import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
-import mod.fuji.core.command.processor.CommandAnnotationProcessor;
 import mod.fuji.core.command.descriptor.CommandDescriptor;
 import mod.fuji.core.command.structure.CommandRequirementDescriptor;
 import mod.fuji.core.document.auxiliary.DocumentUtil;
@@ -37,7 +36,7 @@ public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
     }
 
     public static int inspectCommandDescriptors(CommandContext<ServerCommandSource> ctx, Predicate<CommandDescriptor> filter) {
-        Stream<CommandDescriptor> commandDescriptorStream = CommandAnnotationProcessor.REGISTERED_COMMAND_DESCRIPTORS
+        Stream<CommandDescriptor> commandDescriptorStream = CommandDescriptor.REGISTERED_COMMAND_DESCRIPTORS
             .stream()
             .filter(filter);
 

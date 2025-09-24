@@ -1,7 +1,6 @@
 package mod.fuji.core.command.processor;
 
 import com.mojang.brigadier.CommandDispatcher;
-import mod.fuji.Fuji;
 import mod.fuji.core.annotation.Unused;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.ReflectionUtil;
@@ -11,13 +10,10 @@ import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
-import mod.fuji.core.command.config.model.PermissionModel;
 import mod.fuji.core.command.descriptor.CommandDescriptor;
 import mod.fuji.core.command.descriptor.RetargetCommandDescriptor;
 import mod.fuji.core.command.descriptor.StandardCommandDescriptor;
 import mod.fuji.core.command.structure.CommandRequirementDescriptor;
-import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
-import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.core.document.annotation.Cite;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.document.annotation.TestCase;
@@ -30,13 +26,10 @@ import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
@@ -49,12 +42,6 @@ import org.jetbrains.annotations.NotNull;
 })
 @TestCase(action = "List the command tree of a normal user.", targets = "The command permissions should be handled properly.")
 public class CommandAnnotationProcessor {
-
-    public static final BaseConfigurationHandler<PermissionModel> permission = ObjectConfigurationHandler.ofPath(Fuji.MOD_CONFIG_PATH.resolve("permission.json"), PermissionModel.class);
-
-    public static final Set<CommandDescriptor> REGISTERED_COMMAND_DESCRIPTORS = ConcurrentHashMap.newKeySet();
-    public static final Set<String> LOADED_COMMAND_PATHS = new HashSet<>();
-    public static final Set<String> PUBLIC_COMMAND_PATHS = new HashSet<>();
 
     public static CommandDispatcher<ServerCommandSource> COMMAND_DISPATCHER;
     public static CommandRegistryAccess COMMAND_REGISTRY_ACCESS;
@@ -80,21 +67,21 @@ public class CommandAnnotationProcessor {
         BaseArgumentTypeAdapter.Registry.registerTypeAdapters();
 
         /* Read the latest permission file. */
-        permission.readStorage();
+        StandardCommandDescriptor.permission.readStorage();
 
         /* Register commands. */
-        REGISTERED_COMMAND_DESCRIPTORS.clear();
-        LOADED_COMMAND_PATHS.clear();
-        PUBLIC_COMMAND_PATHS.clear();
+        CommandDescriptor.REGISTERED_COMMAND_DESCRIPTORS.clear();
+        StandardCommandDescriptor.LOADED_METHOD_ARGUMENTS_DERIVED_COMMAND_PATHS.clear();
+        CommandDescriptor.PUBLIC_COMMAND_PATHS.clear();
         processClasses();
 
         /* Write the permission file back. */
         removePermissionMapOfUnloadedCommandPath();
-        permission.writeStorage();
+        StandardCommandDescriptor.permission.writeStorage();
     }
 
     private static void removePermissionMapOfUnloadedCommandPath() {
-        Map<String, Integer> permissionMap = permission
+        Map<String, Integer> permissionMap = StandardCommandDescriptor.permission
             .model()
             .getDefaultLevelPermission()
             .getCommands();
@@ -104,8 +91,8 @@ public class CommandAnnotationProcessor {
             .stream()
             .toList()
             .forEach(key -> {
-                if (!LOADED_COMMAND_PATHS.contains(key)) {
-                    LogUtil.warn("Removed unused permission map for command path '{}' in '{}' file.", key, permission.getFilePath());
+                if (!StandardCommandDescriptor.LOADED_METHOD_ARGUMENTS_DERIVED_COMMAND_PATHS.contains(key)) {
+                    LogUtil.warn("Removed unused permission map for command path '{}' in '{}' file.", key, StandardCommandDescriptor.permission.getFilePath());
                     permissionMap.remove(key);
                 }
             });
@@ -215,7 +202,7 @@ public class CommandAnnotationProcessor {
         commandDescriptor.fillDocument(method.getAnnotation(Document.class));
 
         /* Apply the effective default command requirement. */
-        CommandDescriptor.CommandRequirement.setEffectiveDefaultCommandRequirement(commandDescriptor);
+        StandardCommandDescriptor.setEffectiveDefaultCommandRequirement(commandDescriptor);
         return commandDescriptor;
     }
 
