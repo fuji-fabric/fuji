@@ -326,41 +326,16 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
         /* Register the assembled argument builder as the child of the global root argument builder. */
         LiteralCommandNode<ServerCommandSource> literalCommandNode = assembledArgumentBuilder.build();
         RootCommandNode<ServerCommandSource> rootCommandNode = CommandHelper.Tree.getRootCommandNode();
-        if (isCommandNodeRegistered(literalCommandNode)) {
+        if (CommandHelper.Tree.isCommandNodeRegistered(literalCommandNode)) {
             LogUtil.warn("The command '{}' already registered in the server command tree, now overriding it.", this.getUserFriendlyCommandSyntax());
         }
-
         rootCommandNode.addChild(literalCommandNode);
+
+        /* Add the */
+        CommandHelper.Tree.addRedirect(rootCommandNode,literalCommandNode);
+
+        /* Set register return value. */
         this.registerReturnValue = Optional.of(assembledArgumentBuilder);
-    }
-
-    private boolean isCommandNodeRegistered(@NotNull LiteralCommandNode<ServerCommandSource> rootNode) {
-        return CommandHelper.Path
-            .toUniqueCommandPathList(rootNode)
-            .map(names -> {
-                boolean isRegistered = false;
-                CommandNode<ServerCommandSource> parent = CommandHelper.Tree.getRootCommandNode();
-                for (int i = 0; i < names.size(); i++) {
-                    String name = names.get(i);
-
-                    @Nullable CommandNode<ServerCommandSource> child = parent.getChild(name);
-                    parent = child;
-
-                    if (child == null || !CommandHelper.Node.isExecutableOrRedirectCommandNode(child)) {
-                        return false;
-                    }
-
-                    if (i == names.size() - 1) {
-                        return true;
-                    }
-                }
-
-                return isRegistered;
-            })
-            .orElseGet(() -> {
-                LogUtil.warn("There are forks in given literal command node: {}", this.getUserFriendlyCommandSyntax());
-                return false;
-            });
     }
 
     protected @NotNull ArgumentBuilder<ServerCommandSource, ?> terminalArgumentDecorator(@NotNull ArgumentBuilder<ServerCommandSource, ?> terminalArgumentBuilder) {
