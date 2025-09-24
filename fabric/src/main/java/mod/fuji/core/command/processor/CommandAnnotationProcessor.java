@@ -74,7 +74,7 @@ public class CommandAnnotationProcessor {
     }
 
     @EventConsumer
-    private static void onCommandRegistrationEvent(@Unused CommandRegistrationEvent event) {
+    private static void registerFujiCommands(@Unused CommandRegistrationEvent event) {
         // NOTE: The `/reload` command will clear all registered commands, and trigger the `REGISTRATION` event.
         /* Register argument type adapters. */
         BaseArgumentTypeAdapter.Registry.registerTypeAdapters();

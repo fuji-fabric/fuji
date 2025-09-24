@@ -187,8 +187,8 @@ public class CommandBundleInitializer extends ModuleInitializer {
         CommandBundleService.registerAllBundleCommands();
     }
 
-    @EventConsumer
-    private static void onCommandRegistrationEvent(@Unused CommandRegistrationEvent event) {
+    @EventConsumer(injectorPriority = EventConsumer.HIGHER, consumerPriority = EventConsumer.HIGHER)
+    private static void registerAllBundleCommands(@Unused CommandRegistrationEvent event) {
         ServerHelper.Lifecycle.withServerInstantiated(CommandBundleService::registerAllBundleCommands);
     }
 

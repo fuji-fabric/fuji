@@ -5,7 +5,6 @@ import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import mod.fuji.core.annotation.Unused;
-import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.annotation.CommandNode;
@@ -262,8 +261,8 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         "The `command_permission` module should warp the newly registered commands."
         , "The client-side command tree should be updated."
     })
-    @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.LOWEST)
-    private static void onCommandRegistrationEvent(@Unused CommandRegistrationEvent event) {
+    @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.HIGHER)
+    private static void ensureAllCommandNodesAreWrapped(@Unused CommandRegistrationEvent event) {
         CommandPermissionService.ensureCommandNodeRequirementIsWrapped();
     }
 }

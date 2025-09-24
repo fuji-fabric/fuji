@@ -1055,7 +1055,7 @@
     {
       "event_type_class_name": "mod.fuji.core.event.message.server.command.CommandRegistrationEvent",
       "declaring_class_name": "mod.fuji.core.command.processor.CommandAnnotationProcessor",
-      "declaring_method_name": "onCommandRegistrationEvent",
+      "declaring_method_name": "registerFujiCommands",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
@@ -1197,14 +1197,6 @@
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "mod.fuji.core.event.message.server.command.CommandRegistrationEvent",
-      "declaring_class_name": "mod.fuji.module.initializer.command_alias.CommandAliasInitializer",
-      "declaring_method_name": "onCommandRegistrationEvent",
-      "injector_priority": 1000,
-      "consumer_priority": 1000,
-      "is_dynamic": false
-    },
-    {
       "event_type_class_name": "mod.fuji.core.event.message.player.PlayerActionEvent",
       "declaring_class_name": "mod.fuji.module.initializer.command_attachment.CommandAttachmentInitializer",
       "declaring_method_name": "consumePlayerActionEvent",
@@ -1232,14 +1224,6 @@
       "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
       "declaring_class_name": "mod.fuji.module.initializer.command_bundle.CommandBundleInitializer",
       "declaring_method_name": "registerAllBundleCommands",
-      "injector_priority": 1000,
-      "consumer_priority": 1000,
-      "is_dynamic": false
-    },
-    {
-      "event_type_class_name": "mod.fuji.core.event.message.server.command.CommandRegistrationEvent",
-      "declaring_class_name": "mod.fuji.module.initializer.command_bundle.CommandBundleInitializer",
-      "declaring_method_name": "onCommandRegistrationEvent",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
@@ -1542,10 +1526,18 @@
     },
     {
       "event_type_class_name": "mod.fuji.core.event.message.server.command.CommandRegistrationEvent",
-      "declaring_class_name": "mod.fuji.module.initializer.command_permission.CommandPermissionInitializer",
-      "declaring_method_name": "onCommandRegistrationEvent",
-      "injector_priority": 2000,
-      "consumer_priority": 0,
+      "declaring_class_name": "mod.fuji.module.initializer.command_alias.CommandAliasInitializer",
+      "declaring_method_name": "registerAllAliasCommands",
+      "injector_priority": 1001,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
+      "event_type_class_name": "mod.fuji.core.event.message.server.command.CommandRegistrationEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_bundle.CommandBundleInitializer",
+      "declaring_method_name": "registerAllBundleCommands",
+      "injector_priority": 1001,
+      "consumer_priority": 1001,
       "is_dynamic": false
     },
     {
@@ -1602,6 +1594,14 @@
       "declaring_method_name": "consumeBypassPlayerLimitEvent",
       "injector_priority": 2000,
       "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
+      "event_type_class_name": "mod.fuji.core.event.message.server.command.CommandRegistrationEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_permission.CommandPermissionInitializer",
+      "declaring_method_name": "ensureAllCommandNodesAreWrapped",
+      "injector_priority": 2000,
+      "consumer_priority": 1001,
       "is_dynamic": false
     },
     {

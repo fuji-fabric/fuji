@@ -58,8 +58,8 @@ public class CommandAliasInitializer extends ModuleInitializer {
         CommandAliasService.registerAllAliasCommands();
     }
 
-    @EventConsumer
-    private static void onCommandRegistrationEvent(@Unused CommandRegistrationEvent event) {
+    @EventConsumer(injectorPriority = EventConsumer.HIGHER)
+    private static void registerAllAliasCommands(@Unused CommandRegistrationEvent event) {
         ServerHelper.Lifecycle.withServerInstantiated(CommandAliasService::registerAllAliasCommands);
     }
 
