@@ -5,18 +5,22 @@
 > For user manual, refer to: https://fuji-fabric.github.io
 >
 
-
-
 # Changelog
 
-# Added
-- [command_bundle] feature: add `enable` property for each `bundle command`, making it easier to configure.
-- [core] feature: fine-tune the `command registration point` for better compatibility, include: `command_alias`, `command_bundle`, `command_permission` modules.
-- [core] feature: now will emit a console warning if a `command registration overriding` is detected.
-- [command_event] feature: added 2 server lifecycle events.
-  - feature: add `on_server_started` event.
-  - feature: add `on_server_stopping` event.
+## 🚀 Added
+- **[command_bundle]**
+  - Introduced an `enable` property for each bundle command — making configuration more flexible.
+- **[core]**
+  - Improved **command registration points** for better compatibility across modules:
+    - `command_alias`
+    - `command_bundle`
+    - `command_permission`
+  - Console now shows a warning when a **command registration override** is detected.
+- **[command_event]**
+  - Added new server lifecycle events:
+    - `on_server_started`
+    - `on_server_stopping`
 
-# Fixed
-- [command_bundle && command_alias] fix: the `hot-reload` feature should `un-register` the target command.
-
+## 🐛 Fixed
+- **[command_bundle] & [command_alias]**
+  - Hot-reload now properly **unregisters target commands** before reloading.  
