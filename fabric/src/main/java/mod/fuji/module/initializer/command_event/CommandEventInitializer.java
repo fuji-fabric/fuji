@@ -1,22 +1,29 @@
 package mod.fuji.module.initializer.command_event;
 
-import mod.fuji.core.document.annotation.ColorBox;
-import mod.fuji.core.document.annotation.Document;
+import java.util.List;
+import java.util.Optional;
+import mod.fuji.core.annotation.Unused;
+import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.command.executor.CommandExecutor;
 import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
 import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import mod.fuji.core.document.annotation.ColorBox;
+import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.PlayerDeathEvent;
 import mod.fuji.core.event.message.player.PlayerJoinedEvent;
 import mod.fuji.core.event.message.player.PlayerLeftEvent;
 import mod.fuji.core.event.message.player.PlayerWorldChangedEvent;
+import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
+import mod.fuji.core.event.message.server.lifecycle.ServerStoppingEvent;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.command_event.config.model.CommandEventConfigModel;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-
-import java.util.List;
 import net.minecraft.stat.Stats;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Document(id = 1751826634816L, value = """
     This module allows executing `defined commands` in response to various `events`.
@@ -48,8 +55,13 @@ public class CommandEventInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<CommandEventConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandEventConfigModel.class);
 
-    public static void executeCommandOnEvent(ServerPlayerEntity player, List<String> commands) {
-        CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(player.getCommandSource()), commands);
+    public static void executeCommandOnEvent(@Nullable ServerPlayerEntity player, @NotNull List<String> commands) {
+        ServerCommandSource commandSource = Optional
+            .ofNullable(player)
+            .map($player -> player.getCommandSource())
+            .orElseGet(CommandHelper.Source::getConsoleCommandSource);
+
+        CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(commandSource), commands);
     }
 
     @EventConsumer
@@ -97,4 +109,19 @@ public class CommandEventInitializer extends ModuleInitializer {
         }
     }
 
+    @EventConsumer
+    private static void consumeOnServerStartedEvent(@Unused ServerStartedEvent event) {
+        var config = CommandEventInitializer.config.model().getEvent().getOnServerStarted();
+        if (config.isEnable()) {
+            CommandEventInitializer.executeCommandOnEvent(null, config.getCommands());
+        }
+    }
+
+    @EventConsumer
+    private static void consumeOnServerStoppingEvent(@Unused ServerStoppingEvent event) {
+        var config = CommandEventInitializer.config.model().getEvent().getOnServerStopping();
+        if (config.isEnable()) {
+            CommandEventInitializer.executeCommandOnEvent(null, config.getCommands());
+        }
+    }
 }

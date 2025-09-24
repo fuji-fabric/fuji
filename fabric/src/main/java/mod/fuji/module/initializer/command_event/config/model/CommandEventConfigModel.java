@@ -28,6 +28,8 @@ public class CommandEventConfigModel {
         OnPlayerFirstJoined onPlayerFirstJoined = new OnPlayerFirstJoined();
         OnPlayerJoined onPlayerJoined = new OnPlayerJoined();
         OnPlayerLeft onPlayerLeft = new OnPlayerLeft();
+        OnServerStarted onServerStarted = new OnServerStarted();
+        OnServerStopping onServerStopping = new OnServerStopping();
 
         @Data
         @NoArgsConstructor
@@ -126,6 +128,30 @@ public class CommandEventConfigModel {
             List<String> commands = new ArrayList<>() {
                 {
                     this.add("send-broadcast <dark_grey>%player:name% left the server.");
+                }
+            };
+        }
+
+        @Data
+        @NoArgsConstructor
+        public static class OnServerStarted {
+            boolean enable = false;
+
+            List<String> commands = new ArrayList<>() {
+                {
+                    this.add("send-broadcast <pink>The server is started.");
+                }
+            };
+        }
+
+        @Data
+        @NoArgsConstructor
+        public static class OnServerStopping {
+            boolean enable = false;
+
+            List<String> commands = new ArrayList<>() {
+                {
+                    this.add("send-broadcast <pink>The server is stopping.");
                 }
             };
         }
