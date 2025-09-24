@@ -5,14 +5,16 @@
 > For user manual, refer to: https://fuji-fabric.github.io
 >
 
-# Changelog
-## Added
-- [command_permission] feature: now will detect the change of `requirement` (if it's changed at runtime by other mods), and `auto re-wrap` it.
-  - Before: If some other mods modifies the `requirements` of a command, you have to issue `/reload` to re-wrap it.
-  - Now: This will be detected, and the target command will be re-wrapped automatically immediately (No need to wait until the first use).
+# 📑 Changelog
+
+## ✨ Added
+- **[command_permission]**
+  - Now automatically detects when the `requirement` of a command is changed at runtime by other mods.
+    - **Before:** If another mod modified the requirement, you had to run `/reload` to re-wrap the command.
+    - **Now:** Changes are detected instantly, and the command is re-wrapped automatically (no waiting until first use).
 
 ## 🐛 Fixed
 - **[command_bundle] & [command_alias]**
-  - Hot-reload will forget the public command defined before when re-defining it.
-    - Before: When re-defining a public command, you have to issue `/reload` command to hot-reload the new requirement.
-    - Now: You can simply use `/fuji reload` command, to re-fine the command.
+  - Fixed an issue where hot-reloading would forget previously defined public commands when re-defining them.
+    - **Before:** Re-defining a public command required running `/reload` to load the new requirement.
+    - **Now:** Just run `/fuji reload` to refine the command immediately.  
