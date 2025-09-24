@@ -342,7 +342,6 @@ public class CommandHelper {
                 return false;
             }
 
-            // FIXME: `/home tp -> /say` can't be detected, needs more enhancement for command redirect.
             CommandNode<ServerCommandSource> rootNode = getRootCommandNode();
             @Nullable CommandNode<ServerCommandSource> walkingNode = rootNode.getChild(navigationNode.getName());
             if (walkingNode == null) {

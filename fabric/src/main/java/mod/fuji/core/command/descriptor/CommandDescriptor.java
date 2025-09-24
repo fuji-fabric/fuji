@@ -331,8 +331,8 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
         }
         rootCommandNode.addChild(literalCommandNode);
 
-        /* Add the */
-        CommandHelper.Tree.addRedirect(rootCommandNode,literalCommandNode);
+        /* Add redirect commands if needed. */
+        CommandHelper.Tree.addRedirect(rootCommandNode, literalCommandNode);
 
         /* Set register return value. */
         this.registerReturnValue = Optional.of(assembledArgumentBuilder);
