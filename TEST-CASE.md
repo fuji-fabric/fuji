@@ -59,6 +59,10 @@
 - Target: The redirect target command is a leaf command: `/wb` -> `/workbench`
 - Target: The redirect target command already registered (no args): `/help` -> `/warp`
 - Target: The redirect target command already registered (with args): `/workbench` -> `/say`
+- Target: The redirect target command already registered (with branches): `/home` -> `/warp`
+- Target: The chained command redirect (1-hop redirect): `/wb -> /workbench -> /warp`
+- Target: The chained command redirect (2-hop redirect): `/wb -> /workbench -> /say`
+- Target: The duplicated command redirect: `/wb -> /wb -> /wb`
 
 [Test Case]
 - Module: command_bundle
@@ -246,6 +250,13 @@
 - Target: Throwing item entities during RTP process, the game should be ticked normally.
 - Target: Start 3 RTP processes at the same time, it should be processed normally.
 - Target: Run `/execute as @a run rtp` command, it should be processed normally.
+
+[Test Case]
+- Module: core
+- Action: **Test the functionality of command override detection.**
+- Target: Create the new command `/home tp -> /say` (with redirect) using `command_alias` module, you should see the override warning.
+- Target: Create the new command `/home tp -> /say` (without redirect) using `command_bundle` module, you should NOT see the override warning.
+- Target: Create the new command `/workbench -> /say` (not nested) using `command_alias` module, you should see the override warning.
 
 [Test Case]
 - Module: core

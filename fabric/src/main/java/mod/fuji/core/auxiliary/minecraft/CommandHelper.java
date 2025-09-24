@@ -354,9 +354,9 @@ public class CommandHelper {
 
         @SuppressWarnings("RedundantIfStatement")
         @TestCase(action = "Test the functionality of command override detection.", targets = {
-            "Create the new command `/home tp -> /say with redirect` using `command_alias` module, you should see the override warning.",
-            "Create the new command `/home tp -> /say without redirect` using `command_bundle` module, you should NOT see the override warning.",
-            "Create the new command `/workbench -> /say not nested` using `command_alias` module, you should see the override warning."
+            "Create the new command `/home tp -> /say` (with redirect) using `command_alias` module, you should see the override warning.",
+            "Create the new command `/home tp -> /say` (without redirect) using `command_bundle` module, you should NOT see the override warning.",
+            "Create the new command `/workbench -> /say` (not nested) using `command_alias` module, you should see the override warning."
         })
         private static boolean isCommandNodeRegisteredRecursively(@NotNull CommandNode<ServerCommandSource> navigationNode, @Nullable CommandNode<ServerCommandSource> walkingNode) {
             /* Check pre-conditions. */

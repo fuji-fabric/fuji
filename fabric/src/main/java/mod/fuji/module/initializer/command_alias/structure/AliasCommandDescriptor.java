@@ -28,7 +28,10 @@ public class AliasCommandDescriptor extends CommandDescriptor {
         "The redirect target command is a leaf command: `/wb` -> `/workbench`",
         "The redirect target command already registered (no args): `/help` -> `/warp`",
         "The redirect target command already registered (with args): `/workbench` -> `/say`",
-        "The redirect target command already registered (with branches): `/home` -> `/warp`"
+        "The redirect target command already registered (with branches): `/home` -> `/warp`",
+        "The chained command redirect (1-hop redirect): `/wb -> /workbench -> /warp`",
+        "The chained command redirect (2-hop redirect): `/wb -> /workbench -> /say`",
+        "The duplicated command redirect: `/wb -> /wb -> /wb`"
     })
     @Override
     protected @NotNull ArgumentBuilder<ServerCommandSource, ?> terminalArgumentDecorator(@NotNull ArgumentBuilder<ServerCommandSource, ?> terminalArgumentBuilder) {
