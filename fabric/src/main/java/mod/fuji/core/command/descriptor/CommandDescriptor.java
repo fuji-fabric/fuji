@@ -123,6 +123,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
         trySpamConsole(() -> LogUtil.info("Un-Register {} command: {}", this.getClass().getSimpleName(), this.getUserFriendlyCommandSyntax()));
         LogUtil.debug("Un-register command: {}", this);
 
+        /* Remove registered command nodes in the server command tree. */
         this.registerReturnValue
             .ifPresentOrElse($registerReturnValue -> {
                 /* Find the registered command tree. */
@@ -140,6 +141,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
             }, () -> LogUtil.warn("Failed to remove the registered command node from the server command tree, due to the register return value being null. (descriptor = {}) ", this));
 
+        /* Remove contributed public command paths. */
         boolean removeAny = PUBLIC_COMMAND_PATHS.removeAll(this.contributedPublicCommandPaths);
         if (removeAny) {
             LogUtil.debug("Remove the command paths '{}' from public command paths.", this.contributedPublicCommandPaths);
@@ -161,25 +163,12 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
     }
 
     @ForDeveloper("Returns the only possible path to the command node.")
-    public @NotNull String getCommandNodePath() {
+    public Optional<String> getFlatCommandPath() {
         return this.registerReturnValue
-            .map($registerReturnValue -> getCommandNodePathRecursively($registerReturnValue.build()))
-            .orElseGet(() -> {
-                LogUtil.warn("Failed to get the command node path, due to the register return value being null currently. (descriptor = {})", this);
-                return "[FAILED TO FIND PATH, COMMAND NODE UNREGISTERED]";
+            .map($registerReturnValue -> {
+                LiteralCommandNode<ServerCommandSource> navigationNode = $registerReturnValue.build();
+                return CommandHelper.Path.toFlatCommandPathString(navigationNode);
             });
-    }
-
-    private static @NotNull String getCommandNodePathRecursively(@NotNull CommandNode<ServerCommandSource> registeredRootNode) {
-        StringBuilder commandPath = new StringBuilder();
-        commandPath.append(registeredRootNode.getName());
-
-        registeredRootNode
-            .getChildren()
-            .forEach(child -> commandPath
-                .append(".")
-                .append(getCommandNodePathRecursively(child)));
-        return commandPath.toString();
     }
 
     private static @NotNull CommandNode<ServerCommandSource> findOptionalArgumentAnchor(@NotNull List<CommandArgument> commandArguments) {

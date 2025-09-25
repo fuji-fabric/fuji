@@ -86,6 +86,22 @@ public class CommandHelper {
             return Optional.of(names);
         }
 
+        public static Optional<String> toUniqueCommandPathString(@NotNull CommandNode<ServerCommandSource> navigationNode) {
+            return toUniqueCommandPathList(navigationNode)
+                    .map(Path::joinCommandPath);
+        }
+
+        public static @NotNull String toFlatCommandPathString(@NotNull CommandNode<ServerCommandSource> navigationNode) {
+            StringBuilder flatCommandPath = new StringBuilder();
+            flatCommandPath.append(navigationNode.getName());
+
+            navigationNode
+                // NOTE: Flatten each child, to concat the `optional arguments` in order.
+                .getChildren()
+                .forEach(child -> flatCommandPath.append(".").append(toFlatCommandPathString(child)));
+            return flatCommandPath.toString();
+        }
+
         public static @NotNull String toUniqueCommandPathString(@NotNull List<CommandNode<ServerCommandSource>> nodes) {
             // Compute the `command node path` from the only one possible path.
             return nodes

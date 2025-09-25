@@ -47,7 +47,10 @@ public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
                 return CommandHelper.Return.SUCCESS;
             })
             .orElseGet(() -> {
-                commandDescriptorStream.forEach(it -> TextHelper.sendMessageByText(source, Text.literal(it.getCommandNodePath())));
+                commandDescriptorStream.forEach(it -> {
+                    String string = it.getFlatCommandPath().toString();
+                    TextHelper.sendMessageByText(source, Text.literal(string));
+                });
                 return CommandHelper.Return.SUCCESS;
             });
     }

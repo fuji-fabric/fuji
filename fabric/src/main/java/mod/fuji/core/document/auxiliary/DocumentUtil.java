@@ -192,7 +192,7 @@ public class DocumentUtil {
         return CommandDescriptor
             .REGISTERED_COMMAND_DESCRIPTORS
             .stream()
-            .sorted(Comparator.comparing(CommandDescriptor::getCommandNodePath))
+            .sorted(Comparator.comparing(it -> it.getFlatCommandPath().toString()))
             .toList();
     }
 
