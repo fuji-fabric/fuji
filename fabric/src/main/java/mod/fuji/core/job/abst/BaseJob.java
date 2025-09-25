@@ -23,13 +23,13 @@ public abstract class BaseJob implements Job {
 
     @ForDeveloper("Job Detail = Job Class + Job Key + Job Data")
     @Getter
-    private JobDetail jobDetail;
+    JobDetail jobDetail;
 
     @Getter
-    private TriggerKey triggerKey;
+    TriggerKey triggerKey;
 
     @Getter
-    protected boolean rescheduleAble;
+    boolean rescheduleAble;
 
     public BaseJob(@Nullable String jobGroup, @Nullable String jobName, @Nullable JobDataMap jobDataMap, boolean rescheduleAble) {
         /* Initialize with sensible default values. */

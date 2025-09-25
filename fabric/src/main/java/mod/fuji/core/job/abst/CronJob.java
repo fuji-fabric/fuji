@@ -15,9 +15,13 @@ public abstract class CronJob extends BaseJob {
 
     Supplier<String> cronSupplier;
 
-    public CronJob(@Nullable String jobGroup, @Nullable String jobName, @Nullable JobDataMap jobDataMap, @NotNull Supplier<String> cronSupplier) {
-        super(jobGroup, jobName, jobDataMap, true);
+    public CronJob(@Nullable String jobGroup, @Nullable String jobName, @Nullable JobDataMap jobDataMap, @NotNull Supplier<String> cronSupplier, boolean rescheduleAble) {
+        super(jobGroup, jobName, jobDataMap, rescheduleAble);
         this.cronSupplier = cronSupplier;
+    }
+
+    public CronJob(@Nullable String jobGroup, @Nullable String jobName, @Nullable JobDataMap jobDataMap, @NotNull Supplier<String> cronSupplier) {
+        this(jobGroup, jobName, jobDataMap, cronSupplier, true);
     }
 
     public CronJob(@Nullable JobDataMap jobDataMap, @NotNull Supplier<String> cronSupplier) {

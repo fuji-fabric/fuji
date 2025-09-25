@@ -23,8 +23,7 @@ import org.quartz.JobExecutionException;
 public class PatrolJailJob extends FixedIntervalJob {
 
     public PatrolJailJob(@NotNull JobDataMap jobDataMap, @NotNull JailDescriptor jailDescriptor) {
-        super(null, jailDescriptor.getId(), jobDataMap, jailDescriptor.getPatrol().getPatrolIntervalMillSeconds(), REPEAT_INDEFINITELY);
-        super.rescheduleAble = false;
+        super(null, jailDescriptor.getId(), jobDataMap, jailDescriptor.getPatrol().getPatrolIntervalMillSeconds(), REPEAT_INDEFINITELY, false);
     }
 
     public static void scheduleJob(@NotNull JailDescriptor jailDescriptor) {

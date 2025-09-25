@@ -26,8 +26,7 @@ public class TestSteppingOnBlockJob extends FixedIntervalJob {
     private static final Map<String, String> player2lastSteppingBlockUUID = new HashMap<>();
 
     public TestSteppingOnBlockJob() {
-        super(null, null, null, intervalSupplier(), REPEAT_INDEFINITELY);
-        super.rescheduleAble = false;
+        super(null, null, null, intervalSupplier(), REPEAT_INDEFINITELY, false);
     }
 
     private static void scheduleJob() {

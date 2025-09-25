@@ -15,10 +15,14 @@ public abstract class FixedIntervalJob extends BaseJob {
     private int intervalInMillSeconds;
     private int repeatCount;
 
-    public FixedIntervalJob(@Nullable String jobGroup, @Nullable String jobName, @Nullable JobDataMap jobDataMap, int intervalInMillSeconds, int repeatCount) {
-        super(jobGroup, jobName, jobDataMap, false);
+    public FixedIntervalJob(@Nullable String jobGroup, @Nullable String jobName, @Nullable JobDataMap jobDataMap, int intervalInMillSeconds, int repeatCount, boolean rescheduleAble) {
+        super(jobGroup, jobName, jobDataMap, rescheduleAble);
         this.intervalInMillSeconds = intervalInMillSeconds;
         this.repeatCount = repeatCount;
+    }
+
+    public FixedIntervalJob(@Nullable String jobGroup, @Nullable String jobName, @Nullable JobDataMap jobDataMap, int intervalInMillSeconds, int repeatCount) {
+        this(jobGroup, jobName, jobDataMap, intervalInMillSeconds, repeatCount, false);
     }
 
     @Override
