@@ -1,5 +1,6 @@
 package mod.fuji.module.initializer.command_scheduler;
 
+import mod.fuji.core.annotation.Unused;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.command.annotation.CommandNode;
@@ -10,6 +11,8 @@ import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.document.annotation.TestCase;
+import mod.fuji.core.event.annotation.EventConsumer;
+import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.manager.Managers;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.command_scheduler.command.argument.wrapper.JobName;
@@ -61,8 +64,8 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<CommandSchedulerConfigModel> scheduler = ObjectConfigurationHandler.ofModule("scheduler.json", CommandSchedulerConfigModel.class);
 
-    @Override
-    protected void onInitialize() {
+    @EventConsumer
+    private static void addCommandSchedulerJobs(@Unused ServerStartedEvent event) {
         reloadJobs();
     }
 
@@ -91,12 +94,12 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    private void reloadJobs() {
-        /* Un-schedule jobs. */
-        LogUtil.info("Un-schedule jobs.");
+    private static void reloadJobs() {
+        /* Delete jobs. */
+        LogUtil.info("Delete jobs.");
         Managers.getScheduleManager().deleteJobs(CommandScheduleJob.class);
 
-        /* Schedule jobs. */
+        /* Add jobs. */
         scheduler.model().jobs.forEach(definedJob -> {
             definedJob
                 .getSchedules()
@@ -110,7 +113,7 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
                     Managers.getScheduleManager().addJob(job);
                 });
 
-            LogUtil.info("Schedule job -> {}", definedJob.getName());
+            LogUtil.info("Add job -> {}", definedJob.getName());
         });
     }
 

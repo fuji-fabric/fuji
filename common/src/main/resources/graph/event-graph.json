@@ -1214,6 +1214,14 @@
     },
     {
       "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_attachment.job.TestSteppingOnBlockJob",
+      "declaring_method_name": "scheduleJob",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
       "declaring_class_name": "mod.fuji.module.initializer.command_bundle.CommandBundleInitializer",
       "declaring_method_name": "registerAllBundleCommands",
       "injector_priority": 1000,
@@ -1301,6 +1309,22 @@
       "is_dynamic": false
     },
     {
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_scheduler.CommandSchedulerInitializer",
+      "declaring_method_name": "addCommandSchedulerJobs",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.command_state.job.CommandStateAutoUpdaterJob",
+      "declaring_method_name": "addSelf",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
       "event_type_class_name": "mod.fuji.core.event.message.player.ModifyPlayerDisplayNameEvent",
       "declaring_class_name": "mod.fuji.module.initializer.command_toolbox.nickname.NicknameInitializer",
       "declaring_method_name": "modifyPlayerDisplayName",
@@ -1342,8 +1366,16 @@
     },
     {
       "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.jail.JailInitializer",
+      "declaring_method_name": "reloadPatrolJobs",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
       "declaring_class_name": "mod.fuji.module.initializer.jail.job.UpdateJailRecordsJob",
-      "declaring_method_name": "scheduleUpdateJailRecordsJob",
+      "declaring_method_name": "reloadUpdateJailRecordsJob",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
@@ -1368,6 +1400,14 @@
       "event_type_class_name": "mod.fuji.core.event.message.player.PlayerLeftEvent",
       "declaring_class_name": "mod.fuji.module.initializer.leaderboard.LeaderBoardInitializer",
       "declaring_method_name": "updateLeaderBoardOnPlayerLeft",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.leaderboard.job.UpdateLeaderboardsJob",
+      "declaring_method_name": "addSelf",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false

@@ -269,16 +269,6 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     }
 
     @Override
-    protected void onInitialize() {
-        TestSteppingOnBlockJob.reloadJob();
-    }
-
-    @Override
-    protected void onReload() {
-        TestSteppingOnBlockJob.reloadJob();
-    }
-
-    @Override
     protected void registerGsonTypeAdapters() {
         GsonMapper.registerGsonTypeAdapter(BaseCommandAttachmentEntry.class, new CommandAttachmentEntryAdapter());
     }

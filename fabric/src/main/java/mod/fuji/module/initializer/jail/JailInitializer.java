@@ -1,5 +1,6 @@
 package mod.fuji.module.initializer.jail;
 
+import mod.fuji.core.annotation.Unused;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.annotation.CommandNode;
@@ -9,6 +10,7 @@ import mod.fuji.core.command.annotation.CommandTarget;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.ModifyPlayerDisplayNameEvent;
 import mod.fuji.core.event.message.player.ModifyPlayerListNameEvent;
+import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.service.duration_parser.command.argument.wrapper.Duration;
 import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
 import mod.fuji.core.command.argument.wrapper.impl.OfflinePlayerName;
@@ -292,9 +294,8 @@ public class JailInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-
-    @Override
-    protected void onInitialize() {
+    @EventConsumer
+    private static void reloadPatrolJobs(@Unused ServerStartedEvent event) {
         PatrolJailJob.reloadPatrolJobs();
     }
 

@@ -102,11 +102,6 @@ public class CommandStateInitializer extends ModuleInitializer {
     }
 
     @Override
-    protected void onInitialize() {
-        Managers.getScheduleManager().addJob(new CommandStateAutoUpdaterJob());
-    }
-
-    @Override
     protected void registerPlaceholders() {
         CommandStatePlaceholders.registerIsInStatePlaceholder();
     }

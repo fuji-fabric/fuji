@@ -1,10 +1,13 @@
 package mod.fuji.module.initializer.command_attachment.job;
 
+import mod.fuji.core.annotation.Unused;
 import mod.fuji.core.auxiliary.minecraft.EntityHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.auxiliary.minecraft.UuidHelper;
 import mod.fuji.core.document.annotation.Document;
+import mod.fuji.core.event.annotation.EventConsumer;
+import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.job.abst.FixedIntervalJob;
 import mod.fuji.core.manager.Managers;
 import mod.fuji.module.initializer.command_attachment.CommandAttachmentInitializer;
@@ -26,17 +29,13 @@ public class TestSteppingOnBlockJob extends FixedIntervalJob {
     private static final Map<String, String> player2lastSteppingBlockUUID = new HashMap<>();
 
     public TestSteppingOnBlockJob() {
-        super(null, null, null, intervalSupplier(), REPEAT_INDEFINITELY, false);
+        super(null, null, null, intervalSupplier(), REPEAT_INDEFINITELY, true);
     }
 
-    private static void scheduleJob() {
+    @EventConsumer
+    private static void scheduleJob(@Unused ServerStartedEvent event) {
         TestSteppingOnBlockJob job = new TestSteppingOnBlockJob();
         Managers.getScheduleManager().addJob(job);
-    }
-
-    public static void reloadJob() {
-        Managers.getScheduleManager().deleteJobs(TestSteppingOnBlockJob.class);
-        scheduleJob();
     }
 
     private static int intervalSupplier() {

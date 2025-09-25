@@ -1,9 +1,13 @@
 package mod.fuji.module.initializer.command_state.job;
 
 
+import mod.fuji.core.annotation.Unused;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.document.annotation.Document;
+import mod.fuji.core.event.annotation.EventConsumer;
+import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.job.abst.CronJob;
+import mod.fuji.core.manager.Managers;
 import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
 import mod.fuji.module.initializer.command_state.service.CommandStateService;
 import org.quartz.JobExecutionContext;
@@ -23,5 +27,10 @@ public class CommandStateAutoUpdaterJob extends CronJob {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         ServerHelper.executeSync(CommandStateService::updateAllCommandStates);
+    }
+
+    @EventConsumer
+    private static void addSelf(@Unused ServerStartedEvent event) {
+        Managers.getScheduleManager().addJob(new CommandStateAutoUpdaterJob());
     }
 }

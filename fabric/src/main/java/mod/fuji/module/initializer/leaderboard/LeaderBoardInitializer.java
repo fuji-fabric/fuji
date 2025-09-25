@@ -153,11 +153,6 @@ public class LeaderBoardInitializer extends ModuleInitializer {
         LeaderBoardPlaceholders.registerHighestNScorePlaceholder();
     }
 
-    @Override
-    protected void onInitialize() {
-        Managers.getScheduleManager().addJob(new UpdateLeaderboardsJob());
-    }
-
     @EventConsumer
     private static void updateLeaderBoardOnPlayerJoined(PlayerJoinedEvent event) {
         LeaderBoardService.updateLeaderBoard(event.getPlayer());
