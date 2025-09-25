@@ -237,14 +237,6 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
         return parameterValues;
     }
 
-    protected Optional<Integer> findCommandSourceMethodParameterSpecifierIndex() {
-        return findMethodParameterSpecifierIndex(CommandArgument::isCommandSource);
-    }
-
-    protected Optional<Integer> findCommandTargetMethodParameterSpecifierIndex() {
-        return findMethodParameterSpecifierIndex(CommandArgument::isCommandTarget);
-    }
-
     protected Optional<Integer> findMethodParameterSpecifierIndex(@NotNull Predicate<CommandArgument> predicate) {
         List<CommandArgument> parameterSpecifiers = this.getMethodParameterSpecifiers();
         for (int i = 0; i < parameterSpecifiers.size(); i++) {
@@ -267,6 +259,14 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
         }
 
         return Optional.empty();
+    }
+
+    protected Optional<Integer> findCommandSourceMethodParameterSpecifierIndex() {
+        return findMethodParameterSpecifierIndex(CommandArgument::isCommandSource);
+    }
+
+    protected Optional<Integer> findCommandTargetMethodParameterSpecifierIndex() {
+        return findMethodParameterSpecifierIndex(CommandArgument::isCommandTarget);
     }
 
     @SuppressWarnings({"UnnecessaryLocalVariable"})
@@ -322,7 +322,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
         List<ArgumentBuilder<ServerCommandSource, ?>> argumentBuilders = ArgumentBuilderMaker.makeNonOptionalArgumentBuilders(this);
         LiteralArgumentBuilder<ServerCommandSource> assembledArgumentBuilder = ArgumentBuilderMaker.assembleArgumentBuilders(argumentBuilders, this::terminalArgumentDecorator);
 
-        /* Register the assembled argument builder as the child of the global root argument builder. */
+        /* Replace the built command node in server command tree. */
         LiteralCommandNode<ServerCommandSource> literalCommandNode = assembledArgumentBuilder.build();
         RootCommandNode<ServerCommandSource> rootCommandNode = CommandHelper.Tree.getRootCommandNode();
         if (CommandHelper.Tree.isCommandNodeRegistered(literalCommandNode)) {
@@ -330,7 +330,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
         }
         CommandHelper.Tree.replaceChild(rootCommandNode, literalCommandNode);
 
-        /* Set register return value. */
+        /* Set the register return value. */
         this.registerReturnValue = Optional.of(assembledArgumentBuilder);
     }
 
@@ -435,7 +435,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
         private static void fillCommandRequirement(@NotNull List<Pair<ArgumentBuilder<ServerCommandSource, ?>, CommandArgument>> pairs, @NotNull CommandDescriptor descriptor) {
             /* Fill the command requirements based on the command arguments. */
             String walkingCommandPath = "";
-            boolean seenAnyNonNullRequiremnt = false;
+            boolean seenAnyNonEmptyRequiremnt = false;
             for (var pair : pairs) {
                 /* Extract the key and value. */
                 ArgumentBuilder<ServerCommandSource, ?> argumentBuilder = pair.getKey();
@@ -446,7 +446,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
                 walkingCommandPath = CommandHelper.Path.trimCommandPathString(walkingCommandPath);
 
                 /* Track the public command prefix path. */
-                if (!seenAnyNonNullRequiremnt && CommandRequirementDescriptor.isEmptyRequirement(commandArgument.getRequirement())) {
+                if (!seenAnyNonEmptyRequiremnt && CommandRequirementDescriptor.isEmptyRequirement(commandArgument.getRequirement())) {
                     if (!PUBLIC_COMMAND_PATHS.contains(walkingCommandPath)) {
                         /* Remember added public command paths. */
                         LogUtil.debug("Add command path '{}' as the path of public command.", walkingCommandPath);
@@ -468,7 +468,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
                 }
 
                 /* Stop tracking the public command prefix path, since we have seen a specified requirement. */
-                seenAnyNonNullRequiremnt = true;
+                seenAnyNonEmptyRequiremnt = true;
 
                 if (PUBLIC_COMMAND_PATHS.contains(walkingCommandPath)) {
                     LogUtil.debug("Skip setting the requirement for the path of public command: {}", walkingCommandPath);
