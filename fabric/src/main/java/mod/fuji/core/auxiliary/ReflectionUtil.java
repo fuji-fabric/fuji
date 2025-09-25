@@ -1,6 +1,7 @@
 package mod.fuji.core.auxiliary;
 
 import mod.fuji.Fuji;
+import mod.fuji.core.annotation.CallerSensitive;
 import mod.fuji.core.config.mapper.GsonMapper;
 import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.core.event.injector.structure.EventGraph;
@@ -188,10 +189,12 @@ public class ReflectionUtil {
 
     public static class Stacktrace {
 
+        @CallerSensitive
         public static String findSourceModuleInCurrentStackTrace() {
             return findSourceModuleAsJoinedModulePath(getCurrentStackTraceAsModuleName());
         }
 
+        @CallerSensitive
         private static String findSourceModuleAsJoinedModulePath(List<String> joinedModulePathList) {
             /* The most recent module in the stack trace is considered as the source module. */
             // NOTE: The function defined in mixin class will be injected into the target class. We have no clue to find the source module, for the calls to that function.
@@ -206,6 +209,7 @@ public class ReflectionUtil {
             return result;
         }
 
+        @CallerSensitive
         private static List<String> getCurrentStackTraceAsClassNames() {
             return Arrays
                 .stream(Thread.currentThread().getStackTrace())
@@ -213,6 +217,7 @@ public class ReflectionUtil {
                 .toList();
         }
 
+        @CallerSensitive
         private static List<String> getCurrentStackTraceAsModuleName() {
             return getCurrentStackTraceAsClassNames()
                 .stream()
@@ -220,6 +225,7 @@ public class ReflectionUtil {
                 .toList();
         }
 
+        @CallerSensitive
         public static StackTraceElement getCallerMethod() {
             StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
             // [0] = Thread.getStackTrace

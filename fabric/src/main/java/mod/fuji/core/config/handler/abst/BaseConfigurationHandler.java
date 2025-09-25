@@ -2,6 +2,7 @@ package mod.fuji.core.config.handler.abst;
 
 import com.google.gson.JsonObject;
 import java.util.Comparator;
+import mod.fuji.core.annotation.CallerSensitive;
 import mod.fuji.core.auxiliary.ExceptionUtil;
 import mod.fuji.core.auxiliary.IOUtil;
 import mod.fuji.core.auxiliary.LogUtil;
@@ -219,15 +220,17 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         return ModulePathResolver.computeModulePathString(this.model().getClass().getName());
     }
 
+    @CallerSensitive
     public BaseConfigurationHandler<T> enableAutoSaveFeature() {
         return enableAutoSaveFeature(ScheduleManager.CRON_EVERY_TEN_SECONDS);
     }
 
+    @CallerSensitive
     @EventConsumer(eventType = ServerStoppingEvent.class, isDynamic = true)
     public BaseConfigurationHandler<T> enableAutoSaveFeature(@NotNull String cron) {
         /* Make and schedule the job. */
         // NOTE: Capture the source module in stack trace.
-        String sourceModuleInCurrentStackTrace = ReflectionUtil.Stacktrace.findSourceModuleInCurrentStackTrace();
+        @CallerSensitive String sourceModuleInCurrentStackTrace = ReflectionUtil.Stacktrace.findSourceModuleInCurrentStackTrace();
 
         BaseEventConsumer<ServerStartedEvent> serverStartedEventConsumer = DynamicEventConsumer.makeDynamic(ServerStartedEvent.class, EventConsumer.DEFAULT, EventConsumer.DEFAULT, (server) -> {
             try {
