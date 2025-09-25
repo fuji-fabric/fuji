@@ -7,14 +7,14 @@ import mod.fuji.core.event.message.BaseEvent;
 import java.util.function.Consumer;
 import org.jetbrains.annotations.NotNull;
 
-public class DynamicEventConsumer<T> extends BaseEventConsumer<T> {
+public class DynamicEventConsumer<T> extends EventConsumer<T> {
 
     protected DynamicEventConsumer(EventConsumerInfo eventConsumerInfo, Class<T> eventType, Consumer<T> eventConsumerMethod) {
         super(eventConsumerInfo, eventType, eventConsumerMethod);
     }
 
     @ForDeveloper("Make an event consumer at runtime programmatically.")
-    public static <T extends BaseEvent> BaseEventConsumer<T> makeDynamic(@NotNull Class<T> eventTypeClass, int injectorPriority, int consumerPriority, @NotNull Consumer<T> eventConsumer) {
+    public static <T extends BaseEvent> EventConsumer<T> makeDynamic(@NotNull Class<T> eventTypeClass, int injectorPriority, int consumerPriority, @NotNull Consumer<T> eventConsumer) {
         String eventTypeClassName = eventTypeClass.getName();
         StackTraceElement callerMethod = ReflectionUtil.Stacktrace.getCallerMethod();
         String declaringClassName = callerMethod.getClassName();

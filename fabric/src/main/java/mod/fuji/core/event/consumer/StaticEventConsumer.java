@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
-public class StaticEventConsumer<T> extends BaseEventConsumer<T> {
+public class StaticEventConsumer<T> extends EventConsumer<T> {
 
     private StaticEventConsumer(EventConsumerInfo eventConsumerInfo, Class<T> eventType, Consumer<T> consumer) {
         super(eventConsumerInfo, eventType, consumer);
@@ -40,7 +40,7 @@ public class StaticEventConsumer<T> extends BaseEventConsumer<T> {
         return (Consumer<E>) site.getTarget().invoke();
     }
 
-    public static <T extends BaseEvent> BaseEventConsumer<T> makeStatic(@NotNull EventConsumerInfo eventConsumerInfo, @NotNull Class<T> eventType, @NotNull Method eventConsumerMethod) {
+    public static <T extends BaseEvent> EventConsumer<T> makeStatic(@NotNull EventConsumerInfo eventConsumerInfo, @NotNull Class<T> eventType, @NotNull Method eventConsumerMethod) {
         Consumer<T> consumer = toConsumer(eventType, eventConsumerMethod);
         return new StaticEventConsumer<>(eventConsumerInfo, eventType, consumer);
     }
