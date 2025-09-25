@@ -104,6 +104,10 @@ public class CommandAssistant {
         return sb.toString();
     }
 
+    public static @NotNull String ensurePrefix(@NotNull String input, @NotNull String prefix) {
+        return input.startsWith(prefix) ? input : prefix + input;
+    }
+
     private static void printUsageForCommandNode(@NotNull ServerCommandSource commandSource, @NotNull CommandContext<ServerCommandSource> rootCommandContext, @NotNull CommandContext<ServerCommandSource> commandContext, @NotNull CommandNode<ServerCommandSource> targetCommandNode, @NotNull SuggestionsBuilder builder) {
 //        Inspector.inspectCommandNode(targetCommandNode);
 //        Inspector.inspectSuggestionsBuilder(builder);
@@ -129,7 +133,7 @@ public class CommandAssistant {
             String suffixString = " " + value;
 
             /* Trim the strings, to improve cache hits. */
-            prefixString = prefixString.trim();
+            prefixString = ensurePrefix(prefixString.trim(), "/");
             infixString = infixString.trim();
             suffixString = suffixString.trim();
 

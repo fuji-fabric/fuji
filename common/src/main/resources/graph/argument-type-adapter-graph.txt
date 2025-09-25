@@ -21,6 +21,7 @@ mod.fuji.core.command.argument.adapter.impl.FloatRangeArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.GameProfileArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.GamemodeArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.GreedyArgumentTypeAdapter
+mod.fuji.core.command.argument.adapter.impl.GreedyCommandStringArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.GreedyStringListArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.IdentifierArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.IntRangeArgumentTypeAdapter

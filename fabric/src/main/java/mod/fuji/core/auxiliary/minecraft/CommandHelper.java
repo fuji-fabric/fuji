@@ -519,6 +519,12 @@ public class CommandHelper {
             return !isExecutedByPlayer(commandSource);
         }
 
+
+        public static boolean isExecutedByPlayer(@NotNull CommandContext<ServerCommandSource> commandContext) {
+            @NotNull ServerCommandSource source = commandContext.getSource();
+            return isExecutedByPlayer(source);
+        }
+
         public static boolean isExecutedByPlayer(@NotNull ServerCommandSource commandSource) {
             return commandSource.getPlayer() != null;
         }
@@ -589,6 +595,14 @@ public class CommandHelper {
 
         public static <T> @NotNull SuggestionProvider<ServerCommandSource> identifiers(@NotNull RegistryKey<? extends Registry<T>> registryKey) {
             return iterable(() -> RegistryHelper.getRegistry(registryKey).getIds());
+        }
+
+        public static @NotNull Suggestions listSuggestions(@NotNull ServerPlayerEntity player, @NotNull String commandString) {
+            CommandDispatcher<ServerCommandSource> commandDispatcher = getCommandDispatcher();
+            ServerCommandSource commandSource = Source.getCommandSource(player);
+            ParseResults<ServerCommandSource> parse = commandDispatcher.parse(commandString, commandSource);
+            CompletableFuture<Suggestions> completionSuggestions = commandDispatcher.getCompletionSuggestions(parse);
+            return completionSuggestions.join();
         }
     }
 

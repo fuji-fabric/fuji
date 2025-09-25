@@ -7,7 +7,5 @@
 
 # 📑 Changelog
 
-
-## 🐛 Fixes
-- **[core]**
-  - Fixed an issue where scheduled jobs were not being re-scheduled after re-joining a `single-player world` on `the client side`. (This issue only occurred when the mod was installed and used on the `client side`. Since for `server-side`, the `server instance` will only be started exactly once.)
+## Added
+- [command_meta.run] feature: add `command suggestions` for `/run as {player|console|fake-op}` commands.

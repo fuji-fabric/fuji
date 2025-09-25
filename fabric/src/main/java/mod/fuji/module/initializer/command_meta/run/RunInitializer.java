@@ -1,12 +1,12 @@
 package mod.fuji.module.initializer.command_meta.run;
 
+import mod.fuji.core.command.argument.wrapper.impl.GreedyCommandString;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
-import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
 import mod.fuji.core.command.executor.CommandExecutor;
 import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
 import mod.fuji.module.initializer.ModuleInitializer;
@@ -101,20 +101,20 @@ public class RunInitializer extends ModuleInitializer {
 
     @Document(id = 1751823993461L, value = "Execute a command as console.")
     @CommandNode("as console")
-    private static int $runAsConsole(@CommandSource ServerCommandSource source, GreedyString rest) {
+    private static int $runAsConsole(@CommandSource ServerCommandSource source, GreedyCommandString rest) {
         CommandExecutor.executeSingle(ExtendedCommandSource.asConsole(source), rest.getValue());
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1751823999061L, value = "Execute a command as a player.")
     @CommandNode("as player")
-    private static int $runAsPlayer(@CommandSource ServerCommandSource source, ServerPlayerEntity player, GreedyString rest) {
+    private static int $runAsPlayer(@CommandSource ServerCommandSource source, ServerPlayerEntity player, GreedyCommandString rest) {
         return CommandExecutor.executeSingle(ExtendedCommandSource.asPlayer(source, player), rest.getValue());
     }
 
     @Document(id = 1751824003937L, value = "Execute a command as a player with fake-op.")
     @CommandNode("as fake-op")
-    private static int $runAsFakeOp(@CommandSource ServerCommandSource source, ServerPlayerEntity player, GreedyString rest) {
+    private static int $runAsFakeOp(@CommandSource ServerCommandSource source, ServerPlayerEntity player, GreedyCommandString rest) {
         return CommandExecutor.executeSingle(ExtendedCommandSource.asFakeOp(source, player), rest.getValue());
     }
 }
