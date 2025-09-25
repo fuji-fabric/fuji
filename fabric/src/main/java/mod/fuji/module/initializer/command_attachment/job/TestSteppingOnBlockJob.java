@@ -29,17 +29,13 @@ public class TestSteppingOnBlockJob extends FixedIntervalJob {
     private static final Map<String, String> player2lastSteppingBlockUUID = new HashMap<>();
 
     public TestSteppingOnBlockJob() {
-        super(null, null, null, intervalSupplier(), REPEAT_INDEFINITELY, true);
+        super(null, null, null, () -> CommandAttachmentInitializer.config.model().getTestSteppingOnBlockIntervalInMillSeconds(), REPEAT_INDEFINITELY, true);
     }
 
     @EventConsumer
     private static void scheduleJob(@Unused ServerStartedEvent event) {
         TestSteppingOnBlockJob job = new TestSteppingOnBlockJob();
         Managers.getScheduleManager().addJob(job);
-    }
-
-    private static int intervalSupplier() {
-        return CommandAttachmentInitializer.config.model().getTestSteppingOnBlockIntervalInMillSeconds();
     }
 
     private static void testSteppingBlockForPlayer(@NotNull ServerPlayerEntity player) {

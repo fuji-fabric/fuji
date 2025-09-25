@@ -1,5 +1,6 @@
 package mod.fuji.core.job.abst;
 
+import java.util.function.Supplier;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,17 +13,13 @@ import org.quartz.TriggerBuilder;
 public abstract class FixedIntervalJob extends BaseJob {
 
     public static final int REPEAT_INDEFINITELY = -1;
-    private int intervalInMillSeconds;
+    private Supplier<Integer> intervalInMillSecondsSupplier;
     private int repeatCount;
 
-    public FixedIntervalJob(@Nullable String jobGroup, @Nullable String jobName, @Nullable JobDataMap jobDataMap, int intervalInMillSeconds, int repeatCount, boolean rescheduleAble) {
+    public FixedIntervalJob(@Nullable String jobGroup, @Nullable String jobName, @Nullable JobDataMap jobDataMap, Supplier<Integer> intervalInMillSecondsSupplier, int repeatCount, boolean rescheduleAble) {
         super(jobGroup, jobName, jobDataMap, rescheduleAble);
-        this.intervalInMillSeconds = intervalInMillSeconds;
+        this.intervalInMillSecondsSupplier = intervalInMillSecondsSupplier;
         this.repeatCount = repeatCount;
-    }
-
-    public FixedIntervalJob(@Nullable String jobGroup, @Nullable String jobName, @Nullable JobDataMap jobDataMap, int intervalInMillSeconds, int repeatCount) {
-        this(jobGroup, jobName, jobDataMap, intervalInMillSeconds, repeatCount, false);
     }
 
     @Override
@@ -33,7 +30,7 @@ public abstract class FixedIntervalJob extends BaseJob {
 
         SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder
             .simpleSchedule()
-            .withIntervalInMilliseconds(this.intervalInMillSeconds);
+            .withIntervalInMilliseconds(this.intervalInMillSecondsSupplier.get());
 
         if (this.repeatCount == REPEAT_INDEFINITELY) {
             scheduleBuilder.repeatForever();

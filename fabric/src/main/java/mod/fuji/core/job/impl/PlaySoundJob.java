@@ -24,7 +24,7 @@ import java.util.List;
 public class PlaySoundJob extends FixedIntervalJob {
 
     public PlaySoundJob(JobDataMap jobDataMap, int intervalMs, int repeatCount) {
-        super(null, null, jobDataMap, intervalMs, repeatCount);
+        super(null, null, jobDataMap, () -> intervalMs, repeatCount, false);
     }
 
     public static void scheduleJob(PlaySoundJobSetup setup, List<ServerPlayerEntity> mentionedPlayers) {

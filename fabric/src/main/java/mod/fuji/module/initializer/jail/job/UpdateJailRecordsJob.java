@@ -16,7 +16,7 @@ import org.quartz.JobExecutionException;
 public class UpdateJailRecordsJob extends FixedIntervalJob {
 
     public UpdateJailRecordsJob() {
-        super(null, null, null, getUpdateJailRecordsJobIntervalMillSeconds() , REPEAT_INDEFINITELY);
+        super(null, null, null, UpdateJailRecordsJob::getUpdateJailRecordsJobIntervalMillSeconds, REPEAT_INDEFINITELY, true);
     }
 
     @EventConsumer
