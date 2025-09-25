@@ -127,6 +127,4 @@ public class BossBarManager extends BaseManager {
             .findFirst();
     }
 
-    @Override
-    public void onInitialize() {}
 }

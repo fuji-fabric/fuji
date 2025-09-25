@@ -93,6 +93,4 @@ public class CacheManager extends BaseManager {
         }
     }
 
-    @Override
-    public void onInitialize() {}
 }

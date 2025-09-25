@@ -21,9 +21,6 @@ public class GameTaskManager extends BaseManager {
         submitTask(gameTask);
     }
 
-    @Override
-    public void onInitialize() {}
-
     @EventConsumer
     private static void tickGameTasks(@Unused ServerTickStartEvent event) {
         /* Run tasks in server thread. */

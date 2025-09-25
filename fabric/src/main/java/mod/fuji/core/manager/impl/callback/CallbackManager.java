@@ -27,9 +27,6 @@ public class CallbackManager extends BaseManager {
 
     private static TTLMap<String, Consumer<ServerPlayerEntity>> uuid2consumer;
 
-    @Override
-    public void onInitialize() {}
-
     @EventConsumer
     private static void resetCallbackMap(@Unused ServerStartedEvent event) {
         uuid2consumer = new TTLMap<>();

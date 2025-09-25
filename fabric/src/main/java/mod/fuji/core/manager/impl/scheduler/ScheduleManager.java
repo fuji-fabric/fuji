@@ -162,6 +162,4 @@ public class ScheduleManager extends BaseManager {
             .forEach(this::updateJobTriggers);
     }
 
-    @Override
-    public void onInitialize() {}
 }

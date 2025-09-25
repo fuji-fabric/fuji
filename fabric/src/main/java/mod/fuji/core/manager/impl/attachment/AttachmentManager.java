@@ -19,11 +19,6 @@ public class AttachmentManager extends BaseManager {
 
     public static final Path ATTACHMENT_STORAGE_PATH = Fuji.MOD_CONFIG_PATH.resolve("attachment");
 
-    @Override
-    public void onInitialize() {
-        // no-op
-    }
-
     private File makeFile(String subject, String uuid) throws IOException {
         Path path = ATTACHMENT_STORAGE_PATH.resolve(subject).resolve(uuid);
         Files.createDirectories(path.getParent());
