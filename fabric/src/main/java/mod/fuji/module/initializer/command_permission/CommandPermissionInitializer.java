@@ -241,7 +241,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         });
 
         /* Describe the command path. */
-        String commandPath = CommandHelper.Path.toUniqueCommandPathString(context.getNodes().stream().map(ParsedCommandNode::getNode).toList());
+        String commandPath = CommandHelper.Path.toLinearCommandPathString(context.getNodes().stream().map(ParsedCommandNode::getNode).toList());
         TextHelper.sendTextByKey(source, "command_permission.describe.command_path", commandPath);
 
         /* Describe the command permissions. */

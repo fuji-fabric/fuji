@@ -57,13 +57,13 @@ public class CommandHelper {
 
     public static class Path {
 
-        public static boolean isUniqueCommandPathList(@NotNull CommandNode<ServerCommandSource> navigationNode) {
-            return toUniqueCommandPathList(navigationNode)
+        public static boolean isLinearCommandPath(@NotNull CommandNode<ServerCommandSource> navigationNode) {
+            return toLinearCommandPathList(navigationNode)
                 .isPresent();
         }
 
         @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
-        public static Optional<List<String>> toUniqueCommandPathList(@NotNull CommandNode<ServerCommandSource> navigationNode) {
+        public static Optional<List<String>> toLinearCommandPathList(@NotNull CommandNode<ServerCommandSource> navigationNode) {
             List<String> names = new ArrayList<>();
             CommandNode<ServerCommandSource> current = navigationNode;
 
@@ -86,9 +86,17 @@ public class CommandHelper {
             return Optional.of(names);
         }
 
-        public static Optional<String> toUniqueCommandPathString(@NotNull CommandNode<ServerCommandSource> navigationNode) {
-            return toUniqueCommandPathList(navigationNode)
+        public static Optional<String> toLinearCommandPathString(@NotNull CommandNode<ServerCommandSource> navigationNode) {
+            return toLinearCommandPathList(navigationNode)
                     .map(Path::joinCommandPath);
+        }
+
+        public static @NotNull String toLinearCommandPathString(@NotNull List<CommandNode<ServerCommandSource>> nodes) {
+            // Compute the `command node path` from the only one possible path.
+            return nodes
+                .stream()
+                .map(CommandNode::getName)
+                .collect(Collectors.joining("."));
         }
 
         public static @NotNull String toFlatCommandPathString(@NotNull CommandNode<ServerCommandSource> navigationNode) {
@@ -100,14 +108,6 @@ public class CommandHelper {
                 .getChildren()
                 .forEach(child -> flatCommandPath.append(".").append(toFlatCommandPathString(child)));
             return flatCommandPath.toString();
-        }
-
-        public static @NotNull String toUniqueCommandPathString(@NotNull List<CommandNode<ServerCommandSource>> nodes) {
-            // Compute the `command node path` from the only one possible path.
-            return nodes
-                .stream()
-                .map(CommandNode::getName)
-                .collect(Collectors.joining("."));
         }
 
         public static @NotNull String joinCommandPath(@NotNull List<String> nodes) {
@@ -332,8 +332,8 @@ public class CommandHelper {
             Check if the given navigation command will override an existing command path in the server command tree.
             """)
         public static boolean isCommandNodeRegistered(@NotNull CommandNode<ServerCommandSource> navigationNode) {
-            if (!Path.isUniqueCommandPathList(navigationNode)) {
-                LogUtil.warn("There are forks in the given command node: {}", Path.toUniqueCommandPathList(navigationNode));
+            if (!Path.isLinearCommandPath(navigationNode)) {
+                LogUtil.warn("There are forks in the given command node: {}", Path.toLinearCommandPathList(navigationNode));
                 return false;
             }
 
