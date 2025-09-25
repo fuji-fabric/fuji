@@ -1,5 +1,6 @@
 package mod.fuji.module.initializer.deathlog;
 
+import mod.fuji.core.annotation.Unused;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.auxiliary.ReflectionUtil;
@@ -9,6 +10,7 @@ import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.PlayerDeathEvent;
+import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.deathlog.gui.DeathDataListGui;
 import mod.fuji.module.initializer.deathlog.structure.DeathNode;
@@ -45,9 +47,9 @@ public class DeathLogInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @EventConsumer
     @SneakyThrows(IOException.class)
-    @Override
-    protected void onInitialize() {
+    private static void onServerStarted(@Unused ServerStartedEvent event) {
         Files.createDirectories(DEATH_DATA_DIR_PATH);
     }
 

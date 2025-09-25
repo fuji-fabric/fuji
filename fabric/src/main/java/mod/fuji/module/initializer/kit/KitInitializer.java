@@ -1,5 +1,6 @@
 package mod.fuji.module.initializer.kit;
 
+import mod.fuji.core.annotation.Unused;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -7,6 +8,8 @@ import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.document.annotation.TestCase;
+import mod.fuji.core.event.annotation.EventConsumer;
+import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.kit.command.argument.wrapper.KitName;
 import mod.fuji.module.initializer.kit.gui.KitEditorGui;
@@ -91,8 +94,8 @@ public class KitInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Override
-    protected void onInitialize() {
+    @EventConsumer
+    private static void onServerStarted(@Unused ServerStartedEvent event) {
         KitService.createKitDirectory();
     }
 

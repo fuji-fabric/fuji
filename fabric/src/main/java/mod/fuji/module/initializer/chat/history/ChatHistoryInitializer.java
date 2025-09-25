@@ -1,6 +1,7 @@
 package mod.fuji.module.initializer.chat.history;
 
 import com.google.common.collect.EvictingQueue;
+import mod.fuji.core.annotation.Unused;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
@@ -11,6 +12,7 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.PlayerChatMessageSentEvent;
 import mod.fuji.core.event.message.player.PlayerJoinedEvent;
+import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.chat.history.config.model.ChatHistoryConfigModel;
 import java.util.Queue;
@@ -105,8 +107,8 @@ public class ChatHistoryInitializer extends ModuleInitializer {
         storeChatHistory(decoratedTextAsTheClientSideDo);
     }
 
-    @Override
-    protected void onInitialize() {
+    @EventConsumer
+    private static void onServerStarted(@Unused ServerStartedEvent event) {
         chatHistory = EvictingQueue.create(config.model().getBufferSize());
     }
 

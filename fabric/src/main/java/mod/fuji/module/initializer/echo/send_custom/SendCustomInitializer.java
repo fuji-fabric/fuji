@@ -2,6 +2,7 @@ package mod.fuji.module.initializer.echo.send_custom;
 
 import eu.pb4.sgui.api.elements.BookElementBuilder;
 import eu.pb4.sgui.api.gui.BookGui;
+import mod.fuji.core.annotation.Unused;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.auxiliary.ReflectionUtil;
@@ -11,6 +12,8 @@ import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.command.exception.AbortCommandExecutionException;
+import mod.fuji.core.event.annotation.EventConsumer;
+import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.echo.send_custom.command.argument.wrapper.CustomTextName;
 import mod.fuji.core.service.paged_text.PagedBookText;
@@ -119,9 +122,9 @@ public class SendCustomInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
+    @EventConsumer
     @SneakyThrows(IOException.class)
-    @Override
-    protected void onInitialize() {
+    private static void onServerStarted(@Unused ServerStartedEvent event) {
         Files.createDirectories(CUSTOM_TEXT_DIR_PATH);
     }
 }

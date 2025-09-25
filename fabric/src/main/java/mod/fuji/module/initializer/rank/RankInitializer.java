@@ -1,5 +1,6 @@
 package mod.fuji.module.initializer.rank;
 
+import mod.fuji.core.annotation.Unused;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
@@ -10,6 +11,8 @@ import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
+import mod.fuji.core.event.annotation.EventConsumer;
+import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.rank.command.argument.wrapper.NextAvailableRankNode;
 import mod.fuji.module.initializer.rank.command.argument.wrapper.PreviousAvailableRankNode;
@@ -229,8 +232,8 @@ public class RankInitializer extends ModuleInitializer {
     }
 
 
-    @Override
-    protected void onInitialize() {
+    @EventConsumer
+    private static void onServerStarted(@Unused ServerStartedEvent event) {
         RankService.computeRankGraph();
     }
 

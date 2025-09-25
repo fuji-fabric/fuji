@@ -2,6 +2,7 @@ package mod.fuji.module.initializer.world_downloader;
 
 import com.google.common.collect.EvictingQueue;
 import com.sun.net.httpserver.HttpServer;
+import mod.fuji.core.annotation.Unused;
 import mod.fuji.core.auxiliary.ExceptionUtil;
 import mod.fuji.core.auxiliary.RandomUtil;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
@@ -15,6 +16,8 @@ import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import mod.fuji.core.event.annotation.EventConsumer;
+import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.world_downloader.config.model.WorldDownloaderConfigModel;
 import mod.fuji.module.initializer.world_downloader.structure.FileDownloadHandler;
@@ -137,8 +140,8 @@ public class WorldDownloaderInitializer extends ModuleInitializer {
         return output;
     }
 
-    @Override
-    protected void onInitialize() {
+    @EventConsumer
+    private static void onServerStarted(@Unused ServerStartedEvent event) {
         downloadContextQueue = EvictingQueue.create(config.model().max_simultaneous_download_count);
     }
 
