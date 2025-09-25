@@ -41,7 +41,7 @@ public class ScheduleManager extends BaseManager {
     public static final String CRON_EVERY_THREE_MINUTES = "0 */3 * ? * *";
     public static final String CRON_EVERY_FIVE_MINUTES = "0 */5 * ? * *";
 
-    private static final Set<BaseJob> RESCHEDULABLE_JOBS = new HashSet<>();
+    private static final Set<BaseJob> STATIC_JOBS = new HashSet<>();
 
     @Getter
     private static Scheduler scheduler;
@@ -98,9 +98,9 @@ public class ScheduleManager extends BaseManager {
         try {
             LogUtil.debug("Add job: jobDetail = {}, trigger = {}", jobDetail, trigger);
 
-            /* Track the reschedule-able job. */
-            if (baseJob.isRescheduleAble()) {
-                RESCHEDULABLE_JOBS.add(baseJob);
+            /* Remember static jobs. */
+            if (baseJob.isStaticJob()) {
+                STATIC_JOBS.add(baseJob);
             }
 
             /* Add this job. */
@@ -146,7 +146,7 @@ public class ScheduleManager extends BaseManager {
             });
     }
 
-    private void updateJobTriggers(@NotNull BaseJob baseJob) {
+    public void updateJobTriggers(@NotNull BaseJob baseJob) {
         TriggerKey triggerKey = baseJob.getTriggerKey();
         Trigger newTrigger = baseJob.makeTrigger();
         try {
@@ -157,8 +157,8 @@ public class ScheduleManager extends BaseManager {
         }
     }
 
-    public void updateJobTriggers() {
-        RESCHEDULABLE_JOBS
+    public void reloadStaticJobTriggers() {
+        STATIC_JOBS
             .forEach(this::updateJobTriggers);
     }
 

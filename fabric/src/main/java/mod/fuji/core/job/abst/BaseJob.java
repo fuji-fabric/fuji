@@ -18,8 +18,8 @@ import org.quartz.TriggerKey;
 @NoArgsConstructor
 public abstract class BaseJob implements Job {
 
-    protected String jobGroup;
-    protected String jobName;
+    String jobGroup;
+    String jobName;
 
     @ForDeveloper("Job Detail = Job Class + Job Key + Job Data")
     @Getter
@@ -29,9 +29,9 @@ public abstract class BaseJob implements Job {
     TriggerKey triggerKey;
 
     @Getter
-    boolean rescheduleAble;
+    boolean staticJob;
 
-    public BaseJob(@Nullable String jobGroup, @Nullable String jobName, @Nullable JobDataMap jobDataMap, boolean rescheduleAble) {
+    public BaseJob(@Nullable String jobGroup, @Nullable String jobName, @Nullable JobDataMap jobDataMap, boolean staticJob) {
         /* Initialize with sensible default values. */
         if (jobGroup == null) {
             jobGroup = this.getClass().getName();
@@ -53,7 +53,7 @@ public abstract class BaseJob implements Job {
             .build();
         // NOTE: For simplicity, use identity mapping from TriggerKey to JobKey.
         this.triggerKey = new TriggerKey(jobName, jobGroup);
-        this.rescheduleAble = rescheduleAble;
+        this.staticJob = staticJob;
     }
 
     public abstract @NotNull Trigger makeTrigger();

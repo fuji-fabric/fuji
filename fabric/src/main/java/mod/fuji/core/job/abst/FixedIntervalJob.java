@@ -16,8 +16,8 @@ public abstract class FixedIntervalJob extends BaseJob {
     private Supplier<Integer> intervalInMillSecondsSupplier;
     private int repeatCount;
 
-    public FixedIntervalJob(@Nullable String jobGroup, @Nullable String jobName, @Nullable JobDataMap jobDataMap, Supplier<Integer> intervalInMillSecondsSupplier, int repeatCount, boolean rescheduleAble) {
-        super(jobGroup, jobName, jobDataMap, rescheduleAble);
+    public FixedIntervalJob(@Nullable String jobGroup, @Nullable String jobName, @Nullable JobDataMap jobDataMap, Supplier<Integer> intervalInMillSecondsSupplier, int repeatCount, boolean staticJob) {
+        super(jobGroup, jobName, jobDataMap, staticJob);
         this.intervalInMillSecondsSupplier = intervalInMillSecondsSupplier;
         this.repeatCount = repeatCount;
     }
