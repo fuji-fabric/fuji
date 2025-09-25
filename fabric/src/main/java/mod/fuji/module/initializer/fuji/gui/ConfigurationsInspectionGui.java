@@ -28,7 +28,7 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
     }
 
     public static ConfigurationsInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
-        List<BaseConfigurationHandler<?>> entities = DocumentUtil.getObjectConfigurationHandlers();
+        List<BaseConfigurationHandler<?>> entities = BaseConfigurationHandler.getObjectConfigurationHandlers();
         return new ConfigurationsInspectionGui(parent, player, entities, 0);
     }
 

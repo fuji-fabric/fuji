@@ -8,7 +8,6 @@ import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.descriptor.CommandDescriptor;
 import mod.fuji.core.command.structure.CommandRequirementDescriptor;
-import mod.fuji.core.document.auxiliary.DocumentUtil;
 import mod.fuji.core.gui.component.gui.PagedGui;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -30,7 +29,7 @@ public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
     }
 
     public static CommandsInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
-        List<CommandDescriptor> entities = DocumentUtil.getCommandDescriptors();
+        List<CommandDescriptor> entities = CommandDescriptor.getCommandDescriptors();
 
         return new CommandsInspectionGui(parent, player, entities, 0);
     }

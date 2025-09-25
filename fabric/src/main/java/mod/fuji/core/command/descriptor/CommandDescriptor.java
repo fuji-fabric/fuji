@@ -13,6 +13,7 @@ import com.mojang.brigadier.tree.RootCommandNode;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -80,6 +81,13 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
     protected CommandDescriptor(@NotNull Method method, @NotNull List<CommandArgument> commandArguments) {
         this.method = method;
         this.commandArguments = commandArguments;
+    }
+
+    public static @NotNull List<CommandDescriptor> getCommandDescriptors() {
+        return REGISTERED_COMMAND_DESCRIPTORS
+            .stream()
+            .sorted(Comparator.comparing(it -> it.getFlatCommandPath().toString()))
+            .toList();
     }
 
     @CanIgnoreReturnValue

@@ -1,36 +1,23 @@
 package mod.fuji.core.document.auxiliary;
 
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
-import mod.fuji.core.command.descriptor.CommandDescriptor;
-import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
-import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.core.config.mapper.GsonMapper;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.document.structure.DocString;
 import mod.fuji.core.manager.impl.module.ModuleManager;
-import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
 import mod.fuji.core.service.url_highlighter.UrlHighlighter;
 import mod.fuji.module.initializer.ModuleInitializer;
-import mod.fuji.core.document.structure.JobDescriptor;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.quartz.JobDetail;
-import org.quartz.JobKey;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
-import org.quartz.impl.matchers.GroupMatcher;
 
 public class DocumentUtil {
 
@@ -159,41 +146,6 @@ public class DocumentUtil {
             .toList();
 
         return colorBoxes;
-    }
-
-    public static @NotNull List<BaseConfigurationHandler<?>> getObjectConfigurationHandlers() {
-        return BaseConfigurationHandler.REGISTERED_CONFIGURATION_HANDLERS
-            .stream()
-            .filter(it -> it instanceof ObjectConfigurationHandler<?>)
-            .sorted(Comparator.comparing(BaseConfigurationHandler::getFilePath))
-            .toList();
-    }
-
-    public static @NotNull List<JobDescriptor> getJobDescriptors() throws SchedulerException {
-        List<JobDescriptor> entities = new ArrayList<>();
-
-        /* Get all jobs. */
-        Scheduler scheduler = ScheduleManager.getScheduler();
-
-        // NOTE: Match all jobs, including `CronJob` and `FixedIntervalJob`.
-        GroupMatcher<JobKey> jobKeyGroupMatcher = GroupMatcher.anyJobGroup();
-        Set<JobKey> jobKeys = scheduler.getJobKeys(jobKeyGroupMatcher);
-        for (JobKey jobKey : jobKeys) {
-            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-            List<? extends Trigger> triggersOfJob = scheduler.getTriggersOfJob(jobKey);
-            entities.add(new JobDescriptor(jobDetail, triggersOfJob));
-        }
-
-        entities.sort(Comparator.comparing(it -> it.getJobDetail().getKey().getGroup()));
-        return entities;
-    }
-
-    public static @NotNull List<CommandDescriptor> getCommandDescriptors() {
-        return CommandDescriptor
-            .REGISTERED_COMMAND_DESCRIPTORS
-            .stream()
-            .sorted(Comparator.comparing(it -> it.getFlatCommandPath().toString()))
-            .toList();
     }
 
     public static @NotNull Map<String, String> getDeclaredDocumentStringMap(@NotNull Class<?> rawTypeClass) {

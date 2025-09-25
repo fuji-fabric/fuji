@@ -19,7 +19,7 @@ public class ModuleConfigurationsDocumentBuilder extends DocumentBuilder {
 
     @Override
     public void build(@NotNull DocumentBuilderContext documentBuilderContext) {
-        List<BaseConfigurationHandler<?>> moduleConfigurationHandlers = DocumentUtil
+        List<BaseConfigurationHandler<?>> moduleConfigurationHandlers = BaseConfigurationHandler
             .getObjectConfigurationHandlers()
             .stream()
             .filter(it -> it.getSourceModule().equals(documentBuilderContext.getModulePathString()))

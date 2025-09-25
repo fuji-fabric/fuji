@@ -2,11 +2,9 @@ package mod.fuji.module.initializer.document.builder.component;
 
 import mod.fuji.core.command.descriptor.CommandDescriptor;
 import mod.fuji.core.command.structure.CommandRequirementDescriptor;
-import mod.fuji.core.document.auxiliary.DocumentUtil;
 import mod.fuji.module.initializer.document.builder.context.DocumentBuilderContext;
 import mod.fuji.module.initializer.document.formatter.MarkdownDocumentFormatter;
 import java.util.List;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,7 +12,7 @@ public class ModuleCommandsDocumentBuilder extends DocumentBuilder {
 
     @Override
     public void build(@NotNull DocumentBuilderContext documentBuilderContext) {
-        List<CommandDescriptor> commands = DocumentUtil
+        List<CommandDescriptor> commands = CommandDescriptor
             .getCommandDescriptors()
             .stream()
             .filter(it -> it.getSourceModule().equals(documentBuilderContext.getModulePathString()))

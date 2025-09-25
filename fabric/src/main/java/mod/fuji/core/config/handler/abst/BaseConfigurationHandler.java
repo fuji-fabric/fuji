@@ -1,10 +1,12 @@
 package mod.fuji.core.config.handler.abst;
 
 import com.google.gson.JsonObject;
+import java.util.Comparator;
 import mod.fuji.core.auxiliary.ExceptionUtil;
 import mod.fuji.core.auxiliary.IOUtil;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.ReflectionUtil;
+import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.core.config.job.ConfigurationHandlerWriteStorageJob;
 import mod.fuji.core.config.mapper.GsonMapper;
 import mod.fuji.core.config.migrator.transformer.abst.ConfigurationTransformer;
@@ -72,6 +74,14 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     public BaseConfigurationHandler(@NotNull Path filePath) {
         this.filePath = filePath;
         this.addPostMappingModelIntoJsonObjectHook(VersionPropertyInjector::injectVersionProperty);
+    }
+
+    public static @NotNull List<BaseConfigurationHandler<?>> getObjectConfigurationHandlers() {
+        return REGISTERED_CONFIGURATION_HANDLERS
+            .stream()
+            .filter(it -> it instanceof ObjectConfigurationHandler<?>)
+            .sorted(Comparator.comparing(BaseConfigurationHandler::getFilePath))
+            .toList();
     }
 
     public BaseConfigurationHandler<T> addPreMappingModelIntoJsonObjectHook(@NotNull Consumer<T> hook) {

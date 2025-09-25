@@ -16,7 +16,7 @@ public class ModuleJobsDocumentBuilder extends DocumentBuilder {
     @SneakyThrows(SchedulerException.class)
     @Override
     public void build(@NotNull DocumentBuilderContext documentBuilderContext) {
-        List<JobDescriptor> jobs = DocumentUtil
+        List<JobDescriptor> jobs = JobDescriptor
             .getJobDescriptors()
             .stream()
             .filter(it -> it.getSourceModule().equals(documentBuilderContext.getModulePathString()))

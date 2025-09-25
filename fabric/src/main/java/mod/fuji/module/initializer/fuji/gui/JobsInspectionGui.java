@@ -37,7 +37,8 @@ public class JobsInspectionGui extends PagedGui<JobDescriptor> {
 
     @SneakyThrows(SchedulerException.class)
     public static JobsInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
-        List<JobDescriptor> entities = DocumentUtil.getJobDescriptors();
+        List<JobDescriptor> entities = JobDescriptor
+            .getJobDescriptors();
 
         /* Make the GUI. */
         return new JobsInspectionGui(parent, player, entities, 0);
