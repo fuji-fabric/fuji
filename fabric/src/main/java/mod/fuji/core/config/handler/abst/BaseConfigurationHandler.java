@@ -17,6 +17,7 @@ import mod.fuji.core.event.EventManager;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.consumer.BaseEventConsumer;
 import mod.fuji.core.event.consumer.DynamicEventConsumer;
+import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.event.message.server.lifecycle.ServerStoppingEvent;
 import mod.fuji.core.manager.Managers;
 import mod.fuji.core.manager.impl.module.ModulePathResolver;
@@ -40,6 +41,7 @@ import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import org.graalvm.nativeimage.c.function.CEntryPoint;
 import org.jetbrains.annotations.NotNull;
 import org.quartz.JobDataMap;
 
@@ -227,25 +229,34 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     @SneakyThrows(IOException.class)
     public BaseConfigurationHandler<T> enableAutoSaveFeature(@NotNull String cron) {
         /* Make and schedule the job. */
-        String jobName = this.filePath.toFile().getCanonicalPath();
-        ConfigurationHandlerWriteStorageJob writeStorageJob = new ConfigurationHandlerWriteStorageJob(jobName, new JobDataMap() {
-            {
-                // Specify the configuration handler instance.
-                this.put(BaseConfigurationHandler.class.getName(), BaseConfigurationHandler.this);
+        BaseEventConsumer<ServerStartedEvent> serverStartedEventConsumer = DynamicEventConsumer.makeDynamic(ServerStartedEvent.class, EventConsumer.DEFAULT, EventConsumer.DEFAULT, (server) -> {
+            String jobName;
+            try {
+                jobName = this.filePath.toFile().getCanonicalPath();
+                ConfigurationHandlerWriteStorageJob writeStorageJob = new ConfigurationHandlerWriteStorageJob(jobName, new JobDataMap() {
+                    {
+                        // Specify the configuration handler instance.
+                        this.put(BaseConfigurationHandler.class.getName(), BaseConfigurationHandler.this);
 
-                // Specify the source module.
-                String sourceModuleInCurrentStackTrace = ReflectionUtil.Stacktrace.findSourceModuleInCurrentStackTrace();
-                this.put(SourceModuleGetter.SPECIFIED_SOURCE_MODULE_KEY, sourceModuleInCurrentStackTrace);
+                        // Specify the source module.
+                        String sourceModuleInCurrentStackTrace = ReflectionUtil.Stacktrace.findSourceModuleInCurrentStackTrace();
+                        this.put(SourceModuleGetter.SPECIFIED_SOURCE_MODULE_KEY, sourceModuleInCurrentStackTrace);
+                    }
+                }, () -> cron);
+                Managers.getScheduleManager().addJob(writeStorageJob);
+            } catch (IOException e) {
+                throw ExceptionUtil.makeReThrownException(e);
             }
-        }, () -> cron);
-        Managers.getScheduleManager().addJob(writeStorageJob);
+        });
+        EventManager.registerEventConsumer(ServerStartedEvent.class, serverStartedEventConsumer);
+
 
         /* Write storage on server stopping. */
-        BaseEventConsumer<ServerStoppingEvent> dynamicEventConsumer = DynamicEventConsumer.makeDynamic(ServerStoppingEvent.class, EventConsumer.DEFAULT, EventConsumer.DEFAULT, (server) -> {
+        BaseEventConsumer<ServerStoppingEvent> serverStoppingEventConsumer = DynamicEventConsumer.makeDynamic(ServerStoppingEvent.class, EventConsumer.DEFAULT, EventConsumer.DEFAULT, (server) -> {
             LogUtil.debug("Write storage on server stopping: {}", this.filePath);
             this.writeStorage();
         });
-        EventManager.registerEventConsumer(ServerStoppingEvent.class, dynamicEventConsumer);
+        EventManager.registerEventConsumer(ServerStoppingEvent.class, serverStoppingEventConsumer);
 
         return this;
     }
