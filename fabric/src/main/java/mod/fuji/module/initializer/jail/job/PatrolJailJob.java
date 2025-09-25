@@ -36,7 +36,7 @@ public class PatrolJailJob extends FixedIntervalJob {
         }, jailDescriptor);
 
         /* Schedule the job. */
-        Managers.getScheduleManager().scheduleJob(job);
+        Managers.getScheduleManager().addJob(job);
     }
 
     public static void reloadPatrolJobs() {

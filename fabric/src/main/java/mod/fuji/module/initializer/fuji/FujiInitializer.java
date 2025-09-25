@@ -55,7 +55,7 @@ public class FujiInitializer extends ModuleInitializer {
         Managers.getModuleManager().reloadModuleInitializers();
 
         // Reload jobs.
-        Managers.getScheduleManager().rescheduleJobs();
+        Managers.getScheduleManager().updateJobTriggers();
 
         TextHelper.sendTextByKey(source, "reload");
         return CommandHelper.Return.SUCCESS;

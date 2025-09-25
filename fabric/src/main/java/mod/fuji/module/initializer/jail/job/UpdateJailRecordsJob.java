@@ -22,7 +22,7 @@ public class UpdateJailRecordsJob extends FixedIntervalJob {
     @EventConsumer
     private static void scheduleUpdateJailRecordsJob(@Unused ServerStartedEvent event) {
         UpdateJailRecordsJob updateJailRecordsJob = new UpdateJailRecordsJob();
-        Managers.getScheduleManager().scheduleJob(updateJailRecordsJob);
+        Managers.getScheduleManager().addJob(updateJailRecordsJob);
     }
 
     @Override

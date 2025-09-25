@@ -24,7 +24,7 @@ public class AfkMarkerJob extends CronJob {
     @EventConsumer
     private static void scheduleAfkMarkerJob(@Unused ServerStartedEvent event) {
         AfkMarkerJob afkMarkerJob = new AfkMarkerJob();
-        Managers.getScheduleManager().scheduleJob(afkMarkerJob);
+        Managers.getScheduleManager().addJob(afkMarkerJob);
     }
 
     @Override

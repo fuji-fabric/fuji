@@ -39,7 +39,7 @@ public class WorksOnScheduleDispatcherJob extends CronJob {
     @EventConsumer
     private static void scheduleWorksOnScheduleDispatcherJob(@Unused ServerStartedEvent event) {
         WorksOnScheduleDispatcherJob job = makeInstance();
-        Managers.getScheduleManager().scheduleJob(job);
+        Managers.getScheduleManager().addJob(job);
     }
 
     @Override

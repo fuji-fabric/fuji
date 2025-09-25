@@ -27,7 +27,7 @@ public class UpdateNametagJob extends CronJob {
     @EventConsumer
     private static void scheduleUpdateNametagJob(@Unused ServerStartedEvent event) {
         UpdateNametagJob updateNametagJob = new UpdateNametagJob();
-        Managers.getScheduleManager().scheduleJob(updateNametagJob);
+        Managers.getScheduleManager().addJob(updateNametagJob);
     }
 
 }

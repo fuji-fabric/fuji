@@ -32,7 +32,7 @@ public class TestSteppingOnBlockJob extends FixedIntervalJob {
 
     private static void scheduleJob() {
         TestSteppingOnBlockJob job = new TestSteppingOnBlockJob();
-        Managers.getScheduleManager().scheduleJob(job);
+        Managers.getScheduleManager().addJob(job);
     }
 
     public static void reloadJob() {

@@ -25,7 +25,7 @@ public class UpdateSumUpPlaceholderJob extends CronJob {
     private static void scheduleSumUpPlaceholderUpdaterJob(@Unused ServerStartedEvent event) {
         SumUpPlaceholder.ofServer();
         UpdateSumUpPlaceholderJob updateSumUpPlaceholderJob = new UpdateSumUpPlaceholderJob();
-        Managers.getScheduleManager().scheduleJob(updateSumUpPlaceholderJob);
+        Managers.getScheduleManager().addJob(updateSumUpPlaceholderJob);
     }
 
     @Override

@@ -51,7 +51,7 @@ public class RenderHeaderAndFooterJob extends CronJob {
     @EventConsumer
     private static void scheduleTabListRenderJob(@Unused ServerStartedEvent event) {
         RenderHeaderAndFooterJob renderHeaderAndFooterJob = new RenderHeaderAndFooterJob();
-        Managers.getScheduleManager().scheduleJob(renderHeaderAndFooterJob);
+        Managers.getScheduleManager().addJob(renderHeaderAndFooterJob);
     }
 
     @Override

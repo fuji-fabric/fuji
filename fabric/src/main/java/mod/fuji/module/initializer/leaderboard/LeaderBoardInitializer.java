@@ -155,7 +155,7 @@ public class LeaderBoardInitializer extends ModuleInitializer {
 
     @Override
     protected void onInitialize() {
-        Managers.getScheduleManager().scheduleJob(new UpdateLeaderboardsJob());
+        Managers.getScheduleManager().addJob(new UpdateLeaderboardsJob());
     }
 
     @EventConsumer

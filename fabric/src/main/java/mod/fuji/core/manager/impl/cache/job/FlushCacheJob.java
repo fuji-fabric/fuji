@@ -23,7 +23,7 @@ public class FlushCacheJob extends CronJob {
 
     @EventConsumer
     private static void scheduleFlushCacheJob(@Unused ServerStartedEvent event) {
-        Managers.getScheduleManager().scheduleJob(new FlushCacheJob());
+        Managers.getScheduleManager().addJob(new FlushCacheJob());
     }
 
     @Override

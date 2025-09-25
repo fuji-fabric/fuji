@@ -23,7 +23,7 @@ public class CleanerJob extends CronJob {
     @EventConsumer
     private static void scheduleCleanerJob(@Unused ServerStartedEvent event) {
         CleanerJob cleanerJob = new CleanerJob();
-        Managers.getScheduleManager().scheduleJob(cleanerJob);
+        Managers.getScheduleManager().addJob(cleanerJob);
     }
 
     @Override

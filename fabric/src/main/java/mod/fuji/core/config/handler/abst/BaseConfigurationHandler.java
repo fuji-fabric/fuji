@@ -228,7 +228,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
                 this.put(SourceModuleGetter.SPECIFIED_SOURCE_MODULE_KEY, sourceModuleInCurrentStackTrace);
             }
         }, () -> cron);
-        Managers.getScheduleManager().scheduleJob(writeStorageJob);
+        Managers.getScheduleManager().addJob(writeStorageJob);
 
         /* Write storage on server stopping. */
         BaseEventConsumer<ServerStoppingEvent> dynamicEventConsumer = DynamicEventConsumer.makeDynamic(ServerStoppingEvent.class, EventConsumer.DEFAULT, EventConsumer.DEFAULT, (server) -> {

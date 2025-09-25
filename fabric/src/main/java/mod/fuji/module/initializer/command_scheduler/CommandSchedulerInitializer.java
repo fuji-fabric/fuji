@@ -107,7 +107,7 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
                             this.put("job", definedJob);
                         }
                     }, () -> cron);
-                    Managers.getScheduleManager().scheduleJob(job);
+                    Managers.getScheduleManager().addJob(job);
                 });
 
             LogUtil.info("Schedule job -> {}", definedJob.getName());

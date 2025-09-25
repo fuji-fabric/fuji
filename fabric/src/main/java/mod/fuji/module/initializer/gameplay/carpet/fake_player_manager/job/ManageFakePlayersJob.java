@@ -30,7 +30,7 @@ public class ManageFakePlayersJob extends CronJob {
     @EventConsumer
     private static void scheduleFakePlayerJob(@Unused ServerStartedEvent event) {
         ManageFakePlayersJob manageFakePlayersJob = new ManageFakePlayersJob();
-        Managers.getScheduleManager().scheduleJob(manageFakePlayersJob);
+        Managers.getScheduleManager().addJob(manageFakePlayersJob);
     }
 
     @Override

@@ -39,7 +39,7 @@ public class PlaySoundJob extends FixedIntervalJob {
         }, intervalMs, repeatCount);
 
         /* Schedule the job. */
-        Managers.getScheduleManager().scheduleJob(mentionPlayersJob);
+        Managers.getScheduleManager().addJob(mentionPlayersJob);
     }
 
     public static void scheduleJob(PlaySoundJobSetup setup, ServerPlayerEntity serverPlayer) {

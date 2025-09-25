@@ -27,7 +27,7 @@ public class TTLMap<K, V> {
                 this.put(TTLMap.class.getName(), TTLMap.this);
             }
         }, () -> ScheduleManager.CRON_EVERY_MINUTE);
-        Managers.getScheduleManager().scheduleJob(cleanTTLMapJob);
+        Managers.getScheduleManager().addJob(cleanTTLMapJob);
     }
 
     public void put(K key, V value, long ttl, TimeUnit unit) {
