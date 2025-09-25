@@ -71,7 +71,7 @@ public class TTLMap<K, V> {
     public static class CleanTTLMapJob extends CronJob {
 
         public CleanTTLMapJob(JobDataMap jobDataMap, Supplier<String> cronSupplier) {
-            super(jobDataMap, cronSupplier);
+            super(null, null, jobDataMap, cronSupplier, true);
         }
 
         @SuppressWarnings("rawtypes")

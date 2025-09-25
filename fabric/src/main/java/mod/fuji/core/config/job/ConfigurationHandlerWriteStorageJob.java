@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 public class ConfigurationHandlerWriteStorageJob extends CronJob {
 
     public ConfigurationHandlerWriteStorageJob(String jobName, JobDataMap jobDataMap, Supplier<String> cronSupplier) {
-        super(null, jobName, jobDataMap, cronSupplier);
+        super(null, jobName, jobDataMap, cronSupplier, false);
     }
 
     @Override

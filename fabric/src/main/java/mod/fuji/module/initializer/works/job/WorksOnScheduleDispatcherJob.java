@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 public class WorksOnScheduleDispatcherJob extends CronJob {
 
     private WorksOnScheduleDispatcherJob(Supplier<String> cronSupplier) {
-        super(null, cronSupplier);
+        super(cronSupplier);
     }
 
     public static WorksOnScheduleDispatcherJob makeInstance() {

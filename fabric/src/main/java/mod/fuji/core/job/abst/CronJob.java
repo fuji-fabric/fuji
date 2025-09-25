@@ -20,16 +20,8 @@ public abstract class CronJob extends BaseJob {
         this.cronSupplier = cronSupplier;
     }
 
-    public CronJob(@Nullable String jobGroup, @Nullable String jobName, @Nullable JobDataMap jobDataMap, @NotNull Supplier<String> cronSupplier) {
-        this(jobGroup, jobName, jobDataMap, cronSupplier, true);
-    }
-
-    public CronJob(@Nullable JobDataMap jobDataMap, @NotNull Supplier<String> cronSupplier) {
-        this(null, null, jobDataMap, cronSupplier);
-    }
-
     public CronJob(@NotNull Supplier<String> cronSupplier) {
-        this(null, cronSupplier);
+        this(null, null, null, cronSupplier, true);
     }
 
     @Override
