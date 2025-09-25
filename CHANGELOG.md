@@ -7,14 +7,6 @@
 
 # 📑 Changelog
 
-## ✨ Added
-- **[command_permission]**
-  - Now automatically detects when the `requirement` of a command is changed at runtime by other mods.
-    - **Before:** If another mod modified the requirement, you had to run `/reload` to re-wrap the command.
-    - **Now:** Changes are detected instantly, and the command is re-wrapped automatically (no waiting until first use).
-
-## 🐛 Fixed
-- **[command_bundle] & [command_alias]**
-  - Fixed an issue where hot-reloading would forget previously defined public commands when re-defining them.
-    - **Before:** Re-defining a public command required running `/reload` to load the new requirement.
-    - **Now:** Just run `/fuji reload` to refine the command immediately.  
+## 🐛 Fixes
+- **[core]**
+  - Fixed an issue where scheduled jobs were not being re-scheduled after re-joining a `single-player world` on `the client side`. (This issue only occurred when the mod was installed and used on the `client side`. Since for `server-side`, the `server instance` will only be started exactly once.)
