@@ -14,7 +14,8 @@ import mod.fuji.core.config.migrator.version.VersionPropertyInjector;
 import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.core.document.interfaces.SourceModuleGetter;
 import mod.fuji.core.event.EventManager;
-import mod.fuji.core.event.consumer.EventConsumer;
+import mod.fuji.core.event.annotation.EventConsumer;
+import mod.fuji.core.event.consumer.BaseEventConsumer;
 import mod.fuji.core.event.consumer.DynamicEventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.event.message.server.lifecycle.ServerStoppingEvent;
@@ -222,13 +223,13 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         return enableAutoSaveFeature(ScheduleManager.CRON_EVERY_TEN_SECONDS);
     }
 
-    @mod.fuji.core.event.annotation.EventConsumer(eventType = ServerStoppingEvent.class, isDynamic = true)
+    @EventConsumer(eventType = ServerStoppingEvent.class, isDynamic = true)
     public BaseConfigurationHandler<T> enableAutoSaveFeature(@NotNull String cron) {
         /* Make and schedule the job. */
         // NOTE: Capture the source module in stack trace.
         String sourceModuleInCurrentStackTrace = ReflectionUtil.Stacktrace.findSourceModuleInCurrentStackTrace();
 
-        EventConsumer<ServerStartedEvent> serverStartedEventConsumer = DynamicEventConsumer.makeDynamic(ServerStartedEvent.class, mod.fuji.core.event.annotation.EventConsumer.DEFAULT, mod.fuji.core.event.annotation.EventConsumer.DEFAULT, (server) -> {
+        BaseEventConsumer<ServerStartedEvent> serverStartedEventConsumer = DynamicEventConsumer.makeDynamic(ServerStartedEvent.class, EventConsumer.DEFAULT, EventConsumer.DEFAULT, (server) -> {
             try {
                 String jobName = this.filePath.toFile().getCanonicalPath();
                 ConfigurationHandlerWriteStorageJob writeStorageJob = new ConfigurationHandlerWriteStorageJob(jobName, new JobDataMap() {
@@ -249,7 +250,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
 
 
         /* Write storage on server stopping. */
-        EventConsumer<ServerStoppingEvent> serverStoppingEventConsumer = DynamicEventConsumer.makeDynamic(ServerStoppingEvent.class, mod.fuji.core.event.annotation.EventConsumer.DEFAULT, mod.fuji.core.event.annotation.EventConsumer.DEFAULT, (server) -> {
+        BaseEventConsumer<ServerStoppingEvent> serverStoppingEventConsumer = DynamicEventConsumer.makeDynamic(ServerStoppingEvent.class, EventConsumer.DEFAULT, EventConsumer.DEFAULT, (server) -> {
             LogUtil.debug("Write storage on server stopping: {}", this.filePath);
             this.writeStorage();
         });

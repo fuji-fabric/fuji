@@ -6,7 +6,7 @@ import mod.fuji.core.event.injector.structure.EventConsumerInfo;
 import mod.fuji.core.event.injector.structure.EventGraph;
 import mod.fuji.core.event.injector.structure.EventProducerInfo;
 import mod.fuji.core.event.message.BaseEvent;
-import mod.fuji.core.event.consumer.EventConsumer;
+import mod.fuji.core.event.consumer.BaseEventConsumer;
 import mod.fuji.core.event.consumer.StaticEventConsumer;
 import mod.fuji.core.manager.impl.module.ModuleLoadDeterminer;
 import java.lang.reflect.Method;
@@ -58,7 +58,7 @@ public class StaticEventConsumerInjector {
         Class<?> eventConsumerDeclaringClass = Class.forName(eventConsumerInfo.getDeclaringClassName());
         Method eventConsumerDeclaringMethod = eventConsumerDeclaringClass.getDeclaredMethod(eventConsumerInfo.getDeclaringMethodName(), eventTypeClass);
 
-        EventConsumer<T> eventConsumer = StaticEventConsumer.makeStatic(eventConsumerInfo, eventTypeClass, eventConsumerDeclaringMethod);
+        BaseEventConsumer<T> eventConsumer = StaticEventConsumer.makeStatic(eventConsumerInfo, eventTypeClass, eventConsumerDeclaringMethod);
         EventManager.registerEventConsumer(eventTypeClass, eventConsumer);
     }
 

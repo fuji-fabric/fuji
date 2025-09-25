@@ -6,7 +6,7 @@ import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
 @Data
-public class EventConsumer<T> {
+public class BaseEventConsumer<T> {
 
     @NotNull EventConsumerInfo eventConsumerInfo;
 
@@ -14,7 +14,7 @@ public class EventConsumer<T> {
 
     @NotNull Consumer<T> eventConsumerMethod;
 
-    protected EventConsumer(@NotNull EventConsumerInfo eventConsumerInfo, @NotNull Class<T> eventType, @NotNull Consumer<T> eventConsumerMethod) {
+    protected BaseEventConsumer(@NotNull EventConsumerInfo eventConsumerInfo, @NotNull Class<T> eventType, @NotNull Consumer<T> eventConsumerMethod) {
         this.eventConsumerInfo = eventConsumerInfo;
         this.eventType = eventType;
         this.eventConsumerMethod = eventConsumerMethod;

@@ -5,7 +5,7 @@ import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.event.EventManager;
-import mod.fuji.core.event.consumer.EventConsumer;
+import mod.fuji.core.event.consumer.BaseEventConsumer;
 import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.core.manager.impl.module.ModulePathResolver;
 import java.util.Collection;
@@ -16,19 +16,19 @@ import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class EventsInspectionGui extends PagedGui<EventConsumer<?>> {
+public class EventsInspectionGui extends PagedGui<BaseEventConsumer<?>> {
 
-    public EventsInspectionGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull List<EventConsumer<?>> entities, int pageIndex) {
+    public EventsInspectionGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull List<BaseEventConsumer<?>> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "event.inspection.gui.title"), entities, pageIndex);
     }
 
     @Override
-    protected PagedGui<EventConsumer<?>> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<EventConsumer<?>> entities, int pageIndex) {
+    protected PagedGui<BaseEventConsumer<?>> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<BaseEventConsumer<?>> entities, int pageIndex) {
         return new EventsInspectionGui(parent, player, entities, pageIndex);
     }
 
     public static EventsInspectionGui inspectAll(@NotNull ServerPlayerEntity player) {
-        List<EventConsumer<?>> entities = EventManager.getEvents().values()
+        List<BaseEventConsumer<?>> entities = EventManager.getEvents().values()
             .stream()
             .flatMap(Collection::stream)
             .toList();
@@ -36,7 +36,7 @@ public class EventsInspectionGui extends PagedGui<EventConsumer<?>> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull EventConsumer<?> entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull BaseEventConsumer<?> entity) {
         GuiElementBuilder builder = new GuiElementBuilder();
         String eventConsumerDeclaringClassName = entity.getEventConsumerMethod().getClass().getName();
 
