@@ -1,6 +1,8 @@
 package mod.fuji.core.job.abst;
 
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.JobDataMap;
@@ -13,24 +15,24 @@ public abstract class CronJob extends BaseJob {
 
     Supplier<String> cronSupplier;
 
-    public CronJob(String jobGroup, String jobName, JobDataMap jobDataMap, Supplier<String> cronSupplier) {
+    public CronJob(@Nullable String jobGroup, @Nullable String jobName, @Nullable JobDataMap jobDataMap, @NotNull Supplier<String> cronSupplier) {
         super(jobGroup, jobName, jobDataMap, true);
         this.cronSupplier = cronSupplier;
     }
 
-    public CronJob(JobDataMap jobDataMap, Supplier<String> cronSupplier) {
+    public CronJob(@Nullable JobDataMap jobDataMap, @NotNull Supplier<String> cronSupplier) {
         this(null, null, jobDataMap, cronSupplier);
     }
 
-    public CronJob(Supplier<String> cronSupplier) {
+    public CronJob(@NotNull Supplier<String> cronSupplier) {
         this(null, cronSupplier);
     }
 
     @Override
-    public CronTrigger makeTrigger() {
+    public @NotNull CronTrigger makeTrigger() {
         return TriggerBuilder
             .newTrigger()
-            .withIdentity(jobName, jobGroup)
+            .withIdentity(this.getTriggerKey())
             .withSchedule(CronScheduleBuilder.cronSchedule(this.cronSupplier.get()))
             .build();
     }

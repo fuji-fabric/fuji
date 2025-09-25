@@ -1,6 +1,8 @@
 package mod.fuji.core.job.abst;
 
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.quartz.JobDataMap;
 import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
@@ -13,17 +15,17 @@ public abstract class FixedIntervalJob extends BaseJob {
     private int intervalInMillSeconds;
     private int repeatCount;
 
-    public FixedIntervalJob(String jobGroup, String jobName, JobDataMap jobDataMap, int intervalInMillSeconds, int repeatCount) {
+    public FixedIntervalJob(@Nullable String jobGroup, @Nullable String jobName, @Nullable JobDataMap jobDataMap, int intervalInMillSeconds, int repeatCount) {
         super(jobGroup, jobName, jobDataMap, false);
         this.intervalInMillSeconds = intervalInMillSeconds;
         this.repeatCount = repeatCount;
     }
 
     @Override
-    public Trigger makeTrigger() {
+    public @NotNull Trigger makeTrigger() {
         TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder
             .newTrigger()
-            .withIdentity(jobName, jobGroup);
+            .withIdentity(this.getTriggerKey());
 
         SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder
             .simpleSchedule()

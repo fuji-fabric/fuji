@@ -3,34 +3,42 @@ package mod.fuji.core.job.abst;
 import mod.fuji.core.auxiliary.RandomUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import mod.fuji.core.document.annotation.ForDeveloper;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quartz.Job;
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
+import org.quartz.JobKey;
 import org.quartz.Trigger;
 import org.quartz.TriggerKey;
 
 // NOTE: The no args constructor is only used for quartz to create the job instance.
 @NoArgsConstructor
-@Getter
 public abstract class BaseJob implements Job {
 
     protected String jobGroup;
     protected String jobName;
+
+    @ForDeveloper("Job Detail = Job Class + Job Key + Job Data")
+    @Getter
     private JobDetail jobDetail;
+
+    @Getter
     private TriggerKey triggerKey;
+
+    @Getter
     protected boolean rescheduleAble;
 
     public BaseJob(@Nullable String jobGroup, @Nullable String jobName, @Nullable JobDataMap jobDataMap, boolean rescheduleAble) {
-        /* Generate the value if null. */
+        /* Initialize with sensible default values. */
         if (jobGroup == null) {
             jobGroup = this.getClass().getName();
         }
         if (jobName == null) {
             jobName = RandomUtil.randomUUID();
         }
-
         if (jobDataMap == null) {
             jobDataMap = new JobDataMap();
         }
@@ -38,17 +46,17 @@ public abstract class BaseJob implements Job {
         /* Initialize the variables. */
         this.jobGroup = jobGroup;
         this.jobName = jobName;
-        // Job Detail = Job Class + Job Key + Job Data
         this.jobDetail = JobBuilder
             .newJob(this.getClass())
-            .withIdentity(jobName, jobGroup)
+            .withIdentity(new JobKey(jobName, jobGroup))
             .usingJobData(jobDataMap)
             .build();
+        // NOTE: For simplicity, use identity mapping from TriggerKey to JobKey.
         this.triggerKey = new TriggerKey(jobName, jobGroup);
         this.rescheduleAble = rescheduleAble;
     }
 
-    public abstract Trigger makeTrigger();
+    public abstract @NotNull Trigger makeTrigger();
 
     @Override
     public String toString() {

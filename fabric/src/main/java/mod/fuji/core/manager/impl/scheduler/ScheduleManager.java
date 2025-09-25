@@ -146,7 +146,7 @@ public class ScheduleManager extends BaseManager {
             });
     }
 
-    public void updateJobTriggers(@NotNull BaseJob baseJob) {
+    private void updateJobTriggers(@NotNull BaseJob baseJob) {
         TriggerKey triggerKey = baseJob.getTriggerKey();
         Trigger newTrigger = baseJob.makeTrigger();
         try {
