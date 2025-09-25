@@ -225,6 +225,9 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
     @mod.fuji.core.event.annotation.EventConsumer(eventType = ServerStoppingEvent.class, isDynamic = true)
     public BaseConfigurationHandler<T> enableAutoSaveFeature(@NotNull String cron) {
         /* Make and schedule the job. */
+        // NOTE: Capture the source module in stack trace.
+        String sourceModuleInCurrentStackTrace = ReflectionUtil.Stacktrace.findSourceModuleInCurrentStackTrace();
+
         EventConsumer<ServerStartedEvent> serverStartedEventConsumer = DynamicEventConsumer.makeDynamic(ServerStartedEvent.class, mod.fuji.core.event.annotation.EventConsumer.DEFAULT, mod.fuji.core.event.annotation.EventConsumer.DEFAULT, (server) -> {
             try {
                 String jobName = this.filePath.toFile().getCanonicalPath();
@@ -234,7 +237,6 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
                         this.put(BaseConfigurationHandler.class.getName(), BaseConfigurationHandler.this);
 
                         // Specify the source module.
-                        String sourceModuleInCurrentStackTrace = ReflectionUtil.Stacktrace.findSourceModuleInCurrentStackTrace();
                         this.put(SourceModuleGetter.SPECIFIED_SOURCE_MODULE_KEY, sourceModuleInCurrentStackTrace);
                     }
                 }, () -> cron);
