@@ -7,19 +7,11 @@ import lombok.SneakyThrows;
 
 import java.lang.reflect.Field;
 
-/*
- * Tips:
- * 1. Don't catch and handle the command exception, just use @SneakThrow and CommandSyntaxException.
- * 2. Use CommandHelper.Return to provide useful return value.
- * 3. If you use source.sendFeedback() method, then it will be controlled by game rule `sendCommandFeedback`
- * 4. If possible, don't register new ArgumentType, just use the existed ArgumentType. (Mojang provides many useful argument types which implements ArgumentType)
- */
 public class ModuleInitializer {
 
     public final void doInitialize() {
         this.registerGsonTypeAdapters();
         this.loadConfigurationFiles();
-        this.onInitialize();
         this.registerPlaceholders();
     }
 
@@ -48,10 +40,6 @@ public class ModuleInitializer {
                 configHandler.readStorage();
             }
         }
-    }
-
-    protected void onInitialize() {
-        // no-op
     }
 
     protected void onReload() {

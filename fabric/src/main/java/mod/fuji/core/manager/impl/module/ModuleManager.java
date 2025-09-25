@@ -79,8 +79,7 @@ public class ModuleManager extends BaseManager {
     public void reloadModuleInitializers() {
         MODULE_INITIALIZER_BY_CLASS
             .values()
-            .forEach(ModuleManager::reloadModuleInitializer
-            );
+            .forEach(ModuleManager::reloadModuleInitializer);
     }
 
     private static void reloadModuleInitializer(@NotNull ModuleInitializer initializer) {

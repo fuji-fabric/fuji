@@ -254,7 +254,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
     }
 
     @Override
-    protected void onInitialize() {
+    protected void registerPlaceholders() {
         /* register placeholders */
         registerPlayerMinedPlaceholder();
         registerServerMinedPlaceholder();
