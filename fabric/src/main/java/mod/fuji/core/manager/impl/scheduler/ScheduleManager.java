@@ -37,7 +37,6 @@ public class ScheduleManager extends BaseManager {
     public static final String CRON_EVERY_SECOND = "* * * ? * *";
     public static final String CRON_EVERY_FIVE_SECONDS = "0/5 * * ? * * *";
     public static final String CRON_EVERY_TEN_SECONDS = "0/10 * * ? * * *";
-
     public static final String CRON_EVERY_MINUTE = "0 * * ? * * *";
     public static final String CRON_EVERY_THREE_MINUTES = "0 */3 * ? * *";
     public static final String CRON_EVERY_FIVE_MINUTES = "0 */5 * ? * *";
@@ -52,11 +51,21 @@ public class ScheduleManager extends BaseManager {
         Level level = Level.getLevel(Configs.MAIN_CONTROL_CONFIG.model().core.scheduler.logger_level);
         Configurator.setAllLevels("org.quartz", level);
 
-        // NOTE: Reset the scheduler for client-side, to prevent NPE.
-        resetScheduler();
+        // NOTE: Initialize the scheduler if needed, to prevent NPE while calling client-side entrypoints.
+        getOrInitializeScheduler();
     }
 
-    public void scheduleJob(BaseJob baseJob) {
+    private static void getOrInitializeScheduler() {
+        try {
+            // NOTE: The scheduled jobs are associated with the scheduler ID, not the scheduler instance.
+            StdSchedulerFactory stdSchedulerFactory = new StdSchedulerFactory();
+            scheduler = stdSchedulerFactory.getScheduler();
+        } catch (SchedulerException e) {
+            throw ExceptionUtil.makeReThrownException(e);
+        }
+    }
+
+    public void scheduleJob(@NotNull BaseJob baseJob) {
         JobDetail jobDetail = baseJob.getJobDetail();
         Trigger trigger = baseJob.makeTrigger();
 
@@ -75,6 +84,20 @@ public class ScheduleManager extends BaseManager {
         }
     }
 
+    public void deleteJobs(Class<?> clazz) {
+        List<JobKey> jobKeys = new ArrayList<>(this.getJobKeys(clazz.getName()));
+        this.deleteJobs(jobKeys);
+    }
+
+    private void deleteJobs(List<JobKey> jobKeys) {
+        try {
+            LogUtil.debug("Delete job keys: {}", jobKeys);
+            scheduler.deleteJobs(jobKeys);
+        } catch (SchedulerException e) {
+            LogUtil.error("Failed to delete jobs: jobKeys = {}", jobKeys, e);
+        }
+    }
+
     public void rescheduleJob(BaseJob baseJob) {
         TriggerKey triggerKey = baseJob.getTriggerKey();
         Trigger newTrigger = baseJob.makeTrigger();
@@ -90,20 +113,6 @@ public class ScheduleManager extends BaseManager {
     public void rescheduleJobs() {
         RESCHEDULABLE_JOBS
             .forEach(this::rescheduleJob);
-    }
-
-    public void deleteJobs(Class<?> clazz) {
-        List<JobKey> jobKeys = new ArrayList<>(this.getJobKeys(clazz.getName()));
-        this.deleteJobs(jobKeys);
-    }
-
-    private void deleteJobs(List<JobKey> jobKeys) {
-        try {
-            LogUtil.debug("Delete job keys: {}", jobKeys);
-            scheduler.deleteJobs(jobKeys);
-        } catch (SchedulerException e) {
-            LogUtil.error("Failed to delete jobs: jobKeys = {}", jobKeys, e);
-        }
     }
 
     private Set<JobKey> getJobKeys(@NotNull String jobGroup) {
@@ -127,22 +136,8 @@ public class ScheduleManager extends BaseManager {
             });
     }
 
-    private static void resetScheduler() {
-        try {
-            StdSchedulerFactory stdSchedulerFactory = new StdSchedulerFactory();
-            scheduler = stdSchedulerFactory.getScheduler();
-        } catch (SchedulerException e) {
-            throw ExceptionUtil.makeReThrownException(e);
-        }
-    }
-
-
-    @EventConsumer
+    @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.HIGHEST)
     private static void startScheduler(@Unused ServerStartedEvent event) {
-        /* Make a new scheduler. */
-        resetScheduler();
-
-        /* Start the scheduler. */
         try {
             scheduler.start();
         } catch (SchedulerException e) {
@@ -153,11 +148,12 @@ public class ScheduleManager extends BaseManager {
     @EventConsumer
     private static void shutdownScheduler(@Unused ServerStoppingEvent event) {
         try {
+            // NOTE: The shutdown method will return immediately, the executing jobs will continue running to completion.
             scheduler.shutdown(false);
 
             // NOTE: Make a new scheduler at once, after shutdown the old one. To prevent NPE in client-side environment.
             if (ServerHelper.Environment.isClientSideIntegratedServer()) {
-                resetScheduler();
+                getOrInitializeScheduler();
             }
 
         } catch (SchedulerException e) {
