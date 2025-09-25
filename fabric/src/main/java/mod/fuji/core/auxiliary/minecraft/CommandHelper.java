@@ -599,7 +599,7 @@ public class CommandHelper {
 
         public static @NotNull Suggestions listSuggestions(@NotNull ServerPlayerEntity player, @NotNull String commandString) {
             CommandDispatcher<ServerCommandSource> commandDispatcher = getCommandDispatcher();
-            ServerCommandSource commandSource = Source.getCommandSource(player);
+            ServerCommandSource commandSource = Source.getCommandSource(player).withLevel(4);
             ParseResults<ServerCommandSource> parse = commandDispatcher.parse(commandString, commandSource);
             CompletableFuture<Suggestions> completionSuggestions = commandDispatcher.getCompletionSuggestions(parse);
             return completionSuggestions.join();

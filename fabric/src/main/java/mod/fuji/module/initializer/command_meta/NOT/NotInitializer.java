@@ -4,7 +4,7 @@ import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
-import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
+import mod.fuji.core.command.argument.wrapper.impl.GreedyCommandString;
 import mod.fuji.core.command.executor.CommandExecutor;
 import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
 import mod.fuji.core.document.annotation.ColorBox;
@@ -31,7 +31,7 @@ public class NotInitializer extends ModuleInitializer {
     @Document(id = 1756136578216L, value = "Execute the command as the console, and reverse the return values of `SUCCESS` and `FAILURE`.")
     @CommandNode("NOT")
     @CommandRequirement(level = 4)
-    private static int $not(@CommandSource ServerCommandSource source, GreedyString command) {
+    private static int $not(@CommandSource ServerCommandSource source, GreedyCommandString command) {
         int commandReturnValue = CommandExecutor.executeSingle(ExtendedCommandSource.fromSource(source), command.getValue());
 
         if (CommandHelper.Return.isSuccess(commandReturnValue)) {

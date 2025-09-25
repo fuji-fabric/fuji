@@ -12,6 +12,7 @@ import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.argument.wrapper.impl.GreedyCommandString;
+import mod.fuji.core.document.annotation.TestCase;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
@@ -39,6 +40,12 @@ public class GreedyCommandStringArgumentTypeAdapter extends BaseArgumentTypeAdap
         return new GreedyCommandString(string);
     }
 
+    @TestCase(action = "Test the functionality for recursive suggestions builder.", targets = {
+        "Issue: `/run as console send-broadcast <rb>I am %player:name%`",
+        "Issue: `/run as player @s run as console run as fake-op %player:name% say I am %player:name%`",
+        "Issue: `/run as console command-attachment attach-entity-one @e[type=...`",
+        "Issue: `/NOT NOT NOT run as console delay 3 foreach when-online %player:name% send-broadcast You are %player:name%`"
+    })
     @Override
     protected @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
