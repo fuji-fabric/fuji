@@ -58,20 +58,20 @@ public class GreedyCommandStringArgumentTypeAdapter extends BaseArgumentTypeAdap
 
                 /* Make the recursive suggestions builder. */
                 String remainingString = builder.getRemaining();
-                LogUtil.warn("remaining = {}", remainingString);
-                LogUtil.warn("remaining length = {}", remainingString.length());
-
-                LogUtil.warn("builder.getInput() = {}", builder.getInput());
-                LogUtil.warn("builder.getStart() = {}", builder.getStart());
+//                LogUtil.warn("remaining = {}", remainingString);
+//                LogUtil.warn("remaining length = {}", remainingString.length());
+//
+//                LogUtil.warn("builder.getInput() = {}", builder.getInput());
+//                LogUtil.warn("builder.getStart() = {}", builder.getStart());
 
                 @NotNull Suggestions remainingSuggestions = CommandHelper.Suggestion.listSuggestions(player, remainingString);
                 int offsetBuilderStart = builder.getStart() + remainingSuggestions.getRange().getStart();
                 SuggestionsBuilder offsetBuilder = builder.createOffset(offsetBuilderStart);
-                LogUtil.warn("offsetBuilder.getInput() = {}", offsetBuilder.getInput());
-                LogUtil.warn("offsetBuilder.getStart() = {}", offsetBuilder.getStart());
+//                LogUtil.warn("offsetBuilder.getInput() = {}", offsetBuilder.getInput());
+//                LogUtil.warn("offsetBuilder.getStart() = {}", offsetBuilder.getStart());
 
                 remainingSuggestions.getList().forEach(it -> {
-                    LogUtil.warn("suggestion = {}", it);
+//                    LogUtil.warn("suggestion = {}", it);
                     offsetBuilder.suggest(it.getText());
                 });
 
