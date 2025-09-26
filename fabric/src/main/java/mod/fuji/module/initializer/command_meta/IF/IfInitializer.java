@@ -16,6 +16,7 @@ import mod.fuji.core.document.annotation.TestCase;
 import mod.fuji.module.initializer.ModuleInitializer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import mod.fuji.module.initializer.command_meta.IF.argument.wrapper.IfGreedyCommandString;
 import net.minecraft.server.command.ServerCommandSource;
 
 @Document(id = 1753515891751L, value = """
@@ -162,7 +163,7 @@ public class IfInitializer extends ModuleInitializer {
 
     @CommandNode("IF")
     @CommandRequirement(level = 4)
-    private static int $if(@CommandSource ServerCommandSource source, GreedyString rest) {
+    private static int $if(@CommandSource ServerCommandSource source, IfGreedyCommandString rest) {
         String $rest = rest.getValue();
 
         Matcher matcher = IF_COMMAND_PARSER.matcher($rest);

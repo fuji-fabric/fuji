@@ -61,6 +61,7 @@ mod.fuji.module.initializer.command_attachment.command.argument.adapter.Interact
 mod.fuji.module.initializer.command_cooldown.command.argument.adapter.NamedCooldownDescriptorArgumentTypeAdapter
 mod.fuji.module.initializer.command_menu.command.argument.adapter.MenuNameArgumentTypeAdapter
 mod.fuji.module.initializer.command_meta.AND.command.argument.adapter.AndGreedyCommandStringArgumentTypeAdapter
+mod.fuji.module.initializer.command_meta.IF.argument.adapter.IfGreedyCommandStringArgumentTypeAdapter
 mod.fuji.module.initializer.command_meta.OR.argument.adapter.OrGreedyCommandStringArgumentTypeAdapter
 mod.fuji.module.initializer.command_meta.attachment.command.argument.adapter.SubjectIdArgumentTypeAdapter
 mod.fuji.module.initializer.command_meta.attachment.command.argument.adapter.SubjectNameArgumentTypeAdapter
