@@ -1,5 +1,6 @@
 package mod.fuji.core.command.assistant;
 
+import com.google.common.collect.EvictingQueue;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.context.StringRange;
@@ -27,8 +28,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class CommandAssistant {
 
-    private static final Map<String, AvailableNextCommandPathList> DEBOUNCE_AVAILABLE_NEXT_COMMAND_PATHS = new ConcurrentHashMap<>();
-    private static final Map<String, String> DEBOUNCE_COMPLETED_COMMAND_PATH = new ConcurrentHashMap<>();
+    private static final Map<String, EvictingQueue<AvailableNextCommandPathList>> DEBOUNCE_AVAILABLE_NEXT_COMMAND_PATHS = new ConcurrentHashMap<>();
+    private static final Map<String, EvictingQueue<String>> DEBOUNCE_COMPLETED_COMMAND_PATH = new ConcurrentHashMap<>();
+    private static final int DEBOUNCE_QUEUE_SIZE = 5;
 
     private static @NotNull String toStringByArgumentType(@NotNull CommandNode<ServerCommandSource> commandNode) {
         if (commandNode instanceof ArgumentCommandNode<ServerCommandSource, ?>) {
@@ -49,6 +51,7 @@ public class CommandAssistant {
         return suggestionsBuilderStart != parsedNodeStart;
     }
 
+    @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
     private static ParsedCommandNode<ServerCommandSource> getLastParsedCommandNode(@NotNull CommandContext<ServerCommandSource> commandContext) {
         List<ParsedCommandNode<ServerCommandSource>> parsedCommandNodes = commandContext.getNodes();
         return parsedCommandNodes.get(parsedCommandNodes.size() - 1);
@@ -145,8 +148,12 @@ public class CommandAssistant {
 
         /* Debounce and send current available next command path list. */
         DEBOUNCE_AVAILABLE_NEXT_COMMAND_PATHS.compute(commandSource.getName(), (key, previousValue) -> {
+            if (previousValue == null) {
+                previousValue = EvictingQueue.create(DEBOUNCE_QUEUE_SIZE);
+            }
+
             /* Debounce and send. */
-            if (!currentAvailableNextCommandPathList.equals(previousValue)) {
+            if (!previousValue.contains(currentAvailableNextCommandPathList)) {
                 // NOTE: Re-send the completed command path, as the old message has already been buried.
                 DEBOUNCE_COMPLETED_COMMAND_PATH.remove(commandSource.getName());
 
@@ -167,26 +174,33 @@ public class CommandAssistant {
                         commandSource.sendMessage(possiblePathText);
                     });
 
+                /* Add the value. */
+                previousValue.add(currentAvailableNextCommandPathList);
             }
 
-            /* Update the value. */
-            return currentAvailableNextCommandPathList;
+            return previousValue;
         });
 
         /* Debounce and send the completed command path. */
         if (CommandHelper.Node.isExecutableCommandNode(targetCommandNode)) {
             String currentCompletedCommandPath = getParsedCommandPath(rootCommandContext);
             DEBOUNCE_COMPLETED_COMMAND_PATH.compute(commandSource.getName(), (key, previousValue) -> {
+                if (previousValue == null) {
+                    previousValue = EvictingQueue.create(DEBOUNCE_QUEUE_SIZE);
+                }
+
                 /* Debounce and send. */
-                if (!currentCompletedCommandPath.equals(previousValue)) {
+                if (!previousValue.contains(currentCompletedCommandPath)) {
                     printCommandAssistantHeaderIfAbsent(headerMessagePrinted, commandSource);
 
                     Text text = TextHelper.getTextByKey(commandSource, "command.assistant.complete", TextHelper.Parsers.escapeTags(currentCompletedCommandPath));
                     commandSource.sendMessage(text);
+
+                    /* Add the value. */
+                    previousValue.add(currentCompletedCommandPath);
                 }
 
-                /* Update the value. */
-                return currentCompletedCommandPath;
+                return previousValue;
             });
 
         }
@@ -207,6 +221,9 @@ public class CommandAssistant {
             , "Test the assistant with the optional argument: `/back 3`"
             , "Test the assistant with the entity selector: `/send-message @r`"
             , "Test the assistant with custom parser and non-zero-offset suggestions builder: `/fly others @a[distance=..8`"
+    })
+    @TestCase(action = "Test the de-bounce for greedy command string arguments.", targets = {
+        "Issue: `/IF send-message %player:name% 1 THEN send-broadcast 22...`"
     })
     @ForDeveloper("""
             1. The custom command suggestions provider will be called when the cursor enters, leaves, or moves within a required argument. (Except case 2.)
