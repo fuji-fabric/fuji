@@ -8,13 +8,12 @@
 # 📑 Changelog
 
 ## ✨ Added
-- [core] feature: added `command suggestions` for `greedy command string`, which benefits the following commands: 
+- **[core]** Command suggestions are now available for **greedy command strings**, which improves usability for:
   - `/chain`
   - `/AND`
   - `/OR`
   - `/one-of`
   - `/IF`
-- [core] feature: improvements to `command assistant`.
-  - Improve the `de-bounce` feature for `greedy command string` arguments.
-  - Now will remove the cache data when the player left the server.
-
+- **[core]** Command Assistant improvements:
+  - Enhanced **de-bounce** behavior for greedy command string arguments.
+  - Automatically clears cached data when a player leaves the server.
