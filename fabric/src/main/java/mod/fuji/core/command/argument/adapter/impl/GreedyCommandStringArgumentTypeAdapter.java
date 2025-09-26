@@ -6,7 +6,9 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
@@ -40,11 +42,46 @@ public class GreedyCommandStringArgumentTypeAdapter extends BaseArgumentTypeAdap
         return new GreedyCommandString(string);
     }
 
-    @TestCase(action = "Test the functionality for recursive suggestions builder.", targets = {
+    static Set<String> greedyStringSeparatorLiterals = Set.of("chain");
+
+    @SuppressWarnings("UnnecessaryLocalVariable")
+    private static @NotNull SuggestionsBuilder getBoundedBuilder(@NotNull SuggestionsBuilder builder) {
+        /* Bound the builder with declared separator literals. */
+        for (String literal : greedyStringSeparatorLiterals) {
+            final String remainingString = builder.getRemaining();
+
+            final String token = " " + literal + " ";
+            final int index = remainingString.lastIndexOf(token);
+            if (index != -1) {
+                final int offset = index + token.length();
+                SuggestionsBuilder boundedBuilder = builder.createOffset(builder.getStart() + offset);
+                return boundedBuilder;
+            }
+        }
+
+        /* No separator literals found, simply return the original builder. */
+        return builder;
+    }
+
+    @TestCase(action = "Test the functionality for recursive suggestions builder. (No separator literals)", targets = {
         "Issue: `/run as console send-broadcast <rb>I am %player:name%`",
         "Issue: `/run as player @s run as console run as fake-op %player:name% say I am %player:name%`",
         "Issue: `/run as console command-attachment attach-entity-one @e[type=...`",
         "Issue: `/NOT NOT NOT run as console delay 3 foreach when-online %player:name% send-broadcast You are %player:name%`"
+    })
+    @TestCase(action = "Test the functionality of placeholders.", targets = {
+        "Issue: `/chain run as fake-op @s run as console say 1 chain say 2`",
+        "Issue: `/chain run as fake-op %player:name% sa`",
+        "Issue: `/chain run as fake-op %player:name% run as console run as player @r say 1 chain say 2`",
+        "Issue: `/run as player SakuraWald run as console run as fake-op %player:name% send-message @s I am %player:name%`"
+    })
+    @TestCase(action = "Test the functionality for recursive suggestions builder. (With separator literals)", targets = {
+        "Issue: `/chain say 1 chain`",
+        "Issue: `/chain say 1 chain        say     2     chain say 3`",
+        "Issue: `/chain say 1 chain`",
+        "Issue: `/chain say 1 chain chain chain sa`",
+        "Issue: `/chain say 3  chain   send-messa`",
+        "Issue: `/chain say 3  chain   send-message   @s     <rb>Hello`",
     })
     @Override
     protected @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
@@ -56,26 +93,91 @@ public class GreedyCommandStringArgumentTypeAdapter extends BaseArgumentTypeAdap
                 }
                 ServerPlayerEntity player = context.getSource().getPlayer();
 
-                /* Make the recursive suggestions builder. */
-                String remainingString = builder.getRemaining();
-//                LogUtil.warn("remaining = {}", remainingString);
-//                LogUtil.warn("remaining length = {}", remainingString.length());
-//
-//                LogUtil.warn("builder.getInput() = {}", builder.getInput());
-//                LogUtil.warn("builder.getStart() = {}", builder.getStart());
+                /* Define the input string. */
+                @NotNull String input = builder.getInput();
+                @NotNull String inputTrim = input.trim();
+                LogUtil.warn("input = {}", input);
+                LogUtil.warn("builder.getStart() = {}", builder.getStart());
 
-                @NotNull Suggestions remainingSuggestions = CommandHelper.Suggestion.listSuggestions(player, remainingString);
-                int offsetBuilderStart = builder.getStart() + remainingSuggestions.getRange().getStart();
-                SuggestionsBuilder offsetBuilder = builder.createOffset(offsetBuilderStart);
-//                LogUtil.warn("offsetBuilder.getInput() = {}", offsetBuilder.getInput());
-//                LogUtil.warn("offsetBuilder.getStart() = {}", offsetBuilder.getStart());
+                /* Suggest command suggestions from remaining string. */
+                builder.add(makeCommandStringSuggestionsBuilder(player, builder));
 
-                remainingSuggestions.getList().forEach(it -> {
-//                    LogUtil.warn("suggestion = {}", it);
-                    offsetBuilder.suggest(it.getText());
-                });
+                /* Suggest separator literals at any point. */
+                makeSeparatorLiteralSuggestionsBuilders(inputTrim, builder)
+                    .forEach(builder::add);
 
-                return offsetBuilder.buildFuture();
+                /* Merge the results into the final builder. */
+                return builder.buildFuture();
             });
     }
+
+    private static SuggestionsBuilder makeCommandStringSuggestionsBuilder(@NotNull ServerPlayerEntity player, @NotNull SuggestionsBuilder builder) {
+        /* Make bounded builder. */
+        builder = getBoundedBuilder(builder);
+
+        /* Define the remaining string. */
+        final String remainingString = builder.getRemaining();
+        LogUtil.warn("remaining string = {}", remainingString);
+        LogUtil.warn("remaining string length = {}", remainingString.length());
+
+        /* Define the command string and its offset. */
+        // List the command suggestions in the admin view.
+        ServerCommandSource commandSource = CommandHelper.Source.getCommandSource(player).withLevel(4);
+
+        // Initialize the command string.
+        @NotNull String commandString = remainingString;
+
+        // Replace the placeholder with vanilla Minecraft's target selector.
+        commandString = commandString.replace("%player:name%", "@r");
+
+        // Strip all leading blank characters.
+        commandString = commandString.stripLeading();
+
+        // Strip all trailing blank characters, but keep one if exists.
+        commandString = CommandHelper.Parser.stripTrailingButKeepOne(commandString);
+        LogUtil.warn("command string = {}", commandString);
+
+        // Initialize the command string offset.
+        final int commandStringOffset = commandString.length() - remainingString.length();
+        LogUtil.warn("command string offset = {}", commandStringOffset);
+
+        /* Make sub-builder. */
+        @NotNull Suggestions commandSuggestions = CommandHelper.Suggestion.listSuggestions(commandSource, commandString);
+        final int offset = commandSuggestions.getRange().getStart() - commandStringOffset;
+        final int subBuilderStart = builder.getStart() + offset;
+        final SuggestionsBuilder subBuilder = builder.createOffset(subBuilderStart);
+        LogUtil.warn("subBuilder.getStart() = {}", subBuilder.getStart());
+
+        commandSuggestions.getList().forEach(it -> {
+            LogUtil.warn("suggestion = {}", it);
+            subBuilder.suggest(it.getText());
+        });
+
+        /* Return sub-builder. */
+        return subBuilder;
+    }
+
+    private @NotNull List<SuggestionsBuilder> makeSeparatorLiteralSuggestionsBuilders(@NotNull final String inputTrim, @NotNull final SuggestionsBuilder builder) {
+        List<SuggestionsBuilder> subBuilders = new ArrayList<>();
+
+        greedyStringSeparatorLiterals
+            .forEach(separatorLiteral -> {
+                /* Don't suggest if the suffix is the separator literal already. */
+                if (inputTrim.endsWith(separatorLiteral)) {
+                    return;
+                }
+
+                /* Make sub-builder. */
+                LogUtil.warn("suggest literal = {}", separatorLiteral);
+                final int subBuilderStart = builder.getInput().length();
+                SuggestionsBuilder subBuilder = builder.createOffset(subBuilderStart);
+                subBuilder.suggest(" " + separatorLiteral + " ");
+
+                /* Merge builders. */
+                subBuilders.add(subBuilder);
+            });
+
+        return subBuilders;
+    }
+
 }

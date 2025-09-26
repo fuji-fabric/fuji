@@ -245,11 +245,21 @@
 
 [Test Case]
 - Module: core
-- Action: **Test the functionality for recursive suggestions builder.**
+- Action: **Test the functionality for recursive suggestions builder. (No separator literals)**
 - Target: Issue: `/run as console send-broadcast <rb>I am %player:name%`
 - Target: Issue: `/run as player @s run as console run as fake-op %player:name% say I am %player:name%`
 - Target: Issue: `/run as console command-attachment attach-entity-one @e[type=...`
 - Target: Issue: `/NOT NOT NOT run as console delay 3 foreach when-online %player:name% send-broadcast You are %player:name%`
+
+[Test Case]
+- Module: core
+- Action: **Test the functionality for recursive suggestions builder. (With separator literals)**
+- Target: Issue: `/chain say 1 chain`
+- Target: Issue: `/chain say 1 chain        say     2     chain say 3`
+- Target: Issue: `/chain say 1 chain`
+- Target: Issue: `/chain say 1 chain chain chain sa`
+- Target: Issue: `/chain say 3  chain   send-messa`
+- Target: Issue: `/chain say 3  chain   send-message   @s     <rb>Hello`
 
 [Test Case]
 - Module: core
@@ -265,6 +275,14 @@
 - Target: Create the new command `/home tp -> /say` (with redirect) using `command_alias` module, you should see the override warning.
 - Target: Create the new command `/home tp -> /say` (without redirect) using `command_bundle` module, you should NOT see the override warning.
 - Target: Create the new command `/workbench -> /say` (not nested) using `command_alias` module, you should see the override warning.
+
+[Test Case]
+- Module: core
+- Action: **Test the functionality of placeholders.**
+- Target: Issue: `/chain run as fake-op @s run as console say 1 chain say 2`
+- Target: Issue: `/chain run as fake-op %player:name% sa`
+- Target: Issue: `/chain run as fake-op %player:name% run as console run as player @r say 1 chain say 2`
+- Target: Issue: `/run as player SakuraWald run as console run as fake-op %player:name% send-message @s I am %player:name%`
 
 [Test Case]
 - Module: core

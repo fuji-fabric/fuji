@@ -568,6 +568,19 @@ public class CommandHelper {
         }
     }
 
+    public static class Parser {
+
+        public static @NotNull String stripTrailingButKeepOne(@NotNull String input) {
+            String result = input.stripTrailing();
+            if (result.length() != input.length()) {
+                return result + " ";
+            }
+
+            return result;
+        }
+
+    }
+
     public static class Suggestion {
 
         private static <T> @NotNull CompletableFuture<Suggestions> makeSuggestionsCompletableFuture(@NotNull SuggestionsBuilder builder, @NotNull Supplier<Iterable<T>> iterableSupplier) {
@@ -597,9 +610,9 @@ public class CommandHelper {
             return iterable(() -> RegistryHelper.getRegistry(registryKey).getIds());
         }
 
-        public static @NotNull Suggestions listSuggestions(@NotNull ServerPlayerEntity player, @NotNull String commandString) {
+        public static @NotNull Suggestions listSuggestions(@NotNull ServerCommandSource commandSource, @NotNull String commandString) {
+            // NOTE: Be careful with the leading space characters and the trailing space characters.
             CommandDispatcher<ServerCommandSource> commandDispatcher = getCommandDispatcher();
-            ServerCommandSource commandSource = Source.getCommandSource(player).withLevel(4);
             ParseResults<ServerCommandSource> parse = commandDispatcher.parse(commandString, commandSource);
             CompletableFuture<Suggestions> completionSuggestions = commandDispatcher.getCompletionSuggestions(parse);
             return completionSuggestions.join();
