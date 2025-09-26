@@ -174,8 +174,8 @@ public class CommandArgument {
     }
 
     public boolean isGreedyArgumentType() {
-        return this.argumentType.equals(GreedyString.class)
-            || this.argumentType.equals(GreedyStringList.class);
+        return GreedyString.class.isAssignableFrom(this.argumentType)
+            || GreedyStringList.class.isAssignableFrom(this.argumentType);
     }
 
 }
