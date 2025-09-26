@@ -5,7 +5,7 @@ import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
-import mod.fuji.core.command.argument.wrapper.impl.GreedyStringList;
+import mod.fuji.core.command.argument.wrapper.impl.GreedyCommandString;
 import mod.fuji.core.command.argument.wrapper.impl.StringList;
 import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
@@ -170,11 +170,11 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         , NamedCooldownDescriptor namedCooldown
         , ServerPlayerEntity player
         , Optional<StringList> onFailed
-        , GreedyStringList onSuccess
+        , GreedyCommandString onSuccess
     ) {
         StringList $onFailed = onFailed.orElse(new StringList(Collections.emptyList()));
 
-        List<String> onSuccessCommands = onSuccess.getValue();
+        List<String> onSuccessCommands = Collections.singletonList(onSuccess.getValue());
         List<String> onFailureCommands = $onFailed.getValue();
         return NamedCooldownService.testNamedCooldown(namedCooldown, player, onSuccessCommands, onFailureCommands);
     }

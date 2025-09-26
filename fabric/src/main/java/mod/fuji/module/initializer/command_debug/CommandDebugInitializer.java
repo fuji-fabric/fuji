@@ -6,7 +6,7 @@ import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
-import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
+import mod.fuji.core.command.argument.wrapper.impl.GreedyCommandString;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.ModuleInitializer;
@@ -23,7 +23,7 @@ public class CommandDebugInitializer extends ModuleInitializer {
 
     @CommandNode("command-debug")
     @CommandRequirement(level = 4)
-    private static int $debug(@CommandSource ServerCommandSource source, GreedyString command) throws CommandSyntaxException {
+    private static int $debug(@CommandSource ServerCommandSource source, GreedyCommandString command) throws CommandSyntaxException {
         String commandString = command.getValue();
 
         int returnValue = CommandHelper

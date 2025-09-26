@@ -9,7 +9,7 @@ import mod.fuji.core.auxiliary.minecraft.UuidHelper;
 import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
-import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
+import mod.fuji.core.command.argument.wrapper.impl.GreedyCommandString;
 import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.core.config.mapper.GsonMapper;
@@ -128,7 +128,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         , Optional<Integer> maxUseTimes
         , Optional<ExecuteAsType> executeAsType
         , Optional<Boolean> destroyItem
-        , GreedyString command
+        , GreedyCommandString command
     ) {
         return CommandHelper.Pattern.withItemInMainHandCommand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
             String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
@@ -157,7 +157,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         , Optional<InteractType> interactType
         , Optional<Integer> maxUseTimes
         , Optional<ExecuteAsType> executeAsType
-        , GreedyString command
+        , GreedyCommandString command
     ) {
         String uuid = UuidHelper.getAttachedUuid(entity);
         return CommandAttachmentService.withAttachmentDataNode(uuid, it -> {
@@ -183,7 +183,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
         , Optional<InteractType> interactType
         , Optional<Integer> maxUseTimes
         , Optional<ExecuteAsType> executeAsType
-        , GreedyString command
+        , GreedyCommandString command
     ) {
         String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
         return CommandAttachmentService.withAttachmentDataNode(uuid, it -> {

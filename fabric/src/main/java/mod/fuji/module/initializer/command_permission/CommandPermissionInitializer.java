@@ -10,7 +10,7 @@ import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
-import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
+import mod.fuji.core.command.argument.wrapper.impl.GreedyCommandString;
 import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.core.document.annotation.Cite;
@@ -187,7 +187,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
     @Document(id = 1751826781243L, value = "Describe the `required permissions` of `the given command`.")
     @CommandNode("describe")
     @SuppressWarnings("SameReturnValue")
-    public static int $describe(@CommandSource ServerCommandSource source, GreedyString command) {
+    public static int $describe(@CommandSource ServerCommandSource source, GreedyCommandString command) {
         /* Parse the command string to get the command context. */
         String $command = command.getValue();
         ParseResults<ServerCommandSource> parseResults = CommandHelper
