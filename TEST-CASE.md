@@ -251,25 +251,6 @@
 
 [Test Case]
 - Module: core
-- Action: **Test the functionality for recursive suggestions builder. (No separator literals)**
-- Target: Issue: `/run as console send-broadcast <rb>I am %player:name%`
-- Target: Issue: `/run as player @s run as console run as fake-op %player:name% say I am %player:name%`
-- Target: Issue: `/run as console command-attachment attach-entity-one @e[type=...`
-- Target: Issue: `/NOT NOT NOT run as console delay 3 foreach when-online %player:name% send-broadcast You are %player:name%`
-
-[Test Case]
-- Module: core
-- Action: **Test the functionality for recursive suggestions builder. (With separator literals)**
-- Target: Issue: `/chain say 1 chain`
-- Target: Issue: `/chain say 1 chain say 2 chain`
-- Target: Issue: `/chain say 1 chain        say     2     chain say 3`
-- Target: Issue: `/chain say 1 chain`
-- Target: Issue: `/chain say 1 chain chain chain sa`
-- Target: Issue: `/chain say 3  chain   send-messa`
-- Target: Issue: `/chain say 3  chain   send-message   @s     <rb>Hello`
-
-[Test Case]
-- Module: core
 - Action: **Test the functionality of async chunk loading.**
 - Target: The RTP process should not block the game-playing. (Ticking entities, selecting target blocks...)
 - Target: Throwing item entities during RTP process, the game should be ticked normally.
@@ -285,11 +266,30 @@
 
 [Test Case]
 - Module: core
-- Action: **Test the functionality of placeholders.**
+- Action: **Test the greedy command string argument suggestions builder. (With placeholders)**
 - Target: Issue: `/chain run as fake-op @s run as console say 1 chain say 2`
 - Target: Issue: `/chain run as fake-op %player:name% sa`
 - Target: Issue: `/chain run as fake-op %player:name% run as console run as player @r say 1 chain say 2`
 - Target: Issue: `/run as player SakuraWald run as console run as fake-op %player:name% send-message @s I am %player:name%`
+
+[Test Case]
+- Module: core
+- Action: **Test the greedy command string argument suggestions builder. (With separator literals)**
+- Target: Issue: `/chain say 1 chain`
+- Target: Issue: `/chain say 1 chain say 2 chain`
+- Target: Issue: `/chain say 1 chain        say     2     chain say 3`
+- Target: Issue: `/chain say 1 chain chain chain sa`
+- Target: Issue: `/chain say 3  chain   send-messa`
+- Target: Issue: `/chain say 3  chain   send-message   @s     <rb>Hello`
+- Target: Issue: `/chain IF say 1  THEN  say 2  ELSE  say 3  chain  say 4  chain  say 5`
+
+[Test Case]
+- Module: core
+- Action: **Test the greedy command string argument suggestions builder. (Without separator literals)**
+- Target: Issue: `/run as console send-broadcast <rb>I am %player:name%`
+- Target: Issue: `/run as player @s run as console run as fake-op %player:name% say I am %player:name%`
+- Target: Issue: `/run as console command-attachment attach-entity-one @e[type=...`
+- Target: Issue: `/NOT NOT NOT run as console delay 3 foreach when-online %player:name% send-broadcast You are %player:name%`
 
 [Test Case]
 - Module: core

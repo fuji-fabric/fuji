@@ -51,27 +51,26 @@ public class GreedyCommandStringArgumentTypeAdapter extends BaseArgumentTypeAdap
         this.greedyStringSeparatorLiterals = greedyStringSeparatorLiterals;
     }
 
-    @TestCase(action = "Test the functionality for recursive suggestions builder. (No separator literals)", targets = {
+    @TestCase(action = "Test the greedy command string argument suggestions builder. (Without separator literals)", targets = {
         "Issue: `/run as console send-broadcast <rb>I am %player:name%`",
         "Issue: `/run as player @s run as console run as fake-op %player:name% say I am %player:name%`",
         "Issue: `/run as console command-attachment attach-entity-one @e[type=...`",
         "Issue: `/NOT NOT NOT run as console delay 3 foreach when-online %player:name% send-broadcast You are %player:name%`"
     })
-    @TestCase(action = "Test the functionality of placeholders.", targets = {
-        "Issue: `/chain run as fake-op @s run as console say 1 chain say 2`",
-        "Issue: `/chain run as fake-op %player:name% sa`",
-        "Issue: `/chain run as fake-op %player:name% run as console run as player @r say 1 chain say 2`",
-        "Issue: `/run as player SakuraWald run as console run as fake-op %player:name% send-message @s I am %player:name%`"
-    })
-    @TestCase(action = "Test the functionality for recursive suggestions builder. (With separator literals)", targets = {
+    @TestCase(action = "Test the greedy command string argument suggestions builder. (With separator literals)", targets = {
         "Issue: `/chain say 1 chain`",
         "Issue: `/chain say 1 chain say 2 chain`",
         "Issue: `/chain say 1 chain        say     2     chain say 3`",
-        "Issue: `/chain say 1 chain`",
         "Issue: `/chain say 1 chain chain chain sa`",
         "Issue: `/chain say 3  chain   send-messa`",
         "Issue: `/chain say 3  chain   send-message   @s     <rb>Hello`",
         "Issue: `/chain IF say 1  THEN  say 2  ELSE  say 3  chain  say 4  chain  say 5`"
+    })
+    @TestCase(action = "Test the greedy command string argument suggestions builder. (With placeholders)", targets = {
+        "Issue: `/chain run as fake-op @s run as console say 1 chain say 2`",
+        "Issue: `/chain run as fake-op %player:name% sa`",
+        "Issue: `/chain run as fake-op %player:name% run as console run as player @r say 1 chain say 2`",
+        "Issue: `/run as player SakuraWald run as console run as fake-op %player:name% send-message @s I am %player:name%`"
     })
     @Override
     protected @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
