@@ -3,7 +3,6 @@ package mod.fuji.module.initializer.command_meta.IF.argument.adapter;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import java.util.List;
-import java.util.Set;
 import mod.fuji.core.command.argument.adapter.impl.SeparatedGreedyCommandStringArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.module.initializer.command_meta.IF.argument.wrapper.IfGreedyCommandString;
@@ -13,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 public class IfGreedyCommandStringArgumentTypeAdapter extends SeparatedGreedyCommandStringArgumentTypeAdapter {
 
     public IfGreedyCommandStringArgumentTypeAdapter() {
-        super(List.of("ELSE", "THEN", "IF"));
+        super(List.of("ELSE", "THEN"));
     }
 
     @Override

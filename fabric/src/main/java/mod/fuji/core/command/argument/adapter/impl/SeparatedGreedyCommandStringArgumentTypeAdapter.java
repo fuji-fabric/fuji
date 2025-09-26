@@ -2,7 +2,6 @@ package mod.fuji.core.command.argument.adapter.impl;
 
 import com.mojang.brigadier.context.CommandContext;
 import java.util.List;
-import java.util.Set;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.NotNull;

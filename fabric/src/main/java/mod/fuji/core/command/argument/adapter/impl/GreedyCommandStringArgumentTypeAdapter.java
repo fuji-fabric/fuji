@@ -8,7 +8,6 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
@@ -71,7 +70,8 @@ public class GreedyCommandStringArgumentTypeAdapter extends BaseArgumentTypeAdap
         "Issue: `/chain say 1 chain`",
         "Issue: `/chain say 1 chain chain chain sa`",
         "Issue: `/chain say 3  chain   send-messa`",
-        "Issue: `/chain say 3  chain   send-message   @s     <rb>Hello`"
+        "Issue: `/chain say 3  chain   send-message   @s     <rb>Hello`",
+        "Issue: `/chain IF say 1  THEN  say 2  ELSE  say 3  chain  say 4  chain  say 5`"
     })
     @Override
     protected @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
