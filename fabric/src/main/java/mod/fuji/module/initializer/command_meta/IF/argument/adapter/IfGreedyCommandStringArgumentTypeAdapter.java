@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class IfGreedyCommandStringArgumentTypeAdapter extends SeparatedGreedyCommandStringArgumentTypeAdapter {
 
     public IfGreedyCommandStringArgumentTypeAdapter() {
-        super(Set.of("IF", "THEN", "ELSE"));
+        super(List.of("ELSE", "THEN", "IF"));
     }
 
     @Override

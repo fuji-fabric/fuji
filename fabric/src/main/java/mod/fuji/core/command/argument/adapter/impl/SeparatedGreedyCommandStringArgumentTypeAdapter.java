@@ -18,7 +18,7 @@ public abstract class SeparatedGreedyCommandStringArgumentTypeAdapter extends Gr
     @Override
     protected abstract Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument);
 
-    public SeparatedGreedyCommandStringArgumentTypeAdapter(@NotNull Set<String> greedyStringSeparatorLiterals) {
+    public SeparatedGreedyCommandStringArgumentTypeAdapter(@NotNull List<String> greedyStringSeparatorLiterals) {
         super(greedyStringSeparatorLiterals);
     }
 

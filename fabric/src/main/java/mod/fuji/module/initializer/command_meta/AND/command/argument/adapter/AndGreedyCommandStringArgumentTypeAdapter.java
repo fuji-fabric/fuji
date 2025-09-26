@@ -3,7 +3,6 @@ package mod.fuji.module.initializer.command_meta.AND.command.argument.adapter;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import java.util.List;
-import java.util.Set;
 import mod.fuji.core.command.argument.adapter.impl.SeparatedGreedyCommandStringArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.module.initializer.command_meta.AND.command.argument.wrapper.AndGreedyCommandString;
@@ -13,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 public class AndGreedyCommandStringArgumentTypeAdapter extends SeparatedGreedyCommandStringArgumentTypeAdapter {
 
     public AndGreedyCommandStringArgumentTypeAdapter() {
-        super(Set.of("AND"));
+        super(List.of("AND"));
     }
 
     @Override

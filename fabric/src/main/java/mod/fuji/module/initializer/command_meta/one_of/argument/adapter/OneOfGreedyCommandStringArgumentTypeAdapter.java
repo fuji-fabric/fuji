@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class OneOfGreedyCommandStringArgumentTypeAdapter extends SeparatedGreedyCommandStringArgumentTypeAdapter {
 
     public OneOfGreedyCommandStringArgumentTypeAdapter() {
-        super(Set.of("one-of"));
+        super(List.of("one-of"));
     }
 
     @Override

@@ -42,13 +42,13 @@ public class GreedyCommandStringArgumentTypeAdapter extends BaseArgumentTypeAdap
         return new GreedyCommandString(string);
     }
 
-    final Set<String> greedyStringSeparatorLiterals;
+    final List<String> greedyStringSeparatorLiterals;
 
     public GreedyCommandStringArgumentTypeAdapter() {
-        this.greedyStringSeparatorLiterals = Set.of();
+        this.greedyStringSeparatorLiterals = List.of();
     }
 
-    public GreedyCommandStringArgumentTypeAdapter(@NotNull Set<String> greedyStringSeparatorLiterals) {
+    public GreedyCommandStringArgumentTypeAdapter(@NotNull List<String> greedyStringSeparatorLiterals) {
         this.greedyStringSeparatorLiterals = greedyStringSeparatorLiterals;
     }
 

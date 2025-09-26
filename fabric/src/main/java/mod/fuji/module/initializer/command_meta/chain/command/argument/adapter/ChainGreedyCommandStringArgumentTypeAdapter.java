@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class ChainGreedyCommandStringArgumentTypeAdapter extends SeparatedGreedyCommandStringArgumentTypeAdapter {
 
     public ChainGreedyCommandStringArgumentTypeAdapter() {
-        super(Set.of("chain"));
+        super(List.of("chain"));
     }
 
     @Override

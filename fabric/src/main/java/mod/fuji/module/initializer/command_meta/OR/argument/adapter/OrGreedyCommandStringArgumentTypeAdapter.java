@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class OrGreedyCommandStringArgumentTypeAdapter extends SeparatedGreedyCommandStringArgumentTypeAdapter {
 
     public OrGreedyCommandStringArgumentTypeAdapter() {
-        super(Set.of("OR"));
+        super(List.of("OR"));
     }
 
     @Override
