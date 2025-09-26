@@ -1053,6 +1053,14 @@
       "is_dynamic": false
     },
     {
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerLeftEvent",
+      "declaring_class_name": "mod.fuji.core.command.assistant.CommandAssistant",
+      "declaring_method_name": "resetCommandAssistantCache",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
       "event_type_class_name": "mod.fuji.core.event.message.server.command.CommandRegistrationEvent",
       "declaring_class_name": "mod.fuji.core.command.processor.CommandAnnotationProcessor",
       "declaring_method_name": "registerFujiCommands",

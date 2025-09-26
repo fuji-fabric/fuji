@@ -14,4 +14,7 @@
   - `/OR`
   - `/one-of`
   - `/IF`
+- [core] feature: improvements to `command assistant`.
+  - Improve the `de-bounce` feature for `greedy command string` arguments.
+  - Now will remove the cache data when the player left the server.
 

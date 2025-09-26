@@ -8,14 +8,18 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import mod.fuji.core.annotation.Unused;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
+import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.assistant.structure.AvailableNextCommandPath;
 import mod.fuji.core.command.assistant.structure.AvailableNextCommandPathList;
 import mod.fuji.core.config.Configs;
 import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.core.document.annotation.TestCase;
+import mod.fuji.core.event.annotation.EventConsumer;
+import mod.fuji.core.event.message.player.PlayerLeftEvent;
 import mod.fuji.core.structure.Pair;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +35,13 @@ public class CommandAssistant {
     private static final Map<String, EvictingQueue<AvailableNextCommandPathList>> DEBOUNCE_AVAILABLE_NEXT_COMMAND_PATHS = new ConcurrentHashMap<>();
     private static final Map<String, EvictingQueue<String>> DEBOUNCE_COMPLETED_COMMAND_PATH = new ConcurrentHashMap<>();
     private static final int DEBOUNCE_QUEUE_SIZE = 5;
+
+    @EventConsumer
+    private static void resetCommandAssistantCache(@Unused PlayerLeftEvent event) {
+        String playerName = PlayerHelper.getPlayerName(event.getPlayer());
+        DEBOUNCE_AVAILABLE_NEXT_COMMAND_PATHS.remove(playerName);
+        DEBOUNCE_COMPLETED_COMMAND_PATH.remove(playerName);
+    }
 
     private static @NotNull String toStringByArgumentType(@NotNull CommandNode<ServerCommandSource> commandNode) {
         if (commandNode instanceof ArgumentCommandNode<ServerCommandSource, ?>) {
@@ -223,7 +234,8 @@ public class CommandAssistant {
             , "Test the assistant with custom parser and non-zero-offset suggestions builder: `/fly others @a[distance=..8`"
     })
     @TestCase(action = "Test the de-bounce for greedy command string arguments.", targets = {
-        "Issue: `/IF send-message %player:name% 1 THEN send-broadcast 22...`"
+        "Issue: `/IF send-message %player:name% 1 THEN send-broadcast 22...`",
+        "Issue: `/IF   send-message %player:name% 1 THEN send-broadcast 2  ELSE  send-chat %player:name% 3`"
     })
     @ForDeveloper("""
             1. The custom command suggestions provider will be called when the cursor enters, leaves, or moves within a required argument. (Except case 2.)

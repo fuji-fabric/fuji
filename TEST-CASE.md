@@ -236,6 +236,12 @@
 
 [Test Case]
 - Module: core
+- Action: **Test the de-bounce for greedy command string arguments.**
+- Target: Issue: `/IF send-message %player:name% 1 THEN send-broadcast 22...`
+- Target: Issue: `/IF   send-message %player:name% 1 THEN send-broadcast 2  ELSE  send-chat %player:name% 3`
+
+[Test Case]
+- Module: core
 - Action: **Test the exception handler functions.**
 - Target: This mod failed at server startup, due to mixin injection errors.
 - Target: This mod failed at server startup, due to module initialization failed.
