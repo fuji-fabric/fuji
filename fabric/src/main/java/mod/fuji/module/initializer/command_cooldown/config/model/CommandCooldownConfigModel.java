@@ -1,6 +1,7 @@
 package mod.fuji.module.initializer.command_cooldown.config.model;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.LinkedHashMap;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.command_cooldown.structure.NamedCooldownDescriptor;
 
@@ -20,7 +21,7 @@ public class CommandCooldownConfigModel {
         And the `cooldown ms` for that `target command`.
         """)
     @SerializedName(value = "unnamed_cooldown", alternate = "regex2ms")
-    Map<String, Long> unnamedCooldown = new HashMap<>() {
+    LinkedHashMap<String, Long> unnamedCooldown = new LinkedHashMap<>() {
         {
             this.put("chunks.*", 60 * 1000L);
             this.put("rtp.*", 60 * 1000L);
