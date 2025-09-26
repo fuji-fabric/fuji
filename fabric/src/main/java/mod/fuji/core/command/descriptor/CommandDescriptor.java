@@ -86,7 +86,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
     public static @NotNull List<CommandDescriptor> getCommandDescriptors() {
         return REGISTERED_COMMAND_DESCRIPTORS
             .stream()
-            .sorted(Comparator.comparing(it -> it.getFlatCommandPath().toString()))
+            .sorted(Comparator.comparing(CommandDescriptor::getUserFriendlyCommandSyntax))
             .toList();
     }
 
