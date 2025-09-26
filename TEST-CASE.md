@@ -255,6 +255,7 @@
 - Module: core
 - Action: **Test the functionality for recursive suggestions builder. (With separator literals)**
 - Target: Issue: `/chain say 1 chain`
+- Target: Issue: `/chain say 1 chain say 2 chain`
 - Target: Issue: `/chain say 1 chain        say     2     chain say 3`
 - Target: Issue: `/chain say 1 chain`
 - Target: Issue: `/chain say 1 chain chain chain sa`

@@ -42,10 +42,67 @@ public class GreedyCommandStringArgumentTypeAdapter extends BaseArgumentTypeAdap
         return new GreedyCommandString(string);
     }
 
-    static Set<String> greedyStringSeparatorLiterals = Set.of("chain");
+    final Set<String> greedyStringSeparatorLiterals;
+
+    public GreedyCommandStringArgumentTypeAdapter() {
+        this.greedyStringSeparatorLiterals = Set.of();
+    }
+
+    public GreedyCommandStringArgumentTypeAdapter(@NotNull Set<String> greedyStringSeparatorLiterals) {
+        this.greedyStringSeparatorLiterals = greedyStringSeparatorLiterals;
+    }
+
+    @TestCase(action = "Test the functionality for recursive suggestions builder. (No separator literals)", targets = {
+        "Issue: `/run as console send-broadcast <rb>I am %player:name%`",
+        "Issue: `/run as player @s run as console run as fake-op %player:name% say I am %player:name%`",
+        "Issue: `/run as console command-attachment attach-entity-one @e[type=...`",
+        "Issue: `/NOT NOT NOT run as console delay 3 foreach when-online %player:name% send-broadcast You are %player:name%`"
+    })
+    @TestCase(action = "Test the functionality of placeholders.", targets = {
+        "Issue: `/chain run as fake-op @s run as console say 1 chain say 2`",
+        "Issue: `/chain run as fake-op %player:name% sa`",
+        "Issue: `/chain run as fake-op %player:name% run as console run as player @r say 1 chain say 2`",
+        "Issue: `/run as player SakuraWald run as console run as fake-op %player:name% send-message @s I am %player:name%`"
+    })
+    @TestCase(action = "Test the functionality for recursive suggestions builder. (With separator literals)", targets = {
+        "Issue: `/chain say 1 chain`",
+        "Issue: `/chain say 1 chain say 2 chain`",
+        "Issue: `/chain say 1 chain        say     2     chain say 3`",
+        "Issue: `/chain say 1 chain`",
+        "Issue: `/chain say 1 chain chain chain sa`",
+        "Issue: `/chain say 3  chain   send-messa`",
+        "Issue: `/chain say 3  chain   send-message   @s     <rb>Hello`"
+    })
+    @Override
+    protected @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+        return super.makeRequiredArgumentBuilder(argumentName)
+            .suggests((context, builder) -> {
+                /* Skip for non-player command source. */
+                if (context.getSource().getPlayer() == null) {
+                    return builder.buildFuture();
+                }
+                ServerPlayerEntity player = context.getSource().getPlayer();
+
+                /* Define the input string. */
+                @NotNull final String input = builder.getInput();
+                @NotNull final String inputTrim = input.trim();
+                LogUtil.debug("input = '{}'", input);
+                LogUtil.debug("builder.getStart() = {}", builder.getStart());
+
+                /* Suggest command suggestions from remaining string. */
+                builder.add(makeCommandStringSuggestionsBuilder(player, builder));
+
+                /* Suggest separator literals at any point. */
+                makeSeparatorLiteralSuggestionsBuilders(inputTrim, builder)
+                    .forEach(builder::add);
+
+                /* Merge the results into the final builder. */
+                return builder.buildFuture();
+            });
+    }
 
     @SuppressWarnings("UnnecessaryLocalVariable")
-    private static @NotNull SuggestionsBuilder getBoundedBuilder(@NotNull SuggestionsBuilder builder) {
+    private @NotNull SuggestionsBuilder getBoundedBuilder(@NotNull SuggestionsBuilder builder) {
         /* Bound the builder with declared separator literals. */
         for (String literal : greedyStringSeparatorLiterals) {
             final String remainingString = builder.getRemaining();
@@ -63,62 +120,14 @@ public class GreedyCommandStringArgumentTypeAdapter extends BaseArgumentTypeAdap
         return builder;
     }
 
-    @TestCase(action = "Test the functionality for recursive suggestions builder. (No separator literals)", targets = {
-        "Issue: `/run as console send-broadcast <rb>I am %player:name%`",
-        "Issue: `/run as player @s run as console run as fake-op %player:name% say I am %player:name%`",
-        "Issue: `/run as console command-attachment attach-entity-one @e[type=...`",
-        "Issue: `/NOT NOT NOT run as console delay 3 foreach when-online %player:name% send-broadcast You are %player:name%`"
-    })
-    @TestCase(action = "Test the functionality of placeholders.", targets = {
-        "Issue: `/chain run as fake-op @s run as console say 1 chain say 2`",
-        "Issue: `/chain run as fake-op %player:name% sa`",
-        "Issue: `/chain run as fake-op %player:name% run as console run as player @r say 1 chain say 2`",
-        "Issue: `/run as player SakuraWald run as console run as fake-op %player:name% send-message @s I am %player:name%`"
-    })
-    @TestCase(action = "Test the functionality for recursive suggestions builder. (With separator literals)", targets = {
-        "Issue: `/chain say 1 chain`",
-        "Issue: `/chain say 1 chain        say     2     chain say 3`",
-        "Issue: `/chain say 1 chain`",
-        "Issue: `/chain say 1 chain chain chain sa`",
-        "Issue: `/chain say 3  chain   send-messa`",
-        "Issue: `/chain say 3  chain   send-message   @s     <rb>Hello`",
-    })
-    @Override
-    protected @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
-        return super.makeRequiredArgumentBuilder(argumentName)
-            .suggests((context, builder) -> {
-                /* Skip for non-player command source. */
-                if (context.getSource().getPlayer() == null) {
-                    return builder.buildFuture();
-                }
-                ServerPlayerEntity player = context.getSource().getPlayer();
-
-                /* Define the input string. */
-                @NotNull String input = builder.getInput();
-                @NotNull String inputTrim = input.trim();
-                LogUtil.warn("input = {}", input);
-                LogUtil.warn("builder.getStart() = {}", builder.getStart());
-
-                /* Suggest command suggestions from remaining string. */
-                builder.add(makeCommandStringSuggestionsBuilder(player, builder));
-
-                /* Suggest separator literals at any point. */
-                makeSeparatorLiteralSuggestionsBuilders(inputTrim, builder)
-                    .forEach(builder::add);
-
-                /* Merge the results into the final builder. */
-                return builder.buildFuture();
-            });
-    }
-
-    private static SuggestionsBuilder makeCommandStringSuggestionsBuilder(@NotNull ServerPlayerEntity player, @NotNull SuggestionsBuilder builder) {
+    private SuggestionsBuilder makeCommandStringSuggestionsBuilder(@NotNull ServerPlayerEntity player, @NotNull SuggestionsBuilder builder) {
         /* Make bounded builder. */
         builder = getBoundedBuilder(builder);
 
         /* Define the remaining string. */
         final String remainingString = builder.getRemaining();
-        LogUtil.warn("remaining string = {}", remainingString);
-        LogUtil.warn("remaining string length = {}", remainingString.length());
+        LogUtil.debug("remaining string = {}", remainingString);
+        LogUtil.debug("remaining string length = {}", remainingString.length());
 
         /* Define the command string and its offset. */
         // List the command suggestions in the admin view.
@@ -135,23 +144,20 @@ public class GreedyCommandStringArgumentTypeAdapter extends BaseArgumentTypeAdap
 
         // Strip all trailing blank characters, but keep one if exists.
         commandString = CommandHelper.Parser.stripTrailingButKeepOne(commandString);
-        LogUtil.warn("command string = {}", commandString);
+        LogUtil.debug("command string = {}", commandString);
 
         // Initialize the command string offset.
         final int commandStringOffset = commandString.length() - remainingString.length();
-        LogUtil.warn("command string offset = {}", commandStringOffset);
+        LogUtil.debug("command string offset = {}", commandStringOffset);
 
         /* Make sub-builder. */
         @NotNull Suggestions commandSuggestions = CommandHelper.Suggestion.listSuggestions(commandSource, commandString);
         final int offset = commandSuggestions.getRange().getStart() - commandStringOffset;
         final int subBuilderStart = builder.getStart() + offset;
         final SuggestionsBuilder subBuilder = builder.createOffset(subBuilderStart);
-        LogUtil.warn("subBuilder.getStart() = {}", subBuilder.getStart());
+        LogUtil.debug("subBuilder.getStart() = {}", subBuilder.getStart());
 
-        commandSuggestions.getList().forEach(it -> {
-            LogUtil.warn("suggestion = {}", it);
-            subBuilder.suggest(it.getText());
-        });
+        commandSuggestions.getList().forEach(it -> subBuilder.suggest(it.getText()));
 
         /* Return sub-builder. */
         return subBuilder;
@@ -168,7 +174,6 @@ public class GreedyCommandStringArgumentTypeAdapter extends BaseArgumentTypeAdap
                 }
 
                 /* Make sub-builder. */
-                LogUtil.warn("suggest literal = {}", separatorLiteral);
                 final int subBuilderStart = builder.getInput().length();
                 SuggestionsBuilder subBuilder = builder.createOffset(subBuilderStart);
                 subBuilder.suggest(" " + separatorLiteral + " ");

@@ -43,6 +43,7 @@ mod.fuji.core.command.argument.adapter.impl.RotationArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.ScoreboardCriterionArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.ScoreboardObjectiveArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.ScoreboardSlotArgumentTypeAdapter
+mod.fuji.core.command.argument.adapter.impl.SeparatedGreedyCommandStringArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.ServerCommandSourceAdapter
 mod.fuji.core.command.argument.adapter.impl.SlotRangeArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.StringArgumentTypeAdapter
@@ -61,6 +62,7 @@ mod.fuji.module.initializer.command_cooldown.command.argument.adapter.NamedCoold
 mod.fuji.module.initializer.command_menu.command.argument.adapter.MenuNameArgumentTypeAdapter
 mod.fuji.module.initializer.command_meta.attachment.command.argument.adapter.SubjectIdArgumentTypeAdapter
 mod.fuji.module.initializer.command_meta.attachment.command.argument.adapter.SubjectNameArgumentTypeAdapter
+mod.fuji.module.initializer.command_meta.chain.command.argument.adapter.ChainGreedyCommandStringArgumentTypeAdapter
 mod.fuji.module.initializer.command_meta.json.command.argument.adapter.JsonValueTypeArgumentTypeAdapter
 mod.fuji.module.initializer.command_scheduler.command.argument.adapter.JobNameArgumentTypeAdapter
 mod.fuji.module.initializer.command_state.command.argument.adapter.StateDescriptorArgumentTypeAdapter

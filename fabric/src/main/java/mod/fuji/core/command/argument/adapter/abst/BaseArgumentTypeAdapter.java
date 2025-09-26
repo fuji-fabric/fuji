@@ -3,6 +3,7 @@ package mod.fuji.core.command.argument.adapter.abst;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import java.lang.reflect.Modifier;
 import mod.fuji.core.auxiliary.ExceptionUtil;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.ReflectionUtil;
@@ -45,7 +46,7 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
             }
         };
 
-        @SuppressWarnings({"unchecked"})
+        @SuppressWarnings({"unchecked", "SequencedCollectionMethodCanBeUsed"})
         public static void registerTypeAdapters() {
             // NOTE: The `/reload` command will trigger the command registration event.
             REGISTERED_COMMAND_ARGUMENT_TYPE_ADAPTERS.clear();
@@ -53,11 +54,15 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
 
             ReflectionUtil.CompileTimeGraph.getCompileTimeTxtGraph(ReflectionUtil.CompileTimeGraph.ARGUMENT_TYPE_ADAPTER_GRAPH_FILE_NAME)
                 .stream()
-                .filter(className -> ModuleLoadDeterminer.shouldLoadThis(className))
+                .filter(ModuleLoadDeterminer::shouldLoadThis)
                 .forEach(className -> {
                     try {
                         /* Make the instance of type adapter */
                         Class<? extends BaseArgumentTypeAdapter> adapterClass = (Class<? extends BaseArgumentTypeAdapter>) Class.forName(className);
+                        if (Modifier.isAbstract(adapterClass.getModifiers())) {
+                            return;
+                        }
+
                         Constructor<? extends BaseArgumentTypeAdapter> adapterConstructor = adapterClass.getDeclaredConstructor();
                         BaseArgumentTypeAdapter adapterInstance = adapterConstructor.newInstance();
                         REGISTERED_COMMAND_ARGUMENT_TYPE_ADAPTERS.add(adapterInstance);

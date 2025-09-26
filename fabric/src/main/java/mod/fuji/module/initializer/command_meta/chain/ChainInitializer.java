@@ -10,6 +10,7 @@ import mod.fuji.core.command.executor.CommandExecutor;
 import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.module.initializer.ModuleInitializer;
+import mod.fuji.module.initializer.command_meta.chain.command.argument.wrapper.ChainGreedyCommandString;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.regex.Matcher;
@@ -71,7 +72,7 @@ public class ChainInitializer extends ModuleInitializer {
     @Document(id = 1751824736793L, value = "Chain commands and executes them in sequence, the chain will break if the previous one command fails.")
     @CommandNode("chain")
     @CommandRequirement(level = 4)
-    private static int $chain(@CommandSource ServerCommandSource source, GreedyCommandString rest) {
+    private static int $chain(@CommandSource ServerCommandSource source, ChainGreedyCommandString rest) {
         String $rest = rest.getValue();
 
         Matcher matcher = CHAIN_COMMAND_PARSER.matcher($rest);
