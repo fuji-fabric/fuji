@@ -245,6 +245,14 @@
 
 [Test Case]
 - Module: core
+- Action: **Test the functionality for recursive suggestions builder.**
+- Target: Issue: `/run as console send-broadcast <rb>I am %player:name%`
+- Target: Issue: `/run as player @s run as console run as fake-op %player:name% say I am %player:name%`
+- Target: Issue: `/run as console command-attachment attach-entity-one @e[type=...`
+- Target: Issue: `/NOT NOT NOT run as console delay 3 foreach when-online %player:name% send-broadcast You are %player:name%`
+
+[Test Case]
+- Module: core
 - Action: **Test the functionality of async chunk loading.**
 - Target: The RTP process should not block the game-playing. (Ticking entities, selecting target blocks...)
 - Target: Throwing item entities during RTP process, the game should be ticked normally.
