@@ -9,11 +9,8 @@
 
 ## ✨ Added
 - [core] feature: added `command suggestions` for `greedy command string`, which benefits the following commands: 
-  - `/command-cooldown test`
-  - `/command-attachment {attach-entity|attach-item|attach-block} ...`
-  - `/command-permission describe`
-  - `/command_debug`
+  - `/chain`
+  - `/AND`
+  - `/OR`
+  - `/one-of`
 
-## 🐛 Fixed
-- **[core]**
-    - The `--silent` and `--stdout` optional arguments can't be specified for `greedy command string` argument type.

@@ -8,10 +8,10 @@ import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
-import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
 import mod.fuji.core.command.executor.CommandExecutor;
 import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
 import mod.fuji.module.initializer.ModuleInitializer;
+import mod.fuji.module.initializer.command_meta.one_of.argument.wrapper.OneOfGreedyCommandString;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.Arrays;
@@ -29,7 +29,7 @@ public class OneOfInitializer extends ModuleInitializer {
     @Document(id = 1751824718640L, value = "One-of command randomly pick one of commands and execute it as console.")
     @CommandNode("one-of")
     @CommandRequirement(level = 4)
-    private static int $oneOf(@CommandSource ServerCommandSource source, GreedyString rest) {
+    private static int $oneOf(@CommandSource ServerCommandSource source, OneOfGreedyCommandString rest) {
         String $rest = rest.getValue();
 
         List<String> commands = Arrays.stream($rest.split("one-of"))

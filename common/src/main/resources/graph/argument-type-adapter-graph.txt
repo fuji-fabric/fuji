@@ -60,10 +60,13 @@ mod.fuji.module.initializer.command_attachment.command.argument.adapter.ExecuteA
 mod.fuji.module.initializer.command_attachment.command.argument.adapter.InteractTypeArgumentTypeAdapter
 mod.fuji.module.initializer.command_cooldown.command.argument.adapter.NamedCooldownDescriptorArgumentTypeAdapter
 mod.fuji.module.initializer.command_menu.command.argument.adapter.MenuNameArgumentTypeAdapter
+mod.fuji.module.initializer.command_meta.AND.command.argument.adapter.AndGreedyCommandStringArgumentTypeAdapter
+mod.fuji.module.initializer.command_meta.OR.argument.adapter.OrGreedyCommandStringArgumentTypeAdapter
 mod.fuji.module.initializer.command_meta.attachment.command.argument.adapter.SubjectIdArgumentTypeAdapter
 mod.fuji.module.initializer.command_meta.attachment.command.argument.adapter.SubjectNameArgumentTypeAdapter
 mod.fuji.module.initializer.command_meta.chain.command.argument.adapter.ChainGreedyCommandStringArgumentTypeAdapter
 mod.fuji.module.initializer.command_meta.json.command.argument.adapter.JsonValueTypeArgumentTypeAdapter
+mod.fuji.module.initializer.command_meta.one_of.argument.adapter.OneOfGreedyCommandStringArgumentTypeAdapter
 mod.fuji.module.initializer.command_scheduler.command.argument.adapter.JobNameArgumentTypeAdapter
 mod.fuji.module.initializer.command_state.command.argument.adapter.StateDescriptorArgumentTypeAdapter
 mod.fuji.module.initializer.command_toolbox.warp.command.argument.adapter.WarpDescriptorArgumentTypeAdapter

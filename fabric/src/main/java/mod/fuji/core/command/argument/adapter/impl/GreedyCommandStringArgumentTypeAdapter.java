@@ -86,8 +86,8 @@ public class GreedyCommandStringArgumentTypeAdapter extends BaseArgumentTypeAdap
                 /* Define the input string. */
                 @NotNull final String input = builder.getInput();
                 @NotNull final String inputTrim = input.trim();
-                LogUtil.debug("input = '{}'", input);
-                LogUtil.debug("builder.getStart() = {}", builder.getStart());
+                LogUtil.debug("◉ input = '{}'", input);
+                LogUtil.debug("◉ builder.getStart() = {}", builder.getStart());
 
                 /* Suggest command suggestions from remaining string. */
                 builder.add(makeCommandStringSuggestionsBuilder(player, builder));
