@@ -1,0 +1,37 @@
+package mod.fuji.module.initializer.evaluator;
+
+import java.util.List;
+import mod.fuji.core.auxiliary.minecraft.CommandHelper;
+import mod.fuji.core.command.annotation.CommandNode;
+import mod.fuji.core.command.annotation.CommandRequirement;
+import mod.fuji.core.command.annotation.CommandSource;
+import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
+import mod.fuji.core.document.annotation.ColorBox;
+import mod.fuji.core.document.annotation.Document;
+import mod.fuji.module.initializer.ModuleInitializer;
+import mod.fuji.module.initializer.evaluator.formatter.PrettyFormatter;
+import mod.fuji.module.initializer.evaluator.parser.LispParser;
+import mod.fuji.module.initializer.evaluator.parser.token.Token;
+import net.minecraft.server.command.ServerCommandSource;
+
+@Document(id = 1758985259601L, value = """
+    This module provides an `evaluator` for `Lisp dialect language`.
+    """)
+@ColorBox(id = 1758985675914L, color = ColorBox.ColorBoxTypes.WARNING, value = """
+    ◉ This module is currently an experimental module.
+    Changed may be made in the future versions.
+    """)
+public class EvaluatorInitializer extends ModuleInitializer {
+
+    @CommandNode("lisp eval")
+    @CommandRequirement(level = 4)
+    private static int $eval(@CommandSource ServerCommandSource source, GreedyString form) {
+        final String $form = form.getValue();
+        LispParser lispParser = new LispParser($form);
+        List<Token> parse = lispParser.parse();
+        PrettyFormatter.prettyPrint(parse);
+
+        return CommandHelper.Return.SUCCESS;
+    }
+
+}
