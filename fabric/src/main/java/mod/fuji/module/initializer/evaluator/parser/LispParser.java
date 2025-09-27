@@ -75,8 +75,30 @@ public class LispParser {
 
     @ForDeveloper("Any non-list is atom.")
     private void parseAtom() {
+        parseNumber();
         parseSymbol();
+    }
 
+    private void parseNumber() {
+        char peek;
+
+        while ((peek = peekChar()) != EOF_CHARACTER) {
+            if (!isNumberCharacter(peek)) {
+                break;
+            }
+
+            forward();
+        }
+
+        if (!isEmptyString()) {
+            appendToken(TokenType.NUMBER);
+        }
+    }
+
+    private boolean isNumberCharacter(char ch) {
+        if (ch >= '0' && ch <= '9') return true;
+
+        return false;
     }
 
     private void parseSymbol() {
@@ -94,7 +116,7 @@ public class LispParser {
         }
 
         if (!isEmptyString()) {
-            appendToken(TokenType.IDENTIFIER);
+            appendToken(TokenType.SYMBOL);
         }
     }
 
