@@ -88,11 +88,24 @@ public class LispParser {
             forward();
         }
 
+        /* Read a number. */
+        boolean seenFloatingPointCharacter = false;
         while ((peek = peekChar()) != EOF_CHARACTER) {
 
             if (isSignCharacter(peek)) {
                 // Contains more than 1 sign characters, this is not a number token.
                 return;
+            }
+
+            if (peek == '.') {
+                if (seenFloatingPointCharacter) {
+                    // Contains more than 1 floating point characters, this is not a number token.
+                    return;
+                }
+
+                seenFloatingPointCharacter = true;
+                forward();
+                continue;
             }
 
             if (!isNumberCharacter(peek)) {
@@ -102,6 +115,7 @@ public class LispParser {
             forward();
         }
 
+        /* Append the token. */
         String tokenString = getTokenString();
         if (!tokenString.isEmpty()) {
             if (seenLeadingSignCharacter && tokenString.length() == 1) {

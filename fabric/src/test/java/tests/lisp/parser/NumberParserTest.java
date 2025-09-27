@@ -67,7 +67,7 @@ public class NumberParserTest {
     void testInBetweenSignCharacter() {
         List<Token> actual = ParserUtil.parseInputString("1+2");
         List<Token> expected = List.of(
-            Token.of(TokenType.SYMBOL, StringRange.of(0, 3), "+")
+            Token.of(TokenType.SYMBOL, StringRange.of(0, 3), "1+2")
         );
         assertEquals(expected, actual);
     }
@@ -87,12 +87,39 @@ public class NumberParserTest {
         assertEquals(expected, actual);
     }
 
-//    @Test
-//    void testSingleFloating() {
-//        List<Token> actual = ParserUtil.parseInputString("123.456");
-//        List<Token> expected = List.of(
-//            Token.of(TokenType.NUMBER, StringRange.of(0, 3), "123")
-//        );
-//        assertEquals(expected, actual);
-//    }
+    @Test
+    void testSingleFloatingNumber() {
+        List<Token> actual = ParserUtil.parseInputString("123.456");
+        List<Token> expected = List.of(
+            Token.of(TokenType.NUMBER, StringRange.of(0, 7), "123.456")
+        );
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testTwoFloatingPointCharacters() {
+        List<Token> actual = ParserUtil.parseInputString("123.456.");
+        List<Token> expected = List.of(
+            Token.of(TokenType.SYMBOL, StringRange.of(0, 8), "123.456.")
+        );
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testLeadingFloatingPointCharacter() {
+        List<Token> actual = ParserUtil.parseInputString(".123");
+        List<Token> expected = List.of(
+            Token.of(TokenType.NUMBER, StringRange.of(0, 4), ".123")
+        );
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testLeadingFloatingPointCharacterSymbol() {
+        List<Token> actual = ParserUtil.parseInputString(".123.");
+        List<Token> expected = List.of(
+            Token.of(TokenType.SYMBOL, StringRange.of(0, 5), ".123.")
+        );
+        assertEquals(expected, actual);
+    }
 }
