@@ -96,6 +96,7 @@ mod.fuji.module.initializer.echo.send_message.SendMessageInitializer
 mod.fuji.module.initializer.echo.send_title.SendTitleInitializer
 mod.fuji.module.initializer.echo.send_toast.SendToastInitializer
 mod.fuji.module.initializer.economy.EconomyInitializer
+mod.fuji.module.initializer.evaluator.EvaluatorInitializer
 mod.fuji.module.initializer.fuji.FujiInitializer
 mod.fuji.module.initializer.functional.FunctionalInitializer
 mod.fuji.module.initializer.functional.anvil.AnvilInitializer
