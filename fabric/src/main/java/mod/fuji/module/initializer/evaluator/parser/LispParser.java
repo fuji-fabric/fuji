@@ -1,6 +1,5 @@
 package mod.fuji.module.initializer.evaluator.parser;
 
-import com.google.errorprone.annotations.Keep;
 import java.util.ArrayList;
 import java.util.List;
 import mod.fuji.core.auxiliary.LogUtil;
@@ -80,9 +79,22 @@ public class LispParser {
     }
 
     private void parseNumber() {
-        char peek;
+        char peek = peekChar();
+
+        /* Check if there is leading sign character. */
+        boolean seenLeadingSignCharacter = false;
+        if (isSignCharacter(peek)) {
+            seenLeadingSignCharacter = true;
+            forward();
+        }
 
         while ((peek = peekChar()) != EOF_CHARACTER) {
+
+            if (isSignCharacter(peek)) {
+                // Contains more than 1 sign characters, this is not a number token.
+                return;
+            }
+
             if (!isNumberCharacter(peek)) {
                 break;
             }
@@ -90,9 +102,17 @@ public class LispParser {
             forward();
         }
 
-        if (!isEmptyString()) {
+        String tokenString = getTokenString();
+        if (!tokenString.isEmpty()) {
+            if (seenLeadingSignCharacter && tokenString.length() == 1) {
+                return;
+            }
             appendToken(TokenType.NUMBER);
         }
+    }
+
+    private boolean isSignCharacter(char ch) {
+        return ch == '-' || ch == '+';
     }
 
     private boolean isNumberCharacter(char ch) {
@@ -161,16 +181,20 @@ public class LispParser {
         return input.charAt(end);
     }
 
-    @Keep
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean isEmptyString() {
         return start == end;
     }
 
     private void appendToken(@NotNull TokenType tokenType) {
-        String stringText = input.substring(start, end);
+        String stringText = getTokenString();
         Token token = makeToken(tokenType, stringText);
         endToken();
         tokens.add(token);
+    }
+
+    private @NotNull String getTokenString() {
+        return input.substring(start, end);
     }
 
     private void endToken() {
