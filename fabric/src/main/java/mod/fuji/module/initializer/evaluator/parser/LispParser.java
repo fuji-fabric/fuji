@@ -72,7 +72,13 @@ public class LispParser {
     }
 
 
-    @ForDeveloper("Any non-list is atom.")
+    @ForDeveloper("""
+        Any non-list is atom.
+
+        Call the parser functions in the order that:
+        1. If the distinguish chars have no intersection, call them at arbitrary order.
+        2. Call them in sub-set order.
+        """)
     private void parseAtom() {
         parseNumber();
         parseString();
