@@ -1,13 +1,13 @@
 package mod.fuji.module.initializer.command_advice.config.model;
 
 import com.google.gson.annotations.SerializedName;
-import mod.fuji.core.document.annotation.Document;
-import mod.fuji.module.initializer.command_advice.structure.CommandAdviceEntry;
-import mod.fuji.module.initializer.command_advice.structure.CommandAdviceType;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mod.fuji.core.document.annotation.Document;
+import mod.fuji.module.initializer.command_advice.structure.CommandAdviceEntry;
+import mod.fuji.module.initializer.command_advice.structure.CommandAdviceType;
 
 @Data
 @NoArgsConstructor
@@ -20,7 +20,7 @@ public class CommandAdviceConfigModel {
     List<CommandAdviceEntry> advices = new ArrayList<>() {
         {
             /* Decorate the `/heal` command with `heart particle`. */
-            this.add(new CommandAdviceEntry(true, "Spawn a heart particle after the execution of `/heal` command.",new CommandAdviceEntry.Matcher("heal", true, false), CommandAdviceType.AFTER_EXECUTION, List.of(
+            this.add(new CommandAdviceEntry(true, "Spawn a heart particle after the execution of `/heal` command.", new CommandAdviceEntry.Matcher("heal", true, false), CommandAdviceType.AFTER_EXECUTION, List.of(
                 "say Display the heard particle for player %player:name%",
                 "run as fake-op %player:name% --silent true particle minecraft:heart ~ ~1 ~ 0.6 0.6 0.6 0 20 force %player:name%")));
 
@@ -61,6 +61,14 @@ public class CommandAdviceConfigModel {
                 "has-perm? $1 your.custom.permission")));
             this.add(new CommandAdviceEntry(true, "Add a `exempt` feature for `/view inv <player>` command.", new CommandAdviceEntry.Matcher("view inv (.+)", true, false), CommandAdviceType.ON_EXECUTION_CANCELLED, List.of(
                 "send-message %player:name% <red>You can't view the inventory of $1 player, it's exempted.")));
+
+            /* Ban a specific command in a specific world. */
+            this.add(new CommandAdviceEntry(false, "Ban the use of `/home set` command in the minecraft:the_end dimension.", new CommandAdviceEntry.Matcher("home set (.+)", true, false), CommandAdviceType.CANCEL_IF_ANY_SUCCESS, List.of(
+                "is-in-world? %player:name% minecraft:the_end"
+            )));
+            this.add(new CommandAdviceEntry(false, "Ban the use of `/home set` command in the minecraft:the_end dimension.", new CommandAdviceEntry.Matcher("home set (.+)", true, false), CommandAdviceType.ON_EXECUTION_CANCELLED, List.of(
+                "send-message %player:name% <red>You can't set a home in %world:id% dimension."
+            )));
 
         }
     };
