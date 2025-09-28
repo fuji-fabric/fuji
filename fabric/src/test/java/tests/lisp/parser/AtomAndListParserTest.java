@@ -1,7 +1,7 @@
 package tests.lisp.parser;
 
 import java.util.List;
-import mod.fuji.module.initializer.evaluator.parser.exception.ParserSyntaxException;
+import mod.fuji.module.initializer.evaluator.parser.exception.LispSyntaxException;
 import mod.fuji.module.initializer.evaluator.parser.structure.StringRange;
 import mod.fuji.module.initializer.evaluator.parser.token.Token;
 import mod.fuji.module.initializer.evaluator.parser.token.TokenType;
@@ -23,14 +23,14 @@ public class AtomAndListParserTest {
 
     @Test
     void testUnclosedList() {
-        assertThrows(ParserSyntaxException.class, () -> {
+        assertThrows(LispSyntaxException.class, () -> {
             ParserUtil.parseInputString("(");
         });
     }
 
     @Test
     void testUnexpectedClosedParenthesis() {
-        assertThrows(ParserSyntaxException.class, () -> {
+        assertThrows(LispSyntaxException.class, () -> {
             ParserUtil.parseInputString(")");
         });
     }
@@ -57,7 +57,7 @@ public class AtomAndListParserTest {
 
     @Test
     void testDoubleAtom() {
-        assertThrows(ParserSyntaxException.class, () -> {
+        assertThrows(LispSyntaxException.class, () -> {
             ParserUtil.parseInputString("abc def");
         });
     }

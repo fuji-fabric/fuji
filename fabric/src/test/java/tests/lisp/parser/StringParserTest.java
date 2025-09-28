@@ -1,7 +1,7 @@
 package tests.lisp.parser;
 
 import java.util.List;
-import mod.fuji.module.initializer.evaluator.parser.exception.ParserSyntaxException;
+import mod.fuji.module.initializer.evaluator.parser.exception.LispSyntaxException;
 import mod.fuji.module.initializer.evaluator.parser.structure.StringRange;
 import mod.fuji.module.initializer.evaluator.parser.token.Token;
 import mod.fuji.module.initializer.evaluator.parser.token.TokenType;
@@ -31,14 +31,14 @@ public class StringParserTest {
 
     @Test
     void testDoubleQuoteCharacterInSymbolName() {
-        assertThrows(ParserSyntaxException.class, () -> {
+        assertThrows(LispSyntaxException.class, () -> {
             ParserUtil.parseInputString("abc\"");
         });
     }
 
     @Test
     void testUnclosedString() {
-        assertThrows(ParserSyntaxException.class, () -> {
+        assertThrows(LispSyntaxException.class, () -> {
             ParserUtil.parseInputString("\"abc");
         });
     }

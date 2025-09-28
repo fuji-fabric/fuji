@@ -6,7 +6,7 @@ import java.util.Set;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.document.annotation.Cite;
 import mod.fuji.core.document.annotation.ForDeveloper;
-import mod.fuji.module.initializer.evaluator.parser.exception.ParserSyntaxException;
+import mod.fuji.module.initializer.evaluator.parser.exception.LispSyntaxException;
 import mod.fuji.module.initializer.evaluator.parser.structure.StringRange;
 import mod.fuji.module.initializer.evaluator.parser.token.Token;
 import mod.fuji.module.initializer.evaluator.parser.token.TokenType;
@@ -51,7 +51,7 @@ public class LispParser {
 
         /* Check if the input been parsed totally. */
         if (hasUnparsedCharacters()) {
-            throw new ParserSyntaxException("Unexpected character at %d".formatted(start));
+            throw new LispSyntaxException("Unexpected character at %d".formatted(start));
         }
 
         /* Return the tokens. */
@@ -179,7 +179,7 @@ public class LispParser {
         }
 
         if (!stringClosed) {
-            throw new ParserSyntaxException("Unclosed string after %d".formatted(end));
+            throw new LispSyntaxException("Unclosed string after %d".formatted(end));
         }
 
         if (!isTokenStringEmpty()) {
@@ -222,7 +222,7 @@ public class LispParser {
 
             do {
                 if (!hasUnparsedCharacters()) {
-                    throw new ParserSyntaxException("Missing closed parenthesis after index %d".formatted(end));
+                    throw new LispSyntaxException("Missing closed parenthesis after index %d".formatted(end));
                 }
 
                 parseForm();
@@ -233,7 +233,7 @@ public class LispParser {
 
             return;
         } else {
-            throw new ParserSyntaxException("Expected an open-parenthesis at index %d".formatted(end));
+            throw new LispSyntaxException("Expected an open-parenthesis at index %d".formatted(end));
         }
 
     }
