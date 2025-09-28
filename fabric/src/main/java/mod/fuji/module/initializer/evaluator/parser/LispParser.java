@@ -75,6 +75,8 @@ public class LispParser {
     @ForDeveloper("Any non-list is atom.")
     private void parseAtom() {
         parseNumber();
+        parseString();
+
         parseSymbol();
     }
 
@@ -125,10 +127,46 @@ public class LispParser {
         }
     }
 
+    private void parseString() {
+        char peek = peekChar();
+
+        if (peek == '"') {
+            forward();
+        } else {
+            return;
+        }
+
+        boolean stringClosed = false;
+        while ((peek = peekChar()) != EOF_CHARACTER) {
+
+            if (currentChar() == '\\') {
+                forward();
+                continue;
+            }
+
+            if (peek == '"') {
+                stringClosed = true;
+                forward();
+                break;
+            }
+
+            forward();
+        }
+
+        if (!stringClosed) {
+            throw new ParserSyntaxException("Unclosed string after %d".formatted(end));
+        }
+
+        if (!isTokenStringEmpty()) {
+            appendToken(TokenType.STRING);
+        }
+    }
+
     private boolean isSignCharacter(char ch) {
         return ch == '-' || ch == '+';
     }
 
+    @SuppressWarnings("RedundantIfStatement")
     private boolean isNumberCharacter(char ch) {
         if (ch >= '0' && ch <= '9') return true;
 
@@ -142,6 +180,10 @@ public class LispParser {
                 throw new ParserSyntaxException("Colon character are banned in symbol name, at %d".formatted(end));
             }
 
+            if (peek == '"') {
+                throw new ParserSyntaxException("Double-quote character are banned in symbol name, at %d".formatted(end));
+            }
+
             if (peek == '(' || peek == ')' || peek == ' ') {
                 break;
             }
@@ -149,7 +191,7 @@ public class LispParser {
             forward();
         }
 
-        if (!isEmptyString()) {
+        if (!isTokenStringEmpty()) {
             appendToken(TokenType.SYMBOL);
         }
     }
@@ -195,8 +237,12 @@ public class LispParser {
         return input.charAt(end);
     }
 
+    private char currentChar() {
+        return input.charAt(end - 1);
+    }
+
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    private boolean isEmptyString() {
+    private boolean isTokenStringEmpty() {
         return start == end;
     }
 
