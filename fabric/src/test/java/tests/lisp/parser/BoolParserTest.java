@@ -30,8 +30,8 @@ public class BoolParserTest {
     void testFalseValueSymbolDenotation() {
         List<Token> actual = ParserUtil.parseInputString("()");
         List<Token> expected = List.of(
-            Token.of(TokenType.OPEN_PARENTHESES, StringRange.of(0, 1), "("),
-            Token.of(TokenType.CLOSED_PARENTHESES, StringRange.of(1, 2), ")")
+            Token.of(TokenType.BEGIN_LIST, StringRange.of(0, 1), "("),
+            Token.of(TokenType.END_LIST, StringRange.of(1, 2), ")")
         );
         assertEquals(expected, actual);
     }

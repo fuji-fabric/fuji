@@ -79,4 +79,12 @@ public class StringParserTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    void testEscapeInNumber() {
+        List<Token> actual = ParserUtil.parseInputString("1\\23");
+        List<Token> expected = List.of(
+            Token.of(TokenType.SYMBOL, StringRange.of(0, 4), "1\\23")
+        );
+        assertEquals(expected, actual);
+    }
 }

@@ -15,8 +15,8 @@ public class AtomAndListParserTest {
     void testSingleList() {
         List<Token> actual = ParserUtil.parseInputString("()");
         List<Token> expected = List.of(
-            Token.of(TokenType.OPEN_PARENTHESES, StringRange.of(0, 1), "("),
-            Token.of(TokenType.CLOSED_PARENTHESES, StringRange.of(1, 2), ")")
+            Token.of(TokenType.BEGIN_LIST, StringRange.of(0, 1), "("),
+            Token.of(TokenType.END_LIST, StringRange.of(1, 2), ")")
         );
         assertEquals(expected, actual);
     }
@@ -39,9 +39,9 @@ public class AtomAndListParserTest {
     void testSingleAtomInList() {
         List<Token> actual = ParserUtil.parseInputString("(abc)");
         List<Token> expected = List.of(
-            Token.of(TokenType.OPEN_PARENTHESES, StringRange.of(0, 1), "("),
+            Token.of(TokenType.BEGIN_LIST, StringRange.of(0, 1), "("),
             Token.of(TokenType.SYMBOL, StringRange.of(1, 4), "abc"),
-            Token.of(TokenType.CLOSED_PARENTHESES, StringRange.of(4, 5), ")")
+            Token.of(TokenType.END_LIST, StringRange.of(4, 5), ")")
         );
         assertEquals(expected, actual);
     }
@@ -66,10 +66,10 @@ public class AtomAndListParserTest {
     void testDoubleAtomInList() {
         List<Token> actual = ParserUtil.parseInputString("(abc def)");
         List<Token> expected = List.of(
-            Token.of(TokenType.OPEN_PARENTHESES, StringRange.of(0, 1), "("),
+            Token.of(TokenType.BEGIN_LIST, StringRange.of(0, 1), "("),
             Token.of(TokenType.SYMBOL, StringRange.of(1, 4), "abc"),
             Token.of(TokenType.SYMBOL, StringRange.of(5, 8), "def"),
-            Token.of(TokenType.CLOSED_PARENTHESES, StringRange.of(8, 9), ")")
+            Token.of(TokenType.END_LIST, StringRange.of(8, 9), ")")
         );
         assertEquals(expected, actual);
     }
@@ -78,11 +78,11 @@ public class AtomAndListParserTest {
     void testTripleAtomInList() {
         List<Token> actual = ParserUtil.parseInputString("(abc def ghi)");
         List<Token> expected = List.of(
-            Token.of(TokenType.OPEN_PARENTHESES, StringRange.of(0, 1), "("),
+            Token.of(TokenType.BEGIN_LIST, StringRange.of(0, 1), "("),
             Token.of(TokenType.SYMBOL, StringRange.of(1, 4), "abc"),
             Token.of(TokenType.SYMBOL, StringRange.of(5, 8), "def"),
             Token.of(TokenType.SYMBOL, StringRange.of(9, 12), "ghi"),
-            Token.of(TokenType.CLOSED_PARENTHESES, StringRange.of(12, 13), ")")
+            Token.of(TokenType.END_LIST, StringRange.of(12, 13), ")")
         );
         assertEquals(expected, actual);
     }
@@ -100,13 +100,13 @@ public class AtomAndListParserTest {
     void testShortIdentifiersInList() {
         List<Token> actual = ParserUtil.parseInputString("(a b c d e)");
         List<Token> expected = List.of(
-            Token.of(TokenType.OPEN_PARENTHESES, StringRange.of(0, 1), "("),
+            Token.of(TokenType.BEGIN_LIST, StringRange.of(0, 1), "("),
             Token.of(TokenType.SYMBOL, StringRange.of(1, 2), "a"),
             Token.of(TokenType.SYMBOL, StringRange.of(3, 4), "b"),
             Token.of(TokenType.SYMBOL, StringRange.of(5, 6), "c"),
             Token.of(TokenType.SYMBOL, StringRange.of(7, 8), "d"),
             Token.of(TokenType.SYMBOL, StringRange.of(9, 10), "e"),
-            Token.of(TokenType.CLOSED_PARENTHESES, StringRange.of(10, 11), ")")
+            Token.of(TokenType.END_LIST, StringRange.of(10, 11), ")")
         );
         assertEquals(expected, actual);
     }
@@ -115,18 +115,18 @@ public class AtomAndListParserTest {
     void testAtomAndList() {
         List<Token> actual = ParserUtil.parseInputString("(define (square x) (* x x))");
         List<Token> expected = List.of(
-            Token.of(TokenType.OPEN_PARENTHESES, StringRange.of(0, 1), "("),
+            Token.of(TokenType.BEGIN_LIST, StringRange.of(0, 1), "("),
             Token.of(TokenType.SYMBOL, StringRange.of(1, 7), "define"),
-            Token.of(TokenType.OPEN_PARENTHESES, StringRange.of(8, 9), "("),
+            Token.of(TokenType.BEGIN_LIST, StringRange.of(8, 9), "("),
             Token.of(TokenType.SYMBOL, StringRange.of(9, 15), "square"),
             Token.of(TokenType.SYMBOL, StringRange.of(16, 17), "x"),
-            Token.of(TokenType.CLOSED_PARENTHESES, StringRange.of(17, 18), ")"),
-            Token.of(TokenType.OPEN_PARENTHESES, StringRange.of(19, 20), "("),
+            Token.of(TokenType.END_LIST, StringRange.of(17, 18), ")"),
+            Token.of(TokenType.BEGIN_LIST, StringRange.of(19, 20), "("),
             Token.of(TokenType.SYMBOL, StringRange.of(20, 21), "*"),
             Token.of(TokenType.SYMBOL, StringRange.of(22, 23), "x"),
             Token.of(TokenType.SYMBOL, StringRange.of(24, 25), "x"),
-            Token.of(TokenType.CLOSED_PARENTHESES, StringRange.of(25, 26), ")"),
-            Token.of(TokenType.CLOSED_PARENTHESES, StringRange.of(26, 27), ")")
+            Token.of(TokenType.END_LIST, StringRange.of(25, 26), ")"),
+            Token.of(TokenType.END_LIST, StringRange.of(26, 27), ")")
         );
         assertEquals(expected, actual);
     }

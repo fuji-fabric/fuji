@@ -2,6 +2,7 @@ package mod.fuji.module.initializer.evaluator.parser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.document.annotation.Cite;
 import mod.fuji.core.document.annotation.ForDeveloper;
@@ -15,6 +16,19 @@ import org.jetbrains.annotations.NotNull;
 public class LispParser {
 
     private static final char EOF_CHARACTER = '\0';
+    private static final Set<Character> ATOM_END_CHARACTERS = Set.of(
+        '(',
+        ')',
+        '\'',
+        ';',
+        '"',
+        '|',
+        '#',
+        '`',
+        ',',
+        ':',
+        ' '
+    );
 
     final @NotNull String input;
     int start;
@@ -117,6 +131,11 @@ public class LispParser {
             }
 
             if (!isNumberCharacter(peek)) {
+                if (!ATOM_END_CHARACTERS.contains(peek)) {
+                    // This is a symbol whose name starts with a number.
+                    return;
+                }
+
                 break;
             }
 
@@ -182,15 +201,7 @@ public class LispParser {
     private void parseSymbol() {
         char peek;
         while ((peek = peekChar()) != EOF_CHARACTER) {
-            if (peek == ':') {
-                throw new ParserSyntaxException("Colon character are banned in symbol name, at %d".formatted(end));
-            }
-
-            if (peek == '"') {
-                throw new ParserSyntaxException("Double-quote character are banned in symbol name, at %d".formatted(end));
-            }
-
-            if (peek == '(' || peek == ')' || peek == ' ') {
+            if (ATOM_END_CHARACTERS.contains(peek)) {
                 break;
             }
 
@@ -206,7 +217,7 @@ public class LispParser {
     private void parseList() {
         if (peekChar() == '(') {
             forward();
-            emitToken(TokenType.OPEN_PARENTHESES);
+            emitToken(TokenType.BEGIN_LIST);
 
 
             do {
@@ -218,7 +229,7 @@ public class LispParser {
             } while (peekChar() != ')');
 
             forward();
-            emitToken(TokenType.CLOSED_PARENTHESES);
+            emitToken(TokenType.END_LIST);
 
             return;
         } else {

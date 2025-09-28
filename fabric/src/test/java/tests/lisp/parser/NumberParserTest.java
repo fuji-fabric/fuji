@@ -29,9 +29,9 @@ public class NumberParserTest {
     void testSingleNumberInList() {
         List<Token> actual = ParserUtil.parseInputString("(123)");
         List<Token> expected = List.of(
-            Token.of(TokenType.OPEN_PARENTHESES, StringRange.of(0, 1), "("),
+            Token.of(TokenType.BEGIN_LIST, StringRange.of(0, 1), "("),
             Token.of(TokenType.NUMBER, StringRange.of(1, 4), "123"),
-            Token.of(TokenType.CLOSED_PARENTHESES, StringRange.of(4, 5), ")")
+            Token.of(TokenType.END_LIST, StringRange.of(4, 5), ")")
         );
         assertEquals(expected, actual);
     }
@@ -76,13 +76,13 @@ public class NumberParserTest {
     void testNumberAndSymbolInList() {
         List<Token> actual = ParserUtil.parseInputString("(123 abc 456 def 789)");
         List<Token> expected = List.of(
-            Token.of(TokenType.OPEN_PARENTHESES, StringRange.of(0, 1), "("),
+            Token.of(TokenType.BEGIN_LIST, StringRange.of(0, 1), "("),
             Token.of(TokenType.NUMBER, StringRange.of(1, 4), "123"),
             Token.of(TokenType.SYMBOL, StringRange.of(5, 8), "abc"),
             Token.of(TokenType.NUMBER, StringRange.of(9, 12), "456"),
             Token.of(TokenType.SYMBOL, StringRange.of(13, 16), "def"),
             Token.of(TokenType.NUMBER, StringRange.of(17, 20), "789"),
-            Token.of(TokenType.CLOSED_PARENTHESES, StringRange.of(20, 21), ")")
+            Token.of(TokenType.END_LIST, StringRange.of(20, 21), ")")
         );
         assertEquals(expected, actual);
     }
@@ -119,6 +119,24 @@ public class NumberParserTest {
         List<Token> actual = ParserUtil.parseInputString(".123.");
         List<Token> expected = List.of(
             Token.of(TokenType.SYMBOL, StringRange.of(0, 5), ".123.")
+        );
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testNumberFollowingDecimalPoint() {
+        List<Token> actual = ParserUtil.parseInputString("123.");
+        List<Token> expected = List.of(
+            Token.of(TokenType.NUMBER, StringRange.of(0, 4), "123.")
+        );
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testSymbolNamePrecedingWithNumber() {
+        List<Token> actual = ParserUtil.parseInputString("123.a");
+        List<Token> expected = List.of(
+            Token.of(TokenType.SYMBOL, StringRange.of(0, 5), "123.a")
         );
         assertEquals(expected, actual);
     }
