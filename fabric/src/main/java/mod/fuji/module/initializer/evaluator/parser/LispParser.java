@@ -57,7 +57,7 @@ public class LispParser {
         // Remove leading blank characters.
         while (peekChar == ' ') {
             forward();
-            endToken();
+            beginToken();
             peekChar = peekChar();
         }
 
@@ -123,7 +123,7 @@ public class LispParser {
             if (seenLeadingSignCharacter && tokenString.length() == 1) {
                 return;
             }
-            appendToken(TokenType.NUMBER);
+            emitToken(TokenType.NUMBER);
         }
     }
 
@@ -139,7 +139,7 @@ public class LispParser {
         boolean stringClosed = false;
         while ((peek = peekChar()) != EOF_CHARACTER) {
 
-            if (currentChar() == '\\') {
+            if (previousChar() == '\\') {
                 forward();
                 continue;
             }
@@ -158,7 +158,7 @@ public class LispParser {
         }
 
         if (!isTokenStringEmpty()) {
-            appendToken(TokenType.STRING);
+            emitToken(TokenType.STRING);
         }
     }
 
@@ -192,23 +192,15 @@ public class LispParser {
         }
 
         if (!isTokenStringEmpty()) {
-            appendToken(TokenType.SYMBOL);
+            emitToken(TokenType.SYMBOL);
         }
-    }
-
-    private void forward(int distance) {
-        end += distance;
-    }
-
-    private void forward() {
-        forward(1);
     }
 
     @SuppressWarnings("UnnecessaryReturnStatement")
     private void parseList() {
         if (peekChar() == '(') {
             forward();
-            appendToken(TokenType.OPEN_PARENTHESES);
+            emitToken(TokenType.OPEN_PARENTHESES);
 
 
             do {
@@ -220,13 +212,23 @@ public class LispParser {
             } while (peekChar() != ')');
 
             forward();
-            appendToken(TokenType.CLOSED_PARENTHESES);
+            emitToken(TokenType.CLOSED_PARENTHESES);
 
             return;
         } else {
             throw new ParserSyntaxException("Expected an open-parenthesis at index %d".formatted(end));
         }
 
+    }
+
+
+    @SuppressWarnings("SameParameterValue")
+    private void forward(int distance) {
+        end += distance;
+    }
+
+    private void forward() {
+        forward(1);
     }
 
     private char peekChar() {
@@ -237,7 +239,7 @@ public class LispParser {
         return input.charAt(end);
     }
 
-    private char currentChar() {
+    private char previousChar() {
         return input.charAt(end - 1);
     }
 
@@ -246,24 +248,25 @@ public class LispParser {
         return start == end;
     }
 
-    private void appendToken(@NotNull TokenType tokenType) {
-        String stringText = getTokenString();
-        Token token = makeToken(tokenType, stringText);
-        endToken();
+    private void emitToken(@NotNull TokenType tokenType) {
+        Token token = makeToken(tokenType);
         tokens.add(token);
+
+        beginToken();
+    }
+
+    private void beginToken() {
+        start = end;
     }
 
     private @NotNull String getTokenString() {
         return input.substring(start, end);
     }
 
-    private void endToken() {
-        start = end;
-    }
-
-    private @NotNull Token makeToken(@NotNull TokenType tokenType, @NotNull String stringText) {
+    private @NotNull Token makeToken(@NotNull TokenType tokenType) {
         StringRange stringRange = StringRange.of(start, end);
-        return Token.of(tokenType, stringRange, stringText);
+        String tokenString = getTokenString();
+        return Token.of(tokenType, stringRange, tokenString);
     }
 
 }

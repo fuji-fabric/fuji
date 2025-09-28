@@ -1,6 +1,7 @@
 package mod.fuji.module.initializer.evaluator.parser.token;
 
 import lombok.Value;
+import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.module.initializer.evaluator.parser.structure.StringRange;
 import org.jetbrains.annotations.NotNull;
 
@@ -9,6 +10,8 @@ public class Token {
 
     @NotNull TokenType tokenType;
     @NotNull StringRange stringRange;
+
+    @ForDeveloper("A string text here must be a substring of the original input text. (Literal Representation)")
     @NotNull String stringText;
 
 }

@@ -21,6 +21,15 @@ public class StringParserTest {
     }
 
     @Test
+    void testEmptyString() {
+        List<Token> actual = ParserUtil.parseInputString("\"\"");
+        List<Token> expected = List.of(
+            Token.of(TokenType.STRING, StringRange.of(0, 2), "\"\"")
+        );
+        assertEquals(expected, actual);
+    }
+
+    @Test
     void testDoubleQuoteCharacterInSymbolName() {
         assertThrows(ParserSyntaxException.class, () -> {
             ParserUtil.parseInputString("abc\"");
