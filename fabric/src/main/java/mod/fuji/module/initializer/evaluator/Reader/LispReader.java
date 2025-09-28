@@ -1,4 +1,4 @@
-package mod.fuji.module.initializer.evaluator.parser;
+package mod.fuji.module.initializer.evaluator.Reader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,14 +6,14 @@ import java.util.Set;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.document.annotation.Cite;
 import mod.fuji.core.document.annotation.ForDeveloper;
-import mod.fuji.module.initializer.evaluator.parser.exception.LispSyntaxException;
-import mod.fuji.module.initializer.evaluator.parser.structure.StringRange;
-import mod.fuji.module.initializer.evaluator.parser.token.Token;
-import mod.fuji.module.initializer.evaluator.parser.token.TokenType;
+import mod.fuji.module.initializer.evaluator.Reader.exception.LispSyntaxException;
+import mod.fuji.module.initializer.evaluator.Reader.structure.StringRange;
+import mod.fuji.module.initializer.evaluator.Reader.token.Token;
+import mod.fuji.module.initializer.evaluator.Reader.token.TokenType;
 import org.jetbrains.annotations.NotNull;
 
 @Cite("https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node1.html")
-public class LispParser {
+public class LispReader {
 
     private static final char EOF_CHARACTER = '\0';
     private static final Set<Character> ATOM_END_CHARACTERS = Set.of(
@@ -35,22 +35,22 @@ public class LispParser {
     int end;
     private List<Token> tokens;
 
-    public LispParser(@NotNull String input) {
+    public LispReader(@NotNull String input) {
         this.input = input;
     }
 
-    public @NotNull List<Token> parse() {
-        /* Initialize the parser states. */
+    public @NotNull List<Token> read() {
+        /* Initialize the reader states. */
         LogUtil.warn("input = {}", input);
         tokens = new ArrayList<>();
         start = 0;
         end = 0;
 
-        /* Parse the form. */
-        parseForm();
+        /* Read the form. */
+        readForm();
 
-        /* Check if the input been parsed totally. */
-        if (hasUnparsedCharacters()) {
+        /* Check if the input been read totally. */
+        if (hasUnreadCharacters()) {
             throw new LispSyntaxException("Unexpected character at %d".formatted(start));
         }
 
@@ -58,15 +58,15 @@ public class LispParser {
         return tokens;
     }
 
-    private boolean hasUnparsedCharacters() {
+    private boolean hasUnreadCharacters() {
         return start < input.length();
     }
 
     @SuppressWarnings("UnnecessaryReturnStatement")
-    private void parseForm() {
-        /* Parse form. */
+    private void readForm() {
+        /* Read form. */
         char peekChar = peekChar();
-        LogUtil.warn("parseForm(): peek = {}", peekChar);
+        LogUtil.warn("readForm(): peek = {}", peekChar);
 
         // Remove leading blank characters.
         while (peekChar == ' ') {
@@ -76,12 +76,12 @@ public class LispParser {
         }
 
         if (peekChar == '(') {
-            /* Parse list. */
-            parseList();
+            /* Read list. */
+            readList();
             return;
         } else {
-            /* Parse atom. */
-            parseAtom();
+            /* Read atom. */
+            readAtom();
         }
     }
 
@@ -89,18 +89,18 @@ public class LispParser {
     @ForDeveloper("""
         Any non-list is atom.
 
-        Call the parser functions in the order that:
+        Call the reader functions in the order that:
         1. If the distinguish chars have no intersection, call them at arbitrary order.
         2. Call them in sub-set order.
         """)
-    private void parseAtom() {
-        parseNumber();
-        parseString();
+    private void readAtom() {
+        readNumber();
+        readString();
 
-        parseSymbol();
+        readSymbol();
     }
 
-    private void parseNumber() {
+    private void readNumber() {
         char peek = peekChar();
 
         /* Check if there is leading sign character. */
@@ -152,7 +152,7 @@ public class LispParser {
         }
     }
 
-    private void parseString() {
+    private void readString() {
         char peek = peekChar();
 
         if (peek == '"') {
@@ -198,7 +198,7 @@ public class LispParser {
         return false;
     }
 
-    private void parseSymbol() {
+    private void readSymbol() {
         char peek;
         while ((peek = peekChar()) != EOF_CHARACTER) {
             if (ATOM_END_CHARACTERS.contains(peek)) {
@@ -214,18 +214,18 @@ public class LispParser {
     }
 
     @SuppressWarnings("UnnecessaryReturnStatement")
-    private void parseList() {
+    private void readList() {
         if (peekChar() == '(') {
             forward();
             emitToken(TokenType.BEGIN_LIST);
 
 
             do {
-                if (!hasUnparsedCharacters()) {
+                if (!hasUnreadCharacters()) {
                     throw new LispSyntaxException("Missing closed parenthesis after index %d".formatted(end));
                 }
 
-                parseForm();
+                readForm();
             } while (peekChar() != ')');
 
             forward();

@@ -1,4 +1,4 @@
-package mod.fuji.module.initializer.evaluator.parser.token;
+package mod.fuji.module.initializer.evaluator.Reader.token;
 
 public enum TokenType {
 

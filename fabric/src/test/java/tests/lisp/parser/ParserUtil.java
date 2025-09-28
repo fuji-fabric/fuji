@@ -2,14 +2,14 @@ package tests.lisp.parser;
 
 import java.util.List;
 import mod.fuji.module.initializer.evaluator.formatter.PrettyFormatter;
-import mod.fuji.module.initializer.evaluator.parser.LispParser;
-import mod.fuji.module.initializer.evaluator.parser.token.Token;
+import mod.fuji.module.initializer.evaluator.Reader.LispReader;
+import mod.fuji.module.initializer.evaluator.Reader.token.Token;
 import org.jetbrains.annotations.NotNull;
 
 public class ParserUtil {
     static @NotNull List<Token> parseInputString(@NotNull String input) {
-        LispParser lispParser = new LispParser(input);
-        List<Token> parse = lispParser.parse();
+        LispReader lispReader = new LispReader(input);
+        List<Token> parse = lispReader.read();
         PrettyFormatter.prettyPrint(parse);
         return parse;
     }

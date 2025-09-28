@@ -10,8 +10,8 @@ import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.evaluator.formatter.PrettyFormatter;
-import mod.fuji.module.initializer.evaluator.parser.LispParser;
-import mod.fuji.module.initializer.evaluator.parser.token.Token;
+import mod.fuji.module.initializer.evaluator.Reader.LispReader;
+import mod.fuji.module.initializer.evaluator.Reader.token.Token;
 import net.minecraft.server.command.ServerCommandSource;
 
 @Document(id = 1758985259601L, value = """
@@ -27,9 +27,9 @@ public class EvaluatorInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     private static int $eval(@CommandSource ServerCommandSource source, GreedyString form) {
         final String $form = form.getValue();
-        LispParser lispParser = new LispParser($form);
-        List<Token> parse = lispParser.parse();
-        PrettyFormatter.prettyPrint(parse);
+        LispReader lispReader = new LispReader($form);
+        List<Token> AST = lispReader.read();
+        PrettyFormatter.prettyPrint(AST);
 
         return CommandHelper.Return.SUCCESS;
     }

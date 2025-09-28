@@ -1,9 +1,9 @@
 package tests.lisp.parser;
 
 import java.util.List;
-import mod.fuji.module.initializer.evaluator.parser.structure.StringRange;
-import mod.fuji.module.initializer.evaluator.parser.token.Token;
-import mod.fuji.module.initializer.evaluator.parser.token.TokenType;
+import mod.fuji.module.initializer.evaluator.Reader.structure.StringRange;
+import mod.fuji.module.initializer.evaluator.Reader.token.Token;
+import mod.fuji.module.initializer.evaluator.Reader.token.TokenType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
