@@ -9,9 +9,9 @@ import org.jetbrains.annotations.NotNull;
 public class Token {
 
     @NotNull TokenType tokenType;
-    @NotNull StringRange stringRange;
+    @NotNull StringRange tokenRange;
 
     @ForDeveloper("A string text here must be a substring of the original input text. (Literal Representation)")
-    @NotNull String stringText;
+    @NotNull String tokenContent;
 
 }
