@@ -88,7 +88,7 @@ public class NumberParserTest {
     }
 
     @Test
-    void testSingleFloatingNumber() {
+    void testSingleDecimalPointCharacter() {
         List<Token> actual = ParserUtil.parseInputString("123.456");
         List<Token> expected = List.of(
             Token.of(TokenType.NUMBER, StringRange.of(0, 7), "123.456")
@@ -97,7 +97,7 @@ public class NumberParserTest {
     }
 
     @Test
-    void testTwoFloatingPointCharacters() {
+    void testDoubleDecimalPointCharacter() {
         List<Token> actual = ParserUtil.parseInputString("123.456.");
         List<Token> expected = List.of(
             Token.of(TokenType.SYMBOL, StringRange.of(0, 8), "123.456.")
@@ -106,7 +106,7 @@ public class NumberParserTest {
     }
 
     @Test
-    void testLeadingFloatingPointCharacter() {
+    void testLeadingDecimalPointCharacter() {
         List<Token> actual = ParserUtil.parseInputString(".123");
         List<Token> expected = List.of(
             Token.of(TokenType.NUMBER, StringRange.of(0, 4), ".123")
@@ -115,7 +115,7 @@ public class NumberParserTest {
     }
 
     @Test
-    void testLeadingFloatingPointCharacterSymbol() {
+    void testLeadingDecimalPointCharacterSymbol() {
         List<Token> actual = ParserUtil.parseInputString(".123.");
         List<Token> expected = List.of(
             Token.of(TokenType.SYMBOL, StringRange.of(0, 5), ".123.")
