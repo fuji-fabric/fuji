@@ -11,6 +11,7 @@ import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.evaluator.evaluator.compiler.LispCompiler;
+import mod.fuji.module.initializer.evaluator.evaluator.compiler.formatter.LispNodeFormatter;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispNode;
 import mod.fuji.module.initializer.evaluator.formatter.PrettyFormatter;
 import mod.fuji.module.initializer.evaluator.reader.LispReader;
@@ -36,11 +37,18 @@ public class EvaluatorInitializer extends ModuleInitializer {
 
         LispCompiler lispCompiler = new LispCompiler(tokenStream);
         LispNode AST = lispCompiler.compile();
-        LogUtil.warn("""
-        AST =
 
-        {}
-        """, AST);
+        LogUtil.warn("""
+            AST Print =
+
+            {}
+            """, AST);
+
+        LogUtil.warn("""
+
+            AST Pretty Print = {}
+            """, LispNodeFormatter.prettyPrint(AST));
+
 
         return CommandHelper.Return.SUCCESS;
     }
