@@ -5,6 +5,8 @@ import java.util.List;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispListNode;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispNode;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispNumberNode;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispStringNode;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispSymbolNode;
 import mod.fuji.module.initializer.evaluator.reader.structure.StringRange;
 import mod.fuji.module.initializer.evaluator.reader.token.Token;
@@ -92,8 +94,34 @@ public class LispCompiler {
     }
 
     private void compileSelfEvaluatingObject() {
-//        Token peek = peek();
-//        forward();
+        compileNumber();
+        compileString();
+    }
+
+    private void compileNumber() {
+        Token peek = peek();
+        if (!peek.getTokenType().equals(TokenType.NUMBER)) return;
+        forward();
+
+        String tokenContent = peek.getTokenContent();
+        double value = Double.parseDouble(tokenContent);
+        LispNumberNode node = LispNumberNode.of(value);
+        emitNode(node);
+    }
+
+    private void compileString() {
+        Token peek = peek();
+        if (!peek.getTokenType().equals(TokenType.STRING)) return;
+        forward();
+
+        String tokenContent = peek.getTokenContent();
+        String value = unescapeString(tokenContent);
+        LispStringNode node = LispStringNode.of(value);
+        emitNode(node);
+    }
+
+    private @NotNull String unescapeString(@NotNull String tokenContent) {
+        return tokenContent;
     }
 
     private boolean isSelfEvaluatingObject(@NotNull Token token) {
