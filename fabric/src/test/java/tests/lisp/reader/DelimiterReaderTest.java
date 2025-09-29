@@ -1,4 +1,4 @@
-package tests.lisp.parser;
+package tests.lisp.reader;
 
 import java.util.List;
 import mod.fuji.module.initializer.evaluator.reader.structure.StringRange;
@@ -7,11 +7,11 @@ import mod.fuji.module.initializer.evaluator.reader.token.TokenType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
-public class BlankParserTest {
+public class DelimiterReaderTest {
 
     @Test
     void testCompatSymbolAndString() {
-        List<Token> actual = ParserUtil.parseInputString("(a\"b\")");
+        List<Token> actual = ReaderUtil.readInputString("(a\"b\")");
         List<Token> expected = List.of(
             Token.of(TokenType.BEGIN_LIST, StringRange.of(0, 1), "("),
             Token.of(TokenType.SYMBOL, StringRange.of(1, 2), "a"),
@@ -23,7 +23,7 @@ public class BlankParserTest {
 
     @Test
     void testCompatNumberAndString() {
-        List<Token> actual = ParserUtil.parseInputString("(123\"456\")");
+        List<Token> actual = ReaderUtil.readInputString("(123\"456\")");
         List<Token> expected = List.of(
             Token.of(TokenType.BEGIN_LIST, StringRange.of(0, 1), "("),
             Token.of(TokenType.NUMBER, StringRange.of(1, 4), "123"),

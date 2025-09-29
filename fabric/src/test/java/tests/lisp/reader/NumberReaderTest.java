@@ -1,4 +1,4 @@
-package tests.lisp.parser;
+package tests.lisp.reader;
 
 import java.util.List;
 import mod.fuji.module.initializer.evaluator.reader.exception.LispSyntaxException;
@@ -9,11 +9,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
-public class NumberParserTest {
+public class NumberReaderTest {
 
     @Test
     void testSingleNumber() {
-        List<Token> actual = ParserUtil.parseInputString("123");
+        List<Token> actual = ReaderUtil.readInputString("123");
         List<Token> expected = List.of(
             Token.of(TokenType.NUMBER, StringRange.of(0, 3), "123")
         );
@@ -22,12 +22,12 @@ public class NumberParserTest {
 
     @Test
     void testDoubleNumber() {
-        assertThrows(LispSyntaxException.class, () -> ParserUtil.parseInputString("123 456"));
+        assertThrows(LispSyntaxException.class, () -> ReaderUtil.readInputString("123 456"));
     }
 
     @Test
     void testSingleNumberInList() {
-        List<Token> actual = ParserUtil.parseInputString("(123)");
+        List<Token> actual = ReaderUtil.readInputString("(123)");
         List<Token> expected = List.of(
             Token.of(TokenType.BEGIN_LIST, StringRange.of(0, 1), "("),
             Token.of(TokenType.NUMBER, StringRange.of(1, 4), "123"),
@@ -38,7 +38,7 @@ public class NumberParserTest {
 
     @Test
     void testSingleSignCharacter() {
-        List<Token> actual = ParserUtil.parseInputString("+123");
+        List<Token> actual = ReaderUtil.readInputString("+123");
         List<Token> expected = List.of(
             Token.of(TokenType.NUMBER, StringRange.of(0, 4), "+123")
         );
@@ -47,7 +47,7 @@ public class NumberParserTest {
 
     @Test
     void testDoubleSignCharacter() {
-        List<Token> actual = ParserUtil.parseInputString("+123+4");
+        List<Token> actual = ReaderUtil.readInputString("+123+4");
         List<Token> expected = List.of(
             Token.of(TokenType.SYMBOL, StringRange.of(0, 6), "+123+4")
         );
@@ -56,7 +56,7 @@ public class NumberParserTest {
 
     @Test
     void testOneSignCharacter() {
-        List<Token> actual = ParserUtil.parseInputString("+");
+        List<Token> actual = ReaderUtil.readInputString("+");
         List<Token> expected = List.of(
             Token.of(TokenType.SYMBOL, StringRange.of(0, 1), "+")
         );
@@ -65,7 +65,7 @@ public class NumberParserTest {
 
     @Test
     void testInBetweenSignCharacter() {
-        List<Token> actual = ParserUtil.parseInputString("1+2");
+        List<Token> actual = ReaderUtil.readInputString("1+2");
         List<Token> expected = List.of(
             Token.of(TokenType.SYMBOL, StringRange.of(0, 3), "1+2")
         );
@@ -74,7 +74,7 @@ public class NumberParserTest {
 
     @Test
     void testNumberAndSymbolInList() {
-        List<Token> actual = ParserUtil.parseInputString("(123 abc 456 def 789)");
+        List<Token> actual = ReaderUtil.readInputString("(123 abc 456 def 789)");
         List<Token> expected = List.of(
             Token.of(TokenType.BEGIN_LIST, StringRange.of(0, 1), "("),
             Token.of(TokenType.NUMBER, StringRange.of(1, 4), "123"),
@@ -89,7 +89,7 @@ public class NumberParserTest {
 
     @Test
     void testSingleDecimalPointCharacter() {
-        List<Token> actual = ParserUtil.parseInputString("123.456");
+        List<Token> actual = ReaderUtil.readInputString("123.456");
         List<Token> expected = List.of(
             Token.of(TokenType.NUMBER, StringRange.of(0, 7), "123.456")
         );
@@ -98,7 +98,7 @@ public class NumberParserTest {
 
     @Test
     void testDoubleDecimalPointCharacter() {
-        List<Token> actual = ParserUtil.parseInputString("123.456.");
+        List<Token> actual = ReaderUtil.readInputString("123.456.");
         List<Token> expected = List.of(
             Token.of(TokenType.SYMBOL, StringRange.of(0, 8), "123.456.")
         );
@@ -107,7 +107,7 @@ public class NumberParserTest {
 
     @Test
     void testLeadingDecimalPointCharacter() {
-        List<Token> actual = ParserUtil.parseInputString(".123");
+        List<Token> actual = ReaderUtil.readInputString(".123");
         List<Token> expected = List.of(
             Token.of(TokenType.NUMBER, StringRange.of(0, 4), ".123")
         );
@@ -116,7 +116,7 @@ public class NumberParserTest {
 
     @Test
     void testLeadingDecimalPointCharacterSymbol() {
-        List<Token> actual = ParserUtil.parseInputString(".123.");
+        List<Token> actual = ReaderUtil.readInputString(".123.");
         List<Token> expected = List.of(
             Token.of(TokenType.SYMBOL, StringRange.of(0, 5), ".123.")
         );
@@ -125,7 +125,7 @@ public class NumberParserTest {
 
     @Test
     void testNumberFollowingDecimalPoint() {
-        List<Token> actual = ParserUtil.parseInputString("123.");
+        List<Token> actual = ReaderUtil.readInputString("123.");
         List<Token> expected = List.of(
             Token.of(TokenType.NUMBER, StringRange.of(0, 4), "123.")
         );
@@ -134,7 +134,7 @@ public class NumberParserTest {
 
     @Test
     void testSymbolNamePrecedingWithNumber() {
-        List<Token> actual = ParserUtil.parseInputString("123.a");
+        List<Token> actual = ReaderUtil.readInputString("123.a");
         List<Token> expected = List.of(
             Token.of(TokenType.SYMBOL, StringRange.of(0, 5), "123.a")
         );

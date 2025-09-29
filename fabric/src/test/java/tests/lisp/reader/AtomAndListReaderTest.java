@@ -1,4 +1,4 @@
-package tests.lisp.parser;
+package tests.lisp.reader;
 
 import java.util.List;
 import mod.fuji.module.initializer.evaluator.reader.exception.LispSyntaxException;
@@ -9,11 +9,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
-public class AtomAndListParserTest {
+public class AtomAndListReaderTest {
 
     @Test
     void testSingleList() {
-        List<Token> actual = ParserUtil.parseInputString("()");
+        List<Token> actual = ReaderUtil.readInputString("()");
         List<Token> expected = List.of(
             Token.of(TokenType.BEGIN_LIST, StringRange.of(0, 1), "("),
             Token.of(TokenType.END_LIST, StringRange.of(1, 2), ")")
@@ -24,20 +24,20 @@ public class AtomAndListParserTest {
     @Test
     void testUnclosedList() {
         assertThrows(LispSyntaxException.class, () -> {
-            ParserUtil.parseInputString("(");
+            ReaderUtil.readInputString("(");
         });
     }
 
     @Test
     void testUnexpectedClosedParenthesis() {
         assertThrows(LispSyntaxException.class, () -> {
-            ParserUtil.parseInputString(")");
+            ReaderUtil.readInputString(")");
         });
     }
 
     @Test
     void testSingleAtomInList() {
-        List<Token> actual = ParserUtil.parseInputString("(abc)");
+        List<Token> actual = ReaderUtil.readInputString("(abc)");
         List<Token> expected = List.of(
             Token.of(TokenType.BEGIN_LIST, StringRange.of(0, 1), "("),
             Token.of(TokenType.SYMBOL, StringRange.of(1, 4), "abc"),
@@ -48,7 +48,7 @@ public class AtomAndListParserTest {
 
     @Test
     void testSingleIdentifier() {
-        List<Token> actual = ParserUtil.parseInputString("abc");
+        List<Token> actual = ReaderUtil.readInputString("abc");
         List<Token> expected = List.of(
             Token.of(TokenType.SYMBOL, StringRange.of(0, 3), "abc")
         );
@@ -58,13 +58,13 @@ public class AtomAndListParserTest {
     @Test
     void testDoubleAtom() {
         assertThrows(LispSyntaxException.class, () -> {
-            ParserUtil.parseInputString("abc def");
+            ReaderUtil.readInputString("abc def");
         });
     }
 
     @Test
     void testDoubleAtomInList() {
-        List<Token> actual = ParserUtil.parseInputString("(abc def)");
+        List<Token> actual = ReaderUtil.readInputString("(abc def)");
         List<Token> expected = List.of(
             Token.of(TokenType.BEGIN_LIST, StringRange.of(0, 1), "("),
             Token.of(TokenType.SYMBOL, StringRange.of(1, 4), "abc"),
@@ -76,7 +76,7 @@ public class AtomAndListParserTest {
 
     @Test
     void testTripleAtomInList() {
-        List<Token> actual = ParserUtil.parseInputString("(abc def ghi)");
+        List<Token> actual = ReaderUtil.readInputString("(abc def ghi)");
         List<Token> expected = List.of(
             Token.of(TokenType.BEGIN_LIST, StringRange.of(0, 1), "("),
             Token.of(TokenType.SYMBOL, StringRange.of(1, 4), "abc"),
@@ -89,7 +89,7 @@ public class AtomAndListParserTest {
 
     @Test
     void testSingleShortIdentifier() {
-        List<Token> actual = ParserUtil.parseInputString("a");
+        List<Token> actual = ReaderUtil.readInputString("a");
         List<Token> expected = List.of(
             Token.of(TokenType.SYMBOL, StringRange.of(0, 1), "a")
         );
@@ -98,7 +98,7 @@ public class AtomAndListParserTest {
 
     @Test
     void testShortIdentifiersInList() {
-        List<Token> actual = ParserUtil.parseInputString("(a b c d e)");
+        List<Token> actual = ReaderUtil.readInputString("(a b c d e)");
         List<Token> expected = List.of(
             Token.of(TokenType.BEGIN_LIST, StringRange.of(0, 1), "("),
             Token.of(TokenType.SYMBOL, StringRange.of(1, 2), "a"),
@@ -113,7 +113,7 @@ public class AtomAndListParserTest {
 
     @Test
     void testAtomAndList() {
-        List<Token> actual = ParserUtil.parseInputString("(define (square x) (* x x))");
+        List<Token> actual = ReaderUtil.readInputString("(define (square x) (* x x))");
         List<Token> expected = List.of(
             Token.of(TokenType.BEGIN_LIST, StringRange.of(0, 1), "("),
             Token.of(TokenType.SYMBOL, StringRange.of(1, 7), "define"),

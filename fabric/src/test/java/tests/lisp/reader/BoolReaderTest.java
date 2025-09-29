@@ -1,4 +1,4 @@
-package tests.lisp.parser;
+package tests.lisp.reader;
 
 import java.util.List;
 import mod.fuji.core.document.annotation.ForDeveloper;
@@ -8,7 +8,7 @@ import mod.fuji.module.initializer.evaluator.reader.token.TokenType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
-public class BoolParserTest {
+public class BoolReaderTest {
 
     @ForDeveloper("""
         The `boolean value` is a `symbol`.
@@ -19,7 +19,7 @@ public class BoolParserTest {
         """)
     @Test
     void testFalseValueSymbol() {
-        List<Token> actual = ParserUtil.parseInputString("nil");
+        List<Token> actual = ReaderUtil.readInputString("nil");
         List<Token> expected = List.of(
             Token.of(TokenType.SYMBOL, StringRange.of(0, 3), "nil")
         );
@@ -28,7 +28,7 @@ public class BoolParserTest {
 
     @Test
     void testFalseValueSymbolDenotation() {
-        List<Token> actual = ParserUtil.parseInputString("()");
+        List<Token> actual = ReaderUtil.readInputString("()");
         List<Token> expected = List.of(
             Token.of(TokenType.BEGIN_LIST, StringRange.of(0, 1), "("),
             Token.of(TokenType.END_LIST, StringRange.of(1, 2), ")")
@@ -38,7 +38,7 @@ public class BoolParserTest {
 
     @Test
     void testConventionalTrueValueSymbol() {
-        List<Token> actual = ParserUtil.parseInputString("t");
+        List<Token> actual = ReaderUtil.readInputString("t");
         List<Token> expected = List.of(
             Token.of(TokenType.SYMBOL, StringRange.of(0, 1), "t")
         );

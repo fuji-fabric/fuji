@@ -1,4 +1,4 @@
-package tests.lisp.parser;
+package tests.lisp.reader;
 
 import java.util.List;
 import mod.fuji.module.initializer.evaluator.formatter.PrettyFormatter;
@@ -6,11 +6,11 @@ import mod.fuji.module.initializer.evaluator.reader.LispReader;
 import mod.fuji.module.initializer.evaluator.reader.token.Token;
 import org.jetbrains.annotations.NotNull;
 
-public class ParserUtil {
-    static @NotNull List<Token> parseInputString(@NotNull String input) {
+public class ReaderUtil {
+    static @NotNull List<Token> readInputString(@NotNull String input) {
         LispReader lispReader = new LispReader(input);
-        List<Token> parse = lispReader.read();
-        PrettyFormatter.prettyPrint(parse);
-        return parse;
+        List<Token> read = lispReader.read();
+        PrettyFormatter.prettyPrint(read);
+        return read;
     }
 }

@@ -1,4 +1,4 @@
-package tests.lisp.parser;
+package tests.lisp.reader;
 
 import java.util.List;
 import mod.fuji.module.initializer.evaluator.reader.exception.LispSyntaxException;
@@ -9,11 +9,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
-public class StringParserTest {
+public class StringReaderTest {
 
     @Test
     void testSimpleString() {
-        List<Token> actual = ParserUtil.parseInputString("\"abc\"");
+        List<Token> actual = ReaderUtil.readInputString("\"abc\"");
         List<Token> expected = List.of(
             Token.of(TokenType.STRING, StringRange.of(0, 5), "\"abc\"")
         );
@@ -22,7 +22,7 @@ public class StringParserTest {
 
     @Test
     void testEmptyString() {
-        List<Token> actual = ParserUtil.parseInputString("\"\"");
+        List<Token> actual = ReaderUtil.readInputString("\"\"");
         List<Token> expected = List.of(
             Token.of(TokenType.STRING, StringRange.of(0, 2), "\"\"")
         );
@@ -32,20 +32,20 @@ public class StringParserTest {
     @Test
     void testDoubleQuoteCharacterInSymbolName() {
         assertThrows(LispSyntaxException.class, () -> {
-            ParserUtil.parseInputString("abc\"");
+            ReaderUtil.readInputString("abc\"");
         });
     }
 
     @Test
     void testUnclosedString() {
         assertThrows(LispSyntaxException.class, () -> {
-            ParserUtil.parseInputString("\"abc");
+            ReaderUtil.readInputString("\"abc");
         });
     }
 
     @Test
     void testStringContainsBlankCharacters() {
-        List<Token> actual = ParserUtil.parseInputString("\"abc   def\"");
+        List<Token> actual = ReaderUtil.readInputString("\"abc   def\"");
         List<Token> expected = List.of(
             Token.of(TokenType.STRING, StringRange.of(0, 11), "\"abc   def\"")
         );
@@ -54,7 +54,7 @@ public class StringParserTest {
 
     @Test
     void testDoubleQuoteEscape() {
-        List<Token> actual = ParserUtil.parseInputString("\"a \\\"b c\"");
+        List<Token> actual = ReaderUtil.readInputString("\"a \\\"b c\"");
         List<Token> expected = List.of(
             Token.of(TokenType.STRING, StringRange.of(0, 9), "\"a \\\"b c\"")
         );
@@ -63,7 +63,7 @@ public class StringParserTest {
 
     @Test
     void testBackSlashEscape() {
-        List<Token> actual = ParserUtil.parseInputString("\"a \\\\ b\"");
+        List<Token> actual = ReaderUtil.readInputString("\"a \\\\ b\"");
         List<Token> expected = List.of(
             Token.of(TokenType.STRING, StringRange.of(0, 8), "\"a \\\\ b\"")
         );
@@ -72,7 +72,7 @@ public class StringParserTest {
 
     @Test
     void testUnnecessaryEscape() {
-        List<Token> actual = ParserUtil.parseInputString("\"\\ \\ \\ \"");
+        List<Token> actual = ReaderUtil.readInputString("\"\\ \\ \\ \"");
         List<Token> expected = List.of(
             Token.of(TokenType.STRING, StringRange.of(0, 8), "\"\\ \\ \\ \"")
         );
@@ -81,7 +81,7 @@ public class StringParserTest {
 
     @Test
     void testEscapeInNumber() {
-        List<Token> actual = ParserUtil.parseInputString("1\\23");
+        List<Token> actual = ReaderUtil.readInputString("1\\23");
         List<Token> expected = List.of(
             Token.of(TokenType.SYMBOL, StringRange.of(0, 4), "1\\23")
         );
