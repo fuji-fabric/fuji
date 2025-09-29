@@ -3,6 +3,7 @@ package mod.fuji.module.initializer.evaluator;
 import java.util.List;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
+import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
@@ -65,6 +66,9 @@ public class EvaluatorInitializer extends ModuleInitializer {
 
             eval = {}
             """, eval);
+
+        /* Print the value. */
+        TextHelper.sendTextByKey(source,"lisp.eval.value", eval);
         return CommandHelper.Return.SUCCESS;
     }
 
