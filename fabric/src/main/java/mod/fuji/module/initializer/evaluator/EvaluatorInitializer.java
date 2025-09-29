@@ -51,19 +51,17 @@ public class EvaluatorInitializer extends ModuleInitializer {
 
         LogUtil.warn("""
             AST Print =
-
             {}
             """, AST);
 
         LogUtil.warn("""
-
-            AST Pretty Print = {}
+            AST Pretty Print =
+            {}
             """, LispObjectFormatter.prettyPrint(AST));
 
         LispEvaluator lispEvaluator = new LispEvaluator(AST);
         LispObject eval = lispEvaluator.eval();
         LogUtil.warn("""
-
             eval = {}
             """, eval);
 

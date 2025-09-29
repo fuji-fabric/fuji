@@ -1540,5 +1540,6 @@
   "docstring.1758985259601": "This module provides an `evaluator` for `Lisp dialect language`.\n",
   "docstring.1758985675914": "◉ This module is currently an experimental module.\nChanges may be made in the future versions.\n",
   "docstring.1759152497031": "Alias to `/lisp eval` command.",
-  "docstring.1759152513020": "Eval a lisp form."
+  "docstring.1759152513020": "Eval a lisp form.",
+  "docstring.1759153524537": "◉ Advanced `server-side` show-case mod.\nA new mod is released in https://modrinth.com/mod/showcase\nYou may want to check it!\n"
 }
