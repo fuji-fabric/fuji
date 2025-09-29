@@ -12,9 +12,12 @@ public class LispNumberNode extends LispNode {
 
     double value;
 
-
     public static @NotNull LispNumberNode of(double value) {
         return new LispNumberNode(value);
     }
 
+    @Override
+    public @NotNull LispNode eval() {
+        return this;
+    }
 }

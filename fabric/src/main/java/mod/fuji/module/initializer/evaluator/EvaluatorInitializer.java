@@ -10,8 +10,10 @@ import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.ModuleInitializer;
+import mod.fuji.module.initializer.evaluator.evaluator.LispEvaluator;
 import mod.fuji.module.initializer.evaluator.evaluator.compiler.LispCompiler;
 import mod.fuji.module.initializer.evaluator.evaluator.compiler.formatter.LispNodeFormatter;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispListNode;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispNode;
 import mod.fuji.module.initializer.evaluator.formatter.PrettyFormatter;
 import mod.fuji.module.initializer.evaluator.reader.LispReader;
@@ -36,7 +38,7 @@ public class EvaluatorInitializer extends ModuleInitializer {
         PrettyFormatter.prettyPrint(tokenStream);
 
         LispCompiler lispCompiler = new LispCompiler(tokenStream);
-        LispNode AST = lispCompiler.compile();
+        LispListNode AST = lispCompiler.compile();
 
         LogUtil.warn("""
             AST Print =
@@ -49,7 +51,12 @@ public class EvaluatorInitializer extends ModuleInitializer {
             AST Pretty Print = {}
             """, LispNodeFormatter.prettyPrint(AST));
 
+        LispEvaluator lispEvaluator = new LispEvaluator(AST);
+        LispNode eval = lispEvaluator.eval();
+        LogUtil.warn("""
 
+            eval = {}
+            """, eval);
         return CommandHelper.Return.SUCCESS;
     }
 

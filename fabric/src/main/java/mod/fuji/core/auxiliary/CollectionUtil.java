@@ -21,4 +21,11 @@ public class CollectionUtil {
         if (index == list.size() - 1) return;
         Collections.swap(list, index, index + 1);
     }
+
+
+    @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
+    public static <T> T getLast(@NotNull List<T> list) {
+        return list.get(list.size() - 1);
+    }
+
 }

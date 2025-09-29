@@ -30,14 +30,10 @@ public class LispListNode extends LispNode {
         return new LispListNode(nodes);
     }
 
-//    @Override
-//    public String toString() {
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("(").append(System.lineSeparator());
-//        for (LispNode node : nodes) {
-//            sb.append(node.toString()).append(System.lineSeparator());
-//        }
-//        sb.append(")");
-//        return sb.toString();
-//    }
+    @Override
+    public @NotNull LispNode eval() {
+        // FIXME
+        return null;
+    }
+
 }

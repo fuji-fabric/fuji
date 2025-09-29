@@ -16,4 +16,8 @@ public class LispSymbolNode extends LispNode {
         return new LispSymbolNode(name);
     }
 
+    @Override
+    public @NotNull LispNode eval() {
+        return this;
+    }
 }

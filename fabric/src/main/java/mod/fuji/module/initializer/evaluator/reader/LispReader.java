@@ -36,20 +36,20 @@ public class LispReader {
     private List<Token> tokens;
 
     public LispReader(@NotNull String input) {
-        this.input = input;
-    }
-
-    public @NotNull List<Token> read() {
         /* Initialize the reader states. */
+        this.input = input;
         LogUtil.warn("input = {}", input);
         tokens = new ArrayList<>();
         start = 0;
         end = 0;
+    }
 
+    public @NotNull List<Token> read() {
         /* Read the form. */
         readForm();
 
         /* Check if the input been read totally. */
+        // FIXME: read() loop
         if (hasUnreadCharacters()) {
             throw new LispSyntaxException("Unexpected character at %d".formatted(start));
         }

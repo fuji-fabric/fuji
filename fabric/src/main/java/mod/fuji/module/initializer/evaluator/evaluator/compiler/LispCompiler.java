@@ -29,7 +29,7 @@ public class LispCompiler {
         this.AST = AST;
     }
 
-    public @NotNull LispNode compile() {
+    public @NotNull LispListNode compile() {
         /* Initialize the compiler states. */
         LispListNode rootNode = LispListNode.of();
         this.parent = rootNode;
