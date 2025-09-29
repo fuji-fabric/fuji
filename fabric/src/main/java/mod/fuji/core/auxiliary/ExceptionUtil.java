@@ -3,7 +3,7 @@ package mod.fuji.core.auxiliary;
 import com.google.errorprone.annotations.CheckReturnValue;
 import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.core.document.annotation.TestCase;
-import mod.fuji.core.exception.FujiException;
+import mod.fuji.core.exception.FujiModException;
 import java.util.ArrayList;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -45,7 +45,7 @@ public class ExceptionUtil {
             return runtimeException;
         }
 
-        return new FujiException(message, exception);
+        return new FujiModException(message, exception);
     }
 
     public static @NotNull List<Throwable> getThrowableChain(@NotNull Throwable throwable) {
