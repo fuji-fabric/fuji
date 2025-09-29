@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
 import org.jetbrains.annotations.NotNull;
 
 @Data
@@ -31,7 +32,7 @@ public class LispList extends LispObject {
     }
 
     @Override
-    public @NotNull LispObject eval() {
+    public @NotNull LispObject eval(@NotNull Environment environment) {
         // FIXME
         return null;
     }
