@@ -5,12 +5,13 @@ import mod.fuji.module.initializer.evaluator.reader.structure.StringRange;
 import mod.fuji.module.initializer.evaluator.reader.token.Token;
 import mod.fuji.module.initializer.evaluator.reader.token.TokenType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class DelimiterReaderTest {
 
     @Test
-    void testCompatSymbolAndString() {
+    void testStringFollowingSymbolInList() {
         List<Token> actual = ReaderUtil.readInputString("(a\"b\")");
         List<Token> expected = List.of(
             Token.of(TokenType.BEGIN_LIST, StringRange.of(0, 1), "("),
@@ -22,7 +23,7 @@ public class DelimiterReaderTest {
     }
 
     @Test
-    void testCompatNumberAndString() {
+    void testStringFollowingNumberInList() {
         List<Token> actual = ReaderUtil.readInputString("(123\"456\")");
         List<Token> expected = List.of(
             Token.of(TokenType.BEGIN_LIST, StringRange.of(0, 1), "("),
@@ -33,4 +34,38 @@ public class DelimiterReaderTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    void testSingleStringFollowingNumber() {
+        List<Token> actual = ReaderUtil.readInputString("123\"456\"");
+        List<Token> expected = List.of(
+            Token.of(TokenType.NUMBER, StringRange.of(0, 3), "123"),
+            Token.of(TokenType.STRING, StringRange.of(3, 8), "\"456\"")
+        );
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Disabled("FIXME")
+    void testDoubleStringFollowingNumber() {
+        List<Token> actual = ReaderUtil.readInputString("123\"456\"\"789\"");
+        List<Token> expected = List.of(
+            Token.of(TokenType.NUMBER, StringRange.of(0, 3), "123"),
+            Token.of(TokenType.STRING, StringRange.of(3, 8), "\"456\""),
+            Token.of(TokenType.STRING, StringRange.of(9, 14), "\"789\"")
+        );
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Disabled("FIXME")
+    void testDoubleStringFollowingNumberAndEndsWithNumber() {
+        List<Token> actual = ReaderUtil.readInputString("123\"456\"\"789\"0");
+        List<Token> expected = List.of(
+            Token.of(TokenType.NUMBER, StringRange.of(0, 3), "123"),
+            Token.of(TokenType.STRING, StringRange.of(3, 8), "\"456\""),
+            Token.of(TokenType.STRING, StringRange.of(9, 14), "\"789\""),
+            Token.of(TokenType.NUMBER, StringRange.of(14, 15), "0")
+        );
+        assertEquals(expected, actual);
+    }
 }
