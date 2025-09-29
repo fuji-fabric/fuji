@@ -8,16 +8,16 @@ import org.jetbrains.annotations.NotNull;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
-public class LispNumberNode extends LispNode {
+public class LispNumber extends LispObject {
 
     double value;
 
-    public static @NotNull LispNumberNode of(double value) {
-        return new LispNumberNode(value);
+    public static @NotNull LispNumber of(double value) {
+        return new LispNumber(value);
     }
 
     @Override
-    public @NotNull LispNode eval() {
+    public @NotNull LispObject eval() {
         return this;
     }
 }

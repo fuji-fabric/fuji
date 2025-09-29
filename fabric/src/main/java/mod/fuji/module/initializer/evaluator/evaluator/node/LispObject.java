@@ -4,8 +4,8 @@ import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
 @Data
-public abstract class LispNode {
+public abstract class LispObject {
 
-    public abstract @NotNull LispNode eval();
+    public abstract @NotNull LispObject eval();
 
 }

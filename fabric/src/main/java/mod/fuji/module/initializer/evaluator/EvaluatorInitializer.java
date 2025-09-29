@@ -12,9 +12,9 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.evaluator.evaluator.LispEvaluator;
 import mod.fuji.module.initializer.evaluator.evaluator.compiler.LispCompiler;
-import mod.fuji.module.initializer.evaluator.evaluator.compiler.formatter.LispNodeFormatter;
-import mod.fuji.module.initializer.evaluator.evaluator.node.LispListNode;
-import mod.fuji.module.initializer.evaluator.evaluator.node.LispNode;
+import mod.fuji.module.initializer.evaluator.evaluator.compiler.formatter.LispObjectFormatter;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import mod.fuji.module.initializer.evaluator.formatter.PrettyFormatter;
 import mod.fuji.module.initializer.evaluator.reader.LispReader;
 import mod.fuji.module.initializer.evaluator.reader.token.Token;
@@ -38,7 +38,7 @@ public class EvaluatorInitializer extends ModuleInitializer {
         PrettyFormatter.prettyPrint(tokenStream);
 
         LispCompiler lispCompiler = new LispCompiler(tokenStream);
-        LispListNode AST = lispCompiler.compile();
+        LispList AST = lispCompiler.compile();
 
         LogUtil.warn("""
             AST Print =
@@ -49,10 +49,10 @@ public class EvaluatorInitializer extends ModuleInitializer {
         LogUtil.warn("""
 
             AST Pretty Print = {}
-            """, LispNodeFormatter.prettyPrint(AST));
+            """, LispObjectFormatter.prettyPrint(AST));
 
         LispEvaluator lispEvaluator = new LispEvaluator(AST);
-        LispNode eval = lispEvaluator.eval();
+        LispObject eval = lispEvaluator.eval();
         LogUtil.warn("""
 
             eval = {}

@@ -8,12 +8,12 @@ import org.jetbrains.annotations.NotNull;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor(staticName = "of")
-public class LispStringNode extends LispNode {
+public class LispString extends LispObject {
 
     String value;
 
     @Override
-    public @NotNull LispNode eval() {
+    public @NotNull LispObject eval() {
         return this;
     }
 

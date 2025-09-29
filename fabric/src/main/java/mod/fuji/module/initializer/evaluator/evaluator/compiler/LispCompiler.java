@@ -3,11 +3,11 @@ package mod.fuji.module.initializer.evaluator.evaluator.compiler;
 import com.google.errorprone.annotations.Keep;
 import java.util.List;
 import mod.fuji.core.auxiliary.LogUtil;
-import mod.fuji.module.initializer.evaluator.evaluator.node.LispListNode;
-import mod.fuji.module.initializer.evaluator.evaluator.node.LispNode;
-import mod.fuji.module.initializer.evaluator.evaluator.node.LispNumberNode;
-import mod.fuji.module.initializer.evaluator.evaluator.node.LispStringNode;
-import mod.fuji.module.initializer.evaluator.evaluator.node.LispSymbolNode;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispNumber;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispString;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispSymbol;
 import mod.fuji.module.initializer.evaluator.reader.structure.StringRange;
 import mod.fuji.module.initializer.evaluator.reader.token.Token;
 import mod.fuji.module.initializer.evaluator.reader.token.TokenType;
@@ -23,15 +23,15 @@ public class LispCompiler {
     int start;
     int end;
 
-    LispListNode parent;
+    LispList parent;
 
     public LispCompiler(@NotNull List<Token> AST) {
         this.AST = AST;
     }
 
-    public @NotNull LispListNode compile() {
+    public @NotNull LispList compile() {
         /* Initialize the compiler states. */
-        LispListNode rootNode = LispListNode.of();
+        LispList rootNode = LispList.of();
         this.parent = rootNode;
 
         /* Call the compiler functions. */
@@ -54,9 +54,9 @@ public class LispCompiler {
     private void compileListNode() {
         /* Consume BEGIN_LIST token. */
         forward();
-        LispListNode savedParent = this.parent;
+        LispList savedParent = this.parent;
 
-        LispListNode result = LispListNode.of();
+        LispList result = LispList.of();
         this.parent = result;
 
         /* Consume tokens until the END_LIST token is seen. */
@@ -89,7 +89,7 @@ public class LispCompiler {
         Token peek = peek();
         forward();
 
-        LispSymbolNode node = LispSymbolNode.of(peek.getTokenContent());
+        LispSymbol node = LispSymbol.of(peek.getTokenContent());
         emitNode(node);
     }
 
@@ -105,7 +105,7 @@ public class LispCompiler {
 
         String tokenContent = peek.getTokenContent();
         double value = Double.parseDouble(tokenContent);
-        LispNumberNode node = LispNumberNode.of(value);
+        LispNumber node = LispNumber.of(value);
         emitNode(node);
     }
 
@@ -116,7 +116,7 @@ public class LispCompiler {
 
         String tokenContent = peek.getTokenContent();
         String value = unescapeString(tokenContent);
-        LispStringNode node = LispStringNode.of(value);
+        LispString node = LispString.of(value);
         emitNode(node);
     }
 
@@ -130,7 +130,7 @@ public class LispCompiler {
             || tokenType.equals(TokenType.STRING);
     }
 
-    private void emitNode(@NotNull LispNode node) {
+    private void emitNode(@NotNull LispObject node) {
         this.parent.getNodes().add(node);
         beginNode();
     }

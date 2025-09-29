@@ -1,7 +1,7 @@
 package tests.lisp.compiler;
 
-import mod.fuji.module.initializer.evaluator.evaluator.node.LispListNode;
-import mod.fuji.module.initializer.evaluator.evaluator.node.LispNode;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
@@ -9,20 +9,20 @@ public class ListNodeCompilerTest {
 
     @Test
     void testSingleListNode() {
-        LispNode actual = CompilerUtils.compile("()");
-        LispNode expected = LispListNode.of(
-            LispListNode.of()
+        LispObject actual = CompilerUtils.compile("()");
+        LispObject expected = LispList.of(
+            LispList.of()
         );
         assertEquals(expected, actual);
     }
 
     @Test
     void testNestedListNodes() {
-        LispNode actual = CompilerUtils.compile("((()))");
-        LispNode expected = LispListNode.of(
-            LispListNode.of(
-                LispListNode.of(
-                    LispListNode.of(
+        LispObject actual = CompilerUtils.compile("((()))");
+        LispObject expected = LispList.of(
+            LispList.of(
+                LispList.of(
+                    LispList.of(
 
                     )
                 )
@@ -33,12 +33,12 @@ public class ListNodeCompilerTest {
 
     @Test
     void testListNodeBranches() {
-        LispNode actual = CompilerUtils.compile("(() () ())");
-        LispNode expected = LispListNode.of(
-            LispListNode.of(
-                LispListNode.of(),
-                LispListNode.of(),
-                LispListNode.of()
+        LispObject actual = CompilerUtils.compile("(() () ())");
+        LispObject expected = LispList.of(
+            LispList.of(
+                LispList.of(),
+                LispList.of(),
+                LispList.of()
             )
         );
         assertEquals(expected, actual);
