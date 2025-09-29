@@ -1,8 +1,8 @@
-package mod.fuji.module.initializer.evaluator.Reader.token;
+package mod.fuji.module.initializer.evaluator.reader.token;
 
 import lombok.Value;
 import mod.fuji.core.document.annotation.ForDeveloper;
-import mod.fuji.module.initializer.evaluator.Reader.structure.StringRange;
+import mod.fuji.module.initializer.evaluator.reader.structure.StringRange;
 import org.jetbrains.annotations.NotNull;
 
 @Value(staticConstructor = "of")

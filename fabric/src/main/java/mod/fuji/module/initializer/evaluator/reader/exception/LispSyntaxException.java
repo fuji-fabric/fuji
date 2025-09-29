@@ -1,4 +1,4 @@
-package mod.fuji.module.initializer.evaluator.Reader.exception;
+package mod.fuji.module.initializer.evaluator.reader.exception;
 
 public class LispSyntaxException extends RuntimeException {
     public LispSyntaxException(String message) {

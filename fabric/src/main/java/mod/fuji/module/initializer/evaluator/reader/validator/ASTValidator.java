@@ -1,7 +1,7 @@
-package mod.fuji.module.initializer.evaluator.Reader.validator;
+package mod.fuji.module.initializer.evaluator.reader.validator;
 
 import java.util.List;
-import mod.fuji.module.initializer.evaluator.Reader.token.Token;
+import mod.fuji.module.initializer.evaluator.reader.token.Token;
 import org.jetbrains.annotations.NotNull;
 
 public class ASTValidator {

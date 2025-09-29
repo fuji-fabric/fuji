@@ -1,4 +1,4 @@
-package mod.fuji.module.initializer.evaluator.Reader.structure;
+package mod.fuji.module.initializer.evaluator.reader.structure;
 
 import lombok.Value;
 

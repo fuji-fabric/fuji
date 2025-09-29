@@ -1,4 +1,4 @@
-package mod.fuji.module.initializer.evaluator.Reader;
+package mod.fuji.module.initializer.evaluator.reader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,10 +6,10 @@ import java.util.Set;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.document.annotation.Cite;
 import mod.fuji.core.document.annotation.ForDeveloper;
-import mod.fuji.module.initializer.evaluator.Reader.exception.LispSyntaxException;
-import mod.fuji.module.initializer.evaluator.Reader.structure.StringRange;
-import mod.fuji.module.initializer.evaluator.Reader.token.Token;
-import mod.fuji.module.initializer.evaluator.Reader.token.TokenType;
+import mod.fuji.module.initializer.evaluator.reader.exception.LispSyntaxException;
+import mod.fuji.module.initializer.evaluator.reader.structure.StringRange;
+import mod.fuji.module.initializer.evaluator.reader.token.Token;
+import mod.fuji.module.initializer.evaluator.reader.token.TokenType;
 import org.jetbrains.annotations.NotNull;
 
 @Cite("https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node1.html")
@@ -62,23 +62,20 @@ public class LispReader {
         return start < input.length();
     }
 
-    @SuppressWarnings("UnnecessaryReturnStatement")
     private void readForm() {
-        /* Read form. */
+        /* Stipe leading blank characters. */
         char peekChar = peekChar();
         LogUtil.warn("readForm(): peek = {}", peekChar);
-
-        // Remove leading blank characters.
         while (peekChar == ' ') {
             forward();
-            beginToken();
             peekChar = peekChar();
         }
+        beginToken();
 
+        /* Atom or List? */
         if (peekChar == '(') {
             /* Read list. */
             readList();
-            return;
         } else {
             /* Read atom. */
             readAtom();
@@ -96,7 +93,6 @@ public class LispReader {
     private void readAtom() {
         readNumber();
         readString();
-
         readSymbol();
     }
 

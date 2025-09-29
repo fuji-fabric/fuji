@@ -10,8 +10,8 @@ import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.evaluator.formatter.PrettyFormatter;
-import mod.fuji.module.initializer.evaluator.Reader.LispReader;
-import mod.fuji.module.initializer.evaluator.Reader.token.Token;
+import mod.fuji.module.initializer.evaluator.reader.LispReader;
+import mod.fuji.module.initializer.evaluator.reader.token.Token;
 import net.minecraft.server.command.ServerCommandSource;
 
 @Document(id = 1758985259601L, value = """
@@ -19,7 +19,7 @@ import net.minecraft.server.command.ServerCommandSource;
     """)
 @ColorBox(id = 1758985675914L, color = ColorBox.ColorBoxTypes.WARNING, value = """
     ◉ This module is currently an experimental module.
-    Changed may be made in the future versions.
+    Changes may be made in the future versions.
     """)
 public class EvaluatorInitializer extends ModuleInitializer {
 

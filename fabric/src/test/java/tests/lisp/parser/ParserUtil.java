@@ -2,8 +2,8 @@ package tests.lisp.parser;
 
 import java.util.List;
 import mod.fuji.module.initializer.evaluator.formatter.PrettyFormatter;
-import mod.fuji.module.initializer.evaluator.Reader.LispReader;
-import mod.fuji.module.initializer.evaluator.Reader.token.Token;
+import mod.fuji.module.initializer.evaluator.reader.LispReader;
+import mod.fuji.module.initializer.evaluator.reader.token.Token;
 import org.jetbrains.annotations.NotNull;
 
 public class ParserUtil {
