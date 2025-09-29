@@ -1537,5 +1537,7 @@
   "docstring.1758491504173": "This module provides a collection of `echo commands`.\nThey can be used to send `feedback texts`.\n",
   "docstring.1758555773741": "Teleport to any of your homes.",
   "docstring.1758985259601": "This module provides an `evaluator` for `Lisp dialect language`.\n",
-  "docstring.1758985675914": "◉ This module is currently an experimental module.\nChanges may be made in the future versions.\n"
+  "docstring.1758985675914": "◉ This module is currently an experimental module.\nChanges may be made in the future versions.\n",
+  "docstring.1759152497031": "Alias to `/lisp eval` command.",
+  "docstring.1759152513020": "Eval a lisp form."
 }

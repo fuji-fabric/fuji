@@ -29,6 +29,14 @@ import net.minecraft.server.command.ServerCommandSource;
     """)
 public class EvaluatorInitializer extends ModuleInitializer {
 
+    @Document(id = 1759152497031L, value = "Alias to `/lisp eval` command.")
+    @CommandNode("lisp")
+    @CommandRequirement(level = 4)
+    private static int $root(@CommandSource ServerCommandSource source, GreedyString form) {
+        return $eval(source, form);
+    }
+
+    @Document(id = 1759152513020L, value = "Eval a lisp form.")
     @CommandNode("lisp eval")
     @CommandRequirement(level = 4)
     private static int $eval(@CommandSource ServerCommandSource source, GreedyString form) {
