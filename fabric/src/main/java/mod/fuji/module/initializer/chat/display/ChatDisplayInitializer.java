@@ -24,6 +24,11 @@ import net.minecraft.text.Text;
     2. Show their inventory.
     3. Show their ender chest.
     """)
+@ColorBox(id = 1759153524537L, color = ColorBox.ColorBoxTypes.NOTE, value = """
+    ◉ Advanced `server-side` show-case mod.
+    A new mod is released in https://modrinth.com/mod/showcase
+    You may want to check it!
+    """)
 @ColorBox(id = 1751870533687L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ This module is designed to work with other `chat-related` mods.
     For example, you use this with `Styled Chat` mod.
