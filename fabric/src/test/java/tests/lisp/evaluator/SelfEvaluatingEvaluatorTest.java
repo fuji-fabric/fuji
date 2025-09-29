@@ -1,0 +1,25 @@
+package tests.lisp.evaluator;
+
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispNumber;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispString;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+public class SelfEvaluatingEvaluatorTest {
+
+    @Test
+    void evalSingleNumber() {
+        LispObject actual = EvaluatorUtils.evaluate("123.456");
+        LispObject expect = LispNumber.of(123.456);
+        Assertions.assertEquals(expect, actual);
+    }
+
+    @Test
+    void evalSingleString() {
+        LispObject actual = EvaluatorUtils.evaluate("\"123\"");
+        LispObject expect = LispString.of("\"123\"");
+        Assertions.assertEquals(expect, actual);
+    }
+
+}
