@@ -215,7 +215,6 @@ public class LispReader {
             forward();
             emitToken(TokenType.BEGIN_LIST);
 
-
             do {
                 if (!hasUnreadCharacters()) {
                     throw new LispSyntaxException("Missing closed parenthesis after index %d".formatted(end));
@@ -226,7 +225,6 @@ public class LispReader {
 
             forward();
             emitToken(TokenType.END_LIST);
-
             return;
         } else {
             throw new LispSyntaxException("Expected an open-parenthesis at index %d".formatted(end));
