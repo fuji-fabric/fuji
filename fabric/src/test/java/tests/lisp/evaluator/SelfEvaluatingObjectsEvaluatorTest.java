@@ -6,7 +6,7 @@ import mod.fuji.module.initializer.evaluator.evaluator.node.LispString;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class SelfEvaluatingEvaluatorTest {
+public class SelfEvaluatingObjectsEvaluatorTest {
 
     @Test
     void evalSingleNumber() {
