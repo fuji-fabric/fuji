@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import mod.fuji.module.initializer.evaluator.evaluator.compiler.exception.LispCompilationException;
 import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,10 +32,37 @@ public class LispList extends LispObject {
         return new LispList(nodes);
     }
 
+    @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
     @Override
     public @NotNull LispObject eval(@NotNull Environment environment) {
-        // FIXME
-        return null;
+        /* An empty list is treated as nil value. */
+        if (this.nodes.isEmpty()) {
+            return Environment.NIL;
+        }
+
+        /* The first component of a function call must be a LispSymbol. */
+        LispObject first = this.nodes.get(0);
+        if (!(first instanceof LispSymbol functionNameSymbol)) {
+            throw new LispCompilationException("Illegal function call.");
+        }
+
+        /* Eval the function arguments. */
+        List<LispObject> args = new ArrayList<>();
+        for (int i = 1; i < this.nodes.size(); i++) {
+            LispObject arg = this.nodes.get(i).eval(environment);
+            args.add(arg);
+        }
+//        Environment childEnvironment = new Environment();
+
+        /* Get the function value. */
+        LispFunction functionValue = environment
+            .lookupSymbol(functionNameSymbol.getName())
+            .getFunctionValue()
+            .orElseThrow(() -> new LispCompilationException("The function %s is undefined.".formatted(functionNameSymbol.getName())));
+
+        /* Eval the function with arguments.*/
+        LispObject value = functionValue.call(environment, args);
+        return value;
     }
 
 }

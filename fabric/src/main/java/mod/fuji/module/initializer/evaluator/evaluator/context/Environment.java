@@ -14,7 +14,10 @@ import org.jetbrains.annotations.NotNull;
 
 @Value
 @AllArgsConstructor
+@SuppressWarnings("ClassCanBeRecord")
 public class Environment {
+
+    public static final LispSymbol NIL = LispSymbol.of("nil");
 
     @NotNull Optional<Environment> parent;
     @NotNull Map<String, LispSymbol> symbols;
