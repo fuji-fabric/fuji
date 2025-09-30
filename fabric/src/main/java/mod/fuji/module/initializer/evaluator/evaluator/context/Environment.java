@@ -9,8 +9,10 @@ import mod.fuji.module.initializer.evaluator.evaluator.node.LispFunction;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispString;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispSymbol;
-import mod.fuji.module.initializer.evaluator.evaluator.node.builtin.AdderFunction;
-import mod.fuji.module.initializer.evaluator.evaluator.node.builtin.MultiplierFunction;
+import mod.fuji.module.initializer.evaluator.evaluator.node.builtin.AddFunction;
+import mod.fuji.module.initializer.evaluator.evaluator.node.builtin.DivideFunction;
+import mod.fuji.module.initializer.evaluator.evaluator.node.builtin.MultiplyFunction;
+import mod.fuji.module.initializer.evaluator.evaluator.node.builtin.SubtractFunction;
 import org.jetbrains.annotations.NotNull;
 
 @Value
@@ -28,8 +30,10 @@ public class Environment {
         Environment environment = new Environment(Optional.empty(), new HashMap<>());
 
         /* Define the things that's known in fndb. */
-        environment.defineFunction(LispSymbol.of("+"), new AdderFunction());
-        environment.defineFunction(LispSymbol.of("*"), new MultiplierFunction());
+        environment.defineFunction(LispSymbol.of("+"), new AddFunction());
+        environment.defineFunction(LispSymbol.of("*"), new MultiplyFunction());
+        environment.defineFunction(LispSymbol.of("-"), new SubtractFunction());
+        environment.defineFunction(LispSymbol.of("/"), new DivideFunction());
         environment.defineVariable(LispSymbol.of("*test-version*"), LispString.of("1.0.0"));
         return environment;
     }

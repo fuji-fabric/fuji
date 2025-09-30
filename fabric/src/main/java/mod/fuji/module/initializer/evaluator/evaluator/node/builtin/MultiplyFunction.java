@@ -8,7 +8,7 @@ import mod.fuji.module.initializer.evaluator.evaluator.node.LispNumber;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import org.jetbrains.annotations.NotNull;
 
-public class MultiplierFunction extends LispFunction {
+public class MultiplyFunction extends LispFunction {
 
     @Override
     public @NotNull LispObject call(@NotNull Environment environment, @NotNull List<LispObject> arguments) {
