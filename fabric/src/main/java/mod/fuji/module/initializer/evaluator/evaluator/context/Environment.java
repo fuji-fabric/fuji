@@ -35,6 +35,7 @@ public class Environment {
         environment.defineFunction(LispSymbol.of("-"), new SubtractFunction());
         environment.defineFunction(LispSymbol.of("/"), new DivideFunction());
         environment.defineVariable(LispSymbol.of("*test-version*"), LispString.of("1.0.0"));
+        environment.defineVariable(NIL, NIL);
         return environment;
     }
 
