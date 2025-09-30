@@ -4,12 +4,12 @@ import java.util.List;
 import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
 import mod.fuji.module.initializer.evaluator.evaluator.exception.InvalidNumberOfArgumentsException;
 import mod.fuji.module.initializer.evaluator.evaluator.exception.LispEvaluationException;
-import mod.fuji.module.initializer.evaluator.evaluator.node.LispFunction;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispStandardFunction;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispNumber;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import org.jetbrains.annotations.NotNull;
 
-public class DivideFunction extends LispFunction {
+public class DivideFunction extends LispStandardFunction {
 
     @Override
     public @NotNull LispObject apply(@NotNull Environment environment, @NotNull List<LispObject> arguments) {

@@ -5,11 +5,11 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Value;
-import mod.fuji.module.initializer.evaluator.evaluator.node.LispFunction;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispString;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispSymbol;
-import mod.fuji.module.initializer.evaluator.evaluator.node.builtin.AddFunction;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispFunction;
+import mod.fuji.module.initializer.evaluator.evaluator.node.builtin.AdditionFunction;
 import mod.fuji.module.initializer.evaluator.evaluator.node.builtin.DivideFunction;
 import mod.fuji.module.initializer.evaluator.evaluator.node.builtin.MultiplyFunction;
 import mod.fuji.module.initializer.evaluator.evaluator.node.builtin.SubtractFunction;
@@ -31,7 +31,7 @@ public class Environment {
         Environment environment = new Environment(Optional.empty(), new HashMap<>());
 
         /* Define the things that's known in fndb. */
-        environment.defineFunction(LispSymbol.of("+"), new AddFunction());
+        environment.defineFunction(LispSymbol.of("+"), new AdditionFunction());
         environment.defineFunction(LispSymbol.of("*"), new MultiplyFunction());
         environment.defineFunction(LispSymbol.of("-"), new SubtractFunction());
         environment.defineFunction(LispSymbol.of("/"), new DivideFunction());

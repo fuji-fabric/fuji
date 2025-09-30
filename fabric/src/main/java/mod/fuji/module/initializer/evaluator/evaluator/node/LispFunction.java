@@ -12,10 +12,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract class LispFunction extends LispObject {
 
     @Override
-    public @NotNull LispObject eval(@NotNull Environment environment) {
-        return this;
-    }
+    public abstract @NotNull LispObject eval(@NotNull Environment environment);
 
     public abstract @NotNull LispObject apply(@NotNull Environment environment, @NotNull List<LispObject> arguments);
-
 }

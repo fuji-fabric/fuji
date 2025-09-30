@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import mod.fuji.module.initializer.evaluator.evaluator.auxliary.LispFunctions;
 import mod.fuji.module.initializer.evaluator.evaluator.compiler.exception.LispCompilationException;
 import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +33,7 @@ public class LispList extends LispObject {
         return new LispList(nodes);
     }
 
-    @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
+    @SuppressWarnings({"UnnecessaryLocalVariable"})
     @Override
     public @NotNull LispObject eval(@NotNull Environment environment) {
         /* An empty list is treated as nil value. */
@@ -41,28 +42,21 @@ public class LispList extends LispObject {
         }
 
         /* The first component of a function call must be a LispSymbol. */
-        LispObject first = this.nodes.get(0);
+        LispObject first = LispFunctions.car(this.nodes);
         if (!(first instanceof LispSymbol functionNameSymbol)) {
             throw new LispCompilationException("Illegal function call.");
         }
+        List<LispObject> rest = LispFunctions.cdr(this.nodes);
 
-        /* Eval the function arguments. */
-        List<LispObject> args = new ArrayList<>();
-        for (int i = 1; i < this.nodes.size(); i++) {
-            LispObject arg = this.nodes.get(i).eval(environment);
-            args.add(arg);
+        /* Call the function. */
+        if (LispSpecialForm.isSpecialForm(functionNameSymbol)) {
+            throw new UnsupportedOperationException();
+        } else if (LispMacro.isMacro(functionNameSymbol)) {
+            throw new UnsupportedOperationException();
+        } else {
+            LispObject functionReturnValue = LispStandardFunction.funcall(functionNameSymbol, environment, rest);
+            return functionReturnValue;
         }
-//        Environment childEnvironment = new Environment();
-
-        /* Get the function value. */
-        LispFunction functionValue = environment
-            .lookupSymbol(functionNameSymbol.getName())
-            .getFunctionValue()
-            .orElseThrow(() -> new LispCompilationException("The function %s is undefined.".formatted(functionNameSymbol.getName())));
-
-        /* Eval the function with arguments.*/
-        LispObject value = functionValue.apply(environment, args);
-        return value;
     }
 
 }

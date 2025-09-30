@@ -24,5 +24,3 @@ https://github.com/Zrips/CMI-API
 
 https://github.com/henkelmax/admiral
 
-https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node1.html
-
