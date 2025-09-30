@@ -41,33 +41,38 @@ public class EvaluatorInitializer extends ModuleInitializer {
     @CommandNode("lisp eval")
     @CommandRequirement(level = 4)
     private static int $eval(@CommandSource ServerCommandSource source, GreedyString form) {
-        final String $form = form.getValue();
-        LispReader lispReader = new LispReader($form);
-        List<Token> tokenStream = lispReader.read();
-        PrettyFormatter.prettyPrint(tokenStream);
+        try {
+            final String $form = form.getValue();
+            LispReader lispReader = new LispReader($form);
+            List<Token> tokenStream = lispReader.read();
+            PrettyFormatter.prettyPrint(tokenStream);
 
-        LispCompiler lispCompiler = new LispCompiler(tokenStream);
-        LispList AST = lispCompiler.compile();
+            LispCompiler lispCompiler = new LispCompiler(tokenStream);
+            LispList AST = lispCompiler.compile();
 
-        LogUtil.warn("""
-            AST Print =
-            {}
-            """, AST);
+            LogUtil.debug("""
+                AST Print =
+                {}
+                """, AST);
 
-        LogUtil.warn("""
-            AST Pretty Print =
-            {}
-            """, LispObjectFormatter.prettyPrint(AST));
+            LogUtil.debug("""
+                AST Pretty Print =
+                {}
+                """, LispObjectFormatter.prettyPrint(AST));
 
-        LispEvaluator lispEvaluator = new LispEvaluator(AST);
-        LispObject eval = lispEvaluator.eval();
-        LogUtil.warn("""
-            eval = {}
-            """, eval);
+            LispEvaluator lispEvaluator = new LispEvaluator(AST);
+            LispObject eval = lispEvaluator.eval();
+            LogUtil.debug("""
+                eval = {}
+                """, eval);
 
-        /* Print the value. */
-        TextHelper.sendTextByKey(source,"lisp.eval.value", eval);
-        return CommandHelper.Return.SUCCESS;
+            /* Print the value. */
+            TextHelper.sendTextByKey(source, "lisp.eval.value", eval);
+            return CommandHelper.Return.SUCCESS;
+        } catch (Exception e) {
+            TextHelper.sendTextByKey(source, "lisp.eval.error", e);
+            return CommandHelper.Return.FAILURE;
+        }
     }
 
 }

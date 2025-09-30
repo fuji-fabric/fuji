@@ -332,6 +332,7 @@
   "leaderboard.not_found": "<red>Leaderboard `%s` not fuond.",
   "leaderboard.update.all": "<green>Updated all leaderboards for online players.",
   "line.separator": "<grey>----------------------------------------",
+  "lisp.eval.error": "<red>❌ %s",
   "lisp.eval.value": "<green>➜ %s",
   "maintenance.disconnect": "<red>The server is currently under maintenance.",
   "maintenance.off": "<green>Maintenance mode: off",
