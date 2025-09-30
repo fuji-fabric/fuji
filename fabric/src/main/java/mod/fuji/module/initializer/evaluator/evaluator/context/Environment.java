@@ -10,6 +10,7 @@ import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispString;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispSymbol;
 import mod.fuji.module.initializer.evaluator.evaluator.node.builtin.AdderFunction;
+import mod.fuji.module.initializer.evaluator.evaluator.node.builtin.MultiplierFunction;
 import org.jetbrains.annotations.NotNull;
 
 @Value
@@ -28,6 +29,7 @@ public class Environment {
 
         /* Define the things that's known in fndb. */
         environment.defineFunction(LispSymbol.of("+"), new AdderFunction());
+        environment.defineFunction(LispSymbol.of("*"), new MultiplierFunction());
         environment.defineVariable(LispSymbol.of("*test-version*"), LispString.of("1.0.0"));
         return environment;
     }
