@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 public class DivideFunction extends LispFunction {
 
     @Override
-    public @NotNull LispObject call(@NotNull Environment environment, @NotNull List<LispObject> arguments) {
+    public @NotNull LispObject apply(@NotNull Environment environment, @NotNull List<LispObject> arguments) {
         if (arguments.isEmpty()) {
             throw new InvalidNumberOfArgumentsException(0);
         }

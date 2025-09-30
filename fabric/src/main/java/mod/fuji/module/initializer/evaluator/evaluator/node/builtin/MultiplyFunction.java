@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 public class MultiplyFunction extends LispFunction {
 
     @Override
-    public @NotNull LispObject call(@NotNull Environment environment, @NotNull List<LispObject> arguments) {
+    public @NotNull LispObject apply(@NotNull Environment environment, @NotNull List<LispObject> arguments) {
         double result = 1;
         for (LispObject argument : arguments) {
             if (argument instanceof LispNumber lispNumber) {

@@ -61,7 +61,7 @@ public class LispList extends LispObject {
             .orElseThrow(() -> new LispCompilationException("The function %s is undefined.".formatted(functionNameSymbol.getName())));
 
         /* Eval the function with arguments.*/
-        LispObject value = functionValue.call(environment, args);
+        LispObject value = functionValue.apply(environment, args);
         return value;
     }
 

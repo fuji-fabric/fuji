@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import mod.fuji.core.auxiliary.LogUtil;
-import mod.fuji.core.document.annotation.Cite;
 import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.module.initializer.evaluator.reader.exception.LispSyntaxException;
 import mod.fuji.module.initializer.evaluator.reader.structure.StringRange;
@@ -12,7 +11,11 @@ import mod.fuji.module.initializer.evaluator.reader.token.Token;
 import mod.fuji.module.initializer.evaluator.reader.token.TokenType;
 import org.jetbrains.annotations.NotNull;
 
-@Cite("https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node1.html")
+@ForDeveloper("""
+    The reference resource can be read in:
+    1. https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node1.html
+    2. https://groups.csail.mit.edu/mac/ftpdir/scheme-7.4/doc-html/scheme_toc.html
+    """)
 public class LispReader {
 
     private static final char EOF_CHARACTER = '\0';
