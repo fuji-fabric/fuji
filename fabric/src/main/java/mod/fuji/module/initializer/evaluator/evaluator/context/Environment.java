@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 public class Environment {
 
     public static final LispSymbol NIL = LispSymbol.of("nil");
+    public static final LispSymbol T = LispSymbol.of("t");
 
     @NotNull Optional<Environment> parent;
     @NotNull Map<String, LispSymbol> symbols;
@@ -35,8 +36,19 @@ public class Environment {
         environment.defineFunction(LispSymbol.of("-"), new SubtractFunction());
         environment.defineFunction(LispSymbol.of("/"), new DivideFunction());
         environment.defineVariable(LispSymbol.of("*test-version*"), LispString.of("1.0.0"));
-        environment.defineVariable(NIL, NIL);
+
+        environment.defineNamedConstant(NIL);
+        environment.defineNamedConstant(T);
         return environment;
+    }
+
+    private void defineSelfEvaluatingSymbol(@NotNull LispSymbol lispSymbol) {
+        this.defineVariable(lispSymbol, lispSymbol);
+    }
+
+    private void defineNamedConstant(@NotNull LispSymbol lispSymbol) {
+        // FIXME: a better impl.
+        this.defineSelfEvaluatingSymbol(lispSymbol);
     }
 
     public void defineFunction(@NotNull LispSymbol symbol, @NotNull LispFunction function) {
