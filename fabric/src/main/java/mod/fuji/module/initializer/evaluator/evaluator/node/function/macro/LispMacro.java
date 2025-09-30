@@ -1,7 +1,10 @@
-package mod.fuji.module.initializer.evaluator.evaluator.node;
+package mod.fuji.module.initializer.evaluator.evaluator.node.function.macro;
 
 import java.util.List;
 import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispSymbol;
+import mod.fuji.module.initializer.evaluator.evaluator.node.function.LispFunction;
 import org.jetbrains.annotations.NotNull;
 
 public class LispMacro extends LispFunction {

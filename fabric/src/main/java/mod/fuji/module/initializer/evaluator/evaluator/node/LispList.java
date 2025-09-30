@@ -8,6 +8,9 @@ import lombok.EqualsAndHashCode;
 import mod.fuji.module.initializer.evaluator.evaluator.auxliary.LispFunctions;
 import mod.fuji.module.initializer.evaluator.evaluator.compiler.exception.LispCompilationException;
 import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
+import mod.fuji.module.initializer.evaluator.evaluator.node.function.macro.LispMacro;
+import mod.fuji.module.initializer.evaluator.evaluator.node.function.special_form.LispSpecialForm;
+import mod.fuji.module.initializer.evaluator.evaluator.node.function.standard.LispStandardFunction;
 import org.jetbrains.annotations.NotNull;
 
 @Data

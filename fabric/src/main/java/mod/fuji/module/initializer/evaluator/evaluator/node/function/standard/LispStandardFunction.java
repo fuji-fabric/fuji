@@ -1,10 +1,13 @@
-package mod.fuji.module.initializer.evaluator.evaluator.node;
+package mod.fuji.module.initializer.evaluator.evaluator.node.function.standard;
 
 
 import java.util.ArrayList;
 import java.util.List;
 import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
 import mod.fuji.module.initializer.evaluator.evaluator.exception.LispEvaluationException;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispSymbol;
+import mod.fuji.module.initializer.evaluator.evaluator.node.function.LispFunction;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class LispStandardFunction extends LispFunction {

@@ -8,11 +8,11 @@ import lombok.Value;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispString;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispSymbol;
-import mod.fuji.module.initializer.evaluator.evaluator.node.LispFunction;
-import mod.fuji.module.initializer.evaluator.evaluator.node.builtin.AdditionFunction;
-import mod.fuji.module.initializer.evaluator.evaluator.node.builtin.DivideFunction;
-import mod.fuji.module.initializer.evaluator.evaluator.node.builtin.MultiplyFunction;
-import mod.fuji.module.initializer.evaluator.evaluator.node.builtin.SubtractFunction;
+import mod.fuji.module.initializer.evaluator.evaluator.node.function.LispFunction;
+import mod.fuji.module.initializer.evaluator.evaluator.node.function.standard.builtin.AdditionFunction;
+import mod.fuji.module.initializer.evaluator.evaluator.node.function.standard.builtin.DivideFunction;
+import mod.fuji.module.initializer.evaluator.evaluator.node.function.standard.builtin.MultiplyFunction;
+import mod.fuji.module.initializer.evaluator.evaluator.node.function.standard.builtin.SubtractFunction;
 import org.jetbrains.annotations.NotNull;
 
 @Value

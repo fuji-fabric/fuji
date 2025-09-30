@@ -1,8 +1,9 @@
-package mod.fuji.module.initializer.evaluator.evaluator.node;
+package mod.fuji.module.initializer.evaluator.evaluator.node.function;
 
 import java.util.List;
 import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import org.jetbrains.annotations.NotNull;
 
 @ForDeveloper("""

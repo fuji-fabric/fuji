@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
 import mod.fuji.module.initializer.evaluator.evaluator.exception.LispEvaluationException;
+import mod.fuji.module.initializer.evaluator.evaluator.node.function.LispFunction;
 import org.jetbrains.annotations.NotNull;
 
 @Data
