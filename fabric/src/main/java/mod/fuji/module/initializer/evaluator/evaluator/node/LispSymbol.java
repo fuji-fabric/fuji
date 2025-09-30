@@ -1,5 +1,6 @@
 package mod.fuji.module.initializer.evaluator.evaluator.node;
 
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,20 +15,19 @@ public class LispSymbol extends LispObject {
 
     String name;
 
-    LispObject variableValue;
-    LispObject functionValue;
+    Optional<LispObject> variableValue;
+    Optional<LispFunction> functionValue;
 
     public static @NotNull LispSymbol of(@NotNull String name) {
-        return new LispSymbol(name, null, null);
+        return new LispSymbol(name, Optional.empty(), Optional.empty());
     }
 
     @Override
     public @NotNull LispObject eval(@NotNull Environment environment) {
         // NOTE: De-reference a symbol is to get its variable value.
-        if (this.variableValue == null) {
-            throw new LispEvaluationException("The variable %s is unbound.".formatted(this.name));
-        }
-
-        return this.variableValue;
+        return environment
+            .lookupSymbol(this.getName())
+            .getVariableValue()
+            .orElseThrow(() -> new LispEvaluationException("The variable %s is unbound.".formatted(this.name)));
     }
 }
