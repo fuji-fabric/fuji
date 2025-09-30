@@ -1,7 +1,7 @@
 package tests.lisp.reader;
 
 import java.util.List;
-import mod.fuji.module.initializer.evaluator.reader.exception.LispSyntaxException;
+import mod.fuji.module.initializer.evaluator.reader.exception.LispReaderException;
 import mod.fuji.module.initializer.evaluator.reader.structure.StringRange;
 import mod.fuji.module.initializer.evaluator.reader.token.Token;
 import mod.fuji.module.initializer.evaluator.reader.token.TokenType;
@@ -23,14 +23,14 @@ public class AtomAndListReaderTest {
 
     @Test
     void testUnclosedList() {
-        assertThrows(LispSyntaxException.class, () -> {
+        assertThrows(LispReaderException.class, () -> {
             ReaderUtil.readInputString("(");
         });
     }
 
     @Test
     void testUnexpectedClosedParenthesis() {
-        assertThrows(LispSyntaxException.class, () -> {
+        assertThrows(LispReaderException.class, () -> {
             ReaderUtil.readInputString(")");
         });
     }
@@ -57,7 +57,7 @@ public class AtomAndListReaderTest {
 
     @Test
     void testDoubleAtom() {
-        assertThrows(LispSyntaxException.class, () -> {
+        assertThrows(LispReaderException.class, () -> {
             ReaderUtil.readInputString("abc def");
         });
     }

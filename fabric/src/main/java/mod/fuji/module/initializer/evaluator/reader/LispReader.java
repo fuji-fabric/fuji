@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.document.annotation.ForDeveloper;
-import mod.fuji.module.initializer.evaluator.reader.exception.LispSyntaxException;
+import mod.fuji.module.initializer.evaluator.reader.exception.LispReaderException;
 import mod.fuji.module.initializer.evaluator.reader.structure.StringRange;
 import mod.fuji.module.initializer.evaluator.reader.token.Token;
 import mod.fuji.module.initializer.evaluator.reader.token.TokenType;
@@ -41,7 +41,7 @@ public class LispReader {
     public LispReader(@NotNull String input) {
         /* Initialize the reader states. */
         this.input = input;
-        LogUtil.warn("input = {}", input);
+        LogUtil.debug("input = {}", input);
         tokens = new ArrayList<>();
         start = 0;
         end = 0;
@@ -54,7 +54,7 @@ public class LispReader {
         /* Check if the input been read totally. */
         // FIXME: read() loop
         if (hasUnreadCharacters()) {
-            throw new LispSyntaxException("Unexpected character at %d".formatted(start));
+            throw new LispReaderException("Unexpected character at %d".formatted(start));
         }
 
         /* Return the tokens. */
@@ -68,7 +68,7 @@ public class LispReader {
     private void readForm() {
         /* Stipe leading blank characters. */
         char peekChar = peekChar();
-        LogUtil.warn("readForm(): peek = {}", peekChar);
+        LogUtil.debug("readForm(): peek = {}", peekChar);
         while (peekChar == ' ') {
             forward();
             peekChar = peekChar();
@@ -178,7 +178,7 @@ public class LispReader {
         }
 
         if (!stringClosed) {
-            throw new LispSyntaxException("Unclosed string after %d".formatted(end));
+            throw new LispReaderException("Unclosed string after %d".formatted(end));
         }
 
         if (!isTokenStringEmpty()) {
@@ -220,7 +220,7 @@ public class LispReader {
 
             do {
                 if (!hasUnreadCharacters()) {
-                    throw new LispSyntaxException("Missing closed parenthesis after index %d".formatted(end));
+                    throw new LispReaderException("Missing closed parenthesis after index %d".formatted(end));
                 }
 
                 readForm();
@@ -230,7 +230,7 @@ public class LispReader {
             emitToken(TokenType.END_LIST);
             return;
         } else {
-            throw new LispSyntaxException("Expected an open-parenthesis at index %d".formatted(end));
+            throw new LispReaderException("Expected an open-parenthesis at index %d".formatted(end));
         }
 
     }

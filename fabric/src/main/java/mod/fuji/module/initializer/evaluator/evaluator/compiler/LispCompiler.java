@@ -61,7 +61,6 @@ public class LispCompiler {
 
         /* Consume tokens until the END_LIST token is seen. */
         do {
-            LogUtil.warn("peek = {}", peek());
 //            if (!hasUncompiledTokens()) {
 //                throw new LispCompilationException("Missing more tokens.");
 //            }

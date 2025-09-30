@@ -23,7 +23,7 @@ public class LispEvaluator {
         List<LispObject> values = new ArrayList<>();
 
         int size = AST.getNodes().size();
-        LogUtil.warn("the children size of AST = {}", size);
+        LogUtil.debug("the children size of AST = {}", size);
 
         Environment environment = Environment.ofTopLevel();
 
@@ -33,7 +33,7 @@ public class LispEvaluator {
             values.add(eval);
         }
 
-        LogUtil.warn("values = {}", values);
+        LogUtil.debug("values = {}", values);
         return CollectionUtil.getLast(values);
     }
 

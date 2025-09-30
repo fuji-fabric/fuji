@@ -1,7 +1,7 @@
 package tests.lisp.reader;
 
 import java.util.List;
-import mod.fuji.module.initializer.evaluator.reader.exception.LispSyntaxException;
+import mod.fuji.module.initializer.evaluator.reader.exception.LispReaderException;
 import mod.fuji.module.initializer.evaluator.reader.structure.StringRange;
 import mod.fuji.module.initializer.evaluator.reader.token.Token;
 import mod.fuji.module.initializer.evaluator.reader.token.TokenType;
@@ -22,7 +22,7 @@ public class NumberReaderTest {
 
     @Test
     void testDoubleNumber() {
-        assertThrows(LispSyntaxException.class, () -> ReaderUtil.readInputString("123 456"));
+        assertThrows(LispReaderException.class, () -> ReaderUtil.readInputString("123 456"));
     }
 
     @Test
