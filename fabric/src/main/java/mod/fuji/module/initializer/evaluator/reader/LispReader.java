@@ -110,7 +110,7 @@ public class LispReader {
         }
 
         /* Read a number. */
-        boolean seenFloatingPointCharacter = false;
+        boolean seenDecimalPointCharacter = false;
         while ((peek = peekChar()) != EOF_CHARACTER) {
 
             if (isSignCharacter(peek)) {
@@ -119,12 +119,12 @@ public class LispReader {
             }
 
             if (peek == '.') {
-                if (seenFloatingPointCharacter) {
+                if (seenDecimalPointCharacter) {
                     // Contains more than 1 floating point characters, this is not a number token.
                     return;
                 }
 
-                seenFloatingPointCharacter = true;
+                seenDecimalPointCharacter = true;
                 forward();
                 continue;
             }

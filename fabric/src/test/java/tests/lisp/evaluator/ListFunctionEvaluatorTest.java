@@ -54,6 +54,13 @@ public class ListFunctionEvaluatorTest {
     }
 
     @Test
+    void testCombinedFunctionCall() {
+        LispObject actual = EvaluatorUtils.evaluate("(+ 3 (* 4 5))");
+        LispObject expected = LispNumber.of(23);
+        assertEquals(expected, actual);
+    }
+
+    @Test
     void testIncompatibleArgumentTypeForAdderFunction() {
         assertThrows(LispEvaluationException.class, () -> {
             EvaluatorUtils.evaluate("(+ 1 2 \"3\")");
