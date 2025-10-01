@@ -2,6 +2,7 @@ package mod.fuji.module.initializer.back.service;
 
 import mod.fuji.core.auxiliary.ChronosUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
+import mod.fuji.core.auxiliary.minecraft.EntityHelper;
 import mod.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
@@ -87,7 +88,7 @@ public class BackService {
             GlobalPos latestLocation = latestEntry.getLocation();
             double ignoreDistance = BackInitializer.config.model().ignore_distance;
             if (latestLocation.sameLevel(PlayerHelper.getServerWorld(player))
-                && player.getPos().squaredDistanceTo(latestLocation.getX(), latestLocation.getY(), latestLocation.getZ()) <= ignoreDistance * ignoreDistance
+                && EntityHelper.getPos(player).squaredDistanceTo(latestLocation.getX(), latestLocation.getY(), latestLocation.getZ()) <= ignoreDistance * ignoreDistance
             ) {
                 return false;
             }

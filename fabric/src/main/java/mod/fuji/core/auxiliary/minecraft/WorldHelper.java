@@ -59,6 +59,17 @@ public class WorldHelper {
         return Vec3d.add(pos, 0.5, 0.0, 0.5);
     }
 
+    public static double squareDistance(@NotNull Vec3d vec3d, double x2, double y2, double z2) {
+        return squareDistance(vec3d.getX(), vec3d.getY(), vec3d.getZ(), x2, y2, z2);
+    }
+
+    public static double squareDistance(double x1, double y1, double z1, double x2, double y2, double z2) {
+        double dx = x1 - x2;
+        double dy = y1 - y2;
+        double dz = z1 - z2;
+        return dx * dx + dy * dy + dz * dz;
+    }
+
     public static Item toGuiItem(String dimension) {
         if (dimension.equals(DimensionTypes.OVERWORLD_ID.toString())) {
             return Items.GRASS_BLOCK;
@@ -295,5 +306,7 @@ public class WorldHelper {
 
         }
     }
+
+
 
 }

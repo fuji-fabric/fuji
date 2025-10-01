@@ -1,6 +1,7 @@
 package mod.fuji.module.initializer.deathlog.structure;
 
 import mod.fuji.core.auxiliary.ChronosUtil;
+import mod.fuji.core.auxiliary.minecraft.EntityHelper;
 import mod.fuji.core.auxiliary.minecraft.InventoryHelper;
 import mod.fuji.core.auxiliary.minecraft.NbtHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
@@ -104,7 +105,7 @@ public class DeathNode {
         String time = ChronosUtil.Formatter.getFormattedCurrentDate();
         String reason = player.getDamageTracker().getDeathMessage().getString();
         String dimension = PlayerHelper.getServerWorld(player).getRegistryKey().getValue().toString();
-        Vec3d position = player.getPos();
+        Vec3d position = EntityHelper.getPos(player);
 
         NbtCompound remarkTag = new NbtCompound();
         remarkTag.putString(TIME_KEY, time);

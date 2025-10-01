@@ -77,9 +77,9 @@ public class WorkGeneralSettingsGui extends SimpleGui {
             .setName(TextHelper.getTextByKey(player, "works.work.set.target.position"))
             .setCallback(() -> {
                 work.level = EntityHelper.getServerWorld(player).getRegistryKey().getValue().toString();
-                work.x = player.getPos().x;
-                work.y = player.getPos().y;
-                work.z = player.getPos().z;
+                work.x = EntityHelper.getPos(player).x;
+                work.y = EntityHelper.getPos(player).y;
+                work.z = EntityHelper.getPos(player).z;
                 TextHelper.sendTextByKey(player, "works.work.set.done", "(%s, %f, %f, %f)".formatted(work.level, work.x, work.y, work.z));
                 close();
             })

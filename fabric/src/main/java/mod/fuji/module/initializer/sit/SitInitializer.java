@@ -88,7 +88,7 @@ public class SitInitializer extends ModuleInitializer {
         }
 
         /* Spawn the chair entity, and let the player ride it. */
-        Vec3d lookTarget = player.getPos().add(0.5, 0, 0.5);
+        Vec3d lookTarget = EntityHelper.getPos(player).add(0.5, 0, 0.5);
         Entity chairEntity = spawnChairEntity(serverWorld, steppingBlockPos, lookTarget);
         SPAWNED_CHAIR_ENTITY_LIST.add(chairEntity);
         EntityHelper.rideEntity(player, chairEntity);
@@ -264,7 +264,7 @@ public class SitInitializer extends ModuleInitializer {
         if (maxDistanceToSit > 0 && givenDist > maxDistanceToSit * maxDistanceToSit) return;
 
         /* Spawn the chair entity and ride it. */
-        Vec3d lookingTarget = player.getPos().add(0.5, 0, 0.5);
+        Vec3d lookingTarget = EntityHelper.getPos(player).add(0.5, 0, 0.5);
         Entity chairEntity = SitInitializer.spawnChairEntity(world, hitBlockPos, lookingTarget);
 
         // Dismount the player if there is another vehicle.

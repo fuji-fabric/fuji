@@ -5,6 +5,7 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 
 public class EntityHelper {
@@ -48,8 +49,12 @@ public class EntityHelper {
         return (byte) (value ? base | flag : base & ~flag);
     }
 
-    public static int getAge(Entity entity) {
+    public static int getAge(@NotNull Entity entity) {
         return entity.age;
+    }
+
+    public static @NotNull Vec3d getPos(@NotNull Entity entity) {
+        return entity.pos;
     }
 
     public static void rideEntity(@NotNull Entity passengerEntity, @NotNull Entity vehicleEntity) {

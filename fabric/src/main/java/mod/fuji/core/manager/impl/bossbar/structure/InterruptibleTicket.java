@@ -1,6 +1,8 @@
 package mod.fuji.core.manager.impl.bossbar.structure;
 
+import mod.fuji.core.auxiliary.minecraft.EntityHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
+import mod.fuji.core.auxiliary.minecraft.WorldHelper;
 import mod.fuji.core.extension.PlayerCombatExtension;
 import mod.fuji.core.manager.impl.bossbar.BossBarTicket;
 import mod.fuji.core.structure.GlobalPos;
@@ -46,7 +48,8 @@ public abstract class InterruptibleTicket extends BossBarTicket {
 
         // check distance
         double interruptDistance = this.getInterruptible().getInterruptDistance();
-        if (player.getPos().squaredDistanceTo(this.source.getX(), this.source.getY(), this.source.getZ()) >= (interruptDistance * interruptDistance)) {
+        double distanceSquare = WorldHelper.squareDistance(EntityHelper.getPos(player), this.source.getX(), this.source.getY(), this.source.getZ());
+        if (distanceSquare >= (interruptDistance * interruptDistance)) {
             return false;
         }
 

@@ -5,6 +5,7 @@
 accessible class net/minecraft/util/UserCache$Entry
 accessible field net/minecraft/util/UserCache byName Ljava/util/Map;
 accessible field net/minecraft/server/command/ServerCommandSource silent Z
+accessible field net/minecraft/entity/Entity pos Lnet/minecraft/util/math/Vec3d;
 
 # common economy api
 accessible field net/minecraft/server/network/ServerPlayerEntity server Lnet/minecraft/server/MinecraftServer;
