@@ -26,4 +26,14 @@ public class LispSpecialFormEvaluationTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    void testDoubleDefineVariableForm() {
+        LispObject actual = EvaluatorUtils.evaluate("""
+            (progn (defvar a 123)
+                   (defvar a 456)
+                   a)
+            """);
+        LispObject expected = LispNumber.of(123);
+        assertEquals(expected, actual);
+    }
 }

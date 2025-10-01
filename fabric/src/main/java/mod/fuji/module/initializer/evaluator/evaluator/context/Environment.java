@@ -34,37 +34,37 @@ public class Environment {
         Environment environment = new Environment(Optional.empty(), new HashMap<>());
 
         /* Define the things that's known in fndb. */
-        environment.defineFunction(LispSymbol.of("+"), new AdditionFunction());
-        environment.defineFunction(LispSymbol.of("*"), new MultiplyFunction());
-        environment.defineFunction(LispSymbol.of("-"), new SubtractFunction());
-        environment.defineFunction(LispSymbol.of("/"), new DivideFunction());
-        environment.defineFunction(LispSymbol.of("defvar"), new DefvarSpecialForm());
-        environment.defineFunction(LispSymbol.of("progn"), new PrognSpecialForm());
-        environment.defineVariable(LispSymbol.of("*test-version*"), LispString.of("1.0.0"));
+        environment.setFunctionValue(LispSymbol.of("+"), new AdditionFunction());
+        environment.setFunctionValue(LispSymbol.of("*"), new MultiplyFunction());
+        environment.setFunctionValue(LispSymbol.of("-"), new SubtractFunction());
+        environment.setFunctionValue(LispSymbol.of("/"), new DivideFunction());
+        environment.setFunctionValue(LispSymbol.of("defvar"), new DefvarSpecialForm());
+        environment.setFunctionValue(LispSymbol.of("progn"), new PrognSpecialForm());
+        environment.setVariableValue(LispSymbol.of("*test-version*"), LispString.of("1.0.0"));
 
-        environment.defineNamedConstant(NIL);
-        environment.defineNamedConstant(T);
+        environment.setNamedConstant(NIL);
+        environment.setNamedConstant(T);
         return environment;
     }
 
-    private void defineSelfEvaluatingSymbol(@NotNull LispSymbol lispSymbol) {
-        this.defineVariable(lispSymbol, lispSymbol);
+    private void setSelfEvaluatingSymbol(@NotNull LispSymbol lispSymbol) {
+        this.setVariableValue(lispSymbol, lispSymbol);
     }
 
-    private void defineNamedConstant(@NotNull LispSymbol lispSymbol) {
+    private void setNamedConstant(@NotNull LispSymbol lispSymbol) {
         // FIXME: a better impl.
-        this.defineSelfEvaluatingSymbol(lispSymbol);
+        this.setSelfEvaluatingSymbol(lispSymbol);
     }
 
     @CanIgnoreReturnValue
-    public @NotNull LispSymbol defineFunction(@NotNull LispSymbol symbol, @NotNull LispFunction function) {
+    public @NotNull LispSymbol setFunctionValue(@NotNull LispSymbol symbol, @NotNull LispFunction function) {
         LispSymbol lispSymbol = internSymbol(symbol.getName());
         lispSymbol.setFunctionValue(Optional.of(function));
         return lispSymbol;
     }
 
     @CanIgnoreReturnValue
-    public @NotNull LispSymbol defineVariable(@NotNull LispSymbol symbol, @NotNull LispObject variableValue) {
+    public @NotNull LispSymbol setVariableValue(@NotNull LispSymbol symbol, @NotNull LispObject variableValue) {
         LispSymbol lispSymbol = internSymbol(symbol.getName());
         lispSymbol.setVariableValue(Optional.of(variableValue));
         return lispSymbol;

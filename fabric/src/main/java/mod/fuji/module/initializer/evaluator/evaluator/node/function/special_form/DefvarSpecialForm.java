@@ -1,6 +1,7 @@
 package mod.fuji.module.initializer.evaluator.evaluator.node.function.special_form;
 
 import java.util.List;
+import java.util.Optional;
 import mod.fuji.module.initializer.evaluator.evaluator.auxliary.LispFunctions;
 import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
@@ -23,10 +24,16 @@ public class DefvarSpecialForm extends LispSpecialForm {
         LispObject first = objects.get(0);
         LispSymbol nameSymbol = LispFunctions.checkType(first, LispSymbol.class);
 
-        LispObject second = objects.get(1);
-        second = second.eval(environment);
+        /* Only eval the init-form and assign the value, when it's unbound. */
+        LispSymbol lispSymbol = environment.lookupSymbol(nameSymbol.getName());
+        Optional<LispObject> variableValue = lispSymbol.getVariableValue();
+        if (variableValue.isEmpty()) {
+            LispObject second = objects.get(1);
+            second = second.eval(environment);
+            environment.setVariableValue(nameSymbol, second);
+        }
 
-        return environment.defineVariable(nameSymbol, second);
+        return lispSymbol;
     }
 
 }
