@@ -8,12 +8,5 @@
 # 📑 Changelog
 
 ## ✨ Added
-- **[core]** Command suggestions are now available for **greedy command strings**, which improves usability for:
-  - `/chain`
-  - `/AND`
-  - `/OR`
-  - `/one-of`
-  - `/IF`
-- **[core]** Command Assistant improvements:
-  - Enhanced **de-bounce** behavior for greedy command string arguments.
-  - Automatically clears cached data when a player leaves the server.
+- **[core]** new supported MC version: `MC 1.21.9`
+- **[evaluator]** new experimental module `evaluator`, to provide a simple in-game evaluator.
