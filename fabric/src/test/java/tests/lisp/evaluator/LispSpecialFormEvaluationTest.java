@@ -36,4 +36,17 @@ public class LispSpecialFormEvaluationTest {
         LispObject expected = LispNumber.of(123);
         assertEquals(expected, actual);
     }
+
+    @Test
+    void testDefvarAndDefparameterForms() {
+        LispObject actual = EvaluatorUtils.evaluate("""
+            (progn (defvar a 123)
+                   (defvar a 456)
+                   (defparameter a 789)
+                   (defvar a 0)
+                   a)
+            """);
+        LispObject expected = LispNumber.of(789);
+        assertEquals(expected, actual);
+    }
 }

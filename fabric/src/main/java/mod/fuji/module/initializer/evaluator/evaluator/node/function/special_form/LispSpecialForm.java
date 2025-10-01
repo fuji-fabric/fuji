@@ -20,7 +20,7 @@ public abstract class LispSpecialForm extends LispFunction {
         "block", "if", "progv", "catch", "labels", "quote", "let", "let*",
         "return-from", "declare", "setq", "eval-when", "macrolet", "tagbody",
         "flet", "multiple_value-call", "multiple-value-prog1", "the", "function",
-        "throw", "go", "progn", "unwind-protect", "compiler-let", "defvar"
+        "throw", "go", "progn", "unwind-protect", "compiler-let", "defvar", "defparameter"
     );
 
     public static boolean isSpecialForm(@NotNull LispSymbol lispSymbol) {

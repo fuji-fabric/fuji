@@ -10,6 +10,7 @@ import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispString;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispSymbol;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.LispFunction;
+import mod.fuji.module.initializer.evaluator.evaluator.node.function.special_form.LispDefparameter;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.special_form.LispDefvar;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.special_form.LispProgn;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.standard.builtin.AdditionFunction;
@@ -39,6 +40,7 @@ public class Environment {
         environment.setFunctionValue(LispSymbol.of("-"), new SubtractFunction());
         environment.setFunctionValue(LispSymbol.of("/"), new DivideFunction());
         environment.setFunctionValue(LispSymbol.of("defvar"), new LispDefvar());
+        environment.setFunctionValue(LispSymbol.of("defparameter"), new LispDefparameter());
         environment.setFunctionValue(LispSymbol.of("progn"), new LispProgn());
         environment.setVariableValue(LispSymbol.of("*test-version*"), LispString.of("1.0.0"));
 
