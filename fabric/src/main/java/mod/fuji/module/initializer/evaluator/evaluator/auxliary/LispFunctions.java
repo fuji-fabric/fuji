@@ -41,12 +41,6 @@ public class LispFunctions {
         return expectedType.cast(lispObject);
     }
 
-    public static void checkConstantVariableMutation(@NotNull LispSymbol lispSymbol) {
-        if (lispSymbol.isConstantVariableValue()) {
-            throw new LispEvaluationException("Cannot proclaim a CONSTANT variable: %s".formatted(lispSymbol.getName()));
-        }
-    }
-
     public static <T> T withCheckedVariableMutation(@NotNull Environment environment, @NotNull LispList arguments, @NotNull Function<LispSymbol, T> function) {
         LispFunctions.checkArity(arguments, 2);
 
@@ -54,9 +48,8 @@ public class LispFunctions {
         LispSymbol nameSymbol = LispFunctions.checkType(first, LispSymbol.class);
 
         LispSymbol lookupSymbol = environment.lookupSymbol(nameSymbol.getName());
-        LispFunctions.checkConstantVariableMutation(lookupSymbol);
 
-        return function.apply(nameSymbol);
+        return function.apply(lookupSymbol);
     }
 
 }
