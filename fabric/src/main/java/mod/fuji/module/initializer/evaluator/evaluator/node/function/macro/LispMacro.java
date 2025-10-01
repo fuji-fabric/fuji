@@ -1,7 +1,7 @@
 package mod.fuji.module.initializer.evaluator.evaluator.node.function.macro;
 
-import java.util.List;
 import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispSymbol;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.LispFunction;
@@ -19,7 +19,7 @@ public class LispMacro extends LispFunction {
     }
 
     @Override
-    public @NotNull LispObject apply(@NotNull Environment environment, @NotNull List<LispObject> arguments) {
+    public @NotNull LispObject apply(@NotNull Environment environment, @NotNull LispList arguments) {
         return this;
     }
 }

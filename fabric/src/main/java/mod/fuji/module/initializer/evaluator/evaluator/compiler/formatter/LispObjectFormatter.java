@@ -15,7 +15,7 @@ public class LispObjectFormatter {
         if (node instanceof LispList listNode) {
             sb.append(indent).append("(\n");
             String childIndent = indent + "  ";
-            for (LispObject childNode : listNode.getNodes()) {
+            for (LispObject childNode : listNode.getObjects()) {
                 sb.append(prettyPrint(childNode, childIndent)).append("\n");
             }
             sb.append(indent).append(")");

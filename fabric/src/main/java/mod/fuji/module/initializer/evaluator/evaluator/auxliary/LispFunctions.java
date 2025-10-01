@@ -1,6 +1,5 @@
 package mod.fuji.module.initializer.evaluator.evaluator.auxliary;
 
-import java.util.Collections;
 import java.util.List;
 import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
 import mod.fuji.module.initializer.evaluator.evaluator.exception.LispEvaluationException;
@@ -11,21 +10,24 @@ import org.jetbrains.annotations.NotNull;
 public class LispFunctions {
 
     @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
-    public static @NotNull LispObject car(@NotNull List<LispObject> list) {
-        if (list.isEmpty()) return Environment.NIL;
-        return list.get(0);
+    public static @NotNull LispObject car(@NotNull LispList list) {
+        List<LispObject> objects = list.getObjects();
+        if (objects.isEmpty()) return Environment.NIL;
+        return objects.get(0);
     }
 
-    public static List<LispObject> cdr(@NotNull List<LispObject> list) {
-        if (list.isEmpty()) return Collections.emptyList();
-        if (list.size() == 1) return Collections.emptyList();
+    public static LispList cdr(@NotNull LispList list) {
+        List<LispObject> objects = list.getObjects();
+        if (objects.isEmpty()) return LispList.of();
+        if (objects.size() == 1) return LispList.of();
 
-        return list.subList(1, list.size());
+        return LispList.of(objects.subList(1, objects.size()));
     }
 
-    public static void checkArity(@NotNull List<LispObject> list, int expectedArity) {
-        if (list.size() != expectedArity) {
-            throw new LispEvaluationException("Expected arity " + expectedArity + " but got " + list.size());
+    public static void checkArity(@NotNull LispList list, int expectedArity) {
+        int size = list.getObjects().size();
+        if (size != expectedArity) {
+            throw new LispEvaluationException("Expected arity " + expectedArity + " but got " + size);
         }
     }
 

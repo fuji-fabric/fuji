@@ -22,13 +22,13 @@ public class LispEvaluator {
     public @NotNull LispObject eval()  {
         List<LispObject> values = new ArrayList<>();
 
-        int size = AST.getNodes().size();
+        int size = AST.getObjects().size();
         LogUtil.debug("the children size of AST = {}", size);
 
         Environment environment = Environment.ofTopLevel();
 
-        for (int i = 0; i < AST.getNodes().size(); i++) {
-            LispObject lispObject = AST.getNodes().get(i);
+        for (int i = 0; i < AST.getObjects().size(); i++) {
+            LispObject lispObject = AST.getObjects().get(i);
             LispObject eval = lispObject.eval(environment);
             values.add(eval);
         }

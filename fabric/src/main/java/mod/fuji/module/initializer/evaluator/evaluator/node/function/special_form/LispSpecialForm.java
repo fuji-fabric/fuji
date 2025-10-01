@@ -1,11 +1,11 @@
 package mod.fuji.module.initializer.evaluator.evaluator.node.function.special_form;
 
 
-import java.util.List;
 import java.util.Set;
 import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
 import mod.fuji.module.initializer.evaluator.evaluator.exception.LispEvaluationException;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispSymbol;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.LispFunction;
@@ -27,7 +27,7 @@ public abstract class LispSpecialForm extends LispFunction {
         return RESERVED_SPECIAL_FORM_NAMES.contains(lispSymbol.getName());
     }
 
-    public static @NotNull LispObject funcall(@NotNull LispSymbol functionNameSymbol, @NotNull Environment environment, @NotNull List<LispObject> arguments) {
+    public static @NotNull LispObject funcall(@NotNull LispSymbol functionNameSymbol, @NotNull Environment environment, @NotNull LispList arguments) {
         LispFunction functionValue = environment
             .lookupSymbol(functionNameSymbol.getName())
             .getFunctionValue()

@@ -4,6 +4,7 @@ import java.util.List;
 import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
 import mod.fuji.module.initializer.evaluator.evaluator.exception.InvalidNumberOfArgumentsException;
 import mod.fuji.module.initializer.evaluator.evaluator.exception.LispEvaluationException;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.standard.LispStandardFunction;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispNumber;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
@@ -12,19 +13,20 @@ import org.jetbrains.annotations.NotNull;
 public class SubtractFunction extends LispStandardFunction {
 
     @Override
-    public @NotNull LispObject apply(@NotNull Environment environment, @NotNull List<LispObject> arguments) {
-        if (arguments.isEmpty()) {
+    public @NotNull LispObject apply(@NotNull Environment environment, @NotNull LispList arguments) {
+        List<LispObject> objects = arguments.getObjects();
+        if (objects.isEmpty()) {
             throw new InvalidNumberOfArgumentsException(0);
         }
 
-        if (arguments.size() == 1) {
-            LispNumber lispNumber = (LispNumber) arguments.get(0);
+        if (objects.size() == 1) {
+            LispNumber lispNumber = (LispNumber) objects.get(0);
             return LispNumber.of(-lispNumber.getValue());
         }
 
         double result = -1;
-        for (int i = 0; i < arguments.size(); i++) {
-            LispObject argument = arguments.get(i);
+        for (int i = 0; i < objects.size(); i++) {
+            LispObject argument = objects.get(i);
             if (argument instanceof LispNumber lispNumber) {
                 if (i == 0) {
                     result = lispNumber.getValue();

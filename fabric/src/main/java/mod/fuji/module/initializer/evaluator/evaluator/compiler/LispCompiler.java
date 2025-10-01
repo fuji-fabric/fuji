@@ -2,7 +2,6 @@ package mod.fuji.module.initializer.evaluator.evaluator.compiler;
 
 import com.google.errorprone.annotations.Keep;
 import java.util.List;
-import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispNumber;
@@ -130,7 +129,7 @@ public class LispCompiler {
     }
 
     private void emitNode(@NotNull LispObject node) {
-        this.parent.getNodes().add(node);
+        this.parent.getObjects().add(node);
         beginNode();
     }
 

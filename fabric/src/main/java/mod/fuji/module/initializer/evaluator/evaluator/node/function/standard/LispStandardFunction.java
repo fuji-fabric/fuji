@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
 import mod.fuji.module.initializer.evaluator.evaluator.exception.LispEvaluationException;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispSymbol;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.LispFunction;
@@ -18,14 +19,14 @@ public abstract class LispStandardFunction extends LispFunction {
     }
 
     @Override
-    public abstract @NotNull LispObject apply(@NotNull Environment environment, @NotNull List<LispObject> arguments);
+    public abstract @NotNull LispObject apply(@NotNull Environment environment, @NotNull LispList arguments);
 
-    public static @NotNull LispObject funcall(@NotNull LispSymbol functionNameSymbol, @NotNull Environment environment, @NotNull List<LispObject> arguments) {
+    public static @NotNull LispObject funcall(@NotNull LispSymbol functionNameSymbol, @NotNull Environment environment, @NotNull LispList arguments) {
         /* Eval the function arguments. */
-        List<LispObject> args = new ArrayList<>();
-        for (LispObject argument : arguments) {
+        LispList args = LispList.of();
+        for (LispObject argument : arguments.getObjects()) {
             LispObject arg = argument.eval(environment);
-            args.add(arg);
+            args.getObjects().add(arg);
         }
 //        Environment childEnvironment = new Environment();
 

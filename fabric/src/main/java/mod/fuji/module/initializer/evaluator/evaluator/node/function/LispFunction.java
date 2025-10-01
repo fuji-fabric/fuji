@@ -1,8 +1,8 @@
 package mod.fuji.module.initializer.evaluator.evaluator.node.function;
 
-import java.util.List;
 import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,6 +15,6 @@ public abstract class LispFunction extends LispObject {
     @Override
     public abstract @NotNull LispObject eval(@NotNull Environment environment);
 
-    public abstract @NotNull LispObject apply(@NotNull Environment environment, @NotNull List<LispObject> arguments);
+    public abstract @NotNull LispObject apply(@NotNull Environment environment, @NotNull LispList arguments);
 
 }
