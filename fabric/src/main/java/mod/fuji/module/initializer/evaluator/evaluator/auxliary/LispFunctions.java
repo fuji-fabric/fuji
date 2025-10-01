@@ -1,6 +1,7 @@
 package mod.fuji.module.initializer.evaluator.evaluator.auxliary;
 
 import java.util.List;
+import java.util.function.Function;
 import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
 import mod.fuji.module.initializer.evaluator.evaluator.exception.LispEvaluationException;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
@@ -44,6 +45,18 @@ public class LispFunctions {
         if (lispSymbol.isConstantVariableValue()) {
             throw new LispEvaluationException("Cannot proclaim a CONSTANT variable: %s".formatted(lispSymbol.getName()));
         }
+    }
+
+    public static <T> T withCheckedVariableMutation(@NotNull Environment environment, @NotNull LispList arguments, @NotNull Function<LispSymbol, T> function) {
+        LispFunctions.checkArity(arguments, 2);
+
+        LispObject first = arguments.get(0);
+        LispSymbol nameSymbol = LispFunctions.checkType(first, LispSymbol.class);
+
+        LispSymbol lookupSymbol = environment.lookupSymbol(nameSymbol.getName());
+        LispFunctions.checkConstantVariableMutation(lookupSymbol);
+
+        return function.apply(nameSymbol);
     }
 
 }
