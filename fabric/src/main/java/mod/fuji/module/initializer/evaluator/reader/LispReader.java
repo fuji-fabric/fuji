@@ -188,27 +188,20 @@ public class LispReader extends LispStreamProcessor<Character, String, Token> {
         }
     }
 
-    @SuppressWarnings("UnnecessaryReturnStatement")
     private void readList() {
-        if (peek() == '(') {
-            forward();
-            emit(TokenType.BEGIN_LIST);
+        forward();
+        emit(TokenType.BEGIN_LIST);
 
-            do {
-                if (!hasNext()) {
-                    throw new LispReaderException("Missing closed parenthesis after index %d".formatted(end));
-                }
+        do {
+            if (!hasNext()) {
+                throw new LispReaderException("Missing closed parenthesis after index %d".formatted(end));
+            }
 
-                readForm();
-            } while (peek() != ')');
+            readForm();
+        } while (peek() != ')');
 
-            forward();
-            emit(TokenType.END_LIST);
-            return;
-        } else {
-            throw new LispReaderException("Expected an open-parenthesis at index %d".formatted(end));
-        }
-
+        forward();
+        emit(TokenType.END_LIST);
     }
 
     @Override

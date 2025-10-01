@@ -1,18 +1,20 @@
 package mod.fuji.module.initializer.evaluator.evaluator.compiler;
 
 import java.util.List;
+import mod.fuji.module.initializer.evaluator.evaluator.compiler.exception.LispCompilationException;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispNumber;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispString;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispSymbol;
 import mod.fuji.module.initializer.evaluator.reader.LispStreamProcessor;
+import mod.fuji.module.initializer.evaluator.reader.exception.LispReaderException;
 import mod.fuji.module.initializer.evaluator.reader.structure.StringRange;
 import mod.fuji.module.initializer.evaluator.reader.token.Token;
 import mod.fuji.module.initializer.evaluator.reader.token.TokenType;
 import org.jetbrains.annotations.NotNull;
 
-public class LispCompiler extends LispStreamProcessor<Token, LispList, LispObject> {
+public class LispCompiler extends LispStreamProcessor<Token, List<Token>, LispObject> {
 
     final List<Token> AST;
     LispList parent;
@@ -28,6 +30,10 @@ public class LispCompiler extends LispStreamProcessor<Token, LispList, LispObjec
 
         /* Call the compiler functions. */
         compileTokenStream();
+
+        if (hasNext()) {
+            throw new LispReaderException("Unexpected token at %d".formatted(start));
+        }
 
         /* Return the nodes. */
         return rootNode;
@@ -53,9 +59,9 @@ public class LispCompiler extends LispStreamProcessor<Token, LispList, LispObjec
 
         /* Consume tokens until the END_LIST token is seen. */
         do {
-//            if (!hasUncompiledTokens()) {
-//                throw new LispCompilationException("Missing more tokens.");
-//            }
+            if (!hasNext()) {
+                throw new LispCompilationException("Missing more tokens.");
+            }
 
             compileTokenStream();
 
@@ -119,7 +125,7 @@ public class LispCompiler extends LispStreamProcessor<Token, LispList, LispObjec
     }
 
     @Override
-    protected @NotNull LispList select() {
+    protected @NotNull List<Token> select() {
         throw new UnsupportedOperationException();
     }
 
