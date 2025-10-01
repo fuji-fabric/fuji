@@ -77,11 +77,13 @@ public class LispGlobalVariablesEvaluationTest {
 
     @Test
     void testConstantOverride() {
-            EvaluatorUtils.evaluate("""
+        LispObject actual = EvaluatorUtils.evaluate("""
             (progn (defparameter a 123)
                    (defconstant a 456)
                    a)
             """);
+        LispObject expected = LispNumber.of(456);
+        assertEquals(expected, actual);
     }
 
 }
