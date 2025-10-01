@@ -6,16 +6,15 @@ import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispNumber;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispString;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispSymbol;
+import mod.fuji.module.initializer.evaluator.reader.LispStreamProcessor;
 import mod.fuji.module.initializer.evaluator.reader.structure.StringRange;
 import mod.fuji.module.initializer.evaluator.reader.token.Token;
 import mod.fuji.module.initializer.evaluator.reader.token.TokenType;
 import org.jetbrains.annotations.NotNull;
 
-public class LispCompiler {
+public class LispCompiler extends LispStreamProcessor<Token, LispList, LispObject> {
 
     final List<Token> AST;
-    int start;
-    int end;
     LispList parent;
 
     public LispCompiler(@NotNull List<Token> AST) {
@@ -70,9 +69,13 @@ public class LispCompiler {
 
     private void compileAtom() {
         Token peek = peek();
-        if (isSelfEvaluatingObject(peek)) {
-            compileSelfEvaluatingObject();
-        } else if (peek.getTokenType().equals(TokenType.SYMBOL)) {
+        TokenType tokenType = peek.getTokenType();
+
+        if (tokenType.equals(TokenType.NUMBER)) {
+            compileNumber();
+        } else if (tokenType.equals(TokenType.STRING)) {
+            compileString();
+        } else if (tokenType.equals(TokenType.SYMBOL)) {
             compileSymbol();
         }
     }
@@ -85,14 +88,8 @@ public class LispCompiler {
         emit(node);
     }
 
-    private void compileSelfEvaluatingObject() {
-        compileNumber();
-        compileString();
-    }
-
     private void compileNumber() {
         Token peek = peek();
-        if (!peek.getTokenType().equals(TokenType.NUMBER)) return;
         forward();
 
         String tokenContent = peek.getTokenContent();
@@ -103,7 +100,6 @@ public class LispCompiler {
 
     private void compileString() {
         Token peek = peek();
-        if (!peek.getTokenType().equals(TokenType.STRING)) return;
         forward();
 
         String tokenContent = peek.getTokenContent();
@@ -116,26 +112,24 @@ public class LispCompiler {
         return tokenContent;
     }
 
-    private boolean isSelfEvaluatingObject(@NotNull Token token) {
-        TokenType tokenType = token.getTokenType();
-        return tokenType.equals(TokenType.NUMBER)
-            || tokenType.equals(TokenType.STRING);
-    }
-
-    private void emit(@NotNull LispObject node) {
+    @Override
+    protected void emit(@NotNull LispObject node) {
         this.parent.getObjects().add(node);
         syncStart();
     }
 
-    private void syncStart() {
-        this.start = this.end;
+    @Override
+    protected @NotNull LispList select() {
+        throw new UnsupportedOperationException();
     }
 
-    private void forward() {
-        this.end++;
+    @Override
+    protected int streamLength() {
+        return AST.size();
     }
 
-    private @NotNull Token peek() {
+    @Override
+    protected @NotNull Token peek() {
         if (end >= AST.size()) {
             return TokenKind.EOF_TOKEN;
         }
@@ -143,17 +137,10 @@ public class LispCompiler {
         return AST.get(end);
     }
 
-//    private boolean hasUncompiledTokens() {
-//        return this.start < this.AST.size();
-//    }
-
-//    private boolean isSelectionEmpty() {
-//        return this.start == this.end;
-//    }
-
-//    private @NotNull List<Token> select() {
-//        return AST.subList(this.start, this.end);
-//    }
+    @Override
+    protected @NotNull Token previous() {
+        throw new UnsupportedOperationException();
+    }
 
     private static class TokenKind {
         private static final Token EOF_TOKEN = Token.of(TokenType.EOF, StringRange.of(-1, -1), "DUMMY EOF TOKEN");

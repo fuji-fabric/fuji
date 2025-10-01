@@ -16,19 +16,16 @@ import org.jetbrains.annotations.NotNull;
     1. https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node1.html
     2. https://groups.csail.mit.edu/mac/ftpdir/scheme-7.4/doc-html/scheme_toc.html
     """)
-public class LispReader {
+public class LispReader extends LispStreamProcessor<Character, String, Token> {
 
     final @NotNull String input;
-    int start;
-    int end;
     final List<Token> tokens;
 
     public LispReader(@NotNull String input) {
+        super();
         /* Initialize the reader states. */
         this.input = input;
         this.tokens = new ArrayList<>();
-        this.start = 0;
-        this.end = 0;
     }
 
     public @NotNull List<Token> read() {
@@ -50,8 +47,9 @@ public class LispReader {
         return tokens;
     }
 
-    private boolean hasNext() {
-        return start < input.length();
+    @Override
+    protected int streamLength() {
+        return input.length();
     }
 
     private void readForm() {
@@ -213,11 +211,8 @@ public class LispReader {
 
     }
 
-    private void forward() {
-        end++;
-    }
-
-    private char peek() {
+    @Override
+    protected @NotNull Character peek() {
         if (end >= input.length()) {
             return CharacterKind.EOF_CHARACTER;
         }
@@ -225,32 +220,31 @@ public class LispReader {
         return input.charAt(end);
     }
 
-    private char previous() {
+    @Override
+    protected @NotNull Character previous() {
         return input.charAt(end - 1);
     }
 
-    private boolean selectAny() {
-        return start != end;
-    }
-
-    private void emit(@NotNull TokenType tokenType) {
-        Token token = makeToken(tokenType);
+    @Override
+    protected void emit(@NotNull Token token) {
         tokens.add(token);
         syncStart();
     }
 
-    private void syncStart() {
-        start = end;
-    }
-
-    private @NotNull String select() {
-        return input.substring(start, end);
+    private void emit(@NotNull TokenType tokenType) {
+        Token token = makeToken(tokenType);
+        emit(token);
     }
 
     private @NotNull Token makeToken(@NotNull TokenType tokenType) {
         StringRange stringRange = StringRange.of(start, end);
         String tokenString = select();
         return Token.of(tokenType, stringRange, tokenString);
+    }
+
+    @Override
+    protected @NotNull String select() {
+        return input.substring(start, end);
     }
 
     private static class CharacterKind {
