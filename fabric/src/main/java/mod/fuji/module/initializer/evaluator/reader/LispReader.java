@@ -18,33 +18,17 @@ import org.jetbrains.annotations.NotNull;
     """)
 public class LispReader {
 
-    private static final char EOF_CHARACTER = '\0';
-    private static final Set<Character> ATOM_END_CHARACTERS = Set.of(
-        '(',
-        ')',
-        '\'',
-        ';',
-        '"',
-        '|',
-        '#',
-        '`',
-        ',',
-        ':',
-        ' '
-    );
-
     final @NotNull String input;
     int start;
     int end;
-    private List<Token> tokens;
+    final List<Token> tokens;
 
     public LispReader(@NotNull String input) {
         /* Initialize the reader states. */
         this.input = input;
-        LogUtil.debug("input = {}", input);
-        tokens = new ArrayList<>();
-        start = 0;
-        end = 0;
+        this.tokens = new ArrayList<>();
+        this.start = 0;
+        this.end = 0;
     }
 
     public @NotNull List<Token> read() {
@@ -52,13 +36,13 @@ public class LispReader {
         readForm();
 
         /* Check if the input been read totally. */
-        while (Character.isWhitespace(peekChar())) {
+        while (Character.isWhitespace(peek())) {
             forward();
         }
-        beginToken();
+        syncStart();
 
         // FIXME: read() loop
-        if (hasUnreadCharacters()) {
+        if (hasNext()) {
             throw new LispReaderException("Unexpected character at %d".formatted(start));
         }
 
@@ -66,19 +50,19 @@ public class LispReader {
         return tokens;
     }
 
-    private boolean hasUnreadCharacters() {
+    private boolean hasNext() {
         return start < input.length();
     }
 
     private void readForm() {
         /* Stipe leading blank characters. */
-        char peekChar = peekChar();
+        char peekChar = peek();
         LogUtil.debug("readForm(): peek = {}", peekChar);
         while (Character.isWhitespace(peekChar)) {
             forward();
-            peekChar = peekChar();
+            peekChar = peek();
         }
-        beginToken();
+        syncStart();
 
         /* Atom or List? */
         if (peekChar == '(') {
@@ -105,20 +89,20 @@ public class LispReader {
     }
 
     private void readNumber() {
-        char peek = peekChar();
+        char peek = peek();
 
         /* Check if there is leading sign character. */
         boolean seenLeadingSignCharacter = false;
-        if (isSignCharacter(peek)) {
+        if (CharacterKind.isSignCharacter(peek)) {
             seenLeadingSignCharacter = true;
             forward();
         }
 
         /* Read a number. */
         boolean seenDecimalPointCharacter = false;
-        while ((peek = peekChar()) != EOF_CHARACTER) {
+        while ((peek = peek()) != CharacterKind.EOF_CHARACTER) {
 
-            if (isSignCharacter(peek)) {
+            if (CharacterKind.isSignCharacter(peek)) {
                 // Contains more than 1 sign characters, this is not a number token.
                 return;
             }
@@ -134,8 +118,8 @@ public class LispReader {
                 continue;
             }
 
-            if (!isNumberCharacter(peek)) {
-                if (!ATOM_END_CHARACTERS.contains(peek)) {
+            if (!CharacterKind.isNumberCharacter(peek)) {
+                if (!CharacterKind.isAtomDelimiterCharacter(peek)) {
                     // This is a symbol whose name starts with a number.
                     return;
                 }
@@ -147,17 +131,17 @@ public class LispReader {
         }
 
         /* Append the token. */
-        String tokenString = getTokenString();
+        String tokenString = select();
         if (!tokenString.isEmpty()) {
             if (seenLeadingSignCharacter && tokenString.length() == 1) {
                 return;
             }
-            emitToken(TokenType.NUMBER);
+            emit(TokenType.NUMBER);
         }
     }
 
     private void readString() {
-        char peek = peekChar();
+        char peek = peek();
 
         if (peek == '"') {
             forward();
@@ -166,9 +150,9 @@ public class LispReader {
         }
 
         boolean stringClosed = false;
-        while ((peek = peekChar()) != EOF_CHARACTER) {
+        while ((peek = peek()) != CharacterKind.EOF_CHARACTER) {
 
-            if (previousChar() == '\\') {
+            if (previous() == '\\') {
                 forward();
                 continue;
             }
@@ -186,53 +170,42 @@ public class LispReader {
             throw new LispReaderException("Unclosed string after %d".formatted(end));
         }
 
-        if (!isTokenStringEmpty()) {
-            emitToken(TokenType.STRING);
+        if (selectAny()) {
+            emit(TokenType.STRING);
         }
-    }
-
-    private boolean isSignCharacter(char ch) {
-        return ch == '-' || ch == '+';
-    }
-
-    @SuppressWarnings("RedundantIfStatement")
-    private boolean isNumberCharacter(char ch) {
-        if (ch >= '0' && ch <= '9') return true;
-
-        return false;
     }
 
     private void readSymbol() {
         char peek;
-        while ((peek = peekChar()) != EOF_CHARACTER) {
-            if (ATOM_END_CHARACTERS.contains(peek)) {
+        while ((peek = peek()) != CharacterKind.EOF_CHARACTER) {
+            if (CharacterKind.isAtomDelimiterCharacter(peek)) {
                 break;
             }
 
             forward();
         }
 
-        if (!isTokenStringEmpty()) {
-            emitToken(TokenType.SYMBOL);
+        if (selectAny()) {
+            emit(TokenType.SYMBOL);
         }
     }
 
     @SuppressWarnings("UnnecessaryReturnStatement")
     private void readList() {
-        if (peekChar() == '(') {
+        if (peek() == '(') {
             forward();
-            emitToken(TokenType.BEGIN_LIST);
+            emit(TokenType.BEGIN_LIST);
 
             do {
-                if (!hasUnreadCharacters()) {
+                if (!hasNext()) {
                     throw new LispReaderException("Missing closed parenthesis after index %d".formatted(end));
                 }
 
                 readForm();
-            } while (peekChar() != ')');
+            } while (peek() != ')');
 
             forward();
-            emitToken(TokenType.END_LIST);
+            emit(TokenType.END_LIST);
             return;
         } else {
             throw new LispReaderException("Expected an open-parenthesis at index %d".formatted(end));
@@ -240,52 +213,76 @@ public class LispReader {
 
     }
 
-
-    @SuppressWarnings("SameParameterValue")
-    private void forward(int distance) {
-        end += distance;
-    }
-
     private void forward() {
-        forward(1);
+        end++;
     }
 
-    private char peekChar() {
+    private char peek() {
         if (end >= input.length()) {
-            return EOF_CHARACTER;
+            return CharacterKind.EOF_CHARACTER;
         }
 
         return input.charAt(end);
     }
 
-    private char previousChar() {
+    private char previous() {
         return input.charAt(end - 1);
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    private boolean isTokenStringEmpty() {
-        return start == end;
+    private boolean selectAny() {
+        return start != end;
     }
 
-    private void emitToken(@NotNull TokenType tokenType) {
+    private void emit(@NotNull TokenType tokenType) {
         Token token = makeToken(tokenType);
         tokens.add(token);
-
-        beginToken();
+        syncStart();
     }
 
-    private void beginToken() {
+    private void syncStart() {
         start = end;
     }
 
-    private @NotNull String getTokenString() {
+    private @NotNull String select() {
         return input.substring(start, end);
     }
 
     private @NotNull Token makeToken(@NotNull TokenType tokenType) {
         StringRange stringRange = StringRange.of(start, end);
-        String tokenString = getTokenString();
+        String tokenString = select();
         return Token.of(tokenType, stringRange, tokenString);
     }
 
+    private static class CharacterKind {
+
+        private static final char EOF_CHARACTER = '\0';
+        private static final Set<Character> ATOM_DELIMITER_CHARACTERS = Set.of(
+            '(',
+            ')',
+            '\'',
+            ';',
+            '"',
+            '|',
+            '#',
+            '`',
+            ',',
+            ':',
+            ' '
+        );
+
+        private static boolean isSignCharacter(char ch) {
+            return ch == '-' || ch == '+';
+        }
+
+        @SuppressWarnings("RedundantIfStatement")
+        private static boolean isNumberCharacter(char ch) {
+            if (ch >= '0' && ch <= '9') return true;
+
+            return false;
+        }
+
+        private static boolean isAtomDelimiterCharacter(char peek) {
+            return ATOM_DELIMITER_CHARACTERS.contains(peek);
+        }
+    }
 }
