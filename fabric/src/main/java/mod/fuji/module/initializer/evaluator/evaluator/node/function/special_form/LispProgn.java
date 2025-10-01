@@ -5,7 +5,7 @@ import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import org.jetbrains.annotations.NotNull;
 
-public class PrognSpecialForm extends LispSpecialForm {
+public class LispProgn extends LispSpecialForm {
 
     @Override
     public @NotNull LispObject eval(@NotNull Environment environment) {

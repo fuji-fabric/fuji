@@ -9,7 +9,7 @@ import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispSymbol;
 import org.jetbrains.annotations.NotNull;
 
-public class DefvarSpecialForm extends LispSpecialForm {
+public class LispDefvar extends LispSpecialForm {
 
     @Override
     public @NotNull LispObject eval(@NotNull Environment environment) {
