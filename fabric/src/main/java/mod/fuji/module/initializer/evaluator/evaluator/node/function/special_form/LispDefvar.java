@@ -25,15 +25,17 @@ public class LispDefvar extends LispSpecialForm {
         LispSymbol nameSymbol = LispFunctions.checkType(first, LispSymbol.class);
 
         /* Only eval the init-form and assign the value, when it's unbound. */
-        LispSymbol lispSymbol = environment.lookupSymbol(nameSymbol.getName());
-        Optional<LispObject> variableValue = lispSymbol.getVariableValue();
+        LispSymbol lookupSymbol = environment.lookupSymbol(nameSymbol.getName());
+        LispFunctions.checkConstantVariableMutation(lookupSymbol);
+
+        Optional<LispObject> variableValue = lookupSymbol.getVariableValue();
         if (variableValue.isEmpty()) {
             LispObject second = objects.get(1);
             second = second.eval(environment);
-            environment.setVariableValue(nameSymbol, second);
+            environment.setVariableValue(lookupSymbol, second);
         }
 
-        return lispSymbol;
+        return lookupSymbol;
     }
 
 }

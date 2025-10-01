@@ -18,9 +18,10 @@ public class LispSymbol extends LispObject {
 
     Optional<LispObject> variableValue;
     Optional<LispFunction> functionValue;
+    boolean isConstantVariableValue;
 
     public static @NotNull LispSymbol of(@NotNull String name) {
-        return new LispSymbol(name, Optional.empty(), Optional.empty());
+        return new LispSymbol(name, Optional.empty(), Optional.empty(), false);
     }
 
     @Override

@@ -67,10 +67,10 @@ public class EvaluatorInitializer extends ModuleInitializer {
                 """, eval);
 
             /* Print the value. */
-            TextHelper.sendTextByKey(source, "lisp.eval.value", eval);
+            TextHelper.sendTextByKey(source, "lisp.eval.value", TextHelper.Parsers.escapeTags(eval.toString()));
             return CommandHelper.Return.SUCCESS;
         } catch (Exception e) {
-            TextHelper.sendTextByKey(source, "lisp.eval.error", e);
+            TextHelper.sendTextByKey(source, "lisp.eval.error", TextHelper.Parsers.escapeTags(e.toString()));
             return CommandHelper.Return.FAILURE;
         }
     }

@@ -22,13 +22,14 @@ public class LispDefparameter extends LispSpecialForm {
         List<LispObject> objects = arguments.getObjects();
         LispObject first = objects.get(0);
         LispSymbol nameSymbol = LispFunctions.checkType(first, LispSymbol.class);
+        LispSymbol lookupSymbol = environment.lookupSymbol(nameSymbol.getName());
+        LispFunctions.checkConstantVariableMutation(lookupSymbol);
 
-        LispSymbol lispSymbol = environment.lookupSymbol(nameSymbol.getName());
         LispObject second = objects.get(1);
         second = second.eval(environment);
-        environment.setVariableValue(nameSymbol, second);
+        environment.setVariableValue(lookupSymbol, second);
 
-        return lispSymbol;
+        return lookupSymbol;
     }
 
 }

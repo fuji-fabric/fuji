@@ -5,6 +5,7 @@ import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
 import mod.fuji.module.initializer.evaluator.evaluator.exception.LispEvaluationException;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispSymbol;
 import org.jetbrains.annotations.NotNull;
 
 public class LispFunctions {
@@ -17,6 +18,7 @@ public class LispFunctions {
     }
 
     public static LispList cdr(@NotNull LispList list) {
+        // FIXME: value-copy and ref-copy.
         List<LispObject> objects = list.getObjects();
         if (objects.isEmpty()) return LispList.of();
         if (objects.size() == 1) return LispList.of();
@@ -25,7 +27,7 @@ public class LispFunctions {
     }
 
     public static void checkArity(@NotNull LispList list, int expectedArity) {
-        int size = list.getObjects().size();
+        int size = list.size();
         if (size != expectedArity) {
             throw new LispEvaluationException("Expected arity " + expectedArity + " but got " + size);
         }
@@ -36,6 +38,12 @@ public class LispFunctions {
             throw new LispEvaluationException("Expected type " + expectedType + " but got " + lispObject.getClass());
         }
         return expectedType.cast(lispObject);
+    }
+
+    public static void checkConstantVariableMutation(@NotNull LispSymbol lispSymbol) {
+        if (lispSymbol.isConstantVariableValue()) {
+            throw new LispEvaluationException("Cannot proclaim a CONSTANT variable: %s".formatted(lispSymbol.getName()));
+        }
     }
 
 }
