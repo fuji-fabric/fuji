@@ -1,5 +1,6 @@
 package mod.fuji.module.initializer.evaluator.evaluator.context;
 
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -55,14 +56,18 @@ public class Environment {
         this.defineSelfEvaluatingSymbol(lispSymbol);
     }
 
-    public void defineFunction(@NotNull LispSymbol symbol, @NotNull LispFunction function) {
-        internSymbol(symbol.getName())
-            .setFunctionValue(Optional.of(function));
+    @CanIgnoreReturnValue
+    public @NotNull LispSymbol defineFunction(@NotNull LispSymbol symbol, @NotNull LispFunction function) {
+        LispSymbol lispSymbol = internSymbol(symbol.getName());
+        lispSymbol.setFunctionValue(Optional.of(function));
+        return lispSymbol;
     }
 
-    public void defineVariable(@NotNull LispSymbol symbol, @NotNull LispObject variableValue) {
-        internSymbol(symbol.getName())
-            .setVariableValue(Optional.of(variableValue));
+    @CanIgnoreReturnValue
+    public @NotNull LispSymbol defineVariable(@NotNull LispSymbol symbol, @NotNull LispObject variableValue) {
+        LispSymbol lispSymbol = internSymbol(symbol.getName());
+        lispSymbol.setVariableValue(Optional.of(variableValue));
+        return lispSymbol;
     }
 
     private @NotNull LispSymbol internSymbol(@NotNull String symbolName) {

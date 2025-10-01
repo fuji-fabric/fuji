@@ -24,8 +24,7 @@ public class DefvarSpecialForm extends LispSpecialForm {
         LispObject second = arguments.get(1);
         second = second.eval(environment);
 
-        environment.defineVariable(nameSymbol, second);
-        return nameSymbol;
+        return environment.defineVariable(nameSymbol, second);
     }
 
 }
