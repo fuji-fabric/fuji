@@ -184,7 +184,7 @@ javaProjects.each { projectName ->
                 options.compilerArgs << "-Werror"
 
                 /* Print the AP processing rounds. */
-                options.compilerArgs << "-XprintRounds"
+                // options.compilerArgs << "-XprintRounds"
 
                 /* Specify the behaviour for implicit compilation. */
                 // See: https://docs.oracle.com/javase/6/docs/technotes/tools/solaris/javac.html#processing
