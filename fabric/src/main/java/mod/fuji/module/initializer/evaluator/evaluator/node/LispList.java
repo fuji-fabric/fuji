@@ -2,6 +2,7 @@ package mod.fuji.module.initializer.evaluator.evaluator.node;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -15,9 +16,9 @@ import org.jetbrains.annotations.NotNull;
 
 @Value
 @EqualsAndHashCode(callSuper = true)
-public class LispList extends LispObject {
+public class LispList extends LispObject implements Iterable<LispObject> {
 
-    List<LispObject> objects;
+    @NotNull List<LispObject> objects;
 
     private LispList(@NotNull List<LispObject> objects) {
         this.objects = objects;
@@ -62,6 +63,19 @@ public class LispList extends LispObject {
         }
 
         return functionReturnValue;
+    }
+
+    @Override
+    public @NotNull Iterator<LispObject> iterator() {
+        return this.objects.iterator();
+    }
+
+    public int size() {
+        return objects.size();
+    }
+
+    public LispObject get(int index) {
+        return this.objects.get(index);
     }
 
 }

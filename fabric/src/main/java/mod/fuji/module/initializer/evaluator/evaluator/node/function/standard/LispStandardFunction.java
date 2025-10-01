@@ -24,7 +24,7 @@ public abstract class LispStandardFunction extends LispFunction {
     public static @NotNull LispObject funcall(@NotNull LispSymbol functionNameSymbol, @NotNull Environment environment, @NotNull LispList arguments) {
         /* Eval the function arguments. */
         LispList args = LispList.of();
-        for (LispObject argument : arguments.getObjects()) {
+        for (LispObject argument : arguments) {
             LispObject arg = argument.eval(environment);
             args.getObjects().add(arg);
         }

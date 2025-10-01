@@ -13,7 +13,7 @@ public class AdditionFunction extends LispStandardFunction {
     @Override
     public @NotNull LispObject apply(@NotNull Environment environment, @NotNull LispList arguments) {
         double result = 0;
-        for (LispObject argument : arguments.getObjects()) {
+        for (LispObject argument : arguments) {
             if (argument instanceof LispNumber lispNumber) {
                 result += lispNumber.getValue();
             } else {

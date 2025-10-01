@@ -16,7 +16,7 @@ public class LispProgn extends LispSpecialForm {
     public @NotNull LispObject apply(@NotNull Environment environment, @NotNull LispList arguments) {
         @NotNull LispObject value = Environment.NIL;
 
-        for (LispObject argument : arguments.getObjects()) {
+        for (LispObject argument : arguments) {
             value = argument.eval(environment);
         }
 

@@ -27,7 +27,7 @@ public class LispEvaluator {
 
         Environment environment = Environment.ofTopLevel();
 
-        for (int i = 0; i < AST.getObjects().size(); i++) {
+        for (int i = 0; i < size; i++) {
             LispObject lispObject = AST.getObjects().get(i);
             LispObject eval = lispObject.eval(environment);
             values.add(eval);
