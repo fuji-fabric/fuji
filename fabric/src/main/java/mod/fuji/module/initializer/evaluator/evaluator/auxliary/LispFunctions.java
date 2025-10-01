@@ -3,6 +3,8 @@ package mod.fuji.module.initializer.evaluator.evaluator.auxliary;
 import java.util.Collections;
 import java.util.List;
 import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
+import mod.fuji.module.initializer.evaluator.evaluator.exception.LispEvaluationException;
+import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,4 +22,18 @@ public class LispFunctions {
 
         return list.subList(1, list.size());
     }
+
+    public static void checkArity(@NotNull List<LispObject> list, int expectedArity) {
+        if (list.size() != expectedArity) {
+            throw new LispEvaluationException("Expected arity " + expectedArity + " but got " + list.size());
+        }
+    }
+
+    public static <T extends LispObject> T checkType(@NotNull LispObject lispObject, @NotNull Class<T> expectedType) {
+        if (!expectedType.isAssignableFrom(lispObject.getClass())) {
+            throw new LispEvaluationException("Expected type " + expectedType + " but got " + lispObject.getClass());
+        }
+        return expectedType.cast(lispObject);
+    }
+
 }

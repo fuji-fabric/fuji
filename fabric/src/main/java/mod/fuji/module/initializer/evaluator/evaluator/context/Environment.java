@@ -9,6 +9,8 @@ import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispString;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispSymbol;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.LispFunction;
+import mod.fuji.module.initializer.evaluator.evaluator.node.function.special_form.DefvarSpecialForm;
+import mod.fuji.module.initializer.evaluator.evaluator.node.function.special_form.PrognSpecialForm;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.standard.builtin.AdditionFunction;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.standard.builtin.DivideFunction;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.standard.builtin.MultiplyFunction;
@@ -35,6 +37,8 @@ public class Environment {
         environment.defineFunction(LispSymbol.of("*"), new MultiplyFunction());
         environment.defineFunction(LispSymbol.of("-"), new SubtractFunction());
         environment.defineFunction(LispSymbol.of("/"), new DivideFunction());
+        environment.defineFunction(LispSymbol.of("defvar"), new DefvarSpecialForm());
+        environment.defineFunction(LispSymbol.of("progn"), new PrognSpecialForm());
         environment.defineVariable(LispSymbol.of("*test-version*"), LispString.of("1.0.0"));
 
         environment.defineNamedConstant(NIL);

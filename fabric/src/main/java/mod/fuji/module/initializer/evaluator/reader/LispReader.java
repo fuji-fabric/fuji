@@ -52,6 +52,11 @@ public class LispReader {
         readForm();
 
         /* Check if the input been read totally. */
+        while (Character.isWhitespace(peekChar())) {
+            forward();
+        }
+        beginToken();
+
         // FIXME: read() loop
         if (hasUnreadCharacters()) {
             throw new LispReaderException("Unexpected character at %d".formatted(start));
@@ -69,7 +74,7 @@ public class LispReader {
         /* Stipe leading blank characters. */
         char peekChar = peekChar();
         LogUtil.debug("readForm(): peek = {}", peekChar);
-        while (peekChar == ' ') {
+        while (Character.isWhitespace(peekChar)) {
             forward();
             peekChar = peekChar();
         }

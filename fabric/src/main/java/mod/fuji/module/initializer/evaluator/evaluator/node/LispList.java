@@ -36,7 +36,6 @@ public class LispList extends LispObject {
         return new LispList(nodes);
     }
 
-    @SuppressWarnings({"UnnecessaryLocalVariable"})
     @Override
     public @NotNull LispObject eval(@NotNull Environment environment) {
         /* An empty list is treated as nil value. */
@@ -52,14 +51,17 @@ public class LispList extends LispObject {
         List<LispObject> rest = LispFunctions.cdr(this.nodes);
 
         /* Call the function. */
+        @NotNull LispObject functionReturnValue;
+
         if (LispSpecialForm.isSpecialForm(functionNameSymbol)) {
-            throw new UnsupportedOperationException();
+            functionReturnValue = LispSpecialForm.funcall(functionNameSymbol, environment, rest);
         } else if (LispMacro.isMacro(functionNameSymbol)) {
             throw new UnsupportedOperationException();
         } else {
-            LispObject functionReturnValue = LispStandardFunction.funcall(functionNameSymbol, environment, rest);
-            return functionReturnValue;
+            functionReturnValue = LispStandardFunction.funcall(functionNameSymbol, environment, rest);
         }
+
+        return functionReturnValue;
     }
 
 }

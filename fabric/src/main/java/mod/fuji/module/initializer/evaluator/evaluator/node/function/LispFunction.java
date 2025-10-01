@@ -16,4 +16,5 @@ public abstract class LispFunction extends LispObject {
     public abstract @NotNull LispObject eval(@NotNull Environment environment);
 
     public abstract @NotNull LispObject apply(@NotNull Environment environment, @NotNull List<LispObject> arguments);
+
 }
