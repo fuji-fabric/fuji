@@ -332,6 +332,8 @@
   "leaderboard.not_found": "<red>Leaderboard `%s` not fuond.",
   "leaderboard.update.all": "<green>Updated all leaderboards for online players.",
   "line.separator": "<grey>----------------------------------------",
+  "lisp.eval.error": "<red>➜ %s",
+  "lisp.eval.value": "<green>➜ %s",
   "maintenance.disconnect": "<red>The server is currently under maintenance.",
   "maintenance.off": "<green>Maintenance mode: off",
   "maintenance.on": "<pink>Maintenance mode: on",
@@ -1535,5 +1537,10 @@
   "docstring.1758445255938": "◉ The `per-dimension worldborder` since `MC 1.21.9`\nSince `MC 1.21.9`, the `/worldborder` command is `dimension specific`.\nYou should only use `world.border` module when your MC version is lower than `MC 1.21.9`.\n",
   "docstring.1758491031770": "This module provides a collection of `tool commands`.\nThese commands are `simple` yet `convenient`.\n",
   "docstring.1758491504173": "This module provides a collection of `echo commands`.\nThey can be used to send `feedback texts`.\n",
-  "docstring.1758555773741": "Teleport to any of your homes."
+  "docstring.1758555773741": "Teleport to any of your homes.",
+  "docstring.1758985259601": "This module provides an `evaluator` for `Lisp dialect language`.\n",
+  "docstring.1758985675914": "◉ This module is currently an experimental module.\nChanges may be made in the future versions.\n",
+  "docstring.1759152497031": "Alias to `/lisp eval` command.",
+  "docstring.1759152513020": "Eval a lisp form.",
+  "docstring.1759153524537": "◉ Advanced `server-side` show-case mod.\nA new mod is released in https://modrinth.com/mod/showcase\nYou may want to check it!\n"
 }
