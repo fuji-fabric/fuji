@@ -27,10 +27,21 @@ public class LispFunctions {
         return LispList.of(objects.subList(1, objects.size()));
     }
 
-    public static void checkArity(@NotNull LispList list, int expectedArity) {
-        int size = list.size();
-        if (size != expectedArity) {
-            throw new LispEvaluationException("Expected arity " + expectedArity + " but got " + size);
+    public static void checkExactlyArity(@NotNull LispList list, int expectedArity) {
+        int arity = list.size();
+        if (arity != expectedArity) {
+            throw new LispEvaluationException("Expected arity " + expectedArity + " but got " + arity);
+        }
+    }
+
+    public static void checkRequiredArity(@NotNull LispList list, int requiredArity) {
+        int arity = list.size();
+        if (arity < requiredArity) {
+            throw new LispEvaluationException("""
+                Too few elements in
+                  %s
+                at least %d expected, but got %d
+                """.formatted(list, requiredArity, arity));
         }
     }
 
@@ -42,7 +53,7 @@ public class LispFunctions {
     }
 
     public static <T> T withCheckedVariableMutation(@NotNull Environment environment, @NotNull LispList arguments, @NotNull Function<LispSymbol, T> function) {
-        LispFunctions.checkArity(arguments, 2);
+        LispFunctions.checkExactlyArity(arguments, 2);
 
         LispObject first = arguments.get(0);
         LispSymbol nameSymbol = LispFunctions.checkType(first, LispSymbol.class);
@@ -52,4 +63,13 @@ public class LispFunctions {
         return function.apply(lookupSymbol);
     }
 
+
+    public static @NotNull LispList evalForms(@NotNull Environment environment, @NotNull LispList forms) {
+        LispList values = LispList.of();
+        for (LispObject form : forms) {
+            LispObject value = form.eval(environment);
+            values.add(value);
+        }
+        return values;
+    }
 }

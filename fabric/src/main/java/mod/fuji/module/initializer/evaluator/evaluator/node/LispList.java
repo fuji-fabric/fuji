@@ -1,5 +1,6 @@
 package mod.fuji.module.initializer.evaluator.evaluator.node;
 
+import com.google.errorprone.annotations.Keep;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -76,6 +77,17 @@ public class LispList extends LispObject implements Iterable<LispObject> {
 
     public LispObject get(int index) {
         return this.objects.get(index);
+    }
+
+    public void add(LispObject element) {
+        this.objects.add(element);
+    }
+
+    @Keep
+    public LispList sublist(int start, int end) {
+        if (start == end) return LispList.of();
+        if (start >= objects.size()) return LispList.of();
+        return new LispList(objects.subList(start, end));
     }
 
 }
