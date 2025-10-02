@@ -2,7 +2,7 @@ package mod.fuji.module.initializer.evaluator.evaluator.node.function.standard.b
 
 import java.util.List;
 import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
-import mod.fuji.module.initializer.evaluator.evaluator.exception.InvalidNumberOfArgumentsException;
+import mod.fuji.module.initializer.evaluator.evaluator.exception.LispInvalidNumberOfArgumentsException;
 import mod.fuji.module.initializer.evaluator.evaluator.exception.LispEvaluationException;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.standard.LispStandardFunction;
@@ -16,7 +16,7 @@ public class DivideFunction extends LispStandardFunction {
     public @NotNull LispObject apply(@NotNull Environment environment, @NotNull LispList arguments) {
         List<LispObject> objects = arguments.getObjects();
         if (objects.isEmpty()) {
-            throw new InvalidNumberOfArgumentsException(0);
+            throw new LispInvalidNumberOfArgumentsException(0);
         }
 
         double result = 1;

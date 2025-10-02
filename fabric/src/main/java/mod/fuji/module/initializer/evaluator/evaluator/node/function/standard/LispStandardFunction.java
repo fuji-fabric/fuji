@@ -1,8 +1,7 @@
 package mod.fuji.module.initializer.evaluator.evaluator.node.function.standard;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import mod.fuji.module.initializer.evaluator.evaluator.auxliary.LispFunctions;
 import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
 import mod.fuji.module.initializer.evaluator.evaluator.exception.LispEvaluationException;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
@@ -23,12 +22,7 @@ public abstract class LispStandardFunction extends LispFunction {
 
     public static @NotNull LispObject funcall(@NotNull LispSymbol functionNameSymbol, @NotNull Environment environment, @NotNull LispList arguments) {
         /* Eval the function arguments. */
-        LispList args = LispList.of();
-        for (LispObject argument : arguments) {
-            LispObject arg = argument.eval(environment);
-            args.getObjects().add(arg);
-        }
-//        Environment childEnvironment = new Environment();
+        LispList args = LispFunctions.evalForms(environment, arguments);
 
         /* Get the function value. */
         LispFunction functionValue = environment
@@ -36,10 +30,13 @@ public abstract class LispStandardFunction extends LispFunction {
             .getFunctionValue()
             .orElseThrow(() -> new LispEvaluationException("The function %s is undefined.".formatted(functionNameSymbol.getName())));
 
+        /* Check the number of arguments. */
+//        functionValue.checkNumberOfArguments(arguments);
+
+//        Environment childEnvironment = new Environment();
 
         /* Call the function. */
         return functionValue.apply(environment, args);
     }
-
 
 }
