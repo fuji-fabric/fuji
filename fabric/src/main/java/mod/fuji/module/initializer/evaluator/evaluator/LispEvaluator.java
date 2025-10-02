@@ -25,7 +25,7 @@ public class LispEvaluator {
         int size = AST.getObjects().size();
         LogUtil.debug("the children size of AST = {}", size);
 
-        Environment environment = Environment.ofTopLevel();
+        Environment environment = Environment.ofNullLexical();
 
         for (int i = 0; i < size; i++) {
             LispObject lispObject = AST.getObjects().get(i);

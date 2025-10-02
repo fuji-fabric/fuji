@@ -31,7 +31,7 @@ public class Environment {
     @NotNull Optional<Environment> parent;
     @NotNull Map<String, LispSymbol> symbols;
 
-    public static @NotNull Environment ofTopLevel() {
+    public static @NotNull Environment ofNullLexical() {
         /* Make an empty environment. */
         Environment environment = new Environment(Optional.empty(), new HashMap<>());
 

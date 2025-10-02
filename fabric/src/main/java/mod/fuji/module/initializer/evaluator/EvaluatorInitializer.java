@@ -45,7 +45,6 @@ public class EvaluatorInitializer extends ModuleInitializer {
             final String $form = form.getValue();
             LispReader lispReader = new LispReader($form);
             List<Token> tokenStream = lispReader.read();
-            PrettyFormatter.prettyPrint(tokenStream);
 
             LispCompiler lispCompiler = new LispCompiler(tokenStream);
             LispList AST = lispCompiler.compile();
@@ -65,6 +64,7 @@ public class EvaluatorInitializer extends ModuleInitializer {
             LogUtil.debug("""
                 eval = {}
                 """, eval);
+
 
             /* Print the value. */
             TextHelper.sendTextByKey(source, "lisp.eval.value", TextHelper.Parsers.escapeTags(eval.toString()));
