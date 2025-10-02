@@ -56,9 +56,9 @@ public class LispList extends LispObject implements Iterable<LispObject> {
         @NotNull LispObject functionReturnValue;
 
         if (LispSpecialForm.isSpecialForm(functionNameSymbol)) {
-            functionReturnValue = LispSpecialForm.funcall(functionNameSymbol, environment, args);
+            functionReturnValue = LispFunction.funcall(functionNameSymbol, environment, args);
         } else if (LispMacro.isMacro(functionNameSymbol)) {
-            functionReturnValue = LispSpecialForm.funcall(functionNameSymbol, environment, args);
+            functionReturnValue = LispFunction.funcall(functionNameSymbol, environment, args);
         } else {
             args = LispFunctions.evalForms(environment, args);
             functionReturnValue = LispFunction.funcall(functionNameSymbol, environment, args);
