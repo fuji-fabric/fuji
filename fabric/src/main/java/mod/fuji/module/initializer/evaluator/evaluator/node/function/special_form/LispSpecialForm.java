@@ -3,10 +3,6 @@ package mod.fuji.module.initializer.evaluator.evaluator.node.function.special_fo
 
 import java.util.Set;
 import mod.fuji.core.document.annotation.ForDeveloper;
-import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
-import mod.fuji.module.initializer.evaluator.evaluator.exception.LispEvaluationException;
-import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
-import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispSymbol;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.LispFunction;
 import org.jetbrains.annotations.NotNull;
@@ -25,15 +21,6 @@ public abstract class LispSpecialForm extends LispFunction {
 
     public static boolean isSpecialForm(@NotNull LispSymbol lispSymbol) {
         return RESERVED_SPECIAL_FORM_NAMES.contains(lispSymbol.getName());
-    }
-
-    public static @NotNull LispObject funcall(@NotNull LispSymbol functionNameSymbol, @NotNull Environment environment, @NotNull LispList arguments) {
-        LispFunction functionValue = environment
-            .lookupSymbol(functionNameSymbol.getName())
-            .getFunctionValue()
-            .orElseThrow(() -> new LispEvaluationException("The function %s is undefined.".formatted(functionNameSymbol.getName())));
-
-        return functionValue.apply(environment, arguments);
     }
 
 }

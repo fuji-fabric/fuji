@@ -10,9 +10,9 @@ import lombok.Value;
 import mod.fuji.module.initializer.evaluator.evaluator.auxliary.LispFunctions;
 import mod.fuji.module.initializer.evaluator.evaluator.compiler.exception.LispCompilationException;
 import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
+import mod.fuji.module.initializer.evaluator.evaluator.node.function.LispFunction;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.macro.LispMacro;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.special_form.LispSpecialForm;
-import mod.fuji.module.initializer.evaluator.evaluator.node.function.standard.LispStandardFunction;
 import org.jetbrains.annotations.NotNull;
 
 @Value
@@ -50,17 +50,18 @@ public class LispList extends LispObject implements Iterable<LispObject> {
         if (!(first instanceof LispSymbol functionNameSymbol)) {
             throw new LispCompilationException("Illegal function call.");
         }
-        LispList rest = LispFunctions.cdr(this);
+        LispList args = LispFunctions.cdr(this);
 
         /* Call the function. */
         @NotNull LispObject functionReturnValue;
 
         if (LispSpecialForm.isSpecialForm(functionNameSymbol)) {
-            functionReturnValue = LispSpecialForm.funcall(functionNameSymbol, environment, rest);
+            functionReturnValue = LispSpecialForm.funcall(functionNameSymbol, environment, args);
         } else if (LispMacro.isMacro(functionNameSymbol)) {
-            throw new UnsupportedOperationException();
+            functionReturnValue = LispSpecialForm.funcall(functionNameSymbol, environment, args);
         } else {
-            functionReturnValue = LispStandardFunction.funcall(functionNameSymbol, environment, rest);
+            args = LispFunctions.evalForms(environment, args);
+            functionReturnValue = LispFunction.funcall(functionNameSymbol, environment, args);
         }
 
         return functionReturnValue;
