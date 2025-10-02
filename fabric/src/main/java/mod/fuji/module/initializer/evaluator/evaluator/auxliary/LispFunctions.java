@@ -9,9 +9,9 @@ import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispSymbol;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("SequencedCollectionMethodCanBeUsed")
 public class LispFunctions {
 
-    @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
     public static @NotNull LispObject car(@NotNull LispList list) {
         List<LispObject> objects = list.getObjects();
         if (objects.isEmpty()) return Environment.NIL;

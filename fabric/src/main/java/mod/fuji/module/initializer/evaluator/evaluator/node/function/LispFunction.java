@@ -20,6 +20,17 @@ public abstract class LispFunction extends LispObject {
      */
     final LispList lambdaList = LispList.of();
 
+    @Override
+    public abstract @NotNull LispObject eval(@NotNull Environment environment);
+
+    public abstract @NotNull LispObject apply(@NotNull Environment environment, @NotNull LispList arguments);
+
+    public void checkNumberOfArguments(@NotNull LispList arguments) {
+        int actual = arguments.size();
+        if (this.lambdaList.size() != actual) {
+            throw new LispInvalidNumberOfArgumentsException(actual);
+        }
+    }
 
     /**
      * Apply the function to the given arguments.
@@ -41,15 +52,4 @@ public abstract class LispFunction extends LispObject {
         return functionValue.apply(environment, arguments);
     }
 
-    @Override
-    public abstract @NotNull LispObject eval(@NotNull Environment environment);
-
-    public abstract @NotNull LispObject apply(@NotNull Environment environment, @NotNull LispList arguments);
-
-    public void checkNumberOfArguments(@NotNull LispList arguments) {
-        int actual = arguments.size();
-        if (this.lambdaList.size() != actual) {
-            throw new LispInvalidNumberOfArgumentsException(actual);
-        }
-    }
 }

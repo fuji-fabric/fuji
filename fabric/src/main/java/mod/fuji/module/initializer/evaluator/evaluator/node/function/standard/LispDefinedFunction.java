@@ -7,7 +7,7 @@ import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.LispFunction;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class LispStandardFunction extends LispFunction {
+public abstract class LispDefinedFunction extends LispFunction {
 
     @Override
     public @NotNull LispObject eval(@NotNull Environment environment) {
@@ -15,6 +15,8 @@ public abstract class LispStandardFunction extends LispFunction {
     }
 
     @Override
-    public abstract @NotNull LispObject apply(@NotNull Environment environment, @NotNull LispList arguments);
+    public @NotNull LispObject apply(@NotNull Environment environment, @NotNull LispList arguments) {
+        throw new UnsupportedOperationException();
+    }
 
 }

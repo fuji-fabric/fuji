@@ -5,12 +5,12 @@ import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
 import mod.fuji.module.initializer.evaluator.evaluator.exception.LispInvalidNumberOfArgumentsException;
 import mod.fuji.module.initializer.evaluator.evaluator.exception.LispEvaluationException;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
-import mod.fuji.module.initializer.evaluator.evaluator.node.function.standard.LispStandardFunction;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispNumber;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
+import mod.fuji.module.initializer.evaluator.evaluator.node.function.standard.LispNativeFunction;
 import org.jetbrains.annotations.NotNull;
 
-public class DivideFunction extends LispStandardFunction {
+public class DivideFunction extends LispNativeFunction {
 
     @Override
     public @NotNull LispObject apply(@NotNull Environment environment, @NotNull LispList arguments) {
