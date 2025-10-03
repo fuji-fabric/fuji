@@ -25,7 +25,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class PositionSearcher {
 
-    @ForDeveloper("Search once, and return empty if there is no good result.")
+    /**
+ * Search once, and return empty if there is no good result.
+ **/
     public static void search(@NotNull PositionSearchContext context) {
         final RandomTeleportSettings settings = context.getSettings();
         BlockPos blockPosInChunk = PositionXZGenerator.getRandomXZ(settings);

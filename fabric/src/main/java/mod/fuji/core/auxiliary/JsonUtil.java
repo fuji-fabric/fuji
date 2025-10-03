@@ -53,7 +53,9 @@ public class JsonUtil {
         return root.has(theLastKey);
     }
 
-    @ForDeveloper("The JsonObject.isEmpty() is not exist in old version gson, so the sinytra-connector will fail to load the mod.")
+    /**
+ * The JsonObject.isEmpty() is not exist in old version gson, so the sinytra-connector will fail to load the mod.
+ **/
     @SuppressWarnings("SizeReplaceableByIsEmpty")
     public static boolean isEmpty(JsonObject obj) {
         return obj.size() == 0;

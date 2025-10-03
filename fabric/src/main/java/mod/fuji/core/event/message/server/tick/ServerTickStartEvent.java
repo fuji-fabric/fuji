@@ -6,7 +6,9 @@ import mod.fuji.core.event.message.server.AbstractServerEvent;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.NotNull;
 
-@ForDeveloper("Fired before the call to tick worlds.")
+/**
+ * Fired before the call to tick worlds.
+ **/
 public class ServerTickStartEvent extends AbstractServerEvent {
 
     public ServerTickStartEvent(@NotNull MinecraftServer server) {

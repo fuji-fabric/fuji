@@ -68,7 +68,9 @@ public class CommandAssistant {
         return parsedCommandNodes.get(parsedCommandNodes.size() - 1);
     }
 
-    @ForDeveloper("A child command context will be made, if there is any command redirect or command fork.")
+    /**
+ * A child command context will be made, if there is any command redirect or command fork.
+ **/
     private static @NotNull List<CommandContext<ServerCommandSource>> makeCommandContextChain(@NotNull CommandContext<ServerCommandSource> rootCommandContext) {
         List<CommandContext<ServerCommandSource>> commandContextChain = new ArrayList<>();
 

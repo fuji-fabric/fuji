@@ -31,7 +31,9 @@ public class ServerHelper {
 
     public static class Lifecycle {
 
-        @ForDeveloper("Returns if the server instance is instantiated.")
+        /**
+ * Returns if the server instance is instantiated.
+ **/
         public static boolean isServerInstantiated() {
             return server != null;
         }

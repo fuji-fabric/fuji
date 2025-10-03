@@ -20,7 +20,9 @@ public class ModuleLoadDeterminer {
     public static final String ENABLE_JSON_KEY = "enable";
     private static final String MODULES_JSON_KEY = "modules";
 
-    @ForDeveloper("This value is ")
+    /**
+ * This value is
+ **/
     public static final Map<List<String>, Boolean> MODULE_ENABLE_STATUS = new HashMap<>();
 
     public static @NotNull List<String> getEnabledModulePaths() {

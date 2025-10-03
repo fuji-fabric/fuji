@@ -23,7 +23,9 @@ public class PlaceholderHelper {
     private static final String NO_PLAYER_ERROR_REASON = "NO-PLAYER-ERROR";
     private static final String NO_SERVER_ERROR_REASON = "NO-SERVER-ERROR";
 
-    @ForDeveloper("The args may be null if the user didn't specify it.")
+    /**
+ * The args may be null if the user didn't specify it.
+ **/
     public static @NotNull List<String> splitArguments(@Nullable String args) {
         if (args == null) {
             return List.of();

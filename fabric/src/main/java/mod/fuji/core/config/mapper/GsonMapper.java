@@ -10,14 +10,6 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
-import mod.fuji.core.config.annotation.NotNullEnumType;
-import mod.fuji.core.auxiliary.LogUtil;
-import mod.fuji.core.auxiliary.StringUtil;
-import mod.fuji.core.config.mapper.adapter.BiMapTypeAdapterFactory;
-import mod.fuji.core.config.mapper.adapter.CheckedEnumTypeValueAdapterFactory;
-import mod.fuji.core.config.mapper.wrapper.PropertyMapWrapper;
-import mod.fuji.core.config.migrator.version.IgnoreModVersionFieldStrategy;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -32,6 +24,14 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
+import mod.fuji.core.auxiliary.LogUtil;
+import mod.fuji.core.auxiliary.StringUtil;
+import mod.fuji.core.config.annotation.NotNullEnumType;
+import mod.fuji.core.config.mapper.adapter.BiMapTypeAdapterFactory;
+import mod.fuji.core.config.mapper.adapter.CheckedEnumTypeValueAdapterFactory;
+import mod.fuji.core.config.mapper.wrapper.PropertyMapWrapper;
+import mod.fuji.core.config.migrator.version.IgnoreModVersionFieldStrategy;
+import mod.fuji.core.document.annotation.ForDeveloper;
 import org.jetbrains.annotations.NotNull;
 
 public class GsonMapper {
@@ -77,7 +77,9 @@ public class GsonMapper {
         }
     }
 
-    @ForDeveloper("I want a friend class, the package visibility is hard to use.")
+    /**
+     * I want a friend class, the package visibility is hard to use.
+     **/
     public static @NotNull Gson __GetInternalGsonReferenceWithoutTheUseOfWrappedFunctions() {
         return gson;
     }

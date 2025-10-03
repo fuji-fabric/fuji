@@ -114,10 +114,14 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
             .anyMatch(it -> it.equals(typeClass));
     }
 
-    @ForDeveloper("This function returns a list of classes, to handle a specific type and all of its wrapper types.")
+    /**
+ * This function returns a list of classes, to handle a specific type and all of its wrapper types.
+ **/
     public abstract List<Class<?>> getTypeClasses();
 
-    @ForDeveloper("Allow to refer to an adapter using formal name or shortcut name.")
+    /**
+ * Allow to refer to an adapter using formal name or shortcut name.
+ **/
     public abstract List<String> getTypeNames();
 
     protected abstract ArgumentType<?> makeArgumentType();
@@ -150,12 +154,16 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
         return argumentValue;
     }
 
-    @ForDeveloper("This method is used for an @CommandSource type adapter.")
+    /**
+ * This method is used for an @CommandSource type adapter.
+ **/
     public boolean verifyCommandSource(@NotNull CommandContext<ServerCommandSource> context) {
         return true;
     }
 
-    @ForDeveloper("This information is used in the in-game inspector.")
+    /**
+ * This information is used in the in-game inspector.
+ **/
     public boolean isVanillaMinecraftArgumentType() {
         return getTypeClasses()
             .stream()

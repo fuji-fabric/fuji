@@ -75,7 +75,9 @@ public class TextHelper {
         Loader.writeDefaultLanguageFilesIfAbsent();
     }
 
-    @ForDeveloper("The functions used to interact with the Text Parser.")
+    /**
+ * The functions used to interact with the Text Parser.
+ **/
     public static class Parsers {
         @SuppressWarnings("unused")
         private static final int THIS_STATIC_VARIABLE_IS_USED_TO_ENSURE_THE_EXTENDED_TAGS_ARE_REGISTERED_BEFORE_CREATING_THE_DEFAULT_PARSER = registerExtendedTags();
@@ -97,7 +99,9 @@ public class TextHelper {
             #endif
         }
 
-        @ForDeveloper("The style-only parser should support mini-message language and markdown language.")
+        /**
+ * The style-only parser should support mini-message language and markdown language.
+ **/
         private static NodeParser makeStyleOnlyParser() {
             #if MC_VER <= MC_1_20_2
             List<NodeParser> parsers = new ArrayList<>();
@@ -218,7 +222,9 @@ public class TextHelper {
         }
     }
 
-    @ForDeveloper("The functions used to load language file from storage into memory, and resolve the suitable language json for given audience.")
+    /**
+ * The functions used to load language file from storage into memory, and resolve the suitable language json for given audience.
+ **/
     public static class Loader {
         public static final Map<String, String> PLAYER_2_LANGUAGE_CODE = new ConcurrentHashMap<>();
         public static final Map<String, JsonObject> LANGUAGE_CODE_2_LANGUAGE_JSON = new ConcurrentHashMap<>();
@@ -372,7 +378,9 @@ public class TextHelper {
         }
     }
 
-    @ForDeveloper("The functions to map language key into language value for specified language code.")
+    /**
+ * The functions to map language key into language value for specified language code.
+ **/
     public static class Translator {
 
         private static @Nullable String getLanguageValueFromLanguageJson(@NotNull String languageCode, @NotNull String languageKey) {
@@ -520,7 +528,9 @@ public class TextHelper {
         }
     }
 
-    @ForDeveloper("The functions to operate on the Text domain entity.")
+    /**
+ * The functions to operate on the Text domain entity.
+ **/
     public static class Operators {
 
         public static String getString(@NotNull Text text) {
@@ -539,7 +549,9 @@ public class TextHelper {
         }
     }
 
-    @ForDeveloper("This is the core method to map String into Text.")
+    /**
+ * This is the core method to map String into Text.
+ **/
     public static @NotNull Text getText(@NotNull NodeParser parser, @Nullable Object audience, boolean isKey, String keyOrValue, Object... args) {
         // Retrieve the language value.
         String languageValue = isKey ? Translator.getLanguageValueByKey(audience, keyOrValue) : keyOrValue;
@@ -640,7 +652,9 @@ public class TextHelper {
         return textList;
     }
 
-    @ForDeveloper("The abstraction method to CommandOutput#sendMessage, ServerCommandSource#sendMessage, PlayerEntity#sendMessage and ServerPlayerEntity#sendMessage.")
+    /**
+ * The abstraction method to CommandOutput#sendMessage, ServerCommandSource#sendMessage, PlayerEntity#sendMessage and ServerPlayerEntity#sendMessage.
+ **/
     public static void sendMessageByText(@NotNull Object audience, @NotNull Text text) {
         sendText(audience, text, Sender.TextLocation.MESSAGE);
     }
@@ -649,7 +663,9 @@ public class TextHelper {
         ToastSender.sendToast(player, AdvancementFrame.TASK, icon, text);
     }
 
-    @ForDeveloper("Send the given text to an audience.")
+    /**
+ * Send the given text to an audience.
+ **/
     public static void sendText(@NotNull Object audience, @NotNull Text text, @NotNull Sender.TextLocation textLocation) {
         /* Unbox the command context, to get the command source. */
         if (audience instanceof CommandActor commandActor) {
@@ -681,7 +697,9 @@ public class TextHelper {
         Sender.sendTextToAudience(audience, text, textLocation);
     }
 
-    @ForDeveloper("Send a language key with arguments to an audience.")
+    /**
+ * Send a language key with arguments to an audience.
+ **/
     public static void sendTextByKey(@NotNull Object audience, @NotNull String languageKey, Object... args) {
         /* Get the language value by language key for that audience. */
         String languageValue = Translator.getLanguageValueByKey(audience, languageKey);
@@ -713,8 +731,10 @@ public class TextHelper {
         }
     }
 
+    /**
+     * The functions to send a text to the audience.
+     **/
     @SuppressWarnings("IfCanBeSwitch")
-    @ForDeveloper("The functions to send a text to the audience.")
     public static class Sender {
         private static final String SUPPRESS_SENDING_STRING_MARKER = "[suppress-sending]";
         private static final String SEND_ACTION_BAR_MARKER = "[send-action-bar]";
@@ -894,7 +914,9 @@ public class TextHelper {
             .toList();
     }
 
-    @ForDeveloper("The abstraction for text events.")
+    /**
+ * The abstraction for text events.
+ **/
     public static class Events {
 
         public static class ClickEvent {

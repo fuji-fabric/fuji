@@ -159,7 +159,9 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
         REGISTERED_COMMAND_DESCRIPTORS.remove(this);
     }
 
-    @ForDeveloper("Test the equality using physical memory address.")
+    /**
+ * Test the equality using physical memory address.
+ **/
     @Override
     public final boolean equals(Object obj) {
         return this == obj;
@@ -170,7 +172,9 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
         return super.hashCode();
     }
 
-    @ForDeveloper("Returns the only possible path to the command node.")
+    /**
+ * Returns the only possible path to the command node.
+ **/
     public Optional<String> getFlatCommandPath() {
         return this.registerReturnValue
             .map($registerReturnValue -> {

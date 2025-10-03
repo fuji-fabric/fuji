@@ -11,7 +11,9 @@ public class Token {
     @NotNull TokenType tokenType;
     @NotNull StringRange tokenRange;
 
-    @ForDeveloper("A string text here must be a substring of the original input text. (Literal Representation)")
+    /**
+ * A string text here must be a substring of the original input text. (Literal Representation)
+ **/
     @NotNull String tokenContent;
 
 }

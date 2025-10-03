@@ -24,12 +24,18 @@ public @interface EventConsumer {
         """)
     Class<?> eventType() default Void.class;
 
-    @ForDeveloper("The mixin priority for mixin injector, matched exactly.")
+    /**
+ * The mixin priority for mixin injector, matched exactly.
+ **/
     int injectorPriority() default DEFAULT;
 
-    @ForDeveloper("Event consumers are sorted by natural order.")
+    /**
+ * Event consumers are sorted by natural order.
+ **/
     int consumerPriority() default DEFAULT;
 
-    @ForDeveloper("Is this a static or dynamic event consumer?")
+    /**
+ * Is this a static or dynamic event consumer?
+ **/
     boolean isDynamic() default false;
 }

@@ -53,7 +53,9 @@ public class PropertyMapWrapper {
     }
 
 
-    @ForDeveloper("Implement the gson type adapter for wrapper type.")
+    /**
+ * Implement the gson type adapter for wrapper type.
+ **/
     public static class PropertyMapWrapperAdapter implements JsonSerializer<PropertyMapWrapper>, JsonDeserializer<PropertyMapWrapper> {
 
         private static final String NAME_KEY = "name";

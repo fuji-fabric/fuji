@@ -238,10 +238,12 @@ public abstract class PagedGui<T> extends SimpleGui {
         return this;
     }
 
+    /**
+     * This is an internal GUI, but it's stable since years.
+     **/
     @TestCase(action = "Issue `/fuji` command, and press `F` key.", targets = {
         "Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version."
     })
-    @ForDeveloper("This is an internal GUI, but it's stable since years.")
     @SuppressWarnings("UnstableApiUsage")
     @Override
     public boolean click(int index, ClickType type, SlotActionType action) {

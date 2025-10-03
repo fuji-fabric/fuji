@@ -62,7 +62,9 @@ public class RegistryHelper {
             .orElse("[unregistered]");
     }
 
-    @ForDeveloper("In older MC versions, the MessageType will not carry the registry bits.")
+    /**
+ * In older MC versions, the MessageType will not carry the registry bits.
+ **/
     public static String getIdAsString(@NotNull MessageType.Parameters parameters) {
         String messageTypeIdString;
 
@@ -89,7 +91,9 @@ public class RegistryHelper {
         return getCombinedRegistryManager();
     }
 
-    @ForDeveloper("The Registry is one of the implementations of RegistryEntryLookup.")
+    /**
+ * The Registry is one of the implementations of RegistryEntryLookup.
+ **/
     public static <T> Registry<T> getRegistry(@NotNull RegistryKey<? extends Registry<? extends T>> registryKey) {
         return getCombinedRegistryManager()
             #if MC_VER <= MC_1_21
@@ -99,7 +103,9 @@ public class RegistryHelper {
             #endif
     }
 
-    @ForDeveloper("The RegistryEntryLookup is the interface for all types of registries.")
+    /**
+ * The RegistryEntryLookup is the interface for all types of registries.
+ **/
     public static <T> RegistryEntryLookup<T> getRegistryEntryLookup(@NotNull RegistryKey<? extends Registry<? extends T>> registryKey) {
         return getCombinedRegistryManager()
             #if MC_VER <= MC_1_21

@@ -30,7 +30,9 @@ import org.jetbrains.annotations.Nullable;
 })
 public class PlayerHelper {
 
-    @ForDeveloper("It's possible to generate invalid player name using `/player abc++ spawn` command.")
+    /**
+ * It's possible to generate invalid player name using `/player abc++ spawn` command.
+ **/
     public static String getPlayerName(@NotNull PlayerEntity player) {
         @NotNull GameProfile gameProfile = player.getGameProfile();
         return AuthlibHelper.getName(gameProfile);
@@ -217,7 +219,9 @@ public class PlayerHelper {
 
     public static class Kind {
 
-        @ForDeveloper("The carpet mod sub-classing the ServerPlayerEntity.")
+        /**
+ * The carpet mod sub-classing the ServerPlayerEntity.
+ **/
         public static boolean isRealPlayer(@NotNull ServerPlayerEntity player) {
             return player.getClass() == ServerPlayerEntity.class;
         }

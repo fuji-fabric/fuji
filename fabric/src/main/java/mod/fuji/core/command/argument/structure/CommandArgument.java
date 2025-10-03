@@ -43,7 +43,9 @@ public class CommandArgument {
 
     boolean isCommandSource;
 
-    @ForDeveloper("This field is used for RetargetCommandDescriptor.")
+    /**
+ * This field is used for RetargetCommandDescriptor.
+ **/
     boolean isCommandTarget;
 
     @Nullable String document;

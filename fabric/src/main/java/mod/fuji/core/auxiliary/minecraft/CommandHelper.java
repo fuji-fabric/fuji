@@ -181,7 +181,9 @@ public class CommandHelper {
             return treeCollector;
         }
 
-        @ForDeveloper("Returns a chain of registered command nodes.")
+        /**
+ * Returns a chain of registered command nodes.
+ **/
         @SuppressWarnings("UnnecessaryLocalVariable")
         private static void findCommandTreeRecursively(@NotNull List<List<RegisteredCommandNode>> treeCollector, @NotNull List<RegisteredCommandNode> branchCollector, @NotNull CommandNode<ServerCommandSource> navigationNode, @NotNull CommandNode<ServerCommandSource> walkingNode) {
             CommandNode<ServerCommandSource> parent = walkingNode;

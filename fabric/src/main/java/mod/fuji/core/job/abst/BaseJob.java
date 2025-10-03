@@ -21,7 +21,9 @@ public abstract class BaseJob implements Job {
     String jobGroup;
     String jobName;
 
-    @ForDeveloper("Job Detail = Job Class + Job Key + Job Data")
+    /**
+ * Job Detail = Job Class + Job Key + Job Data
+ **/
     @Getter
     JobDetail jobDetail;
 

@@ -100,7 +100,9 @@ public class ChatStyleInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<ChatStyleConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatStyleConfigModel.class);
 
-    @ForDeveloper("To avoid the message type already registered in the client-side, and the client-side message type will influence the client-side decorator.")
+    /**
+ * To avoid the message type already registered in the client-side, and the client-side message type will influence the client-side decorator.
+ **/
     public static final RegistryKey<MessageType> MESSAGE_TYPE_KEY = RegistryKey.of(RegistryKeys.MESSAGE_TYPE, Identifier.of(Fuji.MOD_ID, "chat_" + StringUtil.toLowerCase(FabricLoader.getInstance().getEnvironmentType().toString())));
     public static final MessageType MESSAGE_TYPE_VALUE = new MessageType(
         Decoration.ofChat("%s%s"),

@@ -9,7 +9,9 @@ public class VersionPropertyInjector {
 
     public static final String MOD_VERSION_KEY = "MOD_VERSION";
 
-    @ForDeveloper("The mod version string in only available since v12.13.0")
+    /**
+ * The mod version string in only available since v12.13.0
+ **/
     public static final String FUTURE_MOD_VERSION = "999.999.999";
 
     public static final String LEGACY_MOD_VERSION = "1.0.0";

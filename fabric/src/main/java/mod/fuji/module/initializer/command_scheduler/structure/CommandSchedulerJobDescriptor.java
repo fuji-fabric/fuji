@@ -48,7 +48,9 @@ public class CommandSchedulerJobDescriptor {
     @SerializedName(value = "command_groups", alternate = {"commands_list", "commands_groups"})
     List<List<String>> command_groups;
 
-    @ForDeveloper("For implement simplification, the job will always be scheduled, and the trigger() will always be called.")
+    /**
+ * For implement simplification, the job will always be scheduled, and the trigger() will always be called.
+ **/
     public void tryTrigger() {
         /* Verify the enable property. */
         if (!this.enable) {

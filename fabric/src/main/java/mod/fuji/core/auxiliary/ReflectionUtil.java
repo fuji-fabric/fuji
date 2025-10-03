@@ -97,7 +97,9 @@ public class ReflectionUtil {
             return GsonMapper.fromJson(reader, clazz);
         }
 
-        @ForDeveloper("Retrieve the resource file from virtual jar file.")
+        /**
+ * Retrieve the resource file from virtual jar file.
+ **/
         private static @NotNull InputStream getVirtualJarInputStream(@NotNull String graphName) {
             String graphPath = GRAPH_CLASSPATH_PREFIX + graphName;
 

@@ -13,7 +13,9 @@ public class DynamicEventConsumer<T> extends BaseEventConsumer<T> {
         super(eventConsumerInfo, eventType, eventConsumerMethod);
     }
 
-    @ForDeveloper("Make an event consumer at runtime programmatically.")
+    /**
+ * Make an event consumer at runtime programmatically.
+ **/
     public static <T extends BaseEvent> BaseEventConsumer<T> makeDynamic(@NotNull Class<T> eventTypeClass, int injectorPriority, int consumerPriority, @NotNull Consumer<T> eventConsumer) {
         String eventTypeClassName = eventTypeClass.getName();
         StackTraceElement callerMethod = ReflectionUtil.Stacktrace.getCallerMethod();

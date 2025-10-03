@@ -33,7 +33,9 @@ public class MultiObsidianPlatformInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<MultiObsidianPlatformConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, MultiObsidianPlatformConfigModel.class);
 
-    @ForDeveloper("This method is used to fix Entity#position() drift.")
+    /**
+ * This method is used to fix Entity#position() drift.
+ **/
     private static BlockPos findNearbyEndPortalBlock(@NotNull BlockPos bp) {
         ServerWorld overworld = ServerHelper.getServer().getOverworld();
 

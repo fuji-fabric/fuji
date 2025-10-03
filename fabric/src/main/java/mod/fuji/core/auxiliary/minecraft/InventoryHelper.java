@@ -21,7 +21,9 @@ public class InventoryHelper {
             , EquipmentSlot.LEGS
             , EquipmentSlot.FEET);
 
-    @ForDeveloper("Main Stacks (1*9 slots + 3*9 slots)")
+    /**
+ * Main Stacks (1*9 slots + 3*9 slots)
+ **/
     public static DefaultedList<ItemStack> getMainStacks(@NotNull PlayerEntity player) {
         #if MC_VER <= MC_1_21_4
         return player.getInventory().main;
@@ -30,7 +32,9 @@ public class InventoryHelper {
         #endif
     }
 
-    @ForDeveloper("Offhand (1 slot) = EquipmentSlot.OFFHAND")
+    /**
+ * Offhand (1 slot) = EquipmentSlot.OFFHAND
+ **/
     public static DefaultedList<ItemStack> getOffhandStack(@NotNull PlayerEntity player) {
         DefaultedList<ItemStack> itemStacks = DefaultedList.ofSize(1, ItemStack.EMPTY);
         EquipmentSlot offhand = EquipmentSlot.OFFHAND;
@@ -38,7 +42,9 @@ public class InventoryHelper {
         return itemStacks;
     }
 
-    @ForDeveloper("Armor (4 slots) = EquipmentSlot.HEAD + EquipmentSlot.CHEST + EquipmentSlot.LEGS + EquipmentSlot.FEET")
+    /**
+ * Armor (4 slots) = EquipmentSlot.HEAD + EquipmentSlot.CHEST + EquipmentSlot.LEGS + EquipmentSlot.FEET
+ **/
     public static DefaultedList<ItemStack> getArmorStacks(@NotNull PlayerEntity player) {
         DefaultedList<ItemStack> itemStacks = DefaultedList.ofSize(PLAYER_ARMOR_SLOTS.size(), ItemStack.EMPTY);
 
