@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Parameter;
 
 /**
- *     A `CommandArgument` is used to describe a `parameter` declared in the command method.
+ *     A <code>CommandArgument</code> is used to describe a <code>parameter</code> declared in the command method.
     It's used to hold the bits.
     It's the component of a CommandDescriptor.
 

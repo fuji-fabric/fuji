@@ -58,7 +58,7 @@ import org.jetbrains.annotations.Nullable;
  *     The design of language system.
     1. Use hash map to map the language key into language value.
     2. Teh language value should be simple enough. (Reduce the usage of long sentence)
-    3. Reduce the usage of `click event` and `hover event` tag in language value. (Use programmatically way to attach them)
+    3. Reduce the usage of <code>click event</code> and <code>hover event</code> tag in language value. (Use programmatically way to attach them)
 
 
  **/

@@ -7,10 +7,10 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 /**
- *     A `transformer` is used to `transform bits` in the `storage` or `memory`.
+ *     A <code>transformer</code> is used to <code>transform bits</code> in the <code>storage</code> or <code>memory</code>.
     Its typical use-case is to migrate data schema between versions.
 
-    You can install multiple transformer instances on a specific `configuration handler`.
+    You can install multiple transformer instances on a specific <code>configuration handler</code>.
     Each transformer will be called before the call to the config model getter function.
 
     The rules to write a new configuration transformer:

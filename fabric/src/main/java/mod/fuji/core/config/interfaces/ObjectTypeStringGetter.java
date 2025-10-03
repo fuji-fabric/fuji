@@ -3,7 +3,7 @@ package mod.fuji.core.config.interfaces;
 import org.jetbrains.annotations.NotNull;
 
 /**
- *     This interface provides the method to get the `object type string`.
+ *     This interface provides the method to get the <code>object type string</code>.
 
     The returned type string should not be the simple class name of the object.
     Since the class name is very likely to be re-named.

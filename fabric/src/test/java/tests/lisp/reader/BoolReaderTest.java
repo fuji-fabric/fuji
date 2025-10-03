@@ -10,11 +10,11 @@ import org.junit.jupiter.api.Test;
 public class BoolReaderTest {
 
     /**
- *         The `boolean value` is a `symbol`.
-        The `nil` symbol is treated as `false value`.
-        Any data object other than `nil` symbol is treated as `true value`.
-        All the assumptions are made by `boolean test functions`.
-        The `boolean test functions` describe the `truth value`.
+ *         The <code>boolean value</code> is a <code>symbol</code>.
+        The <code>nil</code> symbol is treated as <code>false value</code>.
+        Any data object other than <code>nil</code> symbol is treated as <code>true value</code>.
+        All the assumptions are made by <code>boolean test functions</code>.
+        The <code>boolean test functions</code> describe the <code>truth value</code>.
 
  **/
     @Test

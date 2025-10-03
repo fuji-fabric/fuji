@@ -33,8 +33,8 @@ public class ModulePathResolver {
     }
 
     /**
-     * For consistency, the `core` is treated as a `module` that must always be `enabled`.
-     * The `core` module can include `packages` from `fuji` mod or any other packages. (Like packages from `JDK standard`)
+     * For consistency, the <code>core</code> is treated as a <code>module</code> that must always be <code>enabled</code>.
+     * The <code>core</code> module can include <code>packages</code> from <code>fuji</code> mod or any other packages. (Like packages from <code>JDK standard</code>)
      * <p>
      * This method accepts any class name, and returns a sensible module path string. (The given class name can even be non-existent)
      **/
@@ -53,8 +53,8 @@ public class ModulePathResolver {
 
     /**
      * 1. The LogUtil method calls are banned here, to prevent the recursive-call during the cache computing process.
-     * 2. For simplicity, returned `core` module should not contain any sub-module.
-     * 3. This method only returns a declared `module path list` or `[core]`.
+     * 2. For simplicity, returned <code>core</code> module should not contain any sub-module.
+     * 3. This method only returns a declared <code>module path list</code> or <code>[core]</code>.
      **/
     @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
     private static @NotNull List<String> computeModulePathList(@NotNull String className) {

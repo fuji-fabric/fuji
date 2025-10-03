@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  *     1. Regardless of the suggestion order sent by the server, the client will always display them in dictionary order.
-    2. The CommandSuggestionProvider will be called when a new character is received from the client, but will not be called when the client press the `Tab` key.
+    2. The CommandSuggestionProvider will be called when a new character is received from the client, but will not be called when the client press the <code>Tab</code> key.
 
  **/
 @TestCase(action = "Issue `/when-online ...` and `/json put 1 2 3 ...` commands.", targets = "The command suggestion optimizer should work fine.")

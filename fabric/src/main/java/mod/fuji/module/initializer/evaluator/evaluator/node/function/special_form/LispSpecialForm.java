@@ -7,7 +7,7 @@ import mod.fuji.module.initializer.evaluator.evaluator.node.function.LispFunctio
 import org.jetbrains.annotations.NotNull;
 
 /**
- *     For Lisp special forms, refer to the `SB-C` and `ir1-translators.lisp` file.
+ *     For Lisp special forms, refer to the <code>SB-C</code> and <code>ir1-translators.lisp</code> file.
 
  **/
 public abstract class LispSpecialForm extends LispFunction {

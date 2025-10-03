@@ -189,8 +189,8 @@ public class ItemStackHelper {
         }
 
         /**
- *             Before MC 1.20.5, the user-defined NBT is saved in path `tag` tree.
-            After that, it is saved in `components.minecraft:custom_data` tree.
+ *             Before MC 1.20.5, the user-defined NBT is saved in path <code>tag</code> tree.
+            After that, it is saved in <code>components.minecraft:custom_data</code> tree.
             For a NbtCompound, the data schema migration will be done automatically.
 
  **/

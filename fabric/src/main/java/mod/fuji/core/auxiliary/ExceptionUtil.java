@@ -10,15 +10,15 @@ import org.jetbrains.annotations.NotNull;
 public class ExceptionUtil {
 
     /**
-     * Call this method, if you need to express the `TRY-CATCH-WRAP-RETHROW` pattern.
+     * Call this method, if you need to express the <code>TRY-CATCH-WRAP-RETHROW</code> pattern.
      * <p>
-     * Unfortunately, the Java language doesn't support to throw a checked exception, without the `throws` signature.
+     * Unfortunately, the Java language doesn't support to throw a checked exception, without the <code>throws</code> signature.
      * It introduces the in-convenience especially inside the functional interfaces.
      * <p>
      * One solution is to use manifold-exceptions, and treat the checked-exception as unchecked-exception.
      * This solution requires the manifold-rt, to install the host at JVM runtime.
      * It works well in fabric platform.
-     * However, it breaks the compatibility with `connector` mod's `class loader (TRANSFORMER)`.
+     * However, it breaks the compatibility with <code>connector</code> mod's <code>class loader (TRANSFORMER)</code>.
      * <p>
      * You will get a big ClassNotFoundException, due to the class is loaded via different loaders.
      * The manifold-rt needs to generate the byte-code at runtime, to provide the power.
