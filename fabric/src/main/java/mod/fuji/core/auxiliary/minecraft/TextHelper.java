@@ -19,7 +19,6 @@ import mod.fuji.core.command.structure.CommandActor;
 import mod.fuji.core.config.Configs;
 import mod.fuji.core.config.handler.impl.LanguageConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ResourceConfigurationHandler;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.core.document.annotation.TestCase;
 import mod.fuji.core.document.auxiliary.DocumentUtil;
 import mod.fuji.core.gui.component.gui.PagedGui;

@@ -1,7 +1,6 @@
 package mod.fuji.core.event.consumer;
 
 import mod.fuji.core.auxiliary.ReflectionUtil;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.core.event.injector.structure.EventConsumerInfo;
 import mod.fuji.core.event.message.BaseEvent;
 import java.util.function.Consumer;

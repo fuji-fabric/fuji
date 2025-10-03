@@ -2,7 +2,6 @@ package mod.fuji.core.auxiliary.minecraft;
 
 import com.mojang.authlib.GameProfile;
 import java.util.function.Consumer;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.core.document.annotation.TestCase;
 import java.util.List;
 import java.util.Optional;

@@ -2,7 +2,6 @@ package mod.fuji.module.initializer.evaluator.evaluator.node.function.special_fo
 
 
 import java.util.Set;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispSymbol;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.LispFunction;
 import org.jetbrains.annotations.NotNull;

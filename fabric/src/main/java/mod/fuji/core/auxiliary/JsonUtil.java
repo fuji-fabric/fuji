@@ -6,7 +6,6 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.reflect.TypeToken;
 import mod.fuji.core.config.mapper.GsonMapper;
 import mod.fuji.core.config.parser.JsonPathParser;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

@@ -1,7 +1,6 @@
 package mod.fuji.core.auxiliary.minecraft;
 
 import mod.fuji.Fuji;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.core.document.annotation.TestCase;
 import lombok.Getter;
 import lombok.Setter;

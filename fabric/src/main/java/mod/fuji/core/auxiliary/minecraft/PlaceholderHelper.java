@@ -4,7 +4,6 @@ import eu.pb4.placeholders.api.PlaceholderHandler;
 import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
 import mod.fuji.Fuji;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.core.document.descriptor.PlaceholderDescriptor;
 import java.util.List;
 import net.minecraft.server.MinecraftServer;

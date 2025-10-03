@@ -1,7 +1,6 @@
 package mod.fuji.module.initializer.evaluator.reader.token;
 
 import lombok.Value;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.module.initializer.evaluator.reader.structure.StringRange;
 import org.jetbrains.annotations.NotNull;
 

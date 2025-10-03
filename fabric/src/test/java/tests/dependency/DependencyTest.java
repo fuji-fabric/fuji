@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import mod.fuji.Fuji;
 import mod.fuji.core.config.model.MainControlConfigModel;
 import mod.fuji.core.document.annotation.Document;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.core.CoreInitializer;
 import mod.fuji.module.mixin.GlobalMixinConfigPlugin;

@@ -5,7 +5,6 @@ import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import java.util.List;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.command.ServerCommandSource;

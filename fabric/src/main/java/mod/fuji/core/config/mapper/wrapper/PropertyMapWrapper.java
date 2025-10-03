@@ -13,7 +13,6 @@ import com.google.gson.JsonSerializer;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import java.lang.reflect.Type;
 import java.util.Map;
 import lombok.AllArgsConstructor;

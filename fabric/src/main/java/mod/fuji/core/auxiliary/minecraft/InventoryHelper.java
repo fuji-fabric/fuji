@@ -1,7 +1,6 @@
 package mod.fuji.core.auxiliary.minecraft;
 
 import com.google.common.collect.ImmutableList;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import java.util.HashSet;
 import java.util.Set;
 import net.minecraft.entity.EquipmentSlot;

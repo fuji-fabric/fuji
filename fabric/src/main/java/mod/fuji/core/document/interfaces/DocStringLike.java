@@ -1,6 +1,5 @@
 package mod.fuji.core.document.interfaces;
 
-import mod.fuji.core.document.annotation.ForDeveloper;
 
 /**
  *     To attach the document information to the objects, you have these tools:

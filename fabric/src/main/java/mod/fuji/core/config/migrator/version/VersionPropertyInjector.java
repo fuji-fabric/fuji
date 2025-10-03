@@ -2,7 +2,6 @@ package mod.fuji.core.config.migrator.version;
 
 import com.google.gson.JsonElement;
 import mod.fuji.Fuji;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import org.jetbrains.annotations.NotNull;
 
 public class VersionPropertyInjector {

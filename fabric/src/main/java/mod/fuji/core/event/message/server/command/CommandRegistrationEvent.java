@@ -1,7 +1,6 @@
 package mod.fuji.core.event.message.server.command;
 
 import com.mojang.brigadier.CommandDispatcher;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.core.event.message.BaseEvent;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

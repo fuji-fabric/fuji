@@ -12,7 +12,6 @@ import mod.fuji.core.config.job.ConfigurationHandlerWriteStorageJob;
 import mod.fuji.core.config.mapper.GsonMapper;
 import mod.fuji.core.config.migrator.transformer.abst.ConfigurationTransformer;
 import mod.fuji.core.config.migrator.version.VersionPropertyInjector;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.core.document.interfaces.SourceModuleGetter;
 import mod.fuji.core.event.EventManager;
 import mod.fuji.core.event.annotation.EventConsumer;

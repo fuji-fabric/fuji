@@ -6,7 +6,6 @@ import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.gameplay.multi_obsidian_platform.config.model.MultiObsidianPlatformConfigModel;
 import java.util.concurrent.ConcurrentHashMap;

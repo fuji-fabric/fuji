@@ -6,7 +6,6 @@ import mod.fuji.core.config.exception.FailedToLoadResourceException;
 import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.mapper.GsonMapper;
 import mod.fuji.core.config.validator.MissingJsonKeysValidator;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import java.nio.charset.StandardCharsets;
 import lombok.Cleanup;
 import lombok.SneakyThrows;

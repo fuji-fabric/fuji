@@ -1,7 +1,6 @@
 package mod.fuji.core.auxiliary.minecraft;
 
 import mod.fuji.Fuji;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;

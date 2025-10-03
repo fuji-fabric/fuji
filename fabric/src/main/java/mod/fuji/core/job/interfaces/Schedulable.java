@@ -1,6 +1,5 @@
 package mod.fuji.core.job.interfaces;
 
-import mod.fuji.core.document.annotation.ForDeveloper;
 
 /**
  *     This interface provides a method `onSchedule`.

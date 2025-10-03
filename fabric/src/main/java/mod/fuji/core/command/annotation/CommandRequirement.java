@@ -1,7 +1,6 @@
 package mod.fuji.core.command.annotation;
 
 
-import mod.fuji.core.document.annotation.ForDeveloper;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

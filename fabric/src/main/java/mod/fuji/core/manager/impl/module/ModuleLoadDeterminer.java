@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.ReflectionUtil;
 import mod.fuji.core.config.Configs;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.core.event.injector.StaticEventConsumerInjector;
 import mod.fuji.core.event.injector.structure.EventConsumerInfo;
 import java.util.ArrayList;

@@ -8,7 +8,6 @@ import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.command.executor.CommandExecutor;
 import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.module.initializer.command_scheduler.CommandSchedulerInitializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;

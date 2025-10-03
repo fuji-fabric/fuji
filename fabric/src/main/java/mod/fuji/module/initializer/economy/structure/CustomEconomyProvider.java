@@ -11,7 +11,6 @@ import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.module.initializer.economy.EconomyInitializer;
 import java.util.ArrayList;
 import java.util.Collection;

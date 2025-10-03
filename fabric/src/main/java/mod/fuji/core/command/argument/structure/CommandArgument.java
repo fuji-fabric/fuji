@@ -7,7 +7,6 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.command.annotation.CommandTarget;
 import mod.fuji.core.command.structure.CommandRequirementDescriptor;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import lombok.Data;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;

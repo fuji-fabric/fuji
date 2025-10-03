@@ -2,7 +2,6 @@ package mod.fuji.core.config.migrator.transformer.abst;
 
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.config.migrator.exception.AbortConfigurationMigrationException;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import java.nio.file.Path;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;

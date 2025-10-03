@@ -37,7 +37,6 @@ import mod.fuji.core.command.structure.CommandRequirementDescriptor;
 import mod.fuji.core.command.structure.RegisteredCommandNode;
 import mod.fuji.core.document.annotation.DocStringProvider;
 import mod.fuji.core.document.annotation.Document;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.core.document.annotation.TestCase;
 import mod.fuji.core.document.descriptor.PermissionDescriptor;
 import mod.fuji.core.document.interfaces.SourceModuleGetter;

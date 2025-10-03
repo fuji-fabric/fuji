@@ -15,7 +15,6 @@ import mod.fuji.core.command.annotation.CommandTarget;
 import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
 import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.PlayerChatMessagePreEvent;
 import mod.fuji.core.service.style_striper.StyleStriper;

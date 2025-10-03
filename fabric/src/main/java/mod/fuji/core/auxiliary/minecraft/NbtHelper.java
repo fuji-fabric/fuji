@@ -2,7 +2,6 @@ package mod.fuji.core.auxiliary.minecraft;
 
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.command.exception.AbortCommandExecutionException;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

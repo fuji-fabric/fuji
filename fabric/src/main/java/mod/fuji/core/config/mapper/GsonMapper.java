@@ -31,7 +31,6 @@ import mod.fuji.core.config.mapper.adapter.BiMapTypeAdapterFactory;
 import mod.fuji.core.config.mapper.adapter.CheckedEnumTypeValueAdapterFactory;
 import mod.fuji.core.config.mapper.wrapper.PropertyMapWrapper;
 import mod.fuji.core.config.migrator.version.IgnoreModVersionFieldStrategy;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import org.jetbrains.annotations.NotNull;
 
 public class GsonMapper {

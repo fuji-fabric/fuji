@@ -1,6 +1,5 @@
 package mod.fuji.core.config.interfaces;
 
-import mod.fuji.core.document.annotation.ForDeveloper;
 import org.jetbrains.annotations.NotNull;
 
 /**

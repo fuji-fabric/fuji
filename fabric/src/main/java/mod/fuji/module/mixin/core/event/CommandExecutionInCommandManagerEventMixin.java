@@ -2,7 +2,6 @@ package mod.fuji.module.mixin.core.event;
 
 import mod.fuji.annotation.PhasedMixinTemplate;
 import mod.fuji.auxiliary.WeaverUtil;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.core.event.EventManager;
 import mod.fuji.core.event.annotation.EventProducer;
 import mod.fuji.core.event.message.command.CommandExecutionPostEvent;

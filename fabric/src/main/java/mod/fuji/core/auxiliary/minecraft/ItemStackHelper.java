@@ -5,7 +5,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.StringUtil;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import net.minecraft.command.argument.ItemStackArgument;

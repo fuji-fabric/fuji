@@ -9,7 +9,6 @@ import mod.fuji.core.auxiliary.minecraft.WorldHelper;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.argument.wrapper.impl.Dimension;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import java.util.List;
 import lombok.SneakyThrows;
 import net.minecraft.command.argument.DimensionArgumentType;

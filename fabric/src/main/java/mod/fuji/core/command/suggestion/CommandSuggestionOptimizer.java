@@ -2,7 +2,6 @@ package mod.fuji.core.command.suggestion;
 
 import mod.fuji.core.auxiliary.StringUtil;
 import mod.fuji.core.command.suggestion.structure.CommandSuggestionCandidate;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.core.document.annotation.TestCase;
 import java.util.ArrayList;
 import java.util.List;

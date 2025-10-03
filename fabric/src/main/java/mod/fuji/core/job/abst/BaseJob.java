@@ -3,7 +3,6 @@ package mod.fuji.core.job.abst;
 import mod.fuji.core.auxiliary.RandomUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quartz.Job;

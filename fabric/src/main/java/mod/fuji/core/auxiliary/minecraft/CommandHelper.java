@@ -31,7 +31,6 @@ import mod.fuji.core.command.processor.CommandAnnotationProcessor;
 import mod.fuji.core.command.structure.RegisteredCommandNode;
 import mod.fuji.core.command.suggestion.CommandSuggestionOptimizer;
 import mod.fuji.core.config.mapper.wrapper.GameProfileWrapper;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.core.document.annotation.TestCase;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.entity.player.PlayerEntity;

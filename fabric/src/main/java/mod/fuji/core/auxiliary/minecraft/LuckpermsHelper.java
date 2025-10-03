@@ -1,6 +1,5 @@
 package mod.fuji.core.auxiliary.minecraft;
 
-import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.core.document.descriptor.MetaDescriptor;
 import mod.fuji.core.document.descriptor.PermissionDescriptor;
 import java.util.Optional;
