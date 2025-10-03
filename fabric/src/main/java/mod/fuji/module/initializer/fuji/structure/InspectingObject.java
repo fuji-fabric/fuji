@@ -32,23 +32,6 @@ public class InspectingObject {
         this.preferredObjectName = preferredObjectName;
     }
 
-    @SuppressWarnings("RedundantIfStatement")
-    public boolean canGoInside() {
-        Class<?> type = this.getObjectType();
-
-        /* Treat the following types as atom. */
-        if (type.isPrimitive()) return false;
-        if (ReflectionUtil.isPrimitiveWrapperType(type)) return false;
-
-        if (type.equals(String.class)) return false;
-        if (type.isArray()) return false;
-        if (type.isEnum()) return false;
-        if (type.isAnnotation()) return false;
-
-        /* Treat other else types as non-atom. (Including Iterable and Map) */
-        return true;
-    }
-
     public Class<?> getObjectType() {
         // NOTE: The implementation of this.getObjectValue().getClass(); didn't work. (Due to null value)
 
@@ -241,7 +224,7 @@ public class InspectingObject {
         addPossibleValuesForEnumType(player, lore);
 
         /* Add click prompt. */
-        if (this.canGoInside()) {
+        if (ReflectionUtil.canInspectInside(this.getObjectType())) {
             lore.add(TextHelper.getTextByKey(player, "prompt.click.see_inside"));
         }
 

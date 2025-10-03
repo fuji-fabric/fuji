@@ -6,6 +6,7 @@ import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import java.util.HashMap;
 import mod.fuji.module.initializer.document.config.writter.DocumentJsonWriter;
 import mod.fuji.core.document.auxiliary.DocumentUtil;
 import java.io.IOException;
@@ -16,7 +17,7 @@ public class DocumentedTypeAdapterFactory implements TypeAdapterFactory {
     @Override
     public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
         TypeAdapter<T> delegate = gson.getDelegateAdapter(this, type);
-        Map<String, String> declaredDocumentStrings = DocumentUtil.getDeclaredDocumentStringMap(type.getRawType());
+        Map<String, String> declaredDocumentStrings = DocumentUtil.getDeclaredDocumentStringMap(new HashMap<>(), type.getRawType());
 
         return new TypeAdapter<>() {
 

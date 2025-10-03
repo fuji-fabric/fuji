@@ -3,6 +3,7 @@ package mod.fuji.module.initializer.fuji.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import mod.fuji.core.auxiliary.ReflectionUtil;
 import mod.fuji.core.auxiliary.StringUtil;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
@@ -70,7 +71,7 @@ public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
         String objectName = entity.getObjectName();
 
         /* We can't go inside an atom. */
-        if (!entity.canGoInside()) return;
+        if (!ReflectionUtil.canInspectInside(entity.getObjectType())) return;
 
         /* Let's go deeper. */
         List<InspectingObject> newEntities = new ArrayList<>();

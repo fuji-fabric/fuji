@@ -11,7 +11,6 @@ import mod.fuji.module.initializer.ModuleInitializer;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -148,8 +147,7 @@ public class DocumentUtil {
         return colorBoxes;
     }
 
-    public static @NotNull Map<String, String> getDeclaredDocumentStringMap(@NotNull Class<?> rawTypeClass) {
-        Map<String, String> declaredDocumentStringMap = new HashMap<>();
+    public static @NotNull Map<String, String> getDeclaredDocumentStringMap(@NotNull Map<String, String> declaredDocumentStringMap, @NotNull Class<?> rawTypeClass) {
         for (Field field : rawTypeClass.getDeclaredFields()) {
             getFieldDocumentString(null, field)
                 .ifPresent(fieldDocumentString -> {
