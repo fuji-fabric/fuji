@@ -1,0 +1,5 @@
+dependencies {
+    /* Use log4j. */
+    implementation "org.apache.logging.log4j:log4j-core:${project.log4j_version}"
+    implementation "org.apache.logging.log4j:log4j-api:${project.log4j_version}"
+}

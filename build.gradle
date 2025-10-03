@@ -49,7 +49,7 @@ writeBuildGradlePredefine(rootProject.mcVers, rootProject.mcIndex)
 group = project.maven_group
 
 /* Configure shared parts for each sub project. */
-def javaProjects = ["fabric", "checker", "weaver"]
+def javaProjects = ["fabric", "checker", "weaver", "evaluator"]
 javaProjects.each { projectName ->
     project(projectName) { p ->
 
@@ -99,6 +99,7 @@ javaProjects.each { projectName ->
 
             /* For IDE analyser: jetbrains annotations. */
             compileOnly "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
+            testCompileOnly "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
         }
 
         /* Replace properties for each mc version. */

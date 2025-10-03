@@ -102,7 +102,11 @@ dependencies {
 
     /* For testing: fabric-loader-junit */
     testImplementation "net.fabricmc:fabric-loader-junit:${project.fabric_loader_version}"
+
+    /* For evaluator module. */
+    include(implementation(project(":evaluator")))
 }
+
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
