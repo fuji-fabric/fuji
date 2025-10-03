@@ -31,11 +31,12 @@ public class LuckpermsHelper {
         return Optional.of(instance);
     }
 
-    @ForDeveloper("""
-        1. If you apply loadUser() for a fake-player spawned by carpet-fabric, then the User data will be loaded into the memory by luckperms.
+    /**
+ *         1. If you apply loadUser() for a fake-player spawned by carpet-fabric, then the User data will be loaded into the memory by luckperms.
         2. Luckperms will assign the group 'default' for the fake-player, but will never save the User data back to storage.
         3. If you issue `/lp user fake_player permission info`, luckperms will say there is no User data for this player.
-        """)
+
+ **/
     private static User loadUser(@NotNull LuckPerms api, @NotNull UUID uuid) {
         UserManager userManager = api.getUserManager();
 

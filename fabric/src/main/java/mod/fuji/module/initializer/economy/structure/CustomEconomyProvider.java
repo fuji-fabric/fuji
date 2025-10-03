@@ -26,12 +26,13 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
-@ForDeveloper("""
-    Each mod should register its own economy provider, to provide new types of currencies.
+/**
+ *     Each mod should register its own economy provider, to provide new types of currencies.
     One economy provider, can provide many many types of currencies.
     For each player, one economy account, holds one economy currency type.
 
-    """)
+
+ **/
 public class CustomEconomyProvider implements EconomyProvider {
 
     public static final String CUSTOM_ECONOMY_PROVIDER_NAMESPACE = Fuji.MOD_ID;

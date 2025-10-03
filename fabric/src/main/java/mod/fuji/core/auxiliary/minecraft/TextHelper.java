@@ -55,13 +55,14 @@ import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@ForDeveloper("""
-    The design of language system.
+/**
+ *     The design of language system.
     1. Use hash map to map the language key into language value.
     2. Teh language value should be simple enough. (Reduce the usage of long sentence)
     3. Reduce the usage of `click event` and `hover event` tag in language value. (Use programmatically way to attach them)
 
-    """)
+
+ **/
 public class TextHelper {
 
     /* Constants. */
@@ -241,11 +242,12 @@ public class TextHelper {
             return ReflectionUtil.CompileTimeGraph.getCompileTimeTxtGraph(ReflectionUtil.CompileTimeGraph.LANGUAGE_GRAPH_FILE_NAME);
         }
 
-        @ForDeveloper("""
-            Clear the loaded language file in memory.
+        /**
+ *             Clear the loaded language file in memory.
             Note that once teh attempt to load a language file from storage is failed, a JsonObject maker named `UNSUPPORTED LANGUAGE` will be put into the map.
             Leading the subsequent attempts imply returns the marker.
-            """)
+
+ **/
         public static void clearLoadedLanguageJsons() {
             LANGUAGE_CODE_2_LANGUAGE_JSON.clear();
         }
@@ -1032,9 +1034,10 @@ public class TextHelper {
 
     }
 
-    @ForDeveloper("""
-        The text component format: https://minecraft.wiki/w/Text_component_format#History
-        """)
+    /**
+ *         The text component format: https://minecraft.wiki/w/Text_component_format#History
+
+ **/
     @SuppressWarnings("unused")
     public static class Codec {
 

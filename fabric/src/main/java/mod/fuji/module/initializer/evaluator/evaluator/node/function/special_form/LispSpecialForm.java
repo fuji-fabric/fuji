@@ -7,9 +7,10 @@ import mod.fuji.module.initializer.evaluator.evaluator.node.LispSymbol;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.LispFunction;
 import org.jetbrains.annotations.NotNull;
 
-@ForDeveloper("""
-    For Lisp special forms, refer to the `SB-C` and `ir1-translators.lisp` file.
-    """)
+/**
+ *     For Lisp special forms, refer to the `SB-C` and `ir1-translators.lisp` file.
+
+ **/
 public abstract class LispSpecialForm extends LispFunction {
 
     private static final Set<String> RESERVED_SPECIAL_FORM_NAMES = Set.of(

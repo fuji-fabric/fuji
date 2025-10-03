@@ -15,8 +15,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Parameter;
 
-@ForDeveloper("""
-    A `CommandArgument` is used to describe a `parameter` declared in the command method.
+/**
+ *     A `CommandArgument` is used to describe a `parameter` declared in the command method.
     It's used to hold the bits.
     It's the component of a CommandDescriptor.
 
@@ -30,7 +30,8 @@ import java.lang.reflect.Parameter;
       1. If it's a non-optional parameter, you should add it as the last one in non-optional parameters.
       2. If it's an optional parameter, you can add it at any position in optional parameters.
       3. If it's a GreedyString parameter, you should add it as the last method parameter.
-    """)
+
+ **/
 @Data
 public class CommandArgument {
 

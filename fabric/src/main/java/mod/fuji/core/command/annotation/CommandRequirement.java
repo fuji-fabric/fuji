@@ -7,9 +7,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@ForDeveloper("""
-    The predicates are tested using an OR clause, instead of AND clause.
-    """)
+/**
+ *     The predicates are tested using an OR clause, instead of AND clause.
+
+ **/
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface CommandRequirement {

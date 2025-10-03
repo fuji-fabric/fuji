@@ -105,10 +105,11 @@ public class NbtHelper {
         }
     }
 
-    @ForDeveloper("""
-        You should declare the throws IOException for low-level read/write operations.
+    /**
+ *         You should declare the throws IOException for low-level read/write operations.
         The high level layers should handle these exceptions, or just @SneakyThrow to bypass them.
-        """)
+
+ **/
     public static class Storage {
 
         private static void writeNbtFile(@NotNull NbtCompound root, @NotNull Path filePath) throws IOException {

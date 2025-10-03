@@ -330,9 +330,10 @@ public class CommandHelper {
             }
         }
 
-        @ForDeveloper("""
-            Check if the given navigation command will override an existing command path in the server command tree.
-            """)
+        /**
+ *             Check if the given navigation command will override an existing command path in the server command tree.
+
+ **/
         public static boolean isCommandNodeRegistered(@NotNull CommandNode<ServerCommandSource> navigationNode) {
             if (!Path.isLinearCommandPath(navigationNode)) {
                 LogUtil.warn("There are forks in the given command node: {}", Path.toLinearCommandPathList(navigationNode));
@@ -432,10 +433,11 @@ public class CommandHelper {
             return isAdmin(commandSource);
         }
 
-        @ForDeveloper("""
-            By default, an `operator` has the permission level `4`.
+        /**
+ *             By default, an `operator` has the permission level `4`.
             However, it can be configured via `op-permission-level=4` option.
-            """)
+
+ **/
         public static boolean isAdmin(@NotNull ServerCommandSource source) {
             return source.hasPermissionLevel(4);
         }
@@ -483,11 +485,12 @@ public class CommandHelper {
             }
         }
 
-        @ForDeveloper("""
-            If your mod is installed on the client-side, and run the single-player world.
+        /**
+ *             If your mod is installed on the client-side, and run the single-player world.
             Then the injected methods in brigadier will be called twice.
             One for ClientCommandSource, one for ServerCommandSource.
-            """)
+
+ **/
         public static void withServerCommandSource(@NotNull Object indicator, @NotNull Consumer<ServerCommandSource> consumer) {
             indicator = extractCommandSource(indicator);
 

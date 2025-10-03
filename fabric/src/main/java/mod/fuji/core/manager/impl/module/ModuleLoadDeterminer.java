@@ -45,11 +45,12 @@ public class ModuleLoadDeterminer {
             .toList();
     }
 
-    @ForDeveloper("""
-        This method is used to determinate whether to load the given class or not.
+    /**
+ *         This method is used to determinate whether to load the given class or not.
         The given class name can be any class name.
         See details in ModulePathResolver.
-        """)
+
+ **/
     public static boolean shouldLoadThis(@NotNull String className) {
         if (StaticEventConsumerInjector.getEventProducerMixinClassNames().contains(className)) {
             return shouldLoadOnDemandEventMixin(className);

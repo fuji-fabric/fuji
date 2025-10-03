@@ -55,10 +55,11 @@ public class ServerHelper {
             return getPhysicalEnvironmentType() == EnvType.SERVER;
         }
 
-        @ForDeveloper("""
-            If a method is called both in client-side and server-side. Then it will be called twice if the mod is installed in the client-side.
+        /**
+ *             If a method is called both in client-side and server-side. Then it will be called twice if the mod is installed in the client-side.
             One for the client, one for the client integrated server.
-            """)
+
+ **/
         public static @NotNull EnvType getPhysicalEnvironmentType() {
             return FabricLoader.getInstance().getEnvironmentType();
         }

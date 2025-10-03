@@ -20,9 +20,10 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Path;
 
-@ForDeveloper("""
-    For resource configuration handler, the type of model is JsonElement, which equals to the type of data tree.
-    """)
+/**
+ *     For resource configuration handler, the type of model is JsonElement, which equals to the type of data tree.
+
+ **/
 public abstract class ResourceConfigurationHandler extends BaseConfigurationHandler<JsonObject> {
 
     protected final @NotNull String resourceClassPath;

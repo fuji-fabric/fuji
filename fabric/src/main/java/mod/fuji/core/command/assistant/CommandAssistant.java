@@ -8,6 +8,11 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import mod.fuji.core.annotation.Unused;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -16,16 +21,10 @@ import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.assistant.structure.AvailableNextCommandPath;
 import mod.fuji.core.command.assistant.structure.AvailableNextCommandPathList;
 import mod.fuji.core.config.Configs;
-import mod.fuji.core.document.annotation.ForDeveloper;
 import mod.fuji.core.document.annotation.TestCase;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.PlayerLeftEvent;
 import mod.fuji.core.structure.Pair;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -69,8 +68,8 @@ public class CommandAssistant {
     }
 
     /**
- * A child command context will be made, if there is any command redirect or command fork.
- **/
+     * A child command context will be made, if there is any command redirect or command fork.
+     **/
     private static @NotNull List<CommandContext<ServerCommandSource>> makeCommandContextChain(@NotNull CommandContext<ServerCommandSource> rootCommandContext) {
         List<CommandContext<ServerCommandSource>> commandContextChain = new ArrayList<>();
 
@@ -112,11 +111,11 @@ public class CommandAssistant {
         List<CommandContext<ServerCommandSource>> commandContexts = makeCommandContextChain(rootCommandContext);
 
         commandContexts
-                .forEach(commandContext -> {
-                    commandContext.getNodes().forEach(parsedCommandNode -> {
-                        sb.append(toStringByArgumentType(parsedCommandNode.getNode())).append(" ");
-                    });
+            .forEach(commandContext -> {
+                commandContext.getNodes().forEach(parsedCommandNode -> {
+                    sb.append(toStringByArgumentType(parsedCommandNode.getNode())).append(" ");
                 });
+            });
         return sb.toString();
     }
 
@@ -155,8 +154,8 @@ public class CommandAssistant {
 
             /* Update the strings. */
             currentAvailableNextCommandPathList
-                    .getEntries()
-                    .add(new AvailableNextCommandPath(prefixString, infixString, suffixString));
+                .getEntries()
+                .add(new AvailableNextCommandPath(prefixString, infixString, suffixString));
         }
 
         /* Debounce and send current available next command path list. */
@@ -226,23 +225,24 @@ public class CommandAssistant {
         }
     }
 
+    /**
+     * 1. The custom command suggestions provider will be called when the cursor enters, leaves, or moves within a required argument. (Except case 2.)
+     * <p>
+     * 2. If the client use `Tab` key or `Shift + Tab` key to change the `input` and `cursor`, then the custom command suggestion provider will not be called.
+     **/
     @TestCase(action = "Test the command assistant.", targets = {
-            "Change the `cursor` using mouse click, and see the output."
-            , "Test the assistant with command redirect"
-            , "Test the assistant at the beginning of the token"
-            , "Test the assistant at the end of the token"
-            , "Test the assistant with the optional argument: `/back 3`"
-            , "Test the assistant with the entity selector: `/send-message @r`"
-            , "Test the assistant with custom parser and non-zero-offset suggestions builder: `/fly others @a[distance=..8`"
+        "Change the `cursor` using mouse click, and see the output."
+        , "Test the assistant with command redirect"
+        , "Test the assistant at the beginning of the token"
+        , "Test the assistant at the end of the token"
+        , "Test the assistant with the optional argument: `/back 3`"
+        , "Test the assistant with the entity selector: `/send-message @r`"
+        , "Test the assistant with custom parser and non-zero-offset suggestions builder: `/fly others @a[distance=..8`"
     })
     @TestCase(action = "Test the de-bounce for greedy command string arguments.", targets = {
         "Issue: `/IF send-message %player:name% 1 THEN send-broadcast 22...`",
         "Issue: `/IF   send-message %player:name% 1 THEN send-broadcast 2  ELSE  send-chat %player:name% 3`"
     })
-    @ForDeveloper("""
-            1. The custom command suggestions provider will be called when the cursor enters, leaves, or moves within a required argument. (Except case 2.)
-            2. If the client use `Tab` key or `Shift + Tab` key to change the `input` and `cursor`, then the custom command suggestion provider will not be called.
-            """)
     public static void assist(@NotNull CommandContext<ServerCommandSource> rootCommandContext, @NotNull SuggestionsBuilder builder) {
         if (canUseCommandAssistant(rootCommandContext)) {
             return;

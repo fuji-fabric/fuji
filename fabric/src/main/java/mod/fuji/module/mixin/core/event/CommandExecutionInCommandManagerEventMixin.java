@@ -28,10 +28,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 #endif
 
-@ForDeveloper("""
-    In MC <= 1.20.2, the CommandManager#execute calls the CommandDispatcher#execute directly.
+/**
+ *     In MC <= 1.20.2, the CommandManager#execute calls the CommandDispatcher#execute directly.
     In MC > 1.20.2, Mojang introduce the command execution control for game commands, so the CommandManager#execute will not call the CommandDispatcher#execute directly.
-    """)
+
+ **/
 @EventProducer(CommandExecutionPreEvent.class)
 @EventProducer(CommandExecutionPostEvent.class)
 @PhasedMixinTemplate

@@ -1,15 +1,14 @@
 package mod.fuji.core.manager.impl.module;
 
-import mod.fuji.core.auxiliary.ReflectionUtil;
-import mod.fuji.core.document.annotation.ForDeveloper;
-import mod.fuji.module.initializer.ModuleInitializer;
-import mod.fuji.module.mixin.GlobalMixinConfigPlugin;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import mod.fuji.core.auxiliary.ReflectionUtil;
+import mod.fuji.module.initializer.ModuleInitializer;
+import mod.fuji.module.mixin.GlobalMixinConfigPlugin;
 import org.jetbrains.annotations.NotNull;
 
 public class ModulePathResolver {
@@ -33,12 +32,12 @@ public class ModulePathResolver {
             .toList();
     }
 
-    @ForDeveloper("""
-        For consistency, the `core` is treated as a `module` that must always be `enabled`.
-        The `core` module can include `packages` from `fuji` mod or any other packages. (Like packages from `JDK standard`)
-
-        This method accepts any class name, and returns a sensible module path string. (The given class name can even be non-existent)
-        """)
+    /**
+     * For consistency, the `core` is treated as a `module` that must always be `enabled`.
+     * The `core` module can include `packages` from `fuji` mod or any other packages. (Like packages from `JDK standard`)
+     * <p>
+     * This method accepts any class name, and returns a sensible module path string. (The given class name can even be non-existent)
+     **/
     public static @NotNull String computeModulePathString(@NotNull String className) {
         /* Use low-level get and put functions, a lazy cache map is good to prevent the concurrent modification and recursive modification. */
         String modulePathString = CLASS_NAME_2_MODULE_PATH_STRING.get(className);
@@ -52,12 +51,12 @@ public class ModulePathResolver {
         return result;
     }
 
+    /**
+     * 1. The LogUtil method calls are banned here, to prevent the recursive-call during the cache computing process.
+     * 2. For simplicity, returned `core` module should not contain any sub-module.
+     * 3. This method only returns a declared `module path list` or `[core]`.
+     **/
     @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
-    @ForDeveloper("""
-        1. The LogUtil method calls are banned here, to prevent the recursive-call during the cache computing process.
-        2. For simplicity, returned `core` module should not contain any sub-module.
-        3. This method only returns a declared `module path list` or `[core]`.
-        """)
     private static @NotNull List<String> computeModulePathList(@NotNull String className) {
         if (DECLARED_MODULE_PATH_STRINGS.isEmpty()) {
             System.out.println("This is the first time to generate the module path graph file.");

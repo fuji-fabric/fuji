@@ -92,10 +92,11 @@ public class GsonMapper {
         return gson.getDelegateAdapter(skipPast, type);
     }
 
-    @ForDeveloper("""
-        The Gson library has already register a bunch of pre-defined type adapters.
+    /**
+ *         The Gson library has already register a bunch of pre-defined type adapters.
         See: TypeAdapters
-        """)
+
+ **/
     public static void registerGsonTypeAdapter(@NotNull Type type, @NotNull Object typeAdapter) {
         gson = gson
             .newBuilder()

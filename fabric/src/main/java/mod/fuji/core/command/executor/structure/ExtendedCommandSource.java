@@ -1,24 +1,27 @@
 package mod.fuji.core.command.executor.structure;
 
+import lombok.Value;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.descriptor.CommandDescriptor;
-import mod.fuji.core.document.annotation.ForDeveloper;
-import lombok.Value;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
 
+/**
+ * Cases:
+ * <p>
+ * 1. A command is initialized by player Alice, and executed as player Bob.
+ * <p>
+ * 2. A command is initialized by player Alice, and executed as the console. (/run as console)
+ * <p>
+ * 3. A command is initialized by the console, and executed as the console. (command scheduler)
+ * <p>
+ * 4. A command is initialized by a player, and executed as the player. (interactive sign)
+ **/
 @Value
-@ForDeveloper("""
-    Cases:
-    1. A command is initialized by player Alice, and executed as player Bob.
-    2. A command is initialized by player Alice, and executed as the console. (/run as console)
-    3. A command is initialized by the console, and executed as the console. (command scheduler)
-    4. A command is initialized by a player, and executed as the player. (interactive sign)
-    """)
 public class ExtendedCommandSource {
 
     @NotNull ServerCommandSource initiatingSource;

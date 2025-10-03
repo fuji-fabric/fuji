@@ -189,11 +189,12 @@ public class ItemStackHelper {
             setCustomDataNbt(stack, customDataNbt);
         }
 
-        @ForDeveloper("""
-            Before MC 1.20.5, the user-defined NBT is saved in path `tag` tree.
+        /**
+ *             Before MC 1.20.5, the user-defined NBT is saved in path `tag` tree.
             After that, it is saved in `components.minecraft:custom_data` tree.
             For a NbtCompound, the data schema migration will be done automatically.
-            """)
+
+ **/
         public static @Nullable NbtCompound getCustomDataNbt(@NotNull ItemStack stack) {
             #if MC_VER <= MC_1_20_4
             return stack.getNbt();

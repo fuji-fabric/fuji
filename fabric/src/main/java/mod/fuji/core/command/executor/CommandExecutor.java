@@ -29,13 +29,14 @@ public class CommandExecutor {
         return executeSingle(context, command, CommandExecutor::handleCommandExecutorException);
     }
 
-    @ForDeveloper("""
-        Cases:
+    /**
+ *         Cases:
         1. /run as console bad command
         2. /run as console run as player bad command
         3. /run as console run as player <player> run as console bad command
         4. /run as console run as player %player:name% run as fake-op %player:name% say I am %player:name%
-        """)
+
+ **/
     public static int executeSingle(@NotNull ExtendedCommandSource context, @NotNull String command, TriConsumer<ExtendedCommandSource, String, Exception> exceptionHandler) {
 
         /* Expand the command. */

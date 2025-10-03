@@ -53,11 +53,12 @@ import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@ForDeveloper("""
-    A command descriptor is used to describe a command instance.
+/**
+ *     A command descriptor is used to describe a command instance.
 
     To be simple: A command descriptor = command action method + command argument list
-    """)
+
+ **/
 public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
     public static final Set<CommandDescriptor> REGISTERED_COMMAND_DESCRIPTORS = ConcurrentHashMap.newKeySet();
@@ -351,10 +352,11 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
         return terminalArgumentBuilder.executes(commandAction);
     }
 
-    @ForDeveloper("""
-        Register all `optional arguments` and redirect them into the `anchor command node`.
+    /**
+ *         Register all `optional arguments` and redirect them into the `anchor command node`.
         This method should not handle the command requirements, since it's already done while registering the non-optional arguments.
-        """)
+
+ **/
     private void registerOptionalArguments() {
         CommandNode<ServerCommandSource> redirectTargetNode = findOptionalArgumentAnchor(this.commandArguments);
 

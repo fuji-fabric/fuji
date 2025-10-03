@@ -23,11 +23,12 @@ public class DimensionArgumentTypeAdapter extends BaseArgumentTypeAdapter {
         return DimensionArgumentType.dimension();
     }
 
-    @ForDeveloper("""
-        1. The DimensionArgumentType.dimension() will not suggest the new registered dimensions, or un-registered dimensions.
+    /**
+ *         1. The DimensionArgumentType.dimension() will not suggest the new registered dimensions, or un-registered dimensions.
         2. The dimension registry is synced when the client joins the server, and it's fixed.
         3. FIXME: When you call RequiredArgumentBuilder#suggests() method, the `/back {push|clear}` will also be suggested, even the command source has no permission to use it.
-        """)
+
+ **/
     @Override
     @NotNull
     protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {

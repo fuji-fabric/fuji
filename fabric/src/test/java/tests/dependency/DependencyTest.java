@@ -79,12 +79,13 @@ import tests.dependency.structure.DependencyNode;
 import tests.dependency.structure.FileDependencyChecker;
 import tests.dependency.structure.ModuleDependencyChecker;
 
-@ForDeveloper("""
-    You may ask why we are so strict with the symbol reference, it's mainly because the loading mechanism of JVM.
+/**
+ *     You may ask why we are so strict with the symbol reference, it's mainly because the loading mechanism of JVM.
 
     When you reference a symbol, it will trigger the loading of mixins, which introduces the possibility to crash the server.
     Especially when the server is not initialized fully.
-    """)
+
+ **/
 public class DependencyTest {
 
     private static final String PROJECT_ROOT_PACKAGE_NAME = Fuji.class.getPackageName();

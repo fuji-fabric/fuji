@@ -25,9 +25,10 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.NotNull;
 
-@ForDeveloper("""
-    An `ArgumentTypeAdapter` is used to map a specific `ArgumentType` into its `ArgumentValue`.
-    """)
+/**
+ *     An `ArgumentTypeAdapter` is used to map a specific `ArgumentType` into its `ArgumentValue`.
+
+ **/
 public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
 
     public static class Registry {

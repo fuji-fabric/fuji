@@ -7,8 +7,8 @@ import java.nio.file.Path;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-@ForDeveloper("""
-    A `transformer` is used to `transform bits` in the `storage` or `memory`.
+/**
+ *     A `transformer` is used to `transform bits` in the `storage` or `memory`.
     Its typical use-case is to migrate data schema between versions.
 
     You can install multiple transformer instances on a specific `configuration handler`.
@@ -19,7 +19,8 @@ import org.jetbrains.annotations.NotNull;
     2. You need to implement the apply() method properly:
     2.a. It should do necessary checks, including the source existence check and destination existence check.
     2.b. It should do nothing if there is no transformation needed, without the console-spam.
-    """)
+
+ **/
 @SuppressWarnings("LombokGetterMayBeUsed")
 public abstract class ConfigurationTransformer {
 

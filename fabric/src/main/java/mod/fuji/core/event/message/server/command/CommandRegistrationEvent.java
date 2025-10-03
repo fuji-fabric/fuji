@@ -10,11 +10,12 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.NotNull;
 
-@ForDeveloper("""
-    The `/reload` command in vanilla Minecraft will clear the root command tree.
+/**
+ *     The `/reload` command in vanilla Minecraft will clear the root command tree.
     You have to hook this event, to ensure your registered commands still exist after the `/reload` command.
     Note that during the initialization of CommandManager, the MinecraftServer reference is null.
-    """)
+
+ **/
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class CommandRegistrationEvent extends BaseEvent {
