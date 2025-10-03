@@ -1,6 +1,6 @@
 package mod.fuji.module.initializer.evaluator.evaluator.node.function;
 
-import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
+import mod.fuji.module.initializer.evaluator.evaluator.context.LispEnvironment;
 import mod.fuji.module.initializer.evaluator.evaluator.exception.LispEvaluationException;
 import mod.fuji.module.initializer.evaluator.evaluator.exception.LispInvalidNumberOfArgumentsException;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
@@ -21,9 +21,9 @@ public abstract class LispFunction extends LispObject {
     final LispList lambdaList = LispList.of();
 
     @Override
-    public abstract @NotNull LispObject eval(@NotNull Environment environment);
+    public abstract @NotNull LispObject eval(@NotNull LispEnvironment environment);
 
-    public abstract @NotNull LispObject apply(@NotNull Environment environment, @NotNull LispList arguments);
+    public abstract @NotNull LispObject apply(@NotNull LispEnvironment environment, @NotNull LispList arguments);
 
     public void checkNumberOfArguments(@NotNull LispList arguments) {
         int actual = arguments.size();
@@ -37,10 +37,10 @@ public abstract class LispFunction extends LispObject {
      * Note that the <code>funcall</code> function should not evaluate the given arguments.
      * It will be called for Lisp special form, Lisp macro and Lisp standard function.
      * */
-    public static @NotNull LispObject funcall(@NotNull LispSymbol functionNameSymbol, @NotNull Environment environment, @NotNull LispList arguments) {
+    public static @NotNull LispObject funcall(@NotNull LispSymbol functionNameSymbol, @NotNull LispEnvironment environment, @NotNull LispList arguments) {
         /* Get the function value. */
         LispFunction functionValue = environment
-            .lookupSymbol(functionNameSymbol.getName())
+            .lookupSymbolByName(functionNameSymbol.getName())
             .getFunctionValue()
             .orElseThrow(() -> new LispEvaluationException("The function %s is undefined.".formatted(functionNameSymbol.getName())));
 

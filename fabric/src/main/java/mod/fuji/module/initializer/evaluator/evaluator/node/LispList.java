@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Value;
 import mod.fuji.module.initializer.evaluator.evaluator.auxliary.LispFunctions;
 import mod.fuji.module.initializer.evaluator.evaluator.compiler.exception.LispCompilationException;
-import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
+import mod.fuji.module.initializer.evaluator.evaluator.context.LispEnvironment;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.LispFunction;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.macro.LispMacro;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.special_form.LispSpecialForm;
@@ -39,10 +39,10 @@ public class LispList extends LispObject implements Iterable<LispObject> {
     }
 
     @Override
-    public @NotNull LispObject eval(@NotNull Environment environment) {
+    public @NotNull LispObject eval(@NotNull LispEnvironment environment) {
         /* An empty list is treated as nil value. */
         if (this.objects.isEmpty()) {
-            return Environment.NIL;
+            return LispEnvironment.NIL;
         }
 
         /* The first component of a function call must be a LispSymbol. */

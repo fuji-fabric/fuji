@@ -1,6 +1,6 @@
 package mod.fuji.module.initializer.evaluator.evaluator.node.function.standard.builtin;
 
-import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
+import mod.fuji.module.initializer.evaluator.evaluator.context.LispEnvironment;
 import mod.fuji.module.initializer.evaluator.evaluator.exception.LispEvaluationException;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispNumber;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 public class AdditionFunction extends LispNativeFunction {
 
     @Override
-    public @NotNull LispObject apply(@NotNull Environment environment, @NotNull LispList arguments) {
+    public @NotNull LispObject apply(@NotNull LispEnvironment environment, @NotNull LispList arguments) {
         double result = 0;
         for (LispObject argument : arguments) {
             if (argument instanceof LispNumber lispNumber) {

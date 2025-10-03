@@ -1,7 +1,7 @@
 package tests.lisp.evaluator;
 
 import mod.fuji.module.initializer.evaluator.evaluator.compiler.exception.LispCompilationException;
-import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
+import mod.fuji.module.initializer.evaluator.evaluator.context.LispEnvironment;
 import mod.fuji.module.initializer.evaluator.evaluator.exception.LispEvaluationException;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispNumber;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
@@ -14,7 +14,7 @@ public class ListFunctionEvaluatorTest {
     @Test
     void testEmptyListEvaluation() {
         LispObject actual = EvaluatorUtils.evaluate("()");
-        LispObject expected = Environment.NIL;
+        LispObject expected = LispEnvironment.NIL;
         assertEquals(expected, actual);
     }
 

@@ -4,7 +4,7 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
+import mod.fuji.module.initializer.evaluator.evaluator.context.LispEnvironment;
 import mod.fuji.module.initializer.evaluator.evaluator.exception.LispEvaluationException;
 import mod.fuji.module.initializer.evaluator.evaluator.node.function.LispFunction;
 import org.jetbrains.annotations.NotNull;
@@ -25,10 +25,10 @@ public class LispSymbol extends LispObject {
     }
 
     @Override
-    public @NotNull LispObject eval(@NotNull Environment environment) {
+    public @NotNull LispObject eval(@NotNull LispEnvironment environment) {
         // NOTE: De-reference a symbol is to get its variable value.
         return environment
-            .lookupSymbol(this.getName())
+            .lookupSymbolByName(this.getName())
             .getVariableValue()
             .orElseThrow(() -> new LispEvaluationException("The variable %s is unbound.".formatted(this.name)));
     }

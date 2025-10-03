@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import mod.fuji.core.auxiliary.CollectionUtil;
 import mod.fuji.core.auxiliary.LogUtil;
-import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
+import mod.fuji.module.initializer.evaluator.evaluator.context.LispEnvironment;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +25,7 @@ public class LispEvaluator {
         int size = AST.getObjects().size();
         LogUtil.debug("the children size of AST = {}", size);
 
-        Environment environment = Environment.ofNullLexical();
+        LispEnvironment environment = LispEnvironment.ofNullLexical();
 
         for (int i = 0; i < size; i++) {
             LispObject lispObject = AST.getObjects().get(i);

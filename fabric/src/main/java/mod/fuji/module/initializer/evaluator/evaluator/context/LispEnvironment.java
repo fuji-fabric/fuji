@@ -23,17 +23,17 @@ import org.jetbrains.annotations.NotNull;
 @Value
 @AllArgsConstructor
 @SuppressWarnings("ClassCanBeRecord")
-public class Environment {
+public class LispEnvironment {
 
     public static final LispSymbol NIL = LispSymbol.of("nil");
     public static final LispSymbol T = LispSymbol.of("t");
 
-    @NotNull Optional<Environment> parent;
+    @NotNull Optional<LispEnvironment> parent;
     @NotNull Map<String, LispSymbol> symbols;
 
-    public static @NotNull Environment ofNullLexical() {
+    public static @NotNull LispEnvironment ofNullLexical() {
         /* Make an empty environment. */
-        Environment environment = new Environment(Optional.empty(), new HashMap<>());
+        LispEnvironment environment = new LispEnvironment(Optional.empty(), new HashMap<>());
 
         /* Define the things that's known in fndb. */
         environment.setFunctionValue(LispSymbol.of("+"), new AdditionFunction());
@@ -80,7 +80,7 @@ public class Environment {
             });
     }
 
-    public @NotNull LispSymbol lookupSymbol(@NotNull String symbolName) {
+    public @NotNull LispSymbol lookupSymbolByName(@NotNull String symbolName) {
         return internSymbol(symbolName);
     }
 

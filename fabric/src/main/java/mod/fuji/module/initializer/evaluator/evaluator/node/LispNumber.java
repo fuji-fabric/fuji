@@ -3,7 +3,7 @@ package mod.fuji.module.initializer.evaluator.evaluator.node;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
+import mod.fuji.module.initializer.evaluator.evaluator.context.LispEnvironment;
 import org.jetbrains.annotations.NotNull;
 
 @Data
@@ -18,7 +18,7 @@ public class LispNumber extends LispObject {
     }
 
     @Override
-    public @NotNull LispObject eval(@NotNull Environment environment) {
+    public @NotNull LispObject eval(@NotNull LispEnvironment environment) {
         return this;
     }
 }

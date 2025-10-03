@@ -2,7 +2,7 @@ package mod.fuji.module.initializer.evaluator.evaluator.auxliary;
 
 import java.util.List;
 import java.util.function.Function;
-import mod.fuji.module.initializer.evaluator.evaluator.context.Environment;
+import mod.fuji.module.initializer.evaluator.evaluator.context.LispEnvironment;
 import mod.fuji.module.initializer.evaluator.evaluator.exception.LispEvaluationException;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispList;
 import mod.fuji.module.initializer.evaluator.evaluator.node.LispObject;
@@ -14,7 +14,7 @@ public class LispFunctions {
 
     public static @NotNull LispObject car(@NotNull LispList list) {
         List<LispObject> objects = list.getObjects();
-        if (objects.isEmpty()) return Environment.NIL;
+        if (objects.isEmpty()) return LispEnvironment.NIL;
         return objects.get(0);
     }
 
@@ -52,19 +52,19 @@ public class LispFunctions {
         return expectedType.cast(lispObject);
     }
 
-    public static <T> T withCheckedVariableMutation(@NotNull Environment environment, @NotNull LispList arguments, @NotNull Function<LispSymbol, T> function) {
+    public static <T> T withCheckedVariableMutation(@NotNull LispEnvironment environment, @NotNull LispList arguments, @NotNull Function<LispSymbol, T> function) {
         LispFunctions.checkExactlyArity(arguments, 2);
 
         LispObject first = arguments.get(0);
         LispSymbol nameSymbol = LispFunctions.checkType(first, LispSymbol.class);
 
-        LispSymbol lookupSymbol = environment.lookupSymbol(nameSymbol.getName());
+        LispSymbol lookupSymbol = environment.lookupSymbolByName(nameSymbol.getName());
 
         return function.apply(lookupSymbol);
     }
 
 
-    public static @NotNull LispList evalForms(@NotNull Environment environment, @NotNull LispList forms) {
+    public static @NotNull LispList evalForms(@NotNull LispEnvironment environment, @NotNull LispList forms) {
         LispList values = LispList.of();
         for (LispObject form : forms) {
             LispObject value = form.eval(environment);
