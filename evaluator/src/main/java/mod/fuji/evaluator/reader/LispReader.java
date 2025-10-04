@@ -11,10 +11,13 @@ import mod.fuji.evaluator.reader.token.TokenType;
 import org.jetbrains.annotations.NotNull;
 
 /**
- *     The reference resource can be read in:
-    1. https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node1.html
-    2. https://groups.csail.mit.edu/mac/ftpdir/scheme-7.4/doc-html/scheme_toc.html
-
+ * Useful resource:
+ * <p></p>
+ * <ol>
+ *     <li><a href="https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node1.html">Common Lisp the Language</a></li>
+ *     <li><a href="https://groups.csail.mit.edu/mac/ftpdir/scheme-7.4/doc-html/scheme_toc.html">Scheme Manual</a></li>
+ *     <li><a href="https://www.gnu.org/software/kawa/index.html">GNU Kawa</a></li>
+ * </ol>
  **/
 public class LispReader extends LispStreamProcessor<Character, String, Token> {
 
@@ -74,13 +77,12 @@ public class LispReader extends LispStreamProcessor<Character, String, Token> {
 
 
     /**
- *         Any non-list is atom.
-
-        Call the reader functions in the order that:
-        1. If the distinguish chars have no intersection, call them at arbitrary order.
-        2. Call them in sub-set order.
-
- **/
+     * Any non-list is atom.
+     * <p>
+     * Call the reader functions in the order that:
+     * 1. If the distinguish chars have no intersection, call them at arbitrary order.
+     * 2. Call them in sub-set order.
+     **/
     private void readAtom() {
         readNumber();
         readString();

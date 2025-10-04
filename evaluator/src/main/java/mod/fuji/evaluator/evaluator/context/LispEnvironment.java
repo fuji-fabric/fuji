@@ -51,6 +51,11 @@ public class LispEnvironment {
         return environment;
     }
 
+    /**
+     * For simplicity, the <code>named constant</code> entity is type of <code>variable</code>.
+     * Here we use one bit to mark a variable as a named constant.
+     * When the value of a <code>named constant</code> is <code>altered</code> or <code>re-bound</code>, an error should be signaled.
+     */
     public void setNamedConstant(@NotNull LispSymbol lispSymbol, @NotNull LispObject value) {
         LispSymbol lookup = this.setVariableValue(lispSymbol, value);
         lookup.setConstantVariableValue(true);
@@ -81,6 +86,7 @@ public class LispEnvironment {
     }
 
     public @NotNull LispSymbol lookupSymbolByName(@NotNull String symbolName) {
+        // FIXME: proper symbol shadowing
         return internSymbol(symbolName);
     }
 

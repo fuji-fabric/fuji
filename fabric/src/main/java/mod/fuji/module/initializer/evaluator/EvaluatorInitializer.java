@@ -16,7 +16,6 @@ import mod.fuji.evaluator.evaluator.compiler.LispCompiler;
 import mod.fuji.evaluator.evaluator.compiler.formatter.LispObjectFormatter;
 import mod.fuji.evaluator.evaluator.node.LispList;
 import mod.fuji.evaluator.evaluator.node.LispObject;
-import mod.fuji.evaluator.formatter.PrettyFormatter;
 import mod.fuji.evaluator.reader.LispReader;
 import mod.fuji.evaluator.reader.token.Token;
 import net.minecraft.server.command.ServerCommandSource;
