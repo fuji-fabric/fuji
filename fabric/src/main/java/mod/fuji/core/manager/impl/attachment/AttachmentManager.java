@@ -1,7 +1,6 @@
 package mod.fuji.core.manager.impl.attachment;
 
 import mod.fuji.Fuji;
-import mod.fuji.core.manager.abst.BaseManager;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
