@@ -8,7 +8,7 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.job.abst.CronJob;
-import mod.fuji.core.manager.Managers;
+import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
 import mod.fuji.module.initializer.tab.TabListInitializer;
 import net.minecraft.network.packet.s2c.play.PlayerListHeaderS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -51,7 +51,7 @@ public class RenderHeaderAndFooterJob extends CronJob {
     @EventConsumer
     private static void scheduleTabListRenderJob(@Unused ServerStartedEvent event) {
         RenderHeaderAndFooterJob renderHeaderAndFooterJob = new RenderHeaderAndFooterJob();
-        Managers.getScheduleManager().addJob(renderHeaderAndFooterJob);
+        ScheduleManager.addJob(renderHeaderAndFooterJob);
     }
 
     @Override

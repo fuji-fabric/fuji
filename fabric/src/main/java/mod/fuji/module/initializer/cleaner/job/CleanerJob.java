@@ -6,7 +6,7 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.job.abst.CronJob;
-import mod.fuji.core.manager.Managers;
+import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
 import mod.fuji.module.initializer.cleaner.CleanerInitializer;
 import mod.fuji.module.initializer.cleaner.service.CleanerService;
 import org.quartz.JobExecutionContext;
@@ -23,7 +23,7 @@ public class CleanerJob extends CronJob {
     @EventConsumer
     private static void scheduleCleanerJob(@Unused ServerStartedEvent event) {
         CleanerJob cleanerJob = new CleanerJob();
-        Managers.getScheduleManager().addJob(cleanerJob);
+        ScheduleManager.addJob(cleanerJob);
     }
 
     @Override

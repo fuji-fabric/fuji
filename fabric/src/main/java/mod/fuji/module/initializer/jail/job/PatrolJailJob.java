@@ -3,7 +3,7 @@ package mod.fuji.module.initializer.jail.job;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.job.abst.FixedIntervalJob;
-import mod.fuji.core.manager.Managers;
+import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
 import mod.fuji.module.initializer.jail.service.JailService;
 import mod.fuji.module.initializer.jail.structure.JailDescriptor;
 import lombok.Data;
@@ -35,13 +35,13 @@ public class PatrolJailJob extends FixedIntervalJob {
         }, jailDescriptor);
 
         /* Schedule the job. */
-        Managers.getScheduleManager().addJob(job);
+        ScheduleManager.addJob(job);
     }
 
     public static void reloadPatrolJobs() {
         /* Un-schedule jobs. */
         LogUtil.debug("Un-schedule patrol jobs.");
-        Managers.getScheduleManager().deleteJobs(PatrolJailJob.class);
+        ScheduleManager.deleteJobs(PatrolJailJob.class);
 
         JailService
             .getJailDescriptors()

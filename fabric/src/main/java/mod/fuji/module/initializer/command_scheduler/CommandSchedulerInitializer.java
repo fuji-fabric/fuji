@@ -13,7 +13,7 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.document.annotation.TestCase;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
-import mod.fuji.core.manager.Managers;
+import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.command_scheduler.command.argument.wrapper.JobName;
 import mod.fuji.module.initializer.command_scheduler.config.model.CommandSchedulerConfigModel;
@@ -97,7 +97,7 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
     private static void reloadJobs() {
         /* Delete jobs. */
         LogUtil.info("Delete jobs.");
-        Managers.getScheduleManager().deleteJobs(CommandScheduleJob.class);
+        ScheduleManager.deleteJobs(CommandScheduleJob.class);
 
         /* Add jobs. */
         scheduler.model().jobs.forEach(definedJob -> {
@@ -110,7 +110,7 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
                             this.put("job", definedJob);
                         }
                     }, () -> cron);
-                    Managers.getScheduleManager().addJob(job);
+                    ScheduleManager.addJob(job);
                 });
 
             LogUtil.info("Add job -> {}", definedJob.getName());

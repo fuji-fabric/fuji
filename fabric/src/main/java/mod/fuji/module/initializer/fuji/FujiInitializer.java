@@ -9,6 +9,7 @@ import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.config.Configs;
 import mod.fuji.core.document.gui.CommandsInspectionGui;
 import mod.fuji.core.manager.Managers;
+import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.core.CoreInitializer;
 import mod.fuji.module.initializer.fuji.gui.AboutGui;
@@ -55,7 +56,7 @@ public class FujiInitializer extends ModuleInitializer {
         Managers.getModuleManager().reloadModuleInitializers();
 
         // Reload jobs.
-        Managers.getScheduleManager().reloadStaticJobTriggers();
+        ScheduleManager.reloadStaticJobTriggers();
 
         TextHelper.sendTextByKey(source, "reload");
         return CommandHelper.Return.SUCCESS;

@@ -5,7 +5,6 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.job.abst.CronJob;
-import mod.fuji.core.manager.Managers;
 import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
 import mod.fuji.module.initializer.leaderboard.service.LeaderBoardService;
 import org.quartz.JobExecutionContext;
@@ -27,6 +26,6 @@ public class UpdateLeaderboardsJob extends CronJob {
 
     @EventConsumer
     private static void addSelf(@Unused ServerStartedEvent event) {
-        Managers.getScheduleManager().addJob(new UpdateLeaderboardsJob());
+        ScheduleManager.addJob(new UpdateLeaderboardsJob());
     }
 }

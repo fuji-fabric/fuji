@@ -19,7 +19,6 @@ import mod.fuji.core.event.consumer.BaseEventConsumer;
 import mod.fuji.core.event.consumer.DynamicEventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.event.message.server.lifecycle.ServerStoppingEvent;
-import mod.fuji.core.manager.Managers;
 import mod.fuji.core.manager.impl.module.ModulePathResolver;
 import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
 import java.io.BufferedReader;
@@ -244,7 +243,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
                         this.put(SourceModuleGetter.SPECIFIED_SOURCE_MODULE_KEY, sourceModuleInCurrentStackTrace);
                     }
                 }, () -> cron);
-                Managers.getScheduleManager().addJob(writeStorageJob);
+                ScheduleManager.addJob(writeStorageJob);
             } catch (IOException e) {
                 throw ExceptionUtil.makeReThrownException(e);
             }

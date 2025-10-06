@@ -6,7 +6,6 @@ import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.job.abst.CronJob;
 import mod.fuji.core.job.interfaces.Schedulable;
-import mod.fuji.core.manager.Managers;
 import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
 import mod.fuji.module.initializer.works.structure.WorksBinding;
 import mod.fuji.module.initializer.works.structure.work.abst.Work;
@@ -39,7 +38,7 @@ public class WorksOnScheduleDispatcherJob extends CronJob {
     @EventConsumer
     private static void scheduleWorksOnScheduleDispatcherJob(@Unused ServerStartedEvent event) {
         WorksOnScheduleDispatcherJob job = makeInstance();
-        Managers.getScheduleManager().addJob(job);
+        ScheduleManager.addJob(job);
     }
 
     @Override

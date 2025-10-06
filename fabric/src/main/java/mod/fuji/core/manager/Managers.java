@@ -9,7 +9,6 @@ import mod.fuji.core.manager.impl.bossbar.BossBarManager;
 import mod.fuji.core.manager.impl.cache.CacheManager;
 import mod.fuji.core.manager.impl.callback.CallbackManager;
 import mod.fuji.core.manager.impl.module.ModuleManager;
-import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
 import mod.fuji.core.manager.impl.task.GameTaskManager;
 import lombok.Getter;
 
@@ -21,9 +20,6 @@ public class Managers {
 
     @Getter(lazy = true)
     private static final BossBarManager bossBarManager = new BossBarManager();
-
-    @Getter(lazy = true)
-    private static final ScheduleManager scheduleManager = new ScheduleManager();
 
     @Getter(lazy = true)
     private static final BaseBackupManager primaryBackupManager = new PrimaryBackupManager();

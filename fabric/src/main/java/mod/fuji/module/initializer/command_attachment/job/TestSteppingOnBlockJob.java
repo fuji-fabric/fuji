@@ -9,7 +9,7 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.job.abst.FixedIntervalJob;
-import mod.fuji.core.manager.Managers;
+import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
 import mod.fuji.module.initializer.command_attachment.CommandAttachmentInitializer;
 import mod.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
 import mod.fuji.module.initializer.command_attachment.service.CommandAttachmentService;
@@ -35,7 +35,7 @@ public class TestSteppingOnBlockJob extends FixedIntervalJob {
     @EventConsumer
     private static void scheduleJob(@Unused ServerStartedEvent event) {
         TestSteppingOnBlockJob job = new TestSteppingOnBlockJob();
-        Managers.getScheduleManager().addJob(job);
+        ScheduleManager.addJob(job);
     }
 
     private static void testSteppingBlockForPlayer(@NotNull ServerPlayerEntity player) {

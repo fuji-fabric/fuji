@@ -91,7 +91,7 @@ public class ScheduleManager extends BaseManager {
         }
     }
 
-    public void addJob(@NotNull BaseJob baseJob) {
+    public static void addJob(@NotNull BaseJob baseJob) {
         JobDetail jobDetail = baseJob.getJobDetail();
         Trigger trigger = baseJob.makeTrigger();
 
@@ -110,13 +110,13 @@ public class ScheduleManager extends BaseManager {
         }
     }
 
-    public void deleteJobs(@NotNull Class<?> jobGroupClass) {
+    public static void deleteJobs(@NotNull Class<?> jobGroupClass) {
         @NotNull String jobGroupName = jobGroupClass.getName();
-        List<JobKey> jobKeys = new ArrayList<>(this.getJobKeys(jobGroupName));
-        this.deleteJobs(jobKeys);
+        List<JobKey> jobKeys = new ArrayList<>(ScheduleManager.getJobKeys(jobGroupName));
+        ScheduleManager.deleteJobs(jobKeys);
     }
 
-    private void deleteJobs(@NotNull List<JobKey> jobKeys) {
+    private static void deleteJobs(@NotNull List<JobKey> jobKeys) {
         try {
             LogUtil.debug("Delete jobs: jobKeys = {}", jobKeys);
             scheduler.deleteJobs(jobKeys);
@@ -125,7 +125,7 @@ public class ScheduleManager extends BaseManager {
         }
     }
 
-    private @NotNull Set<JobKey> getJobKeys(@NotNull String jobGroup) {
+    private static @NotNull Set<JobKey> getJobKeys(@NotNull String jobGroup) {
         try {
             GroupMatcher<JobKey> groupMatcher = GroupMatcher.groupEquals(jobGroup);
             return scheduler.getJobKeys(groupMatcher);
@@ -135,8 +135,8 @@ public class ScheduleManager extends BaseManager {
         }
     }
 
-    public void triggerJobs(@NotNull String jobGroup) {
-        this.getJobKeys(jobGroup)
+    public static void triggerJobs(ScheduleManager scheduleManager, @NotNull String jobGroup) {
+        ScheduleManager.getJobKeys(jobGroup)
             .forEach(jobKey -> {
                 try {
                     scheduler.triggerJob(jobKey);
@@ -146,7 +146,7 @@ public class ScheduleManager extends BaseManager {
             });
     }
 
-    public void updateJobTriggers(@NotNull BaseJob baseJob) {
+    public static void updateJobTriggers(@NotNull BaseJob baseJob) {
         TriggerKey triggerKey = baseJob.getTriggerKey();
         Trigger newTrigger = baseJob.makeTrigger();
         try {
@@ -157,9 +157,9 @@ public class ScheduleManager extends BaseManager {
         }
     }
 
-    public void reloadStaticJobTriggers() {
+    public static void reloadStaticJobTriggers() {
         STATIC_JOBS
-            .forEach(this::updateJobTriggers);
+            .forEach(ScheduleManager::updateJobTriggers);
     }
 
 }

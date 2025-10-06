@@ -8,7 +8,6 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.job.abst.CronJob;
-import mod.fuji.core.manager.Managers;
 import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
 import mod.fuji.module.initializer.gameplay.carpet.fake_player_manager.service.FakePlayerManagerService;
 import java.util.List;
@@ -30,7 +29,7 @@ public class ManageFakePlayersJob extends CronJob {
     @EventConsumer
     private static void scheduleFakePlayerJob(@Unused ServerStartedEvent event) {
         ManageFakePlayersJob manageFakePlayersJob = new ManageFakePlayersJob();
-        Managers.getScheduleManager().addJob(manageFakePlayersJob);
+        ScheduleManager.addJob(manageFakePlayersJob);
     }
 
     @Override
