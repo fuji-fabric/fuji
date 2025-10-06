@@ -19,7 +19,7 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.document.annotation.TestCase;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.server.command.CommandRegistrationEvent;
-import mod.fuji.core.manager.impl.module.ModuleManager;
+import mod.fuji.core.module.ModuleManager;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;

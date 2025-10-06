@@ -1,9 +1,9 @@
-package mod.fuji.core.manager.impl.module;
+package mod.fuji.core.module;
 
 import mod.fuji.core.auxiliary.ExceptionUtil;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.ReflectionUtil;
-import mod.fuji.core.manager.abst.ModSubInitializer;
+import mod.fuji.core.lifecycle.interfaces.ModSubInitializer;
 import mod.fuji.module.initializer.ModuleInitializer;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +23,7 @@ public class ModuleManager implements ModSubInitializer {
     }
 
     @SuppressWarnings("unchecked")
-    private void invokeModuleInitializers() {
+    private static void invokeModuleInitializers() {
         ReflectionUtil.CompileTimeGraph.getCompileTimeTxtGraph(ReflectionUtil.CompileTimeGraph.MODULE_INITIALIZER_GRAPH_FILE_NAME)
             .forEach(className -> {
                 try {
@@ -35,14 +35,14 @@ public class ModuleManager implements ModSubInitializer {
                     /* Initialize the module initializer. */
                     boolean enable = ModuleLoadDeterminer.shouldLoadThis(className);
                     if (!enable) return;
-                    this.initializeModuleInitializer(clazz);
+                    ModuleManager.initializeModuleInitializer(clazz);
                 } catch (Exception e) {
                     throw ExceptionUtil.makeReThrownException(e);
                 }
             });
     }
 
-    public <T extends ModuleInitializer> void initializeModuleInitializer(@NotNull Class<T> clazz) {
+    public static <T extends ModuleInitializer> void initializeModuleInitializer(@NotNull Class<T> clazz) {
         if (!MODULE_INITIALIZER_BY_CLASS.containsKey(clazz)) {
             String className = clazz.getName();
             if (ModuleLoadDeterminer.shouldLoadThis(className)) {
@@ -76,7 +76,7 @@ public class ModuleManager implements ModSubInitializer {
         }
     }
 
-    public void reloadModuleInitializers() {
+    public static void reloadModuleInitializers() {
         MODULE_INITIALIZER_BY_CLASS
             .values()
             .forEach(ModuleManager::reloadModuleInitializer);

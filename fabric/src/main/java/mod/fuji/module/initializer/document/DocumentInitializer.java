@@ -6,7 +6,7 @@ import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.document.annotation.Document;
-import mod.fuji.core.manager.impl.module.ModuleLoadDeterminer;
+import mod.fuji.core.module.ModuleLoadDeterminer;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.document.builder.MarkdownDocumentBuilder;
 import net.minecraft.server.command.ServerCommandSource;

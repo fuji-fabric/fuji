@@ -5,7 +5,7 @@ import mod.fuji.core.config.mapper.GsonMapper;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.document.structure.DocString;
-import mod.fuji.core.manager.impl.module.ModuleManager;
+import mod.fuji.core.module.ModuleManager;
 import mod.fuji.core.service.url_highlighter.UrlHighlighter;
 import mod.fuji.module.initializer.ModuleInitializer;
 import java.lang.reflect.Field;

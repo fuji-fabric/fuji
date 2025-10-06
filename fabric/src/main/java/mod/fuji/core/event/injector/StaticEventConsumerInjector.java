@@ -8,7 +8,7 @@ import mod.fuji.core.event.injector.structure.EventProducerInfo;
 import mod.fuji.core.event.message.BaseEvent;
 import mod.fuji.core.event.consumer.BaseEventConsumer;
 import mod.fuji.core.event.consumer.StaticEventConsumer;
-import mod.fuji.core.manager.impl.module.ModuleLoadDeterminer;
+import mod.fuji.core.module.ModuleLoadDeterminer;
 import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.stream.Collectors;

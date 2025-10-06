@@ -1,7 +1,7 @@
 package tests.dependency.structure;
 
 import mod.fuji.Fuji;
-import mod.fuji.core.manager.impl.module.ModulePathResolver;
+import mod.fuji.core.module.ModulePathResolver;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;

@@ -4,7 +4,7 @@ import java.util.TreeSet;
 import mod.fuji.Fuji;
 import mod.fuji.core.auxiliary.IOUtil;
 import mod.fuji.core.document.annotation.TestCase;
-import mod.fuji.core.manager.impl.module.ModulePathResolver;
+import mod.fuji.core.module.ModulePathResolver;
 import mod.fuji.module.initializer.document.builder.component.ModuleArgumentTypeAdaptersDocumentBuilder;
 import mod.fuji.module.initializer.document.builder.component.ModuleColorBoxesDocumentBuilder;
 import mod.fuji.module.initializer.document.builder.component.ModuleCommandsDocumentBuilder;

@@ -8,8 +8,9 @@ import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.config.Configs;
 import mod.fuji.core.document.gui.CommandsInspectionGui;
-import mod.fuji.core.manager.Managers;
+import mod.fuji.core.lifecycle.ModInitializers;
 import mod.fuji.core.job.JobManager;
+import mod.fuji.core.module.ModuleManager;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.core.CoreInitializer;
 import mod.fuji.module.initializer.fuji.gui.AboutGui;
@@ -53,7 +54,7 @@ public class FujiInitializer extends ModuleInitializer {
         TextHelper.Loader.clearLoadedLanguageJsons();
 
         // Reload modules.
-        Managers.getModuleManager().reloadModuleInitializers();
+        ModuleManager.reloadModuleInitializers();
 
         // Reload jobs.
         JobManager.reloadStaticJobTriggers();

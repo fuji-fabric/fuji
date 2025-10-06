@@ -5,7 +5,7 @@ import mod.fuji.core.auxiliary.ChronosUtil;
 import mod.fuji.core.auxiliary.IOUtil;
 import java.io.IOException;
 import lombok.SneakyThrows;
-import mod.fuji.core.manager.abst.ModSubInitializer;
+import mod.fuji.core.lifecycle.interfaces.ModSubInitializer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;

@@ -10,7 +10,7 @@ import mod.fuji.core.document.auxiliary.DocumentUtil;
 import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.core.document.gui.CommandsInspectionGui;
 import mod.fuji.core.document.annotation.ColorBox;
-import mod.fuji.core.manager.impl.module.ModulePathResolver;
+import mod.fuji.core.module.ModulePathResolver;
 import mod.fuji.module.initializer.fuji.FujiInitializer;
 
 import net.minecraft.item.Items;

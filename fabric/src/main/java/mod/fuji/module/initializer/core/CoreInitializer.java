@@ -6,7 +6,7 @@ import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.config.Configs;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
-import mod.fuji.core.manager.impl.module.ModuleLoadDeterminer;
+import mod.fuji.core.module.ModuleLoadDeterminer;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.module.initializer.ModuleInitializer;
 

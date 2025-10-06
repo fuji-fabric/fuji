@@ -19,7 +19,7 @@ import mod.fuji.core.event.consumer.BaseEventConsumer;
 import mod.fuji.core.event.consumer.DynamicEventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.event.message.server.lifecycle.ServerStoppingEvent;
-import mod.fuji.core.manager.impl.module.ModulePathResolver;
+import mod.fuji.core.module.ModulePathResolver;
 import mod.fuji.core.job.JobManager;
 import java.io.BufferedReader;
 import java.io.FileInputStream;

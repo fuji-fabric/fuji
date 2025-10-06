@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Set;
 import mod.fuji.core.document.interfaces.SourceModuleGetter;
-import mod.fuji.core.manager.impl.module.ModulePathResolver;
+import mod.fuji.core.module.ModulePathResolver;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import mod.fuji.core.job.JobManager;

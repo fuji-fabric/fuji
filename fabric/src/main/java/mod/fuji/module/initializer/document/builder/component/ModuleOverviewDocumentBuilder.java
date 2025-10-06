@@ -1,7 +1,7 @@
 package mod.fuji.module.initializer.document.builder.component;
 
 import mod.fuji.core.document.auxiliary.DocumentUtil;
-import mod.fuji.core.manager.impl.module.ModuleManager;
+import mod.fuji.core.module.ModuleManager;
 import mod.fuji.module.initializer.document.builder.context.DocumentBuilderContext;
 import mod.fuji.module.initializer.document.formatter.MarkdownDocumentFormatter;
 import java.util.Optional;

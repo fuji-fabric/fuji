@@ -7,7 +7,7 @@ import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.event.EventManager;
 import mod.fuji.core.event.consumer.BaseEventConsumer;
 import mod.fuji.core.gui.component.gui.PagedGui;
-import mod.fuji.core.manager.impl.module.ModulePathResolver;
+import mod.fuji.core.module.ModulePathResolver;
 import java.util.Collection;
 import java.util.List;
 import net.minecraft.item.Items;

@@ -1,4 +1,4 @@
-package mod.fuji.core.manager.impl.module;
+package mod.fuji.core.module;
 
 
 import com.google.gson.JsonObject;

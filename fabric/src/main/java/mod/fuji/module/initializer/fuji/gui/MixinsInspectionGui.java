@@ -6,7 +6,7 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
-import mod.fuji.core.manager.impl.module.ModulePathResolver;
+import mod.fuji.core.module.ModulePathResolver;
 import mod.fuji.core.structure.MixinApplicationInfo;
 import mod.fuji.module.mixin.GlobalMixinConfigPlugin;
 import java.util.Comparator;

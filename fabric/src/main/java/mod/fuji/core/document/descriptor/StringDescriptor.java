@@ -2,9 +2,9 @@ package mod.fuji.core.document.descriptor;
 
 import mod.fuji.core.auxiliary.ReflectionUtil;
 import mod.fuji.core.document.auxiliary.DocumentUtil;
-import mod.fuji.core.manager.impl.module.ModuleLoadDeterminer;
+import mod.fuji.core.module.ModuleLoadDeterminer;
 import mod.fuji.core.document.interfaces.SourceModuleGetter;
-import mod.fuji.core.manager.impl.module.ModulePathResolver;
+import mod.fuji.core.module.ModulePathResolver;
 import lombok.Data;
 import net.minecraft.item.Item;
 import org.jetbrains.annotations.NotNull;

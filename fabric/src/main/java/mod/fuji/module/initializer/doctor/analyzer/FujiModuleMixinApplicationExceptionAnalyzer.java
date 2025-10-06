@@ -1,7 +1,7 @@
 package mod.fuji.module.initializer.doctor.analyzer;
 
 import mod.fuji.core.auxiliary.ReflectionUtil;
-import mod.fuji.core.manager.impl.module.ModulePathResolver;
+import mod.fuji.core.module.ModulePathResolver;
 import mod.fuji.module.mixin.GlobalMixinConfigPlugin;
 import java.util.HashSet;
 import java.util.List;

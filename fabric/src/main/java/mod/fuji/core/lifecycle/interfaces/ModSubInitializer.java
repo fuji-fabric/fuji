@@ -1,4 +1,4 @@
-package mod.fuji.core.manager.abst;
+package mod.fuji.core.lifecycle.interfaces;
 
 public interface ModSubInitializer {
     void onInitialize();

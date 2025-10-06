@@ -1,6 +1,6 @@
 package mod.fuji.module.mixin;
 
-import mod.fuji.core.manager.impl.module.ModuleLoadDeterminer;
+import mod.fuji.core.module.ModuleLoadDeterminer;
 import mod.fuji.core.structure.MixinApplicationInfo;
 import java.util.HashMap;
 import java.util.List;
