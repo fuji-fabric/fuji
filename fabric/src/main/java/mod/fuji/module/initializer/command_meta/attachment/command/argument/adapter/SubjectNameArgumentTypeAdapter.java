@@ -6,7 +6,7 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
-import mod.fuji.core.manager.impl.attachment.AttachmentManager;
+import mod.fuji.core.service.attachment.AttachmentManager;
 import mod.fuji.module.initializer.command_meta.attachment.command.argument.wrapper.SubjectName;
 import net.minecraft.server.command.ServerCommandSource;
 

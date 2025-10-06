@@ -6,7 +6,7 @@ import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import mod.fuji.core.auxiliary.AsyncUtil;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.config.mapper.wrapper.GameProfileWrapper;
-import mod.fuji.core.manager.impl.cache.service.GameProfileCacheService;
+import mod.fuji.core.service.cache.service.GameProfileCacheService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

@@ -2,7 +2,7 @@ package mod.fuji.module.initializer.teleport_warmup.config.model;
 
 import com.google.gson.annotations.SerializedName;
 import mod.fuji.core.document.annotation.Document;
-import mod.fuji.core.manager.impl.bossbar.structure.Interruptible;
+import mod.fuji.core.service.bossbar.structure.Interruptible;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -2,7 +2,7 @@ package mod.fuji.module.initializer.command_warmup.config.model;
 
 import com.google.gson.annotations.SerializedName;
 import mod.fuji.core.document.annotation.Document;
-import mod.fuji.core.manager.impl.bossbar.structure.Interruptible;
+import mod.fuji.core.service.bossbar.structure.Interruptible;
 import mod.fuji.module.initializer.command_warmup.structure.CommandWarmupNode;
 
 import java.util.ArrayList;

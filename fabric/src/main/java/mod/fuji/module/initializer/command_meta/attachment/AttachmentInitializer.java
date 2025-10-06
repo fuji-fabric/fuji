@@ -9,7 +9,7 @@ import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
-import mod.fuji.core.manager.impl.attachment.AttachmentManager;
+import mod.fuji.core.service.attachment.AttachmentManager;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.command_meta.attachment.command.argument.wrapper.SubjectId;
 import mod.fuji.module.initializer.command_meta.attachment.command.argument.wrapper.SubjectName;

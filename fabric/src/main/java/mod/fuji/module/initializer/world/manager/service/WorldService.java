@@ -11,7 +11,7 @@ import mod.fuji.core.auxiliary.minecraft.WorldHelper;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.event.message.server.tick.ServerTickStartEvent;
-import mod.fuji.core.manager.impl.bossbar.BossBarManager;
+import mod.fuji.core.service.bossbar.BossBarManager;
 import mod.fuji.core.structure.GlobalPos;
 import mod.fuji.core.structure.Pair;
 import mod.fuji.core.structure.TeleportTicket;

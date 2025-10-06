@@ -1,7 +1,7 @@
 package mod.fuji.core.service.paged_text;
 
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
-import mod.fuji.core.manager.impl.callback.CallbackManager;
+import mod.fuji.core.service.command_callback.CommandCallbackManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 
@@ -81,7 +81,7 @@ public class PagedMessageText extends PagedText {
     }
 
     private String makeClickCallbackCommand(int pageIndex) {
-        return CallbackManager.makeCallbackCommandString((player) -> {
+        return CommandCallbackManager.makeCallbackCommandString((player) -> {
             if (pageIndex < 0 || pageIndex >= this.getPages().size()) {
                 TextHelper.sendTextByKey(player, "echo.send_custom.custom_text.invalid_page");
                 return;

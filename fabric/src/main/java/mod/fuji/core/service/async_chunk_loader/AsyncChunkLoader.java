@@ -1,7 +1,7 @@
 package mod.fuji.core.service.async_chunk_loader;
 
 import mod.fuji.core.document.annotation.TestCase;
-import mod.fuji.core.manager.impl.task.GameTaskManager;
+import mod.fuji.core.service.game_task.GameTaskManager;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import net.minecraft.server.world.ServerWorld;

@@ -7,7 +7,7 @@ import mod.fuji.core.auxiliary.ChronosUtil;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
-import mod.fuji.core.manager.impl.cache.structure.Cache;
+import mod.fuji.core.service.cache.structure.Cache;
 import mod.fuji.module.initializer.command_state.service.CommandStateService;
 import java.util.ArrayList;
 import java.util.List;

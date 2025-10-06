@@ -8,7 +8,7 @@ import mod.fuji.core.auxiliary.minecraft.UuidHelper;
 import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.core.document.annotation.TestCase;
-import mod.fuji.core.manager.impl.attachment.AttachmentManager;
+import mod.fuji.core.service.attachment.AttachmentManager;
 import mod.fuji.core.service.style_striper.StyleStriper;
 import mod.fuji.core.structure.GlobalBlockPos;
 import mod.fuji.module.initializer.ModuleInitializer;

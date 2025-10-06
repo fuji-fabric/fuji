@@ -1,8 +1,8 @@
 package mod.fuji.core.structure;
 
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
-import mod.fuji.core.manager.impl.bossbar.structure.Interruptible;
-import mod.fuji.core.manager.impl.bossbar.structure.InterruptibleTicket;
+import mod.fuji.core.service.bossbar.structure.Interruptible;
+import mod.fuji.core.service.bossbar.structure.InterruptibleTicket;
 import lombok.Getter;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.boss.ServerBossBar;

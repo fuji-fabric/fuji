@@ -1077,54 +1077,6 @@
       "is_dynamic": true
     },
     {
-      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerDamageEvent",
-      "declaring_class_name": "mod.fuji.core.manager.impl.bossbar.BossBarManager",
-      "declaring_method_name": "processOnPlayerDamagedEvent",
-      "injector_priority": 1000,
-      "consumer_priority": 1000,
-      "is_dynamic": false
-    },
-    {
-      "event_type_class_name": "mod.fuji.core.event.message.server.tick.ServerTickStartEvent",
-      "declaring_class_name": "mod.fuji.core.manager.impl.bossbar.BossBarManager",
-      "declaring_method_name": "tickBossBarTickets",
-      "injector_priority": 1000,
-      "consumer_priority": 1000,
-      "is_dynamic": false
-    },
-    {
-      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerJoinedEvent",
-      "declaring_class_name": "mod.fuji.core.manager.impl.cache.CacheManager",
-      "declaring_method_name": "updateGameProfileCache",
-      "injector_priority": 1000,
-      "consumer_priority": 1000,
-      "is_dynamic": false
-    },
-    {
-      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "mod.fuji.core.manager.impl.cache.job.FlushCacheJob",
-      "declaring_method_name": "scheduleFlushCacheJob",
-      "injector_priority": 1000,
-      "consumer_priority": 1000,
-      "is_dynamic": false
-    },
-    {
-      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "mod.fuji.core.manager.impl.callback.CallbackManager",
-      "declaring_method_name": "resetCallbackMap",
-      "injector_priority": 1000,
-      "consumer_priority": 1000,
-      "is_dynamic": false
-    },
-    {
-      "event_type_class_name": "mod.fuji.core.event.message.server.command.CommandRegistrationEvent",
-      "declaring_class_name": "mod.fuji.core.manager.impl.callback.CallbackManager",
-      "declaring_method_name": "registerCommandCallbackCommand",
-      "injector_priority": 1000,
-      "consumer_priority": 1000,
-      "is_dynamic": false
-    },
-    {
       "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStoppingEvent",
       "declaring_class_name": "mod.fuji.core.manager.impl.scheduler.ScheduleManager",
       "declaring_method_name": "shutdownScheduler",
@@ -1133,8 +1085,56 @@
       "is_dynamic": false
     },
     {
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerDamageEvent",
+      "declaring_class_name": "mod.fuji.core.service.bossbar.BossBarManager",
+      "declaring_method_name": "processOnPlayerDamagedEvent",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
       "event_type_class_name": "mod.fuji.core.event.message.server.tick.ServerTickStartEvent",
-      "declaring_class_name": "mod.fuji.core.manager.impl.task.GameTaskManager",
+      "declaring_class_name": "mod.fuji.core.service.bossbar.BossBarManager",
+      "declaring_method_name": "tickBossBarTickets",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerJoinedEvent",
+      "declaring_class_name": "mod.fuji.core.service.cache.CacheManager",
+      "declaring_method_name": "updateGameProfileCache",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.core.service.cache.job.FlushCacheJob",
+      "declaring_method_name": "scheduleFlushCacheJob",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.core.service.command_callback.CommandCallbackManager",
+      "declaring_method_name": "resetCallbackMap",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
+      "event_type_class_name": "mod.fuji.core.event.message.server.command.CommandRegistrationEvent",
+      "declaring_class_name": "mod.fuji.core.service.command_callback.CommandCallbackManager",
+      "declaring_method_name": "registerCommandCallbackCommand",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
+      "event_type_class_name": "mod.fuji.core.event.message.server.tick.ServerTickStartEvent",
+      "declaring_class_name": "mod.fuji.core.service.game_task.GameTaskManager",
       "declaring_method_name": "tickGameTasks",
       "injector_priority": 1000,
       "consumer_priority": 1000,

@@ -6,7 +6,7 @@ import mod.fuji.core.auxiliary.ReflectionUtil;
 import mod.fuji.core.config.migrator.transformer.abst.JsonConfigurationTransformer;
 import mod.fuji.core.config.migrator.transformer.impl.InflateDirectoryIntoSingleFileTransformer;
 import mod.fuji.core.config.migrator.version.VersionPropertyInjector;
-import mod.fuji.core.manager.impl.attachment.AttachmentManager;
+import mod.fuji.core.service.attachment.AttachmentManager;
 import mod.fuji.module.initializer.command_attachment.CommandAttachmentInitializer;
 import java.nio.file.Path;
 import org.jetbrains.annotations.NotNull;

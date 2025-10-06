@@ -5,7 +5,7 @@ import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.command.executor.CommandExecutor;
 import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
-import mod.fuji.core.manager.impl.cache.structure.Cache;
+import mod.fuji.core.service.cache.structure.Cache;
 import mod.fuji.module.initializer.command_state.CommandStateInitializer;
 import mod.fuji.module.initializer.command_state.structure.PlayerStates;
 import mod.fuji.module.initializer.command_state.structure.StateDescriptor;

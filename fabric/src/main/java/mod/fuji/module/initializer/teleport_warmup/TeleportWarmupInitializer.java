@@ -15,7 +15,7 @@ import mod.fuji.core.document.descriptor.MetaDescriptor;
 import mod.fuji.core.document.descriptor.PermissionDescriptor;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.PlayerTeleportPreEvent;
-import mod.fuji.core.manager.impl.bossbar.BossBarManager;
+import mod.fuji.core.service.bossbar.BossBarManager;
 import mod.fuji.core.structure.GlobalPos;
 import mod.fuji.core.structure.TeleportTicket;
 import mod.fuji.module.initializer.ModuleInitializer;

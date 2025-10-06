@@ -54,7 +54,7 @@ mod.fuji.core.command.argument.adapter.impl.TextArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.Vec2ArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.Vec3ArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.WordArgumentTypeAdapter
-mod.fuji.core.manager.impl.bossbar.command.argument.adapter.StepTypeArgumentTypeAdapter
+mod.fuji.core.service.bossbar.command.argument.adapter.StepTypeArgumentTypeAdapter
 mod.fuji.core.service.duration_parser.command.argument.adapter.DurationArgumentTypeAdapter
 mod.fuji.module.initializer.command_attachment.command.argument.adapter.ExecuteAsTypeArgumentTypeAdapter
 mod.fuji.module.initializer.command_attachment.command.argument.adapter.InteractTypeArgumentTypeAdapter

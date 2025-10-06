@@ -1,8 +1,8 @@
 package mod.fuji.module.initializer.echo.send_bossbar.structure;
 
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
-import mod.fuji.core.manager.impl.bossbar.command.argument.wrapper.StepType;
-import mod.fuji.core.manager.impl.bossbar.BossBarTicket;
+import mod.fuji.core.service.bossbar.command.argument.wrapper.StepType;
+import mod.fuji.core.service.bossbar.BossBarTicket;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.boss.ServerBossBar;
 import net.minecraft.server.network.ServerPlayerEntity;

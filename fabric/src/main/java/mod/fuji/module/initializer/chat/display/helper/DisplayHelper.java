@@ -2,7 +2,7 @@ package mod.fuji.module.initializer.chat.display.helper;
 
 import mod.fuji.core.auxiliary.RandomUtil;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
-import mod.fuji.core.manager.impl.callback.CallbackManager;
+import mod.fuji.core.service.command_callback.CommandCallbackManager;
 import mod.fuji.module.initializer.chat.display.ChatDisplayInitializer;
 import mod.fuji.core.service.display.gui.BaseDisplayGuiFactory;
 import mod.fuji.module.initializer.chat.display.gui.EnderChestDisplayGuiFactory;
@@ -87,7 +87,7 @@ public class DisplayHelper {
 
     @NotNull
     private static ClickEvent makeDisplayClickEvent(@NotNull String displayUUID) {
-        return CallbackManager
+        return CommandCallbackManager
             .makeCallbackClickEvent((player) -> viewDisplayGui(player, displayUUID), ChatDisplayInitializer.config.model().getExpirationDurationSeconds(), TimeUnit.SECONDS);
     }
 }

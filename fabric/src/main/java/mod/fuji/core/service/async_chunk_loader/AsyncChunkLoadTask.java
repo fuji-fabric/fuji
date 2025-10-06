@@ -1,7 +1,7 @@
 package mod.fuji.core.service.async_chunk_loader;
 
 import mod.fuji.core.annotation.Unused;
-import mod.fuji.core.manager.impl.task.structure.GameTask;
+import mod.fuji.core.service.game_task.structure.GameTask;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;

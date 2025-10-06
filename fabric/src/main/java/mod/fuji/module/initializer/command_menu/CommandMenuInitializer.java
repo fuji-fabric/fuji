@@ -13,7 +13,7 @@ import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.PlayerActionEvent;
-import mod.fuji.core.manager.impl.task.GameTaskManager;
+import mod.fuji.core.service.game_task.GameTaskManager;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.command_menu.command.argument.wrapper.MenuName;
 import mod.fuji.module.initializer.command_menu.config.CommandMenuConfigModel;

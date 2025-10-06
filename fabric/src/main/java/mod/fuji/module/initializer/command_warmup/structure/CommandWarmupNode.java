@@ -2,7 +2,7 @@ package mod.fuji.module.initializer.command_warmup.structure;
 
 import com.google.gson.annotations.SerializedName;
 import mod.fuji.core.document.annotation.Document;
-import mod.fuji.core.manager.impl.bossbar.structure.Interruptible;
+import mod.fuji.core.service.bossbar.structure.Interruptible;
 import mod.fuji.core.structure.Tags;
 import lombok.AllArgsConstructor;
 import lombok.Data;

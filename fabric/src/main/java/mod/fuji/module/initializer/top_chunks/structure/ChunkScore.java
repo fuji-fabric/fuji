@@ -7,7 +7,7 @@ import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.document.annotation.DocStringProvider;
 import mod.fuji.core.document.descriptor.PermissionDescriptor;
-import mod.fuji.core.manager.impl.callback.CallbackManager;
+import mod.fuji.core.service.command_callback.CommandCallbackManager;
 import mod.fuji.core.service.type_formatter.TypeFormatter;
 import mod.fuji.core.structure.GlobalPos;
 import mod.fuji.module.initializer.top_chunks.TopChunksInitializer;
@@ -123,7 +123,7 @@ public class ChunkScore implements Comparable<ChunkScore> {
             hoverText.append(TextHelper.TEXT_NEWLINE);
             hoverText.append(TextHelper.getTextByKey(source, "prompt.click.teleport"));
 
-            ClickEvent clickEvent = CallbackManager.makeCallbackClickEvent(this::teleportToThisChunk, 5, TimeUnit.MINUTES);
+            ClickEvent clickEvent = CommandCallbackManager.makeCallbackClickEvent(this::teleportToThisChunk, 5, TimeUnit.MINUTES);
             chunkScoreTextStyle = chunkScoreTextStyle.withClickEvent(clickEvent);
         }
 
