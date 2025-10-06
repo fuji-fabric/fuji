@@ -3,7 +3,7 @@ package mod.fuji.core.manager.impl.module;
 import mod.fuji.core.auxiliary.ExceptionUtil;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.ReflectionUtil;
-import mod.fuji.core.manager.abst.BaseManager;
+import mod.fuji.core.manager.abst.ModInitializer;
 import mod.fuji.module.initializer.ModuleInitializer;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.service.MixinService;
 
 @Getter
-public class ModuleManager extends BaseManager {
+public class ModuleManager implements ModInitializer {
 
     public static final Map<Class<? extends ModuleInitializer>, ModuleInitializer> MODULE_INITIALIZER_BY_CLASS = new HashMap<>();
     public static final Map<String, Class<? extends ModuleInitializer>> MODULE_INITIALIZER_CLASS_BY_MODULE_PATH_STRING = new HashMap<>();

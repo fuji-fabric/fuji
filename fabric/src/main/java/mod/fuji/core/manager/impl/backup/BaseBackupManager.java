@@ -3,9 +3,9 @@ package mod.fuji.core.manager.impl.backup;
 import mod.fuji.Fuji;
 import mod.fuji.core.auxiliary.ChronosUtil;
 import mod.fuji.core.auxiliary.IOUtil;
-import mod.fuji.core.manager.abst.BaseManager;
 import java.io.IOException;
 import lombok.SneakyThrows;
+import mod.fuji.core.manager.abst.ModInitializer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -17,7 +17,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseBackupManager extends BaseManager {
+public abstract class BaseBackupManager implements ModInitializer {
 
     protected final Path BACKUP_STORAGE_PATH;
 

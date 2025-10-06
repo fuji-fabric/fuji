@@ -4,17 +4,17 @@ import mod.fuji.core.annotation.HotPath;
 import mod.fuji.core.event.message.BaseEvent;
 import mod.fuji.core.event.consumer.BaseEventConsumer;
 import mod.fuji.core.event.injector.StaticEventConsumerInjector;
-import mod.fuji.core.manager.abst.BaseManager;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import mod.fuji.core.manager.abst.ModInitializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
-public class EventManager extends BaseManager {
+public class EventManager implements ModInitializer {
 
     private static final Map<Class<? extends BaseEvent>, List<BaseEventConsumer<?>>> events = new ConcurrentHashMap<>();
 

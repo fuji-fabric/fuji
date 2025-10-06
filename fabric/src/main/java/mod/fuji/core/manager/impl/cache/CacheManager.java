@@ -8,7 +8,6 @@ import mod.fuji.core.auxiliary.JsonUtil;
 import mod.fuji.core.config.mapper.GsonMapper;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.PlayerJoinedEvent;
-import mod.fuji.core.manager.abst.BaseManager;
 import mod.fuji.core.manager.impl.cache.config.model.GenericCacheModel;
 import mod.fuji.core.manager.impl.cache.service.GameProfileCacheService;
 import mod.fuji.core.manager.impl.cache.structure.Cache;

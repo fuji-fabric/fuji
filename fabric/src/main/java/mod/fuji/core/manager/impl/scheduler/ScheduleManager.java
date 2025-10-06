@@ -11,7 +11,6 @@ import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.event.message.server.lifecycle.ServerStoppingEvent;
 import mod.fuji.core.job.abst.BaseJob;
-import mod.fuji.core.manager.abst.BaseManager;
 import lombok.Getter;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
