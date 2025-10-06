@@ -9,11 +9,6 @@ import org.jetbrains.annotations.NotNull;
 public class LispLambda extends LispSpecialForm {
 
     @Override
-    public @NotNull LispObject eval(@NotNull LispEnvironment environment) {
-        return this;
-    }
-
-    @Override
     public @NotNull LispObject apply(@NotNull LispEnvironment environment, @NotNull LispList arguments) {
         LispFunctions.checkRequiredArity(arguments, 1);
 //        LispList lambdaList = LispFunctions.checkType(arguments.get(0), LispList.class);

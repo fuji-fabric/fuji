@@ -2,6 +2,8 @@ package mod.fuji.evaluator.evaluator.node.function.special_form;
 
 
 import java.util.Set;
+import mod.fuji.evaluator.evaluator.context.LispEnvironment;
+import mod.fuji.evaluator.evaluator.node.LispObject;
 import mod.fuji.evaluator.evaluator.node.LispSymbol;
 import mod.fuji.evaluator.evaluator.node.function.LispFunction;
 import org.jetbrains.annotations.NotNull;
@@ -23,4 +25,8 @@ public abstract class LispSpecialForm extends LispFunction {
         return RESERVED_SPECIAL_FORM_NAMES.contains(lispSymbol.getName());
     }
 
+    @Override
+    public @NotNull LispObject eval(@NotNull LispEnvironment environment) {
+        return this;
+    }
 }

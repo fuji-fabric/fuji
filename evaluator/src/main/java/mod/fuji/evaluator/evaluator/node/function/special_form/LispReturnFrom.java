@@ -5,16 +5,10 @@ import mod.fuji.evaluator.evaluator.node.LispList;
 import mod.fuji.evaluator.evaluator.node.LispObject;
 import org.jetbrains.annotations.NotNull;
 
-public class LispProgn extends LispSpecialForm {
+public class LispReturnFrom extends LispSpecialForm {
 
     @Override
     public @NotNull LispObject apply(@NotNull LispEnvironment environment, @NotNull LispList arguments) {
-        @NotNull LispObject value = LispEnvironment.NIL;
-
-        for (LispObject argument : arguments) {
-            value = argument.eval(environment);
-        }
-
-        return value;
+        return null;
     }
 }

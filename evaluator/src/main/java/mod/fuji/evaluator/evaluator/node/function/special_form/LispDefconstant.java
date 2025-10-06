@@ -11,11 +11,6 @@ import org.jetbrains.annotations.NotNull;
 public class LispDefconstant extends LispSpecialForm {
 
     @Override
-    public @NotNull LispObject eval(@NotNull LispEnvironment environment) {
-        return this;
-    }
-
-    @Override
     public @NotNull LispObject apply(@NotNull LispEnvironment environment, @NotNull LispList arguments) {
         return LispFunctions.withCheckedVariableMutation(environment, arguments, lookupSymbol -> {
             LispObject second = arguments.get(1);
