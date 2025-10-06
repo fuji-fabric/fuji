@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import mod.fuji.core.manager.abst.ModInitializer;
+import mod.fuji.core.manager.abst.ModSubInitializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
-public class EventManager implements ModInitializer {
+public class EventManager implements ModSubInitializer {
 
     private static final Map<Class<? extends BaseEvent>, List<BaseEventConsumer<?>>> events = new ConcurrentHashMap<>();
 

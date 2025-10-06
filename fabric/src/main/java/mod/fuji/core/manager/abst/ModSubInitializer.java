@@ -1,5 +1,5 @@
 package mod.fuji.core.manager.abst;
 
-public interface ModInitializer {
+public interface ModSubInitializer {
     void onInitialize();
 }
