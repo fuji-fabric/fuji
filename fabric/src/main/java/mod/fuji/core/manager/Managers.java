@@ -21,8 +21,5 @@ public class Managers {
     private static final BaseBackupManager recoveryBackupManager = new RecoveryBackupManager();
 
     @Getter(lazy = true)
-    private static final AttachmentManager attachmentManager = new AttachmentManager();
-
-    @Getter(lazy = true)
     private static final EventManager eventManager = new EventManager();
 }

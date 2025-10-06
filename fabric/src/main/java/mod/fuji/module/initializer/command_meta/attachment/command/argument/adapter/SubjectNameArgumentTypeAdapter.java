@@ -6,7 +6,7 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
-import mod.fuji.core.manager.Managers;
+import mod.fuji.core.manager.impl.attachment.AttachmentManager;
 import mod.fuji.module.initializer.command_meta.attachment.command.argument.wrapper.SubjectName;
 import net.minecraft.server.command.ServerCommandSource;
 
@@ -39,7 +39,7 @@ public class SubjectNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @NotNull
     protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName).suggests((ctx, builder) -> {
-            Managers.getAttachmentManager().listSubjectName().forEach(builder::suggest);
+            AttachmentManager.listSubjectNames().forEach(builder::suggest);
             return builder.buildFuture();
         });
     }

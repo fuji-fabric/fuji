@@ -8,7 +8,7 @@ import mod.fuji.core.auxiliary.minecraft.UuidHelper;
 import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.core.document.annotation.TestCase;
-import mod.fuji.core.manager.Managers;
+import mod.fuji.core.manager.impl.attachment.AttachmentManager;
 import mod.fuji.core.service.style_striper.StyleStriper;
 import mod.fuji.core.structure.GlobalBlockPos;
 import mod.fuji.module.initializer.ModuleInitializer;
@@ -38,12 +38,12 @@ public class ColorSignInitializer extends ModuleInitializer {
 
     public static @Nullable SignCache readSignCache(@NotNull GlobalBlockPos globalBlockPos) {
         String uuid = UuidHelper.getAttachedUuid(globalBlockPos);
-        if (!Managers.getAttachmentManager().existsAttachment(ATTACHMENT_SUBJECT, uuid)) {
+        if (!AttachmentManager.existsAttachment(ATTACHMENT_SUBJECT, uuid)) {
             return null;
         }
 
         try {
-            String data = Managers.getAttachmentManager().getAttachment(ATTACHMENT_SUBJECT, uuid);
+            String data = AttachmentManager.getAttachment(ATTACHMENT_SUBJECT, uuid);
             return GsonMapper.fromJson(data, SignCache.class);
         } catch (IOException e) {
             LogUtil.error("Failed to read sign cache: spatialBlock = {}", globalBlockPos, e);
@@ -55,7 +55,7 @@ public class ColorSignInitializer extends ModuleInitializer {
         String uuid = UuidHelper.getAttachedUuid(globalBlockPos);
         String data = GsonMapper.toJsonString(signCache);
         try {
-            Managers.getAttachmentManager().setAttachment(ATTACHMENT_SUBJECT, uuid, data);
+            AttachmentManager.setAttachment(ATTACHMENT_SUBJECT, uuid, data);
         } catch (IOException e) {
             LogUtil.error("Failed to write sign cache: spatialBlock = {}, signCache = {}", globalBlockPos, signCache, e);
         }
