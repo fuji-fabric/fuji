@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
-public class CacheManager extends BaseManager {
+public class CacheManager {
 
     private static final Path CACHE_DIRECTORY = Fuji.MOD_CONFIG_PATH.resolve("cache");
     private static final Map<String, GenericCacheModel<?>> CACHE_FILES = new ConcurrentHashMap<>();
@@ -33,12 +33,12 @@ public class CacheManager extends BaseManager {
     }
 
     @SneakyThrows(IOException.class)
-    private @NotNull Path toCacheFilePath(@NotNull String cacheSubject) {
+    private static @NotNull Path toCacheFilePath(@NotNull String cacheSubject) {
         Files.createDirectories(CACHE_DIRECTORY.getParent());
         return CACHE_DIRECTORY.resolve(cacheSubject + ".json");
     }
 
-    public <T> @NotNull T getCachedValueOrCompute(@NotNull String cacheSubject, @NotNull String cacheKey, @NotNull Class<T> typeOfCacheValue, @NotNull Duration expirationDuration, @NotNull Supplier<T> supplier) {
+    public static <T> @NotNull T getCachedValueOrCompute(@NotNull String cacheSubject, @NotNull String cacheKey, @NotNull Class<T> typeOfCacheValue, @NotNull Duration expirationDuration, @NotNull Supplier<T> supplier) {
         GenericCacheModel<T> model = getGenericCacheModel(cacheSubject, typeOfCacheValue);
 
         /* Get or create cache. */
@@ -63,7 +63,7 @@ public class CacheManager extends BaseManager {
     }
 
     @SuppressWarnings({"unchecked", "UnnecessaryLocalVariable"})
-    private <T> @NotNull GenericCacheModel<T> getGenericCacheModel(@NotNull String cacheSubject, @NotNull Class<T> typeOfValue) {
+    private static <T> @NotNull GenericCacheModel<T> getGenericCacheModel(@NotNull String cacheSubject, @NotNull Class<T> typeOfValue) {
         GenericCacheModel<T> model = (GenericCacheModel<T>) CACHE_FILES.computeIfAbsent(cacheSubject, key -> {
             Path cacheFilePath = toCacheFilePath(cacheSubject);
             writeDefaultCacheModelIfAbsent(cacheFilePath);
@@ -74,7 +74,7 @@ public class CacheManager extends BaseManager {
         return model;
     }
 
-    public void flushGenericCacheModels() {
+    public static void flushGenericCacheModels() {
         CACHE_FILES.forEach((cacheSubject, cacheModel) -> {
             if (!cacheModel.isDirty()) return;
 

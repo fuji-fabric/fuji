@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Set;
 
 @TestCase(action = "Issue `/stop` in the production environment.", targets = "The program should be terminated.")
-public class ScheduleManager extends BaseManager {
+public class ScheduleManager {
 
     public static final String CRON_EVERY_SECOND = "* * * ? * *";
     public static final String CRON_EVERY_FIVE_SECONDS = "0/5 * * ? * * *";

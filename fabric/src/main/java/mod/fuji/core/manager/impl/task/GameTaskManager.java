@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.jetbrains.annotations.NotNull;
 
-public class GameTaskManager extends BaseManager {
+public class GameTaskManager {
 
     private static final CopyOnWriteArrayList<GameTask> TASK_QUEUE = new CopyOnWriteArrayList<>();
 

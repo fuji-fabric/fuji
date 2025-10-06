@@ -5,7 +5,7 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.job.abst.CronJob;
-import mod.fuji.core.manager.Managers;
+import mod.fuji.core.manager.impl.cache.CacheManager;
 import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -28,6 +28,6 @@ public class FlushCacheJob extends CronJob {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        Managers.getCacheManager().flushGenericCacheModels();
+        CacheManager.flushGenericCacheModels();
     }
 }

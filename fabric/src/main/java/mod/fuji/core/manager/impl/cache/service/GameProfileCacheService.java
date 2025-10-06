@@ -4,7 +4,7 @@ import com.mojang.authlib.GameProfile;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.config.mapper.wrapper.GameProfileWrapper;
-import mod.fuji.core.manager.Managers;
+import mod.fuji.core.manager.impl.cache.CacheManager;
 import mod.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
 import java.time.Duration;
 import java.util.function.Supplier;
@@ -31,8 +31,7 @@ public class GameProfileCacheService {
     }
 
     private static @NotNull GameProfileWrapper getCachedGameProfile(@NotNull String onlinePlayerName, @NotNull Duration expirationDuration, @NotNull Supplier<GameProfileWrapper> supplier) {
-        return Managers
-            .getCacheManager()
+        return CacheManager
             .getCachedValueOrCompute(GAME_PROFILE_CACHE_KEY, onlinePlayerName, GameProfileWrapper.class, expirationDuration, supplier);
     }
 
