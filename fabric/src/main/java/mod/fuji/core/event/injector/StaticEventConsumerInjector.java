@@ -2,9 +2,9 @@ package mod.fuji.core.event.injector;
 
 import mod.fuji.core.auxiliary.ReflectionUtil;
 import mod.fuji.core.event.EventManager;
-import mod.fuji.core.event.injector.structure.EventConsumerInfo;
-import mod.fuji.core.event.injector.structure.EventGraph;
-import mod.fuji.core.event.injector.structure.EventProducerInfo;
+import mod.fuji.core.event.graph.structure.EventConsumerInfo;
+import mod.fuji.core.event.graph.EventGraph;
+import mod.fuji.core.event.graph.structure.EventProducerInfo;
 import mod.fuji.core.event.message.BaseEvent;
 import mod.fuji.core.event.consumer.BaseEventConsumer;
 import mod.fuji.core.event.consumer.StaticEventConsumer;

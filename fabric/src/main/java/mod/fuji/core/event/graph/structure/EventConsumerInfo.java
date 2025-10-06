@@ -1,4 +1,4 @@
-package mod.fuji.core.event.injector.structure;
+package mod.fuji.core.event.graph.structure;
 
 import mod.fuji.core.annotation.ReflectiveAccess;
 import lombok.AllArgsConstructor;

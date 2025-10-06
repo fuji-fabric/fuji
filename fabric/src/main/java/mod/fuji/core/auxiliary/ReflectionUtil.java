@@ -5,7 +5,7 @@ import java.lang.reflect.Parameter;
 import mod.fuji.Fuji;
 import mod.fuji.core.annotation.CallerSensitive;
 import mod.fuji.core.config.mapper.GsonMapper;
-import mod.fuji.core.event.injector.structure.EventGraph;
+import mod.fuji.core.event.graph.EventGraph;
 import mod.fuji.core.module.ModulePathResolver;
 import java.io.BufferedReader;
 import java.io.IOException;

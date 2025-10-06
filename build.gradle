@@ -16,7 +16,7 @@ plugins {
 // Transfers the values set in settings.gradle file to the rest of the project
 project.gradle.ext.getProperties().each { prop ->
     rootProject.ext.set(prop.key, prop.value)
-    println "Add prop in rootProject.ext [key:" + prop.key + ", value:" + prop.value + "]"
+//    println "Add prop in rootProject.ext [key:" + prop.key + ", value:" + prop.value + "]"
 }
 
 // Sets up manifold stuff

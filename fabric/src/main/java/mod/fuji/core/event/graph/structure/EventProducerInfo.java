@@ -1,4 +1,4 @@
-package mod.fuji.core.event.injector.structure;
+package mod.fuji.core.event.graph.structure;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

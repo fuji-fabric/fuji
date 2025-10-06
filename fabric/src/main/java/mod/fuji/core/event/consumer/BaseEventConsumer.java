@@ -1,6 +1,6 @@
 package mod.fuji.core.event.consumer;
 
-import mod.fuji.core.event.injector.structure.EventConsumerInfo;
+import mod.fuji.core.event.graph.structure.EventConsumerInfo;
 import java.util.function.Consumer;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;

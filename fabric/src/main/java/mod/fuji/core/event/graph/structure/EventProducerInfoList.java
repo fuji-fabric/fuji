@@ -1,4 +1,4 @@
-package mod.fuji.core.event.injector.structure;
+package mod.fuji.core.event.graph.structure;
 
 import java.util.ArrayList;
 import lombok.Data;
@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class EventConsumerInfoList extends ArrayList<EventConsumerInfo> {
+public class EventProducerInfoList extends ArrayList<EventProducerInfo> {
 
 }

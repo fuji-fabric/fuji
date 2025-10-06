@@ -1,8 +1,12 @@
-package mod.fuji.core.event.injector.structure;
+package mod.fuji.core.event.graph;
 
 import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mod.fuji.core.event.graph.structure.EventConsumerInfo;
+import mod.fuji.core.event.graph.structure.EventConsumerInfoList;
+import mod.fuji.core.event.graph.structure.EventProducerInfo;
+import mod.fuji.core.event.graph.structure.EventProducerInfoList;
 import org.jetbrains.annotations.NotNull;
 
 @Data

@@ -6,7 +6,7 @@ import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.ReflectionUtil;
 import mod.fuji.core.config.Configs;
 import mod.fuji.core.event.injector.StaticEventConsumerInjector;
-import mod.fuji.core.event.injector.structure.EventConsumerInfo;
+import mod.fuji.core.event.graph.structure.EventConsumerInfo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
