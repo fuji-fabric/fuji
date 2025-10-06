@@ -25,7 +25,6 @@ public class Fuji implements ModInitializer {
     public void onInitialize() {
         Managers.getPrimaryBackupManager().onInitialize();
         Managers.getEventManager().onInitialize();
-        Managers.getCallbackManager().onInitialize();
         Managers.getModuleManager().onInitialize();
     }
 }

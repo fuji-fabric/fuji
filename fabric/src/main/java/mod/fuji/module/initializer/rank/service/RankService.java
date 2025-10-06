@@ -8,7 +8,7 @@ import mod.fuji.core.command.executor.CommandExecutor;
 import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
 import mod.fuji.core.document.annotation.DocStringProvider;
 import mod.fuji.core.document.descriptor.PermissionDescriptor;
-import mod.fuji.core.manager.Managers;
+import mod.fuji.core.manager.impl.callback.CallbackManager;
 import mod.fuji.module.initializer.rank.RankInitializer;
 import mod.fuji.module.initializer.rank.structure.RankDataNode;
 import mod.fuji.module.initializer.rank.structure.RankNode;
@@ -262,7 +262,7 @@ public class RankService {
                 .forEach(nextRankNode -> {
                     String value = "<grey>[</grey>%s<grey>]</grey>".formatted(nextRankNode.getDisplayName());
                     MutableText singleText = TextHelper.getTextByValue(source, value).copy();
-                    ClickEvent clickEvent = Managers.getCallbackManager().makeCallbackEvent((player) -> {
+                    ClickEvent clickEvent = CallbackManager.makeCallbackClickEvent((player) -> {
                         sendRankNodeInfo(source, nextRankNode, true);
                     }, 5, TimeUnit.MINUTES);
                     Text hoverText = TextHelper.getTextByKey(source, "prompt.click.see_it.any");
