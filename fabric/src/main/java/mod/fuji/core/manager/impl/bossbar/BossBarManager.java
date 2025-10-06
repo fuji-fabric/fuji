@@ -5,7 +5,6 @@ import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.PlayerDamageEvent;
 import mod.fuji.core.event.message.server.tick.ServerTickStartEvent;
-import mod.fuji.core.manager.abst.BaseManager;
 import mod.fuji.core.manager.impl.bossbar.structure.InterruptibleTicket;
 import java.util.Optional;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -17,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class BossBarManager extends BaseManager {
+public class BossBarManager {
 
     private static final List<BossBarTicket> tickets = new CopyOnWriteArrayList<>();
     private static final List<BossBarTicket> addedTickets = new CopyOnWriteArrayList<>();
