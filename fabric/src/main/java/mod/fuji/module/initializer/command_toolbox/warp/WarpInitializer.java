@@ -12,7 +12,7 @@ import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
-import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
+import mod.fuji.core.job.JobManager;
 import mod.fuji.core.service.string_splitter.StringSplitter;
 import mod.fuji.core.structure.GlobalPos;
 import mod.fuji.module.initializer.ModuleInitializer;
@@ -37,7 +37,7 @@ public class WarpInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<WarpDataModel> data = ObjectConfigurationHandler
         .ofModule("warp.json", WarpDataModel.class)
-        .enableAutoSaveFeature(ScheduleManager.CRON_EVERY_MINUTE);
+        .enableAutoSaveFeature(JobManager.CRON_EVERY_MINUTE);
 
     @Document(id = 1751825396093L, value = "Teleport to the specified warp point.")
     @CommandNode("tp")

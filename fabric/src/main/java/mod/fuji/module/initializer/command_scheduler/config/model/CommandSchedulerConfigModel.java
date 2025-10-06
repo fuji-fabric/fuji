@@ -1,7 +1,7 @@
 package mod.fuji.module.initializer.command_scheduler.config.model;
 
 import com.google.gson.annotations.SerializedName;
-import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
+import mod.fuji.core.job.JobManager;
 import mod.fuji.module.initializer.command_scheduler.structure.CommandSchedulerJobDescriptor;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,8 +14,8 @@ public class CommandSchedulerConfigModel {
     public @NotNull List<CommandSchedulerJobDescriptor> jobs = new ArrayList<>() {
         {
             this.add(new CommandSchedulerJobDescriptor(true, "example_job", 1024, List.of(
-                ScheduleManager.CRON_EVERY_THREE_MINUTES
-                , ScheduleManager.CRON_EVERY_FIVE_MINUTES
+                JobManager.CRON_EVERY_THREE_MINUTES
+                , JobManager.CRON_EVERY_FIVE_MINUTES
             ),
                 List.of(
                     List.of(

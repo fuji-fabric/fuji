@@ -7,7 +7,7 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.job.abst.CronJob;
-import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
+import mod.fuji.core.job.JobManager;
 import mod.fuji.module.initializer.command_state.service.CommandStateService;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -20,7 +20,7 @@ import org.quartz.JobExecutionException;
 public class CommandStateAutoUpdaterJob extends CronJob {
 
     public CommandStateAutoUpdaterJob() {
-        super(() -> ScheduleManager.CRON_EVERY_SECOND);
+        super(() -> JobManager.CRON_EVERY_SECOND);
     }
 
     @Override
@@ -30,6 +30,6 @@ public class CommandStateAutoUpdaterJob extends CronJob {
 
     @EventConsumer
     private static void addSelf(@Unused ServerStartedEvent event) {
-        ScheduleManager.addJob(new CommandStateAutoUpdaterJob());
+        JobManager.addJob(new CommandStateAutoUpdaterJob());
     }
 }

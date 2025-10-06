@@ -5,7 +5,7 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.job.abst.FixedIntervalJob;
-import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
+import mod.fuji.core.job.JobManager;
 import mod.fuji.module.initializer.jail.service.JailService;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -22,7 +22,7 @@ public class UpdateJailRecordsJob extends FixedIntervalJob {
     @EventConsumer
     private static void reloadUpdateJailRecordsJob(@Unused ServerStartedEvent event) {
         UpdateJailRecordsJob updateJailRecordsJob = new UpdateJailRecordsJob();
-        ScheduleManager.addJob(updateJailRecordsJob);
+        JobManager.addJob(updateJailRecordsJob);
     }
 
     @Override

@@ -8,7 +8,7 @@ import mod.fuji.core.job.abst.FixedIntervalJob;
 import java.util.Objects;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
+import mod.fuji.core.job.JobManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -39,7 +39,7 @@ public class PlaySoundJob extends FixedIntervalJob {
         }, intervalMs, repeatCount);
 
         /* Schedule the job. */
-        ScheduleManager.addJob(mentionPlayersJob);
+        JobManager.addJob(mentionPlayersJob);
     }
 
     public static void scheduleJob(PlaySoundJobSetup setup, ServerPlayerEntity serverPlayer) {

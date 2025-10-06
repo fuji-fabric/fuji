@@ -6,7 +6,7 @@ import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.job.abst.CronJob;
 import mod.fuji.core.service.cache.CacheManager;
-import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
+import mod.fuji.core.job.JobManager;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
@@ -18,12 +18,12 @@ import org.quartz.JobExecutionException;
 public class FlushCacheJob extends CronJob {
 
     public FlushCacheJob() {
-        super(() -> ScheduleManager.CRON_EVERY_MINUTE);
+        super(() -> JobManager.CRON_EVERY_MINUTE);
     }
 
     @EventConsumer
     private static void scheduleFlushCacheJob(@Unused ServerStartedEvent event) {
-        ScheduleManager.addJob(new FlushCacheJob());
+        JobManager.addJob(new FlushCacheJob());
     }
 
     @Override

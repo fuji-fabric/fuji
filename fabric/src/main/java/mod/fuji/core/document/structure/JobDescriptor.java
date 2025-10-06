@@ -7,7 +7,7 @@ import mod.fuji.core.document.interfaces.SourceModuleGetter;
 import mod.fuji.core.manager.impl.module.ModulePathResolver;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
+import mod.fuji.core.job.JobManager;
 import org.jetbrains.annotations.NotNull;
 import org.quartz.Job;
 import org.quartz.JobDetail;
@@ -29,7 +29,7 @@ public class JobDescriptor implements SourceModuleGetter {
         List<JobDescriptor> entities = new ArrayList<>();
 
         /* Get all jobs. */
-        Scheduler scheduler = ScheduleManager.getScheduler();
+        Scheduler scheduler = JobManager.getScheduler();
 
         // NOTE: Match all jobs, including `CronJob` and `FixedIntervalJob`.
         GroupMatcher<JobKey> jobKeyGroupMatcher = GroupMatcher.anyJobGroup();

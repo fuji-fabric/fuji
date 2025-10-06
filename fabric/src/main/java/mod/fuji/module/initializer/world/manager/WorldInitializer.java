@@ -18,7 +18,7 @@ import mod.fuji.core.document.annotation.Cite;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.document.annotation.TestCase;
-import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
+import mod.fuji.core.job.JobManager;
 import mod.fuji.core.structure.GlobalPos;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.world.manager.command.argument.wrapper.LoadedRuntimeDimensionDescriptor;
@@ -324,7 +324,7 @@ public class WorldInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<WorldDataModel> world = ObjectConfigurationHandler
         .ofModule("world.json", WorldDataModel.class)
-        .enableAutoSaveFeature(ScheduleManager.CRON_EVERY_MINUTE);
+        .enableAutoSaveFeature(JobManager.CRON_EVERY_MINUTE);
 
     private static void ensureDimensionNotExists(ServerCommandSource source, Identifier identifier) {
         if (WorldService.existsDimension(identifier)) {

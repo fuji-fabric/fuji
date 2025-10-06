@@ -1,8 +1,8 @@
 package mod.fuji.core.manager;
 
 import mod.fuji.core.event.EventManager;
-import mod.fuji.core.manager.impl.backup.BaseBackupManager;
-import mod.fuji.core.manager.impl.backup.PrimaryBackupManager;
+import mod.fuji.core.service.backup.BaseBackupManager;
+import mod.fuji.core.service.backup.PrimaryBackupManager;
 import mod.fuji.core.manager.impl.module.ModuleManager;
 import lombok.Getter;
 

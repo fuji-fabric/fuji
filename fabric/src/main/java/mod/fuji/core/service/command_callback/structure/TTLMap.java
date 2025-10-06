@@ -2,7 +2,7 @@ package mod.fuji.core.service.command_callback.structure;
 
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.job.abst.CronJob;
-import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
+import mod.fuji.core.job.JobManager;
 import lombok.NoArgsConstructor;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -25,8 +25,8 @@ public class TTLMap<K, V> {
             {
                 this.put(TTLMap.class.getName(), TTLMap.this);
             }
-        }, () -> ScheduleManager.CRON_EVERY_MINUTE);
-        ScheduleManager.addJob(cleanTTLMapJob);
+        }, () -> JobManager.CRON_EVERY_MINUTE);
+        JobManager.addJob(cleanTTLMapJob);
     }
 
     public void put(K key, V value, long ttl, TimeUnit unit) {

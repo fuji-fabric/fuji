@@ -6,7 +6,7 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.job.abst.CronJob;
-import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
+import mod.fuji.core.job.JobManager;
 import mod.fuji.module.initializer.placeholder.structure.SumUpPlaceholder;
 import org.jetbrains.annotations.NotNull;
 import org.quartz.JobExecutionContext;
@@ -17,14 +17,14 @@ import org.quartz.JobExecutionContext;
 public class UpdateSumUpPlaceholderJob extends CronJob {
 
     public UpdateSumUpPlaceholderJob() {
-        super(() -> ScheduleManager.CRON_EVERY_MINUTE);
+        super(() -> JobManager.CRON_EVERY_MINUTE);
     }
 
     @EventConsumer
     private static void scheduleSumUpPlaceholderUpdaterJob(@Unused ServerStartedEvent event) {
         SumUpPlaceholder.ofServer();
         UpdateSumUpPlaceholderJob updateSumUpPlaceholderJob = new UpdateSumUpPlaceholderJob();
-        ScheduleManager.addJob(updateSumUpPlaceholderJob);
+        JobManager.addJob(updateSumUpPlaceholderJob);
     }
 
     @Override

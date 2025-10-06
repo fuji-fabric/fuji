@@ -6,7 +6,7 @@ import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.job.abst.CronJob;
 import mod.fuji.core.job.interfaces.Schedulable;
-import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
+import mod.fuji.core.job.JobManager;
 import mod.fuji.module.initializer.works.structure.WorksBinding;
 import mod.fuji.module.initializer.works.structure.work.abst.Work;
 import lombok.NoArgsConstructor;
@@ -32,13 +32,13 @@ public class WorksOnScheduleDispatcherJob extends CronJob {
     }
 
     public static WorksOnScheduleDispatcherJob makeInstance() {
-        return new WorksOnScheduleDispatcherJob(() -> ScheduleManager.CRON_EVERY_FIVE_SECONDS);
+        return new WorksOnScheduleDispatcherJob(() -> JobManager.CRON_EVERY_FIVE_SECONDS);
     }
 
     @EventConsumer
     private static void scheduleWorksOnScheduleDispatcherJob(@Unused ServerStartedEvent event) {
         WorksOnScheduleDispatcherJob job = makeInstance();
-        ScheduleManager.addJob(job);
+        JobManager.addJob(job);
     }
 
     @Override

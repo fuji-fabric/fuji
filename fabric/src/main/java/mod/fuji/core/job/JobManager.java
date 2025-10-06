@@ -1,4 +1,4 @@
-package mod.fuji.core.manager.impl.scheduler;
+package mod.fuji.core.job;
 
 
 import mod.fuji.core.annotation.Unused;
@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Set;
 
 @TestCase(action = "Issue `/stop` in the production environment.", targets = "The program should be terminated.")
-public class ScheduleManager {
+public class JobManager {
 
     public static final String CRON_EVERY_SECOND = "* * * ? * *";
     public static final String CRON_EVERY_FIVE_SECONDS = "0/5 * * ? * * *";
@@ -111,8 +111,8 @@ public class ScheduleManager {
 
     public static void deleteJobs(@NotNull Class<?> jobGroupClass) {
         @NotNull String jobGroupName = jobGroupClass.getName();
-        List<JobKey> jobKeys = new ArrayList<>(ScheduleManager.getJobKeys(jobGroupName));
-        ScheduleManager.deleteJobs(jobKeys);
+        List<JobKey> jobKeys = new ArrayList<>(JobManager.getJobKeys(jobGroupName));
+        JobManager.deleteJobs(jobKeys);
     }
 
     private static void deleteJobs(@NotNull List<JobKey> jobKeys) {
@@ -134,8 +134,8 @@ public class ScheduleManager {
         }
     }
 
-    public static void triggerJobs(ScheduleManager scheduleManager, @NotNull String jobGroup) {
-        ScheduleManager.getJobKeys(jobGroup)
+    public static void triggerJobs(@NotNull String jobGroup) {
+        JobManager.getJobKeys(jobGroup)
             .forEach(jobKey -> {
                 try {
                     scheduler.triggerJob(jobKey);
@@ -158,7 +158,7 @@ public class ScheduleManager {
 
     public static void reloadStaticJobTriggers() {
         STATIC_JOBS
-            .forEach(ScheduleManager::updateJobTriggers);
+            .forEach(JobManager::updateJobTriggers);
     }
 
 }

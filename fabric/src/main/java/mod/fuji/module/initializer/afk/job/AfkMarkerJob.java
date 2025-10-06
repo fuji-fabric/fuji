@@ -6,7 +6,7 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.job.abst.CronJob;
-import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
+import mod.fuji.core.job.JobManager;
 import mod.fuji.module.initializer.afk.AfkInitializer;
 import mod.fuji.module.initializer.afk.service.AfkService;
 import org.quartz.JobExecutionContext;
@@ -24,7 +24,7 @@ public class AfkMarkerJob extends CronJob {
     @EventConsumer
     private static void scheduleAfkMarkerJob(@Unused ServerStartedEvent event) {
         AfkMarkerJob afkMarkerJob = new AfkMarkerJob();
-        ScheduleManager.addJob(afkMarkerJob);
+        JobManager.addJob(afkMarkerJob);
     }
 
     @Override

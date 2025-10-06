@@ -1,4 +1,4 @@
-package mod.fuji.core.manager.impl.backup;
+package mod.fuji.core.service.backup;
 
 import mod.fuji.Fuji;
 import mod.fuji.core.auxiliary.IOUtil;

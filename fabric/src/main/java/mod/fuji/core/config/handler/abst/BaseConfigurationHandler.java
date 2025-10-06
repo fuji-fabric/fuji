@@ -20,7 +20,7 @@ import mod.fuji.core.event.consumer.DynamicEventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.event.message.server.lifecycle.ServerStoppingEvent;
 import mod.fuji.core.manager.impl.module.ModulePathResolver;
-import mod.fuji.core.manager.impl.scheduler.ScheduleManager;
+import mod.fuji.core.job.JobManager;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -221,7 +221,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
 
     @CallerSensitive
     public BaseConfigurationHandler<T> enableAutoSaveFeature() {
-        return enableAutoSaveFeature(ScheduleManager.CRON_EVERY_TEN_SECONDS);
+        return enableAutoSaveFeature(JobManager.CRON_EVERY_TEN_SECONDS);
     }
 
     @CallerSensitive
@@ -243,7 +243,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
                         this.put(SourceModuleGetter.SPECIFIED_SOURCE_MODULE_KEY, sourceModuleInCurrentStackTrace);
                     }
                 }, () -> cron);
-                ScheduleManager.addJob(writeStorageJob);
+                JobManager.addJob(writeStorageJob);
             } catch (IOException e) {
                 throw ExceptionUtil.makeReThrownException(e);
             }
