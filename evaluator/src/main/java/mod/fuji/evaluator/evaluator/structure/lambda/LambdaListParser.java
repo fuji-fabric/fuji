@@ -77,7 +77,7 @@ public class LambdaListParser extends LispStreamProcessor<LispObject, LispList, 
                 }
                 forward();
 
-                ParameterSpecifier parameterSpecifier = RequiredParameterSpecifier.of(lispSymbol.getName());
+                ParameterSpecifier parameterSpecifier = OptionalParameterSpecifier.of(lispSymbol.getName(), Optional.empty(), Optional.empty());
                 emit(parameterSpecifier);
             } else if (peek instanceof @SuppressWarnings("unused") LispList lispList) {
                 forward();
