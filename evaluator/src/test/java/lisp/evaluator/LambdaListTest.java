@@ -7,6 +7,7 @@ import mod.fuji.evaluator.evaluator.node.LispList;
 import mod.fuji.evaluator.evaluator.node.LispNumber;
 import mod.fuji.evaluator.evaluator.node.LispSymbol;
 import mod.fuji.evaluator.evaluator.structure.lambda.LambdaList;
+import mod.fuji.evaluator.evaluator.structure.lambda.parameter.KeyParameterSpecifier;
 import mod.fuji.evaluator.evaluator.structure.lambda.parameter.OptionalParameterSpecifier;
 import mod.fuji.evaluator.evaluator.structure.lambda.parameter.ParameterSpecifier;
 import mod.fuji.evaluator.evaluator.structure.lambda.parameter.RequiredParameterSpecifier;
@@ -154,5 +155,33 @@ public class LambdaListTest {
                 LispSymbol.of("b")
             ));
         });
+    }
+
+    @Test
+    void testSingleKeyArgParsing() {
+        List<ParameterSpecifier> actual = LambdaList.of(LispList.of(
+            LispSymbol.of("&key"),
+            LispSymbol.of("a")
+        )).getParameterSpecifiers();
+        List<ParameterSpecifier> expected = List.of(
+            KeyParameterSpecifier.of("a", Optional.empty(), Optional.empty())
+        );
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testSingleKeyArgWithSuppliedVarParsing() {
+        List<ParameterSpecifier> actual = LambdaList.of(LispList.of(
+            LispSymbol.of("&key"),
+            LispList.of(
+                LispSymbol.of("a"),
+                LispNumber.of(123),
+                LispSymbol.of("sa")
+            )
+        )).getParameterSpecifiers();
+        List<ParameterSpecifier> expected = List.of(
+            KeyParameterSpecifier.of("a", Optional.of(LispList.of(LispNumber.of(123))), Optional.of(LispSymbol.of("sa")))
+        );
+        assertEquals(expected, actual);
     }
 }

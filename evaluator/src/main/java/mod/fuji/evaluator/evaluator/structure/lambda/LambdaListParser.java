@@ -12,6 +12,7 @@ import mod.fuji.evaluator.evaluator.exception.LispEvaluationException;
 import mod.fuji.evaluator.evaluator.node.LispList;
 import mod.fuji.evaluator.evaluator.node.LispObject;
 import mod.fuji.evaluator.evaluator.node.LispSymbol;
+import mod.fuji.evaluator.evaluator.structure.lambda.parameter.KeyParameterSpecifier;
 import mod.fuji.evaluator.evaluator.structure.lambda.parameter.OptionalParameterSpecifier;
 import mod.fuji.evaluator.evaluator.structure.lambda.parameter.ParameterSpecifier;
 import mod.fuji.evaluator.evaluator.structure.lambda.parameter.RequiredParameterSpecifier;
@@ -38,6 +39,55 @@ public class LambdaListParser extends LispStreamProcessor<LispObject, LispList, 
         parseRequiredArguments();
         parseOptionalArguments();
         parseRestArguments();
+        parseKeyArguments();
+    }
+
+    private void parseKeyArguments() {
+        LispObject peek = peek();
+        if (!peek.equals(LambdaListKeywords.KEY_ARGUMENT_KEYWORD)) {
+            return;
+        }
+        forward();
+        seenLambdaListKeyword.add(LambdaListKeywords.KEY_ARGUMENT_KEYWORD);
+
+
+        while ((peek = peek()) != LispEnvironment.NIL) {
+            if (peek instanceof LispSymbol lispSymbol) {
+                if (LambdaListKeywords.isLambdaListKeyword(lispSymbol)) {
+                    validateLambdaListKeywordTransition(lispSymbol);
+                    break;
+                }
+                forward();
+
+                ParameterSpecifier parameterSpecifier = KeyParameterSpecifier.of(lispSymbol.getName(), Optional.empty(), Optional.empty());
+                emit(parameterSpecifier);
+            } else if (peek instanceof LispList lispList) {
+                forward();
+
+                LispObject parameterNameSymbol = LispFunctions.nth(lispList, 0);
+                if (!(parameterNameSymbol instanceof LispSymbol $parameterNameSymbol)) {
+                    throw new LispEvaluationException("Key argument is not a symbol or cons: %s".formatted(parameterNameSymbol));
+                }
+                String parameterName = $parameterNameSymbol.getName();
+
+                if (lispList.size() == 2) {
+                    LispList initForm = LispList.of(LispFunctions.nth(lispList, 1));
+                    ParameterSpecifier parameterSpecifier = KeyParameterSpecifier.of(parameterName, Optional.of(initForm), Optional.empty());
+                    emit(parameterSpecifier);
+                } else if (lispList.size() == 3) {
+                    LispList initForm = LispList.of(LispFunctions.nth(lispList, 1));
+                    LispSymbol suppliedVar = LispFunctions.checkType(LispFunctions.nth(lispList, 2), LispSymbol.class);
+                    ParameterSpecifier parameterSpecifier = KeyParameterSpecifier.of(parameterName, Optional.of(initForm), Optional.of(suppliedVar));
+                    emit(parameterSpecifier);
+                } else {
+                    throw new LispEvaluationException("Specify too many elements in key arg list.");
+                }
+
+            } else {
+                throw new LispEvaluationException("Key argument is not a symbol or cons: %s".formatted(peek));
+            }
+        }
+
     }
 
     /**
