@@ -20,7 +20,6 @@ import mod.fuji.evaluator.evaluator.structure.lambda.parameter.RestParameterSpec
 import mod.fuji.evaluator.reader.LispStreamProcessor;
 import org.jetbrains.annotations.NotNull;
 
-@Data
 @EqualsAndHashCode(callSuper = true)
 public class LambdaListParser extends LispStreamProcessor<LispObject, LispList, ParameterSpecifier> {
 
@@ -31,11 +30,19 @@ public class LambdaListParser extends LispStreamProcessor<LispObject, LispList, 
         LambdaListKeywords.REQUIRED_ARGUMENT_KEYWORD
     ));
 
-    public LambdaListParser(@NotNull LispList lambdaList) {
+    private LambdaListParser(@NotNull LispList lambdaList) {
         this.lambdaList = lambdaList;
     }
 
-    public void parseLambdaList() {
+    public static @NotNull List<ParameterSpecifier> parse(@NotNull LispList lambdaList) {
+        LambdaListParser lambdaListParser = new LambdaListParser(
+            lambdaList
+        );
+        lambdaListParser.parseLambdaList();
+        return lambdaListParser.builder;
+    }
+
+    private void parseLambdaList() {
         parseRequiredArguments();
         parseOptionalArguments();
         parseRestArguments();

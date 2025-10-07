@@ -20,20 +20,12 @@ public class LambdaList {
 
     public static @NotNull LambdaList of(@NotNull LispList lambdaList) {
         LambdaList newValue = new LambdaList(lambdaList, new ArrayList<>());
-        newValue.parseLambdaList();
+        newValue.parameterSpecifiers = LambdaListParser.parse(newValue.lambdaList);
         return newValue;
     }
 
     public static @NotNull LambdaList empty() {
         return of(LispList.of());
-    }
-
-    private void parseLambdaList() {
-        LambdaListParser lambdaListParser = new LambdaListParser(
-            this.lambdaList
-        );
-        lambdaListParser.parseLambdaList();
-        this.parameterSpecifiers = lambdaListParser.getBuilder();
     }
 
     public void checkNumberOfArguments(@NotNull LispList arguments) {
