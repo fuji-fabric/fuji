@@ -76,7 +76,7 @@ public class LispList extends LispObject implements Iterable<LispObject> {
         return objects.size();
     }
 
-    public LispObject get(int index) {
+    public @NotNull LispObject get(int index) {
         return this.objects.get(index);
     }
 

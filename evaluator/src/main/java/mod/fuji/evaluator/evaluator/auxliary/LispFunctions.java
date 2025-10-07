@@ -27,6 +27,13 @@ public class LispFunctions {
         return LispList.of(objects.subList(1, objects.size()));
     }
 
+    public static @NotNull LispObject nth(@NotNull LispList list, int index) {
+        if (index >= list.size()) {
+            return LispEnvironment.NIL;
+        }
+        return list.get(index);
+    }
+
     public static void checkExactlyArity(@NotNull LispList list, int expectedArity) {
         int arity = list.size();
         if (arity != expectedArity) {
