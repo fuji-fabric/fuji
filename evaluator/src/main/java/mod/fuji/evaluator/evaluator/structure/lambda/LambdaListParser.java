@@ -57,7 +57,6 @@ public class LambdaListParser extends LispStreamProcessor<LispObject, LispList, 
         forward();
         seenLambdaListKeyword.add(LambdaListKeywords.KEY_ARGUMENT_KEYWORD);
 
-
         while ((peek = peek()) != LispEnvironment.NIL) {
             if (peek instanceof LispSymbol lispSymbol) {
                 if (LambdaListKeywords.isLambdaListKeyword(lispSymbol)) {
@@ -207,6 +206,13 @@ public class LambdaListParser extends LispStreamProcessor<LispObject, LispList, 
 
     private void validateLambdaListKeywordTransition(@NotNull LispSymbol to) {
         @NotNull LispSymbol from = getMostRecentlySeenLambdaListKeyword();
+
+        /* Validate repeated lambda list keyword. */
+        if (this.seenLambdaListKeyword.contains(to)) {
+            throw new LispEvaluationException("Repeated %s in lambda list: %s".formatted(to, lambdaList));
+        }
+
+        /* Validate next lambda list keywords. */
         List<LispSymbol> nextLambdaListKeywords = LambdaListKeywords.getNextLambdaListKeywords(from);
         if (!nextLambdaListKeywords.contains(to)) {
             throw new LispEvaluationException("Misplaced %s in lambda list: %s".formatted(to, lambdaList));
