@@ -2,6 +2,7 @@ package lisp.evaluator;
 
 import java.util.List;
 import java.util.Optional;
+import mod.fuji.evaluator.evaluator.exception.LispEvaluationException;
 import mod.fuji.evaluator.evaluator.node.LispList;
 import mod.fuji.evaluator.evaluator.node.LispNumber;
 import mod.fuji.evaluator.evaluator.node.LispSymbol;
@@ -9,7 +10,9 @@ import mod.fuji.evaluator.evaluator.structure.lambda.LambdaList;
 import mod.fuji.evaluator.evaluator.structure.lambda.parameter.OptionalParameterSpecifier;
 import mod.fuji.evaluator.evaluator.structure.lambda.parameter.ParameterSpecifier;
 import mod.fuji.evaluator.evaluator.structure.lambda.parameter.RequiredParameterSpecifier;
+import mod.fuji.evaluator.evaluator.structure.lambda.parameter.RestParameterSpecifier;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
 public class LambdaListTest {
@@ -97,5 +100,47 @@ public class LambdaListTest {
             OptionalParameterSpecifier.of("a", Optional.of(LispList.of(LispNumber.of(123))), Optional.of(LispSymbol.of("b")))
         );
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void testSingleRestParsing() {
+        List<ParameterSpecifier> actual = LambdaList.of(LispList.of(
+            LispSymbol.of("&rest"),
+            LispSymbol.of("a")
+        )).getParameterSpecifiers();
+        List<ParameterSpecifier> expected = List.of(
+            RestParameterSpecifier.of("a")
+        );
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testSpecifyTooFewVariableForRestArgParsing() {
+        assertThrows(LispEvaluationException.class, () -> {
+            LambdaList.of(LispList.of(
+                LispSymbol.of("&rest")
+            ));
+        });
+    }
+
+    @Test
+    void testSpecifyTooManyVariableForRestArgParsing() {
+        assertThrows(LispEvaluationException.class, () -> {
+            LambdaList.of(LispList.of(
+                LispSymbol.of("&rest"),
+                LispSymbol.of("a"),
+                LispSymbol.of("b")
+            ));
+        });
+    }
+
+    @Test
+    void testMissingVariableForRestArgParsing() {
+        assertThrows(LispEvaluationException.class, () -> {
+            LambdaList.of(LispList.of(
+                LispSymbol.of("&rest"),
+                LispSymbol.of("&key")
+            ));
+        });
     }
 }

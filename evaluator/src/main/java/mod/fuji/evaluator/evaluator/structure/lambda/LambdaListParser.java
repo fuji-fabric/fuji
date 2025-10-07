@@ -15,6 +15,7 @@ import mod.fuji.evaluator.evaluator.node.LispSymbol;
 import mod.fuji.evaluator.evaluator.structure.lambda.parameter.OptionalParameterSpecifier;
 import mod.fuji.evaluator.evaluator.structure.lambda.parameter.ParameterSpecifier;
 import mod.fuji.evaluator.evaluator.structure.lambda.parameter.RequiredParameterSpecifier;
+import mod.fuji.evaluator.evaluator.structure.lambda.parameter.RestParameterSpecifier;
 import mod.fuji.evaluator.reader.LispStreamProcessor;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,6 +37,7 @@ public class LambdaListParser extends LispStreamProcessor<LispObject, LispList, 
     public void parseLambdaList() {
         parseRequiredArguments();
         parseOptionalArguments();
+        parseRestArguments();
     }
 
     /**
@@ -51,7 +53,7 @@ public class LambdaListParser extends LispStreamProcessor<LispObject, LispList, 
                 }
                 forward();
 
-                ParameterSpecifier parameterSpecifier = RequiredParameterSpecifier.of(lispSymbol.getName());
+                RequiredParameterSpecifier parameterSpecifier = RequiredParameterSpecifier.of(lispSymbol.getName());
                 emit(parameterSpecifier);
             } else {
                 throw new LispEvaluationException("Required argument is not a symbol: %s".formatted(peek));
@@ -79,7 +81,7 @@ public class LambdaListParser extends LispStreamProcessor<LispObject, LispList, 
 
                 ParameterSpecifier parameterSpecifier = OptionalParameterSpecifier.of(lispSymbol.getName(), Optional.empty(), Optional.empty());
                 emit(parameterSpecifier);
-            } else if (peek instanceof @SuppressWarnings("unused") LispList lispList) {
+            } else if (peek instanceof LispList lispList) {
                 forward();
 
                 LispObject parameterNameSymbol = LispFunctions.nth(lispList, 0);
@@ -108,6 +110,31 @@ public class LambdaListParser extends LispStreamProcessor<LispObject, LispList, 
         }
     }
 
+    private void parseRestArguments() {
+        LispObject peek = peek();
+        if (!peek.equals(LambdaListKeywords.REST_ARGUMENT_KEYWORD)) {
+            return;
+        }
+        forward();
+        seenLambdaListKeyword.add(LambdaListKeywords.REST_ARGUMENT_KEYWORD);
+
+        LispObject parameterName = peek();
+        if (!(parameterName instanceof LispSymbol $parameterName)
+            || $parameterName.equals(LispEnvironment.NIL)
+            || LambdaListKeywords.isLambdaListKeyword($parameterName)) {
+            throw new LispEvaluationException("Expect variable after &rest in: %s".formatted(lambdaList));
+        }
+        forward();
+
+        RestParameterSpecifier restParameterSpecifier = RestParameterSpecifier.of($parameterName.getName());
+        emit(restParameterSpecifier);
+
+        // FIXME: ban the use of NIL as the local variable.
+        peek = peek();
+        if (peek != LispEnvironment.NIL && !LambdaListKeywords.isLambdaListKeyword(peek)) {
+            throw new LispEvaluationException("Expect lambda list keyword at %s in: %s".formatted(peek, lambdaList));
+        }
+    }
 
     private @NotNull LispSymbol getMostRecentlySeenLambdaListKeyword() {
         return CollectionUtil.getLast(seenLambdaListKeyword);
