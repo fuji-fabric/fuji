@@ -124,10 +124,6 @@ public class LispCompiler extends LispStreamProcessor<Token, List<Token>, LispOb
         syncStart();
     }
 
-    @Override
-    protected @NotNull List<Token> select() {
-        throw new UnsupportedOperationException();
-    }
 
     @Override
     protected int streamLength() {

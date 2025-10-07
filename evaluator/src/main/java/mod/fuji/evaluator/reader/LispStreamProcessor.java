@@ -2,7 +2,7 @@ package mod.fuji.evaluator.reader;
 
 import org.jetbrains.annotations.NotNull;
 
-public abstract class LispStreamProcessor<T, U, R> {
+public abstract class LispStreamProcessor<P, S, R> {
 
     protected int start;
     protected int end;
@@ -22,9 +22,9 @@ public abstract class LispStreamProcessor<T, U, R> {
         end++;
     }
 
-    protected abstract @NotNull T peek();
+    protected abstract @NotNull P peek();
 
-    protected abstract @NotNull T previous();
+    protected abstract @NotNull P previous();
 
     protected boolean selectAny() {
         return start != end;
@@ -37,5 +37,7 @@ public abstract class LispStreamProcessor<T, U, R> {
     }
 
     @NotNull
-    protected abstract U select();
+    protected S select() {
+        throw new UnsupportedOperationException();
+    }
 }
