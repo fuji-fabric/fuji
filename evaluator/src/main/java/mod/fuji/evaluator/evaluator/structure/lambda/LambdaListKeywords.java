@@ -11,24 +11,26 @@ public class LambdaListKeywords {
     /**
      * This is a dummy symbol, to represent the <code>required argument type</code>.
      */
-    public static final LispSymbol REQUIRED_ARGUMENT_KEYWORD = LispSymbol.of("&required");
-    public static final LispSymbol OPTIONAL_ARGUMENT_KEYWORD = LispSymbol.of("&optional");
-    public static final LispSymbol REST_ARGUMENT_KEYWORD = LispSymbol.of("&rest");
-    public static final LispSymbol KEY_ARGUMENT_KEYWORD = LispSymbol.of("&key");
+    public static final LispSymbol REQUIRED_KEYWORD = LispSymbol.of("&required");
+    public static final LispSymbol OPTIONAL_KEYWORD = LispSymbol.of("&optional");
+    public static final LispSymbol REST_KEYWORD = LispSymbol.of("&rest");
+    public static final LispSymbol KEY_KEYWORD = LispSymbol.of("&key");
 
-    public static final LispSymbol AUX_ARGUMENT_KEYWORD = LispSymbol.of("&aux");
+    public static final LispSymbol AUX_KEYWORD = LispSymbol.of("&aux");
+    public static final LispSymbol ALLOW_OTHER_KEYS_KEYWORD = LispSymbol.of("&allow-other-keys");
 
-    public static final LispSymbol BODY_ARGUMENT_KEYWORD = LispSymbol.of("&body");
-    public static final LispSymbol WHOLE_ARGUMENT_KEYWORD = LispSymbol.of("&whole");
+    public static final LispSymbol BODY_KEYWORD = LispSymbol.of("&body");
+    public static final LispSymbol WHOLE_KEYWORD = LispSymbol.of("&whole");
+    public static final LispSymbol ENVIRONMENT_KEYWORD = LispSymbol.of("&environment");
 
     /**
      * For a state whose index is N, the acceptable next states are the state whose index > N.
      */
     private static final List<LispSymbol> LAMBDA_LIST_KEYWORDS_ORDER = List.of(
-        REQUIRED_ARGUMENT_KEYWORD,
-        OPTIONAL_ARGUMENT_KEYWORD,
-        REST_ARGUMENT_KEYWORD,
-        KEY_ARGUMENT_KEYWORD
+        REQUIRED_KEYWORD,
+        OPTIONAL_KEYWORD,
+        REST_KEYWORD,
+        KEY_KEYWORD
     );
 
     public static int indexOfLambdaListKeyword(@NotNull LispSymbol lispSymbol) {

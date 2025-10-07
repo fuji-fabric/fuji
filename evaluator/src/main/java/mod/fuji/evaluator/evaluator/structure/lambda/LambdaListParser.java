@@ -3,7 +3,6 @@ package mod.fuji.evaluator.evaluator.structure.lambda;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import mod.fuji.evaluator.auxiliary.CollectionUtil;
 import mod.fuji.evaluator.evaluator.auxliary.LispFunctions;
@@ -27,7 +26,7 @@ public class LambdaListParser extends LispStreamProcessor<LispObject, LispList, 
     @NotNull List<ParameterSpecifier> builder = new ArrayList<>();
 
     @NotNull List<LispSymbol> seenLambdaListKeyword = new ArrayList<>(List.of(
-        LambdaListKeywords.REQUIRED_ARGUMENT_KEYWORD
+        LambdaListKeywords.REQUIRED_KEYWORD
     ));
 
     private LambdaListParser(@NotNull LispList lambdaList) {
@@ -51,11 +50,11 @@ public class LambdaListParser extends LispStreamProcessor<LispObject, LispList, 
 
     private void parseKeyArguments() {
         LispObject peek = peek();
-        if (!peek.equals(LambdaListKeywords.KEY_ARGUMENT_KEYWORD)) {
+        if (!peek.equals(LambdaListKeywords.KEY_KEYWORD)) {
             return;
         }
         forward();
-        seenLambdaListKeyword.add(LambdaListKeywords.KEY_ARGUMENT_KEYWORD);
+        seenLambdaListKeyword.add(LambdaListKeywords.KEY_KEYWORD);
 
         while ((peek = peek()) != LispEnvironment.NIL) {
             if (peek instanceof LispSymbol lispSymbol) {
@@ -120,11 +119,11 @@ public class LambdaListParser extends LispStreamProcessor<LispObject, LispList, 
     private void parseOptionalArguments() {
         /* Initialize optional args parser. */
         LispObject peek = peek();
-        if (!peek.equals(LambdaListKeywords.OPTIONAL_ARGUMENT_KEYWORD)) {
+        if (!peek.equals(LambdaListKeywords.OPTIONAL_KEYWORD)) {
             return;
         }
         forward();
-        seenLambdaListKeyword.add(LambdaListKeywords.OPTIONAL_ARGUMENT_KEYWORD);
+        seenLambdaListKeyword.add(LambdaListKeywords.OPTIONAL_KEYWORD);
 
         /* Consume optional args. */
         while ((peek = peek()) != LispEnvironment.NIL) {
@@ -168,11 +167,11 @@ public class LambdaListParser extends LispStreamProcessor<LispObject, LispList, 
 
     private void parseRestArguments() {
         LispObject peek = peek();
-        if (!peek.equals(LambdaListKeywords.REST_ARGUMENT_KEYWORD)) {
+        if (!peek.equals(LambdaListKeywords.REST_KEYWORD)) {
             return;
         }
         forward();
-        seenLambdaListKeyword.add(LambdaListKeywords.REST_ARGUMENT_KEYWORD);
+        seenLambdaListKeyword.add(LambdaListKeywords.REST_KEYWORD);
 
         LispObject parameterName = peek();
         if (!(parameterName instanceof LispSymbol $parameterName)
