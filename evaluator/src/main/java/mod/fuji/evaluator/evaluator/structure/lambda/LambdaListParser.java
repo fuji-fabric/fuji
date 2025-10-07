@@ -131,8 +131,16 @@ public class LambdaListParser extends LispStreamProcessor<LispObject, LispList, 
 
         // FIXME: ban the use of NIL as the local variable.
         peek = peek();
-        if (peek != LispEnvironment.NIL && !LambdaListKeywords.isLambdaListKeyword(peek)) {
-            throw new LispEvaluationException("Expect lambda list keyword at %s in: %s".formatted(peek, lambdaList));
+        if (peek != LispEnvironment.NIL) {
+            if (peek instanceof LispSymbol lispSymbol) {
+                if (LambdaListKeywords.isLambdaListKeyword(lispSymbol)) {
+                    validateLambdaListKeywordTransition(lispSymbol);
+                } else {
+                    throw new LispEvaluationException("Expect lambda list keyword at %s in: %s".formatted(peek, lambdaList));
+                }
+            } else {
+                throw new LispEvaluationException("Expect lambda list keyword at %s in: %s".formatted(peek, lambdaList));
+            }
         }
     }
 

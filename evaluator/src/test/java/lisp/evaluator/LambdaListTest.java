@@ -143,4 +143,16 @@ public class LambdaListTest {
             ));
         });
     }
+
+    @Test
+    void testMisplacedKeywordAfterRestArgParsing() {
+        assertThrows(LispEvaluationException.class, () -> {
+            LambdaList.of(LispList.of(
+                LispSymbol.of("&rest"),
+                LispSymbol.of("a"),
+                LispSymbol.of("&optional"),
+                LispSymbol.of("b")
+            ));
+        });
+    }
 }

@@ -1,7 +1,6 @@
 package mod.fuji.evaluator.evaluator.structure.lambda;
 
 import java.util.List;
-import mod.fuji.evaluator.evaluator.node.LispObject;
 import mod.fuji.evaluator.evaluator.node.LispSymbol;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,13 +40,6 @@ public class LambdaListKeywords {
         }
 
         return -1;
-    }
-
-    public static boolean isLambdaListKeyword(@NotNull LispObject lispObject) {
-        if (lispObject instanceof LispSymbol lispSymbol) {
-            return isLambdaListKeyword(lispSymbol);
-        }
-        return false;
     }
 
     public static boolean isLambdaListKeyword(@NotNull LispSymbol lispSymbol) {
