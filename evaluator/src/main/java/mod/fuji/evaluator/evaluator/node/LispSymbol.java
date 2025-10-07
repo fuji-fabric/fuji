@@ -10,11 +10,11 @@ import mod.fuji.evaluator.evaluator.node.function.LispFunction;
 import org.jetbrains.annotations.NotNull;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 public class LispSymbol extends LispObject {
 
-    String name;
+    @EqualsAndHashCode.Include String name;
 
     Optional<LispObject> variableValue;
     Optional<LispFunction> functionValue;
