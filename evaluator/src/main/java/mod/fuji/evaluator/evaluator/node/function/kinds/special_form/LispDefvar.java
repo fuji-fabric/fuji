@@ -1,4 +1,4 @@
-package mod.fuji.evaluator.evaluator.node.function.special_form;
+package mod.fuji.evaluator.evaluator.node.function.kinds.special_form;
 
 import java.util.Optional;
 import mod.fuji.evaluator.evaluator.auxliary.LispFunctions;

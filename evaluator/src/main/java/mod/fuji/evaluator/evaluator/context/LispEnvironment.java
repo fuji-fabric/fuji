@@ -10,14 +10,14 @@ import mod.fuji.evaluator.evaluator.node.LispObject;
 import mod.fuji.evaluator.evaluator.node.LispString;
 import mod.fuji.evaluator.evaluator.node.LispSymbol;
 import mod.fuji.evaluator.evaluator.node.function.LispFunction;
-import mod.fuji.evaluator.evaluator.node.function.special_form.LispDefconstant;
-import mod.fuji.evaluator.evaluator.node.function.special_form.LispDefparameter;
-import mod.fuji.evaluator.evaluator.node.function.special_form.LispDefvar;
-import mod.fuji.evaluator.evaluator.node.function.special_form.LispProgn;
-import mod.fuji.evaluator.evaluator.node.function.standard.builtin.AdditionFunction;
-import mod.fuji.evaluator.evaluator.node.function.standard.builtin.DivideFunction;
-import mod.fuji.evaluator.evaluator.node.function.standard.builtin.MultiplyFunction;
-import mod.fuji.evaluator.evaluator.node.function.standard.builtin.SubtractFunction;
+import mod.fuji.evaluator.evaluator.node.function.kinds.special_form.LispDefconstant;
+import mod.fuji.evaluator.evaluator.node.function.kinds.special_form.LispDefparameter;
+import mod.fuji.evaluator.evaluator.node.function.kinds.special_form.LispDefvar;
+import mod.fuji.evaluator.evaluator.node.function.kinds.special_form.LispProgn;
+import mod.fuji.evaluator.evaluator.node.function.kinds.standard.builtin.AdditionFunction;
+import mod.fuji.evaluator.evaluator.node.function.kinds.standard.builtin.DivideFunction;
+import mod.fuji.evaluator.evaluator.node.function.kinds.standard.builtin.MultiplyFunction;
+import mod.fuji.evaluator.evaluator.node.function.kinds.standard.builtin.SubtractFunction;
 import org.jetbrains.annotations.NotNull;
 
 @Value

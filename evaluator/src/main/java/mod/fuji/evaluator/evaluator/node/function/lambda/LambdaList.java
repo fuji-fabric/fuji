@@ -1,11 +1,11 @@
-package mod.fuji.evaluator.evaluator.structure.lambda;
+package mod.fuji.evaluator.evaluator.node.function.lambda;
 
 
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
 import mod.fuji.evaluator.evaluator.node.LispList;
-import mod.fuji.evaluator.evaluator.structure.lambda.parameter.ParameterSpecifier;
+import mod.fuji.evaluator.evaluator.node.function.lambda.parameter.ParameterSpecifier;
 import org.jetbrains.annotations.NotNull;
 
 @Data

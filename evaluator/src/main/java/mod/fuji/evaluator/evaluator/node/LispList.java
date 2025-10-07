@@ -11,8 +11,8 @@ import mod.fuji.evaluator.evaluator.auxliary.LispFunctions;
 import mod.fuji.evaluator.evaluator.compiler.exception.LispCompilationException;
 import mod.fuji.evaluator.evaluator.context.LispEnvironment;
 import mod.fuji.evaluator.evaluator.node.function.LispFunction;
-import mod.fuji.evaluator.evaluator.node.function.macro.LispMacro;
-import mod.fuji.evaluator.evaluator.node.function.special_form.LispSpecialForm;
+import mod.fuji.evaluator.evaluator.node.function.kinds.macro.LispMacro;
+import mod.fuji.evaluator.evaluator.node.function.kinds.special_form.LispSpecialForm;
 import org.jetbrains.annotations.NotNull;
 
 @Value

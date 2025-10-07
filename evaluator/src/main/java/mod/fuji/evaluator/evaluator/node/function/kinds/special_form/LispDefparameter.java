@@ -1,4 +1,4 @@
-package mod.fuji.evaluator.evaluator.node.function.special_form;
+package mod.fuji.evaluator.evaluator.node.function.kinds.special_form;
 
 import mod.fuji.evaluator.evaluator.auxliary.LispFunctions;
 import mod.fuji.evaluator.evaluator.context.LispEnvironment;

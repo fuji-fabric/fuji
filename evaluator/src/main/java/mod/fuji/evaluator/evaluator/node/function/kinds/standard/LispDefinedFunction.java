@@ -1,12 +1,16 @@
-package mod.fuji.evaluator.evaluator.node.function.standard;
+package mod.fuji.evaluator.evaluator.node.function.kinds.standard;
 
+import lombok.AllArgsConstructor;
 import mod.fuji.evaluator.evaluator.context.LispEnvironment;
 import mod.fuji.evaluator.evaluator.node.LispList;
 import mod.fuji.evaluator.evaluator.node.LispObject;
 import mod.fuji.evaluator.evaluator.node.function.LispFunction;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class LispNativeFunction extends LispFunction {
+@AllArgsConstructor
+public abstract class LispDefinedFunction extends LispFunction {
+
+    final LispList bodyForms;
 
     @Override
     public @NotNull LispObject eval(@NotNull LispEnvironment environment) {
@@ -14,6 +18,8 @@ public abstract class LispNativeFunction extends LispFunction {
     }
 
     @Override
-    public abstract @NotNull LispObject apply(@NotNull LispEnvironment environment, @NotNull LispList arguments);
+    public @NotNull LispObject apply(@NotNull LispEnvironment environment, @NotNull LispList arguments) {
+        throw new UnsupportedOperationException();
+    }
 
 }

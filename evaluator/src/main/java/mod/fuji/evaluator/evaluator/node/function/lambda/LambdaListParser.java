@@ -1,4 +1,4 @@
-package mod.fuji.evaluator.evaluator.structure.lambda;
+package mod.fuji.evaluator.evaluator.node.function.lambda;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +11,11 @@ import mod.fuji.evaluator.evaluator.exception.LispEvaluationException;
 import mod.fuji.evaluator.evaluator.node.LispList;
 import mod.fuji.evaluator.evaluator.node.LispObject;
 import mod.fuji.evaluator.evaluator.node.LispSymbol;
-import mod.fuji.evaluator.evaluator.structure.lambda.parameter.KeyParameterSpecifier;
-import mod.fuji.evaluator.evaluator.structure.lambda.parameter.OptionalParameterSpecifier;
-import mod.fuji.evaluator.evaluator.structure.lambda.parameter.ParameterSpecifier;
-import mod.fuji.evaluator.evaluator.structure.lambda.parameter.RequiredParameterSpecifier;
-import mod.fuji.evaluator.evaluator.structure.lambda.parameter.RestParameterSpecifier;
+import mod.fuji.evaluator.evaluator.node.function.lambda.parameter.KeyParameterSpecifier;
+import mod.fuji.evaluator.evaluator.node.function.lambda.parameter.OptionalParameterSpecifier;
+import mod.fuji.evaluator.evaluator.node.function.lambda.parameter.ParameterSpecifier;
+import mod.fuji.evaluator.evaluator.node.function.lambda.parameter.RequiredParameterSpecifier;
+import mod.fuji.evaluator.evaluator.node.function.lambda.parameter.RestParameterSpecifier;
 import mod.fuji.evaluator.reader.LispStreamProcessor;
 import org.jetbrains.annotations.NotNull;
 

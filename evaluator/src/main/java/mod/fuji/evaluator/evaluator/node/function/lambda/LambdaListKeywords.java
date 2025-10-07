@@ -1,4 +1,4 @@
-package mod.fuji.evaluator.evaluator.structure.lambda;
+package mod.fuji.evaluator.evaluator.node.function.lambda;
 
 import java.util.List;
 import mod.fuji.evaluator.evaluator.node.LispSymbol;

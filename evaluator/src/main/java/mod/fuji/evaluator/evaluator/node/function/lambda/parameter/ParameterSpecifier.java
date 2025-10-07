@@ -1,4 +1,4 @@
-package mod.fuji.evaluator.evaluator.structure.lambda.parameter;
+package mod.fuji.evaluator.evaluator.node.function.lambda.parameter;
 
 
 import lombok.Data;

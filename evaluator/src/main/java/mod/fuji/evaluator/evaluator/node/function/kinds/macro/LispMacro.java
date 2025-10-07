@@ -1,4 +1,4 @@
-package mod.fuji.evaluator.evaluator.node.function.macro;
+package mod.fuji.evaluator.evaluator.node.function.kinds.macro;
 
 import mod.fuji.evaluator.evaluator.context.LispEnvironment;
 import mod.fuji.evaluator.evaluator.node.LispList;
