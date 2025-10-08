@@ -41,7 +41,7 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
 
     @ModifyVariable(method = "setText", at = @At("HEAD"), argsOnly = true)
     @NotNull
-    SignText parseTextWhenSetText(@NotNull SignText signText, @Local(ordinal = 0, argsOnly = true) boolean isFront) {
+    SignText parseTextWhenSetText(@NotNull SignText signText, @Local(argsOnly = true) boolean isFront) {
         // NOTE: The function will be called in client and server. When install fuji in client side, and edit sign blocks in online server, the server variable will be null.
         if (ServerHelper.getServer() == null) {
             return signText;

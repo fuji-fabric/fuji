@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ServerLifecycleEventMixin {
 
     @EventProducer(ServerStartingEvent.class)
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;setupServer()Z"), method = "runServer")
+    @Inject(method = "runServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;setupServer()Z"))
     private void produceServerStartingEvent(CallbackInfo info) {
         MinecraftServer server = (MinecraftServer) (Object) this;
         ServerStartingEvent event = new ServerStartingEvent(server);
@@ -27,7 +27,7 @@ public class ServerLifecycleEventMixin {
     }
 
     @EventProducer(ServerStartedEvent.class)
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;createMetadata()Lnet/minecraft/server/ServerMetadata;", ordinal = 0), method = "runServer")
+    @Inject(method = "runServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;createMetadata()Lnet/minecraft/server/ServerMetadata;"))
     private void produceServerStartedEvent(CallbackInfo info) {
         MinecraftServer server = (MinecraftServer) (Object) this;
         ServerStartedEvent event = new ServerStartedEvent(server);
@@ -35,7 +35,7 @@ public class ServerLifecycleEventMixin {
     }
 
     @EventProducer(ServerStoppingEvent.class)
-    @Inject(at = @At("HEAD"), method = "shutdown")
+    @Inject(method = "shutdown", at = @At("HEAD"))
     private void produceServerStoppingEvent(CallbackInfo info) {
         MinecraftServer server = (MinecraftServer) (Object) this;
         ServerStoppingEvent event = new ServerStoppingEvent(server);
@@ -43,7 +43,7 @@ public class ServerLifecycleEventMixin {
     }
 
     @EventProducer(ServerStoppedEvent.class)
-    @Inject(at = @At("TAIL"), method = "shutdown")
+    @Inject(method = "shutdown", at = @At("TAIL"))
     private void produceServerStoppedEvent(CallbackInfo info) {
         MinecraftServer server = (MinecraftServer) (Object) this;
         ServerStoppedEvent event = new ServerStoppedEvent(server);
