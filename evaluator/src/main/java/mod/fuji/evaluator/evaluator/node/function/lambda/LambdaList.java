@@ -36,7 +36,8 @@ public class LambdaList {
     }
 
     public void bindParameterValues(@NotNull LispList argumentValues) {
-        // check arity
+        /* Check function application arity. */
+        checkNumberOfArguments(argumentValues);
 
         // process required args
 

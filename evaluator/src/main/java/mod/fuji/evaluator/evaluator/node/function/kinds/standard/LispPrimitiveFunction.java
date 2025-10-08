@@ -6,7 +6,7 @@ import mod.fuji.evaluator.evaluator.node.LispObject;
 import mod.fuji.evaluator.evaluator.node.function.LispFunction;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class LispNativeFunction extends LispFunction {
+public abstract class LispPrimitiveFunction extends LispFunction {
 
     @Override
     public @NotNull LispObject eval(@NotNull LispEnvironment environment) {

@@ -7,10 +7,10 @@ import mod.fuji.evaluator.evaluator.exception.LispEvaluationException;
 import mod.fuji.evaluator.evaluator.node.LispList;
 import mod.fuji.evaluator.evaluator.node.LispNumber;
 import mod.fuji.evaluator.evaluator.node.LispObject;
-import mod.fuji.evaluator.evaluator.node.function.kinds.standard.LispNativeFunction;
+import mod.fuji.evaluator.evaluator.node.function.kinds.standard.LispPrimitiveFunction;
 import org.jetbrains.annotations.NotNull;
 
-public class DivideFunction extends LispNativeFunction {
+public class DivideFunction extends LispPrimitiveFunction {
 
     @Override
     public @NotNull LispObject apply(@NotNull LispEnvironment environment, @NotNull LispList arguments) {
