@@ -1,15 +1,16 @@
 package mod.fuji.core.command.descriptor;
 
 import com.mojang.brigadier.Command;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import mod.fuji.core.auxiliary.CollectionUtil;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.argument.wrapper.impl.PlayerCollection;
 import mod.fuji.core.command.structure.CommandRequirementDescriptor;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +18,11 @@ import org.jetbrains.annotations.NotNull;
 public class RetargetCommandDescriptor extends CommandDescriptor {
 
     public static final String OTHERS_LITERAL = "others";
+    /**
+     * All <code>others</code> commands require level permission 4 to use.
+     */
+    private static final CommandRequirementDescriptor OTHERS_COMMAND_REQUIREMENT = new CommandRequirementDescriptor(4, null);
+
     private final int commandSourceParameterIndex;
     private final int commandTargetParameterIndex;
     private final int othersParameterIndex;
@@ -38,6 +44,9 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
 
         /* Copy the document from the base command descriptor. */
         this.fillDocument(baseCommandDescriptor.document);
+
+        /* Weaken the specified command source constraint. */
+        this.weakenCommandSourceConstraint();
     }
 
     public static Optional<RetargetCommandDescriptor> from(@NotNull CommandDescriptor commandDescriptor) {
@@ -53,6 +62,22 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
                 && commandArgument.isRequiredArgument());
     }
 
+    private void weakenCommandSourceConstraint() {
+        // NOTE: The `retarget commands` are just a delegate to original command, it should accept any command source to use it.
+        if (!this.canBeExecutedByConsole()) {
+            CollectionUtil
+                .findFirstIndex(commandArguments, CommandArgument::isCommandSource)
+                .ifPresent(specifiedCommandSourceArgumentIndex -> {
+                    /* Replace the original specified command source with console command source. */
+                    CommandArgument weakenedCommandSourceArgument = CommandArgument
+                        .ofRequiredArgument(ServerCommandSource.class, "WEAKENED-OTHERS-COMMAND-SOURCE", false, OTHERS_COMMAND_REQUIREMENT)
+                        .setCommandSource(true);
+                    commandArguments.set(specifiedCommandSourceArgumentIndex, weakenedCommandSourceArgument);
+                });
+        }
+
+    }
+
     private static @NotNull List<CommandArgument> makeRetargetCommandArguments(@NotNull CommandDescriptor commandDescriptor) {
         /* Make the result command arguments. */
         List<CommandArgument> retargetCommandArguments = new ArrayList<>(commandDescriptor.commandArguments);
@@ -63,7 +88,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
         CommandArgument commandTargetArgument = retargetCommandArguments.get(commandTargetArgumentIndex);
 
         /* All the retarget commands require level 4 permission to use. */
-        CommandRequirementDescriptor requirement = new CommandRequirementDescriptor(4, null);
+        CommandRequirementDescriptor requirement = OTHERS_COMMAND_REQUIREMENT;
 
         /* If the argument annotated with @CommandTarget is also annotated with @CommandSource, then split the @CommandSource argument and @CommandTarget argument. */
         if (commandTargetArgument.isCommandSource()) {

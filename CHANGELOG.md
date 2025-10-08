@@ -11,5 +11,7 @@
 # 📑 Changelog
 
 ## ✨ Added
-- **[core]** new supported MC version: `MC 1.21.9`
-- **[evaluator]** new experimental module `evaluator`, to provide a simple in-game evaluator.
+- **[core]** new supported MC version: `MC 1.21.10`
+- **[core]** allow `the console` to use all `others <others>` commands.
+  - Before: `/run as fake-op Steve fly others %player:name% false`
+  - Now: `/fly others Steve false`
