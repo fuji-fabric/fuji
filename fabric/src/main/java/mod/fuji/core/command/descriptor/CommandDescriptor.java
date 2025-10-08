@@ -53,10 +53,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- *     A command descriptor is used to describe a command instance.
-
-    To be simple: A command descriptor = command action method + command argument list
-
+ * A command descriptor is used to describe a command instance.
+ * <p>
+ * To be simple: A command descriptor = command action method + command argument list
  **/
 public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
@@ -160,8 +159,8 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
     }
 
     /**
- * Test the equality using physical memory address.
- **/
+     * Test the equality using physical memory address.
+     **/
     @Override
     public final boolean equals(Object obj) {
         return this == obj;
@@ -173,8 +172,8 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
     }
 
     /**
- * Returns the only possible path to the command node.
- **/
+     * Returns the only possible path to the command node.
+     **/
     public Optional<String> getFlatCommandPath() {
         return this.registerReturnValue
             .map($registerReturnValue -> {
@@ -188,8 +187,8 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
             .stream()
             .filter(CommandArgument::isCommandArgumentSpecifier)
             .takeWhile(commandArgument -> !commandArgument.isOptional()
-                                          // NOTE: Should not redirect to the greedy string argument type, or the greedy string will eat all the remaining input characters.
-                                          && !commandArgument.isGreedyArgumentType())
+                // NOTE: Should not redirect to the greedy string argument type, or the greedy string will eat all the remaining input characters.
+                && !commandArgument.isGreedyArgumentType())
             .map(CommandArgument::getArgumentName)
             .toList();
 
@@ -352,10 +351,9 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
     }
 
     /**
- *         Register all `optional arguments` and redirect them into the `anchor command node`.
-        This method should not handle the command requirements, since it's already done while registering the non-optional arguments.
-
- **/
+     * Register all `optional arguments` and redirect them into the `anchor command node`.
+     * This method should not handle the command requirements, since it's already done while registering the non-optional arguments.
+     **/
     private void registerOptionalArguments() {
         CommandNode<ServerCommandSource> redirectTargetNode = findOptionalArgumentAnchor(this.commandArguments);
 
@@ -670,7 +668,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
                     it ->
                         // Ignore the optional arguments, since we will process them in the second pass.
                         !it.isOptional()
-                        && it.isCommandArgumentSpecifier())
+                            && it.isCommandArgumentSpecifier())
                 .forEach(argument -> {
                     /* Make the argument builder. */
                     ArgumentBuilder<ServerCommandSource, ?> builder = makeArgumentBuilder(argument);
@@ -721,7 +719,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
             .filter(CommandArgument::isCommandSource)
             .allMatch(commandArgument ->
                 commandArgument.getArgumentType().equals(CommandContext.class)
-                || commandArgument.getArgumentType().equals(ServerCommandSource.class));
+                    || commandArgument.getArgumentType().equals(ServerCommandSource.class));
     }
 
     @Override
