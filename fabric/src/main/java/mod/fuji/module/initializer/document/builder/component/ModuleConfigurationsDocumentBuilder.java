@@ -65,6 +65,7 @@ public class ModuleConfigurationsDocumentBuilder extends DocumentBuilder {
                     .append("- Document: %s".formatted(configModelClassDocumentString));
             });
 
+        DocumentedTypeAdapterFactory.FLATTEN_DOCUMENT_STRING_MAP.clear();
         String jsonString = getDocumentGson().toJson(baseConfigurationHandler.getDefaultModel());
 
         documentBuilderContext

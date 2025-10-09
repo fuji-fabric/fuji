@@ -30,7 +30,7 @@ public class DocumentJsonWriter extends JsonWriter {
     @Override
     public JsonWriter name(String name) throws IOException {
         /* Append the document string before the Json property name (comma + name). */
-        Optional<String> documentString = Optional.ofNullable(DocumentedTypeAdapterFactory.mostRecentlyDocumentStringMap.get(name));
+        Optional<String> documentString = Optional.ofNullable(DocumentedTypeAdapterFactory.FLATTEN_DOCUMENT_STRING_MAP.get(name));
         if (documentString.isPresent()) {
             Writer underlyingWriter = getBackendWriter(delegate);
 

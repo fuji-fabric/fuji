@@ -9,7 +9,6 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.module.ModuleLoadDeterminer;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.document.builder.MarkdownDocumentBuilder;
-import mod.fuji.module.initializer.document.config.adapter.DocumentedTypeAdapterFactory;
 import net.minecraft.server.command.ServerCommandSource;
 
 @Document(id = 1758088953109L, value = """
@@ -26,7 +25,6 @@ public class DocumentInitializer extends ModuleInitializer {
 
         int enabledModules = ModuleLoadDeterminer.getEnabledModulePaths().size();
         int declaredModules = ModuleLoadDeterminer.getDeclaredModulePaths().size();
-        DocumentedTypeAdapterFactory.mostRecentlyDocumentStringMap.clear();
         TextHelper.sendTextByKey(source, "document.modules", enabledModules, declaredModules);
         return CommandHelper.Return.SUCCESS;
     }

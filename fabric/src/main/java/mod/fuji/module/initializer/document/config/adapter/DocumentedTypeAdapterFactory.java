@@ -16,7 +16,11 @@ import mod.fuji.module.initializer.document.config.writter.DocumentJsonWriter;
 
 public class DocumentedTypeAdapterFactory implements TypeAdapterFactory {
 
-    public static final Map<String, String> mostRecentlyDocumentStringMap = new HashMap<>();
+    /**
+     * The built document string map.
+     * This map is model-specific. It should be cleared before the call to {@link Gson#toJson} method.
+     * */
+    public static final Map<String, String> FLATTEN_DOCUMENT_STRING_MAP = new HashMap<>();
 
     @Override
     public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
@@ -33,7 +37,7 @@ public class DocumentedTypeAdapterFactory implements TypeAdapterFactory {
                             .ofRoot(value)
                             .flatten()
                             // NOTE: Build the doc string map in down-top order, to prevent a child overrides a mappings from its parent.
-                            .forEach(it -> DocumentUtil.putDocumentStringMap(mostRecentlyDocumentStringMap, it.getObjectType()));
+                            .forEach(it -> DocumentUtil.putDocumentStringMap(FLATTEN_DOCUMENT_STRING_MAP, it.getObjectType()));
                     } catch (FailedToInspectException ignore) {
                         // Continue...
                     }
