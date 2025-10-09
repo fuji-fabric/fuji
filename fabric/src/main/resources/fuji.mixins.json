@@ -182,9 +182,6 @@
     "world.manager.tick.MinecraftServerMixin",
     "world.manager.weather.ServerWorldMixin"
   ],
-  "mixinextras": {
-    "minVersion": "0.5.0"
-  },
   "injectors": {
     "defaultRequire": 1
   }
