@@ -6,12 +6,7 @@
 >
 
 
-
-
 # 📑 Changelog
 
-## ✨ Added
-
-
-## Fixed
-- **[world]** Support `world` module in `neoforge platform with connector mod` environment.
+## 🛠️ Fixed
+- **[world]** Added support for the `world` module when running in a **NeoForge platform** environment with the **connector mod**.
