@@ -11,7 +11,7 @@
 # 📑 Changelog
 
 ## ✨ Added
-- **[core]** new supported MC version: `MC 1.21.10`
-- **[core]** allow `the console` to use all `others <others>` commands.
-  - Before: `/run as fake-op Steve fly others %player:name% false`
-  - Now: `/fly others Steve false`
+
+
+## Fixed
+- **[world]** Support `world` module in `neoforge platform with connector mod` environment.
