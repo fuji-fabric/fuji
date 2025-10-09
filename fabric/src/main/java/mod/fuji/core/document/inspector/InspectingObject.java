@@ -1,4 +1,4 @@
-package mod.fuji.module.initializer.fuji.structure;
+package mod.fuji.core.document.inspector;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

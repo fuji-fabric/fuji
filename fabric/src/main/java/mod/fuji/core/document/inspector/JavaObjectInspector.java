@@ -1,4 +1,4 @@
-package mod.fuji.module.initializer.fuji.structure;
+package mod.fuji.core.document.inspector;
 
 import java.util.List;
 import java.util.Optional;
