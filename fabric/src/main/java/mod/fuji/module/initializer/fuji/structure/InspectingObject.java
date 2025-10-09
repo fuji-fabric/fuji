@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import mod.fuji.core.auxiliary.ExceptionUtil;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.ReflectionUtil;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
@@ -145,7 +146,7 @@ public class InspectingObject {
             .map(objectToInspect -> {
                 /* An atom can't be inspected. */
                 if (!canInspect(inspectingObject.getObjectType())) {
-                    throw new FailedToInspectException("Target object is considered as an atom.");
+                    throw ExceptionUtil.makeReThrownException(new FailedToInspectException("Target object is considered as an atom."));
                 }
 
                 /* Handle special cases.  */

@@ -3,6 +3,7 @@ package mod.fuji.module.initializer.fuji.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.ReflectionUtil;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.config.Configs;
@@ -10,6 +11,9 @@ import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.document.annotation.TestCase;
 import mod.fuji.core.document.auxiliary.DocumentUtil;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.module.initializer.fuji.structure.FailedToInspectException;
+import mod.fuji.module.initializer.fuji.structure.InspectingObject;
+import mod.fuji.module.initializer.fuji.structure.JavaObjectInspector;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -68,18 +72,23 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
             .setItem(toItem(entity))
             .setName(Text.literal(configRelativePath))
             .setLore(lore)
-            .setCallback(() -> inspectWithJavaObjectInspector(trueParentGui, entity, configRelativePath));
+            .setCallback(() -> openRootJavaObjectInspectorGui(trueParentGui, entity, configRelativePath));
 
         return guiElementBuilder
             .build();
     }
 
-    private void inspectWithJavaObjectInspector(SimpleGui parent, BaseConfigurationHandler<?> entity, String topLevelName) {
-        new JavaObjectInspectionGui(parent, entity.model(), getPlayer(), new ArrayList<>(), 0, topLevelName, ".")
-            .open();
+    private void openRootJavaObjectInspectorGui(@Nullable SimpleGui parent, @NotNull BaseConfigurationHandler<?> entity, @NotNull String fileRelativePath) {
+        try {
+            JavaObjectInspector rootInspector  = JavaObjectInspector.ofRoot(entity.model());
+            new JavaObjectInspectionGui(parent, getPlayer(), rootInspector.getInspectingObjects(), 0, fileRelativePath, rootInspector)
+                .open();
+        } catch (FailedToInspectException e) {
+            LogUtil.error("Failed to open the inspector GUI: target object = {}, file path = {}", entity, fileRelativePath, e);
+        }
     }
 
-    private static Item toItem(BaseConfigurationHandler<?> entity) {
+    private static @NotNull Item toItem(@NotNull BaseConfigurationHandler<?> entity) {
         if (entity == Configs.MAIN_CONTROL_CONFIG) {
             return Items.ENDER_CHEST;
         }
