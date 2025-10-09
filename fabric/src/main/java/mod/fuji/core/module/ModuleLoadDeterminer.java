@@ -2,15 +2,15 @@ package mod.fuji.core.module;
 
 
 import com.google.gson.JsonObject;
-import mod.fuji.core.auxiliary.LogUtil;
-import mod.fuji.core.auxiliary.ReflectionUtil;
-import mod.fuji.core.config.Configs;
-import mod.fuji.core.event.injector.StaticEventConsumerInjector;
-import mod.fuji.core.event.graph.structure.EventConsumerInfo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import mod.fuji.core.auxiliary.LogUtil;
+import mod.fuji.core.auxiliary.ReflectionUtil;
+import mod.fuji.core.config.Configs;
+import mod.fuji.core.event.graph.structure.EventConsumerInfo;
+import mod.fuji.core.event.injector.StaticEventConsumerInjector;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,9 +19,6 @@ public class ModuleLoadDeterminer {
     public static final String ENABLE_JSON_KEY = "enable";
     private static final String MODULES_JSON_KEY = "modules";
 
-    /**
- * This value is
- **/
     public static final Map<List<String>, Boolean> MODULE_ENABLE_STATUS = new HashMap<>();
 
     public static @NotNull List<String> getEnabledModulePaths() {
@@ -45,11 +42,10 @@ public class ModuleLoadDeterminer {
     }
 
     /**
- *         This method is used to determinate whether to load the given class or not.
-        The given class name can be any class name.
-        See details in ModulePathResolver.
-
- **/
+     * This method is used to determinate whether to load the given class or not.
+     * The given class name can be any class name.
+     * See details in ModulePathResolver.
+     **/
     public static boolean shouldLoadThis(@NotNull String className) {
         if (StaticEventConsumerInjector.getEventProducerMixinClassNames().contains(className)) {
             return shouldLoadOnDemandEventMixin(className);

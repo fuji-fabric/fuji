@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 public class JavaObjectInspector {
 
+    private static final String WALKING_PATH_DELIMITER = ".";
     final Optional<JavaObjectInspector> parent;
     final @NotNull String walkingPath;
 
@@ -21,7 +22,7 @@ public class JavaObjectInspector {
     public static @NotNull JavaObjectInspector ofRoot(@NotNull Object object) throws FailedToInspectException {
         @NotNull InspectingObject root = InspectingObject.ofRoot(object);
         @NotNull List<InspectingObject> children = InspectingObject.inspect(root);
-        return new JavaObjectInspector(Optional.empty(), ".", root, children);
+        return new JavaObjectInspector(Optional.empty(), WALKING_PATH_DELIMITER, root, children);
     }
 
     public @NotNull JavaObjectInspector withChild(@NotNull InspectingObject inspectingObject) throws FailedToInspectException {
@@ -33,7 +34,7 @@ public class JavaObjectInspector {
 
         /* Compute the new walking path. */
         String childObjectName = inspectingObject.getObjectName();
-        String childWalkingPath = this.getWalkingPath() + "." + childObjectName;
+        String childWalkingPath = this.getWalkingPath() + WALKING_PATH_DELIMITER + childObjectName;
         childWalkingPath = StringUtil.trimPathString(childWalkingPath);
 
         /* Return the child inspector. */
