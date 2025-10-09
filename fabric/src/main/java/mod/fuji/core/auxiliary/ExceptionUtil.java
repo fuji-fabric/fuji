@@ -34,6 +34,7 @@ public class ExceptionUtil {
     })
     @CheckReturnValue
     public static @NotNull RuntimeException makeReThrownException(@NotNull Exception exception) {
+        // NOTE: A re-throw exception may hide the real cause, and cause it hard to catching the actual exception type.
         return ExceptionUtil.makeReThrownException("⬆⬆⬆⬆⬆ Re-throw exception by Fuji Mod. Refer to the details above. ⬆⬆⬆⬆⬆", exception);
     }
 

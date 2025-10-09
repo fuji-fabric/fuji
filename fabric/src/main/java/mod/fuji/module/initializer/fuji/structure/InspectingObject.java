@@ -146,7 +146,7 @@ public class InspectingObject {
             .map(objectToInspect -> {
                 /* An atom can't be inspected. */
                 if (!canInspect(inspectingObject.getObjectType())) {
-                    throw ExceptionUtil.makeReThrownException(new FailedToInspectException("Target object is considered as an atom."));
+                    throw new FailedToInspectException("Target object is considered as an atom.");
                 }
 
                 /* Handle special cases.  */
