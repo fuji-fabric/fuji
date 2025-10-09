@@ -148,15 +148,14 @@ public class DocumentUtil {
         return colorBoxes;
     }
 
-    public static @NotNull Map<String, String> getDeclaredDocumentStringMap(@NotNull Map<String, String> declaredDocumentStringMap, @NotNull Class<?> rawTypeClass) {
+    public static void putDocumentStringMap(@NotNull Map<String, String> collectorMap, @NotNull Class<?> rawTypeClass) {
         for (Field field : rawTypeClass.getDeclaredFields()) {
             getFieldDocumentString(null, field)
                 .ifPresent(fieldDocumentString -> {
                     String translatedFieldName = GsonMapper.getFieldNamingStrategy().translateName(field);
-                    declaredDocumentStringMap.put(translatedFieldName, fieldDocumentString);
+                    collectorMap.put(translatedFieldName, fieldDocumentString);
                 });
         }
-        return declaredDocumentStringMap;
     }
 
     public static @NotNull Optional<String> getAboveElementDocumentString(@NotNull Optional<Object> object, @NotNull Class<?> objectType, @NotNull ServerPlayerEntity player) {

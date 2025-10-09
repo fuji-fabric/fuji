@@ -1,5 +1,6 @@
 package mod.fuji.core.document.inspector;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -39,6 +40,28 @@ public class JavaObjectInspector {
 
         /* Return the child inspector. */
         return new JavaObjectInspector(parentInspector, childWalkingPath, inspectingObject, childInspectingObjects);
+    }
+
+    public @NotNull List<InspectingObject> flatten() {
+        ArrayList<InspectingObject> collector = new ArrayList<>();
+        flattenRecursively(collector, this.getParentInspectingObject());
+        return collector;
+    }
+
+    private void flattenRecursively(@NotNull List<InspectingObject> collector, @NotNull InspectingObject parentInspectingObject) {
+        /* Go down. */
+        InspectingObject
+            .inspect(parentInspectingObject)
+            .forEach(it -> {
+                try {
+                    flattenRecursively(collector, it);
+                } catch (FailedToInspectException ignore) {
+                    // Continue...
+                }
+            });
+
+        /* Go up. */
+        collector.add(parentInspectingObject);
     }
 
 }

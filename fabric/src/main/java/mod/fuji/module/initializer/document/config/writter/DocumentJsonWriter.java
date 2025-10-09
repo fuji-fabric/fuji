@@ -5,19 +5,17 @@ import mod.fuji.core.auxiliary.ReflectionUtil;
 import mod.fuji.core.document.auxiliary.DocumentUtil;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Map;
 import java.util.Optional;
+import mod.fuji.module.initializer.document.config.adapter.DocumentedTypeAdapterFactory;
 import org.jetbrains.annotations.NotNull;
 
 public class DocumentJsonWriter extends JsonWriter {
 
     private final JsonWriter delegate;
-    private final Map<String, String> documentStringMap;
 
-    public DocumentJsonWriter(JsonWriter delegate, Map<String, String> documentStringMap) {
+    public DocumentJsonWriter(JsonWriter delegate) {
         super(getBackendWriter(delegate));
         this.delegate = delegate;
-        this.documentStringMap = documentStringMap;
 
         /* Tweak the variables initialized in the constructor function. */
         setPrettyFormatting();
@@ -32,7 +30,7 @@ public class DocumentJsonWriter extends JsonWriter {
     @Override
     public JsonWriter name(String name) throws IOException {
         /* Append the document string before the Json property name (comma + name). */
-        Optional<String> documentString = Optional.ofNullable(documentStringMap.get(name));
+        Optional<String> documentString = Optional.ofNullable(DocumentedTypeAdapterFactory.mostRecentlyDocumentStringMap.get(name));
         if (documentString.isPresent()) {
             Writer underlyingWriter = getBackendWriter(delegate);
 
