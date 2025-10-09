@@ -5,10 +5,9 @@
 > For user manual, refer to: https://fuji-fabric.github.io
 >
 
-
-
-
 # 📑 Changelog
 
-## 🛠️ Fixed
-- **[world]** Added support for the `world` module when running in a **NeoForge platform** environment with the **connector mod**.
+## ⭐ New Features
+- **[core]:** Added lots of helpful documentation to our online site — check it out here: [fuji-fabric.github.io](https://fuji-fabric.github.io/)
+- **[fuji]:** Improved the user interface for the configuration inspector.  
+  → Try it with: `/fuji inspect configurations`
