@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import mod.fuji.core.auxiliary.ExceptionUtil;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.ReflectionUtil;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
@@ -17,6 +16,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class InspectingObject {
 
@@ -43,7 +43,15 @@ public class InspectingObject {
         if (ReflectionUtil.isMetaClass(javaObject.getClass())) {
             throw new IllegalArgumentException("Cannot inspect object of type " + javaObject.getClass());
         }
-        return new InspectingObject(Optional.of(javaObject), Optional.empty(), Optional.empty());
+        return ofNonFieldObject(Optional.of(javaObject), Optional.empty());
+    }
+
+    private static @NotNull InspectingObject ofNonFieldObject(@NotNull Optional<Object> javaObject, @NotNull Optional<String> preferredObjectName) {
+        return new InspectingObject(javaObject, Optional.empty(), preferredObjectName);
+    }
+
+    private static @NotNull InspectingObject ofFieldObject(@NotNull Optional<Object> javaObject, @NotNull Optional<Object> objectDeclaringClassInstance, @NotNull Optional<String> preferredObjectName) {
+        return new InspectingObject(javaObject, objectDeclaringClassInstance, preferredObjectName);
     }
 
     public @NotNull Class<?> getObjectType() {
@@ -69,20 +77,20 @@ public class InspectingObject {
                         .map($objectDeclaringClassInstance -> {
                             try {
                                 field.setAccessible(true);
-                                return field.get($objectDeclaringClassInstance);
+                                // NOTE: The `null` value is a legal Json Value.
+                                @Nullable Object fieldValue = field.get($objectDeclaringClassInstance);
+                                return fieldValue;
                             } catch (Exception e) {
                                 LogUtil.error("Failed to get the value of field {} in its declaring class instance {}.", field, $objectDeclaringClassInstance, e);
                                 return null;
                             }
                         })
-                        .orElseGet(() -> {
-                            LogUtil.error("Failed to get the value of field {}, its declaring class instance is null.", field);
-                            return null;
-                        });
+                        // Pass the `null` value. (Since any exception can lead to the null value, we can't distinguish which case we are in.)
+                        .orElse(null);
                 }
 
                 /* Get the value of the object itself. */
-                // NOTE: The value of user-defined object may be `null` in some case.
+                // NOTE: The value of user-defined object may be `null` if it's a leaf node.
                 return $object;
             });
     }
@@ -157,7 +165,7 @@ public class InspectingObject {
                     for (int i = 0; iterator.hasNext(); i++) {
                         Object element = iterator.next();
                         String elementIndex = "[" + i + "]";
-                        result.add(new InspectingObject(Optional.ofNullable(element), Optional.empty(), Optional.of(elementIndex)));
+                        result.add(InspectingObject.ofNonFieldObject(Optional.ofNullable(element), Optional.of(elementIndex)));
                     }
                     return result;
                 } else if (Map.class.isAssignableFrom(objectToInspect.getClass())) {
@@ -172,14 +180,14 @@ public class InspectingObject {
                                 jsonObjectKeyName = "\"" + entry.getKey() + "\"";
                             }
 
-                            return new InspectingObject(Optional.of(entry), Optional.empty(), Optional.ofNullable(jsonObjectKeyName));
+                            return InspectingObject.ofNonFieldObject(Optional.of(entry), Optional.ofNullable(jsonObjectKeyName));
                         })
                         .toList();
                 } else if (Map.Entry.class.isAssignableFrom(objectToInspect.getClass())) {
                     // Special case: Map.Entry
                     Map.Entry<?, ?> entry = (Map.Entry<?, ?>) objectToInspect;
-                    InspectingObject entryKeyObject = new InspectingObject(Optional.ofNullable(entry.getKey()), Optional.empty(), Optional.of("KEY"));
-                    InspectingObject entryValueObject = new InspectingObject(Optional.ofNullable(entry.getValue()), Optional.empty(), Optional.of("VALUE"));
+                    InspectingObject entryKeyObject = InspectingObject.ofNonFieldObject(Optional.ofNullable(entry.getKey()), Optional.of("KEY"));
+                    InspectingObject entryValueObject = InspectingObject.ofNonFieldObject(Optional.ofNullable(entry.getValue()), Optional.of("VALUE"));
                     return List.of(entryKeyObject, entryValueObject);
                 }
 
@@ -194,7 +202,7 @@ public class InspectingObject {
                         if (Modifier.isTransient(modifiers)) return false;
                         return true;
                     })
-                    .map(it -> new InspectingObject(Optional.of(it), Optional.of(objectToInspect), Optional.empty()))
+                    .map(it -> InspectingObject.ofFieldObject(Optional.of(it), Optional.of(objectToInspect), Optional.empty()))
                     .toList();
             })
             .orElseThrow(() -> new FailedToInspectException("Target object is null"));
