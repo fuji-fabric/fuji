@@ -37,11 +37,11 @@ public class DocumentJsonWriter extends JsonWriter {
             Writer underlyingWriter = getBackendWriter(delegate);
 
             String formattedDocumentString = documentString.get().trim();
-            formattedDocumentString = DocumentUtil.Indenter.indentExceptFirstLine(formattedDocumentString, getIndent());
+            formattedDocumentString = DocumentUtil.Indenter.indentExceptFirstLine(formattedDocumentString, getCurrentIndent());
 
             underlyingWriter
                 .append(getLineSeparator())
-                .append(getIndent()).append("/* ").append(formattedDocumentString).append(" */");
+                .append(getCurrentIndent()).append("/* ").append(formattedDocumentString).append(" */");
         }
 
         /* Call super to handle default logics. */
@@ -50,6 +50,16 @@ public class DocumentJsonWriter extends JsonWriter {
 
     private static @NotNull Writer getBackendWriter(@NotNull JsonWriter jsonWriter) {
         return ReflectionUtil.Reflection.getInstanceFieldValue(jsonWriter, "out", Writer.class);
+    }
+
+    @SuppressWarnings("StringRepeatCanBeUsed")
+    private @NotNull String getCurrentIndent() {
+        StringBuilder builder = new StringBuilder();
+        String indent = getIndent();
+        for (int i = 1; i < getStackSize(); i++) {
+            builder.append(indent);
+        }
+        return builder.toString();
     }
 
     private @NotNull String getIndent() {
@@ -70,5 +80,10 @@ public class DocumentJsonWriter extends JsonWriter {
         return formattingStyle.getNewline();
         #endif
     }
+
+    private int getStackSize() {
+        return ReflectionUtil.Reflection.getInstanceFieldValue(this, "stackSize", Integer.class);
+    }
+
 
 }
