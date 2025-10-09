@@ -1,215 +1,234 @@
 package mod.fuji.module.initializer.fuji.structure;
 
-import mod.fuji.core.auxiliary.ReflectionUtil;
-import mod.fuji.core.auxiliary.minecraft.TextHelper;
-import mod.fuji.core.document.auxiliary.DocumentUtil;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import lombok.Data;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import mod.fuji.core.auxiliary.LogUtil;
+import mod.fuji.core.auxiliary.ReflectionUtil;
+import mod.fuji.core.auxiliary.minecraft.TextHelper;
+import mod.fuji.core.document.auxiliary.DocumentUtil;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-@Data
 public class InspectingObject {
 
-    public final Object object;
-    public final @Nullable Object instanceOfField;
-    public final @Nullable String preferredObjectName;
+    /**
+     * The <code>object</code> value may be <code>null</code> if the inspecting target is a <code>leaf node</code>.
+     */
+    final @NotNull Optional<Object> object;
 
-    public InspectingObject(Object object, @Nullable Object instanceOfField, @Nullable String preferredObjectName) {
+    /**
+     * If the inspecting <code>object</code> is type of <code>Field</code>, then this field is the instance of the class who declares that field.
+     * Note that this field will be empty for any object that is not type of Field.
+     */
+    final @NotNull Optional<Object> objectDeclaringClassInstance;
+
+    final @NotNull Optional<String> preferredObjectName;
+
+    private InspectingObject(@NotNull Optional<Object> object, @NotNull Optional<Object> objectDeclaringClassInstance, @NotNull Optional<String> preferredObjectName) {
         this.object = object;
-        this.instanceOfField = instanceOfField;
+        this.objectDeclaringClassInstance = objectDeclaringClassInstance;
         this.preferredObjectName = preferredObjectName;
     }
 
-    public Class<?> getObjectType() {
-        // NOTE: The implementation of this.getObjectValue().getClass(); didn't work. (Due to null value)
+    public static @NotNull InspectingObject ofRootInspectingObject(@NotNull Object javaObject) {
+        if (ReflectionUtil.isMetaClass(javaObject.getClass())) {
+            throw new IllegalArgumentException("Cannot inspect object of type " + javaObject.getClass());
+        }
+        return new InspectingObject(Optional.of(javaObject), Optional.empty(), Optional.empty());
+    }
 
+    public @NotNull Class<?> getObjectType() {
         /* Get the field type. */
-        if (object instanceof Field field) {
-            return field.getType();
-        }
+        return this.object
+            .map($object -> {
+                if ($object instanceof Field field) {
+                    return field.getType();
+                }
 
-        return this.object.getClass();
+                return $object.getClass();
+            })
+            // NOTE: Return a sensible class type for `null` value.
+            .orElse(Void.class);
     }
 
-    private String getObjectValueReadableString() {
-        Object value = this.getObjectValue();
+    public @NotNull Optional<Object> getObjectValue() {
+        return object
+            .map($object -> {
+                /* Get the field value. */
+                if ($object instanceof Field field) {
+                    return this.objectDeclaringClassInstance
+                        .map($objectDeclaringClassInstance -> {
+                            try {
+                                field.setAccessible(true);
+                                return field.get($objectDeclaringClassInstance);
+                            } catch (Exception e) {
+                                LogUtil.error("Failed to get the value of field {} in its declaring class instance {}.", field, $objectDeclaringClassInstance, e);
+                                return null;
+                            }
+                        })
+                        .orElseGet(() -> {
+                            LogUtil.error("Failed to get the value of field {}, its declaring class instance is null.", field);
+                            return null;
+                        });
+                }
 
-        /* Optimize the readable string for collection types. */
-        if (value instanceof Collection<?> collection) {
-            return "%d elements".formatted(collection.size());
-        }
-        if (value instanceof Map<?, ?> map) {
-            return "%d elements".formatted(map.size());
-        }
-
-        if (value instanceof Map.Entry<?, ?> entry) {
-            String keyTypeString = entry.getKey().getClass().getSimpleName();
-            String valueTypeString = entry.getValue().getClass().getSimpleName();
-            return "mapper %s -> %s".formatted(keyTypeString, valueTypeString);
-        }
-
-        /* Call the implementation of toString() of the object. */
-        // NOTE: value.toString() may throw NPE.
-        return String.valueOf(value);
+                /* Get the value of the object itself. */
+                // NOTE: The value of user-defined object may be `null` in some case.
+                return $object;
+            });
     }
 
-    public Optional<String> getDocumentString(ServerPlayerEntity player) {
-        /* Extract @Document from a field in class. */
-        if (this.object instanceof Field field) {
-            return DocumentUtil.getFieldDocumentString(player, field);
-        }
+    @SuppressWarnings("IfCanBeSwitch")
+    private @NotNull String getObjectValueString() {
+        /* Compute the value string. */
+        @NotNull String valueString = this
+            .getObjectValue()
+            .map($objectValue -> {
+                /* Optimize the readability of the string for various types. */
+                if ($objectValue instanceof Collection<?> collection) {
+                    return "%d elements".formatted(collection.size());
+                }
 
-        /* Extract @Document from collection and map. */
-        Class<?> objectType = this.getObjectType();
-        return DocumentUtil.getClassDocumentString(player, objectType);
+                if ($objectValue instanceof Map<?, ?> map) {
+                    return "%d mappings".formatted(map.size());
+                }
+
+                if ($objectValue instanceof Map.Entry<?, ?> entry) {
+                    String keyTypeString = entry.getKey().getClass().getSimpleName();
+                    String valueTypeString = entry.getValue().getClass().getSimpleName();
+                    return "mapper %s -> %s".formatted(keyTypeString, valueTypeString);
+                }
+
+                /* Call the implementation of toString() of the object. */
+                // NOTE: value.toString() may throw NPE.
+                return String.valueOf($objectValue);
+            })
+            .orElse("null");
+
+        /* Escape the string. */
+        valueString = TextHelper.Parsers.escapeTags(valueString);
+        return valueString;
     }
 
-    public Object getObjectValue() {
-        // NOTE: Be careful of the implicit call to toString() function. Here we should return the object value directly, to prevent NPE.
 
-        /* Get the field value. */
-        if (object instanceof Field field) {
-            Object value;
-            try {
-                field.setAccessible(true);
-                value = field.get(this.instanceOfField);
-            } catch (Exception e) {
-                value = "FAILED-TO-ACCESS";
-            }
-
-            return value;
-        }
-
-        return this.object;
-    }
-
-
-    private boolean isFieldType() {
-        return this.object instanceof Field;
-    }
-
-    public String getObjectName() {
+    public @NotNull String getObjectName() {
         /* If preferred object name is specified, simply return it. */
-        if (this.preferredObjectName != null) {
-            return this.preferredObjectName;
-        }
-
-        /* Compute the object name. */
-        String objectName;
-        if (this.isFieldType()) {
-            objectName = ((Field) this.object).getName();
-        } else {
-            objectName = this.object.getClass().getSimpleName();
-        }
-
-        /* Decorate the object name if inspecting object is not a field. (It's an element in collection) */
-        if (!this.isFieldType()) {
-            objectName = "$" + objectName;
-        }
-
-        return objectName;
+        return this
+            .preferredObjectName
+            .orElseGet(() -> {
+                /* Compute the object name. */
+                return this.object
+                    .map($object -> {
+                        if ($object instanceof Field field) {
+                            return field.getName();
+                        } else {
+                            /* Decorate the object name if inspecting object is not a field. (It's an element in collection) */
+                            return "$" + $object.getClass().getSimpleName();
+                        }
+                    })
+                    .orElse("null");
+            });
     }
 
-    public Text computeNameText(ServerPlayerEntity player) {
-        String objectName = this.getObjectName();
+    @SuppressWarnings("RedundantIfStatement")
+    public static @NotNull List<InspectingObject> inspect(@NotNull InspectingObject inspectingObject) throws FailedToInspectException {
+        return inspectingObject
+            .getObjectValue()
+            .map(objectToInspect -> {
+                /* An atom can't be inspected. */
+                if (!canInspect(inspectingObject.getObjectType())) {
+                    throw new FailedToInspectException("Target object is considered as an atom.");
+                }
+
+                /* Handle special cases.  */
+                if (Iterable.class.isAssignableFrom(objectToInspect.getClass())) {
+                    // Special case: Iterable
+                    Iterator<?> iterator = ((Iterable<?>) objectToInspect).iterator();
+                    List<InspectingObject> result = new ArrayList<>();
+                    for (int i = 0; iterator.hasNext(); i++) {
+                        Object element = iterator.next();
+                        String elementIndex = "[" + i + "]";
+                        result.add(new InspectingObject(Optional.ofNullable(element), Optional.empty(), Optional.of(elementIndex)));
+                    }
+                    return result;
+                } else if (Map.class.isAssignableFrom(objectToInspect.getClass())) {
+                    // Special case: Map
+                    return ((Map<?, ?>) objectToInspect)
+                        .entrySet()
+                        .stream()
+                        .map(entry -> {
+                            // NOTE: For Json, you can only have `string type` key.
+                            String jsonObjectKeyName = null;
+                            if (String.class.isAssignableFrom(entry.getKey().getClass())) {
+                                jsonObjectKeyName = "\"" + entry.getKey() + "\"";
+                            }
+
+                            return new InspectingObject(Optional.of(entry), Optional.empty(), Optional.ofNullable(jsonObjectKeyName));
+                        })
+                        .toList();
+                } else if (Map.Entry.class.isAssignableFrom(objectToInspect.getClass())) {
+                    // Special case: Map.Entry
+                    Map.Entry<?, ?> entry = (Map.Entry<?, ?>) objectToInspect;
+                    InspectingObject entryKeyObject = new InspectingObject(Optional.ofNullable(entry.getKey()), Optional.empty(), Optional.of("KEY"));
+                    InspectingObject entryValueObject = new InspectingObject(Optional.ofNullable(entry.getValue()), Optional.empty(), Optional.of("VALUE"));
+                    return List.of(entryKeyObject, entryValueObject);
+                }
+
+                /* Inspect the user-defined object. */
+                Class<?> inspectingObjectClass = objectToInspect.getClass();
+                return ReflectionUtil.Reflection.gatherDeclaredFields(inspectingObjectClass)
+                    .stream()
+                    .filter(field -> {
+                        /* Ignore some fields that is not interested. */
+                        int modifiers = field.getModifiers();
+                        if (Modifier.isStatic(modifiers)) return false;
+                        if (Modifier.isTransient(modifiers)) return false;
+                        return true;
+                    })
+                    .map(it -> new InspectingObject(Optional.of(it), Optional.of(objectToInspect), Optional.empty()))
+                    .toList();
+            })
+            .orElseThrow(() -> new FailedToInspectException("Target object is null"));
+    }
+
+    @SuppressWarnings("RedundantIfStatement")
+    private static boolean canInspect(@NotNull Class<?> objectType) {
+        /* Treat the following types as atom. */
+        if (objectType.isPrimitive()) return false;
+        if (ReflectionUtil.isPrimitiveWrapperType(objectType)) return false;
+
+        if (objectType.equals(String.class)) return false;
+        if (objectType.isArray()) return false;
+        if (objectType.isEnum()) return false;
+        if (objectType.isAnnotation()) return false;
+        if (ReflectionUtil.isMetaClass(objectType)) return false;
+
+        /* Treat other else types as non-atom. (Including Iterable and Map) */
+        return true;
+    }
+
+    public @NotNull Text toNameText(@NotNull ServerPlayerEntity player) {
+        @NotNull String objectName = this.getObjectName();
         objectName = TextHelper.Parsers.escapeTags(objectName);
         return TextHelper.getTextByKey(player, "object.name", objectName);
     }
 
-
-    public static List<InspectingObject> inspectJavaObject(@NotNull Object object) {
-        /* Ensure the object is unboxed value. */
-        if (object instanceof InspectingObject) {
-            object = ((InspectingObject) object).object;
-        }
-
-        /* Inspect the structure of object. */
-        Object fieldInstance = object;
-        Class<?> inspectingObjectClass = object.getClass();
-        return ReflectionUtil.Reflection.gatherDeclaredFields(inspectingObjectClass)
-            .stream()
-            .filter(field -> {
-                /* Ignore some fields that is not interested. */
-                int modifiers = field.getModifiers();
-                if (Modifier.isStatic(modifiers)) return false;
-                if (Modifier.isTransient(modifiers)) return false;
-                return true;
-            })
-            .map(it -> new InspectingObject(it, fieldInstance, null))
-            .toList();
-    }
-
-    public Item computeItem() {
-        Class<?> type = this.getObjectType();
-
-        if (Map.class.isAssignableFrom(type)) return Items.MAP;
-        if (Iterable.class.isAssignableFrom(type)) return getIronChainItem();
-
-        if (Boolean.class.isAssignableFrom(type)
-            || boolean.class.isAssignableFrom(type)) {
-            /* If the type of field is boolean, try to get its value. */
-            Boolean booleanValue = (Boolean) this.getObjectValue();
-            return booleanValue ? Items.GREEN_BANNER : Items.RED_BANNER;
-        }
-
-        if (String.class.isAssignableFrom(type)
-            || Character.class.isAssignableFrom(type)
-            || char.class.isAssignableFrom(type)) {
-            return Items.STRING;
-        }
-
-        if (Byte.class.isAssignableFrom(type)
-            || byte.class.isAssignableFrom(type)
-            || Short.class.isAssignableFrom(type)
-            || short.class.isAssignableFrom(type)
-            || Integer.class.isAssignableFrom(type)
-            || int.class.isAssignableFrom(type)
-            || Long.class.isAssignableFrom(type)
-            || long.class.isAssignableFrom(type)) {
-            return Items.REDSTONE;
-        }
-        if (Float.class.isAssignableFrom(type)
-            || float.class.isAssignableFrom(type)
-            || Double.class.isAssignableFrom(type)
-            || double.class.isAssignableFrom(type)) {
-            return Items.GLOWSTONE_DUST;
-        }
-
-        if (Enum.class.isAssignableFrom(type)) {
-            return Items.REPEATER;
-        }
-
-        return Items.PINK_SHULKER_BOX;
-    }
-
-    private static @NotNull Item getIronChainItem() {
-        #if MC_VER < MC_1_21_9
-        return Items.CHAIN;
-        #elif MC_VER >= MC_1_21_9
-        return Items.IRON_CHAIN;
-        #endif
-    }
-
-    private void addPossibleValuesForEnumType(ServerPlayerEntity player, List<Text> lore) {
+    private void addPossibleValuesForEnumType(@NotNull ServerPlayerEntity player, @NotNull List<Text> lore) {
         if (!this.getObjectType().isEnum()) return;
 
-        String possibleValues = ReflectionUtil.getEnumValuesCompactString(this.getObjectType());
+        @NotNull String possibleValues = ReflectionUtil.getEnumValuesCompactString(this.getObjectType());
         lore.add(TextHelper.getTextByKey(player, "object.value.possible_values", possibleValues));
     }
 
-    public List<Text> computeLore(ServerPlayerEntity player) {
+    public @NotNull List<Text> toLore(@NotNull ServerPlayerEntity player) {
         List<Text> lore = new ArrayList<>();
 
         /* Add object type text. */
@@ -217,19 +236,19 @@ public class InspectingObject {
         lore.add(TextHelper.getTextByKey(player, "object.type", objectTypeString));
 
         /* Add object value text. */
-        String literalObjectValueString = getObjectValueString(true);
-        lore.add(TextHelper.getText(TextHelper.Parsers.STYLE_ONLY_PARSER, player, true, "object.value", literalObjectValueString));
+        String objectValueString = getAbbreviatedObjectValueString();
+        lore.add(TextHelper.getText(TextHelper.Parsers.STYLE_ONLY_PARSER, player, true, "object.value", objectValueString));
 
         /* Add possible enum values. */
         addPossibleValuesForEnumType(player, lore);
 
         /* Add click prompt. */
-        if (ReflectionUtil.canInspectInside(this.getObjectType())) {
+        if (canInspect(this.getObjectType())) {
             lore.add(TextHelper.getTextByKey(player, "prompt.click.see_inside"));
         }
 
         /* Add @Document text. */
-        this.getDocumentString(player)
+        DocumentUtil.getAboveElementDocumentString(this.object, this.getObjectType(), player)
             .ifPresent(documentString -> {
                 lore.add(TextHelper.TEXT_EMPTY);
                 lore.addAll(TextHelper.getDocumentTextList(player, documentString));
@@ -238,13 +257,11 @@ public class InspectingObject {
         return lore;
     }
 
-    public @NotNull String getObjectValueString(boolean abbreviated) {
-        String literalObjectValueString = getObjectValueReadableString();
-        if (abbreviated) {
-            literalObjectValueString = StringUtils.abbreviate(literalObjectValueString, "...", 128);
-        }
-        literalObjectValueString = TextHelper.Parsers.escapeTags(literalObjectValueString);
-        return literalObjectValueString;
+    public @NotNull String getAbbreviatedObjectValueString() {
+        /* Abbreviate the string if needed. */
+        String valueString = getObjectValueString();
+        valueString = StringUtils.abbreviate(valueString, "...", 128);
+        return valueString;
     }
 
     private @NotNull String getObjectTypeString() {

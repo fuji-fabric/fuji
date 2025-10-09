@@ -35,22 +35,6 @@ public class ReflectionUtil {
             .collect(Collectors.joining(", "));
     }
 
-    @SuppressWarnings("RedundantIfStatement")
-    public static boolean canInspectInside(@NotNull Class<?> objectType) {
-        /* Treat the following types as atom. */
-        if (objectType.isPrimitive()) return false;
-        if (isPrimitiveWrapperType(objectType)) return false;
-
-        if (objectType.equals(String.class)) return false;
-        if (objectType.isArray()) return false;
-        if (objectType.isEnum()) return false;
-        if (objectType.isAnnotation()) return false;
-        if (isMetaClass(objectType)) return false;
-
-        /* Treat other else types as non-atom. (Including Iterable and Map) */
-        return true;
-    }
-
     public static boolean isMetaClass(@NotNull Class<?> clazz) {
         // Check if it's a class that holds type metadata
         return clazz == Class.class

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -156,6 +157,20 @@ public class DocumentUtil {
                 });
         }
         return declaredDocumentStringMap;
+    }
+
+    public static @NotNull Optional<String> getAboveElementDocumentString(@NotNull Optional<Object> object, @NotNull Class<?> objectType, @NotNull ServerPlayerEntity player) {
+        return object
+            .flatMap($object -> {
+                /* Extract @Document from a field in class. */
+                if ($object instanceof Field field) {
+                    return getFieldDocumentString(player, field);
+                }
+
+                /* Extract @Document from collection and map. */
+                return getClassDocumentString(player, objectType);
+            });
+
     }
 
     public static class Indenter {

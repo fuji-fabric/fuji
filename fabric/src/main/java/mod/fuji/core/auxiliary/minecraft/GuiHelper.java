@@ -3,6 +3,7 @@ package mod.fuji.core.auxiliary.minecraft;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SlotGuiInterface;
+import java.util.Map;
 import mod.fuji.core.auxiliary.AsyncUtil;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.config.mapper.wrapper.GameProfileWrapper;
@@ -348,8 +349,61 @@ public class GuiHelper {
     }
 
     public static class Material {
-        public static Item fromBooleanValue(boolean value) {
+
+        public static @NotNull Item fromBooleanValue(boolean value) {
             return value ? Items.GREEN_STAINED_GLASS : Items.RED_STAINED_GLASS;
+        }
+
+        public static @NotNull Item fromObjectType(@NotNull Optional<Object> objectValue, @NotNull Class<?> objectType) {
+            if (Map.class.isAssignableFrom(objectType)) return Items.MAP;
+
+            if (Iterable.class.isAssignableFrom(objectType)) return getIronChainItem();
+
+            if (Boolean.class.isAssignableFrom(objectType)
+                || boolean.class.isAssignableFrom(objectType)) {
+                /* If the type of field is boolean, try to get its value. */
+                return objectValue
+                    .map($objectValue -> (Boolean) $objectValue ? Items.GREEN_BANNER : Items.RED_BANNER)
+                    .orElse(Items.STRUCTURE_VOID);
+            }
+
+            if (String.class.isAssignableFrom(objectType)
+                || Character.class.isAssignableFrom(objectType)
+                || char.class.isAssignableFrom(objectType)) {
+                return Items.STRING;
+            }
+
+            if (Byte.class.isAssignableFrom(objectType)
+                || byte.class.isAssignableFrom(objectType)
+                || Short.class.isAssignableFrom(objectType)
+                || short.class.isAssignableFrom(objectType)
+                || Integer.class.isAssignableFrom(objectType)
+                || int.class.isAssignableFrom(objectType)
+                || Long.class.isAssignableFrom(objectType)
+                || long.class.isAssignableFrom(objectType)) {
+                return Items.REDSTONE;
+            }
+
+            if (Float.class.isAssignableFrom(objectType)
+                || float.class.isAssignableFrom(objectType)
+                || Double.class.isAssignableFrom(objectType)
+                || double.class.isAssignableFrom(objectType)) {
+                return Items.GLOWSTONE_DUST;
+            }
+
+            if (Enum.class.isAssignableFrom(objectType)) {
+                return Items.REPEATER;
+            }
+
+            return Items.PINK_SHULKER_BOX;
+        }
+
+        private static @NotNull Item getIronChainItem() {
+            #if MC_VER < MC_1_21_9
+            return Items.CHAIN;
+            #elif MC_VER >= MC_1_21_9
+            return Items.IRON_CHAIN;
+            #endif
         }
     }
 
