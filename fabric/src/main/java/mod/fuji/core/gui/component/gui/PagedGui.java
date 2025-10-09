@@ -53,7 +53,7 @@ public abstract class PagedGui<T> extends SimpleGui {
         return super.open();
     }
 
-    protected abstract PagedGui<T> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<T> entities, int pageIndex);
+    protected abstract @NotNull PagedGui<T> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<T> entities, int pageIndex);
 
     private void drawNavigator(int pageIndex) {
         GuiHelper.Placer.fillLastLineIfEmpty(this, GuiHelper.Button.makeSlotPlaceholderButton());

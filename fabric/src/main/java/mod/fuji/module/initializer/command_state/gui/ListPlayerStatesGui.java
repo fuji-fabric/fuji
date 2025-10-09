@@ -28,7 +28,7 @@ public class ListPlayerStatesGui extends PagedGui<GuiElementInterface> {
     }
 
     @Override
-    protected PagedGui<GuiElementInterface> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity source, Text title, @NotNull List<GuiElementInterface> entities, int pageIndex) {
+    protected @NotNull PagedGui<GuiElementInterface> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity source, Text title, @NotNull List<GuiElementInterface> entities, int pageIndex) {
         return new ListPlayerStatesGui(parent, source, this.target, entities, pageIndex);
     }
 

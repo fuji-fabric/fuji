@@ -54,7 +54,7 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
     }
 
     @Override
-    protected PagedGui<IdentifierDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<IdentifierDescriptor> entities, int pageIndex) {
+    protected @NotNull PagedGui<IdentifierDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<IdentifierDescriptor> entities, int pageIndex) {
         return new RegistriesInspectionGui(parent, player, this.isMetaRegistry, entities, pageIndex);
     }
 

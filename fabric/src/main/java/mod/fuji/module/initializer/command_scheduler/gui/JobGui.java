@@ -21,7 +21,7 @@ public class JobGui extends PagedGui<CommandSchedulerJobDescriptor> {
     }
 
     @Override
-    protected PagedGui<CommandSchedulerJobDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<CommandSchedulerJobDescriptor> entities, int pageIndex) {
+    protected @NotNull PagedGui<CommandSchedulerJobDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<CommandSchedulerJobDescriptor> entities, int pageIndex) {
         return new JobGui(player, entities, pageIndex);
     }
 

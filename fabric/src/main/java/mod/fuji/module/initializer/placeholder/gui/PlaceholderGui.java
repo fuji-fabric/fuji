@@ -21,7 +21,7 @@ public class PlaceholderGui extends PagedGui<Identifier> {
     }
 
     @Override
-    protected PagedGui<Identifier> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Identifier> entities, int pageIndex) {
+    protected @NotNull PagedGui<Identifier> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Identifier> entities, int pageIndex) {
         return new PlaceholderGui(player, entities, pageIndex);
     }
 

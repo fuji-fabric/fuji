@@ -12,7 +12,6 @@ import mod.fuji.core.document.annotation.TestCase;
 import mod.fuji.core.document.auxiliary.DocumentUtil;
 import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.module.initializer.fuji.structure.FailedToInspectException;
-import mod.fuji.module.initializer.fuji.structure.InspectingObject;
 import mod.fuji.module.initializer.fuji.structure.JavaObjectInspector;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -37,7 +36,7 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
     }
 
     @Override
-    protected PagedGui<BaseConfigurationHandler<?>> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<BaseConfigurationHandler<?>> entities, int pageIndex) {
+    protected @NotNull PagedGui<BaseConfigurationHandler<?>> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<BaseConfigurationHandler<?>> entities, int pageIndex) {
         return new ConfigurationsInspectionGui(parent, player, entities, pageIndex);
     }
 

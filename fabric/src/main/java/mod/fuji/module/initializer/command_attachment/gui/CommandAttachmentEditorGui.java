@@ -41,7 +41,7 @@ public class CommandAttachmentEditorGui extends PagedGui<BaseCommandAttachmentEn
     }
 
     @Override
-    protected PagedGui<BaseCommandAttachmentEntry> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<BaseCommandAttachmentEntry> entities, int pageIndex) {
+    protected @NotNull PagedGui<BaseCommandAttachmentEntry> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<BaseCommandAttachmentEntry> entities, int pageIndex) {
         return new CommandAttachmentEditorGui(parent, player, entities, pageIndex, this.commandAttachmentDataNode);
     }
 

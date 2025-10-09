@@ -22,7 +22,7 @@ public class SkinGui extends PagedGui<SkinDescriptor> {
     }
 
     @Override
-    protected PagedGui<SkinDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<SkinDescriptor> entities, int pageIndex) {
+    protected @NotNull PagedGui<SkinDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<SkinDescriptor> entities, int pageIndex) {
         return new SkinGui(parent, player, entities, pageIndex);
     }
 

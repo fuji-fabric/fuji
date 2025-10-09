@@ -26,7 +26,7 @@ public class TpaGui extends PagedGui<ServerPlayerEntity> {
     }
 
     @Override
-    protected PagedGui<ServerPlayerEntity> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<ServerPlayerEntity> entities, int pageIndex) {
+    protected @NotNull PagedGui<ServerPlayerEntity> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<ServerPlayerEntity> entities, int pageIndex) {
         return new TpaGui(parent, player, entities, pageIndex);
     }
 

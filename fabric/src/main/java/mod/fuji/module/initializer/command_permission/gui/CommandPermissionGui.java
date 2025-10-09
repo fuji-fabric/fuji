@@ -26,7 +26,7 @@ public class CommandPermissionGui extends PagedGui<CommandNodePermissionWrapper>
     }
 
     @Override
-    protected PagedGui<CommandNodePermissionWrapper> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<CommandNodePermissionWrapper> entities, int pageIndex) {
+    protected @NotNull PagedGui<CommandNodePermissionWrapper> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<CommandNodePermissionWrapper> entities, int pageIndex) {
         return new CommandPermissionGui(player, entities, pageIndex);
     }
 

@@ -23,7 +23,7 @@ public class EventsInspectionGui extends PagedGui<BaseEventConsumer<?>> {
     }
 
     @Override
-    protected PagedGui<BaseEventConsumer<?>> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<BaseEventConsumer<?>> entities, int pageIndex) {
+    protected @NotNull PagedGui<BaseEventConsumer<?>> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<BaseEventConsumer<?>> entities, int pageIndex) {
         return new EventsInspectionGui(parent, player, entities, pageIndex);
     }
 

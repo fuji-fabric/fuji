@@ -117,7 +117,7 @@ public class KitEditorGui extends PagedGui<Kit> {
     }
 
     @Override
-    protected PagedGui<Kit> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Kit> entities, int pageIndex) {
+    protected @NotNull PagedGui<Kit> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Kit> entities, int pageIndex) {
         return new KitEditorGui(player, entities, pageIndex);
     }
 

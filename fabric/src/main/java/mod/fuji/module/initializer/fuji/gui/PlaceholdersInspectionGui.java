@@ -28,7 +28,7 @@ public class PlaceholdersInspectionGui extends StringDescriptorInspectionGui {
     }
 
     @Override
-    protected PagedGui<StringDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<StringDescriptor> entities, int pageIndex) {
+    protected @NotNull PagedGui<StringDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<StringDescriptor> entities, int pageIndex) {
         return new PlaceholdersInspectionGui(parent, player, entities, pageIndex);
     }
 

@@ -23,7 +23,7 @@ public class MixinsInspectionGui extends PagedGui<MixinApplicationInfo> {
     }
 
     @Override
-    protected PagedGui<MixinApplicationInfo> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<MixinApplicationInfo> entities, int pageIndex) {
+    protected @NotNull PagedGui<MixinApplicationInfo> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<MixinApplicationInfo> entities, int pageIndex) {
         return new MixinsInspectionGui(parent, player, entities, pageIndex);
     }
 

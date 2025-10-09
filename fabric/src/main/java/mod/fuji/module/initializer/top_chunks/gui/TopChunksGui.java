@@ -27,7 +27,7 @@ public class TopChunksGui extends PagedGui<ChunkScore> {
     }
 
     @Override
-    protected PagedGui<ChunkScore> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<ChunkScore> entities, int pageIndex) {
+    protected @NotNull PagedGui<ChunkScore> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<ChunkScore> entities, int pageIndex) {
         return new TopChunksGui(player, entities, pageIndex);
     }
 

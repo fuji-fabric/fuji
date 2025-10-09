@@ -27,7 +27,7 @@ public class BalanceTopGui extends PagedGui<GameProfileAndEconomyAccount> {
     }
 
     @Override
-    protected PagedGui<GameProfileAndEconomyAccount> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<GameProfileAndEconomyAccount> entities, int pageIndex) {
+    protected @NotNull PagedGui<GameProfileAndEconomyAccount> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<GameProfileAndEconomyAccount> entities, int pageIndex) {
         return new BalanceTopGui(parent, player, this.currencyId, entities, pageIndex);
     }
 

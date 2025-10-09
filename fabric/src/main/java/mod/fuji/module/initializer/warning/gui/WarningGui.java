@@ -19,7 +19,7 @@ public class WarningGui extends PagedGui<String> {
     }
 
     @Override
-    protected PagedGui<String> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<String> entities, int pageIndex) {
+    protected @NotNull PagedGui<String> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<String> entities, int pageIndex) {
         return new WarningGui(parent, player, entities, pageIndex);
     }
 

@@ -31,7 +31,7 @@ public class JobsInspectionGui extends PagedGui<JobDescriptor> {
     }
 
     @Override
-    protected PagedGui<JobDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<JobDescriptor> entities, int pageIndex) {
+    protected @NotNull PagedGui<JobDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<JobDescriptor> entities, int pageIndex) {
         return new JobsInspectionGui(parent, player, entities, pageIndex);
     }
 
