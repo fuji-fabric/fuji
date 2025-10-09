@@ -31,9 +31,6 @@ public class CommandAdviceEntry {
         """)
         String commandStringRegex;
 
-        @Document(id = 1751826318098L, value = """
-        Is this `advice` only valid, when the target command is executed by a player?
-        """)
         boolean acceptPlayerCommandSource = true;
         boolean acceptConsoleCommandSource;
 

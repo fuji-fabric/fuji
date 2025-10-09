@@ -41,7 +41,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
     Issue: `/command-cooldown create example-kit-cooldown 60000`
 
     To test the cooldown, and give the kit if the cooldown is satisfied.
-    Issue: `/command-cooldown test example-kit-cooldown Alice --onFailed "send-message %player:name% wait a moment" kit give %player:name% example-kit|send-message %player:name% kit received.`
+    You need to configure the `try-use` section for the `named cooldown`, and use `/command-cooldown try-use` to use it.
     """)
 @ColorBox(id = 1751977848415L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Claim a specific kit automatically for online players.
