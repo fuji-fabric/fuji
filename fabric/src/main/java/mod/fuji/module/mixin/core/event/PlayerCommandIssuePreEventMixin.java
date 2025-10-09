@@ -25,7 +25,7 @@ public class PlayerCommandIssuePreEventMixin {
     #if MC_VER <= MC_1_20_4
     @com.llamalad7.mixinextras.injector.ModifyExpressionValue(method = "handleCommandExecution", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/c2s/play/CommandExecutionC2SPacket;comp_808()Ljava/lang/String;"))
     #elif MC_VER > MC_1_20_4
-    @org.spongepowered.asm.mixin.injection.ModifyVariable(method = "executeCommand", at = @At(value = "HEAD"), ordinal = 0, argsOnly = true)
+    @org.spongepowered.asm.mixin.injection.ModifyVariable(method = "executeCommand", at = @At(value = "HEAD"), argsOnly = true)
     #endif
     String producePlayerCommandIssuePreEvent(@NotNull String commandString, @Cancellable CallbackInfo callbackInfo) {
         PlayerCommandIssuePreEvent event = new PlayerCommandIssuePreEvent(player, commandString, callbackInfo);
