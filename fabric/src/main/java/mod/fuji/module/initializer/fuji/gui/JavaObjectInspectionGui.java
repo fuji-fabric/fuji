@@ -10,6 +10,7 @@ import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.module.initializer.fuji.structure.FailedToInspectException;
 import mod.fuji.module.initializer.fuji.structure.InspectingObject;
 import mod.fuji.module.initializer.fuji.structure.JavaObjectInspector;
+import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -29,8 +30,11 @@ public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
 
         /* Place footer. */
         GuiHelper.Placer.setSlotInLastLine(this, 4, GuiHelper.Button.makeHelpButton(player)
+            .setItem(Items.OAK_SAPLING)
             .setLore(List.of(
-                TextHelper.getTextByKey(player, "object.top_level", fileRelativePath)
+                TextHelper.getTextByKey(player, "object.top_level", fileRelativePath),
+                TextHelper.getTextByKey(player, "object.path", inspector.getWalkingPath()),
+                TextHelper.getTextByKey(player, "object.type", inspector.getParentInspectingObject().getObjectTypeString())
             )));
     }
 
@@ -56,7 +60,7 @@ public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
             JavaObjectInspector childInspector = this.inspector.withChild(inspectingObject);
 
             /* Make a deeper GUI and open it. */
-            new JavaObjectInspectionGui(getBackendGui(), getPlayer(), childInspector.getInspectingObjects(), 0, this.fileRelativePath, childInspector)
+            new JavaObjectInspectionGui(getBackendGui(), getPlayer(), childInspector.getChildInspectingObjects(), 0, this.fileRelativePath, childInspector)
                 .open();
         } catch (FailedToInspectException ignore) {
             // Can not open child inspector for target object.

@@ -14,12 +14,14 @@ public class JavaObjectInspector {
 
     final Optional<JavaObjectInspector> parent;
     final @NotNull String walkingPath;
-    final @NotNull List<InspectingObject> inspectingObjects;
+
+    final @NotNull InspectingObject parentInspectingObject;
+    final @NotNull List<InspectingObject> childInspectingObjects;
 
     public static @NotNull JavaObjectInspector ofRoot(@NotNull Object object) throws FailedToInspectException {
         @NotNull InspectingObject root = InspectingObject.ofRoot(object);
         @NotNull List<InspectingObject> children = InspectingObject.inspect(root);
-        return new JavaObjectInspector(Optional.empty(), ".", children);
+        return new JavaObjectInspector(Optional.empty(), ".", root, children);
     }
 
     public @NotNull JavaObjectInspector withChild(@NotNull InspectingObject inspectingObject) throws FailedToInspectException {
@@ -35,7 +37,7 @@ public class JavaObjectInspector {
         childWalkingPath = StringUtil.trimPathString(childWalkingPath);
 
         /* Return the child inspector. */
-        return new JavaObjectInspector(parentInspector, childWalkingPath, childInspectingObjects);
+        return new JavaObjectInspector(parentInspector, childWalkingPath, inspectingObject, childInspectingObjects);
     }
 
 }

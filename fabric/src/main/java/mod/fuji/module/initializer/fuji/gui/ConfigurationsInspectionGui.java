@@ -80,7 +80,7 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
     private void openRootJavaObjectInspectorGui(@Nullable SimpleGui parent, @NotNull BaseConfigurationHandler<?> entity, @NotNull String fileRelativePath) {
         try {
             JavaObjectInspector rootInspector  = JavaObjectInspector.ofRoot(entity.model());
-            new JavaObjectInspectionGui(parent, getPlayer(), rootInspector.getInspectingObjects(), 0, fileRelativePath, rootInspector)
+            new JavaObjectInspectionGui(parent, getPlayer(), rootInspector.getChildInspectingObjects(), 0, fileRelativePath, rootInspector)
                 .open();
         } catch (FailedToInspectException e) {
             LogUtil.error("Failed to open the inspector GUI: target object = {}, file path = {}", entity, fileRelativePath, e);

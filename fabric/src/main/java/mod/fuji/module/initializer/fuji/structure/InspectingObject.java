@@ -265,7 +265,7 @@ public class InspectingObject {
         return valueString;
     }
 
-    private @NotNull String getObjectTypeString() {
+    public @NotNull String getObjectTypeString() {
         return this.getObjectType().getName();
     }
 
