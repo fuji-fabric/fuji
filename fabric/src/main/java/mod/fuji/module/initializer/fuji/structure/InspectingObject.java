@@ -39,7 +39,7 @@ public class InspectingObject {
         this.preferredObjectName = preferredObjectName;
     }
 
-    public static @NotNull InspectingObject ofRootInspectingObject(@NotNull Object javaObject) {
+    public static @NotNull InspectingObject ofRoot(@NotNull Object javaObject) {
         if (ReflectionUtil.isMetaClass(javaObject.getClass())) {
             throw new IllegalArgumentException("Cannot inspect object of type " + javaObject.getClass());
         }

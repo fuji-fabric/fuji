@@ -3,38 +3,29 @@ package mod.fuji.module.initializer.fuji.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import mod.fuji.core.auxiliary.ReflectionUtil;
-import mod.fuji.core.auxiliary.StringUtil;
+import java.util.List;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.module.initializer.fuji.structure.FailedToInspectException;
 import mod.fuji.module.initializer.fuji.structure.InspectingObject;
+import mod.fuji.module.initializer.fuji.structure.JavaObjectInspector;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
 
-    private final String fileRelativePath;
-    private final String walkingPath;
+    final @NotNull String fileRelativePath;
+    final @NotNull JavaObjectInspector inspector;
 
-    public JavaObjectInspectionGui(@Nullable SimpleGui parent, @Nullable Object objectToInspect, ServerPlayerEntity player, @NotNull List<InspectingObject> entities, int pageIndex, String fileRelativePath, @NotNull String walkingPath) {
-        super(parent, player, TextHelper.getTextByKey(player, "object.gui.title", walkingPath), entities, pageIndex);
+    public JavaObjectInspectionGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull List<InspectingObject> entities, int pageIndex, @NotNull String fileRelativePath, @NotNull JavaObjectInspector inspector) {
+        super(parent, player, TextHelper.getTextByKey(player, "object.gui.title", inspector.getWalkingPath()), entities, pageIndex);
 
         /* Pass the variables along the inspecting path. */
         this.fileRelativePath = fileRelativePath;
-        this.walkingPath = walkingPath;
-
-        /* Inspect the Java object instance by demand. */
-        if (objectToInspect != null) {
-            this.getEntities().addAll(InspectingObject.inspectJavaObject(objectToInspect));
-        }
+        this.inspector = inspector;
 
         /* Place footer. */
         GuiHelper.Placer.setSlotInLastLine(this, 4, GuiHelper.Button.makeHelpButton(player)
@@ -45,77 +36,31 @@ public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
 
     @Override
     protected PagedGui<InspectingObject> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<InspectingObject> entities, int pageIndex) {
-        return new JavaObjectInspectionGui(parent, null, player, entities, pageIndex, this.fileRelativePath, this.walkingPath);
+        return new JavaObjectInspectionGui(parent, player, entities, pageIndex, this.fileRelativePath, this.inspector);
     }
 
     @Override
     protected @NotNull GuiElementInterface toGuiElement(@NotNull InspectingObject entity) {
         GuiElementBuilder guiElementBuilder = new GuiElementBuilder()
-            .setName(entity.computeNameText(getPlayer()))
-            .setItem(entity.computeItem())
-            .setLore(entity.computeLore(getPlayer()))
-            .setCallback(() -> onClickToGoInside(entity));
+            .setName(entity.toNameText(getPlayer()))
+            .setItem(GuiHelper.Material.fromObjectType(entity.getObjectValue(), entity.getObjectType()))
+            .setLore(entity.toLore(getPlayer()))
+            .setCallback(() -> openChildInspectorGui(entity));
 
         return guiElementBuilder.build();
     }
 
-    private void onClickToGoInside(InspectingObject entity) {
-        /* Define variables. */
-        Object objectToInspect = entity.getObjectValue();
+    private void openChildInspectorGui(@NotNull InspectingObject inspectingObject) {
+        try {
+            /* Make a new inspector for that non-atom object. */
+            JavaObjectInspector childInspector = this.inspector.withChild(inspectingObject);
 
-        // NOTE: The value of user-defined object may be `null` in some case.
-        if (objectToInspect == null) {
-            return;
+            /* Make a deeper GUI and open it. */
+            new JavaObjectInspectionGui(getBackendGui(), getPlayer(), childInspector.getInspectingObjects(), 0, this.fileRelativePath, childInspector)
+                .open();
+        } catch (FailedToInspectException ignore) {
+            // Can not open child inspector for target object.
         }
-
-        String objectName = entity.getObjectName();
-
-        /* We can't go inside an atom. */
-        if (!ReflectionUtil.canInspectInside(entity.getObjectType())) return;
-
-        /* Let's go deeper. */
-        List<InspectingObject> newEntities = new ArrayList<>();
-
-        /* Special case for Iterable, Map and Map.Entry types.  */
-        if (Iterable.class.isAssignableFrom(objectToInspect.getClass())) {
-            newEntities = ((Collection<?>) objectToInspect)
-                .stream()
-                .map(element -> new InspectingObject(element, null, "ELT"))
-                .toList();
-
-            objectToInspect = null;
-        } else if (Map.class.isAssignableFrom(objectToInspect.getClass())) {
-            newEntities = ((Map<?, ?>) objectToInspect)
-                .entrySet()
-                .stream()
-                .map(entry -> {
-                    // NOTE: For json, you can only have `string type` key.
-                    String jsonObjectKeyName = null;
-                    if (String.class.isAssignableFrom(entry.getKey().getClass())) {
-                        jsonObjectKeyName = "\"" + entry.getKey() + "\"";
-                    }
-
-                    return new InspectingObject(entry, null, jsonObjectKeyName);
-                })
-                .toList();
-
-            objectToInspect = null;
-        } else if (Map.Entry.class.isAssignableFrom(objectToInspect.getClass())) {
-            Map.Entry<?, ?> entry = (Map.Entry<?, ?>) objectToInspect;
-            InspectingObject entryKeyObject = new InspectingObject(entry.getKey(), null, "KEY");
-            InspectingObject entryValueObject = new InspectingObject(entry.getValue(), null, "VALUE");
-            newEntities = List.of(entryKeyObject, entryValueObject);
-
-            objectToInspect = null;
-        }
-
-        /* Compute the new walking path. */
-        String newWalkingPath = this.walkingPath + "." + objectName;
-        newWalkingPath = StringUtil.trimPathString(newWalkingPath);
-
-        /* Make the deeper GUI and open it. */
-        new JavaObjectInspectionGui(getBackendGui(), objectToInspect, getPlayer(), newEntities, 0, this.fileRelativePath, newWalkingPath)
-            .open();
     }
 
 }
