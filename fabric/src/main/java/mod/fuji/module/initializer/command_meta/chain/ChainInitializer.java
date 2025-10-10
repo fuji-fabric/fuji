@@ -1,6 +1,5 @@
 package mod.fuji.module.initializer.command_meta.chain;
 
-import mod.fuji.core.command.argument.wrapper.impl.GreedyCommandString;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.command.annotation.CommandNode;
@@ -29,11 +28,9 @@ import java.util.regex.Pattern;
 
     ◉ The `return value` of a vanilla Minecraft command.
     In vanilla Minecraft, the `return value` of a command, is a `integer`.
-    If integer less than zero, it's `failed`.
-    If integer equals zero, it's `passed`.
-    If integer grater than zero, it's `success`.
-
-    <green>So, we can know whether a command was executed successfully or not, based on the return value of that command.
+    If integer `<= 0`, then the `command execution` is considered as `failure`.
+    If integer `> 0`, then the `command execution` is considered as `success`.
+    The fact is, it's possible to know whether a command execution is success or not, based on the `return value` of that command execution.
 
     ◉ How the `/chain` command works?
     The `/chain` command takes `exactly one argument`, whose type is `greedy string`.
