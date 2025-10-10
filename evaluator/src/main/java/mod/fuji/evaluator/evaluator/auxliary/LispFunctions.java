@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.function.Function;
 import mod.fuji.evaluator.evaluator.context.LispEnvironment;
 import mod.fuji.evaluator.evaluator.exception.LispEvaluationException;
-import mod.fuji.evaluator.evaluator.node.LispList;
-import mod.fuji.evaluator.evaluator.node.LispObject;
-import mod.fuji.evaluator.evaluator.node.LispSymbol;
+import mod.fuji.evaluator.evaluator.value.LispList;
+import mod.fuji.evaluator.evaluator.value.LispObject;
+import mod.fuji.evaluator.evaluator.value.LispSymbol;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("SequencedCollectionMethodCanBeUsed")

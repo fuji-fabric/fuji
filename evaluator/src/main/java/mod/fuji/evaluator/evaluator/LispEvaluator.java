@@ -5,8 +5,8 @@ import java.util.List;
 import mod.fuji.evaluator.auxiliary.CollectionUtil;
 import mod.fuji.evaluator.auxiliary.LogUtil;
 import mod.fuji.evaluator.evaluator.context.LispEnvironment;
-import mod.fuji.evaluator.evaluator.node.LispList;
-import mod.fuji.evaluator.evaluator.node.LispObject;
+import mod.fuji.evaluator.evaluator.value.LispList;
+import mod.fuji.evaluator.evaluator.value.LispObject;
 import org.jetbrains.annotations.NotNull;
 
 public class LispEvaluator {

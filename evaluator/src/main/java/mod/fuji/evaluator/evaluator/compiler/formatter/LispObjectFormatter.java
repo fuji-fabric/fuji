@@ -1,7 +1,7 @@
 package mod.fuji.evaluator.evaluator.compiler.formatter;
 
-import mod.fuji.evaluator.evaluator.node.LispList;
-import mod.fuji.evaluator.evaluator.node.LispObject;
+import mod.fuji.evaluator.evaluator.value.LispList;
+import mod.fuji.evaluator.evaluator.value.LispObject;
 
 public class LispObjectFormatter {
 

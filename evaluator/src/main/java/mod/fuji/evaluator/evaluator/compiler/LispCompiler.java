@@ -2,11 +2,11 @@ package mod.fuji.evaluator.evaluator.compiler;
 
 import java.util.List;
 import mod.fuji.evaluator.evaluator.compiler.exception.LispCompilationException;
-import mod.fuji.evaluator.evaluator.node.LispList;
-import mod.fuji.evaluator.evaluator.node.LispObject;
-import mod.fuji.evaluator.evaluator.node.LispNumber;
-import mod.fuji.evaluator.evaluator.node.LispString;
-import mod.fuji.evaluator.evaluator.node.LispSymbol;
+import mod.fuji.evaluator.evaluator.value.LispList;
+import mod.fuji.evaluator.evaluator.value.LispObject;
+import mod.fuji.evaluator.evaluator.value.LispNumber;
+import mod.fuji.evaluator.evaluator.value.LispString;
+import mod.fuji.evaluator.evaluator.value.LispSymbol;
 import mod.fuji.evaluator.reader.LispStreamProcessor;
 import mod.fuji.evaluator.reader.exception.LispReaderException;
 import mod.fuji.evaluator.reader.structure.StringRange;

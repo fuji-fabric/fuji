@@ -1,9 +1,9 @@
 package lisp.evaluator;
 
 import mod.fuji.evaluator.evaluator.context.LispEnvironment;
-import mod.fuji.evaluator.evaluator.node.LispNumber;
-import mod.fuji.evaluator.evaluator.node.LispObject;
-import mod.fuji.evaluator.evaluator.node.LispString;
+import mod.fuji.evaluator.evaluator.value.LispNumber;
+import mod.fuji.evaluator.evaluator.value.LispObject;
+import mod.fuji.evaluator.evaluator.value.LispString;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

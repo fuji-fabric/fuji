@@ -1,8 +1,8 @@
 package lisp.evaluator;
 
 import mod.fuji.evaluator.evaluator.exception.LispEvaluationException;
-import mod.fuji.evaluator.evaluator.node.LispNumber;
-import mod.fuji.evaluator.evaluator.node.LispObject;
+import mod.fuji.evaluator.evaluator.value.LispNumber;
+import mod.fuji.evaluator.evaluator.value.LispObject;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
