@@ -47,20 +47,26 @@ public class WorldGameRuleInitializer extends ModuleInitializer {
     private static final BaseConfigurationHandler<WorldGameRuleConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, WorldGameRuleConfigModel.class);
 
     public static Optional<GameRuleDescriptor> getEffectiveGameRuleDescriptor(String dimensionId) {
-        return config.model().gameRules
-            .stream()
-            .filter(it -> it.enable
-                && it.dimensionId.equals(dimensionId))
-            .findFirst();
+        var gameRules = config.model().gameRules;
+        for (GameRuleDescriptor gr : gameRules) {
+            if (gr.enable && gr.dimensionId.equals(dimensionId)) {
+                return Optional.of(gr);
+            }
+        }
+        return Optional.empty();
     }
 
+
     public static GameRules getEffectiveGameRules(String dimensionId, GameRules original) {
-        Optional<GameRuleDescriptor> effectiveGameRuleDescriptor = WorldGameRuleInitializer
-            .getEffectiveGameRuleDescriptor(dimensionId);
-        return effectiveGameRuleDescriptor
-            .map(GameRuleDescriptor::asVanillaGameRules)
-            .orElse(original);
+        var gameRules = config.model().gameRules;
+        for (GameRuleDescriptor gr : gameRules) {
+            if (gr.enable && gr.dimensionId.equals(dimensionId)) {
+                return gr.asVanillaGameRules();
+            }
+        }
+        return original;
     }
+
 
     @Override
     protected void registerGsonTypeAdapters() {
