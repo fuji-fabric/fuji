@@ -1,19 +1,20 @@
 package mod.fuji.module.initializer.world.gamerule;
 
-import mod.fuji.core.config.mapper.GsonMapper;
+import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import mod.fuji.core.config.mapper.GsonMapper;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.ModuleInitializer;
-import mod.fuji.module.initializer.world.gamerule.config.model.WorldGameRuleConfigModel;
 import mod.fuji.module.initializer.world.gamerule.config.adapter.BooleanGameRuleMapAdapter;
-import mod.fuji.module.initializer.world.gamerule.structure.GameRuleDescriptor;
 import mod.fuji.module.initializer.world.gamerule.config.adapter.IntegerGameRuleMapAdapter;
-import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
-import it.unimi.dsi.fastutil.objects.Reference2IntMap;
-import java.util.Optional;
+import mod.fuji.module.initializer.world.gamerule.config.model.WorldGameRuleConfigModel;
+import mod.fuji.module.initializer.world.gamerule.structure.GameRuleDescriptor;
 import net.minecraft.world.GameRules;
+
+import java.util.Optional;
 
 @Document(id = 1752577892546L, value = """
     This module allows you to customize the `per-dimension gamerule`.
@@ -56,17 +57,11 @@ public class WorldGameRuleInitializer extends ModuleInitializer {
         return Optional.empty();
     }
 
-
     public static GameRules getEffectiveGameRules(String dimensionId, GameRules original) {
-        var gameRules = config.model().gameRules;
-        for (GameRuleDescriptor gr : gameRules) {
-            if (gr.enable && gr.dimensionId.equals(dimensionId)) {
-                return gr.asVanillaGameRules();
-            }
-        }
+        var gameRuleDescriptorOpt = getEffectiveGameRuleDescriptor(dimensionId);
+        if (gameRuleDescriptorOpt.isPresent()) return gameRuleDescriptorOpt.get().asVanillaGameRules();
         return original;
     }
-
 
     @Override
     protected void registerGsonTypeAdapters() {
