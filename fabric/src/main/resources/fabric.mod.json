@@ -68,6 +68,13 @@
       "contact": {
         "role": "developer of the command_menu online editor"
       }
+    },
+    {
+      "name": "zonary123",
+      "contact": {
+        "role": "contributor",
+        "homepage": "https://github.com/zonary123"
+      }
     }
   ],
   "environment": "*",
