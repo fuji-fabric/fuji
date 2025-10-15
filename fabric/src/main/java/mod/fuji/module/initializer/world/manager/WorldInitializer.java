@@ -481,10 +481,17 @@ public class WorldInitializer extends ModuleInitializer {
     private static int $unload(@CommandSource ServerCommandSource source, LoadedRuntimeDimensionDescriptor dimension) {
         RuntimeDimensionDescriptor runtimeDimensionDescriptor = dimension.getValue();
         Optional<ServerWorld> loadedWorld = runtimeDimensionDescriptor.getLoadedWorld();
-        WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(source, loadedWorld.get(), false, false));
-
-        TextHelper.sendTextByKey(source, "world.dimension.unload", runtimeDimensionDescriptor.dimension);
-        return CommandHelper.Return.SUCCESS;
+        String dimensionId = runtimeDimensionDescriptor.dimension;
+        return loadedWorld
+            .map($loadedWorld -> {
+                WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(source, $loadedWorld, false, false));
+                TextHelper.sendTextByKey(source, "world.dimension.unload", dimensionId);
+                return CommandHelper.Return.SUCCESS;
+            })
+            .orElseGet(() -> {
+                TextHelper.sendTextByKey(source, "world.dimension.unload.already", dimensionId);
+                return CommandHelper.Return.FAILURE;
+            });
     }
 
     @Document(id = 1751826611302L, value = "Delete and create the specified world.")
@@ -513,7 +520,7 @@ public class WorldInitializer extends ModuleInitializer {
                     return CommandHelper.Return.SUCCESS;
                 })
                 .orElseGet(() -> {
-                    TextHelper.sendTextByKey(source, "world.dimension.reset.dimension_descriptor_not_found", dimensionIdentifier);
+                    TextHelper.sendTextByKey(source, "world.dimension.dimension_descriptor_not_found", dimensionIdentifier);
                     return CommandHelper.Return.FAILURE;
                 });
         });
