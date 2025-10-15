@@ -1,19 +1,20 @@
 package mod.fuji.module.initializer.world.gamerule;
 
-import mod.fuji.core.config.mapper.GsonMapper;
+import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import mod.fuji.core.config.mapper.GsonMapper;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.ModuleInitializer;
-import mod.fuji.module.initializer.world.gamerule.config.model.WorldGameRuleConfigModel;
 import mod.fuji.module.initializer.world.gamerule.config.adapter.BooleanGameRuleMapAdapter;
-import mod.fuji.module.initializer.world.gamerule.structure.GameRuleDescriptor;
 import mod.fuji.module.initializer.world.gamerule.config.adapter.IntegerGameRuleMapAdapter;
-import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
-import it.unimi.dsi.fastutil.objects.Reference2IntMap;
-import java.util.Optional;
+import mod.fuji.module.initializer.world.gamerule.config.model.WorldGameRuleConfigModel;
+import mod.fuji.module.initializer.world.gamerule.structure.GameRuleDescriptor;
 import net.minecraft.world.GameRules;
+
+import java.util.Optional;
 
 @Document(id = 1752577892546L, value = """
     This module allows you to customize the `per-dimension gamerule`.
@@ -47,19 +48,19 @@ public class WorldGameRuleInitializer extends ModuleInitializer {
     private static final BaseConfigurationHandler<WorldGameRuleConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, WorldGameRuleConfigModel.class);
 
     public static Optional<GameRuleDescriptor> getEffectiveGameRuleDescriptor(String dimensionId) {
-        return config.model().gameRules
-            .stream()
-            .filter(it -> it.enable
-                && it.dimensionId.equals(dimensionId))
-            .findFirst();
+        var gameRules = config.model().gameRules;
+        for (GameRuleDescriptor gr : gameRules) {
+            if (gr.enable && gr.dimensionId.equals(dimensionId)) {
+                return Optional.of(gr);
+            }
+        }
+        return Optional.empty();
     }
 
     public static GameRules getEffectiveGameRules(String dimensionId, GameRules original) {
-        Optional<GameRuleDescriptor> effectiveGameRuleDescriptor = WorldGameRuleInitializer
-            .getEffectiveGameRuleDescriptor(dimensionId);
-        return effectiveGameRuleDescriptor
-            .map(GameRuleDescriptor::asVanillaGameRules)
-            .orElse(original);
+        var gameRuleDescriptorOpt = getEffectiveGameRuleDescriptor(dimensionId);
+        if (gameRuleDescriptorOpt.isPresent()) return gameRuleDescriptorOpt.get().asVanillaGameRules();
+        return original;
     }
 
     @Override
