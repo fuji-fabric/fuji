@@ -564,19 +564,6 @@ public class WorldInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    @Document(id = 1752435062516L, value = """
-        Query which dimension the player is in.
-        """)
-    @CommandNode("who")
-    @CommandRequirement(level = 4)
-    private static int $who(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {
-        String playerName = PlayerHelper.getPlayerName(player);
-        ServerWorld serverWorld = PlayerHelper.getServerWorld(player);
-        String locationDimensionId = RegistryHelper.getIdAsString(serverWorld);
-        TextHelper.sendTextByKey(source, "world.who.player", playerName, locationDimensionId);
-        return CommandHelper.Return.SUCCESS;
-    }
-
     private static void printGroupedPlayersByDimension(ServerCommandSource source, @Nullable Dimension specifiedDimension) {
         Map<@NotNull String, List<String>> groupedPlayers = WorldHelper
             .getWorlds()
