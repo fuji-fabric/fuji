@@ -1,5 +1,14 @@
 package mod.fuji.module.initializer.world.manager;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import lombok.SneakyThrows;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
@@ -21,26 +30,17 @@ import mod.fuji.core.document.annotation.TestCase;
 import mod.fuji.core.job.JobManager;
 import mod.fuji.core.structure.GlobalPos;
 import mod.fuji.module.initializer.ModuleInitializer;
+import mod.fuji.module.initializer.world.manager.command.argument.wrapper.ChunkGeneratorType;
 import mod.fuji.module.initializer.world.manager.command.argument.wrapper.LoadedRuntimeDimensionDescriptor;
 import mod.fuji.module.initializer.world.manager.command.argument.wrapper.UnloadedRuntimeDimensionDescriptor;
 import mod.fuji.module.initializer.world.manager.command.argument.wrapper.WorldPresetType;
 import mod.fuji.module.initializer.world.manager.config.model.WorldConfigModel;
 import mod.fuji.module.initializer.world.manager.config.model.WorldDataModel;
 import mod.fuji.module.initializer.world.manager.service.WorldService;
-import mod.fuji.module.initializer.world.manager.command.argument.wrapper.ChunkGeneratorType;
 import mod.fuji.module.initializer.world.manager.service.structure.DimensionCreationTicket;
 import mod.fuji.module.initializer.world.manager.service.structure.DimensionDeletionTicket;
 import mod.fuji.module.initializer.world.manager.structure.RuntimeDimensionDescriptor;
 import mod.fuji.module.initializer.world.manager.structure.RuntimeDimensionImporter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import lombok.SneakyThrows;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -473,7 +473,7 @@ public class WorldInitializer extends ModuleInitializer {
         DimensionCreationTicket ticket = new DimensionCreationTicket(source, runtimeDimensionDescriptor);
         WorldService.submitDimensionCreationTicket(ticket);
 
-        TextHelper.sendTextByKey(source,"world.dimension.load", runtimeDimensionDescriptor.dimension);
+        TextHelper.sendTextByKey(source, "world.dimension.load", runtimeDimensionDescriptor.dimension);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -483,7 +483,7 @@ public class WorldInitializer extends ModuleInitializer {
         Optional<ServerWorld> loadedWorld = runtimeDimensionDescriptor.getLoadedWorld();
         WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(source, loadedWorld.get(), false, false));
 
-        TextHelper.sendTextByKey(source,"world.dimension.unload", runtimeDimensionDescriptor.dimension);
+        TextHelper.sendTextByKey(source, "world.dimension.unload", runtimeDimensionDescriptor.dimension);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -495,26 +495,27 @@ public class WorldInitializer extends ModuleInitializer {
             ServerWorld dimensionInstance = dimension.getValue();
             String dimensionIdentifier = RegistryHelper.getIdAsString(dimensionInstance);
             Optional<RuntimeDimensionDescriptor> runtimeDimensionDescriptor = WorldService.getRuntimeDimensionDescriptor(dimensionIdentifier);
-            if (runtimeDimensionDescriptor.isEmpty()) {
-                TextHelper.sendTextByKey(source, "world.dimension.not_found", dimensionIdentifier);
-                return CommandHelper.Return.FAILURE;
-            }
-            RuntimeDimensionDescriptor $runtimeDimensionDescriptor = runtimeDimensionDescriptor.get();
+            return runtimeDimensionDescriptor
+                .map($runtimeDimensionDescriptor -> {
+                    /* Delete the dimension instance. */
+                    WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(source, dimensionInstance, true, false));
 
-            /* Delete the dimension instance. */
-            WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(source, dimensionInstance, true, false));
+                    /* Draw the seed. */
+                    Boolean $useTheSameSeed = useTheSameSeed.orElse(false);
+                    $runtimeDimensionDescriptor.seed = $useTheSameSeed ? $runtimeDimensionDescriptor.seed : RandomSeed.getSeed();
+                    world.writeStorage();
 
-            /* Draw the seed. */
-            Boolean $useTheSameSeed = useTheSameSeed.orElse(false);
-            $runtimeDimensionDescriptor.seed = $useTheSameSeed ? $runtimeDimensionDescriptor.seed : RandomSeed.getSeed();
-            world.writeStorage();
+                    /* Create a new dimension instance. */
+                    DimensionCreationTicket ticket = new DimensionCreationTicket(source, $runtimeDimensionDescriptor);
+                    WorldService.submitDimensionCreationTicket(ticket);
 
-            /* Create a new dimension instance. */
-            DimensionCreationTicket ticket = new DimensionCreationTicket(source, $runtimeDimensionDescriptor);
-            WorldService.submitDimensionCreationTicket(ticket);
-
-            TextHelper.sendBroadcastByKey("world.dimension.reset", dimensionIdentifier);
-            return CommandHelper.Return.SUCCESS;
+                    TextHelper.sendBroadcastByKey("world.dimension.reset", dimensionIdentifier);
+                    return CommandHelper.Return.SUCCESS;
+                })
+                .orElseGet(() -> {
+                    TextHelper.sendTextByKey(source, "world.dimension.reset.dimension_descriptor_not_found", dimensionIdentifier);
+                    return CommandHelper.Return.FAILURE;
+                });
         });
     }
 
@@ -583,7 +584,7 @@ public class WorldInitializer extends ModuleInitializer {
                 String dimensionId = entry.getKey();
                 List<String> players = entry.getValue();
                 TextHelper.sendTextByKey(source, "world.who.dimension", dimensionId, players);
-        });
+            });
     }
 
     @Document(id = 1752283075945L, value = """

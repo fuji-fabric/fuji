@@ -8,4 +8,5 @@
 # 📑 Changelog
 
 ## ⭐ New Features
-- **[world]:** Prevent the `/world delete` command to delete a `vanilla dimension`.
+- **[world]**: Prevent the `/world delete` command to delete a `vanilla dimension`.
+- **[world]**: Fine-tune the feedback messages for `/world` sub commands, for clarity.
