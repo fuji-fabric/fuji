@@ -18,6 +18,8 @@ public class LispEvaluator {
     }
 
     public @NotNull LispObject eval()  {
+        // FIXME: The LispEnvironment should be session-specific.
+
         List<LispObject> values = new ArrayList<>();
 
         int size = AST.getObjects().size();
