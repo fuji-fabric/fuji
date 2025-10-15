@@ -326,9 +326,16 @@ public class WorldInitializer extends ModuleInitializer {
         .ofModule("world.json", WorldDataModel.class)
         .enableAutoSaveFeature(JobManager.CRON_EVERY_MINUTE);
 
-    private static void ensureDimensionNotExists(ServerCommandSource source, Identifier identifier) {
+    private static void ensureDimensionNotExists(@NotNull ServerCommandSource source, @NotNull Identifier identifier) {
         if (WorldService.existsDimension(identifier)) {
             TextHelper.sendTextByKey(source, "world.dimension.exist");
+            throw new AbortCommandExecutionException();
+        }
+    }
+
+    private static void ensureDimensionIsNotVanillaDimension(@NotNull ServerCommandSource source, @NotNull String dimensionId) {
+        if (WorldHelper.isVanillaDimension(dimensionId)) {
+            TextHelper.sendTextByKey(source, "world.dimension.delete.forbidden", dimensionId);
             throw new AbortCommandExecutionException();
         }
     }
@@ -445,9 +452,12 @@ public class WorldInitializer extends ModuleInitializer {
     @CommandNode("delete")
     private static int $delete(@CommandSource ServerCommandSource source, Dimension dimension, Optional<Boolean> confirm) {
         return CommandHelper.Pattern.withCommandConfirmed(source, confirm, () -> {
+            ServerWorld $dimension = dimension.getValue();
+            String dimensionId = RegistryHelper.getIdAsString($dimension);
+            ensureDimensionIsNotVanillaDimension(source, dimensionId);
+
             /* Request to delete. */
-            ServerWorld dimensionInstance = dimension.getValue();
-            WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(source, dimensionInstance, true, true));
+            WorldService.submitDimensionDeletionTicket(new DimensionDeletionTicket(source, $dimension, true, true));
             return CommandHelper.Return.SUCCESS;
         });
     }

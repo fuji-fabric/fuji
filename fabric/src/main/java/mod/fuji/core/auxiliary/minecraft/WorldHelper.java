@@ -4,6 +4,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import mod.fuji.core.service.random_teleport.searcher.PositionYTopDownSearcher;
 import mod.fuji.core.structure.GlobalPos;
 import java.util.Collection;
@@ -84,6 +85,12 @@ public class WorldHelper {
         }
 
         return Items.ENDER_PEARL;
+    }
+
+    public static boolean isVanillaDimension(@NotNull String idAsString) {
+        return Set
+            .of("minecraft:overworld", "minecraft:the_nether", "minecraft:the_end")
+            .contains(idAsString);
     }
 
     public static Collection<ServerWorld> getWorlds() {

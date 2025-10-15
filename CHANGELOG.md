@@ -8,6 +8,4 @@
 # 📑 Changelog
 
 ## ⭐ New Features
-- **[core]:** Added lots of helpful documentation to our online site — check it out here: [fuji-fabric.github.io](https://fuji-fabric.github.io/)
-- **[fuji]:** Improved the user interface for the configuration inspector.  
-  → Try it with: `/fuji inspect configurations`
+- **[world]:** Prevent the `/world delete` command to delete a `vanilla dimension`.

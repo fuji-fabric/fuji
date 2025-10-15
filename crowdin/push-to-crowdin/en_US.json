@@ -623,6 +623,7 @@
   "works.work.set.target.name": "<#FFA1F5>Set name",
   "works.work.set.target.position": "<#FFA1F5>Set position",
   "world.dimension.created": "<gold>Create dimension %s done",
+  "world.dimension.delete.forbidden": "<red>You can't delete %s dimension.",
   "world.dimension.deleted": "<gold>Delete dimension %s done",
   "world.dimension.dimension_type": "<blue>Dimension Type -> %s",
   "world.dimension.exist": "<red>Dimension already exist",
