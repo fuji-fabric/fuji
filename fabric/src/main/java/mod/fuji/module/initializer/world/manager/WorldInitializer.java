@@ -19,6 +19,7 @@ import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.command.argument.wrapper.impl.Dimension;
 import mod.fuji.core.command.argument.wrapper.impl.DimensionType;
+import mod.fuji.core.command.argument.wrapper.impl.FujiIdentifier;
 import mod.fuji.core.command.exception.AbortCommandExecutionException;
 import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
@@ -153,6 +154,9 @@ import org.jetbrains.annotations.Nullable;
 @ColorBox(id = 1751982071236L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Create an extra `the_nether` dimension
     Issue: `/world create my_nether minecraft:the_nether`
+
+    <yellow>NOTE: By default, the dimension namespace is `fuji`.
+    <yellow>Issue `/world create "custom_namespace:my_nether" minecraft:the_nether` to use a custom namespace.
 
     ◉ Delete the extra dimension
     Issue: `/world delete fuji:my_nether --confirm true`
@@ -383,7 +387,7 @@ public class WorldInitializer extends ModuleInitializer {
         """)
     @CommandNode("create")
     private static int $create(@CommandSource ServerCommandSource source
-        , String name
+        , FujiIdentifier name
         , DimensionType dimensionType
         , Optional<Long> seed
         , Optional<ChunkGeneratorType> chunkGeneratorType
@@ -391,7 +395,7 @@ public class WorldInitializer extends ModuleInitializer {
         , Optional<WorldPresetType> worldPresetType) {
 
         /* Make identifier for the new dimension. */
-        Identifier dimensionIdentifier = RegistryHelper.makeIdentifierOrThrow("fuji:%s".formatted(name));
+        Identifier dimensionIdentifier = name.getValue();
         ensureDimensionNotExists(source, dimensionIdentifier);
 
         /* Make the runtime dimension descriptor. */
@@ -417,7 +421,7 @@ public class WorldInitializer extends ModuleInitializer {
         """)
     @CommandNode("import")
     private static int $import(@CommandSource ServerCommandSource source
-        , String name
+        , FujiIdentifier name
         , DimensionType dimensionType
         , Optional<Long> seed
         , Optional<ChunkGeneratorType> chunkGeneratorType
@@ -425,10 +429,12 @@ public class WorldInitializer extends ModuleInitializer {
         , Optional<WorldPresetType> worldPresetType) {
 
         /* Ensure the dimension dir existed. */
+        Identifier dimensionId = name.getValue();
         Path targetDimensionPath = RuntimeDimensionImporter.getLevelSavePath()
             .resolve("dimensions")
-            .resolve("fuji")
-            .resolve(name);
+            .resolve(dimensionId.getNamespace())
+            .resolve(dimensionId.getPath());
+
         if (!Files.exists(targetDimensionPath)) {
             TextHelper.sendTextByKey(source, "world.dimension.import.dimension_dir_not_found", targetDimensionPath.toFile().getCanonicalPath());
             return CommandHelper.Return.FAILURE;

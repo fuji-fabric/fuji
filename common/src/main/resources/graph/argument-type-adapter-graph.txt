@@ -18,6 +18,7 @@ mod.fuji.core.command.argument.adapter.impl.EntityCollectionArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.EntityTypeArgumentAdapter
 mod.fuji.core.command.argument.adapter.impl.FloatArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.FloatRangeArgumentTypeAdapter
+mod.fuji.core.command.argument.adapter.impl.FujiIdentifierArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.GameProfileArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.GamemodeArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.GreedyArgumentTypeAdapter
