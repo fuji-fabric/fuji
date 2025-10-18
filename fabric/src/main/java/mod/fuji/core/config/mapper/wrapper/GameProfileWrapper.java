@@ -16,8 +16,19 @@ import org.jetbrains.annotations.Nullable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GameProfileWrapper {
+
+    /**
+     * The UUID of the <code>user account</code>.
+     * Note that it is different between <code>online account</code> and <code>offline account</code>.
+     */
     @Nullable("For an invalid online player name, the UUID is null.") UUID id;
+
+    /**
+     * The <code>username</code> of the <code>user account</code>.
+     * This field is <code>case-sensitive</code>.
+     */
     @NotNull String name;
+
     @NotNull PropertyMapWrapper properties;
 
     public static @NotNull GameProfileWrapper of(@Nullable UUID id, @NotNull String name) {

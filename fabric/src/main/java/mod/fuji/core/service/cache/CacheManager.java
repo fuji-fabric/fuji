@@ -6,10 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import mod.fuji.Fuji;
 import mod.fuji.core.auxiliary.JsonUtil;
 import mod.fuji.core.config.mapper.GsonMapper;
-import mod.fuji.core.event.annotation.EventConsumer;
-import mod.fuji.core.event.message.player.PlayerJoinedEvent;
 import mod.fuji.core.service.cache.config.model.GenericCacheModel;
-import mod.fuji.core.service.cache.service.GameProfileCacheService;
 import mod.fuji.core.service.cache.structure.Cache;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,11 +22,6 @@ public class CacheManager {
 
     private static final Path CACHE_DIRECTORY = Fuji.MOD_CONFIG_PATH.resolve("cache");
     private static final Map<String, GenericCacheModel<?>> CACHE_FILES = new ConcurrentHashMap<>();
-
-    @EventConsumer
-    private static void updateGameProfileCache(PlayerJoinedEvent event) {
-        GameProfileCacheService.setGameProfileCache(event.getPlayer());
-    }
 
     @SneakyThrows(IOException.class)
     private static @NotNull Path toCacheFilePath(@NotNull String cacheSubject) {

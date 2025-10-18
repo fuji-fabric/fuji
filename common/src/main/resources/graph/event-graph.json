@@ -1101,17 +1101,17 @@
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerJoinedEvent",
-      "declaring_class_name": "mod.fuji.core.service.cache.CacheManager",
-      "declaring_method_name": "updateGameProfileCache",
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
+      "declaring_class_name": "mod.fuji.core.service.cache.job.FlushCacheJob",
+      "declaring_method_name": "scheduleFlushCacheJob",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
     },
     {
-      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "mod.fuji.core.service.cache.job.FlushCacheJob",
-      "declaring_method_name": "scheduleFlushCacheJob",
+      "event_type_class_name": "mod.fuji.core.event.message.player.PlayerJoinedEvent",
+      "declaring_class_name": "mod.fuji.core.service.cache.service.GameProfileCacheService",
+      "declaring_method_name": "updateGameProfileCache",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false
