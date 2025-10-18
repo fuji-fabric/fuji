@@ -7,19 +7,5 @@
 
 # 📑 Changelog
 
-This release brings major improvements to the **world modules** and overall user experience.  
-Special thanks to **@zonary123** for contributing!
-
----
-
-## ✨ New Features
-- **[world.gamerule]** — Optimized performance when retrieving *per-dimension gamerules*.  
-  *(Thanks to @zonary123)*
-- **[world]** — Prevent the `/world delete` command from deleting *vanilla dimensions*.
-- **[world]** — Added support for specifying a **custom namespace** when *creating* or *importing* dimensions. (#517)
-- **[world]** — Refined feedback messages for `/world {load|unload|reset}` commands to improve clarity.
-
----
-
-## 🐛 Fixes
-- **[world]** — Fixed `/world who` command suggestions not appearing properly.
+## Fixes
+- [color.sign] Fix an issue where the `sign cache` data format version didn't get migrated automatically, after the mod version upgrading.
