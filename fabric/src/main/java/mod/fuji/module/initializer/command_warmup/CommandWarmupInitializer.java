@@ -112,7 +112,7 @@ public class CommandWarmupInitializer extends ModuleInitializer {
         if (callback.isCancelled()) return;
         ServerCommandSource commandSource = event.getCommandSource();
         if (CommandHelper.Source.isExecutedByConsole(commandSource)) return;
-        if (config.model().admin_players_can_bypass_all_rules && CommandHelper.Requirement.isAdmin(commandSource)) return;
+        if (config.model().admin_players_can_bypass && CommandHelper.Requirement.isAdmin(commandSource)) return;
 
         CommandHelper.Source.withServerPlayerEntity(commandSource, player -> {
             processCommandWarmup(player, event.getCommandString(), callback);

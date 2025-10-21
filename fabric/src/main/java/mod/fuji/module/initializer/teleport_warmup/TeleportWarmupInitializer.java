@@ -48,9 +48,8 @@ import net.minecraft.server.world.ServerWorld;
     ◉ The `teleport warmup` will NOT be applied if...
     1. The target dimension is not defined in the `effective dimensions` list.
     2. The target player's `age <= 3`
-    3. The target player is admin. (level permission >= 4)
-    4. The target player is a `fake player`.
-    5. The target player has the `warmup bypass permission`.
+    3. The target player is a `fake player`.
+    4. The target player has the `warmup bypass permission`.
     """)
 public class TeleportWarmupInitializer extends ModuleInitializer {
 
@@ -79,7 +78,7 @@ public class TeleportWarmupInitializer extends ModuleInitializer {
         }
 
         /* Skip the teleport warmup for admin players. */
-        if (CommandHelper.Requirement.isAdmin(player)) {
+        if (config.model().admin_players_can_bypass && CommandHelper.Requirement.isAdmin(player)) {
             return false;
         }
 
