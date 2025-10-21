@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 @ColorBox(id = 1757527645811L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Create a `jump pad` that launches players when stepped on.
     You can integrate with `command_attachment` module.
-    Issue: `/command-attachment attach-block-one ~ ~ ~ --interactType STEP_ON \\\\<command\\\\>`
+    Issue: `/command-attachment attach-block-one ~ ~ ~ --interactType STEP_ON \\<command\\>`
 
     ◉ Create a `knock-back stick` that kick the entities around you.
     Issue: `/command-attachment attach-item-one launch at %player:name% @e[type=!minecraft:player,distance=..8] 30 1`

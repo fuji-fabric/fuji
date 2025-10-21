@@ -58,12 +58,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
     You can use the `alternative character |` in `regex`.
     """)
-@ColorBox(id = 1758083597322L, color = ColorBox.ColorBoxTypes.NOTE, value = """
-    ◉ The `command warmup` will NOT be applied if...
-    1. The command source is `the console`.
-    2. The command source is `admin` (level permission >= 4)
-    3. The command source has the `warmup bypass permission` for that command.
-    """)
 public class CommandWarmupInitializer extends ModuleInitializer {
     private static final BaseConfigurationHandler<CommandWarmupConfigModel> config = ObjectConfigurationHandler
         .ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandWarmupConfigModel.class)
@@ -118,7 +112,7 @@ public class CommandWarmupInitializer extends ModuleInitializer {
         if (callback.isCancelled()) return;
         ServerCommandSource commandSource = event.getCommandSource();
         if (CommandHelper.Source.isExecutedByConsole(commandSource)) return;
-        if (CommandHelper.Requirement.isAdmin(commandSource)) return;
+        if (config.model().admin_players_can_bypass_all_rules && CommandHelper.Requirement.isAdmin(commandSource)) return;
 
         CommandHelper.Source.withServerPlayerEntity(commandSource, player -> {
             processCommandWarmup(player, event.getCommandString(), callback);
