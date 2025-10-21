@@ -216,7 +216,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
         if (event.getCallback().isCancelled()) return;
         ServerCommandSource commandSource = event.getCommandSource();
         if (CommandHelper.Source.isExecutedByConsole(commandSource)) return;
-        if (CommandHelper.Requirement.isAdmin(commandSource)) return;
+        if (config.model().isAdminPlayersCanBypass() && CommandHelper.Requirement.isAdmin(commandSource)) return;
 
         @NotNull ServerPlayerEntity player = Objects.requireNonNull(commandSource.getPlayer());
 

@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CommandCooldownConfigModel {
 
+    boolean adminPlayersCanBypass = true;
+
     @Document(id = 1751826371102L, value = """
         The `unnamed cooldown` is applied `per-player`.
 
