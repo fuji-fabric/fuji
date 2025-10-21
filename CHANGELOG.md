@@ -4,8 +4,14 @@
 > 
 > For user manual, refer to: https://fuji-fabric.github.io
 >
+ 
 
 # 📑 Changelog
 
-## Fixes
-- [color.sign] Fix an issue where the `sign cache` data format version didn't get migrated automatically, after the mod version upgrading.
+## ✨ Added
+- **[command_cooldown]** Added the `admin_players_can_bypass` option.
+- **[command_warmup]** Added the `admin_players_can_bypass` option.
+- **[teleport_warmup]** Added the `admin_players_can_bypass` option.
+
+## 🐛 Fixed
+- **[color.sign]** Fixed an issue where the `sign cache` data format version was not automatically migrated after upgrading the mod version.
