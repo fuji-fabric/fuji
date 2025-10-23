@@ -168,7 +168,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
         throw ExceptionUtil.makeReThrownException(e);
     }
 
-    public final void writeStorage() {
+    public synchronized final void writeStorage() {
         try {
             /* Ensure the model is initialized. */
             if (this.model == null) {
