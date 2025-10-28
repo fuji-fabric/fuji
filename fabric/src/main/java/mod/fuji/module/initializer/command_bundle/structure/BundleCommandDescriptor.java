@@ -94,6 +94,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
 
         /* Execute the commands. */
         LogUtil.debug("Execute bundle command: {}", commands);
+        // NOTE: Use the last return value as the tree return value, so that a bundle command can be used to rewrite a predicate command.
         List<Integer> commandReturnValues = CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(source), commands);
         return CollectionUtil.lastElement(commandReturnValues);
     }
