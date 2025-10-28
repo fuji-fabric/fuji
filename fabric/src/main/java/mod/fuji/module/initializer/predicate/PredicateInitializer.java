@@ -9,6 +9,7 @@ import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.EntityHelper;
 import mod.fuji.core.auxiliary.minecraft.InventoryHelper;
 import mod.fuji.core.auxiliary.minecraft.LuckpermsHelper;
+import mod.fuji.core.auxiliary.minecraft.PlaceholderHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.annotation.CommandNode;
@@ -26,7 +27,6 @@ import net.minecraft.command.argument.ItemPredicateArgumentType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
 import net.minecraft.world.GameMode;
 
 @Document(id = 1751826497994L, value = """
@@ -173,15 +173,13 @@ public class PredicateInitializer extends ModuleInitializer {
     }
 
     private static int compareNumericValue(ServerCommandSource source, ServerPlayerEntity player, double value, GreedyString placeholderString, BiPredicate<Double, Double> predicate) {
-        String $numericValueString = placeholderString.getValue();
-        Text numericValueText = TextHelper.getTextByValue(player, $numericValueString);
-        $numericValueString = TextHelper.Operators.getString(numericValueText);
+        String numericValueString = PlaceholderHelper.parsePlaceholderString(player, placeholderString.getValue());
         try {
-            double numericValue = Double.parseDouble($numericValueString);
+            double numericValue = Double.parseDouble(numericValueString);
             boolean testResult = predicate.test(value, numericValue);
             return CommandHelper.Return.returnBoolean(source, testResult);
         } catch (NumberFormatException e) {
-            TextHelper.sendTextByKey(source, "placeholder.number.parse.failed", TextHelper.Parsers.escapeTags($numericValueString));
+            TextHelper.sendTextByKey(source, "placeholder.number.parse.failed", TextHelper.Parsers.escapeTags(numericValueString));
             return CommandHelper.Return.FAILURE;
         }
     }
@@ -207,10 +205,8 @@ public class PredicateInitializer extends ModuleInitializer {
     }
 
     private static int compareStringValue(ServerCommandSource source, ServerPlayerEntity player, String value, GreedyString placeholderString, BiPredicate<String, String> predicate) {
-        String $placeholderString = placeholderString.getValue();
-        Text numericValueText = TextHelper.getTextByValue(player, $placeholderString);
-        $placeholderString = TextHelper.Operators.getString(numericValueText);
-        boolean test = predicate.test(value, $placeholderString);
+        String placeholderValue = PlaceholderHelper.parsePlaceholderString(player, placeholderString.getValue());
+        boolean test = predicate.test(value, placeholderValue);
         return CommandHelper.Return.returnBoolean(source, test);
     }
 
