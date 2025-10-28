@@ -8,5 +8,9 @@
 
 # 📑 Changelog
 
-## 🐛 Fixed
-- **[core]** Ensure the config files managed by `auto save` feature will be `synced` on the server started.
+## Added
+- **[predicate]** Added new `generic predicate commands` to test `string value` conditions.
+  - Added: `/equals? <player> <expectedString> <placeholderString>` command.
+  - Added: `/true? <player> <placeholderString>` command.
+  - Added: `/false? <player> <placeholderString>` command.
+  - Added: `/matches? <player> <regex> <placeholderString>` command.

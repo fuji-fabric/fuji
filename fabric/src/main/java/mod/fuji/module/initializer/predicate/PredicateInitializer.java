@@ -1,34 +1,33 @@
 package mod.fuji.module.initializer.predicate;
 
 import com.mojang.authlib.GameProfile;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.BiPredicate;
 import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
-import mod.fuji.core.auxiliary.minecraft.InventoryHelper;
-import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
-import mod.fuji.core.auxiliary.minecraft.TextHelper;
-import mod.fuji.core.command.argument.wrapper.impl.OfflineGameProfile;
-import mod.fuji.core.document.annotation.ColorBox;
-import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.EntityHelper;
+import mod.fuji.core.auxiliary.minecraft.InventoryHelper;
 import mod.fuji.core.auxiliary.minecraft.LuckpermsHelper;
+import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
+import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.command.argument.wrapper.impl.Dimension;
 import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
+import mod.fuji.core.command.argument.wrapper.impl.OfflineGameProfile;
+import mod.fuji.core.document.annotation.ColorBox;
+import mod.fuji.core.document.annotation.Document;
+import mod.fuji.core.document.descriptor.PermissionDescriptor;
 import mod.fuji.core.document.structure.DocString;
 import mod.fuji.module.initializer.ModuleInitializer;
-import mod.fuji.core.document.descriptor.PermissionDescriptor;
-import java.util.Objects;
-import java.util.function.BiPredicate;
 import net.minecraft.command.argument.ItemPredicateArgumentType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.world.GameMode;
-
-import java.util.Optional;
 
 @Document(id = 1751826497994L, value = """
     This module provides a collection of `predicate commands`.
@@ -173,8 +172,8 @@ public class PredicateInitializer extends ModuleInitializer {
         return compareNumericValue(source, player, value, numericValueString, (a, b) -> a <= b);
     }
 
-    private static int compareNumericValue(ServerCommandSource source, ServerPlayerEntity player, double value, GreedyString numericValueString, BiPredicate<Double, Double> predicate) {
-        String $numericValueString = numericValueString.getValue();
+    private static int compareNumericValue(ServerCommandSource source, ServerPlayerEntity player, double value, GreedyString placeholderString, BiPredicate<Double, Double> predicate) {
+        String $numericValueString = placeholderString.getValue();
         Text numericValueText = TextHelper.getTextByValue(player, $numericValueString);
         $numericValueString = TextHelper.Operators.getString(numericValueText);
         try {
@@ -186,4 +185,33 @@ public class PredicateInitializer extends ModuleInitializer {
             return CommandHelper.Return.FAILURE;
         }
     }
+
+    @CommandNode("equals?")
+    private static int $equals(@CommandSource ServerCommandSource source, ServerPlayerEntity player, String expectedString, GreedyString placeholderString) {
+        return compareStringValue(source, player, expectedString, placeholderString, String::equals);
+    }
+
+    @CommandNode("true?")
+    private static int $true(@CommandSource ServerCommandSource source, ServerPlayerEntity player, GreedyString placeholderString) {
+        return $equals(source, player, "true", placeholderString);
+    }
+
+    @CommandNode("false?")
+    private static int $false(@CommandSource ServerCommandSource source, ServerPlayerEntity player, GreedyString placeholderString) {
+        return $equals(source, player, "false", placeholderString);
+    }
+
+    @CommandNode("matches?")
+    private static int $matches(@CommandSource ServerCommandSource source, ServerPlayerEntity player, String expectedString, GreedyString placeholderString) {
+        return compareStringValue(source, player, expectedString, placeholderString, (a, b) -> b.matches(a));
+    }
+
+    private static int compareStringValue(ServerCommandSource source, ServerPlayerEntity player, String value, GreedyString placeholderString, BiPredicate<String, String> predicate) {
+        String $placeholderString = placeholderString.getValue();
+        Text numericValueText = TextHelper.getTextByValue(player, $placeholderString);
+        $placeholderString = TextHelper.Operators.getString(numericValueText);
+        boolean test = predicate.test(value, $placeholderString);
+        return CommandHelper.Return.returnBoolean(source, test);
+    }
+
 }
