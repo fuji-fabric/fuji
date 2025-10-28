@@ -35,4 +35,8 @@ public class CollectionUtil {
         return Optional.empty();
     }
 
+    public static <T> T lastElement(@NotNull List<T> list) {
+        return list.get(list.size() - 1);
+    }
+
 }

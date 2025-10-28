@@ -5,8 +5,8 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.ParsedArgument;
 import com.mojang.brigadier.context.StringRange;
+import mod.fuji.core.auxiliary.CollectionUtil;
 import mod.fuji.core.auxiliary.LogUtil;
-import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
@@ -94,8 +94,8 @@ public class BundleCommandDescriptor extends CommandDescriptor {
 
         /* Execute the commands. */
         LogUtil.debug("Execute bundle command: {}", commands);
-        CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(source), commands);
-        return CommandHelper.Return.SUCCESS;
+        List<Integer> commandReturnValues = CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(source), commands);
+        return CollectionUtil.lastElement(commandReturnValues);
     }
 
     @Override
