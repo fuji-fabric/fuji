@@ -5,13 +5,16 @@
 > For user manual, refer to: https://fuji-fabric.github.io
 >
 
-
 # 📑 Changelog
 
-## Added
-- [command_meta.run] Now the `/run as console <command>` will pass the return value whatever it is, instead of always defaulting to `SUCCESS`.
-- [command_toolbox.nickname] Added `nickname_constraints` option.
+## 🆕 Added
+- **[command_meta.run]**  
+  `/run as console <command>` now returns the actual command result, rather than always defaulting to `SUCCESS`.
 
+- **[command_toolbox.nickname]**  
+  Introduced a new option: `nickname_constraints`.
 
-## Fixed
-- [command_bundle] Now define a bundle command with empty definition will do nothing and return success, instead of throwing an exception.
+## 🐞 Fixed
+- **[command_bundle]**  
+  Defining a bundle command with an empty definition no longer throws an exception.  
+  It now safely does nothing and returns `SUCCESS` instead.

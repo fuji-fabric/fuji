@@ -3,7 +3,6 @@ package mod.fuji.module.initializer.command_meta.run;
 import mod.fuji.core.command.argument.wrapper.impl.GreedyCommandString;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
-import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
