@@ -8,8 +8,8 @@
 
 # 📑 Changelog
 
-## ✨ Added
+## Added
 
-- **[command_bundle]**  
-  Bundle commands now use the **last command’s return value** instead of always defaulting to `SUCCESS`.  
-  This allows a bundle command to **rewrite a predicate command**, as a shortcut.
+
+## Fixed
+- [command_bundle] Now define a bundle command with empty definition will do nothing and return success, instead of throwing an exception.

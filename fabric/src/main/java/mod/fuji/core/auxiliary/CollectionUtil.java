@@ -35,8 +35,11 @@ public class CollectionUtil {
         return Optional.empty();
     }
 
-    public static <T> T lastElement(@NotNull List<T> list) {
-        return list.get(list.size() - 1);
+    @SuppressWarnings("unchecked")
+    public static <T> Optional<T> lastElement(@NotNull List<T> list) {
+        if (list.isEmpty()) return Optional.empty();
+
+        return (Optional<T>) list.get(list.size() - 1);
     }
 
 }
