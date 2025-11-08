@@ -10,6 +10,7 @@
 
 ## Added
 - [command_meta.run] Now the `/run as console <command>` will pass the return value whatever it is, instead of always defaulting to `SUCCESS`.
+- [command_toolbox.nickname] Added `nickname_constraints` option.
 
 
 ## Fixed
