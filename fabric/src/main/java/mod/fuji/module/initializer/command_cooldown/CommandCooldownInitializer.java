@@ -42,7 +42,6 @@ import org.jetbrains.annotations.NotNull;
     And a `unnamed cooldown` will be `tested` <green>automatically</green> when a player executes a command.
     For example: define a `3 seconds` cooling duration for `/back` command.
     To define a `unnamed cooldown`, you need to modify the config file, and issue `/fuji reload` command to apply it.
-    <blue>NOTE: The `console` and `players with level permission 4` can `bypass` the `unnamed cooldown`.
 
     2. `Named Cooldown`
     You have to use commands to create a `named cooldown`, and use commands to `test` it.
@@ -50,12 +49,12 @@ import org.jetbrains.annotations.NotNull;
     Its typical use is to define a `named cooldown`, and `associate` it with `arbitrary command instance`.
     For example, you have to use `/command-cooldown create` to `create` a `named cooldown`.
     Then, you have to use `/command-cooldown test` to `test` a `named cooldown` <green>manually</green>.
-    You have to specify the `failure case commands` and `success case commands` when `test` a `named cooldown`.
+    You have to specify the `failure case commands` and `success case commands` when `testing` a `named cooldown`.
     If the `conditions` defined by the `named cooldown` is satisfied, then it is a `success case`, else it is a `failure case`.
     For `success case`, we will execute `the success case command`.
     For `failure case`, we will execute `the failure case command`.
 
-    <green>NOTE: If you only want to define a simple `cooling duration` for a specified command, just use `unnamed cooldown`.
+    <green>TL;DR: If you only want to define a simple `cooling duration` for a specified command, just use `unnamed cooldown`.
     """)
 @ColorBox(id = 1751902885278L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Create a `named cooldown`. (With 3 seconds `cooldown duration`.)
@@ -97,11 +96,6 @@ import org.jetbrains.annotations.NotNull;
     However, you can create a `non-persist named cooldown`.
     Issue: `/command-cooldown create kitfood 999999999999 --persistent false`
     This cooldown says that, it can be used only once after each server re-start.
-    """)
-@ColorBox(id = 1758083659552L, color = ColorBox.ColorBoxTypes.NOTE, value = """
-    ◉ The `command cooldown` will NOT be applied if...
-    1. The command source is `the console`.
-    2. The command source is `admin` (level permission >= 4)
     """)
 
 
