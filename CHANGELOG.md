@@ -9,6 +9,7 @@
 # 📑 Changelog
 
 ## Added
+- [command_meta.run] Now the `/run as console <command>` will pass the return value whatever it is, instead of always defaulting to `SUCCESS`.
 
 
 ## Fixed

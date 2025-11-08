@@ -102,8 +102,7 @@ public class RunInitializer extends ModuleInitializer {
     @Document(id = 1751823993461L, value = "Execute a command as console.")
     @CommandNode("as console")
     private static int $runAsConsole(@CommandSource ServerCommandSource source, GreedyCommandString rest) {
-        CommandExecutor.executeSingle(ExtendedCommandSource.asConsole(source), rest.getValue());
-        return CommandHelper.Return.SUCCESS;
+        return CommandExecutor.executeSingle(ExtendedCommandSource.asConsole(source), rest.getValue());
     }
 
     @Document(id = 1751823999061L, value = "Execute a command as a player.")
