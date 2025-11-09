@@ -7,14 +7,6 @@
 
 # 📑 Changelog
 
-## 🆕 Added
-- **[command_meta.run]**  
-  `/run as console <command>` now returns the actual command result, rather than always defaulting to `SUCCESS`.
-
-- **[command_toolbox.nickname]**  
-  Introduced a new option: `nickname_constraints`.
-
 ## 🐞 Fixed
 - **[command_bundle]**  
-  Defining a bundle command with an empty definition no longer throws an exception.  
-  It now safely does nothing and returns `SUCCESS` instead.
+  This module didn't work due to `ClassCastException`.
