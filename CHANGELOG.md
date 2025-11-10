@@ -9,4 +9,4 @@
 
 ## 🐞 Fixed
 - **[command_bundle]**  
-  This module didn't work due to `ClassCastException`.
+  The `argument whose argument name equals to other arguments` can't be resolved. (#553)

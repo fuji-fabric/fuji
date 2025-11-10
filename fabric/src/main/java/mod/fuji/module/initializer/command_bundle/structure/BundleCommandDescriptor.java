@@ -63,7 +63,10 @@ public class BundleCommandDescriptor extends CommandDescriptor {
 
         /* Define the variables. */
         // NOTE: Sort with the longest variable name first, to ensure the String#replace works properly.
-        Map<String, String> variableTable = new TreeMap<>(Comparator.comparing(String::length).reversed());
+        Map<String, String> variableTable = new TreeMap<>(Comparator
+            .comparing(String::length)
+            .reversed()
+            .thenComparing(Comparator.naturalOrder()));
 
         int argumentIndex = 0;
         for (CommandArgument commandArgument : descriptor.commandArguments) {
