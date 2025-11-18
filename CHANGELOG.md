@@ -1,12 +1,11 @@
-> For detailed change logs, please visit: https://github.com/sakurawald/fuji/commits/dev/
+> For detailed change logs, refer to: https://github.com/fuji-fabric/fuji/commits/dev/
 > 
-> For historical change logs, refer to: https://github.com/sakurawald/fuji/releases
+> For historical change logs, refer to: https://github.com/fuji-fabric/fuji/releases
 > 
-> For user manual, refer to: https://fuji-fabric.github.io
+> **For user manual, refer to: https://fuji-fabric.github.io**
 >
+
+
 
 # 📑 Changelog
 
-## 🐞 Fixed
-- **[command_bundle]**  
-  The `argument whose argument name equals to other arguments` can't be resolved. (#553)
