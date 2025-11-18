@@ -56,7 +56,7 @@ import net.minecraft.world.GameMode;
     Issue: `/command-debug <=? Steve 10 %player:health%`
 
     ◉ Test if a player killed more than 100 zombies.
-    Issue: `/command-debug <=? Steve 100 %player:statistic_raw minecraft:deaths%`
+    Issue: `/command-debug <=? Steve 100 %player:statistic_raw minecraft:killed minecraft:zombie%`
 
     ◉ Leverage the `vanilla Minecraft statistics`
     See: https://minecraft.fandom.com/wiki/Statistics

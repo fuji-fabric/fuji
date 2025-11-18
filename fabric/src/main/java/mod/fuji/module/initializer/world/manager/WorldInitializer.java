@@ -289,7 +289,7 @@ import org.jetbrains.annotations.Nullable;
     Let's say you have a `sky block dimension` whose directory name is `sky_block`.
     You need to put that `directory` in `world/dimensions/fuji/sky_block`.
 
-    And issue: `/world import sky_block minecraft:overworld -seed \\<seed\\> --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:air;minecraft:the_void"`
+    And issue: `/world import sky_block minecraft:overworld --seed \\<seed\\> --chunkGeneratorType FLAT --chunkGeneratorParameters "minecraft:air;minecraft:the_void"`
     This defines a `runtime dimension descriptor` with `flat chunk generator`, and with `void layers`.
     The `void layers` means the `flat chunk generator` will fill `minecraft:air` when it is needed to `generate a new chunk`.
 
