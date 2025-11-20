@@ -3,15 +3,6 @@ package mod.fuji.core.service.display.gui;
 import com.google.errorprone.annotations.Keep;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
-#if MC_VER <= MC_1_20_4
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.core.NonNullList;
-#elif MC_VER > MC_1_20_4
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.ItemContainerContents;
-#endif
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.server.level.ServerPlayer;
@@ -44,14 +35,14 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
     private static @NotNull Stream<ItemStack> extractItemsFromShulkerBox(ItemStack stack) {
 
         #if MC_VER <= MC_1_20_4
-        CompoundTag blockEntityData = BlockItem.getBlockEntityData(stack);
+        net.minecraft.nbt.CompoundTag blockEntityData = net.minecraft.world.item.BlockItem.getBlockEntityData(stack);
         if (blockEntityData != null) {
-            ListTag items = (ListTag) blockEntityData.get("Items");
+            net.minecraft.nbt.ListTag items = (net.minecraft.nbt.ListTag) blockEntityData.get("Items");
             if (items == null) return Stream.empty();
 
-            NonNullList<ItemStack> temp = NonNullList.withSize(SHULKER_BOX_MAX_CAPACITY, ItemStack.EMPTY);
+            net.minecraft.core.NonNullList<ItemStack> temp = net.minecraft.core.NonNullList.withSize(SHULKER_BOX_MAX_CAPACITY, ItemStack.EMPTY);
             items.forEach(item -> {
-                CompoundTag itemNbtCompound = (CompoundTag) item;
+                net.minecraft.nbt.CompoundTag itemNbtCompound = (net.minecraft.nbt.CompoundTag) item;
                 int slotIndex = itemNbtCompound.getInt("Slot");
                 ItemStack itemStack = ItemStack.of(itemNbtCompound);
 
@@ -62,7 +53,7 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
         return Stream.empty();
 
         #elif MC_VER > MC_1_20_4
-        ItemContainerContents containerComponent = stack.get(DataComponents.CONTAINER);
+        net.minecraft.world.item.component.ItemContainerContents containerComponent = stack.get(net.minecraft.core.component.DataComponents.CONTAINER);
         if (containerComponent == null) {
             return Stream.empty();
         }
