@@ -17,10 +17,11 @@ public class BanDirectSendMessageMethodCall extends BanMethodCall {
 
     @Override
     public List<String> bannedMethodQualifiedNames() {
-        return List.of("net.minecraft.server.command.ServerCommandSource.sendMessage"
-            , "net.minecraft.server.network.ServerPlayerEntity.sendMessage"
-            , "net.minecraft.entity.player.PlayerEntity.sendMessage"
-            , "net.minecraft.server.command.CommandOutput.sendMessage");
+        return List.of(
+              "net.minecraft.commands.CommandSourceStack.sendSystemMessage"
+            , "net.minecraft.server.level.ServerPlayer.sendSystemMessage"
+            , "net.minecraft.server.level.ServerPlayer.displayClientMessage"
+            , "net.minecraft.commands.CommandSource.sendSystemMessage");
     }
 
     @Override
