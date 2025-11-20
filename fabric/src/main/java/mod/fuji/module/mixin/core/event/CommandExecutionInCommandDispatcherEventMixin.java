@@ -29,7 +29,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = CommandDispatcher.class, remap = false)
 public class CommandExecutionInCommandDispatcherEventMixin {
 
-    // TODO(Ravel): no target class
     @EventProducer(CommandExecutionPreEvent.class)
     #if MC_VER <= MC_1_20_2
     @Inject(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/Command;run(Lcom/mojang/brigadier/context/CommandContext;)I"), cancellable = true)
@@ -45,7 +44,6 @@ public class CommandExecutionInCommandDispatcherEventMixin {
         });
     }
 
-    // TODO(Ravel): no target class
     @EventProducer(CommandExecutionPostEvent.class)
     #if MC_VER <= MC_1_20_2
     @ModifyExpressionValue(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/Command;run(Lcom/mojang/brigadier/context/CommandContext;)I"))

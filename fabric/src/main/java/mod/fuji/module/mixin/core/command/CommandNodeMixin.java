@@ -16,32 +16,26 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(value = CommandNode.class, remap = false)
 public class CommandNodeMixin<S> implements CommandNodeExtension<S> {
 
-    // TODO(Ravel): Could not determine a single target
     @Mutable
     @Shadow
     @Final
     private Predicate<S> requirement;
 
-    // TODO(Ravel): Could not determine a single target
     @Shadow
     @Final
     private Map<String, CommandNode<S>> children;
 
-    // TODO(Ravel): Could not determine a single target
     @Shadow
     @Final
     private Map<String, LiteralCommandNode<S>> literals;
 
-    // TODO(Ravel): Could not determine a single target
     @Shadow
     @Final
     private Map<String, ArgumentCommandNode<S, ?>> arguments;
 
-    // TODO(Ravel): Could not determine a single target
     @Shadow
     private Command<S> command;
 
-    // TODO(Ravel): Could not determine a single target
     @Mutable
     @Shadow
     @Final

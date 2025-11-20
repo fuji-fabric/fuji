@@ -21,7 +21,6 @@ import java.util.function.Predicate;
 @Mixin(value = CommandNode.class, remap = false)
 public abstract class CommandNodeMixin {
 
-    // TODO(Ravel): Could not determine a single target
     @Mutable
     @Shadow
     @Final
@@ -30,7 +29,6 @@ public abstract class CommandNodeMixin {
     @Unique
     private Predicate<Object> previousWrappedPredicate;
 
-    // TODO(Ravel): no target class
     @SuppressWarnings({"unchecked", "ConstantValue"})
     @ModifyReturnValue(method = "getRequirement", at = @At("RETURN"))
     Predicate<Object> wrapRequirementPredicateForThisCommandNode(Predicate<Object> original) {

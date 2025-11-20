@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(UserWhiteList.class)
 public class UserWhiteListMixin {
 
-    // TODO(Ravel): wildcard and regex target are not supported
 /**
      * Once an offline-player join the server, then the offline-uuid will be added to usercache.json.
      * After that, the server will always use the player's offline-uuid in usercache.json to check whitelist (and other list, like ban list, op list).
