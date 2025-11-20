@@ -25,10 +25,10 @@ import org.jetbrains.annotations.NotNull;
 #if MC_VER <= MC_1_20_1
 import java.util.HashMap;
 #elif MC_VER > MC_1_20_1
+import java.util.Optional;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementRequirements;
 #endif
-
 
 public class ToastSender {
     private static final String IMPOSSIBLE = "impossible";
@@ -43,13 +43,13 @@ public class ToastSender {
             , Component.empty()
             ,
                 #if MC_VER <= MC_1_20_2
-                    RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)
+                RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)
                 #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_21_4
-                    Optional.of(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER))
-                #elif MC_VER >= MC_1_21_5 && MC_VER < MC_1_21_9
-                    Optional.of(new net.minecraft.core.ClientAsset(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
+                Optional.of(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER))
+                #elif MC_VER > MC_1_21_4 && MC_VER < MC_1_21_9
+                Optional.of(new net.minecraft.core.ClientAsset(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
                 #elif MC_VER >= MC_1_21_9
-                    Optional.of(new net.minecraft.core.ClientAsset.ResourceTexture(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
+                Optional.of(new net.minecraft.core.ClientAsset.ResourceTexture(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
                 #endif
 
             , advancementFrame.getType() // Type of display frame.
@@ -59,12 +59,7 @@ public class ToastSender {
         );
 
         /* Make advancement entry. */
-        #if MC_VER <= MC_1_20_1
-        Advancement advancementEntry
-        #elif MC_VER > MC_1_20_1
-        AdvancementHolder advancementEntry
-        #endif
-            = Advancement.Builder
+        var advancementEntry = Advancement.Builder
             .advancement()
             .display(advancementDisplay)
             .rewards(AdvancementRewards.EMPTY)
@@ -102,11 +97,11 @@ public class ToastSender {
     #endif
     makeAdvancementRequirements() {
         #if MC_VER <= MC_1_20_1
-            List<String> collection = List.of(IMPOSSIBLE);
-            return new String[][]{collection.toArray(String[]::new)};
+        List<String> collection = List.of(IMPOSSIBLE);
+        return new String[][]{collection.toArray(String[]::new)};
         #elif MC_VER > MC_1_20_1 && MC_VER <= MC_1_20_2
-            String[][] impossible = {{IMPOSSIBLE}};
-            return new AdvancementRequirements(impossible);
+        String[][] impossible = {{IMPOSSIBLE}};
+        return new AdvancementRequirements(impossible);
         #elif MC_VER > MC_1_20_2
         return new AdvancementRequirements(List.of(List.of(IMPOSSIBLE)));
         #endif
@@ -131,7 +126,7 @@ public class ToastSender {
         #if MC_VER <= MC_1_20_1
         Advancement advancementEntry
         #elif MC_VER > MC_1_20_1
-            AdvancementHolder advancementEntry
+        AdvancementHolder advancementEntry
         #endif
         , ResourceLocation identifier) {
 
@@ -162,12 +157,12 @@ public class ToastSender {
         #if MC_VER <= MC_1_20_1
         Collection<Advancement> toEarn
         #elif MC_VER > MC_1_20_1
-            Collection<AdvancementHolder> toEarn
+        Collection<AdvancementHolder> toEarn
         #endif
         , Set<ResourceLocation> toRemove, Map<ResourceLocation, AdvancementProgress> toSetProgress)
     {
         #if MC_VER <= MC_1_21_4
-            return new ClientboundUpdateAdvancementsPacket(false, toEarn, toRemove, toSetProgress);
+        return new ClientboundUpdateAdvancementsPacket(false, toEarn, toRemove, toSetProgress);
         #elif MC_VER >= MC_1_21_5
         return new ClientboundUpdateAdvancementsPacket(false, toEarn, toRemove, toSetProgress, true);
         #endif
@@ -176,7 +171,7 @@ public class ToastSender {
     @SuppressWarnings("SameParameterValue")
     private static @NotNull ClientboundUpdateAdvancementsPacket makeRevokePacket(ResourceLocation identifier) {
         #if MC_VER <= MC_1_20_1
-            Collection<Advancement> toEarn = List.of();
+        Collection<Advancement> toEarn = List.of();
         #elif MC_VER > MC_1_20_1
         Collection<AdvancementHolder> toEarn = List.of();
         #endif
