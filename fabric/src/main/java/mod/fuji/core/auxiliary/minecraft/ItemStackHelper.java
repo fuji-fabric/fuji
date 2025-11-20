@@ -23,9 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import net.minecraft.nbt.ListTag;
 
-#if MC_VER <= MC_1_20_4
-#elif MC_VER > MC_1_20_4
-import net.minecraft.world.item.component.CustomData;
+#if MC_VER > MC_1_20_4
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.ItemLore;
 #endif

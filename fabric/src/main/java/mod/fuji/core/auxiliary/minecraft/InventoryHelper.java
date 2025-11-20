@@ -2,27 +2,26 @@ package mod.fuji.core.auxiliary.minecraft;
 
 import com.google.common.collect.ImmutableList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.NonNullList;
-
-import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
 public class InventoryHelper {
 
     private static final List<EquipmentSlot> PLAYER_ARMOR_SLOTS = List.of(
-            EquipmentSlot.HEAD
-            , EquipmentSlot.CHEST
-            , EquipmentSlot.LEGS
-            , EquipmentSlot.FEET);
+        EquipmentSlot.HEAD
+        , EquipmentSlot.CHEST
+        , EquipmentSlot.LEGS
+        , EquipmentSlot.FEET);
 
     /**
- * Main Stacks (1*9 slots + 3*9 slots)
- **/
+     * Main Stacks (1*9 slots + 3*9 slots)
+     **/
     public static NonNullList<ItemStack> getMainStacks(@NotNull Player player) {
         #if MC_VER <= MC_1_21_4
         return player.getInventory().items;
@@ -32,8 +31,8 @@ public class InventoryHelper {
     }
 
     /**
- * Offhand (1 slot) = EquipmentSlot.OFFHAND
- **/
+     * Offhand (1 slot) = EquipmentSlot.OFFHAND
+     **/
     public static NonNullList<ItemStack> getOffhandStack(@NotNull Player player) {
         NonNullList<ItemStack> itemStacks = NonNullList.withSize(1, ItemStack.EMPTY);
         EquipmentSlot offhand = EquipmentSlot.OFFHAND;
@@ -42,8 +41,8 @@ public class InventoryHelper {
     }
 
     /**
- * Armor (4 slots) = EquipmentSlot.HEAD + EquipmentSlot.CHEST + EquipmentSlot.LEGS + EquipmentSlot.FEET
- **/
+     * Armor (4 slots) = EquipmentSlot.HEAD + EquipmentSlot.CHEST + EquipmentSlot.LEGS + EquipmentSlot.FEET
+     **/
     public static NonNullList<ItemStack> getArmorStacks(@NotNull Player player) {
         NonNullList<ItemStack> itemStacks = NonNullList.withSize(PLAYER_ARMOR_SLOTS.size(), ItemStack.EMPTY);
 

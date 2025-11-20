@@ -1,27 +1,25 @@
 package mod.fuji.core.auxiliary.minecraft;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 import mod.fuji.Fuji;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.chat.ChatType;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.Registry;
-import net.minecraft.core.HolderGetter;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Optional;
 
 public class RegistryHelper {
 
@@ -65,8 +63,8 @@ public class RegistryHelper {
     }
 
     /**
- * In older MC versions, the MessageType will not carry the registry bits.
- **/
+     * In older MC versions, the MessageType will not carry the registry bits.
+     **/
     public static String getIdAsString(@NotNull ChatType.Bound parameters) {
         String messageTypeIdString;
 
@@ -94,27 +92,22 @@ public class RegistryHelper {
     }
 
     /**
- * The Registry is one of the implementations of RegistryEntryLookup.
- **/
+     * The Registry is one of the implementations of RegistryEntryLookup.
+     **/
     public static <T> Registry<T> getRegistry(@NotNull ResourceKey<? extends Registry<? extends T>> registryKey) {
         return getCombinedRegistryManager()
             #if MC_VER <= MC_1_21
                 .registryOrThrow(registryKey);
             #elif MC_VER > MC_1_21
-                .lookupOrThrow(registryKey);
+            .lookupOrThrow(registryKey);
             #endif
     }
 
     /**
- * The RegistryEntryLookup is the interface for all types of registries.
- **/
+     * The RegistryEntryLookup is the interface for all types of registries.
+     **/
     public static <T> HolderGetter<T> getRegistryEntryLookup(@NotNull ResourceKey<? extends Registry<? extends T>> registryKey) {
-        return getCombinedRegistryManager()
-            #if MC_VER <= MC_1_21
-                .lookupOrThrow(registryKey);
-            #elif MC_VER > MC_1_21
-                .lookupOrThrow(registryKey);
-            #endif
+        return getCombinedRegistryManager().lookupOrThrow(registryKey);
     }
 
     public static <T> ResourceKey<T> ofRegistryKey(@NotNull ResourceKey<? extends Registry<T>> registrySpecifier, @NotNull ResourceLocation identifier) {
