@@ -63,7 +63,7 @@ public class AsyncChunkLoadTask extends GameTask {
     #elif MC_VER > MC_1_20_4
     net.minecraft.world.level.chunk.status.ChunkStatus
     #endif
-    getFullChunkStatus() {
+    getFullChunkStatusEnumValue() {
         #if MC_VER <= MC_1_20_4
         return net.minecraft.world.level.chunk.ChunkStatus.FULL;
         #elif MC_VER > MC_1_20_4
@@ -72,7 +72,7 @@ public class AsyncChunkLoadTask extends GameTask {
     }
 
     private static CompletableFuture<Optional<ChunkAccess>> getChunkFuture(@NotNull ServerLevel serverWorld, @NotNull ChunkPos chunkPos) {
-        var future = serverWorld.getChunkSource().getChunkFutureMainThread(chunkPos.x, chunkPos.z, getFullChunkStatus(), true);
+        var future = serverWorld.getChunkSource().getChunkFutureMainThread(chunkPos.x, chunkPos.z, getFullChunkStatusEnumValue(), true);
 
         #if MC_VER <= MC_1_20_4
         return future.thenApply(it -> it.left());

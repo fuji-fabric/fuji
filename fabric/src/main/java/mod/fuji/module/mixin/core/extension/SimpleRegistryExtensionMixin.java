@@ -38,8 +38,7 @@ public abstract class SimpleRegistryExtensionMixin<T> implements SimpleRegistryE
     @Final
     private Map<ResourceKey<T>, Holder.Reference<T>> byKey;
 
-    #if MC_VER <= MC_1_20_4
-    #elif MC_VER > MC_1_20_4
+    #if MC_VER > MC_1_20_4
     @Shadow
     @Final
     private Map<ResourceKey<T>, net.minecraft.core.RegistrationInfo> registrationInfos;
@@ -81,8 +80,7 @@ public abstract class SimpleRegistryExtensionMixin<T> implements SimpleRegistryE
             this.byLocation.remove(registryEntry.key().location());
             this.byValue.remove(entry);
             this.byId.set(rawId, null);
-            #if MC_VER <= MC_1_20_4
-            #elif MC_VER > MC_1_20_4
+            #if MC_VER > MC_1_20_4
             this.registrationInfos.remove(this.key);
             #endif
             return true;
