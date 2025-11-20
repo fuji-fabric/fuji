@@ -18,7 +18,7 @@ public class PlayerListManagerMixin {
 
     @Inject(method = "respawn", at = @At("RETURN"))
     #if MC_VER <= MC_1_20_6
-    private void afterRespawn(ServerPlayerEntity oldPlayer, boolean alive, CallbackInfoReturnable<ServerPlayerEntity> cir)
+    private void afterRespawn(ServerPlayer oldPlayer, boolean alive, CallbackInfoReturnable<ServerPlayer> cir)
     #elif MC_VER > MC_1_20_6
     private void afterRespawn(ServerPlayer oldPlayer, boolean alive, Entity.RemovalReason removalReason, CallbackInfoReturnable<ServerPlayer> cir)
     #endif

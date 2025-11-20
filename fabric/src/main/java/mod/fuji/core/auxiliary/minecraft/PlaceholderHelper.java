@@ -8,10 +8,10 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import mod.fuji.Fuji;
 import mod.fuji.core.document.descriptor.PlaceholderDescriptor;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,7 +49,8 @@ public class PlaceholderHelper {
         };
 
         String placeholderName = descriptor.getString();
-        Placeholders.register(ResourceLocation.fromNamespaceAndPath(Fuji.MOD_ID, placeholderName), placeholderHandler);
+        ResourceLocation identifier = RegistryHelper.makeIdentifierOrThrow(Fuji.MOD_ID, placeholderName);
+        Placeholders.register(identifier, placeholderHandler);
     }
 
     public static void registerPlayerPlaceholder(@NotNull PlaceholderDescriptor descriptor, @NotNull BiFunction<ServerPlayer, String, Component> function) {
@@ -62,7 +63,8 @@ public class PlaceholderHelper {
         };
 
         String placeholderName = descriptor.getString();
-        Placeholders.register(ResourceLocation.fromNamespaceAndPath(Fuji.MOD_ID, placeholderName), placeholderHandler);
+        ResourceLocation identifier = RegistryHelper.makeIdentifierOrThrow(Fuji.MOD_ID, placeholderName);
+        Placeholders.register(identifier, placeholderHandler);
     }
 
     public static void registerServerPlaceholder(@NotNull PlaceholderDescriptor descriptor, @NotNull Function<MinecraftServer, Component> function) {

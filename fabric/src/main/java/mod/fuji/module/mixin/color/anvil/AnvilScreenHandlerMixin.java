@@ -10,9 +10,6 @@ import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.inventory.ItemCombinerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
-#if MC_VER > MC_1_21
-import net.minecraft.world.inventory.ItemCombinerMenuSlotDefinition;
-#endif
 
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -34,11 +31,15 @@ public abstract class AnvilScreenHandlerMixin extends ItemCombinerMenu {
         super(screenHandlerType, i, playerInventory, screenHandlerContext);
     }
     #elif MC_VER > MC_1_21
-    public AnvilScreenHandlerMixin(@Nullable MenuType<?> screenHandlerType, int i, Inventory playerInventory, ContainerLevelAccess screenHandlerContext, ItemCombinerMenuSlotDefinition forgingSlotsManager) {
+    public AnvilScreenHandlerMixin(@Nullable MenuType<?> screenHandlerType, int i, Inventory playerInventory, ContainerLevelAccess screenHandlerContext, net.minecraft.world.inventory.ItemCombinerMenuSlotDefinition forgingSlotsManager) {
         super(screenHandlerType, i, playerInventory, screenHandlerContext, forgingSlotsManager);
     }
     #endif
 
+    /**
+     * To support neo-forge platform, here I can't use the @Expression injector.
+     * Maybe I should drop the support someday.
+     */
     @Unique
     private @NotNull Component parseInputNewItemName() {
         AtomicReference<Component> modifiedText = new AtomicReference<>();
@@ -58,7 +59,7 @@ public abstract class AnvilScreenHandlerMixin extends ItemCombinerMenu {
     @ModifyArg(method = "updateResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;setCustomName(Lnet/minecraft/text/Text;)Lnet/minecraft/item/ItemStack;", ordinal = 0))
     public Text updateResult(Text text)
     #elif MC_VER > MC_1_20_4 && MC_VER <= MC_1_20_6
-    @ModifyArg(method = "updateResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;set(Lnet/minecraft/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))
+    @ModifyArg(method = "createResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;set(Lnet/minecraft/core/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))
     public @NotNull Object updateResult(Object text)
     #elif MC_VER > MC_1_20_6
     @ModifyArg(method = "createResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;set(Lnet/minecraft/core/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))
@@ -72,7 +73,7 @@ public abstract class AnvilScreenHandlerMixin extends ItemCombinerMenu {
     @ModifyArg(method = "setNewItemName", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;setCustomName(Lnet/minecraft/text/Text;)Lnet/minecraft/item/ItemStack;", ordinal = 0))
     public Text newItemName(Text text)
     #elif MC_VER > MC_1_20_4 && MC_VER <= MC_1_20_6
-    @ModifyArg(method = "setNewItemName", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;set(Lnet/minecraft/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))
+    @ModifyArg(method = "setItemName", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;set(Lnet/minecraft/core/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))
     public @NotNull Object newItemName(Object text)
     #elif MC_VER > MC_1_20_6
     @ModifyArg(method = "setItemName", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;set(Lnet/minecraft/core/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))

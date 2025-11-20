@@ -426,7 +426,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
     }
 
     private void registerRotatePlaceholder() {
-        Placeholders.register(ResourceLocation.fromNamespaceAndPath(Fuji.MOD_ID, "rotate"), (ctx, args) -> {
+        Placeholders.register(RegistryHelper.makeIdentifierOrThrow(Fuji.MOD_ID, "rotate"), (ctx, args) -> {
             String namespace = "default";
             if (ctx.player() != null) {
                 namespace = PlayerHelper.getPlayerName(ctx.player());

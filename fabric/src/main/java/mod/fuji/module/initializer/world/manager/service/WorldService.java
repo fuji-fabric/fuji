@@ -84,11 +84,9 @@ public class WorldService {
     }
 
     private static boolean shouldDelayShutdown(ServerLevel world) {
-        #if MC_VER <= MC_1_20_6
-        return world.getChunkManager().threadedAnvilChunkStorage.shouldDelayShutdown();
-        #elif MC_VER > MC_1_20_6
-        return world.getChunkSource().chunkMap.hasWork();
-        #endif
+        return WorldHelper
+            .getChunkStorage(world)
+            .hasWork();
     }
 
     private static boolean tryConsumeDimensionCreationTicket(@NotNull DimensionCreationTicket ticket) {

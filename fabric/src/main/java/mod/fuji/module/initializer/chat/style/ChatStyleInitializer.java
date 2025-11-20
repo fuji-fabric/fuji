@@ -4,6 +4,7 @@ import eu.pb4.placeholders.api.parsers.NodeParser;
 
 import mod.fuji.Fuji;
 import mod.fuji.core.auxiliary.StringUtil;
+import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -102,7 +103,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
     /**
  * To avoid the message type already registered in the client-side, and the client-side message type will influence the client-side decorator.
  **/
-    public static final ResourceKey<ChatType> MESSAGE_TYPE_KEY = ResourceKey.create(Registries.CHAT_TYPE, ResourceLocation.fromNamespaceAndPath(Fuji.MOD_ID, "chat_" + StringUtil.toLowerCase(FabricLoader.getInstance().getEnvironmentType().toString())));
+    public static final ResourceKey<ChatType> MESSAGE_TYPE_KEY = ResourceKey.create(Registries.CHAT_TYPE, RegistryHelper.makeIdentifierOrThrow(Fuji.MOD_ID, "chat_" + StringUtil.toLowerCase(FabricLoader.getInstance().getEnvironmentType().toString())));
     public static final ChatType MESSAGE_TYPE_VALUE = new ChatType(
         ChatTypeDecoration.withSender("%s%s"),
         ChatTypeDecoration.withSender("%s%s"));

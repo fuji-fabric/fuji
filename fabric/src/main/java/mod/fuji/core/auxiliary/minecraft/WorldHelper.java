@@ -135,20 +135,9 @@ public class WorldHelper {
         return world instanceof ServerLevel;
     }
 
-    public static
-    #if  MC_VER <= MC_1_20_6
-    net.minecraft.server.world.ThreadedAnvilChunkStorage
-    #elif MC_VER > MC_1_20_6
-    net.minecraft.server.level.ChunkMap
-    #endif
-    getChunkStorage(ServerLevel world) {
-        #if MC_VER <= MC_1_20_6
-        return world.getChunkManager().threadedAnvilChunkStorage;
-        #elif MC_VER > MC_1_20_6
+    public static net.minecraft.server.level.ChunkMap getChunkStorage(@NotNull ServerLevel world) {
         return world.getChunkSource().chunkMap;
-        #endif
     }
-
 
     public static @NotNull ChunkPos makeChunkPos(@NotNull BlockPos blockPos) {
         return makeChunkPos(blockPos.getX(), blockPos.getZ());

@@ -1,10 +1,8 @@
 package mod.fuji.module.mixin.gameplay.multi_obsidian_platform;
 
 #if MC_VER <= MC_1_20_6
-import net.minecraft.block.EndPortalBlock;
 import org.spongepowered.asm.mixin.Mixin;
-
-@Mixin(EndPortalBlock.class)
+@Mixin(net.minecraft.world.level.block.EndPortalBlock.class)
 public class EndPortalBlockMixin {
 
 }

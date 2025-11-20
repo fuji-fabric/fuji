@@ -15,9 +15,9 @@ public abstract class EndGatewayBlockEntityMixin {
     // To make it working in extra dimensions, we make the expression to be always TRUE. (Actually, the EndGatewayBlockEntity will only appear in the_end dimension type)
 
     #if MC_VER <= MC_1_20_6
-    @WrapOperation(method = "tryTeleportingEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getRegistryKey()Lnet/minecraft/registry/RegistryKey;"))
-    private static RegistryKey<World> letExitPortalsInExtraDimensionsWork(World instance, Operation<RegistryKey<World>> original) {
-        return World.END;
+    @WrapOperation(method = "teleportEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;dimension()Lnet/minecraft/resources/ResourceKey;"))
+    private static ResourceKey<Level> letExitPortalsInExtraDimensionsWork(Level instance, Operation<ResourceKey<Level>> original) {
+        return Level.END;
     }
     #elif MC_VER > MC_1_20_6
     @WrapOperation(method = "getPortalPosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;dimension()Lnet/minecraft/resources/ResourceKey;"))

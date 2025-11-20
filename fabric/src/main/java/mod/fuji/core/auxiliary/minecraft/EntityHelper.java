@@ -95,7 +95,7 @@ public class EntityHelper {
 
         public static boolean isLeashed(@NotNull Entity entity) {
             #if MC_VER <= MC_1_20_6
-            return (entity instanceof net.minecraft.entity.mob.MobEntity mobEntity) && mobEntity.isLeashed();
+            return (entity instanceof net.minecraft.world.entity.monster.Monster mobEntity) && mobEntity.isLeashed();
             #elif MC_VER > MC_1_20_6
             return (entity instanceof net.minecraft.world.entity.Leashable leashable) && leashable.isLeashed();
             #endif

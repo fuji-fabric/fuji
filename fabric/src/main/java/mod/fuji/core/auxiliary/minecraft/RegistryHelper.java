@@ -144,10 +144,14 @@ public class RegistryHelper {
 
     public static @NotNull ResourceLocation makeIdentifierOrThrow(@NotNull String identifier) {
         #if MC_VER <= MC_1_20_6
-        return new Identifier(identifier);
+        return new ResourceLocation(identifier);
         #elif MC_VER > MC_1_20_6
         return ResourceLocation.parse(identifier);
         #endif
+    }
+
+    public static @NotNull ResourceLocation makeIdentifierOrThrow(@NotNull String namespace, @NotNull String path) {
+        return new ResourceLocation(namespace, path);
     }
 
     public static Optional<ResourceLocation> makeIdentifier(@NotNull String identifier) {

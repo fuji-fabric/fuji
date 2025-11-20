@@ -34,7 +34,7 @@ import net.minecraft.advancements.AdvancementRequirements;
 public class ToastSender {
     private static final String IMPOSSIBLE = "impossible";
     private static final String DUMMY_RESOURCE_IMAGE_IDENTIFIER = "minecraft:textures/gui/advancements/backgrounds/end.png";
-    private static final ResourceLocation SEND_TOAST_IDENTIFIER = ResourceLocation.fromNamespaceAndPath("custom", "custom");
+    private static final ResourceLocation SEND_TOAST_IDENTIFIER = RegistryHelper.makeIdentifierOrThrow("custom", "custom");
 
     public static void sendToast(@NotNull ServerPlayer player, @NotNull AdvancementType advancementFrame, @NotNull ItemStack icon, @NotNull Component title) {
         /* Make an advancement display. */
