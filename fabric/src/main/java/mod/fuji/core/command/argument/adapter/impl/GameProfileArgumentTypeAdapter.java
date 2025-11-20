@@ -22,7 +22,8 @@ public class GameProfileArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @SneakyThrows(CommandSyntaxException.class)
     @Override
     public Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
-        return new GameProfileCollection(GameProfileArgument.getGameProfiles(context, commandArgument.getArgumentName()));
+        var gameProfiles = GameProfileArgument.getGameProfiles(context, commandArgument.getArgumentName());
+        return new GameProfileCollection(gameProfiles);
     }
 
     @Override

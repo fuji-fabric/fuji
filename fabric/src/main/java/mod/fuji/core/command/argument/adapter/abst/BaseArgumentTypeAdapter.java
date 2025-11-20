@@ -9,6 +9,7 @@ import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.ReflectionUtil;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.assistant.CommandAssistant;
+import mod.fuji.core.command.processor.CommandAnnotationProcessor;
 import mod.fuji.core.command.suggestion.structure.ComposedCommandSuggestionsProvider;
 import mod.fuji.core.config.Configs;
 import mod.fuji.core.document.interfaces.SourceModuleGetter;
@@ -20,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
@@ -106,6 +108,11 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
 
             throw new RuntimeException("No type adapter supports the type class: " + typeClass.getTypeName());
         }
+
+    }
+
+    public @NotNull CommandBuildContext getCommandRegistryAccess() {
+        return CommandAnnotationProcessor.COMMAND_REGISTRY_ACCESS;
     }
 
     private boolean supportsTypeClass(@NotNull Class<?> typeClass) {

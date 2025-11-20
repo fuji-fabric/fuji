@@ -20,9 +20,9 @@ public class SlotRangeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected ArgumentType<?> makeArgumentType() {
         #if MC_VER <= MC_1_20_4
-            return StringArgumentType.greedyString();
+        return StringArgumentType.greedyString();
         #elif MC_VER > MC_1_20_4
-            return SlotsArgument.slots();
+        return SlotsArgument.slots();
         #endif
     }
 
@@ -38,9 +38,9 @@ public class SlotRangeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     public List<Class<?>> getTypeClasses() {
         #if MC_VER <= MC_1_20_4
-            return List.of(mod.fuji.core.command.argument.wrapper.impl.NotSupportedType.class);
+        return List.of(mod.fuji.core.command.argument.wrapper.impl.NotSupportedType.class);
         #elif MC_VER > MC_1_20_4
-            return List.of(SlotRange.class);
+        return List.of(SlotRange.class);
         #endif
     }
 
