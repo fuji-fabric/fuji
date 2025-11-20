@@ -2,12 +2,12 @@ package mod.fuji.core.auxiliary.minecraft;
 
 import com.mojang.authlib.GameProfile;
 import java.util.function.Consumer;
+import mod.fuji.core.config.mapper.wrapper.GameProfileWrapper;
 import mod.fuji.core.document.annotation.TestCase;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.players.PlayerList;
@@ -16,7 +16,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.players.CachedUserNameToIdResolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,7 +56,7 @@ public class PlayerHelper {
         #if MC_VER <= MC_1_21_5
         return (ServerWorld) player.getWorld();
         #elif MC_VER > MC_1_21_5 && MC_VER < MC_1_21_9
-        return player.getWorld();
+        return player.level();
         #elif MC_VER >= MC_1_21_9
         return player.level();
         #endif
@@ -109,9 +108,9 @@ public class PlayerHelper {
             #if MC_VER < MC_1_21_6
             @NotNull ServerPlayerEntity player, @Nullable net.minecraft.nbt.NbtCompound playerData
             #elif MC_VER >= MC_1_21_6 && MC_VER < MC_1_21_9
-            @NotNull ServerPlayerEntity player, @Nullable net.minecraft.storage.ReadView playerData
+            @NotNull ServerPlayer player, @Nullable net.minecraft.world.level.storage.ValueInput playerData
             #elif MC_VER >= MC_1_21_9
-                @NotNull ServerPlayer player, @Nullable net.minecraft.nbt.CompoundTag playerData
+            @NotNull ServerPlayer player, @Nullable net.minecraft.nbt.CompoundTag playerData
             #endif
         ) {
             /* Do nothing if player data is null. */
@@ -125,7 +124,7 @@ public class PlayerHelper {
             }
             #elif MC_VER >= MC_1_21_6 && MC_VER < MC_1_21_9
             playerData
-                .getOptionalString(DIMENSION_NBT_KEY)
+                .getString(DIMENSION_NBT_KEY)
                 .ifPresent(dimensionId -> setServerWorld(player, dimensionId));
             #elif MC_VER >= MC_1_21_9
             NbtHelper.Primitives
@@ -163,7 +162,7 @@ public class PlayerHelper {
             Optional<net.minecraft.nbt.NbtCompound> playerData = getPlayerManager().loadPlayerData($player);
             applyPlayerData($player, playerData.orElse(null));
             #elif MC_VER >= MC_1_21_6 && MC_VER < MC_1_21_9
-            Optional<net.minecraft.storage.ReadView> playerData = getPlayerManager().loadPlayerData($player, net.minecraft.util.ErrorReporter.Impl.EMPTY);
+            Optional<net.minecraft.world.level.storage.ValueInput> playerData = getPlayerManager().load($player, net.minecraft.util.ProblemReporter.DISCARDING);
             applyPlayerData($player, playerData.orElse(null));
             #elif MC_VER >= MC_1_21_9
             Optional<CompoundTag> playerData = getPlayerManager().loadPlayerData($player.nameAndId());
@@ -263,18 +262,28 @@ public class PlayerHelper {
                     /* Make the list from user cache. */
                     return $userCache.profilesByName.values()
                         .stream()
-                        .map(AuthlibHelper::getGameProfile)
+                        .map(GameProfileWrapper::fromVanillaType)
+                        .map(GameProfileWrapper::toGameProfile)
+                        // Filter out invalid game profile cache entry.
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
                         .toList();
                 })
                 .orElseGet(List::of);
         }
 
-        public static Optional<CachedUserNameToIdResolver> getUserCache() {
+        public static
+        #if MC_VER <= MC_1_21_6
+        Optional<net.minecraft.server.players.GameProfileCache>
+        #elif MC_VER > MC_1_21_6
+        Optional<net.minecraft.server.players.CachedUserNameToIdResolver>
+        #endif
+        getUserCache() {
             #if MC_VER < MC_1_21_9
-            return Optional.ofNullable(ServerHelper.getServer().getUserCache());
+            return Optional.ofNullable(ServerHelper.getServer().getProfileCache());
             #elif MC_VER >= MC_1_21_9
             //noinspection OptionalOfNullableMisuse
-            return Optional.ofNullable((CachedUserNameToIdResolver) ServerHelper.getServer().services().nameToIdCache());
+            return Optional.ofNullable((net.minecraft.server.players.CachedUserNameToIdResolver) ServerHelper.getServer().services().nameToIdCache());
             #endif
         }
 

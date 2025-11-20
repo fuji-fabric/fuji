@@ -31,6 +31,7 @@ import mod.fuji.core.document.annotation.TestCase;
 import mod.fuji.core.job.JobManager;
 import mod.fuji.core.structure.GlobalPos;
 import mod.fuji.module.initializer.ModuleInitializer;
+import mod.fuji.module.initializer.world.manager.auxiliary.WorldBorderHelper;
 import mod.fuji.module.initializer.world.manager.command.argument.wrapper.ChunkGeneratorType;
 import mod.fuji.module.initializer.world.manager.command.argument.wrapper.LoadedRuntimeDimensionDescriptor;
 import mod.fuji.module.initializer.world.manager.command.argument.wrapper.UnloadedRuntimeDimensionDescriptor;
@@ -609,11 +610,11 @@ public class WorldInitializer extends ModuleInitializer {
         TextHelper.sendTextByKey(source, "dimension.border");
         TextHelper.sendTextByKey(source, "dimension.border.size", worldBorder.getSize());
         TextHelper.sendTextByKey(source, "dimension.border.size.lerp_target", worldBorder.getLerpTarget());
-        TextHelper.sendTextByKey(source, "dimension.border.size.lerp_time", worldBorder.getLerpTime());
+        TextHelper.sendTextByKey(source, "dimension.border.size.lerp_time", WorldBorderHelper.getLerpTime(worldBorder));
         TextHelper.sendTextByKey(source, "dimension.border.center.x", worldBorder.getCenterX());
         TextHelper.sendTextByKey(source, "dimension.border.center.z", worldBorder.getCenterZ());
         TextHelper.sendTextByKey(source, "dimension.border.damage.per_block", worldBorder.getDamagePerBlock());
-        TextHelper.sendTextByKey(source, "dimension.border.safe_zone", worldBorder.getSafeZone());
+        TextHelper.sendTextByKey(source, "dimension.border.safe_zone", WorldBorderHelper.getSafeZone(worldBorder));
         TextHelper.sendTextByKey(source, "dimension.border.warning.blocks", worldBorder.getWarningBlocks());
         TextHelper.sendTextByKey(source, "dimension.border.warning.time", worldBorder.getWarningTime());
 

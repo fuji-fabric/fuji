@@ -89,6 +89,18 @@ public class GameProfileWrapper {
     public static @NotNull GameProfileWrapper fromVanillaType(@NotNull net.minecraft.server.players.NameAndId playerConfigEntry) {
         return GameProfileWrapper.of(playerConfigEntry.id(), playerConfigEntry.name());
     }
+
+    public static @NotNull GameProfileWrapper fromVanillaType(@NotNull net.minecraft.server.players.CachedUserNameToIdResolver.GameProfileInfo gameProfileInfo) {
+        var compound = gameProfileInfo.nameAndId();
+        return GameProfileWrapper.of(compound.id(), compound.name());
+    }
+    #endif
+
+    #if MC_VER <= MC_1_21_6
+    public static @NotNull GameProfileWrapper fromVanillaType(@NotNull net.minecraft.server.players.GameProfileCache.GameProfileInfo gameProfileInfo) {
+        var compound = gameProfileInfo.getProfile();
+        return GameProfileWrapper.of(compound.getId(), compound.getName());
+    }
     #endif
 
     #if MC_VER < MC_1_21_9

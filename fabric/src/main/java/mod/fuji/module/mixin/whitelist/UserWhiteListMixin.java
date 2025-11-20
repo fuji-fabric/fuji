@@ -22,13 +22,9 @@ public class UserWhiteListMixin {
      * and let the offline-player join the game, so that the usercache.json can be updated to the offline-uuid.
      * <p>
      * This @Inject makes the whitelist.json only look-up for the player's name, not the uuid.
-     *
-     * @see UserWhiteList#isAllowed(GameProfile)
-     * @see UserWhiteList#toString(GameProfile)
-     * @see net.minecraft.server.players.CachedUserNameToIdResolver#add(GameProfile)
      **/
     #if MC_VER < MC_1_21_9
-    @ModifyReturnValue(method = "toString*", at = @At("RETURN"))
+    @ModifyReturnValue(method = "getKeyForUser*", at = @At("RETURN"))
     String ignoreUUIDAndOnlyComparePlayerName(String original, @Local(argsOnly = true) GameProfile vanillaType)
     #elif MC_VER >= MC_1_21_9
     @ModifyReturnValue(method = "getKeyForUser*", at = @At("RETURN"))

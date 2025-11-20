@@ -2,8 +2,6 @@
 # You should write the AW entries directly, and ignore the AW file headers.
 
 # core
-accessible class net/minecraft/server/players/CachedUserNameToIdResolver$GameProfileInfo
-accessible field net/minecraft/server/players/CachedUserNameToIdResolver profilesByName Ljava/util/Map;
 accessible field net/minecraft/commands/CommandSourceStack silent Z
 accessible field net/minecraft/world/entity/Entity position Lnet/minecraft/world/phys/Vec3;
 

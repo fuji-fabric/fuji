@@ -1,24 +1,36 @@
 package mod.fuji.module.initializer.world.manager.structure.util;
 
 #if MC_VER < MC_1_21_9
-import net.minecraft.server.WorldGenerationProgressListener;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.chunk.ChunkStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class VoidWorldGenerationProgressListener implements WorldGenerationProgressListener {
+public class VoidWorldGenerationProgressListener implements
+    #if MC_VER <= MC_1_21_6
+    net.minecraft.server.level.progress.ChunkProgressListener
+    #elif MC_VER > MC_1_21_6
+    net.minecraft.server.WorldGenerationProgressListener
+    #endif
+{
 
     public static final VoidWorldGenerationProgressListener INSTANCE = new VoidWorldGenerationProgressListener();
 
+    #if MC_VER <= MC_1_21_6
     @Override
-    public void start(ChunkPos spawnPos) {
-        // no-op
-    }
+    public void updateSpawnPos(@NotNull net.minecraft.world.level.ChunkPos chunkPos) {}
+    #elif MC_VER > MC_1_21_6
+    @Override
+    public void start(net.minecraft.util.math.ChunkPos spawnPos) {}
+    #endif
 
+
+    #if MC_VER <= MC_1_21_6
     @Override
-    public void setChunkStatus(ChunkPos pos, @Nullable ChunkStatus status) {
-        // no-op
-    }
+    public void onStatusChange(@NotNull net.minecraft.world.level.ChunkPos chunkPos, @Nullable net.minecraft.world.level.chunk.status.ChunkStatus chunkStatus) {}
+    #elif MC_VER > MC_1_21_6
+    @Override
+    public void setChunkStatus(net.minecraft.util.math.ChunkPos pos, @Nullable net.minecraft.world.chunk.ChunkStatus status) {}
+    #endif
+
 
     @Override
     public void start() {

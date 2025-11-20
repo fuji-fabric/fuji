@@ -6,9 +6,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import mod.fuji.core.auxiliary.LogUtil;
-import mod.fuji.core.config.mapper.wrapper.GameProfileWrapper;
 import java.util.UUID;
-import net.minecraft.server.players.CachedUserNameToIdResolver;
 import org.jetbrains.annotations.NotNull;
 
 public class AuthlibHelper {
@@ -83,14 +81,5 @@ public class AuthlibHelper {
         return new PropertyMap(properties);
         #endif
     }
-
-    public static @NotNull GameProfile getGameProfile(@NotNull CachedUserNameToIdResolver.GameProfileInfo entry) {
-        #if MC_VER < MC_1_21_9
-        return entry.getProfile();
-        #elif MC_VER >= MC_1_21_9
-        return GameProfileWrapper.toGameProfile(entry.nameAndId());
-        #endif
-    }
-
 
 }

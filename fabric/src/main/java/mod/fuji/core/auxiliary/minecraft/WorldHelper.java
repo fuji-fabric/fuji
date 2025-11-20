@@ -196,7 +196,7 @@ public class WorldHelper {
             @NotNull BlockPos spawnPos;
 
             #if MC_VER < MC_1_21_9
-            spawnPos = overworld.getSpawnPos();
+            spawnPos = overworld.getSharedSpawnPos();
             #elif MC_VER >= MC_1_21_9
             spawnPos = overworld.getRespawnData().pos();
             #endif
@@ -229,10 +229,10 @@ public class WorldHelper {
                 .orElse(Optional.empty());
             #elif MC_VER >= MC_1_21_5 && MC_VER < MC_1_21_9
             return Optional
-                .ofNullable(player.getRespawn())
+                .ofNullable(player.getRespawnConfig())
                 .map(respawn -> {
-                    RegistryKey<World> dimension = respawn.comp_3683();
-                    BlockPos blockPos = respawn.comp_3684();
+                    ResourceKey<Level> dimension = respawn.dimension();
+                    BlockPos blockPos = respawn.pos();
                     return Optional.of(GlobalPos.of(dimension,blockPos));
                 })
                 .orElse(Optional.empty());

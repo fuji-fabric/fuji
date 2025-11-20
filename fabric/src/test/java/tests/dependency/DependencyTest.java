@@ -57,7 +57,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.players.CachedUserNameToIdResolver;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
@@ -131,7 +130,6 @@ public class DependencyTest {
         /* Allowed Minecraft entities. */
         allowedReferences.add(MinecraftServer.class.getName());
         allowedReferences.add(PlayerList.class.getName());
-        allowedReferences.add(CachedUserNameToIdResolver.class.getName());
 
         allowedReferences.add(Registry.class.getName());
         allowedReferences.add(BuiltInRegistries.class.getName());

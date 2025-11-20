@@ -7,7 +7,6 @@ import java.util.Optional;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.RandomSequences;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.LevelStem;
@@ -25,11 +24,11 @@ public class RuntimeDimension extends ServerLevel {
         super(server, workerExecutor, session, properties, worldKey, dimensionOptions, worldGenerationProgressListener, debugWorld, seed, spawners, shouldTickTime, randomSequencesState);
     }
     #elif MC_VER > MC_1_20_2 && MC_VER < MC_1_21_9
-    public RuntimeDimension(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, net.minecraft.server.WorldGenerationProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List<net.minecraft.world.spawner.SpecialSpawner> spawners, boolean shouldTickTime, @Nullable RandomSequencesState randomSequencesState) {
+    public RuntimeDimension(MinecraftServer server, Executor workerExecutor, LevelStorageSource.LevelStorageAccess session, ServerLevelData properties, ResourceKey<Level> worldKey, LevelStem dimensionOptions, net.minecraft.server.level.progress.ChunkProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List<net.minecraft.world.level.CustomSpawner> spawners, boolean shouldTickTime, @Nullable net.minecraft.world.RandomSequences randomSequencesState) {
         super(server, workerExecutor, session, properties, worldKey, dimensionOptions, worldGenerationProgressListener, debugWorld, seed, spawners, shouldTickTime, randomSequencesState);
     }
     #elif MC_VER >= MC_1_21_9
-    public RuntimeDimension(MinecraftServer server, Executor workerExecutor, LevelStorageSource.LevelStorageAccess session, ServerLevelData properties, ResourceKey<Level> worldKey, LevelStem dimensionOptions, boolean debugWorld, long seed, List<net.minecraft.world.level.CustomSpawner> spawners, boolean shouldTickTime, @Nullable RandomSequences randomSequencesState) {
+    public RuntimeDimension(MinecraftServer server, Executor workerExecutor, LevelStorageSource.LevelStorageAccess session, ServerLevelData properties, ResourceKey<Level> worldKey, LevelStem dimensionOptions, boolean debugWorld, long seed, List<net.minecraft.world.level.CustomSpawner> spawners, boolean shouldTickTime, @Nullable net.minecraft.world.RandomSequences randomSequencesState) {
         super(server, workerExecutor, session, properties, worldKey, dimensionOptions, debugWorld, seed, spawners, shouldTickTime, randomSequencesState);
     }
     #endif

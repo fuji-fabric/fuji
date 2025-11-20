@@ -20,7 +20,7 @@ public class EntityHelper {
 
     public static @NotNull ServerLevel getServerWorld(@NotNull Entity entity) {
         #if MC_VER < MC_1_21_9
-        return (ServerWorld) entity.getWorld();
+        return (ServerLevel) entity.level();
         #elif MC_VER >= MC_1_21_9
         return (ServerLevel) entity.level();
         #endif

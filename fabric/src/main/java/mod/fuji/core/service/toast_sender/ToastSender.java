@@ -48,7 +48,7 @@ public class ToastSender {
                 #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_21_4
                     Optional.of(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER))
                 #elif MC_VER >= MC_1_21_5 && MC_VER < MC_1_21_9
-                    Optional.of(new net.minecraft.util.AssetInfo(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
+                    Optional.of(new net.minecraft.core.ClientAsset(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
                 #elif MC_VER >= MC_1_21_9
                     Optional.of(new net.minecraft.core.ClientAsset.ResourceTexture(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
                 #endif
