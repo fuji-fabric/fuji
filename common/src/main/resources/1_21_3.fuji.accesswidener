@@ -1,7 +1,9 @@
 accessWidener v2 named
 
 # core
-accessible method net/minecraft/server/players/CachedUserNameToIdResolver$GameProfileInfo getProfile ()Lcom/mojang/authlib/GameProfile;
+accessible class net/minecraft/server/players/GameProfileCache$GameProfileInfo
+accessible field net/minecraft/server/players/GameProfileCache profilesByName Ljava/util/Map;
+accessible method net/minecraft/server/players/GameProfileCache$GameProfileInfo getProfile ()Lcom/mojang/authlib/GameProfile;
 
 # chat module
 accessible class net/minecraft/resources/RegistryDataLoader$Loader
