@@ -10,7 +10,6 @@ import mod.fuji.core.command.annotation.CommandTarget;
 import mod.fuji.core.command.argument.wrapper.impl.Dimension;
 import mod.fuji.module.initializer.ModuleInitializer;
 #if MC_VER <= MC_1_20_4
-import net.minecraft.nbt.NbtCompound;
 import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
 #elif MC_VER > MC_1_20_4
@@ -62,7 +61,7 @@ public class CompassInitializer extends ModuleInitializer {
                 tag.remove("LodestonePos");
             } else {
                 tag.putBoolean("LodestoneTracked", false);
-                NbtCompound posTag = new NbtCompound();
+                net.minecraft.nbt.CompoundTag posTag = new net.minecraft.nbt.CompoundTag();
                 posTag.putInt("X", blockPos.getX());
                 posTag.putInt("Y", blockPos.getY());
                 posTag.putInt("Z", blockPos.getZ());

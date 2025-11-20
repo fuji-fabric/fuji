@@ -22,11 +22,7 @@ public class ServerPlayerInteractionManagerMixin {
     @Final
     protected ServerPlayer player;
 
-    #if MC_VER <= MC_1_20_4
-    @Inject(method = "method_41250", at = @At("HEAD"))
-    #elif MC_VER > MC_1_20_4
     @Inject(method = "debugLogging", at = @At("HEAD"))
-    #endif
     void onPlayerLeftClickBlock(BlockPos blockPos, boolean bl, int i, String string, CallbackInfo ci) {
         if (string.equals("actual start of destroying")) {
             String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);

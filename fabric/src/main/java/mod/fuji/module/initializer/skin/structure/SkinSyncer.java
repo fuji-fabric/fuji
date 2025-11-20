@@ -79,7 +79,7 @@ public class SkinSyncer {
         /* Restore the previous status effects. */
         for (MobEffectInstance effect : player.getActiveEffects()) {
         #if MC_VER <= MC_1_20_4
-        player.networkHandler.sendPacket(new EntityStatusEffectS2CPacket(player.getId(), effect));
+        player.connection.send(new ClientboundUpdateMobEffectPacket(player.getId(), effect));
         #elif MC_VER > MC_1_20_4
         player.connection.send(new ClientboundUpdateMobEffectPacket(player.getId(), effect, false));
         #endif

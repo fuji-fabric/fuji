@@ -19,7 +19,7 @@ public class TextArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected ArgumentType<?> makeArgumentType() {
         #if MC_VER <= MC_1_20_4
-        return TextArgumentType.text();
+        return ComponentArgument.textComponent();
         #elif MC_VER > MC_1_20_4
         return ComponentArgument.textComponent(CommandAnnotationProcessor.COMMAND_REGISTRY_ACCESS);
         #endif

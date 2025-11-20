@@ -23,7 +23,10 @@ public class VoidWorldGenerationProgressListener implements
     #endif
 
 
-    #if MC_VER <= MC_1_21_6
+    #if MC_VER <= MC_1_20_4
+    @Override
+    public void onStatusChange(@NotNull net.minecraft.world.level.ChunkPos chunkPos, @Nullable net.minecraft.world.level.chunk.ChunkStatus chunkStatus) {}
+    #elif MC_VER > MC_1_20_4 && MC_VER <= MC_1_21_6
     @Override
     public void onStatusChange(@NotNull net.minecraft.world.level.ChunkPos chunkPos, @Nullable net.minecraft.world.level.chunk.status.ChunkStatus chunkStatus) {}
     #elif MC_VER > MC_1_21_6

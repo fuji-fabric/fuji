@@ -29,7 +29,7 @@ public class InfoCommandMixin {
         }
 
         #if MC_VER <= MC_1_20_4
-        NbtCompound compoundTag = blockEntity.createNbtWithIdentifyingData();
+        CompoundTag compoundTag = blockEntity.saveWithFullMetadata();
         #elif MC_VER > MC_1_20_4
         CompoundTag compoundTag = blockEntity.saveWithFullMetadata(blockEntity.getLevel().registryAccess());
         #endif

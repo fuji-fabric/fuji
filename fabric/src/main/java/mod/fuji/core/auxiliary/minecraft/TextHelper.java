@@ -1045,7 +1045,7 @@ public class TextHelper {
             #if MC_VER <= MC_1_20_2
             return Text.Serializer.toJson(text);
             #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_20_4
-            return Text.Serialization.toJsonString(text);
+            return Component.Serializer.toJson(text);
             #elif MC_VER > MC_1_20_4
             return net.minecraft.network.chat.ComponentSerialization.CODEC
                 .encodeStart(JsonOps.INSTANCE, text)
@@ -1059,7 +1059,7 @@ public class TextHelper {
             #if MC_VER <= MC_1_20_2
             return Text.Serializer.fromJson(textJson);
             #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_20_4
-            return Text.Serialization.fromJson(textJson);
+            return Component.Serializer.fromJson(textJson);
             #elif MC_VER > MC_1_20_4
             return net.minecraft.network.chat.ComponentSerialization.CODEC
                 .decode(JsonOps.INSTANCE, JsonUtil.readJsonString(textJson))

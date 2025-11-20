@@ -10,7 +10,6 @@ import lombok.Getter;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.status.ChunkStatus;
 import org.jetbrains.annotations.NotNull;
 
 public class AsyncChunkLoadTask extends GameTask {
@@ -58,8 +57,22 @@ public class AsyncChunkLoadTask extends GameTask {
         });
     }
 
+    private static
+    #if MC_VER <= MC_1_20_4
+    net.minecraft.world.level.chunk.ChunkStatus
+    #elif MC_VER > MC_1_20_4
+    net.minecraft.world.level.chunk.status.ChunkStatus
+    #endif
+    getFullChunkStatus() {
+        #if MC_VER <= MC_1_20_4
+        return net.minecraft.world.level.chunk.ChunkStatus.FULL;
+        #elif MC_VER > MC_1_20_4
+        return net.minecraft.world.level.chunk.status.ChunkStatus.FULL;
+        #endif
+    }
+
     private static CompletableFuture<Optional<ChunkAccess>> getChunkFuture(@NotNull ServerLevel serverWorld, @NotNull ChunkPos chunkPos) {
-        var future = serverWorld.getChunkSource().getChunkFutureMainThread(chunkPos.x, chunkPos.z, ChunkStatus.FULL, true);
+        var future = serverWorld.getChunkSource().getChunkFutureMainThread(chunkPos.x, chunkPos.z, getFullChunkStatus(), true);
 
         #if MC_VER <= MC_1_20_4
         return future.thenApply(it -> it.left());

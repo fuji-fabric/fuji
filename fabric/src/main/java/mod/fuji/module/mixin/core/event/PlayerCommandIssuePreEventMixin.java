@@ -23,7 +23,7 @@ public class PlayerCommandIssuePreEventMixin {
 
     @EventProducer(PlayerCommandIssuePreEvent.class)
     #if MC_VER <= MC_1_20_4
-    @com.llamalad7.mixinextras.injector.ModifyExpressionValue(method = "handleCommandExecution", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/c2s/play/CommandExecutionC2SPacket;comp_808()Ljava/lang/String;"))
+    @com.llamalad7.mixinextras.injector.ModifyExpressionValue(method = "performChatCommand", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ServerboundChatCommandPacket;command()Ljava/lang/String;"))
     #elif MC_VER > MC_1_20_4
     @org.spongepowered.asm.mixin.injection.ModifyVariable(method = "performUnsignedChatCommand", at = @At(value = "HEAD"), argsOnly = true)
     #endif

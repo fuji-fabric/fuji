@@ -56,8 +56,8 @@ public abstract class AnvilScreenHandlerMixin extends ItemCombinerMenu {
     }
 
     #if MC_VER <= MC_1_20_4
-    @ModifyArg(method = "updateResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;setCustomName(Lnet/minecraft/text/Text;)Lnet/minecraft/item/ItemStack;", ordinal = 0))
-    public Text updateResult(Text text)
+    @ModifyArg(method = "createResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;setHoverName(Lnet/minecraft/network/chat/Component;)Lnet/minecraft/world/item/ItemStack;", ordinal = 0))
+    public Component updateResult(Component text)
     #elif MC_VER > MC_1_20_4 && MC_VER <= MC_1_20_6
     @ModifyArg(method = "createResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;set(Lnet/minecraft/core/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))
     public @NotNull Object updateResult(Object text)
@@ -70,8 +70,8 @@ public abstract class AnvilScreenHandlerMixin extends ItemCombinerMenu {
     }
 
     #if MC_VER <= MC_1_20_4
-    @ModifyArg(method = "setNewItemName", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;setCustomName(Lnet/minecraft/text/Text;)Lnet/minecraft/item/ItemStack;", ordinal = 0))
-    public Text newItemName(Text text)
+    @ModifyArg(method = "setItemName", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;setHoverName(Lnet/minecraft/network/chat/Component;)Lnet/minecraft/world/item/ItemStack;", ordinal = 0))
+    public Component newItemName(Component text)
     #elif MC_VER > MC_1_20_4 && MC_VER <= MC_1_20_6
     @ModifyArg(method = "setItemName", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;set(Lnet/minecraft/core/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))
     public @NotNull Object newItemName(Object text)

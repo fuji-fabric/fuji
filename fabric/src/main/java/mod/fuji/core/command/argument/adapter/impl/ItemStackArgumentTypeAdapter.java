@@ -32,7 +32,7 @@ public class ItemStackArgumentTypeAdapter extends BaseArgumentTypeAdapter {
         String inputString;
 
         #if MC_VER <= MC_1_20_4
-        inputString = itemStackArgument.asString();
+        inputString = itemStackArgument.serialize();
         #elif MC_VER > MC_1_20_4
         inputString = itemStackArgument.serialize(mod.fuji.core.auxiliary.minecraft.RegistryHelper.getDefaultWrapperLookup());
         #endif

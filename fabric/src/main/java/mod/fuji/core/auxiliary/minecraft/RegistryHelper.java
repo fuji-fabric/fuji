@@ -2,6 +2,7 @@ package mod.fuji.core.auxiliary.minecraft;
 
 import java.util.stream.Stream;
 import mod.fuji.Fuji;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.Entity;
@@ -69,8 +70,8 @@ public class RegistryHelper {
         String messageTypeIdString;
 
         #if MC_VER <= MC_1_20_4
-        MessageType messageTypeObj = parameters.type();
-        messageTypeIdString = RegistryHelper.findRegistryKey(net.minecraft.registry.RegistryKeys.MESSAGE_TYPE, messageTypeObj)
+        ChatType messageTypeObj = parameters.chatType();
+        messageTypeIdString = RegistryHelper.findRegistryKey(Registries.CHAT_TYPE, messageTypeObj)
             .map(RegistryHelper::getIdAsString)
             .orElseThrow(() -> new IllegalStateException("Failed to find the RegistryKey for MessageType %s".formatted(messageTypeObj)));
         #elif MC_VER > MC_1_20_4

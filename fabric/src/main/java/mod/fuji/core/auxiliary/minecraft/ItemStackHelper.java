@@ -36,7 +36,7 @@ public class ItemStackHelper {
 
         public static void removeCustomName(@NotNull ItemStack stack) {
             #if MC_VER <= MC_1_20_4
-            stack.removeCustomName();
+            stack.resetHoverName();
             #elif MC_VER > MC_1_20_4
             stack.remove(DataComponents.CUSTOM_NAME);
             #endif
@@ -44,7 +44,7 @@ public class ItemStackHelper {
 
         public static void setCustomName(@NotNull ItemStack stack, @NotNull Component customName) {
             #if MC_VER <= MC_1_20_4
-            stack.setCustomName(customName);
+            stack.setHoverName(customName);
             #elif MC_VER > MC_1_20_4
             stack.set(DataComponents.CUSTOM_NAME, customName);
             #endif
@@ -52,7 +52,7 @@ public class ItemStackHelper {
 
         public static boolean hasCustomName(@NotNull ItemStack stack) {
             #if MC_VER <= MC_1_20_4
-            return stack.hasCustomName();
+            return stack.hasCustomHoverName();
             #elif MC_VER > MC_1_20_4
             return stack.get(DataComponents.CUSTOM_NAME) != null;
             #endif
@@ -70,10 +70,10 @@ public class ItemStackHelper {
         public static @NotNull List<Component> getLore(@NotNull ItemStack stack) {
             #if MC_VER <= MC_1_20_4
             return stack
-                .getOrCreateSubNbt(DISPLAY_NBT_KEY)
-                .getList(LORE_NBT_KEY, NbtElement.STRING_TYPE)
+                .getOrCreateTagElement(DISPLAY_NBT_KEY)
+                .getList(LORE_NBT_KEY, Tag.TAG_STRING)
                 .stream()
-                .map(tag -> TextHelper.Codec.fromJson(tag.asString()))
+                .map(tag -> TextHelper.Codec.fromJson(tag.getAsString()))
                 .collect(java.util.stream.Collectors.toList());
             #elif MC_VER > MC_1_20_4
                 var loreComponent = stack.get(DataComponents.LORE);
@@ -87,10 +87,10 @@ public class ItemStackHelper {
 
         public static void setLore(@NotNull ItemStack stack, @NotNull List<Component> texts) {
             #if MC_VER <= MC_1_20_4
-            NbtCompound displayTag = stack.getOrCreateSubNbt(DISPLAY_NBT_KEY);
-            NbtList loreItemsTag = new NbtList();
-            for (Text text : texts) {
-                loreItemsTag.add(net.minecraft.nbt.NbtString.of(TextHelper.Codec.toJson(text)));
+            CompoundTag displayTag = stack.getOrCreateTagElement(DISPLAY_NBT_KEY);
+            ListTag loreItemsTag = new ListTag();
+            for (Component text : texts) {
+                loreItemsTag.add(net.minecraft.nbt.StringTag.valueOf(TextHelper.Codec.toJson(text)));
             }
             displayTag.put(LORE_NBT_KEY, loreItemsTag);
             #elif MC_VER > MC_1_20_4
@@ -196,7 +196,7 @@ public class ItemStackHelper {
  **/
         public static @Nullable CompoundTag getCustomDataNbt(@NotNull ItemStack stack) {
             #if MC_VER <= MC_1_20_4
-            return stack.getNbt();
+            return stack.getTag();
             #elif MC_VER > MC_1_20_4
             net.minecraft.world.item.component.CustomData nbtComponent = stack.get(DataComponents.CUSTOM_DATA);
             return nbtComponent == null ? null : nbtComponent.copyTag();
@@ -205,7 +205,7 @@ public class ItemStackHelper {
 
         public static void setCustomDataNbt(@NotNull ItemStack stack, @NotNull CompoundTag newNbt) {
             #if MC_VER <= MC_1_20_4
-            stack.setNbt(newNbt);
+            stack.setTag(newNbt);
             #elif MC_VER > MC_1_20_4
             stack.set(DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.of(newNbt));
             #endif

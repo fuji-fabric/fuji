@@ -8,9 +8,6 @@ accessible field net/minecraft/world/entity/Entity position Lnet/minecraft/world
 # common economy api
 accessible field net/minecraft/server/level/ServerPlayer server Lnet/minecraft/server/MinecraftServer;
 
-# rtp
-accessible method net/minecraft/server/level/ServerChunkCache getChunkFutureMainThread (IILnet/minecraft/world/level/chunk/status/ChunkStatus;Z)Ljava/util/concurrent/CompletableFuture;
-
 # temp ban
 accessible method net/minecraft/server/players/StoredUserList removeExpired ()V
 

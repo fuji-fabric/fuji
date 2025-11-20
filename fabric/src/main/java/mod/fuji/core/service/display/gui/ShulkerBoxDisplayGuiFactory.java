@@ -4,10 +4,10 @@ import com.google.errorprone.annotations.Keep;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 #if MC_VER <= MC_1_20_4
-import net.minecraft.item.BlockItem;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.core.NonNullList;
 #elif MC_VER > MC_1_20_4
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.ItemContainerContents;
@@ -44,16 +44,16 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
     private static @NotNull Stream<ItemStack> extractItemsFromShulkerBox(ItemStack stack) {
 
         #if MC_VER <= MC_1_20_4
-        NbtCompound blockEntityData = BlockItem.getBlockEntityNbt(stack);
+        CompoundTag blockEntityData = BlockItem.getBlockEntityData(stack);
         if (blockEntityData != null) {
-            NbtList items = (NbtList) blockEntityData.get("Items");
+            ListTag items = (ListTag) blockEntityData.get("Items");
             if (items == null) return Stream.empty();
 
-            DefaultedList<ItemStack> temp = DefaultedList.ofSize(SHULKER_BOX_MAX_CAPACITY, ItemStack.EMPTY);
+            NonNullList<ItemStack> temp = NonNullList.withSize(SHULKER_BOX_MAX_CAPACITY, ItemStack.EMPTY);
             items.forEach(item -> {
-                NbtCompound itemNbtCompound = (NbtCompound) item;
+                CompoundTag itemNbtCompound = (CompoundTag) item;
                 int slotIndex = itemNbtCompound.getInt("Slot");
-                ItemStack itemStack = ItemStack.fromNbt(itemNbtCompound);
+                ItemStack itemStack = ItemStack.of(itemNbtCompound);
 
                 temp.set(slotIndex, itemStack);
             });

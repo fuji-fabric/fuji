@@ -25,18 +25,18 @@ import net.minecraft.resources.ResourceKey;
 public class WorldGenSettingsMixin {
 
     #if MC_VER <= MC_1_20_4
-    @ModifyVariable(method = "encode(Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/world/gen/GeneratorOptions;Lnet/minecraft/world/dimension/DimensionOptionsRegistryHolder;)Lcom/mojang/serialization/DataResult;", at = @At("HEAD"), argsOnly = true)
-    private static DimensionOptionsRegistryHolder $wrapWorldGenSettings(DimensionOptionsRegistryHolder dimensionOptionsRegistryHolder) {
-        Registry<DimensionOptions> dimensions = dimensionOptionsRegistryHolder.comp_1014();
-        FilteredRegistry<DimensionOptions> filteredDimensions = new FilteredRegistry<>(dimensions, ExtendedDimensionOptions.SAVE_DIMENSION_OPTIONS_PREDICATE);
-        return new DimensionOptionsRegistryHolder(filteredDimensions);
+    @ModifyVariable(method = "encode(Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/world/level/levelgen/WorldOptions;Lnet/minecraft/world/level/levelgen/WorldDimensions;)Lcom/mojang/serialization/DataResult;", at = @At("HEAD"), argsOnly = true)
+    private static WorldDimensions $wrapWorldGenSettings(WorldDimensions dimensionOptionsRegistryHolder) {
+        Registry<LevelStem> dimensions = dimensionOptionsRegistryHolder.dimensions();
+        FilteredRegistry<LevelStem> filteredDimensions = new FilteredRegistry<>(dimensions, ExtendedDimensionOptions.SAVE_DIMENSION_OPTIONS_PREDICATE);
+        return new WorldDimensions(filteredDimensions);
     }
 
     @SuppressWarnings("UnnecessaryLocalVariable")
-    @ModifyArg(method = "encode(Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/world/gen/GeneratorOptions;Lnet/minecraft/registry/DynamicRegistryManager;)Lcom/mojang/serialization/DataResult;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/dimension/DimensionOptionsRegistryHolder;<init>(Lnet/minecraft/registry/Registry;)V"), index = 0)
-    private static Registry<DimensionOptions> $wrapWorldGenSettings(Registry<DimensionOptions> comp_1014) {
-        Registry<DimensionOptions> dimensions = comp_1014;
-        FilteredRegistry<DimensionOptions> filteredDimensions = new FilteredRegistry<>(dimensions, ExtendedDimensionOptions.SAVE_DIMENSION_OPTIONS_PREDICATE);
+    @ModifyArg(method = "encode(Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/world/level/levelgen/WorldOptions;Lnet/minecraft/core/RegistryAccess;)Lcom/mojang/serialization/DataResult;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/levelgen/WorldDimensions;<init>(Lnet/minecraft/core/Registry;)V"), index = 0)
+    private static Registry<LevelStem> $wrapWorldGenSettings(Registry<LevelStem> comp_1014) {
+        Registry<LevelStem> dimensions = comp_1014;
+        FilteredRegistry<LevelStem> filteredDimensions = new FilteredRegistry<>(dimensions, ExtendedDimensionOptions.SAVE_DIMENSION_OPTIONS_PREDICATE);
         return filteredDimensions;
     }
 

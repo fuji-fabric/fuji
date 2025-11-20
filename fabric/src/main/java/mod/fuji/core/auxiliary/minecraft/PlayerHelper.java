@@ -37,11 +37,7 @@ public class PlayerHelper {
     }
 
     public static void playSound(@NotNull ServerPlayer player, @NotNull SoundEvent soundEvent, @NotNull SoundSource soundCategory, float volume, float pitch) {
-        #if MC_VER <= MC_1_20_4
-        player.playSound(soundEvent, soundCategory, volume, pitch);
-        #elif MC_VER > MC_1_20_4
         player.playNotifySound(soundEvent, soundCategory, volume, pitch);
-        #endif
     }
 
     public static int getPing(@NotNull ServerPlayer player) {
@@ -156,7 +152,7 @@ public class PlayerHelper {
             ServerPlayer $player = makePlayer(gameProfile.get());
 
             #if MC_VER <= MC_1_20_4
-            net.minecraft.nbt.NbtCompound playerData = getPlayerManager().loadPlayerData($player);
+            net.minecraft.nbt.CompoundTag playerData = getPlayerManager().load($player);
             applyPlayerData($player, playerData);
             #elif MC_VER > MC_1_20_4 && MC_VER < MC_1_21_6
             Optional<net.minecraft.nbt.CompoundTag> playerData = getPlayerManager().load($player);

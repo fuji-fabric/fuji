@@ -115,8 +115,8 @@ public class FilteredRegistry<T> extends MappedRegistry<T> {
 
     #if MC_VER <= MC_1_20_4
     @Override
-    public Lifecycle getEntryLifecycle(T entry) {
-        return this.source.getEntryLifecycle(entry);
+    public Lifecycle lifecycle(T entry) {
+        return this.source.lifecycle(entry);
     }
     #endif
 
