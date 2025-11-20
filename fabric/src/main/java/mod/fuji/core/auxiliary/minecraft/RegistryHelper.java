@@ -70,7 +70,7 @@ public class RegistryHelper {
 
         #if MC_VER <= MC_1_20_4
         ChatType messageTypeObj = parameters.chatType();
-        messageTypeIdString = RegistryHelper.findRegistryKey(Registries.CHAT_TYPE, messageTypeObj)
+        messageTypeIdString = RegistryHelper.findRegistryKey(net.minecraft.core.registries.Registries.CHAT_TYPE, messageTypeObj)
             .map(RegistryHelper::getIdAsString)
             .orElseThrow(() -> new IllegalStateException("Failed to find the RegistryKey for MessageType %s".formatted(messageTypeObj)));
         #elif MC_VER > MC_1_20_4
