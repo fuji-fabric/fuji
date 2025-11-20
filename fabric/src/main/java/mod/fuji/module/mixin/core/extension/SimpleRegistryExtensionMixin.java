@@ -4,11 +4,6 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.extension.SimpleRegistryExtension;
 import it.unimi.dsi.fastutil.objects.ObjectList;
-#if MC_VER <= MC_1_20_2
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-#elif MC_VER > MC_1_20_2
-import it.unimi.dsi.fastutil.objects.Reference2IntMap;
-#endif
 
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.core.Registry;
@@ -16,10 +11,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Holder.Reference;
-#if MC_VER <= MC_1_20_4
-#elif MC_VER > MC_1_20_4
-import net.minecraft.core.RegistrationInfo;
-#endif
+
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
@@ -50,7 +42,7 @@ public abstract class SimpleRegistryExtensionMixin<T> implements SimpleRegistryE
     #elif MC_VER > MC_1_20_4
     @Shadow
     @Final
-    private Map<ResourceKey<T>, RegistrationInfo> registrationInfos;
+    private Map<ResourceKey<T>, net.minecraft.core.RegistrationInfo> registrationInfos;
     #endif
 
 
@@ -61,16 +53,16 @@ public abstract class SimpleRegistryExtensionMixin<T> implements SimpleRegistryE
     #if MC_VER <= MC_1_20_2
     @Shadow
     @Final
-    private Object2IntMap<T> toId;
+    private it.unimi.dsi.fastutil.objects.Object2IntMap<T> toId;
     #elif MC_VER > MC_1_20_2
     @Shadow
     @Final
-    private Reference2IntMap<T> toId;
+    private it.unimi.dsi.fastutil.objects.Reference2IntMap<T> toId;
     #endif
 
     @Shadow
     @Final
-    ResourceKey<? extends Registry<T>> key;
+    private ResourceKey<? extends Registry<T>> key;
 
     @Shadow
     private boolean frozen;
