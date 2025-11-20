@@ -117,6 +117,12 @@
 - Target: The jobs from command_scheduler module should be re-scheduled.
 
 [Test Case]
+- Module: command_toolbox.lore
+- Action: **Test the codec for text object.**
+- Target: Issue `/lore set <blue>First Line<newline><green>Second Line`
+- Target: Issue `/lore unset`
+
+[Test Case]
 - Module: command_toolbox.tppos
 - Action: **Issue the command `/tppos --z 64 --x 32 --y 128`**
 - Target: The command context should be passed after the command redirection.
