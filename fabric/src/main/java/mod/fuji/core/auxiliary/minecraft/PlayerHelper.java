@@ -54,7 +54,7 @@ public class PlayerHelper {
 
     public static @NotNull ServerLevel getServerWorld(@NotNull ServerPlayer player) {
         #if MC_VER <= MC_1_21_5
-        return (ServerWorld) player.getWorld();
+        return (ServerLevel) player.level();
         #elif MC_VER > MC_1_21_5 && MC_VER < MC_1_21_9
         return player.level();
         #elif MC_VER >= MC_1_21_9
@@ -106,7 +106,7 @@ public class PlayerHelper {
 
         private static void applyPlayerData(
             #if MC_VER < MC_1_21_6
-            @NotNull ServerPlayerEntity player, @Nullable net.minecraft.nbt.NbtCompound playerData
+            @NotNull ServerPlayer player, @Nullable net.minecraft.nbt.CompoundTag playerData
             #elif MC_VER >= MC_1_21_6 && MC_VER < MC_1_21_9
             @NotNull ServerPlayer player, @Nullable net.minecraft.world.level.storage.ValueInput playerData
             #elif MC_VER >= MC_1_21_9
@@ -159,7 +159,7 @@ public class PlayerHelper {
             net.minecraft.nbt.NbtCompound playerData = getPlayerManager().loadPlayerData($player);
             applyPlayerData($player, playerData);
             #elif MC_VER > MC_1_20_4 && MC_VER < MC_1_21_6
-            Optional<net.minecraft.nbt.NbtCompound> playerData = getPlayerManager().loadPlayerData($player);
+            Optional<net.minecraft.nbt.CompoundTag> playerData = getPlayerManager().load($player);
             applyPlayerData($player, playerData.orElse(null));
             #elif MC_VER >= MC_1_21_6 && MC_VER < MC_1_21_9
             Optional<net.minecraft.world.level.storage.ValueInput> playerData = getPlayerManager().load($player, net.minecraft.util.ProblemReporter.DISCARDING);

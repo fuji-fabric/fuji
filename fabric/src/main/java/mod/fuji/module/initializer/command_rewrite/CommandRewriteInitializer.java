@@ -42,7 +42,7 @@ import org.jetbrains.annotations.NotNull;
     Like, rewrite the command string `/home` into `/home tp default`.
     And provide a shortcut, for `/home tp default` command.
     """)
-@TestCase(action = "Issue `/home` command.", targets = "It should be rewrite to `/home tp default` command.")
+@TestCase(action = "Issue `/?` command.", targets = "It should be rewrite to `/help` command.")
 public class CommandRewriteInitializer extends ModuleInitializer {
     private static final BaseConfigurationHandler<CommandRewriteConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandRewriteConfigModel.class);
 

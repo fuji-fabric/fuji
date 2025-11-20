@@ -108,8 +108,8 @@
 
 [Test Case]
 - Module: command_rewrite
-- Action: **Issue `/?` command.**
-- Target: It should be rewrite to `/help` command.
+- Action: **Issue `/home` command.**
+- Target: It should be rewrite to `/home tp default` command.
 
 [Test Case]
 - Module: command_scheduler

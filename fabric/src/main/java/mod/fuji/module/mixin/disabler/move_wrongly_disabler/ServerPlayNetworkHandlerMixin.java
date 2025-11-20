@@ -33,7 +33,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
 
     @TestCase(action = "Sit in a `boat` and try to move it.", targets = "The `vehicle moved wrongly` should be disabled.")
     #if MC_VER < MC_1_21_6
-    @ModifyConstant(method = "onVehicleMove", constant = @Constant(doubleValue = 0.0625, ordinal = 1))
+    @ModifyConstant(method = "handleMoveVehicle", constant = @Constant(doubleValue = 0.0625, ordinal = 1))
     #elif MC_VER >= MC_1_21_6
     @ModifyConstant(method = "handleMoveVehicle", constant = @Constant(doubleValue = 0.0625, ordinal = 0))
     #endif
