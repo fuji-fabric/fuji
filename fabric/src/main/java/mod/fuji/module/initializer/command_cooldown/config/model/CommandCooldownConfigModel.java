@@ -28,6 +28,7 @@ public class CommandCooldownConfigModel {
             this.put("chunks.*", 60 * 1000L);
             this.put("rtp.*", 60 * 1000L);
             this.put("download.*", 120 * 1000L);
+            this.put("heal.*", 10 * 1000L);
         }
     };
 
