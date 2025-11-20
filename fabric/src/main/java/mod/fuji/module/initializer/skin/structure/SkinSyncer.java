@@ -21,10 +21,6 @@ import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.NotNull;
 import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
 
-#if MC_VER <= MC_1_20_1
-import net.minecraft.world.biome.source.BiomeAccess;
-#endif
-
 public class SkinSyncer {
 
     public static void broadcastGameProfileChange(@NotNull ServerPlayer player) {
@@ -53,7 +49,18 @@ public class SkinSyncer {
 
         /* Send re-spawn packet to the player, to simulate the dimension change behaviour. */
         #if MC_VER <= MC_1_20_1
-        player.networkHandler.sendPacket(new PlayerRespawnS2CPacket(player.getWorld().getDimensionKey(), player.getWorld().getRegistryKey(), BiomeAccess.hashSeed(player.getServerWorld().getSeed()), player.interactionManager.getGameMode(), player.interactionManager.getPreviousGameMode(), player.getWorld().isDebugWorld(), player.getServerWorld().isFlat(), (byte) 3, player.getLastDeathPos(), player.getPortalCooldown()));
+        var world = PlayerHelper.getServerWorld(player);
+        player.connection.send(new ClientboundRespawnPacket(
+            world.dimensionTypeId()
+            , world.dimension()
+            , net.minecraft.world.level.biome.BiomeManager.obfuscateSeed(world.getSeed())
+            , player.gameMode.getGameModeForPlayer()
+            , player.gameMode.getPreviousGameModeForPlayer()
+            , world.isDebug()
+            , world.isFlat()
+            , (byte) 3
+            , player.getLastDeathLocation()
+            , player.getPortalCooldown()));
         #elif MC_VER > MC_1_20_1
         player.connection.send(new ClientboundRespawnPacket(player.createCommonSpawnInfo(EntityHelper.getServerWorld(player)), (byte) 3));
         #endif

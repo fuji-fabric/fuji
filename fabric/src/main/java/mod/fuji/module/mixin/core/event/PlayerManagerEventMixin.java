@@ -22,8 +22,8 @@ public class PlayerManagerEventMixin {
 
     @EventProducer(PlayerJoinedEvent.class)
     #if MC_VER <= MC_1_20_1
-    @Inject(method = "onPlayerConnect", at = @At("TAIL"))
-    void produceOnPlayerJoinedEvent(ClientConnection clientConnection, ServerPlayerEntity player, CallbackInfo ci)
+    @Inject(method = "placeNewPlayer", at = @At("TAIL"))
+    void produceOnPlayerJoinedEvent(Connection clientConnection, ServerPlayer player, CallbackInfo ci)
     #elif MC_VER > MC_1_20_1
     @Inject(method = "placeNewPlayer", at = @At("TAIL"))
     void produceOnPlayerJoinedEvent(Connection clientConnection, @NotNull ServerPlayer player, net.minecraft.server.network.CommonListenerCookie connectedClientData, CallbackInfo ci)

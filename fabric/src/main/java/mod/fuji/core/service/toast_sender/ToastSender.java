@@ -80,13 +80,13 @@ public class ToastSender {
     @SuppressWarnings("UnnecessaryLocalVariable")
     private static
     #if MC_VER <= MC_1_20_1
-    AdvancementCriterion
+    Criterion
     #elif MC_VER > MC_1_20_1
     Criterion<ImpossibleTrigger.TriggerInstance>
     #endif
     makeAdvancementCriterion() {
         #if MC_VER <= MC_1_20_1
-            AdvancementCriterion advancementCriterion = new AdvancementCriterion(new ImpossibleCriterion.Conditions());
+        Criterion advancementCriterion = new Criterion(new ImpossibleTrigger.TriggerInstance());
         #elif MC_VER > MC_1_20_1
         Criterion<ImpossibleTrigger.TriggerInstance> advancementCriterion = new ImpossibleTrigger().createCriterion(new ImpossibleTrigger.TriggerInstance());
         #endif
@@ -116,9 +116,9 @@ public class ToastSender {
         AdvancementProgress advancementProgress = new AdvancementProgress();
 
         #if MC_VER <= MC_1_20_1
-        Map<String, AdvancementCriterion> maps = new HashMap<>();
-        maps.put(IMPOSSIBLE, new AdvancementCriterion(new ImpossibleCriterion.Conditions()));
-        advancementProgress.init(maps, makeAdvancementRequirements());
+        Map<String, Criterion> maps = new HashMap<>();
+        maps.put(IMPOSSIBLE, new Criterion(new ImpossibleTrigger.TriggerInstance()));
+        advancementProgress.update(maps, makeAdvancementRequirements());
         #elif MC_VER > MC_1_20_1
         advancementProgress.update(makeAdvancementRequirements());
         #endif

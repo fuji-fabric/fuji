@@ -42,7 +42,7 @@ public class PlayerHelper {
 
     public static int getPing(@NotNull ServerPlayer player) {
         #if MC_VER <= MC_1_20_1
-        return player.pingMilliseconds;
+        return player.latency;
         #elif MC_VER > MC_1_20_1
         return player.connection.latency();
         #endif
@@ -93,7 +93,7 @@ public class PlayerHelper {
             MinecraftServer server = ServerHelper.getServer();
 
             #if MC_VER <= MC_1_20_1
-            return new ServerPlayerEntity(server, server.getOverworld(), gameProfile);
+            return new ServerPlayer(server, server.overworld(), gameProfile);
             #elif MC_VER > MC_1_20_1
             var syncedClientOptions = net.minecraft.server.level.ClientInformation.createDefault();
             return new ServerPlayer(server, server.overworld(), gameProfile, syncedClientOptions);

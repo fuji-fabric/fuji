@@ -55,7 +55,7 @@ public class SitInitializer extends ModuleInitializer {
 
     private static final Vec3 CHAIR_ENTITY_OFFSET =
         #if MC_VER <= MC_1_20_1
-            new Vec3d(0, -1.175, 0);
+            new Vec3(0, -1.175, 0);
         #elif MC_VER > MC_1_20_1
             new Vec3(0, -1.375, 0);
         #endif
@@ -98,13 +98,11 @@ public class SitInitializer extends ModuleInitializer {
 
     @SuppressWarnings({"Convert2MethodRef", "UnnecessaryLocalVariable"})
     private static double computeSensibleLengthY(VoxelShape voxelShape) {
-        double averageLengthY = voxelShape.toAabbs().stream().mapToDouble(it -> {
-                #if MC_VER <= MC_1_20_1
-                    return it.getYLength();
-                #elif MC_VER > MC_1_20_1
-                    return it.getYsize();
-                #endif
-        }).average().orElse(0);
+        double averageLengthY = voxelShape.toAabbs()
+            .stream()
+            .mapToDouble(it -> it.getYsize())
+            .average()
+            .orElse(0);
         return averageLengthY;
     }
 

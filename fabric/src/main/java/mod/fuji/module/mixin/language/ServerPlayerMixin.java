@@ -13,9 +13,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ServerPlayerMixin {
 
     #if MC_VER <= MC_1_20_1
-    @Inject(method = "setClientSettings", at = @At("HEAD"))
-    void putClientSideLanguage(net.minecraft.network.packet.c2s.play.ClientSettingsC2SPacket clientSettingsC2SPacket, CallbackInfo ci) {
-        ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
+    @Inject(method = "updateOptions", at = @At("HEAD"))
+    void putClientSideLanguage(net.minecraft.network.protocol.game.ServerboundClientInformationPacket clientSettingsC2SPacket, CallbackInfo ci) {
+        ServerPlayer player = (ServerPlayer) (Object) this;
         String playerName = PlayerHelper.getPlayerName(player);
         String languageCode = clientSettingsC2SPacket.language();
         TextHelper.Loader.setPlayerLanguageCode(playerName, languageCode);

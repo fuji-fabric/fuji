@@ -4,17 +4,12 @@ import org.spongepowered.asm.mixin.Mixin;
 
 #if MC_VER <= MC_1_20_1
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlot;
 import org.spongepowered.asm.mixin.injection.At;
-#elif MC_VER > MC_1_20_1
-import net.minecraft.world.inventory.InventoryMenu;
-#endif
-
-#if MC_VER <= MC_1_20_1
-@Mixin(targets = "net/minecraft/screen/PlayerScreenHandler$1")
+@Mixin(targets = "net/minecraft/world/inventory/InventoryMenu$1")
 public class PlayerScreenHandlerMixin {
 
-    @ModifyExpressionValue(method = "canInsert", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/MobEntity;getPreferredEquipmentSlot(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/entity/EquipmentSlot;"), require = 0)
+    @ModifyExpressionValue(method = "mayPlace", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;getEquipmentSlotForItem(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/entity/EquipmentSlot;"), require = 0)
     // NOTE: require = 0, due to the mixin fails in forge platform.
     EquipmentSlot allowPlaceAnyItemInHeadEquipmentSlotInSurvivalGameMode(EquipmentSlot original) {
         /* If an item is not Equipment item, it will prefer EquipmentSlot.MAINHAND by default. */
@@ -27,6 +22,7 @@ public class PlayerScreenHandlerMixin {
     }
 }
 #elif MC_VER > MC_1_20_1
+import net.minecraft.world.inventory.InventoryMenu;
 @Mixin(InventoryMenu.class)
 public class PlayerScreenHandlerMixin {}
 #endif

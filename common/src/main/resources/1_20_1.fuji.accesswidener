@@ -1,20 +1,25 @@
 accessWidener v2 named
 
 # core
-accessible method net/minecraft/server/players/CachedUserNameToIdResolver$GameProfileInfo getProfile ()Lcom/mojang/authlib/GameProfile;
+accessible class net/minecraft/server/players/GameProfileCache$GameProfileInfo
+accessible field net/minecraft/server/players/GameProfileCache profilesByName Ljava/util/Map;
+accessible method net/minecraft/server/players/GameProfileCache$GameProfileInfo getProfile ()Lcom/mojang/authlib/GameProfile;
 
 # world module
-accessible field net/minecraft/world/dimension/DimensionOptionsRegistryHolder comp_1014 Lnet/minecraft/registry/Registry;
+accessible field net/minecraft/world/level/levelgen/WorldDimensions dimensions Lnet/minecraft/core/Registry;
 
 # view module
-accessible field net/minecraft/server/MinecraftServer playerDataStorage Lnet/minecraft/world/WorldSaveHandler;
+accessible field net/minecraft/server/MinecraftServer playerDataStorage Lnet/minecraft/world/level/storage/PlayerDataStorage;
 
 # world helper
-accessible field net/minecraft/server/world/ThreadedAnvilChunkStorage visibleChunkMap Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
+accessible field net/minecraft/server/level/ChunkMap visibleChunkMap Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
 
 # InventoryHelper
-accessible field net/minecraft/inventory/SimpleInventory stacks Lnet/minecraft/util/collection/DefaultedList;
+accessible field net/minecraft/world/SimpleContainer items Lnet/minecraft/core/NonNullList;
 
 # skin
-accessible field net/minecraft/server/world/ThreadedAnvilChunkStorage entityTrackers Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
-accessible class net/minecraft/server/world/ThreadedAnvilChunkStorage$EntityTracker
+accessible field net/minecraft/server/level/ChunkMap entityMap Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+accessible class net/minecraft/server/level/ChunkMap$TrackedEntity
+
+# rtp
+accessible method net/minecraft/server/level/ServerChunkCache getChunkFutureMainThread (IILnet/minecraft/world/level/chunk/ChunkStatus;Z)Ljava/util/concurrent/CompletableFuture;
