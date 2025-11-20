@@ -168,7 +168,7 @@ public class ToastSender {
         , Set<ResourceLocation> toRemove, Map<ResourceLocation, AdvancementProgress> toSetProgress)
     {
         #if MC_VER <= MC_1_21_4
-            return new AdvancementUpdateS2CPacket(false, toEarn, toRemove, toSetProgress);
+            return new ClientboundUpdateAdvancementsPacket(false, toEarn, toRemove, toSetProgress);
         #elif MC_VER >= MC_1_21_5
         return new ClientboundUpdateAdvancementsPacket(false, toEarn, toRemove, toSetProgress, true);
         #endif

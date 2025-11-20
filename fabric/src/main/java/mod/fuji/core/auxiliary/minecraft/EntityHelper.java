@@ -57,6 +57,14 @@ public class EntityHelper {
         return entity.position;
     }
 
+    public static void moveEntity(@NotNull Entity entity, double x, double y, double z, float yRot, float xRot) {
+        #if MC_VER <= MC_1_21_4
+        entity.moveTo(x, y, z, yRot, xRot);
+        #elif MC_VER > MC_1_21_4
+        entity.snapTo(x, y, z, yRot, xRot);
+        #endif
+    }
+
     public static void rideEntity(@NotNull Entity passengerEntity, @NotNull Entity vehicleEntity) {
         #if MC_VER < MC_1_21_9
         passengerEntity.startRiding(vehicleEntity, true);

@@ -221,9 +221,9 @@ public class WorldHelper {
         public static Optional<GlobalPos> getPlayerSpawnPos(@NotNull ServerPlayer player) {
             #if MC_VER < MC_1_21_5
             return Optional
-                .ofNullable(player.getSpawnPointPosition())
+                .ofNullable(player.getRespawnPosition())
                 .map(spawnBlockPos -> {
-                    @NotNull RegistryKey<World> dimension = player.getSpawnPointDimension();
+                    @NotNull ResourceKey<Level> dimension = player.getRespawnDimension();
                     return Optional.of(GlobalPos.of(dimension, spawnBlockPos));
                 })
                 .orElse(Optional.empty());

@@ -924,7 +924,7 @@ public class TextHelper {
 
             public static net.minecraft.network.chat.ClickEvent makeSuggestCommandAction(@NotNull String command) {
                 #if MC_VER <= MC_1_21_4
-                return new net.minecraft.text.ClickEvent(net.minecraft.text.ClickEvent.Action.SUGGEST_COMMAND, command);
+                return new net.minecraft.network.chat.ClickEvent(net.minecraft.network.chat.ClickEvent.Action.SUGGEST_COMMAND, command);
                 #elif MC_VER >= MC_1_21_5
                 return new net.minecraft.network.chat.ClickEvent.SuggestCommand(command);
                 #endif
@@ -932,7 +932,7 @@ public class TextHelper {
 
             public static net.minecraft.network.chat.ClickEvent makeRunCommandAction(@NotNull String command) {
                 #if MC_VER <= MC_1_21_4
-                    return new net.minecraft.text.ClickEvent(net.minecraft.text.ClickEvent.Action.RUN_COMMAND, command);
+                    return new net.minecraft.network.chat.ClickEvent(net.minecraft.network.chat.ClickEvent.Action.RUN_COMMAND, command);
                 #elif MC_VER >= MC_1_21_5
                 return new net.minecraft.network.chat.ClickEvent.RunCommand(command);
                 #endif
@@ -940,7 +940,7 @@ public class TextHelper {
 
             public static net.minecraft.network.chat.ClickEvent makeCopyToClipboardAction(@NotNull String string) {
                 #if MC_VER <= MC_1_21_4
-                    return new net.minecraft.text.ClickEvent(net.minecraft.text.ClickEvent.Action.COPY_TO_CLIPBOARD, string);
+                    return new net.minecraft.network.chat.ClickEvent(net.minecraft.network.chat.ClickEvent.Action.COPY_TO_CLIPBOARD, string);
                 #elif MC_VER >= MC_1_21_5
                 return new net.minecraft.network.chat.ClickEvent.CopyToClipboard(string);
                 #endif
@@ -951,7 +951,7 @@ public class TextHelper {
 
             public static net.minecraft.network.chat.HoverEvent makeShowTextAction(@NotNull Component hoverText) {
                 #if MC_VER <= MC_1_21_4
-                return new net.minecraft.text.HoverEvent(net.minecraft.text.HoverEvent.Action.SHOW_TEXT, hoverText);
+                return new net.minecraft.network.chat.HoverEvent(net.minecraft.network.chat.HoverEvent.Action.SHOW_TEXT, hoverText);
                 #elif MC_VER >= MC_1_21_5
                 return new net.minecraft.network.chat.HoverEvent.ShowText(hoverText);
                 #endif

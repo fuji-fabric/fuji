@@ -27,7 +27,11 @@ public class TextArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
+        #if MC_VER <= MC_1_21_4
+        return ComponentArgument.getComponent(context, commandArgument.getArgumentName());
+        #elif MC_VER > MC_1_21_4
         return ComponentArgument.getRawComponent(context, commandArgument.getArgumentName());
+        #endif
     }
 
     @Override

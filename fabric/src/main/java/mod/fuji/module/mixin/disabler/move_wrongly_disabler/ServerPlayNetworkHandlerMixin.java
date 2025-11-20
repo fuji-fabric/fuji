@@ -21,7 +21,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
         at = @At(
             value = "INVOKE",
             #if MC_VER < MC_1_21_5
-            target = "Lnet/minecraft/server/network/ServerPlayerInteractionManager;isCreative()Z"
+            target = "Lnet/minecraft/server/level/ServerPlayerGameMode;isCreative()Z"
             #elif MC_VER >= MC_1_21_5
             target = "Lnet/minecraft/server/level/ServerPlayer;isCreative()Z"
             #endif

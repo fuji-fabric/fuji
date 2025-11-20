@@ -58,7 +58,7 @@ public class WorldService {
         ServerHelper.executeSync(() -> {
             world.noSave = false;
             #if MC_VER <= MC_1_21_4
-            world.getChunkManager().removePersistentTickets();
+            world.getChunkSource().removeTicketsOnClosing();
             #elif MC_VER > MC_1_21_4
             world.getChunkSource().deactivateTicketsOnClosing();
             #endif

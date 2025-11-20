@@ -139,11 +139,6 @@ public class SitInitializer extends ModuleInitializer {
             }
 
             @Override
-            public boolean canSimulateMovement() {
-                return false;
-            }
-
-            @Override
             public boolean isColliding(BlockPos blockPos, BlockState blockState) {
                 return false;
             }
@@ -171,7 +166,7 @@ public class SitInitializer extends ModuleInitializer {
             }
 
             @Override
-            protected void removePassenger(Entity entity) {
+            protected void removePassenger(@NotNull Entity entity) {
                 /* Call super to handle the default logic. */
                 super.removePassenger(entity);
 
@@ -179,7 +174,7 @@ public class SitInitializer extends ModuleInitializer {
                 if (isChairBlockBroken()) {
                     Vec3 dismountPosition = getDismountPosition();
                     // NOTE: If the chair block is broken, the method `updatePassengerForDismount` will not be called. So we have to update the position manually.
-                    entity.snapTo(dismountPosition.x, dismountPosition.y, dismountPosition.z, entity.getYRot(), entity.getXRot());
+                    EntityHelper.moveEntity(entity, dismountPosition.x, dismountPosition.y, dismountPosition.z, entity.getYRot(), entity.getXRot());
                     EntityHelper.killEntity(this);
                 }
             }

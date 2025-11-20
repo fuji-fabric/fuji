@@ -25,7 +25,7 @@ public class InventoryHelper {
  **/
     public static NonNullList<ItemStack> getMainStacks(@NotNull Player player) {
         #if MC_VER <= MC_1_21_4
-        return player.getInventory().main;
+        return player.getInventory().items;
         #elif MC_VER >= MC_1_21_5
         return player.getInventory().getNonEquipmentItems();
         #endif
@@ -84,9 +84,9 @@ public class InventoryHelper {
 
         ItemStack stack = stacks.get(0);
 
-        #if MC_VER < MC_1_21_5
-        player.getInventory().offHand.set(0, stack);
-        #elif MC_VER >= MC_1_21_5
+        #if MC_VER <= MC_1_21_4
+        player.getInventory().offhand.set(0, stack);
+        #elif MC_VER > MC_1_21_4
         player.equipment.set(EquipmentSlot.OFFHAND, stack);
         #endif
 
