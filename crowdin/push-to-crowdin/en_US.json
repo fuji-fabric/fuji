@@ -1137,7 +1137,7 @@
   "docstring.1751972399779": "This module provides the `/hat` command.\nIt allows a player to put `any item` in the `head equipment slot`.\n",
   "docstring.1751972433657": "This module provides the `/reply` command.\nTo reply the player who recently `/msg` or `/tell` you.\n",
   "docstring.1751972495394": "You can use `command_alias` module, to create a new command `/r` as the alias to `/reply` command.\n",
-  "docstring.1751972580951": "◉ Set lore for item in mainhand.\nIssue: `/lore set \\<rainbow\\>the first line\\<newline\\>\\<bold\\>\\<green\\>the second`\n",
+  "docstring.1751972580951": "◉ Set lore for the item in mainhand.\nIssue: `/lore set \\<rainbow\\>the first line\\<newline\\>\\<bold\\>\\<green\\>the second`\n",
   "docstring.1751972643858": "◉ Set a display name for a warp.\nIssue: `/warp set-name \\<warp\\> \\<blue\\>This is the display name`\n\n◉ Set a lore for a warp.\nIssue: `/warp set-lore \\<warp\\> \\<blue\\>This is the first line|\\<red\\>This is the second line`\n",
   "docstring.1751974763151": "◉ Set up the warmup for all commands.\nRegex: `.+`\n\nThe `.` character in regex means `match any character`.\nThe `+` character in regex means `a quantifier, one or more times`.\n",
   "docstring.1751974917420": "◉ Set up the warmup for all commands, but specify a special setup for `/back` command.\nYou can just write the `config section` for `/back` command `at the top` of rules.\nThe `rules` are `matched` from up to down, and `the first matched rule` will be used.\nSo, you can just write the `special rule` at the top of other rules.\n",

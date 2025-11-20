@@ -22,14 +22,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-#if MC_VER <= MC_1_20_1
-import java.util.HashMap;
-#elif MC_VER > MC_1_20_1
-import java.util.Optional;
-import net.minecraft.advancements.AdvancementHolder;
-import net.minecraft.advancements.AdvancementRequirements;
-#endif
-
 public class ToastSender {
     private static final String IMPOSSIBLE = "impossible";
     private static final String DUMMY_RESOURCE_IMAGE_IDENTIFIER = "minecraft:textures/gui/advancements/backgrounds/end.png";
@@ -45,11 +37,11 @@ public class ToastSender {
                 #if MC_VER <= MC_1_20_2
                 RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)
                 #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_21_4
-                Optional.of(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER))
+                java.util.Optional.of(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER))
                 #elif MC_VER > MC_1_21_4 && MC_VER < MC_1_21_9
-                Optional.of(new net.minecraft.core.ClientAsset(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
+                java.util.Optional.of(new net.minecraft.core.ClientAsset(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
                 #elif MC_VER >= MC_1_21_9
-                Optional.of(new net.minecraft.core.ClientAsset.ResourceTexture(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
+                java.util.Optional.of(new net.minecraft.core.ClientAsset.ResourceTexture(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
                 #endif
 
             , advancementFrame.getType() // Type of display frame.
@@ -93,7 +85,7 @@ public class ToastSender {
     #if MC_VER <= MC_1_20_1
     String[][]
     #elif MC_VER > MC_1_20_1
-    AdvancementRequirements
+    net.minecraft.advancements.AdvancementRequirements
     #endif
     makeAdvancementRequirements() {
         #if MC_VER <= MC_1_20_1
@@ -101,9 +93,9 @@ public class ToastSender {
         return new String[][]{collection.toArray(String[]::new)};
         #elif MC_VER > MC_1_20_1 && MC_VER <= MC_1_20_2
         String[][] impossible = {{IMPOSSIBLE}};
-        return new AdvancementRequirements(impossible);
+        return new net.minecraft.advancements.AdvancementRequirements(impossible);
         #elif MC_VER > MC_1_20_2
-        return new AdvancementRequirements(List.of(List.of(IMPOSSIBLE)));
+        return new net.minecraft.advancements.AdvancementRequirements(List.of(List.of(IMPOSSIBLE)));
         #endif
     }
 
@@ -111,7 +103,7 @@ public class ToastSender {
         AdvancementProgress advancementProgress = new AdvancementProgress();
 
         #if MC_VER <= MC_1_20_1
-        Map<String, Criterion> maps = new HashMap<>();
+        Map<String, Criterion> maps = new java.util.HashMap<>();
         maps.put(IMPOSSIBLE, new Criterion(new ImpossibleTrigger.TriggerInstance()));
         advancementProgress.update(maps, makeAdvancementRequirements());
         #elif MC_VER > MC_1_20_1
@@ -126,7 +118,7 @@ public class ToastSender {
         #if MC_VER <= MC_1_20_1
         Advancement advancementEntry
         #elif MC_VER > MC_1_20_1
-        AdvancementHolder advancementEntry
+        net.minecraft.advancements.AdvancementHolder advancementEntry
         #endif
         , ResourceLocation identifier) {
 
@@ -145,7 +137,7 @@ public class ToastSender {
         #if MC_VER <= MC_1_20_1
         Collection<Advancement> toEarn = List.of(advancementEntry);
         #elif MC_VER > MC_1_20_1
-        Collection<AdvancementHolder> toEarn = List.of(advancementEntry);
+        Collection<net.minecraft.advancements.AdvancementHolder> toEarn = List.of(advancementEntry);
         #endif
 
         Set<ResourceLocation> toRemove = Set.of();
@@ -157,7 +149,7 @@ public class ToastSender {
         #if MC_VER <= MC_1_20_1
         Collection<Advancement> toEarn
         #elif MC_VER > MC_1_20_1
-        Collection<AdvancementHolder> toEarn
+        Collection<net.minecraft.advancements.AdvancementHolder> toEarn
         #endif
         , Set<ResourceLocation> toRemove, Map<ResourceLocation, AdvancementProgress> toSetProgress)
     {
@@ -173,7 +165,7 @@ public class ToastSender {
         #if MC_VER <= MC_1_20_1
         Collection<Advancement> toEarn = List.of();
         #elif MC_VER > MC_1_20_1
-        Collection<AdvancementHolder> toEarn = List.of();
+        Collection<net.minecraft.advancements.AdvancementHolder> toEarn = List.of();
         #endif
 
         Set<ResourceLocation> toRemove = Set.of(identifier);
