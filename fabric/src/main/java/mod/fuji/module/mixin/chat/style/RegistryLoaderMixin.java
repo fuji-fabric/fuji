@@ -58,7 +58,7 @@ public class RegistryLoaderMixin {
         , CallbackInfoReturnable<DynamicRegistryManager.Immutable> cir
         , @Local(ordinal = 1) @NotNull List<RegistryLoader.Loader<?>> iterable)
     #elif MC_VER > MC_1_21
-    @Inject(method = "load"
+    @Inject(method = "load(Lnet/minecraft/resources/RegistryDataLoader$LoadingFunction;Ljava/util/List;Ljava/util/List;)Lnet/minecraft/core/RegistryAccess$Frozen;"
         , at = @At(value = "INVOKE", target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V", ordinal = 0, shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private static void registerNewMessageType(@Coerce Object registryLoadable
         , List<HolderLookup.RegistryLookup<?>> list

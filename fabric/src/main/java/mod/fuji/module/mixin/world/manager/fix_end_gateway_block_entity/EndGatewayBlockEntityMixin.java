@@ -20,7 +20,7 @@ public abstract class EndGatewayBlockEntityMixin {
         return World.END;
     }
     #elif MC_VER > MC_1_20_6
-    @WrapOperation(method = "getPortalPosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;getRegistryKey()Lnet/minecraft/resources/ResourceKey;"))
+    @WrapOperation(method = "getPortalPosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;dimension()Lnet/minecraft/resources/ResourceKey;"))
     private ResourceKey<Level> letExitPortalsInExtraDimensionsWork(net.minecraft.server.level.ServerLevel instance, Operation<ResourceKey<Level>> original) {
         return Level.END;
     }

@@ -33,7 +33,7 @@ public abstract class ServerGamePacketListenerImplMixin {
         method = "handleMoveVehicle",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;isHost()Z"
+            target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;isSingleplayerOwner()Z"
         )
     )
     public boolean disableVehicleMoveTooQuickly(boolean original) {
