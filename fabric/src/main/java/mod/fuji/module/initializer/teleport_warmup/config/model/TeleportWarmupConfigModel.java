@@ -14,7 +14,7 @@ public class TeleportWarmupConfigModel {
         """)
     public double warmup_second = 3;
 
-    public boolean admin_players_can_bypass = true;
+    public boolean admin_players_can_bypass = false;
 
     public Interruptible interruptible = new Interruptible(true, 1, true, true);
 

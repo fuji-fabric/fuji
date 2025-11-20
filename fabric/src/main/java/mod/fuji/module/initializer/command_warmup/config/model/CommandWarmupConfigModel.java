@@ -15,7 +15,7 @@ public class CommandWarmupConfigModel {
         """)
     public boolean warn_for_move = true;
 
-    public boolean admin_players_can_bypass = true;
+    public boolean admin_players_can_bypass = false;
 
     @Document(id = 1751826873894L, value = """
         Defined `warmup` rules.
