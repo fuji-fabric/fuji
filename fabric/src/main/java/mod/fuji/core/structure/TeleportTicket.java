@@ -6,18 +6,14 @@ import mod.fuji.core.service.bossbar.structure.InterruptibleTicket;
 import lombok.Getter;
 import net.minecraft.world.BossEvent;
 import net.minecraft.server.level.ServerBossEvent;
-import net.minecraft.world.entity.Relative;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.EnumSet;
-import java.util.Set;
 
 @Getter
 public class TeleportTicket extends InterruptibleTicket {
 
     private final GlobalPos destination;
-    private final Set<Relative> flags;
+    private final RelativeFlagsWrapper flags;
 
     private TeleportTicket(@NotNull ServerPlayer player
         , GlobalPos source
@@ -25,7 +21,7 @@ public class TeleportTicket extends InterruptibleTicket {
         , float progress
         , int totalMs
         , Interruptible interruptible
-        , Set<Relative> flags
+        , RelativeFlagsWrapper flags
     ) {
         super(
             new ServerBossEvent(TextHelper.getTextByKey(player, "teleport_warmup.bossbar.name"), BossEvent.BossBarColor.BLUE, net.minecraft.world.BossEvent.BossBarOverlay.PROGRESS)
@@ -41,12 +37,13 @@ public class TeleportTicket extends InterruptibleTicket {
         this.getBossBar().setProgress(progress);
     }
 
-    public static @NotNull TeleportTicket make(@NotNull ServerPlayer player, GlobalPos source, GlobalPos destination, int totalMs, Interruptible interruptible, Set<Relative> flags) {
+    public static @NotNull TeleportTicket make(@NotNull ServerPlayer player, GlobalPos source, GlobalPos destination, int totalMs, Interruptible interruptible, RelativeFlagsWrapper flags) {
         return new TeleportTicket(player, source, destination, 0f, totalMs, interruptible, flags);
     }
 
     public static @NotNull TeleportTicket makeVipTicket(@NotNull ServerPlayer player, GlobalPos source, GlobalPos destination) {
-        return new TeleportTicket(player, source, destination, 1f, 2048, Interruptible.makeUninterruptible(), EnumSet.noneOf(Relative.class));
+        var absolute = RelativeFlagsWrapper.empty();
+        return new TeleportTicket(player, source, destination, 1f, 2048, Interruptible.makeUninterruptible(), absolute);
     }
 
     @Override

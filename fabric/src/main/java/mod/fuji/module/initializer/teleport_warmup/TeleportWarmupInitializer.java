@@ -128,7 +128,7 @@ public class TeleportWarmupInitializer extends ModuleInitializer {
                 , new GlobalPos(destinationDimension, event.getDestinationX(), event.getDestinationY(), event.getDestinationZ(), event.getDestinationYaw(), event.getDestinationPitch())
                 , warmupDurationMs
                 , TeleportWarmupInitializer.config.model().interruptible
-                , event.getPositionFlags()
+                , event.getRelativeFlagsWrapper()
             );
             BossBarManager.addTicket(teleportTicket);
             event.getCallbackInfo().cancel();

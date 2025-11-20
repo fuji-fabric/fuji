@@ -11,7 +11,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.With;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.Relative;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
@@ -98,13 +97,13 @@ public class GlobalPos {
         return x * x + y * y + z * z;
     }
 
-    public void teleport(@NotNull ServerPlayer player, Set<Relative> flags) {
+    public void teleport(@NotNull ServerPlayer player, RelativeFlagsWrapper flagsWrapper) {
         /* Get the dimension instance from server. */
         Optional<ServerLevel> dimension = WorldHelper.getWorld(this.level);
         dimension.ifPresentOrElse($dimension -> {
             /* Make position flags. */
             #if MC_VER <= MC_1_21
-            player.teleport($dimension, this.x, this.y, this.z, flags, this.yaw, this.pitch);
+            player.teleportTo($dimension, this.x, this.y, this.z, flagsWrapper.getFlags(), this.yaw, this.pitch);
             #elif MC_VER > MC_1_21
             player.teleportTo($dimension, this.x, this.y, this.z, flags, this.yaw, this.pitch, true);
             #endif
@@ -112,6 +111,6 @@ public class GlobalPos {
     }
 
     public void teleport(@NotNull ServerPlayer player) {
-        teleport(player, EnumSet.noneOf(Relative.class));
+        teleport(player, RelativeFlagsWrapper.empty());
     }
 }
