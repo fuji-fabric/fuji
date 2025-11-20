@@ -6,12 +6,11 @@ import mod.fuji.core.command.exception.AbortCommandExecutionException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
+import mod.fuji.core.structure.AdvancementFrameTypeRepresentation;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.DisplayInfo;
-import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.CriterionProgress;
@@ -36,7 +35,7 @@ public class ToastSender {
     private static final String DUMMY_RESOURCE_IMAGE_IDENTIFIER = "minecraft:textures/gui/advancements/backgrounds/end.png";
     private static final ResourceLocation SEND_TOAST_IDENTIFIER = RegistryHelper.makeIdentifierOrThrow("custom", "custom");
 
-    public static void sendToast(@NotNull ServerPlayer player, @NotNull AdvancementType advancementFrame, @NotNull ItemStack icon, @NotNull Component title) {
+    public static void sendToast(@NotNull ServerPlayer player, @NotNull AdvancementFrameTypeRepresentation advancementFrame, @NotNull ItemStack icon, @NotNull Component title) {
         /* Make an advancement display. */
         DisplayInfo advancementDisplay = new DisplayInfo(
             icon
@@ -53,7 +52,7 @@ public class ToastSender {
                     Optional.of(new net.minecraft.core.ClientAsset.ResourceTexture(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
                 #endif
 
-            , advancementFrame // Type of display frame.
+            , advancementFrame.getType() // Type of display frame.
             , true // Show toast.
             , false // Don't announce the progress to chat.
             , true // Hide this advancement display.

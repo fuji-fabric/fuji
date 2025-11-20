@@ -10,9 +10,9 @@ import mod.fuji.core.command.argument.wrapper.impl.ItemStackWrapper;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.service.toast_sender.ToastSender;
+import mod.fuji.core.structure.AdvancementFrameTypeRepresentation;
 import mod.fuji.module.initializer.ModuleInitializer;
 import java.util.Optional;
-import net.minecraft.advancements.AdvancementType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.commands.CommandSourceStack;
@@ -40,14 +40,14 @@ public class SendToastInitializer extends ModuleInitializer {
     @CommandRequirement(level = 4)
     private static int $sendToast(@CommandSource CommandSourceStack source
         , ServerPlayer player
-        , Optional<AdvancementType> toastType
+        , Optional<AdvancementFrameTypeRepresentation> toastType
         , Optional<ItemStackWrapper> icon
         , GreedyString message
     ) {
         ItemStack $icon = icon
             .map(ItemStackWrapper::getItemStack)
             .orElse(Items.SLIME_BALL.getDefaultInstance());
-        AdvancementType $toastType = toastType.orElse(AdvancementType.CHALLENGE);
+        AdvancementFrameTypeRepresentation $toastType = toastType.orElse(AdvancementFrameTypeRepresentation.CHALLENGE);
         Component title = TextHelper.getTextByValue(player, message.getValue());
         ToastSender.sendToast(player, $toastType, $icon, title);
 

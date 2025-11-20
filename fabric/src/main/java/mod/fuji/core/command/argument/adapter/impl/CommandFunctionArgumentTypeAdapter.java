@@ -8,7 +8,6 @@ import mod.fuji.core.command.argument.structure.CommandArgument;
 import lombok.SneakyThrows;
 import net.minecraft.commands.arguments.item.FunctionArgument;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.functions.CommandFunction;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +26,13 @@ public class CommandFunctionArgumentTypeAdapter extends BaseArgumentTypeAdapter 
 
     @Override
     public List<Class<?>> getTypeClasses() {
-        return List.of(CommandFunction.class);
+        return List.of(
+            #if MC_VER <= MC_1_20_2
+            net.minecraft.commands.CommandFunction.class
+            #elif MC_VER > MC_1_20_2
+            net.minecraft.commands.functions.CommandFunction.class
+            #endif
+        );
     }
 
     @Override

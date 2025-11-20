@@ -43,7 +43,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.functions.CommandFunction;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ChunkHolder;
@@ -220,7 +219,6 @@ public class DependencyTest {
         allowedReferences.add(PlayerTeam.class.getName());
         allowedReferences.add(ParticleOptions.class.getName());
         allowedReferences.add(GameType.class.getName());
-        allowedReferences.add(CommandFunction.class.getName());
         allowedReferences.add(ObjectiveCriteria.class.getName());
 
         allowedReferences.add(ShulkerBoxBlock.class.getName());

@@ -3,14 +3,12 @@ package mod.fuji.core.auxiliary.minecraft;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.serialization.JsonOps;
 import eu.pb4.placeholders.api.ParserContext;
 import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.node.LiteralNode;
 import eu.pb4.placeholders.api.node.TextNode;
 import eu.pb4.placeholders.api.parsers.NodeParser;
 import eu.pb4.sgui.virtual.inventory.VirtualScreenHandler;
-import mod.fuji.core.auxiliary.JsonUtil;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.ReflectionUtil;
 import mod.fuji.core.auxiliary.StringUtil;
@@ -38,7 +36,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.advancements.AdvancementType;
+import mod.fuji.core.structure.AdvancementFrameTypeRepresentation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
@@ -661,7 +659,7 @@ public class TextHelper {
     }
 
     public static void sendToastByText(@NotNull ServerPlayer player, @NotNull ItemStack icon, @NotNull Component text) {
-        ToastSender.sendToast(player, AdvancementType.TASK, icon, text);
+        ToastSender.sendToast(player, AdvancementFrameTypeRepresentation.TASK, icon, text);
     }
 
     /**
@@ -1042,9 +1040,7 @@ public class TextHelper {
 
         @SuppressWarnings("unused")
         public static String toJson(@NotNull Component text) {
-            #if MC_VER <= MC_1_20_2
-            return Text.Serializer.toJson(text);
-            #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_20_4
+            #if MC_VER <= MC_1_20_4
             return Component.Serializer.toJson(text);
             #elif MC_VER > MC_1_20_4
             return net.minecraft.network.chat.ComponentSerialization.CODEC
@@ -1056,9 +1052,7 @@ public class TextHelper {
 
         @SuppressWarnings("unused")
         public static Component fromJson(@NotNull String textJson) {
-            #if MC_VER <= MC_1_20_2
-            return Text.Serializer.fromJson(textJson);
-            #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_20_4
+            #if MC_VER <= MC_1_20_4
             return Component.Serializer.fromJson(textJson);
             #elif MC_VER > MC_1_20_4
             return net.minecraft.network.chat.ComponentSerialization.CODEC

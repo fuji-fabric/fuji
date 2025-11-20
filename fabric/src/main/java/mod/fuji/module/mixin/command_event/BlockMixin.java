@@ -36,7 +36,7 @@ public class BlockMixin {
 
     @Inject(method = "playerWillDestroy", at = @At("RETURN"))
     #if MC_VER <= MC_1_20_2
-    void onBlockBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity playerEntity, CallbackInfo ci)
+    void onBlockBreak(Level world, BlockPos blockPos, BlockState blockState, Player playerEntity, CallbackInfo ci)
     #elif MC_VER > MC_1_20_2
     void onBlockBreak(Level world, BlockPos blockPos, BlockState blockState, Player playerEntity, CallbackInfoReturnable<BlockState> cir)
     #endif

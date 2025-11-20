@@ -61,7 +61,7 @@ public abstract class SimpleRegistryExtensionMixin<T> implements SimpleRegistryE
     #if MC_VER <= MC_1_20_2
     @Shadow
     @Final
-    private Object2IntMap<T> entryToRawId;
+    private Object2IntMap<T> toId;
     #elif MC_VER > MC_1_20_2
     @Shadow
     @Final

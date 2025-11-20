@@ -20,7 +20,7 @@ import java.util.concurrent.Executor;
 public class RuntimeDimension extends ServerLevel {
 
     #if MC_VER <= MC_1_20_2
-    public RuntimeDimension(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, net.minecraft.server.WorldGenerationProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List<net.minecraft.world.spawner.Spawner> spawners, boolean shouldTickTime, @Nullable RandomSequencesState randomSequencesState) {
+    public RuntimeDimension(MinecraftServer server, Executor workerExecutor, LevelStorageSource.LevelStorageAccess session, ServerLevelData properties, ResourceKey<Level> worldKey, LevelStem dimensionOptions, net.minecraft.server.level.progress.ChunkProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List<net.minecraft.world.level.CustomSpawner> spawners, boolean shouldTickTime, @Nullable net.minecraft.world.RandomSequences randomSequencesState) {
         super(server, workerExecutor, session, properties, worldKey, dimensionOptions, worldGenerationProgressListener, debugWorld, seed, spawners, shouldTickTime, randomSequencesState);
     }
     #elif MC_VER > MC_1_20_2 && MC_VER < MC_1_21_9

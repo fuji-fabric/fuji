@@ -101,7 +101,7 @@ public class InventoryHelper {
 
     public static NonNullList<ItemStack> getHeldStacks(@NotNull SimpleContainer inventory) {
         #if MC_VER <= MC_1_20_2
-        return inventory.stacks;
+        return inventory.items;
         #elif MC_VER > MC_1_20_2
         return inventory.getItems();
         #endif
