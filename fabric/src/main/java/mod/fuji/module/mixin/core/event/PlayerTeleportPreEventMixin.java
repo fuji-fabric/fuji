@@ -36,7 +36,7 @@ public abstract class PlayerTeleportPreEventMixin {
 
     @Inject(method = "teleportTo(Lnet/minecraft/server/level/ServerLevel;DDDLjava/util/Set;FFZ)Z", at = @At("HEAD"), cancellable = true)
     private void $producePlayerPreTeleportEvent(ServerLevel serverWorld, double d, double e, double f, Set<net.minecraft.world.entity.Relative> set, float g, float h, boolean bl, CallbackInfoReturnable<Boolean> cir) {
-        producePlayerPreTeleportEvent(serverWorld, d, e, f, g, h, set, cir);
+        producePlayerPreTeleportEvent(serverWorld, d, e, f, g, h, RelativeFlagsWrapper.of(set), cir);
     }
     #endif
 

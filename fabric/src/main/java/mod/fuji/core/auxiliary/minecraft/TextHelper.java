@@ -9,6 +9,7 @@ import eu.pb4.placeholders.api.node.LiteralNode;
 import eu.pb4.placeholders.api.node.TextNode;
 import eu.pb4.placeholders.api.parsers.NodeParser;
 import eu.pb4.sgui.virtual.inventory.VirtualScreenHandler;
+import mod.fuji.core.auxiliary.JsonUtil;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.ReflectionUtil;
 import mod.fuji.core.auxiliary.StringUtil;
@@ -36,7 +37,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import mod.fuji.core.structure.AdvancementFrameTypeRepresentation;
+import mod.fuji.core.structure.AdvancementFrameTypeWrapper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
@@ -659,7 +660,7 @@ public class TextHelper {
     }
 
     public static void sendToastByText(@NotNull ServerPlayer player, @NotNull ItemStack icon, @NotNull Component text) {
-        ToastSender.sendToast(player, AdvancementFrameTypeRepresentation.TASK, icon, text);
+        ToastSender.sendToast(player, AdvancementFrameTypeWrapper.TASK, icon, text);
     }
 
     /**
@@ -1044,7 +1045,7 @@ public class TextHelper {
             return Component.Serializer.toJson(text);
             #elif MC_VER > MC_1_20_4
             return net.minecraft.network.chat.ComponentSerialization.CODEC
-                .encodeStart(JsonOps.INSTANCE, text)
+                .encodeStart(com.mojang.serialization.JsonOps.INSTANCE, text)
                 .getOrThrow()
                 .toString();
             #endif
@@ -1056,7 +1057,7 @@ public class TextHelper {
             return Component.Serializer.fromJson(textJson);
             #elif MC_VER > MC_1_20_4
             return net.minecraft.network.chat.ComponentSerialization.CODEC
-                .decode(JsonOps.INSTANCE, JsonUtil.readJsonString(textJson))
+                .decode(com.mojang.serialization.JsonOps.INSTANCE, JsonUtil.readJsonString(textJson))
                 .getOrThrow()
                 .getFirst();
             #endif

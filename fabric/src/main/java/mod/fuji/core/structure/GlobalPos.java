@@ -105,7 +105,7 @@ public class GlobalPos {
             #if MC_VER <= MC_1_21
             player.teleportTo($dimension, this.x, this.y, this.z, flagsWrapper.getFlags(), this.yaw, this.pitch);
             #elif MC_VER > MC_1_21
-            player.teleportTo($dimension, this.x, this.y, this.z, flags, this.yaw, this.pitch, true);
+            player.teleportTo($dimension, this.x, this.y, this.z, flagsWrapper.getFlags(), this.yaw, this.pitch, true);
             #endif
         }, () -> TextHelper.sendTextByKey(player, "world.dimension.not_found", this.level));
     }

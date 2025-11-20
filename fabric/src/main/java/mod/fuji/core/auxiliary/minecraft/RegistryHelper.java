@@ -1,5 +1,6 @@
 package mod.fuji.core.auxiliary.minecraft;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 import mod.fuji.Fuji;
 import net.minecraft.core.registries.Registries;
@@ -152,7 +153,8 @@ public class RegistryHelper {
     }
 
     public static @NotNull ResourceLocation makeIdentifierOrThrow(@NotNull String namespace, @NotNull String path) {
-        return new ResourceLocation(namespace, path);
+        ResourceLocation identifier = ResourceLocation.tryBuild(namespace, path);
+        return Objects.requireNonNull(identifier);
     }
 
     public static Optional<ResourceLocation> makeIdentifier(@NotNull String identifier) {

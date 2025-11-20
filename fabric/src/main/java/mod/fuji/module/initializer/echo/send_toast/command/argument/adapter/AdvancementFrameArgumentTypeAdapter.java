@@ -7,7 +7,7 @@ import com.mojang.brigadier.context.CommandContext;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
-import mod.fuji.core.structure.AdvancementFrameTypeRepresentation;
+import mod.fuji.core.structure.AdvancementFrameTypeWrapper;
 import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
@@ -23,12 +23,12 @@ public class AdvancementFrameArgumentTypeAdapter extends BaseArgumentTypeAdapter
     @Override
     public Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         String string = StringArgumentType.getString(context, commandArgument.getArgumentName());
-        return AdvancementFrameTypeRepresentation.valueOf(string);
+        return AdvancementFrameTypeWrapper.valueOf(string);
     }
 
     @Override
     public List<Class<?>> getTypeClasses() {
-        return List.of(AdvancementFrameTypeRepresentation.class);
+        return List.of(AdvancementFrameTypeWrapper.class);
     }
 
     @Override
@@ -41,6 +41,6 @@ public class AdvancementFrameArgumentTypeAdapter extends BaseArgumentTypeAdapter
     protected RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super
             .makeRequiredArgumentBuilder(argumentName)
-            .suggests(CommandHelper.Suggestion.enums(AdvancementFrameTypeRepresentation::values));
+            .suggests(CommandHelper.Suggestion.enums(AdvancementFrameTypeWrapper::values));
     }
 }
